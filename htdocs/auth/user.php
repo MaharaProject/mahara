@@ -274,7 +274,7 @@ class User {
                             . '
                         )';
             $user = get_record_sql($sql, array($username, $instanceid));
-            if ($user) {
+            if ($user && $user->id > 0) {
                 $this->populate($user);
                 return $this;
             }
@@ -1646,6 +1646,15 @@ class User {
             }
         }
     }
+
+    /**
+     * Gets the primary institution
+     * @return institution id or 'mahara' if not set
+     */
+    public function get_primary_institution() {
+        $institutions = array_keys($this->get('institutions'));
+        return !empty($institutions[0]) ? $institutions[0] : 'mahara';
+    }
 }
 
 
@@ -1979,15 +1988,6 @@ class LiveUser extends User {
             return $value;
         }
         return $this->defaults[$key];
-    }
-
-    /**
-     * Gets the primary institution
-     * @return institution id or 'mahara' if not set
-     */
-    public function get_primary_institution() {
-        $institutions = array_keys($this->get('institutions'));
-        return !empty($institutions[0]) ? $institutions[0] : 'mahara';
     }
 
     /**

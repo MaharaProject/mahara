@@ -45,7 +45,6 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  Then I should see "Groups" in the "Engage sub-menu" property
  And I should see "People" in the "Engage sub-menu" property
  And I should see "Discussion topics" in the "Engage sub-menu" property
- And I should see "Institution membership" in the "Engage sub-menu" property
 
  # Checking the sub navigation in Manage
  When I follow "Manage"
@@ -194,4 +193,5 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Legal"
  And I should see "Notifications"
  And I should see "Connected apps"
+ And I should see "Institution membership"
  And I should see "Logout"

@@ -117,3 +117,9 @@ $string['ssolabelfor'] = '%s login';
 // or create a htdocs/local/lang/en.utf8/auth.saml.php file and add them there.
 // They need to have the key 'login' + shortname of institution, eg:
 // For 'testinstitution' it would be: $string['logintestinstitution'] = 'Special label';
+
+$string['noentityidpfound'] = 'No Identity Provider ID found';
+$string['novalidauthinstanceprovided'] = 'Your selection is not possible. Please select a different institution.';
+$string['identityprovider'] = 'Identity Provider';
+$string['selectmigrateto'] = 'Select institution to move to ...';
+

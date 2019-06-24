@@ -1575,5 +1575,44 @@ function xmldb_core_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2019122700) {
+        log_debug('Create an "usr_institution_migrate" table to hold pending migrations');
+
+        $table = new XMLDBTable('usr_institution_migrate');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('old_authinstance', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('new_authinstance', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('new_username', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('key', XMLDB_TYPE_CHAR, 16);
+            $table->addFieldInfo('token', XMLDB_TYPE_CHAR, 6);
+            $table->addFieldInfo('email', XMLDB_TYPE_CHAR, 255);
+
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+            $table->addKeyInfo('oldauthfk', XMLDB_KEY_FOREIGN, array('old_authinstance'), 'auth_instance', array('id'));
+            $table->addKeyInfo('newauthfk', XMLDB_KEY_FOREIGN, array('new_authinstance'), 'auth_instance', array('id'));
+
+            create_table($table);
+        }
+    }
+
+    if ($oldversion < 2019122701) {
+        if (!get_record('cron', 'callfunction', 'auth_clean_expired_migrations')) {
+            log_debug('Add cron job to clean expired self-migration entries');
+
+            $cron = new stdClass();
+            $cron->callfunction = 'auth_clean_expired_migrations';
+            $cron->minute       = '0';
+            $cron->hour         = '2,14';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+    }
+
     return $status;
 }

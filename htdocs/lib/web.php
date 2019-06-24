@@ -2956,12 +2956,6 @@ function mahara_standard_nav() {
             'title' => get_string('groups'),
             'weight' => 30,
         ),
-        'engage/institutionmembership' => array(
-            'path' => 'engage/institutions',
-            'url' => 'account/institutions.php',
-            'title' => get_string('institutionmembership'),
-            'weight' => 60,
-        ),
     );
 
     if (can_use_skins()) {
@@ -3140,6 +3134,12 @@ function right_nav() {
             'title' => get_string('notifications'),
             'weight' => 40,
             'iconclass' => 'flag'
+        ),
+        'settings/institutionmembership' => array(
+            'path' => 'settings/institutions',
+            'url' => 'account/institutions.php',
+            'title' => get_string('institutionmembership'),
+            'weight' => 60,
         ),
     );
 
@@ -5016,4 +5016,33 @@ function is_valid_url($url) {
         return false;
     }
     return true;
+}
+
+function account_institution_get_menu_tabs() {
+    $menu = array(
+        'institutions' => array(
+            'path' => 'settings/institutions',
+            'url' => 'account/institutions.php',
+            'title' => get_string('currentinstitutionmembership'),
+            'weight' => 10,
+        ),
+        'migrateinstitution' => array(
+            'path' => 'settings/institutions',
+            'url' => 'account/migrateinstitution.php',
+            'title' => get_string('selfmigration'),
+            'weight' => 20,
+        ),
+    );
+
+    if (defined('SECTION_PAGE')) {
+        $key = SECTION_PAGE;
+        if ($key && isset($menu[$key])) {
+            $menu[$key]['selected'] = true;
+        }
+    }
+
+    // Sort the menu items by weight
+    uasort($menu, "sort_menu_by_weight");
+
+    return $menu;
 }

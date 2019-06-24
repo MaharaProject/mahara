@@ -13,4 +13,11 @@
 
     </div>
 {/if}
+
+{if $saml_logout}
+<script>
+window.top.location.href = '{$WWWROOT}';
+</script>
+{/if}
+
 {include file="footer.tpl"}

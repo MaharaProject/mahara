@@ -43,8 +43,8 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
 PluginAuthSaml::init_simplesamlphp();
 
 // Bug #1693426: destroy mahara session when Single Logout is initiated by IdP
-if ($USER->is_logged_in()) {
+if ($USER->is_logged_in() && !$SESSION->get('postmigrateresponse')) {
     $USER->logout();
 }
-
+$SESSION->set('saml_logout', true);
 require('../extlib/simplesamlphp/modules/saml/www/sp/saml2-logout.php');

@@ -447,3 +447,15 @@ function get_messages_by_ids_mr($usr, array $msgids) {
     }
     return $return;
 }
+
+function valid_canned_messages() {
+    // Add valid canned message functions here
+    return array('institutionfilledreply');
+}
+
+function institutionfilledreply($users) {
+    $i = param_alphanum('i', 'mahara');
+    $institution = get_field('institution', 'displayname', 'name', $i);
+    return array(get_string('institutionfilledreplysubject', 'mahara'),
+                 get_string('institutionfilledreplymessage', 'mahara', display_name($users[0], $users[0]), $institution, get_config('wwwroot') . 'account/migrateinstitution.php', get_config('sitename')));
+}

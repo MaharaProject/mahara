@@ -815,9 +815,7 @@ $string['institutionmembershipdescription'] = 'If you are a member of any instit
 $string['youareamemberof'] = 'You are a member of %s';
 $string['leaveinstitution'] = 'Leave institution';
 $string['reallyleaveinstitution'] = 'Are you sure you want to leave this institution?';
-$string['youhaverequestedmembershipof'] = 'You have requested membership of %s.';
 $string['cancelrequest'] = 'Cancel request';
-$string['youhavebeeninvitedtojoin'] = 'You have been invited to join %s.';
 $string['confirminvitation'] = 'Confirm invitation';
 $string['joininstitution'] = 'Join institution';
 $string['decline'] = 'Decline';
@@ -1371,3 +1369,81 @@ $string['viewartefact'] = 'View ';
 //Accessing an outdated url that will now redirect with session message
 $string['viewartefactdatavuamodal'] = 'The data for %s artefact "%s" cannot be viewed this way anymore. Please go to page "%s" to view it.';
 $string['chooselanguage'] = 'Choose language';
+
+$string['currentinstitutionmembership'] = 'Current institution';
+$string['selfmigration'] = 'Move account';
+$string['migrateaccounttoinstitution'] = 'Move account to another institution';
+$string['migrateinstitutiondescription'] = '<div class="lead">You can choose a new institution to move to.</div><p>You will be required to verify your login details and redirected back to %s. You will receive an email to confirm your account move. Please check your emails for the confirmation message to finalise your account move.</p>';
+$string['migrateemailsubject'] = '%s account move confirmation';
+$string['migrateemailtext'] = 'Hello %s,
+
+You want to move your account on %s from institution "%s" to institution "%s". Please confirm this action by clicking the link
+
+%s
+
+This link is valid for 30 minutes.
+
+Regards,
+The %s Team';
+$string['migrateemailtext_html'] = '<p>Hello %s,</p>
+<p>You want to move your account on %s from institution "%s" to institution "%s". Please <a href="%s">confirm your account move</a>.</p>
+<p>This link is valid for 30 minutes.</p>
+<p>Regards,<br>
+The %s Team</p>';
+$string['migrateemailtextexistinguser'] = 'Hello %s,
+
+You want to move your account on %s from institution "%s" to institution "%s".
+
+You cannot do so because there is another account with the same username and email credentials.
+
+To sort out this problem, please contact the administrator of institution "%s":
+
+%s
+
+Regards,
+The %s Team';
+$string['migrateemailtextexistinguser_html'] = '<p>Hello %s,</p>
+<p>You want to move your account on %s from institution "%s" to institution "%s".</p>
+<p>You cannot do so because there is another account with the same username and email credentials.</p>
+<p>To sort out this problem, please <a href="%s">contact the administrator</a> of institution "%s".</p>
+<p>Regards,<br>
+The %s Team</p>';
+$string['migrateaccountconfirm'] = 'Confirm your account move to another institution on %s.';
+$string['migrateaccountconfirminfo'] = 'Your account will be moved from "%s" to "%s" and you will not be able to log in with your old credentials to your account anymore. If you do use your old login again, a new account will be created.';
+$string['nomigrateoptions'] = 'There are no migration options to choose from.';
+$string['invalidkeytoken'] = 'Something went wrong. Either the link in the confirmation email has expired or another confirmation email has been sent. Please check for the latest confirmation email or request a new one.';
+$string['migratecancelled'] = 'Your account move has been cancelled';
+$string['migratesuccess'] = 'Your account move to institution "%s" was successful. Please log in with your login details for that institution. Remember, if you log into your former institution, a new empty account will be created and you will have two accounts.';
+$string['restartmigration'] = 'Please begin the account moving process again on <a href="%s">choose institution</a> page';
+$string['confirmmigration'] = 'Move account';
+$string['migrationcancelled'] = 'Your account move was cancelled.';
+$string['cannotcompletemigrationwithuser'] = 'You need to be logged in with the credentials for your current institution, not the credentials of the institution to which you want to move. Then follow link in the email again.';
+$string['migrateinstitutionpagelink'] = 'Go to the <a href="%s">Move account</a> page to change your institution and how you log into %s.';
+$string['institutionmaxusersexceededrequest'] = 'This institution is full. You cannot join it at this point. The institution administrator has been informed. Please try again later. If the problem persists, <a href="%s">contact the institution administrator</a>.';
+$string['postformresponse'] = 'A confirmation email has been sent to your primary email address. Please follow the link in that email to confirm the move to your new institution.';
+$string['selfmigrate'] = 'Move account to another institution';
+$string['institutionmembershipfullmessagetextuser'] = 'Hello %s,
+
+%s wants to move to institution "%s" on %s but the maximum number of institution members has been reached.
+
+Please either remove unused accounts or ask a site administrator to increase the number of accounts for this institution.
+
+Once you have made the changes, please let %s know that they can try again by clicking the following link
+
+%s
+
+Regards,
+The %s Team';
+$string['institutionfilledreplysubject'] = 'Account move is possible again';
+$string['institutionfilledreplymessage'] = 'Hello %s,
+
+Thank you for your patience. You can move your account to institution "%s" now by following this link
+
+%s
+
+Regards,
+The %s Team';
+$string['institutionmembershipdescription'] = 'You can see your institution membership status and any actions you can perform that relate to institution membership.';
+$string['institutionmembershiprequestsdescription'] = 'You have requested to join the following institutions.';
+$string['institutionmembershipinvitedescription'] = 'An administrator has invited you to join the following institutions.';
+$string['institutionmembershipjoindescription'] = 'You can send a request to join an institution. The "Institution ID" field is for setting the student ID for this institution.';

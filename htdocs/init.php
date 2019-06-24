@@ -388,6 +388,10 @@ if (!defined('CLI')) {
         header("Content-Security-Policy: frame-ancestors 'self' $csp_ancestor_exemption");
         header('X-Frame-Options: ALLOW-FROM '. $csp_ancestor_exemption);
     }
+    else if ($saml_logout = $SESSION->get('saml_logout')) {
+        // To allow IDP SAML to logout within an iframe we temporarily ignore content security policy
+        // This is set via auth/saml/sp/saml2-logout.php
+    }
     else {
         header("Content-Security-Policy: frame-ancestors 'self'");
         header('X-Frame-Options: SAMEORIGIN');

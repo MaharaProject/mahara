@@ -24,7 +24,7 @@ Feature: Mahara user permissions in institutions
   Scenario: Register to an institution
     # Member can register to an institution
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Institution membership" in "Engage" from main menu
+    And I choose "Institution membership" in "Settings" from user menu
     Then I should see "Request membership of an institution"
     And I log out
 

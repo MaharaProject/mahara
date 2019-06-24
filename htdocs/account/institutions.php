@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'engage/institutions');
+define('MENUITEM', 'settings/institutions');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'account');
 define('SECTION_PAGE', 'institutions');
@@ -84,8 +84,7 @@ if (!empty($requested)) {
             'type' => 'submit',
             'name' => '_cancelrequest_' . $i,
             'class' => 'btn-secondary',
-            'title' => get_string('youhaverequestedmembershipof', 'mahara',
-                                  $institutions[$i]->displayname),
+            'title' => $institutions[$i]->displayname,
             'value' => get_string('cancelrequest')
         );
         unset($institutions[$i]);
@@ -129,8 +128,7 @@ if (!empty($invited)) {
             'name' => 'invite_' . $i,
             'options' => array('confirm', 'decline'),
             'primarychoice' => 'confirm',
-            'title' => get_string('youhavebeeninvitedtojoin', 'mahara',
-                                  $institutions[$i]->displayname),
+            'title' => $institutions[$i]->displayname,
             'class' => 'btn-secondary',
             'value' => array(get_string('joininstitution'), get_string('decline'))
         );
@@ -235,4 +233,7 @@ $smarty->assign('memberform', $memberform);
 $smarty->assign('requestedform', $requestedform);
 $smarty->assign('invitedform', $invitedform);
 $smarty->assign('joinform', $joinform);
+$smarty->assign('migrateurl', get_config('wwwroot') . 'account/migrateinstitution.php');
+$smarty->assign('sitename', get_config('sitename'));
+$smarty->assign('SUBPAGENAV', account_institution_get_menu_tabs());
 $smarty->display('account/institutions.tpl');

@@ -63,7 +63,7 @@ Background:
 Scenario: Users from different institutions cannot see other institution users in the "People" page
     Given I log in as "UserC" with password "Kupuh1pa!"
     # User should not be allowed to join another institution
-    When I choose "Institution membership" in "Engage" from main menu
+    When I choose "Institution membership" in "Settings" from user menu
     Then I should see "You are a member of Institution One"
     And I should not see "Request membership of an institution"
 

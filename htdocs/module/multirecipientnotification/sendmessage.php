@@ -20,6 +20,7 @@ $id = param_integer('id', null);
 $oldreplytoid = param_integer('oldreplyto', null);
 $replytoid = param_integer('replyto', null);
 $messages = null;
+$cannedmessage = param_alphanum('cm', null);
 $users = array();
 $user = null;
 
@@ -28,7 +29,7 @@ global $THEME;
 global $SESSION;
 
 $subject = '';
-
+$defaultmessage = '';
 if (null !== $id) {
     $user = get_record('usr', 'id', $id);
 
@@ -43,6 +44,10 @@ if (null !== $id) {
     }
 
     $users[] = $id;
+    if ($cannedmessage && in_array($cannedmessage, valid_canned_messages()) && is_callable($cannedmessage)) {
+        // Fetch the canned message to populate the subject / message boxes
+        list($subject, $defaultmessage) = call_user_func_array($cannedmessage, array($users));
+    }
 }
 
 if (!is_null($oldreplytoid)) {
@@ -225,6 +230,7 @@ $form = pieform(array(
             'title' => $messages ? get_string('Reply', 'group') : get_string('message'),
             'cols'  => 80,
             'rows'  => 10,
+            'defaultvalue' => $defaultmessage,
             'rules' => array('maxlength' => 65536, 'required' => true),
         ),
         'goto' => array(

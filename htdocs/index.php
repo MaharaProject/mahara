@@ -145,4 +145,9 @@ $smarty->assign('PAGEHEADING', null);
 $smarty->assign('pagename', $pagename);
 $smarty->assign('url', $urls);
 $smarty->assign('page_content', get_site_page_content($pagename));
+if ($SESSION->get('saml_logout')) {
+    // Allow the template call the iframe breaker
+    $SESSION->set('saml_logout', null);
+    $smarty->assign('saml_logout', true);
+}
 $smarty->display('index.tpl');

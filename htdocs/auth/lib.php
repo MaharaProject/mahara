@@ -2227,6 +2227,14 @@ function auth_clean_expired_password_requests() {
         WHERE expiry < ?', array(db_format_timestamp(time())));
 }
 
+/**
+ * Removes self-migration requests that were not completed in the allowed amount of time
+ */
+function auth_clean_expired_migrations() {
+    delete_records_sql('DELETE FROM {usr_institution_migrate}
+        WHERE ctime < ?', array(db_format_timestamp(strtotime('-30 mins'))));
+}
+
 function _email_or_notify($user, $subject, $bodytext, $bodyhtml) {
     try {
         email_user($user, null, $subject, $bodytext, $bodyhtml);

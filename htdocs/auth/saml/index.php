@@ -82,12 +82,17 @@ if (!validateUrlSyntax($wantsurl, 's?H?S?F?E?u-P-a?I?p?f?q?r?')) {
     $wantsurl = $CFG->wwwroot;
 }
 
+$migratecheck = param_variable("migratecheck", false);
+if ($migratecheck) {
+    $SESSION->set('migratecheck', $migratecheck);
+}
+
 // trim off any reference to login and stash
 $SESSION->wantsurl = preg_replace('/\&login$/', '', $wantsurl);
 
 $as = new SimpleSAML\Auth\Simple($sp);
 $idp_entityid = null;
-if (! $as->isAuthenticated()) {
+if (($USER->is_logged_in() && $migratecheck) || !$as->isAuthenticated()) {
     if (param_variable("idpentityid", false)) {
         $idp_entityid = param_variable("idpentityid", false);
     }
@@ -115,7 +120,12 @@ if (! $as->isAuthenticated()) {
 // reinitialise config to pickup idp entityID
 SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
 $as = new SimpleSAML\Auth\Simple('default-sp');
-$as->requireAuth(array('ReturnTo' => get_config('wwwroot') . "auth/saml/index.php"));
+if ($migratecheck) {
+    $as->login(array('ReturnTo' => get_config('wwwroot') . "auth/saml/index.php", 'KeepPost' => FALSE));
+}
+else {
+    $as->requireAuth(array('ReturnTo' => get_config('wwwroot') . "auth/saml/index.php", 'KeepPost' => FALSE));
+}
 
 // ensure that $_SESSION is cleared for simplesamlphp
 if (isset($_SESSION['wantsurl'])) {
@@ -150,6 +160,15 @@ $instance = auth_saml_find_authinstance($saml_attributes);
 // if we don't have an auth instance then this is a serious failure
 if (!$instance) {
     throw new UserNotFoundException(get_string('errorbadinstitution', 'auth.saml'));
+}
+
+if ($SESSION->get('migratecheck')) {
+    $has_access = auth_saml_migrate_check($instance, $saml_attributes);
+    $SESSION->set('migrateidp', null);
+    $SESSION->set('migrateidpkey', null);
+    $SESSION->set('migratecheck', null);
+    $SESSION->set('migrateresponse', $has_access);
+    redirect(get_config('wwwroot') . 'account/migrateinstitution.php');
 }
 
 // stash the existing logged in user - if we have one
@@ -594,4 +613,16 @@ function auth_saml_login_submit(Pieform $form, $values) {
 
     // all happy - carry on now
     redirect('/auth/saml/index.php');
+}
+
+function auth_saml_migrate_check($instance, $saml_attributes) {
+    global $USER, $SESSION;
+
+    $idp = $SESSION->get('migrateidp');
+    $idpattribute = $SESSION->get('migrateidpkey');
+    if (isset($saml_attributes[$idpattribute]) && $saml_attributes[$idpattribute][0] == $idp) {
+        // successfully proved they can log into the IdP so return the saml_attribure array
+        return array('instance' => $instance, 'saml_attributes' => $saml_attributes);
+    }
+    return false;
 }
