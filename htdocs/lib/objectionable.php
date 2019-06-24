@@ -52,7 +52,7 @@ function objection_form_submit(Pieform $form, $values) {
     global $USER, $view, $artefact;
 
     if (!$USER->is_logged_in()) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
 
     require_once('activity.php');
@@ -442,7 +442,7 @@ function review_form_submit(Pieform $form, $values) {
 
     if (!$USER->is_logged_in() &&
         $USER->get('id') === $view->get_owner_object()->get('owner')) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
 
     require_once('activity.php');

@@ -20,7 +20,7 @@ define('TITLE', get_string('deletetask','artefact.plans'));
 $id = param_integer('id');
 $todelete = new ArtefactTypeTask($id);
 if (!$USER->can_edit_artefact($todelete)) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 $viewid = param_integer('view', 0);
 if ($viewid) {

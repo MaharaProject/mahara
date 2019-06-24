@@ -21,7 +21,7 @@ require_once('group.php');
 define('TITLE', get_string('discussiontopics', 'interaction.forum'));
 
 if (!$USER->is_logged_in()) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 $limit  = param_integer('limit', 10);

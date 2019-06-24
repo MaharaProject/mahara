@@ -5289,7 +5289,7 @@ class View {
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
         if (!group_user_access($groupid)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+            throw new AccessDeniedException();
         }
         $from = '
             FROM {view} v
@@ -5421,7 +5421,7 @@ class View {
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
         if (!group_user_access($groupid)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+            throw new AccessDeniedException();
         }
 
         // Get the count of member and non-member comments for both collections and stand alone pages
@@ -5482,7 +5482,7 @@ class View {
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
         if (!group_user_access($groupid)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+            throw new AccessDeniedException();
         }
 
         // Get the count of member and non-member comments for both collections and stand alone pages
@@ -5670,7 +5670,7 @@ class View {
         require_once(get_config('libroot') . 'group.php');
 
         if (!group_user_access($groupid)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+            throw new AccessDeniedException();
         }
 
         $from = '

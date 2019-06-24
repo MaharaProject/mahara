@@ -26,7 +26,7 @@ $sortoptionidx = param_alpha('sortoption', 'adminfirst');
 define('GROUP', $id);
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 $role = group_user_access($group->id);
