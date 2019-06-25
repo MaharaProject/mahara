@@ -97,12 +97,7 @@
             <td colspan="{$viewcount + $colspan}" class="code">
                 <div class="shortname-container">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>
-                    {for name=foo from=0 to=$option->level step=1}
-                        {if $dwoo.for.foo.index != $option->level}
-                        <span class="matrixindent"></span>
-                        {/if}
-                    {/for}
-                    {$option->shortname}
+                    <span class="matrixindent">{$option->shortname}</span>
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
                         <h3 class="popover-title">{$option->name}</h3>
@@ -118,12 +113,7 @@
             <td class="code">
                 <div class="shortname-container" tabindex="0">
                     <span class="sr-only">{str tag="headerrow" section="module.framework"}</span>
-                    {for name=foo2 from=0 to=$option->level step=1}
-                        {if $dwoo.for.foo2.index != $option->level}
-                        <span class="matrixindent"></span>
-                        {/if}
-                    {/for}
-                    {$option->shortname}
+                    <span class="matrixindent">{$option->shortname}</span>
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
                         <h3 class="popover-title">{$option->name}</h3>
