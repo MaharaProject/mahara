@@ -24,7 +24,7 @@ safe_require('artefact', 'internal');
 
 if (!get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
     // This block type is not installed. The user is not allowed in this form.
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 $id = param_integer('id', 0);
@@ -46,7 +46,7 @@ if ($delete) {
 
     $todelete = new ArtefactTypeSocialprofile($id);
     if (!$USER->can_edit_artefact($todelete)) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
     $deleteform = array(
         'name' => 'deleteprofileform',
@@ -70,7 +70,7 @@ else {
     if ($id > 0) {
         $toedit = new ArtefactTypeSocialprofile($id);
         if (!$USER->can_edit_artefact($toedit)) {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+            throw new AccessDeniedException();
         }
         // Get default values
         $title = $toedit->get('title');

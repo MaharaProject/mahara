@@ -32,7 +32,7 @@ $limit  = param_integer('limit', 10);
 
 $plan = new ArtefactTypePlan($id);
 if (!$USER->can_edit_artefact($plan)) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 

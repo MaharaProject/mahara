@@ -33,7 +33,7 @@ else {
 }
 $artefact = new ArtefactTypePlan($id);
 if (!$USER->can_edit_artefact($artefact)) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 $editform = ArtefactTypePlan::get_form($artefact);
 

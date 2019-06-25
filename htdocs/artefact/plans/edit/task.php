@@ -26,7 +26,7 @@ define('TITLE', get_string('edittask','artefact.plans'));
 $id = param_integer('id');
 $task = new ArtefactTypeTask($id);
 if (!$USER->can_edit_artefact($task)) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 $viewid = param_integer('view', 0);
 if ($viewid) {

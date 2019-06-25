@@ -83,5 +83,5 @@ else if (PluginModuleLti::can_submit_for_grading()) {
     }
 }
 else {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }

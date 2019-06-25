@@ -50,14 +50,14 @@ $viewtoken = null;
 if ($mnettoken) {
     $viewtoken = get_view_from_token($mnettoken, false);
     if (!$viewtoken->viewid) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
     $viewid = $viewtoken->viewid;
 }
 else if ($usertoken) {
     $viewtoken = get_view_from_token($usertoken, true);
     if (!$viewtoken->viewid) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
     $viewid = $viewtoken->viewid;
 }
@@ -100,7 +100,7 @@ if (is_view_suspended($view) && !$is_admin && !$is_owner && !($groupid && $is_gr
 }
 
 if (!can_view_view($view)) {
-    $errorstr = (param_integer('objection', null)) ? get_string('accessdeniedobjection', 'error') : get_string('accessdenied', 'error');
+    $errorstr = (param_integer('objection', null)) ? get_string('accessdeniedobjection', 'error') : '';
     throw new AccessDeniedException($errorstr);
 }
 $institution = $view->get('institution');

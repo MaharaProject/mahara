@@ -43,7 +43,7 @@ else {
     define('CREATEGROUP', true);
 
     if (!group_can_create_groups()) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
 
     $group_data = (object) array(

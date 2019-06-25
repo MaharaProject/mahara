@@ -313,7 +313,7 @@ else {
             serve_file($filepath, $downloadname, 'application/zip', $options);
         }
         else {
-            throw new AccessDeniedException(get_string('accessdenied', 'error'));
+            throw new AccessDeniedException();
         }
     }
     else {

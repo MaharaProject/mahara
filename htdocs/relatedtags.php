@@ -26,8 +26,7 @@ if ($viewid) {
     $view = new View($viewid);
     $owner = $view->get('owner');
     if (!can_view_view($view) || !$owner) {
-        $errorstr = get_string('accessdenied', 'error');
-        throw new AccessDeniedException($errorstr);
+        throw new AccessDeniedException();
     }
     if ($owner == $USER->get('id')) {
         // we are looking at our own stuff so send them to my tags page

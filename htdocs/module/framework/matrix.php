@@ -61,8 +61,7 @@ $firstview = $views['views'][0];
 $view = new View($firstview->id);
 
 if (!can_view_view($view->get('id'))) {
-    $errorstr = get_string('accessdenied', 'error');
-    throw new AccessDeniedException($errorstr);
+    throw new AccessDeniedException();
 }
 $frameworkid = $collection->get('framework');
 $framework = new Framework($frameworkid);

@@ -23,7 +23,7 @@ session_write_close();
 $blockid = param_integer('blockid');
 $block = new BlockInstance($blockid);
 if (!can_view_view($block->get('view'))) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 safe_require_plugin('blocktype', $block->get('blocktype'));

@@ -27,7 +27,7 @@ if ($group = param_integer('group', null)) {
     define('GROUP', $group);
     require_once('group.php');
     if (!group_user_can_edit_views($group, $USER->get('id'))) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
     $groupobj = group_current_group();
     $pageheading = get_string('notesfor', 'artefact.internal', $groupobj->name);
@@ -49,7 +49,7 @@ else if ($institution = param_alpha('institution', null)) {
         $pageheading = get_string('notesfor', 'artefact.internal', $institutionobj->displayname);
     }
     if (!$USER->can_edit_institution($institution)) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
     $where = 'institution = ?';
     $values = array($institution);

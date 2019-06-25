@@ -23,7 +23,7 @@ define('TITLE', get_string('editnote', 'artefact.internal'));
 $note = param_integer('id');
 $artefact = new ArtefactTypeHtml($note);
 if (!$USER->can_edit_artefact($artefact) || $artefact->get('locked')) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 $goto = get_config('wwwroot') . 'artefact/internal/notes.php';

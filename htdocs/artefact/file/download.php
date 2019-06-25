@@ -78,26 +78,26 @@ if ($viewid && $fileid) {
     // been attached to a public comment on the page
     if ($commentid = param_integer('comment', null)) {
         if (!record_exists('artefact_attachment', 'artefact', $commentid, 'attachment', $fileid)) {
-            throw new AccessDeniedException('');
+            throw new AccessDeniedException();
         }
         safe_require('artefact', 'comment');
         $comment = new ArtefactTypeComment($commentid);
         if (!$comment->viewable_in($viewid)) {
-            throw new AccessDeniedException('');
+            throw new AccessDeniedException();
         }
     }
     else if ($artefactok == false && $isembedded && $file instanceof ArtefactTypeImage) {
         // Check if the image is embedded in some text somewhere.
         if (!check_is_embedded_image_visible($fileid, null, array('comment'))) {
-            throw new AccessDeniedException('');
+            throw new AccessDeniedException();
         }
     }
     else if ($artefactok == false) {
-        throw new AccessDeniedException('');
+        throw new AccessDeniedException();
     }
 
     if (!can_view_view($viewid)) {
-        throw new AccessDeniedException('');
+        throw new AccessDeniedException();
     }
 
     if (!($file instanceof ArtefactTypeFile)) {
@@ -156,7 +156,7 @@ else {
                     require_once('view.php');
                     $view = group_get_homepage_view($groupid);
                     if (!can_view_view($view->get('id'))) {
-                        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+                        throw new AccessDeniedException();
                     }
                     $imagevisible = EmbeddedImage::can_see_embedded_image($fileid, 'group', $groupid);
                 }
@@ -166,7 +166,7 @@ else {
                 }
 
                 if (!$imagevisible) {
-                    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+                    throw new AccessDeniedException();
                 }
             }
         }

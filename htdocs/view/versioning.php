@@ -24,7 +24,7 @@ $offset = param_integer('offset', 0);
 
 $view = param_integer('view');
 if (!can_view_view($view)) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 
 $fromdate = param_variable('fromdate', '-3 months');

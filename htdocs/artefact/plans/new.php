@@ -33,7 +33,7 @@ if ($id) {
     define('SECTION_PAGE', 'newtask');
     $plan = new ArtefactTypePlan($id);
     if (!$USER->can_edit_artefact($plan)) {
-        throw new AccessDeniedException(get_string('accessdenied', 'error'));
+        throw new AccessDeniedException();
     }
     define('TITLE', get_string('newtask','artefact.plans'));
     $form = ArtefactTypeTask::get_form($id);

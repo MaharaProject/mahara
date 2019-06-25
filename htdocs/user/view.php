@@ -90,7 +90,7 @@ $viewid = $view->get('id');
 $restrictedview = !can_view_view($viewid);
 // Logged-out users can't see any details, though
 if ($restrictedview && !$USER->is_logged_in()) {
-    throw new AccessDeniedException(get_string('accessdenied', 'error'));
+    throw new AccessDeniedException();
 }
 if (!$restrictedview) {
     $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
