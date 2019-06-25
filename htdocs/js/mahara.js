@@ -1217,3 +1217,25 @@ $(function() {
         showmatchall();
     });
 });
+
+/**
+ * Offset html anchors for fixed header
+ */
+jQuery(function($) {
+    $(document).on('click', 'a', function(event) {
+        if ($(this.hash).length && location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')) {
+            event.preventDefault();
+            var target = $(this.hash);
+            var headerheight = 0;
+            if ($('#header-content').length) {
+                headerheight = $('#header-content').offset().top;
+            }
+            else if ($('.container.main-content').length) {
+                headerheight = $('.container.main-content').offset().top;
+            }
+            $('html, body').animate({
+                scrollTop: target.offset().top - headerheight
+            }, 500);
+        }
+    });
+});

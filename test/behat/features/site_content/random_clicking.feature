@@ -14,6 +14,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I choose "Profile" from user menu
     # Checking About me tabs
     And I follow "Contact information"
+    And I scroll to the center of id "profileform"
     And I follow "Social media"
     And I follow "General"
     And I follow "About me"
