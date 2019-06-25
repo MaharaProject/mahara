@@ -91,6 +91,7 @@ Scenario: Create users by csv (Bug 1426983)
   And I follow "Contact information"
   And the "Town" field should contain "Stewarts River"
   And the "Mobile phone" field should contain "0491 570 110"
+  And I scroll to the center of id "profileform"
   And I follow "General"
   And the "Occupation" field should contain "Hairdresser"
   And I log out
