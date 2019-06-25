@@ -754,6 +754,12 @@ class HtmlExportOutputFilter {
             $html
         );
 
+        // Tags
+        $html = preg_replace_callback(
+            '#<a[^>]+href="' . $wwwroot . 'tags.php\?tag=.*?">(.*?)<\/a>#',
+            array($this, 'replace_tag_link'),
+            $html
+        );
         return $html;
     }
 
@@ -917,6 +923,14 @@ class HtmlExportOutputFilter {
             '/static/' . $file
         );
         return $this->basepath . '/static/' . $file;
+    }
+
+    /**
+     * Callback to replace links to tags static text in
+     * the HTML export
+     */
+    function replace_tag_link($matches) {
+        return $matches[1];
     }
 
     /**
