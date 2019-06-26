@@ -95,8 +95,8 @@ else {
 
 $start = param_variable('start', null);
 $end = param_variable('end', null);
-$start = $start ? format_date(strtotime($start), 'strftimew3cdate') : null;
-$end = $end ? format_date(strtotime($end), 'strftimew3cdate') : null;
+$start = $start ? format_date(strtotime(str_replace('/', '-', $start)), 'strftimew3cdate') : null;
+$end = $end ? format_date(strtotime(str_replace('/', '-', $end)), 'strftimew3cdate') : null;
 
 $activecolumns = $SESSION->get('columnsforstats');
 $activecolumns = !empty($activecolumns) ? $activecolumns : array();
