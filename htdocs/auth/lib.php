@@ -2923,12 +2923,13 @@ function auth_register_submit(Pieform $form, $values) {
             foreach ($admins as $admin) {
                 $adminuser = new User();
                 $adminuser->find_by_id($admin);
+                $ownerlang = get_user_language($adminuser->get('id'));
                 email_user($adminuser, null,
-                    get_string('pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
-                    get_string('pendingregistrationadminemailtext', 'auth.internal',
+                    get_string_from_language($ownerlang, 'pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
+                    get_string_from_language($ownerlang, 'pendingregistrationadminemailtext', 'auth.internal',
                         $adminuser->firstname, $institution->displayname, $pendingregistrationslink,
                         $expirystring, $fullname, $values['email'], $values['reason'], get_config('sitename')),
-                    get_string('pendingregistrationadminemailhtml', 'auth.internal',
+                    get_string_from_language($ownerlang, 'pendingregistrationadminemailhtml', 'auth.internal',
                         $adminuser->firstname, $institution->displayname, $pendingregistrationslink, $pendingregistrationslink,
                         $expirystring, $fullname, $values['email'], $values['reason'], get_config('sitename'))
                     );
