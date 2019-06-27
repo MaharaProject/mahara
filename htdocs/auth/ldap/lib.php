@@ -1149,6 +1149,9 @@ class AuthLdap extends Auth {
         }
         log_info('LDAP users found : ' . $nbldapusers);
 
+        // Need to check if this LDAP instance is the parent of an authentication that uses the auth_remote_user table.
+        $requires_remote_username = $this->needs_remote_username();
+
         try {
             $nbupdated = $nbcreated = $nbsuspended = $nbdeleted = $nbignored = $nbpresents = $nbunsuspended = $nberrors = 0;
 
@@ -1167,33 +1170,41 @@ class AuthLdap extends Auth {
                 log_info('user auto-update disabled');
             }
             else {
-                // users to update (known both in LDAP and Mahara usr table)
+                // users to update
+                if ($requires_remote_username) {
+                    $joinsql = ' INNER JOIN {auth_remote_user} aru
+                                     ON u.id = aru.localusr
+                                 INNER JOIN {auth_ldap_extusers_temp} e
+                                     ON aru.remoteusername = e.extusername';
+                }
+                else {
+                    $joinsql = ' INNER JOIN {auth_ldap_extusers_temp} e
+                                     ON u.username = e.extusername';
+                }
                 $sql = "
-                    select
-                        u.id as id,
-                        u.username as username,
-                        u.suspendedreason as suspendedreason,
-                        u.firstname as dbfirstname,
-                        u.lastname as dblastname,
-                        u.email as dbemail,
-                        u.studentid as dbstudentid,
-                        u.preferredname as dbpreferredname,
-                        e.firstname as ldapfirstname,
-                        e.lastname as ldaplastname,
-                        e.email as ldapemail,
-                        e.studentid as ldapstudentid,
-                        e.preferredname as ldappreferredname
-                    from
-                        {usr} u
-                        inner join {auth_ldap_extusers_temp} e
-                            on u.username = e.extusername
-                    where
+                    SELECT
+                        u.id AS id,
+                        u.username AS username,
+                        u.suspendedreason AS suspendedreason,
+                        u.firstname AS dbfirstname,
+                        u.lastname AS dblastname,
+                        u.email AS dbemail,
+                        u.studentid AS dbstudentid,
+                        u.preferredname AS dbpreferredname,
+                        e.firstname AS ldapfirstname,
+                        e.lastname AS ldaplastname,
+                        e.email AS ldapemail,
+                        e.studentid AS ldapstudentid,
+                        e.preferredname AS ldappreferredname
+                    FROM
+                        {usr} u " . $joinsql . "
+                    WHERE
                         u.deleted = 0
-                        and u.authinstance = ?
-                    order by u.username
-                ";
+                        AND u.authinstance = ?
+                    ORDER BY u.username";
+                $params = array($this->instanceid);
 
-                $rs = get_recordset_sql($sql, array($this->instanceid));
+                $rs = get_recordset_sql($sql, $params);
                 log_info($rs->RecordCount() . ' users known to Mahara ');
                 while ($record = $rs->FetchRow()) {
                     $nbpresents++;
@@ -1244,19 +1255,28 @@ class AuthLdap extends Auth {
                 log_info('user auto-suspend/delete disabled');
             }
             else {
-                //users to delete /suspend
+                // users to delete / suspend
+                if ($requires_remote_username) {
+                    $joinsql = "INNER JOIN {auth_remote_user} aru
+                                  ON u.id = aru.localusr
+                                LEFT JOIN {auth_ldap_extusers_temp} e
+                                  ON e.extusername = aru.remoteusername";
+                }
+                else {
+                    $joinsql = "LEFT JOIN {auth_ldap_extusers_temp} e
+                                  ON e.extusername = u.username";
+                }
                 $sql = "
                     SELECT u.id, u.username, u.suspendedreason
                     FROM
-                        {usr} u
-                        LEFT JOIN {auth_ldap_extusers_temp} e
-                        ON e.extusername = u.username
+                        {usr} u " . $joinsql . "
                     WHERE
                         u.authinstance = ?
                         AND u.deleted = 0
                         AND e.extusername IS NULL
                     ORDER BY u.username ASC";
-                $rs = get_recordset_sql($sql, array($this->instanceid));
+                $params = array($this->instanceid);
+                $rs = get_recordset_sql($sql, $params);
                 log_info($rs->RecordCount() . ' users no longer in LDAP ');
 
                 while ($record = $rs->FetchRow()) {
@@ -1292,6 +1312,16 @@ class AuthLdap extends Auth {
             }
             else {
                 // users to create
+                if ($requires_remote_username) {
+                    $joinsql = "LEFT JOIN {auth_remote_user} aru
+                                  ON e.extusername = aru.remoteusername
+                                LEFT JOIN {usr} u
+                                  ON u.id = aru.localusr";
+                }
+                else {
+                    $joinsql = "LEFT JOIN {usr} u
+                                  ON e.extusername = u.username";
+                }
                 $sql = '
                         SELECT
                             e.extusername,
@@ -1302,11 +1332,9 @@ class AuthLdap extends Auth {
                             e.preferredname
                         FROM
                             {auth_ldap_extusers_temp} e
-                            LEFT JOIN {usr} u
-                            ON e.extusername = u.username
+                            " . $sjoinsql . "
                         WHERE u.id IS NULL
                         ORDER BY e.extusername';
-
                 $rs = get_recordset_sql($sql);
                 log_info($rs->RecordCount() . ' LDAP users unknown to Mahara  ');
                 while ($record = $rs->FetchRow()) {
