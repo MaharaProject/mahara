@@ -1346,6 +1346,7 @@ $string['cli_langpack_backup_failed'] = '*** WARNING *** Unable to make backup o
 $string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in Mahara itself. You can set special lang strings in local/lang/.';
 $string['cli_langpack_extract_done'] = 'Copied new "%s" langpack into place';
 $string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s". Reason: %s';
+$string['cli_langpack_ignore'] = 'Langpack "%s" is already current so will skip updating';
 $string['cli_langpack_info'] = 'To update your language packs via the command line.
 You can:
 1) Install or update langpacks by listing the languages by their code, e.g. de = German, fr = French:
