@@ -863,3 +863,8 @@ a.online-users {
     margin-top: -11px;
     margin-bottom: 0;
 }
+
+// Used to stop dropdown being covered by the button
+.controls .btn-group {
+    z-index: 1;
+}
