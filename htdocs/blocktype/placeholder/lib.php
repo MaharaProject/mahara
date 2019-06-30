@@ -25,6 +25,18 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
         return array('shortcut' => 500);
     }
 
+    public static function is_active() {
+        return get_field('blocktype_installed', 'active', 'name', 'placeholder');
+    }
+
+    /**
+     * We want this blocktype to be the default blocktype so we
+     * will prevent it being disabled.
+     */
+    public static function can_be_disabled() {
+        return false;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER, $THEME;
         $configdata = $instance->get('configdata');

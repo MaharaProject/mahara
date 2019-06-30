@@ -32,7 +32,6 @@ Scenario:
   And I click on "Show more"
   And I click on "Navigation" in the "Content types" property
   And I select "Collection UserA_02" from "Collection"
-  And I click on "Set a block title"
   And I set the field "Block title" to "Nav for collection B"
   And I enable the switch "Add to all pages"
   And I select "Automatically retract" from "Retractable"
