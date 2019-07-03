@@ -407,35 +407,19 @@ class ArtefactTypePeerassessment extends ArtefactType {
         else {
             $where = 'pa.view = ? ';
 
-            // If the signoff block is also present on the page then we restrict things differently
-            $withsignoff = record_exists('block_instance', 'view', $viewid, 'blocktype', 'signoff');
-            if ($withsignoff) {
-                // If the view is signed off, select public assessments
-                // or if viewing as page owner, select public assessments
-                // or if viewing as assessment author, select assessments owned by author
-                $where.= 'AND ((vsv.signoff = 1 AND pa.private = 0) ';
-                $where.= '    OR (a.author = ?)';
-                $where.= '    OR (pa.private = 0 AND a.owner = ?))';
+            // select assessments that are published
+            // or select assessments where the user is the author, published or not
+            $where.= 'AND ( (pa.private = 0) ';
+            $where.= '    OR (a.author = ?))';
 
-                $values = array($viewid, $userid, $userid, $block);
-                $joinsignoff = ' JOIN {view_signoff_verify} vsv ON vsv.view = pa.view ';
-            }
-            else {
-                // select assessments that are published
-                // or select assessments where the user is the author, published or not
-                $where.= 'AND ( (pa.private = 0) ';
-                $where.= '    OR (a.author = ?))';
-
-                $values = array($viewid, $userid, $block);
-                $joinsignoff = '';
-            }
+            $values = array($viewid, $userid, $block);
 
             $result->count = count_records_sql('
                 SELECT COUNT(*)
                 FROM
                     {artefact} a
                     JOIN {artefact_peer_assessment} pa
-                        ON a.id = pa.assessment' . $joinsignoff . '
+                        ON a.id = pa.assessment
                     LEFT JOIN {artefact} p
                         ON a.parent = p.id
                 WHERE ' . $where . '
@@ -460,7 +444,6 @@ class ArtefactTypePeerassessment extends ArtefactType {
                         $ids = get_column_sql('
                                 SELECT a.id
                                 FROM {artefact} a JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
-                                ' . $joinsignoff . '
                                 LEFT JOIN {artefact} p ON a.parent = p.id
                                 WHERE ' . $where . '
                                 AND pa.block = ?
@@ -491,7 +474,6 @@ class ArtefactTypePeerassessment extends ArtefactType {
                         u.deleted, u.profileicon, u.urlid, p.id AS parent, p.author AS parentauthor
                     FROM {artefact} a
                         INNER JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
-                        ' . $joinsignoff . '
                         LEFT JOIN {artefact} p
                             ON a.parent = p.id
                         LEFT JOIN {usr} u ON a.author = u.id
