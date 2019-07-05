@@ -1629,7 +1629,7 @@ JS;
     public function i_should_see_images_block($blocktitle) {
         // Find the block.
         $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
                          " and contains(h3, " . $blocktitleliteral . ")]//img";
         // Wait until it finds the text inside the block title.
@@ -1689,7 +1689,7 @@ JS;
         // Find the block.
         $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
         $textliteral = $this->escaper->escapeLiteral($text);
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
                          " and contains(h3, " . $blocktitleliteral . ")]" .
                      "//div[contains(normalize-space(.), " . $textliteral . ")]";
@@ -1732,7 +1732,7 @@ JS;
     public function i_should_not_see_images_block($blocktitle) {
         // Find the block.
         $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
                          " and contains(h3, " . $blocktitleliteral . ")]" .
                          "[count(descendant::img) = 0]";
@@ -1776,7 +1776,7 @@ JS;
         // Find the block.
         $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
         $textliteral = $this->escaper->escapeLiteral($text);
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' column-content ')]" .
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
                          " and contains(h3, " . $blocktitleliteral . ")]" .
                      "//div[count(descendant::*[contains(normalize-space(.), " . $textliteral . ")]) = 0]";

@@ -29,6 +29,8 @@ Scenario:
     And I follow "File"
     And I attach the file "test_html.html" to "File"
     And I press "Save"
+    #give time for the block to resize
+    And I wait "1" seconds
     And I display the page
     #check content of HTML block shows content, but not html tags
     And I should see "Mahara does HTML"

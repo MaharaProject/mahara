@@ -2584,9 +2584,6 @@ class View {
                 'title'      => $newtitle,
                 'view'       => $this->get('id'),
                 'view_obj'   => $this,
-                'row'        => $currentblock->row,
-                'column'     => $currentblock->column,
-                'order'      => $currentblock->order,
             )
         );
         $result = array('blockid' => $currentblock->id,
@@ -2651,9 +2648,6 @@ class View {
                 'title'      => $oldtitle,
                 'view'       => $this->get('id'),
                 'view_obj'   => $this,
-                'row'        => $currentblock->row,
-                'column'     => $currentblock->column,
-                'order'      => $currentblock->order,
             )
         );
         $result = array('blockid' => $currentblock->id,

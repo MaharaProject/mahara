@@ -59,6 +59,7 @@ Background:
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"
+    And I click on "Show more"
     And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
@@ -69,6 +70,7 @@ Background:
     # user adds sign off block
     When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
     And I click on "Show more"
     And I click on "Show more"
     And I click on "Sign-off" in the "Content types" property
@@ -82,6 +84,7 @@ Background:
     # user adds sign off block
     When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
     And I click on "Show more"
     And I click on "Show more"
     And I click on "Sign-off" in the "Content types" property

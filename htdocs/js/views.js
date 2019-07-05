@@ -311,6 +311,8 @@
         };
 
         $('.grid-stack').on('change', function(event, items) {
+            event.stopPropagation();
+            event.preventDefault();
             serializeWidgetMap(items);
         })
 
@@ -445,22 +447,36 @@
 
         $('.blocktype-drag').draggable({
             start: function(event, ui) {
+                $(this).attr('data-gs-width', 4);
+                $(this).attr('data-gs-height', 3);
             },
             helper: function(event) {
-                var original = $(this),
-                    helper = $("<div />").append(original.clone());
-                helper.find('label span').removeClass('hidden');
-                helper.children().each(function(index) {
-                    // Set helper cell sizes to match at least the original sizes
-                    $(this).css('min-width', '200px');
-                });
+              var original = $(this),
+                  helper = $("<div />").append(original.clone());
+              helper.find('label span').removeClass('hidden');
+              helper.children().each(function(index) {
+                  // Set helper cell sizes to match at least the original sizes
+                  $(this).css('min-width', '200px');
+              });
 
-                return helper;
+              // show dotted line with correct dimensions when dragging placeholder block
+              var node = {width: 4, height: 3};
+              $(this).data('_gridstack_node', node);
+
+              return helper;
             },
-            connectToSortable: '.js-col-row .column .column-content',
+            connectToSortable: '.grid-stack',
             stop: function(event, ui) {
+                var placeholder = $('.grid-stack').children().last(),
+                    x = placeholder.attr('data-gs-x'),
+                    y = placeholder.attr('data-gs-y');
+
+                $(placeholder).remove();
+
+                $('.grid-stack .blocktype-drag').removeClass('btn btn-primary');
+                addNewBlock({'positionx': x, 'positiony': y}, 'placeholder');
             },
-            appendTo: 'body'
+            appendTo: 'body',
         });
 
         $('.blocktype-drag').off('click keydown'); // remove old event handlers
@@ -477,26 +493,26 @@
 
     var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
     function startAddBlock(element) {
-            var addblockdialog = $('#addblock');
-            addblockdialog.modal('show');
-            if (!addblockstarted) {
-                addblockstarted = true;
-                addblockdialog.one('dialog.end', function(event, options) {
-                    if (options.saved) {
-                        addNewBlock(options.position, element.find('.blocktype-radio').val());
-                    }
-                    else {
-                        element.trigger("focus");
-                    }
-                });
+        var addblockdialog = $('#addblock');
+        addblockdialog.modal('show');
+        if (!addblockstarted) {
+            addblockstarted = true;
+            addblockdialog.one('dialog.end', function(event, options) {
+                if (options.saved) {
+                    addNewBlock(options.position, element.find('.blocktype-radio').val());
+                }
+                else {
+                    element.trigger("focus");
+                }
+            });
 
-                addblockdialog.find('h4.modal-title').text(get_string('addnewblock', 'view', element.text()));
-                addblockdialog.find('.block-inner').removeClass('d-none');
+            addblockdialog.find('h4.modal-title').text(get_string('addnewblock', 'view', element.text()));
+            addblockdialog.find('.block-inner').removeClass('d-none');
 
-                addblockdialog.find('.deletebutton').trigger("focus");
-                keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
-            }
+            addblockdialog.find('.deletebutton').trigger("focus");
+            keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
         }
+    }
 
     function addNewBlock(whereTo, blocktype) {
         addblockstarted = false;
@@ -516,8 +532,16 @@
             var grid = $('.grid-stack').data('gridstack');
             pd['positiony'] = grid.grid.getGridHeight();
         }
+        else {
+            if (typeof(whereTo['positionx']) !== 'undefined') {
+                pd['positionx'] = whereTo['positionx'];
+            }
+            if (typeof(whereTo['positiony']) !== 'undefined') {
+                pd['positiony'] = whereTo['positiony'];
+            }
+        }
 
-        pd['action_addblocktype_positionx_' + pd['positionx'] + '_positiony_' + pd['positiony'] + '_width_' + '3'+ '_height_' + '3'] = true;
+        pd['action_addblocktype_positionx_' + pd['positionx'] + '_positiony_' + pd['positiony'] + '_width_' + '4'+ '_height_' + '3'] = true;
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
             var div = $('<div>').html(data.data.display.html),
                 blockinstance = div.find('div.grid-stack-item'),
@@ -531,7 +555,7 @@
             addBlockCss(data.css);
 
             var grid = $('.grid-stack').data('gridstack');
-            dimensions.width = 3;
+            dimensions.width = 4;
             dimensions.height = 3;
             addNewWidget(blockinstance, blockId, dimensions, grid, null);
 

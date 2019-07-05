@@ -171,6 +171,7 @@ if ($newlayout = $view->uses_new_layout()) {
             verticalMargin: 10,
             float: true, //to place a block in any part of the page and the position will remain fixed
             resizable: false,
+            acceptWidgets: '.blocktype-drag',
         };
         var grid = $('.grid-stack');
         grid.gridstack(options);
