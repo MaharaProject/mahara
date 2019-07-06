@@ -265,7 +265,7 @@ var FileBrowser = (function($) {
     this.hide_edit_form = function () {
 
         var editrow = $('#' + self.id + '_edit_row');
-        this.clear_create_folder_messages();
+        self.clear_create_folder_messages();
         if (!editrow.hasClass('d-none')) {
             if ((typeof formchangemanager !== 'undefined') && !formchangemanager.confirmLeavingForm()) {
                 return false;
@@ -716,7 +716,7 @@ var FileBrowser = (function($) {
             });
         }
         $('#' + self.id + '_selectlist button.unselect').each(function () {
-            this.clear_create_folder_messages();
+            self.clear_create_folder_messages();
             $(this).on('click', self.unselect);
         });
     };
