@@ -310,7 +310,7 @@ jQuery(function($) {
         // keyESCAPE constant is used since jQuerty.ui is not loaded on all pages
         var keyESCAPE = 27;
         if (
-            (event.type=='click' && !$(event.target).closest('.navbar-toggle').length) ||
+            (event.type == 'click' && !($(event.target).closest('.navbar-toggle, .navbar-form').length || event.which == 3)) ||
             (event.type == 'keyup' && event.keyCode == keyESCAPE)
         ) {
             $('.navbar-collapse.collapse.show').collapse('hide');
