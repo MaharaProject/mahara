@@ -840,7 +840,9 @@ class ArtefactTypeEmail extends ArtefactTypeProfileField {
                         'artefact'  => $this->id,
                     )
                 );
-                update_record('usr', (object)array('email' => $this->title, 'id' => $this->owner));
+                if (!$principal) {
+                    update_record('usr', (object)array('email' => $this->title, 'id' => $this->owner));
+                }
             }
         }
     }
