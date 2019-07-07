@@ -903,6 +903,25 @@ function generate_email_processing_address($userid, $userto, $type='B') {
 }
 
 /**
+* Case insensitive checking for emails to existing db
+* @return bool if the emails exists or not
+*/
+function check_email_exist($email, $ownerid = 0) {
+    // get existing users 'usr','email'
+    $resultarray = get_column_sql("SELECT email FROM {usr} WHERE id != ?", array($ownerid));
+    $resultarray = array_merge($resultarray, get_column_sql("SELECT email FROM {artefact_internal_profile_email} WHERE owner != ?", array($ownerid)));
+    $resultarray = array_merge($resultarray, get_column_sql("SELECT title FROM {artefact} WHERE artefacttype = ? AND owner != ?", array('email', $ownerid)));
+    // get pending(approval required)/registered(no approval but need completion setup for new institution users ('user_registration', 'email')
+    $resultarray = array_merge($resultarray, get_column('usr_registration','email'));
+    foreach ($resultarray as $ind => $e) {
+        if (strtolower($e) == strtolower($email)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Check whether an email account is over the site-wide bounce threshold.
  * If the user is over threshold, then e-mail is disabled for their
  * account, and they are sent a notification to notify them of the change.

@@ -426,14 +426,7 @@ function edituser_site_validate(Pieform $form, $values) {
                 $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
             }
 
-            if (record_exists_sql('
-                    SELECT id
-                    FROM {usr}
-                    WHERE deleted != 1 AND email = ? AND id != ?', array($email, $user->id))
-                || record_exists_sql('
-                    SELECT owner
-                    FROM {artefact_internal_profile_email}
-                    WHERE email = ? AND owner != ?', array($email, $user->id))) {
+            if (check_email_exists($email, $user->id)) {
                 $form->set_error('email', get_string('emailalreadytakenbyothers', 'auth.internal'));
             }
         }

@@ -2785,10 +2785,14 @@ function auth_register_validate(Pieform $form, $values) {
     }
 
     // The e-mail address cannot already be in the system
-    if (!$form->get_error('email')
-        && (record_exists('usr', 'email', $values['email'])
-        || record_exists('artefact_internal_profile_email', 'email', $values['email']))) {
-        $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
+    if (!$form->get_error('email')) {
+        if (!$form->get_error('email') && empty($values['email'])) {
+            $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
+        }
+
+        if (check_email_exist($values['email'])) {
+            $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
+        }
     }
 
     $institution = get_record_sql('
