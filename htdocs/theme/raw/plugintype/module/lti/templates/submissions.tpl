@@ -17,7 +17,11 @@
         <tr>
             <td>{$s->user->firstname}</td>
             <td>{$s->user->lastname}</td>
-            <td>{$s->name}</td>
+            {if is_null($s->grade)}
+                <td><a href="{$WWWROOT}./module/lti/graderedirect.php?collectionid={$s->collectionid}&viewid={$s->viewid}">{$s->name}</a></td>
+            {else}
+                <td>{$s->name}</td>
+            {/if}
             <td>{$s->timesubmitted|strtotime|format_date}</td>
             <td>{$s->grade|default:"-"}</td>
             <td>{if $s->timegraded}{$s->timegraded|strtotime|format_date}{else}-{/if}</td>
