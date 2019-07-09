@@ -70,7 +70,7 @@ if ($userinstitutions) {
 }
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-university');
+setpageicon($smarty, 'icon-bell');
 
 $smarty->assign('users', $users);
 $smarty->assign('types', $types);

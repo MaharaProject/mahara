@@ -95,7 +95,7 @@ function editsitepage_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('discardpageedits')));
-setpageicon($smarty, 'icon-pencil');
+setpageicon($smarty, 'icon-pencil-alt');
 
 $smarty->assign('pageeditform', $form);
 $smarty->display('admin/site/pages.tpl');

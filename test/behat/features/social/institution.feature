@@ -37,7 +37,7 @@ Feature: Mahara user permissions in institutions
     And I follow "Share" in the "Toolbar buttons" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
-    And I choose "User search" in "Users" from administration menu
+    And I choose "User search" in "People" from administration menu
     And I follow "UserB"
     And I press "Add user to institution"
     Then I should see "User added to institution \"Institution Two\"."

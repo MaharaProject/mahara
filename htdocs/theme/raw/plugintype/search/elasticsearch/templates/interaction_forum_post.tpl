@@ -1,12 +1,12 @@
 {if $record->deleted}
     <h3 class="title list-group-item-heading text-inline">
-        <span class="icon icon-commenting-o left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-regular icon-comment-dots left" role="presentation" aria-hidden="true"></span>
         {$record->subject}
     </h3>
     <span class="artefacttype text-midtone">({str tag=deletedforumpost section=search.elasticsearch})</span>
 {else}
     <h3 class="title list-group-item-heading text-inline">
-        <span class="icon icon-commenting-o left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-regular icon-comment-dots left" role="presentation" aria-hidden="true"></span>
         <a href="{$WWWROOT}interaction/forum/topic.php?id={$record->topic}#post{$record->id}">
             {$record->subject}
         </a>

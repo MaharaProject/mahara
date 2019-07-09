@@ -254,7 +254,7 @@ $institutionselector = pieform(array(
 $form = webservice_client_connections($institution);
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-plug');
+setpageicon($smarty, 'icon-project-diagram');
 safe_require('auth', 'webservice');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('institutionselector', $institutionselector);

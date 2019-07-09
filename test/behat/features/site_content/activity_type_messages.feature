@@ -13,7 +13,7 @@ Background:
 Scenario: Selection options to filter messages (Bug 1433342)
  # Log in as "Admin" user
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "Users" from administration menu
+ And I choose "People" from administration menu
  And I follow "Angela"
  And I follow "Send message"
  And I fill in the following:

@@ -101,7 +101,7 @@ foreach ($iframesources as $url => $name) {
                     'type'         => 'button',
                     'class'        => 'btn-secondary btn-sm',
                     'usebuttontag' => true,
-                    'value'          => '<span class="icon icon-trash icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                    'value'          => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
 
                     'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                 ),
@@ -261,7 +261,7 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-regular icon-file-code');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);

@@ -18,7 +18,7 @@ Background:
 
 Scenario: Verifying user's Authentication Method only displays Institutions they are associated with
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "User search" in "Users" from administration menu
+    And I choose "User search" in "People" from administration menu
     When I follow "Angela"
     And I follow "Account settings"
     Then I should see "Authentication method"
@@ -28,7 +28,7 @@ Scenario: Verifying user's Authentication Method only displays Institutions they
 
 Scenario: Accessing user reports
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "User search" in "Users" from administration menu
+    And I choose "User search" in "People" from administration menu
     And I check "selectusers_2"
     And I check "selectusers_3"
     And I press "Get reports"

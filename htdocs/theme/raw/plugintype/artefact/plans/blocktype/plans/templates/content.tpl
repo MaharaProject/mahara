@@ -6,7 +6,7 @@
     {if $editing}
         <div class="float-right btn-group">
             <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/edit/index.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
-                <span class="icon icon-pencil"></span>
+                <span class="icon icon-pencil-alt"></span>
                 <span class="sr-only">{str tag='edit'}</span>
             </a>
             <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/new.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=addtaskspecific section='artefact.plans' arg1=$plan.title)|escape:html|safe}">
@@ -14,7 +14,7 @@
                 <span class="sr-only">{str tag='addtask' section='artefact.plans'}</span>
             </a>
             <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/delete/index.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=deletespecific arg1=$plan.title)|escape:html|safe}">
-                <span class="icon icon-trash text-danger"></span>
+                <span class="icon icon-trash-alt text-danger"></span>
                 <span class="sr-only">{str tag='Delete'}</span>
             </a>
         </div>

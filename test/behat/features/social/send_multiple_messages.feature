@@ -46,7 +46,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I log out
    #Sending friend requests from student to admin (Bug 1440908)
    Then I log in as "admin" with password "Kupuh1pa!"
-   And I choose "User search" in "Users" from administration menu
+   And I choose "User search" in "People" from administration menu
    And I follow "Bob"
    And I follow "Log in as UserB"
    And I follow "Admin User"

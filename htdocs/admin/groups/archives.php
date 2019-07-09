@@ -56,7 +56,7 @@ jQuery(function() {
 EOF;
 
 $smarty = smarty(array('adminusersearch', 'adminexportqueue','paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
-setpageicon($smarty, 'icon-users');
+setpageicon($smarty, 'icon-archive');
 $smarty->assign('search', $search);
 $smarty->assign('limit', $limit);
 $smarty->assign('institutions', !empty($institutions) ? $institutions : array());

@@ -1,5 +1,15 @@
 // Extra icons to fit db defiend tyopes (cf pagebuilder)
-.icon {
+.icon { //fontawesome solid is the default
+    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
+    font-weight: 900;
+    &.icon-regular {
+        font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free" !important;
+        font-weight: 400;
+    }
+    &.icon-brand {
+        font-family: "Font Awesome 5 Brands Regular", "Font Awesome 5 Free" !important;
+        font-weight: 400;
+    }
     &.right {
         padding-left: 5px;
     }
@@ -19,69 +29,69 @@
 }
 
 .icon-annotation:before {
-    content: $fa-var-pencil-square-o;
+    content: fa-content($fa-var-pen-square);
 }
 .icon-peerassessment:before {
-    content: $fa-var-list-alt;
+    content: fa-content($fa-var-list-alt);
 }
 .icon-signoff:before {
-    content: $fa-var-check-square-o;
+    content: fa-content($fa-var-check-square);
 }
 .icon-fileimagevideo:before,
 .icon-video:before {
-    content: $fa-var-film;
+    content: fa-content($fa-var-film);
 }
 .icon-blog:before {
-    content: $fa-var-pencil;
+    content: fa-content($fa-var-pen);
 }
 
 .icon-general:before,
 .icon-occupation:before {
-    content: $fa-var-briefcase;
+    content: fa-content($fa-var-briefcase);
 }
 
 .icon-internal:before {
-    content: $fa-var-user;
+    content: fa-content($fa-var-user);
 }
 
 .icon-external:before {
-    content: $fa-var-external-link;
+    content: fa-content($fa-var-external-link-alt);
 }
 
 .icon-text:before {
-    content: $fa-var-font;
+    content: fa-content($fa-var-font);
 }
 
 .icon-filedownload:before {
-    content: $fa-var-download;
+    content: fa-content($fa-var-download);
 }
 
 .icon-gallery:before {
-    content: $fa-var-image;
+    content: fa-content($fa-var-image);
 }
 
 .icon-internalmedia:before {
-    content: $fa-var-video-camera;
+    content: fa-content($fa-var-video);
 }
 
 .icon-pdf:before {
-    content: $fa-var-file-pdf-o;
+    content: fa-content($fa-var-file-pdf);
 }
 
 .icon-blogaddress:before,
 .icon-officialwebsite:before,
 .icon-personalwebsite:before {
-    content: $fa-var-rss;
+    content: fa-content($fa-var-rss);
 }
 
 .icon-html:before {
-    content: $fa-var-code;
+    content: fa-content($fa-var-code);
 }
 
 .icon-view:before,
 .icon-myviews:before,
 .icon-groupviews:before {
-    content: $fa-var-file;
+    content: fa-content($fa-var-file);
 }
 
 .icon-personalskill:before,
@@ -97,146 +107,146 @@
 .icon-educationhistory:before,
 .icon-interest:before,
 .icon-blogpost:before {
-    content: $fa-var-file-text;
+    content: fa-content($fa-var-file-alt);
 }
 
 .icon-certification:before {
-    content: $fa-var-certificate;
+    content: fa-content($fa-var-certificate);
 }
 
 .icon-recentposts:before {
-    content: $fa-var-clock-o;
+    content: fa-content($fa-var-clock);
 }
 
 .icon-taggedposts:before {
-    content: $fa-var-tags;
+    content: fa-content($fa-var-tags);
 }
 
 .icon-creativecommons:before {
-    content: $fa-var-creative-commons;
+    content: fa-content($fa-var-creative-commons);
 }
 
 .icon-navigation:before {
-    content: $fa-var-location-arrow;
+    content: fa-content($fa-var-location-arrow);
 }
 
 .icon-newviews:before {
-    content: $fa-var-file;
+    content: fa-content($fa-var-file);
 }
 
 .icon-plans:before {
-    content: $fa-var-map-o;
+    content: fa-content($fa-var-map);
 }
 
 .icon-tasks:before {
-    content: $fa-var-tasks;
+    content: fa-content($fa-var-tasks);
 }
 
 .icon-recentforumposts:before {
-    content: $fa-var-comments;
+    content: fa-content($fa-var-comments);
 }
 
 .icon-textbox:before {
-    content: $fa-var-pencil-square-o;
+    content: fa-content($fa-var-pen-square);
 }
 
 .icon-watchlist:before {
-    content: $fa-var-eye;
+    content: fa-content($fa-var-eye);
 }
 
 .icon-groupinfo:before,
 .icon-profileinfo:before {
-    content: $fa-var-info;
+    content: fa-content($fa-var-info);
 }
 
 .icon-socialprofile:before {
-    content: $fa-var-thumbs-up;
+    content: fa-content($fa-var-thumbs-up);
 }
 
 .icon-entireresume:before {
-    content: $fa-var-star;
+    content: fa-content($fa-var-star);
 }
 
 .icon-resumefield:before {
-    content: $fa-var-star-half-o;
+    content: fa-content($fa-var-star-half);
 }
 
 .icon-myfriends:before {
-    content: $fa-var-user-plus;
+    content: fa-content($fa-var-user-plus);
 }
 
 .icon-groupmembers:before,
 .icon-mygroups:before {
-    content: $fa-var-users;
+    content: fa-content($fa-var-users);
 }
 
 .icon-externalfeed:before {
-    content: $fa-var-rss;
+    content: fa-content($fa-var-rss);
 }
 
 .icon-externalvideo:before {
-    content: $fa-var-youtube-play;
+    content: fa-content($fa-var-youtube);
 }
 
 .icon-googleapps:before {
-    content: $fa-var-google;
+    content: fa-content($fa-var-google);
 }
 
 .icon-wall:before {
-    content: $fa-var-quote-left;
+    content: fa-content($fa-var-quote-left);
 }
 
 .icon-audio:before {
-    content: $fa-var-music;
+    content: fa-content($fa-var-music);
 }
 
 .icon-task:before {
-    content: $fa-var-tasks;
+    content: fa-content($fa-var-tasks);
 }
 
 .icon-plan:before {
-    content: $fa-var-calendar-check-o;
+    content: fa-content($fa-var-calendar-check);
 }
 
 .icon-collection:before {
-    content: $fa-var-folder-open;
+    content: fa-content($fa-var-folder-open);
 }
 
 .icon-introduction:before {
-    content: $fa-var-file-text-o;
+    content: fa-content($fa-var-file-alt);
 }
 
 .icon-homenumber:before,
 .icon-businessnumber:before {
-    content: $fa-var-phone;
+    content: fa-content($fa-var-phone);
 }
 
 .icon-address:before {
-    content: $fa-var-road;
+    content: fa-content($fa-var-road);
 }
 
 .icon-town:before {
-    content: $fa-var-home;
+    content: fa-content($fa-var-home);
 }
 
 .icon-city:before {
-    content: $fa-var-building;
+    content: fa-content($fa-var-building);
 }
 
 .icon-country:before {
-    content: $fa-var-globe;
+    content: fa-content($fa-var-globe);
 }
 
 .icon-personalinformation:before {
-    content: $fa-var-sticky-note-o;
+    content: fa-content($fa-var-sticky-note);
 }
 
 .icon-studentid:before {
-    content: $fa-var-graduation-cap;
+    content: fa-content($fa-var-graduation-cap);
 }
 
 .icon-mobilenumber:before {
-    content: $fa-var-mobile;
+    content: fa-content($fa-var-mobile);
 }
 
 .icon-on-hover {
@@ -258,7 +268,9 @@
 }
 
 .icon-fieldset {
-    padding-right: 20px;
+    margin-right: 20px;
+    width: 2em;
+    text-align: center;
 }
 
 .mahara-rss-icon {

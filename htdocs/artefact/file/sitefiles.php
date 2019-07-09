@@ -25,7 +25,7 @@ $form = pieform(ArtefactTypeFileBase::files_form(get_config('wwwroot') . 'artefa
 $js = ArtefactTypeFileBase::files_js();
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-file-image-o');
+setpageicon($smarty, 'icon-regular icon-file-image');
 
 $smarty->assign('descriptionstrargs', array('<a href="' . get_config('wwwroot') . 'admin/site/menu.php">', '</a>'));
 $smarty->assign('institution', 'mahara');

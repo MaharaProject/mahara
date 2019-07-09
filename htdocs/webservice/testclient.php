@@ -255,7 +255,7 @@ else {
     $form = '';
 }
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-vial');
 
 safe_require('auth', 'webservice');
 

@@ -3,7 +3,7 @@
     <div class="groupuserstatus btn-top-right btn-group btn-group-top">
         {if $group->canleave}
             <a href ="{$WWWROOT}group/leave.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-long-arrow-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="leavegroup" section="group"}</span>
             </a>
         {/if}
@@ -14,7 +14,7 @@
             </a>
         {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
             <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-lightbulb-o icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-lightbulb icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="suggesttofriends" section="group"}</span>
             </a>
         {/if}
@@ -26,7 +26,7 @@
         <div class="groupuserstatus btn-top-right btn-group btn-group-top">
             {if $viewid}
             <a href="{$WWWROOT}view/blocks.php?id={$viewid}&group={$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-secondary">
-                <span class="icon icon-pencil text-default" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=editthisview section='view'}</span>
             </a>
             {/if}
@@ -38,13 +38,13 @@
             </a>
             {if $cancopy}
             <a href="{$WWWROOT}group/copy.php?id={$group->id}&return=mygroups" title="{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}" class="btn btn-secondary">
-                <span class="icon icon-clone text-default" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-clone text-default" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=copy}</span>
                 <span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
             </a>
             {/if}
             <a href="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" class="btn btn-secondary">
-                <span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=delete}</span>
                 <span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
             </a>

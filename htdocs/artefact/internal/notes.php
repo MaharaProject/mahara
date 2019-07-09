@@ -201,7 +201,7 @@ jQuery(function($) {
 });';
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-pencil-square-o');
+setpageicon($smarty, 'icon-regular icon-edit');
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('data', $data);
@@ -227,7 +227,7 @@ function deletenote_form($id, $notedata) {
                 'usebuttontag' => true,
                 'class' => 'btn-secondary btn-sm last',
                 'elementtitle' => get_string('delete'),
-                'value' => '<span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span> ',
+                'value' => '<span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span> ',
             ),
         ),
     );

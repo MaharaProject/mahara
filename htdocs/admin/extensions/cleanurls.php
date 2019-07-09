@@ -42,7 +42,7 @@ foreach ($cleanurlconfigkeys as $k) {
 }
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-cog');
 
 $smarty->assign('cleanurls', get_config('cleanurls'));
 $smarty->assign('cleanurlconfig', $cleanurlconfig);

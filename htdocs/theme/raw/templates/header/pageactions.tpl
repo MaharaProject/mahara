@@ -2,14 +2,14 @@
     <div class="btn-group-vertical">
         {if $editurl}{strip}
             <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-secondary">
-                <span class="icon icon-pencil icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editthisview section=view}</span>
             </a>
         {/strip}{/if}
 
         {if $mnethost}
         <a href="{$mnethost.url}" class="btn btn-secondary" title="{str tag=backto arg1=$mnethost.name}">
-            <span class="icon icon-long-arrow-right icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-long-arrow-alt-right icon-lg left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=backto arg1=$mnethost.name}</span>
         </a>
         {/if}
@@ -27,7 +27,7 @@
                     {else}
                         <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}">
                     {/if}
-                    <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-regular icon-copy icon-lg left" role="presentation" aria-hidden="true"></span>
                     {str tag=copy section=mahara}
                     </a>
                 </li>
@@ -45,10 +45,10 @@
                 <li class="dropdown-item">
                     <a id="toggle_watchlist_link" class="watchlist" href="">
                         {if $viewbeingwatched}
-                        <span class="icon icon-lg icon-eye-slash left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">{str tag=removefromwatchlist section=view}</span>
                         {else}
-                        <span class="icon icon-lg icon-eye left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">{str tag=addtowatchlist section=view}</span>
                        {/if}
                     </a>
@@ -78,7 +78,7 @@
                 {if $userisowner || $canremove}
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
-                        <span class="icon icon-lg icon-trash text-danger left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-lg icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">{str tag=deletethisview section=view}</span>
                         <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
                     </a>
@@ -88,7 +88,7 @@
             {if $versionurl}
                 <li class="dropdown-item">
                   <a href="{$versionurl}">
-                      <span class="icon icon-code-fork icon-lg left" role="presentation" aria-hidden="true"></span>
+                      <span class="icon icon-history icon-lg left" role="presentation" aria-hidden="true"></span>
                       <span class="link-text">{str tag=timeline section=view}</span>
                       <span class="sr-only">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
                   </a>

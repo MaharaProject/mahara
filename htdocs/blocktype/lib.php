@@ -1057,7 +1057,7 @@ class BlockInstance {
                         'column' => $this->get('column') - 1,
                         'order'  => $this->get('order'),
                         'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
-                        'arrow'  => "icon icon-long-arrow-left",
+                        'arrow'  => "icon icon-long-arrow-alt-left",
                         'dir'    => 'left',
                     );
                 }
@@ -1066,7 +1066,7 @@ class BlockInstance {
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') + 1,
                         'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-down',
+                        'arrow'  => 'icon icon-long-arrow-alt-down',
                         'dir'    => 'down',
                     );
                 }
@@ -1075,7 +1075,7 @@ class BlockInstance {
                         'column' => $this->get('column'),
                         'order'  => $this->get('order') - 1,
                         'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-up',
+                        'arrow'  => 'icon icon-long-arrow-alt-up',
                         'dir'    => 'up',
                     );
                 }
@@ -1084,7 +1084,7 @@ class BlockInstance {
                         'column' => $this->get('column') + 1,
                         'order'  => $this->get('order'),
                         'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-right',
+                        'arrow'  => 'icon icon-long-arrow-alt-right',
                         'dir'    => 'right',
                     );
                 }

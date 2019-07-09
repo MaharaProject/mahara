@@ -87,7 +87,7 @@ jQuery(function() {
 EOF;
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-users');
+setpageicon($smarty, 'icon-users-cog');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('searchform', $searchform);

@@ -14,7 +14,7 @@
                     </a>
                 {if $wallpost->deletable}
                     <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="card-control card-header-action">
-                        <span class="icon icon-trash left text-danger icon-sm" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-trash-alt left text-danger icon-sm" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
                     </a>
                 {/if}

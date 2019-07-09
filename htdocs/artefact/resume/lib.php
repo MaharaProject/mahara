@@ -1105,7 +1105,7 @@ EOF;
             if (row._rownumber > 1) {
                 var up =
                     jQuery('<a>', {'href': '', 'class': 'moveup'}).append(
-                        jQuery('<span>',{'class': 'icon icon-long-arrow-up','role':'presentation'}),
+                        jQuery('<span>',{'class': 'icon icon-long-arrow-alt-up','role':'presentation'}),
                         jQuery('<span>',{'class': 'sr-only', 'text': {$upjsstr}})
                     );
                     up.on('click', function (e) {
@@ -1117,7 +1117,7 @@ EOF;
             if (!row._last) {
                 var down =
                     jQuery('<a>', {'href': '', 'class':'movedown'}).append(
-                      jQuery('<span>',{'class': 'icon icon-long-arrow-down','role':'presentation'}),
+                      jQuery('<span>',{'class': 'icon icon-long-arrow-alt-down','role':'presentation'}),
                       jQuery('<span>',{'class': 'sr-only', 'text': {$downjsstr}})
                     );
                     down.on('click', function (e) {
@@ -1138,12 +1138,12 @@ EOF;
             var editlink =
                 jQuery('<a>', {'href': 'editcomposite.php?id=' + row.id + '&artefact=' + row.artefact,
                                'title': {$editstr}, 'class': 'btn btn-secondary btn-sm'}).append(
-                                    jQuery('<span>',{'class': 'icon icon-pencil icon-lg', 'role':'presentation'}),
+                                    jQuery('<span>',{'class': 'icon icon-pencil-alt icon-lg', 'role':'presentation'}),
                                     jQuery('<span>',{'class': 'sr-only'}).append({$editjsstr})
                                );
             var dellink =
                 jQuery('<a>', {'href': '', 'title': {$delstr}, 'class': 'btn btn-secondary btn-sm'}).append(
-                    jQuery('<span>',{'class': 'icon icon-trash text-danger icon-lg','role':'presentation'}),
+                    jQuery('<span>',{'class': 'icon icon-trash-alt text-danger icon-lg','role':'presentation'}),
                     jQuery('<span>',{'class': 'sr-only'}).append({$deljsstr})
                 );
                 dellink.on('click', function (e) {

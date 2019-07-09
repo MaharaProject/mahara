@@ -5,11 +5,11 @@
                 <a href="{$WWWROOT}artefact/artefact.php?artefact={$post->id}&view={$options.viewid}">{$post->title}</a>
             </h4>
             <div class="postdetails metadata">
-                <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
                 {$post->postedby}
                 {if $post->lastupdated}
                     <br>
-                    <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
                     {str tag=updatedon section=artefact.blog} {$post->lastupdated}
                 {/if}
             </div>

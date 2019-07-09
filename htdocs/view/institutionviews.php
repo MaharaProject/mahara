@@ -37,7 +37,7 @@ define('TITLE', get_string('institutionviewscollections', 'view'));
 
 if ($institution === false) {
     $smarty = smarty();
-    setpageicon($smarty, 'icon-university');
+    setpageicon($smarty, 'icon-file-alt');
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
 }
@@ -78,7 +78,7 @@ if (!empty($institution)) {
 }
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-university');
+setpageicon($smarty, 'icon-file-alt');
 
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $js);

@@ -144,7 +144,7 @@ $form = array(
 
 $form = pieform($form);
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-puzzle-piece');
+setpageicon($smarty, 'icon-truck-loading');
 safe_require('auth', 'webservice');
 
 $smarty->assign('search', $search);

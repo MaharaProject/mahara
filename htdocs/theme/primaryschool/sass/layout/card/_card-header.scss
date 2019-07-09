@@ -132,21 +132,21 @@
     padding-right: 5px;
 }
 .bt-gallery .card-header:before {
-    content: $fa-var-picture-o;
+    content: $fa-var-file-image;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
 .bt-internalmedia .card-header:before {
-    content: $fa-var-video-camera;
+    content: $fa-var-video;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
 .bt-pdf .card-header:before {
-    content: $fa-var-file-pdf-o;
+    content: $fa-var-file-pdf;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -160,21 +160,21 @@
     padding-right: 5px;
 }
 .bt-blog .card-header:before {
-    content: $fa-var-pencil;
+    content: $fa-var-pen;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
 .bt-blogpost .card-header:before {
-    content: $fa-var-file-text;
+    content: $fa-var-file-alt;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     padding-right: 5px;
 }
 .bt-recentposts .card-header:before {
-    content: $fa-var-clock-o;
+    content: $fa-var-clock;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -195,7 +195,7 @@
     padding-right: 5px;
 }
 .bt-annotation .card-header:before {
-    content: $fa-var-pencil-square-o;
+    content: $fa-var-pen-square;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -216,7 +216,7 @@
     padding-right: 5px;
 }
 .bt-plans .card-header:before {
-    content: $fa-var-check-square-o;
+    content: $fa-var-check-square;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -230,7 +230,7 @@
     padding-right: 5px;
 }
 .bt-textbox .card-header:before {
-    content: $fa-var-pencil-square-o;
+    content: $fa-var-pen-square;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -258,7 +258,7 @@
     padding-right: 5px;
 }
 .bt-resumefield .card-header:before {
-    content: $fa-var-star-o;
+    content: $fa-var-star;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -272,7 +272,7 @@
     padding-right: 5px;
 }
 .bt-externalvideo .card-header:before {
-    content: $fa-var-youtube-play;
+    content: $fa-var-youtube;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
@@ -307,7 +307,7 @@
     padding-right: 5px;
 }
 .bt-image .card-header:before {
-    content: $fa-var-picture-o;
+    content: $fa-var-file-image;
     font-family: FontAwesome;
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);

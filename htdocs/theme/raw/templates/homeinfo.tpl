@@ -35,7 +35,7 @@
             <div id="home-info-share" class="home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
-                        <span class="icon icon-unlock-alt" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-unlock" role="presentation" aria-hidden="true"></span>
                     </div>
                     <h2 class="title">
                         {str tag=share}
@@ -80,7 +80,7 @@
         {if $USER->is_logged_in()}
         <div id="hideinfo" class="nojs-hidden-block text-right hide-info">
             <a href="#" title="{str tag=Hide2}" class="remove-widgets">
-                <span class="icon icon-remove" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-times" role="presentation" aria-hidden="true"></span>
                 <span class="">{str tag=Hide2}</span>
             </a>
         </div>

@@ -104,7 +104,7 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-university');
+setpageicon($smarty, 'icon-user-clock');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('data', $data);

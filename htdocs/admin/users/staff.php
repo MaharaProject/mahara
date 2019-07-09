@@ -67,7 +67,7 @@ function staffusers_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-user');
+setpageicon($smarty, 'icon-user-friends');
 
 $smarty->assign('staffusersform', $form);
 $smarty->display('admin/users/staff.tpl');

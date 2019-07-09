@@ -19,7 +19,7 @@
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         {if $admin}
             <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn btn-secondary deleteforum">
-                <span class="icon icon-trash text-danger" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 {str tag="deleteforum" section="interaction.forum"}
             </a>
         {/if}

@@ -1,13 +1,13 @@
-@import url("font-awesome/font-awesome.css");
+@import url("font-awesome/fontawesome.css");
 
 @font-face {
   font-family: 'FontAwesome';
-  src: url('fontawesome-webfont.eot?v=4.7.0');
-  src: url('font-awesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
-    url('font-awesome/fontawesome-webfont.woff2?v=4.7.0') format('woff2'),
-    url('font-awesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),
-    url('font-awesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
-    url('font-awesome/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+  src: url('fa-regular-400.eot?v=5.8.1');
+  src: url('font-awesome/fa-regular-400.eot?v=5.8.1') format('embedded-opentype'),
+    url('font-awesome/fa-regular-400.woff2?v=5.8.1') format('woff2'),
+    url('font-awesome/fa-regular-400.woff?v=5.8.1') format('woff'),
+    url('font-awesome/fa-regular-400.ttf?v=5.8.1') format('truetype'),
+    url('font-awesome/fa-regular-400.svg?v=5.8.1#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal;
 }

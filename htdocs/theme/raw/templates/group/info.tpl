@@ -6,7 +6,7 @@
     </p>
 
     <p>
-        <span class="icon icon-shield left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-shield-alt left" role="presentation" aria-hidden="true"></span>
         <span class="">{$group->settingsdescription}</span>
     </p>
 
@@ -20,14 +20,14 @@
 
     {if $editwindow}
     <p>
-        <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
         <span>{str tag=editable section=group}:</span>
         {$editwindow}
     </p>
     {/if}
     <ul class="list-unstyled list-inline ">
         <li class="list-inline-item">
-            <span class="icon icon-area-chart" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chart-pie" role="presentation" aria-hidden="true"></span>
         </li>
         {if $group->membercount}
         <li class="list-inline-item">

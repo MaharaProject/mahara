@@ -2,8 +2,8 @@ FontAwesome
 ===========
 
 Website: http://fontawesome.io
-Version: 4.7.0
-License: http://fontawesome.io/license Font: SIL OFL 1.1 License
+Version: 5.8.1
+License: http://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 See also: theme/raw/sass/lib/font-awesome/ for CSS license information
 
 This library is for the Font awesome icon glyphs. Note

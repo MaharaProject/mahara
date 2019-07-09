@@ -137,7 +137,7 @@ if (get_config('friendsnotallowed')) {
 }
 
 $smarty = smarty($javascript, array(), array('applychanges' => 'mahara', 'nogroups' => 'group'), $sideblocks);
-setpageicon($smarty, 'icon-user-plus');
+setpageicon($smarty, 'icon-users');
 $smarty->assign('results', $data);
 $smarty->assign('count', $data['count']);
 $smarty->assign('form', $searchform);

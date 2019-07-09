@@ -111,7 +111,7 @@ class PluginAuthWebservice extends PluginAuth {
                 'url'    => 'webservice/admin/index.php',
                 'title'  => get_string('webservice', 'auth.webservice'),
                 'weight' => 75,
-                'iconclass' => 'puzzle-piece',
+                'iconclass' => 'project-diagram',
             ),
             'webservices/config' => array(
                 'path'   => 'webservices/config',

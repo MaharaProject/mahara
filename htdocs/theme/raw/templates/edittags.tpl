@@ -19,7 +19,7 @@
 {if $tag}
 <div class="edittag list-group-item">
     <h3 class="list-group-item-heading">
-        <span class="icon icon-pencil left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
         {str tag=edittag arg1=$tagsearchurl arg2=$tag}
     </h3>
     <div class="tag-action-description text-small">{str tag=edittagdescription arg1=$tag}</div>
@@ -27,7 +27,7 @@
 </div>
 <div class="deletetag list-group-item">
     <h3 class="list-group-item-heading">
-        <span class="icon icon-trash left text-danger" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-trash-alt left text-danger" role="presentation" aria-hidden="true"></span>
         {str tag=deletetag arg1=$tagsearchurl arg2=$tag}
     </h3>
     <div class="tag-action-description text-small">{str tag=deletetagdescription}</div>

@@ -6,7 +6,7 @@
             {str section=mahara tag=add}
         </a>
         <a id="copyview-button" class="btn btn-secondary" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
-            <span class="icon icon-files-o icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-regular icon-copy icon-lg left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=copy}
         </a>
     </div>
@@ -47,7 +47,7 @@
                     <p>{str tag=confirmadddesc section=view}</p>
                     <div class="btn-group">
                         <button id="add-collection-button" type="button" class="btn btn-secondary"><span class="icon icon-folder-open"></span> {str tag=Collection section=collection}</button>
-                        <button id="add-view-button" type="button" class="btn btn-secondary"><span class="icon icon-file-text"></span> {str tag=view}</button>
+                        <button id="add-view-button" type="button" class="btn btn-secondary"><span class="icon icon-file-alt"></span> {str tag=view}</button>
                     </div>
                 </div>
             </div>

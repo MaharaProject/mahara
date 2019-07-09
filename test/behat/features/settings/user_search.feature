@@ -11,7 +11,7 @@ Background:
 
 Scenario: Testing functions for user search page (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "User search" in "Users" from administration menu
+ And I choose "User search" in "People" from administration menu
  And I follow "Advanced options"
  And I follow "A" in the "Filter by first name" property
  And I follow "UserA"

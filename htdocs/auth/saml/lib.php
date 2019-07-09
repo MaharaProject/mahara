@@ -679,7 +679,7 @@ class PluginAuthSaml extends PluginAuth {
             'name' => 'submit', // must be called submit so we can access it's value
             'type'  => 'button',
             'usebuttontag' => true,
-            'content' => '<span class="icon icon-refresh icon-lg left text-danger" role="presentation" aria-hidden="true"></span> '. get_string($certstatus . 'text', 'auth.saml'),
+            'content' => '<span class="icon icon-sync-alt icon-lg left text-danger" role="presentation" aria-hidden="true"></span> '. get_string($certstatus . 'text', 'auth.saml'),
             'value' => $certstatus,
         );
 

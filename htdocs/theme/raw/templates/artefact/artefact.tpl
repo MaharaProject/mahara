@@ -58,9 +58,9 @@
                     {strip}
                     <a id="toggle_watchlist_link" class="watchlist" href="">
                         {if $viewbeingwatched}
-                            <span class="icon icon-lg icon-eye-slash left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-lg icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span>
                         {else}
-                            <span class="icon icon-lg icon-eye left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-lg icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
                         {/if}
 
                         {if $artefact}

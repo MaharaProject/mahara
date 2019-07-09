@@ -9,7 +9,7 @@
                 <span class="image-rotator-inner">
                     <img role="presentation" aria-hidden="true" src="{$WWWROOT}theme/raw/images/no_userphoto25.png" title="" alt="">
                 </span>
-                <span class="icon icon-rotate-right btn btn-secondary"></span>
+                <span class="icon icon-redo btn btn-secondary"></span>
                 <input type="hidden" id="{$prefix}_edit_orientation" name="{$prefix}_edit_orientation" value="0">
             </div>
             <div class="required form-group">

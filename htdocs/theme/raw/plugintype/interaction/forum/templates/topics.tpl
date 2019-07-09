@@ -86,13 +86,13 @@
     <td class="control-buttons">
         <div class="btn-group">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="edit"}">
-                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="delete"}">
-                <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>

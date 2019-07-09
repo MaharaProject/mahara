@@ -119,7 +119,7 @@ class PluginArtefactInternal extends PluginArtefact {
                 'url' => 'artefact/internal/index.php',
                 'title' => get_string('profile', 'artefact.internal'),
                 'weight' => 10,
-                'iconclass' => 'id-card-o',
+                'iconclass' => 'regular icon-id-card',
             ),
         );
     }

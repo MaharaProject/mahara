@@ -16,7 +16,7 @@ Scenario: Create user who logs in with strict privacy enabled
     And the field "Strict privacy" matches value "1"
     And I press "Update site options"
     # Background adding of user doesn't work for this test
-    And I choose "Add user" in "Users" from administration menu
+    And I choose "Add user" in "People" from administration menu
     And I set the following fields to these values:
     | First name | Bob |
     | Last name | One |

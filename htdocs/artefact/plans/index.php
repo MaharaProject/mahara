@@ -39,7 +39,7 @@ jQuery(function () {
 EOF;
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-plans');
+setpageicon($smarty, 'icon-clipboard-list');
 $smarty->assign('plans', $plans);
 $smarty->assign('strnoplansaddone',
     get_string('noplansaddone', 'artefact.plans',

@@ -11,11 +11,11 @@
     {/if}
 
     <div class="postdetails metadata">
-        <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
         {$postedbyon}
         {if $updatedon}
             <br>
-            <span class="icon icon-calendar left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
             {$updatedon}
         {/if}
     </div>

@@ -370,7 +370,7 @@ $siteoptionform = array(
             ),
         ),
         'accountsettings' => array(
-            'iconclass'=>'clock-o',
+            'iconclass'=>'regular icon-user-cog',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -528,7 +528,7 @@ $siteoptionform = array(
         ),
         # TODO: this should become "Network Settings" at some point
         'proxysettings' => array(
-            'iconclass'=>'exchange',
+            'iconclass'=>'exchange-alt',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
@@ -782,7 +782,7 @@ $siteoptionform = array(
             ),
         ),
         'loggingsettings' => array(
-            'iconclass'=>'exclamation-triangle',
+            'iconclass'=>'truck-loading',
             'class' => 'last',
             'type'         => 'fieldset',
             'collapsible'  => true,

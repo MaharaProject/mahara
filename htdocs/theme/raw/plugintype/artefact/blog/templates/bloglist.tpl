@@ -35,7 +35,7 @@
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
             <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
-                <span class="icon icon-pencil icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
             </a>
             {$blog->deleteform|safe}

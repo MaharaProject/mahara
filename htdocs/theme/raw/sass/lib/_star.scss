@@ -55,7 +55,7 @@
     }
     &.star-rating-off {
         a {
-            @extend .icon-star-o;
+            @extend .icon-star;
              color: $gray-300;
         }
     }
@@ -67,7 +67,7 @@
     }
     &.heart-rating-off {
         a {
-            @extend .icon-heart-o;
+            @extend .icon-heart;
             color: $gray-300;
         }
     }
@@ -79,7 +79,7 @@
     }
     &.thumbs-up-rating-off {
         a {
-            @extend .icon-thumbs-o-up;
+            @extend .icon-thumbs-up;
             color: $gray-300;
         }
     }
@@ -91,7 +91,7 @@
     }
     &.check-circle-rating-off {
         a {
-            @extend .icon-check-circle-o;
+            @extend .icon-check-circle;
             color: $gray-300;
         }
     }

@@ -626,7 +626,7 @@ var FileBrowser = (function($) {
                             e.preventDefault();
                         }
                     });
-                    ul.append($('<li><span class="icon icon-long-arrow-right left"></span>').append(link));
+                    ul.append($('<li><span class="icon icon-long-arrow-alt-right left"></span>').append(link));
                 }
             }
         });

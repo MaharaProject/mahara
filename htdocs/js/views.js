@@ -1053,7 +1053,7 @@
             blockinstanceId = blockinstance.attr('data-id'),
             content = blockinstance.find('.js-blockinstance-content'),
             oldContent = content.html(),
-            loading = $('<span>').attr('class', 'icon icon-spinner icon-spin block-loading'),
+            loading = $('<span>').attr('class', 'icon icon-spinner icon-pulse block-loading'),
             pd = {'id': $('#viewid').val(), 'change': 1};
 
 

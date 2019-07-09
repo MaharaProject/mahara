@@ -556,7 +556,7 @@ function buildContextualHelpBox(content) {
     contextualHelpContainer.html(
         '<div class="float-right pts">' +
             '<a href="" class="help-dismiss" onclick="return false;">' +
-                '<span class="icon icon-remove"></span>' +
+                '<span class="icon icon-times"></span>' +
                 '<span class="sr-only">' + get_string('closehelp') + '</span>' +
             '</a>' +
         '</div>' +

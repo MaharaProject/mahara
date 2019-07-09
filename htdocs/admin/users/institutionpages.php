@@ -49,6 +49,7 @@ else if (!empty($institutionelement['options']) && sizeof($institutionelement['o
 else if (empty($institutionelement['options'])) {
     // Only the 'no institution' institution exists so we need to display this fact
     $smarty = smarty();
+    setpageicon($smarty, 'icon-pencil-alt');
     $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
     $smarty->assign('noinstitutions', get_string('noinstitutionstaticpages', 'admin'));
     $smarty->display('admin/site/pages.tpl');
@@ -155,7 +156,7 @@ function editsitepage_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('adminsitepages'), array(), array('admin' => array('discardpageedits')));
-setpageicon($smarty, 'icon-university');
+setpageicon($smarty, 'icon-pencil-alt');
 
 $smarty->assign('noinstitutionsadmin', (($USER->admin) ? get_string('noinstitutionstaticpagesadmin', 'admin', get_config('wwwroot') . 'admin/site/pages.php') : false));
 $smarty->assign('pageeditform', $form);

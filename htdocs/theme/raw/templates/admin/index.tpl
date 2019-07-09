@@ -98,7 +98,7 @@
     {if $sitedata}
 
         <div class="card bg-info site-stats">
-            <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{$sitedata.displayname}: {str tag=siteinformation section=admin} <span class="icon icon-info float-right" role="presentation" aria-hidden="true"></span></h3>
             {include file='admin/users/stats.tpl' institutiondata=$sitedata showall='_all' fromindex='1'}
             <a class="card-footer text-small" href="{$WWWROOT}admin/users/statistics.php?type=information&subtype=information">{str tag=viewfullsitestatistics section=admin} <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span></a>
         </div>
@@ -113,7 +113,7 @@
                 {$closeform|safe}
             </div>
         {else}
-            <h3 class="card-header">{str tag=closesite section=admin} <span class="icon icon-unlock-alt float-right" role="presentation" aria-hidden="true"></span></h3>
+            <h3 class="card-header">{str tag=closesite section=admin} <span class="icon icon-unlock float-right" role="presentation" aria-hidden="true"></span></h3>
             <div class="card-body">
                 <p>{str tag=closesitedetail section=admin}</p>
                 {$closeform|safe}
@@ -122,7 +122,7 @@
     </div>
 
     <div class="card">
-        <h3 class="card-header">{str tag=clearcachesheading section=admin} <span class="icon icon-refresh float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=clearcachesheading section=admin} <span class="icon icon-sync-alt float-right" role="presentation" aria-hidden="true"></span></h3>
         <div class="card-body">
             <p>{str tag=cliclearcachesdescription section=admin}</p>
             {$clearcachesform|safe}
@@ -378,7 +378,7 @@
     </div>
 
     <div class="card">
-        <h3 class="card-header">{str tag=reports section=statistics} <span class="icon icon-area-chart float-right" role="presentation" aria-hidden="true"></span></h3>
+        <h3 class="card-header">{str tag=reports section=statistics} <span class="icon icon-chart-pie float-right" role="presentation" aria-hidden="true"></span></h3>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/statistics.php">{str tag=reports section=statistics}</a>

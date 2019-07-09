@@ -153,11 +153,11 @@
         <td class="lrbuttons form-group last select-col pt0">
             <div class="btn-group btn-group-vertical">
                 <button type="button" name="rightarrow" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow btn btn-primary btn-lg">
-                    <span class="icon icon-long-arrow-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-long-arrow-alt-right" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{{$rightarrowlabel}}</span>
                 </button>
                 <button type="button" name="leftarrow" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow btn btn-primary btn-lg">
-                     <span class="icon icon-long-arrow-left" role="presentation" aria-hidden="true"></span>
+                     <span class="icon icon-long-arrow-alt-left" role="presentation" aria-hidden="true"></span>
                      <span class="sr-only">{{$leftarrowlabel}}</span>
                 </button>
             </div>

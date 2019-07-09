@@ -29,7 +29,7 @@ Background:
 Scenario: Site admin can send messages to anyone even if
  A user "Does not allow anyone to send me messages"
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "User search" in "Users" from administration menu
+    And I choose "User search" in "People" from administration menu
     When I follow "Dave"
     Then I should see "Send message"
     When I choose "People" in "Engage" from main menu

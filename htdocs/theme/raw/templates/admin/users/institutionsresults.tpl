@@ -48,7 +48,7 @@
                          {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
                             <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last" alt="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
 
-                                <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">
                                     {str tag="delete"}
                                 </span>

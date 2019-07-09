@@ -69,7 +69,7 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I wait "1" seconds
  Then I should see "Admin home" in the "Administration menu" property
  And I should see "Configure site" in the "Administration menu" property
- And I should see "Users" in the "Administration menu" property
+ And I should see "People" in the "Administration menu" property
  And I should see "Groups" in the "Administration menu" property
  And I should see "Institutions" in the "Administration menu" property
  And I should see "Extensions" in the "Administration menu" property
@@ -92,8 +92,8 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I scroll to the base of id "navadmin"
  And I should see "Files" in the "Configure site sub-menu" property
  And I should see "Cookie Consent" in the "Configure site sub-menu" property
- # Checking the sub navigation in Users
- When I press "Show menu for Users"
+ # Checking the sub navigation in People
+ When I press "Show menu for People"
  Then I should see "User search" in the "Users sub-menu" property
  And I should see "Suspended and expired users" in the "Users sub-menu" property
  And I should see "Site staff" in the "Users sub-menu" property
@@ -148,8 +148,8 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I click on "Show administration menu"
  And I should not see "Configure site" in the "Administration menu" property
  And I should not see "Extensions" in the "Administration menu" property
- # Checking the sub navigation in Users
- And I press "Show menu for Users"
+ # Checking the sub navigation in People
+ And I press "Show menu for People"
  Then I should not see "Site staff" in the "Users sub-menu" property
  And I should not see "Site administrators" in the "Users sub-menu" property
  And I should see "User search" in the "Users sub-menu" property

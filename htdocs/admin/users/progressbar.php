@@ -235,7 +235,7 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty(array(), array(), array(), array('sideblocks' => array(progressbar_sideblock(true))));
-setpageicon($smarty, 'icon-university');
+setpageicon($smarty, 'icon-regular icon-id-badge');
 
 $smarty->assign('progressbarform', $form);
 $smarty->assign('institution', $institution);

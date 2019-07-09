@@ -62,7 +62,7 @@
                 {/if}
                 {if $user->friend}
                 <li class="removefriend">
-                    <span class="icon icon-lg text-danger icon-remove left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-lg text-danger icon-user-times left" role="presentation" aria-hidden="true"></span>
                     <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
                         {str tag='removefromfriendslist' section='group'}
                     </a>

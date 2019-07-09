@@ -19,7 +19,7 @@
         <div class="col-md-4">
               <div class="card last">
                 <h3 class="card-header">
-                    <span class="icon-language icon left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon-globe icon left" role="presentation" aria-hidden="true"></span>
                     {str tag=readfulltext1 section=cookieconsent}
                 </h3>
                 <div class="card-body" id="cookietext">
