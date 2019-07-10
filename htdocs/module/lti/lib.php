@@ -436,7 +436,7 @@ class PluginModuleLti extends PluginModule {
                 'text1' => array(
                     'type' => 'html',
                     'class' => 'text-inline',
-                    'value' => get_string('submitto', 'module.lti', $assessment->resourcelinktitle, $assessment->contexttitle),
+                    'value' => get_string('submitto', 'module.lti', $assessment->resourcelinktitle, $assessment->contexttitle) . '&nbsp;',
                 ),
                 'inputgroup' => array(
                     'type' => 'fieldset',
@@ -706,6 +706,83 @@ class PluginModuleLti extends PluginModule {
         redirect('/module/lti/submission.php');
     }
 
+    public static function can_revokesubmission() {
+        global $SESSION, $USER;
+
+        if (empty($SESSION->get('lti.assessment'))) {
+            return false;
+        }
+
+        if (!$sub = new ModuleLtiSubmission($SESSION->get('lti.assessment'), $USER->get('id'))) {
+            return false;
+        }
+
+        if (!$sub->is_submitted()) {
+            return false;
+        }
+
+        // If the assessment has been graded it can't be unsubmitted as
+        // the portfolio has either already been released or the submission option is locked
+        if ($sub->grade) {
+            return false;
+        }
+
+        return $sub;
+    }
+
+    public static function revokesubmission_form() {
+
+        if (!$sub = self::can_revokesubmission()) {
+            return false;
+        }
+
+        $form = array(
+            'name' => 'revokesubmission',
+            'successcallback' => 'PluginModuleLti::revokesubmission_submit',
+            'method' => 'post',
+            'action' => '',
+            'plugintype' => 'module',
+            'pluginname' => 'lti',
+            'elements' => array(
+                'id' => array(
+                    'type' => 'hidden',
+                    'value' => $sub->id,
+                ),
+                'submit' => array(
+                    'type'  => 'submit',
+                    'value' => get_string('revokesubmission', 'module.lti'),
+                    'class' => 'btn btn-primary',
+                )
+            ),
+        );
+
+        return (pieform($form));
+
+    }
+
+
+    public function revokesubmission_submit(Pieform $form, $values) {
+        global $USER;
+
+        if (!$sub = self::can_revokesubmission()) {
+            return false;
+        }
+
+        // Archive/Unlock if required by settings
+        if (!empty($sub->collectionid)) {
+            $portfolio = new Collection($sub->collectionid);
+        }
+
+        if (!empty($sub->viewid)) {
+            $portfolio = new View($sub->viewid);
+        }
+
+        $portfolio->release($USER);
+
+        delete_records('lti_assessment_submission', 'id', $values['id']);
+
+        redirect('/module/lti/submission.php');
+    }
 }
 
 class ModuleLtiSubmission {
