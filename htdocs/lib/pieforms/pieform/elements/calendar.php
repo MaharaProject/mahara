@@ -252,8 +252,8 @@ function pieform_element_calendar_get_headdata($element) {
 
     $libjs = $element['jsroot'] . 'js/jquery-ui.min.js';
     $libcss = $element['jsroot'] . 'css/smoothness/jquery-ui.min.css';
-    $bootstrapdatetimejs = '/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js';
-    $momentjs = '/js/momentjs/moment-with-locales.min.js';
+    $bootstrapdatetimejs = get_config('wwwroot') . 'js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js';
+    $momentjs = get_config('wwwroot') . 'js/momentjs/moment-with-locales.min.js';
     $prev = get_string('datepicker_prevText');
     $next = get_string('datepicker_nextText');
     $result = array(
