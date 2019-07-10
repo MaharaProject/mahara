@@ -510,7 +510,7 @@ $smarty = smarty(array(), array(), array(
         'loseyourchanges',
     ),
 ));
-setpageicon($smarty, 'icon-regular icon-id-card');
+setpageicon($smarty, 'icon-regular icon-address-card');
 $smarty->assign('profileform', $profileform);
 $smarty->display('artefact:internal:index.tpl');
 

@@ -1,6 +1,6 @@
 {if $record->deleted}
     <h3 class="title list-group-item-heading text-inline">
-        <span class="icon icon-icon-file left text-midtone" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-file left text-midtone" role="presentation" aria-hidden="true"></span>
         {$record->title}
     </h3>
     <span class="artefacttype text-midtone">({str tag=deleted section=search.elasticsearch})</span>

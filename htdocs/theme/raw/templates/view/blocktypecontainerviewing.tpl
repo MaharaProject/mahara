@@ -1,4 +1,4 @@
-<div class="bt-{$blocktype} card card-secondary clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
+<div class="bt-{$blocktype} card card-secondary {$cardicontype} clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
     {if $title}
         <h3 class="title card-header js-heading">
             {if $retractable}

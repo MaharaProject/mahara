@@ -53,6 +53,10 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return array('external' => 35000);
     }
 
+    public static function get_css_icon_type($blockname) {
+        return 'icon-brand';
+    }
+
     private static function load_media_sources() {
         static $loaded_sources = array();
 

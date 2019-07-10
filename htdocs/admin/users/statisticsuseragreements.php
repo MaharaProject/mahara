@@ -16,7 +16,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'legal');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-$userid = param_integer('userid', null);
+$userid = param_integer('userid');
 $versionid = param_integer('versionid', null);
 $activetab = param_alpha('activetab', null);
 

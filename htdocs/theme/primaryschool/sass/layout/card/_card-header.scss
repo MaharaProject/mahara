@@ -94,229 +94,128 @@
     }
 }
 
-
-// custom icons to some blocks
-.bt-newviews .card-header:before {
-    content: $fa-var-bullhorn;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
+.card {
+    .card-header:before {
+        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
+        font-weight: 900;
+        color: rgba(255, 255, 255, 0.6);
+        padding-right: 5px;
+    }
+    // custom icons to some blocks
+    &.bt-newviews .card-header:before {
+        content: fa-content($fa-var-bullhorn);
+    }
+    &.bt-inbox .card-header:before {
+        content: fa-content($fa-var-inbox);
+    }
+    &.bt-myviews .card-header:before {
+        content: fa-content($fa-var-file);
+    }
+    &.bt-filedownload .card-header:before {
+        content: fa-content($fa-var-download);
+    }
+    &.bt-folder .card-header:before {
+        content: fa-content($fa-var-folder);
+    }
+    &.bt-gallery .card-header:before {
+        content: fa-content($fa-var-images);
+    }
+    &.bt-internalmedia .card-header:before {
+        content: fa-content($fa-var-video);
+    }
+    &.bt-pdf .card-header:before {
+        content: fa-content($fa-var-file-pdf);
+    }
+    &.bt-html .card-header:before {
+        content: fa-content($fa-var-code);
+    }
+    &.bt-blog .card-header:before {
+        content: fa-content($fa-var-pen);
+    }
+    &.bt-blogpost .card-header:before {
+        content: fa-content($fa-var-file-alt);
+    }
+    &.bt-recentposts .card-header:before {
+        content: fa-content($fa-var-clock);
+    }
+    &.bt-taggedposts .card-header:before {
+        content: fa-content($fa-var-tags);
+    }
+    &.bt-comment .card-header:before {
+        content: fa-content($fa-var-comment);
+    }
+    &.bt-annotation .card-header:before {
+        content: fa-content($fa-var-sticky-note);
+    }
+    &.bt-creativecommons .card-header:before {
+        content: fa-content($fa-var-creative-commons);
+    }
+    &.bt-navigation .card-header:before {
+        content: fa-content($fa-var-location-arrow);
+    }
+    &.bt-plans .card-header:before {
+        content: fa-content($fa-var-tasks);
+    }
+    &.bt-recentforumposts .card-header:before {
+        content: fa-content($fa-var-comments);
+    }
+    &.bt-textbox .card-header:before {
+        content: fa-content($fa-var-edit);
+    }
+    &.bt-profileinfo .card-header:before {
+        content: fa-content($fa-var-address-card);
+    }
+    &.bt-socialprofile .card-header:before {
+        content: fa-content($fa-var-thumbs-up);
+    }
+    &.bt-entireresume .card-header:before {
+        content: fa-content($fa-var-star);
+    }
+    &.bt-resumefield .card-header:before {
+        content: fa-content($fa-var-star);
+    }
+    &.bt-externalfeed .card-header:before {
+        content: fa-content($fa-var-rss);
+    }
+    &.bt-externalvideo .card-header:before {
+        content: fa-content($fa-var-youtube);
+    }
+    &.bt-googleapps .card-header:before {
+        content: fa-content($fa-var-google);
+    }
+    &.bt-wall h3.card-header:before {
+        content: fa-content($fa-var-quote-left);
+    }
+    &.bt-myfriends .card-header:before {
+        content: fa-content($fa-var-user-friends);
+    }
+    &.bt-mygroups .card-header:before {
+        content: fa-content($fa-var-users);
+    }
+    &.bt-image .card-header:before {
+        content: fa-content($fa-var-image);
+    }
+    &.bt-text .card-header:before {
+        content: fa-content($fa-var-font);
+    }
+    &.bt-watchlist .card-header:before {
+        content: fa-content($fa-var-eye);
+    }
+    &.bt-peerassessment .card-header:before {
+        content: fa-content($fa-var-list);
+    }
+    &.bt-signoff .card-header:before {
+        content: fa-content($fa-var-signature);
+    }
+    &.bt-openbadgedisplayer .card-header:before {
+        content: fa-content($fa-var-shield-alt);
+    }
 }
-.bt-inbox .card-header:before {
-    content: $fa-var-inbox;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
+.card.card-regular .card-header:before {
+    font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free" !important;
+    font-weight: 400;
 }
-.bt-myviews .card-header:before {
-    content: $fa-var-file;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-filedownload .card-header:before {
-    content: $fa-var-download;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-folder .card-header:before {
-    content: $fa-var-folder;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-gallery .card-header:before {
-    content: $fa-var-file-image;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-internalmedia .card-header:before {
-    content: $fa-var-video;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-pdf .card-header:before {
-    content: $fa-var-file-pdf;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-html .card-header:before {
-    content: $fa-var-code;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-blog .card-header:before {
-    content: $fa-var-pen;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-blogpost .card-header:before {
-    content: $fa-var-file-alt;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-recentposts .card-header:before {
-    content: $fa-var-clock;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-taggedposts .card-header:before {
-    content: $fa-var-tags;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-comment .card-header:before {
-    content: $fa-var-comment;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-annotation .card-header:before {
-    content: $fa-var-pen-square;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-creativecommons .card-header:before {
-    content: $fa-var-creative-commons;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-navigation .card-header:before {
-    content: $fa-var-location-arrow;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-plans .card-header:before {
-    content: $fa-var-check-square;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-recentforumposts .card-header:before {
-    content: $fa-var-comments;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-textbox .card-header:before {
-    content: $fa-var-pen-square;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-profileinfo .card-header:before {
-    content: $fa-var-info;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-socialprofile .card-header:before {
-    content: $fa-var-thumbs-up;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-entireresume .card-header:before {
-    content: $fa-var-star;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-resumefield .card-header:before {
-    content: $fa-var-star;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-externalfeed .card-header:before {
-    content: $fa-var-rss;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-externalvideo .card-header:before {
-    content: $fa-var-youtube;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-googleapps .card-header:before {
-    content: $fa-var-google;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-wall h3.card-header:before {
-  content: $fa-var-quote-left;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-myfriends .card-header:before {
-  content: $fa-var-user-plus;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-mygroups .card-header:before {
-  content: $fa-var-users;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-image .card-header:before {
-    content: $fa-var-file-image;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
-}
-.bt-text .card-header:before {
-    content: $fa-var-font;
-    font-family: FontAwesome;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.6);
-    padding-right: 5px;
+.card.card-brand .card-header:before {
+    font-family: "Font Awesome 5 Brands Regular", "Font Awesome 5 Free" !important;
+    font-weight: 400;
 }

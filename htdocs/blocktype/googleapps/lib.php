@@ -28,6 +28,10 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return array('external' => 36000);
     }
 
+    public static function get_css_icon_type($blockname) {
+        return 'icon-brand';
+    }
+
     public static function get_blocktype_type_content_types() {
         return array('googleapps' => array('media'));
     }

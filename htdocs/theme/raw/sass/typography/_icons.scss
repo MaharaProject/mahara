@@ -29,13 +29,13 @@
 }
 
 .icon-annotation:before {
-    content: fa-content($fa-var-pen-square);
+    content: fa-content($fa-var-sticky-note );
 }
 .icon-peerassessment:before {
-    content: fa-content($fa-var-list-alt);
+    content: fa-content($fa-var-list);
 }
 .icon-signoff:before {
-    content: fa-content($fa-var-check-square);
+    content: fa-content($fa-var-file-signature);
 }
 .icon-fileimagevideo:before,
 .icon-video:before {
@@ -67,7 +67,7 @@
 }
 
 .icon-gallery:before {
-    content: fa-content($fa-var-image);
+    content: fa-content($fa-var-images);
 }
 
 .icon-internalmedia:before {
@@ -131,11 +131,11 @@
 }
 
 .icon-newviews:before {
-    content: fa-content($fa-var-file);
+    content: fa-content($fa-var-bullhorn);
 }
 
 .icon-plans:before {
-    content: fa-content($fa-var-map);
+    content: fa-content($fa-var-tasks);
 }
 
 .icon-tasks:before {
@@ -147,16 +147,19 @@
 }
 
 .icon-textbox:before {
-    content: fa-content($fa-var-pen-square);
+    content: fa-content($fa-var-edit);
 }
 
 .icon-watchlist:before {
     content: fa-content($fa-var-eye);
 }
 
-.icon-groupinfo:before,
-.icon-profileinfo:before {
+.icon-groupinfo:before {
     content: fa-content($fa-var-info);
+}
+
+.icon-profileinfo:before {
+    content: fa-content($fa-var-address-card);
 }
 
 .icon-socialprofile:before {
@@ -168,11 +171,11 @@
 }
 
 .icon-resumefield:before {
-    content: fa-content($fa-var-star-half);
+    content: fa-content($fa-var-star-half-alt);
 }
 
 .icon-myfriends:before {
-    content: fa-content($fa-var-user-plus);
+    content: fa-content($fa-var-user-friends);
 }
 
 .icon-groupmembers:before,

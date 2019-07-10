@@ -1479,6 +1479,14 @@ Used to signify SmartEvidence has begun on the SmartEvidence martix table.
 </section>
 
 <section data-markdown data-category="icons">
+### Circle closed
+Used to signify SmartEvidence can bel placed on the SmartEvidence martix table.
+```
+<i class="icon icon-circle dot" role="presentation"></i>
+```
+</section>
+
+<section data-markdown data-category="icons">
 ### Code
 Used to show the HTML block.
 ```
@@ -1608,6 +1616,10 @@ As seen on the "Site files" page in the administration area.
 
 <section data-markdown data-category="icons">
 ### File text
+As seen on the "User pages" page.
+```
+<i class="icon icon-regular icon-file-alt" role="presentation"></i>
+```
 As seen on the "Site pages" page.
 ```
 <i class="icon icon-file-alt" role="presentation"></i>
