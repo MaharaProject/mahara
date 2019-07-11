@@ -37,6 +37,7 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
     public function get_summary() {
         $smarty = $this->exporter->get_smarty();
         $blogs = array();
+
         foreach ($this->exporter->get('artefacts') as $artefact) {
             if ($artefact->get('artefacttype') == 'blog') {
                 $blogs[] = array(

@@ -4,6 +4,6 @@
     </a>
     <p>{$description}</p>
     <div>
-        <a href="{$metadataurl}">{str tag=Details section=artefact.file}</a>
+        <!-- <a href="{$metadataurl}">{str tag=Details section=artefact.file}</a> -->
     </div>
 </div>

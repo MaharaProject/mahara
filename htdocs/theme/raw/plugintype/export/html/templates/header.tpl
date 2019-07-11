@@ -6,6 +6,9 @@
 {foreach from=$stylesheets item=sheet}
         <link rel="stylesheet" type="text/css" href="{$rootpath}static/{$sheet}">
 {/foreach}
+{foreach from=$scripts item=script}
+        <script type='text/javascript' src='{$scriptspath}{$script}.js'></script>
+{/foreach}
     </head>
     <body>
         <header class="header fixed-top no-site-messages">

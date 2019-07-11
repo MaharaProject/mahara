@@ -2492,7 +2492,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             $smarty->assign('title', $this->get('title'));
             $smarty->assign('description', $this->get('description'));
             $smarty->assign('downloadpath', $downloadpath);
-            $smarty->assign('metadataurl', $metadataurl);
+            // $smarty->assign('metadataurl', $metadataurl);
             return array('html' => $smarty->fetch('artefact:file:image_render_self.tpl'), 'javascript' => '');
         }
         $result = parent::render_self($options);

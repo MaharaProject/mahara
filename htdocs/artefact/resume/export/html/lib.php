@@ -29,6 +29,17 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             array('text' => get_string('resume', 'artefact.resume'), 'path' => 'index.html'),
         ));
 
+        $attachmentids = array();
+        $exportedmodals = '';
+        $options = array(
+            'details' => true,
+            'metadata' => 1,
+            'modal' => true,
+        );
+        require_once(get_config('docroot') . 'export/html/lib.php');
+        $rootpath = '../../';
+        $outputfilter = new HtmlExportOutputFilter($rootpath, $this->exporter);
+
         if ($artefacts = get_column_sql("SELECT id
             FROM {artefact}
             WHERE \"owner\" = ?
@@ -38,10 +49,33 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             foreach ($artefacts as $id) {
                 $artefact = artefact_instance_from_id($id);
                 $rendered = $artefact->render_self(array());
+                $attachments = $artefact->get_attachments();
+                if (!empty($attachments)) {
+                    foreach ($attachments as $file) {
+                        if (!in_array($file->{'id'}, $attachmentids)) {
+                            array_push($attachmentids, $file->{'id'});
+                            $html = '';
+                            $a = artefact_instance_from_id($file->{'id'});
+                            $modalcontent = $a->render_self($options);
+                            if (!empty($modalcontent['javascript'])) {
+                                $html = '<script>' . $modalcontent['javascript'] . '</script>';
+                            }
+                            $html .= $modalcontent['html'];
+                            $smarty->assign('artefactid', $file->{'id'});
+                            $smarty->assign('content', $html);
+                            $smarty->assign('title', $a->get('title'));
+                            $exportedmodals .= $smarty->fetch('export:html:modal.tpl');
+                        }
+                    }
+                }
+                $content = $outputfilter->filter($rendered['html']);
                 $smarty->assign($artefact->get('artefacttype'), $rendered['html']);
             }
         }
+
         $content = $smarty->fetch('export:html/resume:index.tpl');
+        $exportedmodals = $outputfilter->filter($exportedmodals);
+        $content .= $exportedmodals;
 
         if (false === file_put_contents($this->fileroot . 'index.html', $content)) {
             throw new SystemException("Unable to create index.html for resume");

@@ -1,0 +1,31 @@
+function modal_handler(e) {
+
+    var modal = $('#' + e.target.attributes.getNamedItem('data-target').value);
+    modal.addClass('active').removeClass('closed');
+
+    $(modal).find('.deletebutton').on('click', function(e) {
+        modal.addClass('closed').removeClass('active');
+        dock.hide();
+    });
+
+    $('.feedbacktable .list-group-lite').addClass('fullwidth');
+}
+
+jQuery(function($) {
+"use strict";
+
+    $('[data-target="#configureblock"]').each(function(i, obj) {
+        $(obj).attr('data-target', 'modal_' + $(obj).attr('data-artefactid'));
+    });
+
+    var deletebutton = $('#configureblock').find('.deletebutton');
+
+    $('.commentlink').on('click', function(e){
+        modal_handler(e);
+    });
+
+    $('.modal_link').on('click', function(e){
+        modal_handler(e);
+    });
+
+});

@@ -46,7 +46,7 @@ jQuery(function($) {
         }
         else {
             // Open form here even though it's currently empty (its quicker)
-            newblock.find('.modal-title').html(get_string('loading'));
+            newblock.find('.modal-title').html('loading');
 
             if (replaceContent) {
                 contentArea.html(content);

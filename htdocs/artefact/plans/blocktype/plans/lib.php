@@ -106,8 +106,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                     $configdata['versioning'] = $versioning;
                     ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination, $editing, $versioning);
                     if (($exporter || $versioning) && $tasks['count'] > $tasks['limit']) {
-                        $artefacturl = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $planid
-                            . '&view=' . $instance->get('view');
+                        $artefacturl = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') .'&modal=1&artefact=' . $planid;
                         $tasks['pagination'] = '<a href="' . $artefacturl . '">' . get_string('alltasks', 'artefact.plans') . '</a>';
                     }
                     if ($versioning) {
