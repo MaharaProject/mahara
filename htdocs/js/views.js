@@ -493,7 +493,7 @@
         var position = $(this).val().split('-'),
             element = workspace.find('.js-col-row').eq(parseInt(position[0], 10) - 1).find('.column').eq(parseInt(position[1], 10) - 1),
             options = [get_string('blockordertopcell')],
-            selectbox = $('#addblock_position');
+            selectbox = $('#newblock_position');
 
         element.find('.column-content .blockinstance .blockinstance-header').each(function() {
             options.push(get_string('blockorderafter', 'view', $(this).html()));
