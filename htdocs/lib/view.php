@@ -2186,12 +2186,13 @@ class View {
     */
     public function get_blocks($editing=false) {
         $sql = '
-        SELECT bi.id, bi.view,positionx, positiony, width, height, blocktype, title, configdata
+        SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
+        positionx, positiony, width, height, blocktype, title, configdata
         FROM {block_instance_dimension} bd
         INNER JOIN {block_instance} bi
         ON bd.block = bi.id
         WHERE bi.view = ?
-        ';
+        ORDER BY bi.row, bi.column, bi.order';
         $blocks = get_records_sql_array($sql, array($this->get('id')));
 
         if (is_array($blocks) || is_object($blocks)) {
@@ -2203,6 +2204,9 @@ class View {
                 $b->set('positiony', $block->positiony);
                 $b->set('width', $block->width);
                 $b->set('height', $block->height);
+                $b->set('row', $block->row);
+                $b->set('column', $block->column);
+                $b->set('order', $block->order);
                 $this->grid[]=$b;
             }
         }
@@ -2225,7 +2229,11 @@ class View {
             $block['height'] = $blockinstance->get('height');
             $block['positionx'] = $blockinstance->get('positionx');
             $block['positiony'] = $blockinstance->get('positiony');
-            $blockcontent[$blockinstance->get('id')] = $block;
+            $block['row'] = $blockinstance->get('row');
+            $block['column'] = $blockinstance->get('column');
+            $block['order'] = $blockinstance->get('order');
+            $block['id'] = $blockinstance->get('id');
+            $blockcontent[] = $block;
         }
         return $blockcontent;
     }

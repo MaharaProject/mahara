@@ -17,6 +17,7 @@ define('SECTION_PAGE', 'blocks');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
+require_once(get_config('libroot') . 'gridstacklayout.php');
 
 $id = param_integer('id', 0); // if 0, we're editing our profile.
 $profile = param_boolean('profile');
@@ -162,31 +163,44 @@ require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 $inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
 
-if ($newlayout = $view->uses_new_layout()) {
-    $blocks = $view->get_blocks(true);
-    $blocksencode = json_encode($blocks);
-    $inlinejs .="
-    $(function () {
-        var options = {
-            verticalMargin: 10,
-            float: true, //to place a block in any part of the page and the position will remain fixed
-            resizable: false,
-            acceptWidgets: '.blocktype-drag',
-        };
-        var grid = $('.grid-stack');
-        grid.gridstack(options);
-        grid = $('.grid-stack').data('gridstack');
-        grid.resizable('.grid-stack-item', true);
-        // should add the blocks one by one
-        var blocks = {$blocksencode};
+$needstranslate = "false";
+if (!$view->uses_new_layout()) {
+    // if it's old rowa layout, we need to translate to grid layout
+    save_blocks_in_new_layout($view->get('id'));
+    $needstranslate = "true";
+}
+$blocks = $view->get_blocks(true);
+$blocksencode = json_encode($blocks);
+
+$inlinejs .="
+$(function () {
+    var options = {
+        verticalMargin: 10,
+        float: true, //to place a block in any part of the page and the position will remain fixed
+        resizable: false,
+        acceptWidgets: '.blocktype-drag',
+        draggable: {
+            scroll: true,
+        },
+        animate: true,
+      },
+      grid, translate;
+    grid = $('.grid-stack');
+
+    grid.gridstack(options);
+    grid = $('.grid-stack').data('gridstack');
+    grid.resizable('.grid-stack-item', true);
+    // should add the blocks one by one
+    var blocks = {$blocksencode};
+    if ({$needstranslate}) {
+        // update block heights when they are loaded
+        loadGridTranslate(grid, blocks);
+    }
+    else {
         loadGrid(grid, blocks);
-    });
-    ";
-}
-else {
-    // Build content before initialising smarty in case pieform elements define headers.
-    $viewcontent = $view->build_rows(true);
-}
+    }
+});
+";
 
 // The form for adding blocks via the keyboard
 $addform = pieform(array(
@@ -209,7 +223,6 @@ $addform = pieform(array(
         ),
     ),
 ));
-
 
 // Get the placeholder block info
 $placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $view, 'placeholder');
@@ -291,13 +304,7 @@ if ($collection = $view->get('collection')) {
 }
 $smarty->assign('collectionid', $collectionid);
 
-$smarty->assign('newlayout', $newlayout);
-if (!$newlayout) {
-    // The HTML for the columns in the view
-    $columns = $viewcontent;
-    $smarty->assign('columns', $columns);
-}
-
+$smarty->assign('needstranslate', ($needstranslate ? 1 : 0));
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 
 $smarty->assign('issitetemplate', $view->is_site_template());

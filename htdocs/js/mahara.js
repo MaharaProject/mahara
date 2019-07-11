@@ -1239,9 +1239,7 @@ jQuery(function($) {
             else if ($('.container.main-content').length) {
                 headerheight = $('.container.main-content').offset().top;
             }
-            $('html, body').animate({
-                scrollTop: target.offset().top - headerheight
-            }, 500);
+            $('html, body').animate({}, 500);
         }
     });
 });

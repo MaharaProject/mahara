@@ -106,6 +106,10 @@ $animation_speed: .3s !default;
             }
         }
 
+        > .ui-draggable-handle {
+            border: 1px dashed lightgray;
+        }
+
         @for $i from 1 through $gridstack-columns {
             &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
             &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }

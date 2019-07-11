@@ -6,3 +6,7 @@
     margin-bottom: unset;
     overflow: hidden;
 }
+
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
+    overflow: hidden !important;
+}

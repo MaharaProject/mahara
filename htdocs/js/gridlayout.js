@@ -9,13 +9,42 @@
  * @copyright  (C) 2013 Mike Kelly UAL m.f.kelly@arts.ac.uk
  *
  */
-
-function loadGrid(grid, blocks) {
-    $.each(blocks, function(blockId, block) {
-        var blockContent = $('<div id="block_' + blockId + '"><div class="grid-stack-item-content">'
+function loadGridTranslate(grid, blocks) {
+    var gridElements = [];
+    gridRemoveEvents();
+    // load grid with empty blocks
+    $.each(blocks, function(index, block) {
+        var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '<div/><div/>');
-        addNewWidget(blockContent, blockId, block, grid, block.class);
+        el = grid.addWidget(
+              blockContent,
+              block.positionx,
+              block.positiony,
+              block.width,
+              block.height,
+              null, null, null, null, null,
+              block.id
+        );
+        gridElements.push(el);
+    });
+    window.setTimeout(function(){
+        updateBlockSizes();
+        updateTranslatedGridRows(blocks);
+        gridInit();
+        $.each(gridElements, function(index, el) {
+            el.on('resizestop', resizeStopBlock);
+        })
+    }, 300);
+}
+
+function loadGrid(grid, blocks) {
+
+    $.each(blocks, function(index, block) {
+        var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
+            + block.content +
+            '<div/><div/>');
+        addNewWidget(blockContent, block.id, block, grid, block.class);
     });
 
     jQuery(document).trigger('blocksloaded');
@@ -33,6 +62,64 @@ function loadGrid(grid, blocks) {
     window.setTimeout(function(){
         updateBlockSizes();
     }, 300);
+}
+
+function updateTranslatedGridRows(blocks) {
+
+      var height = [], maxheight = [], realheight;
+      height[0] = 0;
+      maxheight[0] = 0;
+
+      $.each(blocks, function(key, block) {
+          var el, y;
+          if (typeof(height[block.row]) == 'undefined') {
+              height[block.row] = [];
+              height[block.row][0] = 0;
+          }
+          if (typeof(height[block.row][block.column]) == 'undefined') {
+              height[block.row][block.column] = 0;
+          }
+
+          y = 0;
+          if (block.row > 1) {
+              // get the actual y value based on the max height of previus rows
+              for (var i = 1; i < block.row; i++) {
+                  y += maxheight[i];
+              }
+          }
+          if (typeof(height[block.row][block.column]) != 'undefined') {
+              y += height[block.row][block.column];
+          }
+          block.positiony = y;
+
+          el = $('#block_' + block.id);
+
+          realheight = parseInt($(el).attr('data-gs-height'));
+
+          $('.grid-stack').data('gridstack').move(
+              el,
+              block.positionx,
+              block.positiony
+            );
+
+            var id = block.id,
+               dimensions = {
+                   newx: block.positionx,
+                   newy: block.positiony,
+                   newwidth: block.width,
+                   newheight: realheight,
+               }
+            moveBlock(id, dimensions);
+
+          if (height[block.row][block.column] == 0) {
+              height[block.row][block.column] = realheight;
+          }
+          else {
+              height[block.row][block.column] += realheight;
+          }
+          maxheight[block.row] = Math.max(...height[block.row]);
+      });
+
 }
 
 function updateBlockSizes() {
@@ -67,34 +154,37 @@ function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass) {
          null, null, null, null, null,
          blockId
    );
-   $(el).addClass(blocktypeclass);
-   el.on('resizestop', function(event, data) {
-       var content = $(this).find('.grid-stack-item-content')[0];
-       var heightpx = Math.max(data.size.height, content.scrollHeight),
-           widthpx = data.size.width,
-           heightgrid = Math.ceil((heightpx + grid.opts.verticalMargin) / (grid.cellHeight() + grid.opts.verticalMargin)),
-           widthgrid = Math.ceil((widthpx + grid.opts.verticalMargin) / (grid.cellWidth() + grid.opts.verticalMargin)); // horizontalMargin doesn't exist in gridstack yet
 
-       grid.resize($(this), widthgrid, heightgrid);
+    $(el).addClass(blocktypeclass);
+    el.on('resizestop', resizeStopBlock);
 
-       // update dimesions in db
-       var id = this.attributes['data-gs-id'].value,
-          dimensions = {
-              newx: this.attributes['data-gs-x'].value,
-              newy: this.attributes['data-gs-y'].value,
-              newwidth: widthgrid,
-              newheight: heightgrid,
-          }
-       moveBlock(id, dimensions);
-   });
+    // images need time to load before height can be properly calculated
+    window.setTimeout(function(){
+        updateBlockSizes();
+    }, 300);
 
-   // images need time to load before height can be properly calculated
-   window.setTimeout(function(){
-       updateBlockSizes();
-   }, 300);
-   return false;
+    return el;
 }
 
+function resizeStopBlock(event, data) {
+  var grid = $('.grid-stack').data('gridstack');
+  var content = $(this).find('.grid-stack-item-content')[0];
+  var heightpx = Math.max(data.size.height, content.scrollHeight),
+  widthpx = data.size.width,
+  heightgrid = Math.ceil((heightpx + grid.opts.verticalMargin) / (grid.cellHeight() + grid.opts.verticalMargin)),
+  widthgrid = Math.ceil((widthpx + grid.opts.verticalMargin) / (grid.cellWidth() + grid.opts.verticalMargin)); // horizontalMargin doesn't exist in gridstack yet
+  grid.resize($(this), widthgrid, heightgrid);
+
+  // update dimesions in db
+  var id = this.attributes['data-gs-id'].value,
+  dimensions = {
+    newx: this.attributes['data-gs-x'].value,
+    newy: this.attributes['data-gs-y'].value,
+    newwidth: widthgrid,
+    newheight: heightgrid,
+  }
+  moveBlock(id, dimensions);
+}
 
 function moveBlock(id, whereTo) {
     var pd = {
@@ -106,7 +196,41 @@ function moveBlock(id, whereTo) {
     sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST');
 }
 
+var serializeWidgetMap = function(items) {
+    // get the block id
+    // json call to update new position and/or dimension
+    var i;
+    if (typeof(items) != 'undefined') {
+        for (i=0; i<items.length; i++) {
+            if (typeof(items[i].id) != 'undefined') {
 
-$(window).on('colresize', function() {
-    updateBlockSizes();
-});
+                var blockid = items[i].id,
+                    destination = {
+                        'newx': items[i].x,
+                        'newy': items[i].y,
+                        'newheight': items[i].height,
+                        'newwidth': items[i].width,
+                    }
+                moveBlock(blockid, destination);
+            }
+        }
+    }
+};
+
+function gridInit() {
+    $('.grid-stack').on('change', function(event, items) {
+        event.stopPropagation();
+        event.preventDefault();
+        serializeWidgetMap(items);
+    });
+
+    $(window).on('colresize', function() {
+        updateBlockSizes();
+    });
+
+}
+
+function gridRemoveEvents() {
+    $('.grid-stack').off('change');
+    $(window).off('colresize');
+}

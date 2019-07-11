@@ -289,38 +289,12 @@
             location.reload();
         });
 
-        var serializeWidgetMap = function(items) {
-            // get the block id
-            // json call to update new position and/or dimension
-            var i;
-            if (typeof(items) != 'undefined') {
-                for (i=0; i<items.length; i++) {
-                    if (typeof(items[i].id) != 'undefined') {
+        gridInit();
 
-                        var blockid = items[i].id,
-                            destination = {
-                                'newx': items[i].x,
-                                'newy': items[i].y,
-                                'newheight': items[i].height,
-                                'newwidth': items[i].width,
-                            }
-                        moveBlock(blockid, destination);
-                    }
-                }
-            }
-        };
-
-        $('.grid-stack').on('change', function(event, items) {
-            event.stopPropagation();
-            event.preventDefault();
-            serializeWidgetMap(items);
-        })
-
-    // images need time to load before height can be properly calculated
-     window.setTimeout(function(){
-        $(window).trigger('colresize');
-     }, 300);
-
+        // images need time to load before height can be properly calculated
+         window.setTimeout(function(){
+            $(window).trigger('colresize');
+         }, 300);
 
     } // init
 
@@ -1001,5 +975,3 @@ function blockConfigError(form, data) {
 function wire_blockoptions() {
     return ViewManager.blockOptions();
 }
-
-/* GRIDSTACK functions */
