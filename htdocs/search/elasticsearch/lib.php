@@ -610,7 +610,6 @@ class PluginSearchElasticsearch extends PluginSearch {
         foreach ($enabledtypes as $type) {
             ElasticsearchIndexing::create_triggers($type);
             ElasticsearchIndexing::requeue_searchtype_contents($type);
-            error_log("fetching mapping for $type");
             $ES_class = 'ElasticsearchType_' . $type;
             if ($ES_class::$mappingconfv6 === false) {
                 error_log("mapping $type missing - will ignore");
@@ -724,7 +723,6 @@ class PluginSearchElasticsearch extends PluginSearch {
                 )
             )
         );
-        error_log("setting merged mappings");
         $ESClient = self::make_client('write');
         // Set mapping on index type.
         $ESClient->indices()->putMapping($mappingparams);
@@ -2131,9 +2129,7 @@ class ElasticsearchIndexing {
           )
         );
 
-        error_log("beore create");
         $ESClient->indices()->create($params);
-        error_log("after create");
 
     }
 
