@@ -117,6 +117,23 @@ class BehatAdmin extends BehatBase {
             ArtefactTypeFolder::change_public_folder_name($oldlanguage, $settings['lang']);
         }
 
+        if (isset($settings['searchplugin']) && $oldsearchplugin != $settings['searchplugin']) {
+            // Call the old search plugin's sitewide cleanup method
+            safe_require('search', $oldsearchplugin);
+            call_static_method(generate_class_name('search', $oldsearchplugin), 'cleanup_sitewide');
+            // Call the new search plugin's sitewide initialize method
+            safe_require('search', $settings['searchplugin']);
+            $initialize = call_static_method(generate_class_name('search', $settings['searchplugin']), 'initialize_sitewide');
+            if (!$initialize) {
+                throw new SystemException(get_string('searchconfigerror1', 'admin', $settings['searchplugin']));
+            }
+            // Call the new search plugin's can connect
+            safe_require('search', $settings['searchplugin']);
+            $connect = call_static_method(generate_class_name('search', $settings['searchplugin']), 'can_connect');
+            if (!$connect) {
+                throw new SystemException(get_string('searchconfigerror1', 'admin', $settings['searchplugin']));
+            }
+        }
     }
 
     /**
