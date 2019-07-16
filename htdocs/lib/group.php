@@ -2284,7 +2284,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         $values = array_merge($values, array($query_string, $query_string, $query_string));
     }
 
-    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ? ' . $ltiwhere . $query_where . $catsql, $values);
+    $count = count_records_sql('SELECT COUNT(*) FROM {group} g ' . $sql . ' WHERE g.deleted = ? ' . $ltiwhere . $catsql . $query_where, $values);
 
     // almost the same as query used in find - common parts should probably be pulled out
     // gets the groups filtered by above
@@ -2301,7 +2301,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
             $sql . '
             WHERE g.deleted = ? ' .
-            $ltiwhere . $query_where . $catsql . '
+            $ltiwhere  . $catsql . $query_where . '
             GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
                 g.hidemembers, g.hidemembersfrommembers, g.groupparticipationreports, g.urlid, t.membershiptype, t.reason, t.role, g.editwindowstart, g.editwindowend
         ) g1
