@@ -1375,6 +1375,10 @@ abstract class webservice_base_server extends webservice_server {
         // we do not need to call the original default handler because this ws handler does everything
         set_exception_handler(array($this, 'exception_handler'));
 
+        // Set the auth method as UNKNOWN at this point - it should be changed to correct value
+        // in authenticate_user() function
+        $this->auth = 'UNKNOWN';
+
         // init all properties from the request data
         $this->parse_request();
 
@@ -1436,7 +1440,7 @@ abstract class webservice_base_server extends webservice_server {
                                'externalserviceid' => $this->restricted_serviceid,
                                'institution' => $WEBSERVICE_INSTITUTION,
                                'protocol' => 'REST',
-                               'auth' => $this->token,
+                               'auth' => $this->auth,
                                'functionname' => ($WEBSERVICE_FUNCTION_RUN ? $WEBSERVICE_FUNCTION_RUN : $this->functionname),
                                'timetaken' => '' . $time_taken,
                                'uri' => $_SERVER['REQUEST_URI'],
