@@ -906,7 +906,6 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     $attachment->size = $f->describe_size();
                     $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
                     $attachment->artefacttype = $f->get_artefact_type($attachment->id);
-                    $attachment->viewpath = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
                     $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                     $attachment->description = $f->description;
                 }
@@ -1996,7 +1995,6 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
                 $f = artefact_instance_from_id($attachment->id);
                 $attachment->size = $f->describe_size();
                 $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                $attachment->viewpath = get_config('wwwroot') . 'artefact/artefact.php?artefact=' . $attachment->id . '&view=' . (isset($options['viewid']) ? $options['viewid'] : 0);
                 $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                 $attachment->description = $f->description;
             }

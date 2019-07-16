@@ -108,7 +108,7 @@
                     {/if}
 
                     <span class="title text-inline">
-                        <a href="{$item->viewpath}" class="text-small inner-link">
+                        <a class="modal_link text-small inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
                             {$item->title}
                         </a>
                         <span class="metadata"> -

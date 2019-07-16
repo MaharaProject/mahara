@@ -31,7 +31,7 @@
                 {/if}
 
                 <span class="title list-group-item-heading">
-                    <a href="{$item->viewpath}" class="inner-link">
+                    <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                         {$item->title}
                     </a>
                     <span class="metadata"> -
