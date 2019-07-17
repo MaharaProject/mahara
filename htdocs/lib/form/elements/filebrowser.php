@@ -193,7 +193,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
 
     $initjs .= "jQuery({$prefix}.init);";
-    $initjs .= "upload_max_filesize = '" . get_real_size(ini_get('upload_max_filesize')) . "';";
     if ($form->is_submitted() && $form->has_errors()) {
         // need to reapply bootstrap file browser stuff
         $initjs .= "jQuery('.js-filebrowser').each(function() {";
@@ -1622,6 +1621,7 @@ function pieform_element_filebrowser_get_headdata($element) {
         '<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filebrowser.js"></script>');
     if ($element['config']['upload']) {
         // only add dropzone if filebrowser is allowed to upload
+        $headdata[] = '<script type="application/javascript">var upload_max_filesize = ' . get_real_size(ini_get('upload_max_filesize')) . '</script>';
         $headdata[] = '<script type="application/javascript" src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js"></script>';
         $headdata[] = '<link href="' . get_config('wwwroot') . 'js/dropzone/css/dropzone.css" type="text/css" rel="stylesheet">';
         $headdata[] = '<script type="application/javascript" src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js"></script>';
