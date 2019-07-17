@@ -615,7 +615,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
         if (!empty($values['images'])) {
             foreach ($values['images'] as $id) {
-                $image = new ArtefactTypeImage($id);
+                $image = artefact_instance_from_id($id);
                 if (!($image instanceof ArtefactTypeImage) || !$USER->can_view_artefact($image)) {
                     $result['message'] = get_string('unrecoverableerror', 'error');
                     $form->set_error(null, $result['message']);
