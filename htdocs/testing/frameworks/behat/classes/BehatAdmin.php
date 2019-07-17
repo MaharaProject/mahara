@@ -70,6 +70,7 @@ class BehatAdmin extends BehatBase {
                 'institutionexpirynotification',
                 'institutionautosuspend',
                 'requireregistrationconfirm',
+                'isolatedinstitutions',
             // Account settings
             // Security settings
             // Proxy settings
@@ -101,6 +102,11 @@ class BehatAdmin extends BehatBase {
         else {
             // Ensure allowpublicprofiles is set as well
             $settings['allowpublicprofiles'] = 1;
+        }
+        foreach ($settings as $key => $setting) {
+            if (!array_search($key, $allowsettings)) {
+                throw new SystemException("The option \"$key\" is not a valid setting");
+            }
         }
 
         // Update site settings
