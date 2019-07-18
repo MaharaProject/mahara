@@ -142,6 +142,26 @@ class BehatForms extends BehatBase {
         $this->getSession()->executeScript("jQuery('#{$field}').trigger('change');");
     }
     /**
+     * Fill Select2 input field and check the result is not found
+     *
+     * @When /^(?:|I )fill in select2 input "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)" and is not found$/
+     */
+    public function iFillInSelect2InputWithAndSelectNotFound($field, $value) {
+        $page = $this->getSession()->getPage();
+        $this->select2OpenField($page, $field);
+        // clear any existing typed text
+        $this->getSession()->executeScript("jQuery('#{$field}').parent().find('.select2-search.select2-search--inline input').val('')");
+
+        $this->select2FillSearchField($page, $field, $value);
+        $chosenResults = $page->findAll('css', '.select2-results ul li');
+        foreach ($chosenResults as $result) {
+            if ($result->getText() == 'No results found') {
+                return;
+            }
+        }
+        throw new \Exception(sprintf('Value "%s" was found for "%s"', $value, $field));
+    }
+    /**
      * Open Select2 choice list
      *
      * @param DocumentElement $page
