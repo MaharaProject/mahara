@@ -140,11 +140,20 @@ if ($group && in_array($USER->get('id'), $admintutorids, true)) {
             'defaultvalue' => 0,
     )));
 }
+$viewaccess = $view->get_access('%s');
+if (is_isolated() && !empty($viewaccess)) {
+    foreach ($viewaccess as $k => $access) {
+        if ($access['accesstype'] == 'loggedin') {
+            unset($viewaccess[$k]);
+        }
+    }
+    $viewaccess = array_values($viewaccess);
+}
 
 $form['elements']['accesslist'] = array(
     'type'          => 'viewacl',
     'allowcomments' => $allowcomments,
-    'defaultvalue'  => $view->get_access('%s'),
+    'defaultvalue'  => $viewaccess,
     'viewtype'      => $view->get('type'),
     'isformgroup' => false
 );
@@ -370,12 +379,12 @@ function accessurl_validate(Pieform $form, $values) {
             }
 
             $now = time();
-            if ($item['stopdate'] && $now > $item['stopdate']) {
+            if (!empty($item['stopdate']) && $item['stopdate'] && $now > $item['stopdate']) {
                 $SESSION->add_error_msg(get_string('newstopdatecannotbeinpast', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;
             }
-            if ($item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
+            if (!empty($item['startdate']) && !empty($item['stopdate']) && $item['startdate'] && $item['stopdate'] && $item['startdate'] > $item['stopdate']) {
                 $SESSION->add_error_msg(get_string('newstartdatemustbebeforestopdate', 'view', $accesstypestrings[$item['type']]));
                 $form->set_error('accesslist', '');
                 break;

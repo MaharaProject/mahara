@@ -4282,6 +4282,14 @@ class View {
                         // Use the special sorting so that we get all the 'public' access rules at the top of the list
                         // then access rules where some groups of people can see it and lastly specified users/friends
                         foreach ($accesslist as $ak => $av) {
+                            // remove 'Registered users' from the list if isolated institutions are enabled
+                            if ($av->accesstype == 'loggedin' && is_isolated()) {
+                                continue;
+                            }
+                            // remove 'Friends' from the list if friendsnotallowed is enabled
+                            if ($av->accesstype == 'friends' && get_config('friendsnotallowed')) {
+                                continue;
+                            }
                             if ($av->usr) {
                                 $av->displayname = display_name($av->usr);
                                 if (!empty($av->role)) {

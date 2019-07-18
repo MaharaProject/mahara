@@ -92,6 +92,17 @@ $restrictedview = !can_view_view($viewid);
 if ($restrictedview && !$USER->is_logged_in()) {
     throw new AccessDeniedException(get_string('accessdenied', 'error'));
 }
+else if ($restrictedview) {
+    // Check if isolated institutions are on and user being viewed is a site admin
+    // or both users are in no institution
+    $userinsts = $userobj->get('institutions');
+    $loggedininsts = $USER->get('institutions');
+    if ($userobj->get('admin') ||
+        (empty($userinsts) && empty($loggedininsts))) {
+        $restrictedview = false;
+    }
+}
+
 if (!$restrictedview) {
     $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
 }
