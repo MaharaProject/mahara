@@ -1408,6 +1408,14 @@ class ElasticsearchFilterAcl
                 );
                 $this->params['should'][] = $elasticaFilterInstitutions;
             }
+            else if (empty($user_institutions) && is_isolated()) {
+                $elasticaFilterInstitutions = array(
+                        'terms' => array(
+                                'access.institutions' => array('mahara'),
+                        ),
+                );
+                $this->params['should'][] = $elasticaFilterInstitutions;
+            }
 
             // GROUPS (array of groups that have access to the artefact)
             if ($groups = $this->getGroupsList()) {
