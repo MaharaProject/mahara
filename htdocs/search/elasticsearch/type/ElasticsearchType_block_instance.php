@@ -213,6 +213,45 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
                 $blockid
         ) );
 
+        if (is_isolated() && get_field_sql("SELECT v.type FROM {view} v
+                                            JOIN {block_instance} b ON b.view = v.id
+                                            WHERE b.id = ?", array($blockid)) == 'profile') {
+            if ($records) {
+                foreach ($records as $k => $access) {
+                    if ($access->accesstype == 'loggedin') {
+                        unset($records[$k]);
+                    }
+                }
+                $records = array_values($records);
+            }
+            $viewid = get_field('block_instance', 'view', 'id', $blockid);
+            if (!get_records_sql_array("SELECT v.owner FROM {view} v
+                                        JOIN {block_instance} b ON b.view = v.id
+                                        JOIN {usr_institution} ui ON ui.usr = v.owner
+                                        WHERE b.id = ?", array($blockid))) {
+                // Member of no institution so need to add the 'mahara' institution option
+                $noinst = new StdClass();
+                $noinst->view_id = $viewid;
+                $noinst->accesstype = null;
+                $noinst->group = null;
+                $noinst->role = null;
+                $noinst->usr = null;
+                $noinst->institution = 'mahara';
+                $records[] = $noinst;
+            }
+            // Need to allow site admins to be able to see profile pages of all users
+            foreach (get_column('usr', 'id', 'admin', 1) as $adminid) {
+                $admins = new StdClass();
+                $admins->view_id = $viewid;
+                $admins->accesstype = null;
+                $admins->group = null;
+                $admins->role = null;
+                $admins->usr = $adminid;
+                $admins->institution = null;
+                $records[] = $admins;
+            }
+        }
+
         return $records;
     }
 }

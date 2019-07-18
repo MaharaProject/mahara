@@ -102,6 +102,9 @@ class ElasticsearchType_usr extends ElasticsearchType {
                 $record->institutions [] = $institution->institution;
             }
         }
+        else if (is_isolated()) {
+            $record->institutions [] = 'mahara';
+        }
         else {
             $record->institutions = null;
         }
@@ -152,13 +155,33 @@ class ElasticsearchType_usr extends ElasticsearchType {
                     WHERE v.id = va.view AND v.type = 'profile' AND v.owner = ?
                     AND accesstype IN (" . $join . ") ORDER BY FIELD(va.accesstype, " . $join . ")";
         }
-        $profileviewaccess = recordset_to_array ( get_recordset_sql ( $sql, array (
-                $record->id
-        ) ) );
-        $record->access ['general'] = (! empty ( $profileviewaccess )) ? $profileviewaccess [0]->accesstype : 'none';
+        $profileviewaccess = get_records_sql_array($sql, array($record->id));
+        if (empty($profileviewaccess) || is_isolated()) {
+            $record->access ['general'] = 'none';
+            // They either have no open access or isolated institutions are on so open access is not allowed
+            // So we check if they have an institution rules set
+            $profileviewinstitution = get_column_sql("
+                SELECT va.institution FROM {view} v
+                JOIN {view_access} va ON va.view = v.id
+                WHERE v.type = 'profile' AND va.institution IS NOT NULL
+                AND v.owner = ?", array($record->id));
+            if ($profileviewinstitution) {
+                $record->access ['institutions'] = $profileviewinstitution;
+            }
+            if ($institutions == false) {
+                $record->access ['institutions'] = array('mahara');
+            }
+            // make sure site admins can still be seen by everyone
+            if (get_field('usr', 'admin', 'id', $record->id)) {
+                $record->access ['general'] = 'loggedin';
+            }
+        }
+        else {
+            $record->access ['general'] = (! empty ( $profileviewaccess )) ? $profileviewaccess [0]->accesstype : 'none';
+        }
         // always allow user to search themselves for vanity reasons
-        $record->access ['usrs'] = $record->id;
-
+        // and allow all site admins to search them also
+        $record->access ['usrs'] = array_merge(array($record->id), get_column('usr', 'id', 'admin', 1));
         $record->mainfacetterm = self::$mainfacetterm;
         $allowhidename = get_config ( 'userscanhiderealnames' );
         $showusername = ! get_config ( 'nousernames' );
