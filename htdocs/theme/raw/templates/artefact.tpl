@@ -5,7 +5,9 @@
 </p>
 {/if}
 
+{if $modal && !$artefacttype == 'html'}
 <p>{$description|clean_html|safe}</p>
+{/if}
 
 {if isset($attachments)}
 <div class="has-attachment card collapsible">

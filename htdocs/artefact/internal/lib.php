@@ -1009,6 +1009,7 @@ class ArtefactTypeHtml extends ArtefactType {
         }
         $smarty->assign('view', (isset($options['viewid']) ? $options['viewid'] : null));
         $smarty->assign('modal', (isset($options['modal']) ? $options['modal'] : false));
+        $smarty->assign('artefacttype', $this->get('artefacttype'));
         return array(
             'html' => $smarty->fetch('artefact.tpl'),
             'javascript'=>''

@@ -66,7 +66,9 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
             list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
             $smarty->assign('commentcount', $commentcount);
             $smarty->assign('comments', $comments);
+            $smarty->assign('license', (int)get_config('licensemetadata'));
             $smarty->assign('blockid', $instance->get('id'));
+            $smarty->assign('artefactid', $artefact->get('id'));
             return $smarty->fetch('blocktype:textbox:content.tpl');
         }
 

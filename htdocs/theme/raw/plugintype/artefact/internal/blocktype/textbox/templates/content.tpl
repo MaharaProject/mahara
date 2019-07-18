@@ -51,5 +51,3 @@
     </div>
 </div>
 {/if}
-
-{$comments|safe}
