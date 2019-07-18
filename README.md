@@ -33,16 +33,24 @@ The following is a check list of the steps you need to take. Please refer to the
 
 # UPGRADING
 
-Mahara 18.04 supports direct upgrades from previous Mahara versions 15.04.0 and later.
+Mahara 18.04 supports direct upgrades from previous Mahara versions 17.04.0 and later.
 
 If you are upgrading from an earlier version you will need to upgrade
-in two steps:
+in two or more steps:
 
  * Upgrade version 'X' -> 15.04.X (latest 15.04 version)
 
 then
 
- * Upgrade version 15.04.X -> 'Y'
+ * Upgrade version 15.04.X -> 17.04.X (latest 17.04 version)
+
+then
+
+ * Upgrade version 17.04.X -> 'Y'
+
+Note: Older versions of Mahara are not compatible with latest versions
+of PHP so you will need to do intermediate upgrade steps before
+updating your server's PHP
 
 To upgrade an existing Mahara installation, follow the instructions here:
 
