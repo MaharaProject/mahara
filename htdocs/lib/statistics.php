@@ -895,7 +895,7 @@ function useragreement_stats_table($limit, $offset, $extra, $institution, $urlli
 
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
-    $result['settings']['users'] = count($users);
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
 
     if ($count < 1) {
         return $result;
@@ -1153,7 +1153,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
 
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
-    $result['settings']['users'] = count($users);
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
 
     if ($count < 1) {
         return $result;
@@ -2008,7 +2008,7 @@ function user_institution_graph($type = null) {
     require_once(get_config('libroot') . 'institution.php');
 
     $institutions = Institution::count_members(false, true);
-    if (count($institutions) > 1) {
+    if (is_array($institutions) && count($institutions) > 1) {
         $dataarray = array();
         foreach ($institutions as &$i) {
             if ($i->members) {
@@ -2405,7 +2405,7 @@ function group_type_graph($type = false) {
         ORDER BY groupcount DESC", array()
     );
 
-    if (count($grouptypes) > 1) {
+    if (is_array($grouptypes) && count($grouptypes) > 1) {
         $dataarray = array();
         foreach ($grouptypes as &$t) {
             $strtype = get_string('name', 'grouptype.' . $t->grouptype);
@@ -2685,7 +2685,7 @@ function view_type_graph($type = null) {
         array('dashboard')
     );
 
-    if (count($viewtypes) > 1) {
+    if (is_array($viewtypes) && count($viewtypes) > 1) {
         $dataarray = array();
         foreach ($viewtypes as &$t) {
             $dataarray[get_string(ucfirst($t->type), 'view')] = $t->views;
@@ -2790,7 +2790,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     );
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
-    $result['settings']['users'] = count($users);
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
     if ($count < 1) {
         return $result;
     }
@@ -2925,7 +2925,7 @@ function institution_view_type_graph($type = null, $institutiondata) {
         ) GROUP BY type', $values
     );
 
-    if (count($viewtypes) > 1) {
+    if (is_array($viewtypes) && count($viewtypes) > 1) {
         $dataarray = array();
         foreach ($viewtypes as &$t) {
             $dataarray[get_string($t->type, 'view')] = $t->views;
@@ -3065,7 +3065,7 @@ function content_stats_table($limit, $offset, $extra) {
                   AND sd.field NOT LIKE '%version'";
     $regdata = get_records_sql_array("SELECT DISTINCT sr.id, sr.time " . $fromsql . " ORDER BY sr.time DESC", $values);
 
-    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . " AND sr.id = " . $regdata[0]->id, $values);
+    $count = ($regdata) ? count_records_sql("SELECT COUNT(*) " . $fromsql . " AND sr.id = " . $regdata[0]->id, $values) : 0;
 
     $pagination = build_pagination(array(
         'id' => 'stats_pagination',
@@ -3118,7 +3118,7 @@ function content_stats_table($limit, $offset, $extra) {
     $daterange = array_map(function ($obj) { return $obj->time; }, $regdata);
     $result['settings']['start'] = ($start) ? $start : min($daterange);
 
-    if (count($regdata) > 1) {
+    if (is_array($regdata) && count($regdata) > 1) {
         $firstweeks = get_records_sql_assoc(
             "SELECT sd.field, sd.value " . $fromsql . "
             AND sr.id = " . end($regdata)->id . "
@@ -3414,7 +3414,7 @@ function institution_content_stats_table($limit, $offset, &$institutiondata, $ex
     $daterange = array_map(function ($obj) { return $obj->time; }, $regdata);
     $result['settings']['start'] = ($start) ? $start : min($daterange);
 
-    if (count($regdata) > 1) {
+    if (is_array($regdata) && count($regdata) > 1) {
         $firstweeks = get_records_sql_assoc(
             "SELECT sd.field, sd.value " . $fromsql . "
             AND sr.id = " . end($regdata)->id . "
@@ -3554,7 +3554,7 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
     );
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
-    $result['settings']['users'] = count($users);
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
     if ($count < 1) {
         return $result;
     }
@@ -3724,7 +3724,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
     );
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
-    $result['settings']['users'] = count($users);
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
     if ($count < 1) {
         return $result;
     }
