@@ -1140,7 +1140,7 @@
                 <FIELD NAME="type" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="private" />
                 <FIELD NAME="viewskin" TYPE="text" LENGTH="big" NOTNULL="true" />
                 <FIELD NAME="bodybgimg" TYPE="int" LENGTH="10" NOTNULL="false" />
-                <FIELD NAME="viewbgimg" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="headingbgimg" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="false" />
             </FIELDS>

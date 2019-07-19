@@ -74,6 +74,7 @@ $string['element.select.other'] = 'Other';
 $string['element.select.remove'] = 'Remove "%s"';
 
 $string['element.color.transparent'] = 'Default or ';
+$string['element.font.themedefault'] = 'Use Theme font';
 
 $string['rule.before.before'] = 'This cannot be after the field "%s"';
 

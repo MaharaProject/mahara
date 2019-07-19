@@ -565,7 +565,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 LEFT OUTER JOIN {artefact} api ON api.parent = a.id AND api.artefacttype = \'profileicon\'
                 LEFT OUTER JOIN {view_artefact} va ON va.artefact = a.id
                 LEFT OUTER JOIN {artefact_attachment} aa ON aa.attachment = a.id
-                LEFT OUTER JOIN {skin} s ON (s.bodybgimg = a.id OR s.viewbgimg = a.id)
+                LEFT OUTER JOIN {skin} s ON (s.bodybgimg = a.id OR s.headingbgimg = a.id)
                 LEFT OUTER JOIN {interaction_forum_post_attachment} fpa ON fpa.attachment = a.id
                 LEFT OUTER JOIN {usr} u ON a.id = u.profileicon AND a.owner = u.id';
 

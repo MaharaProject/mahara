@@ -134,29 +134,68 @@ $elements['viewskin'] = array(
                 ),
         ),
 );
+
+// Page
 $elements['skinbg'] = array(
     'type'   => 'fieldset',
-    'legend' => get_string('skinbackgroundoptions1', 'skin'),
+    'legend' => get_string('view', 'mahara'),
     'class'  => $fieldset != 'skinbg' ? 'collapsed' : '',
     'elements'     => array(
-            'body_background_color' => array(
-                    'type' => 'color',
-                    'title' => get_string('bodybgcolor1', 'skin'),
-                    'defaultvalue' => (!empty($viewskin['body_background_color']) ? $viewskin['body_background_color'] : '#FFFFFF'),
-                    'size' => 7,
-                    'options' => array(
-                        'transparent' => true,
-                    ),
-            )
+        'header_background_color' => array(
+            'type' => 'color',
+            'title' => get_string('headerbackgroundcolor', 'skin'),
+            'description' => get_string('headerbackgroundcolordescription', 'skin'),
+            'defaultvalue' => (!empty($viewskin['header_background_color']) ? $viewskin['header_background_color'] : '#FFFFFF'),
+            'size' => 7,
+            'options' => array(
+                'transparent' => true,
+            ),
+        ),
+        'header_background_image' => array(
+            'type'         => 'filebrowser',
+            'title'        => get_string('headerbackgroundimage', 'skin'),
+            'folder'       => $folder,
+            'highlight'    => $highlight,
+            'description'  => get_string('headerbackgroundimagedescription', 'skin'),
+            'browse'       => $browse,
+            'filters'      => array(
+                'artefacttype' => array('image'),
+            ),
+            'page'         => get_config('wwwroot') . 'skin/design.php?id=' . $id . '&fs=skinbg',
+            'config'       => array(
+                'upload'          => false,
+                'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                'createfolder'    => false,
+                'edit'            => false,
+                'select'          => true,
+                'selectone'       => true,
+            ),
+            'defaultvalue'       => (!empty($viewskin['header_background_image']) ? array(intval($viewskin['header_background_image'])) : array()),
+            'selectlistcallback' => 'artefact_get_records_by_id',
+            // TODO: Make this work so skins can include site files
+            // 'tabs' => true,
+        ),
+        'body_background_color' => array(
+            'type' => 'color',
+            'title' => get_string('bodybackgroundcolour', 'skin'),
+            'defaultvalue' => (!empty($viewskin['body_background_color']) ? $viewskin['body_background_color'] : '#FFFFFF'),
+            'size' => 7,
+            'options' => array(
+                'transparent' => true,
+            ),
+        )
     )
 );
+
 // Currently site files don't work properly with site skins. And since site files are the only files that would make
 // sense with site skins, we're going to just hide background images entirely for site skins for the time being.
 if (!$designsiteskin) {
     $elements['skinbg']['elements'] = array_merge($elements['skinbg']['elements'], array(
         'body_background_image' => array(
                 'type'         => 'filebrowser',
-                'title'        => get_string('bodybgimage1', 'skin'),
+                'title'        => get_string('bodybackgroundimage', 'skin'),
                 'folder'       => $folder,
                 'highlight'    => $highlight,
                 'browse'       => $browse,
@@ -209,24 +248,45 @@ if (!$designsiteskin) {
         )
     ));
 }
+
+// Add option for theme font
+$themefontoption = array ('' => get_string('themedefault', 'skin'));
+$headerfontoptions = Skin::get_all_font_options();
+$fontoptions = Skin::get_textonly_font_options();
+
+// Add theme font element to list of fonts
+$headerfontoptions = $themefontoption + $headerfontoptions;
+$fontoptions = $themefontoption + $fontoptions;
+
+// Text
 $elements['viewcontent'] = array(
         'type'   => 'fieldset',
-        'legend' => get_string('viewcontentoptions1', 'skin'),
+        'legend' => get_string('sampletext', 'skin'),
         'class'  => $fieldset != 'viewcontent' ? 'collapsed' : '',
         'elements'     => array(
                 'view_heading_font_family' => array(
                         'type' => 'select',
                         'title' => get_string('headingfontfamily', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_heading_font_family']) ? $viewskin['view_heading_font_family'] : 'Arial'),
+                        'defaultvalue' => (!empty($viewskin['view_heading_font_family']) ? $viewskin['view_heading_font_family'] : '' ),
                         'width' => 144,
-                        'options' => Skin::get_all_font_options(),
+                        'options' => $headerfontoptions
+                ),
+                'view_text_heading_color' => array(
+                        'type' => 'color',
+                        'title' => get_string('headingcolor', 'skin'),
+                        'description' => get_string('headingcolordescription', 'skin'),
+                        'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] : '#000000'),
+                        'size' => 7,
+                        'options' => array(
+                            'transparent' => true,
+                        ),
                 ),
                 'view_text_font_family' => array(
                         'type' => 'select',
                         'title' => get_string('textfontfamily', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_text_font_family']) ? $viewskin['view_text_font_family'] : 'Arial'),
+                        'defaultvalue' => (!empty($viewskin['view_text_font_family']) ? $viewskin['view_text_font_family'] : ''),
                         'width' => 144,
-                        'options' => Skin::get_textonly_font_options(),
+                        'options' => $fontoptions
                 ),
                 'view_text_font_size' => array(
                         'type' => 'select',
@@ -248,16 +308,6 @@ $elements['viewcontent'] = array(
                         'title' => get_string('textcolor', 'skin'),
                         'description' => get_string('textcolordescription', 'skin'),
                         'defaultvalue' => (!empty($viewskin['view_text_font_color']) ? $viewskin['view_text_font_color'] : '#000000'),
-                        'size' => 7,
-                        'options' => array(
-                            'transparent' => true,
-                        ),
-                ),
-                'view_text_heading_color' => array(
-                        'type' => 'color',
-                        'title' => get_string('headingcolor', 'skin'),
-                        'description' => get_string('headingcolordescription', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] : '#000000'),
                         'size' => 7,
                         'options' => array(
                             'transparent' => true,
@@ -315,7 +365,7 @@ $elements['viewadvanced'] = array(
                         'style' => 'font-family:monospace',
                         'resizable' => true,
                         'fullwidth' => true,
-                        'title' => get_string('skincustomcss','skin'),
+                        'title' => get_string('skincustomcss', 'skin'),
                         'description' => get_string('skincustomcssdescription', 'skin'),
                         'defaultvalue' => ((!empty($viewskin['view_custom_css'])) ? $viewskin['view_custom_css'] : null),
                 ),
@@ -420,6 +470,8 @@ function designskinform_submit(Pieform $form, $values) {
     $skin['view_text_font_size'] = $values['view_text_font_size'];
     $skin['view_text_font_color'] = $values['view_text_font_color'];
     $skin['view_text_heading_color'] = $values['view_text_heading_color'];
+    $skin['header_background_color'] = $values['header_background_color'];
+    $skin['header_background_image'] = $values['header_background_image'];
     $skin['view_text_emphasized_color'] = $values['view_text_emphasized_color'];
     $skin['view_link_normal_color'] = $values['view_link_normal_color'];
     $skin['view_link_normal_underline'] = $values['view_link_normal_underline'];

@@ -16,6 +16,15 @@ $string['pluginname'] = 'Skin';
 $string['myskins'] = 'Skins';
 $string['siteskinmenu'] = 'Skins';
 
+$string['themedefault'] = 'Theme default';
+$string['headerbackgroundcolor'] = 'Header background colour';
+$string['headerbackgroundcolordescription'] = 'Background color for page header - this will not show if a header image has been selected';
+$string['headerbackgroundimage'] = 'Header background image';
+$string['headerbackgroundimagedescription'] = 'Minimum ideal width: 1832px. Minimum ideal height: 232px.';
+$string['bodybackgroundcolour'] = 'Page background colour';
+$string['bodybackgroundimage'] = 'Page background image';
+
+
 $string['deletethisskin'] = 'Delete this skin';
 $string['skindeleted'] = 'Skin deleted';
 $string['cantdeleteskin'] = 'You cannot delete this skin.';

@@ -63,7 +63,21 @@ $smarty->assign('body_background_attachment', (!empty($body_background_image)) ?
 $smarty->assign('body_background_position', (!empty($body_background_image)) ? Skin::background_position_number_to_value($skin->viewskin['body_background_position']) : '');
 
 // HEADER
-$smarty->assign('header_background_color', $skin->viewskin['header_background_color']); // TODO remove this
+$smarty->assign('header_background_color', $skin->viewskin['header_background_color']);
+
+if (empty($skin->viewskin['header_background_image'])) {
+    $header_background_image = '';
+}
+else {
+    $header_background_image = 'url(\'' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $skin->viewskin['header_background_image'];
+    if ($viewid) {
+        $header_background_image .= "&view={$viewid}";
+    }
+    $header_background_image .= '\')';
+}
+
+$smarty->assign('header_background_image', $header_background_image);
+
 $smarty->assign('header_text_font_color', $skin->viewskin['header_text_font_color']); // TODO remove this
 $smarty->assign('header_link_normal_color', $skin->viewskin['header_link_normal_color']); // TODO remove this
 $smarty->assign('header_link_normal_underline', ($skin->viewskin['header_link_normal_underline'] == true ? 'underline' : 'none')); // TODO remove this
@@ -90,10 +104,10 @@ $smarty->assign('view_background_width', $skin->viewskin['view_background_width'
 
 // TEXT
 $smarty->assign('view_text_font_face', Skin::get_css_font_face_from_font_name($skin->viewskin['view_text_font_family']));
-$smarty->assign('view_text_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_text_font_family']));
+$smarty->assign('view_text_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_text_font_family'], 'text'));
 $smarty->assign('tabs_height', Skin::get_tabs_height_from_font_name($skin->viewskin['view_text_font_family']));  // TODO remove this
 $smarty->assign('view_heading_font_face', Skin::get_css_font_face_from_font_name($skin->viewskin['view_heading_font_family']));
-$smarty->assign('view_heading_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_heading_font_family']));
+$smarty->assign('view_heading_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_heading_font_family'], 'heading'));
 $smarty->assign('view_text_font_size', $skin->viewskin['view_text_font_size']);
 $smarty->assign('view_text_font_color', $skin->viewskin['view_text_font_color']);
 $smarty->assign('view_text_heading_color', $skin->viewskin['view_text_heading_color']);

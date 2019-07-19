@@ -1459,5 +1459,31 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019090901) {
+        log_debug('Update the "skin" table to change where we record background images');
+        $table = new XMLDBTable('skin');
+        if (table_exists($table)) {
+            log_debug('Adding headingbgimg');
+            $field = new XMLDBField('headingbgimg');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+                add_field($table, $field);
+            }
+
+            $field = new XMLDBField('viewbgimg');
+            if (field_exists($table, $field)) {
+                log_debug('Removing viewbgimg');
+                if ($records = get_records_sql_array("SELECT viewbgimg AS aid FROM {skin} WHERE viewbgimg > 0")) {
+                    foreach ($records as $record) {
+                        // Need to remove the view bg image
+                        require_once(get_config('libroot') . 'skin.php');
+                        Skin::remove_background($record->aid);
+                    }
+                }
+                drop_field($table, $field);
+            }
+        }
+    }
+
     return $status;
 }
