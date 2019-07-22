@@ -41,3 +41,8 @@ Scenario: Testing functions for user search page (Bug 1431569)
  And I press "Go"
  Then I should see "Angela"
  And I should see "Page UserA_01"
+ # set system off elasticsearch
+ Then the following site settings are set:
+ | field        | value         |
+ | searchplugin | internal      |
+ And I log out
