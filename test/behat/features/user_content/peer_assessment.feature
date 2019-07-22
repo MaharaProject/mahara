@@ -66,7 +66,7 @@ Scenario: Setup and interact with a peer assessment / signoff combo
     Given I log in as "UserC" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_01"
     And I should not see "UserB first assessment - draft"
-    And I should not see "UserB second assessment - published"
+    And I should see "UserB second assessment - published"
     And I log out
 
     # Owner signs off the page
