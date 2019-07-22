@@ -133,7 +133,7 @@ Scenario: Log in as UserB with role od Peer and Interact with a peer assessment 
     Given I log in as "UserC" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I should not see "UserB first assessment - draft"
-    And I should not see "UserB second assessment - published"
+    And I should see "UserB second assessment - published"
     And I log out
 
     # Owner signs off the page
