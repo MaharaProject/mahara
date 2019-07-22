@@ -95,7 +95,7 @@ Scenario: Installing framework module and activating for an institution
  And I press "Place feedback"
  # And change assessment status
  And I should not see the field "Assessment"
- And I press "Save"
+ And I close the dialog
  And I log out
 
  # Try as another admin
