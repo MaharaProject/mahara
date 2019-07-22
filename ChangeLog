@@ -1,3 +1,54 @@
+19.04.1 (2019-07-23)
+- Bug 1835988: datepicker broken when site is in a subdirectory 
+- Bug 1817783: Delete account when user has locked page blocks not working 
+- Bug 1818591: Error: Undefined index versioning 
+- Bug 1818901: LDAP account set up should not require internal password to be set 
+- Bug 1824767: Site pages and collections : Page template become unavailable after changing settings 
+- Bug 1825282: Student can overwrite Teacher assessment by clicking Save annotation 
+- Bug 1827455: ClamAV admin message missing info 
+- Bug 1827747: Contrast on warning messages is not  enough and "Log in anyway" needs to be bold 
+- Bug 1827797: Adding / viewing a PDF has pdf menus open by default 
+- Bug 1827812: The Site admin email for new registrants is sent in wrong language 
+- Bug 1827966: HTML export not creating folder structure index pages 
+- Bug 1828140: missing btn-primary class on validation email page 
+- Bug 1828141: Creating a new institution with minimal info fails to save 
+- Bug 1828150: clicking on calendar icon doesnt bring up the datepicker on calendar inputs 
+- Bug 1828743: Navigation scrollbar not present if in production mode
+- Bug 1829091: config theme not picking up on some colours 
+- Bug 1829099: Group pages list on homepage is missing collection title 
+- Bug 1830278: When fetching the versioning of a page via ajax we should check that we have access to the page 
+- Bug 1830302: Messages Sending ignoring user preference 
+- Bug 1830797: Left-align lang strings 		 	
+- Bug 1830798: Text is overlapping on "Edit access" 
+- Bug 1830819: Edit dashboard button too low when not using an h1 heading 
+- Bug 1830847: 19.04 README says direct upgrade from 15.04.0 and later, but upgrade.php says must upgrade to 17.04.0 first. 
+- Bug 1831419: Notification when Importing Leap2A 
+- Bug 1831689: Datepicker doesnt work with different date formats 
+- Bug 1831835: Site Admin should be able to send messages to anyone 
+- Bug 1832308: Cannot toggle Group's Open button 
+- Bug 1832805: Missing lang string when saving to timeline 
+- Bug 1833325: Navigation block title is not set for other pages in collection 
+- Bug 1833390: Anchor hides behind header 
+- Bug 1834470: Profile picture generates error when uploaded to Image Gallery 
+- Bug 1835321: Manager can't see peer block when published 
+- Bug 1836325: Group search fails when Group Category is specified 
+- Bug 1836977: Should not display message link when messages set to 'nobody' and isolated institutions set 
+- Bug 1698699: Embedded PDFs not shown in HTML export
+- Bug 1825686: Content chooser has different icon and text sizes 	
+- Bug 1826801: Wrong link text color in "More options" page menu when link is active
+- Bug 1826940: Problem saving info to external_services_logs table
+- Bug 1827955: SAML metadata screen titled IdP when it should be SP
+- Bug 1828135: Deleting a user doesn't clear their pending verified emails
+- Bug 1829096: Print stylesheet prints title on separate page
+- Bug 1832665: SmartEvidence framework indenting not working on long headings
+- Bug 1832796: Adding Journal - message displayed to user is misleading
+- Bug 1832803: Adding an empty string as a comment generates a warning
+- Bug 1833034: Error/warning/success messages remains unless page is refreshed
+- Bug 1825274: Unsubscribe button too large on Group forums page
+- Bug 1826798: SmartEvidence error message needs a more generic message
+- Bug 1827000: Upgrade from 18.10 produces warning from statistics.php
+- Bug 1827305: Fixing add_tags behat feature
+
 19.04.0 (2019-04-30)
 - 1775103 	broken js in "general settings" from site options  
 - 1777014 	Inst admin cannot see profile completion  
