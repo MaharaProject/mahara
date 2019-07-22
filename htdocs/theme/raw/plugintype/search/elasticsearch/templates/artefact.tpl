@@ -99,7 +99,7 @@
                     <!-- Profile artefact can only be displayed in views -->
                     {if $secfacetterm != "Profile"} |
                     <span class="viewartefact">
-                        <a href="{$WWWROOT}artefact/artefact.php?artefact={$record->id}&view={$id}">
+                        <a href="{$WWWROOT}view/view.php?id={$id}&modal=1&artefact={$record->id}">
                         {str tag=viewartefact}
                         {if $secfacetterm == "Journalentry"}
                             {str tag=blogpost section=search.elasticsearch}

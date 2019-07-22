@@ -1008,7 +1008,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             $this->url = $this->view->get_url(false, true) . '&objection=1';
         }
         else {
-            $this->url = 'artefact/artefact.php?artefact=' . $this->artefact->get('id') . '&view=' . $this->view->get('id') . '&objection=1';
+            $this->url = 'view/view.php?id=' . $this->view->get('id') . '&modal=1&artefact=' .  $this->artefact->get('id') . '&objection=1';
         }
 
         if (empty($this->strings->subject)) {
@@ -1049,7 +1049,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, $key, 'activity',
                 $this->view->get('title'), $this->artefact->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, get_config('wwwroot') . "artefact/artefact.php?artefact=" . $this->artefact->get('id') . "&view=" . $this->view->get('id') . "&objection=1", $reporterurl
+                $this->message, get_config('wwwroot') . "view/view.php?id=" . $this->view->get('id') . '&modal=1&artefact=' . $this->artefact->get('id') . "&objection=1", $reporterurl
             );
         }
     }
@@ -1074,7 +1074,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
             return get_string_from_language(
                 $user->lang, $key, 'activity',
                 $viewtitle, hsc($this->artefact->get('title')), $reportername, $ctime,
-                $message, get_config('wwwroot') . "artefact/artefact.php?artefact=" . $this->artefact->get('id') . "&view=" . $this->view->get('id') . "&objection=1", hsc($this->artefact->get('title')),
+                $message, get_config('wwwroot') . "view/view.php?id=" . $this->view->get('id') . '&modal=1&artefact=' . $this->artefact->get('id') . "&objection=1", hsc($this->artefact->get('title')),
                 $reporterurl, $reportername
             );
         }
