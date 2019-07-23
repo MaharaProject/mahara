@@ -474,26 +474,6 @@ class View {
 
         $view->commit();
 
-        // if layout is set, and it's not a default layout
-        // add an entry to usr_custom_layout if one does not already exist
-        if ($template->get('layout') !== null) {
-            $customlayout = get_record('view_layout', 'id', $template->get('layout'), 'iscustom', 1);
-            if ($customlayout !== false) {
-                // is the owner of the copy going to be a group or institution or not?
-                $group = $view->group;
-                $institution = $view->institution;
-                $owner = (!empty($institution) || !empty($group)) ? null : $view->owner;
-                $data = (object) array(
-                    'usr' => $owner,
-                    'group' => $group,
-                    'institution' => $institution,
-                    'layout' =>  $template->get('layout'),
-                );
-                $where = clone $data;
-                ensure_record_exists('usr_custom_layout', $where, $data);
-            }
-        }
-
         $blocks = get_records_array('block_instance', 'view', $view->get('id'));
         if ($blocks) {
             foreach ($blocks as $b) {
@@ -2314,6 +2294,28 @@ class View {
         return ($usesnewlayout || !$hasblocks);
     }
 
+    /*
+     * Checks if the block dimension heights of the page are set to default = 1
+     * and they need to be reset when loading the page
+     * This can happen when we copy a view that has an old layout
+     */
+    function needs_block_resize_on_load() {
+        $viewid = $this->get('id');
+        $sql = "SELECT * FROM {block_instance} bi
+                JOIN {block_instance_dimension} bd
+                ON bi.id = bd.block
+                WHERE bi.view = ?";
+        $hasblocks = record_exists_sql($sql, array($viewid));
+
+        $sql = "SELECT * FROM {block_instance} bi
+                JOIN {block_instance_dimension} bd
+                ON bi.id = bd.block
+                WHERE bd.height > 1 AND bi.view = ?";
+        $blockshavedefaultheights = !record_exists_sql($sql, array($viewid));
+
+        return ($hasblocks && $blockshavedefaultheights);
+    }
+
     /**
      * Returns the HTML for the columns of this view
      */
@@ -2682,9 +2684,10 @@ class View {
     *
     * @param array $values parameters for this function
     *                      id     => int of block instance to move
-    *                      row      => int current row
-    *                      column => int column to move to
-    *                      order  => position in new column to insert at
+    *                      newx   => int x position to move to
+    *                      newy   => int y position to move to
+    *                      newheight  => int height of the block
+    *                      newwidth   => int width of the block
     */
     public function moveblockinstance($values) {
         $requires = array('id', 'newx', 'newy', 'newheight', 'newwidth');
@@ -5951,8 +5954,6 @@ class View {
     public function copy_contents($template, &$artefactcopies) {
 
         $this->set('lockblocks', $template->get('lockblocks'));
-        $this->set('numrows', $template->get('numrows'));
-        $this->set('layout', $template->get('layout'));
         if ($template->get('template') == self::SITE_TEMPLATE
             && $template->get('type') == 'portfolio') {
             $this->set('description', '');
@@ -5964,8 +5965,39 @@ class View {
             $this->set('instructions', EmbeddedImage::prepare_embedded_images($this->copy_setting_info($template, $artefactcopies, 'instructions'), 'instructions', $this->get('id')));
         }
         $this->set('tags', $template->get('tags'));
-        $this->set('columnsperrow', $template->get('columnsperrow'));
-        $blocks = get_records_array('block_instance', 'view', $template->get('id'));
+
+        // If the template uses the gridstack layout
+        if ($template->uses_new_layout()) {
+            // then recover info from block_instance_dimension too
+            $sql = "
+            SELECT * FROM {block_instance} bi
+            INNER JOIN {block_instance_dimension} bd
+            ON bi.id = bd.block
+            WHERE bi.view = ?";
+
+            $blocks = get_records_sql_array($sql, array($template->get('id')));
+        }
+        else {
+            require_once(get_config('libroot') . 'gridstacklayout.php');
+            // get blocks in old layout
+            $blocks = get_records_array('block_instance', 'view', $template->get('id'));
+            // translate layout
+            $oldlayoutcontent = get_blocks_in_old_layout($template->get('id'));
+            $newlayoutcontent = translate_to_new_layout($oldlayoutcontent);
+            foreach ($newlayoutcontent as $block) {
+                $dimensions[$block->block] = $block;
+            }
+            foreach ($blocks as $block) {
+                $block->positionx = $dimensions[$block->id]->positionx;
+                $block->positiony = $dimensions[$block->id]->positiony;
+                $block->width = $dimensions[$block->id]->width;
+                $block->height = $dimensions[$block->id]->height;
+            }
+
+        }
+
+
+
         $numcopied = array('blocks' => 0);
 
         if ($blocks) {

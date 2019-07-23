@@ -512,6 +512,8 @@ $string['gotonextversion'] = 'Go to the next version ';
 $string['gotopreviousversion'] = 'Go to the previous version';
 $string['loadingtimelinecontent'] = 'Loading timeline for "%s". If the page has many versions, this may take a while.';
 
-// layout
+// layout strings
 $string['bottom'] = 'Bottom';
 $string['top'] = 'Top';
+$string['blockssizeupdated'] = 'Block sizes were updated successfully';
+$string['dimensionsnotset'] = 'Block dimensions not set';

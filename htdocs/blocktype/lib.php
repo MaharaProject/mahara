@@ -2139,13 +2139,18 @@ class BlockInstance {
         $obj->height = $height;
         $obj->width = $width;
 
-        //TODO: move this inside of the commit
-        ensure_record_exists('block_instance_dimension', (object) array('block' => $this->id), $obj);
+        if (isset($obj->positionx) && isset($obj->positiony) && isset($obj->height) && isset($obj->width)) {
+            //TODO: move this inside of the commit
+            ensure_record_exists('block_instance_dimension', (object) array('block' => $this->id), $obj);
+            $this->set('positionx',  $positionx);
+            $this->set('positiony', $positiony);
+            $this->set('height', $height);
+            $this->set('width',  $width);
+        }
+        else {
+           throw new \Exception(get_string('dimensionsnotset', 'view'));
+        }
 
-        $this->set('positionx',  $positionx);
-        $this->set('positiony', $positiony);
-        $this->set('height', $height);
-        $this->set('width',  $width);
     }
 }
 

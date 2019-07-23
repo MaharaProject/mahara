@@ -349,12 +349,18 @@ if ($owner && $owner == $USER->get('id')) {
     }
 }
 
-
 // Don't show page content to a user with peer role
 // if the view doesn't have a peer assessment block
 if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
     || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
     if ($newlayout = $view->uses_new_layout()) {
+
+        $blockresizeonload = "false";
+        if ($view->uses_new_layout() && $view->needs_block_resize_on_load()) {
+            // we're copying from an old layout view and need to resize blocks
+            $blockresizeonload = "true";
+        }
+
         $blocks = $view->get_blocks();
         $blocks = json_encode($blocks);
         $blocksjs =  <<<EOF
@@ -368,9 +374,15 @@ $(function () {
     grid.gridstack(options);
     grid = $('.grid-stack').data('gridstack');
 
-    // should add the blocks one by one
     var blocks = {$blocks};
-    loadGrid(grid, blocks);
+    if ({$blockresizeonload}) {
+        // the page was copied from an old layout page
+        // and the blocks still need to be resized
+        loadGridTranslate(grid, blocks);
+    }
+    else {
+        loadGrid(grid, blocks);
+    }
 });
 EOF;
     }
@@ -649,6 +661,7 @@ if ($titletext !== $title) {
 
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 
+$smarty->assign('viewid', $view->get('id'));
 $smarty->display('view/view.tpl');
 
 mahara_touch_record('view', $viewid); // Update record 'atime'

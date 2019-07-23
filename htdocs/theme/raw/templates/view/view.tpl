@@ -1,6 +1,7 @@
 {include file="header.tpl" headertype="page"}
 {include file='modal-details.tpl'}
 
+<input type="hidden" id="viewid" name="id" value="{$viewid}">
 <div id="view-description" class="view-description {if $toolbarhtml}with-toolbar{/if}">
     {$viewdescription|clean_html|safe}
 </div>

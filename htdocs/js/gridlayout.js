@@ -66,7 +66,7 @@ function loadGrid(grid, blocks) {
 
 function updateTranslatedGridRows(blocks) {
 
-      var height = [], maxheight = [], realheight;
+      var height = [], maxheight = [], realheight, updatedGrid = [];
       height[0] = 0;
       maxheight[0] = 0;
 
@@ -100,16 +100,17 @@ function updateTranslatedGridRows(blocks) {
               el,
               block.positionx,
               block.positiony
-            );
+          );
 
-            var id = block.id,
-               dimensions = {
-                   newx: block.positionx,
-                   newy: block.positiony,
-                   newwidth: block.width,
-                   newheight: realheight,
-               }
-            moveBlock(id, dimensions);
+          var updatedBlock = {};
+          updatedBlock.id = block.id;
+          updatedBlock.dimensions =  {
+              newx: +block.positionx,
+              newy: +block.positiony,
+              newwidth: +block.width,
+              newheight: +realheight,
+          };
+          updatedGrid.push(updatedBlock);
 
           if (height[block.row][block.column] == 0) {
               height[block.row][block.column] = realheight;
@@ -119,7 +120,8 @@ function updateTranslatedGridRows(blocks) {
           }
           maxheight[block.row] = Math.max(...height[block.row]);
       });
-
+      // update all blocks together
+      moveBlocks(updatedGrid);
 }
 
 function updateBlockSizes() {
@@ -194,6 +196,15 @@ function moveBlock(id, whereTo) {
     pd['action_moveblockinstance_id_' + id + '_newx_' + whereTo['newx'] + '_newy_' + whereTo['newy'] + '_newheight_' + whereTo['newheight'] + '_newwidth_' + whereTo['newwidth']] = true;
 
     sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST');
+}
+
+function moveBlocks(grid) {
+    var pd = {
+        'id': $('#viewid').val(),
+        'blocks': JSON.stringify(grid),
+    };
+
+    sendjsonrequest(config['wwwroot'] + 'view/grid.json.php', pd, 'POST');
 }
 
 var serializeWidgetMap = function(items) {

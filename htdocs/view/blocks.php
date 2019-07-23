@@ -163,11 +163,15 @@ require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 $inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
 
-$needstranslate = "false";
+$blockresizeonload = "false";
+if ($view->uses_new_layout() && $view->needs_block_resize_on_load()) {
+    // we're copying from an old layout view and need to resize blocks
+    $blockresizeonload = "true";
+}
 if (!$view->uses_new_layout()) {
-    // if it's old rowa layout, we need to translate to grid layout
+    // if it's old row layout, we need to translate to grid layout
     save_blocks_in_new_layout($view->get('id'));
-    $needstranslate = "true";
+    $blockresizeonload = "true";
 }
 $blocks = $view->get_blocks(true);
 $blocksencode = json_encode($blocks);
@@ -192,7 +196,7 @@ $(function () {
     grid.resizable('.grid-stack-item', true);
     // should add the blocks one by one
     var blocks = {$blocksencode};
-    if ({$needstranslate}) {
+    if ({$blockresizeonload}) {
         // update block heights when they are loaded
         loadGridTranslate(grid, blocks);
     }
@@ -304,7 +308,6 @@ if ($collection = $view->get('collection')) {
 }
 $smarty->assign('collectionid', $collectionid);
 
-$smarty->assign('needstranslate', ($needstranslate ? 1 : 0));
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 
 $smarty->assign('issitetemplate', $view->is_site_template());
