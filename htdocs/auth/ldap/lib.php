@@ -1317,7 +1317,7 @@ class AuthLdap extends Auth {
                     if (
                             ($d1 = get_record('usr', 'email', $todb->email))
                             ||
-                            ($d2 = record_exists('artefact_internal_profile_email', 'email', $todb->email))
+                            ($d2 = get_record('artefact_internal_profile_email', 'email', $todb->email))
                     ) {
                         if (empty($d1)) {
                             $d1 = get_record('usr', 'id', $d2->owner);
