@@ -50,7 +50,14 @@ if ($versions->total == 0) {
 
 $form = View::get_timeline_form($view, $fromdate, $todate);
 
-$smarty = smarty(array('paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js', 'js/jTLine/js/jtline.js'), array(), array('view' => array(
+$smarty = smarty(array('paginator',
+        'js/jquery/jquery-ui/js/jquery-ui.min.js',
+        'js/jTLine/js/jtline.js',
+        'js/lodash/lodash.js',
+        'js/gridstack/gridstack.js',
+        'js/gridlayout.js'),
+        array(),
+        array('view' => array(
         'versionnumber',
         'gotonextversion',
         'gotopreviousversion',

@@ -44,6 +44,7 @@ if ($versions->count > 0) {
             "assignID" => $value->id,
             "taskShortDate" => date('j F', strtotime($value->ctime)),
             "taskDetails" => $value->blockdata_formatted->html,
+            "gridlayout" => isset($value->blockdata_formatted->newlayout),
         );
     }
 }

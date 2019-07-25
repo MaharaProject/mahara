@@ -2160,11 +2160,12 @@ class View {
 
     }
 
-    /**
-    * Gets the view blocks in an array to be easily loaded in js gridstack
-    * @param boolean $editing    whether we are in the edit more or not
-    */
-    public function get_blocks($editing=false) {
+/**
+* Gets the view blocks in an array to be easily loaded in js gridstack
+* @param boolean $editing    whether we are in the edit more or not
+*/
+public function get_blocks($editing=false, $exporting=false, $versioning=false) {
+    if (!$versioning) {
         $sql = '
         SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
         positionx, positiony, width, height, blocktype, title, configdata
@@ -2174,49 +2175,66 @@ class View {
         WHERE bi.view = ?
         ORDER BY bi.row, bi.column, bi.order';
         $blocks = get_records_sql_array($sql, array($this->get('id')));
+    }
+    else {
+        $blocks = $versioning->blocks;
+    }
 
-        if (is_array($blocks) || is_object($blocks)) {
-            foreach ($blocks as $block) {
-                require_once(get_config('docroot') . 'blocktype/lib.php');
-                $block->view_obj = $this;
-                $b = new BlockInstance($block->id, (array)$block);
+    if (is_array($blocks) || is_object($blocks)) {
+        foreach ($blocks as $block) {
+            require_once(get_config('docroot') . 'blocktype/lib.php');
+            $block = (object)$block;
+            $block->view = $this->get('id');
+            $block->view_obj = $this;
+            if (!$versioning) {
+                $blockid = $block->id;
+            }
+            else {
+                $blockid = $block->originalblockid;
+            }
+            $b = new BlockInstance($blockid, (array)$block);
+            if (isset($versioning->newlayout)) {
                 $b->set('positionx', $block->positionx);
                 $b->set('positiony', $block->positiony);
                 $b->set('width', $block->width);
                 $b->set('height', $block->height);
+                $b->set('configdata', (array)$block->configdata);
+            }
+            else {
                 $b->set('row', $block->row);
                 $b->set('column', $block->column);
                 $b->set('order', $block->order);
-                $this->grid[]=$b;
             }
+            $this->grid[]=$b;
         }
-
-        $blockcontent = array();
-        foreach($this->grid as $blockinstance) {
-            $block = array();
-            if ($editing) {
-                $result = $blockinstance->render_editing();
-                $result = $result['html'];
-            }
-            else {
-                $result = $blockinstance->render_viewing();
-                if (call_static_method(generate_class_name('blocktype', $blockinstance->get('blocktype')), 'has_static_content')) {
-                    $block['class'] = 'staticblock';
-                }
-            }
-            $block['content'] = $result;
-            $block['width'] = $blockinstance->get('width');
-            $block['height'] = $blockinstance->get('height');
-            $block['positionx'] = $blockinstance->get('positionx');
-            $block['positiony'] = $blockinstance->get('positiony');
-            $block['row'] = $blockinstance->get('row');
-            $block['column'] = $blockinstance->get('column');
-            $block['order'] = $blockinstance->get('order');
-            $block['id'] = $blockinstance->get('id');
-            $blockcontent[] = $block;
-        }
-        return $blockcontent;
     }
+
+    $blockcontent = array();
+    foreach($this->grid as $blockinstance) {
+        $block = array();
+        if ($editing) {
+            $result = $blockinstance->render_editing();
+            $result = $result['html'];
+        }
+        else {
+            $result = $blockinstance->render_viewing($exporting, $versioning);
+            if (call_static_method(generate_class_name('blocktype', $blockinstance->get('blocktype')), 'has_static_content')) {
+                $block['class'] = 'staticblock';
+            }
+        }
+        $block['content'] = $result;
+        $block['width'] = $blockinstance->get('width');
+        $block['height'] = $blockinstance->get('height');
+        $block['positionx'] = $blockinstance->get('positionx');
+        $block['positiony'] = $blockinstance->get('positiony');
+        $block['row'] = $blockinstance->get('row');
+        $block['column'] = $blockinstance->get('column');
+        $block['order'] = $blockinstance->get('order');
+        $block['id'] = $blockinstance->get('id');
+        $blockcontent[] = $block;
+    }
+    return $blockcontent;
+}
     /*
     *
     * wrapper around get_column_datastructure
@@ -7165,52 +7183,73 @@ class View {
 
         $data = json_decode($data);
         $data->version = $versionnumber;
-        $this->numrows = isset($data->numrows) ? $data->numrows : $this->numrows;
-        $this->layout = isset($data->layout) ? $data->layout : $this->layout;
         $this->description = isset($data->description) ? $data->description : '';
         $this->tags = isset($data->tags) && is_array($data->tags) ? $data->tags : array();
-        $colsperrow = array();
-        if (isset($data->columnsperrow)) {
-            foreach ($data->columnsperrow as $k => $v) {
-                $colsperrow[$k] = $v;
+        if (!isset($data->newlayout)) {
+            $this->numrows = isset($data->numrows) ? $data->numrows : $this->numrows;
+            $this->layout = isset($data->layout) ? $data->layout : $this->layout;
+            $colsperrow = array();
+            if (isset($data->columnsperrow)) {
+                foreach ($data->columnsperrow as $k => $v) {
+                    $colsperrow[$k] = $v;
+                }
             }
-        }
-        $this->columnsperrow = $colsperrow;
-        $this->columns = array();
-        $layout = $this->get_layout();
-        for ($i = 1; $i <= $this->numrows; $i++) {
-            $widths = explode(',', $layout->rows[$i]['widths']);
-            for ($j = 1; $j <= $data->columnsperrow->{$i}->columns; $j++) {
-                $this->columns[$i][$j] = array('blockinstances' => array());
-                $this->columns[$i][$j]['width'] = $widths[$j-1];
+            $this->columnsperrow = $colsperrow;
+            $this->columns = array();
+            $layout = $this->get_layout();
+            for ($i = 1; $i <= $this->numrows; $i++) {
+                $widths = explode(',', $layout->rows[$i]['widths']);
+                for ($j = 1; $j <= $data->columnsperrow->{$i}->columns; $j++) {
+                    $this->columns[$i][$j] = array('blockinstances' => array());
+                    $this->columns[$i][$j]['width'] = $widths[$j-1];
+                }
             }
         }
 
         $html = '';
         if (!empty($data->blocks)) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
-            usort($data->blocks, function($a, $b) { return $a->order > $b->order; });
+            if (!isset($data->newlayout)) {
+                usort($data->blocks, function($a, $b) { return $a->order > $b->order; });
+            }
             foreach ($data->blocks as $k => $v) {
                 safe_require('blocktype', $v->blocktype);
-                $bi = new BlockInstance(0,
-                    array(
-                        'id'          => $v->originalblockid,
-                        'blocktype'   => $v->blocktype,
-                        'title'       => $v->title,
-                        'view'        => $this->get('id'),
-                        'view_obj'    => $this,
-                        'row'         => $v->row,
-                        'column'      => $v->column,
-                        'order'       => $v->order,
-                        'configdata'  => serialize((array)$v->configdata),
-                    )
+                $blockdata = array(
+                    'id'          => $v->originalblockid,
+                    'blocktype'   => $v->blocktype,
+                    'title'       => $v->title,
+                    'view'        => $this->get('id'),
+                    'view_obj'    => $this,
+                    'configdata'  => serialize((array)$v->configdata),
                 );
+                if (!isset($data->newlayout)) {
+                    $blockdata['row']    = $v->row;
+                    $blockdata['column'] = $v->column;
+                    $blockdata['order']  = $v->order;
+                }
+                else {
+                    $blockdata['positionx'] = $v->positionx;
+                    $blockdata['positiony'] = $v->positiony;
+                    $blockdata['height']    = $v->height;
+                    $blockdata['width']     = $v->width;
+                }
+                $bi = new BlockInstance(0, $blockdata);
                 // Add a fake unique id to allow for pagination etc
-                $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
+                if (!isset($data->newlayout)) {
+                    $this->columns[$v->row][$v->column]['blockinstances'][] = $bi;
+                }
+                else {
+                    $this->blocks[] = $bi;
+                }
             }
         }
         if (!$USER->has_peer_role_only($this) || $this->has_peer_assessement_block()) {
-            $html = $this->build_rows(false, false, $data);
+            if (!isset($data->newlayout)) {
+                $html = $this->build_rows(false, false, $data);
+            }
+            else {
+                $html = $this->get_blocks(false, false, $data);
+            }
         }
         else {
             $html = '<div class="alert alert-info">

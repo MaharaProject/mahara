@@ -268,6 +268,7 @@ $string['cantversionviewinvalid'] = 'The supplied page identifier is invalid.';
 $string['cantversionvieweditpermissions'] = 'You do not permission to edit this page.';
 $string['cantversionviewsubmitted'] = 'You cannot edit this page because it has been submitted for assessment. You will have to wait until it is released.';
 $string['cantversionviewgroupeditwindow'] = 'You cannot edit this page. It is outside of the group editable date window.';
+$string['cantversionoldlayout'] = 'You cannot save a timeline version of a view with an old layout. You need to convert it to the new grid layout. To do this simply edit the page and the layout will be converted.';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 
