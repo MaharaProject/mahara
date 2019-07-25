@@ -239,6 +239,7 @@ var FileBrowser = (function($) {
 
     this.callback_feedback = function (data) {
         var infoclass = 'info';
+        var temp = false;
         if (data.problem) {
             infoclass = 'warning';
         }
@@ -247,6 +248,7 @@ var FileBrowser = (function($) {
         }
         else {
             infoclass = 'ok';
+            temp = true;
         }
 
         quotaUpdate(data.quotaused, data.quota);
@@ -254,12 +256,15 @@ var FileBrowser = (function($) {
             // pass the artefacttype to update progress bar
             progressbarUpdate(data.artefacttype, data.deleted);
         }
-        var newmessage = makeMessage($('<div>').append(data.message), infoclass);
+        var newmessage = makeMessage($('<div>').append(data.message), infoclass, temp);
         $(newmessage).prop('id', 'uploadstatusline' + data.uploadnumber);
         if (data.uploadnumber) {
             $('#uploadstatusline'+data.uploadnumber).remove();
         }
         $('#' + self.id + '_upload_messages').append(newmessage);
+        if ($(newmessage).hasClass('alert-temp')) {
+            $(newmessage).delay(3000).fadeOut(500);
+        }
     };
 
     this.hide_edit_form = function () {

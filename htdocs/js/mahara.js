@@ -212,7 +212,7 @@ function formGlobalError(form, data) {
 
 // Message related functions
 
-function makeMessage(message, type) {
+function makeMessage(message, type, temp=false) {
     if (message === undefined) {
         return;
     }
@@ -220,6 +220,9 @@ function makeMessage(message, type) {
     var messageContainer = jQuery('<div class="alert"></div>').append(message);
     switch (type) {
         case 'ok':
+            if (temp) {
+                messageContainer.addClass('alert-temp').get(0);
+            }
             return messageContainer.addClass('alert-success').get(0);
         case 'error':
             return messageContainer.addClass('alert-danger').get(0);
