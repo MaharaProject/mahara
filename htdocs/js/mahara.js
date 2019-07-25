@@ -1223,7 +1223,8 @@ $(function() {
  */
 jQuery(function($) {
     $(document).on('click', 'a', function(event) {
-        if ($(this.hash).length && location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')) {
+        if ($(this.hash).length && location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
+            !$(this).is('[class^="carousel"]')) {
             event.preventDefault();
             var target = $(this.hash);
             var headerheight = 0;
