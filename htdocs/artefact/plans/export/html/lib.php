@@ -2,8 +2,8 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-plans-export-html
- * @author     Catalyst IT Ltd
+ * @subpackage artefact-plans
+ * @author     Catalyst IT Ltd, Alexander Del Ponte
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -44,13 +44,9 @@ class HtmlExportPlans extends HtmlExportArtefactPlugin {
         }
         $smarty->assign('plans', $plans);
 
-        if (count($plans)) {
-            $smarty->assign('stryouhaveplans', get_string('youhavenplan', 'artefact.plans', count($plans), count($plans)));
-        }
-
         return array(
             'title' => get_string('Plans', 'artefact.plans'),
-            'description' => $smarty->fetch('export:html/plans:summary.tpl'),
+            'description' => $smarty->fetch('artefact:plans:export/html/summary.tpl'),
         );
     }
 

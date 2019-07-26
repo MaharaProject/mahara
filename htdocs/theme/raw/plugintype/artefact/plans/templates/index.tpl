@@ -1,11 +1,13 @@
 {include file="header.tpl"}
-<div class="btn-group btn-group-top">
-    <a class="btn btn-secondary" href="{$WWWROOT}artefact/plans/new.php">
-        <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
-        {str section="artefact.plans" tag="newplan"}</a>
-</div>
+{if $canedit}
+    <div class="btn-group btn-group-top">
+        <a class="btn btn-secondary" href="{$newPlanLink}">
+            <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+            {str section="artefact.plans" tag="newplan"}</a>
+    </div>
+{/if}
 {if !$plans.data}
-    <div class="no-results">{$strnoplansaddone|safe}</div>
+    <div class="no-results">{$strnoplans|safe}</div>
 {else}
     <div id="planswrap" class="view-container">
         <div id="planslist">

@@ -59,6 +59,11 @@
         &.date {
             margin-left: 4px !important;
         }
+
+        & + button.icon {
+            margin-left: 5px;
+            height: $input-height;
+        }
     }
 
     &.theme-dropdown {

@@ -4704,7 +4704,7 @@ function cron_email_reset_rebounce() {
                   $sql = "UPDATE {artefact_internal_profile_email}
                           SET mailssent = 0, mailsbounced = 0";
                   execute_sql($sql);
-                  $pluginrecord = new StdClass;
+                  $pluginrecord = new stdClass();
                   $pluginrecord->plugin = 'email';
                   $pluginrecord->field  = 'lastbouncereset';
                   $pluginrecord->value  = time();
@@ -4716,7 +4716,7 @@ function cron_email_reset_rebounce() {
               }
           }
           else {
-              $pluginrecord = new StdClass;
+              $pluginrecord = new stdClass();
               $pluginrecord->plugin = 'email';
               $pluginrecord->field  = 'lastbouncereset';
               $pluginrecord->value  = time();

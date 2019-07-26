@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="artefact/plans/db" VERSION="20100525" COMMENT="XMLDB file for MyPlans Artefact Mahara tables"
+<XMLDB PATH="artefact/plans/db" VERSION="20190717" COMMENT="XMLDB file for Plans artefact Mahara tables"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
 <TABLES>
-
     <!-- This table is supposed to have a 1-1 relation with every row in the
     artefact table with artefacttype = 'task'.  It contains additional data
-    that isn't in the artefact table. -->
+    that doesn't exist in the artefact table. -->
     <TABLE NAME="artefact_plans_task">
         <FIELDS>
             <FIELD NAME="artefact" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+            <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
             <FIELD NAME="completiondate" TYPE="datetime" NOTNULL="false" />
             <FIELD NAME="completed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="reminder" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true"/>
+            <FIELD NAME="remindermailsent" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="taskview" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="outcome" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="outcometype" TYPE="char" LENGTH="20" NOTNULL="false" />
+            <FIELD NAME="template" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="roottemplatetask" TYPE="int" LENGTH="10" NOTNULL="false"/>
+            <FIELD NAME="mandatory" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="rootgrouptask" TYPE="int" LENGTH="10" NOTNULL="false" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="artefact" />
             <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
         </KEYS>
+        <INDEXES>
+            <INDEX NAME="rootgrouptaskix" UNIQUE="false" FIELDS="rootgrouptask"/>
+            <INDEX NAME="roottemplatetaskix" UNIQUE="false" FIELDS="roottemplatetask"/>
+            <INDEX NAME="taskviewix" UNIQUE="false" FIELDS="taskview"/>
+            <INDEX NAME="outcomeix" UNIQUE="false" FIELDS="outcome"/>
+            <INDEX NAME="outcometypeix" UNIQUE="false" FIELDS="outcometype"/>
+            <INDEX NAME="completedremindermailsentix" UNIQUE="false" FIELDS="completed,remindermailsent"/>
+        </INDEXES>
+    </TABLE>
+
+    <TABLE NAME="artefact_plans_plan">
+        <FIELDS>
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+            <FIELD NAME="template" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="roottemplate" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="rootgroupplan" TYPE="int" LENGTH="10" NOTNULL="false" />
+            <FIELD NAME="selectionplan" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="artefact" />
+            <KEY NAME="artefactfk" TYPE="foreign" FIELDS="artefact" REFTABLE="artefact" REFFIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="roottemplateix" UNIQUE="false" FIELDS="roottemplate"/>
+            <INDEX NAME="rootgroupplanix" UNIQUE="false" FIELDS="rootgroupplan"/>
+        </INDEXES>
     </TABLE>
 </TABLES>
 </XMLDB>

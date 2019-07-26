@@ -80,6 +80,7 @@ $string['nocollections'] = 'No collections yet.';
 $string['nocollectionsaddone'] = 'No collections yet. %sAdd one%s.';
 $string['nooverride'] = 'No override';
 $string['noviewsavailable'] = 'No pages are available to add.';
+$string['noviewsincollection'] = 'No pages in collection.';
 $string['noviewsaddsome'] = 'No pages in collection. %sAdd some%s.';
 $string['noviews'] = 'No pages.';
 $string['overrideaccess'] = 'Override access';

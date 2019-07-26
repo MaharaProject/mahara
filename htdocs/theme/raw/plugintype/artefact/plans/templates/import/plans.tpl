@@ -20,7 +20,7 @@
                     <strong>{str tag=tasks section=artefact.plans}:</strong>
                     {str tag=ntasks section=artefact.plans arg1=count($plan.entrytasks)}
                 </div>
-                <!-- TODO Display existing plans and plan count with section title -->
+                <!-- TODO Display existplans and plan count with section title -->
                 <!-- {if $plan.existingitems}
                 <div class="existingplans">
                     <strong>{str tag=existingplans section=artefact.plans}</strong>
@@ -89,7 +89,7 @@
     </div>
     {/foreach}
 </div>
-<script>
+<script type="application/javascript">
     jQuery(function() {
         jQuery("a.tasktitle").on("click", function(e) {
             e.preventDefault();

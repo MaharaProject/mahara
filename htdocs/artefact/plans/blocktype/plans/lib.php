@@ -25,7 +25,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         return array('general' => 22000);
     }
 
-     /**
+    /**
      * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
      */
@@ -64,19 +64,19 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
 
         $plans = array();
         $alltasks = array();
-        $template = 'artefact:plans:taskrows.tpl';
+        $template = 'artefact:plans:view/plantasks.tpl';
 
         if (($versioning && isset($configdata['existing_artefacts']) && !empty($configdata['existing_artefacts'])) ||
-           (isset($configdata['artefactids']) && is_array($configdata['artefactids']) && count($configdata['artefactids']) > 0)) {
+            (isset($configdata['artefactids']) && is_array($configdata['artefactids']) && count($configdata['artefactids']) > 0)) {
             if ($versioning) {
                 // recover the configdata from the version
                 $blockid = $instance->get('id');
                 $blocks = $versioning->blocks;
                 foreach ($blocks as $key => $value) {
-                  if ($value->originalblockid == $blockid) {
-                    $versionblock = $value;
-                    break;
-                  }
+                    if ($value->originalblockid == $blockid) {
+                        $versionblock = $value;
+                        break;
+                    }
                 }
                 $configdata = (array)$versionblock->configdata;
                 $savedplans = $configdata['existing_artefacts'];
@@ -86,7 +86,8 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
             }
             foreach ($savedplans as $planid => $plancontent) {
                 try {
-                    $tasks = isset($plancontent->tasks) ? (array)$plancontent->tasks : ArtefactTypeTask::get_tasks($planid, 0, $limit);
+                    $plan = artefact_instance_from_id($planid);
+                    $tasks = isset($plancontent->tasks) ? (array)$plancontent->tasks : ArtefactTypeTask::get_tasks($plan, 0, $limit);
                     $blockid = $instance->get('id');
                     if ($exporter || $versioning) {
                         $pagination = false;
@@ -98,7 +99,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                             'baseurl'   => $baseurl,
                             'id'        => 'block' . $blockid . '_plan' . $planid . '_pagination',
                             'datatable' => 'tasklist_' . $blockid . '_plan' . $planid,
-                            'jsonscript' => 'artefact/plans/viewtasks.json.php',
+                            'jsonscript' => 'artefact/plans/block/tasks.json.php',
                         );
                     }
                     $configdata['view'] = $instance->get('view');
@@ -137,7 +138,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
             }
         }
         else {
-           $smarty->assign('noplans', get_string('noplansselectone', 'blocktype.plans/plans'));
+            $smarty->assign('noplans', get_string('noplansselectone1', 'blocktype.plans/plans'));
         }
 
         $smarty->assign('editing', $editing);

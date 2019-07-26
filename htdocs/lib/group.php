@@ -618,7 +618,7 @@ function group_update($new, $create=false) {
         $new->allowarchives = 0;
     }
 
-    $update_blog_access = ($new->editroles != $old->editroles);
+    $update_artefact_access = ($new->editroles != $old->editroles);
 
     foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'allowarchives', 'editroles',
         'hidden', 'hidemembers', 'hidemembersfrommembers', 'groupparticipationreports') as $f) {
@@ -726,7 +726,7 @@ function group_update($new, $create=false) {
     if ($old->grouptype != $new->grouptype) {
         if ($new->grouptype == 'course') {
             if ($ids = get_records_select_array('artefact',
-                      '"group" = ' . $new->id . ' AND artefacttype IN (\'blog\', \'blogpost\')',
+                      '"group" = ' . $new->id . ' AND artefacttype IN (\'blog\', \'blogpost\', \'plan\', \'task\')',
                       null, '', 'id')) {
                 $access = ($old->editroles == 'all' || $old->editroles == 'notmember');
                 db_begin();
@@ -748,7 +748,7 @@ function group_update($new, $create=false) {
                       AND  artefact IN (
                           SELECT a.id FROM {artefact} a
                           WHERE a.group = ?
-                          AND a.artefacttype IN (\'blog\', \'blogpost\')
+                          AND a.artefacttype IN (\'blog\', \'blogpost\', \'plan\', \'task\')
                       )';
             execute_sql($query, array($new->id));
         }
@@ -792,8 +792,10 @@ function group_update($new, $create=false) {
         }
     }
 
-    // When the create/edit permissions change, update permissions on journal and posts
-    if ($update_blog_access) {
+    // When the create/edit permissions change, update permissions on:
+    // - journals and posts
+    // - plans and tasks
+    if ($update_artefact_access) {
         $edit_access = array();
         if ($old->editroles == 'all') {
             $edit_access['member'] = 0;
@@ -815,7 +817,7 @@ function group_update($new, $create=false) {
                       AND artefact IN (
                           SELECT a.id FROM {artefact} a
                           WHERE a.group = ?
-                          AND a.artefacttype IN (\'blog\', \'blogpost\')
+                          AND a.artefacttype IN (\'blog\', \'blogpost\', \'plan\', \'task\')
                       )';
             execute_sql($query, array($value, $value, $new->id));
         }
@@ -1512,13 +1514,29 @@ function group_removeuser_submit(Pieform $form, $values) {
 
 /**
  * Form for submitting views to a group
+ *
+ * @param int $groupid
+ * @return string|void
+ * @throws SQLException
  */
 function group_view_submission_form($groupid) {
     global $USER;
 
-    list($collections, $views) = View::get_views_and_collections($USER->get('id'));
+    list($collections, $views, $grouptaskoutcomecollections, $grouptaskoutcomeviews) = View::get_views_and_collections_considering_plantasks($USER->get('id'), $groupid);
 
     $viewoptions = $collectionoptions = array();
+
+    foreach ($grouptaskoutcomecollections as $gtoc) {
+        if (empty($gtoc['submittedgroup']) && empty($gtoc['submittedhost'])) {
+            $grouptaskoutcomeoptions['c:' . $gtoc['id']] = $gtoc['name'];
+        }
+    }
+
+    foreach ($grouptaskoutcomeviews as $gtov) {
+        if ($gtov['type'] != 'profile' && empty($gtov['submittedgroup']) && empty($gtov['submittedhost'])) {
+            $grouptaskoutcomeoptions['v:' . $gtov['id']] = $gtov['name'];
+        }
+    }
 
     foreach ($collections as $c) {
         if (empty($c['submittedgroup']) && empty($c['submittedhost'])) {
@@ -1534,25 +1552,28 @@ function group_view_submission_form($groupid) {
 
     $options = $optgroups = null;
 
-    if (!empty($collectionoptions) && !empty($viewoptions)) {
-        $optgroups = array(
-            'collections' => array(
-                'label'   => get_string('Collections', 'collection'),
-                'options' => $collectionoptions,
-            ),
-            'views'       => array(
-                'label'   => get_string('Views', 'view'),
-                'options' => $viewoptions,
-            ),
-        );
+    if (!empty($grouptaskoutcomeoptions)) {
+        $optgroups['grouptasks'] = [
+            'label' => get_string('Grouptasks', 'artefact.plans'),
+            'options' => $grouptaskoutcomeoptions,
+        ];
     }
-    else if (!empty($collectionoptions)) {
-        $options = $collectionoptions;
+
+    if (!empty($collectionoptions)) {
+        $optgroups['collections'] = [
+            'label'   => get_string('Collections', 'collection'),
+            'options' => $collectionoptions,
+        ];
     }
-    else if (!empty($viewoptions)) {
-        $options = $viewoptions;
+
+    if (!empty($viewoptions)) {
+        $optgroups['views'] = [
+            'label' => get_string('Views', 'view'),
+            'options' => $viewoptions,
+        ];
     }
-    else {
+
+    if (empty($optgroups)) {
         return;
     }
 
