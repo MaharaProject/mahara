@@ -37,3 +37,4 @@ node_modules/
 htdocs/.externalToolBuilders/
 htdocs/auth/saml/extlib/simplesamlphp
 htdocs/auth/saml/sp/resources
+*\:Zone.Identifier\:\$DATA
