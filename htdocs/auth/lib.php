@@ -2144,45 +2144,47 @@ function auth_handle_institution_expiries() {
     // The 'expiry' flag on the usr table
     $sitename = get_config('sitename');
     $wwwroot  = get_config('wwwroot');
-    $expire   = get_config('institutionautosuspend');
     $warn     = get_config('institutionexpirynotification');
 
-    $daystoexpire = ceil($warn / 86400) . ' ';
-    $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
-    $expiredate = format_date(strtotime('+' . $daystoexpire), 'strftimedate');
+    // If warning time for institution expiry is set
+    if ($warn) {
+        $daystoexpire = ceil($warn / 86400) . ' ';
+        $daystoexpire .= ($daystoexpire == 1) ? get_string('day') : get_string('days');
+        $expiredate = format_date(strtotime('+' . $daystoexpire), 'strftimedate');
 
-    // Get site administrators
-    $siteadmins = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff FROM {usr} u WHERE u.admin = 1', array());
+        // Get site administrators
+        $siteadmins = get_records_sql_array('SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff FROM {usr} u WHERE u.admin = 1', array());
 
-    // Expiry warning messages
-    if ($institutions = get_records_sql_array(
-      'SELECT i.name, i.displayname FROM {institution} i ' .
-      'WHERE ' . db_format_tsfield('i.expiry', false) . ' < ? AND suspended != 1 AND expirymailsent != 1',
-      array(time() + $warn))) {
-        foreach ($institutions as $institution) {
-            $institution_displayname = $institution->displayname;
-            // Email site administrators
-            foreach ($siteadmins as $user) {
-                $user_displayname  = display_name($user);
-                _email_or_notify($user, get_string('institutionexpirywarning'),
-                    get_string('institutionexpirywarningtext_site1', 'mahara', $user_displayname, $institution_displayname, $expiredate, $sitename, $sitename),
-                    get_string('institutionexpirywarninghtml_site1', 'mahara', $user_displayname, $institution_displayname, $expiredate, $sitename, $sitename)
+        // Expiry warning messages
+        if ($institutions = get_records_sql_array(
+          'SELECT i.name, i.displayname FROM {institution} i ' .
+          'WHERE ' . db_format_tsfield('i.expiry', false) . ' < ? AND suspended != 1 AND expirymailsent != 1',
+          array(time() + $warn))) {
+            foreach ($institutions as $institution) {
+                $institution_displayname = $institution->displayname;
+                // Email site administrators
+                foreach ($siteadmins as $user) {
+                    $user_displayname  = display_name($user);
+                    _email_or_notify($user, get_string('institutionexpirywarning'),
+                        get_string('institutionexpirywarningtext_site1', 'mahara', $user_displayname, $institution_displayname, $expiredate, $sitename, $sitename),
+                        get_string('institutionexpirywarninghtml_site1', 'mahara', $user_displayname, $institution_displayname, $expiredate, $sitename, $sitename)
+                    );
+                }
+
+                // Email institutional administrators
+                $institutionaladmins = get_records_sql_array(
+                  'SELECT u.id, u.username, u.expiry, u.staff, u.admin AS siteadmin, ui.admin AS institutionadmin, u.firstname, u.lastname, u.email ' .
+                  'FROM {usr_institution} ui JOIN {usr} u ON (ui.usr = u.id) WHERE ui.admin = 1', array()
                 );
+                foreach ($institutionaladmins as $user) {
+                    $user_displayname  = display_name($user);
+                    _email_or_notify($user, get_string('institutionexpirywarning'),
+                        get_string('institutionexpirywarningtext_institution1', 'mahara', $user_displayname, $institution_displayname, $sitename, $expiredate, $wwwroot . 'contact.php', $sitename),
+                        get_string('institutionexpirywarninghtml_institution1', 'mahara', $user_displayname, $institution_displayname, $sitename, $expiredate, $wwwroot . 'contact.php', $sitename)
+                    );
+                }
+                set_field('institution', 'expirymailsent', 1, 'name', $institution->name);
             }
-
-            // Email institutional administrators
-            $institutionaladmins = get_records_sql_array(
-              'SELECT u.id, u.username, u.expiry, u.staff, u.admin AS siteadmin, ui.admin AS institutionadmin, u.firstname, u.lastname, u.email ' .
-              'FROM {usr_institution} ui JOIN {usr} u ON (ui.usr = u.id) WHERE ui.admin = 1', array()
-            );
-            foreach ($institutionaladmins as $user) {
-                $user_displayname  = display_name($user);
-                _email_or_notify($user, get_string('institutionexpirywarning'),
-                    get_string('institutionexpirywarningtext_institution1', 'mahara', $user_displayname, $institution_displayname, $sitename, $expiredate, $wwwroot . 'contact.php', $sitename),
-                    get_string('institutionexpirywarninghtml_institution1', 'mahara', $user_displayname, $institution_displayname, $sitename, $expiredate, $wwwroot . 'contact.php', $sitename)
-                );
-            }
-            set_field('institution', 'expirymailsent', 1, 'name', $institution->name);
         }
     }
 
