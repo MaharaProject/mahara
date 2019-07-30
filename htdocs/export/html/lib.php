@@ -51,7 +51,7 @@ class PluginExportHtml extends PluginExport {
      * These javascript files will be included in index.html via the
      * export/html/templates/header.tpl
      */
-    private $scripts = array('jquery', 'bootstrap.min', 'dock', 'modal');
+    private $scripts = array('jquery', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout');
 
     /**
     * constructor.  overrides the parent class
@@ -418,8 +418,13 @@ class PluginExportHtml extends PluginExport {
                 }
                 $smarty->assign('feedback', $feedback);
             }
-
-            $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
+            if (!$view->uses_new_layout()) {
+                $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
+            }
+            else {
+                $smarty->assign('newlayout', true);
+                $smarty->assign('blocks', $view->get_blocks(false, true));
+            }
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
                 throw new SystemException("Could not write view page for view $viewid");
@@ -805,6 +810,9 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
         $jsdir =  $staticdir . 'theme/' . $theme . '/static/js/';
         $directoriestocopy[get_config('docroot') . 'lib/bootstrap/assets/javascripts/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
         $directoriestocopy[get_config('docroot') . 'js/jquery/jquery.js'] = $jsdir . 'jquery.js';
+        $directoriestocopy[get_config('docroot') . 'js/lodash/lodash.js'] = $jsdir . 'lodash.js';
+        $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack.js'] = $jsdir . 'gridstack.js';
+        $directoriestocopy[get_config('docroot') . 'js/gridlayout.js'] = $jsdir . 'gridlayout.js';
 
         foreach ($this->pluginstaticdirs as $dir) {
             $destinationdir = str_replace('export/html/', '', $dir);

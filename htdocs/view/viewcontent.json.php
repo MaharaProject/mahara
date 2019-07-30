@@ -26,7 +26,14 @@ $smarty->assign('viewtitle', $view->get('title'));
 $smarty->assign('ownername', $view->formatted_owner());
 $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
 $smarty->assign('viewinstructions', ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
-$smarty->assign('viewcontent', $view->build_rows(false, true));
+
+if (!$view->uses_new_layout()) {
+    $smarty->assign('viewcontent', $view->build_rows(false, true));
+}
+else {
+    $smarty->assign('newlayout', true);
+    $smarty->assign('blocks', $view->get_blocks());
+}
 
 list($tagcount, $alltags) = $view->get_all_tags_for_view();
 $smarty->assign('tags', $alltags);

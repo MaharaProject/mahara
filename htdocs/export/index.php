@@ -72,7 +72,13 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
             'viewlink' => $view->get_url(true, true),
         );
     }
-    $jsfiles = array('js/preview.js', 'js/export.js');
+    $jsfiles = array(
+        'js/preview.js',
+        'js/export.js',
+        'js/lodash/lodash.js',
+        'js/gridstack/gridstack.js',
+        'js/gridlayout.js',
+    );
 
     $collections = get_records_sql_array('
         SELECT c.id, c.name, c.description

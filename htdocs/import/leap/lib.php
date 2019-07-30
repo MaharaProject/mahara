@@ -1185,19 +1185,24 @@ class PluginImportLeap extends PluginImport {
         static $viewtypes = null;
         $viewelement = $entry->xpath('mahara:view[1]');
 
-        if (count($viewelement) != 1) {
-            // This isn't a Mahara view
-            return false;
+        $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], PluginImportLeap::NS_MAHARA);
+
+        $gridlayout = isset($maharaattributes['newlayout']) && $maharaattributes['newlayout'];
+
+        if (!$gridlayout) {
+            if (count($viewelement) != 1) {
+              // This isn't a Mahara view
+              return false;
+            }
+
+            if (is_null($columnlayouts)) {
+              $columnlayouts = get_records_assoc('view_layout_columns');
+            }
         }
 
-        if (is_null($columnlayouts)) {
-            $columnlayouts = get_records_assoc('view_layout_columns');
-        }
         if (is_null($viewtypes)) {
             $viewtypes = get_column('view_type', 'type');
         }
-
-        $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], PluginImportLeap::NS_MAHARA);
 
         $type = 'portfolio';
         if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $viewtypes)) {
@@ -1208,129 +1213,136 @@ class PluginImportLeap extends PluginImport {
             $ownerformat = FORMAT_NAME_DISPLAYNAME;
         }
 
-        $rows = $entry->xpath('mahara:view[1]/mahara:row');
-        $rowcount = count($rows);
-        // A flag that indicates whether this is an old-style one-row layout, or a new-style multi-row layout
-        $onerowlayout = false;
-        if ($rowcount < 1 || $rowcount > View::$maxlayoutrows) {
-            // Check for a pre-1.8 (one-row) layout
-            $columns = $entry->xpath('mahara:view[1]/mahara:column');
-            $columncount = count($columns);
-            if ($columncount < 1 || $columncount > 5) {
-                // Whoops, invalid number of rows
-                $this->trace("Invalid number of rows specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-                return false;
-            }
-            else {
-                $onerowlayout = true;
-                $rows = array($columns);
-                $rowcount = 1;
-            }
-        }
 
-        $layout = null;
-        if (isset($maharaattributes['layout'])) {
-            $rowwidths = explode('-', $maharaattributes['layout']);
-            if (count($rowwidths) != $rowcount) {
-                $this->trace("Row widths and number of rows do not match for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-                return false;
-            }
-            $columnids = array();
-            foreach ($columnlayouts as $columnlayout) {
-                foreach ($rowwidths as $key => $widths) {
-                    if ($columnlayout->widths == $widths) {
-                        $columnids[$key+1] = $columnlayout->id;
-                    }
-                }
-            }
-            if (count($columnids) != $rowcount) {
-                $this->trace("Invalid row widths were specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-                return false;
-            }
-            $rowscolssql = '';
-            for ($i=0; $i<count($columnids); $i++) {
-                $rowscolssql .= '(row = ' . ($i+1) . ' AND columns = ' . $columnids[$i+1] . ')';
-                if ($i != (count($columnids)-1)) {
-                    $rowscolssql .= ' OR ';
-                }
-            }
-
-            // search in default layout options for a match
-            // this will return first possible match with exact match (if any)
-            // at front of possibles. More than one possible match can occur
-            // if there are 3 or more rows in leap2a layout and 2 of those rows
-            // match more than one possible view layout.
-            $sql = 'SELECT vlrc.viewlayout AS id
-                    FROM
-                        {view_layout} vl
-                        INNER JOIN {view_layout_rows_columns} vlrc
-                            ON vl.id = vlrc.viewlayout
-                        INNER JOIN (
-                            SELECT
-                                viewlayout, COUNT(*)
-                            FROM {view_layout_rows_columns}
-                            GROUP BY viewlayout
-                            HAVING COUNT(*) = ?
-                        ) vlrc2
-                            ON vlrc.viewlayout = vlrc2.viewlayout
-                        INNER JOIN {usr_custom_layout} ucl
-                            ON ucl.layout = vl.id
-                    WHERE (' . $rowscolssql . ')
-                        AND (
-                            vl.iscustom = 0
-                            OR (
-                                vl.iscustom = 1 AND ucl.usr = ? AND ucl.group IS NULL AND ucl.institution IS NULL
-                            )
-                        )
-                    GROUP BY vlrc.viewlayout
-                    HAVING count(*) = ?
-                    LIMIT 1';
-            $layout = get_record_sql($sql, array($rowcount, $this->get('usr'), $rowcount));
-
-            if (!$layout) {
-                require_once(get_config('docroot') . 'lib/layoutpreviewimage.php');
-                // No existing layout matches their page. This probably means they used a custom layout. So, create a new custom layout for them.
-
-                // First check to see whether the custom layout they're using is acceptable in our system
-                // TODO: A clever way to squeeze their page into one of the standard layouts if it isn't acceptable.
-                // Maybe just put everything into a one-column layout and let them rearrange it?
-                if (count ($rowwidths) < 1 || count($rowwidths) > View::$maxlayoutrows) {
-                    $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+        // empezar a cambiar desde aca
+        if (!$gridlayout) {
+            $rows = $entry->xpath('mahara:view[1]/mahara:row');
+            $rowcount = count($rows);
+            // A flag that indicates whether this is an old-style one-row layout, or a new-style multi-row layout
+            $onerowlayout = false;
+            if ($rowcount < 1 || $rowcount > View::$maxlayoutrows) {
+                // Check for a pre-1.8 (one-row) layout
+                $columns = $entry->xpath('mahara:view[1]/mahara:column');
+                $columncount = count($columns);
+                if ($columncount < 1 || $columncount > 5) {
+                    // Whoops, invalid number of rows
+                    $this->trace("Invalid number of rows specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
                     return false;
                 }
+                else {
+                    $onerowlayout = true;
+                    $rows = array($columns);
+                    $rowcount = 1;
+                }
+            }
 
-                $i = 1;
-                $layoutdata = array();
-                $layoutdata['numrows'] = count($rowwidths);
-                foreach ($rowwidths as $row) {
-                    // First, check to see whether this row matches a valid row layout in the DB
-                    $rowcolid = get_field('view_layout_columns', 'id', 'widths', $row);
-                    if (!$rowcolid) {
+            $layout = null;
+            if (isset($maharaattributes['layout'])) {
+                $rowwidths = explode('-', $maharaattributes['layout']);
+                if (count($rowwidths) != $rowcount) {
+                    $this->trace("Row widths and number of rows do not match for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                    return false;
+                }
+                $columnids = array();
+                foreach ($columnlayouts as $columnlayout) {
+                    foreach ($rowwidths as $key => $widths) {
+                        if ($columnlayout->widths == $widths) {
+                            $columnids[$key+1] = $columnlayout->id;
+                        }
+                    }
+                }
+                if (count($columnids) != $rowcount) {
+                    $this->trace("Invalid row widths were specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                    return false;
+                }
+                $rowscolssql = '';
+                for ($i=0; $i<count($columnids); $i++) {
+                    $rowscolssql .= '(row = ' . ($i+1) . ' AND columns = ' . $columnids[$i+1] . ')';
+                    if ($i != (count($columnids)-1)) {
+                        $rowscolssql .= ' OR ';
+                    }
+                }
+
+                // search in default layout options for a match
+                // this will return first possible match with exact match (if any)
+                // at front of possibles. More than one possible match can occur
+                // if there are 3 or more rows in leap2a layout and 2 of those rows
+                // match more than one possible view layout.
+                $sql = 'SELECT vlrc.viewlayout AS id
+                        FROM
+                            {view_layout} vl
+                            INNER JOIN {view_layout_rows_columns} vlrc
+                                ON vl.id = vlrc.viewlayout
+                            INNER JOIN (
+                                SELECT
+                                    viewlayout, COUNT(*)
+                                FROM {view_layout_rows_columns}
+                                GROUP BY viewlayout
+                                HAVING COUNT(*) = ?
+                            ) vlrc2
+                                ON vlrc.viewlayout = vlrc2.viewlayout
+                            INNER JOIN {usr_custom_layout} ucl
+                                ON ucl.layout = vl.id
+                        WHERE (' . $rowscolssql . ')
+                            AND (
+                                vl.iscustom = 0
+                                OR (
+                                    vl.iscustom = 1 AND ucl.usr = ? AND ucl.group IS NULL AND ucl.institution IS NULL
+                                )
+                            )
+                        GROUP BY vlrc.viewlayout
+                        HAVING count(*) = ?
+                        LIMIT 1';
+                $layout = get_record_sql($sql, array($rowcount, $this->get('usr'), $rowcount));
+
+                if (!$layout) {
+                    require_once(get_config('docroot') . 'lib/layoutpreviewimage.php');
+                    // No existing layout matches their page. This probably means they used a custom layout. So, create a new custom layout for them.
+
+                    // First check to see whether the custom layout they're using is acceptable in our system
+                    // TODO: A clever way to squeeze their page into one of the standard layouts if it isn't acceptable.
+                    // Maybe just put everything into a one-column layout and let them rearrange it?
+                    if (count ($rowwidths) < 1 || count($rowwidths) > View::$maxlayoutrows) {
                         $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
                         return false;
                     }
 
-                    // Data to help us generate the layout
-                    $layoutdata["row{$i}"] = $rowcolid;
-                    $i++;
-                }
+                    $i = 1;
+                    $layoutdata = array();
+                    $layoutdata['numrows'] = count($rowwidths);
+                    foreach ($rowwidths as $row) {
+                        // First, check to see whether this row matches a valid row layout in the DB
+                        $rowcolid = get_field('view_layout_columns', 'id', 'widths', $row);
+                        if (!$rowcolid) {
+                            $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                            return false;
+                        }
 
-                // Now that we know the layout is valid, generate a record and a thumbnail image for it.
-                db_begin();
-                // An empty view object, since this view isn't present in the DB yet. We need this in order to access the layout methods
-                $viewobj = new View(0, array(
-                    'owner' => $this->get('usr'),
-                    'deleted' => true // To prevent it from being stored in the DB by the View destructor
-                ));
-                $layoutresult = $viewobj->addcustomlayout($layoutdata);
-                if (empty($layoutresult['layoutid'])) {
-                    $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-                    db_rollback();
-                    return false;
+                        // Data to help us generate the layout
+                        $layoutdata["row{$i}"] = $rowcolid;
+                        $i++;
+                    }
+
+                    // Now that we know the layout is valid, generate a record and a thumbnail image for it.
+                    db_begin();
+                    // An empty view object, since this view isn't present in the DB yet. We need this in order to access the layout methods
+                    $viewobj = new View(0, array(
+                        'owner' => $this->get('usr'),
+                        'deleted' => true // To prevent it from being stored in the DB by the View destructor
+                    ));
+                    $layoutresult = $viewobj->addcustomlayout($layoutdata);
+                    if (empty($layoutresult['layoutid'])) {
+                        $this->trace("Invalid layout specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                        db_rollback();
+                        return false;
+                    }
+                    $layout = (object) array('id' => $layoutresult['layoutid']);
+                    db_commit();
                 }
-                $layout = (object) array('id' => $layoutresult['layoutid']);
-                db_commit();
             }
+        }
+        else {
+            $gridblocks = $entry->xpath('mahara:view[1]/mahara:blockinstance');
         }
 
         // Extract the view description in the entry 'summary'
@@ -1345,72 +1357,110 @@ class PluginImportLeap extends PluginImport {
             'description' => $description,
             'instructions' => $instructions,
             'type'        => $type,
-            'layout'      => $layout->id,
             'tags'        => self::get_entry_tags($entry),
-            'numrows'     => $rowcount,
             'owner'       => $this->get('usr'),
             'ownerformat' => $ownerformat,
         );
-
-        $rowindex = 1;
-        foreach ($rows as $row) {
-
-            // If this is the old one-row layout, we'll have handled that earlier, and have the one row's columns be in $columns
-            if (!$onerowlayout) {
+        if (!$gridlayout) {
+            $config['layout'] = $layout->id;
+            $config['numrows'] = $rowcount;
+            $rowindex = 1;
+            foreach ($rows as $row) {
+              // If this is the old one-row layout, we'll have handled that earlier, and have the one row's columns be in $columns
+              if (!$onerowlayout) {
                 $columns = $row->xpath('mahara:column');
                 $columncount = count($columns);
                 if ($columncount < 1 || $columncount > 5) {
-                    // Whoops, invalid number of columns
-                    $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
-                    return false;
+                  // Whoops, invalid number of columns
+                  $this->trace("Invalid number of columns specified for potential view {$entry->id}, falling back to standard import", self::LOG_LEVEL_VERBOSE);
+                  return false;
                 }
-            }
+              }
 
-            $colindex = 1;
-            foreach ($columns as $column) {
+              $colindex = 1;
+              foreach ($columns as $column) {
                 $blockinstances = $column->xpath('mahara:blockinstance');
                 $order = 1;
                 $config['rows'][$rowindex]['columns'][$colindex] = array();
                 foreach ($blockinstances as $blockinstance) {
-                    $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
-                    if (!isset($attrs['blocktype'])) {
-                        $this->trace("  No mahara:blocktype attribute set for blockinstance at row $rowindex col $colindex, order $order: skipping");
-                        continue;
-                    }
-                    $this->trace("  Found block with type {$attrs['blocktype']} at [$rowindex][$colindex][$order]", self::LOG_LEVEL_VERBOSE);
+                  $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                  if (!isset($attrs['blocktype'])) {
+                    $this->trace("  No mahara:blocktype attribute set for blockinstance at row $rowindex col $colindex, order $order: skipping");
+                    continue;
+                  }
+                  $this->trace("  Found block with type {$attrs['blocktype']} at [$rowindex][$colindex][$order]", self::LOG_LEVEL_VERBOSE);
 
-                    if ($blocktypes_installed === null) {
-                        $blocktypes_installed = array_map(function($a) { return $a->name; }, plugins_installed('blocktype'));
+                  if ($blocktypes_installed === null) {
+                    $blocktypes_installed = array_map(function($a) { return $a->name; }, plugins_installed('blocktype'));
+                  }
+
+                  if (in_array($attrs['blocktype'], $blocktypes_installed)) {
+                    $configelements = $blockinstance->xpath('mahara:*');
+                    $config['rows'][$rowindex]['columns'][$colindex][$order] = array(
+                      'type'   => $attrs['blocktype'],
+                      'title'  => $attrs['blocktitle'],
+                      'config' => array()
+                    );
+                    foreach ($configelements as $element) {
+                      $value = json_decode((string)$element);
+                      if (is_array($value) && isset($value[0])) {
+                        $config['rows'][$rowindex]['columns'][$colindex][$order]['config'][$element->getName()] = $value[0];
+                      }
+                      else {
+                        $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
+                        $this->trace($value);
+                      }
                     }
 
-                    if (in_array($attrs['blocktype'], $blocktypes_installed)) {
-                        $configelements = $blockinstance->xpath('mahara:*');
-                        $config['rows'][$rowindex]['columns'][$colindex][$order] = array(
-                            'type'   => $attrs['blocktype'],
-                            'title'  => $attrs['blocktitle'],
-                            'config' => array()
-                        );
-                        foreach ($configelements as $element) {
-                            $value = json_decode((string)$element);
-                            if (is_array($value) && isset($value[0])) {
-                                $config['rows'][$rowindex]['columns'][$colindex][$order]['config'][$element->getName()] = $value[0];
-                            }
-                            else {
-                                $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
-                                $this->trace($value);
-                            }
-                        }
-
-                        $order++;
-                    }
-                    else {
-                        $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
-                    }
+                    $order++;
+                  }
+                  else {
+                    $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
+                  }
                 }
                 $colindex++;
-            } // cols
-            $rowindex++;
-        } //rows
+              } // cols
+              $rowindex++;
+            } //rows
+        }
+        else {
+            foreach ($gridblocks as $blockinstance) {
+                $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                $row = $attrs['positiony'];
+                $col = $attrs['positionx'];
+                if (!isset($attrs['blocktype'])) {
+                  $this->trace("  No mahara:blocktype attribute set for blockinstance at row $row col $col: skipping");
+                  continue;
+                }
+                $this->trace("  Found block with type {$attrs['blocktype']} at [$row][$col]", self::LOG_LEVEL_VERBOSE);
+
+                if ($blocktypes_installed === null) {
+                    $blocktypes_installed = array_map(function($a) { return $a->name; }, plugins_installed('blocktype'));
+                }
+
+                if (in_array($attrs['blocktype'], $blocktypes_installed)) {
+                    $configelements = $blockinstance->xpath('mahara:*');
+                    $config['row'][$row]['col'][$col] = array(
+                      'type'   => $attrs['blocktype'],
+                      'title'  => $attrs['blocktitle'],
+                      'config' => array()
+                    );
+                    foreach ($configelements as $element) {
+                        $value = json_decode((string)$element);
+                        if (is_array($value) && isset($value[0])) {
+                            $config['row'][$row]['col'][$col]['config'][$element->getName()] = $value[0];
+                        }
+                        else {
+                            $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
+                            $this->trace($value);
+                        }
+                    }
+                }
+                else {
+                    $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
+                }
+            }
+        }
 
         return $config;
     }

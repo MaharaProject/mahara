@@ -64,6 +64,7 @@ class View {
     private $instructions;
     private $instructionscollapsed=0;
     private $newlayout = 1;
+    private $grid;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -2179,7 +2180,7 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
     else {
         $blocks = $versioning->blocks;
     }
-
+    $this->grid = array();
     if (is_array($blocks) || is_object($blocks)) {
         foreach ($blocks as $block) {
             require_once(get_config('docroot') . 'blocktype/lib.php');
@@ -3156,33 +3157,61 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
             'title'       => $this->get('title'),
             'description' => $this->get('description'),
             'type'        => $this->get('type'),
-            'layout'      => $this->get('layout'),
             'tags'        => $this->get('tags'),
-            'numrows'     => $this->get('numrows'),
             'ownerformat' => $this->get('ownerformat'),
             'instructions' => $this->get('instructions'),
         );
 
-        // Export view content
-        $data = $this->get_row_datastructure();
-        foreach ($data as $rowkey => $row) {
-            foreach ($row as $colkey => $column) {
+        if (!$this->uses_new_layout()) {
+            $config['layout'] = $this->get('layout');
+            $config['numrows'] =  $this->get('numrows');
+
+            // Export view content
+            $data = $this->get_row_datastructure();
+            foreach ($data as $rowkey => $row) {
+              foreach ($row as $colkey => $column) {
                 $config['rows'][$rowkey]['columns'][$colkey] = array();
                 foreach ($column['blockinstances'] as $bi) {
-                    safe_require('blocktype', $bi->get('blocktype'));
-                    $classname = generate_class_name('blocktype', $bi->get('blocktype'));
-                    $method = 'export_blockinstance_config';
-                    if (method_exists($classname, $method . "_$format")) {
-                        $method .= "_$format";
-                    }
-                    $config['rows'][$rowkey]['columns'][$colkey][] = array(
-                        'blocktype' => $bi->get('blocktype'),
-                        'title'     => $bi->get('title'),
-                        'config'    => call_static_method($classname, $method, $bi),
-                    );
+                  safe_require('blocktype', $bi->get('blocktype'));
+                  $classname = generate_class_name('blocktype', $bi->get('blocktype'));
+                  $method = 'export_blockinstance_config';
+                  if (method_exists($classname, $method . "_$format")) {
+                    $method .= "_$format";
+                  }
+                  $config['rows'][$rowkey]['columns'][$colkey][] = array(
+                    'blocktype' => $bi->get('blocktype'),
+                    'title'     => $bi->get('title'),
+                    'config'    => call_static_method($classname, $method, $bi),
+                  );
                 }
-            } // cols
-        } // rows
+              } // cols
+            } // rows
+        }
+        else {
+            $config['newlayout'] = true;
+
+            // Export view content
+            $this->get_blocks(false, true);
+            $data = $this->grid;
+            $config['grid'] = array();
+            foreach ($data as $bi) {
+                safe_require('blocktype', $bi->get('blocktype'));
+                $classname = generate_class_name('blocktype', $bi->get('blocktype'));
+                $method = 'export_blockinstance_config';
+                if (method_exists($classname, $method . "_$format")) {
+                  $method .= "_$format";
+                }
+                $config['grid'][] = array(
+                    'blocktype' => $bi->get('blocktype'),
+                    'title'     => $bi->get('title'),
+                    'positionx' => $bi->get('positionx'),
+                    'positiony' => $bi->get('positiony'),
+                    'height'    => $bi->get('height'),
+                    'width'     => $bi->get('width'),
+                    'config'    => call_static_method($classname, $method, $bi),
+                );
+            }
+        }
 
         return $config;
     }
