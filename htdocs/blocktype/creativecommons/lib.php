@@ -35,6 +35,10 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
         return array('general' => 15000);
     }
 
+    public static function get_css_icon_type($blockname) {
+        return 'icon-brand';
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $THEME;
         $configdata = $instance->get('configdata');

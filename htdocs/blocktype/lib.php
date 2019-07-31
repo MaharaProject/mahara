@@ -134,6 +134,10 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return false;
     }
 
+    public static function get_css_icon_type($blocktypename) {
+        return '';
+    }
+
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
         '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->',
@@ -379,6 +383,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
                     'artefactplugin' => $bt->artefactplugin,
                     'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
                     'cssicon'        => call_static_method($classname, 'get_css_icon', $bt->name),
+                    'cssicontype'    => call_static_method($classname, 'get_css_icon_type', $bt->name),
                 );
             }
         }
@@ -1253,6 +1258,9 @@ class BlockInstance {
                 $smarty->assign('retractedonload', $configdata['retractedonload']);
             }
         }
+        $cssicontype = call_static_method($classname, 'get_css_icon_type', $this->blocktype);
+        $cardicontype = !empty($cssicontype) ? preg_replace('/^icon-/', 'card-', $cssicontype) : '';
+        $smarty->assign('cardicontype', $cardicontype);
         $smarty->assign('versioning', $versioning);
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }

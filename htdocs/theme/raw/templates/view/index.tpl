@@ -47,7 +47,7 @@
                     <p>{str tag=confirmadddesc section=view}</p>
                     <div class="btn-group">
                         <button id="add-collection-button" type="button" class="btn btn-secondary"><span class="icon icon-folder-open"></span> {str tag=Collection section=collection}</button>
-                        <button id="add-view-button" type="button" class="btn btn-secondary"><span class="icon icon-file-alt"></span> {str tag=view}</button>
+                        <button id="add-view-button" type="button" class="btn btn-secondary"><span class="icon icon-regular icon-file-alt"></span> {str tag=view}</button>
                     </div>
                 </div>
             </div>
