@@ -1651,9 +1651,10 @@ class BlockInstance {
         $this->rebuild_artefact_list();
 
         // check the table exists in case we need to update a block in the upgrade before the creation of the table
-        if (db_table_exists('block_instance_dimension')) {
+        if (db_table_exists('block_instance_dimension') && isset($this->positionx)) {
             $this->set_block_dimensions($this->positionx, $this->positiony, $this->width, $this->height);
         }
+
         // Tell stuff about this
         handle_event('blockinstancecommit', $this);
 

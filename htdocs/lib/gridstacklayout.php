@@ -29,7 +29,7 @@ function save_blocks_in_new_layout($viewid) {
 
             if ($newlayoutcontent) {
                 foreach ($newlayoutcontent as $block) {
-                    insert_record('block_instance_dimension', $block);
+                    insert_record('block_instance_dimension', (object) $block);
                 }
             }
         }
@@ -54,13 +54,19 @@ function translate_to_new_layout($blocks) {
         foreach ($row as $column) {
             if (isset($column['blocks'])) {
                 foreach ($column['blocks'] as $order => $block) {
-                    $gridblocks[] = (object) array(
-                        'block'     => $block,
+                    $gridblock = array(
                         'positionx' => $x,
                         'positiony' => $y + $order - 1,
                         'width'     => $column['width'],
                         'height'    => 1,
                     );
+                    if (is_array($block)) {
+                        $gridblock = array_merge($block, $gridblock);
+                    }
+                    else {
+                        $gridblock['block'] = $block;
+                    }
+                    $gridblocks[] = $gridblock;
                     $maxorder = max($maxorder, $order);
                 }
             }

@@ -2535,14 +2535,16 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
      *                      block     => block to add
      */
     public function addblockinstance(BlockInstance $bi) {
-        if (!$bi->get('row')) {
-            $bi->set('row', 1);
-        }
-        if (!$bi->get('column')) {
-            $bi->set('column', 1);
-        }
-        if (!$bi->get('order')) {
-            $bi->set('order', 1);
+        if ($this->uses_new_layout()) {
+            if (!$bi->get('row')) {
+              $bi->set('row', 1);
+            }
+            if (!$bi->get('column')) {
+              $bi->set('column', 1);
+            }
+            if (!$bi->get('order')) {
+              $bi->set('order', 1);
+            }
         }
         if (!$bi->get('view')) {
             $bi->set('view', $this->get('id'));
@@ -3250,12 +3252,19 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
             'title'       => $config['title'],
             'description' => $config['description'],
             'type'        => $config['type'],
-            'layout'      => $config['layout'],
             'tags'        => $config['tags'],
-            'numrows'     => $config['numrows'],
             'ownerformat' => $config['ownerformat'],
             'instructions' => $config['instructions'],
         );
+        if (isset($config['layout'])) {
+            $viewdata['layout'] = $config['layout'];
+        }
+        if (isset($config['numrows'])) {
+            $viewdata['numrows'] = $config['numrows'];
+        }
+
+        $viewdata['newlayout'] = true;
+
         if (isset($config['owner'])) {
             $viewdata['owner'] = $config['owner'];
         }
@@ -3267,33 +3276,35 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
             $viewdata['institution'] = $config['institution'];
         }
         $view = View::create($viewdata, $userid);
-
-        foreach ($config['rows'] as $rowkey => $row) {
-            foreach ($row['columns'] as $colkey => $column) {
-                $order = 1;
-                foreach ($column as $blockinstance) {
-                    safe_require('blocktype', $blockinstance['type']);
-                    $classname = generate_class_name('blocktype', $blockinstance['type']);
-                    $method = 'import_create_blockinstance';
-                    if (method_exists($classname, $method . "_$format")) {
-                        $method .= "_$format";
-                    }
-                    $bi = call_static_method($classname, $method, $blockinstance, $config);
-                    if ($bi) {
-                        $bi->set('title',  $blockinstance['title']);
-                        $bi->set('row', $rowkey);
-                        $bi->set('column', $colkey);
-                        $bi->set('order',  $order);
-                        $view->addblockinstance($bi);
-
-                        $order++;
-                    }
-                    else {
-                        log_debug("Blocktype {$blockinstance['type']}'s import_create_blockinstance did not give us a blockinstance, so not importing this block");
-                    }
+        if (isset($config['grid'])) {
+            foreach ($config['grid'] as $blockinstance) {
+                safe_require('blocktype', $blockinstance['type']);
+                $classname = generate_class_name('blocktype', $blockinstance['type']);
+                $method = 'import_create_blockinstance';
+                if (method_exists($classname, $method . "_$format")) {
+                    $method .= "_$format";
                 }
-            } // cols
-        } // rows
+                $bi = call_static_method($classname, $method, $blockinstance, $config);
+                if ($bi) {
+                    $bi->set('title',  $blockinstance['title']);
+                    $bi->set('positionx', $blockinstance['positionx']);
+                    $bi->set('positiony', $blockinstance['positiony']);
+                    $bi->set('width', $blockinstance['width']);
+                    $bi->set('height', $blockinstance['height']);
+                    if (isset($blockinstance['row'])) {
+                        // if we are importing and the layout is not a grid one,
+                        // we'll need this values whn updating the heights of the blocks
+                        $bi->set('row', $blockinstance['row']);
+                        $bi->set('column', $blockinstance['column']);
+                        $bi->set('order', $blockinstance['order']);
+                    }
+                    $view->addblockinstance($bi);
+                }
+                else {
+                    log_debug("Blocktype {$blockinstance['type']}'s import_create_blockinstance did not give us a blockinstance, so not importing this block");
+                }
+            }
+        }
 
         if ($viewdata['type'] == 'profile') {
             $view->set_access(array(
