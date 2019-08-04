@@ -22,11 +22,12 @@ $itemid   = param_variable('itemid');
 
 $data = new stdClass();
 $data->title = $name;
-
+$messagetype = 'updated';
 try {
     if ($itemid == 'new') {
         $data->displayorder = 0; //Place holder.
-        $itemid = insert_record('group_category',$data,'id',true);
+        $itemid = insert_record('group_category', $data, 'id', true);
+        $messagetype = 'added';
     }
     else {
         $data->id = (int)$itemid;
@@ -36,6 +37,7 @@ try {
     group_sort_categories();
 }
 catch (Exception $e) {
-    json_reply('local',get_string('savefailed','admin'));
+    json_reply('local', get_string('savefailed','admin'));
 }
-json_reply(false, array('id' => (int)$itemid));
+json_reply(false, array('message' => get_string('groupcategory' . $messagetype, 'admin'),
+                        'data' => array('id' => (int)$itemid)));

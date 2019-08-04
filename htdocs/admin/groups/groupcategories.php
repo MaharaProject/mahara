@@ -237,7 +237,7 @@ jQuery(function($) {
     var data = {'name':name,
                 'itemid':itemid};
     sendjsonrequest('updategroup.json.php', data, 'POST', function(r) {
-        getitems(r);
+        getitems(r.data);
     });
     return false;
   }
