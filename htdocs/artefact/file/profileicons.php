@@ -323,7 +323,7 @@ function settings_submit_delete(Pieform $form, $values) {
 }
 
 $smarty = smarty(array('tablerenderer'));
-setpageicon($smarty, 'icon-regular icon-portrait');
+setpageicon($smarty, 'icon-portrait');
 $smarty->assign('INLINEJAVASCRIPT', $IJS);
 $smarty->assign('uploadform', $uploadform);
 // This is a rare case where we don't actually care about the form, because
