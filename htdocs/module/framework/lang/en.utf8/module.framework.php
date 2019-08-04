@@ -79,7 +79,9 @@ $string['showelementdetails'] = 'Click to show standard element details.';
 $string['statusdetail'] = 'Page "%s": %s';
 //json editor strings
 $string['copyframework'] = 'Select a framework to copy';
+$string['copyexistingframework'] = 'Copy existing framework';
 $string['editframework'] = 'Select a framework to edit';
+$string['editsavedframework'] = 'Edit saved framework';
 $string['editdescription1'] = 'To be editable, a framework needs to be inactive and not currently used in a collection.';
 $string['editdescription2'] = 'If you edit a framework, you will change the saved data for that framework.';
 $string['copyframeworkdescription'] = 'You can copy any framework that is installed and use it as basis for a new framework file.';
