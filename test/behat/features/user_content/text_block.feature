@@ -17,10 +17,11 @@ Scenario: Create and delete text block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Text"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     # Confirm modal window has a Legend of "Cell" just above the grey blocks  (Bug 1482471)
     Then I should see "Cell" in the "legend" element
     When I press "Add"
+    And I click on "Text" in the "Content types" property
     And I set the field "Block title" to "Text block 1"
     And I set the field "Block content" to "Here is a new block."
     And I press "Save"

@@ -23,6 +23,20 @@ Background:
     | Page UserA_02 | Page 02 | user | UserA |
     | Page UserA_03 | Page 03 | user | UserA |
 
+    And the following "blocks" exist:
+    | title              | type           | page          | retractable | data                  |
+    | Image Block 1      | image          | Page UserA_00 | no | attachemnt=Image1.jpg;showdescription=true |
+    | Text Block 1       | text           | Page UserA_00 | no | textinput=Here is a new block. |
+    | Peer Assessment    | peerassessment | Page UserA_00 | no | instructions=This is the custom peer assessment instructions |
+    | Image Block 2      | image          | Page UserA_01 | no | attachemnt=Image1.jpg;showdescription=true |
+    | Text Block 2       | text           | Page UserA_01 | no | textinput=Here is a new block. |
+    | Peer Assessment    | peerassessment | Page UserA_01 | no | instructions=This is the custom peer assessment instructions |
+    | Image Block 3      | image          | Page UserA_02 | no | attachemnt=Image1.jpg;showdescription=true |
+    | Text Block 3       | text           | Page UserA_02 | no | textinput=Here is a new block. |
+    | Image Block 4      | image          | Page UserA_03 | no | attachemnt=Image1.jpg;showdescription=true |
+    | Text Block 4       | text           | Page UserA_03 | no | textinput=This is some text. |
+    | Peer Assessment    | peerassessment | Page UserA_03 | no | instructions=This is the custom peer assessment instructions for Page UserA_03 |
+
     And the following "permissions" exist:
     | title         | accesstype | accessname | role    | multiplepermissions |
     | Page UserA_00 | user       | userB      | peer    | 0                   |
@@ -32,68 +46,45 @@ Background:
     | Page UserA_02 | user       | userB      | peer    | 0                   |
     | Page UserA_02 | user       | userC      | manager | 1                   |
 
-
-    And the following "blocks" exist:
-    | title        | type  | page          |retractable | data                             |
-    | My text A_00 | text  | Page UserA_00 | no         | textinput=This is some text      |
-    | image A_00   | image | Page UserA_00 | no         | attachment=Image1.jpg; width=100 |
-    | My text A_01 | text  | Page UserA_01 | no         | textinput=This is some text      |
-    | image A_01   | image | Page UserA_01 | no         | attachment=Image1.jpg; width=100 |
-    | My text A_02 | text  | Page UserA_02 | no         | textinput=This is some text      |
-    | image A_02   | image | Page UserA_02 | no         | attachment=Image1.jpg; width=100 |
-    | My text A_03 | text  | Page UserA_03 | no         | textinput=This is some text      |
-    | image A_03   | image | Page UserA_03 | no         | attachment=Image1.jpg; width=100 |
-
     Given the following "collections" exist:
     | title | description| ownertype | ownername | pages |
     | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
 
-# Add peer assessment and signoff blocks to Page Page UserA_00 and Page UserA_00
+    # Add signoff block to Page UserA_00
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I click on "Edit"
-    # user adds peer assessment block
-    And I expand "General" node in the "blocktype sidebar" property
-    And I follow "Peer assessment"
-    And I press "Add"
-    And I set the field "Instructions" to "This is the custom peer assessment instructions"
-    And I press "Save"
     # user adds sign off block
-    And I follow "Sign-off"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
     And I follow "Return to pages and collections"
-    # Add peer assessment and signoff blocks to Page Page UserA_01
-    Given I go to portfolio page "Page UserA_01"
+    And I go to portfolio page "Page UserA_01"
     And I click on "Edit"
-    # user adds peer assessment block
-    And I expand "General" node in the "blocktype sidebar" property
-    And I follow "Peer assessment"
-    And I press "Add"
-    And I set the field "Instructions" to "This is the custom peer assessment instructions"
-    And I press "Save"
     # user adds sign off block
-    And I follow "Sign-off"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
     And I follow "Return to pages and collections"
-
-    # Add peer assessment and signoff blocks to Page Page UserA_01
+    # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
     And I click on "Edit"
-    # user adds peer assessment block
-    And I expand "General" node in the "blocktype sidebar" property
-    And I follow "Peer assessment"
-    And I press "Add"
-    And I set the field "Instructions" to "This is the custom peer assessment instructions for Page UserA_03"
-    And I press "Save"
     # user adds sign off block
-    And I follow "Sign-off"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
@@ -108,7 +99,7 @@ Background:
     And I press "Save"
     And I log out
 
-Scenario: Log in as UserB with role od Peer and Interact with a peer assessment / signoff combo for a single page
+Scenario: Log in as UserB with role of Peer and Interact with a peer assessment / signoff combo for a single page
     # Add peer assessmentimage jpg
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
@@ -163,7 +154,6 @@ Scenario: Log in as UserB with role od Peer and Interact with a peer assessment 
     Given I log in as "UserD" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_03"
     And I should see "This is some text"
-    And I should see images within the block "image A_03"
     And I follow "Add peer assessment"
     And I expand "Instructions" node
     Then I should see "This is the custom peer assessment instructions"

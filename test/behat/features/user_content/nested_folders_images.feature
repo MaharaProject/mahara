@@ -56,11 +56,13 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # this could be expanded to check the other folder block options
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I expand "Media" node
-    And I follow "Folder"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Folder" in the "Content types" property
     And I expand "Folders" node
     And I click on "Select" in "Folder1" row
+    # Set the block title to blank so it uses the name of the folder
+    And I set the field "Block title" to ""
     And I press "Save"
     And I display the page
     Then I should see images within the block "Folder1"

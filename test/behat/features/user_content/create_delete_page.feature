@@ -52,26 +52,31 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "Edit" in the ".editcontent .btn-title" element
     And I should see "Share" in the ".editshare .btn-title" element
     # Adding media block
-    And I expand "Media" node
-    And I follow "File(s) to download"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "File(s) to download" in the "Content types" property
     And I press "Save"
     # Adding Journal block
-    And I expand "Journals" node in the "blocktype sidebar" property
-    And I follow "Recent journal entries"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Recent journal entries" in the "Content types" property
     And I press "Save"
-    And I scroll to the base of id "block-category-blog"
-    And I collapse "Journals" node in the "blocktype sidebar" property
     # Adding profile info block
-    And I expand "Personal info" node in the "blocktype sidebar" property
-    And I follow "Profile information"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Profile information" in the "Content types" property
     And I press "Save"
-    # Adding external media block - but cancel out
-    And I expand "External" node in the "blocktype sidebar" property
-    And I follow "External media"
+    # Adding external media block - but remove it instead
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "External media" in the "Content types" property
     And I press "Remove"
 
     # verify page elements are displayed Display page and Return to pages and collections buttons

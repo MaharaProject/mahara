@@ -19,9 +19,10 @@ Scenario:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    And I expand "Media" node
-    And I follow "PDF" in the "blocktype sidebar" property
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "PDF" in the "Content types" property
     And I fill in the following:
     | Block title | Mahara about PDF |
 

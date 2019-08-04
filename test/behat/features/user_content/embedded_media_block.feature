@@ -17,9 +17,12 @@ Scenario: Embed and play mp4
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  And I expand "Media" node
-  And I follow "Embedded media"
+  When I follow "Add a new block" in the "blocktype sidebar" property
   And I press "Add"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Embedded media" in the "Content types" property
   And I follow "Media"
   And I attach the file "testvid3.mp4" to "File"
   And I press "Save"
@@ -33,9 +36,12 @@ Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  And I expand "Media" node
-  And I follow "Embedded media"
+  When I follow "Add a new block" in the "blocktype sidebar" property
   And I press "Add"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Embedded media" in the "Content types" property
   And I follow "Media"
   And I attach the file "mahara.mp3" to "File"
   And I press "Save"
@@ -57,9 +63,12 @@ Scenario: Change settings and embed 3gp
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  And I expand "Media" node
-  And I follow "Embedded media"
+  When I follow "Add a new block" in the "blocktype sidebar" property
   And I press "Add"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Embedded media" in the "Content types" property
   And I follow "Media"
   And I attach the file "testvid1.3gp" to "File"
   And I press "Save"
@@ -71,9 +80,12 @@ Scenario: Embed unsupported file type
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  And I expand "Media" node
-  And I follow "Embedded media"
+  When I follow "Add a new block" in the "blocktype sidebar" property
   And I press "Add"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Show more"
+  And I click on "Embedded media" in the "Content types" property
   And I follow "Media"
   # mkv is not supported
   And I attach the file "testvid2.mkv" to "File"

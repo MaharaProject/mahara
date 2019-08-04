@@ -17,10 +17,11 @@ Scenario: Create and delete image block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I follow "Image"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    Then I should see "Image: Configure"
     And I set the field "Block title" to "Image Block 1"
+    And I click on "Image" in the "Content types" property
+    Then I should see "Image Block 1: Configure"
     And I follow "Image"
     And I attach the file "Image1.jpg" to "File"
     Then I should see "Image - Image1.jpg"

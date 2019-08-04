@@ -110,12 +110,16 @@
             rewriteConfigureButton(newblock.find('.configurebutton'));
             rewriteDeleteButton(newblock.find('.deletebutton'));
         }
-
-        hideDock();
-        showMediaPlayers();
-        setTimeout(function() {
-            newblock.find('.configurebutton').trigger("focus");
-        }, 1);
+        if (data.closemodal) {
+            hideDock();
+            showMediaPlayers();
+            setTimeout(function() {
+                newblock.find('.configurebutton').trigger("focus");
+            }, 1);
+        }
+        else {
+            return newblock;
+        }
     };
 
     /**
@@ -126,6 +130,7 @@
         if (data.formelementsuccess) {
             eval(data.formelementsuccess + '(form, data)');
         }
+        data.closemodal = true;
         if (data.blockid) {
             ViewManager.replaceConfigureBlock(data);
         }
@@ -170,6 +175,86 @@
             });
         }
 
+    }
+
+    ViewManager.blockOptions = function() {
+        $('#placeholderlist .card-option .card').each(function (idx, val) {
+            $(val).off();
+            $(val).on('click', function(ev, d) {
+                ev.stopPropagation();
+                ev.preventDefault();
+                var blockid = $(ev.currentTarget).data('blockid');
+                var option = $(ev.currentTarget).data('option');
+                var title = encodeURIComponent($('#instconf_title').val());
+                var isnew = $('#instconf_new').val() == '1' ? '1' : '0';
+                var pd = {
+                    'id': $('#viewid').val(),
+                    'change': 1,
+                    'blocktype': 'placeholder',
+                };
+                pd['action_changeblockinstance_id_' + blockid + '_new_' + isnew + '_blocktype_' + option + '_title_' + title] = true;
+                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
+                    if (data.data.returnCode == 1) {
+                        console.log('error: ' + data.data.message);
+                    }
+                    else {
+                        console.log('success: ' + data.data.message);
+                        // Update block on page to be of new type
+                        var newdata = {};
+                        newdata.blockid = data.data.blockid;
+                        newdata.viewid = data.data.viewid;
+                        newdata.data = {};
+                        newdata.data.html = data.data.display.html;
+                        newdata.data.javascript = data.data.display.javascript;
+                        var blockinstance = ViewManager.replaceConfigureBlock(newdata);
+                        if (data.data.configure) {
+                           // The new block has configuration so update config modal to have new config form
+                            if (data.data.isnew) {
+                                addConfigureBlock(blockinstance, data.data.configure, true);
+                            }
+                            else {
+                                // wire up the cancel button on chosen blocktype form to revert the block back to placeholder block
+                                addConfigureBlock(blockinstance, data.data.configure);
+                                var blockinstanceId = blockinstance.attr('data-id');
+                                var cancelbutton = jQuery('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
+                                cancelbutton.off('click');
+                                cancelbutton.on('click',function(e) {
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                    var revpd = {
+                                        'id': $('#viewid').val(),
+                                        'change': 1,
+                                        'blocktype': 'placeholder',
+                                    };
+                                    revpd['action_revertblockinstance_id_' + data.data.blockid + '_title_' + data.data.oldtitle] = true;
+                                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', revpd, 'POST', function(revdata) {
+                                        if (data.data.returnCode == 1) {
+                                            console.log('error: ' + revdata.data.message);
+                                        }
+                                        else {
+                                            console.log('success: ' + revdata.data.message);
+                                            var revnewdata = {};
+                                            revnewdata.blockid = revdata.data.blockid;
+                                            revnewdata.viewid = revdata.data.viewid;
+                                            revnewdata.data = {};
+                                            revnewdata.data.html = revdata.data.display.html;
+                                            revnewdata.data.javascript = revdata.data.display.javascript;
+                                            var blockinstance = ViewManager.replaceConfigureBlock(revnewdata);
+                                            var configbutton = jQuery('.view-container button[name="action_configureblockinstance_id_' + revdata.data.blockid + '"]');
+                                            onModalCancel(e, configbutton);
+                                        }
+                                    });
+                                });
+                            }
+                        }
+                        else {
+                            // No configure form so we just need to close the modal
+                            hideDock();
+                        }
+                    }
+                });
+            });
+        });
     }
 
     //Private Methods
@@ -363,7 +448,7 @@
             helper: function(event) {
                 var original = $(this),
                     helper = $("<div />").append(original.clone());
-
+                helper.find('label span').removeClass('hidden');
                 helper.children().each(function(index) {
                     // Set helper cell sizes to match at least the original sizes
                     $(this).css('min-width', '200px');
@@ -1367,7 +1452,7 @@
         /**
          * changes the intructions so they are for ajax
          */
-        $('#blocksinstruction').html(strings['blocksinstructionajaxlive']);
+        $('#blocksinstruction').html(strings['blocksinstructionajaxlive1']);
         $('#viewinstructions-dropdown').on('hide.bs.collapse show.bs.collapse', function(event) {
             var pd = {
                 'viewid': $('#viewid').val(),
@@ -1401,4 +1486,8 @@ function blockConfigSuccess(form, data) {
  */
 function blockConfigError(form, data) {
     return ViewManager.blockConfigError(form, data);
+}
+
+function wire_blockoptions() {
+    return ViewManager.blockOptions();
 }

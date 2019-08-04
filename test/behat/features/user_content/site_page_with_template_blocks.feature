@@ -19,10 +19,13 @@ Scenario: Add a text block into the site default portfolio page and create a new
     And I click on "Page" in the dialog
     And I set the field "Page title" to "Site page with block templates" 
     And I press "Save"
-    And I expand "Personal info" node in the "blocktype sidebar" property
     # Add a Profile information block
-    And I follow "Profile information"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Profile information" in the "Content types" property
     And I set the following fields to these values:
     | First name     | 1 |
     | Last name      | 1 |

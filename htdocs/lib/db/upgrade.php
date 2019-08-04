@@ -1382,5 +1382,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019080200) {
+        log_debug('Force install of placeholder block plugin');
+        if ($data = check_upgrades('blocktype.placeholder')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

@@ -14,7 +14,7 @@ Background:
       | Page UserA_01 | Page 01| user | UserA |
 
 Scenario: Enable/disable external resources in mahara pages
-# By default external resources are allowed in a page
+ # By default external resources are allowed in a page
  When I log in as "UserA" with password "Kupuh1pa!"
  # Upload an image
  And I choose "Files" in "Create" from main menu
@@ -24,8 +24,9 @@ Scenario: Enable/disable external resources in mahara pages
  And I follow "Edit"
 
  # Add a "Text" block with an image from file area
- And I follow "Text"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | Text block with an internal image |
  And I click the "Insert/edit image" button in the editor
@@ -36,9 +37,9 @@ Scenario: Enable/disable external resources in mahara pages
  And I press "Save"
 
  # Add a "Text" block with an embedded external image
- And I scroll to the top
- And I follow "Text"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | Text block with an external image |
  | Block content | <p><img title="Open source logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Opensource.svg/744px-Opensource.svg.png" alt="" width="300" /></p> |

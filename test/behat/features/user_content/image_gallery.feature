@@ -25,9 +25,11 @@ Scenario:
   # Creating folder 1
   Given I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  And I expand "Media" node
-  And I follow "Image gallery"
+  When I follow "Add a new block" in the "blocktype sidebar" property
   And I press "Add"
+  And I click on "Show more"
+  And I click on "Image gallery" in the "Content types" property
+  And I set the field "Block title" to "Image gallery"
   And I select the radio "Image selection: Display all images from a folder including images uploaded later"
   And I click on the "Select" property
   And I select the radio "Style: Thumbnails (square)"

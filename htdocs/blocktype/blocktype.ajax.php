@@ -15,7 +15,7 @@ define('JSON', 1);
 define('NOSESSKEY', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require($CFG->docroot.'/blocktype/lib.php');
+require_once(get_config('docroot') . 'blocktype/lib.php');
 
 // Close the session to prevent session locking.
 session_write_close();

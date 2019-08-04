@@ -34,8 +34,9 @@ Scenario: Add blocks and create versions
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I follow "Text"
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Text" in the "Content types" property
     And I set the field "Block title" to "Text block version 1"
     And I set the field "Block content" to "Here is the first version of the block."
     And I press "Save"

@@ -80,9 +80,11 @@ Scenario: Installing framework module and activating for an institution
 
  # Add another compentency annotation block
  And I follow "Edit"
- And I expand "General" node
- And I follow "Annotation"
+ When I follow "Add a new block" in the "blocktype sidebar" property
  And I press "Add"
+ And I click on "Show more"
+ And I click on "Show more"
+ And I click on "Annotation" in the "Content types" property
  And I fill in "My three cents" in editor "Annotation"
  And I set the select2 value "1.1 - Sub level of the standard" for "instconf_smartevidence"
  And I press "Save"

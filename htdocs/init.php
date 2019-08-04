@@ -495,6 +495,14 @@ if (!defined('INSTALLER')) {
             throw new ConfigSanityException(get_string('multirecipientnotificationnotenabled',
                                                        'module.multirecipientnotification'));
         }
+        if (!$siteclosedforupgrade) {
+            // Make sure that placeholder block is installed and active
+            safe_require('blocktype', 'placeholder');
+            if (!PluginBlocktypePlaceholder::is_active()) {
+                throw new ConfigSanityException(get_string('placeholderblocktypenotenabled',
+                                                           'blocktype.placeholder'));
+            }
+        }
     }
 }
 

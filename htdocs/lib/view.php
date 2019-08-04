@@ -2017,7 +2017,6 @@ class View {
     public function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $blocktypes = PluginBlockType::get_blocktypes_for_category($category, $this);
-
         $smarty = smarty_core();
         $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);
@@ -2071,7 +2070,6 @@ class View {
             if (substr($actionstring, -2) == '_x' || substr($actionstring, -2) == '_y') {
                 $actionstring = substr($actionstring, 0, -2);
             }
-
             $values = self::get_values_for_action($actionstring);
         }
 
@@ -2085,6 +2083,8 @@ class View {
             break;
             case 'removeblockinstance': // requires action_removeblockinstance_id_\d
             break;
+            case 'changeblockinstance': // requires action_changeblockinstance_id_\d_new_\d_blocktype_\s_title_\s
+            case 'revertblockinstance': // requires action_revertblockinstance_id_\d_title_\s
             case 'configureblockinstance': // requires action_configureblockinstance_id_\d_column_\d_order_\d
             case 'acsearch': // requires action_acsearch_id_\d
             case 'moveblockinstance': // requires action_moveblockinstance_id_\d_row_\d_column_\d_order_\d
@@ -2401,7 +2401,7 @@ class View {
 
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
-            throw new UserException('[translate] Cannot put ' . $values['blocktype'] . ' blocktypes into this view');
+            throw new UserException(get_string('cannotputblocktypeintoview', error, $values['blocktype']));
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
@@ -2488,6 +2488,138 @@ class View {
         $this->shuffle_cell($bi->get('row'), $bi->get('column'), null, $bi->get('order'));
         db_commit();
         $this->dirtycolumns[$bi->get('row')][$bi->get('column')] = 1;
+    }
+
+    /**
+     * Changes a placeholder block into the new type of block
+     */
+    public function changeblockinstance($values) {
+        $currentblock = get_record('block_instance', 'id', $values['id']); // get direct from db as we want to change it
+        $requires = array('blocktype');
+        foreach ($requires as $require) {
+            if (!array_key_exists($require, $values) || empty($values[$require])) {
+                throw new ParamOutOfRangeException(get_string('missingparam'. $require, 'error'));
+            }
+        }
+
+        safe_require('blocktype', $values['blocktype']);
+        if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
+            throw new UserException(get_string('cannotputblocktypeintoview', error, $values['blocktype']));
+        }
+
+        if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
+            $count = count_records_select('block_instance', '"view" = ? AND blocktype = ?',
+                                          array($this->id, $values['blocktype']));
+            if ($count > 0) {
+                throw new UserException(get_string('onlyoneblocktypeperview', 'error', $values['blocktype']));
+            }
+        }
+
+        $blocktypeclass = generate_class_name('blocktype', $values['blocktype']);
+        $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : call_static_method($blocktypeclass, 'get_title');
+
+        if (!empty($values['title'])) {
+            $newtitle = hsc(urldecode($values['title']));
+        }
+        $currentblocktags = get_records_sql_assoc("SELECT id, tag FROM {tag} WHERE resourcetype = ? AND resourceid = ?", array('blocktype', $currentblock->id));
+        // Set up a dummy block instance of new blocktype with the data we need
+        // So we can get the initial display and configure form data
+        $bi = new BlockInstance(0,
+            array(
+                'id'         => $currentblock->id,
+                'blocktype'  => $values['blocktype'],
+                'title'      => $newtitle,
+                'view'       => $this->get('id'),
+                'view_obj'   => $this,
+                'row'        => $currentblock->row,
+                'column'     => $currentblock->column,
+                'order'      => $currentblock->order,
+            )
+        );
+        $result = array('blockid' => $currentblock->id,
+                        'viewid' => $currentblock->view,
+                        'newblocktype' => $values['blocktype']);
+        if ($currentblocktags) {
+            // We need to decide what to do with placeholder block tags
+            $droptags = true;
+            $cform = method_exists($blocktypeclass, 'has_instance_config') ? call_static_method($blocktypeclass, 'instance_config_form', $bi) : false;
+            if ($cform) {
+                foreach ($cform as $element) {
+                    if ($element['type'] == 'tags') {
+                        $droptags = false;
+                    }
+                }
+            }
+            if ($droptags) {
+                foreach ($currentblocktags as $t) {
+                    execute_sql("DELETE FROM {tag} WHERE id = ?", array($t->id));
+                }
+            }
+        }
+
+        $newdata = array('title' => $newtitle, 'blocktype' => $values['blocktype'], 'configdata' => serialize(array()));
+        $update = update_record('block_instance', (object) $newdata, (object) array('id' => $values['id']));
+        if (!$update) {
+            $result['returnCode'] = 1;
+            $result['message'] = get_string('blockchangederror', 'view', $values['blocktype']);
+        }
+        else {
+            // Return new block rendered in both configure mode and (editing) display mode
+            $isnew = (bool)$values['new'];
+            $result['display'] = $bi->render_editing(false, $isnew);
+            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
+                $result['configure'] = $bi->render_editing(true, $isnew);
+            }
+            else {
+                $result['configure'] = false;
+            }
+            $result['returnCode'] = 0;
+            $result['message'] = get_string('blockchangedsuccess', 'view', $values['blocktype']);
+            $result['isnew'] = $isnew;
+            $result['oldtitle'] = $currentblock->title;
+        }
+        return $result;
+    }
+
+    /**
+     * Changes a placeholder block into the new type of block
+     */
+    public function revertblockinstance($values) {
+        $currentblock = get_record('block_instance', 'id', $values['id']); // get direct from db as we want to change it
+
+        safe_require('blocktype', 'placeholder');
+        $oldtitle = hsc(urldecode($values['title']));
+        // Set up a dummy block instance of new blocktype with the data we need
+        // So we can get the initial display and configure form data
+        $bi = new BlockInstance(0,
+            array(
+                'id'         => $currentblock->id,
+                'blocktype'  => 'placeholder',
+                'title'      => $oldtitle,
+                'view'       => $this->get('id'),
+                'view_obj'   => $this,
+                'row'        => $currentblock->row,
+                'column'     => $currentblock->column,
+                'order'      => $currentblock->order,
+            )
+        );
+        $result = array('blockid' => $currentblock->id,
+                        'viewid' => $currentblock->view,
+                        'newblocktype' => 'placeholder');
+
+        $newdata = array('title' => $oldtitle, 'blocktype' => 'placeholder', 'configdata' => serialize(array()));
+        $update = update_record('block_instance', (object) $newdata, (object) array('id' => $values['id']));
+        if (!$update) {
+            $result['returnCode'] = 1;
+            $result['message'] = get_string('blockchangedbackerror', 'view', $values['blocktype']);
+        }
+        else {
+            // Return new block rendered in both configure mode and (editing) display mode
+            $result['display'] = $bi->render_editing(false, false);
+            $result['returnCode'] = 0;
+            $result['message'] = get_string('blockchangedbacksuccess', 'view');
+        }
+        return $result;
     }
 
     /**

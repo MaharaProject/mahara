@@ -1325,11 +1325,17 @@ EOD;
 
     /**
      * generate configdata for the bloctype: peerassessment
-     * @param array $fields holding each chunk of data between the ; in the behat data column
-     * @return array redundant info as there is no data directly connected in this case
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
+     * @return array $configdata of key and values of db table
      */
-    public static function generate_configdata_peerassessment($fields) {
-        return array();
+    public static function generate_configdata_peerassessment($sortedfields) {
+        $configdata = array();
+        foreach ($sortedfields as $key => $value) {
+            if ($key == 'instructions') {
+                $configdata[$key] = $value;
+            }
+        }
+        return $configdata;
     }
 
     /**

@@ -1943,4 +1943,57 @@ JS;
         $this->$action($element, $xpath, "xpath_element");
     }
 
+    /**
+     * Allows interaction with blocktype reorder page in administration.
+     * Seen as we can't do a drag drop easily in behat we will just reorder them via db
+     * and reload the page
+     *
+     * @Then I move blocktype :moveblock to before :otherblock
+     * @param string $moveblock   The block to move
+     * @param string $otherblock  The block to move before
+     */
+    public function i_move_blocktype($moveblock, $otherblock) {
+        // Find the blocktypes.
+        $moveblockliteral = $this->escaper->escapeLiteral($moveblock);
+        $otherblockliteral = $this->escaper->escapeLiteral($otherblock);
+        if ($moveblockliteral == $otherblockliteral) {
+            throw new ExpectationException('The blocktype to move with title ' . $moveblockliteral . ' is the same as ' . $otherblockliteral, $this->getSession());
+        }
+        $blocks = array('move' => array('text' => $moveblockliteral),
+                        'over' => array('text' => $otherblockliteral),
+                       );
+        // Our blocklist form db
+        $blocklist = get_column_sql("SELECT b.name FROM {blocktype_installed} b
+                                  JOIN {blocktype_installed_category} bc ON bc.blocktype = b.name
+                                  WHERE b.active = 1 AND b.name != ? ORDER BY bc.sortorder", array('placeholder'));
+        foreach ($blocks as $k => $block) {
+            $xpath = "//div[contains(@id,'placeholderlist')]" .
+                     "/div/button/div[contains(normalize-space(.), " . $block['text'] . ")]";
+            // Check that we have the block
+            try {
+                $blockobj = $this->find('xpath', $xpath);
+            }
+            catch (ElementNotFoundException $e) {
+                throw new ExpectationException('The blocktype with title ' . $block . ' was not found', $this->getSession());
+            }
+            $blocks[$k]['type'] = $blockobj->getParent()->getAttribute('data-option');
+        }
+
+        if (($moveblock = array_search($blocks['move']['type'], $blocklist)) !== false) {
+            $mover = array_slice($blocklist, $moveblock, 1);
+            unset($blocklist[$moveblock]);
+            $blocklist = array_values($blocklist);
+            if (($otherblock = array_search($blocks['over']['type'], $blocklist)) === false) {
+                throw new ExpectationException('Can not find the blocktype in db for blocktype with title ' . $blocks['over']['text'], $this->getSession());
+            }
+            array_splice($blocklist, $otherblock, 0, $mover);
+            foreach ($blocklist as $k => $v) {
+                execute_sql("UPDATE {blocktype_installed_category} SET sortorder = ? WHERE blocktype = ?", array(($k + 1) * 1000, $v));
+            }
+        }
+        else {
+            throw new ExpectationException('Can not find the blocktype in db for blocktype with title ' . $blocks['move']['text'], $this->getSession());
+        }
+    }
+
 }

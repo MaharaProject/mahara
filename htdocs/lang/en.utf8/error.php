@@ -79,6 +79,7 @@ $string['blocktypeprovidedbyartefactnotinstallable'] = 'This will be installed a
 $string['blockconfigdatacalledfromset'] = 'Configdata should not be set directly. Use PluginBlocktype::instance_config_save instead.';
 $string['invaliddirection'] = 'Invalid direction %s.';
 $string['onlyoneprofileviewallowed'] = 'You are only allowed one profile page.';
+$string['cannotputblocktypeintoview'] = 'Cannot put %s blocktypes into this page';
 $string['onlyoneblocktypeperview'] = 'Cannot put more than one %s block type into a page.';
 
 // if you change these next two , be sure to change them in libroot/errors.php

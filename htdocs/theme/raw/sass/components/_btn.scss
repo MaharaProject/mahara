@@ -296,23 +296,20 @@ td.action-list-copy {
     }
     .title {
         white-space: normal;
-        margin-left: 5px;
-        display: inline-block;
+        display: none;
+        @include media-breakpoint-up(lg) {
+            display: inline-block;
+            margin-left: 5px;
+        }
     }
     .block-icon {
         display: inline-block;
-        vertical-align: top;
-        margin-top: 5px;
-        margin-left: -2px;
-        font-size: 14px;
-        .col-collapsed & {
-            margin-left: 2px;
-            font-size: 18px;
+        @include media-breakpoint-up(lg) {
+            display: none;
         }
     }
      &.btn-accordion {
         .btn {
-            font-size: 13px;
             margin-bottom: -1px;
             max-width: 100%;
             overflow: hidden;
@@ -338,11 +335,10 @@ td.action-list-copy {
         white-space: normal;
         vertical-align: middle;
         padding: 0;
-        padding-right: 5px;
-        padding-top: 3px;
         width: auto;
         max-width: 85%;
         margin-left: 2px;
+        margin-bottom: 0;
     }
 }
 //page builder collapsible

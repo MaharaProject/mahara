@@ -19,32 +19,34 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I should see "Profile template"
     And I should see "Page template"
     When I click on "Edit" in "Dashboard template" card menu
-    And I expand "Personal info" node
-    Then I should see "My friends" in the "blocktype sidebar" property
     # add "My friends" block and verify it is displayed on the page
-    When I follow "My friends" in the "blocktype sidebar" property
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I should see "My portfolios" in the "Content types" property
+    And I should see "Watched pages" in the "Content types" property
+    And I click on "My friends" in the "Content types" property
     Then I should see "My friends" in the "#column-container" "css_element"
-    And I should see "My groups" in the "blocktype sidebar" property
     # add "My groups" block and verify it is displayed on the page
-    When I follow "My groups" in the "blocktype sidebar" property
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    Then I should see "My groups" in the "#column-container" "css_element"
-    When I press "Save"
-    # Confirm "My portfolios" is in the sidebar - NOTE: page already contains a "My Portfolios" block by default
-    Then I should see "My portfolios" in the "blocktype sidebar" property
-    # Confirm "Watched pages" is in the sidebar - NOTE: page already contains a "Watched pages" block by default
-    When I expand "General" node
-    Then I should see "Watched pages" in the "blocktype sidebar" property
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I click on "My groups" in the "Content types" property
+    And I press "Save"
 
     # Site admin Site admin set up "Profile template" to include the following:
     Given I follow "Return to site pages and collections"
     And I click on "Edit" in "Profile template" card menu
-    And I expand "Personal info" node
-    # Confirm Wall is in the sidebar - NOTE: page already contains a Wall block by default
-    Then I should see "Wall" in the "blocktype sidebar" property
-    And I should see "Wall" in the "#column-container" "css_element"
     # Verify that only one block of a certin type can be added to a template page  (ie only 1 Wall block)
-    When I follow "Wall" in the "blocktype sidebar" property
+    When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
+    And I click on "Show more"
+    And I click on "Show more"
+    And I should see "Wall" in the "Content types" property
+    And I click on "Wall" in the "Content types" property
+    And I press "Save"
     Then I should see "Cannot put more than one wall block type into a page."

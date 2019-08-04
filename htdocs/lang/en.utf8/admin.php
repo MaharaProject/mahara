@@ -1500,3 +1500,5 @@ $string['userdeletiondeniedsuccessful'] = 'Request denied successfully.';
 $string['userdeletiondeniedunsuccessful'] = 'The attempted user account deletion denial failed.';
 $string['consented'] = 'Consented';
 $string['groupid'] = 'Group ID';
+
+$string['blocktypeupdatedsuccess'] = 'Updated blocktype sort order';
