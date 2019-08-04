@@ -38,6 +38,21 @@
                     {$user->institutions|safe}
                 </div>
                 {/if}
+                {if $user->introduction}
+                <div class="text-small text-midtone">
+                    <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
+                        href="#userintro{$user->id}" role="button" aria-expanded="false"
+                        aria-controls="userintro{$user->id}">
+                        <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
+                        {str tag=showintroduction section=group}
+                    </a>
+                </div>
+                <div class="introduction detail text-small">
+                    <div class="collapse" id="userintro{$user->id}">
+                        {$user->introduction|safe}
+                    </div>
+                </div>
+                {/if}
             </div>
         </div>
         <div class="col-md-4">
