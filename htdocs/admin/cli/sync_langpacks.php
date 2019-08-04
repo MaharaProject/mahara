@@ -131,15 +131,32 @@ foreach ($langpacks as $lang) {
             array(
                 CURLOPT_URL => $langurl,
                 CURLOPT_HEADER => false,
+                CURLOPT_FILETIME => true,
             ),
             true
         );
+        // Check to see if we can get the upstream's filetime
+        // and ignore updating language if file hasn't changed
+        if (isset($checklang->info['filetime']) && $checklang->info['filetime'] > 0) {
+            $filetime = $checklang->info['filetime'];
+            if (file_exists($tmpdir . '/' . $filename)) {
+                $localfiletime = filemtime($tmpdir . '/' . $filename);
+                if ($localfiletime == $filetime) {
+                    $cli->cli_print(get_string('cli_langpack_ignore', 'admin', $filename));
+                    continue;
+                }
+            }
+        }
+        else {
+            $filetime = time();
+        }
         if ($checklang->info['http_code'] != '200') {
             $cli->cli_print(get_string('cli_langpack_url_failed', 'admin', $lang, $checklang->info['http_code']));
             continue;
         }
         $file = $checklang->data;
         file_put_contents($tmpdir . '/' . $filename, $file);
+        touch($tmpdir . '/' . $filename, $filetime);
         $cli->cli_print(get_string('cli_langpack_upload', 'admin', $filename));
         // if we need to make a backup - do it now
         if ($dobackup) {
