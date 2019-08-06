@@ -531,7 +531,7 @@ function settings_submit(Pieform $form, $values) {
     redirect('/view/blocks.php?id=' . $view->get('id'));
   }
 
-function create_block($bt, $configdata, $view, $column, $blockinfo = null) {
+function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=null) {
     if ($bt == 'taggedposts') {
         $tagselect = $configdata['tagselect'];
         unset($configdata['tagselect']);
@@ -549,9 +549,16 @@ function create_block($bt, $configdata, $view, $column, $blockinfo = null) {
     }
 
     $bi->set('title', $title);
-    $bi->set('row', 1);
-    $bi->set('column', $column);
-    $bi->set('order', $view->get_current_max_order(1, $column) + 1);
+    $bi->set('positionx', 0);
+    $bi->set('positiony', 0);
+    if ($dimension) {
+        $bi->set('height', $dimension->height);
+        $bi->set('width', $dimension->width);
+    }
+    else {
+        $bi->set('height', 3);
+        $bi->set('width', 4);
+    }
     $configdata['retractable'] = false;
     $configdata['retractedonload'] = false;
     $bi->set('configdata', $configdata);
@@ -598,12 +605,6 @@ function set_view_title_and_description(Pieform $form, $values) {
     if (isset($values['createtags'])) {
         $createtags = $values['createtags'] ? $values['createtags'] : array();
         if ($createtags) {
-            $currentcolumn = 1;
-            $maxcols = get_field_sql("
-                SELECT vlc.columns
-                FROM {view_layout_rows_columns} vlrc
-                JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
-                WHERE vlrc.viewlayout = ? and vlrc.row = ?", array(5, 1));
             require_once('searchlib.php');
             require_once('collection.php');
             $data = array();
@@ -657,8 +658,8 @@ function set_view_title_and_description(Pieform $form, $values) {
                                       }
                                   }
                             }
-                            $id = create_block($bk, $configdata, $view, $currentcolumn, array('oldid' => $bid, 'tags' => $tags));
-                            $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                            $dimension = get_record('block_instance_dimension', 'block', $bid);
+                            $id = create_block($bk, $configdata, $view, array('oldid' => $bid, 'tags' => $tags), $dimension);
                         }
                     }
                 }
@@ -701,8 +702,8 @@ function set_view_title_and_description(Pieform $form, $values) {
                                     $oldconfigdata = unserialize($oldconfigdata);
                                     $configdata['artefactids'] = !empty($oldconfigdata['artefactids']) ? $oldconfigdata['artefactids'] : null;
                                 }
-                                $id = create_block($bt, $configdata, $view, $currentcolumn);
-                                $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+
+                                $id = create_block($bt, $configdata, $view);
                             }
                             $bt = false;
                         }
@@ -715,8 +716,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                                                     'count' => '5', // default number of posts to display
                                                     'copytype' => 'nocopy', // default copy type
                                                    );
-                                $id = create_block($bt, $configdata, $view, $currentcolumn);
-                                $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                                $id = create_block($bt, $configdata, $view);
                             }
                             $bt = false;
                         }
@@ -737,8 +737,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                                 $configdata = array('artefactid' => $folderid,
                                                     'sortorder' => 'asc',
                                                    );
-                                $id = create_block($bt, $configdata, $view, $currentcolumn);
-                                $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                                $id = create_block($bt, $configdata, $view);
                             }
                             $bt = false;
                         }
@@ -793,8 +792,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                         }
                         if ($bt) {
                             // Add the block to the page
-                            $id = create_block($bt, $configdata, $view, $currentcolumn);
-                            $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                            $id = create_block($bt, $configdata, $view);
                         }
                     }
                     // We add the plan block now
@@ -803,15 +801,13 @@ function set_view_title_and_description(Pieform $form, $values) {
                         $configdata = array('artefactids' => $plans,
                                             'count' => 10, // default tasks
                                            );
-                        $id = create_block($bt, $configdata, $view, $currentcolumn);
-                        $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                        $id = create_block($bt, $configdata, $view);
                     }
                     // We add in the file to download block once we work out what should be in it
                     if (!empty($filedownload)) {
                         $bt = 'filedownload';
                         $configdata = array('artefactids' => $filedownload);
-                        $id = create_block($bt, $configdata, $view, $currentcolumn);
-                        $currentcolumn = (($currentcolumn +1) % $maxcols) ? ($currentcolumn +1) % $maxcols : $maxcols;
+                        $id = create_block($bt, $configdata, $view);
                     }
                 }
             }
