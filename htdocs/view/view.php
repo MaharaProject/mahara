@@ -359,34 +359,6 @@ jQuery(function () {
 });
 
 jQuery(function($) {
-    $('#column-container .blockinstance-content .commentlink').each(function() {
-        var blockid = $(this).attr('id').match(/\d+/);
-        // only use comments expander if there are comments on the artefact
-        $(this).on('click', function(e) {
-            var commentlink = $(this);
-            var chtml = commentlink.parent().parent().find('#feedbacktable_' + blockid).parent();
-            // add a 'close' link at the bottom of the list for convenience
-            if ($('#closer_' + blockid).length == 0) {
-                var closer = $('<a id="closer_' + blockid + '" href="#" class="close-link">Close</a>').on("click", function(e) {
-                    $(this).parent().toggle(400, function() {
-                        commentlink.trigger("focus");
-                    });
-                    e.preventDefault();
-                });
-                chtml.append(closer);
-            }
-            chtml.toggle(400, function() {
-                if (chtml.is(':visible')) {
-                    chtml.find('a').first().trigger("focus");
-                }
-                else {
-                    commentlink.trigger("focus");
-                }
-            });
-            e.preventDefault();
-        });
-    });
-
     $('.moretags').on('click', function(e) {
         e.preventDefault();
         var params = {
