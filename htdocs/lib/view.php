@@ -1552,7 +1552,7 @@ class View {
                     break;
                 case 'friends':
                     if (!$this->owner) {
-                        continue; // Don't add friend access to group, institution or system views
+                        continue 2; // Don't add friend access to group, institution or system views
                     }
                 case 'public':
                 case 'loggedin':
