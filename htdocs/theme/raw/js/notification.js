@@ -172,7 +172,6 @@ jQuery(function($) {
         }
         else if (self) {
             $(self).removeClass('text-weight-bold js-card-unread').addClass('card');
-            $(self).find('.control').removeClass('control');
             $(self).find('.unread').removeClass('unread'); // for inbox block
         }
         $('#selectall').attr('checked', false); // Need to uncheck bulk checkbox

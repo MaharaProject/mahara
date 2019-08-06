@@ -131,6 +131,19 @@ jQuery(function($) {
 });
 JAVASCRIPT;
 
+$externalmsg = param_integer('msg', 0);
+$externalmsgtype = param_variable('msgtype', '');
+$externalmsgtype = preg_replace('/[^a-z0-9_]+/i', '', $externalmsgtype);
+if ($externalmsg && $externalmsgtype) {
+    $paginationjavascript .= '
+
+jQuery(function($) {
+    $(document).ready(function() {
+        $("#notification-' . $externalmsgtype . '-' . $externalmsg . '").collapse("show");
+    });
+});';
+}
+
 $deleteall = pieform(array(
     'name'        => 'delete_all_notifications',
     'class'       => 'form-deleteall sr-only',
