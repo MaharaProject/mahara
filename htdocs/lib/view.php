@@ -4166,8 +4166,9 @@ class View {
             $collfrom .= $fromstr;
 
             if (!empty($groupby)) {
-                $groupby .= ', g.id, h.wwwroot';
-                $collgroupby .= ', g.id, h.wwwroot';
+                // Adding groupby condition for lti_assessment id column.
+                $groupby .= ', g.id, h.wwwroot' . ($haslti ? ', a.id' : '');
+                $collgroupby .= ', g.id, h.wwwroot' . ($haslti ? ', a.id' : '');
             }
             $sort = '
                 ORDER BY ' . $order . ' vtitle, vid';
