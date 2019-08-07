@@ -246,6 +246,7 @@ function expected_account_preferences() {
                  'orderpagesby' => 'latestmodified',
                  'searchinfields' => 'titleanddescriptionandtags',
                  'view_details_active' => 0,
+                 'showlayouttranslatewarning' => 1,
                  );
 }
 
@@ -450,6 +451,13 @@ function general_account_prefs_form_elements($prefs) {
             'defaultvalue' => $prefs->devicedetection,
         );
     }
+
+    $elements['showlayouttranslatewarning'] = array(
+        'type' => 'switchbox',
+        'defaultvalue' => $prefs->showlayouttranslatewarning,
+        'title' => get_string('showlayouttranslatewarning', 'account'),
+        'description' => get_string('showlayouttranslatewarningdescription', 'account', hsc(get_config('sitename'))),
+    );
 
     return $elements;
 }

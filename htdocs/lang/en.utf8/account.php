@@ -59,6 +59,9 @@ $string['hiderealnamedescription'] = 'Check this box if you have set a display n
 $string['showhomeinfo2'] = 'Dashboard information';
 $string['showhomeinfodescription1'] = 'Display information about how to use %s on the dashboard.';
 
+$string['showlayouttranslatewarning'] = 'Confirm before changing pages layout';
+$string['showlayouttranslatewarningdescription'] = 'Display a warning and request confirmation before changing the layout of a page to the new layout when editing the page';
+
 $string['showprogressbar'] = 'Profile completion progress bar';
 $string['showprogressbardescription'] = 'Display progress bar and tips on how to complete your %s profile.';
 

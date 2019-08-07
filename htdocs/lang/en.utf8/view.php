@@ -518,3 +518,8 @@ $string['bottom'] = 'Bottom';
 $string['top'] = 'Top';
 $string['blockssizeupdated'] = 'Block sizes were updated successfully';
 $string['dimensionsnotset'] = 'Block dimensions not set';
+$string['dontaskagain'] = 'Accept and remember';
+$string['pleaseconfirmtranslate'] = 'Transform page layout';
+$string['confirmtranslationmessage'] = 'As part of Mahara 19.10 we introduced a new way to create pages layout. To be able to edit this page we\'ll need to transform the old layout to the new grid layout.
+If you wish to transform this page alone, click \'Accept\'. To transform all pages that you edit and not see this message again, click \'Accept and remember\', this option can be changed in <a href="%s">Settings</a>. To go back to the page click on \'Cancel\'.
+';

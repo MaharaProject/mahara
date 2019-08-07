@@ -169,9 +169,35 @@ if ($view->uses_new_layout() && $view->needs_block_resize_on_load()) {
     $blockresizeonload = "true";
 }
 if (!$view->uses_new_layout()) {
-    // if it's old row layout, we need to translate to grid layout
-    save_blocks_in_new_layout($view->get('id'));
-    $blockresizeonload = "true";
+    // flag to set the showlayouttranslatewarning=true in account preferences
+    $alwaystranslate = param_boolean('alwaystranslate', false);
+    // flag to translate this page
+    $translate = param_boolean('translate', false);
+    // if  showlayouttranslatewarning is not set in account preferences, then we need to show the warning
+    $showlayouttranslatewarning = is_null($USER->get_account_preference('showlayouttranslatewarning')) ? 1 : $USER->get_account_preference('showlayouttranslatewarning');
+
+    if ($showlayouttranslatewarning && $alwaystranslate) {
+      $USER->set_account_preference('showlayouttranslatewarning', 0);
+      $showlayouttranslatewarning = false;
+    }
+
+    if ($showlayouttranslatewarning && !$translate) {
+      // user needs to confirm that wants to translate old layout page to grid layout
+      // before we continue
+      $smarty = smarty(array(), $stylesheets, false, $extraconfig);
+      $smarty->assign('PAGEHEADING', get_string('pleaseconfirmtranslate', 'view'));
+      $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
+      $smarty->assign('viewid', $view->get('id'));
+      $smarty->assign('viewtitle', $view->get('title'));
+      $smarty->assign('accountprefsurl', get_config('wwwroot') . 'account');
+      $smarty->display('view/translatewarning.tpl');
+      exit;
+    }
+    else {
+        // if it's old row layout, we need to translate to grid layout
+        save_blocks_in_new_layout($view->get('id'));
+        $blockresizeonload = "true";
+    }
 }
 $blocks = $view->get_blocks(true);
 $blocksencode = json_encode($blocks);
