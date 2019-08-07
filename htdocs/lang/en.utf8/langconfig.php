@@ -15,6 +15,7 @@ $string['parentlanguage'] = '';
 $string['pieform_calendar_dateformat'] = '%%Y/%%m/%%d';
 $string['pieform_calendar_timeformat'] = '%%H:%%M';
 $string['strftimedate'] = '%%e %%B %%Y';
+$string['strftimedatemonth'] = '%%e %%B';
 $string['strftimedateshort'] = '%%e %%b %%Y';
 $string['strftimedatetime'] = '%%d %%B %%Y, %%k:%%M';
 $string['strftimedatetimesuffix'] = '%%d %%B %%Y, %%l:%%M%%P';
