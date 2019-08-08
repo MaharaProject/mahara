@@ -790,6 +790,7 @@
                 <FIELD NAME="lockblocks" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="instructions" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="instructionscollapsed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="accessibleview" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

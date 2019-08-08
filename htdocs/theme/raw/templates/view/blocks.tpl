@@ -1,5 +1,9 @@
 {include file="header.tpl"}
 
+{if $accessible}
+    <span class="sr-only">{str tag=accessibilitymodedescription section=view}</span>
+{/if}
+
 <div class="view-instructions">
     <form action="{$formurl}" method="post" class="row">
         <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">

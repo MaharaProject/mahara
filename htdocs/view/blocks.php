@@ -153,6 +153,10 @@ $javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jqu
                     'js/gridstack/gridstack.jQueryUI.js',
                     'js/gridlayout.js',
                     );
+if ($view->get('accessible')) {
+    $javascript[] = 'js/dragondrop/dragon-drop.js';
+    $javascript[] = 'js/accessibilityreorder.js';
+}
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -202,19 +206,31 @@ if (!$view->uses_new_layout()) {
 $blocks = $view->get_blocks(true);
 $blocksencode = json_encode($blocks);
 
+if ( $view->get('accessible')) {
+    $float = 'false';
+    $mincolumns = '12';
+    $reorder = '  accessibilityReorder();';
+}
+else {
+    $float = 'true';
+    $mincolumns = 'null';
+    $reorder = '  ';
+}
+
 $inlinejs .="
 $(function () {
     var options = {
         verticalMargin: 10,
-        float: true, //to place a block in any part of the page and the position will remain fixed
+        float: {$float},
         resizable: false,
         acceptWidgets: '.blocktype-drag',
         draggable: {
             scroll: true,
         },
         animate: true,
-      },
-      grid, translate;
+        minCellColumns: {$mincolumns},
+    },
+    grid, translate;
     grid = $('.grid-stack');
 
     grid.gridstack(options);
@@ -229,6 +245,7 @@ $(function () {
     else {
         loadGrid(grid, blocks);
     }
+    {$reorder}
 });
 ";
 
@@ -264,15 +281,23 @@ if ($placeholderblock) {
     $smarty = smarty_core();
     $smarty->assign('blocktypes', $placeholderblock);
     $smarty->assign('javascript', false);
+    $smarty->assign('accessible', $view->get('accessible'));
     $placeholderbutton = $smarty->fetch('view/blocktypelist.tpl');
 }
-
-$smarty = smarty($javascript, $stylesheets, array(
+$strings = array(
     'view' => array(
         'addnewblock',
         'moveblock',
     ),
-), $extraconfig);
+);
+
+if ($view->get('accessible')) {
+    $strings['view'][] = 'itemgrabbed';
+    $strings['view'][] = 'itemdropped';
+    $strings['view'][] = 'itemreorder';
+}
+
+$smarty = smarty($javascript, $stylesheets, $strings, $extraconfig);
 
 $smarty->assign('addform', $addform);
 
@@ -343,5 +368,5 @@ $smarty->assign('instructionscollapsed', $view->get('instructionscollapsed'));
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('title', $returnto['title']);
-
+$smarty->assign('accessible', $view->get('accessible'));
 $smarty->display('view/blocks.tpl');

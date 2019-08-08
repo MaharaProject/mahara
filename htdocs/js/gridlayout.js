@@ -39,12 +39,12 @@ function loadGridTranslate(grid, blocks) {
 }
 
 function loadGrid(grid, blocks) {
-
+    var minWidth = grid.opts.minCellColumns;
     $.each(blocks, function(index, block) {
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '<div/><div/>');
-        addNewWidget(blockContent, block.id, block, grid, block.class);
+        addNewWidget(blockContent, block.id, block, grid, block.class, minWidth);
     });
 
     jQuery(document).trigger('blocksloaded');
@@ -127,33 +127,35 @@ function updateTranslatedGridRows(blocks) {
 function updateBlockSizes() {
     $.each($('.grid-stack').children(), function(index, element) {
         if (!$(element).hasClass('staticblock')) {
-            $('.grid-stack').data('gridstack').resize(
-                $('.grid-stack-item')[index],
-                $($('.grid-stack-item')[index]).attr('data-gs-width'),
-                Math.ceil(
-                  (
-                    $('.grid-stack-item-content')[index].scrollHeight +
-                    $('.grid-stack').data('gridstack').opts.verticalMargin
-                  )
-                  /
-                  (
-                    $('.grid-stack').data('gridstack').cellHeight() +
-                    $('.grid-stack').data('gridstack').opts.verticalMargin
-                  )
-                )
+            var width = $($('.grid-stack-item')[index]).attr('data-gs-width'),
+            prevHeight = $($('.grid-stack-item')[index]).attr('data-gs-height'),
+            height = Math.ceil(
+              (
+                $('.grid-stack-item-content')[index].scrollHeight +
+                $('.grid-stack').data('gridstack').opts.verticalMargin
+              )
+              /
+              (
+                $('.grid-stack').data('gridstack').cellHeight() +
+                $('.grid-stack').data('gridstack').opts.verticalMargin
+              )
             );
+            //height = height.toString();
+            if (+prevHeight != height) {
+                $('.grid-stack').data('gridstack').resize($('.grid-stack-item')[index], +width, height);
+            }
         }
     });
 }
 
-function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass) {
+function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, minWidth=null) {
    el = grid.addWidget(
          blockContent,
          dimensions.positionx,
          dimensions.positiony,
          dimensions.width,
          dimensions.height,
-         null, null, null, null, null,
+         null, minWidth, null, null, null,
          blockId
    );
 

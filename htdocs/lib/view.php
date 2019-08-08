@@ -65,6 +65,7 @@ class View {
     private $instructionscollapsed=0;
     private $newlayout = 1;
     private $grid;
+    private $accessible = 0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -1978,6 +1979,7 @@ class View {
         $smarty = smarty_core();
         $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);
+        $smarty->assign('accessible', $this->get('accessible'));
         return $smarty->fetch('view/blocktypelist.tpl');
     }
 
@@ -2174,7 +2176,7 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
         INNER JOIN {block_instance} bi
         ON bd.block = bi.id
         WHERE bi.view = ?
-        ORDER BY bi.row, bi.column, bi.order';
+        ORDER BY positiony, positionx';
         $blocks = get_records_sql_array($sql, array($this->get('id')));
     }
     else {

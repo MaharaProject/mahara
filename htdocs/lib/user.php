@@ -247,6 +247,7 @@ function expected_account_preferences() {
                  'searchinfields' => 'titleanddescriptionandtags',
                  'view_details_active' => 0,
                  'showlayouttranslatewarning' => 1,
+                 'accessibilityprofile' => false,
                  );
 }
 
@@ -457,6 +458,13 @@ function general_account_prefs_form_elements($prefs) {
         'defaultvalue' => $prefs->showlayouttranslatewarning,
         'title' => get_string('showlayouttranslatewarning', 'account'),
         'description' => get_string('showlayouttranslatewarningdescription', 'account', hsc(get_config('sitename'))),
+    );
+
+    $elements['accessibilityprofile'] = array(
+        'type' => 'switchbox',
+        'defaultvalue' => $prefs->accessibilityprofile,
+        'title' => get_string('accessibilityprofile', 'account'),
+        'description' => get_string('accessibilityprofiledescription', 'account'),
     );
 
     return $elements;

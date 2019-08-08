@@ -62,6 +62,9 @@ $string['showhomeinfodescription1'] = 'Display information about how to use %s o
 $string['showlayouttranslatewarning'] = 'Confirm before changing pages layout';
 $string['showlayouttranslatewarningdescription'] = 'Display a warning and request confirmation before changing the layout of a page to the new layout when editing the page';
 
+$string['accessibilityprofile'] = 'Accessible profile';
+$string['accessibilityprofiledescription'] = 'Enable accessibility options in your account';
+
 $string['showprogressbar'] = 'Profile completion progress bar';
 $string['showprogressbardescription'] = 'Display progress bar and tips on how to complete your %s profile.';
 

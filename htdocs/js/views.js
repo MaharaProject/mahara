@@ -120,6 +120,10 @@
         else {
             return newblock;
         }
+        if (typeof(window.dragonDrop) != 'undefined') {
+            var list = $('.grid-stack')[0];
+            window.dragonDrop.initElements(list);
+        }
     };
 
     /**
@@ -419,7 +423,7 @@
 
     function makeNewBlocksDraggable() {
 
-        $('.blocktype-drag').draggable({
+        $('.blocktype-drag.not-accessible').draggable({
             start: function(event, ui) {
                 $(this).attr('data-gs-width', 4);
                 $(this).attr('data-gs-height', 3);
@@ -528,10 +532,11 @@
 
             addBlockCss(data.css);
 
-            var grid = $('.grid-stack').data('gridstack');
+            var grid = $('.grid-stack').data('gridstack'),
+            minWidth = grid.opts.minCellColumns;
             dimensions.width = 4;
             dimensions.height = 3;
-            addNewWidget(blockinstance, blockId, dimensions, grid, null);
+            addNewWidget(blockinstance, blockId, dimensions, grid, 'placeholder', minWidth);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
@@ -540,6 +545,16 @@
                 // if block has has_instance_config() set to false, eg 'comment' block
                 rewriteDeleteButton(blockinstance.find('.deletebutton'));
                 blockinstance.find('.deletebutton').trigger("focus");
+            }
+            if (typeof(window.dragonDrop) != 'undefined') {
+                var list = $('.grid-stack')[0];
+                if (whereTo == 'top') {
+                    // new block will show on top of the page but it's still as the last child in the DOM
+                    // need to place it first of the list before dragon drop reset
+                    var children = list.children;
+                    var length = children.length;
+                    list.insertBefore(children[length-1], children[0]);
+                }
             }
         },
         function() {
@@ -635,6 +650,11 @@
                     });
 
                     self.prop('disabled', false);
+                    if (typeof(window.dragonDrop) != 'undefined') {
+                        var list = $('.grid-stack')[0];
+                        window.dragonDrop.initElements(list);
+                    }
+
 
                 }, function() {
 

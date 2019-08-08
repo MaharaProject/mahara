@@ -207,7 +207,6 @@ function create_settings_pieform() {
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements'   => $elements,
-        //'validatecallback' => 'layout_validate',
     );
 
     return array(pieform($settingsform), $inlinejavascript);
@@ -289,6 +288,17 @@ function get_basic_elements() {
             'collapseifoneoption' => false,
             'width'        => '280px',
             'help'         => true,
+        );
+    }
+    $viewhasblocks = count_records('block_instance', 'view', $view->get('id'));
+    $accessibleviewdisabled = $viewhasblocks && !$view->get('accessible');
+    if (!($group || $institution) && $USER->get_account_preference('accessibilityprofile')) {
+        $elements['accessibleview'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('accessibleview', 'view'),
+            'description'  => get_string('accessibleviewdesc', 'view'),
+            'defaultvalue' => !$accessibleviewdisabled,
+            'disabled'     => $accessibleviewdisabled,
         );
     }
     return $elements;
@@ -529,7 +539,7 @@ function settings_submit(Pieform $form, $values) {
     $view->commit();
     $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
     redirect('/view/blocks.php?id=' . $view->get('id'));
-  }
+}
 
 function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=null) {
     if ($bt == 'taggedposts') {
@@ -827,6 +837,9 @@ function set_view_title_and_description(Pieform $form, $values) {
     }
     if (isset($values['anonymise'])) {
         $view->set('anonymise', (int)$values['anonymise']);
+    }
+    if (isset($values['accessibleview'])) {
+        $view->set('accessible', (int)$values['accessibleview']);
     }
 }
 

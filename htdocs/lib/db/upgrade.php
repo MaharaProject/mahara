@@ -1437,5 +1437,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019080802) {
+        log_debug('Adding accessible column to view table');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('accessible');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+    }
+
     return $status;
 }
