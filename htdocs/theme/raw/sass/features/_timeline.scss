@@ -187,11 +187,11 @@ ul.cd-timeline-navigation-second {
   outline: 0;
   text-decoration: none;
   &::after {
-    content: '\f138';
-    font-family: FontAwesome;
+    content: fa-content($fa-var-chevron-circle-right);
+    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
     color: $theme-primary-color;
-    font-size: 30px;
-    top: -7px;
+    font-size: 28px;
+    top: -5px;
     position: relative;
 
   }

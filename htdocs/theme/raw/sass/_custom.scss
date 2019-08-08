@@ -399,18 +399,18 @@
 
 .table thead {
     a::after {
-        font-family: 'FontAwesome';
+        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
         position: relative;
         top: -3px;
         margin-left: 3px;
         color: $gray-300;
     }
     .asc > a::after {
-        content: '\f0dd';
+        content: fa-content($fa-var-caret-down);
     }
     .desc > a::after,
     .sorted > a::after {
-        content: '\f0de';
+        content: fa-content($fa-var-caret-up);
         top: 2px;
     }
 }
