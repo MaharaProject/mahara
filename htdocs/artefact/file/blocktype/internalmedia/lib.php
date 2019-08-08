@@ -263,6 +263,8 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             'ogv'       => 'html5video',
             'webm'      => 'html5video',
             '3gp'       => 'html5video',
+            'wav'       => 'html5audio',
+            'm4a'       => 'html5audio',
         );
     }
 

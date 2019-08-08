@@ -510,5 +510,27 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         clear_resized_images_cache();
     }
 
+    if ($oldversion < 2019081900) {
+        log_debug("Update m4a, m4b, m4p and m4r file types to be audio/mp4 mimetype");
+        // For existing video/mp4 that need to have their mimetype updated to audio/mp4
+        execute_sql("UPDATE {artefact}
+                    SET artefacttype = 'audio'
+                    WHERE id IN (SELECT artefact FROM {artefact_file_files}
+                    WHERE oldextension IN ('m4a', 'm4b', 'm4p', 'm4r'));
+                    ");
+
+        execute_sql("UPDATE {artefact_file_files} SET filetype = 'audio/mp4'
+                    WHERE (oldextension in ('m4a', 'm4b', 'm4p', 'm4r')
+                    AND filetype = 'video/mp4');");
+
+        // Make the m4a type enabled so existing blocks display correctly
+        $options = array();
+        if ($data = get_config_plugin('blocktype', 'internalmedia', 'enabledtypes')) {
+            $options = unserialize($data);
+        }
+        $options[] = 'm4a';
+        set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($options));
+    }
+
     return $status;
 }
