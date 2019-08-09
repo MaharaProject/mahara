@@ -444,6 +444,7 @@ class webservice_xmlrpc_server extends webservice_base_server {
         // Allow cross-origin requests only for Web Services.
         // This allow to receive requests done by Web Workers or webapps in different domains.
         header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Credentials: false');
     }
     /**
      * Generate the XML-RPC fault response.

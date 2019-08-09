@@ -40,6 +40,11 @@ $response['maharaversion'] = get_config('series');
 $response['wwwroot'] = get_config('wwwroot');
 $response['sitename'] = get_config('sitename');
 
+// Allow CORS requests.
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: false');
+
+
 if (!$CFG->webservice_provider_enabled) {
     $response['wsenabled'] = false;
     echo json_encode((object)$response);
