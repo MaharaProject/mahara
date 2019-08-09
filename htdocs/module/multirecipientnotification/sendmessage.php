@@ -278,7 +278,7 @@ function translate_ids_to_names(array $ids) {
     foreach ($ids as $id) {
         $deleted = get_field('usr', 'deleted', 'id', $id);
         if (($deleted === '0') && is_numeric($id) && can_send_message($USER->to_stdclass(), $id)) {
-            $results[] = (object) array('id' => $id, 'text' => hsc(display_name($id)));
+            $results[] = (object) array('id' => $id, 'text' => hsc(display_name($id, null, true)));
         }
     }
     return $results;

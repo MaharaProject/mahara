@@ -50,7 +50,7 @@ while ($more && count($tmpuser) < $usersperpage) {
             'id' => $user['id'],
             'text' => '<img class="select2-user-icon" src="' . get_config('wwwroot') . 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' . $user['id'] . '" />' .
                       '<span>' . hsc(display_name($user['id'])) . '</span>',
-            'name' => hsc(display_name($user['id']))
+            'name' => hsc(display_name($user['id'], null, true))
         );
     }
     $page++;
