@@ -35,6 +35,7 @@ require_once($CFG->docroot . '/webservice/lib.php');
 
 // Allow CORS requests.
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: false');
 
 /**
  * A "deconstructed" webserver class to handle only the parts of the
