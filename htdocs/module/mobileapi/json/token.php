@@ -59,6 +59,7 @@ if (!PluginModuleMobileapi::is_service_ready()) {
 
 // Allow CORS requests.
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Credentials: false');
 
 $username = param_variable('username');
 $password = param_variable('password');
