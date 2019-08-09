@@ -309,6 +309,9 @@ class webservice_rest_server extends webservice_base_server {
         header('Expires: '. gmdate('D, d M Y H:i:s', 0) . ' GMT');
         header('Pragma: no-cache');
         header('Accept-Ranges: none');
+         // Allow CORS requests.
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Credentials: false');
     }
 
     /**
