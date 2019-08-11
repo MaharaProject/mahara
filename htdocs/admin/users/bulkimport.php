@@ -49,7 +49,7 @@ $form = array(
             'type' => 'text',
             'title' => get_string('importfile', 'admin'),
             'size' => 40,
-            'description' => get_string('bulkleap2aimportfiledescription', 'admin'),
+            'description' => get_string('bulkleap2aimportfiledescription1', 'admin'),
             'rules' => array(
                 'required' => true
             )
@@ -136,7 +136,7 @@ function bulkimport_validate(Pieform $form, $values) {
     foreach ($csvdata->data as $user) {
         $username = $user[0];
         $filename = $user[1];
-        $LEAP2AFILES[$username] = "$importdir/users/$filename";
+        $LEAP2AFILES[$username] = $importdir . 'users/' . $filename;
     }
 }
 
