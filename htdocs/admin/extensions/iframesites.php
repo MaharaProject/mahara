@@ -19,9 +19,20 @@ define('SECTION_PAGE', 'iframesites');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('upgrade.php');
 define('TITLE', get_string('allowediframesites', 'admin'));
-
+safe_require('blocktype', 'externalvideo');
 $iframesources = get_records_menu('iframe_source', '', '', 'name,prefix');
 $iframedomains = get_records_menu('iframe_source_icon');
+$fa_domains = PluginBlocktypeExternalvideo::get_fa_brand_icons();
+$data = array();
+foreach ($iframedomains as $name => $domain) {
+    $data[$name]['name'] = $domain;
+    $data[$name]['icon'] = favicon_display_url($domain);
+    $lname = strtolower($name);
+    if (isset($fa_domains[$lname])) {
+        $data[$name]['faicon'] = $fa_domains[$lname]['faicon'];
+        $data[$name]['style'] = $fa_domains[$lname]['style'];
+    }
+}
 
 $newform = pieform(array(
     'name'     => 'newurl',
@@ -85,7 +96,7 @@ foreach ($iframesources as $url => $name) {
         'id'         => $i,
         'url'        => $url,
         'name'       => $name,
-        'icon'       => favicon_display_url($iframedomains[$name]),
+        'icon'       => $data[$name],
         'editform'   => pieform(array(
             'name'             => 'editurl_' . $i,
             'successcallback'  => 'editurl_submit',
