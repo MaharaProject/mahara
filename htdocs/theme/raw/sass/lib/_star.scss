@@ -98,7 +98,6 @@
 }
 
 .star-rating-readonly {
-    width: 15px;
     a {
        font-size: 15px;
        &:hover {
@@ -108,9 +107,8 @@
 }
 
 .star-comment-rating {
-    float:right;
-    margin: -10px 40% 0 0;
-    padding: 10px 0 0 10px;
+    display: block;
+    padding: 6px 0 6px 0;
 }
 .ratingicon:hover {
     color: theme-color("success") !important;

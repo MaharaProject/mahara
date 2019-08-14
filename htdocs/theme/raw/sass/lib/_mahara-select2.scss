@@ -12,9 +12,9 @@
     color: $input-color;
     &.select2-selection--multiple {
         &:after {
-            content: "\f002";
+            font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
+            content: fa-content($fa-var-search);
             color: scale-color($theme-text-color, $lightness: 62.5%);
-            font-family: FontAwesome;
             font-size: 1em;
             display:inline-block;
             position:absolute;
@@ -73,9 +73,9 @@
         .select2-search {
             position: relative;
             &:after {
-                content: "\f002";
+                font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
+                content: fa-content($fa-var-search);
                 color: scale-color($theme-text-color, $lightness: 62.5%);
-                font-family: FontAwesome;
                 font-size: 1em;
                 display:inline-block;
                 position:absolute;

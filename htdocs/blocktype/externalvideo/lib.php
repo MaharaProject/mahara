@@ -364,6 +364,17 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return false;
     }
 
+    public static function get_fa_brand_icons() {
+        return array(
+            'slideshare' => array('faicon' => 'slideshare', 'style' => 'color: #0077B5'),
+            'vimeo' => array('faicon' => 'vimeo-square', 'style' => 'color: #1AB7EA'),
+            'youtube' => array('faicon' => 'youtube', 'style' => 'color: #FF0000'),
+            'youtube [privacy mode]' => array('faicon' => 'youtube-square', 'style' => 'color: #FF0000'),
+            'google' => array('faicon' => 'google', 'style' => 'color: #4285f4'),
+            'googlevideo' => array('faicon' => 'google', 'style' => 'color: #4285f4'),
+        );
+    }
+
     /**
      * Returns a block of HTML that the external video block can use to show the
      * sites for which we will process URLs.
@@ -372,6 +383,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         $source_instances = self::load_media_sources();
         $wwwroot = get_config('wwwroot');
 
+        $fa_domains = self::get_fa_brand_icons();
         $data = array();
         foreach ($source_instances as $name => $source) {
             $sourcestr = get_string($name, 'blocktype.externalvideo');
@@ -380,8 +392,12 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 'url'  => $source->get_base_url(),
                 'icon' => $wwwroot . 'blocktype/externalvideo/media_sources/' . $name . '/favicon.png',
             );
+            $lname = strtolower($name);
+            if (isset($fa_domains[$lname])) {
+                $data[$sourcestr]['faicon'] = $fa_domains[$lname]['faicon'];
+                $data[$sourcestr]['style'] = $fa_domains[$lname]['style'];
+            }
         }
-
         ksort($data);
 
         $smarty = smarty_core();
@@ -398,7 +414,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         if (empty($iframedomains)) {
             return '';
         }
-
+        $fa_domains = self::get_fa_brand_icons();
         $data = array();
         foreach ($iframedomains as $name => $host) {
             $data[$name] = array(
@@ -406,6 +422,11 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 'url'  => 'http://' . $host,
                 'icon' => favicon_display_url($host),
             );
+            $lname = strtolower($name);
+            if (isset($fa_domains[$lname])) {
+                $data[$name]['faicon'] = $fa_domains[$lname]['faicon'];
+                $data[$name]['style'] = $fa_domains[$lname]['style'];
+            }
         }
 
         $smarty = smarty_core();
@@ -433,6 +454,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             }
         }
         else {
+            $fa_domains = self::get_fa_brand_icons();
             foreach ($service_instances as $name => $service) {
                 $servicestr = get_string($name, 'blocktype.externalvideo');
                 $data[$servicestr] = array(
@@ -440,6 +462,11 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                     'url'  => $service->get_base_url(),
                     'icon' => $wwwroot . 'blocktype/externalvideo/embed_services/' . $name . '/favicon.png',
                 );
+                $lname = strtolower($name);
+                if (isset($fa_domains[$lname])) {
+                    $data[$sourcestr]['faicon'] = $fa_domains[$lname]['faicon'];
+                    $data[$sourcestr]['style'] = $fa_domains[$lname]['style'];
+                }
             }
         }
 

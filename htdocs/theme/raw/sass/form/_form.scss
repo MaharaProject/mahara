@@ -254,9 +254,9 @@ textarea.resizable {
     padding-right: 20px;
 }
 .hasDatepickerwrapper:after {
-    font-family: "FontAwesome";
-    font-size: 16px;
-    content: "\f073";
+    content: fa-content($fa-var-calendar-alt);
+    font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free" !important;
+    font-size: 18px;
     color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
     right: 25px;
@@ -264,9 +264,9 @@ textarea.resizable {
     cursor: text;
 }
 .hasDatepickerwrapperacl:after {
-    font-family: "FontAwesome";
-    font-size: 16px;
-    content: "\f073";
+    content: fa-content($fa-var-calendar-alt);
+    font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free" !important;
+    font-size: 18px;
     color: scale-color($theme-text-color, $lightness: 25%);
     right: 10px;
     position: absolute;

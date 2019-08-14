@@ -25,8 +25,8 @@
             display:none;
         }
         &:before {
-            content: "\25BE";
-            font-family: "FontAwesome";
+            content: fa-content($fa-var-caret-down);
+            font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
             margin-top: 9px;
             position: absolute;
             right: 0%;

@@ -21,7 +21,11 @@
         {foreach from=$rows item=row}
         <tr class="social-info">
             <td class="text-center">
+                {if $row->faicon}
+                {$row->faicon|safe}
+                {else}
                 <img src="{$row->icon}" alt="{$row->description}">
+                {/if}
             </td>
             <td>
                 <span>{$row->description}</span>

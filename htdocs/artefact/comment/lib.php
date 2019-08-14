@@ -1123,6 +1123,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'heart' => get_string('heart', 'artefact.comment'),
                     'thumbs-up' => get_string('thumbsup', 'artefact.comment'),
                     'check-circle' => get_string('ok', 'artefact.comment'),
+                    'smile' => get_string('smile', 'artefact.comment'),
                 ),
             ),
             'ratinglength' => array(
