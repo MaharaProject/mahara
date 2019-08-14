@@ -764,20 +764,28 @@ $string['showupdatedetails'] = 'Show update details';
 
 // Bulk Leap2A import
 $string['bulkleap2aimport'] = 'Import users from Leap2A files';
-$string['bulkleap2aimportdescription'] = '<p>You can import users in bulk from a collection of Leap2A files on your server. You must specify a ZIP file on the server file system, which contains all the Leap2A ZIP files and a single CSV file called usernames.csv mapping usernames to filenames.</p>
+$string['bulkleap2aimportdescription1'] = '<p>You can import users in bulk from a collection of Leap2A files on your server. You must specify a ZIP file on the server file system, which contains all the Leap2A ZIP files and a single CSV file called usernames.csv mapping usernames to filenames.</p>
 <p>usernames.csv will look something like this:</p>
 <pre>
 &nbsp;&nbsp;bob,mahara-export-leap-user8-1265165366.zip<br>
 &nbsp;&nbsp;nigel,mahara-export-leap-user1-1266458159.zip
 </pre>
 <p>where mahara-export-leap-user8-1265165366.zip and mahara-export-leap-user1-1266458159.zip are files in a subdirectory called users.</p>
+<p>The structure of your ZIP file, eg import.zip file will be:</p>
+<pre>
+import.zip<br>
+<span class="icon icon-file icon-regular"></span> usernames.csv<br>
+<span class="icon icon-folder-open icon-regular"></span> users<br>
+    <span class="icon icon-file icon-regular"></span> mahara-export-leap-user8-1265165366.zip<br>
+    <span class="icon icon-file icon-regular"></span> mahara-export-leap-user1-1266458159.zip<br>
+</pre>
 <p>This ZIP file should normally be generated using the bulk export built into Mahara.</p>
 <p>If you are importing a lot of users, please be patient. The import process can take a long time.</p>';
 $string['importfile'] = 'Bulk export file';
 $string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these users?';
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised.';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable.';
-$string['bulkleap2aimportfiledescription'] = 'The ZIP file on your server containing all exported users (in Leap2A format) along with a CSV listing of usernames';
+$string['bulkleap2aimportfiledescription1'] = 'Enter the path to the ZIP file on your server containing all exported users (in Leap2A format) along with a CSV listing of usernames<br>Eg "/home/example/data/import.zip"';
 $string['importednuserssuccessfully'] = 'Imported %d of %d users successfully.';
 $string['Import'] = 'Import';
 $string['bulkimportdirdoesntexist'] = 'The directory %s does not exist.';
