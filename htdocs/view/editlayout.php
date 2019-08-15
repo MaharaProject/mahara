@@ -760,6 +760,8 @@ function create_block($bt, $configdata, $view, $column, $blockinfo = null) {
     }
     if ($bt == 'taggedposts') {
         $blocktypeclass::save_tag_selection($tagselect, $bi);
+        // Need to make the block save again now we have made the tag selections
+        $bi->set('dirty', true);
     }
     $bi->commit();
     return $bi->get('id');
