@@ -732,6 +732,13 @@ class HtmlExportOutputFilter {
             $html
         );
 
+        // Replace inner links
+        $html = preg_replace_callback(
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/artefact\.php\?artefact=(\d+)(?:(?:&amp;|&|%26)([a-z]+=[x0-9]+)+)*#',
+            array($this, 'replace_inner_link'),
+            $html
+        );
+
         // Links to pdf block files
         $html = preg_replace_callback(
             '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/blocktype/pdf/viewer\.php\?.*?file=(\d+)(?:&amp;|&|%26).*?(?=[\'"])#',
@@ -836,6 +843,34 @@ class HtmlExportOutputFilter {
         for ($i = 3; $i < count($matches); $i++) {
             list($key, $value) = explode('=', $matches[$i]);
             $options[$key] = $value;
+        }
+
+        return $this->get_export_path_for_file($artefact, $options);
+    }
+
+    private function replace_inner_link($matches) {
+        $artefactid = $matches[2];
+        try {
+            $artefact = artefact_instance_from_id($artefactid);
+        }
+        catch (ArtefactNotFoundException $e) {
+            return '';
+        }
+
+        // If artefact type not something that would be served by download.php,
+        // replace link with nothing
+        if ($artefact->get_plugin_name() != 'file') {
+            return '';
+        }
+
+        $options = array();
+        for ($i = 3; $i < count($matches); $i++) {
+            list($key, $value) = explode('=', $matches[$i]);
+            $options[$key] = $value;
+        }
+
+        if ($artefact instanceof ArtefactTypeFolder) {
+            return $this->get_folder_path_for_file($artefact, $options);
         }
 
         return $this->get_export_path_for_file($artefact, $options);
