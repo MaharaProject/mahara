@@ -36,3 +36,8 @@ button.btn-text:not(:disabled):not(.disabled) {
         color: inherit;
     }
 }
+#searchviews_matchalltags_container {
+    input {
+        margin-top: -20px;
+    }
+}
