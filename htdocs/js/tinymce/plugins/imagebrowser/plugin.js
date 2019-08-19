@@ -442,14 +442,14 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         }
     } // end of loadImageBrowser
 
-    editor.addButton('imagebrowser', {
+    editor.ui.registry.addButton('imagebrowser', {
         icon: 'image',
         tooltip: 'Insert/edit image',
-        onclick: imageBrowserDialogue(),
+        onAction: imageBrowserDialogue(),
         stateSelector: 'img:not([data-mce-object],[data-mce-placeholder])'
     });
 
-    editor.addMenuItem('imagebrowser', {
+    editor.ui.registry.addMenuItem('imagebrowser', {
         icon: 'image',
         text: 'Insert image',
         onclick: imageBrowserDialogue(),

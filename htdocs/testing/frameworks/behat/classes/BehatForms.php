@@ -663,7 +663,7 @@ class BehatForms extends BehatBase {
      * @Given /^(?:|I )fill in "(?P<text>[^"]*)" in first editor$/
      */
     public function iFillInFirstWYSIWYGEditor($text) {
-        $iframe = $this->find('css', '.mce-edit-area > iframe')->getAttribute('id');
+        $iframe = $this->find('css', '.tox-edit-area > iframe')->getAttribute('id');
         $id = substr($iframe, 0, -4); // remove '_ifr'
         // Use javascript to update the tinyMCE editor
         if ($this->find('xpath', "//iframe[@id='" . $iframe . "']")) {
@@ -681,8 +681,7 @@ class BehatForms extends BehatBase {
      */
     public function i_click_button_editor_toolbar($action) {
         $exception = new ElementNotFoundException($this->getSession(), 'button', null, 'the action button "' . $action . '" in the editor toolbar');
-
-        $actionbutton = $this->find('css', "div.wysiwyg div[aria-label='" . $action . "'] > button", $exception);
+        $actionbutton = $this->find('css', "div.wysiwyg button[aria-label='" . $action . "']", $exception);
         $this->ensure_node_is_visible($actionbutton);
         $actionbutton->click();
     }

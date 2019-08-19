@@ -342,9 +342,9 @@ EOF;
 
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
-    theme: "modern",
-    plugins: "tooltoggle,textcolor,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
-    skin: 'light',
+    theme: "silver",
+    plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
+    skin: 'oxide',
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
     toolbar3: {$toolbar[3]},
@@ -358,7 +358,7 @@ EOF;
                     else {
                         $tinymceconfig = <<<EOF
     selector: "textarea.tinywysiwyg",
-    theme: "modern",
+    theme: "silver",
     skin: 'light',
     plugins: "fullscreen,autoresize",
     toolbar: {$toolbar[0]},

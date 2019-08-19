@@ -13,25 +13,29 @@
 tinymce.PluginManager.add('tooltoggle', function(editor) {
     var tooltoggleState = false, DOM = tinymce.DOM;
 
-    editor.addButton('toolbar_toggle', {
-        icon: 'icon tooltoggle-icon',
+    editor.ui.registry.addToggleButton('toolbar_toggle', {
+        icon: 'chevron-up',
         tooltip: get_string('toggletoolbarson'),
-        onclick: function(e) {
-            jQuery(e.target).closest('.mce-toolbar').siblings().toggleClass('d-none');
+        onAction: function(api) {
+            jQuery(editor.editorContainer.childNodes[0].childNodes[0].childNodes[0]).siblings().toggleClass('d-none')
+            jQuery(editor.editorContainer.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0]).toggleClass('flipicon');
+            api.setActive(!api.isActive());
             tooltoggleState = !tooltoggleState;
             editor.fire('ToolToggleStateChanged', {state: tooltoggleState});
         },
-        onPostRender: function() {
+        onSetup: function(api) {
             var self = this;
-            editor.on('ToolToggleStateChanged', function(e) {
-                if (e.state) {
-                    e.target.buttons.toolbar_toggle.tooltip = get_string('toggletoolbarsoff');
+            jQuery(editor.editorContainer.childNodes[0].childNodes[0].childNodes[0]).siblings().toggleClass('d-none');
+            jQuery(editor.editorContainer.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0]).addClass('flipicon');
+            editor.on('ToolToggleStateChanged', function(api) {
+                if (api.state) {
+                    api.target.formElement[2].title = get_string('toggletoolbarsoff');
                 }
                 else {
-                    e.target.buttons.toolbar_toggle.tooltip = get_string('toggletoolbarson');
+                    api.target.formElement[2].title = get_string('toggletoolbarson');
                 }
-                self.active(e.state);
             });
+            api.setActive(self.state);
         }
     });
 });
