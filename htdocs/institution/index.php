@@ -25,14 +25,20 @@ if (is_isolated() && !in_array($inst, array_keys($USER->get('institutions'))) &&
     throw new AccessDeniedException(get_string('notinstitutionmember', 'error'));
 }
 
-$institution = new Institution($inst);
+try {
+    $institution = new Institution($inst);
+}
+catch (Exception $e) {
+    throw new NotFoundException(get_string('institutionnotfound', 'mahara', $inst));
+}
 
 $admins = $institution->admins();
 $staff = $institution->staff();
 build_stafflist_html($admins, 'institution', 'admin', $inst);
 build_stafflist_html($staff, 'institution', 'staff', $inst);
 
-define('TITLE', $institution->displayname);
+$displayname = $institution->name == 'mahara' ? get_config('sitename') : $institution->displayname;
+define('TITLE', $displayname);
 
 $smarty = smarty();
 $smarty->assign('admins', $admins);

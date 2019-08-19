@@ -799,6 +799,9 @@ class Institution {
             WHERE i.institution = ? AND u.deleted = 0 AND i.admin = 1', array($this->name))) {
             return array_map('extract_institution_user_id', $results);
         }
+        if ($this->name == 'mahara') {
+            return $this->institution_and_site_admins();
+        }
         return array();
     }
 

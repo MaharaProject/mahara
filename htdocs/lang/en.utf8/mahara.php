@@ -492,6 +492,7 @@ $string['senddeletenotification'] = 'Send request';
 $string['javascriptnotenabled'] = 'Your browser does not have JavaScript enabled. This site requires JavaScript to be enabled before you can log in.';
 $string['cookiesnotenabled'] = 'Your browser does not have cookies enabled or is blocking cookies. This site requires cookies to be enabled before you can log in.';
 $string['institution'] = 'Institution';
+$string['institutionnotfound'] = 'Institution "%s" not found';
 $string['institutioncontacts'] = '\'%s\' contacts';
 $string['institutionlink'] = '<a href="%s">%s</a>';
 $string['link'] = '<a href="%s">%s</a>';
