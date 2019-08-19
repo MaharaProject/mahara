@@ -246,4 +246,35 @@ class BehatNavigation extends BehatBase {
         }
         $node->click();
     }
+
+    /**
+     * Goes directly to the URL to open a notification based on its author.
+     *
+     * @Given I go directly to the message from :author
+     * @param string $author The message's author
+     */
+    public function i_go_directly_to_the_message($author = null) {
+        if (!$this->running_javascript()) {
+            return true;
+        }
+
+        // First go to the inbox, we'll find our message from there.
+        $this->visitPath("/module/multirecipientnotification/inbox.php");
+
+        // Now find the message itself.
+        $exception = new ExpectationException('The inbox item from ' . $author . ' could not be found.', $this->getSession());
+        $authorliteral = $this->escaper->escapeLiteral($author);
+        $xpath = "//span[@class='username'][contains(normalize-space(.),{$authorliteral})]/ancestor::a";
+        $node = $this->find('xpath', $xpath, new ExpectationException($xpath, $this->getSession()));
+
+        if (!$node->hasAttribute('data-id') || !$node->hasAttribute('data-list')) {
+            throw new ExpectationException('No data-id or data-list for inbox item "' . $author . '".', $this->getSession());
+        }
+
+        // Having found the message, let's go to it directly.
+        $msg = $node->getAttribute('data-id');
+        $msgtype = $node->getAttribute('data-list');
+
+        $this->visitPath("/module/multirecipientnotification/inbox.php?msgtype={$msgtype}&msg={$msg}");
+    }
 }

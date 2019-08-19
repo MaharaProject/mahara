@@ -76,6 +76,8 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
      * @param type $user
      */
     public function notify_user($user) {
+        static $pluginlist = null;
+
         $userdata = $this->to_stdclass();
         $changes = new stdClass();
         $userdata->usr = $user->id;
@@ -109,6 +111,25 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
             $changes->read = (string)(int) ($user->method != 'internal');
             $changes->id = $userdata->internalid;
             update_record('module_multirecipient_userrelation', $changes);
+        }
+
+        // If unread, check if any plugins want to do anything with this. (Handled this way as cheaper than using events.)
+        if (empty($userdata->read)) {
+            // Only do the include process once - don't even try to do inclusion if we know we already have.
+            if ($pluginlist === null) {
+                $pluginlist = plugin_all_installed();
+                foreach ($pluginlist as $plugin) {
+                    safe_require($plugin->plugintype, $plugin->name);
+                }
+            }
+            foreach ($pluginlist as $key => $plugin) {
+                $classname = generate_class_name($plugin->plugintype, $plugin->name);
+                if (!is_callable(array($classname, 'notification_created'))) {
+                    unset ($pluginlist[$key]);
+                    continue;
+                }
+                call_static_method($classname, 'notification_created', $userdata->notification, $userdata, 'module_multirecipient_notification');
+            }
         }
 
         if (($user->method != 'internal') && ('sender' !== $userdata->role)) {
