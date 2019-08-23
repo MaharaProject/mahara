@@ -155,7 +155,8 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
      */
     public static function export_blockinstance_config_leap(BlockInstance $bi) {
         $configdata = $bi->get('configdata');
-        $result = array('text' => json_encode(array($configdata['text'])));
+        $text = !empty($configdata['text']) ? json_encode(array($configdata['text'])) : '';
+        $result = array('text' => $text);
         return $result;
     }
 
