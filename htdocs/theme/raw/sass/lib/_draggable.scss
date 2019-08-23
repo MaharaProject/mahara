@@ -22,8 +22,8 @@
     border-radius: 0;
 
     &:before {
+        @include fonttype(solid);
         content: fa-content($fa-var-arrows-alt);
-        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
         box-sizing: border-box;
         color: $gray-300;
         opacity: 0.7;
