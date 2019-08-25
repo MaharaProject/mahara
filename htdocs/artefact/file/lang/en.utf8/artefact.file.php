@@ -253,6 +253,7 @@ $string['bz2'] = 'Bzip2 compressed file';
 $string['txt'] = 'Plain text file';
 $string['video'] = 'Video file';
 $string['wav'] = 'WAV audio file';
+$string['m4a'] = 'M4A audio file';
 $string['wmv'] = 'WMV video file';
 $string['xml'] = 'XML file';
 $string['zip'] = 'ZIP archive';

@@ -165,25 +165,25 @@
     <filetype>
         <description>m4a</description>
         <mimetypes>
-            <mimetype>video/mp4</mimetype>
+            <mimetype>audio/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>m4p</description>
         <mimetypes>
-            <mimetype>video/mp4</mimetype>
+            <mimetype>audio/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>m4b</description>
         <mimetypes>
-            <mimetype>video/mp4</mimetype>
+            <mimetype>audio/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
         <description>m4r</description>
         <mimetypes>
-            <mimetype>video/mp4</mimetype>
+            <mimetype>audio/mp4</mimetype>
         </mimetypes>
     </filetype>
     <filetype>
