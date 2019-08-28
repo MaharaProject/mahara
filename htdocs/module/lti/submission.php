@@ -54,11 +54,10 @@ if (PluginModuleLti::can_grade()) {
 }
 else if (PluginModuleLti::can_submit_for_grading()) {
 
-    $smarty->assign('PAGEHEADING', get_string('submitportfolio', 'module.lti'));
-
     $sub = PluginModuleLti::get_submission();
 
     if ($sub && $sub->is_submitted()) {
+        $smarty->assign('PAGEHEADING', get_string('portfoliosubmittedheader', 'module.lti'));
         // Info on submitted collection
         $info = $sub->get_portfolio_info();
         $grader = $sub->get_grader();
@@ -73,11 +72,13 @@ else if (PluginModuleLti::can_submit_for_grading()) {
         $smarty->display('module:lti:submittedforgrading.tpl');
     }
     else if (PluginModuleLTI::activity_configured()) {
+        $smarty->assign('PAGEHEADING', get_string('submitportfolio', 'module.lti'));
         // Assessment submission form
         $smarty->assign('form', $form);
         $smarty->display('module:lti:submitforgrading.tpl');
     }
     else {
+        $smarty->assign('PAGEHEADING', get_string('submitportfolio', 'module.lti'));
         $smarty->assign('error', get_string('notconfigured', 'module.lti'));
         $smarty->display('module:lti:submitforgrading.tpl');
     }
