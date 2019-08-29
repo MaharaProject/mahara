@@ -49,8 +49,10 @@ define('PIEFORM_CANCEL', -2);
  *         // definition of elements in the form
  *     )
  * );
+ * $form = pieform($form);
  *
- * $smarty->assign('myform', pieform($form));
+ * $smarty = smarty_core();
+ * $smarty->assign('myform', $form);
  *
  * function myform_validate(Pieform $form, $values) {
  *     // perform validation agains form elements here

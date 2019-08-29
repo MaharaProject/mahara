@@ -77,13 +77,13 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $options->block = $instance->get('id');
         $feedback = ArtefactTypePeerassessment::get_assessments($options, $versioning);
         $feedbackform = ArtefactTypePeerassessment::add_assessment_form(true, $instance->get('id'), 0);
-
+        $feedbackform = pieform($feedbackform);
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('exporter', ($exporter ? true : false));
         $smarty->assign('instructions', $instructions);
         $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
-        $smarty->assign('addassessmentfeedbackform', pieform($feedbackform));
+        $smarty->assign('addassessmentfeedbackform', $feedbackform);
         if ($feedback && !$editing) {
             $smarty->assign('feedback', $feedback);
         }
