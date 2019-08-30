@@ -4,66 +4,76 @@
  * Copyright 2013, Daniel Thies
  * Released under LGPL License.
  *
+ * Updated for Tinymce 5, Catalyst IT
+ * LGPL 2019
  */
 
 tinymce.PluginManager.add('mathslate', function(editor,url) {
 
-        if ((typeof M === 'object') && M.mathslateURL) {
-            url = M.mathslateURL;
-        }
-
 	function showDialog() {
 
-                var cssId, linkElm, dom=editor.dom,math;
+		var slateurl = location.protocol == 'https:' ? '/mathslate-s.html' : '/mathslate.html';
 
-		var win, mathEditor={output: null};
-
-        var slateurl = location.protocol == 'https:' ? '/mathslate-s.html' : '/mathslate.html';
-
-		win = editor.windowManager.open({
+		win = editor.windowManager.openUrl({
 			title: "Math Editor",
-			spacing: 10,
-			padding: 10,
-			width: 525,
-			height: 500,
-            url: url + slateurl,
+			url: url + slateurl,
+			width: 520,
+			height: 550,
+			body: {
+				type: 'panel',
+				items: [{
+					type: 'iframe',
+					name: 'mathslate',
+					content : url + slateurl,
+					html: url + slateurl,
+					type: 'object',
+				}]
+			},
 			buttons: [
-				{text: "Insert Inline", onclick: function() {
-                                        editor.execCommand('mceInsertContent', 
-                                            false, '\\('+
-                                            mathEditor.output('tex')
-                                            +'\\)');
-					win.close();
-                                        }
+				{type: 'custom',
+				text: "Insert Inline",
+				name: "inline",
+				primary: true,
 				},
-				{text: "Insert Display", onclick: function() {
-                                        editor.execCommand('mceInsertContent', 
-                                            false, '\\['+
-                                            mathEditor.output('tex')
-                                            +'\\]');
-					win.close();
-                                        }
+				{type: 'custom',
+				text: "Insert Display",
+				name: "display",
+				primary: false
 				},
-				{text: "Cancel", onclick: function() {
-					win.close();
-                                        }
+				{type: 'cancel',
+				text: "Cancel",
+				name: "cancel",
+				primary: false
 				}
-			]
-		},
-                mathEditor
-                );
+			],
+			onAction: (win, details) => {
+				if (details.name === 'inline') {
+                    var output = jQuery('.tox-navobj iframe').contents().find('.mathslate-preview').text();
+					editor.selection.setContent('\\\(' + output + '\\\)');
+					win.close();
+				}
+				if (details.name === 'display') {
+                    var output = jQuery('.tox-navobj iframe').contents().find('.mathslate-preview').text();
+					editor.selection.setContent('\\\[' + output + '\\\]');
+					win.close();
+				}
+				if (details.name === 'cancel') {
+					win.close();
+				}
+			},
+		});
 	}
 
-	editor.addButton('mathslate', {
-                image : url + '/img/mathslate.png',
+	editor.ui.registry.addButton('mathslate', {
+                path : url + '/img/mathslate.png',
 		tooltip: 'Insert Math',
-		onclick: showDialog
+		onAction: showDialog,
+		icon: 'mathslate'
 	});
 
-	editor.addMenuItem('mathslate', {
-                image : url + '/img/mathslate.png',
+	editor.ui.registry.addMenuItem('mathslate', {
 		text: 'Insert Math',
-		onclick: showDialog,
+		onAction: showDialog,
 		context: 'insert'
 	});
 });
