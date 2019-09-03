@@ -9,7 +9,8 @@
         blockid=$options.blockid
         commentcount=$post->commentcount
         allowcomments=$post->allowcomments
-        justdetails=$justdetails}
+        justdetails=$justdetails
+        displayiconsonly = true}
 {/if}
     <div class="post list-group-item clearfix flush">
         <div class="post-heading">

@@ -393,27 +393,7 @@ jQuery(function($) {
         dock.hide();
     }
 
-    $('.commentlink').off('click');
-    $('.commentlink').on('click', function(e) {
-        open_modal(e);
-        if ( $(this).closest('div[class*=block-header]').hasClass('bh-displayiconsonly') ) {
-            $(this).closest('a[class*=commentlink]').addClass('active-block');
-        }
-        else {
-            $(this).closest('div[class*=block-header]').addClass('active-block');
-        }
-    });
-
-    $('.modal_link').off('click');
-    $('.modal_link').on('click', function (e) {
-        if ($(this).hasClass('no-modal')) {
-            e.stopPropagation();
-        }
-        else {
-            open_modal(e);
-            $(this).closest('div[class*=block-header]').addClass('active-block');
-        }
-    });
+    activateModalLinks();
 
     $('#feedback-form .submitcancel[name="cancel_submit"]').on('click', function(e) {
         e.stopPropagation();
@@ -435,9 +415,7 @@ jQuery(function($) {
     });
 });
 
-jQuery(window).on('pageupdated', {}, function() {
-    dock.init(jQuery(document));
-
+function activateModalLinks() {
     $('.commentlink').off('click');
     $('.commentlink').on('click', function(e) {
         open_modal(e);
@@ -454,6 +432,11 @@ jQuery(window).on('pageupdated', {}, function() {
             $(this).closest('div[class*=block-header]').addClass('active-block');
         }
     });
+}
+
+jQuery(window).on('pageupdated', {}, function() {
+    dock.init(jQuery(document));
+    activateModalLinks();
 });
 EOF;
 

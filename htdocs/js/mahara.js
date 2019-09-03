@@ -1228,7 +1228,7 @@ jQuery(function($) {
     $(document).on('click', 'a', function(event) {
         if ($(this.hash).length && location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
             !$(this).is('[class^="carousel"]') &&
-            !$(this).is('[data-toggle="collapse"]') &&
+            !($(this).data('toggle') === 'collapse') &&
             !($('body').hasClass('modal-open'))) {
             event.preventDefault();
             var target = $(this.hash);

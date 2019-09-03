@@ -54,31 +54,26 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         if (!$playerclass) {
             return get_string('typeremoved', 'blocktype.file/internalmedia');
         }
-
-        $result = '<div class="mediaplayer-container card-body flush"><div class="mediaplayer">';
-        $result .= call_static_method($playerclass, 'get_html', $artefact, $instance, $width, $height);
-
-        // File download link
-        $filesize = round($artefact->get('size') / 1000000, 2) . 'MB';
-        $url = self::get_download_link($artefact, $instance);
-        $result .= '<div class="media-download content-text">
-            <span class="icon icon-download left" role="presentation" aria-hidden="true">
-            </span><span class="sr-only">' . get_string('Download', 'artefact.internal') . '</span>
-            <a class="media-link text-small" href="' . $url . '">' . hsc($artefact->get('title')) . '</a>
-            <span class="text-midtone text-small"> [' . $filesize . '] </span>
-        </div>';
-
-        $result .= '</div></div>';
+        $smarty = smarty_core();
+        $smarty->assign('artefactid', $artefact->get('id'));
+        $smarty->assign('blockid', $instance->get('id'));
 
         require_once(get_config('docroot') . 'artefact/comment/lib.php');
         require_once(get_config('docroot') . 'lib/view.php');
         $view = new View($instance->get('view'));
+        $smarty->assign('allowcomments', $artefact->get('allowcomments'));
+        if (!$artefact->get('allowcomments')) {
+            $smarty->assign('justdetails', true);
+        }
         list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
-
-        $smarty = smarty_core();
-
         $smarty->assign('commentcount', $commentcount);
         $smarty->assign('comments', $comments);
+        $blockheader = $smarty->fetch('header/block-comments-details-header.tpl');
+        $result = $blockheader;
+        $result .= '<div class="mediaplayer-container card-body flush"><div class="mediaplayer">';
+        $result .= call_static_method($playerclass, 'get_html', $artefact, $instance, $width, $height);
+        $result .= '</div></div>';
+
         $smarty->assign('html', $result);
         return $smarty->fetch('blocktype:internalmedia:internalmedia.tpl');
     }

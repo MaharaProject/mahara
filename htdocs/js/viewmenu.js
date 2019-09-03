@@ -81,8 +81,16 @@ function addFeedbackSuccess(form, data) {
     }
 
     // Update the comment link so the correct number of comments is displayed
-    var commentlink = ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
-    $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>' + commentlink);
+    var commentlink = $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']');
+    var newlink = '<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>';
+    if (!(commentlink.closest('div[class*=block-header]').hasClass('bh-displayiconsonly'))) {
+        newlink += ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
+    }
+    else {
+        newlink += ' (' + data.data.count + ')';
+        newlink += '<span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>';
+    }
+    commentlink.html(newlink);
 
     //For brief comments and details previews when there is no block comments and details header
     $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span> (' + data.data.count + ')');
@@ -240,23 +248,34 @@ function delete_comment_from_modal_submit(form, data) {
     });
 
     // Update the comment link with correct count
+    var commentlink = $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']');
+    var newlink ='';
     if (data.data.count == 0) {
-        var newlink = '<span class="icon icon-plus" role="presentation" aria-hidden="true"></span>';
-        newlink += ' ' + get_string('addcomment', 'artefact.comment');
-        newlink += '<span class="bh-margin-left icon icon-link" role="presentation" aria-hidden="true"></span>';
-        newlink += ' ' + get_string('Details', 'artefact.comment');
-        $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']').html(newlink);
-
-        //For brief comments and details previews when there is no block comments and details header
-        $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('');
+        if (commentlink.closest('div[class*=block-header]').hasClass('bh-displayiconsonly')) {
+            newlink += '<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>';
+            newlink += '<span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>';
+        }
+        else {
+            newlink += '<span class="icon icon-plus" role="presentation" aria-hidden="true"></span>';
+            newlink += ' ' + get_string('addcomment', 'artefact.comment');
+            newlink += '<span class="bh-margin-left icon icon-link" role="presentation" aria-hidden="true"></span>';
+            newlink += ' ' + get_string('Details', 'artefact.comment');
+        }
     }
     else {
-        var commentlink = ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
-        $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>' + commentlink);
-
-        //For brief comments and details previews when there is no block comments and details header
-        $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span> (' + data.data.count + ')');
+        if (commentlink.closest('div[class*=block-header]').hasClass('bh-displayiconsonly')) {
+            newlink = '<span class="icon icon-comments" role="presentation" aria-hidden="true"></span> (';
+            newlink += data.data.count + ')';
+            newlink += '<span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>';
+        }
+        else {
+            newlink = '<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>';
+            newlink += ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
+        }
     }
+
+    // Add the new link to the comment link
+    commentlink.html(newlink);
 
     if ($('#configureblock').hasClass('closed')) {
         formSuccess(form, data);
@@ -327,12 +346,10 @@ function toggleDetailsBtn() {
         if (!$('#details-btn').hasClass('active')) {
             $('#details-btn').addClass('active');
             headers.removeClass('d-none');
-            $('.comments-details').removeClass('d-none');
         }
         else {
             $('#details-btn').removeClass('active');
             headers.addClass('d-none');
-            $('.comments-details').addClass('d-none');
         }
     });
 }

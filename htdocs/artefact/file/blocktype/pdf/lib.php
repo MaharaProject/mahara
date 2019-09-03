@@ -84,10 +84,13 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         }
         $smarty = smarty_core();
         if ($artefactid) {
-            $smarty->assign('commentcount', $commentcount);
-            $smarty->assign('comments', $comments);
+            $smarty->assign('artefactid', $artefactid);
+            $artefact = $instance->get_artefact_instance($configdata['artefactid']);
+            $smarty->assign('allowcomments', $artefact->get('allowcomments'));
         }
         $smarty->assign('html', $result);
+        $smarty->assign('editing', $editing);
+        $smarty->assign('blockid', $instance->get('id'));
         return $smarty->fetch('blocktype:pdf:pdfrender.tpl');
     }
 

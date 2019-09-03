@@ -1,7 +1,15 @@
 .block-header {
-   background-color: $theme-block-header-bg-color;
-   text-align: right;
-   padding: 5px;
+  a {
+     display: block;
+     color: $theme-block-header-color;
+     text-align: right;
+     text-decoration: none;
+     background-color: $theme-block-header-bg-color;
+     padding: 8px 10px;
+     &.active-block {
+        background-color: $theme-primary-color;
+     }
+   }
 }
 
 .list-group {
@@ -37,12 +45,4 @@
 
 .bh-margin-left {
    margin-left: 10px;
-}
-
-.active-block {
-   background-color: $theme-primary-color;
-}
-
-span.comments-details-mg-left {
-    margin-left: 10px;
 }

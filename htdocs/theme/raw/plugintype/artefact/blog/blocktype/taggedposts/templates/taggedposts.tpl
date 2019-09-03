@@ -65,6 +65,19 @@
 {else}
 <div class="taggedposts list-group">
     {foreach from=$results item=post}
+    {if !$editing}
+        {if !$post->allowcomments}
+            {assign var="justdetails" value=true}
+        {/if}
+        {include
+            file='header/block-comments-details-header.tpl'
+            artefactid=$post->id
+            blockid=$blockid
+            commentcount=$post->commentcount
+            allowcomments=$post->allowcomments
+            justdetails=$justdetails
+            displayiconsonly=true}
+    {/if}
     <div class="list-group-item">
         <a class="outer-link collapsed" data-toggle="collapse" href="#tagged_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
@@ -78,14 +91,6 @@
                 {$post->title}
             {/if}
         </h4>
-        <span class="comments-details d-none comments-details-mg-left comment-count-preview" data-artefactid="{$post->id}">
-            {if $post->commentcount > 0}
-                <span class="comment_count" role="presentation" aria-hidden="true"></span>
-                <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-                ({$post->commentcount})
-            {/if}
-        </span>
-        <span class="comments-details d-none icon icon-search-plus bh-margin-left" role="presentation" aria-hidden="true"></span>
         <div>
             <span class="metadata">
                 {str tag='postedon' section='blocktype.blog/taggedposts'}

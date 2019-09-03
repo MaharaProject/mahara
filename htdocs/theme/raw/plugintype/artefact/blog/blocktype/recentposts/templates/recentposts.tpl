@@ -25,6 +25,19 @@
 {/if}
 <div class="recentblogpost list-group">
 {foreach from=$mostrecent item=post}
+    {if !($editing)}
+        {if !$post->allowcomments}
+            {assign var="justdetails" value=true}
+        {/if}
+        {include
+            file='header/block-comments-details-header.tpl'
+            artefactid=$post->id
+            blockid=$blockid
+            commentcount=$post->commentcount
+            allowcomments=$post->allowcomments
+            justdetails=$justdetails
+            displayiconsonly=true}
+    {/if}
     <div class="list-group-item">
         <a class="outer-link collapsed" data-toggle="collapse" href="#recent_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
@@ -38,14 +51,6 @@
                 {$post->title}
             {/if}
         </h4>
-        <span class="comments-details d-none comments-details-mg-left comment-count-preview" data-artefactid="{$post->id}">
-            {if $post->commentcount > 0}
-                <span class="comment_count" role="presentation" aria-hidden="true"></span>
-                <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-                ({$post->commentcount})
-            {/if}
-        </span>
-        <span class="comments-details d-none icon icon-search-plus bh-margin-left" role="presentation" aria-hidden="true"></span>
         <div>
             <span class="text-small">
                 {str tag='postedin' section='blocktype.blog/recentposts'}
@@ -70,13 +75,6 @@
         <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
     </div>
     <div  id="recent_post_{$post->id}" class="collapse content-text">
-        {if $post->tags}
-            <div class="tags metadata">
-                <span class="icon icon-tags left" role="presentation" aria-hidden="true"></span>
-                <strong>{str tag=tags}:</strong>
-                {list_tags owner=$post->owner tags=$post->tags}
-            </div>
-        {/if}
         <span>{$post->description|safe}</span>
     </div>
 {/foreach}

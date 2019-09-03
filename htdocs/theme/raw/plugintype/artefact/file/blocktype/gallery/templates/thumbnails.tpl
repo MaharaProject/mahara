@@ -1,3 +1,11 @@
+{if !$editing}
+    {include
+        file='header/block-comments-details-header.tpl'
+        artefactid=$artefactid
+        blockid=$instanceid
+        allowcomments=false
+        justdetails=true}
+{/if}
 <div id="thumbnails{$instanceid}" class="card-body thumbnails js-masonry">
     {foreach from=$images item=image}
         <div style="width: {$width * 1.5}px;" class="thumb">

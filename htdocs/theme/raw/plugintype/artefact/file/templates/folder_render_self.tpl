@@ -20,6 +20,17 @@
     <div class="fullwidth">
         <ul class="list-group">
             {foreach from=$children item=child}
+            {if !$child->allowcomments}
+                {assign var="justdetails" value=true}
+            {/if}
+            {include
+                file='header/block-comments-details-header.tpl'
+                artefactid=$child->id
+                blockid=$blockid
+                commentcount=$child->commentcount
+                allowcomments=$child->allowcomments
+                justdetails=$justdetails
+                displayiconsonly=true}
             <li class="filedownload-item list-group-item">
                 {if $child->artefacttype != 'folder'}
                 <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}" class="outer-link icon-on-hover">
