@@ -2191,8 +2191,15 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             }
             $smarty->assign('children', $childrecords);
         }
-        $smarty->assign('blockid', $options['blockid']);
-        return array('html' => $smarty->fetch('artefact:file:folder_render_self.tpl'),
+        if (isset($options['blockid'])) {
+            $smarty->assign('blockid', $options['blockid']);
+        }
+        $template = 'artefact:file:folder_render_self.tpl';
+        if (isset($options['modal'])) {
+            $smarty->assign('modal', $options['modal']);
+            $template = 'artefact:file:folder_render_in_modal.tpl';
+        }
+        return array('html' => $smarty->fetch($template),
                      'javascript' => null);
     }
 

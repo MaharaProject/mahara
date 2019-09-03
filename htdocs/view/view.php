@@ -393,6 +393,7 @@ jQuery(function($) {
         dock.hide();
     }
 
+    $('.commentlink').off('click');
     $('.commentlink').on('click', function(e) {
         open_modal(e);
         if ( $(this).closest('div[class*=block-header]').hasClass('bh-displayiconsonly') ) {
@@ -401,9 +402,9 @@ jQuery(function($) {
         else {
             $(this).closest('div[class*=block-header]').addClass('active-block');
         }
-
     });
 
+    $('.modal_link').off('click');
     $('.modal_link').on('click', function (e) {
         if ($(this).hasClass('no-modal')) {
             e.stopPropagation();
@@ -437,11 +438,13 @@ jQuery(function($) {
 jQuery(window).on('pageupdated', {}, function() {
     dock.init(jQuery(document));
 
+    $('.commentlink').off('click');
     $('.commentlink').on('click', function(e) {
         open_modal(e);
         $(this).closest('div[class*=block-header]').addClass('active-block');
     });
 
+    $('.modal_link').off('click');
     $('.modal_link').on('click', function (e) {
         if ($(this).hasClass('no-modal')) {
             e.stopPropagation();
@@ -461,6 +464,7 @@ if ($modal = param_integer('modal', null)) {
         $javascript .= <<<EOF
         jQuery(function($) {
             $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-blockid="' + $block + '" data-artefactid="' + $artefact + '" ></a>');
+            $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
                 open_modal(e);
                 $('#configureblock').addClass('active').removeClass('closed');
@@ -473,6 +477,7 @@ EOF;
         $javascript .= <<<EOF
         jQuery(function($) {
             $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-artefactid="' + $artefact + '" ></a>');
+            $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
                 open_modal(e);
                 $('#configureblock').addClass('active').removeClass('closed');

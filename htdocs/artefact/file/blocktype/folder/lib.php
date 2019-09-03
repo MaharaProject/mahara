@@ -60,10 +60,6 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
             list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
         }
         $smarty = smarty_core();
-        if ($artefactid) {
-            $smarty->assign('commentcount', $commentcount);
-            $smarty->assign('comments', $comments);
-        }
         $smarty->assign('html', $result);
         return $smarty->fetch('blocktype:folder:folder.tpl');
     }

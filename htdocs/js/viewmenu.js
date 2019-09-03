@@ -182,6 +182,8 @@ function open_modal(e) {
     $('#modal_messages').html('').removeClass();
 
     var block = $('#configureblock');
+    dock.show(block, false, false);
+
     var params = {
         'viewid': viewid,
         'artefactid': $(e.target).closest('a').data('artefactid'),
@@ -210,22 +212,23 @@ function open_modal(e) {
 }
 
 function delete_comment_from_modal_submit(form, data) {
-    if (!data.data.artefact) {
-        paginator.updateResults(data);
-        paginator.alertProxy('pagechanged', data);
-    }
-    var params = {
-        'viewid': viewid,
-        'artefactid': data.data['artefact'],
-        'blockid': data.data['blockid'],
-    }
-
-    tinymce.EditorManager.execCommand('mceRemoveEditor',true, $('#configureblock').find('textarea.wysiwyg').attr('id'));
-
-    sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
-        $('#configureblock').find('h4').text(data.title);
-        $('.blockinstance-content').html(data.html);
-        set_up_modal_events();
+        if (!data.data.artefact) {
+            paginator.updateResults(data);
+            paginator.alertProxy('pagechanged', data);
+        }
+        var params = {
+            'viewid': viewid,
+            'artefactid': data.data['artefact'],
+            'blockid': data.data['blockid'],
+        }
+        if (!data.data['artefact']) {
+            params['artefactid'] = form.artefactid.value;
+        }
+        tinymce.EditorManager.execCommand('mceRemoveEditor',true, $('#configureblock').find('textarea.wysiwyg').attr('id'));
+        sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
+            $('#configureblock').find('h4').text(data.title);
+            $('.blockinstance-content').html(data.html);
+            set_up_modal_events();
 
         $('.feedbacktable').on('click', '.js-reply', null, function(e){
             var replybutton = $(this);
@@ -315,9 +318,9 @@ function setupCommentButton(element) {
     }
 }
 
-jQuery(function($) {
-
-    // Show/Hide the comments and details block headers
+// Show/Hide the comments and details block headers
+function toggleDetailsBtn() {
+    $('#details-btn').off('click');
     $('#details-btn').on('click', function(e) {
         var headers = $('#main-column-container').find('.block-header');
 
@@ -332,6 +335,11 @@ jQuery(function($) {
             $('.comments-details').addClass('d-none');
         }
     });
+}
+
+jQuery(function($) {
+
+    toggleDetailsBtn();
 
     // Watchlist
     if ($('#toggle_watchlist_link').length) {
