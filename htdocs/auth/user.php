@@ -622,7 +622,7 @@ class User {
         // We need to check if table exists otherwise we get error message about usr_agreement table
         // not existing.
         require_once('ddl.php');
-        if (!table_exists(new XMLDBTable("usr_agreement"))) {
+        if (!db_table_exists("usr_agreement")) {
             return true;
         }
 
@@ -1792,7 +1792,7 @@ class LiveUser extends User {
         $this->SESSION->set('remoteavatar', null);
         $this->SESSION->set('nocheckrequiredfields', null);
         if (get_config('installed') && !defined('INSTALLER') && $this->get('sessionid')
-            && table_exists(new XMLDBTable('usr_session'))) {
+            && db_table_exists('usr_session')) {
             delete_records('usr_session', 'session', $this->get('sessionid'));
         }
 

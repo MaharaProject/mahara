@@ -1074,7 +1074,7 @@ class Framework {
 
     function get_config($value) {
         $record = false;
-        if (table_exists(new XMLDBTable('framework_config')) &&
+        if (db_table_exists('framework_config') &&
             $record = get_record('framework_config', 'framework', $this->id, 'field', $value)) {
             return $record->value;
         }
@@ -1110,7 +1110,7 @@ class Framework {
     public function get_framework_config_options() {
         // check if the plugin has been upgraded
         // if not, all status settings should be greyed out
-        $disabled = !table_exists(new XMLDBTable('framework_config'));
+        $disabled = !db_table_exists('framework_config');
         $warning = array();
         if ($disabled) {
             $warning['plugin_warning'] = array(
