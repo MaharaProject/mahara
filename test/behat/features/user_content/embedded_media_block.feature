@@ -30,7 +30,7 @@ Scenario: Embed and play mp4
   And I press "Play Video"
   # check remaining time is displayed
   And I wait "3" seconds
-  And I should see "-0:00" in the "Videojs time remaining" property
+  And I should see "0:00" in the "Videojs time remaining" property
 
 Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
