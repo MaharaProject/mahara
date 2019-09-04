@@ -2,12 +2,17 @@ HTMLPurifier in Mahara
 ======================
 
 Website: http://www.htmlpurifier.org/
-Version: 4.10.0
+Version: 4.11.0
 
 This library is used by clean_html, to strip malicious HTML from user-generated
 content.
 
 Changes:
+We only use the /library/HTMLPurifier folder from the download, however the configuration change below requires a script that depends on some other code to be run, so for a start grab /extras, /library and /maintenence from the download.
 
-  * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS
+  * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS (commit: 859478ef6e3f05dbdedb0df0d1d2a922bdc16b0e)
+  Note the change to clean_css in HTMLPurifier/Filter/ExtractStyleBlocks.php
+  Run /maintenence/generate-schema-cache.php to update HTMLPurifier/ConfigSchema/schema.ser
+  Once that file is updated, you can delete /maintenence, /extras and everything except the HTMLPurifier folder from /library
+
   * Altered SafeIframe.php so that an HTTPS site will rewrite HTTP iframes to protocol-relative
