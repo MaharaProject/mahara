@@ -173,17 +173,7 @@ class PluginExportLeap extends PluginExport {
                 $SESSION->add_error_msg(get_string('couldnotcopyattachment', 'export', $desiredname));
             }
         }
-        $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
-
-        // zip everything up
-        try {
-            create_zip_archive($this->exportdir, $this->zipfile, array($this->leapfile, $this->filedir));
-        }
-        catch (SystemException $e) {
-            throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
-        }
-        $this->notify_progress_callback(100, get_string('Done', 'export'));
-        return $this->zipfile;
+        return true;
     }
 
     public function cleanup() {

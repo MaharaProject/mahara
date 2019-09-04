@@ -97,8 +97,10 @@ if (!$space) {
 }
 
 try {
-    $zipfile = $exporter->export();
-} catch (SystemException $e) {
+    $exporter->export();
+    $zipfile = $exporter->export_compress();
+}
+catch (SystemException $e) {
     export_iframe_die($e->getMessage(), get_config('wwwroot') . 'view/index.php');
 }
 

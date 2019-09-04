@@ -143,7 +143,8 @@ function bulkexport_submit(Pieform $form, $values) {
 
         $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
         try {
-            $zipfile = $exporter->export();
+            $exporter->export();
+            $zipfile = $exporter->export_compress();
         }
         catch (Exception $e) {
             $exporterrors[] = $username;

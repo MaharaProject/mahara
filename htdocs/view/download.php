@@ -53,11 +53,12 @@ $exporter = new PluginExportLeap($user, $views, $artefacts);
 $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
 
 try {
-  $zipfile = $exporter->export();
+    $exporter->export();
+    $zipfile = $exporter->export_compress();
 }
 catch (SystemException $e) {
-  $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
-  log_warn($e->getMessage());
+    $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
+    log_warn($e->getMessage());
 }
 
 require_once('file.php');

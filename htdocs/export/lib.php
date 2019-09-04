@@ -36,9 +36,6 @@ interface IPluginExport {
  * with the Mahara Plugin API. Mostly, the work of generating exports is
  * delegated to the plugins themselves.
  *
- * TODO: split generation of an archive file from the export() method,
- * implement zipping the export in a method in this class to reduce
- * duplication.
  */
 abstract class PluginExport extends Plugin implements IPluginExport {
 
@@ -105,11 +102,35 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     }
 
     /**
-     * Perform the export and return the path to the resulting file.
+     * Perform the export.
+     *
+     * @return boolean
+     */
+    abstract public function export();
+
+    /**
+     * Perform the compression of the export into a zip file.
      *
      * @return string path to the resulting file (relative to dataroot)
      */
-    abstract public function export();
+    public function export_compress() {
+        if ($this instanceof PluginExportLeap) {
+            $options = array($this->leapfile, $this->filedir);
+        }
+        else {
+            $options = array($this->rootdir);
+        }
+        // zip everything up
+        $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
+        try {
+            create_zip_archive($this->exportdir, $this->zipfile, $options);
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
+        }
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
+        return $this->zipfile;
+    }
 
     /**
      * Perform the checks to see if there is enough space for the
@@ -650,7 +671,8 @@ function export_process_queue($id = false) {
         }
 
         try {
-            $zipfile = $exporter->export();
+            $exporter->export();
+            $zipfile = $exporter->export_compress();
         }
         catch (SystemException $e) {
             $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
