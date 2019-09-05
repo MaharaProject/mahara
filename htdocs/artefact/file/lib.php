@@ -2213,8 +2213,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         if (isset($options['blockid'])) {
             $smarty->assign('blockid', $options['blockid']);
         }
-        $template = 'artefact:file:folder_render_self.tpl';
-        if (isset($options['modal'])) {
+        $template = !empty($options['pdfexport']) ? 'artefact:file:folder_render_self_pdfexport.tpl' : 'artefact:file:folder_render_self.tpl';
+        if (isset($options['modal']) && !isset($options['pdfexport'])) {
             $smarty->assign('modal', $options['modal']);
             $template = 'artefact:file:folder_render_in_modal.tpl';
         }

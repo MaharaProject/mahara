@@ -38,6 +38,28 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 4000);
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        // The exporting for pdf
+        require_once(get_config('docroot') . 'artefact/lib.php');
+        $configdata = $instance->get('configdata');
+        $configdata['viewid'] = $instance->get('view');
+        $configdata['simpledisplay'] = true;
+        $configdata['pdfexport'] = true; // pass down flag that we are in pdf export
+        list($result, $commentcount, $comments) = self::render_instance_data($instance, $editing, $versioning, $configdata);
+
+        $smarty = smarty_core();
+        if (isset($configdata['artefactid'])) {
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
+        $smarty = smarty_core();
+        $smarty->assign('html', $result);
+        return $smarty->fetch('blocktype:folder:folder.tpl');
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $configdata = $instance->get('configdata');
@@ -45,10 +67,23 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         $configdata['simpledisplay'] = true;
         $configdata['blockid'] = $instance->get('id');
         $configdata['editing'] = $editing;
+        list($result, $commentcount, $comments) = self::render_instance_data($instance, $editing, $versioning, $configdata);
 
+        $smarty = smarty_core();
+        if (isset($configdata['artefactid'])) {
+            $smarty->assign('commentcount', $commentcount);
+            $smarty->assign('comments', $comments);
+        }
+        $smarty->assign('html', $result);
+        return $smarty->fetch('blocktype:folder:folder.tpl');
+    }
+
+    private static function render_instance_data(BlockInstance $instance, $editing=false, $versioning=false, $configdata=array()) {
         // This can be either an image or profileicon. They both implement
         // render_self
         $result = '';
+        $commentcount = 0;
+        $comments = null;
         $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
         if ($artefactid) {
             $artefact = $instance->get_artefact_instance($artefactid);
@@ -60,9 +95,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
             $view = new View($configdata['viewid']);
             list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
         }
-        $smarty = smarty_core();
-        $smarty->assign('html', $result);
-        return $smarty->fetch('blocktype:folder:folder.tpl');
+        return array($result, $commentcount, $comments);
     }
 
     public static function has_config() {
