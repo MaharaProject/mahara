@@ -60,6 +60,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                     ),
                     'downloadurl' => $wwwroot,
                     'commentcount' => $commentcount,
+                    'allowcomments' => $artefact->get('allowcomments'),
                 );
 
                 if ($artefact instanceof ArtefactTypeProfileIcon) {

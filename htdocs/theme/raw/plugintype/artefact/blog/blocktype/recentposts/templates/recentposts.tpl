@@ -42,13 +42,13 @@
         <a class="outer-link collapsed" data-toggle="collapse" href="#recent_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
         </a>
-        <h4 class={if !($editing)}"list-group-item-heading text-inline"{else}"title"{/if}>
+        <h4 class="list-group-item-heading text-inline">
             {if !($editing)}
                  <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                      {$post->title}
                  </a>
             {else}
-                {$post->title}
+                <span class="list-group-item-heading no-link">{$post->title}</span>
             {/if}
         </h4>
         <div>

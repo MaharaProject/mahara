@@ -26,6 +26,9 @@
     + .list-group-item-heading {
         color: $link-color;
     }
+    + .list-group-item-heading .no-link {
+        color: $theme-text-color;
+    }
 }
 
 .js .js-hide,

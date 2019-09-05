@@ -17,6 +17,16 @@
     <div id="cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" class="collapse">
         <ul class="list-unstyled list-group">
         {foreach from=$attachments item=item}
+        {if !$item->allowcomments}
+            {assign var="justdetails" value=true}
+        {/if}
+        {include
+            file='header/block-comments-details-header.tpl'
+            artefactid=$item->id
+            commentcount=$item->commentcount
+            allowcomments=true
+            justdetails=$justdetails
+            displayiconsonly = true}
             <li class="list-group-item">
                 <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
                     <span class="sr-only">

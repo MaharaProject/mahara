@@ -1,5 +1,16 @@
 <ul class="list-group">
 {foreach $files file}
+    {if !$file.allowcomments}
+        {assign var="justdetails" value=true}
+    {/if}
+    {include
+        file='header/block-comments-details-header.tpl'
+        artefactid=$file.id
+        blockid=$blockid
+        commentcount=$file.commentcount
+        allowcomments=$file.allowcomments
+        justdetails=$justdetails
+        displayiconsonly = true}
     <li class="filedownload-item list-group-item">
         <a href="{$file.downloadurl}" class="outer-link icon-on-hover">
             <span class="sr-only">
@@ -21,11 +32,7 @@
                 href="#"
                 data-artefactid="{$file.id}"
                 data-blockid="{$blockid}"
-                {if $file.commentcount > 0}
-                    title="{str tag=commentsanddetails section=artefact.file arg1=$file.commentcount}">
-                {else}
-                    title={str tag=Details section=artefact.file}>
-                {/if}
+                title="{$file.title}">
                  {$file.title}
                  <span class="sr-only">
                     {str tag=Details section=artefact.file}
@@ -38,11 +45,13 @@
                </span>
             {/if}
         </h4>
-        <span class="text-small text-midtone"> -
-            {$file.ctime|format_date:'strftimedaydate'}
-            [{$file.size|display_size}]
-        </span>
-        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+        <div>
+            <span class="text-small text-midtone">
+                {$file.ctime|format_date:'strftimedaydate'}
+                [{$file.size|display_size}]
+            </span>
+            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+        </div>
         {if $file.description}
         <div class="file-description">
             <p class="text-small">

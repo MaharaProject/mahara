@@ -97,6 +97,16 @@
             </div>
             <ul class="list-group list-group-unbordered">
                 {foreach from=$row->attachments item=item}
+                {if !$item->allowcomments}
+                    {assign var="justdetails" value=true}
+                {/if}
+                {include
+                    file='header/block-comments-details-header.tpl'
+                    artefactid=$item->id
+                    commentcount=$item->commentcount
+                    allowcomments=true
+                    justdetails=$justdetails
+                    displayiconsonly = true}
                 <li class="list-group-item">
                     <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
                         <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
@@ -108,7 +118,7 @@
                     <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
                     {/if}
 
-                    <span class="title text-inline">
+                    <span class="title text-inline list-group-file-title">
                         <a class="modal_link text-small inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
                             {$item->title}
                         </a>
