@@ -25,7 +25,33 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 3000);
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        // The exporting for pdf
+        $files = self::render_instance_data($instance, $editing, $versioning);
+
+        $smarty = smarty_core();
+        $smarty->assign('viewid', $instance->get('view'));
+        $smarty->assign('blockid', $instance->get('id'));
+        $smarty->assign('files', $files);
+        $smarty->assign('editing', $editing);
+        return $smarty->fetch('blocktype:filedownload:filedownload_pdfexport.tpl');
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
+        $files = self::render_instance_data($instance, $editing, $versioning);
+
+        $smarty = smarty_core();
+        $smarty->assign('viewid', $instance->get('view'));
+        $smarty->assign('blockid', $instance->get('id'));
+        $smarty->assign('files', $files);
+        $smarty->assign('editing', $editing);
+        return $smarty->fetch('blocktype:filedownload:filedownload.tpl');
+    }
+
+    private static function render_instance_data(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         require_once(get_config('docroot') . 'artefact/comment/lib.php');
 
@@ -73,13 +99,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                 $files[] = $file;
             }
         }
-
-        $smarty = smarty_core();
-        $smarty->assign('viewid', $instance->get('view'));
-        $smarty->assign('blockid', $instance->get('id'));
-        $smarty->assign('files', $files);
-        $smarty->assign('editing', $editing);
-        return $smarty->fetch('blocktype:filedownload:filedownload.tpl');
+        return $files;
     }
 
     public static function has_instance_config() {
