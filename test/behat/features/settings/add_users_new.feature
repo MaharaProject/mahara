@@ -110,7 +110,7 @@ Scenario: Check for error messages for the following expiry dates when uploading
           b) expire date is wrong format
   Given I log in as "admin" with password "Kupuh1pa!"
   # Adding 7 Users by csv with expiry date errors
-  And I choose "Add users by CSV" in "Users" from administration menu
+  And I choose "Add users by CSV" in "People" from administration menu
   And I attach the file "7usersnew-errors.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
   And I press "Add users by CSV"
@@ -128,7 +128,7 @@ Scenario: Adding user using different expiry date formats via CSV upload
           e) Thu, May 8, 25 (day abbv and month written full)
   Given I log in as "admin" with password "Kupuh1pa!"
   # Adding 7 Users by csv with corrected expiry date formats
-  And I choose "Add users by CSV" in "Users" from administration menu
+  And I choose "Add users by CSV" in "People" from administration menu
   And I attach the file "7usersnew-correctdates.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
   And I press "Add users by CSV"
