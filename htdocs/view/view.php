@@ -392,6 +392,7 @@ EOF;
     }
 }
 
+$blocktype_toolbar = $view->get_all_blocktype_toolbar();
 $smarty = smarty(
     $javascript,
     $headers,
@@ -537,7 +538,6 @@ if ($collection) {
     }
 }
 
-$blocktype_toolbar = $view->get_all_blocktype_toolbar();
 if (!empty($blocktype_toolbar['toolbarhtml'])) {
     $smarty->assign('toolbarhtml', join("\n", $blocktype_toolbar['toolbarhtml']));
 }

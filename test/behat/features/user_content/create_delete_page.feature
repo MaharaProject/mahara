@@ -50,18 +50,18 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "Share" in the ".editshare .btn-title" element
     And I should see "Return to pages and collections" in the ".returntolocation .btn-title" element
     # Adding media block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "File(s) to download" in the "Content types" property
     And I press "Save"
     # Adding Journal block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Recent journal entries" in the "Content types" property
     And I press "Save"
     # Adding profile info block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"
@@ -69,7 +69,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I click on "Profile information" in the "Content types" property
     And I press "Save"
     # Adding external media block - but remove it instead
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"

@@ -55,7 +55,7 @@ Background:
     And I go to portfolio page "Page UserA_00"
     And I click on "Edit"
     # user adds sign off block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"
@@ -68,7 +68,7 @@ Background:
     And I go to portfolio page "Page UserA_01"
     And I click on "Edit"
     # user adds sign off block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"
@@ -82,7 +82,7 @@ Background:
     Given I go to portfolio page "Page UserA_03"
     And I click on "Edit"
     # user adds sign off block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"

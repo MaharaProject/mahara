@@ -2163,81 +2163,117 @@ class View {
 
     }
 
-/**
-* Gets the view blocks in an array to be easily loaded in js gridstack
-* @param boolean $editing    whether we are in the edit more or not
-*/
-public function get_blocks($editing=false, $exporting=false, $versioning=false) {
-    if (!$versioning) {
-        $sql = '
-        SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
-        positionx, positiony, width, height, blocktype, title, configdata
-        FROM {block_instance_dimension} bd
-        INNER JOIN {block_instance} bi
-        ON bd.block = bi.id
-        WHERE bi.view = ?
-        ORDER BY positiony, positionx';
+    /*
+     * Returns an array of blockinstances only, not rendering them for viewing or editing
+     */
+    public function get_blocks_datastructure() {
+      $sql = '
+            SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
+            positionx, positiony, width, height, blocktype, title, configdata
+            FROM {block_instance_dimension} bd
+            INNER JOIN {block_instance} bi
+            ON bd.block = bi.id
+            WHERE bi.view = ?
+            ORDER BY positiony, positionx';
         $blocks = get_records_sql_array($sql, array($this->get('id')));
-    }
-    else {
-        $blocks = $versioning->blocks;
-    }
-    $this->grid = array();
-    if (is_array($blocks) || is_object($blocks)) {
-        foreach ($blocks as $block) {
-            require_once(get_config('docroot') . 'blocktype/lib.php');
-            $block = (object)$block;
-            $block->view = $this->get('id');
-            $block->view_obj = $this;
-            if (!$versioning) {
+        $grid = array();
+        if (is_array($blocks) || is_object($blocks)) {
+            foreach ($blocks as $block) {
+                require_once(get_config('docroot') . 'blocktype/lib.php');
+                $block = (object)$block;
+                $block->view = $this->get('id');
+                $block->view_obj = $this;
                 $blockid = $block->id;
-            }
-            else {
-                $blockid = $block->originalblockid;
-            }
-            $b = new BlockInstance($blockid, (array)$block);
-            if (isset($versioning->newlayout)) {
+
+                $b = new BlockInstance($blockid, (array)$block);
+
                 $b->set('positionx', $block->positionx);
                 $b->set('positiony', $block->positiony);
                 $b->set('width', $block->width);
                 $b->set('height', $block->height);
-                $b->set('configdata', (array)$block->configdata);
+
+                $grid[]=$b;
             }
-            else {
-                $b->set('row', $block->row);
-                $b->set('column', $block->column);
-                $b->set('order', $block->order);
-            }
-            $this->grid[]=$b;
         }
+        return $grid;
     }
 
-    $blockcontent = array();
-    foreach($this->grid as $blockinstance) {
-        $block = array();
-        if ($editing) {
-            $result = $blockinstance->render_editing();
-            $result = $result['html'];
+    /**
+    * Gets the view blocks in an array to be easily loaded in js gridstack
+    * @param boolean $editing    whether we are in the edit more or not
+    */
+    public function get_blocks($editing=false, $exporting=false, $versioning=false) {
+        if (!$versioning) {
+            $sql = '
+            SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
+            positionx, positiony, width, height, blocktype, title, configdata
+            FROM {block_instance_dimension} bd
+            INNER JOIN {block_instance} bi
+            ON bd.block = bi.id
+            WHERE bi.view = ?
+            ORDER BY positiony, positionx';
+            $blocks = get_records_sql_array($sql, array($this->get('id')));
         }
         else {
-            $result = $blockinstance->render_viewing($exporting, $versioning);
-            if (call_static_method(generate_class_name('blocktype', $blockinstance->get('blocktype')), 'has_static_content')) {
-                $block['class'] = 'staticblock';
+            $blocks = $versioning->blocks;
+        }
+        $this->grid = array();
+        if (is_array($blocks) || is_object($blocks)) {
+            foreach ($blocks as $block) {
+                require_once(get_config('docroot') . 'blocktype/lib.php');
+                $block = (object)$block;
+                $block->view = $this->get('id');
+                $block->view_obj = $this;
+                if (!$versioning) {
+                    $blockid = $block->id;
+                }
+                else {
+                    $blockid = $block->originalblockid;
+                }
+                $b = new BlockInstance($blockid, (array)$block);
+                if (isset($versioning->newlayout)) {
+                    $b->set('positionx', $block->positionx);
+                    $b->set('positiony', $block->positiony);
+                    $b->set('width', $block->width);
+                    $b->set('height', $block->height);
+                    $b->set('configdata', (array)$block->configdata);
+                }
+                else {
+                    $b->set('row', $block->row);
+                    $b->set('column', $block->column);
+                    $b->set('order', $block->order);
+                }
+                $this->grid[]=$b;
             }
         }
-        $block['content'] = $result;
-        $block['width'] = $blockinstance->get('width');
-        $block['height'] = $blockinstance->get('height');
-        $block['positionx'] = $blockinstance->get('positionx');
-        $block['positiony'] = $blockinstance->get('positiony');
-        $block['row'] = $blockinstance->get('row');
-        $block['column'] = $blockinstance->get('column');
-        $block['order'] = $blockinstance->get('order');
-        $block['id'] = $blockinstance->get('id');
-        $blockcontent[] = $block;
+
+        $blockcontent = array();
+        foreach($this->grid as $blockinstance) {
+            $block = array();
+            if ($editing) {
+                $result = $blockinstance->render_editing();
+                $result = $result['html'];
+            }
+            else {
+                $result = $blockinstance->render_viewing($exporting, $versioning);
+                if (call_static_method(generate_class_name('blocktype', $blockinstance->get('blocktype')), 'has_static_content')) {
+                    $block['class'] = 'staticblock';
+                }
+            }
+            $block['content'] = $result;
+            $block['width'] = $blockinstance->get('width');
+            $block['height'] = $blockinstance->get('height');
+            $block['positionx'] = $blockinstance->get('positionx');
+            $block['positiony'] = $blockinstance->get('positiony');
+            $block['row'] = $blockinstance->get('row');
+            $block['column'] = $blockinstance->get('column');
+            $block['order'] = $blockinstance->get('order');
+            $block['id'] = $blockinstance->get('id');
+            $blockcontent[] = $block;
+        }
+        return $blockcontent;
     }
-    return $blockcontent;
-}
+
     /*
     *
     * wrapper around get_column_datastructure
@@ -2743,6 +2779,53 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
         return array('html' => $html);
     }
 
+    /*
+     * Get the position to place a block at the bottom of the page
+     */
+    public function bottomfreeposition() {
+        // get y of blocks at the bottom
+        $sql = 'SELECT MAX("positiony") FROM {block_instance_dimension} bid
+            INNER JOIN block_instance bi ON bi.id = bid.block
+            WHERE bi.view = ?';
+        if ($maxy = get_field_sql($sql, array($this->get('id')))) {
+            // get max height in last row blocks
+            $sql = 'SELECT MAX("height") FROM {block_instance_dimension} bid
+            INNER JOIN {block_instance} bi ON bi.id = bid.block
+            WHERE bi.view = ? AND bid.positiony = ?';
+            $maxheight = get_field_sql($sql, array($this->get('id'), $maxy));
+            return ($maxy + $maxheight);
+        }
+        else {
+            // the view has no blocks
+            return 0;
+        }
+    }
+
+    /*
+     * Helper function to get the blockinstances from old layout pages
+     * and from new grid layout pages
+     */
+    private function get_blockinstances() {
+        $blockinstances = array();
+        if (!$this->uses_new_layout()) {
+            $view_data = $this->get_row_datastructure();
+            foreach ($view_data as $row_data) {
+                foreach($row_data as $column) {
+                    foreach($column['blockinstances'] as $blockinstance) {
+                        $blockinstances[] = $blockinstance;
+                    }
+                }
+            }
+        }
+        else {
+            $data = $this->get_blocks_datastructure();
+            foreach ($data as $blockinstance) {
+                $blockinstances[] = $blockinstance;
+            }
+        }
+        return $blockinstances;
+    }
+
     /**
      * Returns a list of required javascript files + initialization codes, based on
      * the blockinstances present in the view.
@@ -2753,42 +2836,40 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
         $javascriptfiles = array();
         $initjavascripts = array();
 
-        $view_data = $this->get_row_datastructure();
-
         $loadajax = false;
-        foreach ($view_data as $row_data) {
-            foreach($row_data as $column) {
-                foreach($column['blockinstances'] as $blockinstance) {
-                    $pluginname = $blockinstance->get('blocktype');
-                    if (!safe_require_plugin('blocktype', $pluginname)) {
-                        continue;
+        $blockinstances = $this->get_blockinstances();
+
+        if (!empty($blockinstances)) {
+            foreach ($blockinstances as $blockinstance) {
+                $pluginname = $blockinstance->get('blocktype');
+                if (!safe_require_plugin('blocktype', $pluginname)) {
+                  continue;
+                }
+                $classname = generate_class_name('blocktype', $pluginname);
+                $instancejs = call_static_method(
+                  $classname,
+                  'get_instance_javascript',
+                  $blockinstance
+                );
+                foreach($instancejs as $jsfile) {
+                  if (is_array($jsfile) && isset($jsfile['file'])) {
+                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
+                    if (isset($jsfile['initjs'])) {
+                      $initjavascripts[] = $jsfile['initjs'];
                     }
-                    $classname = generate_class_name('blocktype', $pluginname);
-                    $instancejs = call_static_method(
-                        $classname,
-                        'get_instance_javascript',
-                        $blockinstance
-                    );
-                    foreach($instancejs as $jsfile) {
-                        if (is_array($jsfile) && isset($jsfile['file'])) {
-                            $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
-                            if (isset($jsfile['initjs'])) {
-                                $initjavascripts[] = $jsfile['initjs'];
-                            }
-                            if (isset($jsfile['extrafilejs']) && is_array($jsfile['extrafilejs'])) {
-                                foreach ($jsfile['extrafilejs'] as $extrafilejs) {
-                                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $extrafilejs);
-                                }
-                            }
-                        }
-                        else if (is_string($jsfile)) {
-                            $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
-                        }
+                    if (isset($jsfile['extrafilejs']) && is_array($jsfile['extrafilejs'])) {
+                      foreach ($jsfile['extrafilejs'] as $extrafilejs) {
+                        $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $extrafilejs);
+                      }
                     }
-                    // Check to see if we need to include the block Ajax file.
-                    if (!$loadajax && $CFG->ajaxifyblocks && call_static_method($classname, 'should_ajaxify')) {
-                        $loadajax = true;
-                    }
+                  }
+                  else if (is_string($jsfile)) {
+                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
+                  }
+                }
+                // Check to see if we need to include the block Ajax file.
+                if (!$loadajax && $CFG->ajaxifyblocks && call_static_method($classname, 'should_ajaxify')) {
+                  $loadajax = true;
                 }
             }
         }
@@ -2811,34 +2892,33 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
 
         $buttons = array();
         $toolbarhtml = array();
-        $view_data = $this->get_row_datastructure();
+
         $loadajax = false;
-        foreach ($view_data as $row_data) {
-            foreach($row_data as $column) {
-                foreach($column['blockinstances'] as $blockinstance) {
-                    $pluginname = $blockinstance->get('blocktype');
-                    if (!safe_require_plugin('blocktype', $pluginname)) {
-                        continue;
+        $blockinstances = $this->get_blockinstances();
+        if (!empty($blockinstances)) {
+            foreach ($blockinstances as $blockinstance) {
+                $pluginname = $blockinstance->get('blocktype');
+                if (!safe_require_plugin('blocktype', $pluginname)) {
+                  continue;
+                }
+                $classname = generate_class_name('blocktype', $pluginname);
+                $instanceinfo = call_static_method(
+                  $classname,
+                  'get_instance_toolbars',
+                  $blockinstance
+                );
+                foreach($instanceinfo as $info) {
+                  if (is_array($info)) {
+                    if (isset($info['buttons'])) {
+                      $buttons[] = $info['buttons'];
                     }
-                    $classname = generate_class_name('blocktype', $pluginname);
-                    $instanceinfo = call_static_method(
-                        $classname,
-                        'get_instance_toolbars',
-                        $blockinstance
-                    );
-                    foreach($instanceinfo as $info) {
-                        if (is_array($info)) {
-                            if (isset($info['buttons'])) {
-                                $buttons[] = $info['buttons'];
-                            }
-                            if (isset($info['toolbarhtml'])) {
-                                $toolbarhtml[] = $info['toolbarhtml'];
-                            }
-                        }
-                        else if (is_string($info)) {
-                            $buttons[] = $info;
-                        }
+                    if (isset($info['toolbarhtml'])) {
+                      $toolbarhtml[] = $info['toolbarhtml'];
                     }
+                  }
+                  else if (is_string($info)) {
+                    $buttons[] = $info;
+                  }
                 }
             }
         }
@@ -2856,33 +2936,32 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
         global $THEME;
         $cssfiles = array();
         $checkedplugins = array();
-        $view_data = $this->get_row_datastructure();
-        foreach ($view_data as $row_data) {
-            foreach ($row_data as $column) {
-                foreach ($column['blockinstances'] as $blockinstance) {
-                    $pluginname = $blockinstance->get('blocktype');
-                    if (!empty($checkedplugins[$pluginname]) ||
-                        !safe_require_plugin('blocktype', $pluginname)) {
-                        continue;
-                    }
-                    $artefactdir = '';
-                    if ($blockinstance->get('artefactplugin') != '') {
-                        $artefactdir = 'artefact/' . $blockinstance->get('artefactplugin') . '/';
-                    }
-                    $hrefs = $THEME->get_url('style/style.css', true, $artefactdir . 'blocktype/' . $pluginname);
-                    $hrefs = array_reverse($hrefs);
-                    $classname = generate_class_name('blocktype', $pluginname);
-                    $instancecss = call_static_method(
-                        $classname,
-                        'get_instance_css',
-                        $blockinstance
-                    );
-                    $hrefs = array_merge($hrefs, $instancecss);
-                    foreach ($hrefs as $href) {
-                        $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($href) . '">';
-                    }
-                    $checkedplugins[$pluginname] = 1;
+
+        $blockinstances = $this->get_blockinstances();
+        if (!empty($blockinstances)) {
+            foreach ($blockinstances as $blockinstance) {
+                $pluginname = $blockinstance->get('blocktype');
+                if (!empty($checkedplugins[$pluginname]) ||
+                !safe_require_plugin('blocktype', $pluginname)) {
+                  continue;
                 }
+                $artefactdir = '';
+                if ($blockinstance->get('artefactplugin') != '') {
+                  $artefactdir = 'artefact/' . $blockinstance->get('artefactplugin') . '/';
+                }
+                $hrefs = $THEME->get_url('style/style.css', true, $artefactdir . 'blocktype/' . $pluginname);
+                $hrefs = array_reverse($hrefs);
+                $classname = generate_class_name('blocktype', $pluginname);
+                $instancecss = call_static_method(
+                  $classname,
+                  'get_instance_css',
+                  $blockinstance
+                );
+                $hrefs = array_merge($hrefs, $instancecss);
+                foreach ($hrefs as $href) {
+                  $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($href) . '">';
+                }
+                $checkedplugins[$pluginname] = 1;
             }
         }
         return array_unique($cssfiles);
@@ -2910,33 +2989,33 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
      * the blockinstances present in the view.
      */
     public function get_blocktype_javascript() {
-        $view_data = $this->get_row_datastructure();
         $javascript = array();
-        foreach($view_data as $row) {
-            foreach($row as $column) {
-                foreach($column['blockinstances'] as $blockinstance) {
-                    $pluginname = $blockinstance->get('blocktype');
-                    safe_require('blocktype', $pluginname);
-                    $instancejs = call_static_method(
-                        generate_class_name('blocktype', $pluginname),
-                        'get_instance_javascript',
-                        $blockinstance
-                    );
-                    foreach($instancejs as &$jsfile) {
-                        if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
-                            if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
-                                $jsfile = 'artefact/' . $artefactplugin . '/blocktype/' .
-                                    $pluginname . '/' . $jsfile;
-                            }
-                            else {
-                                $jsfile = 'blocktype/' . $blockinstance->get('blocktype') . '/' . $jsfile;
-                            }
-                        }
+
+        $blockinstances = $this->get_blockinstances();
+        if (!empty($blockinstances)) {
+            foreach ($blockinstances as $blockinstance) {
+                $pluginname = $blockinstance->get('blocktype');
+                safe_require('blocktype', $pluginname);
+                $instancejs = call_static_method(
+                  generate_class_name('blocktype', $pluginname),
+                  'get_instance_javascript',
+                  $blockinstance
+                );
+                foreach($instancejs as &$jsfile) {
+                  if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
+                    if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
+                      $jsfile = 'artefact/' . $artefactplugin . '/blocktype/' .
+                      $pluginname . '/' . $jsfile;
                     }
-                    $javascript = array_merge($javascript, $instancejs);
+                    else {
+                      $jsfile = 'blocktype/' . $blockinstance->get('blocktype') . '/' . $jsfile;
+                    }
+                  }
                 }
-            } // cols
-        } // rows
+                $javascript = array_merge($javascript, $instancejs);
+            }
+        }
+
         return array_unique($javascript);
     }
 
@@ -3195,8 +3274,7 @@ public function get_blocks($editing=false, $exporting=false, $versioning=false) 
             $config['newlayout'] = true;
 
             // Export view content
-            $this->get_blocks(false, true);
-            $data = $this->grid;
+            $data = $this->get_blocks_datastructure();
             $config['grid'] = array();
             foreach ($data as $bi) {
                 safe_require('blocktype', $bi->get('blocktype'));

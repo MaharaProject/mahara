@@ -217,7 +217,7 @@ else {
     $reorder = '  ';
 }
 
-$inlinejs .="
+$blocksjs ="
 $(function () {
     var options = {
         verticalMargin: 10,
@@ -261,7 +261,11 @@ $addform = pieform(array(
         'position' => array(
             'type' => 'select',
             'title' => get_string('blockorder', 'view'),
-            'options' => array(get_string('top', 'view'), get_string('bottom', 'view')),
+            'defaultvalue' => 'bottom',
+            'options' => array(
+                'top' => get_string('top', 'view'),
+                'bottom' => get_string('bottom', 'view')
+            ),
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -276,7 +280,7 @@ $placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $vi
 $placeholderbutton = '';
 if ($placeholderblock) {
     // it's active so make the button with different display title
-    $placeholderblock[0]['title'] = get_string('addnewblock', 'view');
+    $placeholderblock[0]['title'] = $view->get('accessible') ? get_string('addnewblockaccessibility', 'view') : get_string('addnewblock', 'view');
     $placeholderblock[0]['cssicon'] = 'plus';
     $smarty = smarty_core();
     $smarty->assign('blocktypes', $placeholderblock);
@@ -336,7 +340,7 @@ $smarty->assign('dashboard', $dashboard);
 if (get_config('blockeditormaxwidth')) {
     $inlinejs .= 'config.blockeditormaxwidth = true;';
 }
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs .  $inlinejs);
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
 $owner = $view->get('owner');

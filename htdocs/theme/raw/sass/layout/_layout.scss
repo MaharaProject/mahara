@@ -11,6 +11,9 @@ body {
         @include media-breakpoint-up(md) {
             padding-bottom:50px;
         }
+        .grouphomepage {
+            padding-top: 30px;
+        }
     }
 }
 

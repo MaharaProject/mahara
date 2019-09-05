@@ -20,7 +20,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
     And I set the field "Page title" to "Site page with block templates" 
     And I press "Save"
     # Add a Profile information block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"

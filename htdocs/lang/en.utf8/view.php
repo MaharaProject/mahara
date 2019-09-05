@@ -269,6 +269,7 @@ $string['cantversionvieweditpermissions'] = 'You do not permission to edit this 
 $string['cantversionviewsubmitted'] = 'You cannot edit this page because it has been submitted for assessment. You will have to wait until it is released.';
 $string['cantversionviewgroupeditwindow'] = 'You cannot edit this page. It is outside of the group editable date window.';
 $string['cantversionoldlayout'] = 'You cannot save a timeline version of a view with an old layout. You need to convert it to the new grid layout. To do this simply edit the page and the layout will be converted.';
+$string['cantaddannotationinoldlayout'] = 'You cannot add an annotation to this page. Please translate the page layout by editing the view first.';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 
@@ -318,7 +319,8 @@ $string['nrrows'] = array(
     '%s row',
     '%s rows',
 );
-$string['addnewblock'] = 'Add a new block';
+$string['addnewblock'] = 'Drag to add a new block';
+$string['addnewblockaccessibility'] = 'Click to add a new block';
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';

@@ -63,7 +63,7 @@ Scenario: Create forum and add block to group page
     And I log in as "UserC" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserC_01" card menu
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"

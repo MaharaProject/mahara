@@ -55,7 +55,7 @@ Scenario: Creating institution tags
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"
     And I press "Save"
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Tagged journal entries" in the "Content types" property

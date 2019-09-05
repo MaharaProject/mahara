@@ -449,6 +449,8 @@
                     x = placeholder.attr('data-gs-x'),
                     y = placeholder.attr('data-gs-y');
 
+                var grid = $('.grid-stack').data('gridstack');
+                grid.removeWidget(placeholder);
                 $(placeholder).remove();
 
                 $('.grid-stack .blocktype-drag').removeClass('btn btn-primary');
@@ -554,6 +556,11 @@
                     var children = list.children;
                     var length = children.length;
                     list.insertBefore(children[length-1], children[0]);
+                }
+            }
+            else {
+                if (typeof whereTo === 'string') {
+                    $('html, body').animate({ scrollTop: $(blockinstance).offset().top }, 'slow');
                 }
             }
         },

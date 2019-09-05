@@ -24,7 +24,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I follow "Edit"
 
  # Add a "Text" block with an image from file area
- When I follow "Add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
@@ -37,7 +37,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I press "Save"
 
  # Add a "Text" block with an embedded external image
- When I follow "Add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Text" in the "Content types" property
  And I set the following fields to these values:

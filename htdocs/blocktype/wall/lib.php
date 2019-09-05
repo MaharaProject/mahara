@@ -198,7 +198,8 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
     public function wallpost_js() {
         $js = <<<EOF
 function wallpost_success(form, data) {
-    if (jQuery('#wall').length && data.posts && data.block) {
+    var wall = jQuery('#wall');
+    if (wall.length && data.posts && data.block) {
         var wall = jQuery('#blockinstance_' + data.block + ' div.wall').first();
         var temp = jQuery('<div>');
         var textareaid = 'wallpost_' + data.block + '_text';
@@ -215,6 +216,10 @@ function wallpost_success(form, data) {
         formSuccess(form, data);
     }
 }
+jQuery( function() {
+    // needs to initialize the tinyMCE editor when the block is loaded
+    PieformManager.signal('onload');
+});
 EOF;
         return "<script>$js</script>";
     }

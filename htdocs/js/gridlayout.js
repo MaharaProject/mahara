@@ -28,13 +28,17 @@ function loadGridTranslate(grid, blocks) {
         );
         gridElements.push(el);
     });
+
+    jQuery(document).trigger('blocksloaded');
+
     window.setTimeout(function(){
         updateBlockSizes();
         updateTranslatedGridRows(blocks);
         gridInit();
         $.each(gridElements, function(index, el) {
             el.on('resizestop', resizeStopBlock);
-        })
+        });
+        initJs();
     }, 300);
 }
 
@@ -49,6 +53,15 @@ function loadGrid(grid, blocks) {
 
     jQuery(document).trigger('blocksloaded');
 
+    initJs();
+
+    // images need time to load before height can be properly calculated
+    window.setTimeout(function(){
+        updateBlockSizes();
+    }, 300);
+}
+
+function initJs() {
     // initialize js function for edit view
     if (typeof editViewInit !== "undefined") {
         editViewInit();
@@ -57,11 +70,6 @@ function loadGrid(grid, blocks) {
     if (typeof viewmenuInit !== "undefined") {
         viewmenuInit();
     }
-
-    // images need time to load before height can be properly calculated
-    window.setTimeout(function(){
-        updateBlockSizes();
-    }, 300);
 }
 
 function updateTranslatedGridRows(blocks) {

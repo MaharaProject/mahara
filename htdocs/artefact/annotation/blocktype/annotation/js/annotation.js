@@ -115,3 +115,23 @@ function addAnnotationFeedbackError(form, data) {
     jQuery('#' + id).removeClass('closed').addClass('active');
     formError(form, data);
 }
+
+function show_se_desc(id) {
+   $("#instconf_smartevidencedesc_container div:not(.description)").addClass('d-none');
+   $("#option_" + id).removeClass('d-none');
+}
+
+function annotationBlockInit() {
+    if ($("#instconf_smartevidence").length) {
+        // block title will be overwritten with framework choice so make it disabled
+        $("#instconf_title").attr('disabled', true);
+
+        // Set up evidence choices and show/hide related descriptions
+        $("#instconf_smartevidence").select2();
+
+        show_se_desc($("#instconf_smartevidence").val());
+        $("#instconf_smartevidence").on('change', function() {
+            show_se_desc($(this).val());
+        });
+    }
+};
