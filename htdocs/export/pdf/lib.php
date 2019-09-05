@@ -45,6 +45,7 @@ class PluginExportPdf extends PluginExportHtml {
     public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback);
+        $this->exporttype = 'pdf';
 
         $this->zipfile = 'mahara-export-pdf-user'
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';

@@ -157,7 +157,6 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      */
     public $exporttype;
 
-
     /**
      * Whether the user requested to export comments as well
      */

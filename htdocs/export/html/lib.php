@@ -71,7 +71,6 @@ class PluginExportHtml extends PluginExport {
     public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback);
-
         $this->rootdir = 'HTML';
         $this->exporttype = 'html';
 
@@ -497,6 +496,7 @@ class PluginExportHtml extends PluginExport {
                 $smarty->assign('blocks', $blocks);
                 $smarty->assign('view', false);
             }
+
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
                 throw new SystemException("Could not write view page for view $viewid");
