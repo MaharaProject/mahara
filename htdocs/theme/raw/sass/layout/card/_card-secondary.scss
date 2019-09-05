@@ -87,4 +87,20 @@
             border-color: $card-border-color;
         }
     }
+
+    // pdf blocks need padding taken away
+    &.bt-pdf .block > .card-body {
+      padding: 0;
+    }
+
+    &.bt-resumefield {
+      .resume-content {
+        border: 1px solid $card-border-color;
+        padding: 10px 15px;
+
+        .list-group-item-heading {
+          font-size: .75001rem;
+        }
+      }
+    }
 }

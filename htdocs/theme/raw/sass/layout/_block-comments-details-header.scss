@@ -5,9 +5,18 @@
      text-align: right;
      text-decoration: none;
      background-color: $theme-block-header-bg-color;
-     padding: 8px 10px;
+     padding: 7px 10px;
+     border: 0;
+
+     &:hover,
+     &:focus {
+       background-color: $theme-block-header-hover-bg-color;
+       color: $theme-block-header-hover-color;
+     }
+
      &.active-block {
-        background-color: $theme-primary-color;
+        background-color: $theme-block-header-active-bg-color;
+        color: $theme-block-header-active-color;
      }
    }
 }
@@ -20,23 +29,32 @@
       height: 0;
 
       .btn-secondary {
-        background-color: $theme-block-header-bg-color;
-        border: 0;
-        color: $theme-block-header-color;
         display: inline-block;
-        padding: 8px 10px;
+        padding: 7px 10px;
+        border: 0;
+        background-color: $theme-block-header-bg-color;
+        color: $theme-block-header-color;
+
+        &:hover,
+        &:focus {
+          background-color: $theme-block-header-hover-bg-color;
+          color: $theme-block-header-hover-color;
+          border: 0;
+        }
+
         &.active-block {
-            background-color: $theme-primary-color;
+          background-color: $theme-block-header-active-bg-color;
+          color: $theme-block-header-active-color;
         }
       }
     }
 
-    ~ .list-group-item .post-heading .title {
+    ~ .list-group-item h4.title {
       margin-right: 100px;
     }
 
     &.d-none {
-      ~ .list-group-item .post-heading .title {
+      ~ .list-group-item h4.title {
         margin-right: 0;
       }
     }
@@ -45,4 +63,70 @@
 
 .bh-margin-left {
    margin-left: 10px;
+}
+
+.card.card-secondary .card-body {
+  .block-header {
+      margin-top: -15px;
+  }
+  // exception of pdf block
+
+
+  // exception of attachments lists in resume
+  .has-attachment .list-unstyled {
+
+    .block-header {
+      margin-top: 0;
+
+      ~ .list-group-item {
+        .title {
+          margin-right: 100px;
+          display: inline-block;
+          max-width: 80%;
+        }
+        img.file-icon {
+          vertical-align: top;
+        }
+      }
+
+      &.d-none {
+        ~ .list-group-item .title {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+
+// exception of pdf block
+.card.card-secondary {
+  &.bt-pdf {
+    .block-header {
+        margin-top: 0;
+    }
+  }
+}
+
+.block-header {
+  &.btn-group-top {
+    .btn-secondary {
+      background-color: $theme-block-header-bg-color;
+      color: $theme-block-header-color;
+      border: 0;
+      padding: 7px 10px;
+
+      &:hover,
+      &:focus {
+        background-color: $theme-block-header-hover-bg-color;
+        color: $theme-block-header-hover-color;
+        border: 0;
+      }
+
+      &:not(:disabled):not(.disabled):active,
+      &.active-block {
+        background-color: $theme-block-header-active-bg-color;
+        color: $theme-block-header-active-color;
+      }
+    }
+  }
 }

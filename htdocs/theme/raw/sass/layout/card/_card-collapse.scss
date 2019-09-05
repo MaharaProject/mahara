@@ -155,17 +155,6 @@
 // @todo: Rethink this, it's too complex
 .card.collapsible:not(.card-secondary) {
     border-width: 0;
-    // For attachment collapsible
-    &.has-attachment {
-        border-radius: $border-radius-sm;
-        border-width: 0 0 1px 0;
-        .card-header a {
-            border-width: 0;
-            &:not(.collapsed) {
-                border-bottom-width: 1px;
-            }
-        }
-    }
 
     // Remove border from heading - add to link tag.
     // In this case we have a nested a tag that takes up the whole of the heading space
@@ -208,6 +197,12 @@
     // Except has-attachment, it doesn't need one.
     &.last .card-header a.collapsed {
         border-bottom-width: 1px;
+    }
+
+    // For attachment collapsible
+    &.has-attachment {
+        border-radius: $border-radius-sm;
+        border-width: 1px;
     }
 }
 
