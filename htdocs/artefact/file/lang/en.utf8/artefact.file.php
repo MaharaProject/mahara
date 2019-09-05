@@ -385,3 +385,8 @@ $string['viruszipfile'] = 'Clam AV has found a file that is infected with a viru
 $string['filetypenotallowed'] = 'Files with extension "%s" are not allowed.';
 $string['filetypenotmatchingmimetype'] = 'File extension does not match file mimetype "%s".';
 $string['validfiletypes'] = 'You can upload the following file types:';
+$string['notrendertopdf'] = 'This block can not be rendered normally in the PDF export.';
+$string['notrendertopdffiles'] = array(
+    'The file has been added to: ',
+    'The files have been added to: ',
+);

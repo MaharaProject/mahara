@@ -159,6 +159,27 @@ class PluginExportPdf extends PluginExportHtml {
                     $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . parent::text_to_filename($view->get('title'));
                 }
                 $filename = $directory . "/index.html";
+                // Adjust the relative links to files to be textual to mention where the file lives within the zip file
+                // Because we can't make relative links in a pdf export
+                $filedata = file_get_contents($filename);
+                if ($view->get('newlayout')) {
+                    if (preg_match('/var blocks = (\[.*?\]);/', $filedata, $matches)) {
+                        $content = json_decode($matches[1]);
+                        foreach ($content as $c) {
+                            $c->content = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\/a\>/s', "$1", $c->content); // $1 = url, $2 = name
+                            // Strip other links out
+                            $c->content = preg_replace('/\<a.*? href=.*?\>(.*?)\<\\/a\>/s', "$1", $c->content); // $1 = name
+                        }
+                        $content = json_encode($content);
+                        $filedata = preg_replace('/var blocks = \[.*?\];/', 'var blocks = ' . $content, $filedata);
+                    }
+                }
+                else {
+                    $filedata = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\/a\>/s', "$1", $filedata); // $1 = url, $2 = name
+                    // Strip other links out
+                    $filedata = preg_replace('/\<a.*? href=.*?\>(.*?)\<\/a\>/s', "$1", $filedata); // $1 = name
+                }
+                file_put_contents($filename, $filedata, LOCK_EX);
 
                 // Navigate to the needed page
                 $page->navigate('file://' . $filename)->waitForNavigation();
