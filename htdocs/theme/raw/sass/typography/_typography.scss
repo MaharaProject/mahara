@@ -293,7 +293,7 @@ pre {
     word-wrap: break-word;
     background-color: $pre-bg;
     border: $border-width solid $card-border-color;
-    border-radius: 2px;
+    border-radius: $border-radius-sm;
     span.wsname {
         font-weight: bold;
     }

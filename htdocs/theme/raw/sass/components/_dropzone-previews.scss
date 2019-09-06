@@ -1,5 +1,5 @@
 .dropzone-previews {
-    border-radius: 4px;
+    border-radius: $border-radius;
     clear: both;
     padding: 40px;
     background-color: $gray-100;
@@ -35,7 +35,7 @@
 
 .block-placeholder,
 .highlight {
-    border-radius: 4px;
+    border-radius: $border-radius;
     width: 100%;
     background-color: $state-warning-bg;
     border: 2px dashed scale-color( $state-warning-border, $lightness: -9.50%);

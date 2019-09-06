@@ -111,7 +111,7 @@
       top: -3px;
       right: 5px;
       background-color: $navbar-messages-count-bg;
-      border-radius: 3px;
+      border-radius: $border-radius;
       padding: 0 3px;
       color: $navbar-messages-count-color;
       font-size: 12px;

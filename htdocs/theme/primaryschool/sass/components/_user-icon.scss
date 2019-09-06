@@ -8,9 +8,9 @@
 
 // turns thumbnail user-icons in grid back to rectangular
 .user-thumbnails .user-icon {
-    border-radius: 3px;
+    border-radius: $border-radius;
     img {
-        border-radius: 3px;
+        border-radius: $border-radius;
     }
 }
 

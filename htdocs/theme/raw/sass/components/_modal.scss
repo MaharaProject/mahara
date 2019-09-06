@@ -176,7 +176,7 @@ $width-sm: 90%;
         }
         .close {
            @include box-shadow(-2px 0 2px rgba(0,0,0,0.3));
-            border-radius:3px 0 0 3px;
+            border-radius: $border-radius 0 0 $border-radius;
             opacity: 1;
             position: absolute;
             top: 1px;

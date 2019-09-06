@@ -41,7 +41,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
     }
 
     .switch-label {
-        border-radius: 3px;
+        border-radius: $border-radius;
         display: block;
         overflow: hidden;
         cursor: pointer;

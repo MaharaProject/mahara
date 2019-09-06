@@ -25,7 +25,7 @@
 
         background-color: $btn-secondary-bg;
         border: 1px solid $btn-secondary-border;
-        border-radius: 3px;
+        border-radius: $border-radius;
         cursor: pointer;
         display: inline-block;
         font-size: $font-size-sm;

@@ -26,7 +26,7 @@
     margin: 0;
     border-color: transparent;
     border-left-width: 0;
-    border-radius: 3px;
+    border-radius: $border-radius;
     min-width: 45px;
     color: $navbar-toggle-color;
     padding: 6px 10px;
