@@ -231,9 +231,12 @@ body.presentation-iframe {
 }
 
 // push in the right page margin to allow room for floating menu
-.pageheader-actions,
-.pageheader-actions + .main-content {
-    padding-right: 50px;
+.pageheader-actions {
+    padding-right: 0;
+
+    .pageheader-content {
+        padding-right: 50px;
+    }
 }
 
 // Profile page accept friends form
