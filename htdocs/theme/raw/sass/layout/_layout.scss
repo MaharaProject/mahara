@@ -256,3 +256,12 @@ body.presentation-iframe {
         padding-top: 0;
     }
 }
+
+// make footer colour extend below footer on short pages
+html {
+  background-color: $site-footer-bg;
+
+  body {
+    background-color: $body-bg;
+  }
+}
