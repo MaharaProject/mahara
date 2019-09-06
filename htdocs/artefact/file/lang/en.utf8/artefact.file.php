@@ -390,3 +390,4 @@ $string['notrendertopdffiles'] = array(
     'The file has been added to: ',
     'The files have been added to: ',
 );
+$string['notrendertopdflink'] = 'The file can be accessed at: ';

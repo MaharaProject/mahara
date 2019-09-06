@@ -64,8 +64,8 @@ class Media_youtube implements MediaBase {
 
     public function validate_url($input) {
         foreach (self::$iframe_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                return true;
+            if (preg_match($source['match'], $input, $matches)) {
+                return array('youtube' => $matches[2]); // the type/id of the video
             }
         }
         return false;
