@@ -8,7 +8,7 @@ function modal_handler(e) {
         dock.hide();
     });
 
-    $('.feedbacktable .list-group-lite').addClass('fullwidth');
+    $(modal).find('.feedbacktable .list-group-lite').addClass('fullwidth');
 }
 
 jQuery(function($) {

@@ -81,7 +81,13 @@ function addFeedbackSuccess(form, data) {
     }
 
     // Update the comment link so the correct number of comments is displayed
-    var commentlink = $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']');
+    var commentlink = '';
+    if (data.data.blockid) {
+        commentlink = $('.commentlink').filter("[data-blockid=" + data.data.blockid + "][data-artefactid=" + data.data.artefact + "]");
+    }
+    else {
+        commentlink = $('.commentlink').filter("[data-artefactid=" + data.data.artefact + "]");
+    }
     var newlink = '<span class="icon icon-comments" role="presentation" aria-hidden="true"></span>';
     if (!(commentlink.closest('div[class*=block-header]').hasClass('bh-displayiconsonly'))) {
         newlink += ' ' + get_string('commentsanddetails', 'artefact.comment', data.data.count);
@@ -91,9 +97,6 @@ function addFeedbackSuccess(form, data) {
         newlink += '<span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>';
     }
     commentlink.html(newlink);
-
-    //For brief comments and details previews when there is no block comments and details header
-    $('.comment-count-preview').filter('[data-artefactid=' + data.data.artefact + ']').html('<span class="icon icon-comments" role="presentation" aria-hidden="true"></span> (' + data.data.count + ')');
 
     resetFeedbackReplyto();
     formSuccess(form, data);
@@ -153,26 +156,37 @@ function set_up_modal_events() {
 
     $('#configureblock .submitcancel[name="submit"]').off('click');
     $('#configureblock .submitcancel[name="submit"]').on('click', function(e) {
-        if (tinymce.activeEditor.getContent()) {
-            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+        if (tinymce.activeEditor.getContent() !== '') {
             dock.hide();
         }
-
         $("#configureblock input:file").each(function() {
             var element = $(this);
             if (element.val() != '') {
                 // Found at least one attachment
                 if (tinymce.activeEditor.getContent()) {
-                    tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+                    $('#configureblock').find('textarea.wysiwyg').each(function() {
+                        modal_textarea_id = $(this).attr('id');
+                        tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+                    });
                 }
-               dock.hide();
+                dock.hide();
             }
+        });
+
+        $('#configureblock').find('textarea.wysiwyg').each(function() {
+            modal_textarea_id = $(this).attr('id');
+            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
         });
     });
 
     $('#configureblock .submitcancel[name="cancel_submit"]').off('click');
     $('#configureblock .submitcancel[name="cancel_submit"]').on('click', function(e) {
-        tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+        if (tinymce.activeEditor.getContent()) {
+            $('#configureblock').find('textarea.wysiwyg').each(function() {
+                modal_textarea_id = $(this).attr('id');
+                tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+            });
+        }
         e.stopPropagation();
         e.preventDefault();
         dock.hide();
@@ -190,7 +204,6 @@ function open_modal(e) {
     $('#modal_messages').html('').removeClass();
 
     var block = $('#configureblock');
-    dock.show(block, false, false);
 
     var params = {
         'viewid': viewid,
@@ -206,9 +219,11 @@ function open_modal(e) {
         $('.blockinstance-content').html(data.html);
 
         set_up_modal_events();
+        dock.show(block, false, true);
 
-        $('.feedbacktable .list-group-lite').addClass('fullwidth');
-        $('.feedbacktable').on('click', '.js-reply', null, function(e){
+        // $('.feedbacktable .list-group-lite').addClass('fullwidth');
+        $(block).find('.feedbacktable .list-group-lite').addClass('fullwidth');
+        $(block).find('.feedbacktable').on('click', '.js-reply', null, function(e){
             var replybutton = $(this);
             e.preventDefault();
             setupCommentButton(replybutton);
@@ -220,23 +235,24 @@ function open_modal(e) {
 }
 
 function delete_comment_from_modal_submit(form, data) {
-        if (!data.data.artefact) {
-            paginator.updateResults(data);
-            paginator.alertProxy('pagechanged', data);
-        }
-        var params = {
-            'viewid': viewid,
-            'artefactid': data.data['artefact'],
-            'blockid': data.data['blockid'],
-        }
-        if (!data.data['artefact']) {
-            params['artefactid'] = form.artefactid.value;
-        }
-        tinymce.EditorManager.execCommand('mceRemoveEditor',true, $('#configureblock').find('textarea.wysiwyg').attr('id'));
-        sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
-            $('#configureblock').find('h4').text(data.title);
-            $('.blockinstance-content').html(data.html);
-            set_up_modal_events();
+    if (!data.data.artefact) {
+        paginator.updateResults(data);
+        paginator.alertProxy('pagechanged', data);
+    }
+    var params = {
+        'viewid': viewid,
+        'artefactid': data.data['artefact'],
+        'blockid': data.data['blockid'],
+    }
+
+    if (!data.data['artefact']) {
+        params['artefactid'] = form.artefactid.value;
+    }
+    tinymce.EditorManager.execCommand('mceRemoveEditor',true, $('#configureblock').find('textarea.wysiwyg').attr('id'));
+    sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
+        $('#configureblock').find('h4').text(data.title);
+        $('.blockinstance-content').html(data.html);
+        set_up_modal_events();
 
         $('.feedbacktable').on('click', '.js-reply', null, function(e){
             var replybutton = $(this);
@@ -248,7 +264,14 @@ function delete_comment_from_modal_submit(form, data) {
     });
 
     // Update the comment link with correct count
-    var commentlink = $('.commentlink').filter('[data-artefactid=' + data.data.artefact + ']');
+    var commentlink = '';
+    if (data.data.blockid) {
+        commentlink = $('.commentlink').filter("[data-blockid=" + data.data.blockid + "][data-artefactid=" + data.data.artefact + "]");
+    }
+    else {
+        commentlink = $('.commentlink').filter("[data-artefactid=" + data.data.artefact + "]");
+    }
+
     var newlink ='';
     if (data.data.count == 0) {
         if (commentlink.closest('div[class*=block-header]').hasClass('bh-displayiconsonly')) {
@@ -258,7 +281,7 @@ function delete_comment_from_modal_submit(form, data) {
         else {
             newlink += '<span class="icon icon-plus" role="presentation" aria-hidden="true"></span>';
             newlink += ' ' + get_string('addcomment', 'artefact.comment');
-            newlink += '<span class="bh-margin-left icon icon-link" role="presentation" aria-hidden="true"></span>';
+            newlink += '<span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>';
             newlink += ' ' + get_string('Details', 'artefact.comment');
         }
     }
@@ -341,16 +364,27 @@ function setupCommentButton(element) {
 function toggleDetailsBtn() {
     $('#details-btn').off('click');
     $('#details-btn').on('click', function(e) {
+        var detailsActive = 0;
         var headers = $('#main-column-container').find('.block-header');
 
         if (!$('#details-btn').hasClass('active')) {
             $('#details-btn').addClass('active');
             headers.removeClass('d-none');
+            detailsActive = 1;
         }
         else {
             $('#details-btn').removeClass('active');
             headers.addClass('d-none');
+            detailsActive = 0;
         }
+
+        var params = {
+            'field': 'view_details_active',
+            'value': detailsActive,
+        }
+        // Save this details mode state to the user account preferences table
+        sendjsonrequest(config['wwwroot'] + 'view/viewdetailsfilter.json.php',  params, 'POST', function(data) {
+        });
     });
 }
 

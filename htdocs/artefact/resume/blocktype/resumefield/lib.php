@@ -47,6 +47,9 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         $smarty = smarty_core();
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
+        $configdata['showcommentcount'] = true;
+        $configdata['editing'] = $editing;
+        $configdata['blockid'] = $instance->get('id');
 
         // Get data about the resume field in this blockinstance
         if (!empty($configdata['artefactid'])) {

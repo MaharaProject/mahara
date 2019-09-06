@@ -32,6 +32,10 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         return array('shortcut' => 2000);
     }
 
+    public static function single_artefact_per_block() {
+        return true;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
 

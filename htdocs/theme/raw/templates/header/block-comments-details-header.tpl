@@ -15,7 +15,7 @@
                 ({$commentcount})
                 <span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>
             {else}
-                {str tag=Comments section=artefact.comment} ({$commentcount}) {str tag=anddetails section=artefact.comment}
+                {str tag=commentsanddetails section=artefact.comment arg1=$commentcount}
             {/if}
         {else}
             {if $displayiconsonly}

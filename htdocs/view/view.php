@@ -470,6 +470,16 @@ EOF;
 EOF;
     }
 }
+// Load the page with details content (block headers) displaying according to user preferences.
+if ($showdetails = get_account_preference($USER->get('id'), 'view_details_active')) {
+    $javascript .= <<<EOF
+    jQuery(function($) {
+        var headers = $('#main-column-container').find('.block-header');
+        $('#details-btn').addClass('active');
+        headers.removeClass('d-none');
+    });
+EOF;
+}
 
 // collection top navigation
 if ($collection) {

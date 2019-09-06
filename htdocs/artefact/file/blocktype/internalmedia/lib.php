@@ -26,6 +26,10 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         return get_string('title', 'blocktype.file/internalmedia');
     }
 
+    public static function single_artefact_per_block() {
+        return true;
+    }
+
     public static function get_description() {
         return get_string('description', 'blocktype.file/internalmedia');
     }
@@ -68,9 +72,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
         $smarty->assign('commentcount', $commentcount);
         $smarty->assign('comments', $comments);
-        $blockheader = $smarty->fetch('header/block-comments-details-header.tpl');
-        $result = $blockheader;
-        $result .= '<div class="mediaplayer-container card-body flush"><div class="mediaplayer">';
+        $result = '<div class="mediaplayer-container card-body flush"><div class="mediaplayer">';
         $result .= call_static_method($playerclass, 'get_html', $artefact, $instance, $width, $height);
         $result .= '</div></div>';
 

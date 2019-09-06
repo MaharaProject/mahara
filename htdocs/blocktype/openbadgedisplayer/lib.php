@@ -37,6 +37,10 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return false;
     }
 
+    public static function single_artefact_per_block() {
+        return false;
+    }
+
     public static function get_title() {
         return get_string('title', 'blocktype.openbadgedisplayer');
     }

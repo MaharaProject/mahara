@@ -44,6 +44,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         $configdata['viewid'] = $instance->get('view');
         $configdata['simpledisplay'] = true;
         $configdata['blockid'] = $instance->get('id');
+        $configdata['editing'] = $editing;
 
         // This can be either an image or profileicon. They both implement
         // render_self

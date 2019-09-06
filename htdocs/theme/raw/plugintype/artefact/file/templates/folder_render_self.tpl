@@ -47,9 +47,13 @@
                     <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
                 {/if}
                 <h4 class="title list-group-item-heading text-inline">
-                    <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
-                        {$child->title}
-                    </a>
+                {if !$editing}
+                <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                    {$child->title}
+                </a>
+                {else}
+                <span class="inner-link">{$child->title}</span>
+                {/if}
                     {if !$simpledisplay}
                     <span class="filedate metadata">
                         {$child->date}

@@ -37,9 +37,13 @@
                 {/if}
 
                 <span class="title list-group-item-heading text-inline">
+                    {if !$editing}
                     <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                         {$item->title}
                     </a>
+                    {else}
+                    <span class="inner-link">{$item->title}</span>
+                    {/if}
                     <span class="metadata"> -
                         [{$item->size|display_size}]
                     </span>

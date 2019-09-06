@@ -31,6 +31,10 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         return true;
     }
 
+    public static function single_artefact_per_block() {
+        return false;
+    }
+
     public static function get_categories() {
         return array('general' => 18000);
     }

@@ -25,6 +25,10 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 9000);
     }
 
+    public static function single_artefact_per_block() {
+        return true;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');

@@ -1055,7 +1055,7 @@ class ArtefactTypeComment extends ArtefactType {
         );
     }
 
-    public static function delete_comment_form($id, $blockid=null, $artefactid=null, $threaded=null) {
+    public static function delete_comment_form($id, $blockid=null, $artefactid=null, $threaded=false) {
         global $THEME;
 
         $form = array(

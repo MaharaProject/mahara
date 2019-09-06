@@ -32,6 +32,10 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
         $smarty = smarty_core();
+        $configdata = $instance->get('configdata');
+        $configdata['showcommentcount'] = true;
+        $configdata['viewid'] = $instance->get('view');
+        $configdata['editing'] = $editing;
         // Get data about the resume fields the user has
         if ($artefacts = get_records_sql_array('
             SELECT va.artefact, a.artefacttype
@@ -41,7 +45,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
             AND va.block = ?', array($instance->get('view'), $instance->get('id')))) {
             foreach ($artefacts as $artefact) {
                 $resumefield = $instance->get_artefact_instance($artefact->artefact);
-                $rendered = $resumefield->render_self(array('viewid' => $instance->get('view')));
+                $rendered = $resumefield->render_self($configdata);
                 $result = $rendered['html'];
                 if (!empty($rendered['javascript'])) {
                     $result .= '<script>' . $rendered['javascript'] . '</script>';

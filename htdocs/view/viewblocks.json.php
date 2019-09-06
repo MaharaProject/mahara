@@ -43,6 +43,10 @@ $options = array(
     'modal' => true,
 );
 
+if ($blockid) {
+    $options['blockid'] = $blockid;
+}
+
 $rendered = $artefact->render_self($options);
 if (!empty($rendered['javascript'])) {
     $html = '<script>' . $rendered['javascript'] . '</script>';

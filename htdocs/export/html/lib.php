@@ -687,8 +687,10 @@ class PluginExportHtml extends PluginExport {
                          $type == 'video' ||
                          $type == 'html' ||
                          $type == 'plans' ||
+                         $type == 'file' ||
                          $type == 'internal' && $b->blocktype != 'profileinfo'||
                          $b->blocktype == 'image' ||
+                         $b->blocktype == 'internalmedia' ||
                          $b->blocktype == 'filedownload'
                      ) {
                         if (isset($configdata['artefactids']) && !empty($configdata['artefactids'])) {

@@ -2170,6 +2170,9 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         $smarty->assign('simpledisplay', isset($options['simpledisplay']) ? $options['simpledisplay'] : false);
         $smarty->assign('folderid', $this->get('id'));
         $smarty->assign('downloadfolderzip', get_config_plugin('blocktype', 'folder', 'folderdownloadzip') ? !empty($options['folderdownloadzip']) : false);
+        if (isset($options['editing'])) {
+            $smarty->assign('editing', $options['editing']);
+        }
 
         $childrecords = false;
         if (!empty($options['existing_artefacts'])) {
@@ -2180,6 +2183,7 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         }
 
         if ($childrecords) {
+            safe_require('artefact', 'comment');
             $sortorder = (isset($options['sortorder']) && $options['sortorder'] == 'desc') ? 'my_files_cmp_desc' : 'my_files_cmp';
             usort($childrecords, array('ArtefactTypeFileBase', $sortorder));
             $children = array();
@@ -2188,6 +2192,13 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $child->title = $child->hovertitle = $c->get('title');
                 $child->date = format_date(strtotime($child->mtime), 'strftimedaydatetime');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                $count = ArtefactTypeComment::count_comments(null, array($child->id));
+                if ($count) {
+                    $child->commentcount = $count[$child->id]->comments;
+                }
+                else {
+                    $child->commentcount = 0;
+                }
             }
             $smarty->assign('children', $childrecords);
         }

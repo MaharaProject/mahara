@@ -25,6 +25,10 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         return true;
     }
 
+    public static function single_artefact_per_block() {
+        return false;
+    }
+
     public static function get_title() {
 
         return get_string('title', 'blocktype.peerassessment/signoff');

@@ -29,6 +29,10 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
         return true;
     }
 
+    public static function single_artefact_per_block() {
+        return true;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
         if (!empty($configdata['artefactid'])) {
@@ -69,6 +73,7 @@ class PluginBlocktypeTextbox extends MaharaCoreBlocktype {
             $smarty->assign('license', (int)get_config('licensemetadata'));
             $smarty->assign('blockid', $instance->get('id'));
             $smarty->assign('artefactid', $artefact->get('id'));
+            $smarty->assign('editing', $editing);
             return $smarty->fetch('blocktype:textbox:content.tpl');
         }
 

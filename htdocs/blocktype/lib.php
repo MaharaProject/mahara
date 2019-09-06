@@ -280,6 +280,16 @@ EOF;
     }
 
     /**
+     * override this to return true if the blocktype
+     * can only contain one artefact per block.
+     * example: Journal block can have multiple artefact so return false.
+     * example: Image block has one image per block so return true.
+    */
+    public static function single_artefact_per_block() {
+        return false;
+    }
+
+    /**
      * Indicates whether this block can be loaded by Ajax after the page is done. This
      * improves page-load times by allowing blocks to be rendered in parallel instead
      * of in serial.
@@ -506,6 +516,7 @@ EOF;
                     'title'          => call_static_method($classname, 'get_title'),
                     'description'    => call_static_method($classname, 'get_description'),
                     'singleonly'     => call_static_method($classname, 'single_only'),
+                    'single_artefact_per_block' => call_static_method($classname, 'single_artefact_per_block'),
                     'artefactplugin' => $bt->artefactplugin,
                     'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
                     'cssicon'        => call_static_method($classname, 'get_css_icon', $bt->name),
@@ -1387,15 +1398,14 @@ class BlockInstance {
         $cardicontype = !empty($cssicontype) ? preg_replace('/^icon-/', 'card-', $cssicontype) : '';
         $smarty->assign('cardicontype', $cardicontype);
         $smarty->assign('versioning', $versioning);
-        /* Apply the comments and details header via template to these types of blocks only
-         * These blocks have one artefact per block, for blocks with multiple artefacts
-         * the header will be added elsewhere via their specific templates
-         */
-        $includetheseblocks = array('image', 'textbox');
-        $blockheader = (in_array($this->get('blocktype'), $includetheseblocks)) ? true : false;
-        $smarty->assign('blockheader', $blockheader);
-        //Set up template for the blocks that have the comments and details header
-        if ($blockheader) {
+
+        // Apply comments and details block header to blocks with have one artefact per block
+        // Blocks with more than one artefact per block get their header via individual templates
+        $blockheader = call_static_method($classname, 'single_artefact_per_block', $this->blocktype);
+        // Set up template for the blocks that have the comments and details header
+        // Check also that an artefact has been attached to ensure empty blocks don't get empty modals
+        if ($blockheader && !empty($configdata['artefactid'])) {
+            $smarty->assign('blockheader', $blockheader);
             if (!empty($configdata['artefactid'])) {
                 $smarty->assign('artefactid', $configdata['artefactid']);
                 $artefact = $this->get_artefact_instance($configdata['artefactid']);

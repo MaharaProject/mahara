@@ -98,8 +98,9 @@
                 {include
                     file='header/block-comments-details-header.tpl'
                     artefactid=$item->id
+                    blockid=$blockid
                     commentcount=$item->commentcount
-                    allowcomments=true
+                    allowcomments=$item->allowcomments
                     justdetails=$justdetails
                     displayiconsonly = true}
                 <li class="list-group-item">
@@ -114,9 +115,13 @@
                     {/if}
 
                     <span class="title text-inline">
+                        {if !$editing}
                         <a class="modal_link text-small inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
                             {$item->title}
                         </a>
+                        {else}
+                        <span class="text-small innerl-link">{$item->title}</span>
+                        {/if}
                         <span class="metadata"> -
                             [{$item->size}]
                         </span>

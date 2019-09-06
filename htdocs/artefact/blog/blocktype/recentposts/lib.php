@@ -135,7 +135,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
             $smarty->assign('blockid', $instance->get('id'));
             $smarty->assign('editing', $editing);
             $smarty->assign('licensemetadata', get_config('licensemetadata') ? true : false);
-            $smarty->assign('canviewblog', $data->owner == $USER->get('id'));
+            $smarty->assign('canviewblog', $data->owner == $USER->can_view_artefact($blog));
 
             if ($editing) {
                 // Get id and title of configued blogs

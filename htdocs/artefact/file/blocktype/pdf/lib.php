@@ -17,6 +17,10 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         return false;
     }
 
+    public static function single_artefact_per_block() {
+        return true;
+    }
+
     public static function get_title() {
         return get_string('title', 'blocktype.file/pdf');
     }
@@ -81,12 +85,16 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($configdata['viewid']);
             list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
+
         }
         $smarty = smarty_core();
         if ($artefactid) {
             $smarty->assign('artefactid', $artefactid);
             $artefact = $instance->get_artefact_instance($configdata['artefactid']);
             $smarty->assign('allowcomments', $artefact->get('allowcomments'));
+            if ($commentcount) {
+                $smarty->assign('commentcount', $commentcount);
+            }
         }
         $smarty->assign('html', $result);
         $smarty->assign('editing', $editing);

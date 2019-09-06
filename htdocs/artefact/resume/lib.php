@@ -879,6 +879,14 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
             $smarty->assign('artefactid', $options['artefactid']);
         }
 
+        if (!empty($options['editing'])) {
+            $smarty->assign('editing', $options['editing']);
+        }
+
+        if (!empty($options['blockid'])) {
+            $smarty->assign('blockid', $options['blockid']);
+        }
+
         if (!$data = get_records_sql_array($sql, array($owner, $type))) {
             $data = array();
         }
@@ -901,6 +909,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     ORDER BY a.title';
             $attachments = get_records_sql_array($sql, array($record->artefact, $record->id));
             if ($attachments) {
+                safe_require('artefact', 'comment');
                 foreach ($attachments as &$attachment) {
                     $f = artefact_instance_from_id($attachment->id);
                     $attachment->size = $f->describe_size();
@@ -908,6 +917,16 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     $attachment->artefacttype = $f->get_artefact_type($attachment->id);
                     $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                     $attachment->description = $f->description;
+                    $attachment->allowcomments = $f->get('allowcomments');
+                    if (!empty($options['showcommentcount'])) {
+                        $count = ArtefactTypeComment::count_comments(null, array($attachment->id));
+                        if ($count) {
+                            $attachment->commentcount = $count[$attachment->id]->comments;
+                        }
+                        else {
+                            $attachment->commentcount = 0;
+                        }
+                    }
                 }
             }
             $record->attachments = $attachments;
@@ -1988,15 +2007,29 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
         if (!empty($options['artefactid'])) {
             $smarty->assign('artefactid', $options['artefactid']);
         }
+        if (!empty($options['editing'])) {
+            $smarty->assign('editing', $options['editing']);
+        }
 
         $attachments = $this->get_attachments();
         if ($attachments) {
+            safe_require('artefact', 'comment');
             foreach ($attachments as &$attachment) {
                 $f = artefact_instance_from_id($attachment->id);
                 $attachment->size = $f->describe_size();
                 $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
                 $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
                 $attachment->description = $f->description;
+                $attachment->allowcomments = $f->get('allowcomments');
+                if (!empty($options['showcommentcount'])) {
+                    $count = ArtefactTypeComment::count_comments(null, array($attachment->id));
+                    if ($count) {
+                        $attachment->commentcount = $count[$attachment->id]->comments;
+                    }
+                    else {
+                        $attachment->commentcount = 0;
+                    }
+                }
             }
             $smarty->assign('attachments', $attachments);
             $smarty->assign('count', count($attachments));

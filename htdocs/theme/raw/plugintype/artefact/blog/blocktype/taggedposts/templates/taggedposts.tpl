@@ -38,9 +38,28 @@
 <div id="blogdescription">
     <div id="postlist_{$blockid}" class="list-group">
         {foreach from=$results item=post}
-        <div class="post list-group-item">
-            <h4 class="list-group-heading">
-                {$post->title}
+        {if !$editing}
+            {if !$post->allowcomments}
+                {assign var="justdetails" value=true}
+            {/if}
+            {include
+                file='header/block-comments-details-header.tpl'
+                artefactid=$post->id
+                blockid=$blockid
+                commentcount=$post->commentcount
+                allowcomments=$post->allowcomments
+                justdetails=$justdetails
+                displayiconsonly=true}
+        {/if}
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading text-inline">
+                {if !($editing)}
+                     <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+                         {$post->title}
+                     </a>
+                {else}
+                    <span class="list-group-item-heading no-link">{$post->title}</span>
+                {/if}
             </h4>
             <div class="postdetails metadata">
                 <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
@@ -84,7 +103,7 @@
         </a>
         <h4 class="list-group-item-heading text-inline">
             {if !($editing)}
-            <a class="modal_link inner-link list-group-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+            <a class="modal_link inner-link list-group-item-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                 {$post->title}
             </a>
             {else}
