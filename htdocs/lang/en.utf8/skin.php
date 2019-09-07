@@ -243,6 +243,11 @@ $string['fonttype.site'] = 'Local font';
 $string['fonttypes.site'] = 'Local fonts';
 $string['fonttype.google'] = 'Google web font';
 $string['fonttypes.google'] = 'Google web fonts';
+$string['fonttypes.theme'] = 'Theme fonts';
+$string['fonttype.t_raw'] = 'Theme font: Raw';
+$string['fonttype.t_ocean'] = 'Theme font: Ocean';
+$string['fonttype.t_modern'] = 'Theme font: Modern';
+$string['fonttype.t_primaryschool'] = 'Theme font: Primary school';
 
 // For examples of pangrams, see: http://en.wikipedia.org/wiki/List_of_pangrams
 $string['preview'] = 'Preview';

@@ -615,8 +615,22 @@ class Skin {
             return '';
         }
         $fontface = '';
-
-        if ($fontdata->fonttype == 'site') {
+        if (preg_match('/^t_(.*)/', $fontdata->fonttype, $matches)) {
+            $theme = $matches[1];
+            $fontfamily = urlencode($fontdata->title);
+            // We need to create @font-face css rule for each variant of the font
+            $variants = unserialize($fontdata->variants);
+            foreach ($variants as $variant) {
+                $baseurl = get_config('wwwroot') . 'theme/' . $theme . '/fonts/' . strtolower($fontdata->name) . '/';
+                $fontface .= '@font-face {';
+                $fontface .= 'font-family: \'' . escape_css_string($fontdata->title) . '\'; ';
+                $fontface .= 'src: url(\'' . $baseurl . $variant['WOFF'] . '\') format(\'woff\'); '; // The only type that is crossbrowser compatible
+                $fontface .= 'font-weight: ' . $variant['font-weight'] . '; ';
+                $fontface .= 'font-style: ' . $variant['font-style'] . '; ';
+                $fontface .= '}';
+            }
+        }
+        else if ($fontdata->fonttype == 'site') {
             $fontfamily = urlencode($fontdata->title);
             // We need to create @font-face css rule for each variant of the font
             $variants = unserialize($fontdata->variants);
@@ -1091,7 +1105,14 @@ class Skin {
      */
     public static function get_sitefonts_data($limit=9, $offset=0, $fonttype='site') {
 
-        if ($fonttype != 'all') {
+        if ($fonttype == 'theme') {
+            $count = count_records_sql('
+                SELECT COUNT(f.name) FROM {skin_fonts} f
+                WHERE f.fonttype LIKE ?', array('t_%'));
+            $fontdata = get_records_sql_array('
+                SELECT * FROM {skin_fonts} WHERE fonttype LIKE ? ORDER BY fonttype', array('t_%'), $offset, $limit);
+        }
+        else if ($fonttype != 'all') {
             $count = count_records_sql('
                 SELECT COUNT(f.name) FROM {skin_fonts} f
                 WHERE f.fonttype = ?', array($fonttype));
@@ -1261,159 +1282,378 @@ class Skin {
 
 
 /**
- * Installs default skin data, called during Mahara installation
+ * Installs default skin data.
+ * This function is now designed so that it can be run more than once.
+ * To add more fonts set up the "ensure_record_exists( ... )" blocks for them
+ * To remove a font set up a "delete_record( ... )" for it
  */
 function install_skins_default() {
-    // Add data for 'common' fonts...
-    $variants = serialize(array(
-        array('variant' => 'regular', 'font-weight' => 'normal', 'font-style' => 'normal'),
-        array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
-        array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
-        array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
-    ));
-    $italiconly = serialize(array(
-        array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Arial',
-        'title' => 'Arial',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusSansL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Arial\', \'Helvetica\', \'Nimbus Sans L\', \'FreeSans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Book_Antiqua',
-        'title' => 'Book Antiqua',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWPalladioL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Book Antiqua\', \'Palatino Linotype\', \'Palatino\', \'URW Palladio L\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Bookman',
-        'title' => 'Bookman',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWBookmanL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Bookman Old Style\', \'Bookman\', \'URW Bookman L\'',
-        'genericfont' => 'serif'));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Chancery',
-        'title' => 'Chancery',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWChanceryL.ttf',
-        'variants' => $italiconly,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Monotype Corsiva\', \'Apple Chancery\', \'Zapf Chancery\', \'URW Chancery L\'',
-        'genericfont' => 'cursive'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Courier',
-        'title' => 'Courier New',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusMonoL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Courier New\', \'Courier\', \'Nimbus Mono L\', \'FreeMono\'',
-        'genericfont' => 'monospace'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Georgia',
-        'title' => 'Georgia',
-        'licence' => 'Charis SIL Open Font Licence.txt',
-        'previewfont' => 'CharisSILR.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Georgia\', \'Charis SIL\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Gothic',
-        'title' => 'Century Gothic',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWGothicL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Century Gothic\', \'Avant Garde\', \'URW Gothic L\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Helvetica',
-        'title' => 'Helvetica',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusSansL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Helvetica\', \'Arial\', \'Nimbus Sans L\', \'FreeSans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Palatino',
-        'title' => 'Palatino',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWPalladioL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Palatino Linotype\', \'Palatino\', \'URW Palladio L\', \'Book Antiqua\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Tahoma',
-        'title' => 'Tahoma',
-        'licence' => 'DejaVu Font Licence.txt',
-        'previewfont' => 'DejaVuSans.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Tahoma\', \'DejaVu Sans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Times',
-        'title' => 'Times New Roman',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusRomanNo9L.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Times New Roman\', \'Times\', \'Nimbus Roman No9\', \'FreeSerif\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Trebuchet',
-        'title' => 'Trebuchet',
-        'licence' => 'Aurulent Open Font Licence.txt',
-        'previewfont' => 'AurulentSans.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Trebuchet MS\', \'Aurulent Sans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Verdana',
-        'title' => 'Verdana',
-        'licence' => 'DejaVu Font Licence.txt',
-        'previewfont' => 'DejaVuSans.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Verdana\', \'DejaVu Sans\'',
-        'genericfont' => 'sans-serif'
-    ));
+    // Add data for the 'common' and theme fonts.
+    // Set up the possible variations
+    // - add in new ones if needed
+    $fv = array(
+        'regular'     => array('variant' => 'regular', 'font-weight' => 'normal', 'font-style' => 'normal'),
+        'bold'        => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
+        'italic'      => array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
+        'bolditalic'  => array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
+        'thin'        => array('variant' => 'thin', 'font-weight' => 'normal', 'font-style' => 'normal'),
+        'light'       => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
+        'lightitalic' => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
+    );
+    // The basic regular/bold/italic/bolditalic combo
+    $basicvariants = serialize(array($fv['regular'], $fv['bold'], $fv['italic'], $fv['bolditalic']));
+
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Arial',
+            'title' => 'Arial'
+        ),
+        (object) array(
+            'name' => 'Arial',
+            'title' => 'Arial',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusSansL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Arial\', \'Helvetica\', \'Nimbus Sans L\', \'FreeSans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'BookAntiqua',
+            'title' => 'Book Antiqua'
+        ),
+        (object) array(
+            'name' => 'BookAntiqua',
+            'title' => 'Book Antiqua',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWPalladioL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Book Antiqua\', \'Palatino Linotype\', \'Palatino\', \'URW Palladio L\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Bookman',
+            'title' => 'Bookman'
+        ),
+        (object) array(
+            'name' => 'Bookman',
+            'title' => 'Bookman',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWBookmanL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Bookman Old Style\', \'Bookman\', \'URW Bookman L\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Chancery',
+            'title' => 'Chancery'
+        ),
+        (object) array(
+            'name' => 'Chancery',
+            'title' => 'Chancery',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWChanceryL.ttf',
+            'variants' => serialize(array($fv['italic'])),
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Monotype Corsiva\', \'Apple Chancery\', \'Zapf Chancery\', \'URW Chancery L\'',
+            'genericfont' => 'cursive'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Courier',
+            'title' => 'Courier New'
+        ),
+        (object) array(
+            'name' => 'Courier',
+            'title' => 'Courier New',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusMonoL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Courier New\', \'Courier\', \'Nimbus Mono L\', \'FreeMono\'',
+            'genericfont' => 'monospace'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Georgia',
+            'title' => 'Georgia'
+        ),
+        (object) array(
+            'name' => 'Georgia',
+            'title' => 'Georgia',
+            'licence' => 'Charis SIL Open Font Licence.txt',
+            'previewfont' => 'CharisSILR.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Georgia\', \'Charis SIL\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Gothic',
+            'title' => 'Century Gothic'
+        ),
+        (object) array(
+            'name' => 'Gothic',
+            'title' => 'Century Gothic',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWGothicL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Century Gothic\', \'Avant Garde\', \'URW Gothic L\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Helvetica',
+            'title' => 'Helvetica'
+        ),
+        (object) array(
+            'name' => 'Helvetica',
+            'title' => 'Helvetica',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusSansL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Helvetica\', \'Arial\', \'Nimbus Sans L\', \'FreeSans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Palatino',
+            'title' => 'Palatino'
+        ),
+        (object) array(
+            'name' => 'Palatino',
+            'title' => 'Palatino',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWPalladioL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Palatino Linotype\', \'Palatino\', \'URW Palladio L\', \'Book Antiqua\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Tahoma',
+            'title' => 'Tahoma'
+        ),
+        (object) array(
+            'name' => 'Tahoma',
+            'title' => 'Tahoma',
+           'licence' => 'DejaVu Font Licence.txt',
+            'previewfont' => 'DejaVuSans.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Tahoma\', \'DejaVu Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Times',
+            'title' => 'Times New Roman'
+        ),
+        (object) array(
+            'name' => 'Times',
+            'title' => 'Times New Roman',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusRomanNo9L.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Times New Roman\', \'Times\', \'Nimbus Roman No9\', \'FreeSerif\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Trebuchet',
+            'title' => 'Trebuchet'
+        ),
+        (object) array(
+            'name' => 'Trebuchet',
+            'title' => 'Trebuchet',
+            'licence' => 'Aurulent Open Font Licence.txt',
+            'previewfont' => 'AurulentSans.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Trebuchet MS\', \'Aurulent Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Verdana',
+            'title' => 'Verdana'
+        ),
+        (object) array(
+            'name' => 'Verdana',
+            'title' => 'Verdana',
+            'licence' => 'DejaVu Font Licence.txt',
+            'previewfont' => 'DejaVuSans.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Verdana\', \'DejaVu Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    // Theme fonts
+    $filetypes = array('EOT', 'SVG', 'TTF', 'WOFF', 'WOFF2', 'OTF');
+    $robotoslabvariants = array();
+    foreach (array('bold', 'regular', 'light', 'thin') as $option) {
+        $robotoslabvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $robotoslabvariants[$option][$type] = 'robotoslab-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'RobotoSlab',
+            'title' => 'Roboto Slab'
+        ),
+        (object) array(
+            'name' => 'RobotoSlab',
+            'title' => 'Roboto Slab',
+            'licence' => '',
+            'previewfont' => 'robotoslab-regular.ttf',
+            'variants' => serialize($robotoslabvariants),
+            'fonttype' => 't_raw',
+            'onlyheading' => 0,
+            'fontstack' => '\'Roboto Slab\', \'Roboto\'',
+            'genericfont' => 'serif'
+        )
+    );
+
+    $opensansvariants = array();
+    foreach (array('bold', 'regular', 'light', 'lightitalic') as $option) {
+        $opensansvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            if ($option == 'lightitalic') {
+                $opensansvariants[$option][$type] = 'OpenSansLightItalic.' . strtolower($type);
+            }
+            else {
+                $opensansvariants[$option][$type] = 'OpenSans' . ucfirst($option) . '.' . strtolower($type);
+            }
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'OpenSans',
+            'title' => 'Open Sans'
+        ),
+        (object) array(
+            'name' => 'OpenSans',
+            'title' => 'Open Sans',
+            'licence' => '',
+            'previewfont' => 'OpenSansRegular.ttf',
+            'variants' => serialize($opensansvariants),
+            'fonttype' => 't_raw',
+            'onlyheading' => 0,
+            'fontstack' => '\'Open Sans\', \'Verdana\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    $osvaldovariants = array();
+    foreach (array('regular') as $option) {
+        $osvaldovariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $osvaldovariants[$option][$type] = 'osvaldo-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Osvaldo',
+            'title' => 'Osvaldo'
+        ),
+        (object) array(
+            'name' => 'Osvaldo',
+            'title' => 'Osvaldo',
+            'licence' => 'SIL Open Font License.txt',
+            'previewfont' => 'osvaldo-regular.ttf',
+            'variants' => serialize($osvaldovariants),
+            'fonttype' => 't_ocean',
+            'onlyheading' => 0,
+            'fontstack' => '\'Osvaldo\', \'Verdana\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    $ralewayvariants = array();
+    foreach (array('bold', 'regular', 'italic', 'light', 'lightitalic', 'thin') as $option) {
+        $ralewayvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $ralewayvariants[$option][$type] = 'raleway-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Raleway',
+            'title' => 'Raleway'
+        ),
+        (object) array(
+            'name' => 'Raleway',
+            'title' => 'Raleway',
+            'licence' => '',
+            'previewfont' => 'raleway-regular.ttf',
+            'variants' => serialize($ralewayvariants),
+            'fonttype' => 't_modern',
+            'onlyheading' => 0,
+            'fontstack' => '\'Raleway\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    $shadowsintolight2variants = array();
+    foreach (array('regular') as $option) {
+        $shadowsintolight2variants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $shadowsintolight2variants[$option][$type] = 'shadows-into-light-two-v6-latin-ext_latin-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'ShadowsIntoLightTwo',
+            'title' => 'Shadows Into Light Two'
+        ),
+        (object) array(
+            'name' => 'ShadowsIntoLightTwo',
+            'title' => 'Shadows Into Light Two',
+            'licence' => 'OFL.txt',
+            'previewfont' => 'shadowsintolight2-regular.ttf',
+            'variants' => serialize($shadowsintolight2variants),
+            'fonttype' => 't_primaryschool',
+            'onlyheading' => 0,
+            'fontstack' => '\'Shadows Into Light Two\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
 }

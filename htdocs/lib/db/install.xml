@@ -1169,7 +1169,7 @@
                 <FIELD NAME="notice" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="previewfont" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="variants" TYPE="text" LENGTH="big" NOTNULL="true" />
-                <FIELD NAME="fonttype" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="site" />
+                <FIELD NAME="fonttype" TYPE="char" LENGTH="30" NOTNULL="true" DEFAULT="site" />
                 <FIELD NAME="onlyheading" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="fontstack" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="genericfont" TYPE="char" LENGTH="10" NOTNULL="true" ENUM="true" ENUMVALUES="'cursive', 'fantasy', 'monospace', 'sans-serif', 'serif'" />

@@ -83,6 +83,7 @@ $previewform = pieform(array(
                 'all'    => get_string('fonttypes.all', 'skin'),
                 'site'   => get_string('fonttypes.site', 'skin'),
                 'google' => get_string('fonttypes.google', 'skin'),
+                'theme'   => get_string('fonttypes.theme', 'skin'),
             ),
             'defaultvalue' => $fonttype,
         ),
@@ -105,7 +106,7 @@ $data = Skin::get_sitefonts_data($limit, $offset, $fonttype);
 $sitefonts = '';
 $googlefonts = '';
 foreach ($data->data as $font) {
-    if ($font['fonttype'] == 'site') {
+    if ($font['fonttype'] == 'site' || preg_match('/^t_/', $font['fonttype'])) {
         $sitefonts .= $font['title'] . '|';
     }
     if ($font['fonttype'] == 'google') {

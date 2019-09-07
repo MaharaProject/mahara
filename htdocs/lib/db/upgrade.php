@@ -1447,5 +1447,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019090900) {
+        log_debug('Update the skin_fonts to know about the theme fonts also');
+        require_once(get_config('libroot') . 'skin.php');
+        $table = new XMLDBTable('skin_fonts');
+        if (table_exists($table)) {
+            $field = new XMLDBField('fonttype');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 30, null, XMLDB_NOTNULL, null, null, null, 'site');
+            change_field_precision($table, $field);
+            install_skins_default();
+        }
+    }
+
     return $status;
 }
