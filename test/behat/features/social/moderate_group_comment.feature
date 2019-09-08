@@ -28,6 +28,10 @@ Scenario: Moderating a group comment when approve comments is turned on
     And I enable the switch "Make comment public"
     And I press "Comment"
     Then I should see "You have requested that this comment be made public." in the "Comment feedbacktable" property
+    # Check that multibyte comments render correctly
+    And I set the field "Comment" to "これはUserCからのコメントです"
+    And I enable the switch "Make comment public"
+    And I press "Comment"
     And I log out
 
     # Checking that normal group member is not able to moderate comment
@@ -40,4 +44,5 @@ Scenario: Moderating a group comment when approve comments is turned on
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page GroupA_01"
     Then I should see "This is a comment from UserC"
-    And I press "Make comment public"
+    And I should see "これはUserCからのコメントです"
+    And I click on "Make comment public" in the "This is a comment from UserC" comment

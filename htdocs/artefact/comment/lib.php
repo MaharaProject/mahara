@@ -1184,7 +1184,12 @@ class ArtefactTypeComment extends ArtefactType {
         $dom = new DOMDocument();
         $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
-        $dom->loadHTML($comment, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        if (function_exists('mb_convert_encoding')) {
+            $dom->loadHTML(mb_convert_encoding($comment, 'HTML-ENTITIES', 'UTF-8'));
+        }
+        else {
+            $dom->loadHTML($comment, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        }
 
         $xpath = new DOMXPath($dom);
 
