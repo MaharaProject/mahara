@@ -18,10 +18,10 @@ function PluginLoadgroupquota(Core $core) {
     $quotaused = $group->quotaused;
 
     if ($quota >= 1048576) {
-        $quota_message = get_string('quotausagegroup', 'mahara', sprintf('%0.1fMB', $group->quotaused / 1048576), sprintf('%0.1fMB', $quota / 1048567));
+        $quota_message = get_string('quotausagegroup', 'mahara', sprintf('%0.1FMB', $group->quotaused / 1048576), sprintf('%0.1FMB', $quota / 1048567));
     }
     else if ($quota >= 1024) {
-        $quota_message = get_string('quotausagegroup', 'mahara', sprintf('%0.1fKB', $group->quotaused / 1024), sprintf('%0.1fKB', $quota / 1024));
+        $quota_message = get_string('quotausagegroup', 'mahara', sprintf('%0.1FKB', $group->quotaused / 1024), sprintf('%0.1FKB', $quota / 1024));
     }
     else {
         $quota_message = get_string('quotausagegroup', 'mahara', sprintf('%d bytes', $group->quotaused), sprintf('%d bytes', $quota));

@@ -821,7 +821,7 @@ class PluginImportLeap extends PluginImport {
                 $abstime   = $data['time'] - $firstdata['time'];
                 $memoryafter = $data['ram'] / 1024;
                 $memorygrowth = ($data['ram'] - $lastdata['ram']) / 1024;
-                $this->trace(sprintf("$i: %.3f\t%.3f\t%.3fK\t%8.3fK", $abstime, $timetaken, $memoryafter, $memorygrowth));
+                $this->trace(sprintf("$i: %.3F\t%.3F\t%.3FK\t%8.3FK", $abstime, $timetaken, $memoryafter, $memorygrowth));
                 $lastdata = $data;
             }
 

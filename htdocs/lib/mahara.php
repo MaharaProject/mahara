@@ -4003,7 +4003,7 @@ function get_my_tags($limit=null, $cloud=true, $sort='freq', $excludeinstitution
 
             foreach ($tagrecords as &$t) {
                 $weight = (tag_weight($t->count) - $minweight) / ($maxweight - $minweight);
-                $t->size = sprintf("%0.1f", $minsize + ($maxsize - $minsize) * $weight);
+                $t->size = sprintf("%0.1F", $minsize + ($maxsize - $minsize) * $weight);
             }
         }
         usort($tagrecords, function($a, $b) { return strnatcasecmp($a->tag, $b->tag); });
