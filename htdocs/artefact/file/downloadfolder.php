@@ -53,7 +53,7 @@ function can_download_artefact($artefact) {
 function zip_filename_from($name) {
     $name = preg_replace('#\s+#', '_', strtolower($name));
     // \pL is used to match any letter in any alphabet (http://php.net/manual/en/regexp.reference.unicode.php)
-    $name = preg_replace('#[^\pL0-9_\-]+#', '', $name);
+    $name = extension_loaded('mbstring') ? mb_eregi_replace('#[^\pL0-9_\-]+#', '', $name) : preg_replace('#[^\pL0-9_\-]+#', '', $name);
     if ($name != '') {
         $name = '-' . $name;
     }
