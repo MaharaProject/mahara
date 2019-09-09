@@ -4,3 +4,21 @@
   white-space: nowrap;
   text-align: center;
 }
+
+.plan_incomplete {
+  background: #FEE7E7;
+  color: #333333;
+}
+
+.task-item .complete-task .icon,
+.task-item .overdue-task .icon {
+  margin-left: -8px; // correct alignment
+}
+
+.task-item .btn-group {
+  margin-right: -8px; // correct alignment
+  a {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+}
