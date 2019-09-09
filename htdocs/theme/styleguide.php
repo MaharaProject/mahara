@@ -90,6 +90,9 @@ $inlinecss = <<<EOT
     .completed {
         color: #426600;
     }
+    p ~ div > .btn-group-top {
+      margin-top: 0;
+    }
 }
 </style>
 EOT;

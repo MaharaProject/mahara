@@ -2,6 +2,10 @@
 // Extenstion to Button groups so we can use forms as buttons
 // --------------------------------------------------
 
+.btn-group {
+    font-family: $font-family-sans-serif;
+}
+
 .btn-group .form-as-button {
     .btn {
         @include border-right-radius(0);
