@@ -1,11 +1,4 @@
 .card.collapsible {
-    > .card-header, .card-header-nested {
-        border-bottom: 0;
-
-        > a.outer-link {
-            border-bottom: 2px solid #ddd;
-        }
-    }
     &:not(.card-secondary).has-attachment {
         .card-header a:not(.collapsed) {
             border-bottom-width: 1px;
