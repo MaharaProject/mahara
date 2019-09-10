@@ -258,10 +258,9 @@ body.presentation-iframe {
 }
 
 // make footer colour extend below footer on short pages
-html {
-  background-color: $site-footer-bg;
-
-  body {
-    background-color: $body-bg;
-  }
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
 }
