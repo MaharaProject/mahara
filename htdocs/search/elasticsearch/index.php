@@ -131,7 +131,7 @@ jQuery(function ($) {
                   .trigger("focus");
             }
             else {
-                $('#universalsearchresults a:first').trigger("focus");
+                $('#universalsearchresults a').first().trigger("focus");
             }
         });
     }

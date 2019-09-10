@@ -58,15 +58,15 @@ Scenario: SmartEvidence interaction by member / staff
     # Mahara member must make comment on competencies before it can be accessed by admin/staff
     When I follow "Smart Evidence Collection 1"
     # click the standard group 3.1 to make an annotation for page 1 column
-    And I click on the matrix point "2,21"
+    And I click on the matrix point "3,22"
     And I fill in "First annotation description" in first editor
     And I click on "Save"
     # click the standard group 3.1 to make an annotation for page 2 column
-    And I click on the matrix point "3,21"
+    And I click on the matrix point "4,22"
     And I fill in "First annotation description" in first editor
     And I click on "Save"
     # click the standard group 3.1 to make an annotation for page 3 column
-    And I click on the matrix point "4,21"
+    And I click on the matrix point "5,22"
     And I fill in "First annotation description" in first editor
     And I click on "Save"
     And I log out
@@ -77,17 +77,17 @@ Scenario: SmartEvidence interaction by member / staff
     And I follow "Smart Evidence Collection 1"
     # Admin/staff selects the competencies ready for assessment and makes an annotation
     # And sets the standard status
-    And I click on the matrix point "2,21"
+    And I click on the matrix point "3,22"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
     And I select "Doesn't meet the standard" from "Assessment"
     And I click on "Save"
-    And I click on the matrix point "3,21"
+    And I click on the matrix point "4,22"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
     And I select "Partially meets the standard" from "Assessment"
     And I click on "Save"
-    And I click on the matrix point "4,21"
+    And I click on the matrix point "5,22"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
     And I select "Meets the standard" from "Assessment"

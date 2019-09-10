@@ -336,12 +336,6 @@ var clearPasswords = (function($) {
           jQuery('#accountprefs_password1').val('');
           jQuery('#accountprefs_password2').val('');
       }
-      if (data.username) {
-          var username = $('#profile-sideblock-username a:first');
-          if (username) {
-              $(username).empty().append(data.username);
-          }
-      }
   }
 }(jQuery))
 

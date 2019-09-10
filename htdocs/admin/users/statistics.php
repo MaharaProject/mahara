@@ -226,7 +226,7 @@ jQuery(function ($) {
         var filteroptid = filteropt.prop('id');
         sendjsonrequest(config['wwwroot'] + 'json/stats_setting.php', {'setting':filteroptid}, 'POST', function(data) {
             filteropt.parent().hide();
-            $('#statistics_table th a:first').trigger('click');
+            $('#statistics_table th a').first().trigger('click');
         });
     });
 

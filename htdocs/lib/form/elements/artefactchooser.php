@@ -137,7 +137,7 @@ function pieform_element_artefactchooser_views_js(Pieform $form, $element) {
     }
     $pagination_js .= <<<EOF
 jQuery(function($) {
-  var ul = $('#{$form->get_name()}_{$element['name']}_container ul.artefactchooser-tabs:first');
+  var ul = $('#{$form->get_name()}_{$element['name']}_container ul.artefactchooser-tabs').first();
   var doneBrowse = false;
   var browseA = null;
   var searchA = null;

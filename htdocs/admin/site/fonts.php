@@ -159,7 +159,7 @@ EOF;
 if ($offset > 0) {
     $js .= <<< EOF
     if ($('#fontlist').length) {
-      $('#fontlist a:first').trigger("focus");
+      $('#fontlist a').first().trigger("focus");
     }
 EOF;
 }

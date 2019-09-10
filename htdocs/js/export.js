@@ -138,5 +138,5 @@ jQuery(function($) {
           });
     });
 
-    checkboxHelperDiv.insertBefore($(containers.views.container).find('div:first'));
+    checkboxHelperDiv.insertBefore($(containers.views.container).find('div').first());
 });

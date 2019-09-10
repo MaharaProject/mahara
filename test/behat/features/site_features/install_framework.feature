@@ -72,7 +72,7 @@ Scenario: Installing framework module and activating for an institution
  Then I should not see "Page admin_06"
 
  # Click on a matrix point to add an annotation
- And I click on the matrix point "3,4"
+ And I click on the matrix point "4,5"
  And I fill in "My two cents" in editor "Annotation"
  And I press "Save"
  And I go to portfolio page "Page admin_02"
@@ -92,7 +92,7 @@ Scenario: Installing framework module and activating for an institution
  # Re-click a matrix point to add some feedback
  And I choose "Pages and collections" in "Create" from main menu
  And I click the card "Collection admin_01"
- And I click on the matrix point "3,4"
+ And I click on the matrix point "4,5"
  And I fill in "This is annotation feedback" in editor "Feedback"
  And I press "Place feedback"
  # And change assessment status
@@ -104,7 +104,7 @@ Scenario: Installing framework module and activating for an institution
  Given  I log in as "UserA" with password "Kupuh1pa!"
  And I wait "1" seconds
  And I follow "Collection admin_01"
- And I click on the matrix point "3,4"
+ And I click on the matrix point "4,5"
  And I wait "1" seconds
  And I select "Partially meets the standard" from "Assessment"
  And I press "Save"

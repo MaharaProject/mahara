@@ -74,15 +74,15 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Mahara member must make comment on a competencies before it can be accessed by admin/staff
     When I follow "Smart Evidence Collection 1"
     # click the standard group 3.1 to make an annotation for page 1 column
-    And I click on the matrix point "2,21"
+    And I click on the matrix point "3,22"
     And I fill in "First annotation description" in first editor
     And I click on "Save"
     # click the standard group 3.2 to make an annotation for page 2 column
-    And I click on the matrix point "3,21"
+    And I click on the matrix point "4,22"
     And I fill in "First annotation description" in first editor
     And I click on "Save"
     # click the standard group 3.1 to make an annotation for page 3 column
-    And I click on the matrix point "4,21"
+    And I click on the matrix point "5,22"
     And I fill in "First annotation description" in first editor
     And I click on "Save"
     # Mahara member logs out so staff can log in and make an assessment
@@ -94,7 +94,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I should see "Smart Evidence Collection 1 "
     And I follow "Smart Evidence Collection 1"
     # Admin/staff selects the competencies ready for assessment and makes a Annotation
-    And I click on the matrix point "2,21"
+    And I click on the matrix point "3,22"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
     And I fill in "Another annotation description" in first editor
@@ -103,12 +103,12 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I should see "This feedback is private."
     And I select "Partially meets the standard" from "Assessment"
     And I click on "Save"
-    And I click on the matrix point "3,21"
+    And I click on the matrix point "4,22"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
     And I select "Meets the standard" from "Assessment"
     And I click on "Save"
-    And I click on the matrix point "4,21"
+    And I click on the matrix point "5,22"
     And I fill in "Staff annotation description" in first editor
     And I click on "Place feedback"
     And I fill in "Another Staff annotation description" in first editor

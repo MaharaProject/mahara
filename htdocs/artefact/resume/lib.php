@@ -1186,8 +1186,8 @@ EOF;
         }
     ],
     {
-        focusElement: 'a:first'
-    }
+        focusElement: 'a'
+    },
 );
 
 tableRenderers.{$compositetype}.type = '{$compositetype}';

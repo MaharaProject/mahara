@@ -58,8 +58,8 @@
     }
 
     jQuery(function ($) {
-        $('#{{$name}}_potential :first').remove();
-        $('#{{$name}}_members :first').remove();
+        $('#{{$name}}_potential :nth-of-type(1)').remove();
+        $('#{{$name}}_members :nth-of-type(1)').remove();
 
         {{$name}}_searchparams = {{$searchparams|safe}};
 

@@ -113,7 +113,7 @@ return function (target, source, columns, options) {
                 self.tbody.append(tr);
                 if (options && row.id == options.focusid && self.options.focusElement) {
                     if (tr.find(self.options.focusElement).length) {
-                        tr.find(self.options.focusElement).trigger("focus");
+                        tr.find(self.options.focusElement).first().trigger("focus");
                     }
                 }
             });

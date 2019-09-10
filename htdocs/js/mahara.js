@@ -1147,11 +1147,11 @@ jQuery(function($) {
         var parent = $(this);
 
         if (!$(e.target).hasClass('child-nav collapse show')) {
-            $(this).find('ul li:first a').focus();
+            $(this).find('ul li').first().find('a').focus();
         }
 
         // Return focus to menu button from last submenu button
-        $($(this).find('button.navbar-showchildren:last')).on('blur', function() {
+        $($(this).find('button.navbar-showchildren').last()).on('blur', function() {
             if ($(this).hasClass('collapsed')) {
                 var id = $(parent).attr('id');
                 $('button[aria-controls="' + id + '"]').focus();
@@ -1159,8 +1159,8 @@ jQuery(function($) {
             }
         });
 
-        // Return focus to menu button from last element in menu when tabbing away
-        $(this).find('ul li:last a').on('blur', function() {
+        // Return focus to menu button from last element in last submenu when tabbing away
+        $(this).find('ul li').last().find('a').on('blur', function() {
             var id = $(parent).attr('id');
             $('button[aria-controls="' + id + '"]').focus();
             $(parent).collapse('hide');

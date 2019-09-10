@@ -171,7 +171,7 @@ var installplugin = (function($) {
               // move the whole thing into the list of installed plugins
               // new parent node
               var bits = name.split('\.');
-              $("ul[id='" + bits[0] + ".installed'] li:eq(0)").after($('[id="' + name + '"]'));
+              $("ul[id='" + bits[0] + ".installed'] li").eq(0).after($('[id="' + name + '"]'));
               var oldlist = $("ul[id='" + bits[0] + ".notinstalled']").find('li:not(:has(h3))');
               if (oldlist.length == 0) {
                   $("ul[id='" + bits[0] + ".notinstalled']").hide();

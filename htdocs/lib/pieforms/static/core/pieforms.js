@@ -172,8 +172,9 @@ var Pieform = (function($) {
             // Ensure the iframe exists and make sure the form targets it
             // self.data.newIframes = true;
             var iframeName = self.setupIframe();
-            $('#' + self.data.name)[0].target = iframeName;
-
+            if ($('#' + self.data.name).length) { // In case we close a modal as form is submitting
+                $('#' + self.data.name)[0].target = iframeName;
+            }
             $('#' + self.data.name).append($('<input>', {
                     'type': 'hidden',
                     'name': 'pieform_jssubmission',

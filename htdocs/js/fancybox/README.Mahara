@@ -10,4 +10,9 @@ Installation:
 
 Changes:
 
-* None
+replaced deprecated jquery selectors
+:first -> .first()
+
+These are not updated in the most recent version of fancybox
+and there is an open issue (https://github.com/fancyapps/fancybox/issues/1346), which looks like they are at least intending to drop support for jquery, so it
+seems like we may as well update these manually for now.

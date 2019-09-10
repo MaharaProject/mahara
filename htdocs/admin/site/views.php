@@ -39,10 +39,11 @@ jQuery(function() {
     {$pagination['javascript']}
     showmatchall();
 EOF;
+
 if ($offset > 0) {
     $js .= <<< EOF
     if ($('#myviews')) {
-        $('#myviews a:first').trigger("focus");
+        $('#myviews a').first().trigger("focus");
     }
 EOF;
 }

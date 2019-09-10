@@ -155,7 +155,7 @@ return function(id, list, heading, script, extradata) {
                 var temp = $('<div>', {'id':'ie-workaround'});
                 if (container.tagName == 'TBODY') {
                     temp.html('<table><tbody>' + listdata + '</tbody></table>');
-                    $(container).replaceWith(temp.find('table tbody:first'));
+                    $(container).replaceWith(temp.find('table tbody').first());
                 }
                 else {
                     temp.html(listdata);

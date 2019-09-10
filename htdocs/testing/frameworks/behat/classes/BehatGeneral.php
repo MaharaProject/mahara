@@ -748,7 +748,6 @@ EOF;
 
     /**
      * Click a matrix point by being given a column,row pair
-     * NOTE: column and row start from number '0' so the first cell in a table is (0,0)
      *
      * @When I click on the matrix point :matrix_point
      * @param string $matrix_point a column,row value
@@ -771,7 +770,7 @@ EOF;
 
         // For some reasons, the Mink function click() and check() do not work
         // Using jQuery as a workaround
-        $jscode = "jQuery(\".tablematrix tr:eq('" . $point[1] . "') td:eq('" . $point[0] . "') span\").trigger('click');";
+        $jscode = "jQuery(\".tablematrix tr:nth-of-type(" . $point[1] . ") td:nth-of-type(" . $point[0] . ") span\").trigger('click');";
         $this->getSession()->executeScript($jscode);
     }
 

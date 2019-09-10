@@ -90,7 +90,7 @@ jQuery(function($) {
         if (confirm === null || confirm === true) {
 
             // Rebuild the form so that data doesn't get added to existing
-            $("#copy option:eq(0)").prop('selected', true); // Reset copy
+            $("#copy option").eq(0).prop('selected', true); // Reset copy
             editor.destroy();
             refresh_editor();
             var index = $('#edit').val();
@@ -122,7 +122,7 @@ jQuery(function($) {
             if (formchangemanager.checkDirtyChanges()) {
                 formchangemanager.confirmLeavingForm();
             }
-            $("#edit option:eq(0)").prop('selected', true); // Reset edit
+            $("#edit option").eq(0).prop('selected', true); // Reset edit
             editor.destroy();
             refresh_editor();
             edit = false;
@@ -175,7 +175,7 @@ jQuery(function($) {
             edit = true;
 
             // Reset the "Copy" dropdown
-            $("#copy option:eq(0)").prop('selected', true);
+            $("#copy option").eq(0).prop('selected', true);
         });
         window.scrollTo(0,0);
     });

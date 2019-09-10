@@ -104,7 +104,7 @@ jQuery(function($) {
                         }
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
+                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
                     }
                 });
                 cancelbutton = newpagemodal.find('.submitcancel.cancel');
@@ -131,7 +131,7 @@ jQuery(function($) {
                         }
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
+                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
                     }
                 });
                 if (hastinymce) {
@@ -192,7 +192,7 @@ jQuery(function($) {
                         editmatrix_update(values);
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
+                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
                     }
                 });
                 // When we are saving the annotation feedback form - changing the evidence status
@@ -222,7 +222,7 @@ jQuery(function($) {
                         }
                         hide_dock();
                         //focus on matrix annotation
-                        $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon').find('a').trigger("focus");
+                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
                     }
                     else {
                         se.stopPropagation();
@@ -292,26 +292,30 @@ jQuery(function($) {
                 hastinymce = true;
             }
             if (results.data.class) {
-                $('#tablematrix tr:eq(' + celly + ') td:eq(' + cellx + ') span.icon')
+                $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon')
                   .attr('class', results.data.class)
                   .attr('title', results.data.title)
                   .data('option', results.data.option)
                   .data('view', results.data.view).empty();
                 if (results.data.readyforassessment) {
-                    var readyforassessment = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.readyforassessment span:nth-child(2)').text(), 10);
-                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.readyforassessment span:nth-child(2)').text(readyforassessment + results.data.readyforassessment);
+                    var readyforassessment = parseInt($('#tablematrix tr').eq(celly).find('td.completedcount.readyforassessment span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr').eq(celly).find('td.completedcount.readyforassessment span:nth-child(2)')
+                    .text(readyforassessment + results.data.readyforassessment);
                 }
                 if (results.data.dontmatch) {
-                    var dontmatch = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.dontmatch span:nth-child(2)').text(), 10);
-                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.dontmatch span:nth-child(2)').text(dontmatch + results.data.dontmatch);
+                    var dontmatch = parseInt($('#tablematrix tr').eq(celly).find('td.completedcount.dontmatch span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr').eq(celly).find('td.completedcount.dontmatch span:nth-child(2)')
+                    .text(dontmatch + results.data.dontmatch);
                 }
                 if (results.data.partiallycomplete) {
-                    var partiallycomplete = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.partiallycomplete span:nth-child(2)').text(), 10);
-                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.partiallycomplete span:nth-child(2)').text(partiallycomplete + results.data.partiallycomplete);
+                    var partiallycomplete = parseInt($('#tablematrix tr').eq(celly).find('td.completedcount.partiallycomplete span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr').eq(celly).find('td.completedcount.partiallycomplete span:nth-child(2)')
+                    .text(partiallycomplete + results.data.partiallycomplete);
                 }
                 if (results.data.completed) {
-                    var completed = parseInt($('#tablematrix tr:eq(' + celly + ') td.completedcount.completed span:nth-child(2)').text(), 10);
-                    $('#tablematrix tr:eq(' + celly + ') td.completedcount.completed span:nth-child(2)').text(completed + results.data.completed);
+                    var completed = parseInt($('#tablematrix tr').eq(celly).find('td.completedcount.completed span:nth-child(2)').text(), 10);
+                    $('#tablematrix tr').eq(celly).find('td.completedcount.completed span:nth-child(2)')
+                    .text(completed + results.data.completed);
                 }
 
             }

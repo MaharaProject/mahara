@@ -44,7 +44,7 @@ Scenario: Accessing annotation block
  And follow "Collection admin_01"
 
  # Click the matrix point and test empty annotation message
- And I click on the matrix point "3,4"
+ And I click on the matrix point "4,5"
  And I wait "1" seconds
  And I press "Save"
  And I should see "This field is required"
