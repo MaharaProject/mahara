@@ -877,3 +877,16 @@ a.online-users {
 .consentbutton span.description {
     padding: 0px !important;
 }
+
+// fixes ie11 flex issues making panels go to bottom of page
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .col-lg-3 {
+      flex: 1 0 0%;
+      max-width: 25%;
+
+      @include media-breakpoint-down(md) {
+          flex: 1 0 0%;
+          max-width: 100%;
+      }
+  }
+}
