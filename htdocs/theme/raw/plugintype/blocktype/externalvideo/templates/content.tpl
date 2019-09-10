@@ -1,4 +1,4 @@
-<div class="mediaplayer-container text-center">
+<div class="mediaplayer-container text-center card-body">
   <div id="vid_{$blockid}" class="mediaplayer" style="margin: 0 auto;">
     {$html|clean_html|safe}
     {if $jsurl}
