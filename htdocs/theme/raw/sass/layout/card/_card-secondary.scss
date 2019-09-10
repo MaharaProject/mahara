@@ -69,6 +69,7 @@
         padding: 15px 0px;
         &.flush {
             padding: 15px 0 0 0;
+            clear: both;
         }
     }
     // If there is no heading we don't want padding on the card-body
