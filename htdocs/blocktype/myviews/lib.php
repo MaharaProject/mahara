@@ -37,6 +37,30 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
         return array('profile', 'dashboard');
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        $userid = $instance->get_view()->get('owner');
+        if (!$userid) {
+            return '';
+        }
+
+        // Get viewable views
+        $views = View::view_search(null, null, (object) array('owner' => $userid), null,
+                    0, 0, true, null, array('portfolio'), null, null, null, null, null, true);
+        $views = (array)$views;
+        foreach ($views['data'] as $k => $view) {
+            $views['data'][$k]['fileurl'] = './' . $view['id'] . '_' . $view['urlid'] . '.pdf';
+        }
+
+        $smarty = smarty_core();
+        $smarty->assign('options', array());
+        $smarty->assign('items', $views['data']);
+        $views['tablerows'] = $smarty->fetch('blocktype:myviews:myviews_pdfexport.tpl');
+        return $views['tablerows'];
+    }
+
     /**
      * This function renders a list of items views as html
      *
