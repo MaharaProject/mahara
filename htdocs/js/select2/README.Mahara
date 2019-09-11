@@ -8,22 +8,32 @@ Select2 is a jQuery-based replacement for <select> browser elements. It turns th
 interactive widgets, supports searching, ajax, and infinite scrolling of results.
 
 Changes:
-* Copy the dist/js/select2.full.min.js to js/select2/
+* Copy the dist/js/select2.full.js to js/select2/
 * Copy the dist/js/i18n/* directory to js/select2/i18n/
 * Copy the src/scss/* files to theme/raw/sass/lib/select2/
-* Added styling to decrease size of text in the menus
-* Added a 'readonly' status to an option to hide the 'x' (stop it being removable)
-* Accessibility improvements
+
+These are changes to select2.full.js as follows:
+* Accessibility improvements (commit 81f826e7673503ebd86e89076ca971571744d1c8)
   * Modify the AJAX data adapter and search box so that items are read out when moving up and
     down through them with the keyboard
   * Link select2 instances to the label(s) of the original <select>
   * Allow removing tags with the keyboard
   * Hide original <select> completely instead of leaving it accessible to screen readers
   * Keep focus position when loading more elements with infinite scrolling
-  * Add label to "Remove tag" button
-  * Make "Remove tag" button work with the keyboard
-  * Adding the 'aria-hidden="true"' to presentation icons
-  * Adding ability to remove tag via 'enter' key if one is focused on the 'x' of a tag
-*
-* set background for exclude tags (commit 1f9bbefe1ddbada754591eb0503a4f5d628fe4ab)
-* user profile picture in select2 styling (commit 1bdfef8ca2056a17ce14268970be9f969d6d6930)
+
+* Adding the 'aria-hidden="true"' to presentation icons (commit 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e)
+* Adding ability to remove tag via 'enter' key if one is focused on the 'x' of a tag (commit 5ec92cddcf24fca18fdb1b24707216a5ea24bde8)
+* Add label to "Remove tag" button (look for the MultipleSelection.prototype.selectionContainer function and the call to it. Worked in 18.04 and hopefully fixed in 19.10)
+
+There are several files including custom styling for select2 in the Mahara codebase which override the 3rd party styling. There are also changes to the provided scss files. These changes look like they are being made already, so I haven't done this. (Just leaving it because it was in the Readme before and probably should be tested for.):
+* Added styling to decrease size of text in the menus
+* Added a 'readonly' status to an option to hide the 'x' (stop it being removable)
+
+_multiple.scss y
+* set background for exclude tags
+(commit 1f9bbefe1ddbada754591eb0503a4f5d628fe4ab)
+
+_dropdown.scss
+* user profile picture in select2 styling
+(commit 1bdfef8ca2056a17ce14268970be9f969d6d6930)
+
