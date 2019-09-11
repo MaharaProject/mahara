@@ -13,7 +13,7 @@
 
   width: 100%;
 
-  z-index: 999;
+  z-index: 1051;
 }
 
 .select2-results {
@@ -27,20 +27,10 @@
 }
 
 .select2-results__option {
-  padding: 4px;
+  padding: 6px;
 
   user-select: none;
   -webkit-user-select: none;
-  overflow: auto;
-  img {
-    margin-right: 4px;
-    display: block;
-    float: left;
-  }
-  span {
-    line-height: 1;
-    vertical-align: text-top;
-  }
 
   &[aria-selected] {
     cursor: pointer;
