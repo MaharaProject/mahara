@@ -1850,18 +1850,21 @@ class View {
                                                 'groupname' => $submitinfo['name'],
                                                 'eventfor' => 'view'));
 
-        require_once('activity.php');
-        activity_occurred('maharamessage',
-            array(
-                'users' => array($this->get('owner')),
-                'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject1', 'group', $this->get('title'),
-                    $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
-                'message' => get_string_from_language($ownerlang, 'viewreleasedmessage1', 'group', $this->get('title'),
-                    $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
-                'url' => $url,
-                'urltext' => $this->get('title'),
-            )
-        );
+        $releaseuserid = ($releaseuser instanceof User) ? $releaseuser->get('id') : $releaseuser->id;
+        if ((int)$releaseuserid !== (int)$this->get('owner')) {
+            require_once('activity.php');
+            activity_occurred('maharamessage',
+                array(
+                    'users' => array($this->get('owner')),
+                    'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject1', 'group', $this->get('title'),
+                        $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
+                    'message' => get_string_from_language($ownerlang, 'viewreleasedmessage1', 'group', $this->get('title'),
+                        $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
+                    'url' => $url,
+                    'urltext' => $this->get('title'),
+                )
+            );
+        }
     }
 
     public static function _db_pendingrelease(array $viewids) {

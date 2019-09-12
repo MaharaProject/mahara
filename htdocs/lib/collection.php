@@ -1198,29 +1198,32 @@ class Collection {
         if (!defined('INSTALLER') && $this->submittedgroup) {
             $releaseuser = optional_userobj($releaseuser);
             $releaseuserdisplay = display_name($releaseuser, $this->owner);
+            $releaseuserid = ($releaseuser instanceof User) ? $releaseuser->get('id') : $releaseuser->id;
             $submitinfo = $this->submitted_to();
 
-            require_once('activity.php');
-            activity_occurred(
-                'maharamessage',
-                array(
-                    'users' => array($this->get('owner')),
-                    'strings' => (object) array(
-                        'subject' => (object) array(
-                            'key'     => 'collectionreleasedsubject1',
-                            'section' => 'group',
-                            'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+            if ((int)$releaseuserid !== (int)$this->get('owner')) {
+                require_once('activity.php');
+                activity_occurred(
+                    'maharamessage',
+                    array(
+                        'users' => array($this->get('owner')),
+                        'strings' => (object) array(
+                            'subject' => (object) array(
+                                'key'     => 'collectionreleasedsubject1',
+                                'section' => 'group',
+                                'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+                            ),
+                            'message' => (object) array(
+                                'key'     => 'collectionreleasedmessage1',
+                                'section' => 'group',
+                                'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+                            ),
                         ),
-                        'message' => (object) array(
-                            'key'     => 'collectionreleasedmessage1',
-                            'section' => 'group',
-                            'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
-                        ),
-                    ),
-                    'url' => $this->get_url(false),
-                    'urltext' => $this->name,
-                )
-            );
+                        'url' => $this->get_url(false),
+                        'urltext' => $this->name,
+                    )
+                );
+            }
         }
     }
 
