@@ -58,7 +58,7 @@ if ($source === null) {
     throw new SimpleSAML_Error_NotFound('Could not find authentication source with id ' . $sourceId);
 }
 
-if (!($source instanceof sspmod_saml_Auth_Source_SP)) {
+if (!($source instanceof \SimpleSAML\Module\saml\Auth\Source\SP)) {
     throw new SimpleSAML_Error_NotFound('Source isn\'t a SAML SP: ' . var_export($sourceId, true));
 }
 
