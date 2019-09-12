@@ -18,6 +18,9 @@ safe_require('artefact', 'internal');
 safe_require('artefact', 'file');
 
 define('TITLE', get_string('bulkleap2aimport', 'admin'));
+$FAILEDUSERS = array();
+$ADDEDUSERS = array();
+$EMAILUSERS = false;
 
 // Turn on autodetecting of line endings, so mac newlines (\r) will work
 ini_set('auto_detect_line_endings', 1);
@@ -144,7 +147,11 @@ function bulkimport_validate(Pieform $form, $values) {
  * Add the users to the system.
  */
 function bulkimport_submit(Pieform $form, $values) {
-    global $SESSION, $LEAP2AFILES;
+    global $SESSION, $LEAP2AFILES, $EMAILUSERS;
+
+    if (!empty($values['emailusers'])) {
+        $EMAILUSERS = true;
+    }
 
     require_once('file.php');
     require_once(get_config('docroot') . 'import/lib.php');
@@ -205,10 +212,7 @@ function import_next_user($filename, $username, $authinstance) {
         return;
     }
 
-    // If the username is already taken, append something to the end
-    while (get_record('usr', 'username', $username)) {
-        $username .= "_";
-    }
+    $username = get_new_username($username, 200);
 
     $user = (object)array(
                           'authinstance'   => $authinstance,
@@ -251,7 +255,7 @@ function import_next_user($filename, $username, $authinstance) {
     unset($record, $tr);
     try {
         $importer->process();
-        log_info("Imported user account $user->id from Leap2A file, see" . $importer->get('logfile') . 'for a full log');
+        log_info("Imported user account $user->id from Leap2A file, see " . $importer->get('logfile') . ' for a full log');
     }
     catch (ImportException $e) {
         log_info("Leap2A import failed: " . $e->getMessage());
@@ -288,14 +292,19 @@ function finish_import() {
     if ($EMAILUSERS && $ADDEDUSERS) {
         foreach ($ADDEDUSERS as $user) {
             $noemailusers = array();
-            try {
-                email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),
-                    get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->clearpasswd, get_config('wwwroot'), get_config('sitename')),
-                    get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->clearpasswd, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
-                );
+            if ($user->email) {
+                try {
+                    email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),
+                        get_string('accountcreatedchangepasswordtext', 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->clearpasswd, get_config('wwwroot'), get_config('sitename')),
+                        get_string('accountcreatedchangepasswordhtml', 'mahara', $user->firstname, get_config('wwwroot'), get_config('sitename'), $user->username, $user->clearpasswd, get_config('wwwroot'), get_config('wwwroot'), get_config('sitename'))
+                    );
+                }
+                catch (EmailException $e) {
+                    log_info($e->getMessage());
+                    $noemailusers[] = $user;
+                }
             }
-            catch (EmailException $e) {
-                log_info($e->getMessage());
+            else {
                 $noemailusers[] = $user;
             }
         }
