@@ -533,6 +533,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     /**
      * Find and update duplicates with imported persondata
      * TODO: Refactor this to combine it with import_persondata()
+     *  NB: This function should only be called when importing one single Leap2A file
      */
     private static function add_import_entry_request_persondata(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
         $field = $leapattributes['field'];
