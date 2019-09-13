@@ -42,6 +42,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block content | <p>It was a bright cold day in April, and the clocks were striking thirteen. Winston Smith, his chin nuzzled into his breast in an effort to escape the vile wind...</p> |
  And I press "Save"
  Then I should see "Winston Smith"
+ And I scroll to the top
 
  # Checking if we can edit a block
  When I configure the block "About me"

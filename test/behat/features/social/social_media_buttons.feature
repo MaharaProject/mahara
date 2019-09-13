@@ -63,7 +63,6 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I log out
  # Logging in as UserB to try see the buttons
  Given I log in as "UserB" with password "Kupuh1pa!"
- And I scroll to the id 'bottom-pane'
  And I follow "Page UserA_01"
  And I should see "Social Media"
  And I should see "Facebook"

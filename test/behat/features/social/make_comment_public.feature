@@ -108,7 +108,6 @@ Background:
 
     And I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
-    And I scroll to the center of id 'row_1'
     And I follow "Collection UserA_01"
     And I should see "This is comment 3"
     And I should not see "This is comment 2"

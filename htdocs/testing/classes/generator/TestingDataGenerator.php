@@ -738,7 +738,8 @@ EOD;
         $viewid = $this->get_view_id($view);
 
         if (!isset(self::$viewcolcounts[$viewid])) {
-          self::$viewcolcounts[$viewid] = 1;
+          self::$viewcolcounts[$viewid]['x'] = 0;
+          self::$viewcolcounts[$viewid]['y'] = 0;
         }
 
         $ids = get_records_sql_array($sql, array($page));
@@ -804,26 +805,42 @@ EOD;
      * @param View $view object of the current view
      * @param int $viewid of the View
      * @param string $title of the block instance to be created
-     * @param int $viewcolcounts the current count of 1,2,3 column to create next block instance
+     * @param int $viewcolcounts the current count of 0,1,2,.. column and 0,1,2,.. row to create next block instance
      * @param array $configdata holding data for new block instance
-     * @param int $maxcols ~ 3
+     * @param int $maxcols ~ 3 (1,2,3,4,6)
      * @param View $otherview for situations such as navigation where a block is related to another view
      */
     public static function create_new_block_instance($blocktype, $view, $viewid, $title, $viewcolcounts, $configdata, $maxcols, $otherview = null) {
         safe_require('blocktype', $blocktype);
+
+        if (!in_array($maxcols, array(1,2,3,4,6))) $maxcols = 3;
+        $blockwidth = 12/$maxcols;
+
         $bi = new BlockInstance(0,
             array(
                 'blocktype'  => $blocktype,
                 'title'      => $title,
                 'view'       => $viewid,
-                'row'        => 1,
             )
         );
-        if (!isset(self::$viewcolcounts[$viewid])) self::$viewcolcounts[$viewid] = 0;
-        $bi->set('order', $view->get_current_max_order(1, self::$viewcolcounts[$viewid]) + 1);
+
+
+        if (!isset(self::$viewcolcounts[$viewid])) {
+            self::$viewcolcounts[$viewid]['x'] = 0;
+            self::$viewcolcounts[$viewid]['y'] = 0;
+        }
         $bi->set('configdata', $configdata);
-        $bi->set('column', self::$viewcolcounts[$viewid]);
-        self::$viewcolcounts[$viewid] = ((self::$viewcolcounts[$viewid]+1) % $maxcols) ? (self::$viewcolcounts[$viewid]+1) % $maxcols : $maxcols;
+        $bi->set('positionx', self::$viewcolcounts[$viewid]['x'] * $blockwidth);
+        $bi->set('positiony', self::$viewcolcounts[$viewid]['y'] * 3);
+        $bi->set('height', 3);
+        $bi->set('width', $blockwidth);
+        if ($newcol = (self::$viewcolcounts[$viewid]['x']+1) % $maxcols) {
+            self::$viewcolcounts[$viewid]['x'] = $newcol;
+        }
+        else {
+            self::$viewcolcounts[$viewid]['x'] = 0;
+            self::$viewcolcounts[$viewid]['y']++;
+        }
 
         //in cases such as navigation where we want to add a block to a different view than the current.
         if ($otherview) {

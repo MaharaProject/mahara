@@ -29,6 +29,7 @@ Scenario: Adding a placeholder block to the page
     Then I should see "Please configure the block to choose what type of block this should be"
 
     # Edit placeholder block and check we can see more options
+    And I scroll to the top
     And I configure the block "Mahara placeholder block"
     And I click on "Show more"
     Then I should see "Image gallery"
