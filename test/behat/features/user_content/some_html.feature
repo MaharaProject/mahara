@@ -37,5 +37,5 @@ Scenario:
     And I follow "mahara manual"
     And I wait "3" seconds
     And I switch to the new window
-    Then I should see "This is the user manual for Mahara"
+    Then I should see "This is the manual for Mahara"
     And I switch to the main window
