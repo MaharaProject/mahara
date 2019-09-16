@@ -32,7 +32,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         foreach ($this->exporter->get('views') as $viewid => $view) {
             if ($profileviewid == $viewid) {
                 // We are exporting the profile page so don't need to make a new one
-                $this->profileviewexported = true;
+                $this->profileviewexported = 'views/' . $view->get('id') . '_' . PluginExportHtml::text_to_filename($view->get('title')) . '/index.html';
                 break;
             }
         }

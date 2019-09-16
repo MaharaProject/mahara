@@ -403,7 +403,7 @@ class PluginExportHtml extends PluginExport {
                 $title = $this->views[$viewid]->get('title');
                 $menus[$collectionid][] = array(
                     'id'   => $viewid,
-                    'url'  => self::text_to_URLpath(self::text_to_filename($title)) . '/index.html',
+                    'url'  => self::text_to_URLpath($viewid . '_' . self::text_to_filename($title)) . '/index.html',
                     'text' => $title,
                 );
             }
@@ -437,7 +437,7 @@ class PluginExportHtml extends PluginExport {
                     array('text' => get_string('Views', 'view')),
                     array('text' => $view->get('title'), 'path' => 'index.html'),
                 ));
-                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_filename($view->get('title'));
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . $view->get('id') . '_' . self::text_to_filename($view->get('title'));
                 if (is_dir($directory)) {
                     throw new SystemException(get_string('duplicatepagetitle', 'export.html'));
                 }
@@ -454,6 +454,11 @@ class PluginExportHtml extends PluginExport {
                 $smarty->assign('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
                 $smarty->assign('viewid', $viewid);
             }
+            else {
+                $smarty->assign('collectionname', false);
+                $smarty->assign('collectionmenu', false);
+                $smarty->assign('viewid', false);
+            }
 
             $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
 
@@ -468,8 +473,14 @@ class PluginExportHtml extends PluginExport {
                 }
                 $smarty->assign('feedback', $feedback);
             }
+            else {
+                $smarty->assign('feedback', false);
+            }
+
             if (!$view->uses_new_layout()) {
                 $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
+                $smarty->assign('newlayout', false);
+                $smarty->assign('blocks', false);
             }
             else {
                 $blocks = $view->get_blocks(false, true);
@@ -482,6 +493,7 @@ class PluginExportHtml extends PluginExport {
                 }
                 $smarty->assign('newlayout', true);
                 $smarty->assign('blocks', $blocks);
+                $smarty->assign('view', false);
             }
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
@@ -518,8 +530,9 @@ class PluginExportHtml extends PluginExport {
         foreach ($this->views as $id => $view) {
             if ($view->get('type') != 'profile') {
                 $item = array(
+                    'id' => $view->get('id'),
                     'title' => $view->get('title'),
-                    'folder' => self::text_to_filename($view->get('title')),
+                    'folder' => $view->get('id') . '_' . self::text_to_filename($view->get('title')),
                 );
                 if (isset($this->viewcollection[$id])
                     && ($this->viewexportmode == self::EXPORT_ALL_VIEWS_COLLECTIONS
@@ -797,30 +810,29 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                                 $content .= $smarty->fetch('export:html:modal.tpl');
                             }
                         }
-                    } #end of if
-                } #end of foreach block
-            } #end of if
+                    }
+                }
+            }
             if (!empty($content)) {
                 $rootpath = ($this->exportingoneview) ? $this->get_root_path() : $this->get_root_path(3, $this->infodir . '/');
                 $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
                 $content = $outputfilter->filter($content);
-
+                // The directories should already exist (see dump_view_export_data())
                 if ($this->exportingoneview) {
                     if (!file_put_contents($this->exportdir . '/' . $this->rootdir . '/index.html', $content, FILE_APPEND)) {
                         throw new SystemException("Could not create artefact metadata for the export");
                     }
                 }
                 else {
-                    $folder = '';
                     if ($view->get('type') != 'profile') {
                         $folder = self::text_to_filename($view->get('title'));
-                        if (!file_put_contents($this->exportdir . '/' . $this->rootdir . '/views/' . $folder . '/index.html', $content, FILE_APPEND)) {
+                        if (!file_put_contents($this->exportdir . '/' . $this->rootdir . '/views/' . $view->get('id') . '_' . $folder . '/index.html', $content, FILE_APPEND)) {
                             throw new SystemException("Could not create artefact metadata for the export");
                         }
                     }
                 }
-            }#end of if
-        } #end of foreach view
+            }
+        }
     }
 
     /**
@@ -1181,7 +1193,7 @@ class HtmlExportOutputFilter {
             return $matches[0];
         }
         if (!isset($this->viewtitles[$viewid])) {
-            $this->viewtitles[$viewid] = PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename(get_field('view', 'title', 'id', $viewid)));
+            $this->viewtitles[$viewid] = PluginExportHtml::text_to_URLpath($this->exporter->views[$viewid]->get('id') . '_' . PluginExportHtml::text_to_filename(get_field('view', 'title', 'id', $viewid)));
         }
         $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path() : $this->exporter->get_root_path(2) . 'views/';
         return $filterpath . $this->viewtitles[$viewid] . '/index.html';
@@ -1196,7 +1208,7 @@ class HtmlExportOutputFilter {
         // If the user view is in this export
         if (isset($this->exporter->views[$viewid])) {
             if (!isset($this->viewtitles[$viewid])) {
-                $this->viewtitles[$viewid] = PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename(get_field('view', 'title', 'id', $viewid)));
+                $this->viewtitles[$viewid] = PluginExportHtml::text_to_URLpath($this->exporter->views[$viewid]->get('id') . '_' . PluginExportHtml::text_to_filename(get_field('view', 'title', 'id', $viewid)));
             }
             $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path() : $this->exporter->get_root_path(2) . 'views/';
             return '<a href="' . $filterpath . $this->viewtitles[$viewid] . '/index.html">' . $matches[4] . '</a>';
@@ -1263,7 +1275,7 @@ class HtmlExportOutputFilter {
             list($key, $value) = explode('=', $matches[$i]);
             $options[$key] = $value;
         }
-        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, $this->exporter->get('filedir')) : $this->exporter->get_root_path(3, $this->exporter->get('filedir'));
+        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path(3, $this->exporter->get('filedir'));
         return $this->get_export_path_for_file($artefact, $options, $filterpath);
     }
 
@@ -1292,7 +1304,7 @@ class HtmlExportOutputFilter {
             return $this->get_folder_path_for_file($artefact, $options);
         }
 
-        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, $this->exporter->get('filedir')) : $this->exporter->get_root_path(1);
+        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path(3, $this->exporter->get('filedir'));
         return $this->get_export_path_for_file($artefact, $options, $filterpath);
     }
 
@@ -1315,7 +1327,7 @@ class HtmlExportOutputFilter {
             return '';
         }
 
-        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, $this->exporter->get('filedir')) : $this->exporter->get_root_path(1);
+        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path(3, $this->exporter->get('filedir'));
         return $this->get_export_path_for_file($artefact, array(), $filterpath);
     }
 

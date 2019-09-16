@@ -2,7 +2,7 @@
 <div id="profile-introduction">{$introduction|clean_html|safe}</div>
 <ul id="profile-links">
 {if $profileviewexported}
-    <li><a href="views/Profile-page/index.html">{str tag=viewprofilepage section=artefact.internal}</a></li>
+    <li><a href="{$profileviewexported}">{str tag=viewprofilepage section=artefact.internal}</a></li>
 {/if}
     <li><a href="content/internal/index.html">{str tag=viewallprofileinformation section=artefact.internal}</a></li>
 </ul>
