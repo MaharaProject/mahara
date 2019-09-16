@@ -206,7 +206,12 @@ function bulkexport_submit(Pieform $form, $values) {
 
     // Download the export file once it has been generated
     require_once('file.php');
-    serve_file($zipfile, basename($zipfile), 'application/x-zip', array('lifetime' => 0, 'forcedownload' => true));
+    $mimetype = 'application/zip; charset=binary';
+    $options = array('lifetime' => 0, 'forcedownload' => true);
+    if ($exporttype == 'pdf') {
+        $options['overridecontenttype'] = 'none';
+    }
+    serve_file($zipfile, basename($zipfile), $mimetype, $options);
     // TODO: delete the zipfile (and temporary files) once it's been downloaded
 }
 
