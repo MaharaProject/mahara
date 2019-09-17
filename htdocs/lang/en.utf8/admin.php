@@ -927,8 +927,8 @@ $string['exportqueuearchived'] = array(
 );
 $string['exportdataascsv'] = 'Export all data in CSV format';
 $string['nocsvresults'] = 'No results found for CSV file';
-$string['exportdownloademailsubject'] = 'Your Leap2A export for "%s" is ready for download';
-$string['exportdownloademailmessage'] = '%s, your Leap2A export for "%s" is ready for download. This file will only be available for up to 24 hours after it was generated. Please follow the link below to download the file:';
+$string['exportdownloademailsubject1'] = 'Your export for "%s" is ready for download';
+$string['exportdownloademailmessage1'] = '%s, your export for "%s" is ready for download. This file will only be available for up to 24 hours after it was generated. Please follow the link below to download the file:';
 $string['exportdownloadurl'] = 'Download exported file';
 
 // Add User
@@ -1179,7 +1179,7 @@ $string['unsuspendinstitutiondescription'] = 'Here you may unsuspend an institut
 $string['unsuspendinstitutiondescription_warning'] = '<em>Beware:</em> Unsuspending an institution without resetting or turning off its expiry date may result in a daily re-suspension.';
 $string['unsuspendinstitutiondescription_instadmin'] = 'People of suspended institutions cannot log in. Contact the site administrator to unsuspend the institution.';
 
-// Bulk Leap2A User export
+// Bulk User export
 $string['bulkexport'] = 'Export accounts';
 $string['bulkexportempty'] = 'Nothing suitable to export. Please double-check the list of usernames.';
 $string['bulkexportinstitution'] = 'The institution from which all members should be exported';
@@ -1189,6 +1189,7 @@ $string['bulkexportusernames'] = 'Usernames to export';
 $string['bulkexportusernamesdescription'] = 'A list of the accounts (one username per line) to be exported along with their data.';
 $string['couldnotexportusers'] = 'The following account(s) could not be exported: %s';
 $string['exportingusername'] = 'Exporting \'%s\'...';
+$string['ignoringbulkexportuser'] = 'Person with username "%s" not found, so ignored';
 
 // Admin User Search
 $string['Search'] = 'Search';
@@ -1332,7 +1333,7 @@ $string['profilecompletenessdesc1'] = 'The profile completion allows people to h
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';
 
 $string['exporttoqueue'] = 'Export to queue';
-$string['exporttoqueuedescription2'] = 'Let the export queue handle the exporting of portfolios via Leap2A for better server load management.';
+$string['exporttoqueuedescription3'] = 'Let the export queue handle the exporting of portfolios for better server load management.';
 
 // Progress meter (ie uploading / downloading data)
 $string['validating'] = 'Validating data...';

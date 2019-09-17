@@ -439,9 +439,6 @@ class PluginExportHtml extends PluginExport {
                     array('text' => $view->get('title'), 'path' => 'index.html'),
                 ));
                 $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . $view->get('id') . '_' . self::text_to_filename($view->get('title'));
-                if (is_dir($directory)) {
-                    throw new SystemException(get_string('duplicatepagetitle', 'export.html'));
-                }
                 if (!check_dir_exists($directory)) {
                     throw new SystemException("Could not create directory for view $viewid");
                 }
@@ -689,15 +686,17 @@ class PluginExportHtml extends PluginExport {
 */
     private function get_resume_field_modals(&$idarray, BlockInstance $bi) {
         $configdata = $bi->get('configdata');
-        $field = $bi->get_artefact_instance($configdata['artefactid']);
-        $attachmentids = array();
-        if ($attachment = $field->get_attachments()) {
-            foreach ($attachment as $a) {
-                array_push($attachmentids, $a->{'id'});
+        if (isset($configdata['artefactid'])) {
+            $field = $bi->get_artefact_instance($configdata['artefactid']);
+            $attachmentids = array();
+            if ($attachment = $field->get_attachments()) {
+                foreach ($attachment as $a) {
+                    array_push($attachmentids, $a->{'id'});
+                }
             }
-        }
-        if (!empty($attachmentids)) {
-            $idarray = array_merge($idarray, $attachmentids);
+            if (!empty($attachmentids)) {
+                $idarray = array_merge($idarray, $attachmentids);
+            }
         }
     }
 

@@ -79,6 +79,14 @@ class PluginExportPdf extends PluginExportHtml {
         return $combiner;
     }
 
+    public static function is_usable() {
+        $dependencies = self::has_plugin_dependencies();
+        if (!empty($dependencies['requires'])) {
+            return false;
+        }
+        return true;
+    }
+
     public static function has_plugin_dependencies() {
         $needs = get_string('needschromeheadless', 'export.pdf');
         // make sure that composer has installed the headlessbrowser hook
@@ -102,12 +110,10 @@ class PluginExportPdf extends PluginExportHtml {
      * Main export routine
      * @param $createarchive Boolean specifies whether a zipfile will be created here
      * or later on, i.e. in PluginExportAll which creates a zipfile of all export formats.
+     * Note: If running pdf export and html export together then this should be run first
      */
     public function export($createarchive=false) {
-        // Only call parent if we do not do pdf export after html export
-        if ($createarchive) {
-            parent::export($createarchive);
-        }
+        parent::export($createarchive);
         $this->pdf_view_export_data();
         return true;
     }
@@ -125,17 +131,17 @@ class PluginExportPdf extends PluginExportHtml {
         $i = 0;
         $viewcount = count($this->views);
 
-        $browsertype = 'chromium-browser';
-        system('dpkg -l | grep ' . $browsertype, $error);
-        if ($error) {
-            $browsertype = 'chrome';
-            system('dpkg -l | grep ' . $browsertype, $error2);
-            if ($error2) {
-                throw new MaharaException('Need to have a Chrome browser installed to use the headless pdf option');
-            }
-        }
-
         if (!isset($pdfrun) || $pdfrun == 'first' || $pdfrun == 'all') {
+            $browsertype = 'chromium-browser';
+            system('dpkg -l | grep ' . $browsertype, $error);
+            if ($error) {
+                $browsertype = 'chrome';
+                system('dpkg -l | grep ' . $browsertype, $error2);
+                if ($error2) {
+                    throw new MaharaException('Need to have a Chrome browser installed to use the headless pdf option');
+                }
+            }
+
             $browserFactory = new BrowserFactory($browsertype);
             // starts headless chrome
             $browser = $browserFactory->createBrowser(['windowSize' => [1280,800],
@@ -170,13 +176,14 @@ class PluginExportPdf extends PluginExportHtml {
         $colpdfs = $viewpdfs = array();
         foreach ($viewobjs as $collectionid => $views) {
             foreach ($views as $viewid => $view) {
+                set_time_limit(120);
                 $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), get_string('exportingviewsprogresspdf', 'export', $i, $viewcount));
 
                 if ($this->exportingoneview) {
                     $directory = $this->exportdir . '/' . $this->rootdir;
                 }
                 else {
-                    $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . parent::text_to_filename($view->get('title'));
+                    $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . $view->get('id') . '_' . parent::text_to_filename($view->get('title'));
                 }
                 $filename = $directory . "/index.html";
                 // Adjust the relative links to files to be textual to mention where the file lives within the zip file

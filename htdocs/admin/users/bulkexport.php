@@ -116,14 +116,25 @@ function bulkexport_submit(Pieform $form, $values) {
     $usernames = array();
 
     // Read in the usernames explicitly specified
-    foreach (explode("\n", $values['usernames']) as $username) {
-        $username = trim($username);
-        if (!empty($username)) {
-            $usernames[] = $username;
+    if (!empty($values['usernames'])) {
+        foreach (explode("\n", $values['usernames']) as $username) {
+            $username = trim($username);
+            if (!empty($username) && record_exists('usr', 'username', $username)) {
+                $usernames[] = $username;
+            }
+            else {
+                log_debug(get_string('ignoringbulkexportuser', 'admin', $username));
+            }
+        }
+
+        if (empty($usernames)) {
+            // All explicit usernames were rejected
+            require_once(get_config('docroot') . '/lib/htmloutput.php');
+            print_export_iframe_die(get_string('bulkexportempty', 'admin'), null);
         }
     }
 
-    if (empty($usernames) && !empty($values['authinstance'])) {
+    if (empty($values['usernames']) && !empty($values['authinstance'])) {
         // Export all users from the selected institution
         $usernames = get_column_sql("SELECT username FROM {usr} WHERE authinstance = ? AND deleted = 0 AND id != 0", array($values['authinstance']));
     }
@@ -188,8 +199,8 @@ function bulkexport_submit(Pieform $form, $values) {
     }
 
     if (!$zipfile = create_zipfile($listing, $files)) {
-        include_once(get_config('wwwroot') . 'export/download.php');
-        export_iframe_die(get_string('bulkexportempty', 'admin'));
+        require_once(get_config('docroot') . '/lib/htmloutput.php');
+        print_export_iframe_die(get_string('bulkexportempty', 'admin'), null);
     }
 
     log_info("Exported $exportcount users to $zipfile");

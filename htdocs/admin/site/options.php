@@ -330,7 +330,7 @@ $siteoptionform = array(
                 'exporttoqueue' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('exporttoqueue', 'admin'),
-                    'description'  => get_string('exporttoqueuedescription2', 'admin'),
+                    'description'  => get_string('exporttoqueuedescription3', 'admin'),
                     'defaultvalue' => get_config('exporttoqueue'),
                     'disabled'     => in_array('exporttoqueue', $OVERRIDDEN),
                 ),

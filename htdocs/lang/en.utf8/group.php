@@ -396,7 +396,7 @@ $string['allowssubmissionsdescription1'] = "Members can submit pages to the grou
 $string['allowssubmissionsdescription'] = 'Members can submit pages to the group.';
 $string['allowsarchives'] = 'Allow archiving of submissions';
 $string['allowsarchiveserror'] = 'You can only allow archiving if submissions are allowed.';
-$string['allowsarchivesdescription'] = 'Pages / collections are archived as zipped Leap2A files during the submission release process.';
+$string['allowsarchivesdescription1'] = 'Pages / collections are archived as zipped files during the submission release process.';
 
 // Group reports
 $string['report'] = 'Report';

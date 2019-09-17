@@ -261,7 +261,7 @@ if ($cancreatecontrolled) {
     $elements['allowarchives'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('allowsarchives', 'group'),
-        'description'  => get_string('allowsarchivesdescription', 'group'),
+        'description'  => get_string('allowsarchivesdescription1', 'group'),
         'defaultvalue' => $group_data->allowarchives,
         'disabled'     => !$group_data->submittableto,
         'help'         => true,

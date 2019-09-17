@@ -126,6 +126,9 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 $firstdone = false;
                 foreach ($artefactids as $artefactid) {
                     $artefact = $instance->get_artefact_instance($artefactid);
+                    if ($artefact->get('artefacttype') == 'folder') {
+                        continue;
+                    }
                     if (!file_exists($artefact->get_path())) {
                         continue;
                     }
