@@ -582,6 +582,8 @@ function get_skin_elements(): array {
     }
     $displaylink = $view->get_url();
 
+    $ispersonalview = !($view->get("group") || $view->get("institution"));
+
     $snippet = smarty_core();
     $snippet->assign('saved', $saved);
     $snippet->assign('incompatible', $incompatible);
@@ -596,6 +598,7 @@ function get_skin_elements(): array {
     $snippet->assign('viewtype', $view->get('type'));
     $snippet->assign('edittitle', $view->can_edit_title());
     $snippet->assign('issiteview', $issiteview);
+    $snippet->assign('ispersonalview', $ispersonalview);
     $skinform = array(
         'skins_html' => array(
             'type' => 'html',

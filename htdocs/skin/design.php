@@ -162,6 +162,7 @@ $elements['skinbg'] = array(
             'highlight'    => $highlight,
             'description'  => get_string('headerbackgroundimagedescription', 'skin'),
             'browse'       => $browse,
+            'institution'  => $designsiteskin ? 'mahara' : null,
             'filters'      => array(
                 'artefacttype' => array('image'),
             ),
@@ -178,8 +179,6 @@ $elements['skinbg'] = array(
             ),
             'defaultvalue'       => (!empty($viewskin['header_background_image']) ? array(intval($viewskin['header_background_image'])) : array()),
             'selectlistcallback' => 'artefact_get_records_by_id',
-            // TODO: Make this work so skins can include site files
-            // 'tabs' => true,
         ),
         'body_background_color' => array(
             'type' => 'color',
@@ -440,12 +439,10 @@ $designskinelements = array(
         'elements' => $elements
 );
 
-if (!$designsiteskin) {
-    $designskinelements['jssuccesscallback'] = 'designskinform_callback';
-    $designskinelements['jserrorcallback'] = 'designskinform_callback';
-    $designskinelements['newiframeonsubmit'] = true;
-    $designskinelements['jsform'] = true;
-}
+$designskinelements['jssuccesscallback'] = 'designskinform_callback';
+$designskinelements['jserrorcallback'] = 'designskinform_callback';
+$designskinelements['newiframeonsubmit'] = true;
+$designskinelements['jsform'] = true;
 
 $designskinform = pieform($designskinelements);
 
@@ -459,8 +456,8 @@ $javascript = <<<EOF
       else {
           // We are submitting the form so need to allow one of the
           // filebrowsers to callback to complete the save
-          if (typeof designskinform_body_background_image != "undefined") {
-              designskinform_body_background_image.callback(form, data);
+          if (typeof designskinform_header_background_image != "undefined") {
+              designskinform_header_background_image.callback(form, data);
           }
       }
   };
@@ -541,6 +538,7 @@ function designskinform_submit(Pieform $form, $values) {
 
     $viewskin = array();
     $viewskin['id'] = $values['id'];
+    $oldtype = get_field('skin', 'type', 'id', $values['id']);
     if ($values['viewskin_title'] <> '') {
         $viewskin['title'] = $values['viewskin_title'];
     }
@@ -551,6 +549,18 @@ function designskinform_submit(Pieform $form, $values) {
 
     $subgoto = $form->get_element_option('submitform', 'goto');
     Skin::create($viewskin);
+    // If the skin has changed from public to private we need to check
+    // the places it is being used to make sure they are still valid
+    if ($values['id'] && $oldtype != $viewskin['type']) {
+        if ($viewskin['type'] == 'private') {
+            // We want to make sure that the skin is only on pages owned by skin owner now
+            // that it has become private
+            execute_sql("UPDATE {view} SET skin = NULL
+                         WHERE (owner IS NULL OR owner != ?)
+                         AND skin = ?", array($viewskin['owner'], $viewskin['id']));
+        }
+    }
+
     if ($form->submitted_by_js()) {
         $result = array(
             'error'   => false,
