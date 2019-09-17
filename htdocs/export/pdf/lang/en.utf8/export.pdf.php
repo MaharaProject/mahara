@@ -16,5 +16,5 @@ $string['description'] = 'This creates a zipped file containing PDFs of your por
 $string['needspdfconfig'] = 'Requires config.php setting "usepdfexport" to be true.';
 $string['needschromeheadless'] = 'Experimental export option that utilises Headless Chrome to Print PDFs. Install the latest version of the Chrome or Chromium browser on the server to use this plugin.';
 $string['needschromeheadlessphp'] = 'Requires "chrome-php". You can install this via "make pdfexport"';
-$string['needspdfunite'] = 'Requires "pdfunite". You can install this via "apt-get install poppler-utils".';
+$string['needspdfcombiner'] = 'Requires either "pdfunite" or "ghostscript" to be able to combine pdfs. You can install "pdfunite" via "apt-get install poppler-utils".';
 $string['exportpdfdisabled'] = 'PDF export dependencies missing so PDF export disabled. For more information see <a href="%s">Plugin administration</a>.';

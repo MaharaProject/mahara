@@ -63,6 +63,22 @@ class PluginExportPdf extends PluginExportHtml {
         return 'PDF';
     }
 
+    public static function has_pdf_combiner() {
+        // Check we have a valid way to combine pdfs
+        $combiner = false;
+        if ($pdfunite = exec('apt-cache policy poppler-utils | grep Installed')) {
+            if (!preg_match('/Installed\: \(none\)/', $pdfunite)) {
+                $combiner = 'pdfunite';
+            }
+        }
+        if ($ghostscript = exec('apt-cache policy ghostscript | grep Installed')) {
+            if (!preg_match('/Installed\: \(none\)/', $ghostscript)) {
+                $combiner = 'ghostscript';
+            }
+        }
+        return $combiner;
+    }
+
     public static function has_plugin_dependencies() {
         $needs = get_string('needschromeheadless', 'export.pdf');
         // make sure that composer has installed the headlessbrowser hook
@@ -70,10 +86,10 @@ class PluginExportPdf extends PluginExportHtml {
         if (!file_exists(get_config('docroot') . 'lib/chrome-php/headless-chromium-php-master/src/BrowserFactory.php')) {
             $requires[] = get_string('needschromeheadlessphp', 'export.pdf');
         }
-        if ($pdfunite = exec('apt -qq list poppler-utils')) {
-            if (!preg_match('/\[installed\]/', $pdfunite)) {
-                $requires[] = get_string('needspdfunite', 'export.pdf');
-            }
+
+        $combiner = self::has_pdf_combiner();
+        if (!$combiner) {
+            $requires[] = get_string('needspdfcombiner', 'export.pdf');
         }
         if (!get_config('usepdfexport')) {
             $requires[] = get_string('needspdfconfig', 'export.pdf');
@@ -118,6 +134,7 @@ class PluginExportPdf extends PluginExportHtml {
                 throw new MaharaException('Need to have a Chrome browser installed to use the headless pdf option');
             }
         }
+
         if (!isset($pdfrun) || $pdfrun == 'first' || $pdfrun == 'all') {
             $browserFactory = new BrowserFactory($browsertype);
             // starts headless chrome
@@ -128,6 +145,9 @@ class PluginExportPdf extends PluginExportHtml {
             // creates a new page and navigate to an url
             $page = $browser->createPage();
         }
+
+        $combiner = self::has_pdf_combiner();
+
         // Map the view id order to their collection order if applicable
         $viewids = array_keys($this->views);
         $viewobjs = array();
@@ -212,14 +232,21 @@ class PluginExportPdf extends PluginExportHtml {
 
         $output = array();
         $directory = $this->exportdir . '/' . $this->rootdir;
-        foreach ($colpdfs as $collectionid => $collection) {
-             $collectionname = $this->collections[$collectionid]->get('name');
-             $collectionname = preg_replace('/\s+/', '_', $collectionname);
-             exec('pdfunite ' . implode(' ', $collection) . ' ' . $directory . '/' . $collectionid . '_' . $collectionname . '.pdf', $output);
-             // remove the page pdfs that are now in collections
-             foreach ($collection as $c) {
-                 unlink($c);
-             }
+        if ($combiner) {
+            foreach ($colpdfs as $collectionid => $collection) {
+                $collectionname = $this->collections[$collectionid]->get('name');
+                $collectionname = preg_replace('/\s+/', '_', $collectionname);
+                if ($combiner == 'pdfunite') {
+                    exec('pdfunite ' . implode(' ', $collection) . ' ' . $directory . '/' . $collectionid . '_' . $collectionname . '.pdf', $output);
+                }
+                else {
+                    exec('gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=' .  $directory . '/' . $collectionid . '_' . $collectionname . '.pdf -dBATCH ' . implode(' ', $collection), $output);
+                }
+                // remove the page pdfs that are now in collections
+                foreach ($collection as $c) {
+                    unlink($c);
+                }
+            }
         }
         // Move view PDF files to same place as collection files
         foreach ($viewpdfs as $view) {
