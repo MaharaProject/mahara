@@ -21,7 +21,7 @@
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     color: inherit;
     background-color: $gray-400;
-    border-color: $btn-secondary-border;;
+    border-color: $btn-secondary-border;
     box-shadow: none;
 }
 
@@ -498,6 +498,13 @@ td.action-list-copy {
 // Page/Collections pageactions btns
 .pageactions {
     margin-right: -1px;
+
+    .content-toolbar {
+        width: 100%;
+        .btn {
+            width: 100%;
+        }
+    }
 
     .btn-group-vertical .btn {
         &:last-child {
