@@ -1411,7 +1411,12 @@ class BlockInstance {
                 $artefact = $this->get_artefact_instance($configdata['artefactid']);
                 $smarty->assign('allowcomments', $artefact->get('allowcomments'));
                 if (!$artefact->get('allowcomments')) {
-                    $smarty->assign('justdetails', (int)get_config('licensemetadata'));
+                    if ($this->get('blocktype') == 'textbox') {
+                        $smarty->assign('justdetails', (int)get_config('licensemetadata'));
+                    }
+                    else {
+                        $smarty->assign('justdetails', true);
+                    }
                 }
                 else {
                     $commentoptions = ArtefactTypeComment::get_comment_options();
@@ -1425,6 +1430,10 @@ class BlockInstance {
                     $smarty->assign('commentcount', $commentcount);
                 }
             }
+        }
+        // Image gallery's from folders should always have details
+        if ($blockheader && $this->get('blocktype') == 'gallery') {
+            $smarty->assign('justdetails', true);
         }
 
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');

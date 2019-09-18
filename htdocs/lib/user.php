@@ -245,7 +245,8 @@ function expected_account_preferences() {
                  'viewsperpage' => 20,
                  'itemsperpage' => 10,
                  'orderpagesby' => 'latestmodified',
-                 'searchinfields' => 'titleanddescriptionandtags'
+                 'searchinfields' => 'titleanddescriptionandtags',
+                 'view_details_active' => 0,
                  );
 }
 
