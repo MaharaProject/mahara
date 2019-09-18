@@ -1,3 +1,4 @@
+<div class="card-body flush">
 {if $hascontent}
 <table class="table resumecontactinfo profile-info">
 {if $address}
@@ -55,3 +56,4 @@
 {$license|safe}
 </div>
 {/if}
+</div>

@@ -23,7 +23,7 @@
 {/if}
 
 <div class="taggedpost-title text-midtone card-body flush">
-    {$blockheading|clean_html|safe}
+    <p>{$blockheading|clean_html|safe}</p>
 </div>
 
 {if $configerror}
@@ -35,7 +35,7 @@
 {elseif $badtag}
     <span class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
 {elseif $full}
-<div id="blogdescription">
+
     <div id="postlist_{$blockid}" class="list-group">
         {foreach from=$results item=post}
         {if !$editing}
@@ -51,8 +51,8 @@
                 justdetails=$justdetails
                 displayiconsonly=true}
         {/if}
-        <div class="list-group-item">
-            <h4 class="list-group-item-heading text-inline">
+        <div class="post list-group-item">
+            <h4 class="title">
                 {if !($editing)}
                      <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                          {$post->title}
@@ -80,7 +80,6 @@
         </div>
         {/foreach}
     </div>
-</div>
 {else}
 <div class="taggedposts list-group">
     {foreach from=$results item=post}
@@ -101,7 +100,7 @@
         <a class="outer-link collapsed" data-toggle="collapse" href="#tagged_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
         </a>
-        <h4 class="list-group-item-heading text-inline">
+        <h4 class="list-group-item-heading">
             {if !($editing)}
             <a class="modal_link inner-link list-group-item-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                 {$post->title}
@@ -110,6 +109,7 @@
             <span class="list-group-item-heading no-link">{$post->title}</span>
             {/if}
         </h4>
+        <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
         <div>
             <span class="metadata">
                 {str tag='postedon' section='blocktype.blog/taggedposts'}
@@ -121,10 +121,9 @@
                 {/if}
             </span>
         </div>
-        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
-    </div>
-    <div  id="tagged_post_{$post->id}" class="collapse content-text">
-        <span>{$post->description|safe}</span>
+        <div  id="tagged_post_{$post->id}" class="collapse content-text">
+            <span>{$post->description|safe}</span>
+        </div>
     </div>
     {/foreach}
 </div>

@@ -20,7 +20,7 @@
             </div>
         {/if}
         {if count($plans) > 1}
-            <h4>{$plan.title}</h4>
+            <h4 class="title">{$plan.title}</h4>
         {/if}
         <p>{$plan.description}</p>
 

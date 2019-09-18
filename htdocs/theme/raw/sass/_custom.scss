@@ -851,6 +851,16 @@ a.online-users {
     padding: 0px !important;
 }
 
+// giving top margin to blog description only when it exists
+.bt-blog #blogdescription > * {
+    margin-top: 10px;
+}
+
+// tagged post title needs padding bottom
+.bt-taggedposts .taggedpost-title {
+    padding: 10px 0;
+}
+
 // fixes ie11 flex issues making panels go to bottom of page
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
   .col-lg-3 {

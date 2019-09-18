@@ -14,9 +14,9 @@
 </div>
 {/if}
 <div id="myblogs" class="myblogs view-container">
-    <p id="blogdescription">
+    <div id="blogdescription">
         {clean_html($blog->get('description'))|safe}
-    </p>
+    </div>
     {if $blog->get('tags')}
     <div class="tags">
         <strong>{str tag=tags}:</strong> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}

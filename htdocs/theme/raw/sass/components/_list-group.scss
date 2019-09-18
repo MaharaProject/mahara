@@ -35,6 +35,7 @@
         }
     }
     &.list-group-unbordered {
+        border: 0;
         li {
             border:0;
             padding: 5px 7px;
@@ -74,6 +75,7 @@
     a {
         &:hover {
             color: $link-color;
+            text-decoration: none;
             &.inner-link {
                 text-decoration: underline;
             }
@@ -92,6 +94,11 @@
 
     .postedon {
         font-family: $font-family-base;
+    }
+
+    &.has-attachment {
+        font-family: $font-family-sans-serif;
+        font-weight: bold;
     }
 }
 
@@ -283,8 +290,8 @@
         }
         &:last-child .list-group-item:last-child{
             border-bottom: 0;
-            border-bottom-right-radius: 3px;
-            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: $card-border-radius;
+            border-bottom-left-radius: $card-border-radius;
         }
     }
 }
@@ -374,4 +381,36 @@
 }
 .card.bt-wall > .block .list-group:last-child .list-group-item:last-child {
     border-bottom: 1px solid $list-group-border;
+}
+
+.bt-taggedposts .list-group,
+.taggedposts.list-group,
+.blog .list-group,
+.bt-plans .list-group,
+.resume-content .list-group {
+    border-top: 1px solid $list-group-border-color;
+    margin-top: -1px;
+}
+
+.bt-entireresume,
+.bt-entireresume-editor {
+    .list-group {
+        h4.title {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .list-group-item {
+            &.flush {
+                border: 0;
+            }
+        }
+        .resume-content {
+            h5.title {
+              font-weight: bold;
+            }
+            .card-body {
+              padding: 0 0 15px 0;
+            }
+        }
+    }
 }

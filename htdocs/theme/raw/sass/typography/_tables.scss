@@ -305,3 +305,20 @@ table.table tr {
         border-top-width: 1px;
     }
 }
+// unless being displayed in a block
+.bt-entireresume,
+.bt-entireresume-editor,
+.bt-resumefield,
+.bt-resumefield-editor
+ {
+    .table.profile-info {
+        >tbody>tr:first-child>th,
+        >tbody>tr:first-child>td {
+            border-top-width: 0;
+        }
+        td, th {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}

@@ -1,9 +1,5 @@
 {foreach from=$items item=view}
-    <div class="list-group-item">
-        <a href="{$view.fullurl}" class="outer-link">
-            <span class="sr-only">{$view.title}</span>
-        </a>
-
+    <div class="list-group-item flush">
         <h4 class="title list-group-item-heading text-inline">
             <a href="{$view.fullurl}">{$view.title}</a>
         </h4>
@@ -13,7 +9,7 @@
             ({str tag=nviews section=view arg1=$view.numpages})
         </span>
         {/if}
-        
+
         {if $view.description}
         <div class="list-group-item-text text-small">
             {$view.description|str_shorten_html:100:true|strip_tags|safe}

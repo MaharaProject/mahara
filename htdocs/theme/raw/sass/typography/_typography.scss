@@ -331,7 +331,9 @@ pre {
 .note-name div,
 .view-description,
 .forum-post .postedits,
-.mce-content-body {
+.mce-content-body,
+.bt-entireresume,
+.bt-entireresume-editor {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
     font-weight: bold;

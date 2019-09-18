@@ -49,12 +49,14 @@
       }
     }
 
-    ~ .list-group-item h4.title {
+    ~ .list-group-item h4.title,
+    ~ .list-group-item h4.list-group-item-heading {
       margin-right: 100px;
     }
 
     &.d-none {
-      ~ .list-group-item h4.title {
+      ~ .list-group-item h4.title,
+      ~ .list-group-item h4.list-group-item-heading {
         margin-right: 0;
       }
     }

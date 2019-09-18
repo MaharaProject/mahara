@@ -42,15 +42,16 @@
         <a class="outer-link collapsed" data-toggle="collapse" href="#recent_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
         </a>
-        <h4 class="list-group-item-heading text-inline">
+        <h4 class="list-group-item-heading">
             {if !($editing)}
-                 <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+                 <a class="modal_link inner-link text-left" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                      {$post->title}
                  </a>
             {else}
                 <span class="list-group-item-heading no-link">{$post->title}</span>
             {/if}
         </h4>
+        <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
         <div>
             <span class="text-small">
                 {str tag='postedin' section='blocktype.blog/recentposts'}
@@ -72,10 +73,9 @@
                 {/if}
             </span>
         </div>
-        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
-    </div>
-    <div  id="recent_post_{$post->id}" class="collapse content-text">
-        <span>{$post->description|safe}</span>
+        <div  id="recent_post_{$post->id}" class="collapse content-text">
+            <span>{$post->description|safe}</span>
+        </div>
     </div>
 {/foreach}
 </div>

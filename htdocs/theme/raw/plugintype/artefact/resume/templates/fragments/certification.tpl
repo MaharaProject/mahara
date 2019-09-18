@@ -16,7 +16,7 @@
 
                 <th>{str tag='title' section='artefact.resume'}</th>
 
-                <th class="resumeattachments text-center">
+                <th class="resumeattachments">
                     <span>{str tag=Attachments section=artefact.resume}</span>
                 </th>
 
@@ -85,9 +85,9 @@
             {/if}
 
             {if $row->attachments}
-            <h5 class="list-group-item-heading">
+            <h5 class="has-attachment list-group-item-heading">
                 <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
-                <span>{str tag='attachedfiles' section='artefact.blog'}</span>
+                <span class="text-small">{str tag='attachedfiles' section='artefact.blog'}</span>
                 ({$row->clipcount})
             </h5>
             <ul class="list-group list-group-unbordered">

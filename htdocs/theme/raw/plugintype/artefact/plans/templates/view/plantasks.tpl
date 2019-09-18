@@ -1,6 +1,6 @@
 {foreach from=$tasks.data item=task}
     {if $task->completed == -1}
-        <div class="task-item plan_incomplete list-group-item {if $task->description || $task->tags}list-group-item-default{/if}">
+        <div class="task-item plan_incomplete list-group-item">
             {if $editing}
                 <div class="float-right btn-group">
                     <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
