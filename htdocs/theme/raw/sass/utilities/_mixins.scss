@@ -60,6 +60,21 @@
     -moz-appearance: $var;
 }
 
+@mixin fonttype($type: solid) {
+    @if $type == regular {
+        font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free";
+        font-weight: 400;
+    }
+    @else if $type == brands {
+        font-family: "Font Awesome 5 Brands Regular", "Font Awesome 5 Free";
+        font-weight: 400;
+    }
+    @else {
+        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+        font-weight: 900;
+    }
+}
+
 /*
 * BOOTSTRAP 3 MIXINS that Mahara uses
 */

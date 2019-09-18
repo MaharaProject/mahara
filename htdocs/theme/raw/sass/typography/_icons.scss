@@ -1,14 +1,11 @@
 // Extra icons to fit db defiend tyopes (cf pagebuilder)
 .icon { //fontawesome solid is the default
-    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
-    font-weight: 900;
+    @include fonttype(solid);
     &.icon-regular {
-        font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free" !important;
-        font-weight: 400;
+        @include fonttype(regular);
     }
     &.icon-brand {
-        font-family: "Font Awesome 5 Brands Regular", "Font Awesome 5 Free" !important;
-        font-weight: 400;
+        @include fonttype(brands);
     }
     &.right {
         padding-left: 5px;
