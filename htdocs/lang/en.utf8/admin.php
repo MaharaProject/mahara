@@ -59,8 +59,12 @@ $string['clisitename'] = 'The site name';
 $string['cliupdatesitenamefailed'] = 'Updating site name failed.';
 $string['cliinstallerdescription'] = 'Install Mahara and create required data directories';
 $string['cliinstallingmahara'] = 'Installing Mahara';
-$string['cliupgraderdescription'] = 'Upgrade the Mahara database and data to the version of Mahara installed';
-$string['cliupgradingmahara'] = 'Upgrading Mahara';
+// CLI upgrade script
+$string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed';
+$string['cli_upgrade_title'] = 'Upgrading Mahara';
+$string['cli_upgrade_force'] = 'Force upgrade to rerun';
+$string['cli_upgrade_flag'] = 'An unfinished upgrade detected. To try upgrading again add "-f" option to the command.';
+
 $string['cliclearingcaches'] = 'Clearing Mahara caches.';
 $string['cliclearcachesdescription'] = 'Clearing caches will delete cached data from the server. There is no danger in clearing caches, but your site may appear slower for a while until the server and clients calculate new information and cache it.';
 $string['clearcachesheading'] = 'Clear caches';

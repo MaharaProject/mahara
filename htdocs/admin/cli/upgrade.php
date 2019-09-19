@@ -24,13 +24,19 @@ require(get_config('docroot') . 'local/install.php');
 $cli = get_cli();
 
 $options = array();
-
+$options['force'] = (object) array(
+    'shortoptions' => array('f'),
+    'description' => get_string('cli_upgrade_force', 'admin'),
+    'required' => false,
+    'defaultvalue' => false,
+);
 $settings = new stdClass();
 $settings->options = $options;
-$settings->info = get_string('cliupgraderdescription', 'admin');
+$settings->info = get_string('cli_upgrade_description', 'admin');
 
 $cli->setup($settings);
 
+$force = $cli->get_cli_param('force');
 // Check whether Mahara is installed yet
 if (!table_exists(new XMLDBTable('config'))) {
     cli::cli_exit(get_string('maharanotinstalled', 'admin'), false);
@@ -45,14 +51,28 @@ if (empty($upgrades['settings']['toupgradecount'])) {
 // Check for issues which would pose problems during upgrade
 ensure_upgrade_sanity();
 
+if (get_field('config', 'value', 'field', '_upgrade')) {
+    if ($force) {
+        // delete the old flag
+        delete_records('config', 'field', '_upgrade');
+    }
+    else {
+        cli::cli_exit(get_string('cli_upgrade_flag', 'admin'), false);
+    }
+}
+// set the flag for this run
+insert_record('config', (object) array('field' => '_upgrade', 'value' => time()));
+
 // Clear all caches
 clear_all_caches();
 
 // Actually perform the upgrade
-log_info(get_string('cliupgradingmahara', 'admin'));
+log_info(get_string('cli_upgrade_title', 'admin'));
 foreach ($upgrades as $name => $data) {
     // Check to make sure the plugin hasn't already been update out-of-sequence
     if ($name != 'settings' && $newdata = check_upgrades($name)) {
         upgrade_mahara(array($name => $newdata));
     }
 }
+// upgrade completed so remove any upgrade holds
+delete_records('config', 'field', '_upgrade');
