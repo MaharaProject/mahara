@@ -1,6 +1,6 @@
 <div id="wall" class="wall">
     {if $wallmessage}
-        <div class="lead text-small text-center">{$wallmessage}</div>
+        <div class="card-body lead text-small text-center">{$wallmessage}</div>
     {/if}
     {if $wallposts}
         {foreach from=$wallposts item=wallpost}

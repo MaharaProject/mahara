@@ -43,6 +43,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type'  => 'submitcancel',
+            'class' => 'btn-secondary button',
             'value' => array(get_string('yes'), get_string('no')),
             'goto'  => $goto,
         ),
