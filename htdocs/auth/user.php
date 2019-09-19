@@ -215,6 +215,9 @@ class User {
      *
      * If the authentication instance is a child or a parent, its relation is
      * checked too, because the user can enter the system by either method.
+     * NOTE: This method has changed !!!!
+     * - it used to check on auth_remote_user table OR on usr table
+     * - now it first checks auth_remote_user table if required THEN / ELSE usr table
      */
     public function find_by_instanceid_username($instanceid, $username, $remoteuser=false) {
 
@@ -271,23 +274,23 @@ class User {
                             . '
                         )';
             $user = get_record_sql($sql, array($username, $instanceid));
+            $this->populate($user);
+            return $this;
         }
-        else {
-            $sql = 'SELECT
-                        *,
-                        ' . db_format_tsfield('expiry') . ',
-                        ' . db_format_tsfield('lastlogin') . ',
-                        ' . db_format_tsfield('lastlastlogin') . ',
-                        ' . db_format_tsfield('lastaccess') . ',
-                        ' . db_format_tsfield('suspendedctime') . ',
-                        ' . db_format_tsfield('ctime') . '
-                    FROM
-                        {usr}
-                    WHERE
-                        LOWER(username) = ? AND
-                        authinstance = ?';
-            $user = get_record_sql($sql, array($username, $instanceid));
-        }
+        $sql = 'SELECT
+                    *,
+                    ' . db_format_tsfield('expiry') . ',
+                    ' . db_format_tsfield('lastlogin') . ',
+                    ' . db_format_tsfield('lastlastlogin') . ',
+                    ' . db_format_tsfield('lastaccess') . ',
+                    ' . db_format_tsfield('suspendedctime') . ',
+                    ' . db_format_tsfield('ctime') . '
+                FROM
+                    {usr}
+                WHERE
+                    LOWER(username) = ? AND
+                    authinstance = ?';
+        $user = get_record_sql($sql, array($username, $instanceid));
 
         if (false == $user) {
             throw new AuthUnknownUserException("User with username \"$username\" is not known at auth instance \"$instanceid\"");
