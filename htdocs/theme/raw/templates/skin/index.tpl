@@ -5,14 +5,24 @@
         <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=createskin section=skin}
     </a>
-    <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" class="btn btn-secondary button" type="submit">
-        <span class="icon icon-code icon-lg left" role="presentation" aria-hidden="true"></span>
-        {str tag=importskins section=skin}
-    </a>
-    <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" class="btn btn-secondary button" type="submit">
-        <span class="icon icon-download icon-lg left" role="presentation" aria-hidden="true"></span>
-        {str tag=exportskins section=skin}
-    </a>
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
+        <span class="btn-title sr-only">{str tag="edit"}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <li>
+            <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" class="btn btn-link" type="submit">
+                <span class="icon icon-upload icon-lg left" role="presentation" aria-hidden="true"></span>
+                {str tag=importskinsmenu section=skin}
+            </a>
+        </li>
+        <li>
+            <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" class="btn btn-link" type="submit">
+                <span class="icon icon-download icon-lg left" role="presentation" aria-hidden="true"></span>
+                {str tag=exportskinsmenu section=skin}
+            </a>
+        </li>
+    </ul>
 </div>
 
 {if !$siteskins}
