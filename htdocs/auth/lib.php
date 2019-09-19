@@ -1071,11 +1071,12 @@ function privacy_form($ignoreagreevalue = false, $ignoreformswitch = false) {
             'value' => $privacy->id,
         );
         if (!$ignoreformswitch) {
+            $description = get_string('register' . $privacy->type, 'admin');
             $elements[$privacy->institution . $privacy->type] = array(
                 'type'         => 'switchbox',
                 'title'        => get_string('privacyagreement', 'admin', get_string($privacy->type . 'lowcase', 'admin')),
                 'description'  => $privacy->agreed ? get_string('privacyagreedto', 'admin',
-                    get_string($privacy->type . 'lowcase', 'admin'), format_date(strtotime($privacy->agreedtime))) : '',
+                    get_string($privacy->type . 'lowcase', 'admin'), format_date(strtotime($privacy->agreedtime))) : $description,
                 'defaultvalue' => $privacy->agreed ? true : false,
                 'disabled'     => ($privacy->agreed && $ignoreagreevalue) ? true : false,
                 'required' => true,

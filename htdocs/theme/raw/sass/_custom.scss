@@ -872,3 +872,8 @@ a.online-users {
 .controls .btn-group {
     z-index: 1;
 }
+
+.consentbutton div,
+.consentbutton span.description {
+    padding: 0px !important;
+}

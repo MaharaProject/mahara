@@ -9,7 +9,6 @@
         <fieldset class="pieform-fieldset last collapsible">
             <legend>
                 <h4>
-
                     <a
                     {if $institutionprivacy}
                         href="#dropdowninstprivacy"
@@ -44,3 +43,5 @@
                         {$privacy->content|safe}
                     </div>
                 {/if}
+            </div>
+            <div class="fieldset-body consentbutton collapse {if (!($privacy->agreed && $ignoreagreevalue) || $ignoreformswitch)}show{/if}">

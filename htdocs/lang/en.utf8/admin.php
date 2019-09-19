@@ -1481,6 +1481,7 @@ $string['hasrefused'] = 'has refused the privacy statement';
 $string['privacylowcase'] = 'privacy statement';
 $string['termsandconditionslowcase'] = 'terms and conditions';
 $string['hasrefused'] = 'has refused the %s';
+$string['suspendaccount'] = 'Suspend account';
 $string['privacyandtotheterms'] = 'privacy statement and to the terms and conditions';
 $string['privacyandtheterms'] = 'privacy statement and the terms and conditions';
 $string['consentdate'] = 'Date of consent / rejection';
