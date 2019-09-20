@@ -55,6 +55,7 @@ if (PluginModuleLti::can_grade()) {
 else if (PluginModuleLti::can_submit_for_grading()) {
 
     $sub = PluginModuleLti::get_submission();
+    $revokeform = PluginModuleLti::revokesubmission_form();
 
     if ($sub && $sub->is_submitted()) {
         $smarty->assign('PAGEHEADING', get_string('portfoliosubmittedheader', 'module.lti'));
@@ -68,6 +69,7 @@ else if (PluginModuleLti::can_submit_for_grading()) {
         $smarty->assign('grade', $sub->grade);
         $smarty->assign('gradedby', empty($grader) ? '' : display_name($grader));
         $smarty->assign('timegraded', $sub->timegraded);
+        $smarty->assign('revokeform', $revokeform);
 
         $smarty->display('module:lti:submittedforgrading.tpl');
     }

@@ -43,10 +43,11 @@ $string['notconfigured'] = 'Currently, this activity does not allow submissions.
 $string['notreadylabel'] = 'Not ready';
 $string['oauthprotocolenabled'] = 'OAuth protocol enabled';
 $string['parentauthforlti'] = 'Parent authority';
-$string['portfoliosubmitted'] = 'You submitted the portfolio "%s" for assessment on %s.';
+$string['portfoliosubmittedforgrading'] = 'You submitted the portfolio "<strong><a href="%s">%s</a></strong>" for assessment on %s.';
 $string['portfoliosubmittedheader'] = 'Portfolio Submitted';
 $string['readylabel'] = 'Ready';
 $string['restprotocolenabled'] = 'REST protocol enabled';
+$string['revokesubmission'] = 'Revoke submission';
 $string['usernameexists2'] = 'Username "%s" is not valid.';
 $string['saveandrelease'] = 'Save and allow submissions';
 $string['submitportfolio'] = 'Submit a portfolio for assessment';
