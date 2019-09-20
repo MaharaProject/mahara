@@ -316,8 +316,11 @@ $string['statsmaxquotaused1'] = 'Has used about %s of disk quota<br>(<a href="%s
 $string['groupcountsbytype'] = 'Number of groups by group type';
 $string['groupcountsbyjointype'] = 'Number of groups by access type';
 $string['blockcountsbytype'] = 'Most frequently used blocks in portfolio pages';
-$string['uptodate'] = 'up to date';
-$string['latestversionis'] = 'latest version is <a href="%s">%s</a>';
+$string['uptodate'] = 'Your local codebase is up to date with Mahara core.';
+$string['latestversionis'] = 'Most recent major release: <a href="%s">%s</a>';
+$string['latestbranchversionis'] = 'Latest minor version of this release: <a href="%s">%s</a>';
+$string['versionnotinsupport'] = '%s is out of support.';
+$string['versionnotinsupportdev'] = 'Development version not in support';
 $string['viewsbytype'] = 'Pages by type';
 $string['institutionloginstabletitle'] = 'Active institutions';
 $string['institutionloginstablesubtitle'] = 'For %s - %s';

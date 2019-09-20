@@ -4346,38 +4346,45 @@ function cron_clean_internal_activity_notifications() {
  * Cronjob to check Launchpad for the latest Mahara version
  */
 function cron_check_for_updates() {
+
+    $url = 'https://mahara.org/local/versions.php';
     $request = array(
-        CURLOPT_URL => 'https://launchpad.net/mahara/+download',
+        CURLOPT_URL => $url,
     );
 
     $result = mahara_http_request($request);
 
-    if (!empty($result->errno)) {
-        log_debug('Could not retrieve launchpad download page');
+    if (!empty($result->errno) || $result->info['http_code'] != '200') {
+        log_debug('Could not access Mahara.org for versioning information.');
         return;
     }
+    $data = json_decode($result->data);
+    if ($data->returnCode == 1) {
+        log_debug('Could not retrieve Mahara versions information file from Mahara.org');
+        return;
+    }
+    $versions = $data->message->versions;
 
-    $page = new DOMDocument();
-    libxml_use_internal_errors(true);
-    $success = $page->loadHTML($result->data);
-    libxml_use_internal_errors(false);
-    if (!$success) {
-        log_debug('Error parsing launchpad download page');
-        return;
+    // Lets record the needed info locally as the cron only fetches the info once a day
+    $latestmajorversion = max(array_keys((array)$versions));
+    $latestversion = $latestmajorversion . '.' . $versions->$latestmajorversion->latest;
+    set_config('latest_version', $latestversion);
+    if (preg_match('/^(\d+)\.(\d+)\.(\d+).*?$/', get_config('release'), $match)) {
+        $currentmajorversion = $match[1] . '.' . $match[2];
+        $latestseriesversion = $currentmajorversion . '.' . $versions->$currentmajorversion->latest;
+        set_config('latest_branch_version', $latestseriesversion);
     }
-    $xpath = new DOMXPath($page);
-    $query = '//div[starts-with(@id,"release-information-")]';
-    $elements = $xpath->query($query);
-    $versions = array();
-    foreach ($elements as $e) {
-        if (preg_match('/^release-information-(\d+)-(\d+)-(\d+)$/', $e->getAttribute('id'), $match)) {
-            $versions[] = "$match[1].$match[2].$match[3]";
+    else {
+        set_config('latest_branch_version', '');
+    }
+    $supported = array();
+    foreach ($versions as $k => $v) {
+        $insupport = filter_var($v->supported, FILTER_VALIDATE_BOOLEAN);
+        if ($insupport) {
+            $supported[] = $k;
         }
     }
-    if (!empty($versions)) {
-        usort($versions, 'strnatcmp');
-        set_config('latest_version', end($versions));
-    }
+    set_config('supported_versions', implode(',', $supported));
 }
 
 /**

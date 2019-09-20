@@ -43,8 +43,23 @@
     {if $showall}
     <tr>
         <th>{str tag=maharaversion section=admin}</th>
-        <td>{$institutiondata.release}{if $institutiondata.strlatestversion} ({$institutiondata.strlatestversion|clean_html|safe}){/if}</td>
+        <td>{$institutiondata.release}</td>
     </tr>
+    {if $institutiondata.strlatestbranchversion || $institutiondata.strnotinsupport || $institutiondata.strlatestversion || $institutiondata.uptodate}
+    <tr>
+        <td colspan="2">
+        {if $institutiondata.uptodate}
+            {$institutiondata.uptodate}
+        {else}
+            <ul>
+            {if $institutiondata.strlatestbranchversion}<li>{$institutiondata.strlatestbranchversion|clean_html|safe}</li>{/if}
+            {if $institutiondata.strnotinsupport}<li><span class="text-danger">{$institutiondata.strnotinsupport}</span></li>{/if}
+            {if $institutiondata.strlatestversion}<li>{$institutiondata.strlatestversion|clean_html|safe}</li>{/if}
+            </ul>
+        {/if}
+        </td>
+    </tr>
+    {/if}
     <tr>
         <th>{str tag=Cron section=admin}</th>
         <td>{if $institutiondata.cronrunning}{str tag=runningnormally section=admin}{else}
