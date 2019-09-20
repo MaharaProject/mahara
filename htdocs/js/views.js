@@ -476,27 +476,30 @@
         });
     }
 
+    var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
     function startAddBlock(element) {
         var addblockdialog = $('#addblock');
         addblockdialog.modal('show');
-
-        addblockdialog.one('dialog.end', function(event, options) {
-            if (options.saved) {
-                addNewBlock(options, element.find('.blocktype-radio').val());
-            }
+        if (!addblockstarted) {
+            addblockstarted = true;
+            addblockdialog.one('dialog.end', function(event, options) {
+                if (options.saved) {
+                    addNewBlock(options, element.find('.blocktype-radio').val());
+                }
             else {
-                element.trigger("focus");
-            }
-        });
+                    element.trigger("focus");
+                }
+            });
 
-        addblockdialog.find('h4.modal-title').text(get_string('addblock', 'view', element.text()));
-        computeColumnInputs(addblockdialog);
-        addblockdialog.find('.block-inner').removeClass('d-none');
-        addblockdialog.find('.cell-chooser input:first').prop('checked', true);
-        addblockdialog.find('.cell-chooser input:first').parent().addClass('focused active');
+            addblockdialog.find('h4.modal-title').text(get_string('addnewblock', 'view'));
+            computeColumnInputs(addblockdialog);
+            addblockdialog.find('.block-inner').removeClass('d-none');
+            addblockdialog.find('.cell-chooser input:first').prop('checked', true);
+            addblockdialog.find('.cell-chooser input:first').parent().addClass('focused active');
 
-        addblockdialog.find('.deletebutton').trigger("focus");
-        keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
+            addblockdialog.find('.deletebutton').trigger("focus");
+            keytabbinginadialog(addblockdialog, addblockdialog.find('.deletebutton'), addblockdialog.find('.cancel'));
+        }
     }
 
     function makeExistingBlocksSortable() {
@@ -587,6 +590,8 @@
     }
 
     function addNewBlock(whereTo, blocktype) {
+
+        addblockstarted = false;
         var pd = {
                 'id': $('#viewid').val(),
                 'change': 1,

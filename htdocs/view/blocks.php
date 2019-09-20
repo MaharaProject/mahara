@@ -210,7 +210,7 @@ if ($placeholderblock) {
 
 $smarty = smarty($javascript, $stylesheets, array(
     'view' => array(
-        'addblock',
+        'addnewblock',
         'cellposition',
         'blockordertopcell',
         'blockorderafter',
