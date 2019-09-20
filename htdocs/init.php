@@ -477,8 +477,7 @@ if (!$mobile_detection_done) {
 // Run modules bootstrap code.
 if (!defined('INSTALLER')) {
     // make sure the table exists if upgrading from older version
-    require_once('ddl.php');
-    if (table_exists(new XMLDBTable('module_installed'))) {
+    if (db_table_exists('module_installed')) {
         if ($plugins = plugins_installed('module')) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin('module', $plugin->name)) {

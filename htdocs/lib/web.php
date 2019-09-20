@@ -1305,10 +1305,7 @@ class Theme {
             return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $this->headerlogosmall;
         }
         else {
-            require_once('ddl.php');
-            $table = new XMLDBTable('institution');
-            $field = new XMLDBField('logoxs');
-            if (field_exists($table, $field) && $sitelogocustomsmallid = get_field('institution', 'logoxs', 'name', 'mahara')) {
+            if (db_column_exists('institution', 'logoxs') && $sitelogocustomsmallid = get_field('institution', 'logoxs', 'name', 'mahara')) {
                 return get_config('wwwroot') . 'thumb.php?type=logobyid&id=' . $sitelogocustomsmallid;
             }
         }

@@ -1883,12 +1883,8 @@ function load_user_institutions($userid) {
     }
     $userid = (int) $userid;
 
-    require_once('ddl.php');
-    $table = new XMLDBTable('institution');
-    $field = new XMLDBField('logoxs');
-    $logoxs = field_exists($table, $field) ? ',i.logoxs' : '';
-    $field = new XMLDBField('tags');
-    $tags = field_exists($table, $field) ? ',i.tags' : '';
+    $logoxs = db_column_exists('institution', 'logoxs') ? ',i.logoxs' : '';
+    $tags = db_column_exists('institution', 'tags') ? ',i.tags' : '';
     if ($userid !== 0 && $institutions = get_records_sql_assoc('
         SELECT u.institution, ' . db_format_tsfield('ctime') . ',' . db_format_tsfield('u.expiry', 'membership_expiry') . ',
                u.studentid, u.staff, u.admin, i.displayname, i.theme, i.registerallowed, i.showonlineusers,
