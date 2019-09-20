@@ -854,6 +854,17 @@ div.form-group .form-control-label {
     position: -webkit-sticky;
     position: sticky;
     top: 200px;
+    z-index: $zindex-sticky;
+}
+@include media-breakpoint-down(sm) {
+    .view-container {
+        &.col-collapsed {
+            #editcontent-sidebar-wrapper {
+                width: 80px;
+                padding-left: 0;
+            }
+        }
+    }
 }
 
 a.online-users {
