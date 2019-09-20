@@ -72,11 +72,28 @@ function site_statistics($full=false) {
     if ($latestversion = get_config('latest_version')) {
         $data['latest_version'] = $latestversion;
         if ($data['release'] == $latestversion) {
-            $data['strlatestversion'] = get_string('uptodate', 'admin');
+            $data['uptodate'] = get_string('uptodate', 'admin');
         }
         else {
             $download_page = 'https://launchpad.net/mahara/+download';
             $data['strlatestversion'] = get_string('latestversionis', 'admin', $download_page, $latestversion);
+        }
+    }
+    if ($branchlatest = get_config('latest_branch_version')) {
+        if ($data['release'] != $branchlatest) {
+            $download_page = 'https://launchpad.net/mahara/+milestone/' . $branchlatest;
+            $data['strlatestbranchversion'] = get_string('latestbranchversionis', 'admin', $download_page, $branchlatest);
+        }
+    }
+    if ($insupport = get_config('supported_versions')) {
+        $insupport = explode(',', $insupport);
+        if (!in_array(get_config('series'), $insupport)) {
+            if (preg_match('/dev$/', $data['release'])) {
+                $data['strnotinsupport'] = get_string('versionnotinsupportdev', 'admin');
+            }
+            else {
+                $data['strnotinsupport'] = get_string('versionnotinsupport', 'admin', get_config('series'));
+            }
         }
     }
 
