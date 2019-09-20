@@ -374,6 +374,7 @@ function upgrade_core($upgrade) {
     set_config('release', $upgrade->torelease);
     set_config('series', $upgrade->toseries);
     bump_cache_version();
+    cron_check_for_updates();
 
     if (!empty($upgrade->install)) {
         core_postinst();
