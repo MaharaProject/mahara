@@ -3984,7 +3984,10 @@ function clean_css($input_css, $preserve_css=false) {
 function html2text($html, $fragment=true) {
     require_once('htmltotext/htmltotext.php');
     if ($fragment) {
-        $html = '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' . $html;
+        // Check if fragment is actually a fragment as tinymce can return a valid html page
+        if (!preg_match('/^<(HTML|\!doctype).*?>/i', $html)) {
+            $html = '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' . $html;
+        }
     }
     $h2t = new HtmltoText($html, get_config('wwwroot'));
     return $h2t->text();

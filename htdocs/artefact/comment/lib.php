@@ -798,7 +798,9 @@ class ArtefactTypeComment extends ArtefactType {
             }
             else if (($candelete || $item->isauthor) && !$is_export_preview) {
                 $check = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
+
                 if ($check->submittedstatus == View::UNSUBMITTED ||
+                    ($item->canedit && $item->private) ||
                     ($item->canedit && $item->id == $lastcomment->id && $item->ts > $editableafter)
                    ) {
                     $item->deleteform = pieform(self::delete_comment_form($item->id, $data->blockid, $data->artefact, $data->threaded));
@@ -1522,7 +1524,7 @@ function delete_comment_submit(Pieform $form, $values) {
     // unless it is the last comment still with in the editable timeframe
     $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
     $lastcomment = ($artefact) ? $comment::last_public_comment($viewid, $artefact) : $comment::last_public_comment($viewid, null);
-    if ($comment->get('id') == $lastcomment->id && $comment->get('mtime') > $editableafter) {
+    if ($comment->get('private') || ($comment->get('id') == $lastcomment->id && $comment->get('mtime') > $editableafter)) {
         $candelete = 1;
     }
     else {
@@ -2154,7 +2156,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             );
             $this->users[$key]->emailmessage = get_string_from_language(
                 $lang, 'feedbacknotificationtext', 'artefact.comment',
-                $authorname, $title, $posttime, trim(html2text(htmlspecialchars($body))), get_config('wwwroot') . $this->url
+                $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
             );
         }
     }
