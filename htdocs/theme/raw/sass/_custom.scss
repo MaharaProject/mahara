@@ -867,3 +867,20 @@ a.online-users {
 .modal-segment-heading {
     flex: 1;
 }
+
+// reduce size of uploaded logos appearing instituion settings page
+#institution_logohtml_container img {
+    max-height: $navbar-height;
+}
+#institution_logoxshtml_container img {
+    height: 48px;
+}
+#institution_logohtml_container,
+#institution_deletelogo_container,
+#institution_logoxshtml_container,
+#institution_deletelogoxs_container {
+    padding-left: 275px;
+    @include media-breakpoint-down(sm) {
+        padding-left: 0;
+    }
+}
