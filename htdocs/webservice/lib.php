@@ -446,7 +446,7 @@ function webservice_connection_definitions() {
         $plugins[$plugin]['notinstalled'] = array();
     }
     foreach (array_keys($plugins) as $plugin) {
-        if (table_exists(new XMLDBTable($plugin . '_installed'))) {
+        if (db_table_exists($plugin . '_installed')) {
             if ($installed = plugins_installed($plugin, true)) {
                 foreach ($installed as $i) {
                     $key = $i->name;
