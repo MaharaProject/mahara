@@ -3050,7 +3050,9 @@ function remote_avatar_url($email, $size) {
         log_warn('remote_avatar_url: size should be in (' . join(', ', $allowedsizes) . ')');
         $s = 40;
     }
-    $notfound = $THEME->get_image_url('no_userphoto' . $s);
+    // The no_userphoto at 100px doesn't have a size suffix
+    $notfoundimg = ($s == 100) ? 'no_userphoto' : 'no_userphoto' . $s;
+    $notfound = $THEME->get_image_url($notfoundimg);
     if (!empty($email) && get_config('remoteavatars')) {
         return remote_avatar($email, $s, $notfound);
     }
