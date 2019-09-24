@@ -1,10 +1,12 @@
 {include file="header.tpl"}
 
-<div id="view-wizard-controls" class="with-heading">
-    <a href="{$viewurl}" id="display_page">
-        {str tag=displayview section=view}
-        <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-    </a>
+<div class="pageactions" id="toolbar-buttons">
+    <div class="btn-group-vertical in-editor">
+        <a class="btn btn-secondary editviews" href="{$viewurl}" title="{str tag=displayview section=view}">
+            <span class="icon icon-lg icon-tv" aria-hidden="true" role="presentation"></span>
+            <span class="btn-title sr-only">{str tag=displayview section=view}</span>
+        </a>
+    </div>
 </div>
 
 <div class="grouppageswrap view-container">

@@ -7310,6 +7310,42 @@ class View {
     }
 
     /**
+    * Returns an array of the url for the "Return to..." button and button title
+    *@return array of url, title
+    */
+    public function get_return_to_url_and_title() {
+        $group = $this->get('group');
+        $institution = $this->get('institution');
+
+        if (!$group && !$institution) {
+            return array(
+                'url' => get_config('wwwroot') . "view/index.php",
+                'title' => get_string('returntoviews', 'view'),
+            );
+        }
+        else if ($group) {
+            return array(
+                'url' => get_config('wwwroot') . 'view/groupviews.php?group=' . $group,
+                'title' => get_string('returntogroupportfolios', 'group'),
+            );
+        }
+        else if ($institution) {
+            if ($institution == 'mahara') {
+                return array(
+                    'url' => get_config('wwwroot') . 'admin/site/views.php',
+                    'title' => get_string('returntositeportfolios', 'view'),
+                );
+            }
+            else {
+                return array(
+                    'url' => get_config('wwwroot') . 'view/institutionviews.php?institution=' . $institution,
+                    'title' => get_string('returntoinstitutionportfolios', 'view'),
+                );
+            }
+        }
+    }
+
+    /**
      * Fetch a list of versions for the particular view
      *
      * @param string $view the ID of the view we wish to retrieve versioning information from

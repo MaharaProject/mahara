@@ -10,15 +10,30 @@
         <span class="icon icon-lg icon-cogs"></span>
         <span class="btn-title sr-only">{if ($edittitle || $canuseskins) }{str tag=settings section=view}{else}{str tag=editlayout section=view}{/if}</span>
     </a>
-    <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}" title="{str tag=editcontent1 section=view}">
-        <span class="icon icon-lg icon-pencil-alt" aria-hidden="true" role="presentation"></span>
-        <span class="btn-title sr-only">{str tag=editcontent1 section=view}</span>
-    </a>
+    {if $selected == 'content'}
+        <a id='displaypagebtn' class="btn btn-secondary editviews displaycontent active" href="{$WWWROOT}view/view.php?id={$viewid}" title="{str tag=displayview section=view}">
+            <span class="icon icon-lg icon-tv" aria-hidden="true" role="presentation"></span>
+            <span class="btn-title sr-only">{str tag=displayview section=view}</span>
+        </a>
+    {else}
+        <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}" title="{str tag=editcontent1 section=view}">
+            <span class="icon icon-lg icon-pencil-alt" aria-hidden="true" role="presentation"></span>
+            <span class="btn-title sr-only">{str tag=editcontent1 section=view}</span>
+        </a>
+    {/if}
+
     {if !$accesssuspended && ($edittitle || $viewtype == 'share') && !$issitetemplate}
         <a class="btn btn-secondary editviews editshare {if $selected == 'share'}active{/if}" href="{$WWWROOT}view/accessurl.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"  title="{str tag=shareview1 section=view}">
             <span class="icon icon-lg icon-unlock" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=shareview1 section=view}</span>
         </a>
     {/if}
+
+    <a class="btn btn-secondary editviews returntolocation"
+        href={$url}
+        title="{$title}">
+        <span class="icon icon-lg icon-step-backward" aria-hidden="true" role="presentation"></span>
+        <span class="btn-title sr-only">{$title}</span>
+    </a>
     </div>
 </div>

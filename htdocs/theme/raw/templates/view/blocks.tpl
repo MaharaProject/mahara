@@ -1,6 +1,5 @@
 {include file="header.tpl"}
 
-{include file="view/editviewtabs.tpl" issiteview=$issiteview}
 <div class="view-instructions">
     <form action="{$formurl}" method="post" class="row">
         <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
@@ -51,38 +50,6 @@
             </div>
         </div>
     </form>
-
-    <div id="view-return-controls">
-        {if !$issitetemplate}
-        <a class="btn btn-secondary" href="{$displaylink}">
-            {str tag=displayview section=view}
-            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-        </a>
-        {/if}
-        {if !$groupid && !$institution}
-        <a class="btn btn-secondary" href="{$WWWROOT}view/index.php">
-            {str tag=returntoviews section=view}
-            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-        </a>
-        {/if}
-        {if $groupid}
-        <a class="btn btn-secondary" href="{$WWWROOT}view/groupviews.php?group={$groupid}">
-            {str tag=returntogroupportfolios section=group}
-            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-        </a>
-        {/if}
-        {if $institution}
-            {if $institution == 'mahara'}
-                <a class="btn btn-secondary" href="{$WWWROOT}admin/site/views.php">
-                {str tag=returntositeportfolios section=view}
-            {else}
-                <a class="btn btn-secondary" href="{$WWWROOT}view/institutionviews.php?institution={$institution}">
-                {str tag=returntoinstitutionportfolios section=view}
-            {/if}
-            <span class="icon icon-arrow-circle-right right" role="presentation" aria-hidden="true"></span>
-        </a>
-        {/if}
-    </div>
 </div>
 
 <div class="modal" id="addblock" role="dialog">
