@@ -4,7 +4,7 @@
             {foreach from=$foruminfo item=postinfo}
             <li class="list-group-item flush">
                 <div class="usericon-heading clearfix">
-                    <a href="{profile_url($postinfo->author)}" class="user-icon small-icon">
+                    <a href="{profile_url($postinfo->author)}" class="user-icon user-icon-30 small-icon">
                         <img src="{profile_icon_url user=$postinfo->author maxheight=40 maxwidth=40}" alt="{str tag=profileimagetext arg1=$postinfo->author|display_default_name}" class="float-left">
                     </a>
                     <h4 class="title list-group-item-heading">
