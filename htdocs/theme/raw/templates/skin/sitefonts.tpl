@@ -25,4 +25,15 @@
 </div>
 
 {$pagination|safe}
+{if $pagination_js}
+    <script>
+    {$pagination_js|safe}
+    $(document).on('pageupdated', function(e, data) {
+        wire_specimens();
+    });
+    wire_specimens();
+    </script>
+{/if}
+
+{include file="pagemodal.tpl"}
 {include file="footer.tpl"}

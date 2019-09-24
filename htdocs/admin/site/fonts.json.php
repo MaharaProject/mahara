@@ -48,7 +48,6 @@ $pagination = build_pagination(array(
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
-    'setlimit' => true,
     'datatable' => 'fontlist',
     'jsonscript' => 'admin/site/fonts.json.php',
     'resultcounttextsingular' => get_string('font', 'skin'),

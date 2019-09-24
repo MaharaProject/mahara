@@ -15,7 +15,7 @@
                         </li>
                         {if $font.fonttype == 'google'}
                             <li>
-                                <a class="btn-display" href="javascript:" onclick="window.open('http://www.google.com/webfonts/specimen/{$font.urlencode}', '_self')">
+                                <a class="btn-display" href="{$WWWROOT}admin/site/font/specimen.php?font={$font.urlencode}">
                                     {str tag="viewfontspecimen" section="skin"}
                                     <span class="accessible-hidden sr-only">
                                         {str tag=viewfontspecimenfor section=skin arg1=$font.title}
@@ -24,7 +24,7 @@
                             </li>
                         {else}
                             <li>
-                                <a class="btn-display" href="javascript:" onclick="window.open('{$WWWROOT}admin/site/font/specimen.php?font={$font.name}', '_self')">
+                                <a class="btn-display" href="{$WWWROOT}admin/site/font/specimen.php?font={$font.name}">
                                     {str tag="viewfontspecimen" section="skin"}
                                     <span class="accessible-hidden sr-only">
                                         {str tag=viewfontspecimenfor section=skin arg1=$font.title}

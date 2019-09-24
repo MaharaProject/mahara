@@ -97,7 +97,7 @@ $previewform = pieform(array(
         ),
         'submit' => array(
             'type' => 'submit',
-            'class' => 'btn-secondary',
+            'class' => 'btn-secondary btn-sm',
             'value' => get_string('preview', 'skin')
         )
     )
@@ -131,7 +131,6 @@ $pagination = build_pagination(array(
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
-    'setlimit' => true,
     'datatable' => 'fontlist',
     'jsonscript' => 'admin/site/fonts.json.php',
     'resultcounttextsingular' => get_string('font', 'skin'),
@@ -139,8 +138,23 @@ $pagination = build_pagination(array(
 ));
 
 $js = <<< EOF
+    function wire_specimens() {
+        $('.btn-display').each(function() {
+            var btn = $(this);
+            $(btn).off('click');
+            $(btn).on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var url = $(this).prop('href');
+                sendjsonrequest(url, {}, 'GET', function(data) {
+                    $('#page-modal .modal-body').html(data.data.html);
+                    $('#page-modal').modal('show');
+                });
+            });
+        });
+    }
+
 jQuery(function ($) {
-    p = {$pagination['javascript']}
 EOF;
 if ($offset > 0) {
     $js .= <<< EOF

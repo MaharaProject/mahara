@@ -54,7 +54,10 @@ $smarty->assign('fonttitle', $fonttitle);
 $smarty->assign('fontlicence', $fontlicence);
 $specimen = $smarty->fetch('skin/specimen.tpl');
 
-
-header('Content-type: text/html');
-echo $specimen;
-exit;
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'font' => $font,
+        'html' => $specimen
+    )
+));

@@ -14,7 +14,7 @@ body {
     max-width: 700px;
     padding: 15px;
 }
-.superspecimen .superheader {
+.superspecimen {
     margin-bottom: 10px;
 }
 .superspecimen h1 {
@@ -82,9 +82,6 @@ p {
 <body>
 
 <div class="superspecimen">
-<div class="superheader">
-    <img src="Mahara_webfonts.png" border="0">
-</div>
 <h1>{$fonttitle}</h1>
 {$fontlicence|safe}
 <div class="fontcard">
