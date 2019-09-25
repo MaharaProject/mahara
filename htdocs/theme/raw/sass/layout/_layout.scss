@@ -46,12 +46,11 @@ body {
     clear:both;
 }
 
-.wallpost {
-    &:first-child {
-        margin-top: 20px;
-    }
-    p {
-        margin-bottom: 0;
+.wall {
+    margin-top: 20px;
+    .lead {
+        background-color: $gray-100;
+        padding: $alert-padding-y $alert-padding-x;
     }
 }
 

@@ -82,13 +82,6 @@
         }
     }
 
-    // wallpost blocks don't need secdonary card border color
-    .wallpost {
-        .card-header {
-            border-color: $card-border-color;
-        }
-    }
-
     // pdf blocks need padding taken away
     &.bt-pdf .block > .card-body {
       padding: 0;

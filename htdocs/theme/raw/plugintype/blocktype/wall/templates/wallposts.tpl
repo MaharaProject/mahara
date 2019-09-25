@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 
-    <h1>{$displayname}: {str tag='wall' section='blocktype.wall'}</h1>
+    <h2>{$displayname}: {str tag='wall' section='blocktype.wall'}</h2>
 
     <a href="{profile_url($owner)}" class="btn btn-secondary">
         <span class="icon icon-arrow-left left" role="presentation" aria-hidden="true"></span>

@@ -2992,7 +2992,7 @@ function profile_icon_url($user, $maxwidth=40, $maxheight=40) {
     }
 
     // Available sizes of the 'no_userphoto' image:
-    $allowedsizes = array(16, 20, 25, 40, 50, 60, 100);
+    $allowedsizes = array(16, 20, 25, 30, 40, 50, 60, 100);
     if ($maxwidth != $maxheight || !in_array($maxwidth, $allowedsizes)) {
         log_warn('profile_icon_url: maxwidth, maxheight should be equal and in (' . join(', ', $allowedsizes) . ')');
     }

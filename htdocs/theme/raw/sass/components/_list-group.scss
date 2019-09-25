@@ -89,6 +89,10 @@
     .collection-item & {
         font-size: $h3-font-size;
     }
+
+    .postedon {
+        font-family: $font-family-base;
+    }
 }
 
 .list-group-item h4.list-group-item-heading {
@@ -108,6 +112,12 @@
     .list-group-item-heading {
         color: $state-warning-text;
 
+    }
+}
+.list-group-item-private {
+    background-color: $gray-100;
+    .text-midtone {
+        color: $theme-text-color;
     }
 }
 
@@ -356,4 +366,12 @@
     clear: both;
     width: 100%;
     cursor: pointer;
+}
+
+// wallpost block borders
+.card.card-secondary .list-group .wallpost:first-child {
+    border-top: 1px solid $list-group-border;
+}
+.card.bt-wall > .block .list-group:last-child .list-group-item:last-child {
+    border-bottom: 1px solid $list-group-border;
 }
