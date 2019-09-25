@@ -32,7 +32,7 @@
                             {$task->description|clean_html|safe}
                         {/if}
                         {if $task->tags}
-                            <div class="tags">
+                            <div class="tags text-small">
                                 <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
                             </div>
                         {/if}
@@ -81,7 +81,7 @@
                             {$task->description|clean_html|safe}
                         {/if}
                         {if $task->tags}
-                            <div class="tags">
+                            <div class="tags text-small">
                                 <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
                             </div>
                         {/if}

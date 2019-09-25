@@ -265,14 +265,18 @@ label.lead {
     margin: 10px 0;
 }
 
-
 .metadata {
     font-family: $font-family-sans-serif;
-    font-size: 0.8em;
-    color: $gray-500;
-    .title & {
-        margin-left: 5px;
-    }
+    font-size: $font-size-sm;
+    font-weight: 400;
+    color: $theme-text-midtone-color;
+}
+
+.postedon {
+    font-family: $font-family-sans-serif;
+    font-size: $font-size-sm;
+    font-weight: 400;
+    color: $theme-text-midtone-color;
 }
 
 .license {

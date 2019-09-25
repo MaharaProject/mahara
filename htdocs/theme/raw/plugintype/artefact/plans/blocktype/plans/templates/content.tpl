@@ -25,7 +25,7 @@
         <p>{$plan.description}</p>
 
         {if $plan.tags}
-            <div class="tags">
+            <div class="tags text-small">
                 <strong>{str tag=tags}:</strong> {list_tags owner=$plan.owner tags=$plan.tags view=$plan.view}
             </div>
         {/if}

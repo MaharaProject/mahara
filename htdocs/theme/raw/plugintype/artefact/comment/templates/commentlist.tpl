@@ -1,13 +1,13 @@
 <!-- The "feedbacktable" class is used as an identifier by Javascript -->
 <div class="list-group list-group-lite">
 {foreach from=$data item=item}
-    <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-warning{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
+    <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-private{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
         <div class="usericon-heading">
-            <span class="user-icon user-icon-40 float-left" role="presentation" aria-hidden="true">
+            <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
                 {if $item->author && !$item->author->deleted}
-                    <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
+                    <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
                 {else}
-                    <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
+                    <img src="{profile_icon_url user=null maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
             <h5 class="float-left list-group-item-heading">

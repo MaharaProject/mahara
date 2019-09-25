@@ -21,11 +21,23 @@
     margin: 20px 0;
 }
 
-.task-item .complete-task .icon,
-.task-item .overdue-task .icon {
-    margin-left: -8px; // correct alignment
+// Plans
+.task-item {
+    .complete-task,
+    .overdue-task {
+        margin-left: 15px;
+        .icon {
+            margin-left: -22px; // correct alignment
+            padding-right: 2px;
+        }
+    }
+    .card-body {
+        padding-bottom: 0;
+        .tags {
+            margin-bottom: 0;
+        }
+    }
 }
-
 .task-item .btn-group {
     margin-right: -8px; // correct alignment
     a {

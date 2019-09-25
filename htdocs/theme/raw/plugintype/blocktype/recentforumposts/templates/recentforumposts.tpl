@@ -9,12 +9,12 @@
                     </a>
                     <h4 class="title list-group-item-heading">
                         <a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic}&post={$postinfo->id}">
-                            {$postinfo->topicname}
+                            {$postinfo->topicname}<br />
                             <span class="metadata text-small">
                                 {if !$postinfo->author->deleted}
-                                    - {$postinfo->author|display_name}
+                                    {$postinfo->author|display_name}
                                 {else}
-                                    - {$postinfo->author|full_name}
+                                    {$postinfo->author|full_name}
                                 {/if}
                             </span>
                         </a>
