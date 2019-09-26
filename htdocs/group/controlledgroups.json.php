@@ -38,7 +38,7 @@ $initialgroups = array('add' => array(), 'invite' => array());
      *           );
 */
 $controlled = get_records_sql_array("SELECT g.*, gm.role,
-          (SELECT 1 FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS member,
+          (SELECT 1 FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS \"member\",
           (SELECT gm1.role FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS memberrole
           FROM {group} g
           JOIN {group_member} gm ON (gm.group = g.id)
@@ -76,7 +76,7 @@ if ($controlled) {
 */
 $invite = get_records_sql_array("SELECT g.*, gm.role,
         (SELECT 1 FROM {group_member_invite} gi WHERE gi.member = ? AND gi.group = g.id) AS invited,
-        (SELECT 1 FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS member
+        (SELECT 1 FROM {group_member} gm1 WHERE gm1.member = ? AND gm1.group = g.id) AS \"member\"
         FROM {group} g
         JOIN {group_member} gm ON (gm.group = g.id)
         WHERE gm.member = ?

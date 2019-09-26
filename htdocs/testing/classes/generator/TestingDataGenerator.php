@@ -2132,7 +2132,7 @@ EOD;
       }
 
       //check that the creator is an admin of the group (for permission to create forum)
-      if (!$isadmin = get_field('group_member', 'member', 'group', $groupid, 'role', "admin", 'member', $creatorid)) {
+      if (!$isadmin = get_field('group_member', 'member', 'group', $groupid, 'role', "admin", "member", $creatorid)) {
         throw new SystemException("The " . $record['creator'] . " does not have admin rights in group " . $record['group'] . "to create a forum");
       }
 
@@ -2191,7 +2191,7 @@ EOD;
 
         // check the user exists and is part of the group i.e. can make a post
         if ($userid = get_field('usr','id', 'username', $record['user'])) {
-            if (!get_field('group_member', 'member', 'group', $groupid, 'member', $userid)) {
+            if (!get_field('group_member', 'member', 'group', $groupid, "member", $userid)) {
                 throw new SystemException("The " . $record['user'] . " is not a member in the group " . $record['group']);
             }
         }

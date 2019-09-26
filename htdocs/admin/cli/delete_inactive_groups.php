@@ -127,7 +127,7 @@ if (empty($institution) && empty($emptygroups) && empty($beforedate) && empty($o
 }
 
 // Find all the groups we need to deal with based on the params provided
-$selectsql = "SELECT g.id, g.name, 0 AS totaladmins, 0 AS totalmembers, g.mtime, NULL AS member FROM {group} g";
+$selectsql = "SELECT g.id, g.name, 0 AS totaladmins, 0 AS totalmembers, g.mtime, NULL AS \"member\" FROM {group} g";
 $joinsql = "";
 $unionsql = "";
 $wheresql = " WHERE g.id != 0";  // dummy where to make things easier
@@ -165,7 +165,7 @@ if ($emptygroups && $onlyadmins) {
                    (SELECT gm3.member
                     FROM {group_member} gm3
                     WHERE gm3.group = gm.group
-                    LIMIT 1) AS member
+                    LIMIT 1) AS \"member\"
                    FROM {group} ag
                    JOIN {group_member} gm ON gm.group = ag.id";
     $unionwheresql = " WHERE ag.id != 0";
