@@ -414,3 +414,16 @@
         }
     }
 }
+
+.memberswrap,
+#friendslist {
+    .list-group-item {
+        .user-icon {
+            margin-top: 0;
+            margin-left: 0;
+        }
+        .detail {
+            margin-left: 53px;
+        }
+    }
+}

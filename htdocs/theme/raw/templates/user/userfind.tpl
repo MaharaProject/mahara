@@ -1,59 +1,57 @@
 <div class="list-group-item {if $user->pending} list-group-item-warning{/if}">
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
-            <div class="usericon-heading">
-                <div class="user-icon user-icon-40 float-left">
-                    <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
-                </div>
-                <h4 class="list-group-item-heading middle">
-                    <a href="{profile_url($user)}" >
-                        <span class="sr-only">{$user->display_name}</span>
-                        {$user->display_name}
-                    </a>
-                    {if $user->pending}
-                    <span class="pendingfriend text-small text-midtone">
-                        - {str tag='pendingsince' section='group' arg1=$user->pending_time}
-                    </span>
-                    {elseif $user->friend && $page == 'find'}
-                    <span class="existingfriend text-small text-midtone">
-                        - {str tag='existingfriend' section='group'}
-                    </span>
-                    {/if}
-
-                    {if $user->friend && $user->views}
-                    <p class="viewlist">
-                        <strong>
-                            {str tag='Portfolios' section='view'}:
-                        </strong>
-                        {foreach from=$user->views item=view name=addr}
-                        <a href="{$view->fullurl}">{$view->title}</a>{if !$dwoo.foreach.addr.last}, {/if}
-                        {/foreach}
-                    </p>
-                    {/if}
-
-                </h4>
-                {if $user->institutions}
-                <div class="memberof detail text-small">
-                    <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
-                    {$user->institutions|safe}
-                </div>
-                {/if}
-                {if $user->introduction}
-                <div class="text-small text-midtone">
-                    <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
-                        href="#userintro{$user->id}" role="button" aria-expanded="false"
-                        aria-controls="userintro{$user->id}">
-                        <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
-                        {str tag=showintroduction section=group}
-                    </a>
-                </div>
-                <div class="introduction detail text-small">
-                    <div class="collapse" id="userintro{$user->id}">
-                        {$user->introduction|safe}
-                    </div>
-                </div>
-                {/if}
+            <div class="user-icon user-icon-40 float-left">
+                <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
+            <h4 class="list-group-item-heading middle">
+                <a href="{profile_url($user)}" >
+                    <span class="sr-only">{$user->display_name}</span>
+                    {$user->display_name}
+                </a>
+                {if $user->pending}
+                <span class="pendingfriend text-small text-midtone">
+                    - {str tag='pendingsince' section='group' arg1=$user->pending_time}
+                </span>
+                {elseif $user->friend && $page == 'find'}
+                <span class="existingfriend text-small text-midtone">
+                    - {str tag='existingfriend' section='group'}
+                </span>
+                {/if}
+
+                {if $user->friend && $user->views}
+                <p class="viewlist">
+                    <strong>
+                        {str tag='Portfolios' section='view'}:
+                    </strong>
+                    {foreach from=$user->views item=view name=addr}
+                    <a href="{$view->fullurl}">{$view->title}</a>{if !$dwoo.foreach.addr.last}, {/if}
+                    {/foreach}
+                </p>
+                {/if}
+
+            </h4>
+            {if $user->institutions}
+            <div class="memberof detail text-small">
+                <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
+                {$user->institutions|safe}
+            </div>
+            {/if}
+            {if $user->introduction}
+            <div class="text-small text-midtone">
+                <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
+                    href="#userintro{$user->id}" role="button" aria-expanded="false"
+                    aria-controls="userintro{$user->id}">
+                    <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
+                    {str tag=showintroduction section=group}
+                </a>
+            </div>
+            <div class="introduction detail text-small">
+                <div class="collapse" id="userintro{$user->id}">
+                    {$user->introduction|safe}
+                </div>
+            </div>
+            {/if}
         </div>
         <div class="col-md-4">
             <ul class="list-unstyled inner-link user-action-list">

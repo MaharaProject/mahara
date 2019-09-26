@@ -234,19 +234,23 @@ td.action-list-copy {
     }
 }
 // Edit page configure buttons
-.card-secondary .blockinstance-controls .btn-group-top {
+.card-secondary .card-header .blockinstance-controls .btn-group-top {
     position: absolute;
     top: 11px;
     right: 10px;
-    margin-top: -10px;
+    margin-top: 0px;
     .btn {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        border-radius: $border-radius;
         border-color: transparent;
-        border-top: 0;
         background: scale-color($btn-secondary-bg, $lightness: 40%);
         &:hover {
             background: rgba($btn-secondary-bg, 1);
+        }
+        &:first-child {
+            border-radius: $border-radius 0 0 $border-radius;
+        }
+        &:last-child {
+            border-radius: 0 $border-radius $border-radius 0;
         }
     }
 }

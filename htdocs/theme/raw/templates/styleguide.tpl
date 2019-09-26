@@ -80,15 +80,19 @@ This pair of buttons is used for deleting or editing an item.
 ### Block edit buttons
 This pair of buttons is used for editing or deleting a block item on a page.
 ```
-<div class="card-header">
-<span class="float-left btn-group btn-group-top">
-    <button class="configurebutton btn btn-inverse btn-sm">
-        <span class="icon icon-cog icon-lg"></span>
-    </button>
-    <button class="deletebutton btn btn-inverse btn-sm">
-        <span class="icon icon-trash-alt text-danger icon-lg"></span>
-    </button>
-</span>
+<div class="blockinstance card card-secondary clearfix">
+    <div class="card-header">
+      <span class="blockinstance-controls">
+          <span class="float-right btn-group btn-group-top">
+              <button class="configurebutton btn btn-inverse btn-sm">
+                  <span class="icon icon-cog icon-lg"></span>
+              </button>
+              <button class="deletebutton btn btn-inverse btn-sm">
+                  <span class="icon icon-trash-alt text-danger icon-lg"></span>
+              </button>
+          </span>
+      </span>
+    </div>
 </div>
 ```
 </section>
