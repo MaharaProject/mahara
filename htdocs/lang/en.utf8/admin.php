@@ -167,6 +167,7 @@ $string['pluginadmindescription'] = 'Install and configure plugins';
 $string['missingplugindisabled1'] = 'The installed plugin "%s" could not be found and has been disabled';
 $string['installedpluginsmissing'] = 'The following plugins are installed but can no longer be found';
 $string['ensurepluginsexist'] = 'Please make sure all your installed plugins are available under %s and readable by the webserver.';
+$string['plugintypedescription_blocktype'] = 'Move individual blocks to change the order in which they appear in the placeholder block that is put on a page. The numbers indicate how many times a specific block type is already in use on the site.';
 
 $string['htmlfilters'] = 'HTML filters';
 $string['htmlfiltersdescription'] = 'Enable new filters for HTML Purifier';
