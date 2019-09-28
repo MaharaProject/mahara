@@ -1971,31 +1971,59 @@ function get_db_version() {
     return $version;
 }
 
+/**
+ * Check to see if table column exists by querying it and catching error if not
+ * This is a faster way than using the field_exists() function in lib/ddl.php
+ * NOTE: When doing an upgrade we fallback to check the table column in the old way to avoid
+ * inconsistent state before db_commit() is called.
+ */
 function db_column_exists($table, $field) {
     global $DB_IGNORE_SQL_EXCEPTIONS;
-    // We will check to see if a column exists by seeing if it throws an error or not
-    try {
-        $DB_IGNORE_SQL_EXCEPTIONS = true;
-        get_column_sql("SELECT " . db_quote_identifier($field) . " FROM " . db_table_name($table) . " LIMIT 1");
-        $DB_IGNORE_SQL_EXCEPTIONS = false;
-        return true;
+
+    if (defined('INSTALLER')) {
+        // We do the check in the old way
+        require_once('ddl.php');
+        $table = new XMLDBTable($table);
+        $field = new XMLDBField($field);
+        return field_exists($table, $field);
     }
-    catch (SQLException $e) {
-        return false;
+    else {
+        // We will check to see if a column exists by seeing if it throws an error or not
+        try {
+            $DB_IGNORE_SQL_EXCEPTIONS = true;
+            get_column_sql("SELECT " . db_quote_identifier($field) . " FROM " . db_table_name($table) . " LIMIT 1");
+            $DB_IGNORE_SQL_EXCEPTIONS = false;
+            return true;
+        }
+        catch (SQLException $e) {
+            return false;
+        }
     }
 }
 
+/**
+ * Check to see if table exists by querying it and catching error if not
+ * This is a faster way than using the table_exists() function in lib/ddl.php
+ * NOTE: When doing an upgrade we fallback to check the table in the old way to avoid
+ * inconsistent state before db_commit() is called.
+ */
 function db_table_exists($table) {
     global $DB_IGNORE_SQL_EXCEPTIONS;
-    // We will check to see if a table exists by seeing if it throws an error or not
-    // This is meant to be a faster way than using the table_exists() function in lib/ddl.php
-    try {
-        $DB_IGNORE_SQL_EXCEPTIONS = true;
-        get_column_sql("SELECT 1 FROM " . db_table_name($table) . " LIMIT 1");
-        $DB_IGNORE_SQL_EXCEPTIONS = false;
-        return true;
+
+    if (defined('INSTALLER')) {
+        // We do the check in the old way
+        require_once('ddl.php');
+        return table_exists(new XMLDBTable($table));
     }
-    catch (SQLException $e) {
-        return false;
+    else {
+        try {
+            $DB_IGNORE_SQL_EXCEPTIONS = true;
+            get_column_sql("SELECT 1 FROM " . db_table_name($table) . " LIMIT 1");
+            $DB_IGNORE_SQL_EXCEPTIONS = false;
+            return true;
+        }
+        catch (SQLException $e) {
+            return false;
+        }
     }
 }
