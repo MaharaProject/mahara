@@ -41,7 +41,7 @@
                         </span>
                     {/if}
                     <span class="subject">
-                        {$item->subject|truncate:80}
+                        {$item->subject|str_shorten_html:50:true|safe}
                     </span>
 
                     <span class="metadata">
