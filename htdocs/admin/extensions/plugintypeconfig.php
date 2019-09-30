@@ -17,8 +17,9 @@ define('TITLE', get_string('pluginadmin', 'admin'));
 
 $plugintype = param_alpha('plugintype');
 
-define('SECTION_PLUGINTYPE', $plugintype);
-define('SECTION_PAGE', 'pluginconfig');
+define('SECTION_PLUGINTYPE', 'core');
+define('SECTION_PLUGINNAME', 'admin');
+define('SECTION_PAGE', $plugintype);
 
 require_once(get_config('docroot') . $plugintype . '/lib.php');
 $classname = 'Plugin' . ucfirst($plugintype);
@@ -66,6 +67,7 @@ $form = pieform($form);
 $smarty = smarty(array('js/jquery/jquery-ui/js/jquery-ui.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js'), $formcss);
 $smarty->assign('form', $form);
 $smarty->assign('plugintype', $plugintype);
+$smarty->assign('plugintypedescription', (string_exists('plugintypedescription_' . $plugintype, 'admin') ? get_string('plugintypedescription_' . $plugintype, 'admin') : false));
 $heading = get_string('pluginadmin', 'admin') . ': ' . $plugintype;
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->assign('INLINEJAVASCRIPT', $formjs);
