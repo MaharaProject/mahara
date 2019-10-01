@@ -294,7 +294,7 @@ class View {
             }
         }
 
-        if (empty(self::$layoutcolumns)) {
+        if (empty(self::$layoutcolumns) && db_table_exists('view_layout_columns')) {
             self::$layoutcolumns = get_records_assoc('view_layout_columns', '', '', 'columns,id');
         }
 
@@ -587,9 +587,7 @@ class View {
 
         // Create the view
         $defaultdata = array(
-            'numcolumns'    => 2, // Obsolete - need to leave for upgrade purposes. This can be deleted once we no longer need to support direct upgrades from 15.10 and earlier.
             'numrows'       => 1,
-            'columnsperrow' => self::default_columnsperrow(),
             'template'      => 0,
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
@@ -854,9 +852,7 @@ class View {
         }
 
         db_begin();
-        $creating = false;
         if (empty($this->id)) {
-            $creating = true;
             // users are only allowed one profile view
             if (!$this->template && $this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
                 throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
@@ -906,25 +902,6 @@ class View {
             delete_records('view_autocreate_grouptype', 'view', $this->get('id'));
             foreach ($this->copynewgroups as $grouptype) {
                 insert_record('view_autocreate_grouptype', (object)array( 'view' => $this->get('id'), 'grouptype' => $grouptype));
-            }
-        }
-
-        $columnsperrowchanged = (!empty($this->oldcolumnsperrow)) ? array_udiff($this->oldcolumnsperrow, $this->columnsperrow, function($oa, $ob) {
-            $rows = $oa->row - $ob->row;
-            $columns = $oa->columns - $ob->columns;
-            if ($rows != 0) {
-                return $rows;
-            }
-            else if ($columns != 0) {
-                return $columns;
-            }
-            return 0;
-        }) : false;
-
-        if (isset($this->columnsperrow) && (!empty($columnsperrowchanged) || $creating)) {
-            delete_records('view_rows_columns', 'view', $this->get('id'));
-            foreach ($this->get_columnsperrow() as $viewrow) {
-                insert_record('view_rows_columns', (object)array( 'view' => $this->get('id'), 'row' => $viewrow->row, 'columns' => $viewrow->columns));
             }
         }
 

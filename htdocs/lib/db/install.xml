@@ -700,41 +700,6 @@
                 <KEY NAME="foreign" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
-        <TABLE NAME="view_layout_columns">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="columns" TYPE="int" LENGTH="1" NOTNULL="true"/>
-                <FIELD NAME="widths" TYPE="char" LENGTH="255" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="columnwidthuk" TYPE="unique" FIELDS="columns,widths"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_layout">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-                <FIELD NAME="rows" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
-                <FIELD NAME="iscustom" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-                <FIELD NAME="layoutmenuorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="view_layout_rows_columns">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="viewlayout" TYPE="int" LENGTH="10" NOTNULL="true"/>
-                <FIELD NAME="row" TYPE="int" LENGTH="1" NOTNULL="true"/>
-                <FIELD NAME="columns" TYPE="int" LENGTH="10" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-                <KEY NAME="rowfk" TYPE="foreign" FIELDS="viewlayout" REFTABLE="view_layout" REFFIELDS="id"/>
-                <KEY NAME="columnsfk" TYPE="foreign" FIELDS="columns" REFTABLE="view_layout_columns" REFFIELDS="id"/>
-            </KEYS>
-        </TABLE>
         <TABLE NAME="view_type">
             <FIELDS>
                 <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" />
@@ -804,21 +769,6 @@
             <INDEXES>
                 <INDEX NAME="urliduk" UNIQUE="true" FIELDS="urlid,owner,group,institution" />
             </INDEXES>
-        </TABLE>
-        <TABLE NAME="usr_custom_layout">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="false"/>
-                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false"/>
-                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
-                <FIELD NAME="layout" TYPE="int" LENGTH="10" NOTNULL="true"/>
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
-                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
-                <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
-                <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
-            </KEYS>
         </TABLE>
         <TABLE NAME="view_rows_columns">
             <FIELDS>
