@@ -29,7 +29,7 @@
             {/if}
         {/if}
         </a>
-    {else if $justdetails}
+    {elseif $justdetails}
         <a class="modal_link list-group-heading {if $displayiconsonly}btn btn-secondary{/if}"
             data-toggle="modal-docked"
             data-target="#configureblock"

@@ -156,7 +156,11 @@ function set_up_modal_events() {
 
     $('#configureblock .submitcancel[name="submit"]').off('click');
     $('#configureblock .submitcancel[name="submit"]').on('click', function(e) {
-        if (tinymce.activeEditor.getContent() !== '') {
+        if (tinymce.activeEditor.getContent()) {
+            $('#configureblock').find('textarea.wysiwyg').each(function() {
+                modal_textarea_id = $(this).attr('id');
+                tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+            });
             dock.hide();
         }
         $("#configureblock input:file").each(function() {
@@ -171,11 +175,6 @@ function set_up_modal_events() {
                 }
                 dock.hide();
             }
-        });
-
-        $('#configureblock').find('textarea.wysiwyg').each(function() {
-            modal_textarea_id = $(this).attr('id');
-            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
         });
     });
 
@@ -387,6 +386,15 @@ function toggleDetailsBtn() {
         });
     });
 }
+
+// Make sure active block headers still display after pagination
+$(document).on('pageupdated', function(e, data) {
+    console.log('pageupdated');
+    var headers = $('#main-column-container').find('.block-header');
+    if ($('#details-btn').hasClass('active')) {
+        headers.removeClass('d-none');
+    }
+});
 
 jQuery(function($) {
 

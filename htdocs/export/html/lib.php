@@ -630,13 +630,27 @@ class PluginExportHtml extends PluginExport {
 * @param BlockInstance $bi      The File(s) to download block
 * @param array  &$idarray       The exisiting array that stores modal ids to be created
 */
-    private function get_folder_modals(&$idarray, BlockInstance $bi) {
-        require_once(get_config('docroot') . 'artefact/resume/blocktype/entireresume/lib.php');
-        $artefacts = PluginBlocktypeFolder::get_current_artefacts($bi);
-        if (!empty($artefacts)) {
-            $idarray = array_merge($idarray, $artefacts);
+private function get_folder_modals(&$idarray, BlockInstance $bi) {
+    $artefacts = PluginBlocktypeFolder::get_current_artefacts($bi);
+    $i = 0;
+    $allartefacts = array();
+    while (count($artefacts) > 0) {
+        if ($artefact = artefact_instance_from_id($artefacts[$i])) {
+            if ($artefact->get('artefacttype') == 'folder') {
+                $children = $artefact->get_children_instances();
+                foreach ($children as $childid) {
+                   array_push($artefacts, $childid->get('id'));
+                }
+            }
         }
+        $allartefacts[] = $artefacts[$i];
+        unset($artefacts[$i]);
+        $i++;
     }
+    if (!empty($allartefacts)) {
+        $idarray = array_unique(array_merge($idarray, $allartefacts));
+    }
+}
 
 /**
 * Exports the hard-coded modals for the blocks into relevant pages.

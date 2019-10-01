@@ -1,4 +1,4 @@
-<div id="thumbnails{$blockid}" class="card-body thumbnails js-masonry">
+<div id="thumbnails{$instanceid}" class="card-body thumbnails js-masonry">
     {foreach from=$images item=image}
         <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;height:{$image.squaredimensions}px;"{/if} class="thumb">
             <a data-fancybox="{$image.fancybox}" href="{$image.link}" title="{$image.title}" data-caption="{$image.title}">

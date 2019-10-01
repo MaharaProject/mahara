@@ -419,11 +419,11 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
         $smarty = smarty_core();
         $smarty->assign('count', count($images));
+        $smarty->assign('instanceid', $instance->get('id'));
         $smarty->assign('images', $images);
         $smarty->assign('showdescription', (!empty($configdata['showdescription'])) ? $configdata['showdescription'] : false);
         $smarty->assign('width', $width);
         $smarty->assign('editing', $editing);
-        $smarty->assign('blockid', $instance->get('id'));
         if (isset($height)) {
             $smarty->assign('height', $height);
         }
