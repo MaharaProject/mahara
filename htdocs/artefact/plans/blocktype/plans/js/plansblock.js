@@ -1,12 +1,21 @@
+/**
+ *
+ * @package    mahara
+ * @subpackage artefact-plans
+ * @author     Catalyst IT Ltd, Alexander Del Ponte
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
 function rewriteTaskTitles(blockid, planid) {
-  jQuery('tasklist_' + blockid + '_plan' + planid + ' a.task-title').each(function() {
-      jQuery(this).off();
-      jQuery(this).on('click', function(e) {
-          e.preventDefault();
-          var description = jQuery(this).parent().find('div.task-desc');
-          description.toggleClass('d-none');
-      });
-  });
+    jQuery('tasklist_' + blockid + '_plan' + planid + ' a.task-title').each(function() {
+        jQuery(this).off();
+        jQuery(this).on('click', function(e) {
+            e.preventDefault();
+            var description = jQuery(this).parent().find('div.task-desc');
+            description.toggleClass('d-none');
+        });
+    });
 }
 function TaskPager(blockid, planid) {
     var self = this;
@@ -33,7 +42,7 @@ function changeCheckBox(taskid, state) {
 function saveCheckBoxChange(taskid) {
     var params = {};
     params.taskid = taskid;
-    sendjsonrequest(config.wwwroot + 'artefact/plans/checktask.json.php', params, 'POST', function(data) {
+    sendjsonrequest(config.wwwroot + 'artefact/plans/block/checktask.json.php', params, 'POST', function(data) {
         if (data.data) {
             changeCheckBox(data.data.artefact, data.data.state);
         }

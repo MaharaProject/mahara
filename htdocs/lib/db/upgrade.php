@@ -1111,7 +1111,7 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2018122700) {
         // Every day, check if the bounce count needs to be reset
-        $cron = new StdClass;
+        $cron = new stdClass();
         $cron->callfunction = 'cron_email_reset_rebounce';
         $cron->minute       = rand(0, 59);
         $cron->hour         = rand(0, 23);

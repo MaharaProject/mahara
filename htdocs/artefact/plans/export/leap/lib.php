@@ -2,8 +2,8 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-plans-export-leap
- * @author     Catalyst IT Ltd
+ * @subpackage artefact-plans
+ * @author     Catalyst IT Ltd, Alexander Del Ponte
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -18,7 +18,7 @@ class LeapExportElementPlan extends LeapExportElement {
     }
 
     public function get_template_path() {
-        return 'export:leap/plans:plan.tpl';
+        return 'artefact:plans:export/leap/plan.tpl';
     }
 }
 

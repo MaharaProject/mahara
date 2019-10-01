@@ -811,6 +811,30 @@ class View {
         return false;
     }
 
+    public function get_group_id_of_corresponding_group_task() {
+        $collection = $this->get_collection();
+        if ($collection) {
+            $portfolioelement = $collection;
+        }
+        else {
+            $portfolioelement = $this;
+        }
+        $portfolioelementtype = strtolower(get_class($portfolioelement));
+        $portfolioelementid = $portfolioelement->get('id');
+
+        $sql = 'SELECT * FROM {artefact} AS a '.
+            'INNER JOIN {artefact_plans_task} AS gt ON gt.artefact = a.id '.
+            'INNER JOIN {artefact_plans_task} AS ut ON ut.rootgrouptask = gt.artefact '.
+            'WHERE ut.outcometype = ? AND ut.outcome = ?';
+
+        $result = get_record_sql($sql, [$portfolioelementtype, $portfolioelementid]);
+
+        if ($result && $result->group) {
+            return $result->group;
+        }
+        return false;
+    }
+
     /**
      * View destructor. Calls commit if necessary.
      *
@@ -5978,7 +6002,7 @@ class View {
                         else {
                             // Need to find the views to add it to
                             foreach ($viewdata as $k => $v) {
-                                if (is_null($v->id)) {
+                                if (!isset($v->id) || is_null($v->id)) {
                                     continue;
                                 }
                                 $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
@@ -6947,6 +6971,48 @@ class View {
         return array($collections, $views);
     }
 
+    /**
+     * @param array $portfolioelements
+     * @param int $groupid
+     * @return array
+     * @throws SQLException
+     */
+    private static function extract_group_selection_plan_outcomes_and_remove_foreign_ones(array &$portfolioelements, $elementclass, $groupid) {
+        $grouptaskoutcomes = [];
+        /** @var \View|\Collection $portfolioobject */
+        foreach($portfolioelements as $id => $portfolioelement) {
+            $portfolioobject = new $elementclass($id);
+            switch ($portfolioobject->get_group_id_of_corresponding_group_task()) {
+                // Element is assigned as outcome to a grouptask in this group - Extract it
+                case $groupid:
+                    $grouptaskoutcomes[$id] = $portfolioelements[$id];
+                    unset($portfolioelements[$id]);
+                    break;
+                // Element is not assigned as outcome to any grouptask - Leave it in
+                case false:
+                    break;
+                // Element is outcome assigned to a grouptask of another group - Filter it out
+                default:
+                    unset($portfolioelements[$id]);
+            }
+        }
+        return $grouptaskoutcomes;
+    }
+
+    /**
+     * @param int $userid
+     * @param int $groupid
+     * @return array
+     * @throws SQLException
+     */
+    public static function get_views_and_collections_considering_plantasks($userid, $groupid) {
+        list($collections, $views) = self::get_views_and_collections($userid);
+
+        $grouptaskoutcomecollections = self::extract_group_selection_plan_outcomes_and_remove_foreign_ones($collections, 'Collection', $groupid);
+        $grouptaskoutcomeviews = self::extract_group_selection_plan_outcomes_and_remove_foreign_ones($views, 'View', $groupid);
+
+        return [$collections, $views, $grouptaskoutcomecollections, $grouptaskoutcomeviews];
+    }
 
     // Returns a string describing the override access for a view record
     public static function access_override_description($v) {
@@ -7672,6 +7738,12 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
     $options = array();
     foreach ($tutorgroupdata as $group) {
         $options[$group->id] = $group->name;
+    }
+
+    $selectiontaskgroupid = $view->get_group_id_of_corresponding_group_task();
+
+    if ($selectiontaskgroupid && array_key_exists($selectiontaskgroupid, $options)) {
+        $options = array_intersect_key($options, [$selectiontaskgroupid => 'Fill options only with this entry']);
     }
 
     // This form sucks from a language string point of view. It should

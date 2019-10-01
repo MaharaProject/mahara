@@ -2,8 +2,8 @@
 /**
  *
  * @package    mahara
- * @subpackage artefact-plans-import-leap
- * @author     Catalyst IT Ltd
+ * @subpackage artefact-plans
+ * @author     Catalyst IT Ltd, Alexander Del Ponte
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -167,6 +167,7 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
             if (!empty($dates['target']['value'])) {
                 $completiondate = strtotime($dates['target']['value']);
             }
+            $updated = strtotime($entry->updated);
             $completiondate = empty($completiondate) ? $updated : $completiondate;
 
             $completed = 0;
@@ -261,7 +262,7 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
             $ancestorids = $importer->get_artefactids_imported_by_entryid($ancestorid);
             $artefactids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
             if (empty($artefactids[0])) {
-                throw new ImportException($importer, 'Task artefact not found: ' . (string)$entry->id);
+                throw new ImportException($importer, 'task artefact not found: ' . (string)$entry->id);
             }
             if (empty($ancestorids[0])) {
                 throw new ImportException($importer, 'Plan artefact not found: ' . $ancestorid);

@@ -65,6 +65,11 @@ td.tiny {
         background: scale-color($warning, $lightness: 70%) !important;
     }
 
+    tr.submitted {
+        color: $state-submitted-text;
+        background: $state-submitted-bg !important;
+    }
+
     td input[type=radio],
     td input[type=checkbox] {
         margin: 0 auto;
