@@ -21,28 +21,30 @@
     margin: 20px 0;
 }
 
-// Plans
-.task-item {
-    .complete-task,
-    .overdue-task {
-        margin-left: 15px;
-        .icon {
-            margin-left: -22px; // correct alignment
-            padding-right: 2px;
-        }
+// Plan
+.card.card-secondary .list-group .task-item {
+    &:first-child {
+        border-top: 1px solid $list-group-border-color;
     }
-    .card-body {
-        padding-bottom: 0;
+    a[data-toggle="collapse"] .collapse-indicator,
+    a[data-toggle="collapse"].collapsed .collapse-indicator {
+        margin-right: 90px;
+        margin-top: 17px;
+    }
+    .plan-task-icon {
+        vertical-align: top;
+        padding-top: 4px;
+    }
+    .plan-task-heading {
+        max-width: 60%;
+        display: inline-block;
+    }
+    .plan-task-detail {
+        margin-left: 22px;
+        margin-top: 10px;
         .tags {
             margin-bottom: 0;
         }
-    }
-}
-.task-item .btn-group {
-    margin-right: -8px; // correct alignment
-    a {
-        font-size: 10px;
-        padding: 2px 8px;
     }
 }
 

@@ -3,7 +3,7 @@
     <div class='btn-group-vertical'>
     {/if}
         {foreach from=$blocktypes item=blocktype}{strip}
-            <a class="{if !$accessible} not-accessible{/if} blocktype-drag blocktypelink btn btn-primary hide-title-collapsed text-left" href="#" title="{$blocktype.title}">
+            <a class="{if !$accessible} not-accessible{/if} blocktype-drag blocktypelink btn btn-primary hide-title-collapsed" href="#" title="{$blocktype.title}">
                 <input type="radio" id="blocktype-list-radio-{$blocktype.name}" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
                 <span class="icon icon-{$blocktype.cssicon} {$blocktype.cssicontype} icon-lg" title="{$blocktype.title}" role="presentation" aria-hidden="true"></span>
                 <label for="blocktype-list-radio-{$blocktype.name}" class="blocktypetitle title">

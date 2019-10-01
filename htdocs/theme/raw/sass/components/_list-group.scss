@@ -427,3 +427,12 @@
         }
     }
 }
+
+// filelist in modal
+.modal-body {
+    .list-group-item {
+        .list-group-item-heading {
+            float: none;
+        }
+    }
+}

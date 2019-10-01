@@ -90,7 +90,7 @@
             {/if}
 
             {if $row->attachments}
-            <div class="has-attachment list-group-item-heading">
+            <div class="list-group-item-heading attachment-title">
                 <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                 <span class="text-small">{str tag='attachedfiles' section='artefact.blog'}</span>
                 ({$row->clipcount})
