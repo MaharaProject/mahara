@@ -625,7 +625,7 @@ class Skin {
                 $fontface .= '@font-face {';
                 $fontface .= 'font-family: \''. escape_css_string($fontdata->title) . '\'; ';
                 $fontface .= 'src: url(\'' . $baseurl . '&format=EOT\'); ';
-                $fontface .= 'src: local(\'☺\'), url(\'' . $baseurl . '&format=WOFF\') format(\'woff\'), ';
+                $fontface .= 'src: local(\'' . escape_css_string($fontdata->title) . '\'), local(\'' . escape_css_string($fontdata->name) . '\'), url(\'' . $baseurl . '&format=WOFF\') format(\'woff\'), ';
                 $fontface .= 'url(\'' . $baseurl . '&format=TTF\') format(\'truetype\'), ';
                 $fontface .= 'url(\'' . $baseurl . '&format=SVG#' . $variant['SVGid'] . '\') format(\'svg\'); ';
                 $fontface .= 'font-weight: ' . $variant['font-weight'] . '; ';
