@@ -1739,10 +1739,6 @@ class PluginImportLeap extends PluginImport {
     }
 
     public function get_entry_by_id($entryid) {
-        static $cache = array();
-        if (isset($cache[$entryid])) {
-            return $cache[$entryid];
-        }
         // TODO: entryid injection? Probably not worth worrying about
         $matches = $this->xml->xpath("//a:feed/a:entry/a:id[.='$entryid']/..");
         // TODO: there had better be only one...
