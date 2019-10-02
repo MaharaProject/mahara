@@ -5,7 +5,7 @@ Main Components
 -------------------------------- */
 .jtline {
   /* opacity: 0; */
-  color: #000;
+  color: $theme-text-color;
   margin: 2em auto;
   -webkit-transition: opacity 0.2s;
   -moz-transition: opacity 0.2s;
@@ -26,7 +26,7 @@ Main Components
   width: 100%;
   max-width: 1150px;
   margin: 0 auto;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid $hr-border-color;
 }
 .jtline .events-wrapper {
   position: relative;
@@ -93,7 +93,7 @@ Main Components
   text-align: center;
   font-size: 1.3rem;
   padding-bottom: 15px;
-  color: #383838;
+  color: $link-color;
   /* fix bug on Safari - text flickering while timeline translates */
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
@@ -101,6 +101,12 @@ Main Components
   -o-transform: translateZ(0);
   transform: translateZ(0);
   outline: none;
+  &:hover {
+    color: $link-hover-color;
+  }
+  &.selected {
+    color: $theme-text-color;
+  }
 }
 .jtline .events a::after {
   /* this is used to create the event spot */
@@ -293,7 +299,7 @@ ul.cd-timeline-navigation-second {
 }
 
 .jtline .events a:hover {
-outline-color: #000;
+  outline-color: $link-hover-color;
 }
 
 .jtline .timeline .cd-timeline-navigation,
@@ -314,40 +320,6 @@ outline-color: #000;
 .jtline .events-content ol {
   margin: 15px;
   padding: 0 30px;
-}
-.jtline .events-content h2 {
-  font-weight: bold;
-  font-size: 2.6rem;
-  font-family: "Playfair Display", serif;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.jtline .events-content em {
-  display: block;
-  font-style: italic;
-  margin: 10px auto;
-  border-bottom:2px dashed #dfdfdf;
-}
-.jtline .events-content em::before {
-  content: '- ';
-}
-.jtline .events-content p.linep {
-  font-size: 1.4rem;
-  color: #959595;
-}
-.jtline .events-content em, .jtline .events-content p.linep {
-  line-height: 1.6;
-}
-@media only screen and (min-width: 768px) {
-  .jtline .events-content h2 {
-    font-size: 7rem;
-  }
-  .jtline .events-content em {
-    font-size: 2rem;
-  }
-  .jtline .events-content p.linep {
-    font-size: 1.8rem;
-  }
 }
 
 @-webkit-keyframes cd-enter-right {
@@ -431,19 +403,28 @@ outline-color: #000;
   div {
     display: inline-block;
     border-bottom: 0;
+    padding: 10px 0 20px 0;
     label {
         min-width: 0;
+    }
+    &.submit {
+        padding: 10px 0;
     }
   }
 }
 
 // TODO: remove this style when the embedded media video block is fixed to play in timeline
-
 .video-js {
     width: 300px;
     height: 150px;
 }
-
 .vjs-fluid {
     padding-top: 56.25%
+}
+
+// version number
+.jtline .events-content .lineli.selected .jtline .events-content p {
+    margin-top: 18px;
+    margin-bottom: 20px;
+    font-size: 16px;
 }
