@@ -10,7 +10,7 @@ Changes:
 
  * Added all of the language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
  * Removed all .min.js and .dev.js files
- * Added code to spellchecker/spellchecker.rpc to use $CFG->spellcheckerengine (original commit: a42e68b43e4a63db19569facae61898af1b86d3f) - not done
+
  * Adding the 'aria-hidden="true"' to presentation icons (original commit: 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e)-  not done
  * Bug 1605110: Modified the "table" plugin to style the table through CSS instead of HTML attributes (original commit: 63f91a7ea8bd60c102e257c05678cc6d55e21683) -not done
  * Add TinyMCE imagebrowser plugin: plugins/imagebrowser/plugin.js
@@ -18,32 +18,26 @@ Changes:
 -can't find this.
 
  * Removed files and folders
-   tinymce.jquery.js removed in v4.3.4
-   theme/inlite
-   theme/mobile
-   skins/lightgray
-   plugins/help
- * Removed 'Powered by Tinymce' text from the modern theme - not found
+    tinymce.jquery.js removed in v4.3.4
+    theme/inlite
+    theme/mobile
+    skins/lightgray
+    plugins/help
+    min.js from plugin folders
+    skins/content
 
  * Added
-   plugins/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
-   plugins/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
-   plugins/tooltoggle (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
-   skins/light: not included in new versions of tinyMCE any more
-     download from https://github.com/instructure/tinymce-light-skin
-     v1.3.1
+    -plugins/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
+    This is old. The new one is a pay service.
+    -plugins/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
+    -plugins/tooltoggle (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
+    -plugins/spellchecker to use $CFG->spellcheckerengine
+    if that is enabled instead of default browser spellchecker.
+    (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
 
-
-added langs
-removed min.js from plugin folders
+removed
 modern theme replaced by silver - fixed.
 added tooltoggle back and changed function calls to new
 imagebrowser. Added old one. New one is now a pay service
 
-added mathslate from version 4, but need to test????
 
-
-quickbars is new, what does it do?
-removed skins/content
-see if can make light skin work.
-see what's happened with spellchecker. Add back in? replaced with sth else?

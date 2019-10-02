@@ -306,11 +306,11 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     if (get_config('tinymcespellcheckerengine')) {
                         $spellchecker = ',spellchecker';
                         $spellchecker_toolbar = '| spellchecker';
-                        $spellchecker_config = "gecko_spellcheck : false, spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/spellchecker.php\",";
+                        $spellchecker_config = "spellchecker_rpc_url : \"{$jsroot}tinymce/plugins/spellchecker/spellchecker.php\",";
                     }
                     else {
                         $spellchecker = $spellchecker_toolbar = '';
-                        $spellchecker_config = 'gecko_spellcheck : true,';
+                        $spellchecker_config = 'browser_spellcheck : true,';
                     }
                     $mathslate = (get_config('mathjax')) ? 'mathslate' : '';
                     $mathslateplugin = !empty($mathslate) ? ',' . $mathslate : '';
@@ -343,6 +343,7 @@ EOF;
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "silver",
+    contextmenu: false,
     plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
     skin: 'oxide',
     toolbar1: {$toolbar[1]},
