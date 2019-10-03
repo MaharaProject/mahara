@@ -43,6 +43,7 @@ Scenario: Embed and play mp3
   And I click on "Show more"
   And I click on "Embedded media" in the "Content types" property
   And I follow "Media"
+  And I set the field "Block title" to "mahara.mp3"
   And I attach the file "mahara.mp3" to "File"
   And I press "Save"
   And I display the page
