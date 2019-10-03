@@ -84,8 +84,8 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     Then I should see " New task"
     When I fill in the following:
     | Title | New Space Task |
-    | Completion date | 2019/01/01 |
     | Description | Space Task - hold breath for a really long time |
+    And I fill in "Completion date" with "tomorrow" date in the format "Y/m/d"
     And I enable the switch "Completed"
     And I press "Save task"
     # confirm user taken back to Plan block on page and new task is displayed
