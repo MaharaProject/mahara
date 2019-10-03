@@ -410,7 +410,7 @@ class Framework {
     }
 
     function set_config_fields() {
-        if (table_exists(new XMLDBTable('framework_config'))) {
+        if (db_table_exists('framework_config')) {
             $status = new stdClass();
 
             $status->framework = $this->get('id');
