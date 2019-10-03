@@ -305,8 +305,9 @@ class PlansTools {
     public static function findCorrespondingUserTaskByRootGroupTaskId($rootGroupTaskId) {
         global $USER;
 
-        $sql = 'SELECT id FROM {artefact} AS a INNER JOIN {artefact_plans_task} AS p ON a.id = p.artefact '.
-            'WHERE a.owner = ? AND p.rootgrouptask = ?';
+        $sql = 'SELECT id FROM {artefact} AS a
+                INNER JOIN {artefact_plans_task} AS p ON a.id = p.artefact
+                WHERE a.owner = ? AND p.rootgrouptask = ?';
         $result = get_record_sql($sql, [$USER->get('id'), $rootGroupTaskId]);
 
         if ($result) {
@@ -323,8 +324,9 @@ class PlansTools {
     public static function groupTaskHasCorrespondingUserTask($groupTaskId) {
         global $USER;
 
-        $sql = 'SELECT * FROM {artefact_plans_task} AS p INNER JOIN {artefact} AS a ON p.artefact = a.id '.
-            'WHERE p.rootgrouptask=? AND a.owner=?';
+        $sql = 'SELECT * FROM {artefact_plans_task} AS p
+                INNER JOIN {artefact} AS a ON p.artefact = a.id
+                WHERE p.rootgrouptask = ? AND a.owner = ?';
 
         return record_exists_sql($sql, [$groupTaskId, $USER->get('id')]);
     }
@@ -339,8 +341,9 @@ class PlansTools {
     public static function findCorrespondingUserPlanByRootGroupPlanId($rootGroupPlanId) {
         global $USER;
 
-        $sql = 'SELECT id FROM {artefact} AS a INNER JOIN {artefact_plans_plan} AS p ON a.id = p.artefact '.
-            'WHERE a.owner = ? AND p.rootgroupplan = ?';
+        $sql = 'SELECT id FROM {artefact} AS a
+                INNER JOIN {artefact_plans_plan} AS p ON a.id = p.artefact
+                WHERE a.owner = ? AND p.rootgroupplan = ?';
         $result = get_record_sql($sql, [$USER->get('id'), $rootGroupPlanId]);
 
         if ($result) {
@@ -356,8 +359,9 @@ class PlansTools {
     public static function getIdTitleArrayOfUserPlanTemplates() {
         global $USER;
 
-        $sql = 'SELECT id, title FROM {artefact} AS a INNER JOIN {artefact_plans_plan} AS p ON a.id = p.artefact '.
-            'WHERE a.owner = ? AND p.template = ?';
+        $sql = 'SELECT id, title FROM {artefact} AS a
+                INNER JOIN {artefact_plans_plan} AS p ON a.id = p.artefact
+                WHERE a.owner = ? AND p.template = ?';
         $result = get_records_sql_array($sql, [$USER->get('id'), 1]);
 
         return $result;
@@ -407,18 +411,19 @@ class PlansTools {
         // - Not assigned as an outcome view (tov)
         // - Not indirectly assigned as an outcome as part of a collection which is assigned as outcome (tc)
         // plus the currently selected taskview
-        $sql = sprintf('SELECT v.id, v.title, c.name, (tv.artefact = ?)%s AS selected FROM {view} AS v '.
-                       'LEFT JOIN {artefact_plans_task} AS tv ON tv.taskview = v.id ' .
-                       'LEFT JOIN {artefact_plans_task} AS tov ON tov.outcome = v.id AND tov.outcometype = \'view\' ' .
-                       'LEFT JOIN ({collection_view} AS cv ' .
-                            'INNER JOIN {collection} AS c ON cv.collection=c.id ' .
-                            'LEFT JOIN {artefact_plans_task} AS tc ON tc.outcome = c.id AND tc.outcometype = \'collection\') ' .
-                       'ON v.id = cv.view ' .
-                       'WHERE v.%s = ? ' .
-                       'AND v.submittedstatus = 0 AND v.urlid NOT IN (\'profile-page\', \'dashboard-page\', \'group-homepage\') ' .
-                       'AND (tv.taskview IS NULL OR tv.artefact = ?) ' .
-                       'AND tov.outcome IS NULL AND tc.outcome IS NULL ' .
-                       'ORDER BY c.name, v.title', $pgBooleanConversion, $searchField);
+        $sql = "SELECT v.id, v.title, c.name, (tv.artefact = ?)" . $pgBooleanConversion . " AS selected
+                FROM {view} AS v
+                LEFT JOIN {artefact_plans_task} AS tv ON tv.taskview = v.id
+                LEFT JOIN {artefact_plans_task} AS tov ON tov.outcome = v.id AND tov.outcometype = 'view'
+                LEFT JOIN ({collection_view} AS cv
+                    INNER JOIN {collection} AS c ON cv.collection = c.id
+                    LEFT JOIN {artefact_plans_task} AS tc ON tc.outcome = c.id AND tc.outcometype = 'collection')
+                ON v.id = cv.view
+                WHERE v." . $searchField . " = ?
+                AND v.submittedstatus = 0 AND v.type NOT IN ('profile', 'dashboard', 'grouphomepage')
+                AND (tv.taskview IS NULL OR tv.artefact = ?)
+                AND tov.outcome IS NULL AND tc.outcome IS NULL
+                ORDER BY c.name, v.title";
         $views = get_records_sql_array($sql, [$taskId, $searchValue, $taskId]);
 
         if ($views === false) {
@@ -483,14 +488,16 @@ class PlansTools {
         // are not assigned as taskview to a task (tv)
         // are not assigned as outcome to a task (tov)
         // or view is already assigned as outcome to this task
-        $sql = sprintf('SELECT v.id, v.title, (tov.artefact IS NOT NULL)%s AS selected FROM {view} AS v '.
-                       'LEFT JOIN {artefact_plans_task} AS tv ON tv.taskview = v.id ' .
-                       'LEFT JOIN {artefact_plans_task} AS tov ON tov.outcome = v.id AND tov.outcometype = \'view\' ' .
-                       'LEFT JOIN {collection_view} AS cv ON cv.view = v.id ' .
-                       'WHERE v.%s = ? AND v.submittedstatus = 0 AND v.urlid NOT IN (\'profile-page\', \'dashboard-page\', \'group-homepage\') ' .
-                       'AND cv.view IS NULL AND tv.taskview IS NULL AND tov.outcome IS NULL ' .
-                       'OR tov.artefact = ? ' .
-                       'ORDER BY v.title', $pgBooleanConversion, $searchField);
+        $sql = "SELECT v.id, v.title, (tov.artefact IS NOT NULL)" . $pgBooleanConversion . " AS selected
+                FROM {view} AS v
+                LEFT JOIN {artefact_plans_task} AS tv ON tv.taskview = v.id
+                LEFT JOIN {artefact_plans_task} AS tov ON tov.outcome = v.id AND tov.outcometype = 'view'
+                LEFT JOIN {collection_view} AS cv ON cv.view = v.id
+                WHERE v." . $searchField . " = ? AND v.submittedstatus = 0
+                AND v.type NOT IN ('profile', 'dashboard', 'grouphomepage')
+                AND cv.view IS NULL AND tv.taskview IS NULL AND tov.outcome IS NULL
+                OR tov.artefact = ?
+                ORDER BY v.title";
         $views = get_records_sql_array($sql, [$searchValue, $taskId]);
 
         if ($views === false) {
@@ -523,15 +530,16 @@ class PlansTools {
         // Are not assigned as outcome to a task (t)
         // Don't contain a view which is assigned as taskview to a task (tv)
         // Or collection is already assigned to this task
-        $sql = sprintf('SELECT c.id, c.name AS title, (t.artefact IS NOT NULL)%s AS selected FROM {collection} AS c '.
-                       'LEFT JOIN {artefact_plans_task} AS t ON t.outcome = c.id AND t.outcometype = \'collection\' ' .
-                       'LEFT JOIN ({collection_view} AS cv ' .
-                            'INNER JOIN {view} AS v ON v.id = cv.view ' .
-                            'INNER JOIN {artefact_plans_task} AS tv ON tv.taskview = v.id) ' .
-                       'ON cv.collection = c.id ' .
-                       'WHERE c.%s = ? AND c.submittedstatus = 0 ' .
-                       'AND t.outcome IS NULL AND tv.taskview IS NULL ' .
-                       'OR t.artefact = ? ORDER BY c.name', $pgBooleanConversion, $searchField);
+        $sql = "SELECT c.id, c.name AS title, (t.artefact IS NOT NULL)" . $pgBooleanConversion . " AS selected
+                FROM {collection} AS c
+                LEFT JOIN {artefact_plans_task} AS t ON (t.outcome = c.id AND t.outcometype = 'collection')
+                LEFT JOIN ({collection_view} AS cv
+                    INNER JOIN {view} AS v ON v.id = cv.view
+                    INNER JOIN {artefact_plans_task} AS tv ON tv.taskview = v.id)
+                ON cv.collection = c.id
+                WHERE c." . $searchField . " = ? AND c.submittedstatus = 0
+                AND t.outcome IS NULL AND tv.taskview IS NULL
+                OR t.artefact = ? ORDER BY c.name";
         $collections = get_records_sql_array($sql, [$searchValue, $taskId]);
 
         if ($collections === false) {
@@ -675,9 +683,9 @@ class PlansTools {
         // Delete artefacts with parent by deleting parent
         foreach ($parentIdChildInstancesArray as $parentId => $childInstances) {
             try {
-                $sql = 'SELECT a.*, i.name, i.plugin FROM {artefact} AS a ' .
-                        'INNER JOIN {artefact_installed_type} AS i ON i.name = a.artefacttype ' .
-                        'WHERE a.id = ?';
+                $sql = 'SELECT a.*, i.name, i.plugin FROM {artefact} AS a
+                        INNER JOIN {artefact_installed_type} AS i ON i.name = a.artefacttype
+                        WHERE a.id = ?';
                 $parentRecord = get_record_sql($sql, [$parentId], 0);
 
                 safe_require('artefact', $parentRecord->plugin);
@@ -732,12 +740,12 @@ class PlansTools {
      */
     public static function collectionIsAssignedAsOutcomeToSelectionGroupTask($collectionId) {
 
-        $sql = 'SELECT * FROM {artefact_plans_task} AS t ' .
-            'INNER JOIN {artefact} AS a ON a.id = t.artefact ' .
-            'INNER JOIN {artefact_plans_plan} AS p ON p.artefact = a.parent ' .
-            'WHERE a.group IS NOT NULL AND a.owner IS NULL ' .
-            'AND t.outcome = ? AND t.outcometype = \'collection\' ' .
-            'AND p.selectionplan = 1 AND p.template = 0';
+        $sql = "SELECT * FROM {artefact_plans_task} AS t
+                INNER JOIN {artefact} AS a ON a.id = t.artefact
+                INNER JOIN {artefact_plans_plan} AS p ON p.artefact = a.parent
+                WHERE a.group IS NOT NULL AND a.owner IS NULL
+                AND t.outcome = ? AND t.outcometype = 'collection'
+                AND p.selectionplan = 1 AND p.template = 0";
 
         $result = get_records_sql_array($sql, [$collectionId]);
 
@@ -769,16 +777,15 @@ class PlansTools {
         $extText = get_string('version.', 'mahara');
 
         $whereClause = where_clause($condField1, $condValue1, $condField2, $condValue2);
-        $whereClause .= (empty($whereClause) ? "WHERE %s LIKE '%s'" : " AND %s LIKE '%s'");
+        $whereClause .= empty($whereClause) ? "WHERE " . db_quote_identifier($field) . " LIKE ?" : " AND " . db_quote_identifier($field) . " LIKE ?";
 
-        $sqlStringValues = [$field, db_table_name($table), $field, $baseStringToCheck . '%'];
+        $whereValues = [$baseStringToCheck . '%'];
         if (!is_null($exceptCondValue) && !is_null($exceptCondField)) {
-            $whereClause .= " AND %s <> '%s'";
-            array_push($sqlStringValues, $exceptCondField, $exceptCondValue);
+            $whereClause .= " AND " . db_quote_identifier($exceptCondField) . " != ?";
+            array_push($whereValues, $exceptCondValue);
         }
 
-        $sql = vsprintf('SELECT %s FROM %s ' . $whereClause, $sqlStringValues);
-        $taken = get_column_sql($sql);
+        $taken = get_column_sql("SELECT " . db_quote_identifier($field) . " FROM " . db_table_name($table) . " " . $whereClause, $whereValues);
 
         $i = 1;
         $stringToCheck = $baseStringToCheck;
