@@ -225,7 +225,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
 
         foreach ($configdata['artefactids'] as $planid) {
             $plan = artefact_instance_from_id($planid);
-            $tasks = ArtefactTypeTask::get_tasks($planid, 0, 0);
+            $tasks = ArtefactTypeTask::get_tasks($plan, 0, 0);
             $artefacts[$planid]['tasks'] = $tasks;
             $artefacts[$planid]['title'] = $plan->get('title');
             $artefacts[$planid]['description'] = $plan->get('description');
