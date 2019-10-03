@@ -1195,7 +1195,8 @@ class PluginImportLeap extends PluginImport {
         }
 
         if (!$gridlayout && is_null($columnlayouts)) {
-          $columnlayouts = get_records_assoc('view_layout_columns');
+            require_once('view.php');
+            $columnlayouts = View::get_old_view_layout_columns();
         }
 
         if (is_null($viewtypes)) {

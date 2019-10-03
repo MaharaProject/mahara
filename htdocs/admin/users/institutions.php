@@ -180,7 +180,9 @@ if ($institution || $add) {
             delete_records('institution_registration', 'institution', $values['i']);
             delete_records('site_content', 'institution', $values['i']);
             delete_records('institution_config', 'institution', $values['i']);
-            delete_records('usr_custom_layout', 'institution', $values['i']);
+            if (db_table_exists('usr_custom_layout')) {
+                delete_records('usr_custom_layout', 'institution', $values['i']);
+            }
             delete_records('usr_registration', 'institution', $values['i']);
             if ($versions = get_records_assoc('site_content_version', 'institution', $values['i'])) {
                 foreach($versions as $version) {

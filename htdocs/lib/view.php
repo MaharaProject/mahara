@@ -364,15 +364,6 @@ class View {
                                 $default[$row->row] = $row;
                             }
                     }
-                    else {
-                        // Layout not known so make it 1 row / 3 cols
-                        if ($this->get('id')) {
-                            insert_record('view_rows_columns', (object) array(
-                                'view' => $this->get('id'),
-                                'row' => 1, 'columns' => 3));
-                        }
-                        $default = self::default_columnsperrow();
-                    }
                     $this->columnsperrow = $default;
                 }
             }
@@ -635,27 +626,30 @@ class View {
             activity_occurred('viewaccess', $accessdata);
         }
 
-        if (isset($viewdata['layout'])) {
-            // e.g. importing via LEAP2A
-            $layoutsrowscols = get_records_select_array('view_layout_rows_columns', 'viewlayout = ?', array($viewdata['layout']));
-            if ($layoutsrowscols) {
-                delete_records('view_rows_columns', 'view', $view->get('id'));
-                foreach ($layoutsrowscols as $layoutrow) {
-                    insert_record('view_rows_columns', (object)array( 'view' => $view->get('id'), 'row' => $layoutrow->row, 'columns' =>  self::$layoutcolumns[$layoutrow->columns]->columns));
-                }
-            }
-        }
-
         return new View($view->get('id')); // Reread to ensure defaults are set
     }
 
-    public static function default_columnsperrow() {
-        $default = array(1 => (object)array('row' => 1, 'columns' => 3, 'widths' => '33,33,33'));
-        if (!$id = get_field('view_layout_columns', 'id', 'columns', $default[1]->columns, 'widths', $default[1]->widths)) {
-            throw new SystemException("View::default_columnsperrow: Default columns = 3, widths = '33,33,33' not in view_layout_columns table");
+    /*
+     * Returns the content we used to have in the view_layout_columns table
+     * we need it to import Leap2a postfolios with old layout
+     */
+    public static function get_old_view_layout_columns() {
+        $layout = new stdClass();
+        $view_layout_columns = array();
+        $id = 0;
+        foreach (self::$basic_column_layouts as $column => $widths) {
+            foreach ($widths as $width) {
+                $id++;
+                $layout = new stdClass();
+                $layout->columns = $column;
+                $layout->widths = $width;
+                $layout->id = $id;
+                $view_layout_columns[] = $layout;
+            }
         }
-        return $default;
+        return $view_layout_columns;
     }
+
 
     public function get($field) {
         if (!property_exists($this, $field)) {
@@ -1196,147 +1190,6 @@ class View {
         }
 
         db_commit();
-    }
-
-    /*
-     * Adds custom layout records to database and returns an array
-    * with layout id and image preview.
-    *
-    * @param array
-    * @return array
-    */
-    public function addcustomlayout($values) {
-        require_once(get_config('libroot') . 'layoutpreviewimage.php');
-        $require = array('numrows');
-        foreach ($require as $require) {
-            if (!array_key_exists($require, $values) || empty($values[$require])) {
-                throw new ParamOutOfRangeException(get_string('missingparam' . $require, 'error'));
-            }
-        }
-
-        $numrows = $values['numrows'];
-        $alttext = '';
-        $rowscolssql = '';
-        $rowscols = array();
-
-        for ($i=0; $i<$numrows; $i++) {
-            if (array_key_exists('row'. ($i+1), $values)) {
-                $rowscolssql .= '(row = ' . ($i+1) . ' AND columns = ' . $values['row' . ($i+1)] . ')';
-                if ($i != $numrows-1) {
-                    $rowscolssql .= ' OR ';
-                }
-                $widths = get_field('view_layout_columns', 'widths', 'id', $values['row' . ($i+1)]);
-                $hyphenatedwidths = str_replace(',', '-', $widths);
-                $alttext .= $hyphenatedwidths;
-                if ($i != $numrows -1) {
-                    $alttext .= ' / ';
-                }
-                $rowscols[$i+1] = $values['row' . ($i+1)];
-            }
-        }
-
-        $owner = $this->owner;
-        $group = $this->group;
-        $institution = $this->institution;
-        if (!empty($group)) {
-            $owner = null;
-            $andclause = 'AND ucl.group = ?';
-            $andclausevalue = $group;
-        }
-        else if (!empty($institution)) {
-            $owner = null;
-            $andclause = 'AND ucl.institution = ?';
-            $andclausevalue = $institution;
-        }
-        else if (isset($owner)) {
-            $andclause = 'AND ucl.usr = ?';
-            $andclausevalue = $owner;
-        }
-        else {
-            // no group or owner or institution set
-            // site pages should have institution set
-            throw new SystemException("View::addcustomlayout: No owner, group or institution set for view.");
-        }
-
-        // check for existing layout
-        $sql = 'SELECT vlrc.viewlayout AS id
-                FROM
-                {view_layout} vl
-                INNER JOIN {view_layout_rows_columns} vlrc
-                ON vl.id = vlrc.viewlayout
-                INNER JOIN (
-                    SELECT
-                    viewlayout, COUNT(*)
-                    FROM {view_layout_rows_columns}
-                    GROUP BY viewlayout
-                    HAVING COUNT(*) = ?
-                    ) vlrc2
-                ON vlrc.viewlayout = vlrc2.viewlayout
-                INNER JOIN {usr_custom_layout} ucl
-                ON ucl.layout = vl.id
-                WHERE (' . $rowscolssql . ')
-                AND (
-                   vl.iscustom = 0
-                   OR (
-                       vl.iscustom = 1 ' . $andclause . '
-                      )
-                )
-                GROUP BY vlrc.viewlayout
-                HAVING count(*) = ?
-                LIMIT 1';
-        $layoutids = get_records_sql_array($sql, array($numrows, $andclausevalue, $numrows));
-
-        if ($layoutids) {
-            $data = array('layoutid' => $layoutids[0]->id, 'newlayout' => 0);
-            return $data;
-        }
-        else {
-
-            db_begin();
-            // no existing layout of this kind, create it
-            $newlayoutid = insert_record('view_layout', (object) array('rows' => $numrows, 'iscustom' => 1), 'id', true);
-            if (!$newlayoutid) {
-                db_rollback();
-                throw new SystemException("View::addcustomlayout: Couldn't create new layout record.");
-            }
-
-            $owner = (!empty($institution) || !empty($group)) ? null : $owner;
-            $data = (object) array(
-                'usr' => $owner,
-                'group' => $group,
-                'institution' => $institution,
-                'layout' =>  $newlayoutid,
-            );
-            $where = clone $data;
-            ensure_record_exists('usr_custom_layout', $where, $data);
-
-            for ($i=0; $i<$numrows; $i++) {
-                if (array_key_exists(($i+1), $rowscols)) {
-                    $widths = get_field('view_layout_columns', 'widths', 'id', $rowscols[$i+1]);
-                    $structure['layout']['row' . ($i + 1)] = $widths;
-                    $newrec = insert_record('view_layout_rows_columns', (object) array('viewlayout' => $newlayoutid, 'row' => ($i+1), 'columns' => $rowscols[$i+1]));
-                    if (!$newrec) {
-                        db_rollback();
-                        throw new SystemException("View::addcustomlayout: Couldn't create new vlrc record.");
-                    }
-                }
-            }
-
-            db_commit();
-
-            // Generate new custom layout preview.
-            $structure['text'] = $alttext;
-            $layoutpreview = new LayoutPreviewImage($structure);
-            $preview = $layoutpreview->create_preview();
-            $data = array(
-                'layoutid' => $newlayoutid,
-                'newlayout' => 1,
-                'layoutpreview' => $preview,
-                'text' => $structure['text']
-            );
-
-            return $data;
-        }
     }
 
     /**
@@ -4461,44 +4314,6 @@ class View {
         return $results;
     }
 
-    public function get_layoutrows() {
-        $layoutrows = array();
-        $owner = $this->get('owner');
-        $group = $this->get('group');
-        $institution = $this->get('institution');
-        $queryarray = array($owner);
-
-        // get built-in layout options (owner=0) and any custom created layouts
-        if (isset($owner)) {
-            // view owned by individual
-            $whereclause = '(ucl.usr = 0 OR ucl.usr = ?)';
-        }
-        else if (!empty($group)) {
-            // view owned by group
-            $whereclause = '(ucl.usr = 0 OR ucl.group = ?)';
-            $queryarray = array($group);
-        }
-        else if (!empty($institution)) {
-            // view owned by institution
-            $whereclause = '(ucl.usr = 0 OR ucl.institution = ?)';
-            $queryarray = array($institution);
-        }
-        else {
-            throw new SystemException("View::get_layoutrows: No owner, group or institution set for view.");
-        }
-
-        $layoutsrowscols = get_records_sql_array('
-                SELECT vlrc.viewlayout, vlrc.row, vlrc.columns
-                FROM {view_layout_rows_columns} vlrc
-                    JOIN {view_layout} vl ON vlrc.viewlayout = vl.id
-                    JOIN {usr_custom_layout} ucl ON (vl.id = ucl.layout)
-                WHERE ' . $whereclause, $queryarray);
-
-        foreach ($layoutsrowscols as $layout) {
-            $layoutrows[$layout->viewlayout][$layout->row] = $layout->columns;
-        }
-        return $layoutrows;
-    }
     /**
      * Returns an SQL snippet that can be used in a where clause to get views
      * with the given owner.
