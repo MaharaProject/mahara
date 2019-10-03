@@ -1978,52 +1978,43 @@ function get_db_version() {
  * inconsistent state before db_commit() is called.
  */
 function db_column_exists($table, $field) {
-    global $DB_IGNORE_SQL_EXCEPTIONS;
+    $dbname = db_quote(get_config('dbname'));
+    // not using db_table_name here because it uses double quotes that break the query
+    $table = db_quote(get_config('dbprefix') . $table);
+    $field = db_quote($field);
 
-    if (defined('INSTALLER')) {
-        // We do the check in the old way
-        require_once('ddl.php');
-        $table = new XMLDBTable($table);
-        $field = new XMLDBField($field);
-        return field_exists($table, $field);
-    }
-    else {
-        // We will check to see if a column exists by seeing if it throws an error or not
-        try {
-            $DB_IGNORE_SQL_EXCEPTIONS = true;
-            get_column_sql("SELECT " . db_quote_identifier($field) . " FROM " . db_table_name($table) . " LIMIT 1");
-            $DB_IGNORE_SQL_EXCEPTIONS = false;
-            return true;
-        }
-        catch (SQLException $e) {
-            return false;
-        }
-    }
+    return get_column_sql("
+        SELECT 1
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE (
+            TABLE_SCHEMA = $dbname
+            OR
+            TABLE_CATALOG = $dbname
+        )
+        AND TABLE_NAME = $table
+        AND COLUMN_NAME = $field
+    ");
 }
 
 /**
  * Check to see if table exists by querying it and catching error if not
- * This is a faster way than using the table_exists() function in lib/ddl.php
+ * This is a faster way than using the table_exists() function in lib/ddl.php  db_quote_identifier(get_config('dbprefix') . $name);
  * NOTE: When doing an upgrade we fallback to check the table in the old way to avoid
  * inconsistent state before db_commit() is called.
  */
 function db_table_exists($table) {
-    global $DB_IGNORE_SQL_EXCEPTIONS;
+    $dbname = db_quote(get_config('dbname'));
+    // not using db_table_name here because it uses double quotes that break the query
+    $table = db_quote(get_config('dbprefix') . $table);
 
-    if (defined('INSTALLER')) {
-        // We do the check in the old way
-        require_once('ddl.php');
-        return table_exists(new XMLDBTable($table));
-    }
-    else {
-        try {
-            $DB_IGNORE_SQL_EXCEPTIONS = true;
-            get_column_sql("SELECT 1 FROM " . db_table_name($table) . " LIMIT 1");
-            $DB_IGNORE_SQL_EXCEPTIONS = false;
-            return true;
-        }
-        catch (SQLException $e) {
-            return false;
-        }
-    }
+    return get_column_sql("
+        SELECT 1
+        FROM INFORMATION_SCHEMA.TABLES
+        WHERE (
+            TABLE_SCHEMA = $dbname
+            OR
+            TABLE_CATALOG = $dbname
+        )
+        AND TABLE_NAME = $table
+    ");
 }
