@@ -27,6 +27,12 @@
 <div id="view" class="view-container">
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">
+            {if $peerhidden}
+                <div class="alert alert-info">
+                    <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
+                    {str tag=nopeerassessmentrequired section=artefact.peerassessment}
+                </div>
+            {/if}
             <div class="grid-stack">
             {if $viewcontent}
                 {$viewcontent|safe}

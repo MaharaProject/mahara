@@ -2405,13 +2405,13 @@ class View {
     public function addblockinstance(BlockInstance $bi) {
         if ($this->uses_new_layout()) {
             if (!$bi->get('row')) {
-              $bi->set('row', 1);
+                $bi->set('row', 1);
             }
             if (!$bi->get('column')) {
-              $bi->set('column', 1);
+                $bi->set('column', 1);
             }
             if (!$bi->get('order')) {
-              $bi->set('order', 1);
+                $bi->set('order', 1);
             }
         }
         if (!$bi->get('view')) {
@@ -5915,13 +5915,14 @@ class View {
             $oldlayoutcontent = get_blocks_in_old_layout($template->get('id'));
             $newlayoutcontent = translate_to_new_layout($oldlayoutcontent);
             foreach ($newlayoutcontent as $block) {
-                $dimensions[$block->block] = $block;
+                $dimensions[$block['block']] = $block;
             }
+
             foreach ($blocks as $block) {
-                $block->positionx = $dimensions[$block->id]->positionx;
-                $block->positiony = $dimensions[$block->id]->positiony;
-                $block->width = $dimensions[$block->id]->width;
-                $block->height = $dimensions[$block->id]->height;
+                $block->positionx = $dimensions[$block->id]['positionx'];
+                $block->positiony = $dimensions[$block->id]['positiony'];
+                $block->width = $dimensions[$block->id]['width'];
+                $block->height = $dimensions[$block->id]['height'];
             }
 
         }

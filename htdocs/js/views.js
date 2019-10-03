@@ -448,13 +448,14 @@
                 var placeholder = $('.grid-stack').children().last(),
                     x = placeholder.attr('data-gs-x'),
                     y = placeholder.attr('data-gs-y');
+                if (typeof(x) != 'undefined' && typeof(y) != 'undefined') {
+                    var grid = $('.grid-stack').data('gridstack');
+                    grid.removeWidget(placeholder);
+                    $(placeholder).remove();
 
-                var grid = $('.grid-stack').data('gridstack');
-                grid.removeWidget(placeholder);
-                $(placeholder).remove();
-
-                $('.grid-stack .blocktype-drag').removeClass('btn btn-primary');
-                addNewBlock({'positionx': x, 'positiony': y}, 'placeholder');
+                    $('.grid-stack .blocktype-drag').removeClass('btn btn-primary');
+                    addNewBlock({'positionx': x, 'positiony': y}, 'placeholder');
+                }
             },
             appendTo: 'body',
         });

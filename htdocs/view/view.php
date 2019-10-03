@@ -353,6 +353,7 @@ if ($owner && $owner == $USER->get('id')) {
 // if the view doesn't have a peer assessment block
 if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
     || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
+    $peerhidden = false;
     if ($newlayout = $view->uses_new_layout()) {
 
         $blockresizeonload = "false";
@@ -390,6 +391,11 @@ EOF;
         $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
         $blocksjs = "$(function () {jQuery(document).trigger('blocksloaded');});";
     }
+}
+else {
+    $blocksjs = '';
+    $newlayout = $view->uses_new_layout();
+    $peerhidden = true;
 }
 
 $blocktype_toolbar = $view->get_all_blocktype_toolbar();
@@ -455,6 +461,10 @@ jQuery(window).on('blocksloaded', {}, function() {
                 $('.tags').html(data.html);
             }
         });
+    });
+    // Wire up the annotation feedback forms
+    $('.feedbacktable.modal-docked form').each(function() {
+        initTinyMCE($(this).prop('id'));
     });
 });
 
@@ -547,6 +557,7 @@ $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
+$smarty->assign('peerhidden', $peerhidden);
 list($tagcount, $alltags) = $view->get_all_tags_for_view(10);
 $smarty->assign('alltags', $alltags);
 $smarty->assign('moretags', ($tagcount > sizeof($alltags) ? true : false));

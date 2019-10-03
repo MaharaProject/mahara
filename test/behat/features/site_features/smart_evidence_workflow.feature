@@ -125,9 +125,8 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I press "Next page"
     # Mahara member places feedback
     When I follow "Place feedback"
-    And I fill in "Mahara member placing feedback" in first editor
+    And I fill in "Mahara member placing feedback" in editor "Feedback"
     And I press "Place feedback"
-    # Mahara member follows "Feedback (3)"
     And I wait "1" seconds
     When I follow "Feedback (4)"
     # Mahara member should see 3 feedback annotations

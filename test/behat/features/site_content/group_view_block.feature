@@ -176,6 +176,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Change the sort options in the "Group pages" block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I follow "GroupA (Administrator)"
+    And I wait "1" seconds
     And I should see "Page UserB_01"
     And I follow "Pages and collections (tab)"
     And I click on "Edit" in "Group homepage" card menu
