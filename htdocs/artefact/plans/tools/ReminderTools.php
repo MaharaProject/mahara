@@ -153,9 +153,9 @@ class ReminderTools {
         foreach ($remindedTasks as $remindedTask) {
             $remindedTaskIds[] = $remindedTask->taskid;
         }
-        $remindedTaskIdsString = implode(', ', $remindedTaskIds);
 
-        $sql = sprintf("UPDATE {artefact_plans_task} SET remindermailsent = 1 WHERE artefact IN (%s)", $remindedTaskIdsString);
+        $sql = "UPDATE {artefact_plans_task} SET remindermailsent = 1
+                WHERE artefact IN (" . implode(', ', array_map('db_quote', $remindedTaskIds)) . ")";
         return execute_sql($sql);
     }
 }
