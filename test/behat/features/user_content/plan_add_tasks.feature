@@ -36,8 +36,8 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     Then I should see " New task"
     When I fill in the following:
     | Title | New Space Task |
-    | Completion date | 2019/01/01 |
     | Description | Space Task - hold breath for a really long time |
+    And I fill in "Completion date" with "tomorrow" date in the format "Y/m/d"
     And I enable the switch "Completed"
     And I press "Save task"
     # confirm user taken back to Plan block on page
@@ -55,26 +55,6 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     And I fill in select2 input "addplan_tags" with "plan" and select "plan"
     And I fill in select2 input "addplan_tags" with "test" and select "test"
     And I press "Save plan"
-    When I follow "New task"
-    And I fill in "Title" with "Purchase Mars"
-    And I fill in "Completion date" with "-2 months" date in the format "Y/m/d"
-    And I fill in "Description" with "Purchase mars description"
-    And I fill in select2 input "addtasks_tags" with "Task1" and select "Task1"
-    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
-    Then I press "Save task"
-    When I follow "New task"
-    And I fill in "Title" with "Set up atmosphere"
-    And I fill in "Completion date" with "-1 months" date in the format "Y/m/d"
-    And I fill in "Description" with "Purchase mars description"
-    And I fill in select2 input "addtasks_tags" with "Task2" and select "Task2"
-    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
-    Then I press "Save task"
-    When  I follow "New task"
-    And I fill in "Title" with "Terraform"
-    And I fill in "Completion date" with "-2 weeks" date in the format "Y/m/d"
-    And I fill in select2 input "addtasks_tags" with "Task3" and select "Task3"
-    And I fill in select2 input "addtasks_tags" with "Plan task" and select "Plan task"
-    Then I press "Save task"
     When I follow "New task"
     And I fill in "Title" with "Exploit resources"
     And I fill in "Completion date" with "+2 days" date in the format "Y/m/d"
