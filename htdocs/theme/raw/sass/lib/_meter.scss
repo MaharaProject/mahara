@@ -28,22 +28,18 @@
 }
 
 .meter-wrap, .meter-value, .meter-text {
-    // The width and height of your image
-    height: 30px;
-}
-
-.meter-wrap, .meter-value {
-    // background: #bdbdbd url(/path/to/your-image.png) top left no-repeat;
+    height: 40px;
 }
 
 .meter-value {
     background-color: $progress-bar-bg;
+    height: 100%;
 }
 
 .meter-text {
     position: absolute;
     left:0;
-    padding-top: 5px;
+    padding-top: 8px;
     text-align: center;
     width: 100%;
     font-weight: bold;

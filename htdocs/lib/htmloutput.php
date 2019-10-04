@@ -24,6 +24,7 @@ function print_export_head($stylesheets) {
             html, body {
                 margin: 0;
                 padding: 0;
+                overflow-y: hidden;
                 background-color: #d4d4d4;
             }
         </style>
