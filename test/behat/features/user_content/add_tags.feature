@@ -54,9 +54,9 @@ Background:
    And I follow "New task"
    And I fill in the following:
    | Title * | Task one   |
-   | Completion date * | 2020/12/31   |
-   And I scroll to the base of id "addtasks_tags_container"
-   And I fill in select2 input "addtasks_tags" with "blue" and select "blue"
+   And I fill in "Completion date" with "tomorrow" date in the format "Y/m/d"
+   And I scroll to the base of id "edittask_tags_container"
+   And I fill in select2 input "edittask_tags" with "blue" and select "blue"
    And I press "Save task"
    # Adding a tag to page 1
    And I choose "Pages and collections" in "Create" from main menu
