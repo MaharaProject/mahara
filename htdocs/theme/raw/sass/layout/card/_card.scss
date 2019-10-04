@@ -49,6 +49,11 @@
     //don't want border around the message
     &.wallpost {
     }
+
+    .has-attachment {
+        border-radius: $border-radius-sm;
+        border-width: 1px;
+    }
 }
 
 .view-pane .card {

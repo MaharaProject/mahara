@@ -95,11 +95,6 @@
     .postedon {
         font-family: $font-family-base;
     }
-
-    &.has-attachment {
-        font-family: $font-family-sans-serif;
-        font-weight: bold;
-    }
 }
 
 .list-group-item h4.list-group-item-heading {
@@ -433,6 +428,33 @@
     .list-group-item {
         .list-group-item-heading {
             float: none;
+        }
+    }
+}
+
+// files for download and attachment files
+.file-download-list,
+.has-attachment {
+    .card-header {
+        border-bottom: 0;
+    }
+    .list-group {
+        .list-group-item {
+            .icon-on-hover ~ .icon-action {
+                left: 0;
+            }
+            .title {
+                max-width: 80%;
+                display: inline-block;
+            }
+            img.file-icon,
+            .icon.text-default {
+                vertical-align: top;
+            }
+            .icon-download {
+                position: relative;
+                top: 0;
+            }
         }
     }
 }

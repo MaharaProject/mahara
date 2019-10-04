@@ -49,14 +49,14 @@
       }
     }
 
-    ~ .list-group-item h4.title,
-    ~ .list-group-item h4.list-group-item-heading {
-      margin-right: 100px;
+    ~ .list-group-item h4.list-group-item-heading,
+    ~ .list-group-item h4.title {
+        margin-right: 100px;
     }
 
     &.d-none {
-      ~ .list-group-item h4.title,
-      ~ .list-group-item h4.list-group-item-heading {
+      ~ .list-group-item h4.list-group-item-heading,
+      ~ .list-group-item h4.title {
         margin-right: 0;
       }
     }
@@ -67,74 +67,54 @@
    margin-left: 10px;
 }
 
-.card.card-secondary {
-  .card-body {
+.file-download-list,
+.has-attachment {
+  .list-group {
     .block-header {
-        margin-top: -15px;
-    }
+      ~ .list-group-item {
+        .icon-on-hover ~ .icon-action {
+          left: -65px;
+        }
+        .title {
+          display: inline-block;
+          max-width: 55%;
+        }
+        img.file-icon {
+          vertical-align: top;
+        }
 
-    // exception of attachments lists in resume
-    .has-attachment .list-unstyled {
-      .block-header {
-        margin-top: 0;
+        // reverts folder and file downloads margin-right
+        h4.list-group-item-heading,
+        h4.title {
+            margin-right: 0;
+        }
+      }
 
+      &.d-none {
         ~ .list-group-item {
+          .icon-on-hover ~ .icon-action {
+            left: 0;
+          }
           .title {
-            margin-right: 100px;
-            display: inline-block;
             max-width: 80%;
           }
-          img.file-icon {
-            vertical-align: top;
-          }
-        }
-
-        &.d-none {
-          ~ .list-group-item .title {
-            margin-right: 0;
-          }
-        }
-      }
-    }
-  }
-
-  // journal titles need margin-right to not wrap under buttons
-  &.bt-recentposts,
-  &.bt-recentposts-editor,
-  &.bt-taggedposts,
-  &.bt-taggedposts-editor {
-    .block-header {
-      ~ .list-group-item {
-
-        h4.list-group-item-heading {
-          margin-right: 80px;
-        }
-      }
-      &.d-none {
-        ~ .list-group-item h4.list-group-item-heading {
-          margin-right: 0;
-        }
-      }
-    }
-  }
-
-  .resume-content .list-group {
-    .block-header {
-      ~ .list-group-item {
-
-        .title {
-          margin-right: 80px;
-        }
-      }
-      &.d-none {
-        ~ .list-group-item .title {
-          margin-right: 0;
         }
       }
     }
   }
 }
 
+.card.card-secondary .card-body {
+  .block-header {
+      margin-top: -15px;
+  }
+  // exception of attachments lists in resume
+  .has-attachment .list-group {
+    .block-header {
+      margin-top: 0;
+    }
+  }
+}
 // exception of pdf block
 .card.card-secondary {
   &.bt-pdf {

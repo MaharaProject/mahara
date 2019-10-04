@@ -85,52 +85,54 @@
             {/if}
 
             {if $row->attachments}
-            <h5 class="list-group-item-heading attachment-title">
-                <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
-                <span class="text-small">{str tag='attachedfiles' section='artefact.blog'}</span>
-                ({$row->clipcount})
-            </h5>
-            <ul class="list-group list-group-unbordered">
-                {foreach from=$row->attachments item=item}
-                {if !$item->allowcomments}
-                    {assign var="justdetails" value=true}
-                {/if}
-                {include
-                    file='header/block-comments-details-header.tpl'
-                    artefactid=$item->id
-                    blockid=$blockid
-                    commentcount=$item->commentcount
-                    allowcomments=$item->allowcomments
-                    justdetails=$justdetails
-                    displayiconsonly = true}
-                <li class="list-group-item">
-                    <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
-                        <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
-                    </a>
-
-                    {if $item->iconpath}
-                    <img class="file-icon" src="{$item->iconpath}" alt="">
-                    {else}
-                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
+            <div class="has-attachment card">
+                <div class="card-header">
+                    <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
+                    <span class="text-small">{str tag='attachedfiles' section='artefact.blog'}</span>
+                    <span class="metadata">({$row->clipcount})</span>
+                </div>
+                <ul class="list-unstyled list-group">
+                    {foreach from=$row->attachments item=item}
+                    {if !$item->allowcomments}
+                        {assign var="justdetails" value=true}
                     {/if}
-
-                    <span class="title text-inline">
-                        {if !$editing}
-                        <a class="modal_link text-small inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
-                            {$item->title}
+                    {include
+                        file='header/block-comments-details-header.tpl'
+                        artefactid=$item->id
+                        blockid=$blockid
+                        commentcount=$item->commentcount
+                        allowcomments=$item->allowcomments
+                        justdetails=$justdetails
+                        displayiconsonly = true}
+                    <li class="list-group-item">
+                        <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
+                            <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
                         </a>
-                        {else}
-                        <span class="text-small innerl-link">{$item->title}</span>
-                        {/if}
-                        <span class="metadata"> -
-                            [{$item->size}]
-                        </span>
-                    </span>
 
-                    <span class="icon icon-download icon-lg float-right text-watermark icon-action inner-link" role="presentation" aria-hidden="true"></span>
-                </li>
-                {/foreach}
-            </ul>
+                        {if $item->iconpath}
+                        <img class="file-icon" src="{$item->iconpath}" alt="">
+                        {else}
+                        <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                        {/if}
+
+                        <span class="title">
+                            {if !$editing}
+                            <a class="modal_link text-small inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
+                                {$item->title}
+                            </a>
+                            {else}
+                            <span class="text-small inner-link">{$item->title}</span>
+                            {/if}
+                            <span class="metadata"> -
+                                [{$item->size}]
+                            </span>
+                        </span>
+
+                        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
             {/if}
         </div>
     </div>

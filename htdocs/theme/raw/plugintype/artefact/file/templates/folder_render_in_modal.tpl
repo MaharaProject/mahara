@@ -17,7 +17,7 @@
         {str tag=foldercontents section=artefact.file}:
     </h4>
 
-    <div class="fullwidth">
+    <div class="fullwidth file-download-list">
         <ul class="list-group">
             {foreach from=$children item=child}
             <li class="filedownload-item list-group-item">
@@ -35,6 +35,7 @@
                 {else}
                     <span class="icon icon-{$child->artefacttype} icon-lg left {if $modal}file-icon-render-in-modal{/if}" role="presentation" aria-hidden="true"></span>
                 {/if}
+                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                 <h4 class="title list-group-item-heading text-inline">
                     <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                         {$child->title}
@@ -46,7 +47,6 @@
                     {/if}
                 </h4>
                 {if $child->artefacttype != 'folder'}
-                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-midtone">

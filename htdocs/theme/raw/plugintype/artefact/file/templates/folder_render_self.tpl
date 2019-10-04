@@ -17,7 +17,7 @@
         {str tag=foldercontents section=artefact.file}:
     </h4>
 
-    <div class="fullwidth">
+    <div class="fullwidth file-download-list">
         <ul class="list-group">
             {foreach from=$children item=child}
             {if !$child->allowcomments}

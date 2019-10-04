@@ -47,16 +47,16 @@
 
         {if $post->files}
         <div class="has-attachment card collapsible" id="blockpostfiles-{$post->id}">
-            <h5 class="card-header">
+            <div class="card-header">
                 <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
-                    <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                      <span class="metadata">
                         ({$post->files|count})
                     </span>
                     <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a>
-            </h5>
+            </div>
             <div class="collapse" id="post-attach-{$post->id}">
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
@@ -72,7 +72,7 @@
                         <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                         {/if}
                         <span class="title">
-                            {$file->title}
+                            <span class="text-small">{$file->title}</span>
                             <span class="metadata"> -
                                 [{$file->size|display_size}]
                             </span>

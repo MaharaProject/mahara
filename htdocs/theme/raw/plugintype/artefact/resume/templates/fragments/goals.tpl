@@ -38,9 +38,8 @@
                 <a class="collapsible collapsed card-footer" aria-expanded="false" href="#attach_goal_{$.foreach.default.index}" data-toggle="collapse">
                     <p class="text-left">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
-
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
-                         <span class="metadata">({$n->count})</span>
+                        <span class="metadata">({$n->count})</span>
                         <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                     </p>
                 </a>
