@@ -36,7 +36,6 @@ var PieformManager = (function($) {
 
         this.init = function() {
             self.connect('onload', null, self.setFocus);
-            self.signal('onload', null);
         };
 
         /**
@@ -84,8 +83,7 @@ var PieformManager = (function($) {
                 'type': 'application/javascript',
                 'src' : self.pieformPath + type + 's/' + name + '.js'
             });
-
-            script.append(self.head);
+            $('head').append(script);
             self.loadCache[type][name] = 1;
         };
 
@@ -153,9 +151,7 @@ var Pieform = (function($) {
 
             self.connectSubmitButtons();
 
-            // Hook for pieform elements that need to execute Javascript
-            // *after* the Pieform has been initialized.
-            $(document).triggerHandler('pieform_postinit', self);
+            PieformManager.signal('onload', self.data.name);
         };
 
         this.processForm = function(e) {

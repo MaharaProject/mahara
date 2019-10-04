@@ -35,7 +35,7 @@ function pieform_element_authlist(Pieform $form, $element) {
     }
 
     if (is_array($value) && count($value)) {
-        $smarty->assign('authtypes', $value['authtypes']);
+        $smarty->assign('authtypes', auth_get_available_auth_types($value['institution']));
         $smarty->assign('instancelist', $value['instancelist']);
         $smarty->assign('instancestring', implode(',',$value['instancearray']));
         $smarty->assign('default', $value['default']);
@@ -43,10 +43,6 @@ function pieform_element_authlist(Pieform $form, $element) {
     }
 
     $smarty->assign('name', $element['name']);
-    $smarty->assign('cannotremove', json_encode(get_string('cannotremove', 'auth')));
-    $smarty->assign('cannotremoveinuse', json_encode(get_string('cannotremoveinuse', 'auth')));
-    $smarty->assign('saveinstitutiondetailsfirst', json_encode(get_string('saveinstitutiondetailsfirst', 'auth')));
-    $smarty->assign('noauthpluginconfigoptions', json_encode(get_string('noauthpluginconfigoptions', 'auth')));
 
     return $smarty->fetch('form/authlist.tpl');
 }
@@ -71,24 +67,54 @@ function pieform_element_authlist_get_value(Pieform $form, $element) {
     }
 
     $value['instancelist'] = $element['options'];
-    $value['authtypes'] = $element['authtypes'];
+    $value['authtypes'] = auth_get_available_auth_types($element['institution']);
     $value['instancePriority'] = $element['instancestring'];
     $value['institution'] = $element['institution'];
 
     return $value;
 }
 
+/**
+ * Javascript to load libraries used by all authlist elements on the page
+ */
 function pieform_element_authlist_js() {
-    return <<<EOF
-// Since this menu is just a dummy selector, don't let it trigger the form change checker.
-jQuery(document).on('pieform_postinit', function(event, form) {
-    jQuery('form[name=' + form.data.name + ']').find('select#dummySelect').off('change.changechecker');
-});
-
+    $return = <<<EOF
+// Load strings used by the authlist Pieforms element
+if (strings !== undefined) {
 EOF;
+
+    $jsstrings = array(
+        array('cannotremove', 'auth'),
+        array('cannotremoveinuse', 'auth'),
+        array('saveinstitutiondetailsfirst', 'auth'),
+        array('noauthpluginconfigoptions', 'auth'),
+    );
+    foreach ($jsstrings as $stringdata) {
+        list($tag, $section) = $stringdata;
+        $return .= '    strings["' . $tag . '"] = ' . json_encode(get_raw_string($tag, $section)) . ";\n";
+    }
+
+    $return .= <<<EOF
 }
 
-function pieform_element_authlist_get_headdata() {
-    $result = '<script>' . pieform_element_authlist_js() . "</script>";
+// Load methods used by the authlist and its modal
+PieformManager.loadPlugin('element', 'authlist');
+
+// Since this menu is just a dummy selector, don't let it trigger the form change checker.
+var formid = jQuery('select#authlistDummySelect').closest('form').attr('id');
+PieformManager.connect('onload', formid, function(pformid) {
+    var selector = 'select#authlistDummySelect';
+    if (pformid) {
+        selector = 'form#' + pformid + ' ' + selector;
+    }
+    jQuery(selector).off('change.changechecker');
+});
+EOF;
+
+    return $return;
+}
+
+function pieform_element_authlist_get_headdata($element) {
+    $result = '<script type="application/javascript">' . pieform_element_authlist_js() . "</script>";
     return array($result);
 }
