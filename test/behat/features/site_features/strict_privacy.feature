@@ -36,7 +36,7 @@ Scenario: Create user who logs in with strict privacy enabled
     Then I should see "Before entering your account, please read the information displayed below."
     And I press "Save changes"
     Then I should see "If you do not consent to the privacy statement(s) or terms and conditions, your account will be suspended."
-    Then I press "No"
+    Then I press "Cancel"
     # consent to privacy statement
     And I enable the switch "I consent to the privacy statement"
     And I enable the switch "I consent to the terms and conditions"
