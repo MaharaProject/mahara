@@ -48,6 +48,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Copy"
     And I press "Copy page"
+    And I follow "Edit"
     And I follow "Display page"
     Then I should see "Town: Wellington"
     And I log out
@@ -57,6 +58,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Copy"
     And I press "Copy page"
+    And I follow "Edit"
     And I follow "Display page"
     Then I should see "Town: Oslo"
     And I log out
