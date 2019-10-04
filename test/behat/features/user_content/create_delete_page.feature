@@ -26,9 +26,6 @@ Scenario: Creating a page with content in it (Bug 1426983)
     | Page title | Test view |
     And I fill in "First description" in first editor
     And I press "Save"
-    # verify page elements are displayed Display page and Return to pages and collections buttons
-    And I should see "Display page" in the "Display page button" property
-    And I should see "Return to pages and collections" in the "Return to pages and collections button" property
     # Editing the pages
     And I follow "Settings" in the "Toolbar buttons" property
     #Change the Page title
@@ -49,8 +46,9 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "This is the edited page title" in the "h1 heading" property
     # confirm settings, edit and share buttons displayed
     And I should see "Settings" in the ".editlayout .btn-title" element
-    And I should see "Edit" in the ".editcontent .btn-title" element
+    And I should see "Display page" in the ".displaycontent .btn-title" element
     And I should see "Share" in the ".editshare .btn-title" element
+    And I should see "Return to pages and collections" in the ".returntolocation .btn-title" element
     # Adding media block
     When I follow "Add a new block" in the "blocktype sidebar" property
     And I press "Add"
@@ -79,9 +77,6 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I click on "External media" in the "Content types" property
     And I press "Remove"
 
-    # verify page elements are displayed Display page and Return to pages and collections buttons
-    And I should see "Display page" in the "Display page button" property
-    And I should see "Return to pages and collections" in the "Return to pages and collections button" property
     And I display the page
     # Show last updated date and time when seeing a portfolio page (Bug 1634591)
     And I should see "Updated on" in the ".text-right" element

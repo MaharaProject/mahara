@@ -129,17 +129,6 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
 </section>
 
 <section data-markdown data-category="buttons">
-### Display page
-This button is used to display a page you have just edited.
-```
-<button class="btn-secondary button btn">
-    {str tag=displayview section=view}
-    <span class="icon icon-arrow-circle-right right" role="presentation"></span>
-</button>
-```
-</section>
-
-<section data-markdown data-category="buttons">
 ### Text link
 This type of button is normally used in lists. An example can be found when you view the "Image" block. It takes you to the artefact page.
 ```

@@ -121,6 +121,10 @@ $smarty->assign('displaylink', $view->get_url());
 $smarty->assign('issiteview', $issiteview);
 $smarty->assign('issitetemplate', $issitetemplate);
 $smarty->assign('PAGEHEADING', $state);
+$returnto = $view->get_return_to_url_and_title();
+$smarty->assign('url', $returnto['url']);
+$smarty->assign('title', $returnto['title']);
+
 $smarty->display('view/editlayout.tpl');
 
 function create_settings_pieform() {

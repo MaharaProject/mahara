@@ -818,4 +818,7 @@ $smarty->assign('allownew', $allownew);
 $smarty->assign('onprobation', $onprobation);
 $smarty->assign('newform', $newform);
 // end
+$returnto = $view->get_return_to_url_and_title();
+$smarty->assign('url', $returnto['url']);
+$smarty->assign('title', $returnto['title']);
 $smarty->display('view/accessurl.tpl');
