@@ -19,7 +19,7 @@ Scenario:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"
@@ -29,6 +29,8 @@ Scenario:
     And I follow "File"
     And I attach the file "test_html.html" to "File"
     And I press "Save"
+    #give time for the block to resize
+    And I wait "1" seconds
     And I display the page
     #check content of HTML block shows content, but not html tags
     And I should see "Mahara does HTML"
@@ -36,6 +38,4 @@ Scenario:
     And I should see images within the block "Some HTML"
     And I follow "mahara manual"
     And I wait "3" seconds
-    And I switch to the new window
     Then I should see "This is the manual for Mahara"
-    And I switch to the main window

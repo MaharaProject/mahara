@@ -80,7 +80,7 @@ Scenario: Installing framework module and activating for an institution
 
  # Add another compentency annotation block
  And I follow "Edit"
- When I follow "Add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Show more"
  And I click on "Show more"

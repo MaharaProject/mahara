@@ -25,7 +25,6 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I select "Email" from "Watchlist"
  And I press "Save"
  And I am on homepage
- And I scroll to the id 'bottom-pane'
  And I follow "Page UserA_01"
  And I press "More options"
  And I follow "Add page to watchlist"
@@ -36,7 +35,6 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I unsubscribe from "Page UserA_01" owned by "UserB"
  And I should see "You have unsubscribed successfully"
  And I am on homepage
- And I scroll to the id 'bottom-pane'
  And I follow "Page UserA_01"
  And I press "More options"
  And I should see "Add page to watchlist"

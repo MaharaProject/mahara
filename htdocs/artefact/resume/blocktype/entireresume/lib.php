@@ -174,4 +174,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return true;
     }
 
+    public static function has_static_content() {
+        return false;
+    }
 }

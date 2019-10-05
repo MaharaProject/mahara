@@ -22,6 +22,7 @@
 @import "../layout/header";
 @import "../layout/profile-block";
 @import "../layout/block-comments-details-header";
+@import "../layout/gridlayout";
 
 // cards are a very commonly used layout component
 @import "../layout/card/card";
@@ -111,6 +112,7 @@
 @import "../lib/elasticsearch";
 @import "../lib/print";
 @import "../lib/cookieconsent";
+@import "../lib/gridstack";
 
 // Keep these files last to override all other style sheets
 @import "../custom";

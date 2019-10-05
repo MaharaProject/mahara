@@ -17,6 +17,7 @@ define('SECTION_PAGE', 'blocks');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'group.php');
+require_once(get_config('libroot') . 'gridstacklayout.php');
 
 $id = param_integer('id', 0); // if 0, we're editing our profile.
 $profile = param_boolean('profile');
@@ -144,8 +145,18 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
 }
 
 $javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js',
-                    'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer', 'artefact/file/js/filebrowser.js',
-                    'lib/pieforms/static/core/pieforms.js', 'js/switchbox.js');
+                    'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer',
+                    'artefact/file/js/filebrowser.js',
+                    'lib/pieforms/static/core/pieforms.js', 'js/switchbox.js',
+                    'js/lodash/lodash.js',
+                    'js/gridstack/gridstack.js',
+                    'js/gridstack/gridstack.jQueryUI.js',
+                    'js/gridlayout.js',
+                    );
+if ($view->get('accessible')) {
+    $javascript[] = 'js/dragondrop/dragon-drop.js';
+    $javascript[] = 'js/accessibilityreorder.js';
+}
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -155,6 +166,89 @@ $inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n
 require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
 $inlinejs .= "jQuery(window).on('pageupdated', {}, function() { dock.init(jQuery(document)); });";
+
+$blockresizeonload = "false";
+if ($view->uses_new_layout() && $view->needs_block_resize_on_load()) {
+    // we're copying from an old layout view and need to resize blocks
+    $blockresizeonload = "true";
+}
+if (!$view->uses_new_layout()) {
+    // flag to set the showlayouttranslatewarning=true in account preferences
+    $alwaystranslate = param_boolean('alwaystranslate', false);
+    // flag to translate this page
+    $translate = param_boolean('translate', false);
+    // if  showlayouttranslatewarning is not set in account preferences, then we need to show the warning
+    $showlayouttranslatewarning = is_null($USER->get_account_preference('showlayouttranslatewarning')) ? 1 : $USER->get_account_preference('showlayouttranslatewarning');
+
+    if ($showlayouttranslatewarning && $alwaystranslate) {
+      $USER->set_account_preference('showlayouttranslatewarning', 0);
+      $showlayouttranslatewarning = false;
+    }
+
+    if ($showlayouttranslatewarning && !$translate) {
+      // user needs to confirm that wants to translate old layout page to grid layout
+      // before we continue
+      $smarty = smarty(array(), $stylesheets, false, $extraconfig);
+      $smarty->assign('PAGEHEADING', get_string('pleaseconfirmtranslate', 'view'));
+      $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
+      $smarty->assign('viewid', $view->get('id'));
+      $smarty->assign('viewtitle', $view->get('title'));
+      $smarty->assign('accountprefsurl', get_config('wwwroot') . 'account');
+      $smarty->display('view/translatewarning.tpl');
+      exit;
+    }
+    else {
+        // if it's old row layout, we need to translate to grid layout
+        save_blocks_in_new_layout($view->get('id'));
+        $blockresizeonload = "true";
+    }
+}
+$blocks = $view->get_blocks(true);
+$blocksencode = json_encode($blocks);
+
+if ( $view->get('accessible')) {
+    $float = 'false';
+    $mincolumns = '12';
+    $reorder = '  accessibilityReorder();';
+}
+else {
+    $float = 'true';
+    $mincolumns = 'null';
+    $reorder = '  ';
+}
+
+$blocksjs ="
+$(function () {
+    var options = {
+        verticalMargin: 10,
+        float: {$float},
+        resizable: false,
+        acceptWidgets: '.blocktype-drag',
+        draggable: {
+            scroll: true,
+        },
+        animate: true,
+        minCellColumns: {$mincolumns},
+    },
+    grid, translate;
+    grid = $('.grid-stack');
+
+    grid.gridstack(options);
+    grid = $('.grid-stack').data('gridstack');
+    grid.resizable('.grid-stack-item', true);
+    // should add the blocks one by one
+    var blocks = {$blocksencode};
+    if ({$blockresizeonload}) {
+        // update block heights when they are loaded
+        loadGridTranslate(grid, blocks);
+    }
+    else {
+        loadGrid(grid, blocks);
+    }
+    {$reorder}
+});
+";
+
 // The form for adding blocks via the keyboard
 $addform = pieform(array(
     'name' => 'newblock',
@@ -164,25 +258,14 @@ $addform = pieform(array(
     'autofocus' => false,
     'class' => 'cell-radios',
     'elements' => array(
-        'blocklegend' => array(
-            'type' => 'fieldset',
-            'elements' => array(
-                'celltitle' => array(
-                    'type' => 'markup',
-                    'value'=> '<legend>' . get_string('celltitle', 'view') . '</legend>',
-                ),
-                'cellchooser' => array(
-                    'type' => 'radio',
-                    'class' => 'fullwidth',
-                    'rowsize' => 2,
-                    'options' => array('R1C1', 'R1C2', 'R2C1'),
-                ),
-            ),
-        ),
         'position' => array(
             'type' => 'select',
             'title' => get_string('blockorder', 'view'),
-            'options' => array('Top', 'After 1', 'After 2'),
+            'defaultvalue' => 'bottom',
+            'options' => array(
+                'top' => get_string('top', 'view'),
+                'bottom' => get_string('bottom', 'view')
+            ),
         ),
         'submit' => array(
             'type' => 'submitcancel',
@@ -192,31 +275,33 @@ $addform = pieform(array(
     ),
 ));
 
-// Build content before initialising smarty in case pieform elements define headers.
-$viewcontent = $view->build_rows(true);
-
 // Get the placeholder block info
 $placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $view, 'placeholder');
 $placeholderbutton = '';
 if ($placeholderblock) {
     // it's active so make the button with different display title
-    $placeholderblock[0]['title'] = get_string('addnewblock', 'view');
+    $placeholderblock[0]['title'] = $view->get('accessible') ? get_string('addnewblockaccessibility', 'view') : get_string('addnewblock', 'view');
     $placeholderblock[0]['cssicon'] = 'plus';
     $smarty = smarty_core();
     $smarty->assign('blocktypes', $placeholderblock);
     $smarty->assign('javascript', false);
+    $smarty->assign('accessible', $view->get('accessible'));
     $placeholderbutton = $smarty->fetch('view/blocktypelist.tpl');
 }
-
-$smarty = smarty($javascript, $stylesheets, array(
+$strings = array(
     'view' => array(
         'addnewblock',
-        'cellposition',
-        'blockordertopcell',
-        'blockorderafter',
         'moveblock',
     ),
-), $extraconfig);
+);
+
+if ($view->get('accessible')) {
+    $strings['view'][] = 'itemgrabbed';
+    $strings['view'][] = 'itemdropped';
+    $strings['view'][] = 'itemreorder';
+}
+
+$smarty = smarty($javascript, $stylesheets, $strings, $extraconfig);
 
 $smarty->assign('addform', $addform);
 
@@ -255,7 +340,7 @@ $smarty->assign('dashboard', $dashboard);
 if (get_config('blockeditormaxwidth')) {
     $inlinejs .= 'config.blockeditormaxwidth = true;';
 }
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs .  $inlinejs);
 $viewtype = $view->get('type');
 $viewtitle = $view->get('title');
 $owner = $view->get('owner');
@@ -278,10 +363,6 @@ if ($collection = $view->get('collection')) {
 }
 $smarty->assign('collectionid', $collectionid);
 
-// The HTML for the columns in the view
-$columns = $viewcontent;
-$smarty->assign('columns', $columns);
-
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
 
 $smarty->assign('issitetemplate', $view->is_site_template());
@@ -291,5 +372,5 @@ $smarty->assign('instructionscollapsed', $view->get('instructionscollapsed'));
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('title', $returnto['title']);
-
+$smarty->assign('accessible', $view->get('accessible'));
 $smarty->display('view/blocks.tpl');

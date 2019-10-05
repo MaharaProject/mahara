@@ -11,7 +11,7 @@ function modal_handler(e) {
     $(modal).find('.feedbacktable .list-group-lite').addClass('fullwidth');
 }
 
-jQuery(function($) {
+jQuery(window).on('blocksloaded', {}, function() {
 "use strict";
 
     $('[data-target="#configureblock"]').each(function(i, obj) {

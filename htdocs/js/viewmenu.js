@@ -105,6 +105,8 @@ function addFeedbackSuccess(form, data) {
     // then close the modal
     if (jQuery('#feedback-form').length) {
         dock.hide();
+        // update the size of the comment block
+        updateBlockSizes();
     }
 }
 
@@ -396,7 +398,7 @@ $(document).on('pageupdated', function(e, data) {
     }
 });
 
-jQuery(function($) {
+jQuery(window).on('blocksloaded', {}, function() {
 
     toggleDetailsBtn();
 

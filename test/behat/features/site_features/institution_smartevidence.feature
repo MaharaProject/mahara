@@ -101,7 +101,7 @@ Scenario: SmartEvidence interaction by member / staff
     # Mahara member clicks the next to view next page
     And I press "Next page"
     When I follow "Place feedback"
-    And I fill in "Mahara member placing feedback" in first editor
+    And I fill in "Mahara member placing feedback" in editor "Feedback"
     And I press "Place feedback"
     And I wait "1" seconds
     When I follow "Feedback (3)"

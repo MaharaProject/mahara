@@ -17,7 +17,7 @@ Scenario: Embed and play mp4
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
   And I click on "Show more"
   And I click on "Show more"
@@ -36,7 +36,7 @@ Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
   And I click on "Show more"
   And I click on "Show more"
@@ -64,7 +64,7 @@ Scenario: Change settings and embed 3gp
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
   And I click on "Show more"
   And I click on "Show more"
@@ -81,7 +81,7 @@ Scenario: Embed unsupported file type
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
   And I click on "Show more"
   And I click on "Show more"

@@ -30,8 +30,13 @@ if ($USER->is_logged_in()) {
     // get the user's dashboard view
     require_once(get_config('libroot') . 'view.php');
     $view = $USER->get_view_by_type('dashboard');
+    $layoutjs = array();
+    if ($newlayout = $view->uses_new_layout()) {
+        $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
+    }
 
     $javascript = array('paginator');
+    $javascript = array_merge($javascript, $layoutjs);
     $blocktype_js = $view->get_all_blocktype_javascript();
     $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
     $inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
@@ -46,8 +51,30 @@ if ($USER->is_logged_in()) {
     else {
         $skin = false;
     }
+    if ($newlayout) {
+        $blocks = $view->get_blocks();
+        $blocks = json_encode($blocks);
+        $blocksjs = <<<EOF
+        $(function () {
+            var options = {
+                verticalMargin: 10,
+                float: true,
+                ddPlugin: false,
+            };
+            var grid = $('.grid-stack');
+            grid.gridstack(options);
+            grid = $('.grid-stack').data('gridstack');
 
-    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+            // should add the blocks one by one
+            var blocks = {$blocks};
+            loadGrid(grid, blocks);
+        });
+EOF;
+    }
+    else {
+        $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+        $blocksjs = "$(function () {jQuery(document).trigger('blocksloaded');});";
+    }
     $smarty = smarty(
         $javascript,
         $stylesheets,
@@ -86,10 +113,13 @@ jQuery(function($) {
 JAVASCRIPT;
 
     }
-    $smarty->assign('INLINEJAVASCRIPT', $js . $inlinejs);
+    $smarty->assign('INLINEJAVASCRIPT', $blocksjs . $js . $inlinejs);
 
     $smarty->assign('dashboardview', true);
-    $smarty->assign('viewcontent', $viewcontent);
+    $smarty->assign('newlayout', $newlayout);
+    if (!$newlayout) {
+        $smarty->assign('viewcontent', $viewcontent);
+    }
     $smarty->assign('viewid', $view->get('id'));
 }
 else {

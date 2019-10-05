@@ -73,7 +73,7 @@ Background:
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Note with a tag
-   When I follow "Add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
    And I click on "Show more"
    And I click on "Show more"
@@ -85,7 +85,7 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Text block with a tag
-   When I follow "Add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
    And I click on "Text" in the "Content types" property
    # create a text block with a Unique name (Text Block 101)
@@ -95,7 +95,7 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a resume field with a tag
-   When I follow "Add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
    And I click on "Show more"
    And I click on "Show more"
@@ -105,7 +105,7 @@ Background:
    And I press "Save"
    # Creating an external video block with a tag
    # need to do this one last as the loading of video effects takes focus away from the add block modal
-   When I follow "Add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
    And I click on "Show more"
    And I click on "Show more"

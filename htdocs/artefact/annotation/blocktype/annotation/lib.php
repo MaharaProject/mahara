@@ -45,6 +45,10 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $view->get('group') == null;
     }
 
+    public static function has_static_content() {
+        return false;
+    }
+
     /**
      * defines if the title should be shown if there is no content in the block
      *
@@ -428,7 +432,8 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
     public static function get_instance_javascript(BlockInstance $bi) {
         return array(
             array(
-                'file' => 'js/annotation.js'
+                'file' => 'js/annotation.js',
+                'initjs' => " annotationBlockInit(); ",
             )
         );
     }
@@ -443,28 +448,5 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         if ($fromversion == 0) {
             set_field('blocktype_installed', 'active', 0, 'artefactplugin', 'annotation');
         }
-    }
-
-    public static function get_instance_config_javascript(BlockInstance $instance) {
-        return <<<EOF
-        jQuery(function($) {
-            function show_se_desc(id) {
-                $("#instconf_smartevidencedesc_container div:not(.description)").addClass('d-none');
-                $("#option_" + id).removeClass('d-none');
-            }
-            if ($("#instconf_smartevidence").length) {
-                // block title will be overwritten with framework choice so make it disabled
-                $("#instconf_title").attr('disabled', true);
-
-                // Set up evidence choices and show/hide related descriptions
-                $("#instconf_smartevidence").select2();
-
-                show_se_desc($("#instconf_smartevidence").val());
-                $("#instconf_smartevidence").on('change', function() {
-                    show_se_desc($(this).val());
-                });
-            }
-        });
-EOF;
     }
 }

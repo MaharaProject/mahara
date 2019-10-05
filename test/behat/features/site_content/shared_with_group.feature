@@ -78,6 +78,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I choose "Groups" in "Engage" from main menu
     And I follow "GroupA"
     # the formats "strftimedate" and "j F Y" both resolve to dd Month YYYY, which is wanted here.
+    And I wait "1" seconds
     And I should see the date "today" in the "#sharedcollectionlist" element with the format "d F Y"
 
     # Edit access for Collection 01
@@ -102,6 +103,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Check the list of shared pages to group "GroupA"
     And I choose "Groups" in "Engage" from main menu
     And I follow "GroupA"
+    And I wait "1" seconds
     And I should see "Page UserA_05"
     And I should see "Collection UserA_05"
     And I should not see "Page UserA_03"

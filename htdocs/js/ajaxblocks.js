@@ -1,6 +1,6 @@
 /*jslint browser: true, nomen: true,  white: true */
 /* global jQuery, $ */
-jQuery(function($) {
+jQuery(window).on('blocksloaded', {}, function() {
 "use strict";
 
     function ajaxBlocks() {
@@ -40,5 +40,9 @@ jQuery(function($) {
     });
 
     ajaxBlocks();
+
+    window.setTimeout(function(){
+       $(window).trigger('colresize');
+    }, 300);
 
 });

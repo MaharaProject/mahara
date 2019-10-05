@@ -1,6 +1,7 @@
 {include file="header.tpl" headertype="page"}
 {include file='modal-details.tpl'}
 
+<input type="hidden" id="viewid" name="id" value="{$viewid}">
 <div id="view-description" class="view-description {if $toolbarhtml}with-toolbar{/if}">
     {$viewdescription|clean_html|safe}
 </div>
@@ -26,14 +27,17 @@
 <div id="view" class="view-container">
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">
-            {if $viewcontent}
-                {$viewcontent|safe}
-            {else}
+            {if $peerhidden}
                 <div class="alert alert-info">
                     <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
                     {str tag=nopeerassessmentrequired section=artefact.peerassessment}
                 </div>
             {/if}
+            <div class="grid-stack">
+            {if $viewcontent}
+                {$viewcontent|safe}
+            {/if}
+            </div>
         </div>
     </div>
     <div class="viewfooter view-container">

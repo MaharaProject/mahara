@@ -82,7 +82,32 @@ if ($group->invitefriends) {
 $editwindow = group_format_editwindow($group);
 
 $view = group_get_homepage_view($group->id);
-$viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+if ($newlayout = $view->uses_new_layout()) {
+    $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
+    $blocks = $view->get_blocks();
+    $blocks = json_encode($blocks);
+    $blocksjs =   <<<EOF
+    $(function () {
+        var options = {
+            verticalMargin: 10,
+            float: true,
+            ddPlugin: false,
+        };
+        var grid = $('.grid-stack');
+        grid.gridstack(options);
+        grid = $('.grid-stack').data('gridstack');
+
+        // should add the blocks one by one
+        var blocks = {$blocks};
+        loadGrid(grid, blocks);
+    });
+EOF;
+}
+else {
+    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+    $layoutjs= array();
+    $blocksjs = "$(function () {jQuery(document).trigger('blocksloaded');});";
+}
 
 $headers = array();
 if ($group->public) {
@@ -91,6 +116,7 @@ if ($group->public) {
 }
 
 $javascript = array('paginator');
+$javascript = array_merge($javascript, $layoutjs);
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 $inlinejs = <<<JS
@@ -127,9 +153,12 @@ $smarty = smarty(
     )
 );
 
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs . $inlinejs);
 $smarty->assign('viewid', $view->get('id'));
-$smarty->assign('viewcontent', $viewcontent);
+$smarty->assign('newlayout', $newlayout);
+if (!$newlayout) {
+    $smarty->assign('viewcontent', $viewcontent);
+}
 $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
 $smarty->assign('cancopy', group_can_create_groups());

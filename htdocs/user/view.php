@@ -104,10 +104,38 @@ else if ($restrictedview) {
 }
 
 if (!$restrictedview) {
-    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+    if ($newlayout = $view->uses_new_layout()) {
+        $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
+        $blocks = $view->get_blocks();
+        $blocks = json_encode($blocks);
+        $blocksjs = <<<EOF
+            $(function () {
+                var options = {
+                    verticalMargin: 10,
+                    float: true,
+                    ddPlugin: false,
+                };
+                var grid = $('.grid-stack');
+                grid.gridstack(options);
+                grid = $('.grid-stack').data('gridstack');
+
+                // should add the blocks one by one
+                var blocks = {$blocks};
+                loadGrid(grid, blocks);
+            });
+EOF;
+    }
+    else {
+        $layoutjs= array();
+        $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+        $blocksjs = "$(function () {jQuery(document).trigger('blocksloaded');});";
+    }
 }
 
-$javascript = array('paginator', 'lib/pieforms/static/core/pieforms.js');
+$javascript = array('paginator',
+                    'lib/pieforms/static/core/pieforms.js',
+                  );
+$javascript = array_merge($javascript, $layoutjs);
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -361,7 +389,7 @@ if ($remoteuserrelationship) {
 
 $smarty->assign('loginas', $loginas);
 
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs . $inlinejs);
 
 $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', $loggedinid != $userid && can_send_message($loggedinid, $userid));
@@ -376,9 +404,11 @@ if ($loggedinid && $loggedinid == $userid) {
     $smarty->assign('ownprofile', true);
 }
 $smarty->assign('pageheadinghtml', $view->display_title(false));
-
 if (!$restrictedview) {
-    $smarty->assign('viewcontent', $viewcontent);
+    $smarty->assign('newlayout', $newlayout);
+    if (!$newlayout) {
+        $smarty->assign('viewcontent', $viewcontent);
+    }
 }
 safe_require('module', 'multirecipientnotification');
 $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());

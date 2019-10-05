@@ -98,8 +98,14 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     protected function find($selector, $locator, $exception = false, $node = false) {
 
         // Returns the first match.
-        $items = $this->find_all($selector, $locator, $exception, $node);
-        return count($items) ? reset($items) : null;
+        if ($items = $this->find_all($selector, $locator, $exception, $node)) {
+            foreach ($items as $key => $value) {
+                if ($value->getTagName() != 'script') {
+                    $returnitems[] = $value;
+                }
+            }
+        }
+        return count($returnitems) ? reset($returnitems) : null;
     }
 
     /**

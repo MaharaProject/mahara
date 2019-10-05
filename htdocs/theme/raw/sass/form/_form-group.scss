@@ -360,20 +360,9 @@
             margin-left: 0; // padding provided by label instead
         }
         &.multi-label {
-            &.customrow {
-                padding: 5px 0;
-            }
 
              > .field {
                 width: 167px;
-
-                &.field-selectnumcols {
-                    width: 123px;
-                }
-
-                .selectnumcols {
-                    width: 107px;
-                }
 
                 select {
                     max-width: 90%;
@@ -382,14 +371,6 @@
                 label {
                     font-size: 0.8em;
                     color: $theme-text-midtone-color;
-                }
-                &.customrowtitle {
-                    width: 70px;
-                    margin-top: 28px;
-                    @include media-breakpoint-down(sm) {
-                        width: 100%;
-                        margin-top: 15px;
-                    }
                 }
             }
         }

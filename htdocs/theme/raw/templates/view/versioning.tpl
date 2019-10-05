@@ -39,7 +39,25 @@
             },
             formatTitle: function (title, obj) { return '<h3>' + title + '</h3>'; },
             formatSubTitle: function (subTitle, obj) { return '<div class="metadata">' + subTitle + '</div>'; },
-            formatBodyContent: function (bodyCnt, obj) { return bodyCnt;}
+            formatBodyContent: function (bodyCnt, obj) {
+              if (obj.gridlayout) {
+                  var grid = $('<div class="grid-stack"></div>');
+                  var options = {
+                      verticalMargin: 10,
+                      float: true,
+                      ddPlugin: false,
+                  };
+                  grid.gridstack(options);
+                  grid = grid.data('gridstack');
+                  loadGrid(grid, bodyCnt);
+
+                  var container = $('<div class="container-fluid"></div>').append(grid.container);
+                  return container[0].outerHTML;
+              }
+              else {
+                  return bodyCnt;
+              }
+            }
         });
     });
     </script>

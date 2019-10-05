@@ -11,7 +11,7 @@
         {$feedback->pagination|safe}
         {if $feedback->pagination_js}
             <script>
-                {$feedback->pagination_js|safe}
+                paginator = {$feedback->pagination_js|safe};
             </script>
         {/if}
     </p>

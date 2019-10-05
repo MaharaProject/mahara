@@ -14,7 +14,7 @@ Scenario: Accessing annotation block (Bug 1443730)
 # Checking if annotation block is available by default
  And I follow "Page admin_01"
  And I follow "Edit"
- When I follow "Add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Show more"
  And I click on "Show more"
@@ -27,7 +27,7 @@ Scenario: Accessing annotation block (Bug 1443730)
 # Editing page to add annotation block
  And follow "Page admin_01"
  And I follow "Edit"
- When I follow "Add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I set the field "Block title" to "Annotation"
  And I click on "Show more"

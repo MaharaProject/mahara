@@ -97,4 +97,8 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
     public static function get_artefacts(BlockInstance $instance) {
         return array();
     }
+
+    public static function has_static_content() {
+        return false;
+    }
 }

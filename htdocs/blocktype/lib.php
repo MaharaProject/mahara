@@ -778,6 +778,9 @@ EOF;
         return !(count($roles) == 1 && $roles[0] == 'peer');
     }
 
+    public static function has_static_content() {
+        return true;
+    }
 }
 
 
@@ -839,15 +842,15 @@ class BlockInstance {
     private $row;
     private $column;
     private $order;
-    private $canmoveleft;
-    private $canmoveright;
-    private $canmoveup;
-    private $canmovedown;
     private $maxorderincolumn;
     private $artefacts = array();
     private $temp = array();
     private $tags = array();
     private $inedit = false;
+    private $positionx;
+    private $positiony;
+    private $width;
+    private $height;
 
     public function __construct($id=0, $data=null) {
          if (!empty($id)) {
@@ -872,6 +875,30 @@ class BlockInstance {
             if (property_exists($this, $field)) {
                 $this->{$field} = $value;
             }
+        }
+
+        $dimensiontable_exists = true;
+        if (defined('INSTALLER')) {
+           // Check to see if the table exists yet
+           require_once('ddl.php');
+           $dimensiontable_exists = table_exists(new XMLDBTable('block_instance_dimension'));
+        }
+
+        if ($dimensiontable_exists) {
+           $dimension = get_records_array('block_instance_dimension', 'block', $id);
+
+           if (is_array($dimension) && isset($dimension[0])) {
+               $this->positionx = $dimension[0]->positionx;
+               $this->positiony = $dimension[0]->positiony;
+               $this->width     = $dimension[0]->width;
+               $this->height    = $dimension[0]->height;
+           }
+        }
+        else {
+           $this->positionx = 0;
+           $this->positiony = 0;
+           $this->width     = 4;
+           $this->height    = 3;
         }
         $this->artefactplugin = blocktype_artefactplugin($this->blocktype);
     }
@@ -1150,7 +1177,6 @@ class BlockInstance {
         global $USER;
 
         safe_require('blocktype', $this->get('blocktype'));
-        $movecontrols = array();
         $this->inedit = true;
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         try {
@@ -1193,45 +1219,6 @@ class BlockInstance {
                 $js = '';
                 $css = '';
             }
-
-            if (!defined('JSON') && !$jsreply) {
-                if ($this->get('canmoveleft')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column') - 1,
-                        'order'  => $this->get('order'),
-                        'title'  => $title == '' ? get_string('movethisblockleft', 'view') : get_string('moveblockleft', 'view', "'$title'"),
-                        'arrow'  => "icon icon-long-arrow-alt-left",
-                        'dir'    => 'left',
-                    );
-                }
-                if ($this->get('canmovedown')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column'),
-                        'order'  => $this->get('order') + 1,
-                        'title'  => $title == '' ? get_string('movethisblockdown', 'view') : get_string('moveblockdown', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-alt-down',
-                        'dir'    => 'down',
-                    );
-                }
-                if ($this->get('canmoveup')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column'),
-                        'order'  => $this->get('order') - 1,
-                        'title'  => $title == '' ? get_string('movethisblockup', 'view') : get_string('moveblockup', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-alt-up',
-                        'dir'    => 'up',
-                    );
-                }
-                if ($this->get('canmoveright')) {
-                    $movecontrols[] = array(
-                        'column' => $this->get('column') + 1,
-                        'order'  => $this->get('order'),
-                        'title'  => $title == '' ? get_string('movethisblockright', 'view') : get_string('moveblockright', 'view', "'$title'"),
-                        'arrow'  => 'icon icon-long-arrow-alt-right',
-                        'dir'    => 'right',
-                    );
-                }
-            }
         }
 
         $configtitle = $title == '' ? call_static_method($blocktypeclass, 'get_title') : $title;
@@ -1244,8 +1231,13 @@ class BlockInstance {
         $smarty->assign('row',    $this->get('row'));
         $smarty->assign('column', $this->get('column'));
         $smarty->assign('order',  $this->get('order'));
+
+        $smarty->assign('positionx', $this->get('positionx'));
+        $smarty->assign('positiony', $this->get('positiony'));
+        $smarty->assign('width', $this->get('width'));
+        $smarty->assign('height', $this->get('height'));
+
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $smarty->assign('movecontrols', $movecontrols);
         $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
         $smarty->assign('configtitle',  $configtitle);
@@ -1658,6 +1650,11 @@ class BlockInstance {
 
         $this->rebuild_artefact_list();
 
+        // check the table exists in case we need to update a block in the upgrade before the creation of the table
+        if (db_table_exists('block_instance_dimension') && isset($this->positionx)) {
+            $this->set_block_dimensions($this->positionx, $this->positiony, $this->width, $this->height);
+        }
+
         // Tell stuff about this
         handle_event('blockinstancecommit', $this);
 
@@ -1770,6 +1767,7 @@ class BlockInstance {
             call_static_method($classname, 'delete_instance', $this);
         }
         delete_records('view_artefact', 'block', $this->id);
+        delete_records('block_instance_dimension', 'block', $this->id);
         delete_records('block_instance', 'id', $this->id);
         delete_records('tag', 'resourcetype', 'blocktype', 'resourceid', $this->id);
         db_commit();
@@ -1952,6 +1950,10 @@ class BlockInstance {
             'row'        => $this->get('row'),
             'column'     => $this->get('column'),
             'order'      => $this->get('order'),
+            'positionx'  => $this->get('positionx'),
+            'positiony'  => $this->get('positiony'),
+            'width'      => $this->get('width'),
+            'height'     => $this->get('height'),
         ));
 
         if (($sameowner && $copytype != 'fullinclself') || $copytype == 'reference') {
@@ -2128,6 +2130,28 @@ class BlockInstance {
      */
     public static function group_tabs($groupid, $role) {
         return array();
+    }
+
+    public function set_block_dimensions($positionx, $positiony, $width, $height) {
+        $obj = new StdClass();
+        $obj->block = $this->id;
+        $obj->positionx = $positionx;
+        $obj->positiony = $positiony;
+        $obj->height = $height;
+        $obj->width = $width;
+
+        if (isset($obj->positionx) && isset($obj->positiony) && isset($obj->height) && isset($obj->width)) {
+            //TODO: move this inside of the commit
+            ensure_record_exists('block_instance_dimension', (object) array('block' => $this->id), $obj);
+            $this->set('positionx',  $positionx);
+            $this->set('positiony', $positiony);
+            $this->set('height', $height);
+            $this->set('width',  $width);
+        }
+        else {
+           throw new \Exception(get_string('dimensionsnotset', 'view'));
+        }
+
     }
 }
 

@@ -217,7 +217,14 @@ else {
         $form = Framework::annotation_feedback_form($params);
     }
     else {
-        $form = Framework::annotation_config_form($params);
+        $view = new View($viewid);
+        if ($view->uses_new_layout()) {
+            $form = Framework::annotation_config_form($params);
+        }
+        else {
+            json_reply(true, get_string('cantaddannotationinoldlayout', 'view'));
+            exit;
+        }
     }
     $data = (object) array('form' => $form);
     json_reply(false, (object) array('message' => $message, 'data' => $data));

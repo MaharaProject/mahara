@@ -114,7 +114,7 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
     And I choose "Pages and collections" in "Configure site" from administration menu
     And I click on "Edit" in "Page mahara_01" card menu
     # Adding journal block to the page
-    When I follow "Add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
     And I click on "Journal" in the "Content types" property

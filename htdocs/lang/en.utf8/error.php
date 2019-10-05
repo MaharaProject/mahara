@@ -108,7 +108,6 @@ $string['notinthesamegroup'] = 'You cannot view this user\'s profile because you
 $string['notinthesameinstitution'] = 'You cannot view this user\'s profile because you are not members of the same institution.';
 $string['notinstitutionmember'] = 'You cannot view this page because you are not a member of the institution to which this page belongs.';
 $string['invalidlayoutselection'] = 'You tried to select a layout that doesn\'t exist.';
-$string['invalidnumrows'] = 'You have tried to create a layout with more than the allowed maximum number of rows. (This should not be possible; please notify your site\'s administrator.)';
 $string['previewimagegenerationfailed'] = 'Sorry, there was a problem generating the preview image.';
 $string['viewtemplatenotfound'] = 'Default page template not found.';
 
@@ -126,8 +125,6 @@ $string['invalidviewaction'] = 'Invalid page control action: %s';
 $string['invaliduser'] = 'Invalid user selected';
 
 $string['missingparamblocktype'] = 'Try selecting a block type to add first.';
-$string['missingparamcolumn'] = 'Missing column specification';
-$string['missingparamrow'] = 'Missing row specification';
 $string['missingparamorder'] = 'Missing order specification';
 $string['missingparamid'] = 'Missing id';
 

@@ -142,7 +142,8 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
     public static function get_instance_javascript(BlockInstance $bi) {
         return array(
             array(
-                'file' => 'js/peerassessment.js'
+                'file' => 'js/peerassessment.js',
+                'initjs' => " peerassessmentBlockInit(); ",
             )
         );
     }
@@ -172,5 +173,9 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
                 WHERE block = ?";
         $artefacts = get_records_sql_array($sql, $values);
         return $artefacts;
+    }
+
+    public static function has_static_content() {
+        return false;
     }
 }

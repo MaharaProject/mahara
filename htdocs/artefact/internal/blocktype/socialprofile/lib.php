@@ -243,4 +243,8 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
         return PluginArtefactInternal::import_create_blockinstance_leap($biconfig, $viewconfig);
     }
 
+    public static function has_static_content() {
+        return false;
+    }
+
 }

@@ -268,6 +268,8 @@ $string['cantversionviewinvalid'] = 'The supplied page identifier is invalid.';
 $string['cantversionvieweditpermissions'] = 'You do not permission to edit this page.';
 $string['cantversionviewsubmitted'] = 'You cannot edit this page because it has been submitted for assessment. You will have to wait until it is released.';
 $string['cantversionviewgroupeditwindow'] = 'You cannot edit this page. It is outside of the group editable date window.';
+$string['cantversionoldlayout'] = 'You cannot save a timeline version of a view with an old layout. You need to convert it to the new grid layout. To do this simply edit the page and the layout will be converted.';
+$string['cantaddannotationinoldlayout'] = 'You cannot add an annotation to this page. Please translate the page layout by editing the view first.';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 
@@ -311,29 +313,19 @@ $string['blockchangedbackerror'] = "Changing block back to placeholder block fai
 
 $string['addblock'] = 'Add block: %s';
 $string['blockcell'] = 'Cell';
-$string['cellposition'] = 'Row %s Column %s';
 $string['blockorder'] = 'Position';
-$string['blockordertopcell'] = 'Top of cell';
-$string['blockorderafter'] = 'After "%s"';
 $string['rownr'] = 'Row %s';
 $string['nrrows'] = array(
     '%s row',
     '%s rows',
 );
-$string['addnewblock'] = 'Add a new block';
+$string['addnewblock'] = 'Drag to add a new block';
+$string['addnewblockaccessibility'] = 'Click to add a new block';
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';
 $string['remove'] = 'Remove';
 $string['removecolumn'] = 'Remove this column';
-$string['moveblockleft'] = "Move %s block left";
-$string['movethisblockleft'] = "Move this block left";
-$string['moveblockdown'] = "Move %s block down";
-$string['movethisblockdown'] = "Move this block down";
-$string['moveblockup'] = "Move %s block up";
-$string['movethisblockup'] = "Move this block up";
-$string['moveblockright'] = "Move %s block right";
-$string['movethisblockright'] = "Move this block right";
 $string['moveblock2'] = 'Move block';
 $string['moveblock'] = 'Move %s block';
 $string['movethisblock'] = 'Move this block';
@@ -348,22 +340,10 @@ $string['removethisblock1'] = 'Remove this block (ID %s)';
 $string['blocktitle'] = 'Block title';
 $string['celltitle'] = 'Cell';
 
-$string['changemyviewlayout'] = 'Change my page layout';
-$string['createcustomlayout'] = 'Create custom layout';
-$string['createnewlayout'] = 'Create new layout';
 $string['basicoptions'] = 'Basic options';
 $string['advancedoptions'] = 'Advanced options';
-$string['viewcolumnspagedescription'] = 'First, select the number of columns in your page. In the next step, you will be able to change the widths of the columns.';
-$string['viewlayoutpagedescription'] = 'Select how you would like your page to be laid out.';
-$string['changeviewlayout'] = 'Change my page\'s column layout';
-$string['numberofcolumns'] = 'Number of columns';
-$string['changecolumnlayoutfailed'] = 'Could not change the column layout. Someone else may have been editing the layout at the same time. Please try again later.';
-$string['changerowlayoutfailed'] = 'Could not change the row layout. Someone else may have been editing the layout at the same time. Please try again later.';
 $string['Row'] = 'Row';
-$string['addarow'] = 'Add a row';
-$string['removethisrow'] = 'Remove this row';
-$string['columnlayout'] = 'Column layout';
-$string['layoutpreview'] = 'Layout preview';
+
 $string['layoutpreviewimage'] = 'Layout preview image';
 $string['Help'] = 'Help';
 $string['blockhelp'] = 'Block help';
@@ -379,21 +359,6 @@ $string['column'] = 'column';
 $string['row'] = 'row';
 $string['columns'] = 'columns';
 $string['rows'] = 'rows';
-$string['100'] = '100';
-$string['50,50'] = '50-50';
-$string['33,33,33'] = '33-33-33';
-$string['25,25,25,25'] = '25-25-25-25';
-$string['20,20,20,20,20'] = '20-20-20-20-20';
-$string['67,33'] = '67-33';
-$string['33,67'] = '33-67';
-$string['25,25,50'] = '25-25-50';
-$string['50,25,25'] = '50-25-25';
-$string['25,50,25'] = '25-50-25';
-$string['15,70,15'] = '15-70-15';
-$string['20,30,30,20'] = '20-30-30-20';
-$string['noviewlayouts'] = 'There are no layouts for a %s column page.';
-$string['cantaddcolumn'] = 'You cannot add any more columns to this page.';
-$string['cantremovecolumn'] = 'You cannot remove the last column from this page.';
 
 $string['blocktypecategory.external'] = 'External';
 $string['blocktypecategory.fileimagevideo'] = 'Media';
@@ -549,3 +514,24 @@ $string['versionnumber'] = 'Version %s';
 $string['gotonextversion'] = 'Go to the next version ';
 $string['gotopreviousversion'] = 'Go to the previous version';
 $string['loadingtimelinecontent'] = 'Loading timeline for "%s". If the page has many versions, this may take a while.';
+
+// layout strings
+$string['bottom'] = 'Bottom';
+$string['top'] = 'Top';
+$string['blockssizeupdated'] = 'Block sizes were updated successfully';
+$string['dimensionsnotset'] = 'Block dimensions not set';
+$string['dontaskagain'] = 'Accept and remember';
+$string['pleaseconfirmtranslate'] = 'Transform page layout';
+$string['confirmtranslationmessage'] = 'As part of Mahara 19.10 we introduced a new way to create pages layout. To be able to edit this page we\'ll need to transform the old layout to the new grid layout.
+If you wish to transform this page alone, click \'Accept\'. To transform all pages that you edit and not see this message again, click \'Accept and remember\', this option can be changed in <a href="%s">Settings</a>. To go back to the page click on \'Cancel\'.
+';
+$string['accessibleview'] = 'Accessible layout';
+$string['accessibleviewdesc'] = 'Enable to have a one column layout for your page';
+$string['itemgrabbed'] = 'Item grabbed: %s';
+$string['itemdropped'] = 'Item dropped: %s';
+$string['itemreorder'] = 'List has been reordered. Item %s is now in position %s of %s';
+$string['reordercancelled'] = 'Reorder was cancelled';
+$string['accessibilitymodedescription'] = 'This page has accessibility layout enabled.
+ In this mode, the page blocks will have full page width and will be displayed as a list that you can reorder.
+ To change a block position, navigate to it, grab it with the \'Enter\' key and move it up and down the list of blocks with the arrow keys.';
+$string['blocktypeis'] = ' %s blocktype';

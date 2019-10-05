@@ -1,5 +1,9 @@
 {include file="header.tpl"}
 
+{if $accessible}
+    <span class="sr-only">{str tag=accessibilitymodedescription section=view}</span>
+{/if}
+
 <div class="view-instructions">
     <form action="{$formurl}" method="post" class="row">
         <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
@@ -45,7 +49,8 @@
         <div class="col">
             <div id="bottom-pane" data-role="workspace">
                 <div id="column-container" class="user-page-content">
-                    {$columns|safe}
+                    <div class="grid-stack">
+                    </div>
                 </div>
             </div>
         </div>

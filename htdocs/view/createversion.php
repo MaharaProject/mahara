@@ -31,13 +31,15 @@ if ($groupid && !group_within_edit_window($groupid)) {
     throw new AccessDeniedException(get_string('cantversionviewgroupeditwindow', 'view'));
 }
 
+if (!$view->uses_new_layout()) {
+    throw new AccessDeniedException(get_string('cantversionoldlayout', 'view'));
+}
+
 $version = new stdClass();
-$version->numrows = $view->get('numrows');
-$version->layout = $view->get('layout');
 $version->description = $view->get('description');
 $version->title = $view->get('title');
 $version->tags = $view->get('tags');
-$version->columnsperrow = $view->get('columnsperrow');
+$version->newlayout = true;
 $version->blocks = array();
 $blocks = get_records_array('block_instance', 'view', $view->get('id'));
 
@@ -51,9 +53,10 @@ if ($blocks) {
             $bi->blocktype = $oldblock->get('blocktype');
             $bi->title = $oldblock->get('title');
             $bi->configdata = $oldblock->get('configdata');
-            $bi->row = $oldblock->get('row');
-            $bi->column = $oldblock->get('column');
-            $bi->order = $oldblock->get('order');
+            $bi->positionx = $oldblock->get('positionx');
+            $bi->positiony = $oldblock->get('positiony');
+            $bi->width = $oldblock->get('width');
+            $bi->height = $oldblock->get('height');
 
             $classname = generate_class_name('blocktype', $oldblock->get('blocktype'));
             if (is_callable($classname . '::'. 'get_current_artefacts')) {

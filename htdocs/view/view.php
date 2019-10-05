@@ -262,7 +262,14 @@ function releaseview_submit() {
     redirect($view->get_url());
 }
 
-$javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js', 'js/jquery/jquery-mobile/jquery.mobile.custom.min.js', 'js/jquery/jquery-ui/js/jquery-ui.min.js');
+$javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js',
+        'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
+        'js/jquery/jquery-ui/js/jquery-ui.min.js',
+        'js/lodash/lodash.js',
+        'js/gridstack/gridstack.js',
+        'js/gridstack/gridstack.jQueryUI.js',
+        'js/gridlayout.js',
+    );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
 if (is_plugin_active('externalvideo', 'blocktype')) {
@@ -342,14 +349,56 @@ if ($owner && $owner == $USER->get('id')) {
     }
 }
 
-
 // Don't show page content to a user with peer role
 // if the view doesn't have a peer assessment block
 if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
     || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
-    $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+    $peerhidden = false;
+    if ($newlayout = $view->uses_new_layout()) {
+
+        $blockresizeonload = "false";
+        if ($view->uses_new_layout() && $view->needs_block_resize_on_load()) {
+            // we're copying from an old layout view and need to resize blocks
+            $blockresizeonload = "true";
+        }
+
+        $blocks = $view->get_blocks();
+        $blocks = json_encode($blocks);
+        $blocksjs =  <<<EOF
+$(function () {
+    var options = {
+        verticalMargin: 10,
+        float: true,
+        ddPlugin: false,
+    };
+    var grid = $('.grid-stack');
+    grid.gridstack(options);
+    grid = $('.grid-stack').data('gridstack');
+
+    var blocks = {$blocks};
+    if ({$blockresizeonload}) {
+        // the page was copied from an old layout page
+        // and the blocks still need to be resized
+        loadGridTranslate(grid, blocks);
+    }
+    else {
+        loadGrid(grid, blocks);
+    }
+});
+EOF;
+    }
+    else {
+        $viewcontent = $view->build_rows(); // Build content before initialising smarty in case pieform elements define headers.
+        $blocksjs = "$(function () {jQuery(document).trigger('blocksloaded');});";
+    }
+}
+else {
+    $blocksjs = '';
+    $newlayout = $view->uses_new_layout();
+    $peerhidden = true;
 }
 
+$blocktype_toolbar = $view->get_all_blocktype_toolbar();
 $smarty = smarty(
     $javascript,
     $headers,
@@ -371,7 +420,7 @@ jQuery(function () {
     paginator = {$feedback->pagination_js}
 });
 
-jQuery(function($) {
+jQuery(window).on('blocksloaded', {}, function() {
 
     var deletebutton = $('#configureblock').find('.deletebutton');
     deletebutton.on('click', function(e) {
@@ -413,6 +462,10 @@ jQuery(function($) {
             }
         });
     });
+    // Wire up the annotation feedback forms
+    $('.feedbacktable.modal-docked form').each(function() {
+        initTinyMCE($(this).prop('id'));
+    });
 });
 
 function activateModalLinks() {
@@ -445,7 +498,7 @@ if ($modal = param_integer('modal', null)) {
 
     if ($block = param_integer('block', null)) {
         $javascript .= <<<EOF
-        jQuery(function($) {
+        jQuery(window).on('blocksloaded', {}, function() {
             $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-blockid="' + $block + '" data-artefactid="' + $artefact + '" ></a>');
             $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
@@ -458,7 +511,7 @@ EOF;
     }
     else {
         $javascript .= <<<EOF
-        jQuery(function($) {
+        jQuery(window).on('blocksloaded', {}, function() {
             $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-artefactid="' + $artefact + '" ></a>');
             $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
@@ -473,7 +526,7 @@ EOF;
 // Load the page with details content (block headers) displaying according to user preferences.
 if ($showdetails = get_account_preference($USER->get('id'), 'view_details_active')) {
     $javascript .= <<<EOF
-    jQuery(function($) {
+    jQuery(window).on('blocksloaded', {}, function() {
         var headers = $('#main-column-container').find('.block-header');
         $('#details-btn').addClass('active');
         headers.removeClass('d-none');
@@ -495,16 +548,16 @@ if ($collection) {
     }
 }
 
-$blocktype_toolbar = $view->get_all_blocktype_toolbar();
 if (!empty($blocktype_toolbar['toolbarhtml'])) {
     $smarty->assign('toolbarhtml', join("\n", $blocktype_toolbar['toolbarhtml']));
 }
 $smarty->assign('canremove', $can_edit);
-$smarty->assign('INLINEJAVASCRIPT', $javascript . $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs . $javascript . $inlinejs);
 $smarty->assign('viewid', $viewid);
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
+$smarty->assign('peerhidden', $peerhidden);
 list($tagcount, $alltags) = $view->get_all_tags_for_view(10);
 $smarty->assign('alltags', $alltags);
 $smarty->assign('moretags', ($tagcount > sizeof($alltags) ? true : false));
@@ -578,7 +631,13 @@ if ($showmnetlink) {
 
 $smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
 $smarty->assign('viewinstructions', ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
-$smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
+$smarty->assign('newlayout', $newlayout);
+if ($newlayout) {
+    $smarty->assign('blocks', (isset($blocks) ? $blocks : null));
+}
+else {
+    $smarty->assign('viewcontent', (isset($viewcontent) ? $viewcontent : null));
+}
 $smarty->assign('releaseform', $releaseform);
 if (isset($ltisubmissionform)) {
     $smarty->assign('ltisubmissionform', $ltisubmissionform);
@@ -613,6 +672,7 @@ if ($titletext !== $title) {
 
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 
+$smarty->assign('viewid', $view->get('id'));
 $smarty->display('view/view.tpl');
 
 mahara_touch_record('view', $viewid); // Update record 'atime'

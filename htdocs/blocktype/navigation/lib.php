@@ -157,9 +157,10 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                                 array(
                                     'blocktype'  => 'navigation',
                                     'title'      => $values['title'],
-                                    'row'        => $instance->get('row'),
-                                    'column'     => $instance->get('column'),
-                                    'order'      => 1,
+                                    'positionx'  => 0,
+                                    'positiony'  => 0,
+                                    'width'      => 4,
+                                    'height'     => 3,
                                     'configdata' => array(
                                         'collection' => $values['collection'],
                                         'retractable' => $values['retractable'],

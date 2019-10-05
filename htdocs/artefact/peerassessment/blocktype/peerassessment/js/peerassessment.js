@@ -22,10 +22,10 @@ function initTinyMCE(formname) {
     }
 }
 
-$(function() {
+function peerassessmentBlockInit() {
     configureAssessmentCancel();
     configureModalOpen();
-});
+};
 
 jQuery(window).on('pageupdated', {}, function() {
     configureAssessmentCancel();
@@ -37,6 +37,9 @@ function configureModalOpen() {
     $('.js-peerassessment-modal').on('click', function(e) {
         e.stopPropagation();
         e.preventDefault();
+        // needs to initialize the tinyMCE editor when the block is loaded
+        PieformManager.signal('onload');
+
         var blockid = $(this).data('blockid');
         var formname = $('#assessment_feedbackform_' + blockid).find('form')[0].id;
         dock.show($('#assessment_feedbackform_' + blockid), false, true);
