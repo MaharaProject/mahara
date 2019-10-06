@@ -25,4 +25,4 @@ $string['options_order_desc'] = 'You can choose to display the latest group memb
 $string['Latest'] = 'Latest';
 $string['Random'] = 'Random';
 
-$string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank';
+$string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank.';
