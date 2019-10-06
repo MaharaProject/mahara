@@ -73,35 +73,10 @@ if (!empty($exportskins)) {
         $itemnode->setAttribute('background-attachment', $viewskin['body_background_attachment']);
         $itemnode->setAttribute('background-position', Skin::background_position_number_to_value($viewskin['body_background_position']));
 
-        // Header element...  // TODO remove this
+        // Header element...
         $childelement = $xmldoc->createElement('header');
         $itemnode = $rootelement->appendChild($childelement);
         $itemnode->setAttribute('background-color', $viewskin['header_background_color']);
-        $itemnode->setAttribute('font-color', $viewskin['header_text_font_color']);
-        $itemnode->setAttribute('normal-color', $viewskin['header_link_normal_color']);
-        if (intval($viewskin['header_link_normal_underline']) == 0) {
-            $itemnode->setAttribute('normal-decoration', 'none');
-        }
-        else {
-            $itemnode->setAttribute('normal-decoration', 'underline');
-        }
-        $itemnode->setAttribute('hover-color', $viewskin['header_link_hover_color']);
-        if (intval($viewskin['header_link_hover_underline']) == 0) {
-            $itemnode->setAttribute('hover-decoration', 'none');
-        }
-        else {
-            $itemnode->setAttribute('hover-decoration', 'underline');
-        }
-        $itemnode->setAttribute('logo-image', $viewskin['header_logo_image']);
-
-        // View (page) element...  // TODO remove this
-        $childelement = $xmldoc->createElement('view');
-        $itemnode = $rootelement->appendChild($childelement);
-        $itemnode->setAttribute('background-color', $viewskin['view_background_color']);
-        $itemnode->setAttribute('background-repeat', Skin::background_repeat_number_to_value($viewskin['view_background_repeat']));
-        $itemnode->setAttribute('background-attachment', $viewskin['view_background_attachment']);
-        $itemnode->setAttribute('background-position', Skin::background_position_number_to_value($viewskin['view_background_position']));
-        $itemnode->setAttribute('width', $viewskin['view_background_width'].'%');
 
         // Text element...
         $childelement = $xmldoc->createElement('text');
@@ -131,13 +106,6 @@ if (!empty($exportskins)) {
             $itemnode->setAttribute('hover-decoration', 'underline');
         }
 
-        // Table element...  // TODO remove this
-        $childelement = $xmldoc->createElement('table');
-        $itemnode = $rootelement->appendChild($childelement);
-        $itemnode->setAttribute('border-color', $viewskin['view_table_border_color']);
-        $itemnode->setAttribute('odd-row-color', $viewskin['view_table_odd_row_color']);
-        $itemnode->setAttribute('even-row-color', $viewskin['view_table_even_row_color']);
-
         // Skin background image element...
         $bodybg = $viewskin['body_background_image'];
         if (!empty($bodybg) && $bodybg > 0) {
@@ -158,33 +126,6 @@ if (!empty($exportskins)) {
                 $childelement = $xmldoc->createElement('image');
                 $itemnode = $rootelement->appendChild($childelement);
                 $itemnode->setAttribute('type', 'body-background-image');
-                $itemnode->setAttribute('artefact', serialize($artefact));
-                $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
-                $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
-                $itemnode->setAttribute('contents', base64_encode($contents));
-            }
-        }
-
-        // Page background image element...  // TODO remove this
-        $viewbg = $viewskin['view_background_image'];
-        if (!empty($viewbg) && $viewbg > 0) {
-            // Get existing page background image data...
-            // Get existing skin background image data...
-            $artefactobj = new ArtefactTypeImage($viewbg);
-            if ($USER->can_view_artefact($artefactobj)) {
-                $artefact = get_record('artefact', 'id', $viewbg, null, null, null, null, 'artefacttype,title,description,note');
-                $artefactfilefiles = get_record('artefact_file_files', 'artefact', $viewbg);
-                $artefactfileimage = get_record('artefact_file_image', 'artefact', $viewbg);
-                // Open and read the contents of each file...
-                $viewbgimage = $artefactobj->get_path();
-                $fp = fopen($viewbgimage, 'rb');
-                $filesize = filesize($viewbgimage);
-                $contents = fread($fp, $filesize);
-                fclose($fp);
-                // Export each file...
-                $childelement = $xmldoc->createElement('image');
-                $itemnode = $rootelement->appendChild($childelement);
-                $itemnode->setAttribute('type', 'view-background-image');
                 $itemnode->setAttribute('artefact', serialize($artefact));
                 $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
                 $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));

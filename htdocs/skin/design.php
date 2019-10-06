@@ -52,9 +52,9 @@ if ($id > 0) {
                 $viewskin['body_background_image'] = false;
             }
         }
-        if (!empty($viewskin['view_background_image'])) {  // TODO remove this
-            if (!record_exists('artefact', 'id', $viewskin['view_background_image'])) {
-                $viewskin['view_background_image'] = false;
+        if (!empty($viewskin['header_background_image'])) {
+            if (!record_exists('artefact', 'id', $viewskin['header_background_image'])) {
+                $viewskin['header_background_image'] = false;
             }
         }
     }

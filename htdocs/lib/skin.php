@@ -66,20 +66,8 @@ class Skin {
         'body_background_attachment' => 'scroll',
         'body_background_position' => 1,
 
-        'header_background_color' => '#DDDDDD',  // TODO remove this
-        'header_text_font_color' => '#000000',  // TODO remove this
-        'header_link_normal_color' => '#000000',  // TODO remove this
-        'header_link_normal_underline' => true,  // TODO remove this
-        'header_link_hover_color' => '#808080',  // TODO remove this
-        'header_link_hover_underline' => true,  // TODO remove this
-        'header_logo_image' => 'normal',  // TODO remove this
-
-        'view_background_color' => '#FFFFFF',  // TODO remove this
-        'view_background_image' => 0,  // TODO remove this
-        'view_background_repeat' => 4,  // TODO remove this
-        'view_background_attachment' => 'scroll',  // TODO remove this
-        'view_background_position' => 1,  // TODO remove this
-        'view_background_width' => 80,  // TODO remove this
+        'header_background_color' => '#DDDDDD',
+        'header_background_image' => 0,
 
         'view_text_font_family' => 'Arial',
         'view_heading_font_family' => 'Arial',
@@ -92,16 +80,6 @@ class Skin {
         'view_link_normal_underline' => true,
         'view_link_hover_color' => '##551A8B',
         'view_link_hover_underline' => true,
-
-        'view_table_border_color' => '#CCCCCC',  // TODO remove this
-        'view_table_header_color' => '#CCCCCC',  // TODO remove this
-        'view_table_header_text_color' => '#000000',  // TODO remove this
-        'view_table_odd_row_color' => '#EEEEEE',  // TODO remove this
-        'view_table_even_row_color' => '#FFFFFF',  // TODO remove this
-
-        'view_button_normal_color' => '#DDDDDD',  // TODO remove this
-        'view_button_hover_color' => '#CCCCCC',  // TODO remove this
-        'view_button_text_color' => '#000000',  // TODO remove this
 
         'view_custom_css' => '',
     );
@@ -975,7 +953,7 @@ class Skin {
         }
 
         // ========== BODY BACKGROUND IMAGE ==========
-        if ($skin['body_background_image'] <> null) {
+        if (!empty($skin['body_background_image'])) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
             $fileid = $skin['body_background_image'];
             $fileobj = artefact_instance_from_id($fileid);
@@ -999,49 +977,18 @@ class Skin {
             self::imagebackgroundfill($img, $bodybackgroundfill, Skin::PREVIEW_THUMBNAIL_ZOOM, intval($skin['body_background_repeat']), intval($skin['body_background_position']));
         }
 
-        // ========== VIEW BACKGROUND COLOR ========== // TODO remove this
-        $viewwidth = Skin::PREVIEW_WIDTH-intval(((100 - $skin['view_background_width']) / 100) * Skin::PREVIEW_WIDTH);
+        // ========== VIEW BACKGROUND COLOR ==========
+        $viewwidth = Skin::PREVIEW_WIDTH - intval(0.2  * Skin::PREVIEW_WIDTH);
         $viewheight = Skin::PREVIEW_HEIGHT;
 
-        $img2 = imagecreatetruecolor($viewwidth*Skin::PREVIEW_THUMBNAIL_ZOOM+1, $viewheight*Skin::PREVIEW_THUMBNAIL_ZOOM);
+        $img2 = imagecreatetruecolor($viewwidth * Skin::PREVIEW_THUMBNAIL_ZOOM + 1, $viewheight * Skin::PREVIEW_THUMBNAIL_ZOOM);
         // Turn off alpha blending and set alpha flag
         imagealphablending($img2, true);
         imagesavealpha($img2, true);
 
-        if ($skin['view_background_color'] <> 'transparent') {
-            list($r, $g, $b) = self::get_rgb_from_hex($skin['view_background_color']);
-            $viewbackgroundcolor = imagecolorallocate($img2, $r, $g, $b);
-            imagefill($img2, 0, 0, $viewbackgroundcolor);
-        }
-        else {
-            $transparentcolor = imagecolorallocatealpha($img2, 255, 255, 255, 127);
-            imagefill($img2, 0, 0, $transparentcolor);
-        }
-
-        /* ========== VIEW BACKGROUND IMAGE ========== */  // TODO remove this
-        if ($skin['view_background_image'] <> null) {
-            require_once(get_config('docroot') . 'artefact/file/lib.php');
-            $fileid = $skin['view_background_image'];
-            $fileobj = artefact_instance_from_id($fileid);
-            $filetype = $fileobj->get('filetype');
-
-            switch ($filetype) {
-                case "image/gif":
-                    $viewbackgroundfill = imagecreatefromgif($fileobj->get_path());
-                    break;
-                case "image/jpeg":
-                    $viewbackgroundfill = imagecreatefromjpeg($fileobj->get_path());
-                    break;
-                case "image/png":
-                default:
-                    $viewbackgroundfill = imagecreatefrompng($fileobj->get_path());
-                    break;
-            }
-            imagealphablending($viewbackgroundfill, false);
-            imagesavealpha($viewbackgroundfill, true);
-
-            self::imagebackgroundfill($img2, $viewbackgroundfill, Skin::PREVIEW_THUMBNAIL_ZOOM, intval($skin['view_background_repeat']), intval($skin['view_background_position']));
-        }
+        list($r, $g, $b) = self::get_rgb_from_hex('#FFFFFF');
+        $viewbackgroundcolor1 = imagecolorallocatealpha($img2, $r, $g, $b, 127);
+        imagefill($img2, 0, 0, $viewbackgroundcolor1);
 
         // ========== SAMPLE HEADING BACKGROUND IMAGE/COLOUR AND TEXT ==========
 
@@ -1060,23 +1007,22 @@ class Skin {
         list($r, $g, $b) = self::get_rgb_from_hex($skin['header_background_color']);
         $heading_background_color = imagecolorallocate($img, $r, $g, $b);
 
-        $headerwidth = Skin::PREVIEW_WIDTH - intval(((100 - $skin['view_background_width']) / 100) * Skin::PREVIEW_WIDTH);
-        $headerheight = $heading_size ;
+        $headerwidth = Skin::PREVIEW_WIDTH - intval(0.2 * Skin::PREVIEW_WIDTH);
+        $headerheight = $heading_size;
+
+        list($r, $g, $b) = self::get_rgb_from_hex('#FFFFFF');
+        $viewbackgroundcolor2 = imagecolorallocate($img2, $r, $g, $b);
+        imagefilledrectangle($img2, 0, $headerheight + ($header_font_size * 2.5) + 1, $viewwidth, $viewheight, $viewbackgroundcolor2);
 
         // Draw header background colour block on the VIEW and BODY
         imagefilledrectangle($img, 0, 0, $headerwidth, $headerheight + ($header_font_size * 2.5), $heading_background_color);
-        imagefilledrectangle($img2, 0, 0, $headerwidth, $headerheight + ($header_font_size * 2.5), $heading_background_color);
 
         // Replace header colour with sample header image if there is one allocated
-        $imagewidth = 0; // @TODO need to stretch the thumbnail if image with for header is less than headerwidth
-        if (isset($skin['header_background_image']) && $skin['header_background_image'] != null) {
+        if (!empty($skin['header_background_image'])) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
             $fileid = $skin['header_background_image'];
             $fileobj = artefact_instance_from_id($fileid);
             $filetype = $fileobj->get('filetype');
-
-            $image = new ArtefactTypeImage($fileid);
-            $imagewidth = $image->get('width');
 
             switch ($filetype) {
               case "image/gif":
@@ -1091,9 +1037,10 @@ class Skin {
                   break;
 
             }
+
+            $headerimage = imagescale($headerimage, Skin::PREVIEW_WIDTH);
             // Draw header image on the VIEW and BODY
             self::imageheaderfill($img, $headerimage,  Skin::PREVIEW_THUMBNAIL_ZOOM*1.2, 1, $headerwidth, $headerheight + ($header_font_size * 2.6));
-            self::imageheaderfill($img2, $headerimage,  Skin::PREVIEW_THUMBNAIL_ZOOM*1.2, 1, $headerwidth, $headerheight + ($header_font_size * 2.6), -22);
         }
 
         // Even though this text is only used in preview images, it's possible the site might want to change
@@ -1106,7 +1053,7 @@ class Skin {
 
         list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_emphasized_color']);
         $emphasized_color = imagecolorallocate($img, $r, $g, $b);
-        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_table_border_color']);
+        list($r, $g, $b) = self::get_rgb_from_hex('#CCCCCC');
         $line_color = imagecolorallocate($img, $r, $g, $b);
         $emphasized_text1 = get_string('previewsubhead1', 'skin'); // Latin for text
         $emphasized_text2 = get_string('previewsubhead2', 'skin');    // Latin for image
@@ -1122,7 +1069,7 @@ class Skin {
 
         // Add second column to the preview thumbnail, if the width of the view is greater or equal 70%
         // or the size of regular text is less than 8...
-        if (intval($skin['view_background_width']) >= 70 && $text_size < 8) {
+        if ($text_size < 8) {
             // Add sample picture
             $sample_img = imagecreatefrompng($THEME->get_path('images/skin_preview_img.png'));
             // Add the sample sub-heading 2 and underline, then merge $sample_img into $img2
@@ -1146,7 +1093,7 @@ class Skin {
         }
 
         // ========== COPY VIEW PART OVER BODY PART OF THE THUMBNAIL ==========
-        $viewbackgroundmargin = intval(((Skin::PREVIEW_WIDTH - intval(($skin['view_background_width'] / 100) * Skin::PREVIEW_WIDTH)) / 2) * Skin::PREVIEW_THUMBNAIL_ZOOM);
+        $viewbackgroundmargin = intval(((Skin::PREVIEW_WIDTH - intval(0.8 * Skin::PREVIEW_WIDTH)) / 2) * Skin::PREVIEW_THUMBNAIL_ZOOM);
         $VIEWOFFSETX = $viewbackgroundmargin - 1;
         $VIEWOFFSETY = 0;
 
