@@ -37,7 +37,7 @@
                 "pointCnt": "taskShortDate",
                 "bodyCnt": "taskDetails"
             },
-            formatTitle: function (title, obj) { return '<h3>' + title + '</h3>'; },
+            formatTitle: function (title, obj) { return '<h2>' + title + '</h2>'; },
             formatSubTitle: function (subTitle, obj) { return '<div class="metadata">' + subTitle + '</div>'; },
             formatBodyContent: function (bodyCnt, obj) {
               if (obj.gridlayout) {
