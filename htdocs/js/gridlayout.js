@@ -57,8 +57,13 @@ function loadGrid(grid, blocks) {
 
     // images need time to load before height can be properly calculated
     window.setTimeout(function(){
-        updateBlockSizes();
+        // no need to update the blocksizes for hidden timeline views
+        var id = $(grid.container).attr('id');
+        if (typeof id === 'undefined') {
+            updateBlockSizes();
+        }
     }, 300);
+
 }
 
 function initJs() {
@@ -70,6 +75,41 @@ function initJs() {
     if (typeof viewmenuInit !== "undefined") {
         viewmenuInit();
     }
+
+    $(window).on('colresize', function(e) {
+        var grid = $(e.target).closest('.grid-stack');
+        var id = grid.attr('id');
+        //check we are not in timeline view
+        if (typeof id === 'undefined') {
+            updateBlockSizes();
+        }
+        else {
+            // on timeline view
+            grid.gridstack();
+            updateBlockSizes(grid);
+        }
+    });
+
+    $(window).on('shown.bs.collapse', function(e) {
+        var grid = $(e.target).closest('.grid-stack');
+        var id = grid.attr('id');
+        //check we are not in timeline view
+        if (typeof id === 'undefined') {
+            updateBlockSizes();
+        }
+        else {
+            // on timeline view
+            grid.gridstack();
+            updateBlockSizes(grid);
+        }
+    });
+
+    $(window).on('timelineviewresizeblocks', function() {
+        var grid = $('.lineli.selected .grid-stack');
+        grid = grid.gridstack();
+        updateBlockSizes(grid);
+    });
+
 }
 
 function updateTranslatedGridRows(blocks) {
@@ -132,25 +172,27 @@ function updateTranslatedGridRows(blocks) {
       moveBlocks(updatedGrid);
 }
 
-function updateBlockSizes() {
-    $.each($('.grid-stack').children(), function(index, element) {
+function updateBlockSizes(grid) {
+    if (typeof grid == 'undefined') {
+        grid = $('.grid-stack');
+    }
+    $.each(grid.children(), function(index, element) {
         if (!$(element).hasClass('staticblock')) {
-            var width = $($('.grid-stack-item')[index]).attr('data-gs-width'),
-            prevHeight = $($('.grid-stack-item')[index]).attr('data-gs-height'),
+            var width = $(element).attr('data-gs-width'),
+            prevHeight = $(element).attr('data-gs-height'),
             height = Math.ceil(
               (
-                $('.grid-stack-item-content')[index].scrollHeight +
-                $('.grid-stack').data('gridstack').opts.verticalMargin
+                $(element).find('.grid-stack-item-content')[0].scrollHeight +
+                grid.data('gridstack').opts.verticalMargin
               )
               /
               (
-                $('.grid-stack').data('gridstack').cellHeight() +
-                $('.grid-stack').data('gridstack').opts.verticalMargin
+                grid.data('gridstack').cellHeight() +
+                grid.data('gridstack').opts.verticalMargin
               )
             );
-            //height = height.toString();
-            if (+prevHeight != height) {
-                $('.grid-stack').data('gridstack').resize($('.grid-stack-item')[index], +width, height);
+            if (+prevHeight < height) {
+                grid.data('gridstack').resize(element, +width, height);
             }
         }
     });
@@ -172,7 +214,11 @@ function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, m
 
     // images need time to load before height can be properly calculated
     window.setTimeout(function(){
-        updateBlockSizes();
+        // no need to update sizes for timeline views that are hidden
+        var id = $(grid.container).attr('id');
+        if (typeof id == 'undefined') {
+          updateBlockSizes();
+        }
     }, 300);
 
     return el;
@@ -243,10 +289,6 @@ function gridInit() {
         event.stopPropagation();
         event.preventDefault();
         serializeWidgetMap(items);
-    });
-
-    $(window).on('colresize', function() {
-        updateBlockSizes();
     });
 
 }
