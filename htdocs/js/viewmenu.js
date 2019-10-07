@@ -391,7 +391,6 @@ function toggleDetailsBtn() {
 
 // Make sure active block headers still display after pagination
 $(document).on('pageupdated', function(e, data) {
-    console.log('pageupdated');
     var headers = $('#main-column-container').find('.block-header');
     if ($('#details-btn').hasClass('active')) {
         headers.removeClass('d-none');
