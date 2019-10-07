@@ -352,7 +352,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
                 'message' => array(
                     'type' => 'html',
                     'class' => '',
-                    'value' => '<div class="alert alert-warning" role="alert"><span class="icon icon-lg icon-exclamation-triangle left" aria-hidden="true" role="presentation"></span>' . get_string('missingbadgesources', 'blocktype.openbadgedisplayer') . '</div>'
+                    'value' => '<div class="alert alert-warning" role="alert">' . get_string('missingbadgesources', 'blocktype.openbadgedisplayer') . '</div>'
                 ),
             );
             return $fields;

@@ -9,31 +9,31 @@
     </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
-        <div class="site-messages text-center">
+        <div class="site-messages">
     {/if}
 
         {if $USERMASQUERADING}
             <div class="site-message alert alert-warning" role="alert">
-                <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
-                <span>{$masqueradedetails}</span>
-                <a href="{$becomeyoulink}">{$becomeyouagain}</a>
+                <div class="container">
+                    <span>{$masqueradedetails}</span>
+                    <a href="{$becomeyoulink}">{$becomeyouagain}</a>
+                </div>
             </div>
         {/if}
         {if !$PRODUCTIONMODE}
             <div class="site-message alert alert-info" role="alert">
-                <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
-                {str tag=notproductionsite section=error}
+                <div class="container">
+                    {str tag=notproductionsite section=error}
+                </div>
             </div>
         {/if}
         {if $SITEOUTOFSYNC}
             <div class="site-message alert alert-warning" role="alert">
-                <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
                 {str tag=siteoutofsyncfor section=error arg1=$SITEOUTOFSYNC}
             </div>
         {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
-                <span class="icon icon-lg icon-lock left" role="presentation" aria-hidden="true"></span>
                 {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
             </div>
         {/if}

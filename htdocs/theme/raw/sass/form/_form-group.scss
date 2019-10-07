@@ -505,6 +505,14 @@
         font-size: $font-size-base - 1;
         display: block;
         padding-top: 10px;
+        font-size: $font-size-sm;
+
+        &:before {
+          @include fonttype(solid);
+          content: fa-content($fa-var-times);
+          color: scale-color($danger, $lightness: -30%);
+          padding-right: 5px;
+        }
 
         @include media-breakpoint-up(lg) {
             margin-left: 265px;
