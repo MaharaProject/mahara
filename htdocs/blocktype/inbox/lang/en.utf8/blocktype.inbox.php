@@ -18,4 +18,4 @@ $string['maxitems'] = 'Maximum number of items to display';
 $string['maxitemsdescription'] = 'Between 1 and 100';
 $string['More'] = 'More';
 $string['nomessages'] = 'No messages';
-$string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank';
+$string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank.';

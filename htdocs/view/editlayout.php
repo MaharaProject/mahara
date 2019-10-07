@@ -296,7 +296,7 @@ function get_basic_elements() {
         $elements['accessibleview'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('accessibleview', 'view'),
-            'description'  => get_string('accessibleviewdesc', 'view'),
+            'description'  => get_string('accessibleviewdescription', 'view'),
             'defaultvalue' => !$accessibleviewdisabled,
             'disabled'     => $accessibleviewdisabled,
         );

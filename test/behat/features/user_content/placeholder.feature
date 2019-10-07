@@ -26,7 +26,7 @@ Scenario: Adding a placeholder block to the page
     And I fill in the following:
     | Block title | Mahara placeholder block |
     And I press "Save"
-    Then I should see "Please configure the block to choose what type of block this should be"
+    Then I should see "Please configure this block to choose its type."
 
     # Edit placeholder block and check we can see more options
     And I scroll to the top

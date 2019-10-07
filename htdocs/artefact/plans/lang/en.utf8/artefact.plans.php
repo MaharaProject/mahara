@@ -67,7 +67,7 @@ $string['savetask'] = 'Save task';
 
 $string['Task'] = 'Task';
 $string['Tasks'] = 'Tasks';
-// For counting tasks results e. g. tasklist
+// For counting tasks results, e.g. tasklist
 $string['task'] = 'task';
 $string['tasks'] = 'tasks';
 
@@ -83,7 +83,7 @@ $string['viewandoutputcontainsameelement'] = 'Task and assignment portfolio cann
 $string['grouptaskselected'] = 'The plan and selected tasks were transferred to your personal portfolio area. If applicable, assignment portfolios were copied as well.';
 $string['grouptaskunselected'] = 'The plan and / or selected tasks were removed from your personal portfolio area. If applicable, any unedited assignment portfolios were removed as well.';
 $string['unselecttaskconfirm'] = 'Do you really want to remove this task from your plan?';
-$string['wrongroleforfunction'] = 'Your role is not intended to perform this functionality.';
+$string['wrongfunctionrole'] = 'You cannot complete this action because your role does not allow it.';
 
 $string['ntasks'] = [
         '1 task',

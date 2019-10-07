@@ -34,7 +34,7 @@ try {
     }
 
     if ($USER->can_edit_artefact($rootGroupPlan)) {
-        throw new Exception(get_string('wrongroleforfunction', 'artefact.plans'));
+        throw new Exception(get_string('wrongfunctionrole', 'artefact.plans'));
     }
 
     if (!$rootGroupPlan->is_selection_plan()) {

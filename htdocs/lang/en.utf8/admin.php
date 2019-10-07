@@ -60,10 +60,10 @@ $string['cliupdatesitenamefailed'] = 'Updating site name failed.';
 $string['cliinstallerdescription'] = 'Install Mahara and create required data directories';
 $string['cliinstallingmahara'] = 'Installing Mahara';
 // CLI upgrade script
-$string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed';
+$string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed.';
 $string['cli_upgrade_title'] = 'Upgrading Mahara';
-$string['cli_upgrade_force'] = 'Force upgrade to rerun';
-$string['cli_upgrade_flag'] = 'An unfinished upgrade detected. To try upgrading again add "-f" option to the command.';
+$string['cli_upgrade_force'] = 'Force the upgrade to rerun';
+$string['cli_upgrade_flag'] = 'An unfinished upgrade was detected. To try upgrading again, add the "-f" option to the command.';
 
 $string['cliclearingcaches'] = 'Clearing Mahara caches.';
 $string['cliclearcachesdescription'] = 'Clearing caches will delete cached data from the server. There is no danger in clearing caches, but your site may appear slower for a while until the server and clients calculate new information and cache it.';
@@ -779,7 +779,7 @@ $string['bulkleap2aimportdescription1'] = '<p>You can import users in bulk from 
 &nbsp;&nbsp;nigel,mahara-export-leap-user1-1266458159.zip
 </pre>
 <p>where mahara-export-leap-user8-1265165366.zip and mahara-export-leap-user1-1266458159.zip are files in a subdirectory called users.</p>
-<p>The structure of your ZIP file, eg import.zip file will be:</p>
+<p>The structure of your ZIP file, e.g. "import.zip" file will be:</p>
 <pre>
 import.zip<br>
 <span class="icon icon-file icon-regular"></span> usernames.csv<br>
@@ -793,7 +793,7 @@ $string['importfile'] = 'Bulk export file';
 $string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these users?';
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised.';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable.';
-$string['bulkleap2aimportfiledescription1'] = 'Enter the path to the ZIP file on your server containing all exported users (in Leap2A format) along with a CSV listing of usernames<br>Eg "/home/example/data/import.zip"';
+$string['bulkleap2aimportfiledescription1'] = 'Enter the path to the ZIP file on your server that contains all exported users (in Leap2A format) along with a CSV listing of usernames, e.g. "/home/example/data/import.zip"';
 $string['importednuserssuccessfully'] = 'Imported %d of %d users successfully.';
 $string['Import'] = 'Import';
 $string['bulkimportdirdoesntexist'] = 'The directory %s does not exist.';
@@ -1364,7 +1364,7 @@ $string['cli_langpack_backup_failed'] = '*** WARNING *** Unable to make backup o
 $string['cli_langpack_en'] = 'You do not need to update the English langpack as the strings are defined in Mahara itself. You can set special lang strings in local/lang/.';
 $string['cli_langpack_extract_done'] = 'Copied new "%s" langpack into place';
 $string['cli_langpack_extract_failed'] = '*** WARNING *** Unable to extract files from "%s". Reason: %s';
-$string['cli_langpack_ignore'] = 'Langpack "%s" is already current so will skip updating';
+$string['cli_langpack_ignore'] = 'The language pack "%s" is already current so will skip updating';
 $string['cli_langpack_info'] = 'To update your language packs via the command line.
 You can:
 1) Install or update langpacks by listing the languages by their code, e.g. de = German, fr = French:

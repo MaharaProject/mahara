@@ -463,8 +463,8 @@ function general_account_prefs_form_elements($prefs) {
     $elements['accessibilityprofile'] = array(
         'type' => 'switchbox',
         'defaultvalue' => $prefs->accessibilityprofile,
-        'title' => get_string('accessibilityprofile', 'account'),
-        'description' => get_string('accessibilityprofiledescription', 'account'),
+        'title' => get_string('accessiblepagecreation', 'account'),
+        'description' => get_string('accessiblepagecreationdescription', 'account'),
     );
 
     return $elements;

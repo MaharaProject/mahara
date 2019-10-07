@@ -265,11 +265,11 @@ $string['updatedaccessfornumviews1'] = array(
 );
 
 $string['cantversionviewinvalid'] = 'The supplied page identifier is invalid.';
-$string['cantversionvieweditpermissions'] = 'You do not permission to edit this page.';
+$string['cantversionvieweditpermissions'] = 'You do not have permission to edit this page.';
 $string['cantversionviewsubmitted'] = 'You cannot edit this page because it has been submitted for assessment. You will have to wait until it is released.';
-$string['cantversionviewgroupeditwindow'] = 'You cannot edit this page. It is outside of the group editable date window.';
-$string['cantversionoldlayout'] = 'You cannot save a timeline version of a view with an old layout. You need to convert it to the new grid layout. To do this simply edit the page and the layout will be converted.';
-$string['cantaddannotationinoldlayout'] = 'You cannot add an annotation to this page. Please translate the page layout by editing the view first.';
+$string['cantversionviewgroupeditwindow'] = 'You cannot edit this page. It is outside of the group editability time frame.';
+$string['cantversionoldlayout'] = 'You cannot save a timeline version of a page with an old layout. You need to convert it to the new layout. To do this, edit the page and the layout will be converted.';
+$string['cantaddannotationinoldlayout'] = 'You cannot add an annotation to this page. Please convert the page layout by editing the page first.';
 
 $string['invalidcolumn'] = 'Column %s out of range';
 
@@ -279,10 +279,10 @@ $string['groupviewurltaken'] = 'A page with this URL already exists.';
 
 // view control stuff
 
-$string['editblockspagedescription'] = '<p>Drag and drop content blocks from the tabs below to create your page.</p>';
+$string['editblockspagedescription'] = '<p>Drag and drop content blocks from the buttons below to create your page.</p>';
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit';
-$string['expandcontract'] = 'Expand /   Contract list of block types';
+$string['expandcontract'] = 'Expand / Contract the list of block types';
 $string['returntoviews'] = 'Return to pages and collections';
 $string['returntoinstitutionportfolios'] = 'Return to institution pages and collections';
 $string['returntositeportfolios'] = 'Return to site pages and collections';
@@ -306,10 +306,10 @@ $string['blockconfigurationrenderingerror'] = 'Configuration failed because the 
 
 $string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your page. You can position a block using the arrow buttons in its titlebar.';
 $string['blocksinstructionajaxlive1'] = 'This area shows a preview of what your page looks like. Changes are saved automatically.<br>Drag \'Add a new block\' onto the page to add one. You can then choose what type of block it will be. You can then also drag blocks around the page to change their position.';
-$string['blockchangedsuccess'] = "Changed placeholder block to a '%s' block successful";
-$string['blockchangederror'] = "Changing block to a '%s' block failed";
-$string['blockchangedbacksuccess'] = "Changed block back to placeholder block";
-$string['blockchangedbackerror'] = "Changing block back to placeholder block failed";
+$string['blockchangedsuccess'] = "Changed the placeholder block to a '%s' block successfully.";
+$string['blockchangederror'] = "Changing the block to a '%s' block failed.";
+$string['blockchangedbacksuccess'] = "Changed the block back to a placeholder block.";
+$string['blockchangedbackerror'] = "Changing the block back to a placeholder block failed.";
 
 $string['addblock'] = 'Add block: %s';
 $string['blockcell'] = 'Cell';
@@ -521,17 +521,17 @@ $string['top'] = 'Top';
 $string['blockssizeupdated'] = 'Block sizes were updated successfully';
 $string['dimensionsnotset'] = 'Block dimensions not set';
 $string['dontaskagain'] = 'Accept and remember';
-$string['pleaseconfirmtranslate'] = 'Transform page layout';
-$string['confirmtranslationmessage'] = 'As part of Mahara 19.10 we introduced a new way to create pages layout. To be able to edit this page we\'ll need to transform the old layout to the new grid layout.
-If you wish to transform this page alone, click \'Accept\'. To transform all pages that you edit and not see this message again, click \'Accept and remember\', this option can be changed in <a href="%s">Settings</a>. To go back to the page click on \'Cancel\'.
+$string['pleaseconfirmtranslate'] = 'Convert page layout';
+$string['confirmtranslationmessage'] = 'As part of Mahara 19.10 we introduced a new way to create a page layout. To be able to edit this page, you will need to convert the old layout to the new layout.
+If you wish to convert only this page, click \'Accept\'. To convert all pages and not see this message again, click \'Accept and remember\'. This option can be changed in your <a href="%s">Settings</a>. To go back to the page, click on \'Cancel\'.
 ';
 $string['accessibleview'] = 'Accessible layout';
-$string['accessibleviewdesc'] = 'Enable to have a one column layout for your page';
+$string['accessibleviewdescription'] = 'To create a one-column page layout and edit it with the keyboard instead of drag-and-drop.';
 $string['itemgrabbed'] = 'Item grabbed: %s';
 $string['itemdropped'] = 'Item dropped: %s';
 $string['itemreorder'] = 'List has been reordered. Item %s is now in position %s of %s';
-$string['reordercancelled'] = 'Reorder was cancelled';
-$string['accessibilitymodedescription'] = 'This page has accessibility layout enabled.
- In this mode, the page blocks will have full page width and will be displayed as a list that you can reorder.
- To change a block position, navigate to it, grab it with the \'Enter\' key and move it up and down the list of blocks with the arrow keys.';
+$string['reordercancelled'] = 'The reordering was cancelled';
+$string['accessibilitymodedescription'] = 'This page has the accessible layout enabled.
+ In this mode, the page blocks will have full page width and will be displayed one after the other.
+ To change a block position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
 $string['blocktypeis'] = ' %s blocktype';
