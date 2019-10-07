@@ -93,7 +93,7 @@ if (get_config('allowgroupcategories')
     && $groupcategories = get_records_menu('group_category','','','displayorder', 'id,title')
 ) {
     $options[0] = get_string('allcategories', 'group');
-    $options[-1] = get_string('categoryunassigned', 'group');
+    $options[-1] = get_string('notcategorised', 'group');
     $options += $groupcategories;
 
     $groupcategoryfield = array(
