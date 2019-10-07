@@ -3019,7 +3019,7 @@ function auth_register_validate(Pieform $form, $values) {
             $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
         }
 
-        if (check_email_exist($values['email'])) {
+        if (check_email_exists($values['email'])) {
             $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
         }
     }

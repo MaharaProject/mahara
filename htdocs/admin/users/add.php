@@ -274,7 +274,7 @@ function adduser_validate(Pieform $form, $values) {
                 $form->set_error('email', get_string('invalidemailaddress', 'artefact.internal'));
             }
 
-            if (check_email_exist($email)) {
+            if (check_email_exists($email)) {
                 $form->set_error('email', get_string('emailalreadytaken', 'auth.internal'));
             }
         }
