@@ -5618,12 +5618,23 @@ class View {
                         else {
                             // Need to find the views to add it to
                             foreach ($viewdata as $k => $v) {
-                                if (!isset($v->id) || is_null($v->id)) {
-                                    continue;
+                                if (is_object($v)) {
+                                    if (!isset($v->id) || is_null($v->id)) {
+                                        continue;
+                                    }
+                                    $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
+                                    if ($viewid == $tag->resourceid) {
+                                        $viewdata[$k]->tags[] = $tag->tag;
+                                    }
                                 }
-                                $viewid = (isset($v->viewid) && !empty($v->viewid)) ? $v->viewid : $v->id;
-                                if ($viewid == $tag->resourceid) {
-                                    $viewdata[$k]->tags[] = $tag->tag;
+                                else {
+                                    if (!isset($v['id'])) {
+                                        continue;
+                                    }
+                                    $viewid = (isset($v['viewid']) && !empty($v['viewid'])) ? $v['viewid'] : $v['id'];
+                                    if ($viewid == $tag->resourceid) {
+                                        $viewdata[$k]['tags'][] = $tag->tag;
+                                    }
                                 }
                             }
                         }
