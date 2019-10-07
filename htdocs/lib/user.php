@@ -916,7 +916,7 @@ function generate_email_processing_address($userid, $userto, $type='B') {
 * Case insensitive checking for emails to existing db
 * @return bool if the emails exists or not
 */
-function check_email_exist($email, $ownerid = 0) {
+function check_email_exists($email, $ownerid = 0) {
     // get existing users 'usr','email'
     $resultarray = get_column_sql("SELECT email FROM {usr} WHERE id != ?", array($ownerid));
     $resultarray = array_merge($resultarray, get_column_sql("SELECT email FROM {artefact_internal_profile_email} WHERE owner != ?", array($ownerid)));
