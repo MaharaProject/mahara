@@ -66,20 +66,8 @@ class Skin {
         'body_background_attachment' => 'scroll',
         'body_background_position' => 1,
 
-        'header_background_color' => '#DDDDDD',  // TODO remove this
-        'header_text_font_color' => '#000000',  // TODO remove this
-        'header_link_normal_color' => '#000000',  // TODO remove this
-        'header_link_normal_underline' => true,  // TODO remove this
-        'header_link_hover_color' => '#808080',  // TODO remove this
-        'header_link_hover_underline' => true,  // TODO remove this
-        'header_logo_image' => 'normal',  // TODO remove this
-
-        'view_background_color' => '#FFFFFF',  // TODO remove this
-        'view_background_image' => 0,  // TODO remove this
-        'view_background_repeat' => 4,  // TODO remove this
-        'view_background_attachment' => 'scroll',  // TODO remove this
-        'view_background_position' => 1,  // TODO remove this
-        'view_background_width' => 80,  // TODO remove this
+        'header_background_color' => '#DDDDDD',
+        'header_background_image' => 0,
 
         'view_text_font_family' => 'Arial',
         'view_heading_font_family' => 'Arial',
@@ -92,16 +80,6 @@ class Skin {
         'view_link_normal_underline' => true,
         'view_link_hover_color' => '##551A8B',
         'view_link_hover_underline' => true,
-
-        'view_table_border_color' => '#CCCCCC',  // TODO remove this
-        'view_table_header_color' => '#CCCCCC',  // TODO remove this
-        'view_table_header_text_color' => '#000000',  // TODO remove this
-        'view_table_odd_row_color' => '#EEEEEE',  // TODO remove this
-        'view_table_even_row_color' => '#FFFFFF',  // TODO remove this
-
-        'view_button_normal_color' => '#DDDDDD',  // TODO remove this
-        'view_button_hover_color' => '#CCCCCC',  // TODO remove this
-        'view_button_text_color' => '#000000',  // TODO remove this
 
         'view_custom_css' => '',
     );
@@ -260,11 +238,11 @@ class Skin {
         else {
             $fordb->bodybgimg = null;
         }
-        if (isset($this->viewskin['view_background_image'])) {
-            $fordb->viewbgimg = $this->viewskin['view_background_image'];
+        if (isset($this->viewskin['header_background_image'])) {
+            $fordb->headingbgimg = $this->viewskin['header_background_image'];
         }
         else {
-            $fordb->viewbgimg = null;
+            $fordb->headingbgimg = null;
         }
 
         db_begin();
@@ -598,7 +576,12 @@ class Skin {
      * - Complete Guide to Pre-Installed Fonts in Linux, Mac, and Windows @ http://www.apaddedcell.com/ ...
      * - Better CSS Font Stacks @ http://unitinteractive.com/blog/2008/06/26/better-css-font-stacks/
      */
-    public static function get_css_font_family_from_font_name($font) {
+    public static function get_css_font_family_from_font_name($font, $type='text') {
+        if ($font === '') {
+            global $THEME;
+            $font = Skin::get_all_theme_fonts($type)[$THEME->basename];
+        }
+
         $fontdata = get_record('skin_fonts', 'name', $font);
         return $fontdata->fontstack . ', ' . $fontdata->genericfont;
     }
@@ -615,8 +598,22 @@ class Skin {
             return '';
         }
         $fontface = '';
-
-        if ($fontdata->fonttype == 'site') {
+        if (preg_match('/^t_(.*)/', $fontdata->fonttype, $matches)) {
+            $theme = $matches[1];
+            $fontfamily = urlencode($fontdata->title);
+            // We need to create @font-face css rule for each variant of the font
+            $variants = unserialize($fontdata->variants);
+            foreach ($variants as $variant) {
+                $baseurl = get_config('wwwroot') . 'theme/' . $theme . '/fonts/' . strtolower($fontdata->name) . '/';
+                $fontface .= '@font-face {';
+                $fontface .= 'font-family: \'' . escape_css_string($fontdata->title) . '\'; ';
+                $fontface .= 'src: url(\'' . $baseurl . $variant['WOFF'] . '\') format(\'woff\'); '; // The only type that is crossbrowser compatible
+                $fontface .= 'font-weight: ' . $variant['font-weight'] . '; ';
+                $fontface .= 'font-style: ' . $variant['font-style'] . '; ';
+                $fontface .= '}';
+            }
+        }
+        else if ($fontdata->fonttype == 'site') {
             $fontfamily = urlencode($fontdata->title);
             // We need to create @font-face css rule for each variant of the font
             $variants = unserialize($fontdata->variants);
@@ -707,13 +704,28 @@ class Skin {
      * @param string $font The name of the font
      * @return string|false The path to the font, or false if not found
      */
-    public static function get_path_to_previewfile($fontname) {
+    public static function get_path_to_previewfile($fontname, $type='text') {
+        $font = false;
+        $theme = '';
+        if ($fontname === '') {
+            global $THEME;
+            $fontname = Skin::get_all_theme_fonts($type)[$THEME->basename];
+        }
         $fontdata = get_record('skin_fonts', 'name', $fontname);
         if (!$fontdata) {
             $font = false;
         }
         else if ($fontdata->fonttype == 'common') {
             $font = get_config('docroot') . 'lib/fonts/' . $fontdata->previewfont;
+        }
+        else if (preg_match('/^t_(.*)/', $fontdata->fonttype, $matches)) {
+            if ($matches[1]) {
+                $theme = $matches[1];
+                $fontfile = get_config('docroot') . 'theme/' . $theme . '/fonts/' . strtolower($fontdata->name) . '/' . $fontdata->previewfont;
+                if (file_exists($fontfile) && is_readable($fontfile)) {
+                    $font = $fontfile;
+                }
+            }
         }
         else {
             $fontfile = get_config('dataroot') . 'skins/fonts/' . $fontdata->name . '/' . $fontdata->previewfont;
@@ -729,7 +741,6 @@ class Skin {
         return $font;
     }
 
-
     /**
      * Converts 6-digit hex color #RRGGBB to rgb(RRR, GGG, BBB)
      * @param unknown_type $color_hex
@@ -742,31 +753,33 @@ class Skin {
     /**
      * Gets font sizes for heading, sub-heading and normal text from given relative size (as in CSS).
      * Relative size can be one of following: xx-small, x-small, small, medium, large, x-large or xx-large
+     * The font size of a page header is not affected by user chosen font size
+     *
      * @param string $font_size
      * @return array
      */
     private static function get_font_sizes($font_size) {
         switch ($font_size) {
             case 'xx-small':
-                return array(7, 5, 3);
+                return array(9, 5, 3);
                 break;
             case 'x-small':
-                return array(8, 6, 4);
+                return array(9, 6, 4);
                 break;
             case 'small':
                 return array(9, 7, 5);
                 break;
             case 'medium':
-                return array(10, 8, 6);
+                return array(9, 8, 6);
                 break;
             case 'large':
-                return array(12, 10, 8);
+                return array(9, 10, 8);
                 break;
             case 'x-large':
-                return array(14, 12, 10);
+                return array(9, 12, 10);
                 break;
             case 'xx-large':
-                return array(16, 14, 12);
+                return array(9, 14, 12);
                 break;
             default:
                 return array(9, 7, 5);
@@ -826,6 +839,19 @@ class Skin {
         return array('x' => $tilepositionx, 'y' => $tilepositiony);
     }
 
+    private static function imageheaderfill(&$dst_im, $src_fill, $zoom_fill, $align_fill=1, $header_width, $header_height, $xoffset = 0) {
+        $layer = imagecreatetruecolor(imagesx($dst_im), imagesy($dst_im));
+        // Turn off alpha blending and set alpha flag
+        imagealphablending($layer, false);
+        imagesavealpha($layer, true);
+
+        // Create resized (zoomed) version of the tile image, used for filling...
+        $tile = imagecreatetruecolor(imagesx($src_fill) * $zoom_fill, imagesy($src_fill) * $zoom_fill);
+        imagealphablending($tile, false);
+        imagesavealpha($tile, true);
+        imagecopyresampled($tile, $src_fill, $xoffset, 0, 0, 0, imagesx($src_fill) * $zoom_fill, imagesy($src_fill) * $zoom_fill, imagesx($src_fill), imagesy($src_fill));
+        imagecopyresampled($dst_im, $tile, 0, 0, 0, 0, $header_width, $header_height, $header_width, $header_height); // black
+    }
 
     /**
      * Fill in the backgrounds in the thumbnail image
@@ -927,7 +953,7 @@ class Skin {
         }
 
         // ========== BODY BACKGROUND IMAGE ==========
-        if ($skin['body_background_image'] <> null) {
+        if (!empty($skin['body_background_image'])) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
             $fileid = $skin['body_background_image'];
             $fileobj = artefact_instance_from_id($fileid);
@@ -951,97 +977,123 @@ class Skin {
             self::imagebackgroundfill($img, $bodybackgroundfill, Skin::PREVIEW_THUMBNAIL_ZOOM, intval($skin['body_background_repeat']), intval($skin['body_background_position']));
         }
 
-        // ========== VIEW BACKGROUND COLOR ========== // TODO remove this
-        $viewwidth = Skin::PREVIEW_WIDTH-intval(((100 - $skin['view_background_width']) / 100) * Skin::PREVIEW_WIDTH);
+        // ========== VIEW BACKGROUND COLOR ==========
+        $viewwidth = Skin::PREVIEW_WIDTH - intval(0.2  * Skin::PREVIEW_WIDTH);
         $viewheight = Skin::PREVIEW_HEIGHT;
 
-        $img2 = imagecreatetruecolor($viewwidth*Skin::PREVIEW_THUMBNAIL_ZOOM+1, $viewheight*Skin::PREVIEW_THUMBNAIL_ZOOM);
+        $img2 = imagecreatetruecolor($viewwidth * Skin::PREVIEW_THUMBNAIL_ZOOM + 1, $viewheight * Skin::PREVIEW_THUMBNAIL_ZOOM);
         // Turn off alpha blending and set alpha flag
         imagealphablending($img2, true);
         imagesavealpha($img2, true);
 
-        if ($skin['view_background_color'] <> 'transparent') {
-            list($r, $g, $b) = self::get_rgb_from_hex($skin['view_background_color']);
-            $viewbackgroundcolor = imagecolorallocate($img2, $r, $g, $b);
-            imagefill($img2, 0, 0, $viewbackgroundcolor);
-        }
-        else {
-            $transparentcolor = imagecolorallocatealpha($img2, 255, 255, 255, 127);
-            imagefill($img2, 0, 0, $transparentcolor);
-        }
+        list($r, $g, $b) = self::get_rgb_from_hex('#FFFFFF');
+        $viewbackgroundcolor1 = imagecolorallocatealpha($img2, $r, $g, $b, 127);
+        imagefill($img2, 0, 0, $viewbackgroundcolor1);
 
-        /* ========== VIEW BACKGROUND IMAGE ========== */  // TODO remove this
-        if ($skin['view_background_image'] <> null) {
+        // ========== SAMPLE HEADING BACKGROUND IMAGE/COLOUR AND TEXT ==========
+
+        // The text in the page header is not affected by the font size chosen by the user
+        $header_font_size = self::get_font_sizes($skin['view_text_font_size'])[0];
+
+        // Allocate heading sizes, text size and emphasized size
+        list($heading_size, $emphasized_size, $text_size) = self::get_font_sizes($skin['view_text_font_size']);
+        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_heading_color']);
+
+        // Allocate heading_text_color
+        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_heading_color']);
+        $heading_text_color = imagecolorallocate($img, $r, $g, $b);
+
+        // Allocate heading_background_color
+        list($r, $g, $b) = self::get_rgb_from_hex($skin['header_background_color']);
+        $heading_background_color = imagecolorallocate($img, $r, $g, $b);
+
+        $headerwidth = Skin::PREVIEW_WIDTH - intval(0.2 * Skin::PREVIEW_WIDTH);
+        $headerheight = $heading_size;
+
+        list($r, $g, $b) = self::get_rgb_from_hex('#FFFFFF');
+        $viewbackgroundcolor2 = imagecolorallocate($img2, $r, $g, $b);
+        imagefilledrectangle($img2, 0, $headerheight + ($header_font_size * 2.5) + 1, $viewwidth, $viewheight, $viewbackgroundcolor2);
+
+        // Draw header background colour block on the VIEW and BODY
+        imagefilledrectangle($img, 0, 0, $headerwidth, $headerheight + ($header_font_size * 2.5), $heading_background_color);
+
+        // Replace header colour with sample header image if there is one allocated
+        if (!empty($skin['header_background_image'])) {
             require_once(get_config('docroot') . 'artefact/file/lib.php');
-            $fileid = $skin['view_background_image'];
+            $fileid = $skin['header_background_image'];
             $fileobj = artefact_instance_from_id($fileid);
             $filetype = $fileobj->get('filetype');
 
             switch ($filetype) {
-                case "image/gif":
-                    $viewbackgroundfill = imagecreatefromgif($fileobj->get_path());
-                    break;
-                case "image/jpeg":
-                    $viewbackgroundfill = imagecreatefromjpeg($fileobj->get_path());
-                    break;
-                case "image/png":
-                default:
-                    $viewbackgroundfill = imagecreatefrompng($fileobj->get_path());
-                    break;
-            }
-            imagealphablending($viewbackgroundfill, false);
-            imagesavealpha($viewbackgroundfill, true);
+              case "image/gif":
+                  $headerimage = imagecreatefromgif($fileobj->get_path());
+                  break;
+              case "image/jpeg":
+                  $headerimage = imagecreatefromjpeg($fileobj->get_path());
+                  break;
+              case "image/png":
+              default:
+                  $headerimage = imagecreatefrompng($fileobj->get_path());
+                  break;
 
-            self::imagebackgroundfill($img2, $viewbackgroundfill, Skin::PREVIEW_THUMBNAIL_ZOOM, intval($skin['view_background_repeat']), intval($skin['view_background_position']));
+            }
+
+            $headerimage = imagescale($headerimage, Skin::PREVIEW_WIDTH);
+            // Draw header image on the VIEW and BODY
+            self::imageheaderfill($img, $headerimage,  Skin::PREVIEW_THUMBNAIL_ZOOM*1.2, 1, $headerwidth, $headerheight + ($header_font_size * 2.6));
         }
 
-        // ========== SAMPLE HEADING AND TEXT ==========
-        list($heading_size, $emphasized_size, $text_size) = self::get_font_sizes($skin['view_text_font_size']);
-        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_heading_color']);
-
-        $heading_color = imagecolorallocate($img, $r, $g, $b);
         // Even though this text is only used in preview images, it's possible the site might want to change
         // it for localization purposes, for instance if they're primarily using a non-Latin alphabet
         $heading_text = get_string('previewheading', 'skin');
-        $heading_font = self::get_path_to_previewfile($skin['view_heading_font_family']);
-        // Add the sample heading
-        imagettftext($img2, $heading_size, 0, 10, $heading_size+8, $heading_color, $heading_font, $heading_text);
+        $heading_font = self::get_path_to_previewfile($skin['view_heading_font_family'], 'heading');
+
+        // Add the sample heading title - the font size does not affect the text within page header
+        imagettftext($img2, $heading_size, 0, 10, $header_font_size+10, $heading_text_color, $heading_font, $heading_text);
 
         list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_emphasized_color']);
         $emphasized_color = imagecolorallocate($img, $r, $g, $b);
-        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_table_border_color']);
+        list($r, $g, $b) = self::get_rgb_from_hex('#CCCCCC');
         $line_color = imagecolorallocate($img, $r, $g, $b);
         $emphasized_text1 = get_string('previewsubhead1', 'skin'); // Latin for text
         $emphasized_text2 = get_string('previewsubhead2', 'skin');    // Latin for image
-        $emphasized_font = self::get_path_to_previewfile($skin['view_heading_font_family']);
+        $emphasized_font = self::get_path_to_previewfile($skin['view_heading_font_family'], 'heading');
 
-        // Add the sample sub-heading 1
-        imagettftext($img2, $emphasized_size, 0, 10, $heading_size+$emphasized_size+16, $emphasized_color, $emphasized_font, $emphasized_text1);
+        // Calculate y positions for drawing
+        $subheading_y_pos = $header_font_size*4 + $emphasized_size + $emphasized_size;
+        $underline_y_pos = $subheading_y_pos + ($heading_size/2) ;
+        $sampleimage_y_pos = $underline_y_pos + $text_size;
+
+        // Add the sample sub-heading 10000
+        imagettftext($img2, $emphasized_size, 0, 10, $subheading_y_pos, $emphasized_color, $emphasized_font, $emphasized_text1);
+
         // Add second column to the preview thumbnail, if the width of the view is greater or equal 70%
         // or the size of regular text is less than 8...
-        if (intval($skin['view_background_width']) >= 70 && $text_size < 8) {
+        if ($text_size < 8) {
             // Add sample picture
             $sample_img = imagecreatefrompng($THEME->get_path('images/skin_preview_img.png'));
-            imagefilledrectangle($img2, 5, $heading_size + $emphasized_size + 18, imagesx($img2) - imagesx($sample_img) - 20, $heading_size + $emphasized_size + 18, $line_color);
-            // Add the sample sub-heading 2
-            imagettftext($img2, $emphasized_size, 0, imagesx($img2) - imagesx($sample_img) - 10, $heading_size + $emphasized_size + 16, $emphasized_color, $emphasized_font, $emphasized_text2);
-            imagefilledrectangle($img2, imagesx($img2) - imagesx($sample_img) - 15, $heading_size + $emphasized_size + 18, imagesx($img2) - 5, $heading_size + $emphasized_size + 18, $line_color);
-            imagecopyresampled($img2, $sample_img, imagesx($img2) - imagesx($sample_img) - 10, $heading_size + $emphasized_size + $text_size + 21, 0, 0, imagesx($sample_img), imagesy($sample_img), imagesx($sample_img), imagesy($sample_img));
+            // Add the sample sub-heading 2 and underline, then merge $sample_img into $img2
+            imagettftext($img2, $emphasized_size, 0, imagesx($img2) - imagesx($sample_img) - 10, $subheading_y_pos, $emphasized_color, $emphasized_font, $emphasized_text2);
+            imagefilledrectangle($img2, imagesx($img2) - imagesx($sample_img) - 15, $underline_y_pos, imagesx($img2) - 5, $underline_y_pos, $line_color);
+
+            // Add underline for sub-heading 1 where x pos stops at second column break
+            imagefilledrectangle($img2, 5, $underline_y_pos, imagesx($img2) - imagesx($sample_img) - 20, $underline_y_pos, $line_color);
+            imagecopyresampled($img2, $sample_img, imagesx($img2) - imagesx($sample_img) - 10, $sampleimage_y_pos, 0, 0, imagesx($sample_img), imagesy($sample_img), imagesx($sample_img), imagesy($sample_img));
         }
         else {
-            imagefilledrectangle($img2, 5, $heading_size + $emphasized_size + 18, imagesx($img2) - 10, $heading_size + $emphasized_size + 18, $line_color);
+            imagefilledrectangle($img2, 5, $underline_y_pos, imagesx($img2) - 10, $underline_y_pos, $line_color);
         }
 
         // Add some sample lines of text
         list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_font_color']);
         $text_color = imagecolorallocate($img, $r, $g, $b);
-        $text_font = self::get_path_to_previewfile($skin['view_text_font_family']);
+        $text_font = self::get_path_to_previewfile($skin['view_text_font_family'], 'text');
         for ($i = 1; $i <= 9; $i++) {
-            imagettftext($img2, $text_size, 0, 10, $heading_size+$emphasized_size+$text_size+15+$i*(2*$text_size), $text_color, $text_font, get_string("previewtextline{$i}", 'skin'));
+            imagettftext($img2, $text_size, 0, 10, $underline_y_pos + $i*(2*$text_size), $text_color, $text_font, get_string("previewtextline{$i}", 'skin'));
         }
 
         // ========== COPY VIEW PART OVER BODY PART OF THE THUMBNAIL ==========
-        $viewbackgroundmargin = intval(((Skin::PREVIEW_WIDTH - intval(($skin['view_background_width'] / 100) * Skin::PREVIEW_WIDTH)) / 2) * Skin::PREVIEW_THUMBNAIL_ZOOM);
+        $viewbackgroundmargin = intval(((Skin::PREVIEW_WIDTH - intval(0.8 * Skin::PREVIEW_WIDTH)) / 2) * Skin::PREVIEW_THUMBNAIL_ZOOM);
         $VIEWOFFSETX = $viewbackgroundmargin - 1;
         $VIEWOFFSETY = 0;
 
@@ -1065,7 +1117,7 @@ class Skin {
      * @param int $aid Artefact id of the background image to remove from skins
      */
     public static function remove_background($aid) {
-        $skinstoupdate = get_records_select_array('skin', 'bodybgimg = ? OR viewbgimg = ?', array($aid, $aid), 'id');
+        $skinstoupdate = get_records_select_array('skin', 'bodybgimg = ? OR headingbgimg = ?', array($aid, $aid), 'id');
         if (!empty($skinstoupdate) && is_array($skinstoupdate)) {
             foreach ($skinstoupdate as $skin) {
                 $skin = new Skin($skin->id);
@@ -1073,8 +1125,8 @@ class Skin {
                 if (isset($viewskin['body_background_image']) && $viewskin['body_background_image'] == $aid) {
                     $viewskin['body_background_image'] = 0;
                 }
-                if (isset($viewskin['view_background_image']) && $viewskin['view_background_image'] == $aid) {  // TODO remove this
-                    $viewskin['view_background_image'] = 0;
+                if (isset($viewskin['header_background_image']) && $viewskin['header_background_image'] == $aid) {
+                    $viewskin['header_background_image'] = 0;
                 }
                 $skin->set('viewskin', $viewskin);
                 $skin->commit();
@@ -1091,7 +1143,14 @@ class Skin {
      */
     public static function get_sitefonts_data($limit=9, $offset=0, $fonttype='site') {
 
-        if ($fonttype != 'all') {
+        if ($fonttype == 'theme') {
+            $count = count_records_sql('
+                SELECT COUNT(f.name) FROM {skin_fonts} f
+                WHERE f.fonttype LIKE ?', array('t_%'));
+            $fontdata = get_records_sql_array('
+                SELECT * FROM {skin_fonts} WHERE fonttype LIKE ? ORDER BY fonttype', array('t_%'), $offset, $limit);
+        }
+        else if ($fonttype != 'all') {
             $count = count_records_sql('
                 SELECT COUNT(f.name) FROM {skin_fonts} f
                 WHERE f.fonttype = ?', array($fonttype));
@@ -1144,6 +1203,28 @@ class Skin {
             }
         }
         return $options;
+    }
+
+    /**
+     * Returns an array of theme's with their theme fonts.
+     * Currently all themes have one font for both heading and text except for 'raw'
+     * @param type $type   Set the type of font, eg text vs heading
+     * @return array
+     */
+    public static function get_all_theme_fonts($type='text') {
+        $genericfont = ($type == 'text') ? 'sans-serif' : 'serif';
+        $fontdata = get_records_sql_array('
+            SELECT SUBSTRING(fonttype, 3) AS theme, fonttype, name, genericfont FROM {skin_fonts} WHERE fonttype LIKE ? ORDER BY fonttype', array('t_%')
+        );
+        $data = array();
+        if ($fontdata) {
+            foreach ($fontdata as $font) {
+                if ($font->theme != 'raw' || ($font->theme == 'raw' && $font->genericfont == $genericfont)) {
+                    $data[$font->theme] = $font->name;
+                }
+            }
+        }
+        return $data;
     }
 
 
@@ -1261,159 +1342,378 @@ class Skin {
 
 
 /**
- * Installs default skin data, called during Mahara installation
+ * Installs default skin data.
+ * This function is now designed so that it can be run more than once.
+ * To add more fonts set up the "ensure_record_exists( ... )" blocks for them
+ * To remove a font set up a "delete_record( ... )" for it
  */
 function install_skins_default() {
-    // Add data for 'common' fonts...
-    $variants = serialize(array(
-        array('variant' => 'regular', 'font-weight' => 'normal', 'font-style' => 'normal'),
-        array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
-        array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
-        array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
-    ));
-    $italiconly = serialize(array(
-        array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Arial',
-        'title' => 'Arial',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusSansL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Arial\', \'Helvetica\', \'Nimbus Sans L\', \'FreeSans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Book_Antiqua',
-        'title' => 'Book Antiqua',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWPalladioL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Book Antiqua\', \'Palatino Linotype\', \'Palatino\', \'URW Palladio L\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Bookman',
-        'title' => 'Bookman',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWBookmanL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Bookman Old Style\', \'Bookman\', \'URW Bookman L\'',
-        'genericfont' => 'serif'));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Chancery',
-        'title' => 'Chancery',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWChanceryL.ttf',
-        'variants' => $italiconly,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Monotype Corsiva\', \'Apple Chancery\', \'Zapf Chancery\', \'URW Chancery L\'',
-        'genericfont' => 'cursive'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Courier',
-        'title' => 'Courier New',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusMonoL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Courier New\', \'Courier\', \'Nimbus Mono L\', \'FreeMono\'',
-        'genericfont' => 'monospace'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Georgia',
-        'title' => 'Georgia',
-        'licence' => 'Charis SIL Open Font Licence.txt',
-        'previewfont' => 'CharisSILR.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Georgia\', \'Charis SIL\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Gothic',
-        'title' => 'Century Gothic',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWGothicL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Century Gothic\', \'Avant Garde\', \'URW Gothic L\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Helvetica',
-        'title' => 'Helvetica',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusSansL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Helvetica\', \'Arial\', \'Nimbus Sans L\', \'FreeSans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Palatino',
-        'title' => 'Palatino',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'URWPalladioL.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Palatino Linotype\', \'Palatino\', \'URW Palladio L\', \'Book Antiqua\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Tahoma',
-        'title' => 'Tahoma',
-        'licence' => 'DejaVu Font Licence.txt',
-        'previewfont' => 'DejaVuSans.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Tahoma\', \'DejaVu Sans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Times',
-        'title' => 'Times New Roman',
-        'licence' => 'GPL-2.0.txt',
-        'previewfont' => 'NimbusRomanNo9L.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Times New Roman\', \'Times\', \'Nimbus Roman No9\', \'FreeSerif\'',
-        'genericfont' => 'serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Trebuchet',
-        'title' => 'Trebuchet',
-        'licence' => 'Aurulent Open Font Licence.txt',
-        'previewfont' => 'AurulentSans.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Trebuchet MS\', \'Aurulent Sans\'',
-        'genericfont' => 'sans-serif'
-    ));
-    insert_record('skin_fonts', (object) array(
-        'name' => 'Verdana',
-        'title' => 'Verdana',
-        'licence' => 'DejaVu Font Licence.txt',
-        'previewfont' => 'DejaVuSans.ttf',
-        'variants' => $variants,
-        'fonttype' => 'common',
-        'onlyheading' => 0,
-        'fontstack' => '\'Verdana\', \'DejaVu Sans\'',
-        'genericfont' => 'sans-serif'
-    ));
+    // Add data for the 'common' and theme fonts.
+    // Set up the possible variations
+    // - add in new ones if needed
+    $fv = array(
+        'regular'     => array('variant' => 'regular', 'font-weight' => 'normal', 'font-style' => 'normal'),
+        'bold'        => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
+        'italic'      => array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
+        'bolditalic'  => array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
+        'thin'        => array('variant' => 'thin', 'font-weight' => 'normal', 'font-style' => 'normal'),
+        'light'       => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
+        'lightitalic' => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
+    );
+    // The basic regular/bold/italic/bolditalic combo
+    $basicvariants = serialize(array($fv['regular'], $fv['bold'], $fv['italic'], $fv['bolditalic']));
+
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Arial',
+            'title' => 'Arial'
+        ),
+        (object) array(
+            'name' => 'Arial',
+            'title' => 'Arial',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusSansL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Arial\', \'Helvetica\', \'Nimbus Sans L\', \'FreeSans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'BookAntiqua',
+            'title' => 'Book Antiqua'
+        ),
+        (object) array(
+            'name' => 'BookAntiqua',
+            'title' => 'Book Antiqua',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWPalladioL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Book Antiqua\', \'Palatino Linotype\', \'Palatino\', \'URW Palladio L\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Bookman',
+            'title' => 'Bookman'
+        ),
+        (object) array(
+            'name' => 'Bookman',
+            'title' => 'Bookman',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWBookmanL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Bookman Old Style\', \'Bookman\', \'URW Bookman L\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Chancery',
+            'title' => 'Chancery'
+        ),
+        (object) array(
+            'name' => 'Chancery',
+            'title' => 'Chancery',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWChanceryL.ttf',
+            'variants' => serialize(array($fv['italic'])),
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Monotype Corsiva\', \'Apple Chancery\', \'Zapf Chancery\', \'URW Chancery L\'',
+            'genericfont' => 'cursive'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Courier',
+            'title' => 'Courier New'
+        ),
+        (object) array(
+            'name' => 'Courier',
+            'title' => 'Courier New',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusMonoL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Courier New\', \'Courier\', \'Nimbus Mono L\', \'FreeMono\'',
+            'genericfont' => 'monospace'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Georgia',
+            'title' => 'Georgia'
+        ),
+        (object) array(
+            'name' => 'Georgia',
+            'title' => 'Georgia',
+            'licence' => 'Charis SIL Open Font Licence.txt',
+            'previewfont' => 'CharisSILR.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Georgia\', \'Charis SIL\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Gothic',
+            'title' => 'Century Gothic'
+        ),
+        (object) array(
+            'name' => 'Gothic',
+            'title' => 'Century Gothic',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWGothicL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Century Gothic\', \'Avant Garde\', \'URW Gothic L\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Helvetica',
+            'title' => 'Helvetica'
+        ),
+        (object) array(
+            'name' => 'Helvetica',
+            'title' => 'Helvetica',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusSansL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Helvetica\', \'Arial\', \'Nimbus Sans L\', \'FreeSans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Palatino',
+            'title' => 'Palatino'
+        ),
+        (object) array(
+            'name' => 'Palatino',
+            'title' => 'Palatino',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'URWPalladioL.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Palatino Linotype\', \'Palatino\', \'URW Palladio L\', \'Book Antiqua\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Tahoma',
+            'title' => 'Tahoma'
+        ),
+        (object) array(
+            'name' => 'Tahoma',
+            'title' => 'Tahoma',
+           'licence' => 'DejaVu Font Licence.txt',
+            'previewfont' => 'DejaVuSans.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Tahoma\', \'DejaVu Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Times',
+            'title' => 'Times New Roman'
+        ),
+        (object) array(
+            'name' => 'Times',
+            'title' => 'Times New Roman',
+            'licence' => 'GPL-2.0.txt',
+            'previewfont' => 'NimbusRomanNo9L.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Times New Roman\', \'Times\', \'Nimbus Roman No9\', \'FreeSerif\'',
+            'genericfont' => 'serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Trebuchet',
+            'title' => 'Trebuchet'
+        ),
+        (object) array(
+            'name' => 'Trebuchet',
+            'title' => 'Trebuchet',
+            'licence' => 'Aurulent Open Font Licence.txt',
+            'previewfont' => 'AurulentSans.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Trebuchet MS\', \'Aurulent Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Verdana',
+            'title' => 'Verdana'
+        ),
+        (object) array(
+            'name' => 'Verdana',
+            'title' => 'Verdana',
+            'licence' => 'DejaVu Font Licence.txt',
+            'previewfont' => 'DejaVuSans.ttf',
+            'variants' => $basicvariants,
+            'fonttype' => 'common',
+            'onlyheading' => 0,
+            'fontstack' => '\'Verdana\', \'DejaVu Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    // Theme fonts
+    $filetypes = array('EOT', 'SVG', 'TTF', 'WOFF', 'WOFF2', 'OTF');
+    $robotoslabvariants = array();
+    foreach (array('bold', 'regular', 'light', 'thin') as $option) {
+        $robotoslabvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $robotoslabvariants[$option][$type] = 'robotoslab-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'RobotoSlab',
+            'title' => 'Roboto Slab'
+        ),
+        (object) array(
+            'name' => 'RobotoSlab',
+            'title' => 'Roboto Slab',
+            'licence' => '',
+            'previewfont' => 'robotoslab-regular.ttf',
+            'variants' => serialize($robotoslabvariants),
+            'fonttype' => 't_raw',
+            'onlyheading' => 0,
+            'fontstack' => '\'Roboto Slab\', \'Roboto\'',
+            'genericfont' => 'serif'
+        )
+    );
+
+    $opensansvariants = array();
+    foreach (array('bold', 'regular', 'light', 'lightitalic') as $option) {
+        $opensansvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            if ($option == 'lightitalic') {
+                $opensansvariants[$option][$type] = 'OpenSansLightItalic.' . strtolower($type);
+            }
+            else {
+                $opensansvariants[$option][$type] = 'OpenSans' . ucfirst($option) . '.' . strtolower($type);
+            }
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'OpenSans',
+            'title' => 'Open Sans'
+        ),
+        (object) array(
+            'name' => 'OpenSans',
+            'title' => 'Open Sans',
+            'licence' => '',
+            'previewfont' => 'OpenSansRegular.ttf',
+            'variants' => serialize($opensansvariants),
+            'fonttype' => 't_raw',
+            'onlyheading' => 0,
+            'fontstack' => '\'Open Sans\', \'Verdana\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    $osvaldovariants = array();
+    foreach (array('regular') as $option) {
+        $osvaldovariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $osvaldovariants[$option][$type] = 'osvaldo-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Osvaldo',
+            'title' => 'Osvaldo'
+        ),
+        (object) array(
+            'name' => 'Osvaldo',
+            'title' => 'Osvaldo',
+            'licence' => 'SIL Open Font License.txt',
+            'previewfont' => 'osvaldo-regular.ttf',
+            'variants' => serialize($osvaldovariants),
+            'fonttype' => 't_ocean',
+            'onlyheading' => 0,
+            'fontstack' => '\'Osvaldo\', \'Verdana\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    $ralewayvariants = array();
+    foreach (array('bold', 'regular', 'italic', 'light', 'lightitalic', 'thin') as $option) {
+        $ralewayvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $ralewayvariants[$option][$type] = 'raleway-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Raleway',
+            'title' => 'Raleway'
+        ),
+        (object) array(
+            'name' => 'Raleway',
+            'title' => 'Raleway',
+            'licence' => '',
+            'previewfont' => 'raleway-regular.ttf',
+            'variants' => serialize($ralewayvariants),
+            'fonttype' => 't_modern',
+            'onlyheading' => 0,
+            'fontstack' => '\'Raleway\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+
+    $shadowsintolight2variants = array();
+    foreach (array('regular') as $option) {
+        $shadowsintolight2variants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $shadowsintolight2variants[$option][$type] = 'shadows-into-light-two-v6-latin-ext_latin-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'ShadowsIntoLightTwo',
+            'title' => 'Shadows Into Light Two'
+        ),
+        (object) array(
+            'name' => 'ShadowsIntoLightTwo',
+            'title' => 'Shadows Into Light Two',
+            'licence' => 'OFL.txt',
+            'previewfont' => 'shadowsintolight2-regular.ttf',
+            'variants' => serialize($shadowsintolight2variants),
+            'fonttype' => 't_primaryschool',
+            'onlyheading' => 0,
+            'fontstack' => '\'Shadows Into Light Two\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
 }

@@ -32,7 +32,12 @@ if (!empty($font)) {
     $fontdata = get_record('skin_fonts', 'name', $font);
     $fonttitle = $fontdata->title;
     if (!empty($fontdata->licence) && !is_null($fontdata->licence)) {
-        $fontpath = get_config('wwwroot') . 'skins/fonts/' . $fontdata->name . '/';
+        if (preg_match('/^t_(.*)/', $fontdata->fonttype, $matches)) {
+            $fontpath = get_config('wwwroot') . 'theme/' . $matches[1] . '/fonts/' . strtolower($fontdata->name) . '/';
+        }
+        else {
+            $fontpath = get_config('wwwroot') . 'skins/fonts/' . $fontdata->name . '/';
+        }
         $fontlicence = '<a href="' . $fontpath . $fontdata->licence . '">' . get_string('fontlicence', 'skin') . '</a>';
     }
     else {
@@ -49,7 +54,10 @@ $smarty->assign('fonttitle', $fonttitle);
 $smarty->assign('fontlicence', $fontlicence);
 $specimen = $smarty->fetch('skin/specimen.tpl');
 
-
-header('Content-type: text/html');
-echo $specimen;
-exit;
+json_reply(false, array(
+    'message' => null,
+    'data' => array(
+        'font' => $font,
+        'html' => $specimen
+    )
+));

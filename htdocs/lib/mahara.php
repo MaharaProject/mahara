@@ -3484,7 +3484,7 @@ function artefact_in_view($artefact, $view) {
             SELECT s.id
             FROM {view} v INNER JOIN {skin} s
                 ON v.skin = s.id
-            WHERE v.id = ? AND ? in (s.bodybgimg, s.viewbgimg)
+            WHERE v.id = ? AND ? in (s.bodybgimg, s.headingbgimg)
     ";
     $params = array_merge($params, array($view, $artefact->get('id')));
 

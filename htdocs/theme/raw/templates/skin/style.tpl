@@ -30,7 +30,14 @@ body > .main-content > .row {
 }
 
 
-/** all other custom settings should be scoped to be within .user-page-content **/
+/* Heading background customizations */
+.pageheader {
+    background-color: {$header_background_color};
+    background: {$header_background_image|safe} ;
+    background-size: 100%;
+}
+
+/* All other custom settings should be scoped to be within .user-page-content */
 /* with the exception of the page title and page description */
 
 /* page settings (also page description) */
@@ -131,6 +138,6 @@ body > .main-content > .row {
 }
 
 
-/** advanced: custom css **/
+/* advanced: custom css */
 
 {$view_custom_css|safe}
