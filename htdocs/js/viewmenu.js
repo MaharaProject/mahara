@@ -239,6 +239,7 @@ function delete_comment_from_modal_submit(form, data) {
     if (!data.data.artefact) {
         paginator.updateResults(data);
         paginator.alertProxy('pagechanged', data);
+        return;
     }
     var params = {
         'viewid': viewid,
