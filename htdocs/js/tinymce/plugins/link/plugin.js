@@ -1323,7 +1323,7 @@
         var id = anchor.name || anchor.id;
         return id ? [{
             text: id,
-            value: '#' + id
+            value: '#user_' + id
           }] : [];
       });
       return anchors.length > 0 ? Option.some([{

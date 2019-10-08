@@ -2,42 +2,33 @@ TinyMCE
 ========
 
 Website: https://www.tiny.cloud/
-Version: 4.8.2
+Version: 5.0
 
-Based on development version
 
 Changes:
 
- * Added all of the language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
- * Removed all .min.js and .dev.js files
-
- * Adding the 'aria-hidden="true"' to presentation icons (original commit: 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e)-  not done
- * Bug 1605110: Modified the "table" plugin to style the table through CSS instead of HTML attributes (original commit: 63f91a7ea8bd60c102e257c05678cc6d55e21683) -not done
- * Add TinyMCE imagebrowser plugin: plugins/imagebrowser/plugin.js
- * Modified plugins/link/plugin.js to add 'user_' to the anchorlist value and selected to account for htmlpurification prefixing all user id's with 'user_'
--can't find this.
-
- * Removed files and folders
-    tinymce.jquery.js removed in v4.3.4
-    theme/inlite
-    theme/mobile
-    skins/lightgray
-    plugins/help
-    min.js from plugin folders
-    skins/content
-
- * Added
+  * Added
+    -all of the language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
     -plugins/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
-    This is old. The new one is a pay service.
+    This is from a previous version that still works. The new one tinymce 5.0 offers is a pay service.
     -plugins/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
-    -plugins/tooltoggle (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
+    -plugins/tooltoggle - this is a custom plugin. Changed function
+    calls to fit with tinymce 5.0. (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
     -plugins/spellchecker to use $CFG->spellcheckerengine
     if that is enabled instead of default browser spellchecker.
     (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
 
-removed
-modern theme replaced by silver - fixed.
-added tooltoggle back and changed function calls to new
-imagebrowser. Added old one. New one is now a pay service
+ * Removed
+    min.js files from main and plugin folders
+    theme/mobile
+    skins/ui/oxide-dark
+    plugins/help
+    min.js from plugin folders
+    skins/content
 
+ * Checked for icon.*presentation to make sure icons with 'role="presentation"' also have 'aria-hidden="true"' in the html (original commit: 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e) (no changes this time - remove comment?)
 
+ * Checked for stying of the table plugin calling dom.getAttrib without optionally calling dom.getStyle first (original commit: 63f91a7ea8bd60c102e257c05678cc6d55e21683) (no changes this time - remove comment?)
+
+ * Modified plugins/link/plugin.js to add 'user_' to the anchorlist value and selected to account for htmlpurification prefixing all user id's with 'user_'
+ (original commit: 099b3d3119a1e9900ab2ea2341470d15f05adbe3)
