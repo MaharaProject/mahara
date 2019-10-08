@@ -4,7 +4,7 @@
             <div class="user-icon user-icon-40 float-left">
                 <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
-            <h4 class="list-group-item-heading middle">
+            <h4 class="list-group-item-heading middle inline">
                 <a href="{profile_url($user)}" >
                     <span class="sr-only">{$user->display_name}</span>
                     {$user->display_name}
@@ -18,19 +18,18 @@
                     - {str tag='existingfriend' section='group'}
                 </span>
                 {/if}
-
-                {if $user->friend && $user->views}
-                <p class="viewlist">
-                    <strong>
-                        {str tag='Portfolios' section='view'}:
-                    </strong>
-                    {foreach from=$user->views item=view name=addr}
-                    <a href="{$view->fullurl}">{$view->title}</a>{if !$dwoo.foreach.addr.last}, {/if}
-                    {/foreach}
-                </p>
-                {/if}
-
             </h4>
+
+            {if $user->friend && $user->views}
+            <p class="viewlist detail text-small">
+                <strong>
+                    {str tag='Portfolios' section='view'}:
+                </strong>
+                {foreach from=$user->views item=view name=addr}
+                <a href="{$view->fullurl}">{$view->title}</a>{if !$dwoo.foreach.addr.last}, {/if}
+                {/foreach}
+            </p>
+            {/if}
             {if $user->institutions}
             <div class="memberof detail text-small">
                 <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
@@ -38,7 +37,7 @@
             </div>
             {/if}
             {if $user->introduction}
-            <div class="text-small text-midtone">
+            <div class="text-small detail text-midtone">
                 <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
                     href="#userintro{$user->id}" role="button" aria-expanded="false"
                     aria-controls="userintro{$user->id}">

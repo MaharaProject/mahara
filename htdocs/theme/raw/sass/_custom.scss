@@ -32,8 +32,12 @@
     }
     a[data-toggle="collapse"] .collapse-indicator,
     a[data-toggle="collapse"].collapsed .collapse-indicator {
-        margin-right: 90px;
+        margin-right: 10px;
         margin-top: 17px;
+    }
+    & .btn-group + a[data-toggle="collapse"] .collapse-indicator,
+    & .btn-group + a[data-toggle="collapse"].collapsed .collapse-indicator {
+        margin-right: 90px;
     }
     .plan-task-icon {
         vertical-align: top;

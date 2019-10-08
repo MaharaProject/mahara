@@ -175,6 +175,9 @@ $logged-in-height-mobile: 100px;
 
 .dashboard-editable {
     margin-top: $grid-gutter-width;
-    padding: ($grid-gutter-width - 10) 0;
     border-top: 1px solid $btn-secondary-border;
+
+    #editdashboard {
+        margin-top: 0;
+    }
 }
