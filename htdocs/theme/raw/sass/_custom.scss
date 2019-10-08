@@ -38,6 +38,8 @@
     .plan-task-icon {
         vertical-align: top;
         padding-top: 4px;
+        z-index: 3;
+        position: relative;
     }
     .plan-task-heading {
         max-width: 60%;

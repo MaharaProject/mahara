@@ -65,7 +65,8 @@ jQuery(document).on('pageupdated', function(e, data) {
     enableCheckBoxes();
 });
 
-jQuery(function() {
-    // On page load
+jQuery(window).on('blocksloaded', {}, function() {
+"use strict";
+    // after all blocks are loaded
     enableCheckBoxes();
 });
