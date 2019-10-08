@@ -60,9 +60,6 @@
     .list-group .list-group-item {
         border-left: 0;
         border-right: 0;
-        &:first-child {
-            border-top:0;
-        }
     }
     > .card-body,
     > .block > .card-body {
@@ -80,10 +77,5 @@
         .has-attachment {
             margin: 0;
         }
-    }
-
-    // pdf blocks need padding taken away
-    &.bt-pdf .block > .card-body {
-      padding: 0;
     }
 }
