@@ -309,7 +309,6 @@
     }
 }
 
-.card-header + .block > .list-group .list-group-item:first-child,
 .list-group + .card-footer {
     border-top-width: 0;
 }
@@ -374,21 +373,8 @@
     cursor: pointer;
 }
 
-// wallpost block borders
-.card.card-secondary .list-group .wallpost:first-child {
-    border-top: 1px solid $list-group-border;
-}
 .card.bt-wall > .block .list-group:last-child .list-group-item:last-child {
     border-bottom: 1px solid $list-group-border;
-}
-
-.bt-taggedposts .list-group,
-.taggedposts.list-group,
-.blog .list-group,
-.bt-plans .list-group,
-.resume-content .list-group {
-    border-top: 1px solid $list-group-border-color;
-    margin-top: -1px;
 }
 
 .bt-entireresume,
@@ -397,11 +383,6 @@
         h4.title {
             font-weight: bold;
             margin: 10px 0;
-        }
-        .list-group-item {
-            &.flush {
-                border: 0;
-            }
         }
         .resume-content {
             h5.title {
@@ -461,4 +442,37 @@
             }
         }
     }
+}
+
+// Rmove some list's first child top border when they don't have anything between card header and list
+.card.card-secondary {
+  &.bt-recentposts, &.bt-recentposts-editor,
+  &.bt-recentforumposts, &.bt-recentforumposts-editor,
+  &.bt-navigation, &.bt-navigation-editor,
+  &.bt-entireresume, &.bt-entireresume-editor,
+  &.bt-resumefield, &.bt-resumefield-editor,
+  &.bt-filedownload, &.bt-filedownload-editor,
+  &.bt-folder, &.bt-folder-editor,
+  &.bt-myviews, &.bt-myviews-editor,
+  &.bt-newviews, &.bt-newviews-editor,
+  &.bt-inbox, &.bt-inbox-editor,
+  &.bt-watchlist, &.bt-watchlist-editor {
+    .list-group {
+      .list-group-item:first-child,
+      + .list-group-item:first-child,
+      .block-header:first-child + .list-group-item {
+        border-top: 0;
+      }
+    }
+  }
+  // except list in list
+  &.bt-entireresume, &.bt-entireresume-editor {
+    .list-group .list-group {
+      .list-group-item:first-child,
+      + .list-group-item:first-child,
+      .block-header:first-child + .list-group-item {
+        border-top: 1px solid $list-group-border-color;
+      }
+    }
+  }
 }

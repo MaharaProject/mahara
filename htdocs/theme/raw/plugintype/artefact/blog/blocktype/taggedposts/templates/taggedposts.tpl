@@ -51,7 +51,7 @@
                 justdetails=$justdetails
                 displayiconsonly=true}
         {/if}
-        <div class="post list-group-item">
+        <div class="post list-group-item flush">
             <h4 class="title">
                 {if !($editing)}
                      <a class="modal_link inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
