@@ -54,7 +54,7 @@ if ($source === null) {
     throw new SimpleSAML_Error_AuthSource($sourceId, 'Could not find authentication source.');
 }
 
-if (!($source instanceof sspmod_saml_Auth_Source_SP)) {
+if (!($source instanceof \SimpleSAML\Module\saml\Auth\Source\SP)) {
     throw new SimpleSAML_Error_AuthSource($sourceId,
         'The authentication source is not a SAML Service Provider.');
 }
