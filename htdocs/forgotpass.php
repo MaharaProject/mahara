@@ -72,9 +72,9 @@ if ($SESSION->get('forgotpasskey')) {
             )
         )
     );
-
+    $form = pieform($form);
     $smarty = smarty();
-    $smarty->assign('forgotpasschange_form', pieform($form));
+    $smarty->assign('forgotpasschange_form', $form);
     $smarty->assign('heading', get_string('changepassword'));
     $smarty->display('forgotpass.tpl');
     exit;
@@ -214,8 +214,8 @@ function forgotpasschange_submit(Pieform $form, $values) {
     throw new SystemException('User "' . $user->username
         . ' tried to change their password, but the attempt failed');
 }
-
+$form = pieform($form);
 $smarty = smarty();
-$smarty->assign('forgotpass_form', pieform($form));
+$smarty->assign('forgotpass_form', $form);
 $smarty->assign('heading', get_string('forgotusernamepassword'));
 $smarty->display('forgotpass.tpl');

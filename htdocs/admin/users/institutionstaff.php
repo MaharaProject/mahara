@@ -22,11 +22,9 @@ $s = institution_selector_for_page(param_alphanum('institution', false),
                                    get_config('wwwroot') . 'admin/users/institutionstaff.php');
 $institution = $s['institution'];
 
-$smarty = smarty();
-
-setpageicon($smarty, 'icon-university');
-
 if ($institution === false) {
+    $smarty = smarty();
+    setpageicon($smarty, 'icon-university');
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
 }
@@ -67,6 +65,13 @@ $form = array(
     )
 );
 
+function staffusers_validate(Pieform $form, $values) {
+    // If the institution has no members show error
+    if (!(get_column('usr_institution', 'usr', 'institution', $values['institution']))) {
+        $form->set_error(null, get_string('nousersselected', 'admin'));
+    }
+}
+
 function staffusers_submit(Pieform $form, $values) {
     global $SESSION, $USER;
 
@@ -89,12 +94,14 @@ function staffusers_submit(Pieform $form, $values) {
     $SESSION->add_ok_msg(get_string('staffusersupdated', 'admin'));
     redirect('/admin/users/institutionstaff.php?institution=' . $inst);
 }
-
+$form = pieform($form);
+$smarty = smarty();
+setpageicon($smarty, 'icon-university');
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs'] . '
 jQuery(function($) {
   formchangemanager.add(\'staffusers\');
   formchangemanager.unbindForm(\'staffusers\');
 });');
-$smarty->assign('staffusersform', pieform($form));
+$smarty->assign('staffusersform', $form);
 $smarty->display('admin/users/institutionstaff.tpl');
