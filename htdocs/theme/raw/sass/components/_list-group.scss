@@ -145,10 +145,11 @@
         font-size: $font-size-sm;
         display: block;
         padding: 10px 15px;
+        color: $link-color;
         &:hover {
             background: #efefef;
             text-decoration: none;
-            color: scale-color($link-color, $lightness: -16%);
+            color:$link-hover-color;
         }
         small {
             color: $link-color;

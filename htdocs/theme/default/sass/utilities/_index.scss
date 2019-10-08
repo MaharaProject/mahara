@@ -1,6 +1,5 @@
 
 @import "../typography/tables";
-@import "../typography/typography";
 
 // General customisation and component files go here...
 @import "../layout/footer";
@@ -9,13 +8,11 @@
 
 // cards are a very commonly used layout component
 @import "../layout/card/card";
-@import "../layout/card/card-collapse"; // for collapsible cards and collapsible fieldsets
 @import "../layout/card/card-header";
 @import "../layout/card/card-secondary";
 @import "../layout/card/card";
 
 // Navigation
-@import "../layout/nav/main-nav";
 @import "../layout/nav/nav-tabs";
 
 // Components - small reusable design elements
@@ -23,7 +20,6 @@
 @import "../components/btn";
 @import "../components/indicator";
 @import "../components/list-group";
-@import "../components/toggles";
 
 // Feature related sass. We avoid this where we can in favour of reusable components
 @import "../features/dashboard-widget";

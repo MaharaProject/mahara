@@ -10,7 +10,11 @@
   }
 }
 
-.card-quarter .card-header a {
-  font-family: $font-family-sans-serif;
-  font-weight: 300;
+.card-collection,
+.card-view {
+  .card-header {
+    .title-link {
+      font-family: $font-family-sans-serif;
+    }
+  }
 }
