@@ -1,35 +1,12 @@
 .footer {
-    background-color: $site-footer-bg;
     .footer-inner {
         padding: 20px 10px;
 
         .nav-link {
-            color: $site-footer-color;
-                font-weight: 700;
-            &:hover,
-            &:focus {
-                background-color: $site-footer-hover-bg;
-                color: $site-footer-hover-color;
-            }
-        }
-        .metadata {
-            color: $site-footer-color;
+            font-weight: 700;
         }
     }
     &.upgrade-footer a {
         font-weight: 700;
-    }
-}
-
-
-// admin footer
-.admin {
-    .footer {
-        .footer-inner {
-            padding: 20px 10px;
-            background: none;
-            border: 0;
-            border-radius: 0;
-        }
     }
 }

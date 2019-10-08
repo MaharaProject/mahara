@@ -13,11 +13,6 @@
     }
 }
 
-.card-header .help a {
-    border: 0;
-}
-
-
 // sidebar card headings
 .sidebar .card > .card-header {
     @include border-top-radius(0);
@@ -35,16 +30,6 @@
 
     .text-midtone {
         color: #FFFFFF;
-    }
-}
-
-
-.card.collapsible {
-    .card-header-nested,
-    .card-header {
-        > a.outer-link {
-            border-color: #ddd;
-        }
     }
 }
 

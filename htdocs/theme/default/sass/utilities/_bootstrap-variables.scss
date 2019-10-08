@@ -29,8 +29,6 @@ $headings-color:          #333333;
 //
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 
-$border-radius-base:        0.1875rem;
-
 //== Dropdowns
 //
 //## Dropdown menu container and contents.
@@ -43,12 +41,16 @@ $dropdown-link-hover-color:      scale-color($gray-700, $lightness: -5%);
 //##
 
 //== Tabs
-$nav-tabs-border-color:                     #ddd;
-
-$nav-tabs-link-hover-border-color:          $gray-100;
+$nav-tabs-border-color:             $theme-accent-color;
+$nav-tabs-border-width:             2px;
+$nav-tabs-border-radius:            $border-radius;
+$nav-tabs-link-hover-border-color:  $theme-accent-color;
+$nav-tabs-link-active-color:        $theme-text-color;
+$nav-tabs-link-active-bg:           scale-color($theme-accent-color, $lightness: 60%);
+$nav-tabs-link-active-border-color: transparent transparent $theme-accent-color transparent;
 
 //== Pills
-$nav-pills-border-radius:                   $border-radius-base;
+$nav-pills-border-radius:           0.1875rem;
 
 //== Progress bars
 //
