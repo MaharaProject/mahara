@@ -41,7 +41,7 @@
             formatSubTitle: function (subTitle, obj) { return '<div class="metadata">' + subTitle + '</div>'; },
             formatBodyContent: function (bodyCnt, obj) {
               if (obj.gridlayout) {
-                  var grid = $('<div class="grid-stack"></div>');
+                  var grid = $('<div id="grid_' + obj.assignID + '" class="grid-stack"></div>');
                   var options = {
                       verticalMargin: 10,
                       float: true,

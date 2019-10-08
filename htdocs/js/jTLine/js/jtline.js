@@ -295,6 +295,7 @@
                         selectedContent.removeClass('enter-left enter-right');
                         selectedContent.addClass('selected');
                         evdone = true;
+                        $(window).trigger('timelineviewresizeblocks');
                     }
                 });
                 // height of the version changes after it becomes visible
@@ -431,6 +432,7 @@
                                     timeline.find('.cd-timeline-navigation').find('.next').addClass('inactive');
                                 }
                             });
+                            $(window).trigger('timelineviewresizeblocks');
                         }
                         else {
                             $(obj).html("Error fetching data");
