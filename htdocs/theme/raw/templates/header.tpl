@@ -29,16 +29,20 @@
         {/if}
         {if $SITEOUTOFSYNC}
             <div class="site-message alert alert-warning" role="alert">
-                {str tag=siteoutofsyncfor section=error arg1=$SITEOUTOFSYNC}
+                <div class="container">
+                    {str tag=siteoutofsyncfor section=error arg1=$SITEOUTOFSYNC}
+                </div>
             </div>
         {/if}
         {if $SITECLOSED}
             <div class="site-message alert alert-danger" role="alert">
-                {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
+                <div class="container">
+                    {if $SITECLOSED == 'logindisabled'}{str tag=siteclosedlogindisabled section=mahara arg1="`$WWWROOT`admin/upgrade.php"}{else}{str tag=siteclosed}{/if}
+                </div>
             </div>
         {/if}
         {if $SITETOP}
-            <div id="switchwrap">{$SITETOP|safe}</div>
+           <div id="switchwrap">{$SITETOP|safe}</div>
         {/if}
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
