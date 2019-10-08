@@ -1467,11 +1467,12 @@ function auth_saml_openssl_x509_fingerprint($cert, $hash) {
    $bin = base64_decode($cert);
    return hash($hash, $bin);
 }
-
+$discofileexists = false;
 if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php')) {
     require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php');
+    $discofileexists = true;
 }
-if (class_exists('SimpleSAML\XHTML\IdPDisco')) {
+if ($discofileexists && class_exists('SimpleSAML\XHTML\IdPDisco')) {
     class PluginAuthSaml_IdPDisco extends SimpleSAML\XHTML\IdPDisco
     {
 
@@ -1504,7 +1505,7 @@ if (class_exists('SimpleSAML\XHTML\IdPDisco')) {
         }
     }
 }
-else {
+else if ($discofileexists) {
     global $SESSION;
     $SESSION->add_msg_once(get_string('errorupdatelib', 'auth.saml'), 'error', false);
 }
