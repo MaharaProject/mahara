@@ -46,26 +46,56 @@
     color: $gray-500;
 }
 
+.alert {
+    position: relative;
+    padding: .75rem 1.25rem .75rem 3rem;
+
+    &:before {
+      @include fonttype(solid);
+      position: absolute;
+      left: 20px;
+      top: 15px;
+      font-size: 1.33333em;
+      line-height: .75em;
+    }
+}
+
 // overrides bootstrap calculations so this is same as states
 .alert-success {
     color: scale-color($success, $lightness: -30%);
     background-color: scale-color($success, $lightness: 70%);
     border-color: scale-color($success, $lightness: 50%);
+    &:before {
+      content: fa-content($fa-var-check);
+      color: scale-color($success, $lightness: -30%);
+    }
 }
 .alert-info {
     color: scale-color($info, $lightness: -30%);
     background-color: scale-color($info, $lightness: 70%);
     border-color: scale-color($info, $lightness: 50%);
+    &:before {
+      content: fa-content($fa-var-info-circle);
+      color: scale-color($info, $lightness: -30%);
+    }
 }
 .alert-warning {
     color: scale-color($warning, $lightness: -40%);
     background-color: scale-color($warning, $lightness: 85%);
     border-color: scale-color($warning, $lightness: 50%);
+    &:before {
+      content: fa-content($fa-var-exclamation-triangle);
+      color: scale-color($warning, $lightness: -40%);
+    }
 }
 .alert-danger {
     color: scale-color($danger, $lightness: -30%);
     background-color: scale-color($danger, $lightness: 70%);
     border-color: scale-color($danger, $lightness: 50%);
+    &:before {
+      content: fa-content($fa-var-times);
+      color: scale-color($danger, $lightness: -30%);
+    }
 }
 .alert-submitted {
     background-color: $state-submitted-bg;

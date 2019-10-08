@@ -96,8 +96,7 @@
 
 .card {
     .card-header:before {
-        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free" !important;
-        font-weight: 900;
+        @include fonttype(solid);
         color: rgba(255, 255, 255, 0.6);
         padding-right: 5px;
     }
@@ -212,10 +211,8 @@
     }
 }
 .card.card-regular .card-header:before {
-    font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free" !important;
-    font-weight: 400;
+    @include fonttype(regular);
 }
 .card.card-brand .card-header:before {
-    font-family: "Font Awesome 5 Brands Regular", "Font Awesome 5 Free" !important;
-    font-weight: 400;
+    @include fonttype(brands);
 }

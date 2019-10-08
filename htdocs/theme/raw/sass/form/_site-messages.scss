@@ -3,10 +3,42 @@
     top: 0;
     width: 100%;
     z-index: 1001;
+
     .site-message.alert {
         margin-bottom: 0;
         border-radius: 0;
-        padding: 5px 15px;
+        padding: 6px 1.25rem;
+        border: 0;
+
+        // take away default alert icon so it can be aligned with different break points
+        &:before {
+            display: none;
+        }
+        // puts the alert icons into the container with break points
+        .container:before {
+            @include fonttype(solid);
+            position: relative;
+            top: 1px;
+            font-size: 1.33333em;
+            line-height: .75em;
+            padding-right: 5px;
+        }
+        &.alert-success .container:before {
+            content: fa-content($fa-var-check);
+            color: scale-color($success, $lightness: -30%);
+        }
+        &.alert-info .container:before {
+            content: fa-content($fa-var-info-circle);
+            color: scale-color($info, $lightness: -30%);
+        }
+        &.alert-warning .container:before {
+            content: fa-content($fa-var-exclamation-triangle);
+            color: scale-color($warning, $lightness: -40%);
+        }
+        &.alert-danger .container:before {
+            content: fa-content($fa-var-times);
+            color: scale-color($danger, $lightness: -30%);
+        }
     }
     @include media-breakpoint-down(sm) {
         display: none;

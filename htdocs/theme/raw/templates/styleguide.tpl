@@ -939,8 +939,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
 This is used to indicate that you should make the recommended change.
 ```
 <div class="admin-warning alert alert-warning">
-    <h3>Warning</h3>
-    <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span> This is a warning alert.
+    This is a warning alert.
 </div>
 ```
 </section>
@@ -950,8 +949,7 @@ This is used to indicate that you should make the recommended change.
 Used to show that there is an error, which must be fixed before you can continue.
 ```
 <div class="alert alert-danger">
-    <h3>Danger</h3>
-    <span class="icon icon-lg icon-times text-danger left" role="presentation" aria-hidden="true"></span>This is a danger alert.
+    This is a danger alert.
 </div>
 ```
 </section>
@@ -961,8 +959,7 @@ Used to show that there is an error, which must be fixed before you can continue
 Used to show that an action was successful.
 ```
 <div class="alert alert-success">
-    <h3>Success</h3>
-    <span class="icon icon-lg icon-check text-success left" role="presentation" aria-hidden="true"></span> This is a success alert.
+    This is a success alert.
 </div>
 ```
 </section>
@@ -972,8 +969,7 @@ Used to show that an action was successful.
 Used to show information about Mahara. Usually, this is only shown to administrators.
 ```
 <div class="alert alert-info">
-    <h3>Info</h3>
-    <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span> This is a info alert.
+    This is a info alert.
 </div>
 ```
 </section>
