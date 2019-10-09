@@ -248,6 +248,24 @@ class BehatAdmin extends BehatBase {
                     ),
                 ),
             ),
+            'search' => array (
+                'elasticsearch' => array(
+                    'indexname' => array(),
+                    'types' => array(
+                        'usr',
+                        'interaction_instance',
+                        'interaction_forum_post',
+                        'group',
+                        'view',
+                        'artefact',
+                        'block_instance',
+                        'collection',
+                    ),
+                    'cronlimit' => array(),
+                    'shards' => array(),
+                    'replicashards' => array(),
+                ),
+            ),
         );
         // if artefact internal profilemandatory is set we need to make sure that firstname/lastname/email are included.
         if (!empty($settings['artefact']['internal']['profilemandatory'])) {
@@ -262,6 +280,12 @@ class BehatAdmin extends BehatBase {
             $mandatory = array('firstname', 'lastname', 'email');
             $values = array_merge($mandatory, $values);
             $settings['artefact']['internal']['profilepublic'] = implode(',', $values);
+        }
+        // if search elasticsearch types set we need to make sure to use only valid ones
+        if (!empty($settings['search']['elasticsearch']['types'])) {
+            $values = explode(',', $settings['search']['elasticsearch']['types']);
+            $values = array_intersect($values, $allowsettings['search']['elasticsearch']['types']);
+            $settings['search']['elasticsearch']['types'] = implode(',', $values);
         }
 
         // Update plugin settings

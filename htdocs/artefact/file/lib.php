@@ -126,39 +126,13 @@ class PluginArtefactFile extends PluginArtefact {
     public static function set_quota_triggers() {
         set_config_plugin('artefact', 'file', 'quotanotifylimit', 80);
         set_config_plugin('artefact', 'file', 'quotanotifyadmin', false);
-
-        // Create triggers to reset the quota notification flag
         if (is_postgres()) {
             $sql = "DROP FUNCTION IF EXISTS {unmark_quota_exeed_upd_set}() CASCADE;";
             execute_sql($sql);
-
-            db_create_trigger(
-                'unmark_quota_exceed_upd_usr_set',
-                'AFTER', 'UPDATE', 'usr', "
-                UPDATE {usr_account_preference}
-                SET value = 0 FROM {artefact_config}
-                WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
-                AND {usr_account_preference}.usr = NEW.id
-                AND {artefact_config}.plugin = 'file'
-                AND {artefact_config}.field = 'quotanotifylimit'
-                AND CAST(NEW.quotaused AS float)/CAST(NEW.quota AS float) < CAST({artefact_config}.value AS float)/100;"
-            );
         }
         else {
             $sql = "DROP TRIGGER IF EXISTS {unmark_quota_exceed_upd_set}";
             execute_sql($sql);
-
-            db_create_trigger(
-                'unmark_quota_exceed_upd_usr_set',
-                'AFTER', 'UPDATE', 'usr', "
-                UPDATE {usr_account_preference}, {artefact_config}
-                SET {usr_account_preference}.value = 0
-                WHERE {usr_account_preference}.field = 'quota_exceeded_notified'
-                AND {usr_account_preference}.usr = NEW.id
-                AND {artefact_config}.plugin = 'file'
-                AND {artefact_config}.field = 'quotanotifylimit'
-                AND NEW.quotaused/NEW.quota < {artefact_config}.value/100;"
-            );
         }
     }
 

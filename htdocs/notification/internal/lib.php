@@ -66,34 +66,27 @@ class PluginNotificationInternal extends PluginNotification {
         return $messageid;
     }
 
+    /**
+     * The pseudo trigger function that should work like how triggers worked before
+     * But instead of things happening automatically at db level
+     * we call the command at the dml.php level to have some control over it
+     * @param string $id  The id of the user to update
+     * @param string $savetype Whether we are doing an insert / update / or delete
+     * - Note: in this instance of the pseudo_trigger() we don't care about the $savetype
+     *         as we can work out the current state via an SQL query
+     */
+    public static function pseudo_trigger($id, $savetype = 'insert') {
+        $usr = get_field('notification_internal_activity', 'usr', 'id', $id);
+        execute_sql("UPDATE {usr} SET unread = (
+                        SELECT SUM(counts) FROM (
+                            SELECT COUNT(*) AS counts FROM {module_multirecipient_userrelation} WHERE \"role\" = 'recipient' AND \"read\" = ? AND usr = ?
+                            UNION
+                            SELECT COUNT(*) AS counts FROM {notification_internal_activity} WHERE \"read\" = ? AND usr = ?
+                        ) AS countsum
+                    ) WHERE id = ?", array(0, $usr, 0, $usr, $usr), false);
+    }
+
     public static function postinst($prevversion) {
-        if ($prevversion == 0) {
-            // Add triggers to update user unread message count when updating
-            // notification_internal_activity
-            db_create_trigger(
-                'update_unread_insert',
-                'AFTER', 'INSERT', 'notification_internal_activity', '
-                IF NEW.read = 0 THEN
-                    UPDATE {usr} SET unread = unread + 1 WHERE id = NEW.usr;
-                END IF;'
-            );
-            db_create_trigger(
-                'update_unread_update',
-                'AFTER', 'UPDATE', 'notification_internal_activity', '
-                IF OLD.read = 0 AND NEW.read = 1 THEN
-                    UPDATE {usr} SET unread = unread - 1 WHERE id = NEW.usr;
-                ELSEIF OLD.read = 1 AND NEW.read = 0 THEN
-                    UPDATE {usr} SET unread = unread + 1 WHERE id = NEW.usr;
-                END IF;'
-            );
-            db_create_trigger(
-                'update_unread_delete',
-                'AFTER', 'DELETE', 'notification_internal_activity', '
-                IF OLD.read = 0 THEN
-                    UPDATE {usr} SET unread = unread - 1 WHERE id = OLD.usr;
-                END IF;'
-            );
-        }
     }
 
     public static function get_event_subscriptions() {
