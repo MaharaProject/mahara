@@ -17,6 +17,7 @@ class TinyMCE_SpellChecker_EnchantEngine extends TinyMCE_SpellChecker_Engine {
 	 * @param Array $words Array of words to check.
 	 * @return Name/value object with arrays of suggestions.
 	 */
+
 	public function getSuggestions($lang, $words) {
 		$suggestions = array();
 		$enchant = enchant_broker_init();

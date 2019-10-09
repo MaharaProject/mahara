@@ -1,37 +1,42 @@
-.mce-ico.mce-i-icon.tooltoggle-icon {
-    @extend .icon;
-    @extend .icon-lg;
-    @extend .icon-angle-down;
 
-    &:before {
-        display: block;
-        text-align: center;
-    }
+.flipicon {
+    transform: rotateZ(180deg);
 }
 
-.mce-panel.mce-tinymce {
+.tox-tinymce {
     background: $card-bg;
     border: 0;
-    .mce-panel {
+
+    .tox-toolbar-overlord .tox-sidebar-wrap .tox-statusbar {
         background: $card-header-bg;
     }
 
-    .mce-statusbar.mce-container{
+    .tox-statusbar .tox-editor-container{
         margin-top: 5px;
         background: $card-header-bg;
     }
 }
 
+.tox-toolbar-overlord {
+    background-color: $card-header-bg;
+}
+
+.tox .tox-toolbar,
+.tox-statusbar
+ {
+    background-color: #f9f9f9 !important;
+}
+
 // Ensure that when tinyMce is displayed correctly on IE11
 // When it is on fullscreen mode
-.mce-fullscreen {
+.tox-fullscreen {
     .modal-docked .modal-body,
     .page-modal .modal-body{
         overflow: visible;
     }
 }
 
-.mce-fullscreen.mce-tinymce {
+.tox-fullscreen.tox-tinymce {
     z-index: $zindex-tooltip + 10; // needs to be above all bootstrap components
 }
 
@@ -43,26 +48,75 @@
     min-height: 300px;
 }
 
-label.sr-only + div.mce-tinymce {
+label.sr-only + div.tox-tinymce {
     max-width: 100%;
     width: 99%;
 }
 
-.mce-container .mce-wordcount {
+.tox-editor-container .tox-wordcount {
     text-align: right;
 }
 
-.mce-active .mce-ico.mce-i-icon.tooltoggle-icon {
+.tox-active .tox-icon.tox-tbtn {
     transform: rotate(180deg);
     &:before {
         margin-top: 1px;
     }
 }
 
-.mce-btn-group {
+.tox-toolbar__group {
     border: 0px !important;
 }
 
-.mce-btn:not(.mce-primary) {
+.tox-tbtn:not(.tox-primary) {
     background-color: transparent !important;
+}
+
+//modal pop up
+.tox .tox-dialog.mahara-dialog {
+
+    .tox-dialog__title {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 16px;
+        font-weight: 300;
+    }
+
+    .tox-textfield,
+    .tox-form__group .tox-selectfield select {
+        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 14px;
+    }
+}
+
+.tox-dialog__footer-end {
+    flex-direction: row-reverse;
+}
+
+.tox-dialog.mahara-dialog .tox-button {
+    background-color: $btn-primary-bg;
+    border-color: $btn-primary-border;
+    &:hover {
+        background-color: scale-color($btn-primary-bg, $lightness: -32%) !important;
+        border-color: $btn-primary-border !important;
+    }
+}
+
+.tox-dialog.mahara-dialog .tox-button.tox-button--secondary {
+    background-color: transparent;
+    border-color: transparent;
+    text-decoration-line: underline;
+    color: $btn-primary-bg;
+    box-shadow: none;
+    &:hover {
+        background-color: scale-color($btn-secondary-bg, $lightness: -10.05) !important;
+        border-color: transparent !important;
+    }
+}
+.tox-dialog.mahara-dialog .tox-button.tox-button--icon.tox-button--naked {
+    background-color: transparent;
+    border-color: transparent;
+    &:hover {
+        background-color: scale-color($btn-secondary-bg, $lightness: -10.05) !important;
+        border-color: transparent !important;
+    }
 }

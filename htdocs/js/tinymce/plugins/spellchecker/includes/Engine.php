@@ -76,7 +76,6 @@ class TinyMCE_SpellChecker_Engine {
 		$method = self::getParam("method", "spellcheck");
 		$lang = self::getParam("lang", "en_US");
 		$text = self::getParam("text");
-
 		if ($method == "spellcheck") {
 			try {
 				if (!$text) {
@@ -84,6 +83,7 @@ class TinyMCE_SpellChecker_Engine {
 				}
 
 				if (!$engine->isSupported()) {
+			//		log_debug("err");
 					throw new Exception("Current spellchecker isn't supported.");
 				}
 
