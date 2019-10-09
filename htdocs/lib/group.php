@@ -2446,6 +2446,58 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
     return $filtered;
 }
 
+function group_get_extended_data($data) {
+    global $USER;
+
+    $groupids = array();
+    if (!empty($data) && is_array($data)) {
+        foreach ($data as $group) {
+            $groupids[] = $group->id;
+        }
+    }
+    if (!empty($groupids)) {
+        $groups =  get_records_sql_array("
+            SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+            g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.role, g1.membershiptype, g1.membercount, COUNT(gmr.member) AS requests,
+            g1.editwindowstart, g1.editwindowend
+            FROM (
+                SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                g.hidemembers, g.hidemembersfrommembers, g.urlid, t.role, t.membershiptype, COUNT(gm.member) AS membercount,
+                g.editwindowstart, g.editwindowend
+                FROM {group} g
+                LEFT JOIN {group_member} gm ON (gm.group = g.id)
+                LEFT JOIN (
+                    SELECT g.id, 'admin' AS membershiptype, gm.role AS role
+                    FROM {group} g
+                    INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                    UNION
+                    SELECT g.id, 'member' AS membershiptype, gm.role AS role
+                    FROM {group} g
+                    INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
+                    UNION
+                    SELECT g.id, 'invite' AS membershiptype, gmi.role
+                    FROM {group} g
+                    INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
+                    UNION
+                    SELECT g.id, 'request' AS membershiptype, NULL as role
+                    FROM {group} g
+                    INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
+                ) t ON t.id = g.id
+                WHERE g.id IN (" . implode($groupids, ',') . ")
+                GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
+                g.hidemembers, g.hidemembersfrommembers, g.urlid, t.role, t.membershiptype, g.editwindowstart, g.editwindowend
+            ) g1
+            LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
+            GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
+            g1.hidemembers, g1.hidemembersfrommembers, g1.urlid, g1.role, g1.membershiptype, g1.membercount, g1.editwindowstart, g1.editwindowend
+            ORDER BY g1.name",
+            array($USER->get('id'), $USER->get('id'), $USER->get('id'), $USER->get('id'))
+        );
+        return $groups;
+    }
+    return array();
+}
+
 function group_get_user_admintutor_groups() {
     $groups = array();
 
