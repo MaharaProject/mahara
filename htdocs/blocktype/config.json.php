@@ -30,7 +30,7 @@ if (!empty($direction)) {
 // return updated info
 $type = array();
 $blocks = get_records_sql_array("SELECT b.name, b.artefactplugin, bc.sortorder,
-                                  (SELECT COUNT(bi.*) FROM {block_instance} bi WHERE bi.blocktype = b.name) AS blockcount
+                                  (SELECT COUNT(*) FROM {block_instance} bi WHERE bi.blocktype = b.name) AS blockcount
                                   FROM {blocktype_installed} b
                                   JOIN {blocktype_installed_category} bc ON bc.blocktype = b.name
                                   WHERE b.active = 1
