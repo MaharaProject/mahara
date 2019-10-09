@@ -14,6 +14,7 @@ define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'institution.php');
 
 $fromdate  = param_variable('fromdate', null);
 $todate   = param_variable('todate', null);
@@ -33,16 +34,29 @@ if ($versions->count > 0) {
     end($versions->data);
     $lastkey = key($versions->data);
     reset($versions->data);
+    $language = current_language();
+    if ($language != 'en.utf8') {
+        $langmonths = explode(',', get_string('element.date.monthnames', 'pieforms'));
+        $engmonths = explode(',', get_string_from_language('en.utf8', 'element.date.monthnames', 'pieforms'));
+        $months = array_combine($engmonths, $langmonths);
+    }
     foreach ($versions->data as $key => $value) {
         $view = new View($viewid);
         $value->blockdata_formatted = $view->format_versioning_data($value->blockdata, $key);
+        $datestr = strftime('%e %B', strtotime($value->ctime));
+        if ($language != 'en.utf8') {
+            if (preg_match('/(\w+)$/', $datestr, $matches)) {
+                $datestr = str_replace($matches[1], $months[$matches[1]], $datestr);
+            }
+        }
+
         $data[$key] = array(
             "isSelected" => ($key == $lastkey ? true : false),
             "taskTitle" => (isset($value->blockdata_formatted->title) ? $value->blockdata_formatted->title : $value->viewname),
             "taskSubTitle" => $view->display_author() . ', ' . format_date(strtotime($value->ctime)),
             "assignDate" => date('d/m/Y\TH:i', strtotime($value->ctime)),
             "assignID" => $value->id,
-            "taskShortDate" => date('j F', strtotime($value->ctime)),
+            "taskShortDate" => $datestr,
             "taskDetails" => $value->blockdata_formatted->html,
             "gridlayout" => isset($value->blockdata_formatted->newlayout),
         );
