@@ -1253,7 +1253,7 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
         $id = $dataobject->{$primarykey};
     }
     else {
-        $id = $mysqlid;
+        $id = isset($mysqlid) ? $mysqlid : $db->Insert_ID();
     }
     pseudo_trigger($table, $dataobject, (integer)$id, 'insert');
     return $replykey ? (integer)$id : true;
