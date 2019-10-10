@@ -15,7 +15,9 @@ $animation_speed: .3s !default;
 
 .grid-stack {
     position: relative;
-    min-height: 80vh;
+    &.gridedit {
+        min-height: 80vh;
+    }
 
     &.grid-stack-rtl {
         direction: ltr;

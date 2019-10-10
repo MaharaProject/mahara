@@ -279,4 +279,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         }
     }
 
+    public static function has_static_content() {
+        return false;
+    }
 }
