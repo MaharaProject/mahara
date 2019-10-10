@@ -49,7 +49,7 @@
         <div class="col">
             <div id="bottom-pane" data-role="workspace">
                 <div id="column-container" class="user-page-content">
-                    <div class="grid-stack">
+                    <div class="grid-stack gridedit">
                     </div>
                 </div>
             </div>

@@ -90,7 +90,7 @@ function initJs() {
         }
     });
 
-    $(window).on('shown.bs.collapse', function(e) {
+    $(window).on('hidden.bs.collapse shown.bs.collapse', function(e) {
         var grid = $(e.target).closest('.grid-stack');
         var id = grid.attr('id');
         //check we are not in timeline view
@@ -182,7 +182,7 @@ function updateBlockSizes(grid) {
             prevHeight = $(element).attr('data-gs-height'),
             height = Math.ceil(
               (
-                $(element).find('.grid-stack-item-content')[0].scrollHeight +
+                $(element).find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
                 grid.data('gridstack').opts.verticalMargin
               )
               /
@@ -191,7 +191,7 @@ function updateBlockSizes(grid) {
                 grid.data('gridstack').opts.verticalMargin
               )
             );
-            if (+prevHeight < height) {
+            if (+prevHeight != height) {
                 grid.data('gridstack').resize(element, +width, height);
             }
         }
