@@ -2,10 +2,10 @@
     .card-header {
         background-color: $theme-secondary-color;
         border-color: $theme-secondary-color;
-        color: #FFF;
+        color: $white;
 
         .text-midtone {
-          color: #FFF;
+          color: $white;
         }
     }
 }

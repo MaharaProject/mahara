@@ -1500,5 +1500,17 @@ function xmldb_core_upgrade($oldversion=0) {
         db_drop_trigger('unmark_quota_exceed_upd_usr_set', 'usr');
     }
 
+    if ($oldversion < 2019093003) {
+        log_debug('Remove "thin" theme font variant');
+        foreach (array('RobotoSlab', 'Raleway') as $font) {
+            if ($fontdata = get_record('skin_fonts', 'name', $font)) {
+                $config = unserialize($fontdata->variants);
+                unset($config['thin']);
+                $fontdata->variants = serialize($config);
+                update_record('skin_fonts', $fontdata, 'id');
+            }
+        }
+    }
+
     return $status;
 }

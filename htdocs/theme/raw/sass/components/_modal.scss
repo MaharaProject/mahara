@@ -82,6 +82,9 @@ $width-sm: 90%;
     }
     .btn.submit {
         margin-top: 15px;
+        &.unselect {
+            margin-top: 0;
+        }
     }
     .artefactchooser-search {
         .btn.submit {
@@ -183,16 +186,10 @@ $width-sm: 90%;
             opacity: 1;
             position: absolute;
             top: 1px;
-            left: -29px;
-            padding: 10px 7px 9px;
+            left: -26px;
+            padding: 8px 7px 14px;
             background: $modal-header-color;
-            border: 1px solid $modal-header-border-color;
-            border-right:0;
-
-            @include media-breakpoint-down(md) {
-                left:-22px;
-                padding: 10px 4px 9px 3px;
-            }
+            border: 0;
             .times {
                 color: $theme-text-midtone-color;
                 opacity:0.4;

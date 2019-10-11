@@ -1356,7 +1356,6 @@ function install_skins_default() {
         'bold'        => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
         'italic'      => array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
         'bolditalic'  => array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
-        'thin'        => array('variant' => 'thin', 'font-weight' => 'normal', 'font-style' => 'normal'),
         'light'       => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
         'lightitalic' => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
     );
@@ -1588,7 +1587,7 @@ function install_skins_default() {
     // Theme fonts
     $filetypes = array('EOT', 'SVG', 'TTF', 'WOFF', 'WOFF2', 'OTF');
     $robotoslabvariants = array();
-    foreach (array('bold', 'regular', 'light', 'thin') as $option) {
+    foreach (array('bold', 'regular', 'light') as $option) {
         $robotoslabvariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
             $robotoslabvariants[$option][$type] = 'robotoslab-' . $option . '.' . strtolower($type);
@@ -1668,7 +1667,7 @@ function install_skins_default() {
     );
 
     $ralewayvariants = array();
-    foreach (array('bold', 'regular', 'italic', 'light', 'lightitalic', 'thin') as $option) {
+    foreach (array('bold', 'regular', 'italic', 'light', 'lightitalic') as $option) {
         $ralewayvariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
             $ralewayvariants[$option][$type] = 'raleway-' . $option . '.' . strtolower($type);
