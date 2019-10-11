@@ -194,6 +194,9 @@ textarea.resizable {
     position: relative;
     label {
         display: block;
+        &.inline-label {
+            display: inline-block;
+        }
     }
     .form-group {
         padding: 0;

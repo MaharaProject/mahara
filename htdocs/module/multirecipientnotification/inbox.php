@@ -282,18 +282,22 @@ $searchdata = new stdClass();
 $searchdata->searchtext = $searchtext;
 $searchdata->searcharea = $searcharea;
 $searchdata->searchurl = 'inbox.php?type=' . $type . '&search=' . $searchtext . '&searcharea=';
-$searchdata->all_count = 0;
-$searchdata->sender_count = 0;
-$searchdata->recipient_count = 0;
-$searchdata->sub_count = 0;
-$searchdata->mes_count = 0;
+$searchdata->tabs = array();
 if ($searchtext !== null) {
     $searchresults = get_message_search($searchtext, $type, 0, null, "inbox.php", $USER->get('id'));
-    $searchdata->all_count = $searchresults['All_data']['count'];
-    $searchdata->sender_count = $searchresults['Sender']['count'];
-    $searchdata->recipient_count = $searchresults['Recipient']['count'];
-    $searchdata->sub_count = $searchresults['Subject']['count'];
-    $searchdata->mes_count = $searchresults['Message']['count'];
+    unset($searchresults['Recipient']);
+    foreach ($searchresults as $section => $value) {
+        $term = new stdClass();
+        $term->name = $section;
+        $term->count = $value['count'];
+        switch ($section) {
+            case 'All_data': $term->tag = 'labelall'; break;
+            case 'Sender': $term->tag = 'fromuser'; break;
+            case 'Subject': $term->tag = 'subject'; break;
+            case 'Message': $term->tag = 'labelmessage';
+        }
+        $searchdata->tabs[] = $term;
+    }
 }
 $smarty->assign('searchdata', $searchdata);
 $smarty->assign('deleteall', $deleteall);
