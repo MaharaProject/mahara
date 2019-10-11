@@ -51,3 +51,4 @@ $string['labelall']             = 'All';
 $string['labelmessage']         = 'Message';
 
 $string['multirecipientnotificationnotenabled'] = 'The module "multirecipientnotifications" needs to be installed and be active. If you are upgrading Mahara from a version older than 16.10.0, please upgrade to that point first and make sure the module is installed and active by visiting "Administration menu" → "Extensions" → "Plugin administration".';
+$string['subject'] = 'Subject';
