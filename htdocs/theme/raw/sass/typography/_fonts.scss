@@ -1,6 +1,5 @@
 $font-path: '../../raw/fonts';
 
-$thin: 100, normal;
 $light: 300, normal;
 $lightItalic: 300, italic;
 $regular: normal, normal;
@@ -16,7 +15,6 @@ $opensans: (
 );
 
 $robotoslab: (
-    robotoslab-thin: $thin,
     robotoslab-light: $light,
     robotoslab-regular: $regular,
     robotoslab-bold: $bold

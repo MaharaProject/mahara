@@ -1,11 +1,3 @@
-.icon {
-  &.text-danger,
-  &.text-success,
-  &.text-warning {
-    color: $theme-text-color;
-  }
-}
-
 // Makes the label red when a form error is shown
 .has-error {
   label {
@@ -13,31 +5,9 @@
   }
 }
 
-// Lighten the Administration link in the menu bar in the admin area
-div.admin-title a {
-  color:#FFFFFF;
-}
-
+// logged out login box help icon needs the right colour
 .loggedout {
     .help .icon-info-circle {
         color: inherit;
-    }
-}
-
-// Remove the weird smaller button in the approve friend request box
-.btn-text,
-button.btn-text:not(:disabled):not(.disabled) {
-    border: 0;
-    box-shadow: none;
-    &:active {
-        box-shadow: none;
-        background-color: transparent;
-        border-width: 0;
-        color: inherit;
-    }
-}
-#searchviews_matchalltags_container {
-    input {
-        margin-top: -20px;
     }
 }
