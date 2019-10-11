@@ -1187,7 +1187,8 @@ class Collection {
 
         handle_event('releasesubmission', array('releaseuser' => $releaseuser,
                                                 'id' => $this->get('id'),
-                                                'groupname' => $this->submittedgroup,
+                                                'hostname' => $this->submittedhost,
+                                                'groupname' => ($this->submittedgroup ? get_field('group', 'name', 'id', $this->submittedgroup) : ''),
                                                 'eventfor' => 'collection'));
 
         // We don't send out notifications about the release of remote-submitted Views & Collections

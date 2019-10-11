@@ -92,24 +92,37 @@ if ($institution || $add) {
         }
 
         function delete_submit(Pieform $form, $values) {
-            global $SESSION;
+            global $SESSION, $USER;
 
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
             $collectionids = get_column('collection', 'id', 'institution', $values['i']);
             $viewids = get_column('view', 'id', 'institution', $values['i']);
             $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
             $regdataids = get_column('institution_registration', 'id', 'institution', $values['i']);
+            $host = get_field('host', 'wwwroot', 'institution', $values['i']);
 
             db_begin();
+            require_once(get_config('libroot') . 'collection.php');
+            if ($submittedcolids = get_column('collection', 'id', 'submittedhost', $host)) {
+                foreach ($submittedcolids as $id) {
+                    $collection = new Collection($id);
+                    $collection->release($USER);
+                }
+            }
             if ($collectionids) {
-                require_once(get_config('libroot') . 'collection.php');
                 foreach ($collectionids as $collectionid) {
                     $collection = new Collection($collectionid);
                     $collection->delete();
                 }
             }
+            require_once(get_config('libroot') . 'view.php');
+            if ($submittedviewids = get_column('view', 'id', 'submittedhost', $host)) {
+                foreach ($submittedviewids as $id) {
+                    $view = new View($id);
+                    $view->release($USER);
+                }
+            }
             if ($viewids) {
-                require_once(get_config('libroot') . 'view.php');
                 foreach ($viewids as $viewid) {
                     $view = new View($viewid);
                     $view->delete();
@@ -172,6 +185,7 @@ if ($institution || $add) {
 
             execute_sql("UPDATE {group} SET institution = 'mahara' WHERE institution = ?", array($values['i']));
             delete_records('auth_instance', 'institution', $values['i']);
+
             delete_records('host', 'institution', $values['i']);
             delete_records('institution_locked_profile_field', 'name', $values['i']);
             delete_records('usr_institution_request', 'institution', $values['i']);
