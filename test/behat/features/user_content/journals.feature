@@ -33,6 +33,7 @@ Scenario: Add Journal block to the page
     And I select the radio "Mars journal"
     And I press "Save"
     And I display the page
+    And I wait "1" seconds
     Then I should see "Spacefood is kind of gross"
 
 # Adding a journal entry from a journal block on a portfolio page
