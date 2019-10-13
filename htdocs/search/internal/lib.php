@@ -931,7 +931,7 @@ class PluginSearchInternal extends PluginSearch {
                 name " . db_ilike() . " '%' || ? || '%'
                 OR description " . db_ilike() . " '%' || ? || '%'
                 OR shortname " . db_ilike() . " '%' || ? || '%'
-            ) AND deleted = 0" . $ltiwhere;
+            ) AND deleted = 0 " . $ltiwhere;
         $values = array($query_string, $query_string, $query_string);
 
         if (!$grouproles = join(',', array_keys($USER->get('grouproles')))) {
