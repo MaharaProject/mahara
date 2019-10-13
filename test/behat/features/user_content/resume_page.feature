@@ -142,6 +142,7 @@ Scenario: Editing Education and Employment info
     And I should not see "North American Cultural Studies"
     # Test whether Employment history shows address
     When I follow "Test Analyst at Catalyst IT"
+    And I wait "1" seconds
     Then I should see "Address: 150 Willis St"
     # Test whether Education history shows address
     When I follow "Machine Learning - Creation 2.1 (Masters of Philosophy) at University College"

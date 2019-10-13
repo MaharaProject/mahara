@@ -102,7 +102,7 @@ jQuery(function($) {
         'title':{$getstring['edit']},
         'alt':{$getstring['editspecific']}.replace('%s', item.name)
       });
-      edit.append($('<span>', {'class':'icon icon-cog icon-lg', 'role':'presentation'}));
+      edit.append($('<span>', {'class':'icon icon-pencil-alt icon-lg', 'role':'presentation'}));
       edit.append($('<span class="sr-only">' + {$getstring['editspecific']}.replace('%s', item.name) + '</span>'));
 
       edit.on('click', function (e) { e.preventDefault(); edititem(item); });
