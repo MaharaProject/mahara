@@ -26,6 +26,9 @@
                     {{if $institution}}
                         'institution': "{{$institution}}",
                     {{/if}}
+                    {{if $group}}
+                        'group': "{{$group}}",
+                    {{/if}}
                 }
             },
             processResults: function(data, page) {

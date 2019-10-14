@@ -538,3 +538,13 @@ div.toolbarhtml {
 #migrateinstitution_authinstance {
     max-width: 420px;
 }
+
+.activegrouplabels.noresults form .form-group {
+    padding: $card-spacer-y $card-spacer-x;
+    border-bottom: 1px solid $input-border-color;
+}
+
+.activegrouplabels form .form-group {
+    border-bottom: 0;
+    padding: 0;
+}

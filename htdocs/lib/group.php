@@ -1726,6 +1726,8 @@ function group_get_admins($groupids) {
  *                         the query to build this information.
  */
 function group_prepare_usergroups_for_display($groups) {
+    global $USER;
+
     if (!$groups) {
         return;
     }
@@ -1741,6 +1743,15 @@ function group_prepare_usergroups_for_display($groups) {
                 $group->admins[] = $admin;
             }
         }
+
+        if ($group->membershiptype == 'member' || $group->membershiptype == 'admin') {
+            if (!$labels = get_column('group_usr_label', 'label', 'usr', $USER->get('id'), 'group', $group->id)) {
+                $labels = array();
+            }
+            natcasesort($labels);
+            $group->labels = $labels;
+        }
+
         if ($group->membershiptype == 'member') {
             $group->canleave = group_user_can_leave($group->id);
         }
@@ -2211,6 +2222,7 @@ function group_current_group($cache=true) {
 }
 
 function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=0, $category='', $query_string='') {
+    global $USER;
 
     // Strangely, casting is only needed for invite, request and admin and only in
     // postgres
@@ -2231,6 +2243,17 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
     $ltijoin = is_plugin_active('lti', 'module') ? ' LEFT JOIN {lti_assessment} a ON g.id = a.group ' : '';
     $ltiwhere = is_plugin_active('lti', 'module') ? ' AND a.id IS NULL ' : '';
 
+    // Add active group label filters if needed
+    $activefilters = array();
+    $activefiltersql = '';
+    if ($activegrouplabels = (array)json_decode(get_account_preference($USER->get('id'), 'grouplabels'))) {
+        foreach ($activegrouplabels as $k => $label) {
+            $activefiltersql .= ($k == 0) ? ' WHERE' : ' OR';
+            $activefiltersql .= ' EXISTS (SELECT gl.label FROM {group_usr_label} gl WHERE gl.group = g.id AND gl.usr = "member" AND gl.label = ?) ';
+        }
+        $activefilters = $activegrouplabels;
+    }
+
     // Different filters join on the different kinds of association
     if ($filter == 'admin') {
         $sql = "
@@ -2238,8 +2261,9 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
                 SELECT g.id, $adminsql AS membershiptype, $empty AS reason, $adminsql AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                " . $activefiltersql . "
             ) t ON t.id = g.id";
-        $values = array($userid);
+        $values = array_merge(array($userid), $activefilters);
     }
     else if ($filter == 'member') {
         $sql = "
@@ -2247,12 +2271,14 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
                 SELECT g.id, 'admin' AS membershiptype, $empty AS reason, $adminsql AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                " . $activefiltersql . "
                 UNION
                 SELECT g.id, 'member' AS type, $empty AS reason, gm.role AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role != 'admin')
+                " . $activefiltersql . "
             ) t ON t.id = g.id";
-        $values = array($userid, $userid);
+        $values = array_merge(array($userid), $activefilters, array($userid), $activefilters);
     }
     else if ($filter == 'invite') {
         $sql = "
@@ -2279,19 +2305,23 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
                 SELECT g.id, 'admin' AS membershiptype, '' AS reason, 'admin' AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ? AND gm.role = 'admin')
+                " . $activefiltersql . "
                 UNION
                 SELECT g.id, 'member' AS membershiptype, '' AS reason, gm.role AS role
                 FROM {group} g
                 INNER JOIN {group_member} gm ON (g.id = gm.group AND gm.member = ? AND gm.role != 'admin')
+                " . $activefiltersql . "
                 UNION
                 SELECT g.id, 'invite' AS membershiptype, gmi.reason, gmi.role
                 FROM {group} g
                 INNER JOIN {group_member_invite} gmi ON (gmi.group = g.id AND gmi.member = ?)
+                " . $activefiltersql . "
                 UNION SELECT g.id, 'request' AS membershiptype, gmr.reason, '' AS role
                 FROM {group} g
                 INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
+                " . $activefiltersql . "
             ) t ON t.id = g.id";
-        $values = array($userid, $userid, $userid, $userid);
+        $values = array_merge(array($userid), $activefilters, array($userid), $activefilters, array($userid), $activefilters, array($userid), $activefilters);
     }
 
     $values[] = 0;
@@ -2371,11 +2401,12 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
  * @param int $offset The first group index in the current page to display
  * @param boolean $fromcache if yes, try to return the list from the cache first
  *                             or no, force to query database and update the cache
+ * @param array $grouplabels    An array of grouplabels to filter the results on. They filter on match all
  * @return array $usergroups    An array of groups the user belongs to.
  * Or if the $limit option is not empty
  * @return array, int $usergroups, $count  You can fetch the results as list($usergroups, $count)
  */
-function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=null, $offset=0, $fromcache=true) {
+function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=null, $offset=0, $fromcache=true, $grouplabels=array()) {
     global $USER;
 
     static $usergroups = array();
@@ -2384,6 +2415,18 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
 
     if (is_null($userid)) {
         $userid = $loggedinid;
+    }
+
+    // Add active group label filters if needed
+    $activefilters = array();
+    $activefiltersql = '';
+    if ($grouplabels) {
+        foreach ($grouplabels as $k => $label) {
+            $activefiltersql .= ($k == 0) ? ' AND (' : ' OR';
+            $activefiltersql .= ' EXISTS (SELECT gl.label FROM {group_usr_label} gl WHERE gl.group = g.id AND gl.usr = gm.member AND gl.label = ?) ';
+        }
+        $activefiltersql .= ') ';
+        $activefilters = $grouplabels;
     }
 
     if (!$fromcache || !isset($usergroups[$userid])) {
@@ -2397,9 +2440,9 @@ function group_get_user_groups($userid=null, $roles=null, $sort=null, $limit=nul
                 JOIN {grouptype_roles} gtr ON g.grouptype = gtr.grouptype AND gm.role = gtr.role
                 LEFT OUTER JOIN {group_member} gm1 ON gm1.group = gm.group AND gm1.member = ?" . $ltijoin . "
             WHERE gm.member = ?
-                AND g.deleted = 0" . $ltiwhere . "
+                AND g.deleted = 0 " . $ltiwhere . $activefiltersql . "
             ORDER BY g.name, gm.role = 'admin' DESC, gm.role, g.id",
-            array($loggedinid, $userid)
+            array_merge(array($loggedinid, $userid), $activefilters)
         );
         if ($groups) {
             foreach ($groups as $key => $group) {
@@ -3330,4 +3373,179 @@ function group_remove_user_from_existing_groups($userid = null) {
     $user = new User();
     $user->find_by_id($userid);
     $user->reset_grouproles();
+}
+
+function group_label_form($groupid) {
+    global $USER;
+
+    if (!$labels = get_column('group_usr_label', 'label', 'usr', $USER->get('id'), 'group', $groupid)) {
+        $labels = array();
+    }
+    natcasesort($labels);
+
+    $params = array();
+    $params['filter'] = param_alpha('filter', 'allmy');
+    $groupcategory = param_signed_integer('groupcategory', 0);
+    if ($groupcategory != 0) {
+        $params['groupcategory'] = $groupcategory;
+    }
+    $query = param_variable('query', '');
+    if ($query) {
+        $params['query'] = $query;
+    }
+    $paramsurl = get_config('wwwroot') . 'group/index.php' . ($params ? ('?' . http_build_query($params)) : '');
+    $form = array(
+        'name' => 'grouplabel',
+        'renderer'  => 'div',
+        'autofocus' => false,
+        'jsform'    => true,
+        'validatecallback' => 'group_label_validate',
+        'successcallback' => 'group_label_submit',
+        'jssuccesscallback' => 'group_label_update',
+        'jserrorcallback' => 'group_label_update',
+        'elements' => array(
+            'groupid' => array(
+                'type'   => 'hidden',
+                'value'  => $groupid,
+            ),
+            'paramsurl' => array(
+                'type'   => 'hidden',
+                'value'  => $paramsurl,
+            ),
+            'grouplabel' => array(
+                'type'          => 'autocomplete',
+                'title'         => get_string('addlabel', 'group'),
+                'ajaxurl'       => get_config('wwwroot') . 'group/addlabel.json.php',
+                'multiple'      => true,
+                'initfunction'  => 'translate_landingpage_to_tags',
+                'ajaxextraparams' => array(),
+                'extraparams' => array('tags' => true),
+                'group'         => $groupid,
+                'defaultvalue'  => $labels,
+                'hiddenlabel'   => true,
+                'mininputlength' => 2,
+            ),
+            'submit' => array(
+                'type' => 'submit',
+                'class' => 'btn-primary',
+                'value' => get_string('save', 'mahara'),
+            ),
+        )
+    );
+
+    return pieform($form);
+}
+
+function group_label_validate(Pieform $form, $values) {
+    global $USER;
+    $member = get_field('group_member', 'role', 'member', $USER->get('id'), 'group', $values['groupid']);
+    if (!$member) {
+        $form->set_error(null, get_string('grouplabelnotmember', 'group'));
+    }
+    // Make sure there is a label on initial save
+    $labels = (isset($values['grouplabel']) && strlen($values['grouplabel'][0]) > 0);
+    if (!$labels) {
+        // Check that we are not just removing the last label
+        $existing = get_column('group_usr_label', 'label', 'group', $values['groupid'], 'usr', $USER->get('id'));
+        if (empty($existing)) {
+            $form->set_error('grouplabel', get_string('groupnovalidlabelsupplied', 'group'));
+        }
+    }
+    else {
+        // if there are labels too short/long to alert them of this - needs to be 2 - 200 chars long
+        $labellengths = array_map('strlen', $values['grouplabel']);
+        // Check if any label is too short/long
+        $lengtherror = '';
+        if (min($labellengths) < 2) {
+            $lengtherror .= get_string('agrouplabeltooshort', 'group', '2');
+        }
+        if (max($labellengths) > 200) {
+            $lengtherror .= ' ' . get_string('agrouplabeltoolong', 'group', '200');
+        }
+        if (!empty($lengtherror)) {
+            $form->set_error('grouplabel', $lengtherror);
+        }
+    }
+}
+
+function group_label_submit(Pieform $form, $values) {
+    global $USER;
+
+    $paramsurl = $values['paramsurl'];
+    $gid = $values['groupid'];
+    $uid = $USER->get('id');
+    $member = get_field('group_member', 'role', 'member', $uid, 'group', $gid);
+    if ($member) {
+        $existing = get_column('group_usr_label', 'label', 'group', $gid, 'usr', $uid);
+        $newlabels = array();
+        // Add in the new labels
+        foreach ($values['grouplabel'] as $label) {
+            if (!empty($label)) {
+                $newlabels[] = $label;
+                $fordb = new stdClass();
+                $fordb->group = $gid;
+                $fordb->usr = $uid;
+                $fordb->label = $label;
+                $wheredb = clone $fordb;
+                $fordb->ctime = db_format_timestamp(time());
+                ensure_record_exists('group_usr_label', $wheredb, $fordb);
+            }
+        }
+        // Now remove any obsolete labels
+        $sql = 'DELETE FROM {group_usr_label} WHERE "group" = ? AND usr = ?';
+        $where = array($gid, $uid);
+        if (!empty($newlabels)) {
+            $sql .= ' AND label NOT IN (' . implode(',', array_fill(0, count($newlabels), '?')) . ')';
+            $where = array_merge($where, $newlabels);
+        }
+        execute_sql($sql, $where);
+
+        $groups = get_records_array('group', 'id', $gid);
+        $groups = group_get_extended_data($groups);
+        group_prepare_usergroups_for_display($groups);
+        $activegrouplabels = (array)json_decode(get_account_preference($USER->get('id'), 'grouplabels'));
+
+        $smarty = smarty_core();
+        $smarty->assign('activegrouplabels', $activegrouplabels);
+        $smarty->assign('groups', $groups);
+        $smarty->assign('paramsurl', $paramsurl);
+        $html = $smarty->fetch('group/mygroupresults.tpl');
+
+        $form->reply(PIEFORM_OK, array(
+            'message' => (empty($existing) ? get_string('grouplabeladded', 'group') : get_string('grouplabelupdated', 'group')),
+            'data'    => array(
+                'html'   => $html,
+                'id'     => 'grouplist_' . $gid,
+            ),
+            'goto'    => $paramsurl,
+        ));
+    }
+}
+
+/**
+ * Fetch the group labels based on a query request
+ *
+ * @param string $request Filter the grouplabes that begin with query string
+ * @param string $groupid If not null also filter grouplabels by group
+ *
+ * @return array of stdclass objects of grouplabels
+ */
+function group_labels_for_group($request, $groupid=null, $limit=null, $offset=0) {
+    global $USER;
+    $output = array('count' => 0, 'data' => null);
+    $joingroup = '';
+    $wheregroup = array();
+    if ($groupid) {
+        $joingroup = ' AND gl.group = ?';
+        $wheregroup = array($groupid);
+    }
+    if ($labels = get_records_sql_array("SELECT DISTINCT gl.label FROM {group_usr_label} gl
+                                         JOIN {group_member} gm ON gm.group = gl.group
+                                         WHERE gl.usr = ? AND gm.member = gl.usr
+                                         AND gl.label LIKE ?" . $joingroup,
+        array_merge(array($USER->get('id'), $request . '%'), $wheregroup), $offset, $limit)) {
+        $output['count'] = count($labels);
+        $output['data'] = $labels;
+    }
+    return $output;
 }

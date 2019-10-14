@@ -68,9 +68,9 @@ if ($groupcategory != 0) {
 if ($query) {
     $params['query'] = $query;
 }
-
+$paramsurl = get_config('wwwroot') . 'group/index.php' . ($params ? ('?' . http_build_query($params)) : '');
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'group/index.php' . ($params ? ('?' . http_build_query($params)) : ''),
+    'url' => $paramsurl,
     'count' => $groups['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
@@ -85,6 +85,7 @@ $pagination = build_pagination(array(
 
 $smarty = smarty_core();
 $smarty->assign('groups', $groups['data']);
+$smarty->assign('paramsurl', $paramsurl);
 $html = $smarty->fetch('group/mygroupresults.tpl');
 
 json_reply(false, array(

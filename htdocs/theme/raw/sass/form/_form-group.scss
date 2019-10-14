@@ -518,6 +518,10 @@
         }
     }
 
+    label.sr-only ~ .errmsg {
+        margin-left: 0px; // No margin if the label is hidden
+    }
+
     .description:not(.html) {
         color: $gray-300;
         font-style: italic;

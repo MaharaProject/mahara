@@ -73,6 +73,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
         $sort = !empty($configdata['sort']) ? $configdata['sort'] : null;
         $limit = !empty($configdata['limitto']) ? $configdata['limitto'] : null;
+        $grouplabels = !empty($configdata['grouplabels']) ? $configdata['grouplabels'] : array();
         $view = $instance->get_view();
         $baseurl = ($view->get('type') == 'dashboard') ? $view->get_url() . '?id=' . $view->get('id') : $view->get_url();
         $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'block=' . $instance->get('id');
@@ -86,10 +87,10 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         require_once('group.php');
         // Group stuff
         if (!empty($limit)) {
-            list($usergroups, $count) = group_get_user_groups($userid, null, $sort, $limit, 0);
+            list($usergroups, $count) = group_get_user_groups($userid, null, $sort, $limit, 0, true, $grouplabels);
         }
         else {
-            $usergroups = group_get_user_groups($userid, null, $sort);
+            $usergroups = group_get_user_groups($userid, null, $sort, null, 0, true, $grouplabels);
             $count = count($usergroups);
         }
         foreach ($usergroups as $group) {
@@ -121,7 +122,10 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
 
     public static function instance_config_form(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
-
+        $labels = array();
+        if (isset($configdata['grouplabels']) && is_array($configdata['grouplabels'])) {
+            $labels = $configdata['grouplabels'];
+        }
         return array(
             'sort' => array(
                 'type'  => 'select',
@@ -143,10 +147,24 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
                     'maxlength' => 4,
                 ),
             ),
+            'grouplabels' => array(
+                'type'          => 'autocomplete',
+                'title'         => get_string('displayonlylabels', 'group'),
+                'ajaxurl'       => get_config('wwwroot') . 'group/addlabel.json.php',
+                'multiple'      => true,
+                'initfunction'  => 'translate_landingpage_to_tags',
+                'ajaxextraparams' => array(),
+                'extraparams' => array('tags' => false),
+                'defaultvalue'  => $labels,
+                'mininputlength' => 2,
+            ),
         );
     }
 
     public static function instance_config_save($values) {
+        if (isset($values['grouplabels'][0]) && empty($values['grouplabels'][0])) {
+            unset($values['grouplabels']);
+        }
         $values['limitto'] = !empty($values['limitto']) ? (int)$values['limitto'] : '';
         return $values;
     }

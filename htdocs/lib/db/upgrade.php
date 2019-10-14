@@ -1637,5 +1637,21 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {block_instance} SET title = '' WHERE blocktype = 'signoff'");
     }
 
+    if ($oldversion < 2020013000) {
+        log_debug('create group_usr_label table for group labels');
+        $table = new XMLDBTable('group_usr_label');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('group', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('label', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('groupfk', XMLDB_KEY_FOREIGN, array('group'), 'group', array('id'));
+            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+            create_table($table);
+        }
+    }
+
     return $status;
 }

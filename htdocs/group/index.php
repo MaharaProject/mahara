@@ -16,6 +16,35 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 define('TITLE', get_string('groups'));
 require_once('group.php');
 require_once('searchlib.php');
+
+$labelfilter = param_variable('labelfilter', null);
+$labelfilterremove = param_integer('remove', 0);
+if ($labelfilter) {
+    $entitiesAttr = array('/\&quot;/' => '"',
+                          '/\&amp;/' => '&',
+                          '/\&lt;/' => '<',
+                          '/\&gt;/' => '>',
+                          '/\&\#39;/' => "'",
+                          '/\&\#039;/' => "'",
+                          '/\&\#x27;/' => "'"
+                          );
+    $patterns = array_keys($entitiesAttr);
+    $replace = array_values($entitiesAttr);
+    $labelfilter = preg_replace($patterns, $replace, $labelfilter);
+    $userlabels = (array)json_decode(get_account_preference($USER->get('id'), 'grouplabels'));
+    $last = count($userlabels);
+    $flipped = array_flip($userlabels);
+    if ($labelfilterremove) {
+        unset($flipped[$labelfilter]);
+    }
+    else if (!isset($flipped[$labelfilter])) {
+        $flipped[$labelfilter] = $last;
+    }
+
+    $userlabels = array_flip($flipped);
+    natcasesort($userlabels);
+    set_account_preference($USER->get('id'), 'grouplabels', json_encode(array_values($userlabels)));
+}
 $filter = param_alpha('filter', 'allmy');
 $offset = param_integer('offset', 0);
 $groupcategory = param_signed_integer('groupcategory', 0);
@@ -25,16 +54,27 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'group');
 define('SECTION_PAGE', 'index');
 
+// Create the "add label form " now if it's been submitted
+if (param_exists('pieform_grouplabel')) {
+    pieform(group_label_form(param_integer('groupid')));
+}
+
+$activegrouplabels = (array)json_decode(get_account_preference($USER->get('id'), 'grouplabels'));
+
 /* $searchmode will switch between 2 search funcs (with different queries)
 *  $searchmode = 'find' uses search_group
 *  $searchmode = 'mygroups' uses group_get_associated_groups
 */
 $searchmode = 'find';
 
+$showactivegrouplabels = false;
 // check that the filter is valid, if not default to 'all'
 if (in_array($filter, array('allmy', 'member', 'admin', 'invite', 'notmember', 'canjoin'))) {
-    if ($filter == 'allmy' || $filter == 'admin' || $filter == 'invite') {
+    if ($filter == 'allmy' || $filter == 'admin' || $filter == 'member' || $filter == 'invite') {
         $searchmode = 'mygroups';
+    }
+    if ($filter == 'allmy' || $filter == 'member' || $filter == 'admin') {
+        $showactivegrouplabels = true;
     }
     $type = $filter;
 }
@@ -161,7 +201,7 @@ else {
 if ($searchmode == 'find') {
     if ($groups['data']) {
         $groups['data'] = group_get_extended_data($groups['data']);
-        }
+    }
 }
 
 group_prepare_usergroups_for_display($groups['data']);
@@ -175,9 +215,9 @@ if ($groupcategory != 0) {
 if ($query) {
     $params['query'] = $query;
 }
-
+$paramsurl = get_config('wwwroot') . 'group/index.php' . ($params ? ('?' . http_build_query($params)) : '');
 $pagination = build_pagination(array(
-    'url' => get_config('wwwroot') . 'group/index.php' . ($params ? ('?' . http_build_query($params)) : ''),
+    'url' => $paramsurl,
     'count' => $groups['count'],
     'limit' => $groupsperpage,
     'offset' => $offset,
@@ -194,9 +234,30 @@ function search_submit(Pieform $form, $values) {
     redirect('/group/index.php?filter=' . $values['filter'] . ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }
 
+$labelfilter = array(
+    'name' => 'dummy',
+    'checkdirtychange' => false,
+    'elements' => array (
+        'grouplabelfilter' => array(
+            'type'          => 'autocomplete',
+            'title'         => get_string('filterbygrouplabel', 'group'),
+            'ajaxurl'       => get_config('wwwroot') . 'group/addlabel.json.php',
+            'multiple'      => true,
+            'initfunction'  => 'translate_landingpage_to_tags',
+            'ajaxextraparams' => array(),
+            'extraparams' => array('tags' => false),
+            'defaultvalue'  => $activegrouplabels,
+            'mininputlength' => 2,
+        )
+    ),
+);
+$labelfilterform = pieform($labelfilter);
+
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-comments');
 $smarty->assign('groups', $groups['data']);
+$smarty->assign('paramsurl', $paramsurl);
+$smarty->assign('activegrouplabels', $showactivegrouplabels ? $labelfilterform : false);
 $smarty->assign('cancreate', group_can_create_groups());
 $html = $smarty->fetch('group/mygroupresults.tpl');
 $smarty->assign('groupresults', $html);

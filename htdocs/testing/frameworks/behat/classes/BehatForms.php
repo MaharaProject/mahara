@@ -190,7 +190,7 @@ class BehatForms extends BehatBase {
      */
     private function select2FillSearchField($page, $field, $value) {
         $driver = $this->getSession()->getDriver();
-        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', "//html/descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]");
+        $select2Input = $this->getSession()->getDriver()->getWebDriverSession()->element('xpath', "//html//select[@id='" . $field . "']/../descendant-or-self::*[@class and contains(concat(' ', normalize-space(@class), ' '), ' select2-search__field ')]");
         if (!$select2Input) {
             throw new \Exception(sprintf('No field "%s" found', $field));
         }
