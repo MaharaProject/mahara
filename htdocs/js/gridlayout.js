@@ -102,6 +102,14 @@ function initJs() {
             grid.gridstack();
             updateBlockSizes(grid);
         }
+        if (e.type == 'hidden' && $(e.target).hasClass('block')) {
+            var block = $(e.target).closest('.grid-stack-item');
+            grid.data('gridstack').resize(block, block.attr('data-gs-width'), 1);
+        }
+        else {
+            updateBlockSizes();
+        }
+
     });
 
     $(window).on('timelineviewresizeblocks', function() {
@@ -177,7 +185,7 @@ function updateBlockSizes(grid) {
         grid = $('.grid-stack');
     }
     $.each(grid.children(), function(index, element) {
-        if (!$(element).hasClass('staticblock')) {
+      //  if (!$(element).hasClass('staticblock')) {
             var width = $(element).attr('data-gs-width'),
             prevHeight = $(element).attr('data-gs-height'),
             height = Math.ceil(
@@ -194,7 +202,7 @@ function updateBlockSizes(grid) {
             if (+prevHeight != height) {
                 grid.data('gridstack').resize(element, +width, height);
             }
-        }
+        //}
     });
 }
 

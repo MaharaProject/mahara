@@ -17,6 +17,9 @@ $animation_speed: .3s !default;
     position: relative;
     &.gridedit {
         min-height: 80vh;
+        .ui-draggable-handle {
+            border: 1px dashed lightgray;
+        }
     }
 
     &.grid-stack-rtl {
@@ -106,10 +109,6 @@ $animation_speed: .3s !default;
             &> .ui-resizable-handle {
                 display: none !important;
             }
-        }
-
-        > .ui-draggable-handle {
-            border: 1px dashed lightgray;
         }
 
         @for $i from 1 through $gridstack-columns {

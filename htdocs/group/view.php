@@ -90,8 +90,8 @@ if ($newlayout = $view->uses_new_layout()) {
     $(function () {
         var options = {
             verticalMargin: 10,
-            float: true,
-            ddPlugin: false,
+            disableDrag : true,
+            disableResize: true,
         };
         var grid = $('.grid-stack');
         grid.gridstack(options);
