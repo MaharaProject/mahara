@@ -1,0 +1,16 @@
+// cards
+.card.card-secondary {
+    > .card-header, .card-header-nested {
+        border-left: 0;
+        background-color: transparent;
+    }
+    .card-body {
+        h4.title {
+            font-family: $font-family-sans-serif;
+        }
+    }
+}
+
+.bt-taggedposts .post h4.title {
+    font-family: $font-family-sans-serif;
+}
