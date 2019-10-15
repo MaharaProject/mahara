@@ -368,8 +368,8 @@ if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
 $(function () {
     var options = {
         verticalMargin: 10,
-        float: true,
-        ddPlugin: false,
+        disableDrag : true,
+        disableResize: true,
     };
     var grid = $('.grid-stack');
     grid.gridstack(options);

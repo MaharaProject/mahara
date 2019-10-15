@@ -102,6 +102,14 @@ function initJs() {
             grid.gridstack();
             updateBlockSizes(grid);
         }
+        if (e.type == 'hidden' && $(e.target).hasClass('block')) {
+            var block = $(e.target).closest('.grid-stack-item');
+            grid.data('gridstack').resize(block, block.attr('data-gs-width'), 1);
+        }
+        else {
+            updateBlockSizes();
+        }
+
     });
 
     $(window).on('timelineviewresizeblocks', function() {
