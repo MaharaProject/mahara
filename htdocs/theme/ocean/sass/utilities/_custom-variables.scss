@@ -56,17 +56,3 @@ $navbar-inverse-toggle-hover-color:         #333;
 $navbar-inverse-toggle-hover-bg:            scale-color($theme-primary-color, $lightness: 90%);
 $navbar-inverse-toggle-active-color:        #000;
 $navbar-inverse-toggle-active-bg:           scale-color($theme-primary-color, $lightness: 90%);
-
-
-
-//== Tabs
-$nav-tabs-border-color:                     #eee;
-
-$nav-tabs-link-hover-border-color:          $theme-primary-color;
-
-$nav-tabs-active-link-hover-bg:             $body-bg;
-$nav-tabs-active-link-hover-color:          $theme-primary-color;
-$nav-tabs-active-link-hover-border-color:   $theme-primary-color;
-
-$nav-tabs-justified-link-border-color:            #f7f7f7;
-$nav-tabs-justified-active-link-border-color:     $body-bg;
