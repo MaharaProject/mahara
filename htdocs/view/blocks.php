@@ -153,7 +153,7 @@ $javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jqu
                     'js/gridstack/gridstack.jQueryUI.js',
                     'js/gridlayout.js',
                     );
-if ($view->get('accessible')) {
+if ($view->get('accessibleview')) {
     $javascript[] = 'js/dragondrop/dragon-drop.js';
     $javascript[] = 'js/accessibilityreorder.js';
 }
@@ -206,7 +206,7 @@ if (!$view->uses_new_layout()) {
 $blocks = $view->get_blocks(true);
 $blocksencode = json_encode($blocks);
 
-if ( $view->get('accessible')) {
+if ( $view->get('accessibleview')) {
     $mincolumns = '12';
     $reorder = '  accessibilityReorder();';
 }
@@ -277,12 +277,12 @@ $placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $vi
 $placeholderbutton = '';
 if ($placeholderblock) {
     // it's active so make the button with different display title
-    $placeholderblock[0]['title'] = $view->get('accessible') ? get_string('addnewblockaccessibility', 'view') : get_string('addnewblock', 'view');
+    $placeholderblock[0]['title'] = $view->get('accessibleview') ? get_string('addnewblockaccessibility', 'view') : get_string('addnewblock', 'view');
     $placeholderblock[0]['cssicon'] = 'plus';
     $smarty = smarty_core();
     $smarty->assign('blocktypes', $placeholderblock);
     $smarty->assign('javascript', false);
-    $smarty->assign('accessible', $view->get('accessible'));
+    $smarty->assign('accessible', $view->get('accessibleview'));
     $placeholderbutton = $smarty->fetch('view/blocktypelist.tpl');
 }
 $strings = array(
@@ -292,7 +292,7 @@ $strings = array(
     ),
 );
 
-if ($view->get('accessible')) {
+if ($view->get('accessibleview')) {
     $strings['view'][] = 'itemgrabbed';
     $strings['view'][] = 'itemdropped';
     $strings['view'][] = 'itemreorder';
@@ -369,5 +369,5 @@ $smarty->assign('instructionscollapsed', $view->get('instructionscollapsed'));
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('title', $returnto['title']);
-$smarty->assign('accessible', $view->get('accessible'));
+$smarty->assign('accessible', $view->get('accessibleview'));
 $smarty->display('view/blocks.tpl');

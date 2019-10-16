@@ -291,7 +291,7 @@ function get_basic_elements() {
         );
     }
     $viewhasblocks = count_records('block_instance', 'view', $view->get('id'));
-    $accessibleviewdisabled = $viewhasblocks && !$view->get('accessible');
+    $accessibleviewdisabled = $viewhasblocks && !$view->get('accessibleview');
     if (!($group || $institution) && $USER->get_account_preference('accessibilityprofile')) {
         $elements['accessibleview'] = array(
             'type'         => 'switchbox',
@@ -839,7 +839,7 @@ function set_view_title_and_description(Pieform $form, $values) {
         $view->set('anonymise', (int)$values['anonymise']);
     }
     if (isset($values['accessibleview'])) {
-        $view->set('accessible', (int)$values['accessibleview']);
+        $view->set('accessibleview', (int)$values['accessibleview']);
     }
 }
 
