@@ -777,10 +777,6 @@ EOF;
     public static function display_for_roles($roles) {
         return !(count($roles) == 1 && $roles[0] == 'peer');
     }
-
-    public static function has_static_content() {
-        return true;
-    }
 }
 
 
@@ -1252,7 +1248,7 @@ class BlockInstance {
         $smarty->assign('strremovetitletexttooltip', get_string('removeblock2', 'view'));
         $smarty->assign('lockblocks', ($this->get_view()->get('lockblocks') && $this->get_view()->get('owner'))); // Only lock blocks for user's portfolio pages
 
-        if (!$configure && $title) {
+        if ( $title) {
             $configdata = $this->get('configdata');
             if (isset($configdata['retractable']) && $configdata['retractable']) {
                 $smarty->assign('retractable', true);

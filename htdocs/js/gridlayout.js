@@ -177,23 +177,21 @@ function updateBlockSizes(grid) {
         grid = $('.grid-stack');
     }
     $.each(grid.children(), function(index, element) {
-        if (!$(element).hasClass('staticblock')) {
-            var width = $(element).attr('data-gs-width'),
-            prevHeight = $(element).attr('data-gs-height'),
-            height = Math.ceil(
-              (
-                $(element).find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
-                grid.data('gridstack').opts.verticalMargin
-              )
-              /
-              (
-                grid.data('gridstack').cellHeight() +
-                grid.data('gridstack').opts.verticalMargin
-              )
-            );
-            if (+prevHeight != height) {
-                grid.data('gridstack').resize(element, +width, height);
-            }
+        var width = $(element).attr('data-gs-width'),
+        prevHeight = $(element).attr('data-gs-height'),
+        height = Math.ceil(
+          (
+            $(element).find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
+            grid.data('gridstack').opts.verticalMargin
+          )
+          /
+          (
+            grid.data('gridstack').cellHeight() +
+            grid.data('gridstack').opts.verticalMargin
+          )
+        );
+        if (+prevHeight != height) {
+            grid.data('gridstack').resize(element, +width, height);
         }
     });
 }
