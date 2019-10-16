@@ -98,7 +98,4 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         return array();
     }
 
-    public static function has_static_content() {
-        return false;
-    }
 }

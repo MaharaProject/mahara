@@ -2089,9 +2089,6 @@ class View {
             }
             else {
                 $result = $blockinstance->render_viewing($exporting, $versioning);
-                if (call_static_method(generate_class_name('blocktype', $blockinstance->get('blocktype')), 'has_static_content') && !defined('BEHAT_TEST')) {
-                    $block['class'] = 'staticblock';
-                }
             }
             $block['content'] = $result;
             $block['width'] = $blockinstance->get('width');

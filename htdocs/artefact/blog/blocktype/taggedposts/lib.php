@@ -550,11 +550,6 @@ EOF;
     public static function allowed_in_view(View $view) {
         return $view->get('owner') != null;
     }
-
-    public static function has_static_content() {
-        return false;
-    }
-
 }
 
 function translate_ids_to_tags(array $ids) {
