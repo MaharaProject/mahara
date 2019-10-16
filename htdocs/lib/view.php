@@ -65,7 +65,7 @@ class View {
     private $instructionscollapsed=0;
     private $newlayout = 1;
     private $grid;
-    private $accessible = 0;
+    private $accessibleview = 0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -1812,7 +1812,7 @@ class View {
         $smarty = smarty_core();
         $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);
-        $smarty->assign('accessible', $this->get('accessible'));
+        $smarty->assign('accessible', $this->get('accessibleview'));
         return $smarty->fetch('view/blocktypelist.tpl');
     }
 

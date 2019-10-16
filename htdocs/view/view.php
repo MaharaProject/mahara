@@ -362,6 +362,11 @@ if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
             $blockresizeonload = "true";
         }
 
+        $mincolumns = 'null';
+        if ( $view->get('accessibleview')) {
+            $mincolumns = '12';
+        }
+
         $blocks = $view->get_blocks();
         $blocks = json_encode($blocks);
         $blocksjs =  <<<EOF
@@ -370,6 +375,7 @@ $(function () {
         verticalMargin: 10,
         disableDrag : true,
         disableResize: true,
+        minCellColumns: {$mincolumns},
     };
     var grid = $('.grid-stack');
     grid.gridstack(options);
