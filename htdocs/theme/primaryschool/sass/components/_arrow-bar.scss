@@ -1,16 +1,4 @@
 .arrow-bar {
-    background-color: $arrow-bar-bg;
-
-    .arrow {
-        background-color: $arrow-color;
-        &:after {
-            border-left: 14px solid $arrow-color;
-        }
-        .text {
-            color: $arrow-text-color;
-        }
-    }
-
     // to theme the Résumé nav and Groups nav green
     &.resume,
     &.group {
@@ -18,52 +6,8 @@
 
         .arrow {
             background-color: $arrow-alt-color;
-            color: #FFF;
             &:after {
                 border-left-color: $arrow-alt-color;
-            }
-        }
-        .nav-inpage {
-            &.nav > li {
-              > a, button {
-                  color: $arrow-link-color;
-                  &:hover,
-                  &:focus {
-                      background: $arrow-link-background-color;
-                      color: $arrow-link-hover-color;
-                  }
-              }
-              &.active > a,
-              &.active > button  {
-                  color: $arrow-link-active-color;
-                  background: $arrow-link-background-color;
-                  &:hover,
-                  &:focus {
-                      color: $arrow-link-active-color;
-                  }
-              }
-            }
-        }
-    }
-}
-
-.nav-inpage {
-    &.nav > li {
-        > a, button {
-            color: $arrow-link-color;
-            &:hover,
-            &:focus {
-                background: $arrow-link-background-color;
-                color: $arrow-link-hover-color;
-            }
-        }
-        &.active > a,
-        &.active > button  {
-            color: $arrow-link-active-color;
-            background: $arrow-link-background-color;
-            &:hover,
-            &:focus {
-                color: $arrow-link-active-color;
             }
         }
     }

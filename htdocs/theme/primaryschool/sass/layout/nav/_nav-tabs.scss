@@ -3,7 +3,6 @@
     &.nav {
         li {
             > a {
-                background-color: transparent;
                 &:hover,
                 &:focus {
                     background-color: rgba($theme-primary-color, 0.1);

@@ -1,15 +1,7 @@
 .footer {
-    background-color: rgba(255, 255, 255, 0.7);
     border-top: 5px solid #ececec;
 
     .footer-nav {
         font-size: $font-size-base;
-    }
-}
-
-.admin {
-    .footer {
-        background-color: transparent;
-        border-top: 0;
     }
 }

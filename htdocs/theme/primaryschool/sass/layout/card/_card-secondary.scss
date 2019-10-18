@@ -1,31 +1,14 @@
 .card.card-secondary {
-    @include box-shadow(none);
-    > .card-header {
+    > .card-header, .card-header-nested {
         font-family: $font-family-sans-serif;
         border-radius: 0;
         border-bottom: 0;
-    }
-    > .card-header, .card-header-nested {
-        border-bottom: 0;
         padding-left: 10px;
-        background-color: #047DB1;
         color: #FFFFFF;
 
         a {
             color: #FFFFFF;
             text-decoration: underline;
-        }
-    }
-    .blockinstance-controls {
-        .btn-group-top {
-            top: 10px;
-
-            @include media-breakpoint-down(md) {
-                top: -10px;
-            }
-            @include media-breakpoint-down(sm) {
-                top: 0px;
-            }
         }
     }
 }

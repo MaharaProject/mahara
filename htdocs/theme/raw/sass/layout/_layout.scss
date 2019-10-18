@@ -130,15 +130,12 @@ iframe {
 }
 
 .view-description {
-    margin-top: 15px;
-    @include media-breakpoint-up(sm) {
-        margin-top: 30px;
-    }
+    margin-bottom: 3rem;
     &.with-toolbar {
         margin-right: 20px;
     }
     &.with-addblock {
-        margin-top: 0px;
+        margin-bottom: 2rem;
     }
 }
 
@@ -243,6 +240,14 @@ body.presentation-iframe {
     padding-right: 0;
 
     .pageheader-content {
+        @media (max-width: 1270px) {
+            padding-right: 50px;
+        }
+    }
+}
+form#settings,
+.view-instructions {
+    @media (max-width: 1270px) {
         padding-right: 50px;
     }
 }

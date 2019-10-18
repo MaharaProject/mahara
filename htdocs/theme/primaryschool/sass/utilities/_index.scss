@@ -11,7 +11,6 @@
 
 // Navigation
 @import "../layout/nav/main-nav";
-@import "../layout/nav/navbar";
 @import "../layout/nav/nav-tabs";
 
 // Forms
@@ -20,11 +19,8 @@
 // Components - small reusable design elements
 @import "../components/arrow-bar";
 @import "../components/btn";
-@import "../components/contextual-help";
 @import "../components/indicator";
 @import "../components/list-group";
-@import "../components/modal";
-@import "../components/toggles";
 @import "../components/user-icon";
 
 // Feature related sass. We avoid this where we can in favour of reusable components

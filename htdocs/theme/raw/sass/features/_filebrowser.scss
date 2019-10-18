@@ -60,10 +60,13 @@
 
 // reset padding and margin inside collapsible
 .filelist.table,
-.filelist-wrapper.card,
+.filelist-wrapper.card {
+    margin-bottom: 0;
+    padding: 0 !important;
+}
 .filebrowser.form-group {
     margin-bottom: 0;
-    padding: 0 !important // override form-group padding;
+    border-bottom: 1px solid $list-group-border-color;
 }
 
 .uploadform.userfile {
