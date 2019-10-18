@@ -2,7 +2,7 @@
 .collapsible legend h3,
 .card-header {
     &.has-link {
-        a .icon {
+        a .collapse-indicator {
             color: $theme-primary-color;
         }
     }
@@ -17,11 +17,16 @@
     }
 }
 
+.collapse-inline {
+    width: 85%;
+}
 
-// custom block heading
+
+// custom block heading pre gridstack
 .column-layout {
     &:nth-child(3n+1) {
-        .card-secondary {
+        .card.card-secondary,
+        .blockinstance {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: scale-color($theme-primary-color, $lightness: 10%);
                 color: #FFFFFF;
@@ -45,7 +50,8 @@
         }
     }
     &:nth-child(3n+2) {
-        .card-secondary {
+        .card.card-secondary,
+        .blockinstance {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-two;
                 color: #FFFFFF;
@@ -69,7 +75,8 @@
         }
     }
     &:nth-child(3n+3) {
-        .card-secondary {
+        .card.card-secondary,
+        .blockinstance {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-three;
                 color: #FFFFFF;
@@ -94,17 +101,58 @@
     }
 }
 
+// gridstack card-header colors
+.grid-stack .grid-stack-item {
+    &:nth-child(5n+1) .card-header,
+    &:nth-child(5n+1) .card.card-secondary.blockinstance.card .card-header {
+        background-color: scale-color($theme-primary-color, $lightness: 10%);
+        color: #FFFFFF;
+    }
+    &:nth-child(5n+2) .card-header,
+    &:nth-child(5n+2) .card.card-secondary.blockinstance.card .card-header  {
+        background-color: $theme-accent-color;
+        color: #FFFFFF;
+    }
+    &:nth-child(5n+3) .card-header,
+    &:nth-child(5n+3) .card.card-secondary.blockinstance.card .card-header  {
+        background-color: $theme-accent-color-two;
+        color: #FFFFFF;
+    }
+    &:nth-child(5n+4) .card-header,
+    &:nth-child(5n+4) .card.card-secondary.blockinstance.card .card-header  {
+        background-color: $theme-secondary-color;
+        color: #FFFFFF;
+    }
+    &:nth-child(5n+5) .card-header,
+    &:nth-child(5n+5) .card.card-secondary.blockinstance.card .card-header  {
+        background-color: $theme-accent-color-three;
+        color: #FFFFFF;
+    }
+    .has-attachment .card-header,
+    .card.card-secondary.blockinstance.card .has-attachment .card-header {
+        background-color: $card-header-bg;
+        color: $theme-text-color;
+        &:hover,
+        &:focus {
+          background-color: $card-bg;
+        }
+        .collapse-indicator {
+          color: $theme-primary-color;
+        }
+    }
+}
+
 .card {
     .card-header:before {
         @include fonttype(solid);
         color: rgba(255, 255, 255, 0.6);
         padding-right: 5px;
     }
-    // custom icons to some blocks
+    // custom icons to some blocks, they do not appear on the edit page
     &.bt-newviews .card-header:before {
         content: fa-content($fa-var-bullhorn);
     }
-    &.bt-inbox .card-header:before {
+    &.bt-inbox .card-header:before{
         content: fa-content($fa-var-inbox);
     }
     &.bt-myviews .card-header:before {
@@ -215,4 +263,9 @@
 }
 .card.card-brand .card-header:before {
     @include fonttype(brands);
+}
+
+// remove the empty icon in attached files header
+.has-attachment .card-header::before {
+    display: none;
 }

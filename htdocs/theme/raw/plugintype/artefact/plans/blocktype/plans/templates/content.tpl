@@ -2,7 +2,7 @@
     <p class="editor-description">{$noplans}</p>
 {/if}
 {foreach from=$plans item=plan}
-    <div class="card-body flush">
+    <div{if $plan.description} class="card-body flush"{/if}>
         {if $editing}
             <div class="float-right btn-group">
                 <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/plan/edit.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
@@ -22,14 +22,14 @@
         {if count($plans) > 1}
             <h4 class="title">{$plan.title}</h4>
         {/if}
-        <p>{$plan.description}</p>
-
+        {if $plan.description}
+            <p>{$plan.description}</p>
+        {/if}
         {if $plan.tags}
             <div class="tags text-small">
                 <strong>{str tag=tags}:</strong> {list_tags owner=$plan.owner tags=$plan.tags view=$plan.view}
             </div>
         {/if}
-        {if !$plan.description && !$plan.tags} &nbsp; {/if}
 
         {if $plan.numtasks != 0}
             {foreach from=$alltasks item=tasks}

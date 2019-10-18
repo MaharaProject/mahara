@@ -1,23 +1,25 @@
 .expand-indicator,
 .move-indicator {
-    margin-left: -4px;
-
     .card-secondary & {
         color: #FFF;
     }
 }
 
+.collapse-indicator {
+    color: scale-color($theme-primary-color, $lightness: 10%);
+    .collapsed & {
+        color: scale-color($theme-primary-color, $lightness: 10%);
+    }
+    a:hover &,
+    a:focus & {
+        color: $theme-primary-color;
+    }
+}
 
-//dash inner
-//messages: inbox, sent
-//admin: site options
-//journals
-.inboxblock .link-block,
-.form-notificationlist h4 a,
-.pieform-fieldset.collapsible h4 a,
-.myblogs h5 a {
+tr[data-toggle="collapse"],
+a[data-toggle="collapse"] {
     &:hover .collapse-indicator,
-    &:focus .collapse-indicator {
+    &:focus .collapse-indicator{
         color: scale-color($theme-primary-color, $lightness: 10%);
     }
     .collapse-indicator {
@@ -25,15 +27,20 @@
     }
 }
 
-.collapse-indicator,
-.collapsed .collapse-indicator {
-    color: $theme-primary-color;
+[data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
+[data-toggle="collapse"].outer-link:hover ~ .collapse-indicator {
+    &.collapsed {
+        ~ .collapse-indicator {
+            color: scale-color($theme-primary-color, $lightness: 10%);
+        }
+    }
+    &:hover,
+    &:focus {
+        ~ .collapse-indicator {
+            color: $theme-primary-color;
+        }
+    }
 }
-a:focus .collapse-indicator,
-a:hover .collapse-indicator {
-    color: scale-color($theme-primary-color, $lightness: 10%);
-}
-
 
 // if indicators are in colour block titles then make it white
 .card-secondary {
@@ -41,21 +48,30 @@ a:hover .collapse-indicator {
         .move-indicator {
             color: #FFFFFF !important;
         }
-        .collapse-inline {
-            width: auto;
+        [data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
+        [data-toggle="collapse"].outer-link:hover ~ .collapse-indicator  {
+            color: #FFFFFF;
+            &.collapsed {
+                ~ .collapse-indicator {
+                    color: #FFFFFF;
+                }
+            }
+            a:hover,
+            a:focus {
+                .collapse-indicator {
+                    color: #FFFFFF;
+                }
+            }
         }
         .collapse-indicator {
             color: #FFFFFF;
-
-            &:hover,
-            &:focus {
+            .collapsed & {
+                color: #FFFFFF;
+            }
+            a:hover &,
+            a:focus & {
                 color: #FFFFFF;
             }
         }
     }
-}
-
-[data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
-[data-toggle="collapse"].outer-link:hover ~ .collapse-indicator {
-    color: #FFFFFF;
 }

@@ -7,7 +7,6 @@
         // color: inherit;
         &.tag {
             display:inline-block;
-            @extend .text-success;
         }
         &.text-success {
              @extend .text-success;
@@ -402,6 +401,9 @@
         .user-icon {
             margin-top: 0;
             margin-left: 0;
+        }
+        h4.list-group-item-heading {
+            font-size: $h4-font-size;
         }
         .detail {
             margin-left: 53px;
