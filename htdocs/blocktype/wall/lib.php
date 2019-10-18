@@ -214,11 +214,20 @@ function wallpost_success(form, data) {
             }
         }
         formSuccess(form, data);
+        $(window).trigger('colresize');
     }
 }
 jQuery( function() {
     // needs to initialize the tinyMCE editor when the block is loaded
     PieformManager.signal('onload');
+    if (typeof(tinyMCE) != 'undefined') {
+        tinyMCE.activeEditor.on('ResizeEditor', function(e) {
+            $(window).trigger('colresize');
+        });
+        tinyMCE.activeEditor.on('init', function(e) {
+            $(window).trigger('colresize');
+        });
+    }
 });
 EOF;
         return "<script>$js</script>";
