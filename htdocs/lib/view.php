@@ -7176,10 +7176,9 @@ class View {
             }
         }
         else {
-            $html = '<div class="alert alert-info">
-                        <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>' .
+            $html = '<div class="alert alert-info">' .
                         get_string('nopeerassessmentrequired', 'artefact.peerassessment') .
-                      '</div>';
+                    '</div>';
         }
         $data->html = $html;
         return $data;
