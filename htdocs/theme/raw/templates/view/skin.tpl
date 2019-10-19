@@ -1,13 +1,11 @@
 {if !$saved}
 <div class="alert alert-warning">
-    <span class="icon icon-lg icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
     {str tag=notsavedyet section=skin}
 </div>
 {/if}
 
 {if $incompatible}
 <div class="alert alert-danger">
-    <span class="icon icon-ban" role="presentation" aria-hidden="true"></span>
     {$incompatible}
 </div>
 {/if}
