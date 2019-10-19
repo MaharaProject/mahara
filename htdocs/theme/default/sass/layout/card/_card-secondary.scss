@@ -15,17 +15,5 @@
             border-color: $card-secondary-border;
             font-family: $font-family-sans-serif;
         }
-        // removing left/right padding in card body
-        .block {
-             > .card-body {
-                 padding: 15px 0;
-             }
-        }
-    }
-
-    .blockinstance-controls .btn-group-top {
-        @include media-breakpoint-down(lg) {
-            margin: 0;
-        }
     }
 }
