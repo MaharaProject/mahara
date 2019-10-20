@@ -1428,6 +1428,8 @@ class BlockInstance {
             $smarty->assign('justdetails', true);
         }
 
+        $smarty->assign('peerroleonly', $USER->has_peer_role_only($this->get_view()));
+
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }
 

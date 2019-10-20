@@ -558,6 +558,7 @@ $smarty->assign('viewtype', $viewtype);
 $smarty->assign('feedback', $feedback);
 $smarty->assign('owner', $owner);
 $smarty->assign('peerhidden', $peerhidden);
+$smarty->assign('peerroleonly', $USER->has_peer_role_only($view));
 list($tagcount, $alltags) = $view->get_all_tags_for_view(10);
 $smarty->assign('alltags', $alltags);
 $smarty->assign('moretags', ($tagcount > sizeof($alltags) ? true : false));
