@@ -18,6 +18,10 @@ $theme->parent      = 'raw';
 /* This theme includes all css via sass, so we don't need raw's css. */
 $theme->overrideparentcss = true;
 
+$theme->themelinkcolor = '#0162a7'; // $view_link_normal_color
+$theme->themefocusedlinkcolor = '#01528c'; // $view_link_hover_color
+
+
 /**
  * The following themeconfig options are available. If you make new themeconfig
  * options please add them here and explain what they do.

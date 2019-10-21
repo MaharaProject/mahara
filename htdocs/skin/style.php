@@ -34,11 +34,6 @@ if (!$skinobj->can_view()) {
     throw new AccessDeniedException();
 }
 $skin->viewskin = unserialize($skin->viewskin);
-foreach ($skin->viewskin as $key => $option) {
-    if ($option === 'transparent') {
-        $skin->viewskin[$key] = '';
-    }
-}
 $smarty = smarty();
 
 // Font Notice

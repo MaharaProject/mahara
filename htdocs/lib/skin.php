@@ -579,10 +579,13 @@ class Skin {
     public static function get_css_font_family_from_font_name($font, $type='text') {
         if ($font === '') {
             global $THEME;
-            $font = Skin::get_all_theme_fonts($type)[$THEME->basename];
+            $fonts = Skin::get_all_theme_fonts($type);
+            $fontname = isset($fonts[$THEME->basename]) ? $fonts[$THEME->basename] : '';
         }
-
         $fontdata = get_record('skin_fonts', 'name', $font);
+        if (!$fontdata) {
+            return '';
+        }
         return $fontdata->fontstack . ', ' . $fontdata->genericfont;
     }
 
@@ -709,7 +712,9 @@ class Skin {
         $theme = '';
         if ($fontname === '') {
             global $THEME;
-            $fontname = Skin::get_all_theme_fonts($type)[$THEME->basename];
+            $fonts = Skin::get_all_theme_fonts($type);
+            $fontname = isset($fonts[$THEME->basename]) ? $fonts[$THEME->basename] : '';
+
         }
         $fontdata = get_record('skin_fonts', 'name', $fontname);
         if (!$fontdata) {
@@ -942,15 +947,9 @@ class Skin {
         imagealphablending($img, true);
         imagesavealpha($img, true);
 
-        if ($skin['body_background_color'] != 'transparent') {
-            list($r, $g, $b) = self::get_rgb_from_hex($skin['body_background_color']);
-            $bodybackgroundcolor = imagecolorallocate($img, $r, $g, $b);
-            imagefill($img, 0, 0, $bodybackgroundcolor);
-        }
-        else {
-            $transparentcolor = imagecolorallocatealpha($img, 255, 255, 255, 127);
-            imagefill($img, 0, 0, $transparentcolor);
-        }
+        list($r, $g, $b) = self::get_rgb_from_hex($skin['body_background_color']);
+        $bodybackgroundcolor = imagecolorallocate($img, $r, $g, $b);
+        imagefill($img, 0, 0, $bodybackgroundcolor);
 
         // ========== BODY BACKGROUND IMAGE ==========
         if (!empty($skin['body_background_image'])) {
