@@ -446,8 +446,17 @@ $designskinform = pieform($designskinelements);
 
 $javascript = <<<EOF
   function designskinform_callback(form, data) {
-      if (typeof designskinform_body_background_image != "undefined") {
-          designskinform_body_background_image.callback(form, data);
+      // with multiple filebrowsers on form we need to update the right one
+      // when changing to subdirectories
+      if (data.formelement && typeof window[data.formelement] != "undefined") {
+          window[data.formelement].callback(form, data);
+      }
+      else {
+          // We are submitting the form so need to allow one of the
+          // filebrowsers to callback to complete the save
+          if (typeof designskinform_body_background_image != "undefined") {
+              designskinform_body_background_image.callback(form, data);
+          }
       }
   };
 EOF;
