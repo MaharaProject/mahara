@@ -78,6 +78,8 @@ $siteoptionform = array(
                     'options'      => array('' => get_string('nocountryselected')) + $countries,
                     'help'         => true,
                     'disabled'     => in_array('country', $OVERRIDDEN),
+                    'description'  => get_string('countryisodisclaimer', 'mahara') . '<br>' .
+                                      get_string('countryisocustomise', 'mahara'),
                 ),
                 'timezone' => array(
                     'type'         => 'select',
