@@ -135,6 +135,9 @@ $elements['viewskin'] = array(
         ),
 );
 
+// Use the theme default or default to theme 'Raw'
+$themeheaderbgcolor = isset($THEME->themeheaderbgcolor) ? $THEME->themeheaderbgcolor : '#F7F7F7'; // $pageheader-bg
+
 // Page
 $elements['skinbg'] = array(
     'type'   => 'fieldset',
@@ -145,10 +148,10 @@ $elements['skinbg'] = array(
             'type' => 'color',
             'title' => get_string('headerbackgroundcolor', 'skin'),
             'description' => get_string('headerbackgroundcolordescription', 'skin'),
-            'defaultvalue' => (!empty($viewskin['header_background_color']) ? $viewskin['header_background_color'] : '#FFFFFF'),
+            'defaultvalue' => (!empty($viewskin['header_background_color']) ? $viewskin['header_background_color'] : $themeheaderbgcolor),
             'size' => 7,
             'options' => array(
-                'transparent' => true,
+                'themedefault' => $themeheaderbgcolor,
             ),
         ),
         'header_background_image' => array(
@@ -183,7 +186,7 @@ $elements['skinbg'] = array(
             'defaultvalue' => (!empty($viewskin['body_background_color']) ? $viewskin['body_background_color'] : '#FFFFFF'),
             'size' => 7,
             'options' => array(
-                'transparent' => true,
+                'themedefault' => '#FFFFFF',
             ),
         )
     )
@@ -258,6 +261,22 @@ $fontoptions = Skin::get_textonly_font_options();
 $headerfontoptions = $themefontoption + $headerfontoptions;
 $fontoptions = $themefontoption + $fontoptions;
 
+// Set the 'Custom' theme default variables
+if ($THEME->basename == 'custom') {
+    $themeheadingcolor = get_custom_theme_field('headings');
+    $themelinkcolor = get_custom_theme_field('link');
+}
+// Set the theme default variables, default to theme 'Raw'
+if (!isset($themeheadingcolor)) {
+    $themeheadingcolor = isset($THEME->themeheadingcolor) ? $THEME->themeheadingcolor : '#333333'; // $view_text_heading_color
+}
+if (!isset($themelinkcolor)) {
+    $themelinkcolor = isset($THEME->themelinkcolor) ? $THEME->themelinkcolor : '#556d32'; // $view_link_normal_color
+}
+$themetextcolor = isset($THEME->themetextcolor) ? $THEME->themetextcolor : '#333333'; // $view_text_font_color
+$themeemphasizedtextcolor = isset($THEME->themeemphasizedtextcolor) ? $THEME->themeemphasizedtextcolor : '#333333'; // $view_text_emphasized_color
+$themefocusedlinkcolor = isset($THEME->themefocusedlinkcolor) ? $THEME->themefocusedlinkcolor :  '#475c2a'; // $view_link_hover_color
+
 // Text
 $elements['viewcontent'] = array(
         'type'   => 'fieldset',
@@ -275,10 +294,10 @@ $elements['viewcontent'] = array(
                         'type' => 'color',
                         'title' => get_string('headingcolor', 'skin'),
                         'description' => get_string('headingcolordescription', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] : '#000000'),
+                        'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] :  $themeheadingcolor),
                         'size' => 7,
                         'options' => array(
-                            'transparent' => true,
+                            'themedefault' => $themeheadingcolor,
                         ),
                 ),
                 'view_text_font_family' => array(
@@ -307,29 +326,29 @@ $elements['viewcontent'] = array(
                         'type' => 'color',
                         'title' => get_string('textcolor', 'skin'),
                         'description' => get_string('textcolordescription', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_text_font_color']) ? $viewskin['view_text_font_color'] : '#000000'),
+                        'defaultvalue' => (!empty($viewskin['view_text_font_color']) ? $viewskin['view_text_font_color'] : $themetextcolor),
                         'size' => 7,
                         'options' => array(
-                            'transparent' => true,
+                            'themedefault' => $themetextcolor,
                         ),
                 ),
                 'view_text_emphasized_color' => array(
                         'type' => 'color',
                         'title' => get_string('emphasizedcolor', 'skin'),
                         'description' => get_string('emphasizedcolordescription', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_text_emphasized_color']) ? $viewskin['view_text_emphasized_color'] : '#000000'),
+                        'defaultvalue' => (!empty($viewskin['view_text_emphasized_color']) ? $viewskin['view_text_emphasized_color'] : $themeemphasizedtextcolor),
                         'size' => 7,
                         'options' => array(
-                            'transparent' => true,
+                            'themedefault' => $themeemphasizedtextcolor,
                         ),
                 ),
                 'view_link_normal_color' => array(
                         'type' => 'color',
                         'title' => get_string('normallinkcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_link_normal_color']) ? $viewskin['view_link_normal_color'] : '#0000EE'),
+                        'defaultvalue' => (!empty($viewskin['view_link_normal_color']) ? $viewskin['view_link_normal_color'] : $themelinkcolor),
                         'size' => 7,
                         'options' => array(
-                            'transparent' => true,
+                            'themedefault' => $themelinkcolor,
                         ),
                 ),
                 'view_link_normal_underline' => array(
@@ -340,10 +359,10 @@ $elements['viewcontent'] = array(
                 'view_link_hover_color' => array(
                         'type' => 'color',
                         'title' => get_string('hoverlinkcolor', 'skin'),
-                        'defaultvalue' => (!empty($viewskin['view_link_hover_color']) ? $viewskin['view_link_hover_color'] : '#EE0000'),
+                        'defaultvalue' => (!empty($viewskin['view_link_hover_color']) ? $viewskin['view_link_hover_color'] : $themefocusedlinkcolor),
                         'size' => 7,
                         'options' => array(
-                            'transparent' => true,
+                            'themedefault' => $themefocusedlinkcolor,
                         ),
                 ),
                 'view_link_hover_underline' => array(
@@ -424,6 +443,18 @@ $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('designskinform', $designskinform);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('skin/design.tpl');
+
+function get_custom_theme_field($field) {
+    global $USER;
+    $institutions = $USER->get('institutions');
+    $theme_var = get_field_sql(
+        "SELECT sp.value FROM style_property sp JOIN institution i ON i.style = sp.style AND sp.field = ?
+        WHERE i.name IN ('" . join("','", array_keys($institutions)) . "')
+        ORDER BY i.name
+        LIMIT 1", array($field)
+    );
+    return $theme_var;
+}
 
 function designskinform_validate(Pieform $form, $values) {
     global $USER;

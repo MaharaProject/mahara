@@ -17,6 +17,10 @@ $theme->formrenderer = 'div';
 /* Currently Ocean cannot be a parent theme for subtheme */
 $theme->parent      = 'raw';
 
+$theme->themelinkcolor = '#20738F'; // $view_link_normal_color
+$theme->themefocusedlinkcolor = '#3FAFD4'; // $view_link_hover_color
+
+
 /* This theme includes all css via sass, so we don't need raw's css. */
 $theme->overrideparentcss = true;
 

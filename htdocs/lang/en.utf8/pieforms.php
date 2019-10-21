@@ -73,7 +73,7 @@ $string['element.passwordpolicy.ulns'] = 'Upper and lowercase letters, numbers, 
 $string['element.select.other'] = 'Other';
 $string['element.select.remove'] = 'Remove "%s"';
 
-$string['element.color.transparent'] = 'Default or ';
+$string['element.color.transparent1'] = 'Theme default';
 $string['element.font.themedefault'] = 'Use Theme font';
 
 $string['rule.before.before'] = 'This cannot be after the field "%s"';

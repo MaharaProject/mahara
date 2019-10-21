@@ -25,21 +25,22 @@ function pieform_element_color(Pieform $form, $element) {
     $name = Pieform::hsc($element['name']);
     $baseid = Pieform::hsc($form->get_name() . '_' . $element['name']);
     $value = Pieform::hsc($form->get_value($element));
-    $transparent = (!empty($element['options']['transparent']) && $element['options']['transparent'] == true);
+    $themedefault = (!empty($element['options']['themedefault'])) ? $element['options']['themedefault'] : '';
 
     // Transparency optional control
-    if ($transparent) {
+    if ($themedefault) {
         $optional = <<<EOF
         <script>
-            var {$baseid}_oldval = '';
+            var {$baseid}_oldval = '{$value}';
             function {$baseid}_toggle(x) {
                 if ( x.checked ) {
                     {$baseid}_oldval = jQuery('#{$baseid}').val();
-                    jQuery('#{$baseid}').val('');
+                    document.getElementById('{$baseid}')._jscLinkedInstance.fromString('{$themedefault}');
                     jQuery('#{$baseid}').prop('disabled', true);
                 }
                 else {
                     jQuery('#{$baseid}').val({$baseid}_oldval);
+                    document.getElementById('{$baseid}')._jscLinkedInstance.fromString({$baseid}_oldval);
                     jQuery('#{$baseid}').prop('disabled', false);
                 }
             }
@@ -52,30 +53,29 @@ EOF;
         }
 
         $optional .= ' <input type="checkbox" '
-          . (isset($element['defaultvalue']) && $element['defaultvalue'] == 'transparent' ? 'checked="checked" ' : '')
+          . ($themedefault && $element['defaultvalue'] == $themedefault ? 'checked="checked" ' : '')
             . 'name="' . $name . '_optional" id="' . $baseid . '_optional" onchange="' . $baseid . '_toggle(this)" '
             . 'tabindex="' . Pieform::hsc($element['tabindex']) . '">';
         $optional .= ' <label for="' . $baseid . '_optional">'
-            . $title . $form->i18n('element', 'color', 'transparent', $element) . '</label> ';
+            . $title . $form->i18n('element', 'color', 'transparent1', $element) . '</label> ';
 
         $result .= $optional;
     }
 
     // Color Picker (Chooser)
     $result .= '<input type="text" name="' . $name . '_color" id="' . $baseid . '"'
-        . ($transparent && (!isset($element['defaultvalue']) || $element['defaultvalue'] == 'transparent') ? ' disabled="disabled"' : '')
-        . ($transparent ? ' class="jscolor {hash:true,required:false}"' : ' class="jscolor {hash:true}"')
-        . ' value="' . ($value == 'transparent' ? '' : $value) . '">';
+        . ($themedefault && $element['defaultvalue'] == $themedefault ? ' disabled="disabled"' : '')
+        . ' value="' . $value . '">';
 
     return $result;
 }
 
 /**
- * Returns the color value of the color selector element from the request or transparent
+ * Returns the color value of the color selector element from the request
  *
  * @param Pieform $form    The form the element is attached to
  * @param array   $element The element to get the value for
- * @return string A 6-digit hex color value, or the string "transparent"
+ * @return string A 6-digit hex color value
  */
 function pieform_element_color_get_value(Pieform $form, $element) {
     $name = $element['name'];
@@ -97,17 +97,23 @@ function pieform_element_color_get_value(Pieform $form, $element) {
             $color = '';
         }
         if ($color === '') {
-            return 'transparent';
+            return '#FFFFFF';
         }
         $color = "#{$color}";
         return $color;
+    }
+
+    if (isset($global[$name . '_optional']) && isset($element['options']['themedefault'])) {
+        if (!empty($element['options']['themedefault'])) {
+            return $element['options']['themedefault'];
+        }
     }
 
     if (isset($element['defaultvalue'])) {
         return $element['defaultvalue'];
     }
 
-    return 'transparent';
+    return '#FFFFFF';
 }
 
 /**
@@ -118,17 +124,13 @@ function pieform_element_color_get_value(Pieform $form, $element) {
  */
 function pieform_element_color_get_headdata($element, Pieform $form) {
     $libfile   = get_config('wwwroot')  . 'js/jscolor/jscolor.js';
-    $name = $form->get_property('name') . '_' . $element['name'];
+    $name = Pieform::hsc($form->get_name() . '_' . $element['name']);
     $result = '<script>';
-    $result .= "var initjscolor = false; \n";
+    $result .= "var jsc" . $name . " = ''\n";
     $result .= "PieformManager.connect('onload', null, function() {\n";
     $result .= "  jQuery(function($) { \n";
-    $result .= "    if (initjscolor === true) { \n";
     $result .= "      // rewire up the picker to show up\n";
-    $result .= "      var jsc = new jscolor('" . $name . "'); \n";
-    $result .= "    } \n";
-    $result .= "    // only after initial page load\n";
-    $result .= "    initjscolor = true; \n";
+    $result .= "      jsc" . $name . " = new jscolor('" . $name . "'); \n";
     $result .= "  }); \n";
     $result .= "});</script>";
     $results = array(

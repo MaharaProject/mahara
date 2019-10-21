@@ -19,6 +19,12 @@ $theme->parent = 'raw';
 /* If we are using normal CSS, this should be false. If we are using SASS, it should be true. */
 $theme->overrideparentcss = true;
 
+$theme->themeheadingcolor = '#545B5D'; // $view_text_heading_color
+$theme->themetextcolor = '#545B5D'; // $view_text_font_color
+$theme->themelinkcolor = '#1f6c88;'; // $view_link_normal_color
+$theme->themeemphasizedtextcolor = '#545B5D'; // $view_text_emphasized_color
+$theme->themefocusedlinkcolor = '#1d6781'; // $view_link_hover_color
+
 /**
  * The following themeconfig options are available. If you make new themeconfig
  * options please add them here and explain what they do.
