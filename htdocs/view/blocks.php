@@ -207,12 +207,10 @@ $blocks = $view->get_blocks(true);
 $blocksencode = json_encode($blocks);
 
 if ( $view->get('accessible')) {
-    $float = 'false';
     $mincolumns = '12';
     $reorder = '  accessibilityReorder();';
 }
 else {
-    $float = 'true';
     $mincolumns = 'null';
     $reorder = '  ';
 }
@@ -221,7 +219,6 @@ $blocksjs ="
 $(function () {
     var options = {
         verticalMargin: 10,
-        float: {$float},
         resizable: false,
         acceptWidgets: '.blocktype-drag',
         draggable: {

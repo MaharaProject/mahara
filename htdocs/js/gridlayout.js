@@ -90,7 +90,7 @@ function initJs() {
         }
     });
 
-    $(window).on('shown.bs.collapse', function(e) {
+    $(window).on('hidden.bs.collapse shown.bs.collapse', function(e) {
         var grid = $(e.target).closest('.grid-stack');
         var id = grid.attr('id');
         //check we are not in timeline view
@@ -102,6 +102,14 @@ function initJs() {
             grid.gridstack();
             updateBlockSizes(grid);
         }
+        if (e.type == 'hidden' && $(e.target).hasClass('block')) {
+            var block = $(e.target).closest('.grid-stack-item');
+            grid.data('gridstack').resize(block, block.attr('data-gs-width'), 1);
+        }
+        else {
+            updateBlockSizes();
+        }
+
     });
 
     $(window).on('timelineviewresizeblocks', function() {
@@ -177,23 +185,21 @@ function updateBlockSizes(grid) {
         grid = $('.grid-stack');
     }
     $.each(grid.children(), function(index, element) {
-        if (!$(element).hasClass('staticblock')) {
-            var width = $(element).attr('data-gs-width'),
-            prevHeight = $(element).attr('data-gs-height'),
-            height = Math.ceil(
-              (
-                $(element).find('.grid-stack-item-content')[0].scrollHeight +
-                grid.data('gridstack').opts.verticalMargin
-              )
-              /
-              (
-                grid.data('gridstack').cellHeight() +
-                grid.data('gridstack').opts.verticalMargin
-              )
-            );
-            if (+prevHeight < height) {
-                grid.data('gridstack').resize(element, +width, height);
-            }
+        var width = $(element).attr('data-gs-width'),
+        prevHeight = $(element).attr('data-gs-height'),
+        height = Math.ceil(
+          (
+            $(element).find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
+            grid.data('gridstack').opts.verticalMargin
+          )
+          /
+          (
+            grid.data('gridstack').cellHeight() +
+            grid.data('gridstack').opts.verticalMargin
+          )
+        );
+        if (+prevHeight != height) {
+            grid.data('gridstack').resize(element, +width, height);
         }
     });
 }

@@ -58,8 +58,8 @@ if ($USER->is_logged_in()) {
         $(function () {
             var options = {
                 verticalMargin: 10,
-                float: true,
-                ddPlugin: false,
+                disableDrag : true,
+                disableResize: true,
             };
             var grid = $('.grid-stack');
             grid.gridstack(options);

@@ -234,8 +234,4 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         }
         return $artefacts;
     }
-
-    public static function has_static_content() {
-        return false;
-    }
 }

@@ -45,10 +45,6 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $view->get('group') == null;
     }
 
-    public static function has_static_content() {
-        return false;
-    }
-
     /**
      * defines if the title should be shown if there is no content in the block
      *

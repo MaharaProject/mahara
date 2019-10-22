@@ -173,8 +173,4 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
     public static function allowed_in_view(View $view) {
         return true;
     }
-
-    public static function has_static_content() {
-        return false;
-    }
 }

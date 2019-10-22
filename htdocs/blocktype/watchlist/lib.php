@@ -396,8 +396,4 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
         return array($views, count($views));
     }
 
-    public static function has_static_content() {
-        return false;
-    }
-
 }

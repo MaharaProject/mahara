@@ -278,5 +278,4 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
                 . $configdata['artefactid'] . '&view=' . $instance->get('view');
         }
     }
-
 }
