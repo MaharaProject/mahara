@@ -107,6 +107,7 @@ foreach ( $element_list as $element => $type ) {
         $countries = getoptions_country();
         $items[$element]['options'] = array('' => get_string('nocountryselected')) + $countries;
         $items[$element]['defaultvalue'] = get_config('country');
+        $items[$element]['description'] = get_string('countryisodisclaimer', 'mahara');
     }
     $classname = 'ArtefactType' . ucfirst($element);
     if (is_callable(array($classname, 'getoptions'))) {
