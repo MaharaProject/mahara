@@ -1,5 +1,5 @@
 <div class="bt-{$blocktype} gridstackblock card card-secondary {$cardicontype} clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
-    {if !$editing && $blockheader && !$versioning}
+    {if !$editing && $blockheader && !$versioning && !$peerroleonly}
         {include file='header/block-comments-details-header.tpl' artefactid=$artefactid blockid=$blockid commentcount=$commentcount}
     {/if}
     {if $title}
