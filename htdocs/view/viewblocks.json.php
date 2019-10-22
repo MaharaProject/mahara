@@ -23,16 +23,26 @@ $artefactid = param_integer('artefactid');
 if (!can_view_view($viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
+if (!artefact_in_view($artefactid, $viewid)) {
+    json_reply('local', get_string('accessdenied', 'error'));
+}
 
 $html = '';
 if ($blockid) {
     $block = new BlockInstance($blockid);
+    if ((int)$block->get('view') !== $viewid) {
+        json_reply('local', get_string('accessdenied', 'error'));
+    }
     $view = $block->get_view();
     $artefact = $block->get_artefact_instance($artefactid);
 }
 else {
     $artefact = artefact_instance_from_id($artefactid);
     $view = new View($viewid);
+}
+
+if ($USER->has_peer_role_only($view)) {
+    json_reply('local', get_string('accessdenied', 'error'));
 }
 
 // Render the artefact
