@@ -27,7 +27,7 @@ function pieform_element_color(Pieform $form, $element) {
     $value = Pieform::hsc($form->get_value($element));
     $themedefault = (!empty($element['options']['themedefault'])) ? $element['options']['themedefault'] : '';
 
-    // Transparency optional control
+    // Theme default checkbox optional control
     if ($themedefault) {
         $optional = <<<EOF
         <script>

@@ -16,7 +16,12 @@ $string['pluginname'] = 'Skin';
 $string['myskins'] = 'Skins';
 $string['siteskinmenu'] = 'Skins';
 
+$string['header'] = 'Header';
+$string['blockheading'] = 'Block heading';
+
 $string['themedefault'] = 'Theme default';
+$string['blockheaderfontfamily'] = 'Block header font';
+$string['blockheaderfontcolor'] = 'Block header font color';
 $string['headerbackgroundcolor'] = 'Header background colour';
 $string['headerbackgroundcolordescription'] = 'Background color for page header - this will not show if a header image has been selected';
 $string['headerbackgroundimage'] = 'Header background image';

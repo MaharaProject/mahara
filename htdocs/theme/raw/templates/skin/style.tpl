@@ -91,6 +91,11 @@ body > .main-content > .row {
 
 /* blocks */
 
+.user-page-content .block-header a {
+    color: {$view_block_header_font_color};
+    font-family: {$view_block_header_font|safe};
+}
+
 .user-page-content .card .title:not(.feedtitle) {
     font-weight: bold;
     color: {$view_text_emphasized_color};
