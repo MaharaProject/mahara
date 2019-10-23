@@ -70,6 +70,12 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             array(
                 'file'   => get_config('wwwroot') . 'js/masonry/masonry.min.js',
                 'initjs' => " $('.js-masonry.thumbnails').masonry({ itemSelector: '.thumb' });"
+            ),
+            array(
+                'file' => '',
+                'initjs' => "$('#slideshow{$blockid}').on('slid.bs.carousel', function () {
+                    $(window).trigger('colresize');
+                });"
             )
         );
     }
