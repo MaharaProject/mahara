@@ -349,7 +349,8 @@ pre {
 
     /* but not some titles */
     &.list-group-item-heading,
-    &.title {
+    &.title,
+    &.card-header {
       font-family: $headings-font-family;
       font-weight: $headings-font-weight;
       color: $headings-color;
