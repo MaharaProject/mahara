@@ -43,6 +43,7 @@
 
     @include media-breakpoint-down(xs) {
         margin: 0;
+        height: auto;
     }
 }
 .tag-filters {

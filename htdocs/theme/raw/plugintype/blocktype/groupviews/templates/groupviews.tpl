@@ -24,7 +24,6 @@
             <span class="lead text-small">{str tag=nogroupviewsyet section=view}</span>
         </div>
     {/if}
-    <hr />
 {/if}
 
 {if $sharedviews}
@@ -55,7 +54,6 @@
             <span class="lead text-small">{str tag=nosharedviewsyet section=view}</span>
         </div>
     {/if}
-    <hr />
 {/if}
 
 
@@ -87,7 +85,6 @@
             <span class="lead text-small">{str tag=nosharedcollectionsyet section=collection}</span>
         </div>
     {/if}
-    <hr />
 {/if}
 
 {if $allsubmitted}
@@ -116,7 +113,6 @@
             <span class="lead text-small">{str tag=nosubmittedviewscollectionsyet section=view}</span>
         </div>
     {/if}
-    <hr />
 {/if}
 {if $nosubmissions}
     <h4 class="title list-group-item-heading">
@@ -138,7 +134,6 @@
         {literal}}{/literal});
     </script>
     {/if}
-    <hr />
 {/if}
 
 {if $mysubmitted || $group_view_submission_form}

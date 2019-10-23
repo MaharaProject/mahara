@@ -105,6 +105,7 @@ label.sr-only + div.tox-tinymce {
     background-color: transparent;
     border-color: transparent;
     text-decoration-line: underline;
+    font-weight: 400;
     color: $btn-primary-bg;
     box-shadow: none;
     &:hover {

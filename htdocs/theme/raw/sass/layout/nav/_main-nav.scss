@@ -30,7 +30,6 @@
         position: static;
         clear: both;
         max-height: none;
-        border: 1px solid $navbar-default-link-border;
 
         @include media-breakpoint-up(md) {
             position: absolute;

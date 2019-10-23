@@ -249,6 +249,10 @@
     content: fa-content($fa-var-mobile);
 }
 
+.icon-cpd:before {
+    content: fa-content($fa-var-award);
+}
+
 .icon-on-hover {
 
     ~ .icon-action {

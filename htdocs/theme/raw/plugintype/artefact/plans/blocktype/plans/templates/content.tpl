@@ -2,7 +2,7 @@
     <p class="editor-description">{$noplans}</p>
 {/if}
 {foreach from=$plans item=plan}
-    <div{if $plan.description} class="card-body flush"{/if}>
+    <div class="listing{if $plan.description} card-body flush{/if}">
         {if $editing}
             <div class="float-right btn-group">
                 <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/plan/edit.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
