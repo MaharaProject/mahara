@@ -92,20 +92,3 @@ $btn-primary-border:             scale-color($btn-primary-bg, $lightness: -5%);
 $btn-success-color:              #fff;
 $btn-success-bg:                 $theme-primary-color;
 $btn-success-border:             scale-color($theme-primary-color, $lightness: -5%);
-
-
-//== Buttons
-
-$btn-font-weight:                normal;
-
-$btn-secondary-color:            #333;
-$btn-secondary-bg:               #F9F9F9;
-$btn-secondary-border:           #ccc;
-
-$btn-primary-color:              #fff;
-$btn-primary-bg:                 $theme-primary-color;
-$btn-primary-border:             scale-color($btn-primary-bg, $lightness: -5%);
-
-$btn-success-color:              #fff;
-$btn-success-bg:                 $theme-primary-color;
-$btn-success-border:             scale-color($theme-primary-color, $lightness: -5%);

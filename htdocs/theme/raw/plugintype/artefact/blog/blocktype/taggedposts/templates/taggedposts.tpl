@@ -22,19 +22,20 @@
 </div>
 {/if}
 
-<div class="taggedpost-title text-midtone card-body flush">
-    <p>{$blockheading|clean_html|safe}</p>
-</div>
-
+<div class="taggedpost-title card-body flush">
+{if $blockheading}
+    <p class="text-midtone">{$blockheading|clean_html|safe}</p>
+{/if}
 {if $configerror}
-    <span class="text-midtone">{str tag='configerror' section='blocktype.blog/taggedposts'}</span>
+    <p class="text-midtone">{str tag='configerror' section='blocktype.blog/taggedposts'}</p>
 {elseif $badnotag && $badtag}
-    <span class="text-midtone">{str tag='notagsboth' section='blocktype.blog/taggedposts' arg1=$badtag arg2=$badnotag}</span>
+    <p class="text-midtone">{str tag='notagsboth' section='blocktype.blog/taggedposts' arg1=$badtag arg2=$badnotag}</p>
 {elseif $badnotag}
-    <span class="text-midtone">{str tag='notagsomit' section='blocktype.blog/taggedposts' arg1=$badnotag}</span>
+    <p class="text-midtone">{str tag='notagsomit' section='blocktype.blog/taggedposts' arg1=$badnotag}</p>
 {elseif $badtag}
-    <span class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</span>
+    <p class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</p>
 {elseif $full}
+</div>
 
     <div id="postlist_{$blockid}" class="list-group">
         {foreach from=$results item=post}
