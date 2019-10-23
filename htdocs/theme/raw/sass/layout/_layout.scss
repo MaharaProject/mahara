@@ -166,6 +166,9 @@ body.presentation-iframe {
 
 .peoplelistinfo {
     clear: both;
+    .profile img {
+      margin-right: 10px;
+    }
     .leftdiv {
         float: left;
         margin-bottom: 5px;
@@ -254,13 +257,11 @@ form#settings,
 
 // Profile page accept friends form
 .pendingfriendscard {
-    margin-top: 40px;
-    padding-top: 30px;
+    margin-top: 60px;
     margin-bottom: 20px;
 
     @include media-breakpoint-down(md) {
         margin-top: -30px;
-        padding-top: 0;
     }
 }
 

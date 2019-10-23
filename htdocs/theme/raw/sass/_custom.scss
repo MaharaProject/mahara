@@ -917,3 +917,15 @@ a.online-users {
         padding-left: 0;
     }
 }
+
+// view last updated
+.last-updated {
+  margin-top: $grid-gutter-width;
+}
+
+// shared view filter in smaller screens too close to top element
+@include media-breakpoint-down(lg) {
+  #search_inputgroupsort_container {
+    margin-top: 10px;
+  }
+}

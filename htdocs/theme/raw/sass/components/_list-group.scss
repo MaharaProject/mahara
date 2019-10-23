@@ -129,7 +129,6 @@
 // Sidebar notification item styles
 .list-group-item-profile-notification {
     word-wrap: normal;
-    word-break: break-all;
     white-space: normal;
     &:first-child {
         padding-right: 80px;
@@ -306,6 +305,7 @@
     }
     + .pagination-container {
         padding-top: 10px;
+        padding-bottom: 10px;
     }
 }
 
@@ -395,6 +395,27 @@
     }
 }
 
+.bt-groupviews,
+.bt-groupviews-editor {
+    h4.title {
+        font-weight: bold;
+        font-size: $font-size-base;
+        padding: 10px 0;
+        border-bottom: 1px solid $list-group-border;
+        margin: 0;
+    }
+}
+
+.bt-plans,
+.bt-plans-editor {
+    h4.title {
+        font-weight: bold;
+        font-size: $font-size-base;
+        margin: 0;
+        padding-bottom: 10px;
+    }
+}
+
 .memberswrap,
 #friendslist {
     .list-group-item {
@@ -449,18 +470,11 @@
 
 // Rmove some list's first child top border when they don't have anything between card header and list
 .card.card-secondary {
-  &.bt-recentposts, &.bt-recentposts-editor,
-  &.bt-recentforumposts, &.bt-recentforumposts-editor,
-  &.bt-navigation, &.bt-navigation-editor,
-  &.bt-entireresume, &.bt-entireresume-editor,
-  &.bt-resumefield, &.bt-resumefield-editor,
-  &.bt-filedownload, &.bt-filedownload-editor,
-  &.bt-folder, &.bt-folder-editor,
-  &.bt-myviews, &.bt-myviews-editor,
-  &.bt-newviews, &.bt-newviews-editor,
-  &.bt-inbox, &.bt-inbox-editor,
-  &.bt-watchlist, &.bt-watchlist-editor {
-    .list-group {
+  > .block,
+  > .block > .listing,
+  > .block .file-download-list,
+  > .block .forumposts {
+    > .list-group {
       .list-group-item:first-child,
       + .list-group-item:first-child,
       .block-header:first-child + .list-group-item {
@@ -468,9 +482,22 @@
       }
     }
   }
-  // except list in list
-  &.bt-entireresume, &.bt-entireresume-editor {
-    .list-group .list-group {
+  // exceptions
+  &.bt-taggedposts > .block > .list-group,
+  &.bt-taggedposts-editor > .block > .list-group,
+  .list-group .list-group {
+    .list-group-item:first-child,
+    + .list-group-item:first-child,
+    .block-header:first-child + .list-group-item {
+      border-top: 1px solid $list-group-border-color;
+    }
+  }
+
+  &.bt-plans .block .listing,
+  &.bt-plans-editor .block .listing {
+    h4 + .list-group,
+    p + .list-group,
+    .tags + .list-group {
       .list-group-item:first-child,
       + .list-group-item:first-child,
       .block-header:first-child + .list-group-item {

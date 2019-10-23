@@ -145,3 +145,8 @@ h3 {
         }
     }
 }
+
+// remove border radius from first child list-group-item in a card that appears under a card-header
+.card-header + .list-group .list-group-item:first-child {
+  border-radius: 0;
+}

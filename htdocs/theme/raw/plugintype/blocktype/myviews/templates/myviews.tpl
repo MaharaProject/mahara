@@ -1,6 +1,6 @@
 {if $myviews}
     <div class="list-group">
-        <div id="myviewlist" class="list-group">
+        <div id="myviewlist">
             {$myviews.tablerows|safe}
         </div>
     {if $myviews.pagination}
