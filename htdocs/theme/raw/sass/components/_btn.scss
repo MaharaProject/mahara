@@ -541,3 +541,17 @@ td.action-list-copy {
         }
     }
 }
+
+// Admin
+#close_site_submit {
+    &.btn {
+        border-color: $danger;
+        color: $white;
+        background-color: $danger;
+        &:hover,
+        &:focus {
+          color: $white;
+          background-color: scale-color($danger, $lightness: -10%);
+        }
+    }
+}
