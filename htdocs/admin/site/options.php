@@ -372,7 +372,7 @@ $siteoptionform = array(
             ),
         ),
         'accountsettings' => array(
-            'iconclass'=>'regular icon-user-cog',
+            'iconclass'=> 'user-cog',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,
