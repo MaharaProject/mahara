@@ -44,7 +44,7 @@ $string['notreadylabel'] = 'Not ready';
 $string['oauthprotocolenabled'] = 'OAuth protocol enabled';
 $string['parentauthforlti'] = 'Parent authority';
 $string['portfoliosubmittedforgrading'] = 'You submitted the portfolio "<strong><a href="%s">%s</a></strong>" for assessment on %s.';
-$string['portfoliosubmittedheader'] = 'Portfolio Submitted';
+$string['portfoliosubmittedheader'] = 'Portfolio submitted';
 $string['readylabel'] = 'Ready';
 $string['restprotocolenabled'] = 'REST protocol enabled';
 $string['revokesubmission'] = 'Revoke submission';
