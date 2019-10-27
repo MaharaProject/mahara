@@ -472,14 +472,14 @@ $string['noearliestdate'] = 'There is no data recorded for this report.';
 $string['submissions'] = 'Submissions';
 $string['reportdescassessments'] = '<ul>
 <li>Submission type</li>
-<li>Portfolio name</li>
+<li>Portfolio title</li>
 <li>Portfolio owner</li>
 <li>Group submitted to</li>
 <li>Submission date</li>
-<li>Released date</li>
+<li>Release date</li>
 <li>Released by</li>
 </ul>';
 $string['assessmenttype'] = 'Submission type';
 $string['assessmensubmitted'] = 'Submission date';
 $string['assessmentmarker'] = 'Released by';
-$string['assessmentreleaseddate'] = 'Released date';
+$string['assessmentreleaseddate'] = 'Release date';
