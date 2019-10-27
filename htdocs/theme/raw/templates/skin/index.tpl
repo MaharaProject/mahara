@@ -5,9 +5,9 @@
         <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
         {str tag=createskin section=skin}
     </a>
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
-        <span class="btn-title sr-only">{str tag="edit"}</span>
+    <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
+        <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
+        <span class="sr-only">{str tag="moreoptions"}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
         <li>
