@@ -375,7 +375,7 @@ $elements['viewcontent'] = array(
             ),
             'view_link_normal_underline' => array(
                     'type' => 'switchbox',
-                    'title' => get_string('linkunderlined', 'skin'),
+                    'title' => get_string('normallinkunderlined', 'skin'),
                     'defaultvalue' => (isset($viewskin['view_link_normal_underline']) and intval($viewskin['view_link_normal_underline']) == 1 ? 'checked' : ''),
             ),
             'view_link_hover_color' => array(
@@ -389,7 +389,7 @@ $elements['viewcontent'] = array(
             ),
             'view_link_hover_underline' => array(
                     'type' => 'switchbox',
-                    'title' => get_string('linkunderlined', 'skin'),
+                    'title' => get_string('hoverlinkunderlined', 'skin'),
                     'defaultvalue' => (isset($viewskin['view_link_hover_underline']) and intval($viewskin['view_link_hover_underline']) == 1 ? 'checked' : ''),
             ),
         ),
