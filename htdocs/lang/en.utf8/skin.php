@@ -21,11 +21,11 @@ $string['blockheading'] = 'Block heading';
 
 $string['themedefault'] = 'Theme default';
 $string['blockheaderfontfamily'] = 'Block header font';
-$string['blockheaderfontcolor'] = 'Block header font color';
+$string['blockheaderfontcolor'] = 'Block header text colour';
 $string['headerbackgroundcolor'] = 'Header background colour';
-$string['headerbackgroundcolordescription'] = 'Background color for page header - this will not show if a header image has been selected';
+$string['headerbackgroundcolordescription'] = 'The background colour for the page header. This will not be displayed if a header background image has been selected.';
 $string['headerbackgroundimage'] = 'Header background image';
-$string['headerbackgroundimagedescription'] = 'Minimum ideal width: 1832px. Minimum ideal height: 232px.';
+$string['headerbackgroundimagedescription'] = 'The minimum width is 1832px and minimum height is 232px.';
 $string['bodybackgroundcolour'] = 'Page background colour';
 $string['bodybackgroundimage'] = 'Page background image';
 
@@ -152,8 +152,9 @@ $string['headerlogoimagelight1'] = 'White Mahara logo and text (suitable for dar
 $string['headerlogoimagedark1'] = 'Dark Mahara logo and text (suitable for lighter header backgrounds)';
 
 $string['normallinkcolor'] = 'Normal link colour';
-$string['hoverlinkcolor1'] = 'Focussed link colour';
-$string['linkunderlined'] = 'Underline link';
+$string['hoverlinkcolor1'] = 'Hover link colour';
+$string['normallinkunderlined'] = 'Underline normal link';
+$string['hoverlinkunderlined'] = 'Underline hover link';
 
 $string['tableborder'] = 'Table border colour';
 $string['tableheader'] = 'Header background colour';
