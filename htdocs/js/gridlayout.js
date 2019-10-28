@@ -36,6 +36,7 @@ function loadGridTranslate(grid, blocks) {
         updateTranslatedGridRows(blocks);
         gridInit();
         $.each(gridElements, function(index, el) {
+            el.on('resizestart', resizeStartBlock);
             el.on('resizestop', resizeStopBlock);
         });
         initJs();
@@ -43,12 +44,16 @@ function loadGridTranslate(grid, blocks) {
 }
 
 function loadGrid(grid, blocks) {
-    var minWidth = grid.opts.minCellColumns;
+    var minWidth = grid.opts.minCellColumns,
+        minHeight=null;
     $.each(blocks, function(index, block) {
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '<div/><div/>');
-        addNewWidget(blockContent, block.id, block, grid, block.class, minWidth);
+        if (!$(block.content).children().hasClass('collapse')) {
+            minHeight = block.height;
+        }
+        addNewWidget(blockContent, block.id, block, grid, block.class, minWidth, minHeight);
     });
 
     jQuery(document).trigger('blocksloaded');
@@ -204,18 +209,19 @@ function updateBlockSizes(grid) {
     });
 }
 
-function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, minWidth=null) {
+function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, minWidth=null, minHeight=null) {
    el = grid.addWidget(
          blockContent,
          dimensions.positionx,
          dimensions.positiony,
          dimensions.width,
          dimensions.height,
-         null, minWidth, null, null, null,
+         null, minWidth, null, minHeight, null,
          blockId
    );
 
     $(el).addClass(blocktypeclass);
+    el.on('resizestart', resizeStartBlock);
     el.on('resizestop', resizeStopBlock);
 
     // images need time to load before height can be properly calculated
@@ -230,24 +236,31 @@ function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, m
     return el;
 }
 
-function resizeStopBlock(event, data) {
-  var grid = $('.grid-stack').data('gridstack');
-  var content = $(this).find('.grid-stack-item-content')[0];
-  var heightpx = Math.max(data.size.height, content.scrollHeight),
-  widthpx = data.size.width,
-  heightgrid = Math.ceil((heightpx + grid.opts.verticalMargin) / (grid.cellHeight() + grid.opts.verticalMargin)),
-  widthgrid = Math.ceil((widthpx + grid.opts.verticalMargin) / (grid.cellWidth() + grid.opts.verticalMargin)); // horizontalMargin doesn't exist in gridstack yet
-  grid.resize($(this), widthgrid, heightgrid);
+function resizeStartBlock(event, data) {
+    var grid = $('.grid-stack').data('gridstack');
+    grid.minHeight($(this), null);
+}
 
-  // update dimesions in db
-  var id = this.attributes['data-gs-id'].value,
-  dimensions = {
-    newx: this.attributes['data-gs-x'].value,
-    newy: this.attributes['data-gs-y'].value,
-    newwidth: widthgrid,
-    newheight: heightgrid,
-  }
-  moveBlock(id, dimensions);
+function resizeStopBlock(event, data) {
+    var grid = $('.grid-stack').data('gridstack');
+    var content = $(this).find('.gridstackblock')[0];
+    var heightpx = Math.max(data.size.height, content.scrollHeight),
+    widthpx = data.size.width,
+    heightgrid = Math.round((heightpx + grid.opts.verticalMargin) / (grid.cellHeight() + grid.opts.verticalMargin)),
+    widthgrid = Math.round((widthpx + grid.opts.verticalMargin) / grid.cellWidth()); // horizontalMargin doesn't exist in gridstack yet
+    grid.resize($(this), widthgrid, heightgrid);
+    grid.minHeight($(this), heightgrid);
+
+    // update dimesions in db
+    var id = this.attributes['data-gs-id'].value,
+    dimensions = {
+      newx: this.attributes['data-gs-x'].value,
+      newy: this.attributes['data-gs-y'].value,
+      newwidth: widthgrid,
+      newheight: heightgrid,
+    }
+    moveBlock(id, dimensions);
+    serializeWidgetMap(grid.grid.nodes);
 }
 
 function moveBlock(id, whereTo) {

@@ -543,7 +543,7 @@
             minWidth = grid.opts.minCellColumns;
             dimensions.width = 4;
             dimensions.height = 3;
-            addNewWidget(blockinstance, blockId, dimensions, grid, 'placeholder', minWidth);
+            addNewWidget(blockinstance, blockId, dimensions, grid, 'placeholder', minWidth, dimensions.height);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
