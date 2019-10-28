@@ -4,6 +4,7 @@ data-gs-x="{$positionx}"
 data-gs-y="{$positiony}"
 data-gs-width="{$width}"
 data-gs-height="{$height}"
+data-gs-min-height="{$height}"
 data-gs-id="{$id}"
 >
 
