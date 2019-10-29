@@ -392,6 +392,13 @@ class ArtefactTypePlan extends ArtefactType {
     }
 
     /**
+     * @return bool
+     */
+    public function is_root_groupplan() {
+        return !is_null($this->rootgroupplan);
+    }
+
+    /**
      * @param stdClass $group
      * @return bool
      */
@@ -1257,30 +1264,39 @@ class ArtefactTypeTask extends ArtefactType {
                         break;
 
                     case 'view':
+                        if ($parentPlan->is_selection_plan() || ($parentPlan->is_root_groupplan() && $task->is_chosen_grouptask())) {
+                            // If task has a rootgrouptask (user has selected in group), then the user can't change the taskView,
+                            // so we only need the entry of the assigned GroupTaskView
+                            $taskViewId = $task->get('taskview');
 
-                        // If task has a rootgrouptask (user has selected in group), then the user can't change the taskView,
-                        // so we only need the entry of the assigned GroupTaskView
-                        $taskViewId = $task->get('taskview');
+                            if (!empty($task->get('rootgrouptask'))) {
+                                require_once(get_config('docroot') . 'lib/view.php');
+                                    if ($taskViewId) {
+                                        $taskView = new \View($taskViewId);
 
-                        if (!empty($task->get('rootgrouptask'))) {
-                            require_once(get_config('docroot') . 'lib/view.php');
-                                if ($taskViewId) {
-                                    $taskView = new \View($taskViewId);
-
-                                    if ($taskView) {
-                                        $elements['view']['options'][$taskView->get('id')] = $taskView->get('title');
-                                        $elements['view']['defaultvalue'] = $taskView->get('id');
+                                        if ($taskView) {
+                                            $elements['view']['options'][$taskView->get('id')] = $taskView->get('title');
+                                            $elements['view']['defaultvalue'] = $taskView->get('id');
+                                        }
                                     }
-                                }
-                                $elements['view']['readonly'] = true;
+                                    $elements['view']['readonly'] = true;
+                            }
+                            else {
+                                PlansTools::fillTaskViewSelectElement($elements['view'], $task->get('id'), $group);
+                            }
                         }
                         else {
-                            PlansTools::fillTaskViewSelectElement($elements['view'], $task->get('id'), $group);
+                            unset($elements['view']);
                         }
                         break;
 
                     case 'outcome':
-                        PlansTools::fillOutcomePortfolioSelectElementForTask($elements['outcome'], $task->get('id'), $group);
+                        if ($parentPlan->is_selection_plan() || ($parentPlan->is_root_groupplan() && $task->is_chosen_grouptask())) {
+                            PlansTools::fillOutcomePortfolioSelectElementForTask($elements['outcome'], $task->get('id'), $group);
+                        }
+                        else {
+                            unset($elements['outcome']);
+                        }
                         break;
 
                     default:
@@ -1291,8 +1307,14 @@ class ArtefactTypeTask extends ArtefactType {
 
         }
         else { // new task
-            PlansTools::fillTaskViewSelectElement($elements['view'], null, $group);
-            PlansTools::fillOutcomePortfolioSelectElementForTask($elements['outcome'], null, $group);
+            if ($parentPlan->is_selection_plan()) {
+                PlansTools::fillTaskViewSelectElement($elements['view'], null, $group);
+                PlansTools::fillOutcomePortfolioSelectElementForTask($elements['outcome'], null, $group);
+            }
+            else {
+                unset($elements['view']);
+                unset($elements['outcome']);
+            }
 
             $elements['taskid'] = ['type' => 'hidden', 'value' => null];
             // see if it's a template by checking it's parent plan template status
@@ -1410,6 +1432,8 @@ class ArtefactTypeTask extends ArtefactType {
     public static function submit(Pieform $form, $values) {
         global $USER, $SESSION, $view;
 
+        $values['view'] = !empty($values['view']) ? $values['view'] : '';
+        $values['outcome'] = !empty($values['outcome']) ? $values['outcome'] : '';
         if (!empty($values['taskid'])) {
             $id = (int) $values['taskid'];
             $artefact = new ArtefactTypeTask($id);
