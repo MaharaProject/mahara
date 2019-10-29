@@ -853,14 +853,14 @@ class PlansTools {
 
         switch ($portfolioElementType) {
             case 'view':
-                return $portfolioElement->get_url();
+                return $portfolioElement->get_url(true, true);
             case 'collection':
                 // To circumvent the log_warn in the get_url() for an empty collection
                 if (empty($portfolioElement->views())) {
                     return get_config('wwwroot') . 'collection/views.php?id=' . $portfolioElement->get('id');
                 }
                 else {
-                    return $portfolioElement->get_url();
+                    return $portfolioElement->get_url(true, true);
                 }
             default:
                 throw new \MaharaException(get_string('unsupportedportfoliotype','artefact.plans'));
