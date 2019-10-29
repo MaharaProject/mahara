@@ -140,7 +140,8 @@ function importskinform_submit(Pieform $form, $values) {
             $skin = array_merge($skin, array('view_text_font_size' => $item->getAttribute('font-size')));
             $skin = array_merge($skin, array('view_text_font_color' => $item->getAttribute('font-color')));
             $skin = array_merge($skin, array('view_text_heading_color' => $item->getAttribute('heading-color')));
-            $skin = array_merge($skin, array('view_text_emphasized_color' => $item->getAttribute('emphasized-color')));
+            $skin = array_merge($skin, array('view_block_header_font' => $item->getAttribute('block-heading-font')));
+            $skin = array_merge($skin, array('view_block_header_font_color' => $item->getAttribute('block-heading-color')));
         }
 
         // Link element...

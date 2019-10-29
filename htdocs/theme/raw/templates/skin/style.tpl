@@ -37,6 +37,16 @@ body > .main-content > .row {
     background-size: 100%;
 }
 
+.collection-nav h2 {
+    color:  {$view_text_heading_color};
+}
+
+/* Used to style author, tag links in page headers */
+.pageheader-content .text-small a {
+    color: {$view_text_heading_color};
+    text-decoration: underline;
+}
+
 /* All other custom settings should be scoped to be within .user-page-content */
 /* with the exception of the page title and page description */
 
@@ -98,17 +108,11 @@ body > .main-content > .row {
 
 .user-page-content .card .title:not(.feedtitle) {
     font-weight: bold;
-    color: {$view_text_emphasized_color};
+    color: {$view_text_font_color};
     font-family: {$view_heading_font_family|safe};
-    border-color: {$view_text_emphasized_color};
+    border-color: {$view_text_font_color};
 }
-.user-page-content .card .title a,
-.user-page-content .card .title a:link,
-.user-page-content .card .title a:visited,
-.user-page-content .card .title a:active {
-    color: {$view_text_emphasized_color};
-    text-decoration: none;
-}
+
 .user-page-content .card .title a:hover {
     color: {$view_link_hover_color};
     text-decoration: none;
@@ -125,9 +129,6 @@ body > .main-content > .row {
 
 .user-page-content .list-group-item {
     background-color: transparent;
-}
-.user-page-content .card > .block .list-group .list-group-item {
-    border-color: {$view_text_emphasized_color};
 }
 
 
