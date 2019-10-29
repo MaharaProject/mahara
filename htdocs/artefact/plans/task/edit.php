@@ -62,7 +62,8 @@ define('TITLE', $title);
 
 $form = ArtefactTypeTask::get_form($task->get('parent'), $group, $task);
 
-$smarty = smarty(['js/preview.js', 'artefact/plans/js/taskedit.js']);
+$smarty = smarty(['js/preview.js', 'artefact/plans/js/taskedit.js',
+                  'js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js']);
 $smarty->assign('editform', $form);
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('SUBSECTIONHEADING', $subsectionheading);

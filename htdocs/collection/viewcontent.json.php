@@ -22,12 +22,22 @@ if (!can_view_view($id)) {
 $firstview = new View($id);
 $collection = $firstview->get('collection');
 
+if ($firstview->uses_new_layout()) {
+    $blocks = $firstview->get_blocks(false, true);
+    $newlayout = true;
+}
+else {
+    $blocks = $view->build_rows();
+    $newlayout = false;
+}
+
 $smarty = smarty_core();
 $smarty->assign('viewid', $id);
 $smarty->assign('collectiontitle', $collection->get('name'));
 $smarty->assign('ownername', $firstview->formatted_owner());
 $smarty->assign('collectiondescription', $collection->get('description'));
-$smarty->assign('viewcontent', $firstview->build_rows(false, true));
+$smarty->assign('newlayout', $newlayout);
+$smarty->assign('blocks', $blocks);
 list($tagcount, $alltags) = $firstview->get_all_tags_for_view();
 $smarty->assign('tags', $alltags);
 
