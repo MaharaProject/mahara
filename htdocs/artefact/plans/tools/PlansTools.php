@@ -18,35 +18,6 @@ use View;
 class PlansTools {
 
     /**
-     * @return null|string
-     * @throws \Exception
-     */
-    public static function getCurrentTerm() {
-
-        // ToDo: Config terms in settings, currently hardcoded implemented only for standard German universities
-
-        $date = new \DateTime();
-        $year = $date->format('Y');
-        $month = (int) $date->format('m');
-        If ($date->getTimezone()->getName() !== 'Europe/Berlin') {
-            return null;
-        }
-        if ($month > 3 and $month < 10) {
-            $semester = 'SoSe ' . $year;
-        }
-        else {
-            if ($month < 4) {
-                $year = ((int) $year - 1) . '/' . $date->format('y');
-            }
-            else {
-                $year = $year . '/' . ((int) $date->format('y') + 1);
-            }
-            $semester = 'WiSe ' . $year;
-        }
-        return $semester;
-    }
-
-    /**
      * @param ArtefactTypePlan $rootGroupPlan
      * @return ArtefactTypePlan
      * @throws \ArtefactNotFoundException
@@ -69,7 +40,6 @@ class PlansTools {
 
         $tags = $rootGroupPlan->get('tags');
         $tags[] = $rootGroup->name;
-        $tags[] = self::getCurrentTerm();
 
         $userPlan->set('tags', $tags);
 
@@ -687,16 +657,18 @@ class PlansTools {
                         INNER JOIN {artefact_installed_type} AS i ON i.name = a.artefacttype
                         WHERE a.id = ?';
                 $parentRecord = get_record_sql($sql, [$parentId], 0);
+                if ($parentRecord) {
+                    safe_require('artefact', $parentRecord->plugin);
+                    $classname = generate_artefact_class_name($parentRecord->artefacttype);
 
-                safe_require('artefact', $parentRecord->plugin);
-                $classname = generate_artefact_class_name($parentRecord->artefacttype);
-
-
-                /** @var \ArtefactType $parentInstance */
-                $parentInstance = new $classname($parentRecord->id, $parentRecord);
-                $parentInstance->delete();
+                    /** @var \ArtefactType $parentInstance */
+                    $parentInstance = new $classname($parentRecord->id, $parentRecord);
+                    $parentInstance->delete();
+                }
+                else {
+                    // parent already gone away - can happen if loop deletes folder before folder item
+                }
             }
-
             // If for some reasons the deletion of the parent fails, make sure that at least it's children are deleted
             catch (\Exception $e) {
                 /** @var \ArtefactType $childInstance */
@@ -815,6 +787,11 @@ class PlansTools {
     }
 
     /**
+     * When a page is copied as part of the copying of a plan task, it may take a few seconds to complete the copying process
+     * especially when the page contains a lot of artefacts. The within 5 second check here is to allow for a slight margin
+     * between page's 'ctime' and 'mtime' values without regarding the page as having been modified.
+     * Because once a page has been regarded as modified, different deletion rules apply to the deletion of artefacts.
+     *
      * @param View $view
      * @return bool
      * @throws \Exception
@@ -822,8 +799,8 @@ class PlansTools {
     public static function viewHasNotBeenModifiedByUserSinceCreation(\View $view) {
         $cTime = new \DateTime($view->get('ctime'));
         $mTime = new \DateTime($view->get('mtime'));
-
-        return $mTime->diff($cTime)->s < 4;
+        $diff = $mTime->getTimestamp() - $cTime->getTimestamp();
+        return $diff < 5;
     }
 
     /**
