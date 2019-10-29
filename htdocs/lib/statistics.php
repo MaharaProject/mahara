@@ -3631,7 +3631,7 @@ function accesslist_statistics_headers($extra, $urllink) {
         array('id' => 'rownum', 'name' => '#'),
         array(
               'id' => 'owner', 'required' => true,
-              'name' => get_string('owner', 'view'),
+              'name' => get_string('Owner', 'view'),
               'class' => format_class($extra, 'owner'),
               'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner'),
               'helplink' => get_help_icon('core', 'reports', 'accesslist', 'owner')
@@ -4928,7 +4928,7 @@ function assessments_statistics_headers($extra, $urllink) {
         ),
         array('id' => 'owner',
             'required' => true,
-            'name' => get_string('owner', 'view'),
+            'name' => get_string('Owner', 'view'),
             'link' => format_goto($urllink . '&sort=owner', $extra, array('sort'), 'owner'),
         ),
         array('id' => 'group',
