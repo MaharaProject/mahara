@@ -74,7 +74,6 @@ class Skin {
         'view_text_font_size' => 'small',
         'view_text_font_color' => '#000000',
         'view_text_heading_color' => '#000000',
-        'view_text_emphasized_color' => '#666666',
 
         'view_link_normal_color' => '#0000EE',
         'view_link_normal_underline' => true,
@@ -1050,7 +1049,7 @@ class Skin {
         // Add the sample heading title - the font size does not affect the text within page header
         imagettftext($img2, $heading_size, 0, 10, $header_font_size+10, $heading_text_color, $heading_font, $heading_text);
 
-        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_emphasized_color']);
+        list($r, $g, $b) = self::get_rgb_from_hex($skin['view_text_font_color']);
         $emphasized_color = imagecolorallocate($img, $r, $g, $b);
         list($r, $g, $b) = self::get_rgb_from_hex('#CCCCCC');
         $line_color = imagecolorallocate($img, $r, $g, $b);

@@ -22,7 +22,6 @@ $theme->overrideparentcss = true;
 $theme->themeheadingcolor = '#545B5D'; // $view_text_heading_color
 $theme->themetextcolor = '#545B5D'; // $view_text_font_color
 $theme->themelinkcolor = '#1f6c88;'; // $view_link_normal_color
-$theme->themeemphasizedtextcolor = '#545B5D'; // $view_text_emphasized_color
 $theme->themefocusedlinkcolor = '#1d6781'; // $view_link_hover_color
 
 /**
