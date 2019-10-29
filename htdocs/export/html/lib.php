@@ -63,7 +63,7 @@ class PluginExportHtml extends PluginExport {
         $this->rootdir = 'portfolio-for-' . self::text_to_filename($user->get('username'));
 
         // Create basic required directories
-        foreach (array('files', 'views', 'static', 'static/smilies', 'static/profileicons') as $directory) {
+        foreach (array('files', 'views', 'static', 'static/profileicons') as $directory) {
             $directory = "{$this->exportdir}/{$this->rootdir}/{$directory}/";
             if (!check_dir_exists($directory)) {
                 throw new SystemException("Couldn't create the temporary export directory $directory");
@@ -803,9 +803,6 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
             }
         }
 
-        // Smilies
-        $directoriestocopy[get_config('docroot') . 'js/tinymce/plugins/emoticons/img'] = $staticdir . 'smilies/';
-
         // Copy over bootstrap and jquery files
         $jsdir =  $staticdir . 'theme/' . $theme . '/static/js/';
         $directoriestocopy[get_config('docroot') . 'lib/bootstrap/assets/javascripts/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
@@ -1015,8 +1012,6 @@ class HtmlExportOutputFilter {
             array(
                 // We don't care about javascript
                 '#<script[^>]*>.*?</script>#si',
-                // Fix simlies from tinymce
-                '#<img ([^>]*)src="(' . $wwwroot . ')?/?js/tinymce/plugins/emoticons/img/([^"]+)"([^>]+)>#',
                 // No forms
                 '#<form[^>]*>.*?</form>#si',
                 // Gratuitous hack for the RSS blocktype
@@ -1024,7 +1019,6 @@ class HtmlExportOutputFilter {
             ),
             array(
                 '',
-                '<img $1src="' . $this->basepath . '/static/smilies/$3"$4>',
                 '',
                 '',
             ),
