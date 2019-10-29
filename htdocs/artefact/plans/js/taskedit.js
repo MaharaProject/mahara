@@ -33,7 +33,12 @@ $(function () {
 
     setButtonAccessibility($("#view_button"), $("#edittask_view"));
 
-    $("#view_button").insertAfter("#edittask_view_container .picker");
+    if ($("#edittask_view_container .picker").length) {
+        $("#view_button").removeClass('d-none').insertAfter("#edittask_view_container .picker");
+    }
+    else {
+        $("#view_button").addClass('d-none');
+    }
 
     // Hook up 'click to preview' links
     $("#view_button").click(function (event) {
@@ -56,7 +61,12 @@ $(function () {
     // main
     setButtonAccessibility($("#outcome_button"), $("#edittask_outcome"));
 
-    $("#outcome_button").insertAfter("#edittask_outcome_container .picker");
+    if ($("#edittask_outcome_container .picker").length) {
+        $("#outcome_button").removeClass('d-none').insertAfter("#edittask_outcome_container .picker");
+    }
+    else {
+        $("#outcome_button").addClass('d-none');
+    }
 
     // Hook up 'click to preview' links
     $("#outcome_button").click(function (event) {
