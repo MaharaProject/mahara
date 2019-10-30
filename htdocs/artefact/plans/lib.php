@@ -1526,7 +1526,12 @@ class ArtefactTypeTask extends ArtefactType {
             $sql .= " AND a.id IN ( " . join(',', array_fill(0, count($tasks), '?')) . ")";
             $values = array_merge($values, $tasks);
         }
-        $sql .= " ORDER BY a.id";
+        if ($plan->is_template()) {
+            $sql .= " ORDER BY a.id";
+        }
+        else {
+            $sql .= " ORDER BY at.completed, at.completiondate ASC, a.id";
+        }
         ($results = get_records_sql_array($sql, $values, $offset, $limit))
         || ($results = array());
 
