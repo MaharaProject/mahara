@@ -60,7 +60,8 @@ else {
 
 $form = ArtefactTypeTask::get_form($planId, $group);
 
-$smarty = smarty(['js/preview.js', 'artefact/plans/js/taskedit.js']);
+$smarty = smarty(['js/preview.js', 'artefact/plans/js/taskedit.js',
+                  'js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js']);
 
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $pageheading);

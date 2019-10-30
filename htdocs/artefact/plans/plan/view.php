@@ -85,7 +85,9 @@ $pagestrings = [
         'emptycollection'
     ]
 ];
-$smarty = smarty(['paginator', 'js/preview.js', 'artefact/plans/js/planview.js'], null, $pagestrings);
+$smarty = smarty(['paginator', 'js/preview.js', 'artefact/plans/js/planview.js',
+                  'js/lodash/lodash.js', 'js/gridstack/gridstack.js',
+                  'js/gridlayout.js'], null, $pagestrings);
 
 $smarty->assign('tasks', $tasks);
 //$smarty->assign('plan', $id);
