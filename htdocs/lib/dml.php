@@ -1086,6 +1086,13 @@ function get_table_from_query($sql) {
         $idsql = null; // no existing rows being updated
         $type = 'insert';
     }
+    else if (preg_match('/^UPDATE\s(.*?)\sSET\s(.*?)WHERE\s(.*)/i', $sql, $matches)) {
+        $table = trim($matches[1], '"');
+        $binds = $matches[2];
+        $bindoffset = preg_match_all('/(?<!\\\)\?/', $binds);
+        $idsql = 'SELECT * FROM ' . $matches[1] . ' WHERE '  . $matches[3];
+        $type = 'update';
+    }
     else if (preg_match('/^UPDATE\s(.*?)\s.*?IN\s*\(\s*(SELECT.*)\s*\)/i', $sql, $matches)) {
         $table = trim($matches[1], '"');
         $idsql = $matches[2];
@@ -1094,13 +1101,6 @@ function get_table_from_query($sql) {
     else if (preg_match('/^UPDATE\s(.*?)\s.*?FROM\s(.*)/i', $sql, $matches)) {
         $table = trim($matches[1], '"');
         $idsql = 'SELECT * FROM ' . $matches[2];
-        $type = 'update';
-    }
-    else if (preg_match('/^UPDATE\s(.*?)\sSET\s(.*?)WHERE\s(.*)/i', $sql, $matches)) {
-        $table = trim($matches[1], '"');
-        $binds = $matches[2];
-        $bindoffset = preg_match_all('/(?<!\\\)\?/', $binds);
-        $idsql = 'SELECT * FROM ' . $matches[1] . ' WHERE '  . $matches[3];
         $type = 'update';
     }
     return array($type, $table, $idsql, $bindoffset);
