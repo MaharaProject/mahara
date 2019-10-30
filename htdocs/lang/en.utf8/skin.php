@@ -109,8 +109,8 @@ $string['bodybgcolor1'] = 'Background colour';
 $string['viewbgcolor'] = 'Page background colour';
 $string['textcolor'] = 'Text colour';
 $string['textcolordescription'] = 'This is the colour of normal text.';
-$string['headingcolor'] = 'Heading text colour';
-$string['headingcolordescription'] = 'This is the colour of a page heading.';
+$string['headingcolor1'] = 'Header text colour';
+$string['headingcolordescription2'] = 'This is the colour for text in the header area.';
 $string['emphasizedcolor'] = 'Emphasized text colour';
 $string['emphasizedcolordescription'] = 'This is the colour of page sub-headings and emphasized text.';
 $string['bodybgimage1'] = 'Background image';
@@ -152,7 +152,7 @@ $string['headerlogoimagelight1'] = 'White Mahara logo and text (suitable for dar
 $string['headerlogoimagedark1'] = 'Dark Mahara logo and text (suitable for lighter header backgrounds)';
 
 $string['normallinkcolor'] = 'Normal link colour';
-$string['hoverlinkcolor'] = 'Highlighted link colour';
+$string['hoverlinkcolor1'] = 'Focussed link colour';
 $string['linkunderlined'] = 'Underline link';
 
 $string['tableborder'] = 'Table border colour';

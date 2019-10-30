@@ -274,9 +274,8 @@ if (!isset($themelinkcolor)) {
     $themelinkcolor = isset($THEME->themelinkcolor) ? $THEME->themelinkcolor : '#556d32'; // $view_link_normal_color
 }
 $themetextcolor = isset($THEME->themetextcolor) ? $THEME->themetextcolor : '#333333'; // $view_text_font_color
-$themeemphasizedtextcolor = isset($THEME->themeemphasizedtextcolor) ? $THEME->themeemphasizedtextcolor : '#333333'; // $view_text_emphasized_color
 $themefocusedlinkcolor = isset($THEME->themefocusedlinkcolor) ? $THEME->themefocusedlinkcolor :  '#475c2a'; // $view_link_hover_color
-$themeblockheadingfontcolor = '#FFFFFF'; // $theme-block-header-color
+$themeblockheadingfontcolor = isset($THEME->themeblockheadingfontcolor) ? $THEME->themeblockheadingfontcolor :  '#333333'; // $theme-block-header-color
 
 // Text
 $elements['viewcontent'] = array(
@@ -298,8 +297,8 @@ $elements['viewcontent'] = array(
             ),
             'view_text_heading_color' => array(
                     'type' => 'color',
-                    'title' => get_string('headingcolor', 'skin'),
-                    'description' => get_string('headingcolordescription', 'skin'),
+                    'title' => get_string('headingcolor1', 'skin'),
+                    'description' => get_string('headingcolordescription2', 'skin'),
                     'defaultvalue' => (!empty($viewskin['view_text_heading_color']) ? $viewskin['view_text_heading_color'] :  $themeheadingcolor),
                     'size' => 7,
                     'options' => array(
@@ -365,16 +364,6 @@ $elements['viewcontent'] = array(
                         'themedefault' => $themetextcolor,
                     ),
             ),
-            'view_text_emphasized_color' => array(
-                    'type' => 'color',
-                    'title' => get_string('emphasizedcolor', 'skin'),
-                    'description' => get_string('emphasizedcolordescription', 'skin'),
-                    'defaultvalue' => (!empty($viewskin['view_text_emphasized_color']) ? $viewskin['view_text_emphasized_color'] : $themeemphasizedtextcolor),
-                    'size' => 7,
-                    'options' => array(
-                        'themedefault' => $themeemphasizedtextcolor,
-                    ),
-            ),
             'view_link_normal_color' => array(
                     'type' => 'color',
                     'title' => get_string('normallinkcolor', 'skin'),
@@ -391,7 +380,7 @@ $elements['viewcontent'] = array(
             ),
             'view_link_hover_color' => array(
                     'type' => 'color',
-                    'title' => get_string('hoverlinkcolor', 'skin'),
+                    'title' => get_string('hoverlinkcolor1', 'skin'),
                     'defaultvalue' => (!empty($viewskin['view_link_hover_color']) ? $viewskin['view_link_hover_color'] : $themefocusedlinkcolor),
                     'size' => 7,
                     'options' => array(
@@ -538,7 +527,6 @@ function designskinform_submit(Pieform $form, $values) {
     $skin['view_text_heading_color'] = $values['view_text_heading_color'];
     $skin['header_background_color'] = $values['header_background_color'];
     $skin['header_background_image'] = $values['header_background_image'];
-    $skin['view_text_emphasized_color'] = $values['view_text_emphasized_color'];
     $skin['view_link_normal_color'] = $values['view_link_normal_color'];
     $skin['view_link_normal_underline'] = $values['view_link_normal_underline'];
     $skin['view_link_hover_color'] = $values['view_link_hover_color'];

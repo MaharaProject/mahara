@@ -84,7 +84,6 @@ $smarty->assign('view_block_header_font_color', $skin->viewskin['view_block_head
 $smarty->assign('view_text_font_size', $skin->viewskin['view_text_font_size']);
 $smarty->assign('view_text_font_color', $skin->viewskin['view_text_font_color']);
 $smarty->assign('view_text_heading_color', $skin->viewskin['view_text_heading_color']);
-$smarty->assign('view_text_emphasized_color', $skin->viewskin['view_text_emphasized_color']);
 
 // LINK
 $smarty->assign('view_link_normal_color', $skin->viewskin['view_link_normal_color']);

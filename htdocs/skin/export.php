@@ -86,7 +86,8 @@ if (!empty($exportskins)) {
         $itemnode->setAttribute('font-size', $viewskin['view_text_font_size']);
         $itemnode->setAttribute('font-color', $viewskin['view_text_font_color']);
         $itemnode->setAttribute('heading-color', $viewskin['view_text_heading_color']);
-        $itemnode->setAttribute('emphasized-color', $viewskin['view_text_emphasized_color']);
+        $itemnode->setAttribute('block-heading-font', $viewskin['view_block_header_font']);
+        $itemnode->setAttribute('block-heading-color', $viewskin['view_block_header_font_color']);
 
         // Link element...
         $childelement = $xmldoc->createElement('link');
