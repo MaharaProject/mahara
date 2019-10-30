@@ -11,7 +11,7 @@
             <a class="btn-secondary submitcancel submit btn" href="{$WWWROOT}view/blocks.php?id={$viewid}&translate=true">
               {str tag="accept"}
             </a>
-            <a class="btn-secondary submitcancel cancel" href="{$WWWROOT}view/view.php?id={$viewid}">
+            <a class="btn-secondary submitcancel cancel btn" href="{$WWWROOT}view/view.php?id={$viewid}">
                 {str tag="cancel"}
             </a>
         </div>
