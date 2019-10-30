@@ -343,6 +343,10 @@ EOF;
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "silver",
+    mobile: {
+        theme: 'mobile',
+        toolbar: ['undo', 'bold', 'italic', 'link', 'bullist', 'styleselect'],
+    },
     contextmenu: false,
     plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
     skin: 'oxide',
