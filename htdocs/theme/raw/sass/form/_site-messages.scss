@@ -9,6 +9,7 @@
         border-radius: 0;
         padding: 6px 1.25rem;
         border: 0;
+        min-height: 33px;
 
         // take away default alert icon so it can be aligned with different break points
         &:before {
