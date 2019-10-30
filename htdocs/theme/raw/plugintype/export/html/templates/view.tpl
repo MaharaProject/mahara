@@ -44,7 +44,6 @@ $(function () {
     {$view|safe}
 {elseif !$blocks}
     <div class="alert alert-info">
-      <span class="icon icon-lg icon-info-circle left" role="presentation" aria-hidden="true"></span>
       {str tag=nopeerassessmentrequired section=artefact.peerassessment}
     </div>
 {else}
