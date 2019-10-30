@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="center">
-    <p class="alert alert-warning">{str tag=confirmtranslationmessage section=view arg1=$accountprefsurl}</p>
+    <p class="alert alert-warning">{str tag=confirmconversionmessage section=view arg1=$accountprefsurl}</p>
     <form action="{$formurl}" method="post" class="pieform form-inline">
         <input type="hidden" id="viewid" name="id" value="{$viewid}">
         <input type="hidden" name="sesskey" value="{$SESSKEY}">

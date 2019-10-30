@@ -522,8 +522,8 @@ $string['blockssizeupdated'] = 'Block sizes were updated successfully';
 $string['dimensionsnotset'] = 'Block dimensions not set';
 $string['dontaskagain'] = 'Accept and remember';
 $string['pleaseconfirmtranslate'] = 'Convert page layout';
-$string['confirmtranslationmessage'] = 'As part of Mahara 19.10 we introduced a new way to create a page layout. To be able to edit this page, you will need to convert the old layout to the new layout.
-If you wish to convert only this page, click \'Accept\'. To convert all pages and not see this message again, click \'Accept and remember\'. This option can be changed in your <a href="%s">Settings</a>. To go back to the page, click on \'Cancel\'.
+$string['confirmconversionmessage'] = 'As part of Mahara 19.10 we introduced a new way to create a page layout. To be able to edit this page, you will need to convert the old to the new layout.
+If you want to convert only this page, click \'Accept\'. To convert all pages and not see this message again, click \'Accept and remember\'. This option can be changed in your <a href="%s">Preferences</a>. To go back to the page without editing it, click \'Cancel\'.
 ';
 $string['accessibleview'] = 'Accessible layout';
 $string['accessibleviewdescription'] = 'To create a one-column page layout and edit it with the keyboard instead of drag-and-drop.';
