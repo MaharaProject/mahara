@@ -1809,6 +1809,7 @@ function mysql_get_type() {
     if (!is_mysql()) {
         throw new SQLException('mysql_get_type() expects a mysql database');
     }
+    // First check against version_comment as some older versions store the info we need there
     $mysqltype = mysql_get_variable('version_comment');
     if (stripos($mysqltype, 'MariaDB') !== false) {
         return 'mariadb';
@@ -1816,9 +1817,15 @@ function mysql_get_type() {
     else if (stripos($mysqltype, 'Percona') !== false) {
         return 'percona';
     }
-    else {
-        return 'mysql';
+    // Then check against version as some newer versions store the info we need there
+    $mysqltype = mysql_get_variable('version');
+    if (stripos($mysqltype, 'MariaDB') !== false) {
+        return 'mariadb';
     }
+    else if (stripos($mysqltype, 'Percona') !== false) {
+        return 'percona';
+    }
+    return 'mysql';
 }
 
 /**
