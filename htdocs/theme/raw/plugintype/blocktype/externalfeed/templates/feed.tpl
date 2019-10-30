@@ -43,9 +43,9 @@
                     <h4 class="list-group-item-heading text-inline">
                         {$entry->title}
                     </h4>
-                    <span class="postdetails text-small text-midtone">
-                     - {if $entry->pubdate}{str tag=publishedon section=blocktype.externalfeed arg1=$entry->pubdate}{/if}
-                    </span>
+                    <div class="postdetails metadata text-small">
+                        {if $entry->pubdate}{str tag=publishedon section=blocktype.externalfeed arg1=$entry->pubdate}{/if}
+                    </div>
                 </li>
             {/foreach}
             </ol>

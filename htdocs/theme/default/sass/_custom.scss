@@ -1,20 +1,6 @@
 // viewfooter
 .viewfooter {
-    padding: 0 15px;
+    padding: 15px;
     background-color: #f7f7f7;
     border-radius: 10px;
-    // Ensure background-color isn't visible when comments aren't enabled
-    .comment-container {
-      h3 {
-        padding: 30px 15px 0 15px;
-      }
-      hr {
-        margin: 0 15px;
-      }
-      #feedbacktable,
-      #feedback_pagination,
-      #add-comment {
-        padding: 0 15px;
-      }
-    }
 }

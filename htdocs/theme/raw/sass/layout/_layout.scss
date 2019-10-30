@@ -68,6 +68,7 @@ body {
 
 .viewfooter {
     clear: both;
+    margin-top: 2rem;
 }
 
 // Needed to clear the float when dropzone is visible
@@ -130,7 +131,7 @@ iframe {
 }
 
 .view-description {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     &.with-toolbar {
         margin-right: 20px;
     }

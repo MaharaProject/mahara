@@ -473,7 +473,8 @@
   > .block,
   > .block > .listing,
   > .block .file-download-list,
-  > .block .forumposts {
+  > .block .forumposts,
+  > .block .blog {
     > .list-group {
       .list-group-item:first-child,
       + .list-group-item:first-child,
@@ -504,5 +505,14 @@
         border-top: 1px solid $list-group-border-color;
       }
     }
+  }
+
+  // leave the bottom border in last child in card-secondary
+  .list-group {
+      &:last-child .list-group-item:last-child{
+          border-bottom: 1px solid $list-group-border-color;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+      }
   }
 }
