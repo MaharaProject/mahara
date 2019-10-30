@@ -57,7 +57,10 @@ try {
     $taskview = $rootGroupTask->get('taskview');
     if ($userTask) {
         $portfolioElement = PlansTools::getPortfolioElementByTypeAndId($rootGroupTask->get('outcometype'), $rootGroupTask->get('outcome'));
-        $outcomeurl = PlansTools::createOutcomeUrlForPortfolioElement($portfolioElement);
+        $outcomeurl = false;
+        if ($portfolioElement) {
+            $outcomeurl = PlansTools::createOutcomeUrlForPortfolioElement($portfolioElement);
+        }
         $buttons = '';
         if ($taskview) {
             $buttons .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $taskview . '" class="btn btn-secondary btn-sm btn-view" title="' . get_string('showassignedview', 'artefact.plans') . '">
