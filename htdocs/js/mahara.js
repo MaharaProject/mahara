@@ -1011,7 +1011,7 @@ function getUrlParameter(param, url) {
     }
     var vars = url.split("?");
 
-    if (!vars[1]) return null; // no search parameters
+    if (!vars[1]) return null; // no search parameters - are you using clean URLs?
 
     varparams = vars[1].split("&");
 
