@@ -45,8 +45,9 @@ function loadGridTranslate(grid, blocks) {
 
 function loadGrid(grid, blocks) {
     var minWidth = grid.opts.minCellColumns,
-        minHeight=null;
+        minHeight;
     $.each(blocks, function(index, block) {
+        minHeight = null;
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '<div/><div/>');
