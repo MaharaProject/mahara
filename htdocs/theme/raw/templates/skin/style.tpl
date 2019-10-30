@@ -102,15 +102,14 @@ body > .main-content > .row {
 /* blocks */
 
 .user-page-content .block-header a {
-    color: {$view_block_header_font_color};
-    font-family: {$view_block_header_font|safe};
+    color: #FFFFFF;
 }
 
 .user-page-content .card .title:not(.feedtitle) {
     font-weight: bold;
-    color: {$view_text_font_color};
-    font-family: {$view_heading_font_family|safe};
-    border-color: {$view_text_font_color};
+    color: {$view_block_header_font_color};
+    font-family: {$view_block_header_font|safe};
+    border-color: {$view_block_header_font_color};
 }
 
 .user-page-content .card .title a:hover {

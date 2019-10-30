@@ -275,7 +275,7 @@ if (!isset($themelinkcolor)) {
 }
 $themetextcolor = isset($THEME->themetextcolor) ? $THEME->themetextcolor : '#333333'; // $view_text_font_color
 $themefocusedlinkcolor = isset($THEME->themefocusedlinkcolor) ? $THEME->themefocusedlinkcolor :  '#475c2a'; // $view_link_hover_color
-$themeblockheadingfontcolor = '#FFFFFF'; // $theme-block-header-color
+$themeblockheadingfontcolor = isset($THEME->themeblockheadingfontcolor) ? $THEME->themeblockheadingfontcolor :  '#333333'; // $theme-block-header-color
 
 // Text
 $elements['viewcontent'] = array(
