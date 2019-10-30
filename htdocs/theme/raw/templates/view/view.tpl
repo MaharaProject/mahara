@@ -2,9 +2,11 @@
 {include file='modal-details.tpl'}
 
 <input type="hidden" id="viewid" name="id" value="{$viewid}">
+{if $viewdescription}
 <div id="view-description" class="view-description {if $toolbarhtml}with-toolbar{/if}">
     {$viewdescription|clean_html|safe}
 </div>
+{/if}
 
 {if $viewinstructions}
     <div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
@@ -64,9 +66,6 @@
             <h3 class="title">
                 {str tag="Comments" section="artefact.comment"}
             </h3>
-            {if $feedback->count == 0}
-            <hr />
-            {/if}
             {* Do not change the id because it is used by paginator.js *}
             <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackbase fullwidth">
                 {$feedback->tablerows|safe}

@@ -40,12 +40,6 @@
     }
 }
 
-.alert-default {
-    background-color: rgba($body-bg, 0.4);
-    border: 1px solid scale-color($gray-400, $lightness: 8%);
-    color: $gray-500;
-}
-
 .alert {
     position: relative;
     padding: .75rem 1.25rem .75rem 3rem;
@@ -58,6 +52,13 @@
       font-size: 1.33333em;
       line-height: .75em;
     }
+}
+
+.alert-default {
+    background-color: rgba($body-bg, 0.4);
+    border: 1px solid scale-color($gray-400, $lightness: 8%);
+    color: $gray-500;
+    padding-left: 1.25rem;
 }
 
 // overrides bootstrap calculations so this is same as states
