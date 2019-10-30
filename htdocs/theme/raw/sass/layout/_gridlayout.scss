@@ -4,6 +4,12 @@
 .grid-stack {
     margin-left: -10px;
     margin-right: -10px;
+
+    // but pages that haven't been converted need to have to reverted background
+    > .clearfix {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
 }
 
 .gridstackblock.card {

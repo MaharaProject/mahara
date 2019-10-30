@@ -68,6 +68,9 @@
     margin-bottom: 0;
     border-bottom: 1px solid $list-group-border-color;
 }
+#files .filebrowser.form-group {
+    border-bottom: 0;
+}
 
 .uploadform.userfile {
     margin-bottom: 20px;

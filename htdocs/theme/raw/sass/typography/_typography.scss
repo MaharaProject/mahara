@@ -341,7 +341,8 @@ pre {
 .bt-resumefield,
 .bt-resumefield-editor,
 .bt-taggedposts .post,
-.bt-taggedposts-editor .post {
+.bt-taggedposts-editor .post,
+.exportable-artefact-container {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
     font-weight: bold;
