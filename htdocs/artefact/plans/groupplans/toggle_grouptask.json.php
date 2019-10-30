@@ -54,12 +54,17 @@ try {
     if (!$userPlan) {
         $userPlan = PlansTools::createUserPlanFromGroupPlan($rootGroupPlan);
     }
-
+    $taskview = $rootGroupTask->get('taskview');
     if ($userTask) {
         $portfolioElement = PlansTools::getPortfolioElementByTypeAndId($rootGroupTask->get('outcometype'), $rootGroupTask->get('outcome'));
         $outcomeurl = PlansTools::createOutcomeUrlForPortfolioElement($portfolioElement);
+        $buttons = '';
+        if ($taskview) {
+            $buttons .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $taskview . '" class="btn btn-secondary btn-sm btn-view" title="' . get_string('showassignedview', 'artefact.plans') . '">
+                             <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                         </a>';
+        }
         if ($outcomeurl) {
-            $buttons = '';
             $buttons .= '<a href="' . $outcomeurl . '" class="btn btn-secondary btn-sm btn-outcome" title="' . get_string('editassignedoutcome', 'artefact.plans') . '">
                              <span class="icon icon-file icon-lg" role="presentation" aria-hidden="true"></span>
                          </a>';
@@ -78,6 +83,11 @@ try {
             $portfolioElement = PlansTools::getPortfolioElementByTypeAndId($newUserTask->get('outcometype'), $outcomeId);
             $outcomeurl = PlansTools::createOutcomeUrlForPortfolioElement($portfolioElement);
             $buttons = '';
+            if ($taskview) {
+                $buttons .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $taskview . '" class="btn btn-secondary btn-sm btn-view" title="' . get_string('showassignedview', 'artefact.plans') . '">
+                                 <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                             </a>';
+            }
             if ($outcomeurl) {
                 $buttons .= '<a href="' . $outcomeurl . '" class="btn btn-secondary btn-sm btn-outcome" title="' . get_string('editassignedoutcome', 'artefact.plans') . '">
                                  <span class="icon icon-file icon-lg" role="presentation" aria-hidden="true"></span>
