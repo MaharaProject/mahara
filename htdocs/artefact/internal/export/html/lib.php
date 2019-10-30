@@ -33,8 +33,13 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
                 $smarty->assign('breadcrumbs', array(array('text' => 'Profile page', 'path' => 'profilepage.html')));
                 $view = $this->exporter->get('user')->get_profile_view();
                 $outputfilter = new HtmlExportOutputFilter('../../', $this->exporter);
-                $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
-
+                if (!$view->uses_new_layout()) {
+                    $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
+                }
+                else {
+                    $smarty->assign('newlayout', true);
+                    $smarty->assign('blocks', $view->get_blocks(false, true));
+                }
                 $content = $smarty->fetch('export:html/internal:profilepage.tpl');
                 if (!file_put_contents($this->fileroot . 'profilepage.html', $content)) {
                     throw new SystemException("Unable to write profile page");
