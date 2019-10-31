@@ -14,21 +14,6 @@ body {
 body > .main-content > .row {
     background-color: #FFFFFF;
 }
-@media (min-width: 768px) {
-    body > .main-content > .row {
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        border-bottom-left-radius: 3px;
-        margin-bottom: 20px; /* to show the user's custom body background, if set */
-    }
-}
-@media (max-width: 767px) {
-    .main-content {
-        padding-top: 0 !important;
-    }
-}
-
 
 /* Heading background customizations */
 .pageheader {
@@ -39,9 +24,13 @@ body > .main-content > .row {
 
 .collection-nav h2 {
     color:  {$view_text_heading_color};
+    border-bottom: 1px solid {$view_text_heading_color};
 }
 
 /* Used to style author, tag links in page headers */
+.pageheader-content .text-small {
+    color: {$view_text_heading_color};
+}
 .pageheader-content .text-small a {
     color: {$view_text_heading_color};
     text-decoration: underline;
@@ -105,16 +94,19 @@ body > .main-content > .row {
     color: #FFFFFF;
 }
 
-.user-page-content .card .title:not(.feedtitle) {
+.user-page-content .card .card-header:not(.feedtitle) {
     font-weight: bold;
     color: {$view_block_header_font_color};
     font-family: {$view_block_header_font|safe};
     border-color: {$view_block_header_font_color};
+    background: none;
 }
-
-.user-page-content .card .title a:hover {
+.user-page-content .card .card-header a:hover {
     color: {$view_link_hover_color};
     text-decoration: none;
+}
+.user-page-content .card .card-header .collapse-indicator {
+    color: {$view_block_header_font_color};
 }
 .user-page-content .link-blocktype:hover {
     background-color: transparent;
