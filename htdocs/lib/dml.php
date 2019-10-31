@@ -1103,9 +1103,6 @@ function get_table_from_query($sql) {
         $idsql = 'SELECT * FROM ' . $matches[2];
         $type = 'update';
     }
-    if (get_config('dbprefix')) {
-        $table = str_replace(get_config('dbprefix'), $table, '');
-    }
     return array($type, $table, $idsql, $bindoffset);
 }
 
@@ -1290,6 +1287,9 @@ function table_need_trigger($table) {
 }
 
 function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
+    if ($dbprefix = get_config('dbprefix')) {
+        $table = preg_replace('/' . $dbprefix . '/', '', $table);
+    }
     if ($type = table_need_trigger($table)) {
         if ($type == 'es') {
             $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
