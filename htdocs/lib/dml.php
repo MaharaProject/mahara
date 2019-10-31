@@ -1103,6 +1103,9 @@ function get_table_from_query($sql) {
         $idsql = 'SELECT * FROM ' . $matches[2];
         $type = 'update';
     }
+    if (get_config('dbprefix')) {
+        $table = str_replace(get_config('dbprefix'), $table, '');
+    }
     return array($type, $table, $idsql, $bindoffset);
 }
 
