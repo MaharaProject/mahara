@@ -117,14 +117,27 @@ class module_lti_launch extends external_api {
         $updateremote = false;
         $updateuser = true;
 
-        // User not found - try to match on email
-        if (!$userid && isset($params['lis_person_contact_email_primary'])) {
+        // User not found
+        $remoteusername = false;
+        // - try to match on ext username
+        if (!$userid && isset($params['ext_user_username'])) {
             log_debug('User not found in auth_remote_user with user_id:' . $params['user_id']);
-            $userid = get_field_sql("SELECT owner
+            $userid = get_field('auth_remote_user', 'localusr', 'authinstance', $authinstanceid, 'remoteusername', $params['ext_user_username']);
+            $updateremote = true;
+            $remoteusername = $params['ext_user_username'];
+        }
+        // User not found
+        // - try to match on email
+        if (!$userid && isset($params['lis_person_contact_email_primary'])) {
+            log_debug('User not found in auth_remote_user with ext_user_username:' . $params['ext_user_username']);
+            $userid = get_field_sql("SELECT DISTINCT owner
                                      FROM {artefact_internal_profile_email}
                                      WHERE LOWER(email) = ?
                                      AND verified = ?", array(strtolower($params['lis_person_contact_email_primary']), 1));
             $updateremote = true;
+            if (empty($remoteusername)) {
+                $remoteusername = $params['lis_person_contact_email_primary'];
+            }
         }
 
         // Check user belongs to institution specified by OAuth key
@@ -167,16 +180,14 @@ class module_lti_launch extends external_api {
                 $user->firstname = $params['lis_person_name_given'];
                 $user->lastname = $params['lis_person_name_family'];
                 $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
-
+                $user->username = !empty($remoteusername) ? $remoteusername : $user->email;
                 // Make sure that the username doesn't already exist
                 if (get_field_sql("SELECT username
                                    FROM {usr}
-                                   WHERE LOWER(username) = ?", array(strtolower($user->email)))) {
+                                   WHERE LOWER(username) = ?", array(strtolower($user->username)))) {
                     $USER->logout();
-                    throw new WebserviceInvalidParameterException(get_string('usernameexists2', 'module.lti', $user->email));
+                    throw new WebserviceInvalidParameterException(get_string('usernameexists2', 'module.lti', $user->username));
                 }
-
-                $user->username = $user->email;
 
                 $userid = create_user($user, array(), $WEBSERVICE_INSTITUTION, true, $params['user_id']);
 
