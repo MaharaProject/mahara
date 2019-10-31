@@ -2266,7 +2266,9 @@ class ElasticsearchIndexing {
      * Add to queue - a replacement for the triggers
      */
     public static function add_to_queue($id, $table, $artefacttype=null) {
-
+        if ($dbprefix = get_config('dbprefix')) {
+            $table = preg_replace('/' . $dbprefix . '/', '', $table);
+        }
         $artefacttypes_str = self::artefacttypes_filter_string();
         if ($table == 'view_artefact') {
             $sql = "INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype)
