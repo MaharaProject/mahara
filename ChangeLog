@@ -1,3 +1,26 @@
+19.04.2 (2019-11-01)
+- Bug 1830654: A number of language strings in the SmartEvidence section, in particular editor, are not translated
+- Bug 1836588: Multibyte comments broken
+- Bug 1836675: Page header doesnt align with content
+- Bug 1836981: Should not display 'registered users' option on profile page view access when isolated institutions are on
+- Bug 1837660: Error in Ldap user sync
+- Bug 1837855: Rev. 19.04.1 error create institution
+- Bug 1839223: When creating a page via tags, the copied blocks have the wrong text for the tags
+- Bug 1839499: Site pages and collections : Site unavailable error after enabling lti plugin.
+- Bug 1839897: Adjust mahara mobile landing pages for CORS restrictions
+- Bug 1840106: Library upgrade: Marked to 0.7.0
+- Bug 1840109: Library upgrade: simplesamlphp to 1.17.5
+- Bug 1840368: Create page via tags not inserting all tagged artefacts into DB
+- Bug 1843149: Bulk import doesn't retain user details correctly
+- Bug 1847750: SQL statement missing space
+- Bug 1833158: Headings and sub-headings not displaying properly in SmartEvidence
+- Bug 1834973: IE11 sidepanels are at the bottom of the page
+- Bug 1837953: Stop the slideshow from scrolling when arrow are clicked
+- Bug 1838907: Remove the not needed Zone identifier files for Raleway theme
+- Bug 1843537: Wrong redirect for CSV-Upload Users when Mahara is in subdir
+- Bug 1844745: Block content overlaps content chooser in mobile view
+- Bug 1844838: Have mahara site digest more branch / release info from Mahara.org
+
 19.04.1 (2019-07-23)
 - Bug 1835988: datepicker broken when site is in a subdirectory 
 - Bug 1817783: Delete account when user has locked page blocks not working 
