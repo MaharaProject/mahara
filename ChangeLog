@@ -1,3 +1,11 @@
+18.04.6 (2019-11-01)
+- 1840109  Library upgrade: simplesamlphp to 1.17.5
+- 1837660  Error in Ldap user sync
+- 1837855  Rev. 19.04.1 error create institution
+- 1839897  Adjust mahara mobile landing pages for CORS restrictions
+- 1838907  Remove the not needed Zone identifier files for Raleway theme
+- 1844838  Have mahara site digest more branch / release info from Mahara.org
+
 18.04.5 (2019-07-23)
 - Bug 1835988: datepicker broken when site is in a subdirectory
 - Bug 1824767: Site pages and collections : Page template become unavailable after changing settings
