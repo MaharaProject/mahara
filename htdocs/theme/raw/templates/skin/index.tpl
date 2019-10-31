@@ -30,7 +30,7 @@
 {/if}
 
 {if $skins}
-<div class="row skins">
+<div class="row skins view-container">
     {foreach from=$skins item=skin}
     <div class="skin">
         <div class="card">
