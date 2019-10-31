@@ -29,6 +29,7 @@ Scenario: Clicking ID's (Bug 1428456)
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Text" in the "Content types" property
+ And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | The Sun Also Rises |
  | Block content | <p>Robert Cohn was once middleweight boxing champion of Princeton. Do not think that I am very much impressed by that as a boxing title, but it meant a lot to Cohn...</p> |
@@ -56,10 +57,13 @@ Scenario: Clicking ID's (Bug 1428456)
  And I display the page
  And I follow "Edit"
  When I delete the block "The Sun Also Rises"
+ And I wait "1" seconds
  Then I should not see "Robert Cohn"
  When I delete the block "1984"
+ And I wait "1" seconds
  Then I should not see "Winston Smith"
  When I delete the block "Ulysses"
+ And I wait "1" seconds
  Then I should not see "Buck Mulligan"
 
  # Checking we can add a block, make config changes, then delete the block

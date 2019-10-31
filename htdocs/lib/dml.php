@@ -1103,6 +1103,9 @@ function get_table_from_query($sql) {
         $idsql = 'SELECT * FROM ' . $matches[2];
         $type = 'update';
     }
+    if ($prefix = get_config('dbprefix')) {
+        $table = preg_replace('/^' . $prefix . '/', '', $table);
+    }
     return array($type, $table, $idsql, $bindoffset);
 }
 
@@ -1260,9 +1263,6 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
 }
 
 function table_need_trigger($table) {
-    if ($dbprefix = get_config('dbprefix')) {
-        $table = preg_replace('/' . $dbprefix . '/', '', $table);
-    }
     if (defined('SKIP_TRIGGER') && SKIP_TRIGGER === true) {
         return false;
     }
@@ -1287,9 +1287,6 @@ function table_need_trigger($table) {
 }
 
 function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
-    if ($dbprefix = get_config('dbprefix')) {
-        $table = preg_replace('/' . $dbprefix . '/', '', $table);
-    }
     if ($type = table_need_trigger($table)) {
         if ($type == 'es') {
             $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
