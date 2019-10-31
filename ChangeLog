@@ -1,3 +1,217 @@
+19.10.0 (2019-10-31)
+- 739528 	Export to HTML doesn't use selected theme
+- 920246   dd the group category filter to /admin/groups/groups.php
+- 1044878  Make the info on copying text box more obvious
+- 1353809  Avoid making duplicate group categories
+- 1529730  Show full introduction from the profile
+- 1560778  Convert institution auth manager from pop-up window to modal
+- 1669128  HTML export links to actual files rather than local files
+- 1698699  Embedded PDFs not shown in HTML export
+- 1714082  The user's primary email address is not checked in a case insensitive way
+- 1732302  Behat: fix secret_URL test
+- 1774318  Drop remaining bbcode
+- 1775479  Remove obsolete code for displaying comments
+- 1778439  Behat help_icon test - put commented lines back in
+- 1785985  Remove triggers from Mahara database
+- 1794628  Clean up session duplication between auth/session and auth/saml
+- 1798720  Do not link tags in HTML export
+- 1811904  need to upgrade Font Awesome library from 4.7.0 to 5.X
+- 1813987  more usable and simpler layout selector for Mahara pages
+- 1817783  Delete account when user has locked page blocks not working
+- 1818591  Error: Undefined index versioning
+- 1818901  LDAP account set up should not require internal password to be set
+- 1819178  CRON Job - [WAR] f8 (auth/lib.php:2115) A non-numeric value encountered
+- 1821267  Email notice for submissions and reports on submissions
+- 1822695  Group Invite button overlaps pending friend request on Profile page
+- 1823823  Behat: add script for timeline show correct version of plan block
+- 1824263  Institution tags have wrong text when selected
+- 1824742  Match all tags checkbox not displayed correctly
+- 1824767  Site pages and collections : Page template become unavailable after changing settings
+- 1825256  The Manage -> Export page radio buttons alignment need to be better
+- 1825274  Unsubscribe button too large on Group forums page
+- 1825282  Student can overwrite Teacher assessment by clicking Save annotation
+- 1826798  SmartEvidence error message needs a more generic message
+- 1826801  Wrong link text color in "More options" page menu when link is active
+- 1826940  Problem saving info to external_services_logs table
+- 1827000  Upgrade from 18.10 produces warning from statistics.php
+- 1827272  Move the "Theme" drop-down menu to the page settings page
+- 1827305  Fixing add_tags behat feature
+- 1827445  Improve efficiency when checking if a table field exists
+- 1827455  ClamAV admin message missing info
+- 1827747  Contrast on warning messages is not high enough and "Log in anyway" needs to be bold
+- 1827797  Adding / viewing a PDF has pdf menus open by default
+- 1827811  Move "Add comment" and "Details" into modal with "Comments"
+- 1827812  The Site admin email for new registrants is sent in wrong language
+- 1827816  Behat; add-tags.feature, add back in failing lines
+- 1827955  SAML metadata screen titled IdP when it should be SP
+- 1827966  HTML export not creating folder structure index pages
+- 1828135  Deleting a user doesn't clear their pending verified emails
+- 1828140  missing btn-primary class on validation email page
+- 1828141  Creating a new institution with minimal info fails to save
+- 1828150  clicking on calendar icon doesnt bring up the datepicker on calendar inputs
+- 1828303  Unable to logout if session expires and authmethod gone away
+- 1828309  Create institution addUserAsStaff() and addUserAsAdmin() wrapper functions
+- 1828331  Inconsistent time formats across Mahara
+- 1828743  Navigation scrollbar not present if in production mode
+- 1828753  Move the usr_roles table to usr_access_roles as that is what it relates to
+- 1828965  Correct URL protocols in the Readme file
+- 1829091  config theme not picking up on some colours
+- 1829096  Print stylesheet prints title on separate page
+- 1829099  Group pages list on homepage is missing collection title
+- 1829290  Behat: Adding expiry date column in user CSV uploads
+- 1829322  Behat: public and private feedback annotations on SmartEvidence collections
+- 1829431  Behat: Allow quota details in 'User details' report
+- 1829673  Behat: View someone else’s content based on a tag
+- 1829803  Allow more optional values for the 'showmore' pagination
+- 1829940  Create a 'magic' placeholder block
+- 1830278  When fetching the versioning of a page via ajax we should check that we have access to the page
+- 1830287  Behat Making a friend request from a users profile page
+- 1830302  Messages Sending ignoring user preference
+- 1830552  Behat: 2 new roles for assessment work flow Peer assessor and manager
+- 1830654  A number of language strings in the SmartEvidence section, in particular editor, are not translated
+- 1830797  Left-align lang strings
+- 1830798  Text is overlapping on "Edit access"
+- 1830801  keep navigation open on link right click
+- 1830819  Edit dashboard button too low when not using an h1 heading
+- 1830835  Footer should still be at the bottom of the page on shorter pages
+- 1830847  19.04 README says direct upgrade from 15.04.0 and later, but upgrade.php says must upgrade to 17.04.0 first.
+- 1831414  Skin import gets virus scanned when virus checking is disabled
+- 1831419  Notification when Importing Leap2A
+- 1831689  Datepicker doesnt work with different date formats
+- 1831835  Site Admin should be able to send messages to anyone
+- 1832115  Navigation block doesn't display SmartEvidence overview page
+- 1832308  Cannot toggle Group's Open button
+- 1832665  SmartEvidence framework indenting not working on long headings
+- 1832796  Adding Journal - message displayed to user is misleading
+- 1832803  Adding an empty string as a comment generates a warning
+- 1832805  Missing lang string when saving to timeline
+- 1833034  Error/warning/success messages remains unless page is refreshed
+- 1833158  Headings and sub-headings not displaying properly in SmartEvidence
+- 1833301  Problem with exporting text block with missing 'text'
+- 1833314  Institution selector missing styling
+- 1833320  Duplicate variable in bootsrap-variables.scss
+- 1833325  Navigation block title is not set for other pages in collection
+- 1833330  Institution top menu hovers under config buttons
+- 1833348  Heading on tags page can't be selected
+- 1833390  Anchor hides behind header
+- 1833495  Syncing LDAP usernames with Mahara's internal username leads to incorrect user record matching
+- 1833889  Access denied message twice on non-shared 'Pages and collections'
+- 1834117  Property of non-object in lib/view.php
+- 1834261  Reports generating error about time zone not specified
+- 1834470  Profile picture generates error when uploaded to Image Gallery
+- 1834544  Allow sync langpack only sync file if changed since last sync
+- 1834576  Content overview report updating help info and removing broken link
+- 1834973  IE11 sidepanels are at the bottom of the page
+- 1835321  Manager can't see peer block when published
+- 1835329  Alert message are not displaying icons
+- 1835869  Skins to support new page header
+- 1835988  datepicker broken when site is in a subdirectory
+- 1836017  Tag cloud invalid font size
+- 1836325  Group search fails when Group Category is specified
+- 1836588  Multibyte comments broken
+- 1836653  Allow LTI submissions to be revoked if not graded
+- 1836656  LTI submission formatting improvements
+- 1836675  Page header doesnt align with content
+- 1836676  border radius values not set with a variable
+- 1836803  Update HTML Purifier to 4.11.0
+- 1836977  Should not display message link when messages set to 'nobody' and isolated institutions set
+- 1836981  Should not display 'registered users' option on profile page view access when isolated institutions are on
+- 1837194  Adding notifications hooks for plugins
+- 1837631  Time date translation
+- 1837660  Error in Ldap user sync
+- 1837855  Rev. 19.04.1 error create institution
+- 1837951  Uploading files success messages should fade away after a few seconds
+- 1837953  Stop the slideshow from scrolling when arrow are clicked
+- 1837999  Extend plans functionality to allow for assignment tasks
+- 1838483  support .wav and .m4a for embedded media
+- 1838907  Remove the not needed Zone identifier files for Raleway theme
+- 1838908  Email info out of sync
+- 1838915  Comment ratings not displaying correctly with font-awesome5
+- 1839032  Adjust find_by_instanceid_username() function to allow check remote then fallback to usr table
+- 1839223  When creating a page via tags, the copied blocks have the wrong text for the tags
+- 1839499  Site pages and collections : Site unavailable error after enabling lti plugin.
+- 1839549  Upgrading mahara via CLI doesn't remove the _upgrade flag
+- 1839581  Have cleaner select2 choosing of user in send message
+- 1839785  Make bulk import page instructions a bit clearer
+- 1839897  Adjust mahara mobile landing pages for CORS restrictions
+- 1840097  Library upgrade: Cookie consent to 3.11
+- 1840103  Library upgrade: HTMLPurifier to 4.11.0
+- 1840105  Library upgrade: JQuery to 3.4.1
+- 1840106  Library upgrade: Marked to 0.7.0
+- 1840107  Library upgrade: PDFjs to 2.1.266
+- 1840108  Library upgrade: Select 2 to 4.0.8
+- 1840109  Library upgrade: simplesamlphp to 1.17.5
+- 1840111  Library upgrade: popper to 1.15.0
+- 1840112  Library upgrade: TinyMCE to version 5
+- 1840113  Library upgrade: video.js to 7.6
+- 1840197  Font Awesome: Icons being created from titles in collection pages
+- 1840368  Create page via tags not inserting all tagged artefacts into DB
+- 1840565  Add short instructions on placeholder admin page
+- 1840713  Have a page to list site admin / staff similar to the institution admin / staff one
+- 1840733  Zipped multibyte folder name broken
+- 1841988  Tidy up some places where we call pieform() after smarty_core()
+- 1842777  Behat: failing test looking for incorrect menu item
+- 1843002  Skins index page menu tabs overlap the filter when viewing in language with long names
+- 1843149  Bulk import doesn't retain user details correctly
+- 1843202  Allow theme fonts to be listed on the admin -> configure site -> fonts page
+- 1843238  Remove background behind list-group-item-text
+- 1843239  Profile picture overlapped name in profile side bar
+- 1843351  Open and close blocks modal causes error when block is placed on page
+- 1843363  Add space between external media video and card header
+- 1843513  Links included in text boxes are converted from http to https
+- 1843537  Wrong redirect for CSV-Upload Users when Mahara is in subdir
+- 1843691  Correct submission confirmation email lang string
+- 1843821  Make small logo appear earlier in responsive mode
+- 1843822  Default theme misses green border for heading on retractable blocks
+- 1843823  Plans run into each other when more than one plan in a block
+- 1844073  Make GDPR statements and agreeing on them clearer
+- 1844470  Move "Display page" and "Return to pages and collections" to right-hand side on "Edit" screen
+- 1844723  Allow date language strings to have am/pm suffix options
+- 1844742  Deleting wall post, "Yes" button doesn't have button background
+- 1844748  Deleting a private comment problem
+- 1844838  Have mahara site digest more branch / release info from Mahara.org
+- 1844953  Turn font specimen page into a modal
+- 1845051  Missing image file in theme raw: no_userphoto100
+- 1845061  Restrict the size of the logo displays on institution settings page
+- 1845104  Various theme fixes for 19.10
+- 1845129  Clean up styles in timeline
+- 1845273  Rejig CSS for wall posts
+- 1846102  Multibyte message subject on Inbox block corrupted
+- 1846653  Need to correctly escape some plans sql queries
+- 1846813  Exporting plans now broken
+- 1846972  Skin text colour defaults should default to the theme colours
+- 1847001  Change check_email_exist() to check_email_exists() for consistency
+- 1847005  More skin font options for new header
+- 1847009  Plans are no longer able to be check marked
+- 1847168  Search results for Mahara inbox search are displaying too close to search button
+- 1847177  Deleting comment from page produces a Loading spinner that doesn't clear
+- 1847214  Failed to get a recordset: mysqli error
+- 1847345  Only mention ssphp needs updating if installed
+- 1847381  Upgrade mathslate for tinymce 5.0
+- 1847390  Undefined mysqldid var warning produced when adding new blocks
+- 1847523  Fix for group_get_extended_data()
+- 1847750  SQL statement missing space
+- 1847894  Change "Edit" icon on group category page
+- 1848096  Skins - cannot select header background image from folder
+- 1848897  Doubleup of icons for alert messages
+- 1848959  peer assessment : details in modal should not show block content
+- 1849225  Need to update country code information for Mahara 19.10.0
+- 1849395  Need to lock down the view/viewblocks.json.php response more
+- 1849586  Chrome - gap between Logo-menu bar and system messages when zoomed in 75% and less
+- 1850024  Add tool tip to the "More options" button on skin overview page
+- 1850210  sql error: importing leap2A when using elasticsearch index
+- 1850218  Can't export portfolio in HTML
+- 1850219  "Cancel" button on "Convert page layout" doesn't have proper class
+- 1850227  The "Task page" button is lost when a group member copies a task into their personal area
+- 1850235  Extra 2nd line above a couple of different elements (plans and institution contact page)
+- 1850543  Remove "Task page" and "Assignment portfolio" when not assignment plan
+- 1850544  Overdue tasks on top and clicking to complete tasks in edit mode went missing
+- 1850560  Plan task preview button relies on url not being in clean-url mode
+- 1850561  Plan task preview mode needs the gridstack libraries
+- 1850566  HTML export profile page giving error on full export
+- 1850631  Bug 1752688 is back in Debian 10
+- 1850712  Group plans tasks without portfolio assignment cause error when turning off for member
+
 19.10rc2 (2019-10-24)
 
 19.10rc1 (2019-10-10)
