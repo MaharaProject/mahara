@@ -393,7 +393,7 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function install_auth_default() {
         // Set library version to download
-        set_config_plugin('auth', 'saml', 'version', '1.16.3');
+        set_config_plugin('auth', 'saml', 'version', '1.17.6');
     }
 
     private static function delete_old_certificates() {
@@ -793,6 +793,9 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function idptable($list, $preferred = array(), $institutions = array(), $showdelete = false) {
+        if (empty($list)) {
+            return array(0, '');
+        }
         $idps = array();
         $lang = current_language();
         $lang = explode('.', $lang);
@@ -1067,9 +1070,12 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function get_raw_disco_list() {
-        PluginAuthSaml::init_simplesamlphp();
-        $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
-        return $discoHandler->getTheIdPs();
+        if (class_exists('PluginAuthSaml_IdPDisco')) {
+            PluginAuthSaml::init_simplesamlphp();
+            $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
+            return $discoHandler->getTheIdPs();
+        }
+        return array('list' => 0);
     }
 
     public static function get_disco_list($lang = null, $entityidps = array()) {
@@ -1091,7 +1097,7 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function get_instance_config_options($institution, $instance = 0) {
-        if (!class_exists('SimpleSAML_XHTML_IdPDisco')) {
+        if (!class_exists('SimpleSAML\XHTML\IdPDisco')) {
             global $SESSION;
             $SESSION->add_error_msg(get_string('errorssphpsetup', 'auth.saml'));
             redirect(get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution);
@@ -1579,8 +1585,9 @@ function auth_saml_openssl_x509_fingerprint($cert, $hash) {
 
 if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php')) {
     require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/SimpleSAML/XHTML/IdPDisco.php');
-
-    class PluginAuthSaml_IdPDisco extends SimpleSAML_XHTML_IdPDisco
+}
+if (class_exists('SimpleSAML\XHTML\IdPDisco')) {
+    class PluginAuthSaml_IdPDisco extends SimpleSAML\XHTML\IdPDisco
     {
 
         /**
@@ -1612,7 +1619,10 @@ if (file_exists(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/lib/Simp
         }
     }
 }
-
+else {
+    global $SESSION;
+    $SESSION->add_msg_once(get_string('errorupdatelib', 'auth.saml'), 'error', false);
+}
 
 /*
  * Provides any mahara specific wrappers for the metarefresh plugin from simplesamlphp that is used to refresh IDP metadata
@@ -1703,8 +1713,8 @@ class Metarefresh {
                     'type' => $outputFormat,
                     'directory' => $outputDir,
                 ));
-
-                $metaloader = new sspmod_metarefresh_MetaLoader($expire, $stateFile, $oldMetadataSrc);
+                require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/modules/metarefresh/lib/MetaLoader.php');
+                $metaloader = new SimpleSAML\Module\metarefresh\MetaLoader($expire, $stateFile, $oldMetadataSrc);
 
                 # Get global blacklist, whitelist and caching info
                 $blacklist = $mconfig->getArray('blacklist', array());
