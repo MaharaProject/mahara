@@ -1,3 +1,15 @@
+18.10.3 (2019-11-01)
+- 1837660  Error in Ldap user sync
+- 1837855  Rev. 19.04.1 error create institution
+- 1839223  When creating a page via tags, the copied blocks have the wrong text for the tags
+- 1839499  Site pages and collections : Site unavailable error after enabling lti plugin.
+- 1839897  Adjust mahara mobile landing pages for CORS restrictions
+- 1840109  Library upgrade: simplesamlphp to 1.17.5
+- 1840368  Create page via tags not inserting all tagged artefacts into DB
+- 1847750  SQL statement missing space
+- 1838907  Remove the not needed Zone identifier files for Raleway theme
+- 1844838  Have mahara site digest more branch / release info from Mahara.org
+
 18.10.2 (2019-07-23)
 - Bug 1835988: datepicker broken when site is in a subdirectory
 - Bug 1817783: Delete account when user has locked page blocks not working
