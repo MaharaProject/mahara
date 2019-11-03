@@ -207,7 +207,10 @@ class ArtefactTypePlan extends ArtefactType {
         parent::__construct($id, $data);
 
         if ($this->id) {
-            if ($pdata = get_record('artefact_plans_plan', 'artefact', $this->id)) {
+            if (defined('INSTALLER') && !db_table_exists('artefact_plans_plan')) {
+                // Upgrading from older site and table does not yet exist
+            }
+            else if ($pdata = get_record('artefact_plans_plan', 'artefact', $this->id)) {
                 foreach($pdata as $name => $value) {
                     if (property_exists($this, $name)) {
                         $this->$name = $value;
