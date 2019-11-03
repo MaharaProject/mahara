@@ -1254,10 +1254,40 @@ function xmldb_core_upgrade($oldversion=0) {
                                 try {
                                     // get the artefacts use in the block
                                     $bi = new BlockInstance($blockid);
-                                    if ($bi && $artefacts = PluginBlocktypePlans::get_current_artefacts($bi)) {
-                                        foreach ($artefacts as $key => $artefact) {
-                                            if (isset($bi->configdata['artefactid']) && $bi->configdata['artefactid'] == $artefact) {
-                                                unset($artefacts[$key]);
+                                    if ($bi) {
+                                        $artefacts = array();
+                                        $configdata = $bi->get('configdata');
+                                        foreach ($configdata['artefactids'] as $planid) {
+                                            // We need to do this without calling the plan class because the plan class has changed
+                                            $plan = get_record('artefact', 'id', $planid, null, null, null, null, 'id, title, description, owner');
+                                            if ($tags = get_column('tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $planid)) {
+                                                $plan->tags = $tags;
+                                            }
+                                            $tasks = get_records_sql_array("SELECT a.id, apt.artefact AS task, apt.completed, apt.completiondate,
+                                                                             a.title, a.description, a.parent, a.owner
+                                                                            FROM {artefact} a
+                                                                            JOIN {artefact_plans_task} apt ON apt.artefact = a.id
+                                                                            WHERE a.parent = ?", array($planid));
+                                            foreach ($tasks as $t => $task) {
+                                                if ($tasktags = get_column('tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $task->id)) {
+                                                    $task->tags = $tasktags;
+                                                }
+                                            }
+                                            $artefacts[$planid]['tasks'] = array('count' => count($tasks),
+                                                                                 'data' => $tasks,
+                                                                                 'offset' => 0,
+                                                                                 'limit' => 0,
+                                                                                 'id' => $planid);
+                                            $artefacts[$planid]['title'] = $plan->title;
+                                            $artefacts[$planid]['description'] = $plan->description;
+                                            $artefacts[$planid]['tags'] = $plan->tags;
+                                            $artefacts[$planid]['owner'] = $plan->owner;
+                                        }
+                                        if (!empty($artefacts)) {
+                                            foreach ($artefacts as $key => $artefact) {
+                                                if (isset($bi->configdata['artefactid']) && $bi->configdata['artefactid'] == $artefact) {
+                                                    unset($artefacts[$key]);
+                                                }
                                             }
                                         }
                                         $existing_artefacts[$blockid] = $artefacts;
