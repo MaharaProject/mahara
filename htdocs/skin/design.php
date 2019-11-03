@@ -479,10 +479,11 @@ function get_custom_theme_field($field) {
     global $USER;
     $institutions = $USER->get('institutions');
     $theme_var = get_field_sql(
-        "SELECT sp.value FROM style_property sp JOIN institution i ON i.style = sp.style AND sp.field = ?
-        WHERE i.name IN ('" . join("','", array_keys($institutions)) . "')
-        ORDER BY i.name
-        LIMIT 1", array($field)
+        "SELECT sp.value FROM {style_property} sp
+         JOIN {institution} i ON i.style = sp.style AND sp.field = ?
+         WHERE i.name IN ('" . join("','", array_keys($institutions)) . "')
+         ORDER BY i.name
+         LIMIT 1", array($field)
     );
     return $theme_var;
 }
