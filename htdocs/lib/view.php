@@ -2615,7 +2615,7 @@ class View {
     public function bottomfreeposition() {
         // get y of blocks at the bottom
         $sql = 'SELECT MAX("positiony") FROM {block_instance_dimension} bid
-            INNER JOIN block_instance bi ON bi.id = bid.block
+            INNER JOIN {block_instance} bi ON bi.id = bid.block
             WHERE bi.view = ?';
         if ($maxy = get_field_sql($sql, array($this->get('id')))) {
             // get max height in last row blocks

@@ -98,7 +98,7 @@ function allocate_client_connection_validate(Pieform $form, $values) {
     if ($values['id'] > 0) {
         if ($results = get_records_sql_assoc(
             'SELECT cci.*
-             FROM client_connections_institution AS cci
+             FROM {client_connections_institution} AS cci
              WHERE cci.name = ? AND
                cci.id <> ? AND
                cci.institution = ? ', array($values['name'], $values['id'], $values['i']))) {
