@@ -1,3 +1,4 @@
+<a id="header-target-main"></a>
 <div id="header-content" class="pageheader pageheader-actions">
     <div class="container pageheader-content">
         <div class="row">
