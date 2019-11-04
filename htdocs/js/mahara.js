@@ -1226,10 +1226,13 @@ $(function() {
  */
 jQuery(function($) {
     $(document).on('click', 'a', function(event) {
-        if ($(this.hash).length && location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
-            !$(this).is('[class^="carousel"]') &&
-            !($(this).data('toggle') === 'collapse') &&
-            !($('body').hasClass('modal-open'))) {
+        // needs to have a target hash
+        // target the same page
+        // the target has to be in the same block and needs to be inside a tag <a>
+        // or the target needs to be the header
+        if ($(this.hash).length &&
+            location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') &&
+            $(this).closest('body').find('a' + this.hash).length) {
             event.preventDefault();
             var target = $(this.hash);
             var headerheight = 0;
@@ -1239,7 +1242,10 @@ jQuery(function($) {
             else if ($('.container.main-content').length) {
                 headerheight = $('.container.main-content').offset().top;
             }
-            $('html, body').animate({}, 500);
+            $('html, body').animate({
+                scrollTop: target.offset().top - headerheight
+            }, 500);
+            $('a' + this.hash).attr('tabindex', 0).focus();
         }
     });
 });
