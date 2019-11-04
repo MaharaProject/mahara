@@ -73,7 +73,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   Then I should see "You can design your own skin"
   # Import skin
   And I choose "Skins" in "Create" from main menu
-  And I press "Edit"
+  And I press "More options"
   And I follow "Import" in the ".btn-top-right" "css_element"
   And I click on "Help"
   And I should see "You can import skins from other Mahara sites."
