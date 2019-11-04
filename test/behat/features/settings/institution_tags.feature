@@ -46,7 +46,7 @@ Scenario: Creating institution tags
     And I choose "Journals" in "Create" from main menu
     And I click on "Mars journal"
     And I click on "Edit" in "Mars party" row
-    And I fill in select2 input "editpost_tags" with "One tag" and select "Institution One: One tag (0)"
+    And I fill in select2 input "editpost_tags" with "One tag" and select "Institution One: One tag"
     And I press "Save entry"
 
     Given I choose "Pages and collections" in "Create" from main menu
