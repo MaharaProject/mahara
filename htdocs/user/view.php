@@ -70,7 +70,8 @@ if (!isset($user)) {
 $is_friend = is_friend($userid, $loggedinid);
 
 if ($loggedinid == $userid) {
-    $view = $USER->get_profile_view();
+    $userobj = clone $USER;
+    $view = $userobj->get_profile_view();
 }
 else {
     $userobj = new User();
@@ -390,7 +391,13 @@ if ($remoteuserrelationship) {
 $smarty->assign('loginas', $loginas);
 
 $smarty->assign('INLINEJAVASCRIPT', $blocksjs . $inlinejs);
-
+if ($userobj->get('admin') || $userobj->get('staff')) {
+    $url = get_config('wwwroot') . 'institution/index.php?institution=mahara';
+    $link = get_string('institutionlink', 'mahara', $url, 'mahara');
+    // If user is both Admin and Staff, only say Site administrator and not both
+    $role = $userobj->get('admin') ? get_string('siteadmin', 'admin') : get_string('sitestaff', 'admin');
+    $smarty->assign('siterole', $role . ' ' . $link);
+}
 $smarty->assign('institutions', get_institution_string_for_user($userid));
 $smarty->assign('canmessage', $loggedinid != $userid && can_send_message($loggedinid, $userid));
 $smarty->assign('USERID', $userid);

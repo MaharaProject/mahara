@@ -833,6 +833,12 @@ class Institution {
             WHERE i.institution = ? AND u.deleted = 0 AND i.staff = 1', array($this->name))) {
             return array_map('extract_institution_user_id', $results);
         }
+        if ($this->name == 'mahara') {
+            // get all the site staff who are not also site admins
+            if ($results = get_records_sql_array("SELECT u.id FROM {usr} u WHERE u.deleted = 0 AND u.staff = 1 AND u.admin = 0")) {
+                return array_map('extract_institution_user_id', $results);
+            }
+        }
         return array();
     }
 
