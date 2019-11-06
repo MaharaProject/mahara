@@ -19,7 +19,9 @@ jQuery(function($) {
         var i,
             id,
             listitem,
-            heading;
+            heading,
+            activetab,
+            fsParam;
 
         if (createmenu) {
             $(ident).prepend('<ul class="nav nav-tabs" role="tablist"></ul>');
@@ -48,9 +50,20 @@ jQuery(function($) {
                 mahara.tabnav.append(listitem);
             }
         }
+        // first tab to be the active one by default
+        activetab = mahara.tabnav.find('li:first-child a');
 
-        // set first tab active
-        mahara.tabnav.find('li:first-child a').tab('show');
+        // check url params to see what tab to activate
+        fsParam = getUrlParameter('fs');
+        if (typeof(fsParam) != 'undefined' && fsParam) {
+            var targettab = mahara.tabnav.find('li a[href="#profileform_' + fsParam + '_container"]');
+            if (typeof(targettab) != 'undefined' && targettab.length) {
+                activetab = targettab;
+            }
+        }
+        // set tab active
+        saveTab(activetab[0]);
+
         if ($(mahara.tabnav.find('li:first-child a').attr('href')).find('.requiredmarker').length) {
             // show 'required' header message
             mahara.tabnav.closest('form').find('.requiredmarkerdesc').removeClass('d-none');
@@ -69,7 +82,7 @@ jQuery(function($) {
                 // hide 'required' header message
                 $(e.target).closest('form').find('.requiredmarkerdesc').addClass('d-none');
             }
-            saveTab(e);
+            saveTab(e.target);
         });
     }
 
@@ -107,9 +120,9 @@ jQuery(function($) {
      * Store the current active tab in session Storage
      * @param e | Event
      */
-    function saveTab(e) {
+    function saveTab(target) {
 
-        var currentTabId = $(e.target).attr('href'),
+        var currentTabId = $(target).attr('href'),
             stateObject = {
                 tabID: currentTabId,
                 url: window.location.pathname
