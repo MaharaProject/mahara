@@ -377,8 +377,8 @@
     border-bottom: 1px solid $list-group-border;
 }
 
-.bt-entireresume,
-.bt-entireresume-editor {
+.card.card-secondary.bt-entireresume,
+.card.card-secondary.bt-entireresume-editor {
     .list-group {
         h4.title {
             font-weight: bold;
@@ -390,6 +390,9 @@
             }
             .card-body {
               padding: 0 0 15px 0;
+            }
+            .list-group .list-group-item:last-child {
+              border-bottom: 0;
             }
         }
     }

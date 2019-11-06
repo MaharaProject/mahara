@@ -123,6 +123,10 @@ iframe {
 .btn-action-list + .view-container,
 .btn-group-top + .view-container {
     margin-top: 60px;
+
+    @include media-breakpoint-down(sm) {
+        margin-top: 0;
+    }
 }
 
 .view-container {
