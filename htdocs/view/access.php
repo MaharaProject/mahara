@@ -211,13 +211,9 @@ if ($group && in_array( $USER->get('id'), $admintutorids, true )) {
 }
 $viewaccess = $view->get_access('%s');
 if (is_isolated() && !empty($viewaccess)) {
-    foreach ($viewaccess as $k => $access) {
-        if ($access['accesstype'] == 'loggedin') {
-            unset($viewaccess[$k]);
-        }
-    }
-    $viewaccess = array_values($viewaccess);
+    $viewaccess = filter_isolated_view_access($view, $viewaccess);
 }
+
 $form['elements']['accesslist'] = array(
     'type'          => 'viewacl',
     'allowcomments' => $allowcomments,

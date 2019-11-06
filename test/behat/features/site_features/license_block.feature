@@ -34,6 +34,7 @@ Scenario:
   Then I should not see "Permissions beyond the scope of this license may be available"
   # Open the block and check it has the correct text
   And I expand "Creative Commons license" node
+  And I wait "1" seconds
   Then I should see "Page UserA_01 by Angela User is licensed under a Creative Commons Attribution-Share Alike 4.0 Unported license."
   When I follow "Edit"
   # change to noncommercial and check message
@@ -43,4 +44,5 @@ Scenario:
   And I press "Save"
   And I display the page
   And I expand "Creative Commons license" node
+  And I wait "1" seconds
   And I should see "Page UserA_01 by Angela User is licensed under a Creative Commons Attribution-Noncommercial 4.0 Unported license."
