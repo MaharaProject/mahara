@@ -737,7 +737,7 @@ class Country {
         array(
             '2' => 'mk',
             '3' => 'mkd',
-            'match' => "^Macedonia, the Former Yugoslav Republic of\$",
+            'match' => "^North Macedonia\$",
         ),
         array(
             '2' => 'ml',
