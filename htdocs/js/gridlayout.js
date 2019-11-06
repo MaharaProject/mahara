@@ -11,6 +11,7 @@
  */
 function loadGridTranslate(grid, blocks) {
     var gridElements = [];
+    window.isGridstackRendering = true;
     gridRemoveEvents();
     // load grid with empty blocks
     $.each(blocks, function(index, block) {
@@ -40,12 +41,14 @@ function loadGridTranslate(grid, blocks) {
             el.on('resizestop', resizeStopBlock);
         });
         initJs();
+        window.isGridstackRendering = false;
     }, 300);
 }
 
 function loadGrid(grid, blocks) {
     var minWidth = grid.opts.minCellColumns,
         minHeight;
+    window.isGridstackRendering = true;
     $.each(blocks, function(index, block) {
         minHeight = null;
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
@@ -68,6 +71,7 @@ function loadGrid(grid, blocks) {
         if (typeof id === 'undefined') {
             updateBlockSizes();
         }
+        window.isGridstackRendering = false;
     }, 300);
 
 }
