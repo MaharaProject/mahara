@@ -2098,7 +2098,7 @@ class BlockInstance {
         $js = '';
         foreach ($jsfiles as $jsfile) {
 
-            $file = (is_array($jsfile) && isset($jsfile['file'])) ? $jsfile['file'] : $jsfile;
+            $file = (is_array($jsfile) && !empty($jsfile['file'])) ? $jsfile['file'] : $jsfile;
 
             if (stripos($file, 'http://') === false && stripos($file, 'https://') === false) {
                 $file = 'blocktype/' . $this->blocktype . '/' . $file;
