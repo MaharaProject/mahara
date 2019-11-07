@@ -104,7 +104,7 @@ function display_tag($name, $alltags, $showcount = false) {
     else {
         $tag = $alltags[$name]->tag;
     }
-    if ($showcount) {
+    if ($showcount && $alltags[$name]->count > 0) {
         $tag .= ' (' . $alltags[$name]->count . ')';
     }
     return $tag;
@@ -212,7 +212,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                 FROM {tag} t
                 LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
                 LEFT JOIN {institution} i ON i.name = t2.ownerid AND t2.resourcetype = 'institution'
-                WHERE t.editedby=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
+                WHERE t.ownertype='user' AND t.ownerid=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 GROUP BY 1, 3
                 -- Selecting tags used in institution section that you belong to
                 " . $userinstitutiontags . "
