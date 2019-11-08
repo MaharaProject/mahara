@@ -2472,6 +2472,7 @@ class View {
 
         if (!empty($values['title'])) {
             $newtitle = hsc(urldecode($values['title']));
+            $newtitle = preg_replace('/\%2E/', '.', $newtitle); // Deal with . in title
         }
         $currentblocktags = get_records_sql_assoc("SELECT id, tag FROM {tag} WHERE resourcetype = ? AND resourceid = ?", array('blocktype', $currentblock->id));
         // Set up a dummy block instance of new blocktype with the data we need
@@ -2538,6 +2539,7 @@ class View {
 
         safe_require('blocktype', 'placeholder');
         $oldtitle = hsc(urldecode($values['title']));
+        $oldtitle = preg_replace('/\%2E/', '.', $oldtitle); // Deal with . in title
         // Set up a dummy block instance of new blocktype with the data we need
         // So we can get the initial display and configure form data
         $bi = new BlockInstance(0,
