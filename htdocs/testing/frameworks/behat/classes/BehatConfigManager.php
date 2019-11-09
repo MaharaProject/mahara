@@ -78,7 +78,12 @@ class BehatConfigManager {
             'contexts' => $core_contexts,
             'filters'  => $core_filters,
         );
-
+        $gherkin_filters = array(
+            'tags' => '~@manual'
+        );
+        $gherkin = array(
+            'filters' => $gherkin_filters,
+        );
         // Get test suite config for each plugin
         // Gets all the plugins with features and/or contexts.
         $plugins = TestsFinder::get_plugins_with_tests('features');
@@ -98,7 +103,7 @@ class BehatConfigManager {
 
         // Behat config file specifing the main context class,
         // the required Behat extensions and Mahara test wwwroot.
-        $contents = self::get_config_file_contents($suites);
+        $contents = self::get_config_file_contents($suites, $gherkin);
 
         // Stores the file.
         check_dir_exists(dirname($configfilepath), true, true);
@@ -134,7 +139,7 @@ class BehatConfigManager {
      * @param array $suites
      * @return string
      */
-    protected static function get_config_file_contents($suites) {
+    protected static function get_config_file_contents($suites, $gherkin) {
         global $CFG;
 
         // We require here when we are sure behat dependencies are available.
@@ -175,6 +180,7 @@ class BehatConfigManager {
                        'loop_break' => 'true'
                      )
                 ),
+                'gherkin' => $gherkin,
                 'suites' => $suites
             )
         );
