@@ -1,9 +1,9 @@
 {foreach from=$institutions item=institution}
         <tr class="{cycle values='r0,r1'}">
                 <td>
-                    {if !$institution->site}<a href="{$WWWROOT}institution/index.php?institution={$institution->name}">{/if}
+                    <a href="{$WWWROOT}institution/index.php?institution={$institution->name}">
                         {$institution->displayname}
-                    {if !$institution->site}</a>{/if}
+                    </a>
                 </td>
                 <td class="center">
                     {$institution->name}

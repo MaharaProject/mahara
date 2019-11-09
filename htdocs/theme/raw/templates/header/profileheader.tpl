@@ -13,6 +13,12 @@
                 </h1>
 
                 <div class="userdetail view-container">
+                    {if $siterole}
+                    <p class="lead text-small">
+                        <span class="icon icon-lg icon-university left" role="presentation" aria-hidden="true"></span>
+                        {$siterole|safe}
+                    </p>
+                    {/if}
                     {if $institutions}
                     <p class="lead text-small">
                         <span class="icon icon-lg icon-university left" role="presentation" aria-hidden="true"></span>
