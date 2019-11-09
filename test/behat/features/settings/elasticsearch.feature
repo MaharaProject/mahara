@@ -1,4 +1,4 @@
-@javascript @core @core_administration
+@javascript @core @core_administration @manual
 Feature: Configuration on elastic search
 In order to index and search the site using elasticsearch
 As an admin
