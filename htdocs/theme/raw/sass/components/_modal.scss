@@ -45,7 +45,8 @@ $width-sm: 90%;
         @include border-bottom-radius(3px);
         max-height: 90%;
         height: 90%;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         &.flush {
             padding: 0;
         }
