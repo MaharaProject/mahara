@@ -2974,35 +2974,35 @@ function mahara_standard_nav() {
  * @return array
  */
 function main_nav($type = null) {
-    global $USER;
+    global $USER, $SESSION;
 
     $language = current_language();
     $cachemenu = false;
     // Get the first institution
     $institution = $USER->get_primary_institution();
-    $menutype = '';
+    $menutype = $SESSION->get('handheld_device') ? 'mob_' : '';
     if ($type == 'adminnav') {
         global $USER, $SESSION;
         if ($USER->get('admin')) {
-            $menutype = 'admin_nav';
+            $menutype .= 'admin_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = admin_nav();
             }
         }
         else if ($USER->get('staff')) {
-            $menutype = 'staff_nav';
+            $menutype .= 'staff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = staff_nav();
             }
         }
         else if ($USER->is_institutional_admin()) {
-            $menutype = 'instadmin_nav';
+            $menutype .= 'instadmin_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_admin_nav();
             }
         }
         else {
-            $menutype = 'inststaff_nav';
+            $menutype .= 'inststaff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_staff_nav();
             }
@@ -3010,7 +3010,7 @@ function main_nav($type = null) {
     }
     else {
         // Build the menu structure for the site
-        $menutype = 'standard_nav';
+        $menutype .= 'standard_nav';
         if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
             $menu = mahara_standard_nav();
         }
