@@ -1,3 +1,9 @@
+18.10.4 (2019-11-12)
+- Bug 1847345: Only mention ssphp needs updating if installed
+- Bug 1851165: display_tag() missing index error
+- Bug 1851418: Security upgrade simplesamlphp to 1.17.7
+- Bug 1852020: Nav menu missing import / export items
+
 18.10.3 (2019-11-01)
 - 1837660  Error in Ldap user sync
 - 1837855  Rev. 19.04.1 error create institution
