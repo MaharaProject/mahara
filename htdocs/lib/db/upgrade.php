@@ -1542,5 +1542,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019093008) {
+        log_debug('Drop the elasticsearch triggers for the plugins');
+        require_once(get_config('docroot') . 'search/elasticsearch/lib.php');
+        $enabledtypes = explode(',', get_config_plugin('search', 'elasticsearch', 'types'));
+        foreach ($enabledtypes as $type) {
+            ElasticsearchIndexing::drop_triggers($type);
+        }
+        ElasticsearchIndexing::drop_trigger_functions();
+    }
+
     return $status;
 }
