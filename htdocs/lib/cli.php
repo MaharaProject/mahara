@@ -92,6 +92,11 @@ class cli {
     private $defaultvalues = array();
 
     /**
+     * Allow multiple values for option
+     */
+    private $multiples = array();
+
+    /**
      * Store the arguments given on the CLI
      */
     private $arguments = null;
@@ -137,7 +142,8 @@ class cli {
         foreach ($settings->options as $name => $optionsettings) {
             // Store the default value
             $this->defaultvalues[$name] = (isset($optionsettings->defaultvalue)) ? $optionsettings->defaultvalue : false;
-
+            // Store if can be multiple
+            $this->multiples[$name] = (isset($optionsettings->multiple)) ? $optionsettings->multiple : false;
             // By default this value isn't required
             $optionsettings->required = (isset($optionsettings->required)) ? $optionsettings->required : false;
 
@@ -251,7 +257,7 @@ class cli {
             if (($key = array_search('--', $options)) !== false) {
                 $options = array_slice($options, 0, $key);
             }
-
+            $multi = array();
             foreach ($options as $argument) {
                 // Attempt to match arguments
                 preg_match('/^(-(-)?)([^=]*)(=(.*))?$/', $argument, $matches);
@@ -261,7 +267,18 @@ class cli {
                         $argname = $this->shortoptions[$argname];
                     }
                     $argdata = isset($matches[5]) ? $matches[5] : true;
-                    $this->arguments[$argname] = $argdata;
+                    if (!isset($multi[$argname])) {
+                        $this->arguments[$argname] = $argdata;
+                        $multi[$argname] = true;
+                    }
+                    else if ($this->multiples[$argname] !== false) {
+                        // allowed to be multiple
+                        if (isset($multi[$argname]) && !is_array($this->arguments[$argname])) {
+                            // Need to change existing value from string to array
+                            $this->arguments[$argname] = array($this->arguments[$argname]);
+                        }
+                        array_push($this->arguments[$argname], $argdata);
+                    }
                 }
                 else {
                     // The argument didn't match a known setting so store it in

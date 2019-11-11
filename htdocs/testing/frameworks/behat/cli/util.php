@@ -84,6 +84,13 @@ $options['config']->description = 'Get behat YML config path';
 $options['config']->required = false;
 $options['config']->defaultvalue = false;
 
+$options['format'] = new stdClass();
+$options['format']->shortoptions = array('f');
+$options['format']->description = 'Get behat format options';
+$options['format']->required = false;
+$options['format']->defaultvalue = false;
+$options['format']->multiple = true;
+
 $settings = new stdClass();
 $settings->options = $options;
 $settings->info = 'CLI tool to manage Behat integration in Mahara';

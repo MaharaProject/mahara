@@ -24,6 +24,7 @@ $options['langpacks'] = (object) array(
         'description' => get_string('cli_langpack', 'admin'),
         'required' => true,
         'examplevalue' => 'de',
+        'multiple' => true,
 );
 define('CLI_LANGPACKS_BACKUP_DEFAULT', -1);
 $options['keepbackups'] = (object) array(
@@ -48,7 +49,9 @@ $cli->setup($settings);
 
 // Get which language packs we are going to update
 $langpacks = $cli->get_cli_param('langpacks');
-$langpacks = explode(',', $langpacks);
+if (!is_array($langpacks)) {
+    $langpacks = explode(',', $langpacks);
+}
 
 // No need to update the English lang pack as English lang strings are default in Mahara
 $key = array_search('en', $langpacks);
