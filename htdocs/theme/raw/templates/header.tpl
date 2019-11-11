@@ -5,7 +5,7 @@
 {include file="header/head.tpl"}
 <body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
     <div class="skiplink btn-group btn-group-top">
-        <a class="sr-only sr-only-focusable btn btn-secondary" {if $headertype=='page'}href="#header-content"{else}href="#main"{/if}>{str tag=skipmenu}</a>
+        <a class="sr-only sr-only-focusable btn btn-secondary" {if $headertype=='page'}href="#header-target-main"{else}href="#header-main"{/if}>{str tag=skipmenu}</a>
     </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
@@ -133,6 +133,7 @@
 
     <div class="container main-content">
         <div class="row">
+            <a id="header-main"></a>
             <main id="main" class="{if $SIDEBARS}{if $SIDEBLOCKS.right}col-lg-9 {else}col-lg-9 order-md-2 {/if}{else}col-md-12{/if} main">
                 <div id="content" class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="main-column-container">
