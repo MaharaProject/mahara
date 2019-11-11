@@ -1,3 +1,21 @@
+19.10.1 (2019-11-12)
+- 1829943  Error deleting institution due to foreign key constraint with view table
+- 1850220  Can't get to site's contacts page from profile page
+- 1850786  Upgrade script to 19.10 from 19.04.1 fails when converting artefact audio - elasticsearch triggers
+- 1850869  Text block - internal anchor does not work
+- 1851165  display_tag() missing index error
+- 1851174  19.10 upgrade is failing at artefact_plans_plan
+- 1851175  Unformatted table name breaks matrix
+- 1851176  Unformatted table name breaks skin editing
+- 1851288  Error when alterting the block placeholder name before choosing block type
+- 1851418  Security upgrade simplesamlphp to 1.17.7
+- 1852020  Nav menu missing import / export items
+- 1850865  iPad iOS 13.1 block comments and details modal content scrolls horizontally
+- 1850880  Profile completion tips links - some are inaccurate
+- 1851193  'skip to main content' link is not working
+- 1851589  Console error in image gallery
+- 1846915  Small language string fixes for Mahara 19.10
+
 19.10.0 (2019-10-31)
 - 739528 	Export to HTML doesn't use selected theme
 - 920246   dd the group category filter to /admin/groups/groups.php
