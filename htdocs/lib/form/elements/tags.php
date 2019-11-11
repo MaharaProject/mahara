@@ -178,8 +178,8 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                   END) AS tag, COUNT(*) AS count, i.displayname AS prefix
                 FROM {tag} t
                 LEFT JOIN {tag} t2 ON t2.id" . $typecast . " = SUBSTRING(t.tag, 7)
-                LEFT JOIN {institution} i ON i.name = t2.ownerid AND t2.resourcetype='institution'
-                WHERE t.editedby=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
+                LEFT JOIN {institution} i ON i.name = t2.ownerid AND t2.resourcetype = 'institution'
+                WHERE t.ownertype='user' AND t.ownerid=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 GROUP BY 1, 3
                 " . $insttagsforuser . "
             ) tags
