@@ -1,3 +1,11 @@
+19.04.3 (2019-11-12)
+- 1829943  Error deleting institution due to foreign key constraint with view table
+- 1847345  Only mention ssphp needs updating if installed
+- 1851165  display_tag() missing index error
+- 1851418  Security upgrade simplesamlphp to 1.17.7
+- 1852020  Nav menu missing import / export items
+- 1851193  'skip to main content' link is not working
+
 19.04.2 (2019-11-01)
 - Bug 1830654: A number of language strings in the SmartEvidence section, in particular editor, are not translated
 - Bug 1836588: Multibyte comments broken
