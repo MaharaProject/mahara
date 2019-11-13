@@ -2681,7 +2681,7 @@ abstract class Plugin implements IPlugin {
 
     /**
      * Is plugin deprecated - going to be obsolete / removed
-     * @return bool
+     * @return either bool or lang string indicating if plugin or part of it is deprecated
      */
     public static function is_deprecated() {
         return false;

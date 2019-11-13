@@ -32,6 +32,7 @@ defined('INTERNAL') || die();
 class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
 
     private static $source = null;
+    private static $deprecatedhosts = array('backpack');
 
     public static function single_only() {
         return false;
@@ -61,6 +62,10 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return array('portfolio', 'profile');
     }
 
+    public static function is_deprecated() {
+        return get_string('componentdeprecated', 'admin', 'Mozilla backpack');
+    }
+
     public static function get_backpack_source() {
         if (is_null(self::$source)) {
             $source = get_config('openbadgedisplayer_source');
@@ -73,6 +78,12 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
             }
 
             self::$source = $source;
+        }
+        // remove deprecated hosts
+        foreach (self::$deprecatedhosts as $deprecatedhost) {
+            if (isset(self::$source[$deprecatedhost])) {
+                unset(self::$source[$deprecatedhost]);
+            }
         }
 
         return self::$source;
@@ -107,7 +118,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
             return;
         }
 
-        $host = 'backpack';
+        $host = 'passport';
         $badgegroups = $configdata['badgegroup'];
         $html = '';
 
@@ -115,18 +126,30 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         if (is_string($badgegroups)) {
             $badgegroups = array($badgegroups);
         }
+        // add warning message if the block contains badges from deprecated host
+        $deprecatedmsg = array();
+        foreach ($badgegroups as $selectedbadgegroup) {
+            list($host, $uid, $selectedgroupid) = explode(':', $selectedbadgegroup);
+            // Display 'Host was deprecated' message
+            if (in_array($host, self::$deprecatedhosts)) {
+                $deprecatedmsg[] = get_string('title_' . $host, 'blocktype.openbadgedisplayer');
+            }
+        }
+        if ($deprecatedmsg) {
+            $html .= get_string('deprecatedhost', 'blocktype.openbadgedisplayer', implode(', ', $deprecatedmsg));
+        }
 
         if ($editing) {
             $items = array();
-
             foreach ($badgegroups as $selectedbadgegroup) {
                 list($host, $uid, $selectedgroupid) = explode(':', $selectedbadgegroup);
-
-                $allbadgegroups = self::get_badgegroupnames($host, $uid);
-                if (!empty($allbadgegroups)) {
-                    foreach ($allbadgegroups as $badgegroupid => $name) {
-                        if ((int) $selectedgroupid === (int) $badgegroupid) {
-                            $items[] = $name;
+                if (!in_array($host, self::$deprecatedhosts)) {
+                    $allbadgegroups = self::get_badgegroupnames($host, $uid);
+                    if (!empty($allbadgegroups)) {
+                        foreach ($allbadgegroups as $badgegroupid => $name) {
+                            if ((int) $selectedgroupid === (int) $badgegroupid) {
+                                $items[] = $name;
+                            }
                         }
                     }
                 }
@@ -148,7 +171,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
             $smarty->assign('id', $instance->get('id'));
             $smarty->assign('badgehtml', self::get_badges_html($badgegroups));
 
-            $html = $smarty->fetch('blocktype:openbadgedisplayer:openbadgedisplayer.tpl');
+            $html .= $smarty->fetch('blocktype:openbadgedisplayer:openbadgedisplayer.tpl');
         }
 
         return $html;
@@ -174,6 +197,12 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         $host = $parts[0];
         $uid = $parts[1];
         $badgegroupid = $parts[2];
+
+        // Display 'Mozilla backpack was deprecated' message
+        if (in_array($host, self::$deprecatedhosts)) {
+            // return get_string('deprecatedhost', 'blocktype.openbadgedisplayer', get_string('title_' . $host, 'blocktype.openbadgedisplayer'));
+            return '';
+        }
 
         // Try to get the badge html from database first
         // Get badge group html using uid (backpackid)
