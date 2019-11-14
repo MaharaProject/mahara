@@ -134,6 +134,13 @@ function webservices_server_submit(Pieform $form, $values) {
     redirect('/webservice/admin/oauthv1sregister.php');
 }
 
+function webservice_oauth_server_validate(Pieform $form, $values) {
+    $owner = array_diff($values['user'], array(''));
+    if (empty($owner)) {
+        $form->set_error('user', get_string('needtosetowner', 'auth.webservice'));
+    }
+}
+
 function webservice_oauth_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
@@ -153,6 +160,13 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
                     'consumer_secret'   => $dbserver->consumer_secret,
                     'id'                => $values['id'],
        );
+        if ($USER->get('admin') && isset($values['user'])) {
+            $useridchange = !empty($values['user'][0]) ? $values['user'][0] : false;
+            if ($useridchange) {
+                $app['userid'] = $useridchange;
+            }
+        }
+
         $key = $store->updateConsumer($app, $USER->get('id'), true);
         $c = (object) $store->getConsumer($key, $USER->get('id'), true);
         if (empty($c)) {
@@ -182,10 +196,12 @@ function webservice_main_submit(Pieform $form, $values) {
 }
 
 function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = array()) {
+    global $USER;
 
     $server_details =
         array(
             'name'             => 'webservice_oauth_server',
+            'validatecallback' => 'webservice_oauth_server_validate',
             'successcallback'  => 'webservice_oauth_server_submit',
             'jsform'           => false,
             'elements'   => array(
@@ -220,11 +236,32 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
         'type'         => 'text',
     );
 
-    $server_details['elements']['user'] = array(
-        'title'        => get_string('serviceuser', 'auth.webservice'),
-        'value'        =>  get_field('usr', 'username', 'id', $dbserver->userid),
-        'type'         => 'html',
-    );
+    if ($USER->get('admin')) {
+        // we can set another user as service owner
+        $server_details['elements']['user'] = array(
+            'title'        => get_string('serviceuser', 'auth.webservice'),
+            'defaultvalue'        => array($dbserver->userid),
+            'type' => 'autocomplete',
+            'ajaxurl' => get_config('wwwroot') . 'webservice/admin/users.json.php',
+            'initfunction' => 'translate_ids_to_names',
+            'multiple' => true,
+            'ajaxextraparams' => array(),
+            'extraparams' => array(
+                'maximumSelectionLength' => 1
+            ),
+            'width' => '280px',
+            'rules' => array(
+                'required' => true,
+            ),
+        );
+    }
+    else {
+        $server_details['elements']['user'] = array(
+            'title'        => get_string('serviceuser', 'auth.webservice'),
+            'value'        => get_field('usr', 'username', 'id', $dbserver->userid),
+            'type'         => 'html',
+        );
+    }
 
     $server_details['elements']['application_uri'] = array(
         'title'        => get_string('application_uri', 'auth.webservice'),
@@ -686,4 +723,14 @@ function get_module_from_serverid($serverid) {
         return explode("/", $consumer->component);
     }
     return array('auth', 'webservice');
+}
+
+/**
+ * Translate the supplied user id to it's display name
+ *
+ * @param array $ids  User id number
+ * @return object $results containing id and text values
+ */
+function translate_ids_to_names(array $ids) {
+    return translate_user_ids_to_names($ids);
 }
