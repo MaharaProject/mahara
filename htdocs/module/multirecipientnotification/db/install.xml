@@ -28,8 +28,8 @@
             <FIELD NAME="role" TYPE="char" LENGTH="9" ENUM="true" ENUMVALUES="'sender','recipient'" NOTNULL="true" DEFAULT="recipient" COMMENT="the role of user-relation"/>
             <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="relation to the user"/>
             <FIELD NAME="notification" TYPE="int" LENGTH="10" NOTNULL="true" COMMENT="the message-relation"/>
-            <FIELD NAME="read" TYPE="char" LENGTH="1" ENUM="true" ENUMVALUES="'0','1'" DEFAULT="0" NOTNULL="true" COMMENT="boolean value indicating if the message has been read"/>
-            <FIELD NAME="deleted" TYPE="char" LENGTH="1" ENUM="true" ENUMVALUES="'0','1'" DEFAULT="0" NOTNULL="true" COMMENT="boolean value indicating if the message has been deleted"/>
+            <FIELD NAME="read" TYPE="int" LENGTH="1"  DEFAULT="0" NOTNULL="true" COMMENT="boolean value indicating if the message has been read"/>
+            <FIELD NAME="deleted" TYPE="int" LENGTH="1"  DEFAULT="0" NOTNULL="true" COMMENT="boolean value indicating if the message has been deleted"/>
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
