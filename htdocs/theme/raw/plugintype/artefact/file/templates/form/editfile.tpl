@@ -74,12 +74,12 @@
             {/if}
         </div>
         {license_form_files($prefix, 'edit')}
-        <div class="form-group">
+        <div class="form-group switchbox">
             <label for="{$prefix}_edit_allowcomments">
                 {str tag=Comments section=artefact.comment}
             </label>
             <div class="form-switch">
-                <div class="switch onoff"{if $switchwidth} style="width: {$switchwidth}"{/if}>
+                <div class="switch"{if $switchwidth} style="width: {$switchwidth}"{/if}>
                     <input class="switchbox" type="checkbox" name="{$prefix}_edit_allowcomments" id="{$prefix}_edit_allowcomments" {if $fileinfo->allowcomments}checked {/if} />
                     <label class="switch-label" tabindex="1" for="{$prefix}_edit_allowcomments">
                         <span class="switch-inner" role="presentation" aria-hidden="true"></span>

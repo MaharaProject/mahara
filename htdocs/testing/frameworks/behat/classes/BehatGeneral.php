@@ -1996,4 +1996,66 @@ JS;
         }
     }
 
+    /**
+     * @Then I select the skin :skinname from :skinsection
+     */
+    public function iSelectTheSkinFrom($skinname, $skinsection) {
+        $skinnameliteral = $this->escaper->escapeLiteral($skinname);
+        $xpath = "//div[contains(@id, $skinsection)]" .
+                "/div[contains(concat(' ', normalize-space(@class), ' '), ' skin ')]" .
+                "/a/div";
+        try {
+            $skin = $this->find('xpath', $xpath);
+            $this->ensure_node_is_visible($skin);
+            $skin->click();
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('The skin with title ' . $skinname . ' was not found', $this->getSession());
+        }
+    }
+
+    /**
+     * Check if a block's "display" icons are present
+     *
+     * @Then the :row row should contain display button :text
+     */
+    public function check_row_contains_display_icon($row, $text) {
+        $rowname = $this->escaper->escapeLiteral($row);
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $xpath = "//li[contains(normalize-space(.), " . $rowname . ")]" .
+                 "/preceding-sibling::div[contains(concat(' ', normalize-space(@class), ' '), ' bh-displayiconsonly ')][1]" .
+                 "/a/span[@title=" . $textliteral . "]";
+        try {
+            $button = $this->find('xpath', $xpath);
+            $this->ensure_node_is_visible($button);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('The display button with title ' . $textliteral . ' in row ' . $rowname . ' was not found', $this->getSession());
+        }
+    }
+
+    /**
+     * Check if a block's "display" icons are not present
+     *
+     * @Then the :row row should not contain display button :text
+     */
+    public function check_row_does_not_contains_display_icon($row, $text) {
+        $rowname = $this->escaper->escapeLiteral($row);
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $xpath = "//li[contains(normalize-space(.), " . $rowname . ")]" .
+                 "/preceding-sibling::div[contains(concat(' ', normalize-space(@class), ' '), ' bh-displayiconsonly ')][1]" .
+                 "/a/span[@title=" . $textliteral . "]";
+        $found = true;
+        try {
+            $button = $this->find('xpath', $xpath);
+            $this->ensure_node_is_visible($button);
+        }
+        catch (ElementNotFoundException $e) {
+            // all is fine as it is missing
+            $found = false;
+        }
+        if ($found) {
+            throw new ExpectationException('The display button with title ' . $textliteral . ' in row ' . $rowname . ' was found', $this->getSession());
+        }
+    }
 }
