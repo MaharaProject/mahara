@@ -1339,6 +1339,25 @@ function display_username($user=null) {
 }
 
 /**
+ * Translate the supplied user id to it's display name
+ *
+ * @param array $ids  User id number
+ * @return object $results containing id and text values
+ */
+function translate_user_ids_to_names($ids) {
+    // for an empty list, the element '' is transmitted
+    $ids = array_diff($ids, array(''));
+    $results = array();
+    foreach ($ids as $id) {
+        $deleted = get_field('usr', 'deleted', 'id', $id);
+        if (($deleted === '0') && is_numeric($id)) {
+            $results[] = (object) array('id' => $id, 'text' => display_name($id));
+        }
+    }
+    return $results;
+}
+
+/**
  * helper function to default to currently
  * logged in user if there isn't an id specified
  * @throws InvalidArgumentException if there is no user and no $USER

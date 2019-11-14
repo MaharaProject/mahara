@@ -270,16 +270,13 @@ function sendmessage_validate(Pieform $form, $values) {
     }
 }
 
-function translate_ids_to_names(array $ids) {
+function translate_ids_to_names(array $unfilteredids) {
     global $USER;
-    // for an empty list, the element '' is transmitted
-    $ids = array_diff($ids, array(''));
-    $results = array();
-    foreach ($ids as $id) {
-        $deleted = get_field('usr', 'deleted', 'id', $id);
-        if (($deleted === '0') && is_numeric($id) && can_send_message($USER->to_stdclass(), $id)) {
-            $results[] = (object) array('id' => $id, 'text' => hsc(display_name($id, null, true)));
+    $ids = array();
+    foreach ($unfilteredids as $id) {
+        if (is_numeric($id) && can_send_message($USER->to_stdclass(), $id)) {
+            $ids[] = $id;
         }
     }
-    return $results;
+    return translate_user_ids_to_names($ids);
 }
