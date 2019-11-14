@@ -32,8 +32,13 @@ body > .main-content > .row {
     color: {$view_text_heading_color};
 }
 .pageheader-content .text-small a {
-    color: {$view_text_heading_color};
-    text-decoration: underline;
+    color: {$view_link_normal_color};
+    text-decoration: {$view_link_normal_underline};
+}
+.pageheader-content .text-small a:hover,
+.pageheader-content .text-small a:active {
+    color: {$view_link_hover_color};
+    text-decoration: {$view_link_hover_underline};
 }
 
 /* All other custom settings should be scoped to be within .user-page-content */
@@ -84,7 +89,6 @@ body > .main-content > .row {
 #viewh1 {
     color: {$view_text_heading_color};
     font-family: {$view_heading_font_family|safe};
-    font-weight: bold;
 }
 
 
