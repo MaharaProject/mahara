@@ -368,6 +368,7 @@ $smarty->assign('instructions', $view->get('instructions'));
 $smarty->assign('instructionscollapsed', $view->get('instructionscollapsed'));
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
+$smarty->assign('viewurl', $view->get_url());
 $smarty->assign('title', $returnto['title']);
 $smarty->assign('accessible', $view->get('accessibleview'));
 $smarty->display('view/blocks.tpl');
