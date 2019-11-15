@@ -13,10 +13,12 @@
         </a>
     {/if}
     {if $selected == 'content'}
-        <a id='displaypagebtn' class="btn btn-secondary editviews displaycontent active" href="{$WWWROOT}view/view.php?id={$viewid}" title="{str tag=displayview section=view}">
-            <span class="icon icon-lg icon-tv" aria-hidden="true" role="presentation"></span>
-            <span class="btn-title sr-only">{str tag=displayview section=view}</span>
-        </a>
+        {if $viewurl}
+            <a id='displaypagebtn' class="btn btn-secondary editviews displaycontent active" href="{$WWWROOT}view/view.php?id={$viewid}" title="{str tag=displayview section=view}">
+                <span class="icon icon-lg icon-tv" aria-hidden="true" role="presentation"></span>
+                <span class="btn-title sr-only">{str tag=displayview section=view}</span>
+            </a>
+        {/if}
     {else}
         <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}" title="{str tag=editcontent1 section=view}">
             <span class="icon icon-lg icon-pencil-alt" aria-hidden="true" role="presentation"></span>
