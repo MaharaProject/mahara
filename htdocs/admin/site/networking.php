@@ -78,6 +78,7 @@ $networkingform = pieform(
                 'title'        => get_string('enablenetworking','admin'),
                 'description'  => get_string('enablenetworkingdescription','admin'),
                 'defaultvalue' => get_config('enablenetworking'),
+                'disabled'     => in_array('enablenetworking', $OVERRIDDEN),
             ),
             'promiscuousmode' => array(
                 'type'         => 'switchbox',
@@ -85,6 +86,7 @@ $networkingform = pieform(
                 'title'        => get_string('promiscuousmode','admin'),
                 'description'  => get_string('promiscuousmodedescription','admin'),
                 'defaultvalue' => get_config('promiscuousmode'),
+                'disabled'     => in_array('promiscuousmode', $OVERRIDDEN),
             ),
             'submitbuttons' => array(
                 'type' => 'fieldset',
@@ -112,17 +114,8 @@ $networkingform = pieform(
     )
 );
 
-function networkingform_fail(Pieform $form) {
-    $form->reply(PIEFORM_ERR, array(
-        'message' => get_string('enablenetworkingfailed','admin'),
-        'goto'    => '/admin/site/networking.php',
-    ));
-}
-
-
 function networkingform_submit(Pieform $form, $values) {
     $reply = '';
-
     if ($form->get_submitvalue() === 'deletekey') {
         global $SESSION;
         $openssl = OpenSslRepo::singleton();
@@ -135,32 +128,14 @@ function networkingform_submit(Pieform $form, $values) {
     }
 
     if (get_config('enablenetworking') != $values['enablenetworking']) {
-        if (!set_config('enablenetworking', $values['enablenetworking'])) {
-            networkingform_fail($form);
-        }
-        else {
-            if (empty($values['enablenetworking'])) {
-                $reply .= get_string('networkingdisabled','admin');
-            }
-            else {
-                $reply .= get_string('networkingenabled','admin');
-            }
-        }
+        $values['enablenetworking'] ? $reply .= get_string('networkingenabled','admin') : $reply .= get_string('networkingdisabled','admin');
+    }
+    if (get_config('promiscuousmode') != $values['promiscuousmode']) {
+        $values['promiscuousmode'] ? $reply .= get_string('promiscuousmodeenabled','admin') : $reply .= get_string('promiscuousmodedisabled','admin');
     }
 
-    if (get_config('promiscuousmode') != $values['promiscuousmode']) {
-        if (!set_config('promiscuousmode', $values['promiscuousmode'])) {
-            networkingform_fail($form);
-        }
-        else {
-            if (empty($values['promiscuousmode'])) {
-                $reply .= get_string('promiscuousmodedisabled','admin');
-            }
-            else {
-                $reply .= get_string('promiscuousmodeenabled','admin');
-            }
-        }
-    }
+    set_config('enablenetworking', $values['enablenetworking']);
+    set_config('promiscuousmode', $values['promiscuousmode']);
 
     $form->reply(PIEFORM_OK, array(
         'message' => ($reply == '') ? get_string('networkingunchanged','admin') : $reply,
