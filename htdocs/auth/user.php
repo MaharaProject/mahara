@@ -274,8 +274,10 @@ class User {
                             . '
                         )';
             $user = get_record_sql($sql, array($username, $instanceid));
-            $this->populate($user);
-            return $this;
+            if ($user) {
+                $this->populate($user);
+                return $this;
+            }
         }
         $sql = 'SELECT
                     *,
