@@ -15,10 +15,20 @@ Background:
 Scenario: Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Configure site" from administration menu
+    # Check for access to share template BUG - # 1824767
+    And I should not see "Access rules for \"Dashboard template\""
+    When I follow "Dashboard template"
+    Then I should not see "Share"
+    When I go to "/view/accessurl.php?id=2"
+    Then I should see "Access denied"
+    And I should see "You do not have access to view this page."
+    When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Add"
     And I click on "Page" in the dialog
-    And I set the field "Page title" to "Site page with block templates" 
+    And I set the field "Page title" to "Site page with block templates"
     And I press "Save"
+    And I should see "Share"
+
     # Add a Profile information block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
