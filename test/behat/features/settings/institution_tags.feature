@@ -12,10 +12,12 @@ Background:
     And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | member |
+    | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | admin |
 
     And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01| user | UserA |
+    | Page InstOne_01 | Page | institution | instone |
 
     And the following "journals" exist:
     | owner | ownertype | title | description | tags |
@@ -25,11 +27,9 @@ Background:
     | owner | ownertype | title | entry | blog | tags | draft |
     | UserA | user | Mars party | I just landed on Mars, mission success | Mars journal | Mars | 0 |
 
-Scenario: Creating institution tags
-    # Log in as "Admin" user
+    #Creating institution tags as a part of the background steps - set up preconditions
     Given I log in as "admin" with password "Kupuh1pa!"
-
-    # Creating an Institution
+    # Creating Institution tags
     And I choose "Tags" in "Institutions" from administration menu
     And I follow "Create tag"
     And I set the field "Institution tag" to "One tag"
@@ -42,6 +42,7 @@ Scenario: Creating institution tags
     Then I should see "Institution tag deleted successfully"
     And I log out
 
+Scenario: Mahara member can use Institution tags in their content
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Journals" in "Create" from main menu
     And I click on "Mars journal"
@@ -78,3 +79,25 @@ Scenario: Creating institution tags
     And I follow "Edit tags"
     Then I should see "Test" in the "My tags list" property
     Then I should not see "Institution One: One tag" in the "My tags list" property
+
+Scenario: Inst admin can use Institution tags when creating Institution pages
+    Given I log in as "UserB" with password "Kupuh1pa!"
+    And I choose "Pages and collections" in "Institutions" from administration menu
+    And I follow "Add"
+    And I click on "Page" in the dialog
+    And I fill in the following:
+    | Page title | Test view |
+    And I fill in "First description" in first editor
+    And I fill in select2 input "settings_tags" with "One" and select "Institution One: One tag"
+    And I press "Save"
+
+    # Inst admin put an institution tag on a text block artefact on an institution page
+    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    And I press "Add"
+    And I click on "Text" in the "Content types" property
+    And I set the field "Block title" to "Text Block 1"
+    And I set the field "Block content" to "Here is a new block."
+    And I fill in select2 input "instconf_tags" with "One" and select "Institution One: One tag"
+    And I press "Save"
+    And I go to portfolio page "Test view"
+    Then I should see "Institution One: One tag"
