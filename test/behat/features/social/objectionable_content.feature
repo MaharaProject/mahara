@@ -17,6 +17,15 @@ Given the following "pages" exist:
      | Page UserA_01 | public |
      | Page UserA_02 | public |
 
+    Given I log in as "admin" with password "Kupuh1pa!"
+    # Navigating to notification settings
+    And I choose "Site options" in "Configure site" from administration menu
+    And I follow "Notification settings"
+    And I select "Inbox" from "Objectionable content"
+    And I select "Inbox" from "Objectionable content in forum"
+    And I press "Update site options"
+    And I log out
+
 Scenario: User reports objectionable content on a page and admin responds
     Given I log in as "UserB" with password "Kupuhipa1!"
     And I wait "1" seconds
@@ -35,8 +44,14 @@ Scenario: User reports objectionable content on a page and admin responds
 
     # Admin to Review objectionable material and click Still objectionable button and respond
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I wait "1" seconds
-    And I follow "Page UserA_01"
+    And I trigger cron
+    And I am on homepage
+    When I choose inbox
+    # We can't do full string as it's truncated
+    And I follow "Objectionable content on page \"Page UserA_01\""
+    Then I should see "Some complain text"
+    When I follow "More..."
+    Then I should see "Page UserA_01"
     And I should see "This page, or something within it, has been reported as containing objectionable content. If this is no longer the case, you can click the button to remove this notice and notify the other administrators."
     When I press "Still objectionable"
     Then I should see "Review objectionable material"
