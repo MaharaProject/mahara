@@ -10,7 +10,7 @@
  */
 
 jQuery(function($) {
-    $(window).on("keypress", function(e) {
+    $(window).on("keyup", function(e) {
         var targetType = e.target.nodeName;
 
         if (
@@ -24,41 +24,44 @@ jQuery(function($) {
 
         if (config.commandMode) {
             switch(e.key) {
-                case 'a':
-                    document.location.href = config.wwwroot + 'admin/';
+                case 'a': // Administration
+                    document.location.href = config.wwwroot + 'admin/index.php';
                     break;
-                case 'h':
+                case 'h': // Homepage
                     document.location.href = config.wwwroot;
                     break;
-                case 'b':
-                    document.location.href = config.wwwroot + 'artefact/blog/';
+                case 'b': // User journal
+                    document.location.href = config.wwwroot + 'artefact/blog/index.php';
                     break;
-                case 'p':
-                    document.location.href = config.wwwroot + 'artefact/internal/';
+                case 'p': // User Profile
+                    document.location.href = config.wwwroot + 'artefact/internal/index.php';
                     break;
-                case 'f':
-                    document.location.href = config.wwwroot + 'artefact/file/';
+                case 'f': // User files
+                    document.location.href = config.wwwroot + 'artefact/file/index.php';
                     break;
-                case 'g':
+                case 'g': // Groups
                     document.location.href = config.wwwroot + 'group/index.php';
                     break;
-                case 'v':
-                    document.location.href = config.wwwroot + 'view';
+                case 'v': // Pages and collections
+                    document.location.href = config.wwwroot + 'view/index.php';
                     break;
-                case 'c':
-                    document.location.href = config.wwwroot + 'collection';
+                case 's': // Pages and collections access
+                    document.location.href = config.wwwroot + 'view/share.php';
                     break;
-                case 'l':
-                    document.location.href = config.wwwroot + 'artefact/plans';
+                case 'l': // Plans
+                    document.location.href = config.wwwroot + 'artefact/plans/index.php';
+                    break;
+                case 'e': // Export
+                    document.location.href = config.wwwroot + 'export/index.php';
                     break;
                 case '/':
-                    $(document.usf.query).trigger("focus");
+                    $('#usf_query').focus();
                     break;
             }
             config.commandMode = false;
         }
         else {
-            if (e.key.string == 'g') {
+            if (e.key == 'g') {
                 config.commandMode = true;
             }
         }
