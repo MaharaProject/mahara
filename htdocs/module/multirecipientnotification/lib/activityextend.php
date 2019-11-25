@@ -79,7 +79,7 @@ function activitylistin($type='all', $limit=10, $offset=0) {
                 ON a.id = b.notification
             INNER JOIN {activity_type} AS at ON a.type = at.id
             WHERE b.usr = ?
-            AND b.deleted = '0'
+            AND b.deleted = 0
             AND b.role = '" . $notificationtargetrole . "'
             " . $typesql . "
             )";
@@ -459,7 +459,7 @@ function activitylistout($type='all', $limit=10, $offset=0) {
                 ON a.id = b.notification
             INNER JOIN {activity_type} AS at ON a.type = at.id
             WHERE b.usr = ?
-            AND b.deleted = '0'
+            AND b.deleted = 0
             AND b.role = '" . $notificationtargetrole . "'
             " . $typesql . "
             )";

@@ -197,7 +197,7 @@ function delete_all_notifications_submit() {
                 ON msg.id = rel.notification
                 AND rel.usr = ?
                 AND rel.role = ?
-                AND rel.deleted = \'0\'
+                AND rel.deleted = 0
                 ' . $typecond;
         $result = get_records_sql_array($query, array($userid, 'recipient'));
         $msgids = array();

@@ -139,7 +139,7 @@ function mark_as_read_mr(array $msgids, $usr = null, $read = true) {
     db_begin();
     foreach ($msgids as $msgid) {
         $change = new stdClass();
-        $change->read = $read ? '1' : '0';
+        $change->read = $read ? 1 : 0;
 
         $where = array(
             'notification' => $msgid,
@@ -172,8 +172,8 @@ function delete_messages_mr(array $msgids, $usr = null) {
 
     $query = '
         UPDATE {module_multirecipient_userrelation}
-        SET deleted = \'1\',
-            "read" = \'1\'
+        SET deleted = 1,
+            "read" = 1
         WHERE usr = ?
         AND notification in (' . join(',', $msgids) . ')';
     execute_sql($query, array($usr));
@@ -182,7 +182,7 @@ function delete_messages_mr(array $msgids, $usr = null) {
         SELECT DISTINCT a.id
         FROM {module_multirecipient_notification} AS a
         LEFT JOIN {module_multirecipient_userrelation} AS ur
-            ON a.id = ur.notification AND ur.deleted = \'0\'
+            ON a.id = ur.notification AND ur.deleted = 0
         WHERE a.id IN (' . join(',', array_map('db_quote', $msgids)) . ')
         AND ur.id IS NULL';
     $deleteidrecords = get_records_sql_array($query, array());
@@ -344,10 +344,10 @@ function get_message_mr($usr, $msgid) {
     $message->fromid = -1;
     foreach ($userrelations as $userrel) {
         if ($userrel->usr == $usr) {
-            if ('1' === $userrel->deleted) {
+            if ($userrel->deleted) {
                 return null;
             }
-            else if ('1' === $userrel->read) {
+            else if ($userrel->read) {
                 $message->read = 1;
             }
             else {
@@ -429,7 +429,7 @@ function get_messages_by_ids_mr($usr, array $msgids) {
         if (!array_key_exists($msgid, $return)) {
             continue;
         }
-        if (($userrel->usr == $usr) && ('1' === $userrel->deleted)) {#
+        if (($userrel->usr == $usr) && ($userrel->deleted)) {
             $return = array_diff_assoc($return, array($msgid => $return[$msgid]));
             continue;
         }

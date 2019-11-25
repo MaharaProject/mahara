@@ -136,7 +136,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
                             UNION
                             SELECT COUNT(*) AS counts FROM {notification_internal_activity} WHERE \"read\" = ? AND usr = ?
                         ) AS countsum
-                    ) WHERE id = ?", array('0', $usr, 0, $usr, $usr), false);
+                    ) WHERE id = ?", array(0, $usr, 0, $usr, $usr), false);
     }
 
     public static function postinst($prevversion) {

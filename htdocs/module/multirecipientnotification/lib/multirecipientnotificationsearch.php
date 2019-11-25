@@ -119,7 +119,7 @@ function get_message_search($searchstring, $type, $offset, $limit, $location, $u
             FROM {module_multirecipient_notification} AS notif
             INNER JOIN {module_multirecipient_userrelation} AS relation
             ON notif.id = relation.notification
-            WHERE " . $query_new_where . " AND relation.deleted = '0'
+            WHERE " . $query_new_where . " AND relation.deleted = 0
         )";
     $query_old_where = array();
     $query_new_where = array();

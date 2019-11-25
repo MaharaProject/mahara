@@ -1552,5 +1552,16 @@ function xmldb_core_upgrade($oldversion=0) {
         ElasticsearchIndexing::drop_trigger_functions();
     }
 
+    if ($oldversion < 2019111500) {
+        log_debug('Alter module_multirecipient_userrelation table column types');
+        $table = new XMLDBTable('module_multirecipient_userrelation');
+        $field = new XMLDBField('read');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        change_field_type($table, $field, true, true);
+        $field = new XMLDBField('deleted');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        change_field_type($table, $field, true, true);
+    }
+
     return $status;
 }

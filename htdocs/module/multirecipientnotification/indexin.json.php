@@ -82,7 +82,7 @@ if ($markasread) {
                 $column = 'id';
             }
             set_field_select(
-                $list, 'read', '1',
+                $list, 'read', 1,
                 $column . ' IN (' . join(',', array_map('db_quote', $idsperlist)) . ') AND usr = ?',
                 array($USER->get('id'))
             );
