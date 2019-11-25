@@ -320,17 +320,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
 
         if (!empty($values['smartevidence'])) {
             // Check that the new smartevidence standard we are changing to is not alreay covered by another annotation block
-            $block = $form->get_element('blockconfig');
-            $view = $form->get_element('id');
+            $block = $form->get_element_option('blockconfig', 'value');
+            $viewid = $form->get_element_option('id', 'value');
             require_once('view.php');
-            $view = new View($view['value']);
+            $view = new View($viewid);
             $collection = $view->get('collection');
             if (is_object($collection) && $collection->get('framework')) {
                 $annotationid = get_field('framework_evidence', 'annotation',
                                            'view', $view->get('id'),
                                            'framework', $collection->get('framework'),
                                            'element', $values['smartevidence']);
-                if ($annotationid && $annotationid != $block['value']) {
+                if ($annotationid && ($annotationid != $block)) {
                     $result['message'] = get_string('annotationclash', 'module.framework');
                     $form->set_error('smartevidence', $result['message']);
                     $form->reply(PIEFORM_ERR, $result);

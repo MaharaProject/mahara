@@ -553,13 +553,13 @@ function designskinform_submit(Pieform $form, $values) {
     $viewskin['type'] = $values['viewskin_access'];
     $viewskin['viewskin'] = $skin;
 
-    $submitelement = $form->get_element('submitform');
+    $subgoto = $form->get_element_option('submitform', 'goto');
     Skin::create($viewskin);
     if ($form->submitted_by_js()) {
         $result = array(
             'error'   => false,
             'message' => get_string('skinsaved', 'skin'),
-            'goto'    => $submitelement['goto'],
+            'goto'    => $subgoto,
         );
         // Redirect back to the page from within the iframe
         $SESSION->add_ok_msg($result['message']);

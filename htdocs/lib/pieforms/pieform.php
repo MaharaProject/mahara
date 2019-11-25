@@ -942,6 +942,25 @@ class Pieform {/*{{{*/
     }/*}}}*/
 
     /**
+     * Returns the element's option with the given name. Throws a PieformException if the
+     * element's cannot be found.
+     *
+     * @param  string $name     The name of the element to find
+     * @param  string $option     The name of the option to find, i.e 'disabled'
+     * @return array            The element's option
+     * @throws PieformException If the element could not be found
+     */
+    public function get_element_option($name, $option) {/*{{{*/
+        if (!isset($this->elementrefs[$name])) {
+            throw new PieformException('Element "' . $name . '" cannot be found');
+        }
+        if (!isset($this->elementrefs[$name][$option])) {
+            throw new PieformException('Element "' . $name . '" option "' . $option . '" cannot be found');
+        }
+        return $this->elementrefs[$name][$option];
+    }/*}}}*/
+
+    /**
      * Sends a message back to a form
      */
     public function reply($returncode, $message, $replacehtml=null) {

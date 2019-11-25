@@ -4585,17 +4585,17 @@ function format_class($extra, $column, $class = 'search-results-sort-column') {
 }
 
 function reportconfigform_cancel_submit(Pieform $form) {
-    $submitelement = $form->get_element('submit');
-    redirect($submitelement['goto']);
+    $goto = $form->get_element_option('submit', 'goto');
+    redirect($goto);
 }
 
 function reportconfigform_submit(Pieform $form, $values) {
     global $SESSION;
 
-    $submitelement = $form->get_element('submit');
+    $goto = $form->get_element_option('submit', 'goto');
     // Get the type/subtype values from select field
     list($type, $subtype) = explode('_', $values['typesubtype']);
-    $submitelement['goto'] .= '&type=' . $type . '&subtype=' . $subtype;
+    $goto .= '&type=' . $type . '&subtype=' . $subtype;
 
     $SESSION->set('columnsforstats', null);
     $extra = array();
@@ -4615,7 +4615,7 @@ function reportconfigform_submit(Pieform $form, $values) {
 
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('applyingfilters', 'statistics'),
-        'goto' => $submitelement['goto'],
+        'goto' => $goto,
         )
     );
 }

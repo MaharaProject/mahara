@@ -117,7 +117,7 @@ $smarty->display('view/delete.tpl');
 
 function deleteview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $viewid, $groupid, $institution;
-    $submitelement = $form->get_element('submit');
+    $goto = $form->get_element_option('submit', 'goto');
     $view = new View($viewid, null);
     if (View::can_remove_viewtype($view->get('type')) || $USER->get('admin')) {
         $collectionid = $view->collection_id();
@@ -130,5 +130,5 @@ function deleteview_submit(Pieform $form, $values) {
     else {
         $SESSION->add_error_msg(get_string('cantdeleteview', 'view'));
     }
-    redirect( $submitelement['goto']);
+    redirect($goto);
 }
