@@ -1524,6 +1524,7 @@ EOF;
  *
  */
     public function i_delete_link_resource_menu_item($item) {
+        $this->getSession()->wait(2000, '(jQuery("div#menuitemlist tr:contains(\'' . $item . '\') button:contains(\'Delete\')")[0].length > 0)');
         $this->getSession()->executeScript('jQuery("div#menuitemlist tr:contains(\'' . $item . '\') button:contains(\'Delete\')")[0].click();');
         usleep(10000);
         $this->i_accept_confirm_popup();

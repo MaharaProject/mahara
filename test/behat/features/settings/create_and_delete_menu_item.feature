@@ -9,7 +9,7 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Entering an external link
     And I choose "Menus" in "Configure site" from administration menu
-    And I select "Logged-in links and resources" from "Edit:"
+    And I select "Logged-in links and resources" from "Edit"
     And I fill in "namenew" with "Test Menu Link"
     And I fill in "linkedtonew" with "https://mahara.org/"
     And I press "Add"
@@ -20,7 +20,7 @@ Scenario: Creating and deleting external links (Selenium 1426983)
     And I choose "Dashboard" from main menu
     Then I should see "Test Menu Link"
     And I choose "Menus" in "Configure site" from administration menu
-    And I select "Logged-in links and resources" from "Edit:"
+    And I select "Logged-in links and resources" from "Edit"
     And I delete the link and resource menu item "Test Menu Link"
     And I should see "Item deleted"
     And I press "Save changes"
@@ -38,7 +38,7 @@ Scenario: Make sure blogs do not show in site file link options (Bug #1537426)
     And I attach the file "Image1.jpg" to "File"
     # Entering an external link
     And I choose "Menus" in "Configure site" from administration menu
-    And I select "Logged-in links and resources" from "Edit:"
+    And I select "Logged-in links and resources" from "Edit"
     And I set the following fields to these values:
     | Site file | 1 |
     And the "linkedtonew" select box should not contain "Site blog"

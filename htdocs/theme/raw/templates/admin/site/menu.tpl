@@ -6,7 +6,7 @@
             <div class="card-body">
                 <p class="lead">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
                 <div class="dropdown form-group">
-                    <label for="menuselect">{str tag=edit}:</label>
+                    <label for="menuselect">{str tag=edit}</label>
                     <span class="picker">
                         <select class="form-control select" id="menuselect" name="menuselect">
                         {foreach from=$MENUS item=menu}
