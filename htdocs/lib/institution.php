@@ -367,6 +367,17 @@ class Institution {
         if ($profileview = $userobj->get_profile_view()) {
             $profileview->add_owner_institution_access(array($this->name));
         }
+        if (is_isolated() && !$admin) {
+            // If isolated institutions are on and this user is not an admin make sure their existing pages
+            // are not shared with people outside their new institution
+            $toremove1 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.institution IS NOT NULL AND va.institution != ?)", array($user->id, $this->name));
+            $toremove2 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.usr IS NOT NULL AND va.usr NOT IN (SELECT usr FROM {usr_institution} WHERE institution = ?))", array($user->id, $this->name));
+            $toremove3 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.group IS NOT NULL AND va.group NOT IN (SELECT g.id FROM {group} g WHERE g.institution = ?))", array($user->id, $this->name));
+            $toremove = array_merge($toremove1, $toremove2, $toremove3);
+            if (!empty($toremove)) {
+                delete_records_sql("DELETE FROM {view_access} WHERE id IN (" . join(',', array_map('db_quote', $toremove)) . ")");
+            }
+        }
 
         db_commit();
     }
@@ -731,6 +742,17 @@ class Institution {
         delete_records('usr_account_preference', 'usr', $user->id, 'field', 'licensedefault', 'value', LICENSE_INSTITUTION_DEFAULT);
 
         delete_records('usr_institution', 'usr', $user->id, 'institution', $this->name);
+        if (is_isolated() && !$user->admin) {
+            // If isolated institutions are on and this user is not an admin make sure their existing pages
+            // are not shared with people outside their new institution
+            $toremove1 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.institution IS NOT NULL AND va.institution = ?)", array($user->id, $this->name));
+            $toremove2 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.usr IS NOT NULL AND va.usr IN (SELECT usr FROM {usr_institution} WHERE institution = ?))", array($user->id, $this->name));
+            $toremove3 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.group IS NOT NULL AND va.group IN (SELECT g.id FROM {group} g WHERE g.institution = ?))", array($user->id, $this->name));
+            $toremove = array_merge($toremove1, $toremove2, $toremove3);
+            if (!empty($toremove)) {
+                delete_records_sql("DELETE FROM {view_access} WHERE id IN (" . join(',', array_map('db_quote', $toremove)) . ")");
+            }
+        }
         handle_event('updateuser', $user->id);
         db_commit();
     }
