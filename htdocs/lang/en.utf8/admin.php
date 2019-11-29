@@ -217,6 +217,7 @@ $string['cleanurlsdescriptionshort'] = 'Configure site to use human-readable URL
 
 // sanity check warnings
 $string['warnings'] = 'Warning';
+$string['applyingchanges'] = 'Applying changes';
 
 // Group management
 $string['groupcategories'] = 'Group categories';

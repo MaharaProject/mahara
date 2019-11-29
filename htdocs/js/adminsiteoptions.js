@@ -12,7 +12,11 @@
   // Add here as appropriate
 var forceReloadElements = ['sitename', 'lang', 'theme',
                            'defaultaccountlifetime_units',
-                           'defaultaccountlifetimeupdate'];
+                           'defaultaccountlifetimeupdate',
+                           'defaultregistrationexpirylifetime_units',
+                           'defaultaccountinactiveexpire_units',
+                           'defaultaccountinactivewarn_units',
+                           'searchplugin', 'remoteavatars']; // Changes that are visible on site options page
 var isReloadRequired = false;
 
 // if strict privacy is enabled, disables multiple institutions per user
@@ -65,33 +69,38 @@ function update_allowpublicprofiles() {
 }
 
 var checkReload = (function($) {
-  // Disconnects the pieform submit handler and changes the form target back to
-  // the page itself (rather than pieform's hidden iframe), so a full post/reload
-  // cycle will happen when the form is submitted
+  // Checks to see if we need to refresh the page after form is saved
+  // Normally we only load back in the form but for things like language/theme
+  // changes we want to see them right away.
   function reloadRequired() {
       isReloadRequired = true;
-      $('#siteoptions').off();
-      $('#siteoptions')[0].target = '';
   }
 
   // Wires up appropriate elements to cause a full page reload if they're changed
   function connectElements() {
       $(forceReloadElements).each(function(id, element) {
           if ($('#siteoptions_' + element).length) {
-            $('#siteoptions_' + element).on('change', reloadRequired);
+              $('#siteoptions_' + element).on('change', reloadRequired);
           }
       });
 
       $('#siteoptions_allowpublicviews').on('click', update_allowpublicprofiles);
   }
 
-  connectElements();
+  jQuery(function() {
+      connectElements();
+  });
 
   // Javascript success handler for the form. Re-wires up the elements
   return function(form, data) {
       update_allowpublicprofiles();
-
-      isReloadRequired = false;
+      if (isReloadRequired == true) {
+          isReloadRequired = false;
+          jQuery('#siteoptions_applying').removeClass('d-none');
+          setTimeout(function() {
+              window.location.href = data.goto;
+          }, 1000);
+      }
       connectElements();
 
       jQuery('#siteoptions_institutionstrictprivacy').on("click", function() {
