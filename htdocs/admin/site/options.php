@@ -43,6 +43,8 @@ $siteoptionform = array(
     'renderer'   => 'div',
     'plugintype' => 'core',
     'pluginname' => 'admin',
+    'validatecallback' => 'siteoptions_validate',
+    'successcallback' => 'siteoptions_submit',
     'jssuccesscallback' => 'checkReload',
     'elements'   => array(
         'sitesettings' => array(
@@ -845,11 +847,29 @@ $siteoptionform['elements']['submit'] = array(
 
 $siteoptionform = pieform($siteoptionform);
 
-function siteoptions_fail(Pieform $form, $field) {
-    $form->reply(PIEFORM_ERR, array(
-        'message' => get_string('setsiteoptionsfailed', 'admin', get_string($field, 'admin')),
-        'goto'    => '/admin/site/options.php',
-    ));
+function siteoptions_validate(Pieform $form, $values) {
+
+    if (get_config('searchplugin') != $values['searchplugin']) {
+        // Call the new search plugin's can connect
+        safe_require('search', $values['searchplugin']);
+        $connect = call_static_method(generate_class_name('search', $values['searchplugin']), 'can_connect');
+        if (!$connect) {
+            $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
+        }
+    }
+    if ($values['viruschecking'] == true) {
+        $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
+        if (!$pathtoclam ) {
+            $form->set_error('viruschecking', get_string('clamnotset', 'mahara', $pathtoclam));
+        }
+        else if (!file_exists($pathtoclam) && !is_executable($pathtoclam)) {
+            $form->set_error('viruschecking', get_string('clamlost', 'mahara', $pathtoclam));
+        }
+    }
+
+    if ($values['recaptchaonregisterform'] && !($values['recaptchapublickey'] && $values['recaptchaprivatekey'])) {
+        $form->set_error('recaptchaonregisterform', get_string('recaptchakeysmissing1', 'admin'));
+    }
 }
 
 function siteoptions_submit(Pieform $form, $values) {
@@ -959,14 +979,17 @@ function siteoptions_submit(Pieform $form, $values) {
     }
     // Turn homepageredirecturl into string
     $values['homepageredirecturl'] = !empty($values['homepageredirecturl']) ? $values['homepageredirecturl'][0] : '';
+    $fieldsfailed = 0;
+    foreach ($fields as $field) {
+        if (!set_config($field, $values[$field])) {
+            $form->set_error($field, get_string('setsiteoptionsfailed1', 'admin'));
+            $fieldsfailed += 1;
+        }
+    }
     $oldsearchplugin = get_config('searchplugin');
     $oldlanguage = get_config('lang');
     $oldtheme = get_config('theme');
-    foreach ($fields as $field) {
-        if (!set_config($field, $values[$field])) {
-            siteoptions_fail($form, $field);
-        }
-    }
+
     if ($oldlanguage != $values['lang']) {
         safe_require('artefact', 'file');
         ArtefactTypeFolder::change_public_folder_name($oldlanguage, $values['lang']);
@@ -982,63 +1005,25 @@ function siteoptions_submit(Pieform $form, $values) {
         safe_require('search', $values['searchplugin']);
         $initialize = call_static_method(generate_class_name('search', $values['searchplugin']), 'initialize_sitewide');
         if (!$initialize) {
-            $form->reply(PIEFORM_ERR, array(
-                'message' => get_string('searchconfigerror1', 'admin', $values['searchplugin']),
-                'goto'    => '/admin/site/options.php',
-            ));
+            $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
+            $fieldsfailed += 1;
         }
     }
-    // Call the new search plugin's can connect
-    safe_require('search', $values['searchplugin']);
-    $connect = call_static_method(generate_class_name('search', $values['searchplugin']), 'can_connect');
-    if (!$connect) {
+    if ($fieldsfailed > 0) {
         $form->reply(PIEFORM_ERR, array(
-            'message' => get_string('searchconfigerror1', 'admin', $values['searchplugin']),
+            'message' => get_string('setsiteoptionsfailednotice', 'admin', $fieldsfailed),
             'goto'    => '/admin/site/options.php',
         ));
     }
 
     // submitted sessionlifetime is in minutes; db entry session_timeout is in seconds
-    if (!set_config('session_timeout', $values['sessionlifetime'] * 60)) {
-        siteoptions_fail($form, 'sessionlifetime');
-    }
+    set_config('session_timeout', $values['sessionlifetime'] * 60);
+
     // Submitted value is on/off; database entry should be 1/0
     foreach(array('viruschecking', 'usersallowedmultipleinstitutions') as $checkbox) {
-        if (!set_config($checkbox, (int) ($values[$checkbox] == 'on'))) {
-            siteoptions_fail($form, $checkbox);
-        }
+        set_config($checkbox, (int) ($values[$checkbox] == 'on'));
     }
 
-    if ($values['viruschecking'] == 'on') {
-        $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
-        if (!$pathtoclam ) {
-            $form->reply(PIEFORM_ERR, array(
-                'message' => get_string('clamnotset', 'mahara', $pathtoclam),
-                'goto'    => '/admin/site/options.php',
-            ));
-        }
-        else if (!file_exists($pathtoclam) && !is_executable($pathtoclam)) {
-            $form->reply(PIEFORM_ERR, array(
-                'message' => get_string('clamlost', 'mahara', $pathtoclam),
-                'goto'    => '/admin/site/options.php',
-            ));
-        }
-    }
-
-    if (get_config('recaptchaonregisterform')
-            && !(
-                    get_config('recaptchapublickey')
-                    && get_config('recaptchaprivatekey')
-            )
-    ) {
-        $form->reply(
-            PIEFORM_ERR,
-            array(
-                'message' => get_string('recaptchakeysmissing1', 'admin'),
-                'goto' => '/admin/site/options.php',
-            )
-        );
-    }
     // Need to clear the cached menus in case site config changes effect them.
     clear_menu_cache();
 
