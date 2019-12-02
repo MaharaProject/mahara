@@ -156,8 +156,8 @@ class Collection {
         if (is_plugin_active('lti', 'module')) {
             delete_records('lti_assessment_submission', 'collectionid', $this->id);
         }
-        delete_records('collection','id',$this->id);
         delete_records('existingcopy', 'collection', $this->id);
+        delete_records('collection', 'id', $this->id);
         // Delete any submission history
         delete_records('module_assessmentreport_history', 'event', 'collection', 'itemid', $this->id);
 
