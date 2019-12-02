@@ -39,7 +39,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         $data['socialprofiles'] = array();
 
         // add in the selected email address
-        if (!empty($configdata['email'])) {
+        if (!empty($configdata['email']) && get_field('artefact', 'id', 'id', $configdata['email'])) {
             $configdata['artefactids'][] = $configdata['email'];
         }
 
@@ -245,7 +245,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
                 'type'    => 'radio',
                 'title'   => get_string('email', 'artefact.internal'),
                 'options' => $emailoptions,
-                'defaultvalue' => (isset($configdata['email'])) ? $configdata['email'] : 0,
+                'defaultvalue' => (isset($configdata['email']) && get_field('artefact', 'id', 'id', $configdata['email'])) ? $configdata['email'] : 0,
             );
         }
         else {
@@ -308,6 +308,13 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         $artefacttypes = PluginArtefactInternal::get_profile_artefact_types();
         if ($owner) {
             $artefacttypes = array_diff($artefacttypes, array('email'));
+            if ($default && is_array($default)) {
+                $emails = get_column_sql("SELECT id FROM {artefact} WHERE artefacttype = 'email'
+                                          AND id IN (" . join(',', array_map('db_quote', $default)) . ")");
+                if ($emails) {
+                    $default = array_diff($default, $emails);
+                }
+            }
         }
 
         if (!get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
