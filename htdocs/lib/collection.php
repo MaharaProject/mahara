@@ -156,8 +156,8 @@ class Collection {
         if (is_plugin_active('lti', 'module')) {
             delete_records('lti_assessment_submission', 'collectionid', $this->id);
         }
-        delete_records('collection','id',$this->id);
         delete_records('existingcopy', 'collection', $this->id);
+        delete_records('collection', 'id', $this->id);
 
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
