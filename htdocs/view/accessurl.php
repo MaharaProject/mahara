@@ -410,7 +410,7 @@ function accessurl_cancel_submit() {
 }
 
 function accessurl_submit(Pieform $form, $values) {
-    global $SESSION, $institution, $view, $group, $collection;
+    global $SESSION, $institution, $view, $group, $collection, $collectionid, $shareurl;
 
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
@@ -510,6 +510,10 @@ function accessurl_submit(Pieform $form, $values) {
         }
     }
     set_progress_done('copyviewexistingmembersprogress');
+
+    if ($collectionid && $shareurl) {
+        redirect($shareurl);
+    }
     if ($view->get('owner')) {
         redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
     }

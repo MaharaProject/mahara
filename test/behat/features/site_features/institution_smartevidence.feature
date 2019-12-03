@@ -48,14 +48,13 @@ Scenario: SmartEvidence interaction by member / staff
     And I press "Next: Edit collection pages"
     And I follow "All"
     And I press "Add pages"
-    When I follow "Done"
-    Then I should see "Pages and collections"
+    When I follow "Next: Edit access"
+    Then I click on "Return to pages and collections"
 
     # Mahara member makes page visible to public
     And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
-    And I click on "Return to pages and collections"
     # Mahara member must make comment on competencies before it can be accessed by admin/staff
     When I follow "Smart Evidence Collection 1"
     # click the standard group 3.1 to make an annotation for page 1 column
@@ -112,5 +111,3 @@ Scenario: SmartEvidence interaction by member / staff
     # verify that user cannot delete Other user's annotations.
     And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[3]/div[1]/div" "xpath_element"
     And I should not see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div" "xpath_element"
-
-
