@@ -217,6 +217,27 @@ $string['generatedviewurls'] = array(
 );
 $string['cleanurlsdescriptionshort'] = 'Configure site to use human-readable URLs';
 
+$string['embeddedurls'] = 'Update embedded URLs';
+$string['embeddedurlsdescription'] = '<p>If you change your URL then existing links within embedded content on the site will point to the wrong place.</p><p>You can fix them up here by specifying the old URL domain.</p>';
+$string['nopotentialembeddedurls'] = '<p>There are no potential old URLs detected.</p>';
+$string['potentialembeddedurls'] = '<p>The following sections look to have old URLs.</p>';
+$string['oldurl'] = 'Old site URL';
+$string['oldurldescription'] = 'Enter the URL path of the old site, eg "https://oldsite.com" to see if there are anything to update.';
+$string['checkurl'] = 'Check URL';
+$string['domigrateurls'] = 'Update URLs';
+$string['migrateurlsdescription'] = 'Change all the embedded URLs that start with "%s" to now start with "%s"';
+$string['migrateurlsconfirm'] = 'Confirm migration';
+$string['migratedbasicurls'] = 'Updated %s content URLs';
+$string['migratedblockurls'] = 'Updated %s block content URLs';
+$string['section_view_instructions'] = 'Page instructions';
+$string['section_view_description'] = 'Page description';
+$string['section_group'] = 'Group description';
+$string['section_artefact'] = 'Artefact content';
+$string['section_interaction'] = 'Forum description';
+$string['section_interactionpost'] = 'Forum content';
+$string['section_block'] = 'Block content';
+$string['potentialfor'] = 'Results for %s';
+
 // sanity check warnings
 $string['warnings'] = 'Warning';
 $string['applyingchanges'] = 'Applying changes';
