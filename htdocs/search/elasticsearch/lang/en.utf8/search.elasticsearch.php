@@ -88,6 +88,7 @@ $string['resetlegend'] = 'Index reset';
 $string['resume'] = 'Résumé';
 $string['scheme'] = 'Scheme';
 $string['schemedescription'] = 'Scheme of the Elasticsearch server. Default is http.';
+$string['servererror'] = 'Problem connecting to the server: "%s"';
 $string['shards'] = 'Shards';
 $string['shardsdescription'] = 'The number of pieces (shards) of the index to be made.';
 $string['sortby'] = 'Sort by';
