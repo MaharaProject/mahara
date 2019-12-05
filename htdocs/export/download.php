@@ -12,6 +12,7 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . '/lib/htmloutput.php');
+require_once(get_config('docroot') . 'export/lib.php');
 
 // Download the export file if it's been generated
 $downloadfile = param_variable('file', null);
@@ -62,46 +63,48 @@ function export_iframe_progress_handler($percent, $status) {
 
 
 // Bail if we don't have enough data to do an export
-if (!isset($exportdata['format'])
-    || !isset($exportdata['what'])
+if (!isset($exportdata['what'])
     || !isset($exportdata['views'])) {
     export_iframe_die(get_string('unabletogenerateexport', 'export'));
     exit;
 }
 
-safe_require('export', $exportdata['format']);
+$exportplugins = plugins_installed('export');
+foreach ($exportplugins as $plugin) {
+    safe_require('export', $plugin->name);
+}
+
 $user = new User();
 $user->find_by_id($USER->get('id'));
-$class = generate_class_name('export', $exportdata['format']);
 
 switch($exportdata['what']) {
 case 'all':
-    $exporter = new $class($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_iframe_progress_handler');
+    $exporter = new PluginExportAll($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_iframe_progress_handler');
     break;
 case 'views':
-    $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS, 'export_iframe_progress_handler');
+    $exporter = new PluginExportAll($user, $exportdata['views'], PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS, 'export_iframe_progress_handler');
     break;
 case 'collections':
-    $exporter = new $class($user, $exportdata['views'], PluginExport::EXPORT_LIST_OF_COLLECTIONS, 'export_iframe_progress_handler');
+    $exporter = new PluginExportAll($user, $exportdata['views'], PluginExport::EXPORT_LIST_OF_COLLECTIONS, 'export_iframe_progress_handler');
     break;
 default:
     export_iframe_die(get_string('unabletoexportportfoliousingoptions', 'export'));
 }
 
 $exporter->includefeedback = $exportdata['includefeedback'];
+
 // Get an estimate of how big the unzipped export file would be
 // so we can check that we have enough disk space for it
-$space = $exporter->is_diskspace_available();
+$space = ($exporter->is_diskspace_available());
 if (!$space) {
     export_iframe_die(get_string('exportfiletoobig', 'mahara'), get_config('wwwroot') . 'view/index.php');
 }
 
 try {
-    $exporter->export();
-    $zipfile = $exporter->export_compress();
+    $zipfile = $exporter->export();
 }
 catch (SystemException $e) {
-    export_iframe_die($e->getMessage(), get_config('wwwroot') . 'view/index.php');
+    throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
 }
 
 // Store the filename in the session, and redirect the iframe to it to trigger

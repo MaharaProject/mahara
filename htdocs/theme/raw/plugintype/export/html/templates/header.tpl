@@ -4,7 +4,7 @@
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <title>{str tag=usersportfolio section=export.html args=$user|full_name|escape}</title>
 {foreach from=$stylesheets item=sheet}
-        <link rel="stylesheet" type="text/css" href="{$rootpath}static/{$sheet}">
+        <link rel="stylesheet" type="text/css" href="{$rootpath}{if !$exportingoneview}HTML/{/if}static/{$sheet}">
 {/foreach}
 {foreach from=$scripts item=script}
         <script type='text/javascript' src='{$scriptspath}{$script}.js'></script>
@@ -16,10 +16,10 @@
                 <div class="container">
                     <div id="logo-area" class="logo-area">
                         <a class="logo change-to-small" href="https://mahara.org/">
-                            <img src="{$maharalogo}" alt="Mahara">
+                            <img src="{$rootpath}{if !$exportingoneview}HTML/{/if}{$maharalogo}" alt="Mahara">
                         </a>
                         <a href="https://mahara.org/" class="logoxs change-to-small-default">
-                            <img src="{$maharalogosmall}" alt="Mahara">
+                            <img src="{$rootpath}{if !$exportingoneview}HTML/{/if}{$maharalogosmall}" alt="Mahara">
                         </a>
                     </div>
                 </div>

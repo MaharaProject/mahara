@@ -84,6 +84,8 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $smarty->assign('filecount', count(array_filter($this->artefactdata, function($a) { return $a->get("artefacttype") != "folder"; })));
         $smarty->assign('foldercount', count(array_filter($this->artefactdata, function($a) { return $a->get("artefacttype") == "folder"; })));
         $smarty->assign('spaceused', $this->exporter->get('user')->get('quotaused'));
+        $smarty->assign('exportdir', $this->exporter->get('exportdir'));
+        $smarty->assign('filedir', $this->exporter->get('filedir'));
 
         return array(
             'title' => get_string('Files', 'artefact.file'),
@@ -151,7 +153,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                 }
                 else {
                     $artefact = artefact_instance_from_id($artefactid);
-                    if (!$artefact->get_path() || !copy($artefact->get_path(), $filesystemdirectory . PluginExportHtml::sanitise_path($artefact->get('title')))) {
+                    if (!$artefact->get_path() || !copy($artefact->get_path(), $filesystemdirectory . PluginExportHtml::sanitise_path($artefactid . '-' . $artefact->get('title')))) {
                         $SESSION->add_error_msg(get_string('nonexistentfile', 'export', $artefact->get('title')));
                     }
                 }
@@ -186,6 +188,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         $smarty->assign('files',   $this->prepare_artefacts_for_smarty($id, false));
 
         $content = $smarty->fetch('export:html/file:index.tpl');
+
         if (false === file_put_contents($filesystemdirectory . 'index.html', $content)) {
             throw new SystemException("Unable to create index.html for directory $id");
         }
@@ -213,11 +216,15 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             if ($artefact->get('artefacttype') != 'folder') {
                 $size = $artefact->get('size');
                 $size = ($size) ? display_size($size) : '';
+                $path = PluginExportHtml::sanitise_path($artefact->get('id') . '-' . $artefact->get('title'));
+            }
+            else {
+                $path = PluginExportHtml::sanitise_path($artefact->get('title'));
             }
             $data[] = array(
                 'icon'        => '',
                 'title'       => $artefact->get('title'),
-                'path'        => PluginExportHtml::sanitise_path($artefact->get('title')),
+                'path'        => $path,
                 'description' => $artefact->get('description'),
                 'size'        => $size,
                 'date'        => strftime(get_string('strftimedaydatetime'), $artefact->get('ctime')),

@@ -34,10 +34,7 @@ function display_artefacts($array, $itemsinrow) {
 }
 
 echo $form_tag;
-echo '<h2 class="heading">' . get_string('chooseanexportformat', 'export') . '</h2>';
-echo '<div class="element form-group" id="exportformat-buttons">';
-echo '<div>' . $elements['format']['html'] . '</div>';
-echo '</div>';
+echo '<p class="lead">' . get_string('exportarchivedescription1', 'export') . '</p>';
 echo '<h2 class="heading">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
 echo '<div class="element form-group" id="whattoexport-buttons">';
 echo '<div>'. $elements['what']['html'] . '</div>';

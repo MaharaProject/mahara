@@ -41,7 +41,7 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
         foreach ($this->exporter->get('artefacts') as $artefact) {
             if ($artefact->get('artefacttype') == 'blog') {
                 $blogs[] = array(
-                    'link' => 'files/blog/' . PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename($artefact->get('title'))) . '/index.html',
+                    'link' => 'content/blog/' . PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename($artefact->get('title'))) . '/index.html',
                     'title' => $artefact->get('title'),
                 );
             }

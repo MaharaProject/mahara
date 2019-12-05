@@ -14,6 +14,7 @@ defined('INTERNAL') || die();
 class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
     private $profileviewexported = false;
+    protected $rootpath = '../../../';
 
     public function dump_export_data() {
         if (($this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_VIEWS
@@ -23,27 +24,14 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             return;
         }
 
-        $smarty = $this->exporter->get_smarty('../../', 'internal');
+        $smarty = $this->exporter->get_smarty($this->rootpath, 'internal');
         $smarty->assign('page_heading', get_string('profilepage', 'artefact.internal'));
 
         // Profile page
         $profileviewid = $this->exporter->get('user')->get_profile_view()->get('id');
         foreach ($this->exporter->get('views') as $viewid => $view) {
             if ($profileviewid == $viewid) {
-                $smarty->assign('breadcrumbs', array(array('text' => 'Profile page', 'path' => 'profilepage.html')));
-                $view = $this->exporter->get('user')->get_profile_view();
-                $outputfilter = new HtmlExportOutputFilter('../../', $this->exporter);
-                if (!$view->uses_new_layout()) {
-                    $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
-                }
-                else {
-                    $smarty->assign('newlayout', true);
-                    $smarty->assign('blocks', $view->get_blocks(false, true));
-                }
-                $content = $smarty->fetch('export:html/internal:profilepage.tpl');
-                if (!file_put_contents($this->fileroot . 'profilepage.html', $content)) {
-                    throw new SystemException("Unable to write profile page");
-                }
+                // We are exporting the profile page so don't need to make a new one
                 $this->profileviewexported = true;
                 break;
             }

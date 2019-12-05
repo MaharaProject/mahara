@@ -23,7 +23,8 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             // Dont' care about resume in this case
             return;
         }
-        $smarty = $this->exporter->get_smarty('../../', 'resume');
+        $rootpath = $this->exporter->get_root_path(3);
+        $smarty = $this->exporter->get_smarty($rootpath, 'resume');
         $smarty->assign('page_heading', get_string('resumeofuser', 'artefact.resume', full_name($this->exporter->get('user'))));
         $smarty->assign('breadcrumbs', array(
             array('text' => get_string('resume', 'artefact.resume'), 'path' => 'index.html'),
@@ -37,7 +38,6 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             'modal' => true,
         );
         require_once(get_config('docroot') . 'export/html/lib.php');
-        $rootpath = '../../';
         $outputfilter = new HtmlExportOutputFilter($rootpath, $this->exporter);
 
         if ($artefacts = get_column_sql("SELECT id
