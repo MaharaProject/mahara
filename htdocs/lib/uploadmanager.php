@@ -88,11 +88,13 @@ class upload_manager {
             $size = $file['size'][$this->inputindex];
             $error = $file['error'][$this->inputindex];
             $tmpname = $file['tmp_name'][$this->inputindex];
+            $type = $file['type'][$this->inputindex];
         }
         else {
             $size = $file['size'];
             $error = $file['error'];
             $tmpname = $file['tmp_name'];
+            $type = $file['type'];
         }
         $maxfilesize = !empty($this->maxfilesize) ? display_size($this->maxfilesize) : display_size(get_max_upload_size(false));
         if ($maxsize && $size > $maxsize) {
@@ -134,6 +136,21 @@ class upload_manager {
         }
 
         $this->file = $file;
+        $ext = $this->original_filename_extension();
+        if ($validfiletypes = get_config('validfiletypes')) {
+            $validext = array_map('trim', explode(',', $validfiletypes));
+            if (!in_array($ext, $validext)) {
+                // the extension is not one of the valid options
+                return get_string('filetypenotallowed', 'artefact.file', $ext);
+            }
+            $typeparts = explode('/', $type);
+            $mimetype = file_mime_type($tmpname);
+            $mimetypeparts = explode('/', $mimetype);
+            if ($typeparts[0] !== $mimetypeparts[0]) {
+                // the extension is not correct type for the file
+                return get_string('filetypenotmatchingmimetype', 'artefact.file', $mimetype);
+            }
+        }
         return false;
     }
 

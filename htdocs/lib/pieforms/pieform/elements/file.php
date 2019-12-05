@@ -38,9 +38,11 @@ function pieform_element_file(Pieform $form, $element) {/*{{{*/
         $result = '<input type="hidden" name="MAX_FILE_SIZE" value="' . $element['maxfilesize'] . '"/>';
         $maxfilesize = $element['maxfilesize'];
     }
-    $result .= '<div class="' . (empty($element['description']) ? 'align-with-input file' : 'align-with-input-desc') . '"><input type="file"' . $form->element_attributes($element) .
-        (isset($element['accept']) ? ' accept="' . Pieform::hsc($element['accept']) . '"' : '') .
-        '>';
+    // if validfiletypes set then only accept those types
+    $accepts = get_config('validfiletypes') ? ' accept="' . Pieform::hsc('.' . str_replace(',', ',.', get_config('validfiletypes'))) . '"' : '';
+    $accepts = isset($element['accept']) ? ' accept="' . Pieform::hsc($element['accept']) . '"' : $accepts;
+    // if form element accept is set then only accept those types
+    $result .= '<div class="' . (empty($element['description']) ? 'align-with-input file' : 'align-with-input-desc') . '"><input type="file"' . $form->element_attributes($element) . $accepts . '>';
     if (!$maxfilesize) {
         // not supplied by form element
         $maxfilesize = get_max_upload_size(false);

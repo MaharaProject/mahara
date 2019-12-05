@@ -178,7 +178,10 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $fileliststr = json_encode($filedata);
 
     $smarty->assign('prefix', $prefix);
-    $accepts = isset($element['accept']) ? 'accept="' . Pieform::hsc($element['accept']) . '"' : '';
+    // if validfiletypes set then only accept those types
+    $accepts = get_config('validfiletypes') ? 'accept="' . Pieform::hsc('.' . str_replace(',', ',.', get_config('validfiletypes'))) . '"' : '';
+    // if form element accept is set then only accept those types
+    $accepts = isset($element['accept']) ? 'accept="' . Pieform::hsc($element['accept']) . '"' : $accepts;
     $smarty->assign('accepts', $accepts);
 
     $initjs = "{$prefix} = new FileBrowser('{$prefix}', {$folder}, {$configstr}, config);
@@ -247,7 +250,11 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $colspan++;
     }
     $smarty->assign('colspan', $colspan);
-
+    if ($validfiletypes = get_config('validfiletypes')) {
+        $validext = array_map('trim', explode(',', $validfiletypes));
+        sort($validext);
+        $smarty->assign('validfiletypes', $validext);
+    }
     return $smarty->fetch('artefact:file:form/filebrowser.tpl');
 }
 

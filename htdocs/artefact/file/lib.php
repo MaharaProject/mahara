@@ -1232,6 +1232,27 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
 
         $f->commit();
+
+        if ($validfiletypes = get_config('validfiletypes')) {
+            $validext = array_map('trim', explode(',', $validfiletypes));
+            $oldext = $f->get('oldextension');
+            if (!in_array($oldext, $validext)) {
+                // the extension is not one of the valid options
+                log_debug(get_string('filetypenotallowed', 'artefact.file', $oldext));
+                $f->delete();
+                return false;
+            }
+            $typeparts = explode('/', $f->get('filetype'));
+            $oldext = $oldext == 'jpg' ? 'jpeg' : $oldext;
+            $mimetype = file_mime_type('foo.' . $oldext); // check the file mimetype against it's extension
+            $mimetypeparts = explode('/', $mimetype);
+            if ($typeparts[0] !== $mimetypeparts[0]) {
+                // the extension is not correct type for the file
+                log_debug(get_string('filetypenotmatchingmimetype', 'artefact.file', $mimetype));
+                $f->delete();
+                return false;
+            }
+        }
         $id = $f->get('id');
 
         if (isset($data->artefacttype) && $data->artefacttype == 'profileicon') {
