@@ -982,6 +982,7 @@ $string['institutiondeletedsuccessfully'] = 'Institution deleted successfully';
 $string['noauthpluginforinstitution'] = 'Your site administrator has not configured an authentication plugin for this institution.';
 $string['adminnoauthpluginforinstitution'] = 'Please configure an authentication plugin for this institution.';
 $string['institutionname'] = 'Institution name';
+$string['institutionnameinvalid'] = 'Institution name is invalid';
 $string['institutionshortname'] = 'Institution short name';
 $string['institutionnamealreadytaken'] = 'This institution name is already taken.';
 $string['institutiondisplayname'] = 'Institution display name';

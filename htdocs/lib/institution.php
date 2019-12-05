@@ -1155,14 +1155,11 @@ function institution_generate_name($displayname) {
     $basename = mb_substr($displayname, 0, 255);
     $basename = iconv('UTF-8', 'ASCII//TRANSLIT', $displayname);
     $basename = strtolower($basename);
-    $basename = preg_replace('/[^a-z]/', '', $basename);
-    if (strlen($basename) < 2) {
-        $basename = 'inst' . $basename;
+    $basename = preg_replace('/[^a-z0-9]/', '', $basename);
+    $basename = substr($basename, 0, 255);
+    if (strlen($basename) < 1 || $basename === '0') {
+        throw new ParamOutOfRangeException(get_string('institutionnameinvalid', 'admin'));
     }
-    else {
-        $basename = substr($basename, 0, 255);
-    }
-
     // Make sure the name is unique. If it is not, add a suffix and see if
     // that makes it unique
     $finalname = $basename;

@@ -16,7 +16,7 @@ define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $contentname = param_alpha('contentname');
-$institution = param_alpha('institution', null);
+$institution = param_alphanum('institution', null);
 if (empty($institution)) {
     $institution = 'mahara';
 }

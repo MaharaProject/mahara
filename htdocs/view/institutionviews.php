@@ -20,7 +20,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'institution.php');
 
-$institution = param_alpha('institution', false);
+$institution = param_alphanum('institution', false);
 $offset = param_integer('offset', 0);
 
 if ($institution == 'mahara') {

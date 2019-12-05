@@ -18,7 +18,7 @@ safe_require('artefact', 'blog');
 $blogs = (object) array(
     'offset' => param_integer('offset', 0),
     'limit'  => param_integer('limit', 10),
-    'institution' => param_alpha('institution', null),
+    'institution' => param_alphanum('institution', null),
     'group'  => param_integer('group', null),
 );
 

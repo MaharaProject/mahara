@@ -19,7 +19,7 @@ $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 12);
 $setlimit = param_boolean('setlimit', false);
 $groupid = param_integer('group', null);
-$institution = param_alpha('institution', null);
+$institution = param_alphanum('institution', null);
 $orderby = param_alphanum('orderby', null);
 
 if (!empty($groupid)) {
