@@ -1614,5 +1614,23 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020011700) {
+        log_debug('Adding in new usr_roles table with different structure');
+
+        $table = new XMLDBTable('usr_roles');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('role', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('provisioner', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255);
+            $table->addFieldInfo('active', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 1);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+            create_table($table);
+        }
+    }
+
     return $status;
 }

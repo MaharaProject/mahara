@@ -39,6 +39,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'industry',
             'html',
             'socialprofile',
+            'userroles',
         );
         if (class_exists('PluginArtefactInternalLocal', false)) {
             $localtypes = PluginArtefactInternalLocal::get_artefact_types();
@@ -69,6 +70,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'occupation',
             'industry',
             'socialprofile',
+            'userroles',
         );
         if (class_exists('PluginArtefactInternalLocal', false)) {
             $localtypes = PluginArtefactInternalLocal::get_profile_artefact_types();
@@ -92,6 +94,7 @@ class PluginArtefactInternal extends PluginArtefact {
             'mobilenumber',
             'faxnumber',
             'socialprofile',
+            'userroles',
         );
         if (class_exists('PluginArtefactInternalLocal', false)) {
             $localtypes = PluginArtefactInternalLocal::get_contactinfo_artefact_types();
@@ -496,6 +499,7 @@ class ArtefactTypeProfile extends ArtefactType {
             'occupation'      => 'text',
             'industry'        => 'text',
             'maildisabled'    => 'html',
+            'userroles'       => 'html',
         );
         $social = array();
         if (get_record('blocktype_installed', 'active', 1, 'name', 'socialprofile')) {
@@ -1343,4 +1347,47 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         return $element;
     }
 
+}
+
+class ArtefactTypeUserroles extends ArtefactTypeProfileField {
+    public function render_self($options) {
+        return array('html' => self::defaulthtml());
+    }
+
+    function defaulthtml() {
+        if ($roles = self::get_multiple()) {
+            $rolestr = '';
+            foreach ($roles as $k => $role) {
+                if ($k !== 0) {
+                    $rolestr .= ', ';
+                }
+                $rolestr .= get_string($role, 'artefact.internal');
+            }
+        }
+        else {
+            $rolestr = get_string('nospecialroles', 'artefact.internal');
+        }
+        return $rolestr;
+    }
+
+    function format_result($raw) {
+        return get_string("userroles.{$raw}");
+    }
+
+    function usersearch_column_structure() {
+        return array('name' => 'userroles', 'sort' => false, 'template' => 'admin/users/searchuserroles.tpl');
+    }
+
+    function can_be_multiple() {
+        return true;
+    }
+
+    function get_multiple($userid = null) {
+        global $USER;
+
+        if (!$userid) {
+            $userid = $USER->get('id');
+        }
+        return get_column('usr_roles', 'role', 'usr', $userid);
+    }
 }

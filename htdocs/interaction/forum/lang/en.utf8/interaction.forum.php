@@ -120,6 +120,7 @@ Attachments:
 %s";
 $string['forumsettings'] = 'Forum settings';
 $string['forumsuccessfulsubscribe'] = 'Forum subscribed successfully';
+$string['forumfailunsubscribe'] = 'You are not allowed to unsubscribe.';
 $string['forumsuccessfulunsubscribe'] = 'Forum unsubscribed successfully';
 $string['gotoforums'] = 'Go to forums';
 $string['groupadmins'] = 'Group administrators';

@@ -81,14 +81,15 @@ if (method_exists($authobj, 'change_password')) {
         'defaultvalue' => $user->passwordchange,
     );
 }
+$roleelements = array();
 if ($USER->get('admin')) {
-    $elements['staff'] = array(
+    $roleelements['staff'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('sitestaff','admin'),
         'defaultvalue' => $user->staff,
         'help'         => true,
     );
-    $elements['admin'] = array(
+    $roleelements['admin'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('siteadmin','admin'),
         'defaultvalue' => $user->admin,
@@ -105,6 +106,25 @@ $elements['email'] = array(
         'email'    => true,
     ),
 );
+if ($user->roles && isset($user->roles['_site'])) {
+    foreach ($user->roles['_site'] as $rk => $role) {
+        $roleelements['userroles_' . $role->id] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string($rk),
+            'defaultvalue' => $role->active,
+        );
+    }
+}
+if (!empty($roleelements)) {
+    $elements['roles'] = array(
+        'type' => 'fieldset',
+        'collapsible'  => true,
+        'collapsed'    => false,
+        'legend'       => get_string('userroles', 'artefact.internal'),
+        'class' => 'dropdown-group js-dropdown-group',
+        'elements' => $roleelements,
+    );
+}
 $elements['maildisabled'] = array(
     'type' => 'switchbox',
     'defaultvalue' => get_account_preference($user->id, 'maildisabled'),
@@ -654,6 +674,16 @@ function edituser_site_submit(Pieform $form, $values) {
             );
         }
     }
+    $userobj = new User();
+    $userobj = $userobj->find_by_id($user->id);
+    foreach ($values as $index => $value) {
+        if (preg_match('/^userroles_(.*)/', $index, $matches)) {
+            if ($value != $form->get_element($index)['defaultvalue']) {
+                $userobj->update_role($matches[1], (int) $value);
+            }
+        }
+    }
+    unset($userobj);
     db_commit();
 
     $SESSION->add_ok_msg(get_string('usersitesettingschanged', 'admin'));
@@ -806,6 +836,31 @@ $allinstitutions = get_records_assoc('institution', '', '', 'displayname', 'name
 $institutionloop = 0;
 $institutionlength = count($institutions);
 foreach ($institutions as $i) {
+    $roleelements = array(
+        $i->institution.'_staff' => array(
+            'name'         => $i->institution.'_staff',
+            'type'         => 'switchbox',
+            'title'        => get_string('institutionstaff','admin'),
+            'defaultvalue' => $i->staff,
+        ),
+        $i->institution.'_admin' => array(
+            'name'         => $i->institution.'_admin',
+            'type'         => 'switchbox',
+            'title'        => get_string('institutionadmin','admin'),
+            'description'  => get_string('institutionadmindescription1','admin'),
+            'defaultvalue' => $i->admin,
+        ),
+    );
+    if ($user->roles && isset($user->roles[$i->institution])) {
+        foreach ($user->roles[$i->institution] as $rk => $role) {
+            $roleelements[$i->institution . '_roles_' . $role->id] = array(
+                'name'         => $i->institution . '_roles_' . $role->id,
+                'type'         => 'switchbox',
+                'title'        => get_string($rk),
+                'defaultvalue' => $role->active,
+            );
+        }
+    }
     $elements[$i->institution.'_settings'] = array(
         'type' => 'fieldset',
         'legend' => get_string('institutionsettings', 'admin').' - '.$i->displayname,
@@ -830,16 +885,13 @@ foreach ($institutions as $i) {
                 'description'  => get_string('institutionstudentiddescription', 'admin'),
                 'defaultvalue' => $i->studentid,
             ),
-            $i->institution.'_staff' => array(
-                'type'         => 'switchbox',
-                'title'        => get_string('institutionstaff','admin'),
-                'defaultvalue' => $i->staff,
-            ),
-            $i->institution.'_admin' => array(
-                'type'         => 'switchbox',
-                'title'        => get_string('institutionadmin','admin'),
-                'description'  => get_string('institutionadmindescription1','admin'),
-                'defaultvalue' => $i->admin,
+            $i->institution.'_roles' => array(
+                'type' => 'fieldset',
+                'collapsible'  => true,
+                'collapsed'    => false,
+                'legend'       => get_string('userroles', 'artefact.internal'),
+                'class' => 'dropdown-group js-dropdown-group',
+                'elements' => $roleelements,
             ),
             $i->institution.'_submit' => array(
                 'type'  => 'submit',
@@ -940,6 +992,13 @@ function edituser_institution_submit(Pieform $form, $values) {
                 db_begin();
                 delete_records('usr_institution', 'usr', $user->id, 'institution', $i->institution);
                 insert_record('usr_institution', $newuser);
+                foreach ($values as $index => $value) {
+                    if (preg_match('/^' . $i->institution . '_roles_(.*)/', $index, $matches)) {
+                        if ($value != $form->get_element($index)['defaultvalue']) {
+                            $user->update_role($matches[1], (int) $value);
+                        }
+                    }
+                }
                 if ($newuser->admin) {
                     activity_add_admin_defaults(array($user->id));
                 }
