@@ -107,3 +107,11 @@ $string['newkeycreated'] = 'New key / certificate created';
 $string['deleteoldkeytext'] = 'Delete old certificate';
 $string['oldkeydeleted'] = 'Old key / certificate deleted';
 $string['keyrollfailed'] = 'Failed to remove old key / certificate';
+
+// SSO labels
+// The SSO buttons will be labelled with the display name of your institution
+$string['ssolabelfor'] = '%s login';
+// If you want to have a custom label you can either add them here
+// or create a htdocs/local/lang/en.utf8/auth.saml.php file and add them there.
+// They need to have the key 'login' + shortname of institution, eg:
+// For 'testinstitution' it would be: $string['logintestinstitution'] = 'Special label';
