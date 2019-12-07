@@ -1225,6 +1225,10 @@ function auth_check_required_fields() {
                 ),
             );
         }
+        else {
+            // No method for changing password so don't show heading
+            $changepassword = false;
+        }
     }
     else if (defined('JSON')) {
         // Don't need to check this for json requests
