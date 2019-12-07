@@ -93,6 +93,11 @@ class AuthSaml extends Auth {
         $this->config['institutionidpentityid'] = '';
         $this->config['avatar'] = '';
         $this->config['authloginmsg'] = '';
+        $this->config['role'] = '';
+        $this->config['rolesiteadmin'] = '';
+        $this->config['rolesitestaff'] = '';
+        $this->config['roleinstadmin'] = '';
+        $this->config['roleinststaff'] = '';
         $this->instanceid = $id;
 
         if (!empty($id)) {
@@ -151,6 +156,11 @@ class AuthSaml extends Auth {
         $email           = isset($attributes[$this->config['emailfield']][0]) ? $attributes[$this->config['emailfield']][0] : null;
         $studentid       = isset($attributes[$this->config['studentidfield']][0]) ? $attributes[$this->config['studentidfield']][0] : null;
         $avatar          = isset($attributes[$this->config['avatar']][0]) ? $attributes[$this->config['avatar']][0] : null;
+        $roles           = isset($attributes[$this->config['role']]) ? $attributes[$this->config['role']] : array();
+        $rolesiteadmin   = isset($this->config['rolesiteadmin']) ? array_map('trim', explode(',', $this->config['rolesiteadmin'])) : array();
+        $rolesitestaff   = isset($this->config['rolesitestaff']) ? array_map('trim', explode(',', $this->config['rolesitestaff'])) : array();
+        $roleinstadmin   = isset($this->config['roleinstadmin']) ? array_map('trim', explode(',', $this->config['roleinstadmin'])) : array();
+        $roleinststaff   = isset($this->config['roleinststaff']) ? array_map('trim', explode(',', $this->config['roleinststaff'])) : array();
         $institutionname = $this->institution;
 
         $create = false;
@@ -233,6 +243,27 @@ class AuthSaml extends Auth {
         }
 
         /*******************************************/
+        $institutionrole = 'member'; // default role
+        $usr_is_siteadmin = 0;
+        $usr_is_sitestaff = 0;
+        if ($roles && is_array($roles)) {
+            foreach ($roles as $rk => $rv) {
+                if (in_array($rv, $rolesiteadmin)) {
+                    $user->admin = 1;
+                    $usr_is_siteadmin = 1;
+                }
+                if (in_array($rv, $rolesitestaff)) {
+                    $user->staff = 1;
+                    $usr_is_sitestaff = 1;
+                }
+                if (in_array($rv, $roleinstadmin)) {
+                    $institutionrole = 'admin';
+                }
+                if (in_array($rv, $roleinststaff)) {
+                    $institutionrole = 'staff';
+                }
+            }
+        }
 
         if ($create) {
 
@@ -261,7 +292,7 @@ class AuthSaml extends Auth {
             db_begin();
             $user->username           = get_new_username($remoteuser, 40);
 
-            $user->id = create_user($user, array(), $institutionname, $this, $remoteuser);
+            $user->id = create_user($user, array(), $institutionname, $this, $remoteuser, array(), false, $institutionrole);
 
             /*
              * We need to convert the object to a stdclass with its own
@@ -299,7 +330,8 @@ class AuthSaml extends Auth {
                 imagedestroy($source_img);
                 $user->profileicon = $profileid;
             }
-        } elseif ($update) {
+        }
+        else if ($update) {
             if (! empty($firstname)) {
                 set_profile_field($user->id, 'firstname', $firstname);
                 $user->firstname = $firstname;
@@ -316,7 +348,44 @@ class AuthSaml extends Auth {
                 set_profile_field($user->id, 'studentid', $studentid);
                 $user->studentid = $studentid;
             }
-
+            // Double check that the user is in this institution and add them if allowed
+            if (get_config('usersuniquebyusername')) {
+                if (!get_field('usr_institution', 'ctime', 'usr', $user->id, 'institution', $institutionname)) {
+                    require_once('institution.php');
+                    $institution = new Institution($institutionname);
+                    if ($institutionrole == 'admin') {
+                        $institution->addUserAsStaff($user);
+                    }
+                    else if ($institutionrole == 'staff') {
+                        $institution->addUserAsStaff($user);
+                    }
+                    else {
+                        $institution->addUserAsMember($user);
+                    }
+                }
+                else {
+                    if ($institutionrole == 'admin') {
+                        set_field('usr_institution', 'admin', 1, 'usr', $user->id, 'institution', $institutionname);
+                        set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                    }
+                    else if ($institutionrole == 'staff') {
+                        set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                        set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $institutionname);
+                    }
+                    else {
+                        set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                        set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                    }
+                }
+            }
+            if (empty($usr_is_siteadmin)) {
+                // make sure they are not site admin anymore
+                $user->admin = 0;
+            }
+            if (empty($usr_is_sitestaff)) {
+                // make sure they are not site staff anymore
+                $user->staff = 0;
+            }
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
         }
@@ -374,6 +443,11 @@ class PluginAuthSaml extends PluginAuth {
         'weautocreateusers'      => 0,
         'firstnamefield'         => '',
         'surnamefield'           => '',
+        'role'                   => '',
+        'rolesiteadmin'          => '',
+        'rolesitestaff'          => '',
+        'roleinstadmin'          => '',
+        'roleinststaff'          => '',
         'emailfield'             => '',
         'studentidfield'         => '',
         'updateuserinfoonlogin'  => 1,
@@ -1296,6 +1370,36 @@ EOF;
                 'defaultvalue' => self::$default_config['avatar'],
                 'description' => get_string('samlfieldforavatardescription', 'auth.saml'),
             ),
+            'role' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforrole', 'auth.saml'),
+                'defaultvalue' => self::$default_config['role'],
+                'help' => false,
+            ),
+            'rolesiteadmin' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforrolesiteadmin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['rolesiteadmin'],
+                'help' => false,
+            ),
+            'rolesitestaff' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforrolesitestaff', 'auth.saml'),
+                'defaultvalue' => self::$default_config['rolesitestaff'],
+                'help' => false,
+            ),
+            'roleinstadmin' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleinstadmin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleinstadmin'],
+                'help' => false,
+            ),
+            'roleinststaff' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleinststaff', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleinststaff'],
+                'help' => false,
+            ),
             'authloginmsg' => array(
                 'type'         => 'wysiwyg',
                 'rows'         => 10,
@@ -1465,6 +1569,11 @@ EOF;
             'surnamefield' => $values['surnamefield'],
             'emailfield' => $values['emailfield'],
             'studentidfield' => $values['studentidfield'],
+            'role' => $values['role'],
+            'rolesiteadmin' => $values['rolesiteadmin'],
+            'rolesitestaff' => $values['rolesitestaff'],
+            'roleinstadmin' => $values['roleinstadmin'],
+            'roleinststaff' => $values['roleinststaff'],
             'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
             'institutionattribute' => $values['institutionattribute'],
             'institutionvalue' => $values['institutionvalue'],
