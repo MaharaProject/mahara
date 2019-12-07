@@ -240,9 +240,11 @@ class AuthSaml extends Auth {
             $user->email              = $email;
             $user->studentid          = $studentid;
 
-            // must have these values
-            if (empty($firstname) || empty($lastname) || empty($email)) {
-                throw new AccessDeniedException(get_string('errormissinguserattributes1', 'auth.saml', get_config('sitename')));
+            // must have these values - unless creating a user with username only
+            if (!get_config('saml_create_minimum_user')) {
+                if (empty($firstname) || empty($lastname) || empty($email)) {
+                    throw new AccessDeniedException(get_string('errormissinguserattributes1', 'auth.saml', get_config('sitename')));
+                }
             }
 
             $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;

@@ -814,3 +814,12 @@ $cfg->sessionhandler = 'file';
  * Set as a comma seperated string of valid file extensions
  */
 //$cfg->validfiletypes = 'doc,docx,gif,jpeg,jpg,m4a,mp3,mp4,pdf,png'; // for example
+
+/**
+ * Allow the creation of a user with minimum details from SAML
+ * With modern privacy laws some IdPs will not include identifying things like firstname/lastname,
+ * email address in their minimum packet of info about an authenticated user.
+ * Mahara expect these to exist to create a new user.
+ * To get passed this, by allowing just a unique identifier/username, we set the follwing flag
+ */
+// $cfg->saml_create_minimum_user=true;
