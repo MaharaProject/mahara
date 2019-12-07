@@ -4679,6 +4679,8 @@ function language_select_form() {
                             'type' => 'select',
                             'title' => get_string('language') . ':',
                             'hiddenlabel' => true,
+                            'submitonchange' => true,
+                            'class' => 'submitonchange',
                             'options' => $languages,
                             'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
                             'rules' => array('required' => true),
@@ -4686,7 +4688,7 @@ function language_select_form() {
                         'changelang' => array(
                             'type' => 'button',
                             'usebuttontag' => true,
-                            'class' => 'btn-secondary input-group-append',
+                            'class' => 'btn-secondary input-group-append submitonchange',
                             'value' => get_string('change'),
                         )
                     )

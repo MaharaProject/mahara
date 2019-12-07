@@ -30,6 +30,9 @@
             border-bottom-left-radius: $border-radius;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
+            &.submitonchange {
+                @include border-right-radius($border-radius);
+            }
             max-width: 100%;
             &.text {
                 height: $input-height;
@@ -48,6 +51,12 @@
                     @include border-right-radius($border-radius);
                 }
             }
+        }
+    }
+    .pieform-fieldset > .input-group-append.submitonchange {
+        & input[type="submit"],
+        & button[type="submit"] {
+            display: none !important;
         }
     }
     label {
