@@ -2085,9 +2085,9 @@ class BlockInstance {
      * Returns javascript to grab & eval javascript from files on the web
      *
      * @param array $jsfiles Each element of $jsfiles is either a url, a local filename,
-     *                       or an array of the form
+     *                       or an array in the form of
      *                       array(
-     *                           'file'   => string   // url or local js filename
+     *                           'file'   => string   // url or local js filename (or empty if initjs only is required)
      *                           'initjs' => string   // js to be executed once the file's
      *                                                // contents have been loaded
      *                       )
@@ -2097,23 +2097,28 @@ class BlockInstance {
     public function get_get_javascript_javascript($jsfiles) {
         $js = '';
         foreach ($jsfiles as $jsfile) {
+            if (is_array($jsfile) && empty($jsfile['file']) && !empty($jsfile['initjs'])) {
+                // Just dealing with initjs option only so do this on page load
+                $js .= "jQuery(function() {\n" . $jsfile['initjs'] . "\n})";
+            }
+            else {
+                $file = (is_array($jsfile) && !empty($jsfile['file'])) ? $jsfile['file'] : $jsfile;
 
-            $file = (is_array($jsfile) && !empty($jsfile['file'])) ? $jsfile['file'] : $jsfile;
-
-            if (stripos($file, 'http://') === false && stripos($file, 'https://') === false) {
-                $file = 'blocktype/' . $this->blocktype . '/' . $file;
-                if ($this->artefactplugin) {
-                    $file = 'artefact/' . $this->artefactplugin . '/' . $file;
+                if (stripos($file, 'http://') === false && stripos($file, 'https://') === false) {
+                    $file = 'blocktype/' . $this->blocktype . '/' . $file;
+                    if ($this->artefactplugin) {
+                        $file = 'artefact/' . $this->artefactplugin . '/' . $file;
+                    }
+                    $file = get_config('wwwroot') . $file;
                 }
-                $file = get_config('wwwroot') . $file;
-            }
 
-            $js .= "jQuery.ajax({url: '{$file}', dataType: 'script', cache:true";
-            if (is_array($jsfile) && !empty($jsfile['initjs'])) {
-                // Pass success callback to getScript
-                $js .= ", success: function(data){\n" . $jsfile['initjs'] . "\n}";
+                $js .= "jQuery.ajax({url: '{$file}', dataType: 'script', cache:true";
+                if (is_array($jsfile) && !empty($jsfile['initjs'])) {
+                    // Pass success callback to getScript
+                    $js .= ", success: function(data){\n" . $jsfile['initjs'] . "\n}";
+                }
+                $js .= "});\n";
             }
-            $js .= "});\n";
         }
         return $js;
     }
