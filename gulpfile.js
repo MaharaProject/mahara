@@ -1,5 +1,5 @@
 // Include gulp
-var gulp = require('gulp-help')(require('gulp'));
+var gulp = require('gulp');
 
 //Polyfill so we don't need >= node 0.12
 require('es6-promise').polyfill();
@@ -22,7 +22,7 @@ themes = themes.map(function(themepath){
 });
 
 // Turn sass into css
-gulp.task('css', 'Compile SASS into CSS', function () {
+async function css () {
     var tasks = themes.map(function(themepath){
 
         console.log("Compiling CSS for " + themepath);
@@ -40,12 +40,13 @@ gulp.task('css', 'Compile SASS into CSS', function () {
     });
 
     return es.concat.apply(null, tasks);
-});
+};
 
-// Watch Files For Changes
-gulp.task('watch', 'Watch style directories and auto-compile CSS', function() {
-    gulp.watch('htdocs/theme/*/sass/**/*.scss', ['css']);
-});
+function watch() {
+    gulp.watch('htdocs/theme/*/sass/**/*.scss', gulp.series('css'));
+}
 
-// Default Task (recompile on init before watching)
-gulp.task('default', ['css', 'watch']);
+gulp.task('css', css);
+gulp.task('watch', watch);
+
+gulp.task('default', gulp.series(css, watch));
