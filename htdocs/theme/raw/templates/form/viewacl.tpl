@@ -4,7 +4,7 @@
     data-user-roles='{{$userroles}}'
     data-group-roles='{{$grouproles}}' >
     {{if  $viewtype == "profile" }}
-        <h2 class="panel-heading">{{str tag=profile section=view}}</h2>
+        <h2 class="panel-heading">{{str tag=Profile section=view}}</h2>
     {{/if}}
 
     <table id="accesslisttable" class="fullwidth accesslists table form-inline">
