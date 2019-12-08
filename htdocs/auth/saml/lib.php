@@ -98,6 +98,7 @@ class AuthSaml extends Auth {
         $this->config['rolesitestaff'] = '';
         $this->config['roleinstadmin'] = '';
         $this->config['roleinststaff'] = '';
+        $this->config['organisationname'] = '';
         $this->instanceid = $id;
 
         if (!empty($id)) {
@@ -448,6 +449,7 @@ class PluginAuthSaml extends PluginAuth {
         'rolesitestaff'          => '',
         'roleinstadmin'          => '',
         'roleinststaff'          => '',
+        'organisationname'       => '',
         'emailfield'             => '',
         'studentidfield'         => '',
         'updateuserinfoonlogin'  => 1,
@@ -1364,6 +1366,12 @@ EOF;
                 'defaultvalue' => self::$default_config['studentidfield'],
                 'help' => true,
             ),
+            'organisationname' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldfororganisationname', 'auth.saml'),
+                'defaultvalue' => self::$default_config['organisationname'],
+                'help' => false,
+            ),
             'avatar' => array(
                 'type' => 'text',
                 'title' => get_string('samlfieldforavatar', 'auth.saml'),
@@ -1574,6 +1582,7 @@ EOF;
             'rolesitestaff' => $values['rolesitestaff'],
             'roleinstadmin' => $values['roleinstadmin'],
             'roleinststaff' => $values['roleinststaff'],
+            'organisationname' => $values['organisationname'],
             'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
             'institutionattribute' => $values['institutionattribute'],
             'institutionvalue' => $values['institutionvalue'],

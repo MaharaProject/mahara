@@ -94,6 +94,7 @@ $string['samlfieldforrolesiteadmin'] = 'Role mapping for site administrator';
 $string['samlfieldforrolesitestaff'] = 'Role mapping for site staff';
 $string['samlfieldforroleinstadmin'] = 'Role mapping for institution administrator';
 $string['samlfieldforroleinststaff'] = 'Role mapping for institution staff';
+$string['samlfieldfororganisationname'] = 'SSO field for Organisation';
 $string['samlfieldauthloginmsg'] = 'Wrong login message';
 $string['spentityid'] = "Service Provider entityId";
 $string['title'] = 'SAML';
