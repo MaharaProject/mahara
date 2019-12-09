@@ -1342,7 +1342,7 @@ EOF;
             throw new Exception(sprintf('Invalid user name. No profile view found for "%s".', $user));
         }
         if (count($views) > 1) {
-            throw new Exception(sprintf('Invalid useer name. More than one profile view found for "%s".', $user));
+            throw new Exception(sprintf('Invalid user name. More than one profile view found for "%s".', $user));
         }
 
         $view = reset($views);
