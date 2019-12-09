@@ -93,7 +93,7 @@ $restrictedview = !can_view_view($viewid);
 if ($restrictedview && !$USER->is_logged_in()) {
     throw new AccessDeniedException();
 }
-else if ($restrictedview) {
+else if ($restrictedview && is_isolated()) {
     // Check if isolated institutions are on and user being viewed is a site admin
     // or both users are in no institution
     $userinsts = $userobj->get('institutions');
@@ -104,6 +104,8 @@ else if ($restrictedview) {
     }
 }
 
+$blocksjs = '';
+$layoutjs = array();
 if (!$restrictedview) {
     if ($newlayout = $view->uses_new_layout()) {
         $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
