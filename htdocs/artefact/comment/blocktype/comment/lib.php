@@ -74,7 +74,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         }
         // If the view has comments turned off, tutors can still leave
         // comments if the view is submitted to their group.
-        if (!empty($releaseform) || ($view->user_comments_allowed($USER))) {
+        if ((!empty($releaseform) || ($view->user_comments_allowed($USER))) && !$versioning) {
             $addfeedbackpopup = true;
         }
         safe_require('artefact', 'comment');
@@ -82,6 +82,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         $commentoptions->limit = $limit;
         $commentoptions->offset = $offset;
         $commentoptions->showcomment = $showcomment;
+        $commentoptions->versioning = $versioning;
         $commentoptions->view = $instance->get_view();
         $feedback = ArtefactTypeComment::get_comments($commentoptions);
         $smarty = smarty_core();
