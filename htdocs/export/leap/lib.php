@@ -72,6 +72,7 @@ class PluginExportLeap extends PluginExport {
     public function __construct(User $user, $views, $artefacts, $progresshandler=null) {
         parent::__construct($user, $views, $artefacts, $progresshandler);
         $this->smarty = smarty_core();
+        $this->exporttype = 'leap';
         if (!check_dir_exists($this->exportdir . '/' . $this->filedir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
@@ -301,7 +302,7 @@ class PluginExportLeap extends PluginExport {
 
             $this->smarty->assign('contenttype', 'xhtml');
             if (!$view->uses_new_layout()) {
-                if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, true), $view->get('id'))) {
+                if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, $this->exporttype), $view->get('id'))) {
                     $this->smarty->assign('content', clean_html($viewcontent, true));
                 }
                 $this->smarty->assign('viewdata',    $config['rows']);
@@ -314,7 +315,7 @@ class PluginExportLeap extends PluginExport {
                 $this->smarty->assign('layout',      $widths);
             }
             else {
-                if ($viewblocks = self::parse_xhtmlish_content($view->get_blocks(false, true), $view->get('id'))) {
+                if ($viewblocks = self::parse_xhtmlish_content($view->get_blocks(false, $this->exporttype), $view->get('id'))) {
                     $this->smarty->assign('content', clean_html($viewblocks, true));
                     $this->smarty->assign('blocks', $config['grid']);
                 }

@@ -787,7 +787,7 @@ class ArtefactTypeComment extends ArtefactType {
             $is_export_preview = param_integer('export',0);
 
             // Comment authors can edit recent comments if they're private or if no one has replied yet.
-            if (!$item->deletedby && $item->isauthor && !$is_export_preview && !$data->versioning
+            if (!$data->export && !$item->deletedby && $item->isauthor && !$is_export_preview && !$data->versioning
                 && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
                 $item->canedit = 1;
             }

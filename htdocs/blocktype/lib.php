@@ -50,6 +50,7 @@ interface IPluginBlocktype {
     public static function get_categories();
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false);
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null);
 }
 
 /**
@@ -91,6 +92,10 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
      */
     public static function has_base_config() {
         return true;
+    }
+
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        return static::render_instance($instance, $editing, $versioning);
     }
 
     /**
@@ -1321,6 +1326,14 @@ class BlockInstance {
         else if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false && $versioning === false) {
             $content = '';
             $smarty->assign('loadbyajax', true);
+        }
+        else if ($exporting !== false) {
+            try {
+                $content = call_static_method($classname, 'render_instance_export', $this, false, $versioning, $exporting);
+            }
+            catch (NotFoundException $e) {
+                $content = '';
+            }
         }
         else {
             $smarty->assign('loadbyajax', false);

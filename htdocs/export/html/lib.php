@@ -71,7 +71,9 @@ class PluginExportHtml extends PluginExport {
     public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback);
+
         $this->rootdir = 'HTML';
+        $this->exporttype = 'html';
 
         // Create basic required directories
         foreach (array('views', 'static', 'static/profileicons') as $directory) {
@@ -478,12 +480,12 @@ class PluginExportHtml extends PluginExport {
             }
 
             if (!$view->uses_new_layout()) {
-                $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
+                $smarty->assign('view', $outputfilter->filter($view->build_rows(false, $this->exporttype)));
                 $smarty->assign('newlayout', false);
                 $smarty->assign('blocks', false);
             }
             else {
-                $blocks = $view->get_blocks(false, true);
+                $blocks = $view->get_blocks(false, $this->exporttype);
                 if ($blocks) {
                     foreach ($blocks as $bk => $bv) {
                         if (isset($blocks[$bk]['content'])) {

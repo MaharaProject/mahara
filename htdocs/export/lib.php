@@ -153,6 +153,12 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     public $views = array();
 
     /**
+     * The exporter type - to allow it to be used as a string variable
+     */
+    public $exporttype;
+
+
+    /**
      * Whether the user requested to export comments as well
      */
     public $includefeedback = false;
