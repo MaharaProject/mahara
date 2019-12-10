@@ -356,6 +356,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->sort = (!empty($sortorder)) ? $sortorder : 'earliest';
         $options->threaded = null;
         $options->blockid = null;
+        $options->versioning = false;
         return $options;
     }
 
@@ -418,6 +419,7 @@ class ArtefactTypeComment extends ArtefactType {
             'sort'     => $sort,
             'threaded' => $threaded,
             'data'     => array(),
+            'versioning' => $versioning,
         );
 
         $where = 'c.hidden = 0';
@@ -785,7 +787,7 @@ class ArtefactTypeComment extends ArtefactType {
             $is_export_preview = param_integer('export',0);
 
             // Comment authors can edit recent comments if they're private or if no one has replied yet.
-            if (!$item->deletedby && $item->isauthor && !$is_export_preview
+            if (!$item->deletedby && $item->isauthor && !$is_export_preview && !$data->versioning
                 && ($item->private || $item->id == $lastcomment->id) && $item->ts > $editableafter) {
                 $item->canedit = 1;
             }
@@ -796,7 +798,7 @@ class ArtefactTypeComment extends ArtefactType {
             if ($item->deletedby) {
                 $item->deletedmessage = $deletedmessage[$item->deletedby];
             }
-            else if (($candelete || $item->isauthor) && !$is_export_preview) {
+            else if (($candelete || $item->isauthor) && !$is_export_preview && !$data->versioning) {
                 $check = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
 
                 if ($check->submittedstatus == View::UNSUBMITTED ||
