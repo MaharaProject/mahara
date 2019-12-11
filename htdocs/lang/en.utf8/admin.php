@@ -438,7 +438,7 @@ $string['licenseallowcustomdescription'] = "For license metadata, allow users to
 $string['recaptchakeysmissing1'] = 'reCAPTCHA is turned on, but it will not function until you also provide a site key and secret key.';
 $string['recaptchanotpassed'] = 'The reCAPTCHA wasn\'t entered correctly. Please try it again.';
 $string['recaptchaonregisterform1'] = 'reCAPTCHA on user registration / contact us forms';
-$string['recaptchaonregisterformdesc2'] = 'Users self-registering a new account or using the contact us form will have to prove themselves human by passing a <a href="http://recaptcha.org/">reCAPTCHA</a> test.';
+$string['recaptchaonregisterformdesc3'] = 'Users self-registering a new account or using the contact us form will have to prove themselves human by passing a <a href="https://www.google.com/recaptcha/">reCAPTCHA</a> test.';
 $string['recaptchaprivatekey1'] = 'reCAPTCHA secret key';
 $string['recaptchaprivatekeydesc1'] = 'The secret key for your site\'s reCAPTCHA account.';
 $string['recaptchapublickey1'] = 'reCAPTCHA site key';
