@@ -127,3 +127,4 @@ $string['jsondatanotsubmitted'] = 'Your form data was not submitted to the datab
 $string['editor'] = 'Editor';
 $string['Management'] = 'Management';
 $string['all'] = 'all';
+$string['removestandardorelementconfirm'] = 'Are you sure you want to remove this item? If you remove this item then the standard elements associated with it will also be removed.';

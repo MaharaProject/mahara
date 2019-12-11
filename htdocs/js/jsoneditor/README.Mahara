@@ -72,3 +72,6 @@ lines to the JSONEditor.defaults.translate function:
  *        string = string.charAt(0).toUpperCase() + string.slice(1);
         }
       }
+
+* Customized alert message in  askConfirmation function
+js/jsoneditor/src/dist/jsoneditor.js line 4028
