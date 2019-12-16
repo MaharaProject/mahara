@@ -148,9 +148,11 @@ function updateTranslatedGridRows(blocks) {
 
           y = 0;
           if (block.row > 1) {
-              // get the actual y value based on the max height of previus rows
+              // get the actual y value based on the max height of previous rows
               for (var i = 1; i < block.row; i++) {
-                  y += maxheight[i];
+                  if (typeof(maxheight[i]) != 'undefined') {
+                      y += maxheight[i];
+                  }
               }
           }
           if (typeof(height[block.row][block.column]) != 'undefined') {
