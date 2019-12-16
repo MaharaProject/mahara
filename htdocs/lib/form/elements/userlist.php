@@ -36,9 +36,18 @@ function pieform_element_userlist(Pieform $form, $element) {
         $members = get_records_select_assoc('usr','id IN (' . join(',',array_map('intval', $value)) . ')', null, $orderby, 'id,username,firstname,lastname,preferredname,staff');
 
         foreach($members as &$member) {
-            $member = display_name($member);
+            $member->displayname = display_name($member);
+            if (!empty($element['allowuserrules']) && !empty($element['group'])) {
+                global $USER;
+                $institution = get_field('group', 'institution', 'id', $element['group']);
+                $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $element['group'], 'userid' => $member->id, 'institution' => $institution));
+                foreach ($checks as $check) {
+                    if ($check['can_leave'] === false) {
+                        $member->disabled = true;
+                    }
+                }
+            }
         }
-
         $smarty->assign('options',$members);
         $smarty->assign('value', join(',',$value));
     }

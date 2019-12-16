@@ -100,6 +100,8 @@ class AuthSaml extends Auth {
         $this->config['roleinstadmin'] = '';
         $this->config['roleinststaff'] = '';
         $this->config['organisationname'] = '';
+        $this->config['roleautogroups'] = '';
+        $this->config['roleautogroupsall'] = false;
         $this->instanceid = $id;
 
         if (!empty($id)) {
@@ -164,6 +166,11 @@ class AuthSaml extends Auth {
         $rolesitestaff   = isset($this->config['rolesitestaff']) ? array_map('trim', explode(',', $this->config['rolesitestaff'])) : array();
         $roleinstadmin   = isset($this->config['roleinstadmin']) ? array_map('trim', explode(',', $this->config['roleinstadmin'])) : array();
         $roleinststaff   = isset($this->config['roleinststaff']) ? array_map('trim', explode(',', $this->config['roleinststaff'])) : array();
+        $roleautogroups  = isset($this->config['roleautogroups']) ? array_map('trim', explode(',', $this->config['roleautogroups'])) : array();
+        $roleautogroupsall = isset($this->config['roleautogroupsall']) ? $this->config['roleautogroupsall'] : false;
+        if (is_isolated()) {
+            $roleautogroupsall = false;
+        }
         $institutionname = $this->institution;
 
         $create = false;
@@ -259,6 +266,7 @@ class AuthSaml extends Auth {
 
         /*******************************************/
         $institutionrole = 'member'; // default role
+        $userroles = array();
         $usr_is_siteadmin = 0;
         $usr_is_sitestaff = 0;
         if ($roles && is_array($roles)) {
@@ -276,6 +284,12 @@ class AuthSaml extends Auth {
                 }
                 if (in_array($rv, $roleinststaff)) {
                     $institutionrole = 'staff';
+                }
+                if (in_array($rv, $roleautogroups)) {
+                    $userroles[] = array('role' => 'autogroupadmin',
+                                         'institution' => ($roleautogroupsall ? '_site' : $institutionname),
+                                         'active' => 1,
+                                         'provisioner' => 'saml');
                 }
             }
         }
@@ -404,6 +418,52 @@ class AuthSaml extends Auth {
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
         }
+        if (!empty($userroles)) {
+            if ($create) {
+                $user->set_roles($userroles);
+            }
+            else {
+                $user->get_roles();
+                // Turn off all the roles that are not associated with the SAML user roles anymore
+                foreach ($user->roles as $inst => $roles) {
+                    if (in_array($inst, array_column($userroles, 'institution')) === false) {
+                        // Not in institution anymore so remove institution specific roles
+                        foreach ($roles as $role) {
+                            $user->update_role($role->id, 0);
+                        }
+                        continue;
+                    }
+                    foreach ($roles as $k => $role) {
+                        if (in_array($role->role, array_column($userroles, 'role')) === false) {
+                            // User does not have role any more in IdP so remove role
+                            $user->update_role($role->id, 0);
+                        }
+                    }
+                }
+                // Now check which roles need adding / updating
+                foreach ($userroles as $index => $userrole) {
+                    if (isset($user->roles[$userrole['institution']]) &&
+                        isset($user->roles[$userrole['institution']][$userrole['role']])) {
+                        if ($user->roles[$userrole['institution']][$userrole['role']]->active == 0) {
+                            // Need to activate role
+                            $user->update_role($user->roles[$userrole['institution']][$userrole['role']]->id, 1);
+                        }
+                    }
+                    else {
+                        // Need to add role
+                        $user->set_roles(array($userrole));
+                    }
+                }
+            }
+        }
+        else if (empty($userroles) && !$create) {
+            // User exists but doesn't have any user roles so we need to turn of all existing ones
+            $existingroleids = get_column('usr_roles', 'id', 'usr', $user->get('id'), 'active', 1);
+            foreach ($existingroleids as $roleid) {
+                $user->update_role($roleid, 0);
+            }
+        }
+
         $user->commit();
 
         /**
@@ -465,6 +525,8 @@ class PluginAuthSaml extends PluginAuth {
         'roleinstadmin'          => '',
         'roleinststaff'          => '',
         'organisationname'       => '',
+        'roleautogroups'         => '',
+        'roleautogroupsall'      => 0,
         'emailfield'             => '',
         'studentidfield'         => '',
         'updateuserinfoonlogin'  => 1,
@@ -1427,7 +1489,19 @@ EOF;
                 'type' => 'text',
                 'title' => get_string('samlfieldforroleinststaff', 'auth.saml'),
                 'defaultvalue' => self::$default_config['roleinststaff'],
+            ),
+            'roleautogroups' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforautogroups', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleautogroups'],
                 'help' => false,
+            ),
+            'roleautogroupsall' => array(
+                'type' => 'switchbox',
+                'title' => get_string('samlfieldforautogroupsall', 'auth.saml'),
+                'defaultvalue' => is_isolated() ? false : self::$default_config['roleautogroupsall'],
+                'description' => get_string('samlfieldforautogroupsalldescription', 'auth.saml'),
+                'disabled' => is_isolated(),
             ),
             'authloginmsg' => array(
                 'type'         => 'wysiwyg',
@@ -1605,6 +1679,8 @@ EOF;
             'roleinstadmin' => $values['roleinstadmin'],
             'roleinststaff' => $values['roleinststaff'],
             'organisationname' => $values['organisationname'],
+            'roleautogroups' => $values['roleautogroups'],
+            'roleautogroupsall' => $values['roleautogroupsall'],
             'updateuserinfoonlogin' => $values['updateuserinfoonlogin'],
             'institutionattribute' => $values['institutionattribute'],
             'institutionvalue' => $values['institutionvalue'],
