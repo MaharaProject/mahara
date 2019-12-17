@@ -184,7 +184,7 @@ function updateTranslatedGridRows(blocks) {
           else {
               height[block.row][block.column] += realheight;
           }
-          maxheight[block.row] = Math.max(...height[block.row]);
+          maxheight[block.row] = Math.max.apply(null, height[block.row]);
       });
       // update all blocks together
       moveBlocks(updatedGrid);
@@ -214,7 +214,7 @@ function updateBlockSizes(grid) {
     });
 }
 
-function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, minWidth=null, minHeight=null) {
+function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, minWidth, minHeight) {
    el = grid.addWidget(
          blockContent,
          dimensions.positionx,
