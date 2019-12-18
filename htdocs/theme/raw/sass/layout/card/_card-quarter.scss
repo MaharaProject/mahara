@@ -2,12 +2,15 @@
 
 .card-collection,
 .card-view {
-    width: 50%;
+    width: 100%;
     float: left;
     padding-left: 15px;
     padding-right: 15px;
     margin-bottom: 30px;
     height: 200px;
+    @include media-breakpoint-up(sm) {
+        width: 50%;
+    }
     @include media-breakpoint-up(md) {
         width: 25%;
     }
