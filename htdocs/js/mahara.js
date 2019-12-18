@@ -212,7 +212,7 @@ function formGlobalError(form, data) {
 
 // Message related functions
 
-function makeMessage(message, type, temp=false) {
+function makeMessage(message, type, temp) {
     if (message === undefined) {
         return;
     }

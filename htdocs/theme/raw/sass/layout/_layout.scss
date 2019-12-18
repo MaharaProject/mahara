@@ -275,5 +275,6 @@ body {
 
     .main-content {
       flex: 1;
+      -ms-flex: 0 0 auto; // IE11 fix
     }
 }
