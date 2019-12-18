@@ -582,6 +582,12 @@ EOF;
         return $forums;
     }
 
+    /*
+     *  Check if we need to process new forum posts
+     */
+    public static function interaction_forum_new_post_needs_to_run() {
+        return (bool)count_records_sql('SELECT COUNT(*) FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND approved = 1');
+    }
 
     /**
      * Process new forum posts.

@@ -2599,6 +2599,14 @@ function reset_password($user, $resetpasswordchange=true, $quickhash=false) {
     }
 }
 
+
+/*
+ * Check if we need to set any user login tries to 0
+ */
+function user_login_tries_to_zero_needs_to_run() {
+    return (bool)count_records_sql("SELECT COUNT(*) FROM {usr} WHERE logintries >= ?", array(MAXLOGINTRIES));
+}
+
 function user_login_tries_to_zero() {
     execute_sql('UPDATE {usr} SET logintries = 0 WHERE logintries > 0');
 }

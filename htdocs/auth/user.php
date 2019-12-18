@@ -1941,6 +1941,8 @@ class LiveUser extends User {
 
         $this->commit();
 
+        update_record('usr', (object) array('id' => $user->id, 'logintries' => 0));
+
         // finally, after all is done, call the (maybe non existant) hook on their auth plugin
         $authobj = AuthFactory::create($authinstance);
         $authobj->login();
