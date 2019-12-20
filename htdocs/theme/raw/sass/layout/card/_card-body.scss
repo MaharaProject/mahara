@@ -1,7 +1,7 @@
 // Display objects in cards differently
 .card-body {
     ul:not(.profile-info) {
-        font-size: 0.9em;
+        font-size: $font-size-base * 0.85715;
         &:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
             padding-left: 20px;
             margin: 0 0 20px;

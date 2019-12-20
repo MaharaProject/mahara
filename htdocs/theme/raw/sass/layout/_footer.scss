@@ -2,8 +2,16 @@
     background-color: $site-footer-bg;
     .footer-nav {
         font-size: $font-size-sm;
+
+        @include media-breakpoint-down(sm) {
+            float: none !important;
+            text-align: center;
+            display: block;
+            margin-top: 1em;
+        }
+
         .icon-stack {
-            font-size: 0.75em;
+            font-size: $font-size-base * 0.715;
         }
         .nav-link {
             color: $site-footer-color;
@@ -27,9 +35,17 @@
         padding-bottom: 30px;
         .mahara-logo {
             margin-right: 20px;
+            @include media-breakpoint-down(sm) {
+                float: none !important;
+                text-align: center;
+            }
         }
         .mahara-version {
             padding-top: 10px;
+            @include media-breakpoint-down(sm) {
+                float: none !important;
+                text-align: center;
+            }
         }
         .site-performace {
             clear: both;

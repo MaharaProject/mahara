@@ -136,7 +136,7 @@
 
     //used when adding email addresses to profiles (anywhere else?)
     .message {
-        font-size: 0.9em;
+        font-size: $font-size-base * 0.85715;
         color: $gray-500;
     }
 
@@ -369,7 +369,7 @@
                 }
 
                 label {
-                    font-size: 0.8em;
+                    font-size: $font-size-base * 0.785;
                     color: $theme-text-midtone-color;
                 }
             }
@@ -502,10 +502,9 @@
     .errmsg {
         @extend .align-with-input;
         color: theme-color("danger");
-        font-size: $font-size-base - 1;
         display: block;
         padding-top: 10px;
-        font-size: $font-size-sm;
+        font-size: $font-size-base * 0.85715
 
         &:before {
           @include fonttype(solid);
@@ -584,4 +583,21 @@
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
    color: $gray-300 !important;
+}
+
+// upload forms browse button overlaps on phone
+@include media-breakpoint-down(sm) {
+  .form-upload .align-with-input {
+    margin-top: 0;
+  }
+}
+
+// reset the padding when the individual font file is collapsed in font install
+.individualfiles.form-group {
+    padding: 0;
+    border-bottom: 0 none;
+}
+
+div.form-group .form-control-label {
+    vertical-align: top;
 }

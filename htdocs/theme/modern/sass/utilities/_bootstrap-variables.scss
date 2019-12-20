@@ -19,11 +19,16 @@ $font-family-base:                          $font-family-sans-serif;
 $headings-font-family:                      $font-family-sans-serif;
 $headings-font-weight:                      700;
 
+// Typography
+$text-muted:                                $gray-300;
+$blockquote-small-color:                    $gray-300;
+$hr-border-color:                           $gray-100;
+
 // Forms
 $input-disabled-bg:                         $gray-100;
 
 $input-color:                               $gray-500;
-$input-border-color:                        #ccc;
+$input-border-color:                        $gray-200;
 
 $input-focus-border-color:                  $theme-accent-color;
 
@@ -49,55 +54,36 @@ $dropdown-header-color:                     $gray-300;
 $nav-link-padding-y:                        0.9375rem;
 $nav-link-padding-x:                        0.625rem;
 
-$nav-tabs-border-color:                     #eee;
-$nav-tabs-link-hover-border-color:          $theme-primary-color;
-
 // Navs
 $navbar-padding-x:                          floor(($grid-gutter-width / 2));
 
 // Pagination
-$pagination-border-color:                   #ddd;
-
 $pagination-hover-bg:                       $gray-100;
 $pagination-hover-border-color:             #ddd;
-
-$pagination-active-color:                   #fff;
-$pagination-active-bg:                      $theme-primary-color;
-$pagination-active-border-color:            $theme-primary-color;
 
 $pagination-disabled-color:                 $gray-300;
 $pagination-disabled-border-color:          #ddd;
 
 // Jumbotron
 $jumbotron-padding:                         30px;
-$jumbotron-color:                           inherit;
 $jumbotron-bg:                              $gray-100;
 
-// Tooltips
-$tooltip-arrow-width:                       5px;
-
-// Popovers
-$popover-header-bg:                         scale-color($popover-bg, $lightness: -5%);
-$popover-arrow-width:                       10px;
+// Badges
+$badge-border-radius:                       10px;
 
 // Modals
 $modal-inner-padding:                       15px;
 
 $modal-header-border-color:                 #e5e5e5;
-$modal-footer-border-color:                 $modal-header-border-color;
 $modal-header-padding:                      15px;
 
 $modal-lg:                                  900px;
 
 // List group
 $list-group-border-color:                   #ddd;
-$list-group-border-radius:                  $border-radius;
 
 // Image thumbnails
 $thumbnail-bg:                              $body-bg;
-
-// Badges
-$badge-border-radius:                       10px;
 
 // Breadcrumbs
 $breadcrumb-padding-y:                      8px;
@@ -105,14 +91,3 @@ $breadcrumb-padding-x:                      15px;
 
 $breadcrumb-bg:                             #f5f5f5;
 $breadcrumb-active-color:                   $gray-300;
-
-// Code
-$code-color:                                #c7254e;
-$kbd-bg:                                    #333;
-$pre-color:                                 $gray-700;
-$code-font-size:                            13px;
-
-// Typography
-$text-muted:                                $gray-300;
-$blockquote-small-color:                    $gray-300;
-$hr-border-color:                           $gray-100;

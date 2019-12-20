@@ -7,8 +7,8 @@ body {
     .main {
         margin: 0 0 20px;
         padding-top: 30px;
-        padding-bottom: 0;
-        @include media-breakpoint-up(md) {
+        padding-bottom: 30px;
+        @include media-breakpoint-up(lg) {
             padding-bottom:50px;
         }
         .grouphomepage {
@@ -58,10 +58,10 @@ body {
 .columns4,
 .columns5 {
     .wallpost .card-header {
-        font-size: 12px;
+        font-size: $font-size-sm;
         padding-right:40px;
         h4 {
-            font-size: 12px;
+            font-size: $font-size-sm;
         }
     }
 }
@@ -123,7 +123,6 @@ iframe {
 .btn-action-list + .view-container,
 .btn-group-top + .view-container {
     margin-top: 60px;
-
     @include media-breakpoint-down(sm) {
         margin-top: 0;
     }
@@ -200,6 +199,11 @@ body.presentation-iframe {
         z-index: $zindex-fixed;
         .btn.first-of-group {
             border-top-left-radius: $border-radius;
+        }
+        .btn-primary {
+          label {
+            padding: 0;
+          }
         }
     }
 }
@@ -281,4 +285,17 @@ body {
       flex: 1;
       -ms-flex: 0 0 auto; // IE11 fix
     }
+}
+
+// fixes ie11 flex issues making panels go to bottom of page
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .col-lg-3 {
+      flex: 1 0 0%;
+      max-width: 25%;
+
+      @include media-breakpoint-down(md) {
+          flex: 1 0 0%;
+          max-width: 100%;
+      }
+  }
 }

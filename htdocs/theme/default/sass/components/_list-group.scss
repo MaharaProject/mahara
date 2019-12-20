@@ -1,18 +1,9 @@
-.list-group-item-link {
-    a {
-        &:hover {
-            background-color: scale-color($theme-primary-color, $lightness: 90%);
-        }
-    }
-}
-
 .list-group-item-heading {
-  font-family: $font-family-sans-serif;
   font-weight: 700;
 }
 
 .list-group-item {
     &.published {
-        background-color: #fff;
+        background-color: $white;
     }
 }

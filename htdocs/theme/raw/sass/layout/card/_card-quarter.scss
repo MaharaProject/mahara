@@ -18,10 +18,10 @@
     .site-template {
         background: repeating-linear-gradient(
             -45deg,
-            #f1f1f1,
-            #f1f1f1 10px,
-            #f9f9f9 10px,
-            #f9f9f9 20px
+            $gray-100,
+            $gray-100 10px,
+            scale-color($gray-100, $lightness: 30%) 10px,
+            scale-color($gray-100, $lightness: 30%) 20px
             ) !important;
     }
 
@@ -47,7 +47,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            font-family: $font-family-serif;
+            font-family: $headings-font-family;
         }
     }
 
@@ -96,7 +96,7 @@
             a {
                 white-space: normal;
                 background-color: $dropdown-bg;
-                padding: 5px 10px;
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
 
                 &:hover {
                     background-color: $dropdown-link-hover-bg;
@@ -104,7 +104,7 @@
             }
             .icon {
                 position: absolute;
-                padding-top: 5px;
+                padding-top: $dropdown-item-padding-y;
             }
             .link-text {
                 display: inline-block;
@@ -123,10 +123,10 @@
             width: auto;
             max-height: none;
             > li > a {
-                padding: 5px 10px;
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
             }
             .view-details {
-                padding: 5px 10px;
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
                 font-size: $font-size-sm;
                 border-top: 1px solid $dropdown-border-color;
 
@@ -141,7 +141,7 @@
         float: left;
         .dropdown-menu {
             .view-details {
-                padding: 5px 10px;
+                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
                 background-color: $state-danger-bg;
             }
         }

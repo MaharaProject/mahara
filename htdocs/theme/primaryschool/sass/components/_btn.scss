@@ -11,16 +11,6 @@
     }
 }
 
-
-//page builder collapsible
-.btn-group-vertical {
-    label {
-        font-family: $font-family-sans-serif;
-        font-size: 14px;
-    }
-}
-
-
 // login box btns for external login
 .login-externallink {
     display: inline-block;
@@ -56,11 +46,11 @@
 
 // makes certain buttons primary colour
 .col-collapse-offset.col-with-collapse .btn {
-    color: #fff;
+    color: $white;
     background-color: $theme-primary-color;
     border-color: scale-color($btn-primary-bg, $lightness: -5%);
     .icon {
-        color: #fff;
+        color: $white;
     }
     &:focus,
     &:hover {
@@ -68,11 +58,11 @@
     }
 }
 .submitcancel .btn {
-    color: #fff;
+    color: $white;
     background-color: $theme-primary-color;
     border-color: scale-color($btn-primary-bg, $lightness: -5%);
     .icon {
-        color: #fff;
+        color: $white;
     }
     &:focus,
     &:hover {
@@ -80,26 +70,26 @@
     }
 }
 .btn-with-heading {
-    color: #fff;
+    color: $white;
     background-color: $theme-primary-color;
     border-color: scale-color($btn-primary-bg, $lightness: -5%);
     .icon {
-        color: #fff;
+        color: $white;
     }
     &:focus,
     &:hover {
         background-color: scale-color($theme-primary-color, $lightness: 5%);
-        color: #fff;
+        color: $white;
     }
 }
 
 .card-secondary .blockinstance-controls .btn-group-top .btn {
-    color: #333;
+    color: $gray-700;
     .text-danger {
         color: $state-danger-text;
     }
     &:hover {
-        background-color: #ccc;
+        background-color: $gray-200;
     }
 }
 

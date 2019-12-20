@@ -26,29 +26,29 @@ $menu-styles: (
     > li {
         > a {
             font-weight: bold;
-            color: #FFFFFF;
+            color: $white;
             border-color: transparent;
             &:before {
                 @include fonttype(solid);
                 padding-right: 5px;
                 font-size: 19px;
-                color: #FFFFFF;
+                color: $white;
             }
             &:focus,
             &:hover {
-                color: #FFFFFF;
+                color: $white;
             }
         }
         &.active > a {
-            color: #555;
-            background-color: #FFFFFF;
+            color: $gray-500;
+            background-color: $white;
         }
         .child-nav > li {
             a {
-                color: #FFFFFF;
+                color: $white;
             }
             &.active a {
-                color: #FFFFFF;
+                color: $white;
             }
         }
     }
@@ -67,12 +67,12 @@ $menu-styles: (
                     &:focus,
                     &:hover {
                         background-color: #{nth($section, 3)};
-                        color: #FFFFFF;
+                        color: $white;
                     }
                 }
                 &:focus,
                 &:hover {
-                    background-color: #FFFFFF;
+                    background-color: $white;
                 }
             }
             .navbar-showchildren,

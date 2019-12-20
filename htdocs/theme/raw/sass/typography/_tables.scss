@@ -39,7 +39,7 @@ td.tiny {
         .allnone-toggles {
             width: 81px;
             .btn-sm {
-                font-size: 10px;
+                font-size: $font-size-base * 0.715;
             }
         }
 
@@ -58,6 +58,22 @@ td.tiny {
             &:last-child > a::after {
                 right: 0;
             }
+        }
+
+        a::after {
+            @include fonttype(solid);
+            position: relative;
+            top: -3px;
+            margin-left: 3px;
+            color: $gray-300;
+        }
+        .asc > a::after {
+            content: fa-content(\f0d7);
+        }
+        .desc > a::after,
+        .sorted > a::after {
+            content: fa-content(\f0d8);
+            top: 2px;
         }
     }
 
@@ -86,7 +102,7 @@ td.tiny {
             .movedown,
             .moveup {
                 @extend .text-midtone;
-                font-size: 20px;
+                font-size: $font-size-base * 1.428;
             }
         }
         &.control-buttons {
@@ -128,7 +144,7 @@ td.tiny {
     }
 
     small {
-        font-size: $font-size-base - 2;
+        font-size: $font-size-sm;
     }
 
     // admin configure site add link table
@@ -187,9 +203,9 @@ td.tiny {
 
 
 .table-small{
-    font-size: 0.8em;
+    font-size: $font-size-base * 0.785;
     th {
-        font-size: 0.8em;
+        font-size: $font-size-base * 0.785;
     }
     >thead>tr>th,
     >thead>tr>td,
@@ -211,7 +227,7 @@ td.tiny {
     }
 
     .btn-sm {
-        font-size: 10px;
+        font-size: $font-size-base * 0.715;
     }
 }
 
@@ -259,7 +275,7 @@ table.table tr {
 }
 
 .th-shared-title {
-    font-size: 0.8em;
+    font-size: $font-size-base * 0.785;
     position: relative;
     margin-bottom: -12px;
     display: block;
@@ -272,7 +288,7 @@ table.table tr {
     line-height: 30px;
     vertical-align: bottom;
     margin: 5px;
-    font-size: 16px;
+    font-size: $font-size-base * 1.14285;
     font-weight: 300;
 }
 
@@ -321,4 +337,9 @@ table.table tr {
             padding-right: 0;
         }
     }
+}
+
+// table cells that need to be fixed 70px width
+.width-70 {
+    width: 70px;
 }

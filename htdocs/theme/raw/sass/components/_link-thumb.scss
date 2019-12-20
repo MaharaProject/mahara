@@ -4,7 +4,7 @@
     position: relative;
     display: block;
     padding: 7px 15px 15px;
-    font-size: 20px;
+    font-size: $font-size-base * 1.428;
     margin-bottom: 4px;
     background-color: $thumbnail-bg;
 
@@ -19,7 +19,7 @@
         }
     }
     .metadata {
-        font-size: 10px;
+        font-size: $font-size-base * 0.715;
         position: absolute;
         bottom: 3px;
         right: 3px;

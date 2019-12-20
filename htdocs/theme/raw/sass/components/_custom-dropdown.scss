@@ -20,7 +20,7 @@
         > li > a {
             // option links
             display: block;
-            padding: 5px 10px;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
             color: $dropdown-link-color;
 
             &:hover {
@@ -35,7 +35,7 @@
             display: block;
             background-color: $dropdown-link-active-bg;
             color: $dropdown-link-active-color;
-            padding: 5px 10px;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
             cursor: default;
         }
     }

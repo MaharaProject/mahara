@@ -18,18 +18,18 @@
     @include border-top-radius(0);
     border-bottom: 0;
     background-color: $theme-primary-color;
-    color: #FFFFFF;
+    color: $white;
 
     .help a .icon {
-        color: #FFFFFF;
+        color: $white;
     }
 
     a {
-        color: #FFFFFF;
+        color: $white;
     }
 
     .text-midtone {
-        color: #FFFFFF;
+        color: $white;
     }
 }
 

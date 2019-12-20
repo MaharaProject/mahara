@@ -9,7 +9,7 @@
             display:inline-block;
         }
         &.text-success {
-             @extend .text-success;
+            @extend .text-success;
         }
         &.text-link {
             @extend .text-link;
@@ -67,8 +67,8 @@
 }
 
 .list-group-item-heading {
-    font-family: $font-family-serif;
-    font-weight: 300;
+    font-family: $headings-font-family;
+    font-weight: $headings-font-weight;
     margin-top: 0;
     margin-bottom: 5px;
     a {
@@ -101,7 +101,7 @@
 }
 
 .list-group-item h4.list-group-item-heading {
-    font-size: $font-size-base + 0.0715;
+    font-size: $font-size-base * 1.0714;
     margin-bottom: 5px;
     a {
         padding: 0;
@@ -109,7 +109,7 @@
 }
 
 .list-group-item h5 {
-    font-size: $font-size-base + 0.0715;
+    font-size: $font-size-base * 1.0714;
 }
 
 .list-group-item-warning {
@@ -145,7 +145,7 @@
         padding: 10px 15px;
         color: $link-color;
         &:hover {
-            background: #efefef;
+            background: $list-group-hover-bg;
             text-decoration: none;
             color:$link-hover-color;
         }
@@ -198,7 +198,7 @@
         @extend .list-group-item-warning;
     }
     &.published {
-        background: scale-color($card-header-bg, $lightness: 50%);
+        background: $body-bg;
     }
     &.flush {
         padding: 10px 0;
@@ -286,12 +286,16 @@
         .list-group-item {
             border-radius: 0;
         }
-        &:last-child .list-group-item:last-child{
+        &:last-child .list-group-item:last-child {
             border-bottom: 0;
             border-bottom-right-radius: $card-border-radius;
             border-bottom-left-radius: $card-border-radius;
         }
     }
+}
+.card .card-header ~ .list-group .list-group-item:first-child {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
 }
 
 .grouppages .list-group-item {
@@ -361,7 +365,7 @@
     span.help {
         font-size: inherit;
         .icon {
-            font-size: 16px;
+            font-size: $font-size-base * 1.14285;
         }
     }
 }
@@ -512,10 +516,22 @@
 
   // leave the bottom border in last child in card-secondary
   .list-group {
-      &:last-child .list-group-item:last-child{
+      &:last-child .list-group-item:last-child {
           border-bottom: 1px solid $list-group-border-color;
           border-bottom-right-radius: 0;
           border-bottom-left-radius: 0;
       }
+  }
+  // exceptions
+  &.bt-entireresume,
+  &.bt-entireresume-editor {
+    .list-group-item {
+      .resume-content:last-child .list-group .list-group-item:last-child {
+        border-bottom: 0;
+      }
+      &.flush {
+        padding-bottom: 0;
+      }
+    }
   }
 }

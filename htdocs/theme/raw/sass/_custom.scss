@@ -17,47 +17,6 @@
     width: auto;
 }
 
-#progress-iframe { // old style progress bars, e.g. portfolio export
-    border: 1px solid $gray-500;
-    height: 40px;
-    width: 100%;
-    max-width: 650px;
-    margin: 20px 0;
-}
-
-// Plan
-.card.card-secondary .list-group .task-item {
-    a[data-toggle="collapse"] .collapse-indicator,
-    a[data-toggle="collapse"].collapsed .collapse-indicator {
-        margin-right: 10px;
-        margin-top: 17px;
-    }
-    .plan-task-icon {
-        vertical-align: top;
-        padding-top: 4px;
-        z-index: 3;
-        position: relative;
-        cursor: pointer;
-    }
-    .plan-task-heading {
-        max-width: 60%;
-        display: inline-block;
-    }
-    .plan-task-detail {
-        margin-left: 22px;
-        margin-top: 10px;
-        .tags {
-            margin-bottom: 0;
-        }
-    }
-}
-.bt-plans-editor.card.card-secondary .list-group .task-item {
-    a[data-toggle="collapse"] .collapse-indicator,
-    a[data-toggle="collapse"].collapsed .collapse-indicator {
-        margin-right: 90px;
-    }
-}
-
 .no-results {
     @extend .lead;
     clear: both;
@@ -69,24 +28,6 @@
 .no-results-small {
     @extend .no-results;
     padding: 15px 0;
-}
-
-.wysiwyg {
-    label {
-        display:block;
-    }
-    label  + .mce-tinymce {
-        width:100%;
-    }
-}
-
-.wysiwyg.view-description {
-    width: 70%;
-}
-.wysiwyg.under-label-help {
-    label  + .mce-tinymce {
-        width:70%;
-    }
 }
 
 .toolbar-affix.affix {
@@ -127,43 +68,6 @@
     @include media-breakpoint-up(xl) {
         min-width: 500px;
     }
-}
-
-// Styles for select2 in forms
-// overriding select2 default styles
-.select2-container-multi {
-    max-width: 85% !important;
-    display: inline-block;
-    @include media-breakpoint-up(md) {
-        width: 420px !important;
-    }
-    @include media-breakpoint-up(xl) {
-        width: 500px !important;
-    }
-    &.select2-dropdown-open {
-        .select2-choices {
-            border-radius: $border-radius $border-radius 0 0;
-        }
-    }
-    .select2-choices {
-        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.075) inset);
-        border-radius: $border-radius;
-        background-color: $body-bg;
-        border: 1px solid $input-border-color;
-        background-image: none;
-        width: 100%;
-        .select2-search-choice {
-            border: none;
-        }
-    }
-}
-
-// Specific card-secondary styling for the edit page layout
-.card-secondary.blockinstance > .card-header > .blockinstance-header {
-    display: block;
-    padding-left: 10px;
-    padding-right: 80px;
-    word-break: normal;
 }
 
 // Style label institution selection
@@ -228,47 +132,6 @@
     background-color: rgba($gray-100, 0.2);
 }
 
-// reset the padding when the individual font file is collapsed in font install
-.individualfiles.form-group {
-    padding: 0;
-    border-bottom: 0 none;
-}
-
-// Login card
-.login-externallink {
-    display: inline-block;
-    a.btn {
-        margin: 0 5px 5px 0;
-    }
-}
-
-.login-related-links {
-  .register-link{
-    padding-right: 2px;
-  }
-  .forgotpass-link {
-    padding-left: 5px;
-  }
-}
-
-.progress-bar {
-    position: relative;
-    height: 100%;
-    &.small-progress span {
-        display: block;
-        left: 100%;
-        padding-left: 5px;
-        position: absolute;
-    }
-}
-
-.progress-bar .decompress-link {
-    color: $progress-bar-color;
-    text-decoration: underline;
-    display: inline-block;
-    margin-top: 8px;
-}
-
 // Admin user search page (advanced options)
 // limit the size of dynamic to match select box above
 .userserach-filter {
@@ -289,35 +152,6 @@
         &.first {
             margin-left: 270px;
         }
-    }
-}
-
-// Gallery thumbnails
-// override bootstrap thumbnails styling
-.thumbnails {
-    padding-top: 20px;
-    .thumb {
-        margin: 5px 0px 10px 5px;
-    }
-}
-.thumbnail {
-    margin: 0 15px 0 0;
-    .card-body & {
-        margin-bottom: 10px;
-    }
-}
-.bt-gallery,
-.bt-gallery-editor {
-    img.frame {
-        padding: 3px;
-        margin: 0;
-        border: 1px solid #ccc;
-        background: #fff;
-        box-shadow: 0 0 3px 5px #f8f8f8;
-    }
-    &.card.card-secondary > .block > .card-body {
-        overflow: hidden;
-        padding: 15px 20px;
     }
 }
 
@@ -383,28 +217,6 @@
     }
 }
 
-.card > .card-header {
-    font-size: $font-size-base * 1.14285;
-}
-
-.table thead {
-    a::after {
-        @include fonttype(solid);
-        position: relative;
-        top: -3px;
-        margin-left: 3px;
-        color: $gray-300;
-    }
-    .asc > a::after {
-        content: fa-content($fa-var-caret-down);
-    }
-    .desc > a::after,
-    .sorted > a::after {
-        content: fa-content($fa-var-caret-up);
-        top: 2px;
-    }
-}
-
 .containobjectionable {
     background-color: $state-danger-bg;
 }
@@ -416,7 +228,7 @@
         background-color: rgba(255,255,255,0);
         thead tr th {
             font-weight: 400;
-            font-size: 12px;
+            font-size: $font-size-base * 0.85715;
             padding: 2px 8px 8px;
         }
         thead tr,
@@ -434,25 +246,13 @@
     padding-left: 10px;
 }
 
-.secreturls .list-group-item,
-.iframesources .buttonscell {
-    .collapse-indicator.open .icon-chevron-down {
-        transform: rotate(-180deg);
-        transition-duration: 0.3s;
-    }
-    .collapse-indicator.closed .icon-chevron-down {
-        transform: rotate(0deg);
-        transition-duration: 0.3s;
-    }
-}
-
 .secreturls .list-group-item {
     .secret-url {
         word-wrap: break-word;
     }
 }
 .iframesources .buttonscell a {
-    font-size: 12px;
+    font-size: $font-size-base * 0.85715;
 }
 
 // Remove the link colour from a comment that has an attachement
@@ -460,10 +260,6 @@
     .viewfooter .comment-item .comment-attachment .card.collapsible h4 a.collapsed {
         color: $theme-text-color;
     }
-}
-
-#inboxblock .link-block.unread {
-    font-weight: bold;
 }
 
 // Preview image in popup modal
@@ -496,29 +292,6 @@
   margin-bottom: 20px;
 }
 
-#configureauthinstance-modal {
-    .modal-body textarea.under-label,
-    .modal-body .under-label-help.wysiwyg .mce-tinymce {
-        width: calc(100% - 30px) !important;
-    }
-    .modal-body .form-group.text {
-        label {
-            max-width: calc(50% - 30px);
-        }
-        input[type="text"] {
-            max-width: 50%;
-        }
-    }
-    .modal-body .form-group.password {
-        label {
-            max-width: calc(50% - 30px);
-        }
-        input[type="password"] {
-            max-width: 50%;
-        }
-    }
-}
-
 .defaultskin {
     margin-top: 10px;
     margin-bottom: 20px;
@@ -530,16 +303,6 @@
         background: $state-warning-bg;
         color: $state-warning-text;
     }
-}
-
-.btn-search.btn.btn-primary.admin-groups.button.btn {
-    margin-left: -13px;
-    margin-top: 2px;
-    vertical-align: text-top;
-}
-
-.connections button {
-    margin-top: 10px;
 }
 
 .emptybtnspace {
@@ -560,15 +323,6 @@
   clear: both;
   content: "";
   display: table;
-}
-
-.notification-parent .bulk-actions label.btn-secondary {
-  padding-bottom: 3px;
-}
-
-.forassessment label {
-  display: inline-block !important;
-  margin-top: -25px;
 }
 
 .accessurl-button {
@@ -676,14 +430,6 @@ div.toolbarhtml {
     }
 }
 
-.assessment-item-buttons {
-    .assessbtn + .assessbtn {
-        button {
-            @include border-left-radius(0);
-        }
-    }
-}
-
 #viewinstructions,
 .peerinstructions {
     &.with-toolbar {
@@ -704,39 +450,13 @@ div.toolbarhtml {
     top: 15px;
 }
 
-.field-label-bold {
-    label {
-        font-weight: bold;
-    }
-}
 #pendinglist {
     margin-bottom: 0;
-}
-// Stop btn links displaying as buttons
-[type="button"].btn-link,
-a[type="submit"],
-.card-header a[type="button"] {
-    -webkit-appearance: none;
 }
 
 // Used when you really only need flex on an item
 .flexbox {
     display: flex;
-}
-
-// Add space when there are 2 selects next to each other
-.select {
-    + .select {
-        margin-left: 5px;
-    }
-    + .submit:not(.input-group-append) {
-        margin-left: 5px;
-    }
-}
-
-// Removes weird text node between buttons on admin/users/suspended.php
-.pieform-fieldset.btn-group {
-    font-size: 0;
 }
 
 .elasticsearch-filters {
@@ -749,98 +469,13 @@ a[type="submit"],
     visibility: hidden;
 }
 
-// Notifications search and bulk action select alignment
-.form-inline {
-    input {
-        @extend .form-control;
-        &.btn-primary {
-            @extend .btn-primary;
-        }
-    }
-}
-.notification-parent {
-    .bulk-actions {
-        input {
-            margin-top: 1px;
-        }
-        button {
-            height: calc(2.0625rem + 2px);
-        }
-    }
-}
-
-// Share with me search filter
-#search_share_container {
-    label {
-        margin-top: 13px;
-    }
-}
-
-// Find groups search
-#search_searchfield {
-    color: $btn-primary-color;
-    background-color: $btn-primary-bg;
-    border: $btn-primary-border;
-    border-radius: $border-radius;
-    width: auto;
-    margin-top: 12px;
-}
-
-// Find people results approve request alignment
-.approvefriend .pieform {
-    display: inline-block;
-    margin-left: 3px;
-    button {
-        font-size: $font-size-sm;
-    }
-}
-
-// Manage collections
-.collection-pages {
-    button.btn-sm {
-        border: 0;
-    }
-}
-
-// Networking delete btn
-.secondary #networkingform_submit {
-    background-color: $state-danger-bg;
-    color: $state-danger-text;
-    border-color: $state-danger-border;
-    margin-left: .5rem;
-}
-
-// Web services add service groups btn
-#webservices_function_groups_add_submit,
-#webservices_token_generate_submit {
-    width: auto;
-}
-
 // Backup for libraries that still need hidden class instead of bootstrap 4s new .d-none
 .hidden {
     display: none;
 }
 //used for Smart Evidence json-editor
 #editor_holder .bg-light {
-    background-color: #FFF !important;
-}
-
-div.form-group .form-control-label {
-    vertical-align: top;
-}
-
-.json-editor-btn-add {
-    border-top-right-radius: $border-radius !important;
-    border-bottom-right-radius: $border-radius !important;
-}
-
-.errormsg {
-    color: $state-danger-text;
-}
-
-// table cells that need to be fixed 70px width
-.width-70 {
-    width: 70px;
+    background-color: $white !important;
 }
 
 // Forum select wrap too close to text
@@ -848,60 +483,9 @@ div.form-group .form-control-label {
     margin: 0 0 10px 10px;
 }
 
-.form-group.checkboxes .group-invite input[type="checkbox"] {
-    float: left;
-    top: 0;
-    margin-right: 5px;
-}
-
-a.online-users {
-    text-align: left;
-}
-
-#forums-list .button {
-    white-space: nowrap;
-}
-
-.extensions h2 .btn-group-top {
-    margin-top: -11px;
-    margin-bottom: 0;
-}
-
-// Used to stop dropdown being covered by the button
-.controls .btn-group {
-    z-index: 1;
-}
-
 .consentbutton div,
 .consentbutton span.description {
     padding: 0px !important;
-}
-
-// giving top margin to blog description only when it exists
-.bt-blog #blogdescription > * {
-    margin-top: 10px;
-}
-
-// tagged post title needs padding bottom
-.bt-taggedposts .taggedpost-title {
-    padding: 10px 0;
-}
-
-// fixes ie11 flex issues making panels go to bottom of page
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  .col-lg-3 {
-      flex: 1 0 0%;
-      max-width: 25%;
-
-      @include media-breakpoint-down(md) {
-          flex: 1 0 0%;
-          max-width: 100%;
-      }
-  }
-}
-
-.modal-segment-heading {
-    flex: 1;
 }
 
 // reduce size of uploaded logos appearing instituion settings page
@@ -919,11 +503,6 @@ a.online-users {
     @include media-breakpoint-down(sm) {
         padding-left: 0;
     }
-}
-
-// view last updated
-.last-updated {
-  margin-top: $grid-gutter-width;
 }
 
 // shared view filter in smaller screens too close to top element

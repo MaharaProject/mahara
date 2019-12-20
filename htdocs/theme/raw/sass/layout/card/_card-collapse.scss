@@ -42,7 +42,7 @@
             }
         }
         &.first .card-header a {
-            @include border-top-radius(3px);
+            @include border-top-radius($border-radius);
         }
 
         .section-import & {
@@ -65,11 +65,11 @@
         h4,
         h3  {
             margin: 0;
-            font-size: 18px;
+            font-size: $font-size-lg;
             padding: 0;
 
             .pieform > .collapsible-group:first-child & {
-                @include border-top-radius(3px);
+                border-top-radius: $border-radius;
             }
         }
 

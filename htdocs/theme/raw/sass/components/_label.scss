@@ -22,3 +22,25 @@ a.label.label-default,
         @extend .text-white;
     }
 }
+
+// Share with me search filter
+#search_share_container {
+    label {
+        margin-top: 13px;
+    }
+}
+
+.field-label-bold {
+    label {
+        font-weight: bold;
+    }
+}
+
+.notification-parent .bulk-actions label.btn-secondary {
+  padding-bottom: 3px;
+}
+
+.forassessment label {
+  display: inline-block !important;
+  margin-top: -25px;
+}

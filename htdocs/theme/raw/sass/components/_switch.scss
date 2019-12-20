@@ -2,7 +2,7 @@ $transition: 0.1s ease-in 0s;
 $height: 28px;
 $indicator-horizontal-margin : 9px;
 $indicator-size: 10px;
-$label-font-size: 14px;
+$label-font-size: $font-size-base;
 
 $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
 

@@ -1,27 +1,27 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow component variables
-$arrow-color:                   $theme-primary-color;
-$arrow-bar-bg:                  scale-color($arrow-color, $lightness: 5%);
-$arrow-text-color:              #fff;
-$arrow-link-color:              #FFF;
-$arrow-link-hover-color:        #000000;
-$arrow-link-active-color:       #333333;
-$arrow-link-background-color:   #fff;
+$arrow-color:                               $theme-primary-color;
+$arrow-bar-bg:                              scale-color($arrow-color, $lightness: 5%);
+$arrow-text-color:                          $white;
+$arrow-link-color:                          $white;
+$arrow-link-hover-color:                    $black;
+$arrow-link-active-color:                   $gray-700;
+$arrow-link-background-color:               $white;
 
-$arrow-alt-color:               $theme-secondary-color; //to theme the Résumé nav and Groups nav green
+$arrow-alt-color:                           $theme-secondary-color; //to theme the Résumé nav and Groups nav green
 
 // color for the secondary title in sections (cf. groups)
-$section-heading-color: #999;
+$section-heading-color:                     #999;
 
-$admin-title-color: #FFF;
-$admin-title-bg: transparent;
+$admin-title-color:                         $white;
+$admin-title-bg:                            transparent;
 
-$dashboard-widget-bg: #FFFFFF;
-$dashboard-widget-color:  #FFFFFF;
+$dashboard-widget-bg:                       $white;
+$dashboard-widget-color:                    $white;
 
-$help-icon-color: #047DB1;
-$rss-icon-color: #FE6500;
+$help-icon-color:                           #047DB1;
+$rss-icon-color:                            #FE6500;
 
 
 // LEGACY BOOTSTRAP 3 VARIABLES
@@ -31,17 +31,17 @@ $navbar-default-bg:                         $theme-primary-color;
 $navbar-default-border:                     transparent;
 
 // Navbar toggle
-$navbar-toggle-color:                       #FFFFFF;
+$navbar-toggle-color:                       $white;
 $navbar-toggle-bg:                          transparent;
-$navbar-toggle-hover-color:                 #FFFFFF;
+$navbar-toggle-hover-color:                 $white;
 $navbar-toggle-hover-bg:                    scale-color($theme-primary-color, $lightness: -5%);
-$navbar-toggle-active-color:                #FFFFFF;
+$navbar-toggle-active-color:                $white;
 $navbar-toggle-active-bg:                   scale-color($theme-primary-color, $lightness: -5%);
 
 // Navbar menu
 $navbar-default-link-border:                transparent;
-$navbar-default-link-color:                 #FFFFFF;
-$navbar-default-link-hover-color:           #FFFFFF;
+$navbar-default-link-color:                 $white;
+$navbar-default-link-hover-color:           $white;
 $navbar-default-link-bg:                    $theme-primary-color;
 $navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -5%);
 $navbar-default-active-color:               $gray-700;
@@ -49,23 +49,23 @@ $navbar-default-active-bg:                  #f1f1f1;
 
 // Navbar menus children
 $navbar-inverse-bg:                         scale-color($navbar-default-link-bg, $lightness: -10%);
-$navbar-inverse-link-color:                 #FFFFFF;
-$navbar-inverse-link-hover-color:           #FFFFFF;;
+$navbar-inverse-link-color:                 $white;
+$navbar-inverse-link-hover-color:           $white;
 $navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
-$navbar-inverse-link-active-color:          #FFFFFF;
+$navbar-inverse-link-active-color:          $white;
 $navbar-inverse-link-active-bg:             scale-color($navbar-default-link-bg, $lightness: -15%);
 
 // Navbar menu children toggles
-$navbar-inverse-toggle-color:               #FFFFFF;
+$navbar-inverse-toggle-color:               $white;
 $navbar-inverse-toggle-bg:                  $navbar-default-link-bg;
-$navbar-inverse-toggle-hover-color:         #FFFFFF;
+$navbar-inverse-toggle-hover-color:         $white;
 $navbar-inverse-toggle-hover-bg:            scale-color($navbar-inverse-bg, $lightness: -5%);
-$navbar-inverse-toggle-active-color:        #FFFFFF;
+$navbar-inverse-toggle-active-color:        $white;
 $navbar-inverse-toggle-active-bg:           scale-color($navbar-default-link-bg, $lightness: -10%);
 
 
 //== Tabs
-$nav-tabs-border-color:                     #eee;
+$nav-tabs-border-color:                     $gray-100;
 
 $nav-tabs-link-hover-border-color:          $theme-primary-color;
 
@@ -81,14 +81,18 @@ $nav-tabs-justified-active-link-border-color:     $body-bg;
 
 $btn-font-weight:                normal;
 
-$btn-secondary-color:            #333;
+$btn-secondary-color:            $gray-700;
 $btn-secondary-bg:               #F9F9F9;
-$btn-secondary-border:           #ccc;
+$btn-secondary-border:           $gray-200;
 
-$btn-primary-color:              #fff;
+$btn-primary-color:              $white;
 $btn-primary-bg:                 $theme-primary-color;
 $btn-primary-border:             scale-color($btn-primary-bg, $lightness: -5%);
 
-$btn-success-color:              #fff;
+$btn-success-color:              $white;
 $btn-success-bg:                 $theme-primary-color;
 $btn-success-border:             scale-color($theme-primary-color, $lightness: -5%);
+
+// Collapse/expand indicator
+$collapse-indicator-color:                  scale-color($theme-primary-color, $lightness: 10%);
+$collapse-indicator-hover-color:            $theme-primary-color;

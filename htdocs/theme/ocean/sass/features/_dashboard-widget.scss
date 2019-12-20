@@ -1,135 +1,120 @@
-// overriding/additional styles for theme
-
-// even out boxes fix
-@include media-breakpoint-up(md) {
-    .dashboard-widget-container .thumbnail-widget {
-        width: 32%;
-        padding: 0;
-        margin-left:2%;
-
-        &.first {
-            margin-left: 0;
-        }
-    }
-}
-
-
 .dashboard-widget-container {
     overflow: visible;
 
-    .widget-heading {
-        border: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        height: auto;
-        background: transparent;
-
-        @include media-breakpoint-up(md) {
-            margin-top: 20px;
-        }
-        @include media-breakpoint-up(xl) {
-            margin-top: 40px;
-        }
-        h2 {
-            font-weight: 500;
-            display: inline-block;
-            color: $gray-700;
-            @include media-breakpoint-up(xl) {
-                font-size: 36px;
-            }
-        }
-        p {
-            font-family: $font-family-serif;
-            font-size: 16px;
-            color: $gray-500;
-            display: block;
-            @include media-breakpoint-up(xl) {
-                font-size: 20px
-            }
-        }
-    }
-
-    .circle-bg {
-        float: none;
-        display: inline-block;
-        width: auto;
-        height: auto;
-        background: transparent;
-
-        .icon {
-            color: $theme-secondary-color;
-
-            @include media-breakpoint-up(xl) {
-                font-size: 36px
-            }
-        }
-    }
-
-    .widget-detail {
-        border: 0;
-    }
-
     .thumbnail-widget {
-        background-color: scale-color($theme-secondary-color, $lightness: 90%);
         text-align: center;
+        background-color: $dashboard-widget-bg;
 
         @include media-breakpoint-up(md) {
+            padding: 0;
+            width: 32%;
+            margin-left: 2%;
             height: 223px;
-            border-radius: 50% !important;
+            border-radius: 50%;
+            &.first {
+                margin-left: 0;
+            }
         }
         @include media-breakpoint-up(xl) {
             height: 271px;
         }
-    }
 
-    .logged-in {
+        &:hover {
+            background-color: scale-color($theme-secondary-color, $lightness: 70%);
+            transition: all 0.2s ease 0s;
+        }
+
         .widget-heading {
+            border-top: 0;
+            padding: 0 10px;
+            height: auto;
+            background: transparent;
+
+            @include media-breakpoint-between(md, lg) {
+                height: auto;
+            }
+
+            @include media-breakpoint-up(md) {
+                margin-top: 20px;
+            }
+            @include media-breakpoint-up(xl) {
+                margin-top: 40px;
+            }
+
+            .circle-bg {
+                float: none;
+                display: inline-block;
+                width: auto;
+                height: auto;
+
+                .icon {
+                    color: $dashboard-widget-cirlce-icon-color;
+                    @include media-breakpoint-up(xl) {
+                        font-size: 36px
+                    }
+                }
+            }
+
             h2 {
                 font-weight: 500;
+                display: inline-block;
+                color: $dashboard-widget-title-color;
+                @include media-breakpoint-up(xl) {
+                    font-size: 36px;
+                }
             }
             p {
                 font-size: 16px;
+                font-family: $font-family-serif;
                 color: $gray-500;
+                display: block;
                 @include media-breakpoint-up(xl) {
                     font-size: 20px
                 }
             }
         }
-
         .widget-detail {
             opacity: 1;
             margin-top: 0;
-            background-color: transparent;
             border: 0;
             height: auto;
-            @include media-breakpoint-up(xl) {
-                padding-left: 30px;
-                padding-right: 30px;
-            }
+            background: transparent;
+
             p {
-                color: $gray-700;
-                @include media-breakpoint-down(lg) {
-                    font-size: 13px;
+              font-size: 13px;
+              color: $gray-700;
+            }
+        }
+
+        &.logged-in {
+            .widget-detail {
+                opacity: 1;
+                margin-top: 0;
+                @include media-breakpoint-between(md, lg) {
+                    margin-top: 0;
+                }
+                @include media-breakpoint-up(xl) {
+                    padding-left: 30px;
+                    padding-right: 30px;
+                }
+                @include media-breakpoint-down(sm) {
+                    margin-top: 0;
+                    border: 0;
+                    background: transparent;
+                }
+                p {
+                  font-size: 13px;
+                  color: $gray-700;
+                }
+            }
+            &:hover {
+                .widget-detail {
+                    opacity: 1;
+                    margin-top: 0;
+                    background: transparent;
                 }
             }
         }
-        &.thumbnail-widget:hover {
-            background-color: scale-color($theme-secondary-color, $lightness: 70%);
-            transition: all 0.2s ease 0s;
-        }
 
-    }
-
-    .logged-in:hover {
-        .widget-heading {
-            background-color: transparent;
-        }
-        .widget-detail {
-            margin-top: 0;
-            height: auto;
-            p {
-                color: $gray-700;
-            }
-        }
     }
 }

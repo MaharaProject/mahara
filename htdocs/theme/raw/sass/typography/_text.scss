@@ -25,7 +25,7 @@
 }
 
 .text-tiny {
-    font-size: ($font-size-sm * .75);
+    font-size: $font-size-sm * 0.75;
 }
 
 .text-regular {
@@ -42,4 +42,12 @@
 
 .text-danger {
     color: $state-danger-text !important; // Needs to be important to override default
+}
+
+#inboxblock .link-block.unread {
+    font-weight: bold;
+}
+
+.errormsg {
+    color: $state-danger-text;
 }
