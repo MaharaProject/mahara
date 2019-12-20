@@ -1054,7 +1054,14 @@ jQuery(function($) {
         $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').off('click');
         $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function(e) {
             var standardid = 0,
+                last_standardid = 0,
                 standard_array_temp = standard_array;
+
+            // get the last standard id from the list of standards,
+            // to check if it's the one being deleted
+            if (standard_array.length) {
+                last_standardid = standard_array[standard_array.length - 1]
+            }
 
             update_standard_shortname_handler();
             update_standard_array();
@@ -1065,7 +1072,32 @@ jQuery(function($) {
             standardid = $(standard_array_temp).not(standard_array).get()[0];
             // delete all the standard elements under the standard that was removed
             delete_child_standard_elements(standardid, '');
+
+            // if the standard is the last one (or the one that has focus) change the standar element count
+            if ((last_standardid == standardid)) {
+                update_eid_number();
+            }
+
         });
+    }
+
+    function update_eid_number() {
+        // no standard or no standard elements, then reset the count
+        if (!standard_array.length || parent_array.length < 2) {
+            eid = 0;
+        }
+        else {
+            // last standard element name
+            var spl = parent_array[parent_array.length -1].split('.');
+            // last standard element parent matches last added standard
+            if (spl[0] == standard_array[standard_array.length - 1]) {
+                eid = spl[spl.length-1];
+            }
+            else {
+                // last added standard doesnt have standard elements
+                eid = 0;
+            }
+        }
     }
 
     function delete_child_standard_elements(std_id, el_id) {
