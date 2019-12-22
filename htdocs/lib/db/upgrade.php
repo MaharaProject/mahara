@@ -1632,5 +1632,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020012800) {
+        log_debug('Remove the heading from signoff blocks');
+        execute_sql("UPDATE {block_instance} SET title = '' WHERE blocktype = 'signoff'");
+    }
+
     return $status;
 }

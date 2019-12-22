@@ -119,7 +119,8 @@ $(function() {
     $('#verify').on('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
-        $j("#verify-confirm-form").modal('show');
+        $('body').prepend($('#verify-confirm-form')); // Move form in DOM so it display ok in IE11
+        $("#verify-confirm-form").modal('show');
     });
 
     $('#verify-yes-button').on('click', function(event) {

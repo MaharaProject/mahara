@@ -117,6 +117,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
     public static function instance_config_save($values, $instance) {
         $viewid = $instance->get_view()->get('id');
         ensure_record_exists('view_signoff_verify', (object) array('view' => $viewid), (object) array('view' => $viewid), 'id', true);
+        $values['title'] = '';
         return $values;
     }
 
