@@ -1370,3 +1370,4 @@ $string['viewartefact'] = 'View ';
 
 //Accessing an outdated url that will now redirect with session message
 $string['viewartefactdatavuamodal'] = 'The data for %s artefact "%s" cannot be viewed this way anymore. Please go to page "%s" to view it.';
+$string['chooselanguage'] = 'Choose language';

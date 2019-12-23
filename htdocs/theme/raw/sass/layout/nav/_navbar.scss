@@ -36,7 +36,7 @@
         max-width: none;
         visibility: visible;
         top: 10px;
-        right: 230px;
+        right: 240px;
         margin: 0 30px 0 0;
         padding: 0;
         box-shadow: none;
@@ -117,5 +117,12 @@
       padding: 0 3px;
       color: $navbar-messages-count-color;
       font-size: 12px;
+    }
+}
+
+// Header language toggle
+.navbar-toggle.lang-toggle {
+    span.icon-language {
+        font-size: 1.5em;
     }
 }

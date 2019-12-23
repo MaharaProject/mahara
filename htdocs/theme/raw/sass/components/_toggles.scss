@@ -6,12 +6,12 @@
         position: absolute;
         margin: 4px 0 4px 7px;
         z-index: 3;
-        left: 90px;
+        left: 135px;
         display: block;
         width: 27px;
         height: 27px;
         @include media-breakpoint-up(md) {
-            left: 45px;
+            left: 90px;
         }
         &:hover,
         &:focus {

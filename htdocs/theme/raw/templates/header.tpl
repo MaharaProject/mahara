@@ -108,6 +108,12 @@
                             </a>
                             {/foreach}
                         {/if}
+                        {if $LANGCHOICES}
+                            <button class="lang-toggle navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-language" aria-expanded="false" aria-controls="main-language" title='{str tag="chooselanguage"}'>
+                                <span class="sr-only">{str tag="chooselanguage"}</span>
+                                <span class="icon icon-language icon-large" role="presentation" aria-hidden="true"></span>
+                            </button>
+                        {/if}
                         <!-- HIDE WHEN ON DESKTOP -->
                         {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
                         <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="usf">
@@ -119,6 +125,7 @@
 
                     {include file="header/topright.tpl"}
                     {include file="header/navigation.tpl"}
+                    {include file="header/language.tpl"}
             </div>
         </div>
     </header>

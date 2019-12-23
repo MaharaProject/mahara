@@ -798,6 +798,8 @@ EOF;
         else {
             $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
         }
+        $smarty->assign('LANGCHOICES', get_languages());
+        $smarty->assign('LANGCURRENT', current_language());
     }
     else {
         $smarty->assign('languageform', $langselectform);
