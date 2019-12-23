@@ -91,6 +91,7 @@ class AuthSaml extends Auth {
         $this->config['loginlink'] = false;
         $this->config['institutionidp'] = '';
         $this->config['institutionidpentityid'] = '';
+        $this->config['avatar'] = '';
         $this->config['authloginmsg'] = '';
         $this->instanceid = $id;
 
@@ -140,6 +141,7 @@ class AuthSaml extends Auth {
         $lastname        = isset($attributes[$this->config['surnamefield']][0]) ? $attributes[$this->config['surnamefield']][0] : null;
         $email           = isset($attributes[$this->config['emailfield']][0]) ? $attributes[$this->config['emailfield']][0] : null;
         $studentid       = isset($attributes[$this->config['studentidfield']][0]) ? $attributes[$this->config['studentidfield']][0] : null;
+        $avatar          = isset($attributes[$this->config['avatar']][0]) ? $attributes[$this->config['avatar']][0] : null;
         $institutionname = $this->institution;
 
         $create = false;
@@ -269,7 +271,23 @@ class AuthSaml extends Auth {
                 // Add them to the institution they have SSOed in by
                 $user->join_institution($institutionname);
             }
-
+            if (!empty($avatar) && base64_encode(base64_decode($avatar, true)) === $avatar) {
+                // Check that we have a base64 string
+                $avataricon = base64_decode($avatar);
+                $source_img = imagecreatefromstring($avataricon);
+                $pathname = get_config('dataroot') . 'temp/' . time() . '.jpg';
+                $img_save = imagejpeg($source_img, $pathname, 100);
+                safe_require('artefact', 'file');
+                $data = (object)array(
+                    'title' => 'saml_avatar',
+                    'owner' => $user->get('id'),
+                    'oldextension' => 'jpg',
+                    'artefacttype' => 'profileicon',
+                );
+                $profileid = ArtefactTypeProfileIcon::save_file($pathname, $data, $user, true);
+                imagedestroy($source_img);
+                $user->profileicon = $profileid;
+            }
         } elseif ($update) {
             if (! empty($firstname)) {
                 set_profile_field($user->id, 'firstname', $firstname);
@@ -349,6 +367,7 @@ class PluginAuthSaml extends PluginAuth {
         'loginlink'              => 0,
         'institutionidpentityid' => '',
         'active'                 => 1,
+        'avatar'                 => '',
         'authloginmsg'           => '',
         'metarefresh_metadata_url'         => '',
     );
@@ -1253,6 +1272,12 @@ EOF;
                 'defaultvalue' => self::$default_config['studentidfield'],
                 'help' => true,
             ),
+            'avatar' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforavatar', 'auth.saml'),
+                'defaultvalue' => self::$default_config['avatar'],
+                'description' => get_string('samlfieldforavatardescription', 'auth.saml'),
+            ),
             'authloginmsg' => array(
                 'type'         => 'wysiwyg',
                 'rows'         => 10,
@@ -1427,6 +1452,7 @@ EOF;
             'institutionvalue' => $values['institutionvalue'],
             'institutionregex' => $values['institutionregex'],
             'institutionidpentityid' => $entityid,
+            'avatar' => $values['avatar'],
             'authloginmsg' => $values['authloginmsg'],
             'metarefresh_metadata_url' => $values['metarefresh_metadata_url'],
         );
