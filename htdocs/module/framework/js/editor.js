@@ -38,7 +38,10 @@ jQuery(function($) {
     // Use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
     // Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
-    JSONEditor.defaults.options.disable_edit_json = 'true';
+    JSONEditor.defaults.options.disable_edit_json = true;
+
+    // disable the delete_last buttons from Standards and Standard Elements
+    JSONEditor.defaults.options.disable_array_delete_last_row = true;
 
     // Override default editor strings to allow translation by us
     // - fyi, not all editor strings are overridden, just the ones currently used.
@@ -46,7 +49,6 @@ jQuery(function($) {
     JSONEditor.defaults.languages.en.button_collapse = get_string('collapse');
     JSONEditor.defaults.languages.en.button_expand = get_string('expand');
     JSONEditor.defaults.languages.en.button_add_row_title = get_string('add');
-    JSONEditor.defaults.languages.en.button_delete_last_title = get_string('deletelast') + " {{0}}";
     JSONEditor.defaults.languages.en.button_move_down_title = get_string('moveright'); // Move right
     JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
     JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
@@ -271,6 +273,9 @@ jQuery(function($) {
                         "format": "tabs-top",
                         "minItems": 1,
                         "description": get_string('standardsdescription'),
+                        "options" : {
+                            "disable_array_delete_all_rows": true
+                        },
                         "items": {
                             "title": get_string('standard'),
                             "headerTemplate": "{{self.shortname}}",
@@ -1077,36 +1082,11 @@ jQuery(function($) {
     }
 
     /**
-     * Manually add the handlers for the standards/standard elements top delete buttons
-     * 'Delete last' and 'Delete all'
+     * Manually add the handlers for the standard elements top delete button
+     * 'Delete all'
      */
     function update_delete_button_handler() {
-        // Standards section
-        // 'Delete last standard' button
-        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-delete').eq(0).on('click', function () {
-            update_standard_shortname_handler();
-            update_standard_array();
-            textarea_init();
-            set_editor_dirty();
-        });
-        // 'Delete all' button
-        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-delete').eq(1).on('click', function () {
-            update_standard_array();
-            textarea_init();
-            set_editor_dirty();
-        });
-
         // Standard element section
-        // 'Delete last standard element' button
-        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-delete').eq(0).on('click', function () {
-            update_parent_array();
-            eid--;
-            se_index--;
-            set_parent_array();
-            add_parent_event();
-            update_delete_element_button_handlers();
-            set_editor_dirty();
-        });
         // 'Delete all' button
         $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-delete').eq(1).on('click', function () {
             update_parent_array();
