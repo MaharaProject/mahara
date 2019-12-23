@@ -113,6 +113,7 @@ function pieform_element_select(Pieform $form, $element) {
         . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . (!empty($element['allowother']) ? ' onChange="pieform_select_other(this);"' : '')
+        . ((empty($element['allowother']) && !empty($element['submitonchange'])) ? ' onChange="this.form.submit();"' : '')
         . (!empty($element['width']) ? ' style="width: ' . $element['width'] . 'px;' : ' style="')
         . (!empty($element['height']) ? ' height: ' . $element['height'] . 'px;"' : '"')
         . ">\n";
