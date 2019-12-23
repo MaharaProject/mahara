@@ -1143,6 +1143,10 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         return "artefact/file/originals/" . ($id % 256);
     }
 
+    public static function get_profileicon_file_directory($id) {
+        return "artefact/file/profileicons/originals/" . ($id % 256);
+    }
+
     public function get_path($data=array()) {
         if (!empty($this->externalfilesystem)) {
             return $this->externalfilesystem->get_path($this);
@@ -1174,6 +1178,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->filetype = $imageinfo['mime'];
             $data->width    = $imageinfo[0];
             $data->height   = $imageinfo[1];
+            if (isset($data->artefacttype) && $data->artefacttype == 'profileicon') {
+                return new ArtefactTypeProfileicon(0, $data);
+            }
             return new ArtefactTypeImage(0, $data);
         }
 
@@ -1227,7 +1234,12 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         $f->commit();
         $id = $f->get('id');
 
-        $newdir = $dataroot . self::get_file_directory($id);
+        if (isset($data->artefacttype) && $data->artefacttype == 'profileicon') {
+            $newdir = $dataroot . self::get_profileicon_file_directory($id);
+        }
+        else {
+            $newdir = $dataroot . self::get_file_directory($id);
+        }
         check_dir_exists($newdir);
         $newname = $newdir . '/' . $id;
         if (!rename($pathname, $newname)) {
