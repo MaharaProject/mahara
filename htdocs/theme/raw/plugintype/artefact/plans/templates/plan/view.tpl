@@ -19,7 +19,7 @@
         {if $canedit}
             {$planstasksdescription}
         {/if}
-        <p class="metadata">{$strnotasks|safe}</p>
+        <p>{$strnotasks|safe}</p>
     </div>
 {else}
     <div class="table-responsive">
