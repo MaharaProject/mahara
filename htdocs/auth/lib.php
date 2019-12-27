@@ -1709,7 +1709,8 @@ function auth_get_login_form() {
         'pluginname'     => 'internal',
         'elements'       => $elements,
         'dieaftersubmit' => false,
-        'iscancellable'  => false
+        'iscancellable'  => false,
+        'hiderequiredheader' => (!empty($elements['login_extra']) ? true : false),
     );
 
     return $form;
@@ -1762,10 +1763,12 @@ function auth_get_login_form_elements() {
     );
     $elements = array(
         'login' => array(
-            'type' => 'container',
-            'class' => 'login form-condensed',
-            'isformgroup' => false,
-            'elements' => $elements
+            'type' => 'fieldset',
+            'class' => 'login_internal',
+            'legend' => get_string('alternativelogins', 'auth'),
+            'collapsible' => true,
+            'collapsed'   => true,
+            'elements'    => $elements
         )
     );
 
@@ -1784,34 +1787,34 @@ function auth_get_login_form_elements() {
             $showbasicform = true;
         }
     }
-    if (!empty($extraelements) && $showbasicform) {
-        $loginlabel = array(
-            'type' => 'markup',
-            'value' => '<p><a name="sso" />' . get_string('orloginvia') . '</p>'
-        );
-        $extraelements = array_merge(array('label' => $loginlabel), $extraelements);
-        $keys = array_keys($extraelements);
-        if (!empty($keys)) {
-            $key = $keys[count($keys) - 1];
-        }
-    }
     if (count($extraelements)) {
         $extraelements = array(
             'login_extra' => array(
                 'type' => 'container',
-                'class' => 'login_extra panel-footer text-small',
+                'class' => 'login_extra',
                 'isformgroup' => false,
                 'elements' => $extraelements
             )
         );
     }
-    // Replace or supplement the standard login form elements
-    if ($showbasicform) {
-        $elements = array_merge($elements, $extraelements);
-    }
     else {
+        $elements['login']['type'] = 'container';
+        $elements['login']['class'] = 'login form-condensed';
+        $elements['login']['isformgroup'] = false;
+    }
+
+    // Replace or supplement the standard login form elements
+    if ($showbasicform && !empty($extraelements)) {
+        $elements = array_merge($extraelements, $elements);
+    }
+    else if (!$showbasicform && !empty($extraelements)) {
         $elements = $extraelements;
     }
+    else if (!$showbasicform) {
+        // Should we allow having no login options?
+        $elements = array();
+    }
+
     return $elements;
 }
 /**
@@ -2491,6 +2494,7 @@ function auth_generate_login_form() {
         'pluginname' => 'internal',
         'autofocus'  => false,
         'elements'   => $elements,
+        'hiderequiredheader' => (!empty($elements['login_extra']) ? true : false),
     )));
 
     return $loginform;

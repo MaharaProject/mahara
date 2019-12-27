@@ -1484,14 +1484,54 @@ EOF;
      * Add "SSO Login" link below the normal login form.
      */
     public static function login_form_elements() {
+        // Check how many active IdPs we can connect to and if it less than four we
+        // can display sso buttons for them on login block - otherwise have them
+        // redirect to IdP discovery page
+        $idps = array();
+        if ($rawidps = get_records_sql_array("
+                SELECT aic.value, ai.institution
+                FROM {auth_instance} ai
+                JOIN {auth_instance_config} aic ON aic.instance = ai.id
+                WHERE ai.authname = ?
+                AND ai.active = ?
+                AND aic.field = ?
+                ORDER BY ai.id ASC", array('saml', 1, 'institutionidpentityid'))) {
+            foreach ($rawidps as $rawidp) {
+                if (!isset($idps[$rawidp->value])) {
+                    $idps[$rawidp->value] = $rawidp;
+                }
+            }
+        }
         $url = get_config('wwwroot') . 'auth/saml/index.php';
         if (param_exists('login')) {
             // We're on the transient login page. Redirect back to original page once we're done.
             $url .= '?wantsurl=' . urlencode(get_full_script_path());
         }
+
+        $value = '<div class="login-externallink">';
+        if (count($idps) < 4) {
+            foreach ($idps as $idp) {
+                $idpurl = $url;
+                $idpurl .= param_exists('login') ? '&' : '?';
+                $idpurl .= 'idpentityid=' . $idp->value;
+                if (string_exists('login' . $idp->institution, 'auth.saml')) {
+                    // we use custom string defined in auth.saml
+                    $ssolabel = get_string('login' . $idp->institution, 'auth.saml');
+                }
+                else {
+                    $ssolabel = get_string('ssolabelfor', 'auth.saml', get_field('institution', 'displayname', 'name', $idp->institution));
+                }
+                $value .= '<a class="btn btn-primary saml-' . $idp->institution . '" href="' . $idpurl . '">' . $ssolabel . '</a>';
+            }
+        }
+        else {
+            $value .= '<a class="btn btn-primary" href="' . $url . '">' . get_string('login', 'auth.saml') . '</a>';
+        }
+        $value .= '</div>';
+
         $elements = array(
             'loginsaml' => array(
-                'value' => '<div class="login-externallink"><a class="btn btn-primary btn-sm" href="' . $url . '">' . get_string('login', 'auth.saml') . '</a></div>'
+                'value' => $value
             )
         );
         return $elements;
