@@ -403,12 +403,14 @@
 
     function updateSsoOptions() {
         var current = $('#auth_config_ssodirection').val();
-        for (var opt in ssoAllOptions) {
-            if (ssoAllOptions[opt] == current) {
-                jQuery('#auth_config_' + opt + '_container').removeClass('hidden');
-            }
-            else {
-                jQuery('#auth_config_' + opt + '_container').addClass('hidden');
+        if (typeof current !== 'undefined') {
+            for (var opt in ssoAllOptions) {
+                if (ssoAllOptions[opt] == current) {
+                    jQuery('#auth_config_' + opt + '_container').removeClass('hidden');
+                }
+                else {
+                    jQuery('#auth_config_' + opt + '_container').addClass('hidden');
+                }
             }
         }
     }
