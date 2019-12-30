@@ -980,24 +980,17 @@ function fetch_graph_data(opts) {
  * Allow the finding / changing of a param from a url string
  */
 function updateUrlParameter(url, param, value) {
-    var found = false;
     var vars = url.split("?");
     if (typeof(vars[1]) !== 'undefined') {
-        varparams = vars[1].split("&");
 
-        for (var i = 0; i < varparams.length; i++) {
-            var pair = varparams[i].split("=");
-            if (pair[0] == param) {
-                pair[1] = value;
-                found = true;
-            }
-            varparams[i] = pair.join("=");
-        }
-        vars[1] = varparams.join("&");
+        var searchParams = new URLSearchParams(vars[1]);
+
+        // if param exists in url, replace it and delete duplicates
+        // otherwise create it and add to end of url string
+        searchParams.set(param, value);
+
+        vars[1] = searchParams.toString();
         url = vars.join("?");
-        if (!found) {
-            url = url + '&' + param + '=' + value;
-        }
     }
     else {
         url = url + '?' + param + '=' + value;
@@ -1005,7 +998,14 @@ function updateUrlParameter(url, param, value) {
     return url;
 }
 
-function getUrlParameter(param, url) {
+/*
+ * Gets a param value from a url
+ * @param string  param the name of the parameter
+ * @param string  url   the url that could contain the param
+ * @param boolean all   true to return an array with all values
+ */
+
+function getUrlParameter(param, url, all) {
     if (!url) {
       url = window.location.href;
     }
@@ -1013,12 +1013,13 @@ function getUrlParameter(param, url) {
 
     if (!vars[1]) return null; // no search parameters - are you using clean URLs?
 
-    varparams = vars[1].split("&");
-
-    for (var i = 0; i < varparams.length; i++) {
-        var pair = varparams[i].split("=");
-        if (pair[0] == param) {
-            return pair[1] || '';
+    var searchParams = new URLSearchParams(vars[1]);
+    if (searchParams.has(param)) {
+        if (typeof(all) != 'undefined' && all == true) {
+            return searchParams.getAll(param) || [];
+        }
+        else {
+            return searchParams.get(param) || '';
         }
     }
     return null;
