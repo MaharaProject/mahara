@@ -45,8 +45,13 @@ function pieform_element_checkbox(Pieform $form, $element) {/*{{{*/
         $checked = true;
     }
     $global = ($form->get_property('method') == 'get') ? $_GET : $_POST;
-    if ($form->is_submitted() && isset($global[$element['name']])) {
-        $checked = true;
+    if ($form->is_submitted()) {
+        if (isset($global[$element['name']])) {
+            $checked = true;
+        }
+        else if ((isset($element['disabled']) && $element['disabled']) && isset($element['defaultvalue'])) {
+            $checked = (bool) $element['defaultvalue'];
+        }
     }
     else if (!$form->is_submitted() && !empty($element['defaultvalue'])) {
         $checked = true;
@@ -79,6 +84,9 @@ function pieform_element_checkbox_get_value(Pieform $form, $element) {/*{{{*/
     if ($form->is_submitted()) {
         if(isset($global[$name])) {
             return true;
+        }
+        else if (isset($element['disabled']) && $element['disabled']) {
+            return (bool) $element['defaultvalue'];
         }
         return false;
     }

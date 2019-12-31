@@ -123,13 +123,11 @@ function editblog_submit(Pieform $form, $values) {
     global $USER;
 
     ArtefactTypeBlog::edit_blog($USER, $values);
-    $institution = $form->get_element('institution');
-    $group = $form->get_element('group');
-    if (!empty($institution['value'])) {
-        redirect('/artefact/blog/view/index.php?id=' . $values['id'] . '&institution=' . $institution['value']);
+    if ($institution = $form->get_element_option('institution', 'value')) {
+        redirect('/artefact/blog/view/index.php?id=' . $values['id'] . '&institution=' . $institution);
     }
-    else if (!empty($group['value'])) {
-        redirect('/artefact/blog/view/index.php?id=' . $values['id'] . '&group=' . $group['value']);
+    else if ($group = $form->get_element_option('group', 'value')) {
+        redirect('/artefact/blog/view/index.php?id=' . $values['id'] . '&group=' . $group);
     }
     else {
         redirect('/artefact/blog/view/index.php?id=' . $values['id']);
@@ -142,11 +140,11 @@ function editblog_submit(Pieform $form, $values) {
  */
 function editblog_cancel_submit(Pieform $form) {
     $id = param_integer('id');
-    if ($data = $form->get_element('institution')) {
-        redirect('/artefact/blog/view/index.php?id=' . $id . '&institution=' . $data['value']);
+    if ($institution = $form->get_element_option('institution', 'value')) {
+        redirect('/artefact/blog/view/index.php?id=' . $id . '&institution=' . $institution);
     }
-    else if ($data = $form->get_element('group')) {
-        redirect('/artefact/blog/view/index.php?id=' . $id . '&group=' . $data['value']);
+    else if ($group = $form->get_element_option('group', 'value')) {
+        redirect('/artefact/blog/view/index.php?id=' . $id . '&group=' . $group);
     }
     else {
         redirect('/artefact/blog/view/index.php?id=' . $id);

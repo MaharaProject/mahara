@@ -78,8 +78,8 @@ if ($delete) {
 }
 
 function allocate_client_connection_cancel_submit(Pieform $form) {
-    $institution = $form->get_element('i');
-    redirect(get_config('wwwroot') . 'webservice/admin/connections.php?i=' . $institution['value']);
+    $institution = $form->get_element_option('i', 'value');
+    redirect(get_config('wwwroot') . 'webservice/admin/connections.php?i=' . $institution);
 }
 
 function allocate_client_connection_validate(Pieform $form, $values) {
