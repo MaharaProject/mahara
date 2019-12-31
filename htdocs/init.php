@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-if (defined('CLI') && php_sapi_name() != 'cli') {
+if (defined('CLI') && !is_cli()) {
     die();
 }
 
@@ -561,4 +561,23 @@ function init_performance_info() {
     if (function_exists('posix_times')) {
         $PERF->startposixtimes = posix_times();
     }
+}
+
+/**
+ * Do some robust checking to see if we are accessing site via CLI mode or not
+ */
+function is_cli() {
+    if (defined('STDIN')) {
+        return true;
+    }
+    if (php_sapi_name() === 'cli') {
+        return true;
+    }
+    if (array_key_exists('SHELL', $_ENV)) {
+        return true;
+    }
+    if (!array_key_exists('REQUEST_METHOD', $_SERVER)) {
+        return true;
+    }
+    return false;
 }

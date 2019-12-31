@@ -25,7 +25,7 @@ require_once(get_config('docroot') . 'webservice/lib.php');
 // If we are running behat tests, we only run cron via the behat step:
 // I trigger (the )?cron
 if (defined('BEHAT_TEST')) {
-    if (php_sapi_name() == 'cli') {
+    if (is_cli()) {
         die_info("Can not run cron from command line when behat environment is enabled");
     }
     $behattrigger = param_boolean('behattrigger', false);
@@ -37,7 +37,7 @@ if (defined('BEHAT_TEST')) {
 // Check if we have come via browser and have the right urlsecret
 // Note: if your crontab hits this file via curl/http thenyou will need
 // to add the urlsecret there for the cron to work.
-if (php_sapi_name() != 'cli' && get_config('urlsecret') !== null) {
+if (!is_cli() && get_config('urlsecret') !== null) {
     $urlsecret = param_alphanumext('urlsecret', -1);
     if ($urlsecret !== get_config('urlsecret')) {
         die_info(get_string('accessdeniednourlsecret', 'error'));
