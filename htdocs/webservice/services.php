@@ -55,7 +55,7 @@ $functions = array(
         'classname'   => 'mahara_user_external',
         'methodname'  => 'get_my_user',
         'classpath'   => WEBSERVICE_DIRECTORY,
-        'description' => 'Get the current user details',
+        'description' => 'Get the current account details',
         'type'        => 'read',
     ),
 
@@ -281,5 +281,3 @@ $functions = array(
 */
 $services = array(
 );
-
-

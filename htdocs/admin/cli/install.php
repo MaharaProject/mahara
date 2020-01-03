@@ -28,13 +28,13 @@ $options = array();
 $options['adminpassword'] = new stdClass();
 $options['adminpassword']->examplevalue = 'Password1!';
 $options['adminpassword']->shortoptions = array('p');
-$options['adminpassword']->description = get_string('cliadminpassword', 'admin');
+$options['adminpassword']->description = get_string('cliadminpassword1', 'admin');
 $options['adminpassword']->required = true;
 
 $options['adminemail'] = new stdClass();
 $options['adminemail']->examplevalue    = 'user@example.org';
 $options['adminemail']->shortoptions    = array('e');
-$options['adminemail']->description     = get_string('cliadminemail', 'admin');
+$options['adminemail']->description     = get_string('cliadminemail1', 'admin');
 $options['adminemail']->required = true;
 
 $options['sitename'] = new stdClass();

@@ -118,9 +118,9 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
-     * Choose a main menu item from user menu
+     * Choose a main menu item from account menu
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from user menu$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from account menu$/
      */
     public function i_choose_menu_user($menuitem) {
         $menuitemnode = $this->get_main_menu_item_node($menuitem, 'main-nav-user');
@@ -129,9 +129,9 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
-     * Choose a main menu item from user menu by id
+     * Choose a main menu item from account menu by id
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from user menu by id$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" from account menu by id$/
      */
     public function i_choose_menu_user_by_id($menuitem) {
         $menuitemnode = $this->get_main_menu_item_node($menuitem, 'main-nav-user', true);
@@ -151,9 +151,9 @@ class BehatNavigation extends BehatBase {
     }
 
     /**
-     * Choose a sub menu item in user menu item
+     * Choose a sub menu item in account menu item
      *
-     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from user menu$/
+     * @Given /^I choose "(?P<menu_item>(?:[^"]|\\")*)" in "(?P<mainmenu_item>(?:[^"]|\\")*)" from account menu$/
      */
     public function i_choose_submenu_user($menuitem, $mainmenuitem) {
         $menuitemnode = $this->get_sub_menu_item_node($menuitem, $mainmenuitem, 'main-nav-user');

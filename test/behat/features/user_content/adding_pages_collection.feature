@@ -1,7 +1,7 @@
 @javascript @core @core_artefact @core_portfolio @core_collection
 Feature: Adding pages to a collection
    In order to add pages to a collection
-   As an normal user I need pages
+   As an normal member I need pages
    So I can add them to the collection
 
 Background:
@@ -50,7 +50,7 @@ Scenario: Creating a collection AND adding pages
     # Sharing the collection then adding in a new page
     And I choose "Shared by me" in "Share" from main menu
     And I follow "Edit access"
-    And I select "Registered users" from "accesslist[0][searchtype]"
+    And I select "Registered people" from "accesslist[0][searchtype]"
     And I press "Save"
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Add"

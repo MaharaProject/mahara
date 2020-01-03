@@ -33,7 +33,7 @@
             <td>{$registration->expiryformat}</td>
             <td>
                 {if $registration->pending == 2}
-                <div>{str tag=pendingusercompletion section=admin}</div>
+                <div>{str tag=pendingusercompletion1 section=admin}</div>
                 {else}
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=approve">

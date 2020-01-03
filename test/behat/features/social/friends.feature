@@ -1,11 +1,11 @@
 @javascript @core @core_user @core_portfolio @friends
 Feature: Friends feature functionality
-    1. UserA find people within and without their Institution
+    1. UserA finds people within and outside of their institution
         a. Verify page elements
             - Search field
             - Side blocks
             - Results - User image, user name, institution member and action buttons (send friend request, send message)
-    2. UserA request friendship - add message (make 4 friend requests)
+    2. UserA requests friendship - add message (make 4 friend requests)
 
 Background:
     Given the following "institutions" exist:
@@ -45,7 +45,7 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     And I press "Request friendship"
     Then I should see "Sent a friendship request to Dave UserD"
 
-    # sending a friend request from a users profile page
+    # sending a friend request from a profile page
     When I select "Everyone" from "Filter"
     And I press "Search"
     Then I should see "Earl UserE"
@@ -69,7 +69,7 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     Then I should see "Accepted friend request"
     And I log out
 
-    # Admin User sets Friends control so Nobody may add them as a friend
+    # Admin sets friends control so "Nobody" may add them as a friend
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     And I select the radio "Nobody may add me as a friend"
@@ -103,5 +103,5 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     And I choose "People" in "Engage" from main menu
     When I select "Everyone" from "Filter"
     And I press "Search"
-    Then I should see "This user does not want any new friends." in the "Admin User" row
+    Then I should see "This person does not want any new friends." in the "Admin User" row
     And I click on "Send friend request" in "Dave UserD" row

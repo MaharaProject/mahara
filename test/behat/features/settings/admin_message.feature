@@ -1,5 +1,5 @@
 @javascript @core @core_messages
-Feature: Site admin can send messages to anyone regardless of setting "Messages from other users" to "Do not allow anyone to send me messages"
+Feature: Site admin can send messages to anyone regardless of setting "Messages from other people" to "Do not allow anyone to send me messages"
 
 Background:
     Given the following "institutions" exist:
@@ -17,9 +17,9 @@ Background:
     | field                | value |
     | isolatedinstitutions | 1     |
 
-    # user set profile setting set to "Do not allow anyone to send me messages"
+    # Person sets profile setting set to "Do not allow anyone to send me messages"
     Given I log in as "UserD" with password "Kupuh1pa!"
-    And I choose "Preferences" in "Settings" from user menu
+    And I choose "Preferences" in "Settings" from account menu
     And I set the following fields to these values:
     | Do not allow anyone to send me messages | 1 |
     And I press "Save"
@@ -27,9 +27,9 @@ Background:
     And I log out
 
 Scenario: Site admin can send messages to anyone even if
- A user "Does not allow anyone to send me messages"
+ a person "Does not allow anyone to send me messages"
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "User search" in "People" from administration menu
+    And I choose "People search" in "People" from administration menu
     When I follow "Dave"
     Then I should see "Send message"
     When I choose "People" in "Engage" from main menu

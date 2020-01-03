@@ -56,7 +56,7 @@ Scenario: Trying a username or password that doesn't exist (Bug 1460911)
 
 Scenario: Student can't change password to anything on suckypasswords list (Bug #844457)
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Preferences" in "Settings" from user menu
+  And I choose "Preferences" in "Settings" from account menu
   And I fill in "Current password" with "Kupuh1pa!"
   And I fill in "New password" with "abc123"
   And I fill in "Confirm password" with "abc123"

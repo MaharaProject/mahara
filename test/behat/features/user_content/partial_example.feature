@@ -7,7 +7,7 @@ Feature: Testing Behat's functionality
 Scenario: Meta test testing Behat's functionality (Bug #1387836)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I am on homepage
-    And I choose "Profile" from user menu
+    And I choose "Profile" from account menu
     And I follow "About me"
     And I set the following fields to these values:
     | First name | test first name |
@@ -44,7 +44,6 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I choose "Export" in "Manage" from main menu
     And I move backward one page
     And I move forward one page
-    And I choose "Profile" from user menu
+    And I choose "Profile" from account menu
     And the "First name" field should not contain "Jinelle"
     And the "First name" field should contain "test first name"
-

@@ -11,7 +11,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I should see "Admin User"
     # Checking Content Menu
     And I click on "Show main menu"
-    And I choose "Profile" from user menu
+    And I choose "Profile" from account menu
     # Checking About me tabs
     And I follow "Contact information"
     And I scroll to the center of id "profileform"

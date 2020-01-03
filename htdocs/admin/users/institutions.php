@@ -585,8 +585,8 @@ if ($institution || $add) {
 
         $elements['allowinstitutionpublicviews'] = array(
             'type'         => 'switchbox',
-            'title'        => get_string('allowinstitutionpublicviews', 'admin'),
-            'description'  => get_string('allowinstitutionpublicviewsdescription2','admin'),
+            'title'        => get_string('allowinstitutionpublicviews1', 'admin'),
+            'description'  => get_string('allowinstitutionpublicviewsdescription3','admin'),
             'defaultvalue' => get_config('allowpublicviews') && $data->allowinstitutionpublicviews,
             'disabled'     => get_config('allowpublicviews') == false,
             'help'         => true,
@@ -595,7 +595,7 @@ if ($institution || $add) {
         if ($USER->get('admin')) {
             $elements['maxuseraccounts'] = array(
                 'type'         => 'text',
-                'title'        => get_string('maxuseraccounts','admin'),
+                'title'        => get_string('maxuseraccounts1','admin'),
                 'description'  => get_string('maxuseraccountsdescription','admin'),
                 'defaultvalue' => empty($data->maxuseraccounts) ? '' : $data->maxuseraccounts,
                 'rules'        => array(

@@ -54,6 +54,6 @@ $string['progress_peerassessment'] = array(
     'Add %s peer assessments to pages',
 );
 $string['progress_verify'] = array(
-    "Give 1 verification to another user's peer assessment page",
-    "Give %s verifications to other users' peer assessment pages",
+    "Give 1 verification to another person's peer assessment page",
+    "Give %s verifications to other people's peer assessment pages",
 );

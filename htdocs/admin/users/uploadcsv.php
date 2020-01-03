@@ -695,7 +695,7 @@ foreach ($ALLOWEDKEYS as $type) {
 }
 $fields .= "<div class=cl></div></ul>\n";
 
-$uploadcsvpagedescription = get_string('uploadcsvpagedescription6', 'admin', $fields);
+$uploadcsvpagedescription = get_string('uploadcsvpagedescription7', 'admin', $fields);
 
 $form = pieform($form);
 

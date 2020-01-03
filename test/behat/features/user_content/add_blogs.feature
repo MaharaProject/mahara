@@ -21,7 +21,7 @@ Feature: Mahara users can create their blogs
     When I follow "Add one"
     Then I should see "New journal entry in journal"
     And I move backward one page
-    And I choose "Preferences" in "Setting" from user menu
+    And I choose "Preferences" in "Setting" from account menu
     And I fill in the following:
     | tagssideblockmaxtags | 10 |
     And I enable the switch "Multiple journals"

@@ -67,7 +67,7 @@ $string['zipnotinstalled'] = 'Your system does not have the ZIP command. Please 
 $string['addedleap2atoexportqueuecollections'] = 'Added some of your collections to the export queue.';
 $string['addedleap2atoexportqueueviews'] = 'Added some of your pages to the export queue.';
 $string['addedleap2atoexportqueueall'] = 'Added all your data to the export queue.';
-$string['exportqueuenotempty'] = 'Items in the export queue for this user. Please wait until they have been archived.';
+$string['exportqueuenotempty'] = 'Items in the export queue for this person. Please wait until they have been archived.';
 $string['requeue'] = 'Re-queue';
 
 // Export queue errors

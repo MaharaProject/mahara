@@ -23,7 +23,7 @@ $string['mbstringextensionnotloaded'] = 'Your server configuration does not incl
 $string['xmlextensionnotloaded'] = 'Your server configuration does not include the %s extension. Mahara requires this in order to parse XML data from a variety of sources. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. Mahara requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['gdfreetypenotloaded'] = 'Your server configuration of the gd extension does not include Freetype support. Please make sure that gd is configured with it.';
-$string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. Mahara requires this in order to support users logging in. Please make sure that it is loaded in php.ini or install it if it is not installed.';
+$string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. Mahara requires this in order to support people logging in. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['curllibrarynotinstalled'] = 'Your server configuration does not include the curl extension. Mahara requires this for Moodle integration and to retrieve external feeds. Please make sure that curl is loaded in php.ini or install it if it is not installed.';
 $string['registerglobals'] = 'You have dangerous PHP settings: register_globals is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag register_globals off';
@@ -41,8 +41,8 @@ $string['apcstatoff'] = 'Your server appears to be running APC with apc.stat=0. 
 
 If you are on shared hosting, it is likely that there is little you can do to get apc.stat turned on other than ask your hosting provider. Perhaps you could consider moving to a different host.';
 $string['datarootinsidedocroot'] = 'You have set up your data root to be inside your document root. This is a large security problem as then anyone can directly request session data (in order to hijack other people\'s sessions) or files that they are not allowed to access that other people have uploaded. Please configure the data root to be outside of the document root.';
-$string['datarootnotwritable'] = 'Your defined data root directory, %s, is not writable. This means that neither session data, user files nor anything else that needs to be uploaded can be saved on your server. Please make the directory if it does not exist or give ownership of the directory to the web server user if it does.';
-$string['sessionpathnotwritable'] = 'Your session data directory, %s, is not writable. Please create the directory if it does not exist or give ownership of the directory to the web server user if it does.';
+$string['datarootnotwritable'] = 'Your defined data root directory, %s, is not writable. This means that neither session data, files nor anything else that needs to be uploaded can be saved on your server. Please create the directory if it does not exist or give ownership of the directory to the web server account if it does.';
+$string['sessionpathnotwritable'] = 'Your session data directory, %s, is not writable. Please create the directory if it does not exist or give ownership of the directory to the web server account if it does.';
 $string['wwwrootnothttps'] = 'Your defined wwwroot, %s, is not HTTPS. However, other settings (such as sslproxy) for your installation require that your wwwroot is a HTTPS address.
 
 Please update your wwwroot setting to be a HTTPS address or fix the incorrect setting.';
@@ -59,9 +59,9 @@ $string['dbnotutf8'] = 'You are not using a UTF-8 database. Mahara stores all da
 $string['dbversioncheckfailed'] = 'Your database server version is not new enough to successfully run Mahara. Your server is %s %s, but Mahara requires at least version %s.';
 $string['plpgsqlnotavailable'] = 'The PL/pgSQL language is not enabled in your Postgres installation, and Mahara cannot enable it. Please install PL/pgSQL in your database manually. For instructions on how to do this, see https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Enabling_Plpgsql';
 $string['mysqlnotriggerprivilege'] = 'Mahara requires permission to create database triggers, but is unable to do so. Please ensure that the trigger privilege has been granted to the appropriate user in your MySQL installation. For instructions on how to do this, see https://wiki.mahara.org/wiki/System_Administrator\'s_Guide/Granting_Trigger_Privilege';
-$string['mbstringneeded'] = 'Please install the mbstring extension for php. This is needed if you have UTF-8 characters in usernames. Otherwise, users might not be able to login.';
+$string['mbstringneeded'] = 'Please install the mbstring extension for php. This is needed if you have UTF-8 characters in usernames. Otherwise, people might not be able to login.';
 $string['cssnotpresent'] = 'CSS files are not present in your htdocs/theme/raw/style directory. If you are running Mahara from a git checkout, run "make css" to build the CSS files. If you are running Mahara from a ZIP download, try downloading and unzipping again.';
-$string['mahararootusermissing'] = 'The "root" user is missing from the database so we cannot continue. This user needs to be present for Mahara to function correctly. To add the root user back in please make another install of the Mahara version you are using and see what is contained for user id = 0 in the "usr" and "usr_custom_layout" tables and add that data back in to your instance of Mahara before trying to upgrade again.';
+$string['mahararootusermissing'] = 'The "root" account is missing from the database so we cannot continue. This account needs to be present for Mahara to function correctly. To add the root account back in, please make another install of the Mahara version you are using and see what is contained for account id = 0 in the "usr" and "usr_custom_layout" tables and add that data to your instance of Mahara before trying to upgrade again.';
 
 // general exception error messages
 $string['blocktypenametaken'] = "Block type %s is already taken by another plugin (%s).";
@@ -71,7 +71,7 @@ $string['classmissing'] = "class %s for type %s in plugin %s was missing.";
 $string['artefacttypeclassmissing'] = "Artefact types must all implement a class. Missing %s.";
 $string['artefactpluginmethodmissing'] =  "Artefact plugin %s must implement %s and does not.";
 $string['blocktypelibmissing'] = 'Missing lib.php for block %s in artefact plugin %s.';
-$string['unabletosetmultipleblogs'] = 'Enabling multiple journals for the user %s when copying page %s has failed. This can be set manually on the <a href="%s">account</a> page.';
+$string['unabletosetmultipleblogs'] = 'Enabling multiple journals for %s when copying page %s has failed. This can be set manually on the <a href="%s">account</a> page.';
 $string['pleaseloginforjournals'] = 'You need to log out and log back in before you will see all your journals and posts.';
 $string['blocktypemissingconfigform'] = 'Block type %s must implement instance_config_form.';
 $string['versionphpmissing1'] = 'Plugin %s %s is missing version.php. If you are not expecting to have a plugin %s, please delete the folder at %s.';
@@ -104,9 +104,9 @@ $string['viewnotfoundexceptiontitle'] = 'Page not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a page that does not exist.';
 $string['viewnotfound'] = 'Page with id %s not found.';
 $string['viewnotfoundbyname'] = 'Page %s by %s not found.';
-$string['youcannotviewthisusersprofile'] = 'You cannot view this user\'s profile.';
-$string['notinthesamegroup'] = 'You cannot view this user\'s profile because you are not members of the same group.';
-$string['notinthesameinstitution'] = 'You cannot view this user\'s profile because you are not members of the same institution.';
+$string['youcannotviewthisusersprofile'] = 'You cannot view this profile.';
+$string['notinthesamegroup'] = 'You cannot view this profile because you are not members of the same group.';
+$string['notinthesameinstitution'] = 'You cannot view this profile because you are not members of the same institution.';
 $string['notinstitutionmember'] = 'You cannot view this page because you are not a member of the institution to which this page belongs.';
 $string['invalidlayoutselection'] = 'You tried to select a layout that doesn\'t exist.';
 $string['previewimagegenerationfailed'] = 'Sorry, there was a problem generating the preview image.';
@@ -123,7 +123,7 @@ $string['blockinstancenotfound'] = 'Block instance with id %s not found.';
 $string['interactioninstancenotfound'] = 'Activity instance with id %s not found.';
 
 $string['invalidviewaction'] = 'Invalid page control action: %s';
-$string['invaliduser'] = 'Invalid user selected';
+$string['invaliduser'] = 'Invalid account selected';
 
 $string['missingparamblocktype'] = 'Try selecting a block type to add first.';
 $string['missingparamorder'] = 'Missing order specification';

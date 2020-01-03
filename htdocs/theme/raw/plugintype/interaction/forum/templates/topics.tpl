@@ -46,7 +46,7 @@
             <span class="text-small text-midtone">
                 {str tag=by section=view}
                 {if $topic->deleteduser}
-                    {str tag=deleteduser}
+                    {str tag=deleteduser1}
                 {else}
                     <a href="{profile_url($topic->poster)}" class="forumuser{if in_array($topic->poster, $groupadmins)} groupadmin{elseif $topic->moderator} moderator{/if}">
                         {$topic->poster|display_name:null:true}
@@ -74,7 +74,7 @@
         <p>
             {str tag=by section=view}
             {if $topic->lastposterdeleteduser}
-                {str tag=deleteduser}
+                {str tag=deleteduser1}
             {else}
                 <a href="{profile_url($topic->lastposter)}" {if in_array($topic->lastposter, $groupadmins)} class="groupadmin"{elseif $topic->lastpostermoderator} class="moderator"{/if}>{$topic->lastposter|display_name:null:true}
                 </a>

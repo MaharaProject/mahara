@@ -1,8 +1,7 @@
 @javascript @core @core_view @core_portfolio @menu
-Feature: Checking the correct menu items are available for each user
+Feature: Checking the correct menu items are available for each person
 In order to make sure the correct menu items are available
-As every user
-So users can access features in Mahara.
+So people can access features in Mahara that they are allowed to interact with.
 
 Background:
 Given the following "institutions" exist:
@@ -57,11 +56,11 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  # The one major difference a site staff has is site info link that leads to other links
  And I click on "Show administration menu"
  And I wait "1" seconds
- And I follow "User search"
+ And I follow "People search"
  And I click on "Show administration menu"
  Then I follow "Reports"
 
-Scenario: Checking menu items are available as Admin User (Bug 1467368)
+Scenario: Checking menu items are available as admin (Bug 1467368)
  Given I log in as "admin" with password "Kupuh1pa!"
  # Checking the sub navigation in Administration
  And I click on "Show administration menu"
@@ -93,13 +92,13 @@ Scenario: Checking menu items are available as Admin User (Bug 1467368)
  And I should see "Cookie Consent" in the "Configure site sub-menu" property
  # Checking the sub navigation in People
  When I press "Show menu for People"
- Then I should see "User search" in the "Users sub-menu" property
- And I should see "Suspended and expired users" in the "Users sub-menu" property
+ Then I should see "People search" in the "Users sub-menu" property
+ And I should see "Suspended and expired accounts" in the "Users sub-menu" property
  And I should see "Site staff" in the "Users sub-menu" property
  And I should see "Site administrators" in the "Users sub-menu" property
  And I should see "Export queue" in the "Users sub-menu" property
- And I should see "Add user" in the "Users sub-menu" property
- And I should see "Add users by CSV" in the "Users sub-menu" property
+ And I should see "Add a person" in the "Users sub-menu" property
+ And I should see "Add people by CSV" in the "Users sub-menu" property
  # Checking the sub navigation in Groups
  When I press "Show menu for Groups" in the "Administration menu" property
  Then I should see "Administer groups" in the "Admin Groups sub-menu" property
@@ -151,11 +150,11 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I press "Show menu for People"
  Then I should not see "Site staff" in the "Users sub-menu" property
  And I should not see "Site administrators" in the "Users sub-menu" property
- And I should see "User search" in the "Users sub-menu" property
- And I should see "Suspended and expired users" in the "Users sub-menu" property
+ And I should see "People search" in the "Users sub-menu" property
+ And I should see "Suspended and expired accounts" in the "Users sub-menu" property
  And I should see "Export queue" in the "Users sub-menu" property
- And I should see "Add user" in the "Users sub-menu" property
- And I should see "Add users by CSV" in the "Users sub-menu" property
+ And I should see "Add a person" in the "Users sub-menu" property
+ And I should see "Add people by CSV" in the "Users sub-menu" property
  # Checking the sub navigation in Groups
  And I press "Show menu for Groups" in the "Administration menu" property
  Then I should not see "Administer groups" in the "Admin Groups sub-menu" property
@@ -181,10 +180,10 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  # Checking Reports menu
  And I should see "Reports"
 
- #Checking the user menu navigation headings
- Scenario: Checking User menu items
+ #Checking the acconut menu navigation headings
+ Scenario: Checking account menu items
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I click on the "User menu" property
+ And I click on the "Account menu" property
  Then I should see "Profile"
  And I should see "Profile pictures"
  And I should see "Settings"

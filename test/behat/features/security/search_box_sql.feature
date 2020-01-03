@@ -8,8 +8,6 @@ So I can check the field doesn't error
 Scenario: sql injection attempt on search field
   Given I log in as "admin" with password "Kupuh1pa!"
   When I set the following fields to these values:
-   | Search users | 'or 1=1;-- |
+   | Search for people | 'or 1=1;-- |
   And I press "Go"
   Then I should see "No search results found"
-
-

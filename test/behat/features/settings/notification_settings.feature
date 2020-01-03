@@ -1,6 +1,6 @@
 @javascript @core @core_administration
 Feature: Validating multiple notification settings
-Log in as admin and as a user to confirm default notification options are available in the select box
+Log in as admin and as a regular account holder to confirm default notification options are available in the select box
 Secondly, check that the notification types are listed alphabetically
 
 Background:
@@ -16,7 +16,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I follow "Notification settings"
     # Verifying "None" option is not available for these notifications
     And the "System message" field should not contain "None"
-    And the "Message from other users" field should not contain "None"
+    And the "Message from other people" field should not contain "None"
     # Verifying all options are available for the rest of Admin notifications
     And I select "Email" from "Contact us"
     And I select "Email digest" from "Contact us"
@@ -44,18 +44,18 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     # Logging in as user1
     Then I log in as "UserA" with password "Kupuh1pa!"
     # Navigating to notification settings
-    And I choose "Notifications" in "Settings" from user menu
+    And I choose "Notifications" in "Settings" from account menu
     # Verifying the "None" option is not available for the following notifications
     And the "System message" field should not contain "None"
-    And the "Message from other users" field should not contain "None"
+    And the "Message from other people" field should not contain "None"
     And the "System message" field should not contain "None"
-    # Verifying all options are selectable for the following user notifications
+    # Verifying all options are selectable for the following notifications
     And I select "Email" from "System message"
     And I select "Email digest" from "System message"
     And I select "Inbox" from "System message"
-    And I select "Email" from "Message from other users"
-    And I select "Email digest" from "Message from other users"
-    And I select "Inbox" from "Message from other users"
+    And I select "Email" from "Message from other people"
+    And I select "Email digest" from "Message from other people"
+    And I select "Inbox" from "Message from other people"
     And I select "Email" from "Watchlist"
     And I select "Email digest" from "Watchlist"
     And I select "Inbox" from "Watchlist"
@@ -88,12 +88,14 @@ Scenario: Admin logs in and checks notification settings (Bug 1388682)
     And I choose "Site options" in "Configure site" from administration menu
     And I click on "Notification settings"
     #see the notification settings in alphabetical order.
-    And "Comment" "text" should appear before "Contact us" "text"
+    # @TODO Need to target the check to the 'notifications' section
+    # only now that there are two places 'Contact us' appears on the page
+    # And "Comment" "text" should appear before "Contact us" "text"
     And "Contact us" "text" should appear before "Feedback on annotations" "text"
     And "Feedback on annotations" "text" should appear before "Group message" "text"
     And "Group message" "text" should appear before "Institution message" "text"
-    And "Institution message" "text" should appear before "Message from other users" "text"
-    And "Message from other users" "text" should appear before "New forum post" "text"
+    And "Institution message" "text" should appear before "Message from other people" "text"
+    And "Message from other people" "text" should appear before "New forum post" "text"
     And "New forum post" "text" should appear before "New page access" "text"
     And "New page access" "text" should appear before "Objectionable content" "text"
     And "Objectionable content" "text" should appear before "Objectionable content in forum" "text"

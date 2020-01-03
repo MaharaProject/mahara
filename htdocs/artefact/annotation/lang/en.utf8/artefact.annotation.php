@@ -96,7 +96,7 @@ To see %s online, follow this link:
 %s";
 
 $string['artefactdefaultpermissions'] = 'Default annotation permission';
-$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have feedback enabled on creation. Users can override these settings for individual artefacts.';
+$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have feedback enabled on creation. Authors can override these settings for individual artefacts.';
 
 $string['annotationinformationerror'] = 'We do not have the right information to display the annotation.';
 
@@ -113,8 +113,8 @@ $string['progress_annotation'] = array(
     'Add %s annotations to pages',
 );
 $string['progress_annotationfeedback'] = array(
-    "Give 1 feedback to another user's annotation",
-    "Give %s feedbacks to other users' annotations",
+    "Give 1 feedback to another person's annotation",
+    "Give %s feedbacks to other people's annotations",
 );
 $string['duplicatedannotation'] = 'Duplicated annotation';
 $string['existingannotation'] = 'Existing feedback';

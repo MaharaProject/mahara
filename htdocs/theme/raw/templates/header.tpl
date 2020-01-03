@@ -90,8 +90,8 @@
                             <a href="{profile_url($USER)}" class="user-icon user-icon-25" title='{str tag="profilepage"}'>
                                 <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}" alt="{str tag=profileimagefor section=artefact.internal arg1=display_name($USER->get('id'))}">
                             </a>
-                            <button class="user-toggle navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="main-nav-user" title='{str tag="usermenu"}'>
-                                <span class="sr-only">{str tag="showusermenu"}</span>
+                            <button class="user-toggle navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="main-nav-user" title='{str tag="usermenu1"}'>
+                                <span class="sr-only">{str tag="showusermenu1"}</span>
                                 <span class="icon icon-chevron-down collapsed"></span>
                             </button>
                         {/if}

@@ -32,4 +32,4 @@ Scenario: Registering as a new student and checking switch can flick back and fo
     And I should see the date "+2 weeks" in the "tbody tr td:nth-of-type(3)" element with the format "d F Y"
     When I follow "Approve"
     And I press "Approve"
-    Then I should see "Approval sent, waiting on user completion"
+    Then I should see "Approval sent, waiting for person to complete the registration process."

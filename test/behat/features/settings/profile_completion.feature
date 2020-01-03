@@ -76,7 +76,7 @@ Scenario Outline: 1) site admin enables profile completion for the site admin me
     Then I should see "Profile completion" in the "Progressbar block" property
     And I should see "Profile completion tips"
     And I should see "50%" in the "Progressbar" property
-    When I choose "Profile" from user menu
+    When I choose "Profile" from account menu
     Then I should see "Profile"
     And I follow "About me"
     When I fill in "Student ID" with "123456"

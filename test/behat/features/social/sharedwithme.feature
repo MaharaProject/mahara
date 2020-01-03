@@ -64,8 +64,8 @@ Scenario: Testing that views & collections are collated properly
     And I should not see "I am on UserA_01 page"
     And I should see "I am on Page UserA_03"
 
-    # Allow user to see institution/group pages
-    When I check "Registered users"
+    # Allow people to see institution/group pages
+    When I check "Registered people"
     And I press "Search"
     Then I should see "Page mahara_01"
     And I should see "Page GroupA_01"

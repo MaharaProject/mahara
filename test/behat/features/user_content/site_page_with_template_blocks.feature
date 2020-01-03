@@ -47,7 +47,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
     And I press "Save"
     And I should see "Postal address"
     And I follow "Share" in the "Toolbar buttons" property
-    And I select "Registered users" from "General" in shared with select2 box
+    And I select "Registered people" from "General" in shared with select2 box
     And I expand "Advanced options" node
     And I enable the switch "Allow copying"
     And I press "Save"

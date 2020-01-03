@@ -18,7 +18,7 @@ Scenario: Checking navigation of the big homepage buttons
  And I click on "Hide information box"
  Then I should see "You have hidden the information box."
  And I should not see "Find people and join groups"
- And I choose "Preferences" in "Settings" from user menu
+ And I choose "Preferences" in "Settings" from account menu
  And I enable the switch "Dashboard information"
  And I press "Save"
  And I am on homepage

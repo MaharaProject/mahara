@@ -1,7 +1,7 @@
 @javascript @core @core_user @core_portfolio
-Feature: Searching by user in Shared Pages
+Feature: Searching by person in "Shared with me"
     In order to search by name on the shared with me page
-    As an admin I need to create users
+    As an admin I need to create accounts
     So I can search for them by name
 
 Background:
@@ -19,7 +19,7 @@ Background:
      | Page UserB_03 | Page 05 | user | UserB |
      | Page UserB_04 | Page 06 | user | UserB |
 
-Scenario: Create users and search for them (Bug 897586)
+Scenario: Create accounts and search for them (Bug 897586)
     # Log in as the student user
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Sharing both of the pages that have been created
@@ -31,7 +31,7 @@ Scenario: Create users and search for them (Bug 897586)
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
     And I log out
-    # Log in as the second student user
+    # Log in as the second student account
     And I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob User"
@@ -43,17 +43,17 @@ Scenario: Create users and search for them (Bug 897586)
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
-    # Sharing 1 of the pages Bob created to admin user
+    # Sharing 1 of the pages Bob created with "Admin"
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_03" for "editaccess_views"
-    And I select "User" from "accesslist[0][searchtype]"
+    And I select "Person" from "accesslist[0][searchtype]"
     And I select "Admin User" from select2 search box in row number "1"
     And I press "Save"
     # Verifying that the page has been shared
     And I should see "Access rules were updated for 1 page."
     And I log out
-    # Logging back in as admin to search for users on the shared with me page
+    # Logging back in as admin to search for people on the shared with me page
     And I log in as "admin" with password "Kupuh1pa!"
     And I choose "Shared with me" in "Share" from main menu
     # Entering Angela name in the search box

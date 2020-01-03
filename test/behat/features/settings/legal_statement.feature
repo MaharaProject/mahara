@@ -6,7 +6,7 @@ Scenario: Admin user log in and confirm Legal templates are correct for
     1. Site privacy Statement
     2. Site terms and conditions
     Given I log in as "admin" with password "Kupuh1pa!"
-    When  I choose "Legal" in "Settings" from user menu
+    When  I choose "Legal" in "Settings" from account menu
     # verify user on correct page and correct intro text for page
     Then I should see "Displayed are the current privacy statements and terms and conditions."
     # verify Site privacy Statement section contains correct text

@@ -16,7 +16,7 @@ And the following "pages" exist:
 
 Scenario: Profile block displays my information correctly (Bug 1677929)
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Profile pictures" from user menu
+  And I choose "Profile pictures" from account menu
   # Add profile image
   And I attach the file "Image2.png" to "Profile picture"
   And I set the field "Image title" to "Angela"
@@ -49,7 +49,7 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   # This checks an image is displayed, not the specific image
   And I should see images within the block "Profile information"
   # Delete the profile picture
-  And I choose "Profile pictures" from user menu
+  And I choose "Profile pictures" from account menu
   And I select the radio "Mark \"Angela\" for deletion"
   And I press "Delete"
   Then I should see "Profile picture deleted"

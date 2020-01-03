@@ -63,7 +63,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Shared with this group report'             => array("#sharedviewsreport", "css_element"),
     'Matrix table'                              => array("#tablematrix", "css_element"),
     'Toolbar buttons'                           => array("#toolbar-buttons", "css_element"),
-    'User menu'                                 => array(".icon-chevron-down.collapsed", "css_element"),
+    'Account menu'                                 => array(".icon-chevron-down.collapsed", "css_element"),
     'Signoff page'                              => array("#signoff-confirm-form", "css_element"),
     'Verify page'                               => array("#verify-confirm-form", "css_element"),
     'Display page button'                       => array("#view-return-controls .btn-secondary:nth-of-type(1)", "css_element"),

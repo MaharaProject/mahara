@@ -1,6 +1,6 @@
 <div class="card">
     <h3 class="card-header">
-        {str tag="onlineusers" args=$sbdata.count}
+        {str tag="peopleonline" args=$sbdata.count}
         <br>
         <span id="lastminutes" class="text-small text-midtone">({str tag="lastminutes" args=$sbdata.lastminutes})</span>
     </h3>
@@ -20,7 +20,7 @@
         {/foreach}
     </ul>
     <a href="{$WWWROOT}user/online.php" class="online-users card-footer text-small" id="allonline">
-        {str tag="allonline"}
+        {str tag="allpeopleonline"}
         <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span>
     </a>
 </div>

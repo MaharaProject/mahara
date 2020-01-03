@@ -40,7 +40,7 @@ $string['licensedefault'] = 'Default license';
 $string['licensedefaultdescription'] = 'The default license for your content.';
 $string['licensedefaultinherit'] = 'Use the institution default';
 
-$string['messagesdescr'] = 'Messages from other users';
+$string['messagesdescr'] = 'Messages from other people';
 $string['messagesnobody'] = 'Do not allow anyone to send me messages';
 $string['messagesfriends'] = 'Allow people on my friends list to send me messages';
 $string['messagesallow'] = 'Allow anyone to send me messages';
@@ -54,7 +54,7 @@ $string['enablemultipleblogs1'] = 'Multiple journals';
 $string['enablemultipleblogsdescription1']  = 'By default, you have one journal. If you would like to keep more than one journal, turn this option on.';
 
 $string['hiderealname'] = 'Hide real name';
-$string['hiderealnamedescription'] = 'Check this box if you have set a display name and do not want other users to be able to find you by your real name in user searches.';
+$string['hiderealnamedescription'] = 'Check this box if you have set a display name and do not want other people to be able to find you by your real name in searches.';
 
 $string['showhomeinfo2'] = 'Dashboard information';
 $string['showhomeinfodescription1'] = 'Display information about how to use %s on the dashboard.';
@@ -80,7 +80,7 @@ EOF;
 $string['maildisableddescription'] = 'Sending of email to your account has been disabled. You may <a href="%s">re-enable your email</a> from the account preferences page.';
 
 $string['deleteaccountuser']  = 'Delete account of %s';
-$string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your pages will no longer be visible to other users. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
+$string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your pages will no longer be visible to other people. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
 $string['sendnotificationdescription']  = 'A notification will be sent to an administrator, who needs to approve the deletion of your account. If you request to delete your account, all your personal content will be deleted permanently. That means any files you uploaded, journal entries you wrote, and pages and collections you created will be deleted. You cannot get any of that back. If you uploaded files to groups, created journal entries and portfolios, and contributed to forums there, they will stay on the site, but your name will no longer be displayed.';
 $string['pendingdeletionsince'] = 'Account pending deletion since %s';
 $string['pendingdeletionadminemailsubject'] = "Account deletion request on %s";
@@ -88,9 +88,9 @@ $string['resenddeletionadminemailsubject'] = "Reminder of account deletion reque
 $string['canceldeletionadminemailsubject'] = "Cancellation of account deletion request on %s";
 $string['pendingdeletionadminemailtext'] = "Hello Administrator,
 
-User %s has requested the deletion of their account from the site.
+%s has requested the deletion of their account from the site.
 
-You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: %s
+You are listed as an administrator in an institution to which this person belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: %s
 
 Details of the account deletion request follow:
 
@@ -102,8 +102,8 @@ Reason: %s
 Regards,
 The %s Team";
 $string['pendingdeletionadminemailhtml'] = "<p>Hello Administrator,</p>
-<p>User %s has requested the deletion of their account from the site.</p>
-<p>You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: <a href='%s'>%s</a></p>
+<p>%s has requested the deletion of their account from the site.</p>
+<p>You are listed as an administrator in an institution to which the person belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: <a href='%s'>%s</a></p>
 <p>Details of the account deletion request follow:</p>
 <p>Name: %s</p>
 <p>Email: %s</p>
@@ -116,9 +116,9 @@ $string['accountdeleted']  = 'Your account has been deleted.';
 $string['resenddeletionnotification'] = 'Resend deletion notification';
 $string['resenddeletionadminemailtext'] = "Hello Administrator,
 
-This is a reminder that user %s has requested the deletion of their account from the site.
+This is a reminder that %s has requested the deletion of their account from the site.
 
-You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: %s
+You are listed as an administrator in an institution to which the person belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: %s
 
 Details of the account deletion request follow:
 
@@ -130,8 +130,8 @@ Message: %s
 Regards,
 The %s Team";
 $string['resenddeletionadminemailhtml'] = "<p>Hello Administrator,</p>
-<p>This is a reminder that user % has requested the deletion of their account from the site.</p>
-<p>You are listed as an administrator in an institution to which the user belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: <a href='%s'>%s</a></p>
+<p>This is a reminder that % has requested the deletion of their account from the site.</p>
+<p>You are listed as an administrator in an institution to which the person belongs. You can decide whether to approve or deny the deletion request. To do this, select the following link: <a href='%s'>%s</a></p>
 <p>Details of the account deletion request follow:</p>
 <p>Name: %s</p>
 <p>Email: %s</p>
@@ -142,14 +142,14 @@ The %s Team</pre>";
 
 $string['pendingdeletionemailsent'] = 'Sent notification to institution administrators';
 $string['cancelrequest'] = 'Cancel request';
-$string['deleterequestcanceled'] = 'The request to delete your user account has been cancelled.';
+$string['deleterequestcanceled'] = 'The request to delete your account has been cancelled.';
 $string['canceldeletionrequest'] = 'Cancel deletion request';
 $string['canceldeletionrequestconfirmation'] = 'This will cancel the request to the institution administrators for deleting the account of %s. Are you sure you want to continue?';
 $string['canceldeletionadminemailtext'] = "Hello Administrator,
 
-User %s has cancelled the request to delete their account from the site.
+%s has cancelled the request to delete their account from the site.
 
-You are listed as an administrator in an institution to which the user belongs.
+You are listed as an administrator in an institution to which the person belongs.
 
 Details of the cancelled request follow:
 
@@ -160,8 +160,8 @@ Email: %s
 Regards,
 The %s Team";
 $string['canceldeletionadminemailhtml'] = "<p>Hello Administrator,</p>
-<p>User %s has cancelled the request to delete their account from the site.</p>
-<p>You are listed as an administrator in an institution to which the user belongs.</p>
+<p>%s has cancelled the request to delete their account from the site.</p>
+<p>You are listed as an administrator in an institution to which the person belongs.</p>
 <p>Details of the cancelled request follow:</p>
 <p>Name: %s</p>
 <p>Email: %s</p>

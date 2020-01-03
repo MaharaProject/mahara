@@ -16,4 +16,4 @@ $string['imapconfig'] = 'IMAP configuration';
 $string['description'] = 'Authenticate against an IMAP email server';
 $string['notusable'] = 'Please install the PHP IMAP extension';
 $string['domainname'] = 'Email address domain name';
-$string['weautocreateusers'] = 'We auto-create users';
+$string['weautocreateusers'] = 'We auto-create accounts';

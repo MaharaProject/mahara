@@ -1,6 +1,6 @@
 @javascript @core
 Feature: Embedded media block
-  As a user
+  As a person
   I want to add an embedded media block to my page
   So I can include audio and video content
 
@@ -60,7 +60,7 @@ Scenario: Change settings and embed 3gp
   And I enable the switch "3GPP media file"
   And I press "Save"
   And I log out
-  # Log in as user and check 3gp is uploadable
+  # Log in as author and check 3gp is uploadable
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu

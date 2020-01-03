@@ -108,9 +108,9 @@ $string['count_group_member'] = 'Number of group members';
 $string['count_host'] = 'Number of Moodle hosts';
 $string['count_institution'] = 'Number of institutions';
 $string['count_interaction_forum_post'] = 'Number of forum posts';
-$string['count_usr'] = 'Number of users';
+$string['count_usr'] = 'Number of people';
 $string['count_usr_friend'] = 'Number of friend relationships';
-$string['count_usr_institution'] = 'Number of users in institutions';
+$string['count_usr_institution'] = 'Number of people in institutions';
 $string['count_members'] = 'Number of members of institution';
 $string['count_artefacts'] = 'Number of artefacts';
 $string['count_blocks'] = 'Number of blocks';
@@ -181,7 +181,7 @@ $string['plugin_search_internal_version'] = 'Search plugin Internal version';
 $string['release'] = 'Release';
 $string['sitename'] = 'Site name';
 $string['theme'] = 'Theme';
-$string['usersloggedin'] = 'Number of logged-in users in the last week';
+$string['usersloggedin'] = 'Number of logged-in people in the last week';
 $string['version'] = 'Version';
 $string['view_type_dashboard'] = 'Number of dashboards';
 $string['view_type_grouphomepage'] = 'Number of group homepages';
@@ -192,17 +192,17 @@ $string['sitedataweekly'] = 'Weekly site data';
 
 $string['group-count'] = 'Groups';
 $string['view-count'] = 'Pages';
-$string['user-count'] = 'User';
+$string['user-count'] = 'People';
 $string['institutiondataweekly'] = 'Institution weekly data';
-$string['usersbytype'] = 'Users by type';
+$string['usersbytype'] = 'People by type';
 $string['staff'] = 'Staff';
 $string['admins'] = 'Administrators';
 
-$string['activeusers'] = "Active users";
+$string['activeusers'] = "Active accounts";
 $string['logins'] = "Logins";
 
 $string['reports'] = 'Reports';
-$string['reportsdesc'] = 'View statistics about the site and learning analytics data about users';
+$string['reportsdesc'] = 'View statistics about the site and learning analytics data';
 $string['reportsfor'] = 'Reports for %s';
 $string['reporttype'] = 'Report type';
 $string['reportconfig'] = 'Report configuration';
@@ -225,7 +225,7 @@ $string['reportdescusers'] = '<ul>
 <li>Total number of people in the selected institution</li>
 </ul>';
 
-$string['reportuserdetails'] = 'User details';
+$string['reportuserdetails'] = 'Account details';
 $string['reportdescuserdetails'] = '<ul>
 <li>First name</li>
 <li>Last name</li>
@@ -237,11 +237,11 @@ $string['reportdescuserdetails'] = '<ul>
 <li>Quota used</li>
 <li>Last login</li>
 <li>Number of probation points (if enabled)</li>
-</ul><p>People whose user accounts were created during the selected time period are displayed.</p>';
+</ul><p>People whose accounts were created during the selected time period are displayed.</p>';
 
-$string['reportuseractivity'] = 'User activity';
+$string['reportuseractivity'] = 'Account activity';
 $string['reportdescuseractivity'] = '<ul>
-<li>User information</li>
+<li>Name and username</li>
 <li>Number of artefacts created or updated</li>
 <li>Number of pages created</li>
 <li>Number of collections created</li>
@@ -256,10 +256,10 @@ $string['reportcollaboration'] = 'Collaboration';
 $string['reportdesccollaboration'] = '<ul>
 <li>Number of comments</li>
 <li>Number of annotation feedback</li>
-<li>Number of portfolios (pages or collections) shared with individual users</li>
+<li>Number of portfolios (pages or collections) shared with individuals</li>
 <li>Number of portfolios shared with groups</li>
 <li>Number of portfolios shared with an institution</li>
-<li>Number of portfolios shared with all registered users</li>
+<li>Number of portfolios shared with all registered people</li>
 <li>Number of portfolios shared publicly</li>
 <li>Number of portfolios shared via secret URLs</li>
 <li>Number of portfolios shared with friends</li>
@@ -308,22 +308,22 @@ $string['reportdescuseragreement'] = '<ul>
 // Last activities reported on in the "User activity" report
 $string['blockinstancecommit'] = 'Add a block to a page';
 $string['addfriend'] = 'Add a friend';
-$string['activateuser'] = 'Activate a user';
+$string['activateuser'] = 'Activate an account';
 $string['clearcaches'] = 'Clear the cache';
 $string['sharedcommenttogroup'] = 'Comment on a page shared with a group';
 $string['createcollection'] = 'Create a collection';
 $string['creategroup'] = 'Create a group';
 $string['createview'] = 'Create a page';
-$string['createuser'] = 'Create a user';
-$string['deactivateuser'] = 'Deactivate a user';
+$string['createuser'] = 'Create an account';
+$string['deactivateuser'] = 'Deactivate an account';
 $string['deleteartefact'] = 'Delete an artefact';
 $string['deleteartefacts'] = 'Delete artefacts';
 $string['deleteblockinstance'] = 'Delete a block from a page';
 $string['deletecollection'] = 'Delete a collection';
 $string['removefriendrequest'] = 'Delete a friend request';
 $string['deleteview'] = 'Delete a page';
-$string['deleteuser'] = 'Delete a user';
-$string['expireuser'] = 'Expire a user';
+$string['deleteuser'] = 'Delete an account';
+$string['expireuser'] = 'Expire an account';
 $string['userjoinsgroup'] = 'Join a group';
 $string['login'] = 'Logged in';
 $string['loginas'] = 'Masqueraded by an administrator';
@@ -333,12 +333,12 @@ $string['saveartefact'] = 'Save an artefact';
 $string['saveview'] = 'Save a page';
 $string['addfriendrequest'] = 'Send a friend request';
 $string['addsubmission'] = 'Submit a portfolio';
-$string['suspenduser'] = 'Suspend a user';
-$string['undeleteuser'] = 'Undelete a user';
-$string['unexpireuser'] = 'Unexpire a user';
-$string['unsuspenduser'] = 'Unsuspend a user';
+$string['suspenduser'] = 'Suspend a person';
+$string['undeleteuser'] = 'Undelete an account';
+$string['unexpireuser'] = 'Unexpire an account';
+$string['unsuspenduser'] = 'Unsuspend a person';
 $string['updatecollection'] = 'Update a collection';
-$string['updateuser'] = 'Update a user';
+$string['updateuser'] = 'Update an account';
 $string['updateviewaccess'] = 'Update the portfolio access';
 
 // Group reports
@@ -360,8 +360,8 @@ $string['reportdesccontent'] = '<ul>
 <li>Title</li>
 <li>Number of modifications</li>
 <li>Total</li>
-<li>Number of unique users who made the modifications</li>
-<li>Number of unique users over the total</li>
+<li>Number of unique people who made the modifications</li>
+<li>Number of unique people over the total</li>
 </ul>';
 $string['reportdescobjectionable'] = "<ul>
 <li>Page title</li>
@@ -381,16 +381,16 @@ $string['reviewer'] = 'Reviewer';
 $string['contentobjectionablereports'] = 'Objectionable content';
 $string['status.0'] = '';
 $string['status.1'] = 'Administrator needs to review';
-$string['status.2'] = 'User needs to make changes';
+$string['status.2'] = 'Author needs to make changes';
 
 // Institution reports
 $string['informationreports'] = 'Information overview';
 $string['reportdescinformation'] = '<ul>
 <li>Creation date</li>
-<li>Number of users</li>
+<li>Number of people</li>
 <li>Number of pages</li>
 <li>Disk space used</li>
-<li>Users overview</li>
+<li>People overview</li>
 <li>Pages overview</li>
 <li>Growth trend</li>
 <li>For "All institutions" only:
@@ -416,8 +416,8 @@ $string['reportdesccomparisons'] = '<ul>
 
 $string['reportdesclogins'] = '<ul>
 <li>Institution</li>
-<li>Number of logins no matter the user</li>
-<li>Number of active users</li>
+<li>Number of logins no matter the person</li>
+<li>Number of active accounts</li>
 </ul>
 <p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
 
@@ -425,8 +425,8 @@ $string['userscollaborationreports'] = 'Collaboration';
 $string['userspageactivityreports'] = 'Page activity';
 $string['usersmasqueradingreports'] = 'Masquerading sessions';
 $string['usersaccesslistreports'] = 'Portfolio access';
-$string['usersuseractivityreports'] = 'User activity';
-$string['usersuserdetailsreports'] = 'User details';
+$string['usersuseractivityreports'] = 'Account activity';
+$string['usersuserdetailsreports'] = 'Account details';
 $string['usersuseragreementreports'] = 'Legal consent';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
@@ -446,8 +446,8 @@ $string['sharedcomments'] = 'Shared page comments';
 $string['notdisplayed'] = 'N/A';
 $string['lastmodified'] = 'Last modified';
 $string['lastvisited'] = 'Last visited';
-$string['user'] = 'User';
-$string['usershare'] = 'Users';
+$string['user'] = 'Person';
+$string['usershare'] = 'People';
 $string['groupshare'] = 'Groups';
 $string['institutionshare'] = 'Institutions';
 $string['loggedinshare'] = 'Registered';
@@ -463,9 +463,9 @@ $string['needadvancedanalytics'] = 'Advanced analytics need to be enabled for th
 $string['Overview'] = 'Overview';
 $string['weeklytrend'] = 'Growth trend';
 $string['groupinfo'] = 'Groups overview';
-$string['usersinfo'] = 'Users overview';
+$string['usersinfo'] = 'People overview';
 $string['viewsinfo'] = 'Pages overview';
-$string['usersbyinstitution'] = 'Users by institution';
+$string['usersbyinstitution'] = 'People by institution';
 $string['groupsbytype'] = 'Groups by type';
 $string['earliestdate'] = 'Data for this report is only available from %s onwards.';
 $string['noearliestdate'] = 'There is no data recorded for this report.';

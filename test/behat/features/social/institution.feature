@@ -1,6 +1,6 @@
 @javascript @core @core_institution
-Feature: Mahara user permissions in institutions
-  As a mahara user
+Feature: Mahara account permissions in institutions
+  As a person
   I can be a member of at least one institution
   As an administrator
   I can share institution pages
@@ -37,10 +37,10 @@ Feature: Mahara user permissions in institutions
     And I follow "Share" in the "Toolbar buttons" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
-    And I choose "User search" in "People" from administration menu
+    And I choose "People search" in "People" from administration menu
     And I follow "UserB"
-    And I press "Add user to institution"
-    Then I should see "User added to institution \"Institution Two\"."
+    And I press "Add to institution"
+    Then I should see "Person added to institution \"Institution Two\"."
     And I log out
 
     # Institution admin can share institution page with any of the institutions they belong to
@@ -56,8 +56,8 @@ Feature: Mahara user permissions in institutions
     # Add new member to institution via Institution -> Member's page
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Members" in "Institutions" from administration menu
-    And I select "People who have not requested institution membership yet" from "Users to display:"
+    And I select "People who have not requested institution membership yet" from "People to display:"
     And I select "UserC" from "Non-members"
     And I press "Turn selected non-members into invited"
     And I press "Add members"
-    And I should see "Users added"
+    And I should see "People added"

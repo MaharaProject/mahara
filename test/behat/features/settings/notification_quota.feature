@@ -12,15 +12,15 @@ Background:
 Scenario Outline: When quota notification threshold is changed, send notifications to users who are now over threshold (Bug 1367539)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
-    # Modifying user quota quota to 2MB
+    # Modifying account quota quota to 2MB
     And I go to the "artefact" plugin "file" configuration "file" type
-    And I follow "Default user quota"
-    # Clearning the tex box first to enter 2 MB
+    And I follow "Default account quota"
+    # Clearning the text box first to enter 2 MB
     And I fill in "Default quota" with ""
     And I fill in "Default quota" with "2"
-    # Update already existing users
-    And I enable the switch "Update user quotas"
-    # Modifying user notification threshold to multiple %
+    # Update already existing accounts
+    And I enable the switch "Update account quotas"
+    # Modifying quota notification threshold to multiple %
     And I fill in "Quota notification threshold" with "<threshold>"
     And I press "Save"
     # Verifying changes were made
@@ -34,7 +34,7 @@ Scenario Outline: When quota notification threshold is changed, send notificatio
     And I attach the file "Image1.jpg" to "File"
     And I attach the file "Image2.png" to "File"
     And I attach the file "Image3.png" to "File"
-    # Verifying notification for reaching user quota threshold have been received
+    # Verifying notification for reaching account quota threshold have been received
     And I am on homepage
     And I choose inbox
     # Regression testing for previous errors

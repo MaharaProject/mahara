@@ -2,7 +2,7 @@
 Feature: Smart evidence work flow from Institution member submitting to Institution staff making
     and adding comments to collection submission.
 
-Background: Setting up test data for users and portfolio pages
+Background: Setting up test data for people and portfolio pages
     Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Alice | User | mahara | internal | member |
@@ -20,7 +20,7 @@ Background: Setting up test data for users and portfolio pages
     # Matrix config file is loaded
     # Enable Institutions to allow Smart Evidence
     # ********************************************************
-     # Admin user enable annotations module
+     # Admin enables annotations module
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plugin administration" in "Extensions" from administration menu
     And I press "activate_blocktype_annotation_submit"
@@ -68,7 +68,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
-    # Verify user is on correct page
+    # Verify author is on correct page
     And I should see "Smart Evidence Collection 1"
 
     # Mahara member must make comment on a competencies before it can be accessed by admin/staff
@@ -136,5 +136,5 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I should see "Make public"
     # Mahara member should see edit and delete for their own annotation feedback comment
     And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[4]/div[1]/div" "xpath_element"
-    # verify that user cannot delete Other user's annotations.
+    # verify that someone cannot delete other people's annotations.
     And I should not see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div" "xpath_element"

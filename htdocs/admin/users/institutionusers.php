@@ -127,14 +127,14 @@ else if ($usertype == 'nonmembers') {
 else if ($usertype == 'invited') {
     // Allow invitations to be revoked
     $userlistelement = array(
-        'title' => get_string('revokeinvitations', 'admin'),
+        'title' => get_string('revokeinvitation', 'admin'),
         'lefttitle' => get_string('invitedusers', 'admin'),
         'righttitle' => get_string('userstobeuninvited', 'admin'),
         'leftarrowlabel' => get_string('moveusersfromuninvited', 'admin'),
         'rightarrowlabel' => get_string('moveuserstouninvited', 'admin'),
         'searchparams' => array('member' => 0, 'invitedby' => 1),
     );
-    $submittext = get_string('revokeinvitations', 'admin');
+    $submittext = get_string('revokeinvitation', 'admin');
 }
 
 $userlistelement['type'] = 'userlist';
@@ -317,7 +317,7 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-user-friends');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('usertypeselector', $usertypeselector);
-$smarty->assign('instructions', get_string('institutionusersinstructions' . $usertype . '1', 'admin', $userlistelement['lefttitle'], $userlistelement['righttitle']));
+$smarty->assign('instructions', get_string('institutionusersinstructions' . $usertype . '2', 'admin', $userlistelement['lefttitle'], $userlistelement['righttitle']));
 $smarty->assign('institutionusersform', $userlistform);
 $smarty->assign('institutionselector', $institutionselector);
 $smarty->display('admin/users/institutionusers.tpl');

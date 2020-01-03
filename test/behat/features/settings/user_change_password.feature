@@ -1,10 +1,10 @@
 @javascript @core @core_account
-Feature: Creating users and an institution enrolling users and changing their passwords
-    In order to change user passwords successfully
-    As an admin create users and create an institution
-    So I can log in as those users and change the password successfully
+Feature: Creating people and an institution enrolling people and changing their passwords
+    In order to change passwords successfully
+    As an admin create accounts and create an institution
+    So I can log in as those people and change their password successfully
 
-Scenario: Creating an Institution assigning users and changing their passwords
+Scenario: Creating an institution assigning members and changing their passwords
     # Log in as Admin
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating an Institution
@@ -13,8 +13,8 @@ Scenario: Creating an Institution assigning users and changing their passwords
     And I fill in the following:
     | Institution name   | Institution One  |
     And I press "Submit"
-    # Creating user 1
-    And I choose "Add user" in "People" from administration menu
+    # Creating account 1
+    And I choose "Add a person" in "People" from administration menu
     And I fill in the following:
     | firstname   | bob  |
     | lastname    | bobby    |
@@ -24,9 +24,9 @@ Scenario: Creating an Institution assigning users and changing their passwords
     And I select "Institution One" from "Institution"
     And I enable the switch "Institution administrator"
     And I scroll to the base of id "adduser_submit"
-    And I press "Create user"
-    # Creating user 2
-    And I choose "Add user" in "People" from administration menu
+    And I press "Create account"
+    # Creating account 2
+    And I choose "Add a person" in "People" from administration menu
     And I fill in the following:
     | firstname   | Jen  |
     | lastname    | Jenny    |
@@ -35,10 +35,10 @@ Scenario: Creating an Institution assigning users and changing their passwords
     | password    | Mahara#1  |
     And I select "Institution One" from "Institution"
     And I scroll to the base of id "adduser_submit"
-    And I press "Create user"
-    # Log out as user admin
+    And I press "Create account"
+    # Log out as admin
     And I log out
-    # Log in as user 1
+    # Log in as account 1
     When I log in as "bob" with password "Mahara#1"
     And I fill in the following:
     | New password | Mahara1sGreat@  |
@@ -48,7 +48,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Verifying password was changed successfully
     And I should see "Your new password has been saved"
     # Changing password
-    And I choose "Preferences" in "Settings" from user menu
+    And I choose "Preferences" in "Settings" from account menu
     And I fill in the following:
     | Current password   | Mahara1sGreat@ |
     | New password   | MaharaIsC00l! |
@@ -56,9 +56,9 @@ Scenario: Creating an Institution assigning users and changing their passwords
     When I press "Save"
     # Verifying password was changed
     And I should see "Preferences saved"
-    # Log out as user 1
+    # Log out as account 1
     And I log out
-    # Log in as user 2
+    # Log in as account 2
     And I log in as "jen" with password "Mahara#1"
     And I fill in the following:
     | New password | Mahara1sGreat@ |
@@ -68,7 +68,7 @@ Scenario: Creating an Institution assigning users and changing their passwords
     # Verifying password was changed
     And I should see "Your new password has been saved"
     # Changing password
-    And I choose "Preferences" in "Settings" from user menu
+    And I choose "Preferences" in "Settings" from account menu
     And I fill in the following:
     | Current password   | Mahara1sGreat@ |
     | New password   | MaharaIsC00l! |

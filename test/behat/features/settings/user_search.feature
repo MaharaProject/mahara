@@ -1,6 +1,6 @@
 @javascript @core @core_administration
-Feature: Configuration on user search page
-In order to change the configuration of the user search page
+Feature: Configuration on people search page
+In order to change the configuration of the people search page
 As an admin
 So I can benefit from the use of different configurations
 
@@ -9,9 +9,9 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | admin |
 
-Scenario: Testing functions for user search page (Bug 1431569)
+Scenario: Testing functions for people search page (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "User search" in "People" from administration menu
+ And I choose "People search" in "People" from administration menu
  And I follow "Advanced options"
  And I follow "A" in the "Filter by first name" property
  And I follow "UserA"
@@ -22,11 +22,11 @@ Scenario: Testing functions for user search page (Bug 1431569)
  | Disable email | 1 |
  And I press "Save changes"
 
- # Check that I can do user search when 'Email address' option is on
+ # Check that I can do a people search when 'Email address' option is on
  Given the following plugin settings are set:
  | plugintype | plugin  | field | value |
  | artefact | internal | profilepublic | email |
  And I set the following fields to these values:
- | Search users | UserA@example.org |
- And I press the key "Enter" in the "Search users" field
+ | Search for people | UserA@example.org |
+ And I press the key "Enter" in the "Search for people" field
  Then I should see "UserA"

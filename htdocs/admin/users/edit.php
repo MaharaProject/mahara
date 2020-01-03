@@ -901,7 +901,7 @@ foreach ($institutions as $i) {
             $i->institution.'_remove' => array(
                 'type'  => 'submit',
                 'class' => 'btn-secondary',
-                'value' => get_string('removeuserfrominstitution', 'admin'),
+                'value' => get_string('removeuserfrominstitution1', 'admin'),
                 'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
             )
         )
@@ -924,7 +924,7 @@ if ($USER->get('admin')
     if (!empty($options)) {
         $elements['addinstitutionheader'] = array(
             'type'  => 'markup',
-            'value' => '<h4>' . get_string('addusertoinstitution', 'admin') . '</h4>',
+            'value' => '<h4>' . get_string('addusertoinstitution1', 'admin') . '</h4>',
         );
         $elements['addinstitution'] = array(
             'type'         => 'select',
@@ -934,7 +934,7 @@ if ($USER->get('admin')
         $elements['add'] = array(
             'type'  => 'submit',
             'class' => 'btn-primary',
-            'value' => get_string('addusertoinstitution', 'admin'),
+            'value' => get_string('addusertoinstitution1', 'admin'),
         );
     }
 }

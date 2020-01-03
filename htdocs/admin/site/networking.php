@@ -49,7 +49,7 @@ $networkingform = pieform(
             'wwwroot' => array(
                 'type'         => 'html',
                 'title'        => get_string('wwwroot','admin'),
-                'description'  => get_string('wwwrootdescription', 'admin'),
+                'description'  => get_string('wwwrootdescription1', 'admin'),
                 'value'        => get_config('wwwroot')
             ),
             'pubkey' => array(

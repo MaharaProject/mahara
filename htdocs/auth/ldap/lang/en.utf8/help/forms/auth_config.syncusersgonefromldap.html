@@ -1,19 +1,20 @@
 <!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
 <!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
-<h3>If a user is no longer present in LDAP</h3>
-<p>This setting determines what the cron will do if a user in your
+<h3>If an account is no longer present in LDAP</h3>
+<p>This setting determines what the cron will do if a person in your
 institution has no matching record in your LDAP server.</p>
-<p><b>Note:</b> This setting only applies to users who have this authentication
+<p><b>Note:</b> This setting only applies to people who have this authentication
 instance as their authentication method.</p>
 <dl>
 <dt>Do nothing</dt>
 <dd>No action will be taken. (This is the recommended setting.)</dd>
-<dt>Suspend user's account</dt>
-<dd>The user's account will be suspended. The user will no longer be able to log in,
-and their content and pages will not be viewable. However, none of their data will be
-deleted, and the user can be un-suspended by the cron when their LDAP record reappears,
-or manually by an administrator.</dd>
-<dt>Delete user's account and all content</dt>
-<dd><b>Use with caution!</b> The user's account will be deleted, along with all their content and pages. The data
-is fully deleted from the server, so this action requires a server backup to reverse.</dd>
+<dt>Suspend account</dt>
+<dd>The account will be suspended. The account holder will no longer be able to
+  log in, and their content and pages will not be viewable. However, none of
+  their data will be deleted, and the person can be un-suspended by the cron
+  when their LDAP record reappears, or manually by an administrator.</dd>
+<dt>Delete account and all content</dt>
+<dd><b>Use with caution!</b> The account will be deleted, along with all their
+  content and pages. The data is fully deleted from the server, so this action
+  requires a server backup to reverse.</dd>
 </dl>

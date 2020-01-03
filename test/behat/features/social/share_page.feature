@@ -54,12 +54,12 @@ Scenario: Check share page with Registered Users
  # Edit access for Page 03
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserA_03" card access menu
- And I select "Registered users" from "General" in shared with select2 box
+ And I select "Registered people" from "General" in shared with select2 box
  And I press "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Shared with me" in "Share" from main menu
- And I check "Registered users"
+ And I check "Registered people"
  And I uncheck "Me"
  And I uncheck "Friends"
  And I uncheck "My groups"

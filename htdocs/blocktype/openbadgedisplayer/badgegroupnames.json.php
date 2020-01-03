@@ -33,7 +33,7 @@ $badgegroupnames = isset($uid) ? PluginBlocktypeOpenbadgedisplayer::get_badgegro
 $nobadgegroup = get_string('nobadgegroupsin1', 'blocktype.openbadgedisplayer', $hosttitle, $email);
 $nobackpack = get_string('nobackpackidin1', 'blocktype.openbadgedisplayer', $email, $hosttitle);
 if ($host == 'badgr' && is_null($uid)) {
-    $nobackpack = get_string('nobadgruid1', 'blocktype.openbadgedisplayer');
+    $nobackpack = get_string('nobadgruid2', 'blocktype.openbadgedisplayer');
 }
 
 json_reply(false, array(

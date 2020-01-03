@@ -1,7 +1,7 @@
 @javascript @core @core_institution @core_artefact
 Feature: Adding journals to institution level
     In order to use journals at an institution level
-    As a user and admin
+    As a person and admin
     So I can create journals to share on pages
 
 Background:
@@ -95,7 +95,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
     And I delete the "Journal entry 1" row
     Then I should not see "Journal entry 1"
 
-Scenario: Newly created user can get a copy of the journal (Bug 1472467)
+Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating a site wide journal
     And I choose "Journals" in "Configure site" from administration menu
@@ -123,23 +123,23 @@ Scenario: Newly created user can get a copy of the journal (Bug 1472467)
     And I press "Save"
     And I scroll to the id "main-nav"
     And I follow "Share" in the "Toolbar buttons" property
-    And I select "Registered users" from "accesslist[0][searchtype]"
+    And I select "Registered people" from "accesslist[0][searchtype]"
     And I follow "Advanced options"
     And I set the following fields to these values:
     | Allow copying | 1 |
-    | Copy for new user | 1 |
+    | Copy into new accounts | 1 |
     And I press "Save"
-    # Needs to add new user now to see if they get copy of page
-    And I choose "Add user" in "People" from administration menu
+    # Needs to add new people now to see if they get copy of page
+    And I choose "Add a person" in "People" from administration menu
     And I fill in the following:
     | First name * | Pete |
     | Last name * | Mc |
     | Email * | UserA@example.org |
     | Username * | UserA |
     | Password * | KKJhh$$67686 |
-    And I press "Create user"
-    # Logging in as new user
-    And I follow "Log in as this user"
+    And I press "Create account"
+    # Logging in as new person
+    And I follow "Log in as this person"
     And I follow "log in anyway"
     # Checking I can see the page ...
     And I choose "Pages and collections" in "Create" from main menu

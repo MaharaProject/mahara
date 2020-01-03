@@ -15,7 +15,7 @@ define('INTERNAL', 1);
 define('ADMIN', 1);
 define('MENUITEM', 'configusers/staffusers');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('staffusers', 'admin'));
+define('TITLE', get_string('staffusers1', 'admin'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'staffusers');
@@ -29,7 +29,7 @@ $form = pieform(array(
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
-            'title' => get_string('staffusers', 'admin'),
+            'title' => get_string('staffusers1', 'admin'),
             'defaultvalue' => $staffusers,
             'lefttitle' => get_string('potentialstaff', 'admin'),
             'righttitle' => get_string('currentstaff', 'admin'),
