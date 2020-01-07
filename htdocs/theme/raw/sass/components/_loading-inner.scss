@@ -7,3 +7,12 @@
 .loading-message {
     margin-left: 5px;
 }
+.applying-box {
+    font-size: 1.2em;
+    left: calc(50% - 150px);
+    top: 50%;
+    width: 300px;
+    position: absolute;
+    text-align: center;
+    padding: 10px 0;
+}
