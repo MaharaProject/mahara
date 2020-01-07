@@ -381,3 +381,6 @@ $string['progress_video'] = array(
 );
 $string['anytypeoffile'] = 'File (any type)';
 $string['viruszipfile'] = 'Clam AV has found a file that is infected with a virus. The compressed file has been quarantined and removed from your account.';
+$string['filetypenotallowed'] = 'Files with extension "%s" are not allowed.';
+$string['filetypenotmatchingmimetype'] = 'File extension does not match file mimetype "%s".';
+$string['validfiletypes'] = 'You can upload the following file types:';

@@ -940,3 +940,18 @@ a.online-users {
         font-weight: normal;
     }
 }
+
+.validfiletypes {
+    border: 1px solid $card-border-color;
+    margin: 15px;
+    padding: 5px;
+    background-color: #F8F4F6; /* $theme-accent-color for rangaranga */
+
+    span {
+        padding-right: 3px;
+        display: inline-block;
+        &.label {
+            font-weight: 700;
+        }
+    }
+}

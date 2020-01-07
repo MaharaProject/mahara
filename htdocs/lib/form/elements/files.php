@@ -43,6 +43,12 @@ function pieform_element_files(Pieform $form, $element) {
         $maxfilesize = get_max_upload_size(false);
     }
     $smarty->assign('maxfilesizedesc', get_string('maxuploadsize', 'artefact.file') . ' ' . display_size($maxfilesize));
+    // if validfiletypes set then only accept those types
+    $accepts = get_config('validfiletypes') ? 'accept="' . Pieform::hsc('.' . str_replace(',', ',.', get_config('validfiletypes'))) . '"' : '';
+    // if form element accept is set then only accept those types
+    $accepts = isset($element['accept']) ? 'accept="' . Pieform::hsc($element['accept']) . '"' : $accepts;
+    $smarty->assign('accepts', $accepts);
+
     return $smarty->fetch('form/files.tpl');
 }
 

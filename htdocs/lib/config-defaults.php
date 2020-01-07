@@ -808,3 +808,9 @@ $cfg->sessionhandler = 'file';
  * activites on your install of Mahara. No friends allowed - this is a site-wide setting.
  */
 //$cfg->friendsnotallowed = true;
+
+/**
+ * Restrict the site to only allow the upload of certain file types.
+ * Set as a comma seperated string of valid file extensions
+ */
+//$cfg->validfiletypes = 'doc,docx,gif,jpeg,jpg,m4a,mp3,mp4,pdf,png'; // for example
