@@ -310,6 +310,21 @@ function auth_saml_find_authinstance($saml_attributes) {
         }
         // now we have the default configs
         if ($configs) {
+            // Check there is a roleprefix set to see if they are allowed to try and login
+            // We do this here to avoid making an institution for a user that can't login
+            if (isset($configs['roleprefix']->value)) {
+                $roleallowed = false;
+                foreach ($saml_attributes[$configs['role']->value] as $index => $role) {
+                    if (preg_match('/^' . $configs['roleprefix']->value . '/', $role)) {
+                        $roleallowed = true;
+                    }
+                }
+                if (!$roleallowed) {
+                    log_debug('User authorisation request from SAML failed - no roles prefixed with "' . $configs['roleprefix']->value . '"');
+                    return false;
+                }
+            }
+
             foreach ($saml_attributes[$configs['institutionattribute']->value] as $index => $attr) {
                 // does this institution use a regex match against the institution check value?
                 if ($configvalue = $configs['institutionregex']->value) {

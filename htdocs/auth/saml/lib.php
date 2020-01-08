@@ -94,6 +94,7 @@ class AuthSaml extends Auth {
         $this->config['avatar'] = '';
         $this->config['authloginmsg'] = '';
         $this->config['role'] = '';
+        $this->config['roleprefix'] = '';
         $this->config['rolesiteadmin'] = '';
         $this->config['rolesitestaff'] = '';
         $this->config['roleinstadmin'] = '';
@@ -158,6 +159,7 @@ class AuthSaml extends Auth {
         $studentid       = isset($attributes[$this->config['studentidfield']][0]) ? $attributes[$this->config['studentidfield']][0] : null;
         $avatar          = isset($attributes[$this->config['avatar']][0]) ? $attributes[$this->config['avatar']][0] : null;
         $roles           = isset($attributes[$this->config['role']]) ? $attributes[$this->config['role']] : array();
+        $roleprefix      = isset($this->config['roleprefix']) ? $this->config['roleprefix'] : null;
         $rolesiteadmin   = isset($this->config['rolesiteadmin']) ? array_map('trim', explode(',', $this->config['rolesiteadmin'])) : array();
         $rolesitestaff   = isset($this->config['rolesitestaff']) ? array_map('trim', explode(',', $this->config['rolesitestaff'])) : array();
         $roleinstadmin   = isset($this->config['roleinstadmin']) ? array_map('trim', explode(',', $this->config['roleinstadmin'])) : array();
@@ -166,7 +168,19 @@ class AuthSaml extends Auth {
 
         $create = false;
         $update = false;
-
+        // Check if a user needs a certain role to be allowed to login
+        if (!empty($roleprefix)) {
+            $roleallowed = false;
+            foreach ($roles as $index => $role) {
+                if (preg_match('/^' . $roleprefix . '/', $role)) {
+                    $roleallowed = true;
+                }
+            }
+            if (!$roleallowed) {
+                log_debug('User authorisation request from SAML failed - no roles prefixed with "' . $roleprefix . '"');
+                return false;
+            }
+        }
         // Retrieve a $user object. If that fails, create a blank one.
         try {
             $isremote = $this->config['remoteuser'] ? true : false;
@@ -445,6 +459,7 @@ class PluginAuthSaml extends PluginAuth {
         'firstnamefield'         => '',
         'surnamefield'           => '',
         'role'                   => '',
+        'roleprefix'             => '',
         'rolesiteadmin'          => '',
         'rolesitestaff'          => '',
         'roleinstadmin'          => '',
@@ -1384,6 +1399,12 @@ EOF;
                 'defaultvalue' => self::$default_config['role'],
                 'help' => false,
             ),
+            'roleprefix' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleprefix', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleprefix'],
+                'help' => true,
+            ),
             'rolesiteadmin' => array(
                 'type' => 'text',
                 'title' => get_string('samlfieldforrolesiteadmin', 'auth.saml'),
@@ -1578,6 +1599,7 @@ EOF;
             'emailfield' => $values['emailfield'],
             'studentidfield' => $values['studentidfield'],
             'role' => $values['role'],
+            'roleprefix' => trim($values['roleprefix']),
             'rolesiteadmin' => $values['rolesiteadmin'],
             'rolesitestaff' => $values['rolesitestaff'],
             'roleinstadmin' => $values['roleinstadmin'],
