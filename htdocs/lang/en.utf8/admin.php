@@ -1519,5 +1519,12 @@ $string['userdeletiondeniedsuccessful'] = 'Request denied successfully.';
 $string['userdeletiondeniedunsuccessful'] = 'The attempted user account deletion denial failed.';
 $string['consented'] = 'Consented';
 $string['groupid'] = 'Group ID';
-
 $string['blocktypeupdatedsuccess'] = 'Updated blocktype sort order';
+
+// Change group settings
+$string['groupsettings'] = 'Group settings';
+$string['introtext'] = 'You can change the default settings that are used when a new group is created. Some settings are only available to people who have a certain role. The options that are not available to them are ignored when they create a new group, and the default value is used instead.';
+$string['savedgroupconfigsuccessfully'] = 'Saved default group settings.';
+$string['defaultreset'] = 'Reset to default';
+$string['defaultresetlabel'] = 'Reset';
+$string['defaultresetdesc'] = 'Reset all of the above options to their default values.';

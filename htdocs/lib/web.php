@@ -2408,6 +2408,12 @@ function admin_nav() {
             'path'   => 'managegroups/archives',
             'url'    => 'admin/groups/archives.php',
             'title'  => get_string('archivedsubmissions', 'admin'),
+            'weight' => 27,
+        ),
+        'managegroups/settings' => array(
+            'path'   => 'managegroups/settings',
+            'url'    => 'admin/groups/settings.php',
+            'title'  => get_string('groupsettings', 'admin'),
             'weight' => 25,
         ),
         'managegroups/uploadcsv' => array(

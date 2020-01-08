@@ -395,6 +395,7 @@ $string['allowsubmissions'] = 'Allow submissions';
 $string['allowssubmissionsdescription1'] = "Members can submit pages to the group that are then locked. These pages cannot be edited until they are released by a group tutor or administrator.";
 $string['allowssubmissionsdescription'] = 'Members can submit pages to the group.';
 $string['allowsarchives'] = 'Allow archiving of submissions';
+$string['allowsarchiveserror'] = 'You can only allow archiving if submissions are allowed.';
 $string['allowsarchivesdescription'] = 'Pages / collections are archived as zipped Leap2A files during the submission release process.';
 
 // Group reports
