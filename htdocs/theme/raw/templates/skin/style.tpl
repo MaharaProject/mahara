@@ -32,13 +32,13 @@ body > .main-content > .row {
     color: {$view_text_heading_color};
 }
 .pageheader-content .text-small a {
-    color: {$view_link_normal_color};
-    text-decoration: {$view_link_normal_underline};
+    color: {$view_text_heading_color};
+    text-decoration: underline;
 }
 .pageheader-content .text-small a:hover,
 .pageheader-content .text-small a:active {
-    color: {$view_link_hover_color};
-    text-decoration: {$view_link_hover_underline};
+    color: {$view_text_heading_color};
+    text-decoration: underline;
 }
 
 /* All other custom settings should be scoped to be within .user-page-content */
