@@ -104,6 +104,22 @@ if (!can_view_view($view)) {
     $errorstr = (param_integer('objection', null)) ? get_string('accessdeniedobjection', 'error') : '';
     throw new AccessDeniedException($errorstr);
 }
+
+// If a block was configured & submitted, build the form now so it can
+// be processed without having to render the other blocks.
+if ($blockid = param_integer('blockconfig', 0)) {
+    require_once(get_config('docroot') . 'blocktype/lib.php');
+    $bi = new BlockInstance($blockid);
+    // Check if the block_instance belongs to this view
+    if ($bi->get('view') != $view->get('id')) {
+        throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
+    }
+    // check if the block type has quickedit enabled
+    if (get_field('blocktype_installed', 'quickedit', 'name', $bi->get('blocktype')) > 0) {
+        $bi->build_quickedit_form();
+    }
+}
+
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution, false, false, false);
 // Comment list pagination requires limit/offset params
@@ -272,6 +288,7 @@ $javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js',
         'js/gridstack/gridstack.js',
         'js/gridstack/gridstack.jQueryUI.js',
         'js/gridlayout.js',
+        'js/views.js',
     );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);

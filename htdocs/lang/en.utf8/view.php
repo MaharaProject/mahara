@@ -372,6 +372,8 @@ $string['blocktypecategorydesc.general'] = 'Click for general options';
 $string['blocktypecategorydesc.internal'] = 'Click for personal info options';
 $string['blocktypecategorydesc.blog'] = 'Click for journal options';
 
+$string['drafttextblockdescription'] = 'Save the block as draft if you don\'t want the text to be visible to anybody. Once the text is published, it can\'t be set to draft again.';
+
 $string['notitle'] = 'No title';
 $string['clickformoreinformation1'] = 'Click for more information and to add a comment.';
 $string['detailslinkalt'] = 'Details';
@@ -386,6 +388,7 @@ $string['wrongblocktype'] = 'The ID supplied is not for a valid blocktype.';
 $string['changeviewtheme'] = 'The theme you have chosen for this page is no longer available to you. Please select a different theme.';
 $string['nothemeselected1'] = 'Use institution theme';
 $string['usesitetheme'] = 'Use site theme';
+$string['quickedit'] = 'Quick edit';
 
 // Templates
 $string['Template'] = 'Template';

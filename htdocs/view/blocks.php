@@ -62,7 +62,7 @@ if ($group && !group_within_edit_window($group)) {
 // be processed without having to render the other blocks.
 if ($blockid = param_integer('blockconfig', 0)) {
     // However, if removing a newly placed block, let it fall through to process_changes
-    if (!param_exists('cancel_action_configureblockinstance_id_' . $blockid) || !param_integer('removeoncancel', 0) || param_integer('pieform_jssubmission', 0)) {
+    if (!param_exists('cancel_action_configureblockinstance_id_' . $blockid)) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $bi = new BlockInstance($blockid);
         // Check if the block_instance belongs to this view
@@ -291,6 +291,9 @@ $strings = array(
     'view' => array(
         'addnewblock',
         'moveblock',
+    ),
+    'artefact.blog'=> array(
+        'draft'
     ),
 );
 

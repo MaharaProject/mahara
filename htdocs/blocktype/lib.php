@@ -267,7 +267,8 @@ EOF;
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
         '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->',
-        ' <FIELD NAME="artefactplugin" TYPE="char" LENGTH="255" NOTNULL="false" />',
+        ' <FIELD NAME="artefactplugin" TYPE="char" LENGTH="255" NOTNULL="false" />
+          <FIELD NAME="quickedit" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true"/>',
         str_replace(
             '<!-- PLUGINTYPE_INSTALLED_EXTRAKEYS -->',
             '<KEY NAME="artefactpluginfk" TYPE="foreign" FIELDS="artefactplugin" REFTABLE="artefact_installed" REFFIELDS="name" />',
@@ -1125,7 +1126,12 @@ class BlockInstance {
         $this->commit();
 
         try {
-            $rendered = $this->render_editing(false, false, $form->submitted_by_js());
+            if ($form->get_property('quickedit')) {
+                $rendered = array('html' => $this->render_viewing());
+            }
+            else {
+                $rendered = $this->render_editing(false, false, $form->submitted_by_js());
+            }
         }
         catch (HTMLPurifier_Exception $e) {
             $message = get_string('blockconfigurationrenderingerror', 'view') . ' ' . $e->getMessage();
@@ -1140,6 +1146,10 @@ class BlockInstance {
             'viewid'  => $this->get('view'),
             'goto'    => $redirect,
         );
+
+         if (isset($values['draft']) && $values['draft']) {
+            $result['draftclass'] = true;
+         }
 
         // Render all the other blocks in the torender list
         $result['otherblocks'] = array();
@@ -1262,8 +1272,10 @@ class BlockInstance {
         $smarty->assign('strremovetitletexttooltip', get_string('removeblock2', 'view'));
         $smarty->assign('lockblocks', ($this->get_view()->get('lockblocks') && ($this->get_view()->get('owner') || $this->get_view()->get('group')))); // Only lock blocks for user's portfolio and group pages
 
+        $configdata = $this->get('configdata');
+        $smarty->assign('draft', (isset($configdata['draft']) ? $configdata['draft'] : 0));
+
         if ( $title) {
-            $configdata = $this->get('configdata');
             if (isset($configdata['retractable']) && $configdata['retractable']) {
                 $smarty->assign('retractable', true);
                 if (defined('JSON') || $jsreply) {
@@ -1280,6 +1292,31 @@ class BlockInstance {
     }
 
 
+    public function render_editing_quickedit() {
+        global $USER;
+
+        safe_require('blocktype', $this->get('blocktype'));
+        $this->inedit = true;
+        try {
+            $title = $this->get_title();
+        }
+        catch (NotFoundException $e) {
+            log_debug('Cannot render block title. Original error follows: ' . $e->getMessage());
+            $title = get_string('notitle', 'view');
+        }
+
+        list($content, $js, $css) = array_values($this->build_quickedit_form());
+
+        if (is_array($css)) {
+            $css = array_unique($css);
+        }
+        return array(
+            'html' => $content,
+            'javascript' => $js,
+            'pieformcss' => $css,
+            'title' => $title
+        );
+    }
 
     public function order_artefacts_by_title($ids){
       $result = array();
@@ -1445,8 +1482,13 @@ class BlockInstance {
         if ($blockheader && $this->get('blocktype') == 'gallery') {
             $smarty->assign('justdetails', true);
         }
+        if (get_field('blocktype_installed', 'quickedit', 'name', $this->get('blocktype')) > 0) {
+            $smarty->assign('blockid', $this->get('id'));
+            $smarty->assign('showquickedit', $USER->can_edit_view($this->get_view()));
+        }
 
         $smarty->assign('peerroleonly', $USER->has_peer_role_only($this->get_view()));
+        $smarty->assign('draft', (isset($configdata['draft']) ? $configdata['draft'] : 0));
 
         return $smarty->fetch('view/blocktypecontainerviewing.tpl');
     }
@@ -1468,7 +1510,7 @@ class BlockInstance {
 
         safe_require('blocktype', $this->get('blocktype'));
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'));
+        $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'), $new);
 
         // Block types may specify a method to generate a default title for a block
         $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
@@ -1575,6 +1617,169 @@ class BlockInstance {
             'configdirs' => $configdirs,
             'plugintype' => 'blocktype',
             'pluginname' => $this->get('blocktype'),
+        );
+
+        if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {
+            $form['validate'] = false;
+        }
+
+        $pieform = pieform_instance($form);
+
+        if ($pieform->is_submitted()) {
+            global $SESSION;
+            $SESSION->add_error_msg(get_string('errorprocessingform'));
+        }
+
+        $html = $pieform->build();
+        // We probably need a new version of $pieform->build() that separates out the js
+        // Temporary evil hack:
+        if (preg_match('/<script type="(text|application)\/javascript">(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+            $js = "var pf_{$form['name']} = " . $matches[2] . "pf_{$form['name']}.init();";
+        }
+        else if (preg_match('/<script>(new Pieform\(.*\);)<\/script>/', $html, $matches)) {
+            $js = "var pf_{$form['name']} = " . $matches[1] . "pf_{$form['name']}.init();";
+        }
+        else {
+            $js = '';
+        }
+
+        // We need to load any javascript required for the pieform. We do this
+        // by checking for an api function that has been added especially for
+        // the purpose, but that is not part of Pieforms. Maybe one day later
+        // it will be though
+        foreach ($elements as $key => $element) {
+            $element['name'] = $key;
+            $function = 'pieform_element_' . $element['type'] . '_views_js';
+            if (is_callable($function)) {
+                $js .= call_user_func_array($function, array($pieform, $element));
+            }
+        }
+
+        $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
+        if (is_array($configjs)) {
+            $js .= $this->get_get_javascript_javascript($configjs);
+        }
+        else if (is_string($configjs)) {
+            $js .= $configjs;
+        }
+
+        $js .= "
+            jQuery(function ($) {
+                $('#instconf_title').on('change', function() {
+                    $('#instconf_retractable').prop('disabled', ($('#instconf_title').prop('value') == ''));
+                });
+            });";
+
+        // We need to load any dynamic css required for the pieform. We do this
+        // by checking for an api function that has been added especially for
+        // the purpose, but that is not part of Pieforms. Maybe one day later
+        // it will be though
+        $css = array();
+        foreach ($elements as $key => $element) {
+            $element['name'] = $key;
+            $function = 'pieform_element_' . $element['type'] . '_views_css';
+            if (is_callable($function)) {
+                $css[] = call_user_func_array($function, array($pieform, $element));
+            }
+        }
+
+        $renderedform = array('html' => $html, 'javascript' => $js, 'css' => $css);
+        return $renderedform;
+    }
+
+    public function build_quickedit_form() {
+
+        $notretractable = get_config_plugin('blocktype', $this->get('blocktype'), 'notretractable');
+
+        safe_require('blocktype', $this->get('blocktype'));
+        $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
+        $elements = call_static_method($blocktypeclass, 'instance_quickedit_form', $this, $this->get_view()->get('template'));
+
+        // Block types may specify a method to generate a default title for a block
+        $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
+
+        $title = $this->get('title');
+        $configdata = $this->get('configdata');
+        $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
+        $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
+
+        if (call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+            $titleelement = array(
+                'type' => 'hidden',
+                'value' => $title,
+            );
+        }
+        else {
+            $titleelement = array(
+                'type' => 'text',
+                'title' => get_string('blocktitle', 'view'),
+                'description' => $hasdefault ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
+                'defaultvalue' => $title,
+                'rules' => array('maxlength' => 255),
+                'hidewhenempty' => $hasdefault,
+                'expandtext'    => get_string('setblocktitle'),
+            );
+        }
+        $elements = array_merge(
+            array(
+                'title' => $titleelement,
+                'blockconfig' => array(
+                    'type'  => 'hidden',
+                    'value' => $this->get('id'),
+                ),
+                'id' => array(
+                    'type'  => 'hidden',
+                    'value' => $this->get('view'),
+                ),
+            ),
+            $elements
+        );
+
+        if (!$notretractable) {
+            $elements = array_merge(
+                $elements,
+                array (
+                    'retractable' => array(
+                        'type'         => 'select',
+                        'title'        => get_string('retractable', 'view'),
+                        'description'  => get_string('retractabledescription', 'view'),
+                        'options' => array(
+                                BlockInstance::RETRACTABLE_NO => get_string('no'),
+                                BlockInstance::RETRACTABLE_YES => get_string('yes'),
+                                BlockInstance::RETRACTABLE_RETRACTED => get_string('retractedonload', 'view')
+                        ),
+                        'defaultvalue' => $retractable + $retractedonload,
+                    ),
+                )
+            );
+        }
+
+        // Add submit/cancel buttons
+        $elements['action_configureblockinstance_id_' . $this->get('id')] = array(
+            'type' => 'submitcancel',
+            'class' => 'btn-secondary',
+            'value' => array(get_string('save'), get_string('cancel')),
+            'goto' => View::make_base_url(),
+        );
+
+        $configdirs = array(get_config('libroot') . 'form/');
+        if ($this->get('artefactplugin')) {
+            $configdirs[] = get_config('docroot') . 'artefact/' . $this->get('artefactplugin') . '/form/';
+        }
+
+        $form = array(
+            'name' => 'instconf',
+            'renderer' => 'div',
+            'validatecallback' => array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_validate'),
+            'successcallback'  => array($this, 'instance_config_store'),
+            'jsform' => true,
+            'jssuccesscallback' => 'blockConfigSuccess',
+            'jserrorcallback'   => 'blockConfigError',
+            'elements' => $elements,
+            'configdirs' => $configdirs,
+            'plugintype' => 'blocktype',
+            'pluginname' => $this->get('blocktype'),
+            'quickedit' => true,
         );
 
         if (param_variable('action_acsearch_id_' . $this->get('id'), false)) {

@@ -62,8 +62,13 @@
                     data.data.javascript += $(this).prop('innerHTML');
                 }
             });
-            var newblock = temp.find('div.blockinstance');
-
+            var newblock = temp.find('div.gridstackblock');
+            // check if block has header link for quick edit
+            var oldheader = oldblock.find('.block-header')
+            if (oldheader.length) {
+                // add the header to the new block
+                newblock.prepend(oldheader);
+            }
             $('.blockinstance-header', newblock).on("mousedown", function() {
                     $('.js-col-row .column-content').each(function() {
                         $(this).addClass('block-drop-on', 100);
@@ -78,8 +83,15 @@
 
             swapNodes(oldblock.get()[0], newblock.get()[0]); // using DOM objects, not jQuery objects so we needn't worry about IDs
 
+            if (typeof(data.draftclass) != 'undefined' && data.draftclass && !$(newblock).closest(".grid-stack-item-content").hasClass('draft')) {
+                $(newblock).closest(".grid-stack-item-content").addClass('draft');
+            }
+            else {
+                $(newblock).closest(".grid-stack-item-content").removeClass('draft');
+            }
+
             var embedjs = data.data.javascript;
-            if (embedjs.indexOf("AC_Voki_Embed") !== -1) {
+            if (typeof(embedjs)!='undefined' && embedjs.indexOf("AC_Voki_Embed") !== -1) {
                 var paramsstr = embedjs.substring(embedjs.lastIndexOf("(")+1,embedjs.lastIndexOf(")"));
                 var params = paramsstr.split(',');
                 if (params.length == 7 ) { // old voki embed code has only 7 parameters

@@ -41,6 +41,9 @@
         transition-duration: 0.3s;
         margin-top: 5px;
     }
+    &.block-config-modal {
+        margin-left: 5px;
+    }
 }
 
 tr[data-toggle="collapse"],

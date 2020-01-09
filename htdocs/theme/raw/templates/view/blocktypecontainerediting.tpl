@@ -27,7 +27,7 @@
         </span>
     </h3>
     <span class="sr-only">{str tag=blocktypeis section=view arg1=$blocktype}</span>
-    <div class="block blockinstance-content js-blockinstance-content">
+    <div class="block blockinstance-content js-blockinstance-content {if $draft}draft {/if}">
         {$content|safe}
     </div>
 </div>
