@@ -158,13 +158,19 @@ var FileBrowser = (function($) {
         self.submitform();
 
         // $(self.id + '_userfile').value = ''; // Won't work in IE
+        var accept = $('#' + self.id + '_userfile').prop('accept');
+        if (typeof accept === typeof undefined || accept === false) {
+            accept = '*';
+        }
+
         $('#' + self.id + '_userfile_container').empty().append(
             $('<input>', {
                 'type':'file',
                 'class':'file',
                 'id':self.id+'_userfile',
                 'name':'userfile[]',
-                'multiple':''
+                'multiple':'',
+                'accept': accept,
             })
         );
         $('#' + self.id + '_userfile').off('change');
