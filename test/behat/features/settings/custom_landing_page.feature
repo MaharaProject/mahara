@@ -1,8 +1,8 @@
 @javascript @core @core_account @core_login
-Feature: Setting a custom landing page on login
-In order to show a page other than dashboard on login
+Feature: Set a custom landing page on login
+In order to show a page other than the default dashboard on person login
 As an admin
-I can set the custom landing page
+I can set the custom landing page (uses forum topic page)
 As a user
 I can see custom page on login
 
