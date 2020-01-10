@@ -969,6 +969,17 @@ class ViewLimitExceededException extends UserException {}
 class UserNotFoundException extends NotFoundException {}
 
 /**
+ * Exception - user not found while doing SAML authentication
+ */
+class SamlUserNotFoundException extends UserNotFoundException {
+    public function strings() {
+        return array_merge(parent::strings(),
+            array('message' => get_string('invaliduser', 'error')),
+            array('title'   => get_string('unabletosigninviasso', 'auth')));
+    }
+}
+
+/**
  * Exception - user not found while doing XMLRPC authentication
  */
 class XmlrpcUserNotFoundException extends UserNotFoundException {
