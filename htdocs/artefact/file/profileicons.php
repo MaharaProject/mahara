@@ -19,7 +19,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('profileicons', 'artefact.file'));
 
 $settingsform = pieform_instance(array(
-    'name'      => 'settings',
+    'name'      => 'profileiconsettings',
     'renderer'  => 'oneline',
     'autofocus' => false,
     'presubmitcallback' => '',
@@ -79,9 +79,9 @@ $profileiconappearsinposts = json_encode(get_string('profileiconappearsinposts',
 $confirmdeletefile = json_encode(get_string('confirmdeletefile', 'artefact.file'));
 
 $IJS = <<<EOF
-formchangemanager.add('settings');
+formchangemanager.add('profileiconsettings');
 
-var profileiconschecker = formchangemanager.find('settings');
+var profileiconschecker = formchangemanager.find('profileiconsettings');
 
 var table = new TableRenderer(
     'profileicons',
@@ -156,7 +156,7 @@ function postSubmit(form, data) {
 }
 
 jQuery(function($) {
-    $('#settings_delete').on('click', function(e) {
+    $('#profileiconsettings_delete').on('click', function(e) {
         profileiconschecker.set(FORM_SUBMITTED);
 
         // Find form
@@ -259,7 +259,7 @@ function upload_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('profileiconaddedtoimagesfolder', 'artefact.file', get_string('imagesdir', 'artefact.file')));
 }
 
-function settings_submit_default(Pieform $form, $values) {
+function profileiconsettings_submit_default(Pieform $form, $values) {
     global $USER, $SESSION;
 
     $default = param_integer('d');
@@ -280,7 +280,7 @@ function settings_submit_default(Pieform $form, $values) {
     redirect('/artefact/file/profileicons.php');
 }
 
-function settings_submit_delete(Pieform $form, $values) {
+function profileiconsettings_submit_delete(Pieform $form, $values) {
     require_once(get_config('docroot') . 'artefact/lib.php');
     require_once('file.php');
     global $USER, $SESSION;

@@ -28,7 +28,7 @@
             </tfoot>
         </table>
     </div>
-    <input type="hidden" name="pieform_settings" value="">
+    <input type="hidden" name="pieform_profileiconsettings" value="">
     <input type="hidden" name="sesskey" value="{$USER->get('sesskey')}">
     </form>
 
