@@ -838,6 +838,8 @@ $cfg->saml_log_attributes = false;
  * and be mapped via the SAML instance setting 'samlfieldfororganisationname'.
  * To make a new institution you need to define what institution to fetch an existing SAML
  * instance from to be used as the default 'template' SAML settings.
+ * The 'saml_create_institution_default' can also be used as a 'parent' auth to update the
+ * role* values for all the other SAML configs that have the same 'institutionidpentityid' value
  */
 //$cfg->saml_create_institution=true;
 //$cfg->saml_create_institution_default = 'mahara';

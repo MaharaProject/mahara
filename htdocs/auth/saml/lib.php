@@ -1502,20 +1502,35 @@ EOF;
                 'defaultvalue' => is_isolated() ? false : self::$default_config['roleautogroupsall'],
                 'description' => get_string('samlfieldforautogroupsalldescription', 'auth.saml'),
                 'disabled' => is_isolated(),
-            ),
-            'authloginmsg' => array(
-                'type'         => 'wysiwyg',
-                'rows'         => 10,
-                'cols'         => 50,
-                'title'        => get_string('samlfieldauthloginmsg', 'auth.saml'),
-                'description'  => get_string('authloginmsgnoparent', 'auth'),
-                'defaultvalue' => self::$default_config['authloginmsg'],
-                'help'         => true,
-                'class'        => 'under-label-help',
-                'rules'       => array(
-                    'maxlength' => 1000000
-                )
-            ),
+            )
+        );
+        if (get_config('saml_create_institution_default')) {
+            // Show the copy roles option if this is a 'default' one
+            foreach ($defaults = explode(',', get_config('saml_create_institution_default')) as $default) {
+                if ($institution == $default) {
+                    $elements['rolepopulate'] = array(
+                        'type'         => 'switchbox',
+                        'title' => get_string('populaterolestoallsaml', 'auth.saml'),
+                        'defaultvalue' => false,
+                        'description' => get_string('populaterolestoallsamldescription', 'auth.saml'),
+                        'help'  => false,
+                    );
+                    break;
+                }
+            }
+        }
+        $elements['authloginmsg'] = array(
+            'type'         => 'wysiwyg',
+            'rows'         => 10,
+            'cols'         => 50,
+            'title'        => get_string('samlfieldauthloginmsg', 'auth.saml'),
+            'description'  => get_string('authloginmsgnoparent', 'auth'),
+            'defaultvalue' => self::$default_config['authloginmsg'],
+            'help'         => true,
+            'class'        => 'under-label-help',
+            'rules'       => array(
+                'maxlength' => 1000000
+            )
         );
 
         return array(
@@ -1691,7 +1706,19 @@ EOF;
             'metarefresh_metadata_url' => $values['metarefresh_metadata_url'],
         );
 
-        foreach(self::$default_config as $field => $value) {
+        $auth_children = false;
+        if (get_config('saml_create_institution_default') && !empty($values['rolepopulate'])) {
+            // Allow role changes to populate out to 'child' saml instances if this is a 'default' one
+            foreach ($defaults = explode(',', get_config('saml_create_institution_default')) as $default) {
+                if ($values['institution'] == $default) {
+                    // Find all the instances with same institutionidpentityid
+                    $auth_children = get_column('auth_instance_config', 'instance', 'field', 'institutionidpentityid', 'value', $entityid);
+                    break;
+                }
+            }
+        }
+
+        foreach (self::$default_config as $field => $value) {
             $record = new stdClass();
             $record->instance = $values['instance'];
             $record->field    = $field;
@@ -1702,6 +1729,18 @@ EOF;
             }
             else {
                 update_record('auth_instance_config', $record, array('instance' => $values['instance'], 'field' => $field));
+            }
+
+            if ($auth_children && preg_match('/^role/', $field)) {
+                // Populate the role changes to the other SAML instances
+                foreach ($auth_children as $child) {
+                    $dbwhere = new StdClass();
+                    $dbwhere->field = $field;
+                    $dbwhere->instance = $child;
+                    $dbdata = clone $dbwhere;
+                    $dbdata->value = $value;
+                    ensure_record_exists('auth_instance_config', $dbwhere, $dbdata);
+                }
             }
         }
 
