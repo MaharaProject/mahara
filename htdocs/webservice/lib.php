@@ -1612,8 +1612,11 @@ function webservice_load_services_file($component) {
             true,
             array('services', 'functions')
         );
-        $services = $file['services'];
-        $functions = $file['functions'];
+        $services = $functions = null;
+        if ($file) {
+            $services = $file['services'];
+            $functions = $file['functions'];
+        }
     }
     else {
         // Not a plugin, must handle manually

@@ -26,7 +26,7 @@
                 <h2>{str tag="siteaccountsettings" section="admin"}</h2>
                 <p class="errmsg">{str tag="usereditwarning1" section="admin"}</p>
                 {$siteform|safe}
-                {if ($institutions)}
+                {if $institutions > 1}
                    {$institutionform|safe}
                 {/if}
             </div>

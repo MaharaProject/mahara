@@ -93,7 +93,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
             'legend' => get_string('messagetypes', 'blocktype.inbox'),
             'elements' => array(),
         );
-        foreach($types as $type) {
+        foreach ($types as $type) {
             if (!empty($type->plugintype)) {
                 $type->title = get_string('type' . $type->name, $type->plugintype . '.' . $type->pluginname);
             }
@@ -102,19 +102,21 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
             }
             $type->class = '';
         }
-        usort($types, function ($a, $b) { return strnatcasecmp($a->title, $b->title); });
+        usort($types, function ($a, $b) {
+            return strnatcasecmp($a->title, $b->title);
+        });
         if ($USER->get('admin')) {
             $types[] = (object)array('name' => 'adminmessages',
-                                     'title' => get_string('typeadminmessages', 'activity'),
-                                     'class' => 'field-label-bold');
+                                    'title' => get_string('typeadminmessages', 'activity'),
+                                    'class' => 'field-label-bold');
         }
-        foreach($types as $type) {
+        foreach ($types as $type) {
             $elements['types']['elements'][$type->name] = array(
-                'type' => 'switchbox',
-                'title' => $type->title,
-                'class' => $type->class,
-                'defaultvalue' => isset($configdata[$type->name]) ? $configdata[$type->name] : 0,
-            );
+            'type' => 'switchbox',
+            'title' => $type->title,
+            'class' => $type->class,
+            'defaultvalue' => isset($configdata[$type->name]) ? $configdata[$type->name] : 0,
+        );
         }
         $elements['maxitems'] = array(
             'type' => 'text',

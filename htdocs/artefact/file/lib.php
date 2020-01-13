@@ -249,13 +249,15 @@ class PluginArtefactFile extends PluginArtefact {
 
         $mimetypes = array();
 
-        foreach ($allmimetypes as $r) {
-            if (is_null($description) || in_array($r->description, $description)) {
-                if ($getrecords) {
-                    $mimetypes[$r->mimetype] = $r;
-                }
-                else {
-                    $mimetypes[] = $r->mimetype;
+        if ($allmimetypes) {
+            foreach ($allmimetypes as $r) {
+                if (is_null($description) || in_array($r->description, $description)) {
+                    if ($getrecords) {
+                        $mimetypes[$r->mimetype] = $r;
+                    }
+                    else {
+                        $mimetypes[] = $r->mimetype;
+                    }
                 }
             }
         }
@@ -861,6 +863,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
             $ownersql = artefact_owner_sql($artefact->owner, $artefact->group, $artefact->institution);
             $folderdata[$ownerkey] = new stdClass();
             $folderdata[$ownerkey]->data = get_records_select_assoc('artefact', "artefacttype='folder' AND $ownersql", array(), '', 'id, title, parent');
+            if (!$folderdata[$ownerkey]->data) {
+                $folderdata[$ownerkey]->data = array();
+            }
             if ($artefact->group) {
                 $folderdata[$ownerkey]->ownername = get_field('group', 'name', 'id', $artefact->group) . ':';
             }
@@ -2895,8 +2900,9 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
         if ($this->id) {
             $descriptions = self::archive_file_descriptions();
-            $validtypes = self::archive_mime_types();
-            $this->archivetype = $descriptions[$validtypes[$this->filetype]->description];
+            if ($validtypes = self::archive_mime_types()) {
+                $this->archivetype = $descriptions[$validtypes[$this->filetype]->description];
+            }
         }
     }
 
@@ -3235,8 +3241,9 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
 
         if ($this->id) {
             $descriptions = self::video_file_descriptions();
-            $validtypes = self::video_mime_types();
-            $this->videotype = $descriptions[$validtypes[$this->filetype]->description];
+            if ($validtypes = self::video_mime_types()) {
+                $this->videotype = $descriptions[$validtypes[$this->filetype]->description];
+            }
         }
     }
 

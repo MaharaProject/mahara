@@ -118,8 +118,10 @@ class Sitemap {
                 // build a list of forums in each public group
                 $forums = get_forum_list($group->id);
                 $forumids = array();
-                foreach ($forums as $forum) {
-                    $forumids[] = $forum->id;
+                if ($forums) {
+                    foreach ($forums as $forum) {
+                        $forumids[] = $forum->id;
+                    }
                 }
 
                 // active topics within the specified forums (public only)

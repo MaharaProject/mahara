@@ -2149,7 +2149,7 @@ function auth_ldap_sync_users(
         var_dump($auths);
     }
 
-    if (count($auths) == 0) {
+    if (!$auths) {
         log_warn(get_string('nomatchingauths', 'auth.ldap'));
         return false;
     }
@@ -2234,7 +2234,7 @@ function auth_ldap_sync_groups(
         var_dump($auths);
     }
 
-    if (count($auths) == 0) {
+    if (!$auths) {
         log_warn(get_string('nomatchingauths', 'auth.ldap'));
         return false;
     }

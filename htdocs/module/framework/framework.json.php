@@ -70,18 +70,21 @@ $evidencestatuses = param_variable('evidencestatuses', null);
 //need to delete records if edit is true and there is an id missing.
 //so get the ids expected from the db.
 if ($fw_to_edit) {
-    $std_ids = get_records_array('framework_standard','framework', $fw_to_edit, '', 'id');
     $db_sids = array();
-    foreach ($std_ids as $sid) {
-        array_push($db_sids, $sid->id);
-    }
     $db_seids = array();
+    $db_stdels = array();
+
+    if ($std_ids = get_records_array('framework_standard', 'framework', $fw_to_edit, '', 'id')) {
+        foreach ($std_ids as $sid) {
+            array_push($db_sids, $sid->id);
+        }
+    }
+
     foreach($db_sids as $sid) {
         $stdel_ids = get_records_array('framework_standard_element', 'standard', $sid, '', 'id');
         array_push($db_seids, $stdel_ids);
     }
 
-    $db_stdels = array();
     foreach ($db_seids as $seids) {
         if ($seids != null) {
             foreach ($seids as $seid) {

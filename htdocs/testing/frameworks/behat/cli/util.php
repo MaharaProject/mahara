@@ -141,6 +141,7 @@ try {
         }
         //now composer is updated, apply custom styling to the html report
         set_report_styling();
+        reverse_implode();//interim fix to overwrite mink
 
         BehatConfigManager::update_config_file();
         // Other possible actions we may need to take.

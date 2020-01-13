@@ -132,7 +132,7 @@ function site_statistics($full=false) {
             GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
             ORDER BY friends DESC
             LIMIT 1", array());
-        $maxfriends = $maxfriends[0];
+        $maxfriends = !empty($maxfriends[0]) ? $maxfriends[0] : false;
         $meanfriends = 2 * count_records('usr_friend') / $data['users'];
         if ($maxfriends) {
             $data['strmaxfriends'] = get_string(
@@ -154,7 +154,7 @@ function site_statistics($full=false) {
             GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
             ORDER BY views DESC
             LIMIT 1", array());
-        $maxviews = $maxviews[0];
+        $maxviews = !empty($maxviews[0]) ? $maxviews[0] : false;
         if ($maxviews) {
             $data['strmaxviews'] = get_string(
                 'statsmaxviews1',
@@ -175,7 +175,7 @@ function site_statistics($full=false) {
             GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
             ORDER BY groupcount DESC
             LIMIT 1", array());
-        $maxgroups = $maxgroups[0];
+        $maxgroups = !empty($maxgroups[0]) ? $maxgroups[0] : false;
         if ($maxgroups) {
             $data['strmaxgroups'] = get_string(
                 'statsmaxgroups1',
@@ -195,7 +195,7 @@ function site_statistics($full=false) {
             WHERE deleted = 0 AND id > 0
             ORDER BY quotaused DESC
             LIMIT 1", array());
-        $maxquotaused = $maxquotaused[0];
+        $maxquotaused = !empty($maxquotaused[0]) ? $maxquotaused[0] : false;
         $data['strmaxquotaused'] = get_string(
             'statsmaxquotaused1',
             'admin',
@@ -375,7 +375,7 @@ function institution_statistics($institution, $full=false) {
                 GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
                 ORDER BY friends DESC
                 LIMIT 1", $data['memberssqlparams']);
-            $maxfriends = $maxfriends[0];
+            $maxfriends = !empty($maxfriends[0]) ? $maxfriends[0] : false;
             $meanfriends = count_records_sql('SELECT COUNT(*) FROM
                         (SELECT * FROM {usr_friend}
                             WHERE usr1 IN (' . $data['memberssql'] . ')
@@ -403,7 +403,7 @@ function institution_statistics($institution, $full=false) {
                 GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
                 ORDER BY views DESC
                 LIMIT 1", $data['memberssqlparams']);
-            $maxviews = $maxviews[0];
+            $maxviews = !empty($maxviews[0]) ? $maxviews[0] : false;
             if ($maxviews) {
                 $data['strmaxviews'] = get_string(
                     'statsmaxviews1',
@@ -424,7 +424,7 @@ function institution_statistics($institution, $full=false) {
                 GROUP BY u.id, u.firstname, u.lastname, u.preferredname, u.urlid
                 ORDER BY groupcount DESC
                 LIMIT 1", $data['memberssqlparams']);
-            $maxgroups = $maxgroups[0];
+            $maxgroups = !empty($maxgroups[0]) ? $maxgroups[0] : false;
             if ($maxgroups) {
                 $data['strmaxgroups'] = get_string(
                     'statsmaxgroups1',
@@ -444,7 +444,7 @@ function institution_statistics($institution, $full=false) {
                 WHERE id IN (" . $data['memberssql'] . ")
                 ORDER BY quotaused DESC
                 LIMIT 1", $data['memberssqlparams']);
-            $maxquotaused = $maxquotaused[0];
+            $maxquotaused = !empty($maxquotaused[0]) ? $maxquotaused[0] : false;
             $avgquota = get_field_sql("
                 SELECT AVG(quotaused)
                 FROM {usr}
@@ -3596,15 +3596,16 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
     $data = get_records_sql_array($sql, $where);
     $daterange = array_map(function ($obj) { return $obj->date; }, $data);
     $result['settings']['start'] = ($start) ? $start : min($daterange);
-
-    foreach ($data as $item) {
-        $jsondata = json_decode($item->data);
-        $item->reason = $jsondata->reason;
-        $item->userurl = profile_url($item->user);
-        $item->user = display_name($item->user);
-        $item->masqueraderurl = profile_url($item->masquerader);
-        $item->masquerader = display_name($item->masquerader);
-        $item->date = format_date(strtotime($item->date));
+    if ($data) {
+        foreach ($data as $item) {
+            $jsondata = json_decode($item->data);
+            $item->reason = $jsondata->reason;
+            $item->userurl = profile_url($item->user);
+            $item->user = display_name($item->user);
+            $item->masqueraderurl = profile_url($item->masquerader);
+            $item->masquerader = display_name($item->masquerader);
+            $item->date = format_date(strtotime($item->date));
+        }
     }
 
     if (!empty($extra['csvdownload'])) {

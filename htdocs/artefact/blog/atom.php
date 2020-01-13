@@ -82,7 +82,7 @@ else {
         LIMIT 1;",
         array($artefactid));
 
-    if ($owner[0]->profileicon) {
+    if ($owner && $owner[0]->profileicon) {
         $image = get_config('wwwroot') . 'thumb.php?type=profileiconbyid&maxsize=100&id='
             . $owner[0]->profileicon;
     }

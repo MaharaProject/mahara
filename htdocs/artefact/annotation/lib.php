@@ -545,9 +545,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 INNER JOIN {artefact_annotation_feedback} f on a.annotation = f.onannotation
                 WHERE a.artefact = ?";
 
-        $artefacts = get_records_sql_assoc($sql, array($artefactid));
-        $ids = array_keys($artefacts);
-        self::bulk_delete($ids);
+        if ($artefacts = get_records_sql_assoc($sql, array($artefactid))) {
+            $ids = array_keys($artefacts);
+            self::bulk_delete($ids);
+        }
     }
 
     /**
@@ -754,8 +755,9 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     LEFT JOIN {usr_institution} uif ON uf.id = uif.usr
                     WHERE ' . $where . '
                     ORDER BY ' . $sortorder;
-            $annotationfeedback = get_records_sql_assoc($sql, array(), $offset, $limit);
-            $result->data = array_values($annotationfeedback);
+            if ($annotationfeedback = get_records_sql_assoc($sql, array(), $offset, $limit)) {
+                $result->data = array_values($annotationfeedback);
+            }
         }
 
         $result->position = 'blockinstance';
@@ -932,7 +934,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             $where = 'an.view = ?';
             $values = array($onview);
         }
-        $newest = get_records_sql_array('
+        if ($newest = get_records_sql_array('
             SELECT af.id, af.ctime
             FROM {artefact} a
             INNER JOIN {artefact_annotation} an ON a.id = an.annotation
@@ -942,8 +944,9 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             AND   a.id = ' . (int) $annotation . '
             AND   ' . $where . '
             ORDER BY af.ctime DESC', $values, 0, 1
-        );
-        return $newest[0];
+        )) {
+            return $newest[0];
+        }
     }
 
     /**

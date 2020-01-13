@@ -480,7 +480,9 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     WHERE ' . $where . '
                     AND pa.block = ?
                     ORDER BY ' . $orderby, $values, $offset, $limit);
-                $result->data = array_values($assessments);
+                if ($assessments) {
+                    $result->data = array_values($assessments);
+                }
             }
         }
 
@@ -579,14 +581,15 @@ class ArtefactTypePeerassessment extends ArtefactType {
     }
 
     public static function last_public_assessment($view=null) {
-        $newest = get_records_sql_array('
+        if ($newest = get_records_sql_array('
             SELECT a.id, a.ctime
             FROM {artefact} a
             INNER JOIN {artefact_peer_assessment} pa ON a.id = pa.assessment
             WHERE pa.private = 0 AND pa.view = ?
             ORDER BY a.ctime DESC', array($view), 0, 1
-        );
-        return $newest[0];
+        )) {
+            return $newest[0];
+        }
     }
 
     public static function build_html(&$data, $versioning=null) {

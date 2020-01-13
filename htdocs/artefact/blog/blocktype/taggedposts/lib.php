@@ -255,8 +255,10 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
                 // get all tags for this post
                 $taglist = get_records_sql_array("SELECT tag FROM {tag} WHERE resourcetype = 'artefact' AND resourceid = ? ORDER BY tag DESC", array($result->id));
-                foreach ($taglist as $t) {
-                    $result->taglist[] = $t->tag;
+                if ($taglist) {
+                    foreach ($taglist as $t) {
+                        $result->taglist[] = $t->tag;
+                    }
                 }
                 if ($full) {
                     $rendered = $artefact->render_self(array('viewid' => $view, 'details' => true, 'blockid' => $instance->get('id')));
@@ -308,7 +310,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                     LEFT JOIN {institution} i ON i.name = t.ownerid
                     WHERE t.id = ?", array(substr($tag, 6, 5))
                 );
-                $tag = $tags[0]->tag;
+                $tag = $tags ? $tags[0]->tag : false;
             }
             $tagstr .= ($USER->id != $owner) ? '"<a href="' . get_config('wwwroot') . 'relatedtags.php?tag=' . urlencode($tag) . '&view=' . $view . '">' . hsc($tag) . '</a>"' : '"<a href="' . get_config('wwwroot') . 'tags.php?tag=' . urlencode($tag) . '&sort=name&type=text">' . hsc($tag) . '</a>"';
         }
