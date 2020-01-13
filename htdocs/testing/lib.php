@@ -237,3 +237,15 @@ function set_report_styling() {
         copy($bootstrap_js, $report_js . "/bootstrap.min.js");
     }
 }
+
+//remove this when Mink is updated so that it no longer has a PHP7.4
+//incompatible implode(parts, glue) call
+function reverse_implode() {
+    $old_implode = 'implode($parts, \',\')';
+    $new_implode = 'implode(\',\', $parts)';
+
+    $escaper_path = get_mahararoot_dir() . '/external/vendor/behat/mink/src/Selector/Xpath/Escaper.php';
+    $escaper_old = file_get_contents($escaper_path);
+    $escaper = str_replace($old_implode, $new_implode, $escaper_old);
+    file_put_contents($escaper_path, $escaper);
+}

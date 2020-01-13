@@ -586,7 +586,9 @@ EOF;
             // elsewhere that allowed this to happen
             $forum->weight = $weights[$forum->id]->value;
         }
-        usort($forums, function($a, $b) { return $a->weight > $b->weight; });
+        usort($forums, function ($a, $b) {
+            return $a->weight > $b->weight;
+        });
         return $forums;
     }
 

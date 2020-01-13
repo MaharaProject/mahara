@@ -25,7 +25,9 @@ if (!can_view_view($bi->get('view'))) {
 $userid = $bi->get_view()->get('owner');
 
 $friends = get_friends($userid, $limit, $offset);
-PluginBlocktypeMyfriends::build_myfriends_html($friends, $userid, $bi);
+if ($friends) {
+    PluginBlocktypeMyfriends::build_myfriends_html($friends, $userid, $bi);
+}
 unset($friends['data']);
 
 json_reply(false, array('data' => $friends));

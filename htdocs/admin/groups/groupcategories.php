@@ -56,7 +56,7 @@ foreach ($argumentstrings as $string) {
 }
 
 $thead = array(json_encode(get_string('name', 'admin')), '""');
-$thead = implode($thead, ",");
+$thead = implode(",", $thead);
 
 $ijs = <<< EOJS
 jQuery(function($) {

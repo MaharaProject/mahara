@@ -2548,7 +2548,7 @@ function group_get_extended_data($data) {
                     FROM {group} g
                     INNER JOIN {group_member_request} gmr ON (gmr.group = g.id AND gmr.member = ?)
                 ) t ON t.id = g.id
-                WHERE g.id IN (" . implode($groupids, ',') . ")
+                WHERE g.id IN (" . implode(',', $groupids) . ")
                 GROUP BY g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
                 g.hidemembers, g.hidemembersfrommembers, g.urlid, t.role, t.membershiptype, g.editwindowstart, g.editwindowend
             ) g1

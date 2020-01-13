@@ -120,62 +120,68 @@ function find_remote_user($username, $wwwroot) {
 
     $candidates = array();
 
-    foreach ($authinstances as $authinstance) {
-        if ($authinstance->authname != 'xmlrpc') {
-            continue;
-        }
-        try {
-            $user = new User;
-            $userfound = false;
-            if (get_config('usersuniquebyusername')) {
-                // When turned on, this setting means that it doesn't matter
-                // which other application the user SSOs from, they will be
-                // given the same account in Mahara.
-                //
-                // This setting is one that has security implications unless
-                // only turned on by people who know what they're doing. In
-                // particular, every system linked to Mahara should be making
-                // sure that same username == same person.  This happens for
-                // example if two Moodles are using the same LDAP server for
-                // authentication.
-                //
-                // If this setting is on, it must NOT be possible to self
-                // register on the site for ANY institution - otherwise users
-                // could simply pick usernames of people's accounts they wished
-                // to steal.
-                if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
-                    log_warn(get_string('warninstitutionregistration', 'auth') . ' ' .
-                             get_string('warninstitutionregistrationinstitutions',
-                                 'auth',
-                                 count($institutions),
-                                 join("\n  ", $institutions)));
-                    return false;
+    if ($authinstances) {
+        foreach ($authinstances as $authinstance) {
+            if ($authinstance->authname != 'xmlrpc') {
+                continue;
+            }
+            try {
+                $user = new User;
+                $userfound = false;
+                if (get_config('usersuniquebyusername')) {
+                    // When turned on, this setting means that it doesn't matter
+                    // which other application the user SSOs from, they will be
+                    // given the same account in Mahara.
+                    //
+                    // This setting is one that has security implications unless
+                    // only turned on by people who know what they're doing. In
+                    // particular, every system linked to Mahara should be making
+                    // sure that same username == same person.  This happens for
+                    // example if two Moodles are using the same LDAP server for
+                    // authentication.
+                    //
+                    // If this setting is on, it must NOT be possible to self
+                    // register on the site for ANY institution - otherwise users
+                    // could simply pick usernames of people's accounts they wished
+                    // to steal.
+                    if ($institutions = get_column('institution', 'name', 'registerallowed', '1')) {
+                        log_warn(get_string('warninstitutionregistration', 'auth') . ' ' .
+                                get_string(
+                                    'warninstitutionregistrationinstitutions',
+                                    'auth',
+                                    count($institutions),
+                                    join("\n  ", $institutions)
+                                ));
+                        return false;
+                    }
+
+                    if (!get_config('usersallowedmultipleinstitutions')) {
+                        log_warn(get_string('warnmultiinstitutionsoff', 'auth'));
+                        return false;
+                    }
+
+                    try {
+                        $user->find_by_username($username);
+                        // It came back. We found a user.
+                        $userfound = true;
+                    }
+                    catch (Exception $e) {
+                        // $user->find_by_username will throw an error if a user was not found.
+                        // We can ignore it and try to find the user by the authinstance below.
+                        continue;
+                    }
                 }
 
-                if (!get_config('usersallowedmultipleinstitutions')) {
-                    log_warn(get_string('warnmultiinstitutionsoff', 'auth'));
-                    return false;
+                if ($userfound == false) {
+                    // Try finding user by the authinstance.
+                    $user->find_by_instanceid_username($authinstance->id, $username, true);
                 }
-
-                try {
-                    $user->find_by_username($username);
-                    // It came back. We found a user.
-                    $userfound = true;
-                }
-                catch (Exception $e) {
-                    // $user->find_by_username will throw an error if a user was not found.
-                    // We can ignore it and try to find the user by the authinstance below.
-                    continue;
-                }
+                $candidates[$authinstance->id] = $user;
             }
-            if ($userfound == false) {
-                // Try finding user by the authinstance.
-                $user->find_by_instanceid_username($authinstance->id, $username, true);
+            catch (Exception $e) {
+                // we don't care
+                continue;
             }
-            $candidates[$authinstance->id] = $user;
-        } catch (Exception $e) {
-            // we don't care
-            continue;
         }
     }
 
@@ -712,11 +718,11 @@ function get_notifications_for_user($username, $notificationtypes, $maxitems) {
     $params = array($USER->get('id'));
     $params = array_merge($params, $notificationtypes);
     $params[] = $maxitems;
-    $records = get_records_sql_array($sql, $params);
-
     $data = new stdClass();
-    $data->data = $records;
-    $data->count = count($records);
+    if ($records = get_records_sql_array($sql, $params)) {
+        $data->data = $records;
+        $data->count = count($records);
+    }
     $data->displayname = display_name($user);
     return $data;
 }

@@ -1651,15 +1651,14 @@ EOF;
                 if ($rawxml != $values['institutionidp']) {
                     $changedxml = true;
                     // find out which institutions are using it
-                    $duplicates = get_records_sql_array("
+                    if ($duplicates = get_records_sql_array("
                         SELECT COUNT(aic.instance) AS instances
                         FROM {auth_instance_config} aic
                         JOIN {auth_instance} ai ON (ai.authname = 'saml' AND ai.id = aic.instance)
                         WHERE aic.field = 'institutionidpentityid' AND aic.value = ? AND aic.instance != ?",
-                        array($values['institutionidpentityid'], $values['instance']));
-                    if ($duplicates[0]->instances > 0) {
-                        $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
-                    }
+                        array($values['institutionidpentityid'], $values['instance'])) && $duplicates[0]->instances > 0) {
+                            $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
+                        }
                     else {
                         $SESSION->add_ok_msg(get_string('idpentityupdated', 'auth.saml'));
                     }
@@ -1893,10 +1892,12 @@ class Metarefresh {
             }
             return array();//could not get any valid urls to fetch metadata from
         }
-        foreach($urls as $url) {
-            if ( isset($url->value) && !empty($url->value) ) {
-                if ( isset($sites[$url->instance]) ) {
-                    $finalarr[$sites[$url->instance]] = $url->value;
+        if ($urls) {
+            foreach ($urls as $url) {
+                if (isset($url->value) && !empty($url->value)) {
+                    if (isset($sites[$url->instance])) {
+                        $finalarr[$sites[$url->instance]] = $url->value;
+                    }
                 }
             }
         }

@@ -176,10 +176,12 @@ class PluginModuleLti extends PluginModule {
                                            LEFT JOIN {oauth_server_config} c ON c.oauthserverregistryid = r.id
                                            WHERE r.id = ?', array($serverid));
         $dbconfig = new stdClass();
-        foreach ($rawdbconfig as $raw) {
-            $dbconfig->institution = $raw->institution;
-            if (!empty($raw->field)) {
-                $dbconfig->{$raw->field} = $raw->value;
+        if ($rawdbconfig) {
+            foreach ($rawdbconfig as $raw) {
+                $dbconfig->institution = $raw->institution;
+                if (!empty($raw->field)) {
+                    $dbconfig->{$raw->field} = $raw->value;
+                }
             }
         }
 

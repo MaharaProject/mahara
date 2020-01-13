@@ -75,7 +75,7 @@ function xrds_parse ( $data )
 	foreach ($uris as $uri)
 	{
 		// TODO: support uris referring to service documents outside this one
-		if ($uri{0} == '#')
+		if ($uri[0] == '#')
 		{
 			$id    = substr($uri, 1);
 			$oauth = xrds_xrd_oauth($xpath, $id);
@@ -203,7 +203,7 @@ function xrds_xrd_oauth_service ( $n )
 		{
 			$service['consumer_key'] = $value;
 		}
-		else if ($name{0} != '#')
+		else if ($name[0] != '#')
 		{
 			$service[strtolower($name)] = $value;
 		}

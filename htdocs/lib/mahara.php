@@ -1618,7 +1618,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
 
     $realpath = realpath($fullpath);
 
-    if (strpos($realpath, get_config('docroot') !== 0)) {
+    if (strpos($realpath, get_config('docroot')) !== 0) {
         if (!empty($nonfatal)) {
             return false;
         }

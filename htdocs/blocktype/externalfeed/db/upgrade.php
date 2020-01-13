@@ -106,18 +106,20 @@ function xmldb_blocktype_externalfeed_upgrade($oldversion=0) {
             // Find the block instances using external feeds. Check to see if they are not using the 'true' id and update them accordingly
             require_once(get_config('docroot') . 'blocktype/lib.php');
             $blockids = get_records_array('block_instance', 'blocktype', 'externalfeed', 'id ASC', 'id');
-            foreach ($blockids as $blockid) {
-                $blockinstance = new BlockInstance($blockid->id);
-                $configdata = $blockinstance->get('configdata');
-                if (!empty($configdata['feedid'])) {
-                    foreach ($feedstoupdate as $url => $ids) {
-                        foreach ($ids as $key => $id) {
-                            if ($id == $configdata['feedid'] && $key != '0') {
-                                $configdata['feedid'] = $ids[0];
-                                $blockinstance->set('configdata', $configdata);
-                                $blockinstance->set('dirty', true);
-                                $blockinstance->commit();
-                                break;
+            if ($blockids) {
+                foreach ($blockids as $blockid) {
+                    $blockinstance = new BlockInstance($blockid->id);
+                    $configdata = $blockinstance->get('configdata');
+                    if (!empty($configdata['feedid'])) {
+                        foreach ($feedstoupdate as $url => $ids) {
+                            foreach ($ids as $key => $id) {
+                                if ($id == $configdata['feedid'] && $key != '0') {
+                                    $configdata['feedid'] = $ids[0];
+                                    $blockinstance->set('configdata', $configdata);
+                                    $blockinstance->set('dirty', true);
+                                    $blockinstance->commit();
+                                    break;
+                                }
                             }
                         }
                     }

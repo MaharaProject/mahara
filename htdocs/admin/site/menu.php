@@ -32,7 +32,7 @@ foreach ($adminstrings as $string) {
 }
 
 $thead = array(json_encode(get_string('type', 'admin')), json_encode(get_string('name', 'admin')), json_encode(get_string('linkedto', 'admin')), '""');
-$thead = implode($thead, ",");
+$thead = implode(",", $thead);
 $externallink = json_encode(get_string('externallink', 'admin'));
 $sitefile = json_encode(get_string('sitefile','admin'));
 

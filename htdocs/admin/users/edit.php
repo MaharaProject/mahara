@@ -1062,7 +1062,7 @@ if (isset($suspendform2)) {
 }
 $smarty->assign('deleteform', $deleteform);
 $smarty->assign('siteform', $siteform);
-$smarty->assign('institutions', count($allinstitutions) > 1);
+$smarty->assign('institutions', count($allinstitutions));
 $smarty->assign('institutionform', $institutionform);
 
 $smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));

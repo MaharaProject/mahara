@@ -1553,8 +1553,10 @@ class User {
 
         $views = array();
         $results = get_records_select_array('view', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, title, description, type');
-        foreach ($results as $result) {
-            $views[$result->id] = $result;
+        if ($results) {
+            foreach ($results as $result) {
+                $views[$result->id] = $result;
+            }
         }
 
         db_begin();
@@ -1595,10 +1597,11 @@ class User {
 
         $collections = array();
         $results = get_records_select_array('collection', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, name');
-        foreach ($results as $result) {
-            $collections[$result->id] = $result;
+        if ($results) {
+            foreach ($results as $result) {
+                $collections[$result->id] = $result;
+            }
         }
-
         db_begin();
         foreach ($templateids as $tid) {
             $anyexistingviews = get_records_sql_array("
@@ -1612,8 +1615,10 @@ class User {
                FROM {collection_view} cv
                WHERE cv.collection = ?", array($this->get('id'), $tid));
             $sum = 0;
-            foreach ($anyexistingviews as $item) {
-                $sum += $item->hascopy;
+            if ($anyexistingviews) {
+                foreach ($anyexistingviews as $item) {
+                    $sum += $item->hascopy;
+                }
             }
             if ($onlyonce && $sum > 0 && $sum === count($anyexistingviews)) {
                 // We have all views for this collection so skip
@@ -1716,15 +1721,17 @@ class User {
             $this->copy_collections($templateids, false, true);
             // Need to loop thru collections to find the list of viewids
             $results = get_records_select_array('collection_view', 'collection IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'collection, view, displayorder');
-            foreach ($results as $result) {
-                $where = new stdClass();
-                $where->view = $result->view;
-                $where->collection = $result->collection;
-                $where->usr = $this->id;
+            if ($results) {
+                foreach ($results as $result) {
+                    $where = new stdClass();
+                    $where->view = $result->view;
+                    $where->collection = $result->collection;
+                    $where->usr = $this->id;
 
-                $record = clone $where;
-                $record->ctime = db_format_timestamp(time());
-                ensure_record_exists('existingcopy', $where, $record);
+                    $record = clone $where;
+                    $record->ctime = db_format_timestamp(time());
+                    ensure_record_exists('existingcopy', $where, $record);
+                }
             }
         }
         else {
