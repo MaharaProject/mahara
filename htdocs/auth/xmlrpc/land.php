@@ -93,6 +93,11 @@ foreach($instances as $instance) {
 
 if ($res == true) {
     // Everything's ok - we have an authenticated User object
+    // Now allow for MNET to set a valid CSP for this session allowing the peer to be in iframes.
+    $parts = parse_url($remotewwwroot);
+    $cspurl = $parts['scheme'] . '://' . $parts['host'];
+    $SESSION->set('csp-ancestor-exemption', $cspurl);
+
     // confirm the MNET session
     // redirect
     if ($remoteurl) {
