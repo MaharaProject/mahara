@@ -223,11 +223,16 @@ class FeedReader {
      *      = false if not exists
      */
     public function get_item_link($i) {
-        return (isset($this->items[$i])
-                && isset($this->items[$i]['LINK'])
-                && isset($this->items[$i]['LINK']['VALUE'])) ?
-                      $this->items[$i]['LINK']['VALUE']
-                    : false;
+        if (isset($this->items[$i]) && isset($this->items[$i]['LINK'])) {
+            if (isset($this->items[$i]['LINK']['VALUE'])) {
+                return $this->items[$i]['LINK']['VALUE'];
+            }
+            if (isset($this->items[$i]['LINK']['ATTRIBUTES'])
+                && isset($this->items[$i]['LINK']['ATTRIBUTES']['HREF'])) {
+                return $this->items[$i]['LINK']['ATTRIBUTES']['HREF'];
+            }
+        }
+        return false;
     }
 
     /**
