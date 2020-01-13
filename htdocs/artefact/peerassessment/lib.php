@@ -592,13 +592,13 @@ class ArtefactTypePeerassessment extends ArtefactType {
     public static function build_html(&$data, $versioning=null) {
         global $USER, $THEME;
 
-        $candelete = $data->canedit || $USER->get('admin');
         $deletedmessage = array();
         $authors = array();
         $lastcomment = self::last_public_assessment($data->view);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
         $signedoff = null;
         foreach ($data->data as &$item) {
+            $candelete = ($data->canedit && ($item->author == $USER->get('id'))) || $USER->get('admin');
             if ($signedoff === null) {
                 $view = new View($item->view);
                 $signedoff = self::is_signed_off($view);
