@@ -109,7 +109,7 @@ function editcomposite_callback(form, data) {
     }
 };
 $(function($) {
-    $('#page-modal').on('hidden.bs.modal', function (e) {
+    $('#editcomposite_filebrowser_page-modal').on('hidden.bs.modal', function (e) {
         // check if the upload file modal is still visible and if so put the body class back to allow scrolling
         if ($('#editcomposite_filebrowser_upload_browse').hasClass('show')) {
             $('body').addClass('modal-open');

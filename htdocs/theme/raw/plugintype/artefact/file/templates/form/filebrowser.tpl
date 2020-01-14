@@ -193,7 +193,7 @@
             </tbody>
         </table>
         {/if}
-        {include file="pagemodal.tpl"}
+        {include file="pagemodal.tpl" prefix=$prefix keepParentModalOpen=true}
     {if $tabs}
     </div>
     {/if}

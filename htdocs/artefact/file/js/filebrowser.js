@@ -740,13 +740,16 @@ var FileBrowser = (function($) {
         if ($('#' + self.id + '_filelist').length === 0) {
             return;
         }
-        var pagemodal = $('#page-modal');
+
+        var pagemodal = $('#' + ($(this).attr('id') + '_page-modal')); // try pagemodal with variable
         if (pagemodal.length === 0) {
-            return;
+            pagemodal = $('#page-modal'); // try generic pagemodal
+            if (pagemodal.length === 0) {
+                return;
+            }
         }
 
-        var pagemodalbody = $('#page-modal .modal-body');
-
+        var pagemodalbody = pagemodal.find('.modal-body');
         var elem = $('#' + self.id + '_filelist .img-modal-preview');
 
         elem.each(function() {
@@ -755,19 +758,25 @@ var FileBrowser = (function($) {
 
                 e.preventDefault();
                 self.clear_create_folder_messages();
-                var previewimg = $('#previewimg');
+                var previewimg = pagemodal.find('.previewimg');
                 if (previewimg.length === 0) {
-                    previewimg = $('<img id="previewimg" src="">');
+                    previewimg = $('<img class="previewimg" src="">');
                     pagemodalbody.append(previewimg);
                 }
                 var imgsrc = $(this).attr('href');
                 imgsrc = updateUrlParameter(imgsrc, 'maxwidth', 400);
                 imgsrc = updateUrlParameter(imgsrc, 'maxheight', 400);
-                previewimg.attr('src',imgsrc);
-                $('#page-modal').modal('show');
+                previewimg.attr('src', imgsrc);
+                $(pagemodal).modal('show');
 
             });
         });
+
+        //Set the click event for Close button on preview image modal
+        $(pagemodal).on('click', '.modal-footer .btn', function() {
+            $(this).closest('.modal').modal('hide');
+        });
+
     };
 
     this.connect_select_buttons = function () {

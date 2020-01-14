@@ -73,6 +73,7 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
         );
     }
     $jsfiles = array(
+        'paginator',
         'js/preview.js',
         'js/export.js',
         'js/lodash/lodash.js',
