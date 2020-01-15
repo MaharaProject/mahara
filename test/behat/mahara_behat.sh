@@ -101,7 +101,7 @@ then
     fi
 
     # Initialise the test site for behat (database, dataroot, behat yml config)
-    php htdocs/testing/frameworks/behat/cli/init.php
+    php htdocs/testing/frameworks/behat/cli/init.php $REPORT
 
     # Run the Behat tests themselves (after any intial setup)
     if is_selenium_running; then
@@ -147,6 +147,7 @@ then
     SERVER=$!
 
     BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
+
     echo "Run Behat..."
 
     #added html format for html report
