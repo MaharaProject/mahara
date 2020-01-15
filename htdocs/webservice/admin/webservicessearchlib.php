@@ -40,8 +40,14 @@ function build_webservice_log_search_results($search) {
 
     $params = array();
     foreach ($search as $k => $v) {
-        if (!empty($v)) {
+        if (!empty($v) && !in_array($k, array('userquery', 'functionquery', 'sortby', 'sortdir'))) {
             $params[] = $k . '=' . $v;
+        }
+        else if (!empty($v) && $k == 'functionquery') {
+            $params[] = $k . '=' . get_field('external_functions', 'id', 'name', $v);
+        }
+        else if (!empty($v) && $k == 'userquery') {
+            $params[] = $k . '=' . get_field('usr', 'id', 'username', $v);
         }
     }
 
@@ -85,7 +91,7 @@ function build_webservice_log_search_results($search) {
     $smarty->assign('cols', $cols);
 
     return array($smarty->fetch('searchresulttable.tpl'), $cols, array(
-        'url' => $searchurl . '&sortby=' . $search->sortby . '&sortdir=' . $search->sortdir,
+        'url' => $searchurl,
         'sortby' => $search->sortby,
         'sortdir' => $search->sortdir
     ), $pagination);
@@ -208,8 +214,7 @@ function get_log_search_results($search) {
             FROM {external_services_logs} el
             JOIN {usr} u
                 ON el.userid = u.id
-            ' . $where . ' ORDER BY ' . $search->sortby, $params, $search->offset, $search->limit);
-
+            ' . $where . ' ORDER BY ' . $sort, $params, $search->offset, $search->limit);
     $results = array(
             'count'   => $count,
             'limit'   => $search->limit,
