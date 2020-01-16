@@ -59,13 +59,18 @@ class PluginModuleAssessmentreport extends PluginModule {
     public static function observe_on_releasesubmission($event, $data) {
         $releaseuserid = ($data['releaseuser'] instanceof User) ? $data['releaseuser']->get('id') : $data['releaseuser']->id;
         $item = ($data['eventfor'] == "collection" ? new Collection($data['id']) : new View($data['id']));
-        $group = get_record('group', 'name', $data['groupname']);
+        if (!empty($data['groupname'])) {
+            $group = get_record('group', 'name', $data['groupname']);
+        }
+        else {
+            $group = false;
+        }
         $historyobj = (object) array(
-            'userid'        => $item ? $item->get('owner') : 0,
+            'userid'        => $item ? $item->get('owner') : null,
             'event'         => $data['eventfor'],
-            'itemid'        => $item ? $item->get('id') : 0,
+            'itemid'        => $item ? $item->get('id') : null,
             'datereleased'  => date('Y-m-d H:i:s'),
-            'groupid'       => $group ? $group->id : 0,
+            'groupid'       => $group ? $group->id : null,
             'markerid'      => $releaseuserid
         );
 
@@ -96,13 +101,18 @@ class PluginModuleAssessmentreport extends PluginModule {
      */
     public static function observe_on_addsubmission($event, $data) {
         $item = ($data['eventfor'] == "collection" ? new Collection($data['id']) : new View($data['id']));
-        $group = get_record('group', 'name', $data['groupname']);
+        if (!empty($data['groupname'])) {
+            $group = get_record('group', 'name', $data['groupname']);
+        }
+        else {
+            $group = false;
+        }
         $historyobj = (object) array(
-            'userid'        => $item ? $item->get('owner') : 0,
+            'userid'        => $item ? $item->get('owner') : null,
             'event'         => $data['eventfor'],
-            'itemid'        => $item ? $item->get('id') : 0,
+            'itemid'        => $item ? $item->get('id') : null,
             'datesubmitted' => date('Y-m-d H:i:s'),
-            'groupid'       => $group ? $group->id : 0
+            'groupid'       => $group ? $group->id : null
         );
 
         insert_record('module_assessmentreport_history', $historyobj);
