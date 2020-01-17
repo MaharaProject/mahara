@@ -29,6 +29,13 @@
         {/if}
     </div>
     {/if}
+
+    <div class="help">
+        <a href="#" id="signoff-info-icon" class="hidden" title="{str tag=viewsignoffdetails section=blocktype.peerassessment/signoff}">
+            <span class="icon icon-info-circle"></span>
+            <span class="sr-only">{str tag=viewsignoffdetails section=blocktype.peerassessment/signoff}</span>
+        </a>
+    </div>
 </div>
 
 {* signoff modal form *}
@@ -72,6 +79,25 @@
             </div>
         </div>
     </div>
+{* signoff info modal *}
+    <div tabindex="0" class="modal fade" id="signoff-info-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">
+                        <span class="icon icon-lg icon-check-circle left" role="presentation" aria-hidden="true"></span>
+                        {str tag=signoffdetails section=blocktype.peerassessment/signoff}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <p id="signoff-info"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script type="application/javascript">
 $(function() {
@@ -80,6 +106,10 @@ $(function() {
         $("#verify-confirm-form").modal('hide');
     });
     var signedoff = '{$signoff}';
+    var showverify = '{$showverify}';
+    if (signedoff) {
+        $('#signoff-info-icon').removeClass('hidden');
+    }
     $('#signoff').on('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -102,13 +132,15 @@ $(function() {
             if (data.data) {
                 if (data.data.signoff_newstate) {
                     $('#signoff span.icon').addClass('icon-check-circle completed').removeClass('icon-circle incomplete');
+                    $('#signoff-info-icon').removeClass('hidden');
                     signedoff = '1';
                 }
                 else {
                     $('#signoff span.icon').addClass('icon-circle incomplete').removeClass('icon-check-circle completed');
                     signedoff = '';
+                    $('#signoff-info-icon').addClass('hidden');
                 }
-                if (data.data.verify_change) {
+                if (data.data.verify_change && showverify) {
                     $('#signoff').parent().next().find('span.icon').addClass('icon-circle dot disabled').removeClass('icon-check-circle completed');
                 }
             }
@@ -136,5 +168,17 @@ $(function() {
             $("#verify-confirm-form").modal('hide');
         });
     });
+
+    $('#signoff-info-icon').on('click', function(event) {
+        sendjsonrequest('{$WWWROOT}artefact/peerassessment/completion.json.php', { 'view': '{$view}', 'signoffstatus': 1 }, 'POST', function (data) {
+            if (data.data) {
+                if (data.data) {
+                    $('#signoff-info').html(data.data);
+                }
+                $('#signoff-info-modal').modal('show');
+            }
+        });
+    });
+
 });
 </script>

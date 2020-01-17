@@ -21,6 +21,7 @@ $blockid = param_integer('block', null);
 $viewid = param_integer('view', null);
 $signoff = param_integer('signoff', null);
 $verify = param_integer('verify', null);
+$signoffstatus = param_integer('signoffstatus', null);
 
 if (empty($viewid) && !empty($blockid)) {
     // try to find view from blockid
@@ -44,6 +45,28 @@ $signable = ArtefactTypePeerassessment::is_signable($view);
 $verifiable = ArtefactTypePeerassessment::is_verifiable($view);
 
 $data = new stdClass();
+
+if ($signoffstatus) {
+    $record = get_record_sql("SELECT * from {view_signoff_verify} where view = ?", array($viewid));
+    if ($view->get("owner") && $record->signofftime) {
+        $signedoffby = (int)$view->get('owner');
+        $signedoffbymsg = get_string('signedoffbyondate', 'blocktype.peerassessment/signoff', display_name($signedoffby, null, true), format_date(strtotime($record->signofftime), 'strftimedate'));
+        $msg = $signedoffbymsg;
+        if (($verifiedby = $record->verifier) && $showverify) {
+            $verifiedbymsg = get_string('verifiedbyondate', 'blocktype.peerassessment/signoff', display_name($verifiedby, null, true), format_date(strtotime($record->verifiedtime), 'strftimedate'));
+            $msg = '<p>' . $signedoffbymsg . '</p>' . '<p>' . $verifiedbymsg . '</p>';
+        }
+        else if ($showverify && !ArtefactTypePeerassessment::is_verified($view)) {
+            $msg = get_string('readyforverification', 'blocktype.peerassessment/signoff');
+        }
+        json_reply(false, array('data' => $msg));
+    }
+    else {
+        //throw an error
+        json_reply('local', get_string('wrongsignoffviewrequest', 'blocktype.peerassessment/signoff'));
+    }
+}
+
 if ($showsignoff && $signable && $signoff !== null) {
     $currentstate = ArtefactTypePeerassessment::is_signed_off($view);
     $newstate = 1 - (int)$currentstate;

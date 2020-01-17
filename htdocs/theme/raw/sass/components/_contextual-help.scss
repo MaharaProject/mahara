@@ -26,6 +26,19 @@ span.help {
     }
 }
 
+// Used for the sign-off block in verifyform.tpl
+div.help {
+    .icon {
+        color: $help-icon-color;
+        opacity: 0.8;
+    }
+    &:hover {
+        .icon {
+            opacity:1;
+        }
+    }
+}
+
 .contextualHelp {
     position: absolute;
     z-index: $zindex-popover;

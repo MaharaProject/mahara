@@ -30,8 +30,14 @@ $string['signoffpageconfirm'] = 'Confirm this action?';
 $string['verifypagetitle'] = 'Verify page';
 $string['verifypagedesc'] = 'Select "Yes" to verify that the portfolio owner has met all requirements for this page. Select "No" to return to the page without verifying it.';
 
+$string['signoffdetails'] = 'Sign-off details';
 $string['updatesignoff'] = 'Update page sign-off';
 $string['updateverify'] = 'Update page verification';
+$string['viewsignoffdetails'] = 'View sign-off details information';
+$string['readyforverification'] = 'This page is ready for verification.';
+$string['signedoffbyondate'] = '%s signed off this page on %s.';
+$string['verifiedbyondate'] = '%s verified this page on %s.';
+
 
 $string['removedverifynotificationsubject'] = 'Verification for %s removed';
 $string['removedverifynotification'] = 'The owner of the page %s has removed their sign-off. Therefore, your verification has also been removed. Please go to the page to see if it is ready to be marked as verified again.';
