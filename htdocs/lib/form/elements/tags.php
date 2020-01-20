@@ -136,7 +136,7 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
         $typecast = is_postgres() ? '::varchar' : '';
 
         // get all the institution tags the user can use
-        $values = array($userid);
+        $values = array($userid, $userid);
         if ($USER->get('admin') && isset($institution)) {
           $values[] = $institution;
           $insttagsforuser = "
@@ -181,6 +181,13 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
                 LEFT JOIN {institution} i ON i.name = t2.ownerid AND t2.resourcetype = 'institution'
                 WHERE t.ownertype='user' AND t.ownerid=? AND t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 GROUP BY 1, 3
+                -- Selecting tags used in groups that you belong to
+                UNION ALL
+                SELECT t.tag, 0 AS count, NULL AS prefix
+                FROM {tag} t
+                JOIN {group} g ON g.id" . $typecast . " = t.ownerid AND t.ownertype='group'
+                JOIN {group_member} gm ON gm.group = g.id AND gm.member = ?
+                WHERE t.resourcetype IN ('artefact', 'view', 'collection', 'blocktype')
                 " . $insttagsforuser . "
             ) tags
             " . $querystr . "
