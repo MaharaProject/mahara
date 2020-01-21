@@ -5,8 +5,8 @@ $arrow-color:                   $theme-primary-color;
 $arrow-bar-bg:                  scale-color($theme-primary-color, $lightness: -25%);
 $arrow-text-color:              #fff;
 $arrow-link-color:              #fff;
-$arrow-link-hover-color:        $theme-text-color;
-$arrow-link-active-color:       #FFF;
+$arrow-link-hover-color:        $theme-primary-color;
+$arrow-link-active-color:       $theme-text-color;
 $arrow-link-background-color:   #fff;
 
 // color for the secondary title in sections (cf. groups)

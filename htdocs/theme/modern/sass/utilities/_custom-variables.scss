@@ -3,7 +3,7 @@ $arrow-color:                               scale-color($theme-secondary-color, 
 $arrow-bar-bg:                              $theme-secondary-color;
 $arrow-text-color:                          #FFFFFF;
 $arrow-link-color:                          #FFFFFF;
-$arrow-link-hover-color:                    #FFFFFF;
+$arrow-link-hover-color:                    $theme-secondary-color;
 $arrow-link-active-color:                   $theme-text-color;
 $arrow-link-background-color:               #fff;
 
