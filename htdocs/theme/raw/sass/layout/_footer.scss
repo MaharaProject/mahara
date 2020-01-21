@@ -45,6 +45,7 @@
             @include media-breakpoint-down(sm) {
                 float: none !important;
                 text-align: center;
+                padding-top: 20px;
             }
         }
         .site-performace {
