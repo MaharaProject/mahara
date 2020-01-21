@@ -20,3 +20,8 @@
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
     overflow: hidden !important;
 }
+
+// take away the move cursor when page in display mode
+#view .ui-draggable {
+    cursor: default;
+}
