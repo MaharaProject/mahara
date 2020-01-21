@@ -270,12 +270,24 @@ class ArtefactTypeCoverletter extends ArtefactTypeResume {
         parent::__construct($id, $data);
     }
 
+    public function render_self($options) {
+        $smarty = smarty_core();
+        $smarty->assign('content',  $this->description);
+        return array('html' => $smarty->fetch('artefact:resume:fragments/coverletter.tpl'));
+    }
+
 }
 
 class ArtefactTypeInterest extends ArtefactTypeResume {
 
     public static function is_singular() {
         return true;
+    }
+
+    public function render_self($options) {
+        $smarty = smarty_core();
+        $smarty->assign('content',  $this->description);
+        return array('html' => $smarty->fetch('artefact:resume:fragments/interest.tpl'));
     }
 
 }
