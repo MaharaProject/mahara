@@ -7581,3 +7581,59 @@ define('FORMAT_NAME_STUDENTID', 5);
  * display format for author names in views - obeys display_name
  */
 define('FORMAT_NAME_DISPLAYNAME', 6);
+
+function filter_isolated_view_access($view, $viewaccess) {
+    global $SESSION;
+
+    if (!is_isolated() || empty($viewaccess)) {
+        // no need to filter
+        return $viewaccess;
+    }
+
+    $removerules = 0;
+    foreach ($viewaccess as $k => $access) {
+        if ($access['accesstype'] == 'loggedin') {
+            unset($viewaccess[$k]);
+            $removerules++;
+        }
+        else if ($access['type'] == 'user' && !empty($access['usr'])) {
+            $userinstitutions = get_column('usr_institution', 'institution', 'usr', $access['usr']);
+            if ($view->get('owner')) {
+                $viewinstitutions = get_column('usr_institution', 'institution', 'usr', $view->get('owner'));
+            }
+            else if ($view->get('group')) {
+                $viewinstitutions = get_column('group', 'institution', 'id', $view->get('group'));
+            }
+            else if ($view->get('institution')) {
+                $viewinstitutions = array($view->get('institution'));
+            }
+            // check that the user is in the same institution
+            if (!((empty($viewinstitutions) && empty($userinstitutions)) || array_intersect($viewinstitutions, $userinstitutions))) {
+                unset($viewaccess[$k]);
+                $removerules++;
+            }
+        }
+        else if ($access['type'] == 'group' && !empty($access['group'])) {
+            $userinstitutions = get_column('group', 'institution', 'id', $access['group']);
+            if ($view->get('owner')) {
+                $viewinstitutions = get_column('usr_institution', 'institution', 'usr', $view->get('owner'));
+            }
+            else if ($view->get('group')) {
+                $viewinstitutions = get_column('group', 'institution', 'id', $view->get('group'));
+            }
+            else if ($view->get('institution')) {
+                $viewinstitutions = array($view->get('institution'));
+            }
+            // check that the user is in the same institution
+            if (!((empty($viewinstitutions) && empty($userinstitutions)) || array_intersect($viewinstitutions, $userinstitutions))) {
+                unset($viewaccess[$k]);
+                $removerules++;
+            }
+        }
+    }
+    if ($removerules) {
+        $SESSION->add_error_msg(get_string('isolatedinstitutionsremoverules', 'error', $removerules));
+    }
+    $viewaccess = array_values($viewaccess);
+    return $viewaccess;
+}
