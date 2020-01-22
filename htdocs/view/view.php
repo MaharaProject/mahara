@@ -499,6 +499,14 @@ jQuery(window).on('pageupdated', {}, function() {
 });
 EOF;
 
+// Alert message for peers and peermanagers so that they know a page containing a peer assessment block has been signed off
+if ($USER->can_peer_assess($view) && ArtefactTypePeerassessment::is_signed_off($view) && $view->has_peer_assessement_block()) {
+    $signedoffbyurl = get_config('wwwroot') . 'user/view.php?id=' . $view->get('owner');
+    $signedoffbylink = '<a href="'. $signedoffbyurl .'">' . display_name($view->get('owner')) . '</a>';
+    $signedoffalertpeermsg = get_string('signedoffalertpeermsg', 'artefact.peerassessment', display_name($view->get('owner'), null, true), $signedoffbylink);
+    $smarty->assign('signedoffalertpeermsg', $signedoffalertpeermsg);
+}
+
 if ($modal = param_integer('modal', null)) {
     $artefact = param_integer('artefact', null);
 

@@ -34,6 +34,11 @@
                     {str tag=nopeerassessmentrequired section=artefact.peerassessment}
                 </div>
             {/if}
+            {if $signedoffalertpeermsg}
+                <div class="alert alert-info">
+                    {$signedoffalertpeermsg|clean_html|safe}
+                </div>
+            {/if}
             <div class="grid-stack">
             {if $viewcontent}
                 {$viewcontent|safe}
