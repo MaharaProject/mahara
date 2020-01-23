@@ -349,11 +349,23 @@ class Pieform {/*{{{*/
                 }
 
                 foreach ($element['elements'] as $subname => &$subelement) {
-                    if (isset($subelement['name'])) {
-                        $subname = $subelement['name'];
+                    if (isset($subelement['type']) && ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container')) {
+                        foreach ($subelement['elements'] as $subsubname => &$subsubelement) {
+                            if (isset($subsubelement['name'])) {
+                                $subsubname = $subsubelement['name'];
+                            }
+                            $this->elementrefs[$subsubname] = &$subsubelement;
+                            $subsubelement['name'] = $subsubname;
+                        }
+                        unset($subsubelement);
                     }
-                    $this->elementrefs[$subname] = &$subelement;
-                    $subelement['name'] = $subname;
+                    else {
+                        if (isset($subelement['name'])) {
+                            $subname = $subelement['name'];
+                        }
+                        $this->elementrefs[$subname] = &$subelement;
+                        $subelement['name'] = $subname;
+                    }
                 }
                 unset($subelement);
             }
@@ -380,9 +392,19 @@ class Pieform {/*{{{*/
         foreach ($this->data['elements'] as $name => $element) {
             if (isset($element['type']) && ($element['type'] == 'fieldset' || $element['type'] == 'container')) {
                 foreach ($element['elements'] as $subname => $subelement) {
-                    if (!empty($subelement['ignore'])) {
-                        unset ($this->data['elements'][$name]['elements'][$subname]);
-                        unset($this->elementrefs[$subname]);
+                    if (isset($subelement['type']) && ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container')) {
+                        foreach ($subelement['elements'] as $subsubname => $subsubelement) {
+                            if (!empty($subsubelement['ignore'])) {
+                                unset ($this->data['elements'][$name]['elements'][$subname]['elements'][$subsubname]);
+                                unset($this->elementrefs[$subsubname]);
+                            }
+                        }
+                    }
+                    else {
+                        if (!empty($subelement['ignore'])) {
+                            unset ($this->data['elements'][$name]['elements'][$subname]);
+                            unset($this->elementrefs[$subname]);
+                        }
                     }
                 }
             }
@@ -721,7 +743,18 @@ class Pieform {/*{{{*/
         foreach ($this->data['elements'] as &$element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
-                    $this->build_element_html($subelement);
+                    if ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container') {
+                        foreach ($subelement['elements'] as &$subsubelement) {
+                            if ($subsubelement['type'] == 'fieldset' || $subsubelement['type'] == 'container') {
+                                throw new PieformException('Forms may not have fieldset / containers more than two layers deep!');
+                            }
+                            $this->build_element_html($subsubelement);
+                        }
+                        unset($subsubelement);
+                    }
+                    else {
+                        $this->build_element_html($subelement);
+                    }
                 }
                 unset($subelement);
             }
@@ -912,7 +945,14 @@ class Pieform {/*{{{*/
         foreach ($this->data['elements'] as $name => $element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as $subelement) {
-                    $elements[] = $subelement;
+                    if (isset($subelement['type']) && ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container')) {
+                        foreach ($subelement['elements'] as $subsubname => $subsubelement) {
+                            $elements[] = $subsubelement;
+                        }
+                    }
+                    else {
+                        $elements[] = $subelement;
+                    }
                 }
             }
             else {
@@ -1067,11 +1107,23 @@ EOF;
         foreach ($this->data['elements'] as $key => &$element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
-                    if ($subelement['name'] == $name) {
-                        $subelement['error'] = $message;
-                        $subelement['isescaped'] = ($isescaped) ? true : false;
-                        $this->data['haserror'] = true;
-                        return;
+                    if (isset($subelement['type']) && ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container')) {
+                        foreach ($subelement['elements'] as $subsubname => $subsubelement) {
+                            if ($subsubelement['name'] == $name) {
+                                $subsubelement['error'] = $message;
+                                $subsubelement['isescaped'] = ($isescaped) ? true : false;
+                                $this->data['haserror'] = true;
+                                return;
+                            }
+                        }
+                    }
+                    else {
+                        if ($subelement['name'] == $name) {
+                            $subelement['error'] = $message;
+                            $subelement['isescaped'] = ($isescaped) ? true : false;
+                            $this->data['haserror'] = true;
+                            return;
+                        }
                     }
                 }
             }
@@ -1493,11 +1545,22 @@ EOF;
         foreach ($this->data['elements'] as &$element) {
             if ($element['type'] == 'fieldset' || $element['type'] == 'container') {
                 foreach ($element['elements'] as &$subelement) {
-                    if (isset($subelement['error'])) {
-                        $subelement['autofocus'] = true;
-                        return;
+                    if (isset($subelement['type']) && ($subelement['type'] == 'fieldset' || $subelement['type'] == 'container')) {
+                        foreach ($subelement['elements'] as $subsubname => $subsubelement) {
+                            if (isset($subsubelement['error'])) {
+                                $subsubelement['autofocus'] = true;
+                                return;
+                            }
+                            unset($subsubelement['autofocus']);
+                        }
                     }
-                    unset($subelement['autofocus']);
+                    else {
+                        if (isset($subelement['error'])) {
+                            $subelement['autofocus'] = true;
+                            return;
+                        }
+                        unset($subelement['autofocus']);
+                    }
                 }
             }
             else {

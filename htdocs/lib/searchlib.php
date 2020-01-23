@@ -402,6 +402,23 @@ function get_admin_user_search_results($search, $offset, $limit) {
                 $emails = array();
             }
             $result['email'] = $emails;
+
+            // Add in info for any custom artefact internal columns that can be multiple
+            $customcols = get_config_plugin('artefact', 'internal', 'profileadminusersearch');
+            if ($customcols) {
+                $customcolsarray = explode(',', $customcols);
+                safe_require('artefact', 'internal');
+                foreach ($customcolsarray as $k => $v) {
+                    $classname = 'ArtefactType' . $v;
+                    if (is_callable(array($classname, 'can_be_multiple')) &&
+                        call_static_method($classname, 'can_be_multiple') &&
+                        is_callable(array($classname, 'get_multiple')) &&
+                        $multiple = call_static_method($classname, 'get_multiple', $result['id'])) {
+                        $result[$v] = $multiple;
+                    }
+                }
+            }
+
             if ($isadmin) {
                 continue;
             }

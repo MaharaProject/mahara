@@ -573,6 +573,13 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
         $profile->set('note',        $type);
         $profile->commit();
     }
+    else if ($field == 'userroles') {
+        // Handle this in special way
+        $user = new User();
+        $user->find_by_id($userid);
+        $user->set_roles($value);
+        $user->commit();
+    }
     else {
         $classname = generate_artefact_class_name($field);
         $profile = new $classname(0, array('owner' => $userid), $new);
@@ -1624,6 +1631,7 @@ function delete_user($userid) {
     delete_records('usr_password_request', 'usr', $userid);
     delete_records('usr_watchlist_view', 'usr', $userid);
     delete_records('view_access', 'usr', $userid);
+    delete_records('usr_roles', 'usr', $userid);
     delete_records('usr_login_data', 'usr', $userid);
     delete_records('usr_pendingdeletion', 'usr', $userid); // just in case
     delete_records('usr_agreement', 'usr', $userid);

@@ -244,6 +244,14 @@ EOF;
             }
         }
 
+        // Check if any UserRoles are in play
+        foreach ($USER->get_roletypes() as $classname) {
+            if (method_exists($classname, 'interaction_subscribe')) {
+                $ur = new $classname;
+                $ur->interaction_subscribe(array('id' => $instance->get('id')));
+            }
+        }
+
         // Moderators
         delete_records(
             'interaction_forum_moderator',
@@ -1693,12 +1701,27 @@ function subscribe_forum_submit(Pieform $form, $values) {
         $SESSION->add_ok_msg(get_string('forumsuccessfulsubscribe', 'interaction.forum'));
     }
     else {
-        delete_records(
-            'interaction_forum_subscription_forum',
-            'forum', $values['forum'],
-            'user', $USER->get('id')
-        );
-        $SESSION->add_ok_msg(get_string('forumsuccessfulunsubscribe', 'interaction.forum'));
+        $can_unsubscribe = true;
+        // Check if any UserRoles are in play
+        $checks = $USER->apply_userrole_method('interaction_unsubscribe', array('forum' => $values['forum'], 'userid' => $USER->get('id')));
+        foreach ($checks as $check) {
+            if ($check['can_unsubscribe'] === false) {
+                // A UserRole is stopping us from unsubscribing
+                $can_unsubscribe = false;
+                break;
+            }
+        }
+        if ($can_unsubscribe) {
+            delete_records(
+                'interaction_forum_subscription_forum',
+                'forum', $values['forum'],
+                'user', $USER->get('id')
+            );
+            $SESSION->add_ok_msg(get_string('forumsuccessfulunsubscribe', 'interaction.forum'));
+        }
+        else {
+            $SESSION->add_error_msg(get_string('forumfailunsubscribe', 'interaction.forum'));
+        }
     }
     if ($values['redirect'] == 'index') {
         redirect('/interaction/forum/index.php?group=' . $values['group']);

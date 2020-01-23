@@ -319,6 +319,8 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *         AccessDeniedException
  */
 function group_create($data) {
+    global $USER;
+
     if (!is_array($data)) {
         throw new InvalidArgumentException("group_create: data must be an array, see the doc comment for this "
             . "function for details on its format");
@@ -491,6 +493,8 @@ function group_create($data) {
             )
         );
     }
+    // Check if any UserRoles are in play
+    $USER->apply_userrole_method('group_join', array('groupid' => $id, 'ctime' => $data['ctime']));
 
     // Copy views for the new group
     $artefactcopies = array();
@@ -1070,6 +1074,14 @@ function group_user_can_leave($group, $userid=null) {
 
     if (group_is_only_admin($group->id, $userid)) {
         return ($result[$group->id][$userid] = false);
+    }
+
+    // Check if any UserRoles are in play
+    $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group->id, 'userid' => $userid));
+    foreach ($checks as $check) {
+        if ($check['can_leave'] === false) {
+            return ($result[$group->id][$userid] = false);
+        }
     }
 
     return ($result[$group->id][$userid] = true);
@@ -1887,6 +1899,13 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
     $role = group_user_access($group);
     $userid = $USER->get('id');
     foreach ($results['data'] as &$r) {
+        // Check if any UserRoles are in play
+        $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group, 'userid' => $r['id']));
+        foreach ($checks as $check) {
+            if ($check['can_leave'] === false) {
+                continue 2;
+            }
+        }
         if ($role == 'admin' && ($r['id'] != $userid || group_user_can_leave($group, $r['id']))) {
             $r['removeform'] = group_get_removeuser_form($r['id'], $group);
         }
@@ -3247,4 +3266,68 @@ function get_group_access_roles() {
         $data[$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.' . $r->grouptype));
     }
     return $data;
+}
+
+function group_add_user_to_existing_groups($userid = null, $role = 'member') {
+    global $USER;
+
+    if (empty($userid)) {
+        $userid = $USER->get('id');
+    }
+    // Find all the non-deleted groups where the user is not present
+    // or is present but with a different group role
+    if ($groups = get_records_sql_assoc("SELECT g.id, gm.* FROM {group} g
+                                         LEFT JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
+                                         WHERE (gm.role IS NULL OR gm.role != ?)
+                                         AND g.deleted = 0
+                                         ORDER BY g.id", array($userid, $role))) {
+        foreach ($groups as $k => $group) {
+            if ($group->role) {
+                try {
+                    group_change_role($k, $userid, $role);
+                }
+                catch (AccessDeniedException $e) {
+                    // ignore
+                }
+            }
+            else {
+                try {
+                    group_add_user($k, $userid, $role);
+                }
+                catch (AccessDeniedException $e) {
+                    // ignore
+                }
+            }
+        }
+    }
+    // now reset their group roles
+    $user = new User();
+    $user->find_by_id($userid);
+    $user->reset_grouproles();
+}
+
+function group_remove_user_from_existing_groups($userid = null) {
+    global $USER;
+
+    if (empty($userid)) {
+        $userid = $USER->get('id');
+    }
+    // Find all the non-deleted groups where the user is present
+    if ($groups = get_records_sql_assoc("SELECT g.id, gm.* FROM {group} g
+                                         JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
+                                         WHERE g.deleted = 0
+                                         ORDER BY g.id", array($userid))) {
+        foreach ($groups as $k => $group) {
+            try {
+                group_remove_user($k, $userid, true);
+            }
+            catch (AccessDeniedException $e) {
+                // ignore
+            }
+        }
+    }
+    // now reset their group roles
+    $user = new User();
+    $user->find_by_id($userid);
+    $user->reset_grouproles();
 }

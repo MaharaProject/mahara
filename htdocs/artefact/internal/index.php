@@ -118,6 +118,10 @@ foreach ( $element_list as $element => $type ) {
         $defaultoption = call_static_method($classname, 'defaultoption');
         $items[$element]['defaultvalue'] = $defaultoption;
     }
+    if ($type == 'html' && is_callable(array($classname, 'defaulthtml'))) {
+        $defaultvalue = call_static_method($classname, 'defaulthtml');
+        $items[$element]['value'] = $defaultvalue;
+    }
     if ($element == 'socialprofile') {
         $items[$element] = ArtefactTypeSocialprofile::render_profile_element();
     }
@@ -209,7 +213,7 @@ $profileform = pieform(array(
 
 function get_desired_fields(&$allfields, $section) {
     global $USER;
-    $desiredfields = array('about' => array('firstname', 'lastname', 'studentid', 'preferredname', 'introduction'),
+    $desiredfields = array('about' => array('firstname', 'lastname', 'studentid', 'preferredname', 'userroles', 'introduction'),
                            'contact' => array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'),
                            'social' => array('socialprofile'),
                            );
@@ -446,7 +450,7 @@ function profileform_submit(Pieform $form, $values) {
                 $USER->commit();
             }
         }
-        else if (in_array($element, array('maildisabled', 'socialprofile'))) {
+        else if (in_array($element, array('maildisabled', 'socialprofile', 'userroles'))) {
             continue;
         }
         else {

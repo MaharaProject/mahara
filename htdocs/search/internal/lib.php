@@ -492,9 +492,13 @@ class PluginSearchInternal extends PluginSearch {
             $default = ArtefactTypeProfile::get_always_adminusersearchable_fields();
             foreach ($customcolsarray as $k => $v) {
                 if (!array_key_exists($v, $default)) {
+                    $classname = 'ArtefactType' . $v;
+                    if (is_callable(array($classname, 'can_be_multiple')) && $ismultiple = call_static_method($classname, 'can_be_multiple')) {
+                        continue; // we need to handle this post results
+                    }
                     $firstcols .= ', a' . $k . '.title AS ' . $v;
                     $join .= 'LEFT JOIN {artefact} a' . $k . ' ON (a' . $k . '.owner = u.id AND a' . $k . '.artefacttype = \'' . $v . '\') ';
-               }
+                }
             }
         }
 

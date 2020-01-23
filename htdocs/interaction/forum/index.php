@@ -57,7 +57,17 @@ if ($forums) {
     foreach ($forums as $forum) {
         $forum->feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=f&id=' . $forum->id;
         $allowunsubscribe = get_config_plugin_instance('interaction_forum', $forum->id, 'allowunsubscribe');
-
+        if ($allowunsubscribe) {
+            // Check if any UserRoles are in play
+            $checks = $USER->apply_userrole_method('interaction_unsubscribe', array('forum' => $forum->id, 'userid' => $USER->get('id')));
+            foreach ($checks as $check) {
+                if ($check['can_unsubscribe'] === false) {
+                    // A UserRole is stopping us from unsubscribing
+                    $allowunsubscribe = false;
+                    break;
+                }
+            }
+        }
         if ($membership) {
             $forum->subscribe = pieform(array(
                 'name'     => 'subscribe_forum' . ($i == 0 ? '' : $i),
