@@ -35,7 +35,7 @@ if ($group = param_integer('group', null)) {
     $values = array($group);
     $params['group'] = $group;
 }
-else if ($institution = param_alpha('institution', null)) {
+else if ($institution = param_alphanum('institution', null)) {
     if ($institution == 'mahara') {
         define('ADMIN', 1);
         define('MENUITEM', 'configsite');

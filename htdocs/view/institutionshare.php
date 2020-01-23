@@ -17,7 +17,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'institution.php');
 
-$institution = param_alpha('institution', false);
+$institution = param_alphanum('institution', false);
 
 if ($institution == 'mahara') {
     redirect('/admin/site/shareviews.php');

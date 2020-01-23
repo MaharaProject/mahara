@@ -5661,7 +5661,8 @@ function get_institutions_to_associate() {
         // This does not apply for site admins
         foreach ($USER->institutions as $inst) {
             if (empty($inst->suspended)) {
-                $institutions = array_merge($institutions, array($inst->institution => $inst->displayname));
+                // use + to perserve numerical keys
+                $institutions = $institutions + array($inst->institution => $inst->displayname);
             }
         }
     }
@@ -5670,7 +5671,8 @@ function get_institutions_to_associate() {
         $records = get_records_array('institution');
         foreach ($records as $inst) {
             if (empty($inst->suspended)) {
-                $institutions = array_merge($institutions, array($inst->name => $inst->displayname));
+                // use + to perserve numerical keys
+                $institutions = $institutions + array($inst->name => $inst->displayname);
             }
         }
     }

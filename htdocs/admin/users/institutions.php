@@ -760,6 +760,21 @@ EOF;
 
 function institution_validate(Pieform $form, $values) {
     global $USER, $institution, $add;
+    if ($add) {
+        try {
+            $check = institution_generate_name($values['displayname']);
+        }
+        catch (ParamOutOfRangeException $e) {
+            $form->set_error('displayname', get_string('institutionnameinvalid', 'admin'));
+        }
+    }
+    else {
+        $check = strtolower($values['displayname']);
+        $check = preg_replace('/[^a-z0-9]/', '', $check);
+        if (strlen($check) < 1 || $check === '0') {
+            $form->set_error('displayname', get_string('institutionnameinvalid', 'admin'));
+        }
+    }
 
     if ($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutionaloverride')) {
         if (get_config_plugin('artefact', 'file', 'maxquotaenabled') && get_config_plugin('artefact', 'file', 'maxquota') < $values['defaultquota']) {

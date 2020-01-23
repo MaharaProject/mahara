@@ -19,7 +19,7 @@ if (!is_logged_in()) {
     throw new AccessDeniedException();
 }
 
-$inst = param_alpha('institution');
+$inst = param_alphanum('institution');
 
 if (is_isolated() && !in_array($inst, array_keys($USER->get('institutions'))) && !$USER->get('admin')) {
     throw new AccessDeniedException(get_string('notinstitutionmember', 'error'));

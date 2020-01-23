@@ -19,7 +19,7 @@ $folderid = param_integer('folder', 0);
 $viewid = param_integer('view', 0);
 
 $groupid = param_integer('group', 0);
-$institution = param_alpha('institution', 0);
+$institution = param_alphanum('institution', 0);
 
 /*
 * Function to check if the specified artefact should be downloadable
