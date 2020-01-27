@@ -35,6 +35,8 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Options dialog'                            => array(".modal-header", "css_element"),
     'Share sub-menu'                            => array(".share", "css_element"),
     'Engage sub-menu'                           => array(".engage", "css_element"),
+    'Tinymce editor menu'                       => array(".tox-toolbar", "css_element"),
+    'Tinymce editor'                            => array(".tox-edit-area", "css_element"),
     'Web services sub-menu'                     => array(".webservices", "css_element"),
     'H1 heading'                                => array("h1", "css_element"),
     'Collections text-box'                      => array(".select2-selection__rendered", "css_element"),
