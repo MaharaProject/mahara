@@ -831,3 +831,13 @@ $cfg->saml_log_attributes = false;
  * To get passed this, by allowing just a unique identifier/username, we set the follwing flag
  */
 // $cfg->saml_create_minimum_user=true;
+
+/**
+ * Allow SAML to create an institution when creating a new user if the institution they need
+ * to belong to doesn't yet exist. The IdP can pass an institution display name through
+ * and be mapped via the SAML instance setting 'samlfieldfororganisationname'.
+ * To make a new institution you need to define what institution to fetch an existing SAML
+ * instance from to be used as the default 'template' SAML settings.
+ */
+//$cfg->saml_create_institution=true;
+//$cfg->saml_create_institution_default = 'mahara';
