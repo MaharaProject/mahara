@@ -17,6 +17,9 @@ require_once('group.php');
 require_once(get_config('libroot') . 'antispam.php');
 require_once('embeddedimage.php');
 
+$cancreatecontrolled = $USER->get('admin') || $USER->get('staff')
+    || $USER->is_institutional_admin() || $USER->is_institutional_staff();
+
 if ($id = param_integer('id', null)) {
     define('TITLE', get_string('editgroup', 'group'));
     define('GROUP', $id);
@@ -54,6 +57,7 @@ else {
         'grouptype'      => 'standard',
         'open'           => 1,
         'controlled'     => 0,
+        'request'        => 0,
         'category'       => 0,
         'public'         => 0,
         'usersautoadded' => 0,
@@ -73,10 +77,24 @@ else {
         'hidemembers'    => GROUP_HIDE_NONE,
         'hidemembersfrommembers'  => GROUP_HIDE_NONE,
     );
+
     // If the user belongs to an institution we need to set the default institution as one of theirs
     $userinstitutions = array_keys($USER->get('institutions'));
     if (!empty($userinstitutions)) {
         $group_data->institution = $userinstitutions[0]; // assign the first one
+    }
+    $group_prefix = 'group_';
+    if ($group_defaults = get_records_sql_array("SELECT * FROM {institution_config}
+                                                 WHERE institution = ? AND field LIKE ? || '%'", array('mahara', $group_prefix))) {
+        foreach ($group_defaults as $k => $v) {
+            $item = preg_replace('/^' . $group_prefix . '/', '', $v->field);
+            if (isset($group_data->$item)) {
+                if ($item == 'controlled' && !$cancreatecontrolled) {
+                    $v->value = 0;
+                }
+                $group_data->$item = $v->value;
+            }
+        }
     }
 }
 
@@ -139,9 +157,6 @@ $elements['membership'] = array(
     'type'         => 'html',
     'value'        => '<h4>' . get_string('Membership', 'group') . '</h4>',
 );
-
-$cancreatecontrolled = $USER->get('admin') || $USER->get('staff')
-    || $USER->is_institutional_admin() || $USER->is_institutional_staff();
 
 $elements['open'] = array(
     'type'         => 'switchbox',
