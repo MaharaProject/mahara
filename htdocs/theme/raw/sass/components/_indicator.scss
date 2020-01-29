@@ -1,6 +1,6 @@
 .move-indicator {
     @extend .text-muted;
-    font-size: $font-size-base * .786;
+    font-size: $font-size-base * 0.785;
     vertical-align: middle;
     margin-left: -4px;
     opacity: 0.7;
@@ -19,22 +19,22 @@
 
 //dash
 .collapse-indicator {
-    color: scale-color($gray-500, $lightness: 37.5%);
-    font-size: 13px;
+    color: $collapse-indicator-color;
+    font-size: $font-size-base * 0.9285;
     display: block;
     transition-duration: 0.3s;
     &.float-right {
         margin: 2px 0 0;
     }
     &.text-small {
-        font-size: 11px;
+        font-size: $font-size-base * 0.785;
     }
     .collapsed & {
-        color: scale-color($gray-500, $lightness: 37.5%);
+        color: $collapse-indicator-color;
     }
     a:hover &,
     a:focus & {
-        color: $gray-500;
+        color: $collapse-indicator-hover-color;
     }
     .collapsed ~ & {
         transform: rotate(180deg);
@@ -47,12 +47,12 @@ tr[data-toggle="collapse"],
 a[data-toggle="collapse"] {
     &:hover .collapse-indicator,
     &:focus .collapse-indicator{
-        color: $gray-500;
+        color: $collapse-indicator-hover-color;
     }
     .collapse-indicator {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
-        color: scale-color($gray-500, $lightness: 37.5%);
+        color: $collapse-indicator-color;
         margin-top: 5px;
         line-height: 13px;
         height: auto;
@@ -65,12 +65,12 @@ a[data-toggle="collapse"] {
 
 .expand-indicator {
     @extend .text-muted;
-    font-size: 12px;
+    font-size: $font-size-sm;
     padding-right: 5px;
     + .icon {
-        color: $theme-text-color;
+        color: $collapse-indicator-color;
         &:hover, &:focus {
-            color: scale-color($theme-text-color, $lightness: 12.5%);
+            color: $collapse-indicator-hover-color;
         }
     }
 }
@@ -79,13 +79,13 @@ a[data-toggle="collapse"] {
 [data-toggle="collapse"].outer-link {
     &.collapsed {
         ~ .collapse-indicator {
-            color: scale-color($gray-500, $lightness: 37.5%);
+            color: $collapse-indicator-color;
         }
     }
     &:hover,
     &:focus {
         ~ .collapse-indicator {
-            color:$gray-500;
+            color: $collapse-indicator-hover-color;
         }
     }
 }
@@ -156,5 +156,17 @@ a[data-toggle="collapse"] {
                 width: 50%;
             }
         }
+    }
+}
+
+.secreturls .list-group-item,
+.iframesources .buttonscell {
+    .collapse-indicator.open .icon-chevron-down {
+        transform: rotate(-180deg);
+        transition-duration: 0.3s;
+    }
+    .collapse-indicator.closed .icon-chevron-down {
+        transform: rotate(0deg);
+        transition-duration: 0.3s;
     }
 }

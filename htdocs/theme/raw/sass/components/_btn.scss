@@ -1,11 +1,12 @@
 // Modifications and extra use cases for bootstrap  buttons
 
 .btn-secondary {
-    color: $theme-text-color;
+    color: $btn-secondary-color;
     background-color: $btn-secondary-bg;
     border-color: $btn-secondary-border;
     box-shadow: none;
-    &:hover {
+    &:hover,
+    &.focus {
         background-color: scale-color($btn-secondary-bg, $lightness: -10.05);
     }
     &.disabled {
@@ -14,8 +15,14 @@
 }
 
 .btn-primary {
+    color: $btn-primary-color;
+    background-color: $btn-primary-bg;
     border-color: $btn-primary-border;
     box-shadow: none;
+    &:hover,
+    &.focus {
+        background-color: scale-color($btn-primary-bg, $lightness: -10.05);
+    }
 }
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
@@ -74,47 +81,6 @@
     }
 }
 
-// Used on pending friends page
-.btn-toggle.card-footer {
-    padding:0;
-    > .btn {
-        border-radius: 0;
-        width: 100%;
-        float: left;
-        height: 42px;
-        line-height: 30px;
-        text-align: left;
-        &:first-child {
-            border-radius: 0 0 0 $border-radius;
-            border-bottom: 1px solid $card-border-color;
-        }
-        &:last-child {
-            border-radius: 0 0 $border-radius 0;
-
-        }
-        .btn {
-            padding: 0;
-            margin: 0;
-            color: inherit;
-             &:hover {
-                 text-decoration: none;
-             }
-        }
-        form {
-            display: inline-block;
-        }
-        &:hover {
-            color: $gray-900;
-            background: $gray-100;
-            text-decoration: none;
-
-            .icon {
-                color: $gray-300;
-            }
-        }
-    }
-}
-
 h1 + div > .btn-top-left,
 .page-header + div.btn-top-left {
     float: none;
@@ -157,7 +123,7 @@ p ~ div > .btn-group-top,
             margin-right: 1px;
             width: 100%;
             border-right-width: 1px;
-            border-radius: $border-radius !important;
+            border-radius: $btn-border-radius !important;
             .btn {
                 margin-bottom: 0;
             }
@@ -240,17 +206,17 @@ td.action-list-copy {
     right: 10px;
     margin-top: 0px;
     .btn {
-        border-radius: $border-radius;
+        border-radius: $btn-border-radius;
         border-color: transparent;
         background: scale-color($btn-secondary-bg, $lightness: 40%);
         &:hover {
             background: rgba($btn-secondary-bg, 1);
         }
         &:first-child {
-            border-radius: $border-radius 0 0 $border-radius;
+            border-radius: $btn-border-radius 0 0 $btn-border-radius;
         }
         &:last-child {
-            border-radius: 0 $border-radius $border-radius 0;
+            border-radius: 0 $btn-border-radius $btn-border-radius 0;
         }
     }
 }
@@ -274,74 +240,6 @@ td.action-list-copy {
     }
 }
 
-
-//page builder collapsible
-.btn-group-vertical {
-    .btn:not(:first-child) {
-        margin-left: 0;
-    }
-    .indicator {
-        margin-left: -4px;
-        font-size: $font-size-base - 3;
-        padding: 7px 5px 0 0;
-        vertical-align: top;
-        &.icon-arrows-alt {
-            vertical-align: middle;
-            margin-left: -7px;
-        }
-    }
-    .title {
-        white-space: normal;
-        display: none;
-        @include media-breakpoint-up(lg) {
-            display: inline-block;
-            margin-left: 5px;
-        }
-    }
-    .hide-title-collapsed {
-        .title {
-            margin-left: 2px;
-        }
-    }
-    .block-icon {
-        display: inline-block;
-        @include media-breakpoint-up(lg) {
-            display: none;
-        }
-    }
-     &.btn-accordion {
-        .btn {
-            margin-bottom: -1px;
-            max-width: 100%;
-            overflow: hidden;
-            width:100%;
-            min-width: 60px;
-            &.ui-accordion-header {
-                 margin-bottom: -3px;
-            }
-            &.last {
-                border-bottom-radius: 3px;
-                background-color: $btn-secondary-bg;
-            }
-        }
-        // To override btn-primary colour
-        .btn-primary {
-            color: $gray-700;
-            background: $gray-400;
-            border-color: $btn-secondary-border;
-        }
-    }
-    label {
-        font-size: 12px;
-        white-space: normal;
-        vertical-align: middle;
-        padding: 0;
-        width: auto;
-        max-width: 85%;
-        margin-left: 2px;
-        margin-bottom: 0;
-    }
-}
 //page builder collapsible
 .btn-accordion.ui-accordion {
     &.btn-help {
@@ -445,7 +343,7 @@ td.action-list-copy {
     .mce-primary {
         background-color: $btn-primary-bg;
         border-color: $btn-primary-border;
-        font-family: $font-family-sans-serif;
+        font-family: $font-family-base;
 
         &:hover {
             background-color: scale-color($btn-primary-bg, $lightness: -32%);
@@ -463,7 +361,7 @@ td.action-list-copy {
             button.submit {
             background-color: $btn-primary-bg;
             border-color: $btn-primary-border;
-            font-family: $font-family-sans-serif;
+            font-family: $btn-font-family;
             color: $btn-primary-color;
 
             &:hover {
@@ -475,7 +373,7 @@ td.action-list-copy {
 
 .btn-sm,
 .btn-group .btn.btn-sm {
-    font-size: $font-size-base / 1.1665;
+    font-size: $font-size-sm;
     border: 1px solid $btn-secondary-border;
     padding: 0.14375rem 0.625rem;
 }
@@ -483,7 +381,7 @@ td.action-list-copy {
 .card.first .card-header {
     a:not(.secondary-link),
     a.btn-sm {
-        border-radius: $border-radius-sm;
+        border-radius: $btn-border-radius-sm;
 
         &:last-child {
             border-top-left-radius: 0;
@@ -554,4 +452,98 @@ td.action-list-copy {
           background-color: scale-color($danger, $lightness: -10%);
         }
     }
+}
+
+// Networking delete btn
+.secondary #networkingform_submit {
+    background-color: $state-danger-bg;
+    color: $state-danger-text;
+    border-color: $state-danger-border;
+    margin-left: .5rem;
+}
+
+// Web services add service groups btn
+#webservices_function_groups_add_submit,
+#webservices_token_generate_submit {
+    width: auto;
+}
+
+// Find groups search
+#search_searchfield {
+    color: $btn-primary-color;
+    background-color: $btn-primary-bg;
+    border: $btn-primary-border;
+    border-radius: $border-radius;
+    width: auto;
+    margin-top: 12px;
+}
+
+#forums-list .button {
+    white-space: nowrap;
+}
+
+// Manage collections
+.collection-pages {
+    button.btn-sm {
+        border: 0;
+    }
+}
+
+// Find people results approve request alignment
+.approvefriend .pieform {
+    display: inline-block;
+    margin-left: 3px;
+    button {
+        font-size: $font-size-base * 0.85715;
+    }
+}
+
+// Stop btn links displaying as buttons
+[type="button"].btn-link,
+a[type="submit"],
+.card-header a[type="button"] {
+    -webkit-appearance: none;
+}
+
+.json-editor-btn-add {
+    border-top-right-radius: $border-radius !important;
+    border-bottom-right-radius: $border-radius !important;
+}
+
+.assessment-item-buttons {
+    .assessbtn + .assessbtn {
+        button {
+            @include border-left-radius(0);
+        }
+    }
+}
+
+.btn-search.btn.btn-primary.admin-groups.button.btn {
+    margin-left: -13px;
+    margin-top: 2px;
+    vertical-align: text-top;
+}
+
+// Notifications search and bulk action select alignment
+.form-inline {
+    input {
+        @extend .form-control;
+        &.btn-primary {
+            @extend .btn-primary;
+        }
+    }
+}
+.notification-parent {
+    .bulk-actions {
+        input {
+            margin-top: 1px;
+        }
+        button {
+            height: calc(2.0625rem + 2px);
+        }
+    }
+}
+
+.connections button {
+    margin-top: 10px;
 }

@@ -34,9 +34,9 @@ h1 {
         margin: 40px 0 10px 0;
         padding: 0;
         border-bottom: 0;
-        font-size: 36px;
+        font-size: $font-size-base * 2.5715;
         @include media-breakpoint-down(md) {
-            font-size: 30px;
+            font-size: $font-size-base * 2.1425;
             margin-top: 20px;
         }
     }
@@ -131,7 +131,7 @@ h2 {
 h2, h3, h4, h5, legend {
     &.card-header {
         margin: 0;
-        font-size: 16px;
+        font-size: $font-size-base * 1.14285;
     }
     &.no-margin {
         margin: 0;
@@ -239,17 +239,17 @@ blockquote {
 
 .lead,
 .lead p {
-    font-size: ($font-size-base * 1.10);
+    font-size: $font-size-base * 1.14285;
     font-weight: 300;
     line-height: 1.4;
     margin-bottom: 15px;
 
     @include media-breakpoint-up(md) {
-        font-size: ($font-size-base * 1.2);
+        font-size: $font-size-base * 1.215;
     }
 
     &.text-small {
-        font-size: $font-size-base;
+        font-size: $font-size-sm;
     }
     &.link {
         margin-bottom: 0;
@@ -302,7 +302,7 @@ pre {
         font-weight: bold;
     }
     span.wsdescription {
-        color: #2A33A6;
+        color: $info;
         padding-right: 10px;
 
         .wsrequired {

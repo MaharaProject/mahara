@@ -1,76 +1,39 @@
 .expand-indicator,
 .move-indicator {
     .card-secondary & {
-        color: #FFF;
-    }
-}
-
-.collapse-indicator {
-    color: scale-color($theme-primary-color, $lightness: 10%);
-    .collapsed & {
-        color: scale-color($theme-primary-color, $lightness: 10%);
-    }
-    a:hover &,
-    a:focus & {
-        color: $theme-primary-color;
-    }
-}
-
-tr[data-toggle="collapse"],
-a[data-toggle="collapse"] {
-    &:hover .collapse-indicator,
-    &:focus .collapse-indicator{
-        color: scale-color($theme-primary-color, $lightness: 10%);
-    }
-    .collapse-indicator {
-        color: $theme-primary-color;
-    }
-}
-
-[data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
-[data-toggle="collapse"].outer-link:hover ~ .collapse-indicator {
-    &.collapsed {
-        ~ .collapse-indicator {
-            color: scale-color($theme-primary-color, $lightness: 10%);
-        }
-    }
-    &:hover,
-    &:focus {
-        ~ .collapse-indicator {
-            color: $theme-primary-color;
-        }
+        color: $white;
     }
 }
 
 // if indicators are in colour block titles then make it white
-.card-secondary {
+.card.card-secondary {
     .card-header {
         .move-indicator {
-            color: #FFFFFF !important;
+            color: $white !important;
         }
         [data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
         [data-toggle="collapse"].outer-link:hover ~ .collapse-indicator  {
-            color: #FFFFFF;
+            color: $white;
             &.collapsed {
                 ~ .collapse-indicator {
-                    color: #FFFFFF;
+                    color: $white;
                 }
             }
             a:hover,
             a:focus {
                 .collapse-indicator {
-                    color: #FFFFFF;
+                    color: $white;
                 }
             }
         }
         .collapse-indicator {
-            color: #FFFFFF;
+            color: $white;
             .collapsed & {
-                color: #FFFFFF;
+                color: $white;
             }
             a:hover &,
             a:focus & {
-                color: #FFFFFF;
+                color: $white;
             }
         }
     }

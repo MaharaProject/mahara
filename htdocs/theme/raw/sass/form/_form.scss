@@ -106,9 +106,26 @@ label,
     margin:0;
 }
 
-.wysiwyg label,
 .textarea label {
     vertical-align: top;
+}
+
+.wysiwyg {
+    label {
+        display: block;
+        vertical-align: top;
+        + .mce-tinymce {
+            width:100%;
+        }
+    }
+    &.view-description {
+        width: 70%;
+    }
+    &.under-label-help {
+        label + .mce-tinymce {
+            width:70%;
+        }
+    }
 }
 
 // BS3 code - begin
@@ -259,7 +276,7 @@ textarea.resizable {
 .hasDatepickerwrapper:after {
     @include fonttype(regular);
     content: fa-content($fa-var-calendar-alt);
-    font-size: 18px;
+    font-size: $font-size-lg;
     color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
     right: 25px;
@@ -272,7 +289,7 @@ textarea.resizable {
     color: scale-color($theme-text-color, $lightness: 25%);
     right: 10px;
     position: absolute;
-    font-size: 16px;
+    font-size: $font-size-base * 1.14285;
     top: 5px;
 }
 .date-picker {
@@ -292,14 +309,79 @@ textarea.resizable {
 }
 
 .progress {
-    background: repeating-linear-gradient(45deg, #f5f5f5, #f5f5f5 10px, #eeeeee 10px, #eeeeee 20px);
-    .progress-bar.small-progress {
-        span {
-            color: #666666;
+    background: $progress-bg;
+    .progress-bar {
+        position: relative;
+        height: 100%;
+        &.small-progress span {
+            display: block;
+            left: 100%;
+            padding-left: 5px;
+            position: absolute;
+            color: $theme-text-midtone-color;
+        }
+        .decompress-link {
+            color: $progress-bar-color;
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 8px;
         }
     }
 }
 
+#progress-iframe { // old style progress bars, e.g. portfolio export
+    border: 1px solid $gray-500;
+    height: 40px;
+    width: 100%;
+    max-width: 650px;
+    margin: 20px 0;
+}
+
 input:disabled[type="text"] {
     color: $black;
+}
+
+// Add space when there are 2 selects next to each other
+.select {
+    + .select {
+        margin-left: 5px;
+    }
+    + .submit:not(.input-group-append) {
+        margin-left: 5px;
+    }
+}
+
+// Styles for select2 in forms
+// overriding select2 default styles
+.select2-container-multi {
+    max-width: 85% !important;
+    display: inline-block;
+    @include media-breakpoint-up(md) {
+        width: 420px !important;
+    }
+    @include media-breakpoint-up(xl) {
+        width: 500px !important;
+    }
+    &.select2-dropdown-open {
+        .select2-choices {
+            border-radius: $border-radius $border-radius 0 0;
+        }
+    }
+    .select2-choices {
+        @include box-shadow($input-box-shadow);
+        border-radius: $input-border-radius;
+        background-color: $body-bg;
+        border: $input-border-width solid $input-border-color;
+        background-image: none;
+        width: 100%;
+        .select2-search-choice {
+            border: none;
+        }
+    }
+}
+
+.form-group.checkboxes .group-invite input[type="checkbox"] {
+    float: left;
+    top: 0;
+    margin-right: 5px;
 }

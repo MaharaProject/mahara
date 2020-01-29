@@ -1,33 +1,35 @@
 // card is the style used for the user-editable cards used across Mahara
 
 .card.card-secondary {
-    &.card {
-        @include box-shadow(none);
-        border-color: transparent;
-    }
+    @include box-shadow(none);
+    border-color: transparent;
     .admin & {
         border-color: $card-border-color;
     }
     .admin .user-page-content & {
         border-color: transparent;
     }
-    > .card-header {
-        font-family: $font-family-serif;
-        border-bottom: 2px solid $card-secondary-border;
-        font-size: $h4-font-size;
-        font-weight: 300;
-        margin-top: 0;
-    }
-    &.blockinstance.card {
+    &.blockinstance {
         background-color: transparent;
         .card-header {
             background-color: $card-header-bg;
+
+            > .blockinstance-header {
+                display: block;
+                padding-left: 10px;
+                padding-right: 80px;
+                word-break: normal;
+            }
         }
     }
     > .card-header, .card-header-nested {
-        border-bottom: 2px solid $card-secondary-border;
         padding: 10px 8px 10px 0px;
         background: transparent;
+        font-family: $headings-font-family;
+        font-size: $h4-font-size;
+        font-weight: $headings-font-weight;
+        border-bottom: 2px solid $card-secondary-border;
+        margin-top: 0;
 
         // In page builder we can choose to not have a heading,
         // but we still need a dragable object.
@@ -51,9 +53,9 @@
             background-color: $state-warning-bg;
             border-bottom: 1px solid $state-warning-border;
         }
-    }
-    & .card-warning .card-body {
+        .card-body {
             background-color: $state-warning-bg;
+        }
     }
     .card-header-plain {
         border: 1px solid scale-color($gray-300, $lightness: -10.93);
@@ -79,4 +81,78 @@
             margin: 0;
         }
     }
+
+    // Plan blocks
+    .list-group .task-item {
+        a[data-toggle="collapse"] .collapse-indicator,
+        a[data-toggle="collapse"].collapsed .collapse-indicator {
+            margin-right: 10px;
+            margin-top: 17px;
+        }
+        .plan-task-icon {
+            vertical-align: top;
+            padding-top: 4px;
+            z-index: 3;
+            position: relative;
+            cursor: pointer;
+        }
+        .plan-task-heading {
+            max-width: 60%;
+            display: inline-block;
+        }
+        .plan-task-detail {
+            margin-left: 22px;
+            margin-top: 10px;
+            .tags {
+                margin-bottom: 0;
+            }
+        }
+    }
+    &.bt-plans-editor .list-group .task-item {
+        a[data-toggle="collapse"] .collapse-indicator,
+        a[data-toggle="collapse"].collapsed .collapse-indicator {
+            margin-right: 90px;
+        }
+    }
+}
+
+// Gallery thumbnails
+// override bootstrap thumbnails styling
+.thumbnails {
+    padding-top: 20px;
+    .thumb {
+        margin: 5px 0px 10px 5px;
+    }
+}
+.thumbnail {
+    margin: 0 15px 0 0;
+    .card-body & {
+        margin-bottom: 10px;
+    }
+}
+.bt-gallery,
+.bt-gallery-editor {
+    img.frame {
+        padding: $thumbnail-padding;
+        margin: 0;
+        border: $thumbnail-border-width solid $thumbnail-border-color;
+        background: $thumbnail-bg;
+        box-shadow: $thumbnail-box-shadow;
+        border-radius: $thumbnail-border-radius;
+    }
+    &.card.card-secondary > .block > .card-body {
+        overflow: hidden;
+        padding: 15px 20px;
+    }
+}
+
+
+// giving top margin to blog description only when it exists
+.bt-blog #blogdescription > * {
+    margin-top: 10px;
+}
+
+// tagged post title needs padding bottom
+.bt-taggedposts .taggedpost-title {
+    padding: 10px 0;
 }

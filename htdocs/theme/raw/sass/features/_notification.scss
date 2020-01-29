@@ -2,7 +2,7 @@
     .selectall {
         margin-top: 15px;
         margin-right: 30px;
-        font-size: $font-size-base - 2;
+        font-size: $font-size-sm;
     }
     .notification-list {
         padding-top: 20px;
@@ -12,7 +12,7 @@
 .notification-parent {
     .bulk-actions {
         label {
-            font-size: 16px;
+            font-size: $font-size-base * 1.14285;
         }
         @include media-breakpoint-up(sm) {
             float: left;

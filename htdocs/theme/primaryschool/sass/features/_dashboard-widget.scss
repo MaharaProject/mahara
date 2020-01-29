@@ -34,7 +34,7 @@ $logged-in-height-phone: 120px;
 
         .widget {
             background-color: $theme-accent-color-two;
-            border-left: 10px solid #FFFFFF;
+            border-left: 10px solid $white;
             height: $logged-in-height;
 
             @include media-breakpoint-between (sm, lg) {
@@ -47,7 +47,7 @@ $logged-in-height-phone: 120px;
 
             .puzzle {
                 background-color: $theme-accent-color;
-                border: 10px solid #FFFFFF;
+                border: 10px solid $white;
                 border-left: 0;
                 width: 50px;
                 height: 80px;
@@ -78,8 +78,8 @@ $logged-in-height-phone: 120px;
                 background-color: $theme-accent-color;
 
                 .puzzle {
-                    background-color: #FFFFFF;
-                    border: 10px solid #FFFFFF;
+                    background-color: $white;
+                    border: 10px solid $white;
                     border-left: 0;
                 }
             }
@@ -91,7 +91,7 @@ $logged-in-height-phone: 120px;
 
                 .puzzle {
                     background-color: $theme-accent-color-two;
-                    border: 10px solid #FFFFFF;
+                    border: 10px solid $white;
                     border-left: 0;
                 }
             }
@@ -119,7 +119,7 @@ $logged-in-height-phone: 120px;
         }
 
         .puzzlewrap {
-            border-left: 10px solid #FFFFFF;
+            border-left: 10px solid $white;
             position: relative;
             height: $logged-in-height;
             width: 90px;
@@ -133,7 +133,7 @@ $logged-in-height-phone: 120px;
 
         .puzzle {
             background-color: $theme-secondary-color;
-            border: 10px solid #FFFFFF;
+            border: 10px solid $white;
             border-left: 0;
             width: 50px;
             height: 80px;
@@ -154,7 +154,7 @@ $logged-in-height-phone: 120px;
             }
 
             .pencillead {
-                background-color: #333333;
+                background-color: $gray-700;
                 width: 25px;
                 height: 40px;
                 -moz-border-radius: 0 50px 50px 0;
@@ -201,7 +201,7 @@ $logged-in-height-phone: 120px;
             font-family: 'Shadows Into Light Two', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-weight: 400;
             font-size: 30px;
-            color: #FFFFFF;
+            color: $white;
 
             @include media-breakpoint-between (sm, lg) {
                 font-size: 32px;
@@ -234,7 +234,7 @@ $logged-in-height-phone: 120px;
         p {
             margin: 0;
             font-size: $font-size-sm;
-            color: #FFFFFF;
+            color: $white;
 
             @include media-breakpoint-down(sm) {
                 margin: 0;
@@ -243,7 +243,7 @@ $logged-in-height-phone: 120px;
         }
 
         a {
-            color: #FFFFFF;
+            color: $white;
         }
     }
 
@@ -263,7 +263,7 @@ $logged-in-height-phone: 120px;
 
         p {
             margin-bottom: 0;
-            color: #333;
+            color: $gray-700;
 
             @include media-breakpoint-down(sm) {
                 font-size: $font-size-sm;
@@ -306,7 +306,7 @@ $logged-in-height-phone: 120px;
 
             p {
                 font-size: $font-size-sm;
-                color: #FFFFFF;
+                color: $white;
             }
         }
 
@@ -335,7 +335,7 @@ $logged-in-height-phone: 120px;
             }
 
             p {
-                color: #fff;
+                color: $white;
             }
         }
     }
@@ -362,7 +362,7 @@ $logged-in-height-phone: 120px;
 }
 
 .dashboard-editable {
-    border-top: 1px solid #cccccc;
+    border-top: 1px solid $gray-200;
 }
 
 .loggedout .dashboard-widget-container {

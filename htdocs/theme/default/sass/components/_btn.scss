@@ -1,16 +1,15 @@
 // forum buttons
 .forum-post-btns {
-    border-top: 1px dotted #ececec;
+    border-top: 1px dotted $gray-100;
     padding: 10px;
 }
 
-.btn-secondary, .drag-default-button {
+.drag-default-button {
     background: $btn-secondary-bg;
-    margin-bottom: 0;
     &:hover,
     &:focus {
         background: scale-color($btn-secondary-bg, $lightness: -9.7%);
-        color: $theme-text-color;
+        color: $btn-secondary-color;
         border-color: scale-color($btn-secondary-border, $lightness: -12%);
     }
 }

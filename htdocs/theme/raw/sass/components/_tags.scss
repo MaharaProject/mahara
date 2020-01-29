@@ -18,7 +18,7 @@
     margin-top: 25px;
     .tagfreq.badge {
         color: inherit;
-        border: 1px solid theme-color("primary");
+        border: 1px solid $link-color;
         background-color: transparent;
     }
     .tag {
@@ -31,7 +31,7 @@
     color: $gray-500;
     .badge {
         border: 1px solid transparent;
-        color: #fff;
+        color: $white;
         background-color: $gray-500;
     }
 }
@@ -50,14 +50,13 @@
     @extend .clearfix;
     background: scale-color($card-bg, $lightness: -1.5%);
     padding: 10px 15px;
-    border-bottom: 1px solid $list-group-border-color;
 }
 
 //Edit tag page
 .tag-action-description {
     color: $theme-text-lighttone-color;
     font-style: italic;
-    font-size: $font-size-base - 1;
+    font-size: $font-size-base * 0.9285;
     max-width: 90%;
     display: block;
     padding-top: 10px;

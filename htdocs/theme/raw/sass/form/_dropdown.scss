@@ -78,7 +78,7 @@
 
     .input-sm {
         padding: 2.3px 10px;
-        font-size: 12px;
+        font-size: $font-size-sm;
         &.picker {
             padding: 0;
         }
@@ -158,7 +158,7 @@
     > .active {
         background-color: $theme-primary-color;
         > a {
-            color: #fff;
+            color: $white;
             text-decoration: none;
             outline: 0;
             background-color: $theme-primary-color;
@@ -198,7 +198,7 @@
       padding: 0;
 
         > a {
-            padding: 5px 10px;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
             display: block;
 
             &:hover,
@@ -207,7 +207,7 @@
             }
         }
         > span.nolink {
-            padding: 5px 10px;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
             display: block;
             white-space: nowrap;
         }

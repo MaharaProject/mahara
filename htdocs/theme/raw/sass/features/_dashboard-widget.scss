@@ -1,5 +1,5 @@
-$logged-in-height: 90px;
-$logged-in-height-mobile: 100px;
+$logged-in-height: 100px;
+$logged-in-height-mobile: 110px;
 
 
 .dashboard-widget-container {
@@ -7,67 +7,10 @@ $logged-in-height-mobile: 100px;
     margin-top: $grid-gutter-width;
 
     .remove-widgets {
-        font-size: $font-size-sm * 0.8335;
+        font-size: $font-size-sm;
     }
-    .hide-info{
+    .hide-info {
         clear: both;
-    }
-
-    .widget-heading {
-        @include clearfix;
-        padding: 13px 15px;
-        height: $logged-in-height;
-        border-top: 3px solid $dashboard-widget-color;
-        background-color: scale-color($dashboard-widget-bg, $lightness: -3.25%);
-
-        @include media-breakpoint-between(md, lg) {
-            height: $logged-in-height-mobile;
-            padding: 7px 15px;
-        }
-
-        h2 {
-            margin: 5px 0 3px;
-            font-weight: bold;
-        }
-
-        p {
-            margin: 0;
-            font-size: $font-size-sm;
-            color: $gray-500;
-        }
-        a {
-            color: $link-color;
-        }
-    }
-
-    .circle-bg {
-        margin-right: 10px;
-        border-radius: 50%;
-        position: relative;
-        float: left;
-        background-color: $dashboard-widget-color;
-        width: 60px;
-        height: 60px;
-        text-align:center;
-
-        .icon {
-            color: $body-bg;
-            padding-top:16px;
-            font-size: 30px;
-            &.icon-user {
-                padding-left:0; // the only one that is actually centered by defualt
-            }
-        }
-    }
-
-    .widget-detail {
-        padding: 10px 15px;
-        border: 1px solid $gray-100;
-
-        p {
-            margin-bottom: 0;
-            color: $theme-text-color;
-        }
     }
 
     .thumbnail-widget {
@@ -82,91 +25,125 @@ $logged-in-height-mobile: 100px;
                 padding-left: 0;
             }
         }
-    }
-
-    .logged-in {
-        text-decoration: none;
-        height: $logged-in-height;
-        overflow:hidden;
-
-        @include media-breakpoint-down(sm) {
-            height: auto;
-        }
 
         .widget-heading {
             @include clearfix;
-            border-radius: $border-radius;
+            padding: 10px;
+            height: $logged-in-height;
+            border-top: 3px solid $dashboard-widget-circle-bg;
+            background-color: $dashboard-widget-bg;
 
-            @include media-breakpoint-down(md) {
-                border-radius: $border-radius $border-radius 0 0;
+            @include media-breakpoint-between(md, lg) {
+                height: $logged-in-height-mobile;
+            }
+
+            .circle-bg {
+                margin-right: 10px;
+                border-radius: 50%;
+                position: relative;
+                float: left;
+                background-color: $dashboard-widget-circle-bg;
+                width: 60px;
+                height: 60px;
+                text-align:center;
+
+                .icon {
+                    color: $dashboard-widget-cirlce-icon-color;
+                    padding-top:16px;
+                    font-size: $font-size-base * 2.15;
+                }
             }
 
             h2 {
                 margin: 5px 0 3px;
                 font-weight: bold;
+                color: $dashboard-widget-title-color;
             }
 
             p {
                 margin: 0;
                 font-size: $font-size-sm;
-                color: $link-color;
+                color: $dashboard-widget-title-color;
             }
         }
 
         .widget-detail {
-            @include transition(0.03s);
-            border-radius: $border-radius;
-            opacity:0;
-            margin-top: -$logged-in-height * 2;
-            border: none;
-            font-weight: bold;
-            position: relative;
-            display: inline-block;
-            z-index: 2;
-            background-color: $dashboard-widget-color;
-            height: $logged-in-height;
-            margin-right: 15px;
-            vertical-align: top;
-            width:100%;
-            @include media-breakpoint-between(md, lg) {
-                margin-top: -$logged-in-height-mobile * 2;
-                height: $logged-in-height-mobile;
-            }
-            @include media-breakpoint-down(sm) {
-                border-radius: 0 0 $border-radius $border-radius;
-                margin-top: 0;
-                border: 1px solid $gray-100;
-                background-color: $body-bg;
-                font-weight: normal;
-                opacity: 1;
-            }
+            padding: 10px;
+            border: 1px solid $gray-100;
+
             p {
-                color: #fff;
+                margin-bottom: 0;
+                color: $theme-text-color;
+            }
+        }
+
+        &.logged-in {
+            text-decoration: none;
+            overflow:hidden;
+
+            @include media-breakpoint-down(sm) {
+                height: auto;
+            }
+
+            .widget-heading {
+                @include clearfix;
+                border-radius: $border-radius;
 
                 @include media-breakpoint-down(sm) {
-                    color:$theme-text-color;
+                    border-radius: $border-radius $border-radius 0 0;
                 }
             }
-        }
-    }
 
-    .logged-in:hover {
-        .widget-heading {
-            @include media-breakpoint-down(md) {
-                background: scale-color($gray-100, $lightness: -10.5%);
-            }
-        }
-        .widget-detail {
-            @include transition(0.3s);
-            opacity: 1;
-            margin-top: -$logged-in-height;
-            @include media-breakpoint-between(md, lg) {
-                margin-top: -$logged-in-height-mobile;
-            }
-            @include media-breakpoint-down(sm) {
-                margin-top: 0;
+            .widget-detail {
+                @include transition(0.03s);
+                border-radius: $border-radius;
+                opacity:0;
+                margin-top: -$logged-in-height * 2;
+                border: none;
+                position: relative;
+                display: inline-block;
+                z-index: 2;
+                background-color: $dashboard-widget-circle-bg;
+                height: $logged-in-height;
+                vertical-align: top;
+                width:100%;
+                @include media-breakpoint-between(md, lg) {
+                    margin-top: -$logged-in-height-mobile * 2;
+                    height: $logged-in-height-mobile;
+                }
+                @include media-breakpoint-down(sm) {
+                    border-radius: 0 0 $border-radius $border-radius;
+                    margin-top: 0;
+                    border: 1px solid $gray-100;
+                    background-color: $body-bg;
+                    opacity: 1;
+                    height: auto;
+                }
                 p {
-                    color: $link-color;
+                    color: $white;
+
+                    @include media-breakpoint-down(sm) {
+                        color:$theme-text-color;
+                    }
+                }
+            }
+
+            &:hover {
+                .widget-heading {
+                    @include media-breakpoint-down(sm) {
+                        background: scale-color($dashboard-widget-bg, $lightness: -5%);
+                    }
+                }
+                .widget-detail {
+                    @include transition(0.3s);
+                    opacity: 1;
+                    margin-top: -$logged-in-height;
+                    @include media-breakpoint-between(md, lg) {
+                        margin-top: -$logged-in-height-mobile;
+                    }
+                    @include media-breakpoint-down(sm) {
+                        margin-top: 0;
+                    }
                 }
             }
         }

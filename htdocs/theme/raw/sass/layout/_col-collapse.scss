@@ -8,7 +8,7 @@
     @include media-breakpoint-down(md) {
         .title,
         .indicator {
-            font-size: 0.7em;
+            font-size: $font-size-base * 0.715;
         }
     }
 

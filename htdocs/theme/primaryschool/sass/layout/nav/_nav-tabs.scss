@@ -1,12 +1,9 @@
 .nav-tabs {
-    border-bottom-color: $theme-primary-color;
     &.nav {
-        li {
-            > a {
-                &:hover,
-                &:focus {
-                    background-color: rgba($theme-primary-color, 0.1);
-                }
+        li > a {
+            &:hover,
+            &:focus {
+                background-color: rgba($theme-primary-color, 0.1);
             }
         }
     }

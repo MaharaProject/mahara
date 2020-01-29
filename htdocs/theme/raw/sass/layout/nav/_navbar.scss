@@ -12,9 +12,11 @@
     }
 
     .login-link a {
-        margin-left: 15px;
+        display: inline-block;
+        margin: 0 15px;
         padding: 7px 15px;
         color: $navbar-default-link-color;
+        border-radius: $border-radius;
 
         &:focus,
         &:hover {
@@ -116,7 +118,7 @@
       border-radius: $border-radius;
       padding: 0 3px;
       color: $navbar-messages-count-color;
-      font-size: 12px;
+      font-size: $font-size-sm;
     }
 }
 

@@ -58,7 +58,7 @@ Main Components
   height: 3px;
   /* width will be set using JavaScript */
   width: 1000px;
-  background: #dfdfdf;
+  background: $gray-400;
   -webkit-transition: -webkit-transform 0.4s;
   -moz-transition: -moz-transform 0.4s;
   transition: transform 0.4s;
@@ -91,7 +91,7 @@ Main Components
   bottom: 0;
   z-index: 2;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: $font-size-base * 1.285;
   padding-bottom: 15px;
   color: $link-color;
   /* fix bug on Safari - text flickering while timeline translates */
@@ -123,8 +123,8 @@ Main Components
   height: 15px;
   width: 15px;
   border-radius: 50%;
-  border: 2px solid #dfdfdf;
-  background-color: #f8f8f8;
+  border: 2px solid $gray-400;
+  background-color: $gray-100;
   -webkit-transition: background-color 0.3s, border-color 0.3s;
   -moz-transition: background-color 0.3s, border-color 0.3s;
   transition: background-color 0.3s, border-color 0.3s;
@@ -196,7 +196,7 @@ ul.cd-timeline-navigation-second {
     @include fonttype(solid);
     content: fa-content($fa-var-chevron-circle-right);
     color: $theme-primary-color;
-    font-size: 28px;
+    font-size: $font-size-base * 2;
     top: -5px;
     position: relative;
 
@@ -235,7 +235,7 @@ ul.cd-timeline-navigation-second {
 }
 .no-touch .cd-timeline-navigation a.inactive:hover,
 .no-touch .cd-timeline-navigation-second a.inactive:hover {
-  border-color: #dfdfdf;
+  border-color: $gray-400;
 }
 
 .jtline .events-content {
@@ -426,5 +426,10 @@ ul.cd-timeline-navigation-second {
 .jtline .events-content .lineli.selected .jtline .events-content p {
     margin-top: 18px;
     margin-bottom: 20px;
-    font-size: 16px;
+    font-size: $font-size-base * 1.14285;
+}
+
+.jtline .events-content .container-fluid {
+  padding-left: 0;
+  padding-right: 0;
 }

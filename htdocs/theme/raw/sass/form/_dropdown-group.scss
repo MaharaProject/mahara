@@ -63,7 +63,7 @@
         margin-top: 24px;
         float: left;
         z-index: 1;
-        background: rgba(#fff, 0.8);
+        background: rgba($white, 0.8);
         &:before {
             @include fonttype(solid);
             content: fa-content($fa-var-caret-down);
@@ -71,7 +71,6 @@
             position: absolute;
             right: 0%;
             top: 0;
-            z-index: 0;
             height: 17px;
             padding-left: 10px;
             padding-right: 10px;

@@ -4,7 +4,7 @@ $width-sm: 90%;
 
 //tinymce modal
 .blockinstance-as-modal {
-    background: #fff;
+    background: $white;
     padding: 20px;
     border: 1px solid $modal-header-border-color;
 }
@@ -101,7 +101,7 @@ $width-sm: 90%;
     h4, .mce-title {
         font-family: $font-family-base;
         font-weight: 300;
-        font-size: 16px;
+        font-size: $font-size-base * 1.14285;
     }
     .close,
     .mce-close {
@@ -117,7 +117,7 @@ $width-sm: 90%;
         }
         .times {
             opacity: 0.8;
-            font-size: 25px;
+            font-size: $font-size-base * 1.785;
         }
     }
 }
@@ -224,4 +224,32 @@ $width-sm: 90%;
 
 .modal-title {
     margin-top: 0;
+}
+
+.modal-segment-heading {
+    flex: 1;
+    -ms-flex: 0 0 auto; // IE11 fix
+}
+
+#configureauthinstance-modal {
+    .modal-body textarea.under-label,
+    .modal-body .under-label-help.wysiwyg .mce-tinymce {
+        width: calc(100% - 30px) !important;
+    }
+    .modal-body .form-group.text {
+        label {
+            max-width: calc(50% - 30px);
+        }
+        input[type="text"] {
+            max-width: 50%;
+        }
+    }
+    .modal-body .form-group.password {
+        label {
+            max-width: calc(50% - 30px);
+        }
+        input[type="password"] {
+            max-width: 50%;
+        }
+    }
 }

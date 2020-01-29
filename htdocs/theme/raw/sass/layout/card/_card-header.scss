@@ -5,7 +5,7 @@
     background-color: $card-header-bg;
     position: relative;
     display: block;
-    font-family: $font-family-sans-serif;
+    font-family: $font-family-base;
     font-weight: 300;
     p {
         margin: 0;
@@ -60,7 +60,7 @@
         }
         .pieform > .collapsible-group:first-child &,
         .card.first & {
-            @include border-top-radius(3px);
+            @include border-top-radius($border-radius);
         }
     }
     .help a { //fix css on contextual help icons
@@ -74,10 +74,10 @@
 
 
 .card-small .card-header {
-    font-size: 12px;
+    font-size: $font-size-sm;
     padding-right:40px;
     h4 {
-        font-size: 12px;
+        font-size: $font-size-sm;
     }
 }
 
@@ -98,6 +98,9 @@ h3 {
 }
 
 .card {
+    > .card-header {
+        font-size: $font-size-base * 1.14285;
+    }
     &.collapsible:not(.card-secondary) {
         .card-header {
             border: 0;
@@ -130,7 +133,7 @@ h3 {
                 .subject,
                 .metadata,
                 .sentdate {
-                    color: #FFF;
+                    color: $white;
                 }
             }
             .card-body {

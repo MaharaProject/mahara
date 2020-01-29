@@ -6,7 +6,7 @@
         margin:0;
     }
     table {
-        font-size: 12px;
+        font-size: $font-size-sm;
         margin-bottom: 0;
     }
     small {
@@ -35,7 +35,7 @@
         dd {
             color: $gray-500;
             line-height: 1.5em;
-            font-size: 0.9em;
+            font-size: $font-size-base * 0.85715;
         }
     }
     .nav-pills {
@@ -58,4 +58,22 @@
 
 .view-pane .card {
     border-width: 0;
+}
+
+
+// Login card
+.login-externallink {
+    display: inline-block;
+    a.btn {
+        margin: 0 5px 5px 0;
+    }
+}
+
+.login-related-links {
+  .register-link{
+    padding-right: 2px;
+  }
+  .forgotpass-link {
+    padding-left: 5px;
+  }
 }

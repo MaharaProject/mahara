@@ -3,16 +3,17 @@
 //Arrow compoanent variables
 $arrow-color:                   $theme-primary-color;
 $arrow-bar-bg:                  scale-color($theme-primary-color, $lightness: -25%);
-$arrow-text-color:              #fff;
-$arrow-link-color:              #fff;
+$arrow-text-color:              $white;
+$arrow-link-color:              $white;
 $arrow-link-hover-color:        $theme-primary-color;
 $arrow-link-active-color:       $theme-text-color;
-$arrow-link-background-color:   #fff;
+$arrow-link-background-color:   $white;
 
 // color for the secondary title in sections (cf. groups)
-
-$dashboard-widget-bg:           transparent;
-$dashboard-widget-color:        transparent;
+$dashboard-widget-bg:                       scale-color($theme-secondary-color, $lightness: 90%);
+$dashboard-widget-title-color:              #333333;
+$dashboard-widget-circle-bg:                transparent;
+$dashboard-widget-cirlce-icon-color:        $theme-secondary-color;
 
 // Pages and collections page header
 $pageheader-bg:                 scale-color($theme-primary-color, $lightness: 95%);
@@ -25,34 +26,34 @@ $navbar-default-bg:                         $theme-primary-color;
 $navbar-default-border:                     scale-color($navbar-default-bg, $lightness: 5%);
 
 // Navbar toggle
-$navbar-toggle-color:                       #FFF;
+$navbar-toggle-color:                       $white;
 $navbar-toggle-bg:                          transparent;
-$navbar-toggle-hover-color:                 #FFF;
+$navbar-toggle-hover-color:                 $white;
 $navbar-toggle-hover-bg:                    scale-color($navbar-default-bg, $lightness: -5.5%);
-$navbar-toggle-active-color:                #FFF;
+$navbar-toggle-active-color:                $white;
 $navbar-toggle-active-bg:                   scale-color($navbar-default-bg, $lightness: -5.5%);
 
 // Navbar menu
 $navbar-default-link-border:                scale-color($navbar-default-bg, $lightness: 5%);
-$navbar-default-link-color:                 #FFF;
-$navbar-default-link-hover-color:           #FFF;
+$navbar-default-link-color:                 $white;
+$navbar-default-link-hover-color:           $white;
 $navbar-default-link-bg:                    $theme-primary-color;
 $navbar-default-link-hover-bg:              scale-color($navbar-default-bg, $lightness: -5.5%);
-$navbar-default-active-color:               #FFF;
+$navbar-default-active-color:               $white;
 $navbar-default-active-bg:                  scale-color($navbar-default-bg, $lightness: -15%);
 
 // Navbar menus children
 $navbar-inverse-bg:                         scale-color($theme-primary-color, $lightness: 90%);
-$navbar-inverse-link-color:                 #333;
-$navbar-inverse-link-hover-color:           #333;
+$navbar-inverse-link-color:                 $gray-700;
+$navbar-inverse-link-hover-color:           $gray-700;
 $navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
-$navbar-inverse-link-active-color:          #000;
+$navbar-inverse-link-active-color:          $black;
 $navbar-inverse-link-active-bg:             scale-color($navbar-inverse-bg, $lightness: -2%);
 
 // Navbar menu children toggles
-$navbar-inverse-toggle-color:               #FFF;
+$navbar-inverse-toggle-color:               $white;
 $navbar-inverse-toggle-bg:                  transparent;
-$navbar-inverse-toggle-hover-color:         #333;
+$navbar-inverse-toggle-hover-color:         $gray-700;
 $navbar-inverse-toggle-hover-bg:            scale-color($theme-primary-color, $lightness: 90%);
-$navbar-inverse-toggle-active-color:        #000;
+$navbar-inverse-toggle-active-color:        $black;
 $navbar-inverse-toggle-active-bg:           scale-color($theme-primary-color, $lightness: 90%);

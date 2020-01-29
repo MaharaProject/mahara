@@ -4,19 +4,21 @@
 // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
 //Arrow component variables
-$arrow-color:                               scale-color(theme-color("primary"), $lightness: 80%) !default;
+$arrow-color:                               scale-color($theme-primary-color, $lightness: 80%) !default;
 $arrow-bar-bg:                              scale-color($arrow-color, $lightness: 35%) !default;
 $arrow-text-color:                          $theme-text-color !default;
 $arrow-link-color:                          $link-color !default;
 $arrow-link-hover-color:                    $theme-text-color !default;
 $arrow-link-active-color:                   $theme-text-color !default;
-$arrow-link-background-color:               #fff !default;
+$arrow-link-background-color:               $white !default;
 
 // color for the secondary title in sections (cf. groups)
 $section-heading-color:                     #999 !default;
 
-$dashboard-widget-bg:                       #f4f4f4 !default;
-$dashboard-widget-color:                    theme-color("primary") !default;
+$dashboard-widget-bg:                       #ececec !default;
+$dashboard-widget-title-color:              #333333 !default;
+$dashboard-widget-circle-bg:                $theme-primary-color !default;
+$dashboard-widget-cirlce-icon-color:        $white !default;
 
 $help-icon-color:                           theme-color("statetext") !default;
 $rss-icon-color:                            #FE6500 !default;
@@ -40,7 +42,7 @@ $site-footer-hover-bg:                      #eee !default;
 
 // Site header
 $navbar-height:                             60px !default;
-$navbar-default-bg:                         #fff !default;
+$navbar-default-bg:                         $white !default;
 $navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%) !default;
 
 // Navbar toggle
@@ -65,7 +67,7 @@ $navbar-inverse-bg:                         #F1F1F1 !default;
 $navbar-inverse-link-color:                 $link-color !default;
 $navbar-inverse-link-hover-color:           $link-hover-color !default;
 $navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%) !default;
-$navbar-inverse-link-active-color:          theme-color("text") !default;
+$navbar-inverse-link-active-color:          $theme-text-color !default;
 $navbar-inverse-link-active-bg:             #F1F1F1 !default;
 
 // Navbar menu children toggles
@@ -103,12 +105,14 @@ $state-submitted-bg:                        scale-color($yellow, $lightness: 90%
 $state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
 
 // Buttons + Forms
+$btn-font-family:                           $font-family-base;
+$btn-secondary-color:                       #theme-text-color;
 $btn-secondary-bg:                          #F9F9F9 !default;
 $btn-secondary-border:                      $secondary !default;
 
-$btn-primary-color:                         #fff !default;
-$btn-primary-bg:                            theme-color("primary") !default;
-$btn-primary-border:                        scale-color(theme-color("primary"), $lightness: -16%) !default;
+$btn-primary-color:                         $white !default;
+$btn-primary-bg:                            $theme-primary-color !default;
+$btn-primary-border:                        scale-color($theme-primary-color, $lightness: -16%) !default;
 
 $btn-bg-disabled-color:                     #f9f9f9 !default;
 
@@ -151,3 +155,7 @@ $theme-block-header-hover-bg-color:         scale-color($theme-block-header-bg-c
 $theme-block-header-hover-color:            $white !default;
 $theme-block-header-active-bg-color:        $theme-primary-color !default;
 $theme-block-header-active-color:           $white !default;
+
+// Collapse/expand indicator
+$collapse-indicator-color:                  scale-color($gray-500, $lightness: 37.5%) !default;
+$collapse-indicator-hover-color:            $gray-500 !default;

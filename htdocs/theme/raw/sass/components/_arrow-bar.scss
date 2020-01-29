@@ -1,10 +1,8 @@
 .arrow-bar {
     border-radius: $border-radius;
     overflow: hidden;
-    margin-top: 10px;
     margin-bottom: $grid-gutter-width;
     line-height: 46px;
-    color: $popover-arrow-color;
     display: block;
     width: 100%;
     background-color: $arrow-bar-bg;
@@ -18,13 +16,8 @@
 
     .arrow {
         float: left;
-        position: relative;
-        display: block;
         background-color: $arrow-color;
         width: auto;
-        @include media-breakpoint-down(lg) {
-            width: auto;
-        }
         &:after {
             border-bottom: 29px solid transparent;
             border-left: 14px solid $arrow-color;
@@ -40,7 +33,7 @@
             @include ellipsis(true);
             display: block;
             color: $arrow-text-color;
-            font-weight: 700;
+            font-weight: bold;
         }
     }
 
@@ -49,7 +42,6 @@
         text-align: right;
     }
 }
-
 
 .nav-inpage {
     &.nav > li {

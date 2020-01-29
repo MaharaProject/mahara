@@ -203,24 +203,24 @@
  				cursor: pointer;
  				border-radius: $border-radius;
  				&:hover {
- 					background: #e9ecef;
+ 					background: scale-color($theme-primary-color, $lightness: 95%);
  				}
  			}
  			span.active {
  				background-color: $theme-primary-color;
- 				color: #fff;
+ 				color: $white;
  				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
  			}
  			span.old {
- 				color: #6c757d;
+ 				color: $gray-600;
  			}
  			span.disabled {
  				background: none;
- 				color: #6c757d;
+ 				color: $gray-600;
  				cursor: not-allowed;
  				&:hover {
  					background: none;
- 					color: #6c757d;
+ 					color: $gray-600;
  					cursor: not-allowed;
  				}
  			}
@@ -238,11 +238,11 @@
  		}
  		th.disabled {
  			background: none;
- 			color: #6c757d;
+ 			color: $gray-600;
  			cursor: not-allowed;
  			&:hover {
  				background: none;
- 				color: #6c757d;
+ 				color: $gray-600;
  				cursor: not-allowed;
  			}
  		}
@@ -252,50 +252,50 @@
  					th {
  						cursor: pointer;
  						&:hover {
- 							background: #e9ecef;
+ 							background: scale-color($theme-primary-color, $lightness: 95%);
  						}
  					}
  				}
  			}
  		}
  		td.cw {
- 			font-size: .8em;
+ 			font-size: $font-size-base * 0.785;
  			height: 20px;
  			line-height: 20px;
- 			color: #6c757d;
+ 			color: $gray-600;
  		}
  		td.day {
  			height: 20px;
  			line-height: 20px;
  			width: 20px;
  			&:hover {
- 				background: #e9ecef;
+ 				background: scale-color($theme-primary-color, $lightness: 95%);
  				cursor: pointer;
  			}
  		}
  		td.hour {
  			&:hover {
- 				background: #e9ecef;
+ 				background: scale-color($theme-primary-color, $lightness: 95%);
  				cursor: pointer;
  			}
  		}
  		td.minute {
  			&:hover {
- 				background: #e9ecef;
+ 				background: scale-color($theme-primary-color, $lightness: 95%);
  				cursor: pointer;
  			}
  		}
  		td.second {
  			&:hover {
- 				background: #e9ecef;
+ 				background: scale-color($theme-primary-color, $lightness: 95%);
  				cursor: pointer;
  			}
  		}
  		td.old {
- 			color: #6c757d;
+ 			color: $gray-600;
  		}
  		td.new {
- 			color: #6c757d;
+ 			color: $gray-600;
  		}
  		td.today {
  			position: relative;
@@ -313,26 +313,26 @@
  		}
  		td.active {
  			background-color: $theme-primary-color;
- 			color: #fff;
+ 			color: $white;
  			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
  			&:hover {
  				background-color: $theme-primary-color;
- 				color: #fff;
+ 				color: $white;
  				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
  			}
  		}
  		td.active.today {
  			&:before {
- 				border-bottom-color: #fff;
+ 				border-bottom-color: $white;
  			}
  		}
  		td.disabled {
  			background: none;
- 			color: #6c757d;
+ 			color: $gray-600;
  			cursor: not-allowed;
  			&:hover {
  				background: none;
- 				color: #6c757d;
+ 				color: $gray-600;
  				cursor: not-allowed;
  			}
  		}
@@ -347,22 +347,12 @@
  			box-shadow: none;
  		}
  	}
- 	.timepicker-hour {
- 		width: 54px;
- 		font-weight: bold;
- 		font-size: 1.2em;
- 		margin: 0;
- 	}
- 	.timepicker-minute {
- 		width: 54px;
- 		font-weight: bold;
- 		font-size: 1.2em;
- 		margin: 0;
- 	}
+ 	.timepicker-hour,
+ 	.timepicker-minute,
  	.timepicker-second {
  		width: 54px;
  		font-weight: bold;
- 		font-size: 1.2em;
+ 		font-size: $font-size-base * 1.215;
  		margin: 0;
  	}
  	button[data-action] {

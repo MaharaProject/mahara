@@ -1,22 +1,23 @@
 .nav-tabs {
     padding-left: 0 !important;
     margin-bottom: 0 !important;
+    border-bottom: 1px solid $nav-tabs-border-color;
     &.nav {
         li > a {
             margin-right: 2px;
             display: block;
             font-weight: 300;
-            border: 1px solid transparent;
+            border: 0;
             border-bottom: 3px solid transparent;
             padding: 8px 10px;
-            font-size: $font-size-base * 1.07142857;
+            font-size: $font-size-base * 1.0714;
             text-decoration: none;
+            border-radius: $nav-tabs-border-radius;
 
             &:hover,
             &:focus {
-                color: scale-color($link-color, $lightness: -16%);
-                border-bottom-color: $nav-tabs-link-hover-border-color;
                 background: scale-color($gray-100, $lightness: 45%);
+                border-bottom-color: $nav-tabs-link-hover-border-color;
                 text-decoration: none;
             }
 
@@ -31,8 +32,10 @@
             }
 
             &.active {
-                color: $link-color;
-                border-bottom-color: $nav-tabs-link-hover-border-color;
+                color: $nav-tabs-link-active-color;
+                background-color: $nav-tabs-link-active-bg;
+                border-bottom: 3px solid $nav-tabs-link-active-border-color;
+
                 &:hover,
                 &:focus {
                     border-bottom-color: $nav-tabs-link-hover-border-color;

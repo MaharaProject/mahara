@@ -1,13 +1,13 @@
 // using bootstrap popover to style the help content
 span.help {
-    font-size: $font-size-base * 1.35714286;
+    font-size: $font-size-lg;
     vertical-align: top;
     padding-left:10px;
     display: inline-block;
 
     .icon {
         color: $help-icon-color;
-        font-size: 20px;
+        font-size: $font-size-lg;
         opacity: 0.8;
     }
     &:hover {
@@ -18,7 +18,7 @@ span.help {
     .table & {
         margin-top:-6px;
         .icon {
-            font-size: 0.9em;
+            font-size: $font-size-sm;
         }
     }
     a {
@@ -40,11 +40,9 @@ span.help {
     text-align: left;
     background-color: $popover-bg;
     background-clip: padding-box;
-    border: 1px solid $popover-fallback-border-color;
     border: 1px solid $popover-border-color;
     border-radius: $border-radius-lg;
     padding: 0 14px 8px;
-    font-size: $font-size-base - 1;
     @include box-shadow(0 5px 10px rgba(0,0,0,.2));
     color: $theme-text-color;
 
@@ -52,7 +50,7 @@ span.help {
     white-space: normal;
 
     .help-dismiss {
-        font-size: 16px;
+        font-size: $font-size-base * 1.14285;
         color: $gray-500;
     }
 
@@ -62,7 +60,7 @@ span.help {
         padding: 8px 14px;
         background-color: $popover-header-bg;
         border-bottom: 1px solid scale-color($popover-header-bg, $lightness: -5%);
-        border-radius: ($border-radius-lg - 1) ($border-radius-lg - 1) 0 0;
+        border-radius: $border-radius $border-radius 0 0;
         font-weight: $headings-font-weight;
     }
 }
@@ -74,7 +72,7 @@ table.table td .contextualHelp h3 {
 .pieform-fieldset.collapsible .contextualHelp h3 {
     margin: 0 -14px 20px;
     padding: 8px 14px;
-    font-family: $font-family-serif;
+    font-family: $headings-font-family;
     font-size: $font-size-base;
 }
 
