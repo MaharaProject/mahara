@@ -17,10 +17,23 @@ Changes:
 Removed .github, tests and docs folders; Gruntfile.js, package.json,
 package-lock.json, .gitattributes, .gitignore, npmignore, .npmrc and travis.yml
 
-From src/iconlibs, removed bootstrap2.js, foundation2-3.js, materialicons.js
-src/styles
-src/templates  - all but default
-src/themes bootstrap2.js, foundation.js, materialize.js
+And removed following directories and files since they are included in jsoneditor.js
+editors/
+iconlibs/
+styles/
+templates/
+themes/
+class.js
+core.js
+defaults.js
+editor.js
+iconlib.js
+intro.js
+jquery.js
+outro.js
+theme.js
+utilities.js
+validator.js
 
 To allow changing of the text on the Edit JSON button:
     in src/defaults.js, added:
