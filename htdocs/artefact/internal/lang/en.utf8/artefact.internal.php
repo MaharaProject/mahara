@@ -76,8 +76,10 @@ $string['pinterest.input'] = 'Pinterest username';
 $string['pinterest'] = 'Pinterest';
 $string['occupation'] = 'Occupation';
 $string['industry'] = 'Industry';
+// Custom user roles
 $string['userroles'] = 'User roles';
 $string['nospecialroles'] = '<span class="text-midtone">No special roles</span>';
+$string['autogroupadmin'] = 'Auto group admin';
 
 // Field names for view user and search user display
 $string['name'] = 'Name';

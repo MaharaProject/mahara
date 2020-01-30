@@ -110,7 +110,7 @@ if ($user->roles && isset($user->roles['_site'])) {
     foreach ($user->roles['_site'] as $rk => $role) {
         $roleelements['userroles_' . $role->id] = array(
             'type'         => 'switchbox',
-            'title'        => get_string($rk),
+            'title'        => get_string($rk, 'artefact.internal'),
             'defaultvalue' => $role->active,
         );
     }

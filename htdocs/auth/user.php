@@ -1050,7 +1050,11 @@ class User {
     }
 
     public function update_role($roleid, $state) {
-        set_field('usr_roles', 'active', $state, 'id', $roleid);
+        $role = ucfirst(get_field('usr_roles', 'role', 'id', $roleid));
+        $classname = 'UserRole' . $role;
+        $r = new $classname((object)array('id' => $roleid));
+        $r->set('active', $state);
+        $r->commit();
         $this->reset_roles();
     }
 
@@ -2319,6 +2323,113 @@ abstract class UserRole {
         if (!empty($this->id)) {
             delete_records('usr_roles', 'id', $this->id);
         }
+    }
+}
+
+class UserRoleAutogroupadmin extends UserRole {
+
+    public function __construct($data=null) {
+        parent::__construct('autogroupadmin', $data);
+    }
+
+    public function commit() {
+        parent::commit();
+
+        require_once(get_config('docroot') . 'lib/group.php');
+        $institution = $this->institution == '_site' || $this->institution === null ? 'all' : $this->institution;
+
+        if ($this->active) {
+            // Add the user to all the groups as a group admin
+            group_add_user_to_existing_groups($this->usr, 'admin', $institution);
+        }
+        else {
+            // Remove the user from all the groups where they are group admin
+            group_remove_user_from_existing_groups($this->usr, $institution);
+        }
+    }
+
+    private function _prepare_sql($data) {
+        $wheresql = 'role = ? ';
+        $where = array($this->role);
+        if (empty($data['institution']) || $data['institution'] == '_site') {
+            $wheresql .= 'AND institution IS NULL ';
+        }
+        else {
+            $wheresql .= 'AND (institution = ? OR institution IS NULL) ';
+            $where[] = $data['institution'];
+        }
+        if (isset($data['active'])) {
+            $wheresql .= 'AND active = ? ';
+            $where[] = (bool)$data['active'];
+        }
+        if (!empty($data['userid'])) {
+            $wheresql .= 'AND usr = ? ';
+            $where[] = $data['userid'];
+        }
+        if (!empty($data['provisioner'])) {
+            $wheresql .= 'AND provisioner = ? ';
+            $where[] = $data['provisioner'];
+        }
+        return array($wheresql, $where);
+    }
+
+    public function group_join($data) {
+        if (!empty($data['groupid'])) {
+            list($wheresql, $where) = self::_prepare_sql($data);
+            if ($results = get_column_sql("SELECT usr FROM {usr_roles} WHERE " . $wheresql . " AND active = 1", $where)) {
+                foreach ($results as $userid) {
+                    insert_record('group_member', (object) array(
+                        'group'  => $data['groupid'],
+                        'member' => $userid,
+                        'role'   => 'admin',
+                        'ctime'  => !empty($data['ctime']) ? $data['ctime'] : db_format_timestamp(time()),
+                    ));
+                }
+                return array('userids' => $results);
+            }
+        }
+        return false;
+    }
+
+    public function group_leave($data) {
+        if (!empty($data['groupid']) && !empty($data['userid'])) {
+            list($wheresql, $where) = self::_prepare_sql($data);
+            if ($results = get_column_sql("SELECT usr FROM {usr_roles} WHERE " . $wheresql, $where)) {
+                return array('can_leave' => false);
+            }
+        }
+        return array('can_leave' => true);
+    }
+
+    public function interaction_subscribe($data) {
+        if (!empty($data['userid'])) {
+            // subscribe one user to the forum
+            subscribe_user_to_forum($data['userid'], $data['id']);
+        }
+        else {
+            // Need to make sure all autogroupadmins are subscribed
+            list($wheresql, $where) = self::_prepare_sql($data);
+            if ($results = get_column_sql("SELECT usr FROM {usr_roles} WHERE " . $wheresql . " AND active = 1", $where)) {
+                foreach ($results as $userid) {
+                    if (!get_record('interaction_forum_subscription_forum', 'user', $userid, 'forum', $data['id'])) {
+                        subscribe_user_to_forum($data['userid'], $data['id']);
+                    }
+                }
+            }
+        }
+        return array('can_subscribe' => true);
+    }
+
+    public function interaction_unsubscribe($data) {
+        if (!empty($data['userid'])) {
+            // Check to see if this user has the authgroupadmin role
+            list($wheresql, $where) = self::_prepare_sql($data);
+            if ($results = get_column_sql("SELECT usr FROM {usr_roles} WHERE " . $wheresql, $where)) {
+                // Not allowed to remove subscription
+                return array('can_unsubscribe' => false);
+            }
+        }
+        return array('can_unsubscribe' => true);
     }
 }
 

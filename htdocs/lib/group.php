@@ -494,7 +494,7 @@ function group_create($data) {
         );
     }
     // Check if any UserRoles are in play
-    $USER->apply_userrole_method('group_join', array('groupid' => $id, 'ctime' => $data['ctime']));
+    $USER->apply_userrole_method('group_join', array('groupid' => $id, 'ctime' => $data['ctime'], 'institution' => $data['institution']));
 
     // Copy views for the new group
     $artefactcopies = array();
@@ -1077,7 +1077,7 @@ function group_user_can_leave($group, $userid=null) {
     }
 
     // Check if any UserRoles are in play
-    $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group->id, 'userid' => $userid));
+    $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group->id, 'userid' => $userid, 'institution' => $group->institution));
     foreach ($checks as $check) {
         if ($check['can_leave'] === false) {
             return ($result[$group->id][$userid] = false);
@@ -1898,9 +1898,10 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
 
     $role = group_user_access($group);
     $userid = $USER->get('id');
+    $institution = get_field('group', 'institution', 'id', $group);
     foreach ($results['data'] as &$r) {
         // Check if any UserRoles are in play
-        $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group, 'userid' => $r['id']));
+        $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group, 'userid' => $r['id'], 'institution' => $institution));
         foreach ($checks as $check) {
             if ($check['can_leave'] === false) {
                 continue 2;
@@ -3268,7 +3269,7 @@ function get_group_access_roles() {
     return $data;
 }
 
-function group_add_user_to_existing_groups($userid = null, $role = 'member') {
+function group_add_user_to_existing_groups($userid = null, $role = 'member', $institution = 'all') {
     global $USER;
 
     if (empty($userid)) {
@@ -3276,11 +3277,21 @@ function group_add_user_to_existing_groups($userid = null, $role = 'member') {
     }
     // Find all the non-deleted groups where the user is not present
     // or is present but with a different group role
+    $where = array($userid, $role);
+    $wheresql = '';
+    if (is_array($institution)) {
+        $wheresql .= ' AND g.institution IN (' . join(',', array_map('db_quote', $institution)) . ')';
+    }
+    else if ($institution != 'all') {
+        $wheresql .= ' AND g.institution IN (?)';
+        $where[] = $institution;
+    }
     if ($groups = get_records_sql_assoc("SELECT g.id, gm.* FROM {group} g
                                          LEFT JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
                                          WHERE (gm.role IS NULL OR gm.role != ?)
                                          AND g.deleted = 0
-                                         ORDER BY g.id", array($userid, $role))) {
+                                         " . $wheresql . "
+                                         ORDER BY g.id", $where)) {
         foreach ($groups as $k => $group) {
             if ($group->role) {
                 try {
@@ -3306,17 +3317,27 @@ function group_add_user_to_existing_groups($userid = null, $role = 'member') {
     $user->reset_grouproles();
 }
 
-function group_remove_user_from_existing_groups($userid = null) {
+function group_remove_user_from_existing_groups($userid = null, $institution = 'all') {
     global $USER;
 
     if (empty($userid)) {
         $userid = $USER->get('id');
     }
     // Find all the non-deleted groups where the user is present
+    $where = array($userid);
+    $wheresql = '';
+    if (is_array($institution)) {
+        $wheresql .= ' AND g.institution IN (' . join(',', array_map('db_quote', $institution)) . ')';
+    }
+    else if ($institution != 'all') {
+        $wheresql .= ' AND g.institution IN (?)';
+        $where[] = $institution;
+    }
     if ($groups = get_records_sql_assoc("SELECT g.id, gm.* FROM {group} g
                                          JOIN {group_member} gm ON (gm.group = g.id AND gm.member = ?)
                                          WHERE g.deleted = 0
-                                         ORDER BY g.id", array($userid))) {
+                                         " . $wheresql . "
+                                         ORDER BY g.id", $where)) {
         foreach ($groups as $k => $group) {
             try {
                 group_remove_user($k, $userid, true);

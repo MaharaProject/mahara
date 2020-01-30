@@ -166,7 +166,7 @@
             {{if $righttitle}}<label class="h3" for="{{$name}}_members">{{$righttitle}}</label>{{/if}}
             <select class="form-control" size="10" multiple="true" id="{{$name}}_members" style="width: 100%;"><option></option>
             {{foreach from=$options key=id item=user}}
-                <option value="{{$id}}">{{$user}}</option>
+                <option {{if $user->disabled}}disabled="disabled"{{/if}} value="{{$id}}">{{$user->displayname}}</option>
             {{/foreach}}
             </select>
         </td>

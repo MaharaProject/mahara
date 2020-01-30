@@ -159,7 +159,7 @@ $instance = auth_saml_find_authinstance($saml_attributes);
 
 // if we don't have an auth instance then this is a serious failure
 if (!$instance) {
-    throw new UserNotFoundException(get_string('errorbadinstitution', 'auth.saml'));
+    throw new SamlUserNotFoundException(get_string('errorbadinstitution', 'auth.saml'));
 }
 
 if ($SESSION->get('migratecheck')) {
@@ -182,7 +182,7 @@ try {
     $can_login = $auth->request_user_authorise($saml_attributes);
 }
 catch (AccessDeniedException $e) {
-    throw new UserNotFoundException(get_string('errnosamluser', 'auth.saml'));
+    throw new SamlUserNotFoundException(get_string('errnosamluser', 'auth.saml'));
 }
 catch (XmlrpcClientException $e) {
     throw new AccessDeniedException($e->getMessage());
@@ -217,7 +217,7 @@ if ($can_login) {
 // are we configured to allow testing of local login and linking?
 $loginlink = get_field('auth_instance_config', 'value', 'field', 'loginlink', 'instance', $instance->id);
 if (empty($loginlink)) {
-    throw new UserNotFoundException(get_string('errnosamluser', 'auth.saml'));
+    throw new SamlUserNotFoundException(get_string('errnosamluser', 'auth.saml'));
 }
 
 // used in the submit callback for auth_saml_loginlink_screen()

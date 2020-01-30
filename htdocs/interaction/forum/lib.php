@@ -1703,7 +1703,7 @@ function subscribe_forum_submit(Pieform $form, $values) {
     else {
         $can_unsubscribe = true;
         // Check if any UserRoles are in play
-        $checks = $USER->apply_userrole_method('interaction_unsubscribe', array('forum' => $values['forum'], 'userid' => $USER->get('id')));
+        $checks = $USER->apply_userrole_method('interaction_unsubscribe', array('forum' => $values['forum'], 'userid' => $USER->get('id'), 'institution' => get_field('group', 'institution', 'id', $values['group'])));
         foreach ($checks as $check) {
             if ($check['can_unsubscribe'] === false) {
                 // A UserRole is stopping us from unsubscribing

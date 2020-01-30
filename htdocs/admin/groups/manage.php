@@ -115,6 +115,8 @@ $groupadminsform = pieform(array(
     'elements'   => array(
         'admins' => array(
             'type' => 'userlist',
+            'group' => $group->id,
+            'allowuserrules' => true,
             'hiddenlabel' => true,
             'title' => get_string('groupadmins', 'group'),
             'defaultvalue' => $admins,
@@ -142,7 +144,7 @@ function groupadminsform_submit(Pieform $form, $values) {
             UPDATE {group_member}
             SET role = 'member'
             WHERE role = 'admin' AND \"group\" = ?
-                AND member IN ($demoted)",
+                AND \"member\" IN ($demoted)",
             array($group->id)
         );
     }
