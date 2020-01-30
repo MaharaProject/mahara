@@ -1910,41 +1910,43 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
     $role = group_user_access($group);
     $userid = $USER->get('id');
     $institution = get_field('group', 'institution', 'id', $group);
-    foreach ($results['data'] as &$r) {
-        // Check if any UserRoles are in play
-        $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group, 'userid' => $r['id'], 'institution' => $institution));
-        foreach ($checks as $check) {
-            if ($check['can_leave'] === false) {
-                continue 2;
+    if ($results['data']) {
+        foreach ($results['data'] as &$r) {
+            // Check if any UserRoles are in play
+            $checks = $USER->apply_userrole_method('group_leave', array('groupid' => $group, 'userid' => $r['id'], 'institution' => $institution));
+            foreach ($checks as $check) {
+                if ($check['can_leave'] === false) {
+                    continue 2;
+                }
             }
-        }
-        if ($role == 'admin' && ($r['id'] != $userid || group_user_can_leave($group, $r['id']))) {
-            $r['removeform'] = group_get_removeuser_form($r['id'], $group);
-        }
-        // NOTE: this is a quick approximation. We should really check whether,
-        // for each role in the group, that the user can change to it (using
-        // group_can_change_role).  This only controls whether the 'change
-        // role' link appears though, so it doesn't matter too much. If the
-        // user clicks on this link, changerole.php does the full check and
-        // sends them back here saying that the user has no roles they can
-        // change to anyway.
-        $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
-    }
-
-    if (!empty($membershiptype)) {
-        if ($membershiptype == 'request') {
-            foreach ($results['data'] as &$r) {
-                $r['addform'] = group_get_adduser_form($r['id'], $group);
-                $r['denyform'] = group_get_denyuser_form($r['id'], $group);
-                // TODO: this will suck when there's quite a few on the page,
-                // would be better to grab all the reasons in one go
-                $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
+            if ($role == 'admin' && ($r['id'] != $userid || group_user_can_leave($group, $r['id']))) {
+                $r['removeform'] = group_get_removeuser_form($r['id'], $group);
             }
+            // NOTE: this is a quick approximation. We should really check whether,
+            // for each role in the group, that the user can change to it (using
+            // group_can_change_role).  This only controls whether the 'change
+            // role' link appears though, so it doesn't matter too much. If the
+            // user clicks on this link, changerole.php does the full check and
+            // sends them back here saying that the user has no roles they can
+            // change to anyway.
+            $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
         }
-        $smarty->assign('membershiptype', $membershiptype);
-    }
 
-    $results['cdata'] = array_chunk($results['data'], 2);
+        if (!empty($membershiptype)) {
+            if ($membershiptype == 'request') {
+                foreach ($results['data'] as &$r) {
+                    $r['addform'] = group_get_adduser_form($r['id'], $group);
+                    $r['denyform'] = group_get_denyuser_form($r['id'], $group);
+                    // TODO: this will suck when there's quite a few on the page,
+                    // would be better to grab all the reasons in one go
+                    $r['reason']  = get_field('group_member_request', 'reason', 'group', $group, 'member', $r['id']);
+                }
+            }
+            $smarty->assign('membershiptype', $membershiptype);
+        }
+
+        $results['cdata'] = array_chunk($results['data'], 2);
+    }
     $results['roles'] = group_get_role_info($group);
     $smarty->assign('results', $results);
     $smarty->assign('searchurl', $searchurl);

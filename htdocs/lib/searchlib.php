@@ -464,7 +464,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'limit' => $limit,
             'jumplinks' => 8,
             'numbersincludeprevnext' => 2,
-            'offset' => $offset,
+            'offset' => $results['offset'] ? $results['offset'] : $offset,
             'datatable' => 'searchresults',
             'searchresultsheading' => 'resultsheading',
             'jsonscript' => 'admin/users/search.json.php',
@@ -993,7 +993,7 @@ function get_group_user_search_results($group, $query, $offset, $limit, $members
         $group, $queries, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $sortoptionidx, $nontutor
     );
 
-    if ($results['count']) {
+    if ($results['count'] && $results['data']) {
         $userids = array_map(function($a) { return $a["id"];}, $results['data']);
         $introductions = get_records_sql_assoc("SELECT \"owner\", description
             FROM {artefact}

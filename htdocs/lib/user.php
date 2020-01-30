@@ -2196,6 +2196,9 @@ function get_users_data($userids, $getviews=true) {
 }
 
 function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $query='') {
+    if (isset($data['count']) && isset($data['offset']) && $data['count'] < $data['offset']) {
+        $data['offset'] = $data['count'];
+    }
     if ($data['data']) {
         $userlist = array_map(function($u) { return (int)$u['id']; }, $data['data']);
         $userdata = get_users_data($userlist, $filter != 'pending');
@@ -2221,6 +2224,7 @@ function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $que
         $resultcounttextsingular = get_string('user', 'group');
         $resultcounttextplural = get_string('users', 'group');
     }
+
     $smarty->assign('admingroups', $admingroups);
     safe_require('module', 'multirecipientnotification');
     $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());

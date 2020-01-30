@@ -5907,3 +5907,13 @@ function notify_landing_removed($landingpage, $deleted=false) {
         'url'     => $url,
     ));
 }
+
+function get_max_offset($offset, $limit, $count) {
+    $offset = $limit * floor($offset / $limit);
+    // check offset is not going beyond last page from pagination
+    $maxoffset = $limit * floor($count / $limit);
+    if ($offset > $maxoffset) {
+        $offset = $maxoffset;
+    }
+    return $offset;
+}
