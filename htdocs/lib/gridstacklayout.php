@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 /*
- * Saves blocks with new layut data into the database
+ * Saves blocks with new layout data into the database
  */
 function save_blocks_in_new_layout($viewid) {
     if ($viewid) {
@@ -23,13 +23,38 @@ function save_blocks_in_new_layout($viewid) {
             WHERE bi.view = ? ";
 
         if (!record_exists_sql($sql, array($viewid))) {
+            // check if the view has a description,
+            // then the blocks should start in row 1
+            require_once('view.php');
+            $view = new View($viewid);
+
+            $newdescriptionblock = 0;
+            if ($description = $view->get('description')) {
+                $simpletextdescription = can_extract_description_text($description);
+                if ($simpletextdescription) {
+                    $description = $simpletextdescription;
+                }
+                else {
+                    $newdescriptionblock = 1;
+                }
+            };
 
             $oldlayoutcontent = get_blocks_in_old_layout($viewid);
-            $newlayoutcontent = translate_to_new_layout($oldlayoutcontent);
+            $newlayoutcontent = translate_to_new_layout($oldlayoutcontent, $newdescriptionblock);
 
             if ($newlayoutcontent) {
                 foreach ($newlayoutcontent as $block) {
                     insert_record('block_instance_dimension', (object) $block);
+                }
+                // if there's a page description, we need to add extra block
+                if ($newdescriptionblock) {
+                    require_once('view.php');
+                    $view = new View($viewid);
+
+                    $view->description_to_block();
+                    //remove description from view
+                    $view->set('description', '');
+                    $view->commit();
                 }
             }
         }
@@ -45,8 +70,7 @@ function save_blocks_in_new_layout($viewid) {
  * and create a structure with blocks in the new gridstack layout
  */
 
-function translate_to_new_layout($blocks) {
-    $y = 0;
+function translate_to_new_layout($blocks, $y=0) {
     $gridblocks = array();
     foreach ($blocks as $row) {
         $x = 0;

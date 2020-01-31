@@ -152,11 +152,13 @@ function initJs() {
 function updateTranslatedGridRows(blocks) {
 
       var height = [], maxheight = [], realheight, updatedGrid = [];
-      height[0] = 0;
+      height[0] = [];
+      height[0][0] = 0;
       maxheight[0] = 0;
 
       $.each(blocks, function(key, block) {
           var el, y;
+
           if (typeof(height[block.row]) == 'undefined') {
               height[block.row] = [];
               height[block.row][0] = 0;
@@ -166,9 +168,9 @@ function updateTranslatedGridRows(blocks) {
           }
 
           y = 0;
-          if (block.row > 1) {
+          if (block.row > 0) {
               // get the actual y value based on the max height of previous rows
-              for (var i = 1; i < block.row; i++) {
+              for (var i = 0; i < block.row; i++) {
                   if (typeof(maxheight[i]) != 'undefined' && !isNaN(maxheight[i])) {
                       y += maxheight[i];
                   }

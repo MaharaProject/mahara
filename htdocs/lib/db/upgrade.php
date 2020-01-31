@@ -1696,5 +1696,49 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020050800) {
+        require_once(get_config('docroot') . 'lib/view.php');
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $sql = "SELECT id FROM {view} v
+            WHERE v.template != ?
+            AND v.description IS NOT NULL";
+        $viewids = get_column_sql($sql, array(View::SITE_TEMPLATE));
+
+        $count = 0;
+        $limit = 1000;
+        $total = count($viewids);
+        foreach ($viewids as $viewid) {
+            $viewobj = new View($viewid);
+            // check if the view has new layout and description
+            if ($viewobj->uses_new_layout() && $description = $viewobj->get('description')) {
+                if ($newdescription = can_extract_description_text($description)) {
+                    $viewobj->set('description', $newdescription);
+                    $viewobj->commit();
+                }
+                else {
+                    // get all the blocks in the view and move them 1 row down
+                    if ($blockids = get_column('block_instance', 'id', 'view', $viewid)) {
+                        foreach ($blockids as $blockid) {
+                            $bi = new BlockInstance($blockid);
+                            $y = $bi->get('positiony');
+                            $bi->set('positiony', $y + 1);
+                            $bi->commit();
+                        }
+                    }
+                    // add the description block at the top
+                    $viewobj->description_to_block();
+                    //remove description from view
+                    $viewobj->set('description', '');
+                    $viewobj->commit();
+                }
+            }
+            $count++;
+            if (($count % $limit) == 0 || $count == $total) {
+                log_debug("$count/$total");
+                set_time_limit(30);
+            }
+        }
+    }
+
     return $status;
 }

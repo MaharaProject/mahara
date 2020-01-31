@@ -1294,12 +1294,21 @@ class PluginImportLeap extends PluginImport {
         // and view instructions in entry 'subtitle'
         // A description/instructions may be wrapped in XHTML div
         // See more PluginExportLeap::parse_xhtmlish_content()
-        $description = $this->extract_view_entry_field($entry->summary);
+        $newdescriptionblock = 0;
+        if ($description = $this->extract_view_entry_field($entry->summary)) {
+            $simpletextdescription = can_extract_description_text($description);
+            if ($simpletextdescription) {
+                $description = $simpletextdescription;
+            }
+            else {
+                $newdescriptionblock = 1;
+            }
+        };
         $instructions = $this->extract_view_entry_field($entry->subtitle);
 
         $config = array(
             'title'       => (string)$entry->title,
-            'description' => $description,
+            'description' => ($newdescriptionblock ? '' : $description),
             'instructions' => $instructions,
             'type'        => $type,
             'tags'        => self::get_entry_tags($entry),
@@ -1381,7 +1390,7 @@ class PluginImportLeap extends PluginImport {
               $rowindex++;
             } //rows
             require_once(get_config('docroot') . 'lib/gridstacklayout.php');
-            $config['grid'] = translate_to_new_layout($config['grid']);
+            $config['grid'] = translate_to_new_layout($config['grid'], $newdescriptionblock);
         }
         else {
             foreach ($gridblocks as $blockinstance) {
@@ -1404,7 +1413,7 @@ class PluginImportLeap extends PluginImport {
                         'type'      => $attrs['blocktype'],
                         'title'     => $attrs['blocktitle'],
                         'positionx' => $attrs['positionx'],
-                        'positiony' => $attrs['positiony'],
+                        'positiony' => $attrs['positiony'] + $newdescriptionblock, // we'll need to move all blocks one row down if there is a description
                         'height'    => $attrs['height'],
                         'width'     => $attrs['width'],
                         'config'    => array()
@@ -1432,6 +1441,19 @@ class PluginImportLeap extends PluginImport {
             }
         }
 
+        if ($newdescriptionblock) {
+            $config['grid'][] = array (
+                'type' => 'text',
+                'title' => get_string('description', 'view'),
+                'config' => array(
+                    'text' => $description
+                ),
+                'positionx' => 0,
+                'positiony' => 0,
+                'width' => 12,
+                'height' => 1,
+            );
+        }
         return $config;
     }
 
