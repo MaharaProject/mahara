@@ -30,6 +30,7 @@ class Collection {
     private $tags;
     private $framework;
     private $coverimage;
+    private $progresscompletion;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -365,6 +366,7 @@ class Collection {
         $data->coverimage = $colltemplate->get('coverimage');
         $data->submittedstatus = 0;
 
+        $data->progresscompletion = $colltemplate->get('progresscompletion');
         $collection = self::save($data);
 
         $numcopied = array('pages' => 0, 'blocks' => 0, 'artefacts' => 0);
@@ -665,6 +667,18 @@ class Collection {
                 'description' => get_string('frameworkdesc', 'module.framework'),
             );
         }
+
+        $institution = !empty($this->institution) ? $this->institution : 'mahara';
+        $institution = new Institution($institution);
+        if (is_plugin_active('signoff', 'blocktype') && $institution->progresscompletion) {
+            $elements['progresscompletion'] = array(
+                'type'  => 'switchbox',
+                'title' => get_string('progresscompletion', 'admin'),
+                'description' => get_string('progresscompletiondesc', 'collection'),
+                'defaultvalue' => 0,
+            );
+        }
+
 
         // populate the fields with the existing values if any
         if (!empty($this->id)) {

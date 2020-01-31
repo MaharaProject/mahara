@@ -86,6 +86,7 @@ $string['noviewsaddsome'] = 'No pages in collection. %sAdd some%s.';
 $string['noviews'] = 'No pages.';
 $string['overrideaccess'] = 'Override access';
 $string['potentialviews'] = 'Potential pages';
+$string['progresscompletiondesc'] = 'Add a progression completion page to the collection';
 $string['saveapply'] = 'Apply and save';
 $string['savecollection'] = 'Save collection';
 $string['smartevidence'] = 'SmartEvidence';

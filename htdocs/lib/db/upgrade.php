@@ -1672,9 +1672,9 @@ function xmldb_core_upgrade($oldversion=0) {
                 $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
                 add_field($table, $field);
                 $table->addKeyInfo('coverimagefk', XMLDB_KEY_FOREIGN, array('coverimage'), 'artefact', array('id'));
-            }
-        }
-    }
+              }
+          }
+      }
 
     if ($oldversion < 2020050600) {
         log_debug('Fixing skins for new format options');
@@ -1736,6 +1736,28 @@ function xmldb_core_upgrade($oldversion=0) {
             if (($count % $limit) == 0 || $count == $total) {
                 log_debug("$count/$total");
                 set_time_limit(30);
+            }
+        }
+    }
+
+    if ($oldversion < 2020051300) {
+        $table = new XMLDBTable('collection');
+        if (table_exists($table)) {
+            log_debug('Adding progress completion column to collection table');
+            $field = new XMLDBField('progresscompletion');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+            }
+        }
+
+        $table = new XMLDBTable('institution');
+        if (table_exists($table)) {
+            log_debug('Adding progress completion column to institution table');
+            $field = new XMLDBField('progresscompletion');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
             }
         }
     }

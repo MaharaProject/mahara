@@ -59,7 +59,8 @@ class Institution {
         'licensemandatory' => 0,
         'dropdownmenu' => 0,
         'skins' => 1,
-        'tags' => 0
+        'tags' => 0,
+        'progresscompletion' => 0,
     );
 
     // This institution's config settings

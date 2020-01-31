@@ -250,6 +250,7 @@ if ($institution || $add) {
         $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
         $data->allowinstitutionsmartevidence = get_config_institution($institution, 'allowinstitutionsmartevidence');
         $data->reviewselfdeletion = get_config_institution($institution, 'reviewselfdeletion');
+        $data->progresscompletion = get_config_institution($institution, 'progresscompletion');
         $data->showonlineusers = (is_isolated() && $data->showonlineusers == 2 ? 1 : $data->showonlineusers);
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
@@ -284,6 +285,7 @@ if ($institution || $add) {
         $data->showonlineusers = is_isolated() ? 1 : 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
         $data->allowinstitutionsmartevidence = 0;
+        $data->progresscompletion = 0;
         $data->tags = 0;
         $data->licensemandatory = 0;
         $data->licensedefault = '';
@@ -627,6 +629,15 @@ if ($institution || $add) {
         'disabled'     => get_config('defaultreviewselfdeletion') == true,
         'defaultvalue' => get_config('defaultreviewselfdeletion') ? get_config('defaultreviewselfdeletion') : (isset($data->reviewselfdeletion) && $data->reviewselfdeletion),
     );
+    if (is_plugin_active('signoff', 'blocktype')) {
+        $elements['progresscompletion'] = array(
+          'type'         => 'switchbox',
+          'title'        => get_string('progresscompletion', 'admin'),
+          'description'  => get_string('progresscompletiondescription','admin'),
+          'defaultvalue' => isset($data->progresscompletion) && $data->progresscompletion,
+          'help'         => true,
+        );
+    }
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
         'class' => 'last with-formgroup',
@@ -992,6 +1003,7 @@ function institution_submit(Pieform $form, $values) {
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
     $newinstitution->allowinstitutionsmartevidence  = (isset($values['allowinstitutionsmartevidence']) && $values['allowinstitutionsmartevidence']) ? 1 : 0;
     $newinstitution->tags  = (isset($values['allowinstitutiontags']) && $values['allowinstitutiontags']) ? 1 : 0;
+    $newinstitution->progresscompletion  = (isset($values['progresscompletion']) && $values['progresscompletion']) ? 1 : 0;
 
     // do not set 'reviewselfdeletion' if it has never been changed at institution level
     // and the value is the same as site setting 'defaultreviewselfdeletion'
