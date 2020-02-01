@@ -54,6 +54,15 @@
         border-radius: $border-radius-sm;
         border-width: 1px;
     }
+    .activegrouplabels {
+        padding: $card-spacer-y $card-spacer-x;
+
+        + .list-group {
+            .list-group-item:first-child {
+                @include border-top-radius(0);
+            }
+        }
+    }
 }
 
 .view-pane .card {

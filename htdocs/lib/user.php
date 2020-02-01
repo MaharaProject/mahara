@@ -233,6 +233,7 @@ function expected_account_preferences() {
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
                  'groupsideblockmaxgroups' => '',
                  'groupsideblocksortby' => 'alphabetical',
+                 'groupsideblocklabels' => '',
                  'hiderealname'   => 0,
                  'multipleblogs' => get_config('defaultmultipleblogs'),
                  'showhomeinfo' => 1,
@@ -248,6 +249,7 @@ function expected_account_preferences() {
                  'view_details_active' => 0,
                  'showlayouttranslatewarning' => 1,
                  'accessibilityprofile' => false,
+                 'grouplabels' => '',
                  );
 }
 
@@ -409,6 +411,18 @@ function general_account_prefs_form_elements($prefs) {
             'earliest' => get_string('earliest', 'blocktype.mygroups'),
             'alphabetical'  => get_string('alphabetical', 'blocktype.mygroups'),
         ),
+    );
+    $labels = (array)json_decode(get_account_preference($USER->get('id'), 'groupsideblocklabels'));
+    $elements['groupsideblocklabels'] = array(
+        'type'          => 'autocomplete',
+        'title'         => get_string('displayonlylabels', 'group'),
+        'ajaxurl'       => get_config('wwwroot') . 'group/addlabel.json.php',
+        'multiple'      => true,
+        'initfunction'  => 'translate_landingpage_to_tags',
+        'ajaxextraparams' => array(),
+        'extraparams' => array('tags' => false),
+        'defaultvalue'  => $labels,
+        'mininputlength' => 2,
     );
     if (get_config('userscanhiderealnames')) {
         $elements['hiderealname'] = array(

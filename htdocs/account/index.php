@@ -248,6 +248,13 @@ function accountprefs_submit(Pieform $form, $values) {
     $oldtheme = $USER->get_account_preference('theme');
     $oldgroupsideblockmaxgroups = $USER->get_account_preference('groupsideblockmaxgroups');
     $oldgroupsideblocksortby = $USER->get_account_preference('groupsideblocksortby');
+    $oldgroupsideblocklabels = $USER->get_account_preference('groupsideblocklabels');
+    if (isset($values['groupsideblocklabels'][0]) && empty($values['groupsideblocklabels'][0])) {
+        $values['groupsideblocklabels'] = '';
+    }
+    else {
+        $values['groupsideblocklabels'] = json_encode(array_values($values['groupsideblocklabels']));
+    }
 
     // Set user account preferences
     foreach ($expectedprefs as $eprefkey => $epref) {
@@ -300,6 +307,9 @@ function accountprefs_submit(Pieform $form, $values) {
         $reload = true;
     }
     if ($values['groupsideblocksortby'] != $oldgroupsideblocksortby) {
+        $reload = true;
+    }
+    if ($values['groupsideblocklabels'] != $oldgroupsideblocklabels) {
         $reload = true;
     }
 

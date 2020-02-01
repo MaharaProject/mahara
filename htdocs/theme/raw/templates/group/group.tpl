@@ -1,4 +1,4 @@
-<div class="list-group-item {if $group->membershiptype == 'invite' || $group->membershiptype == 'request' || $group->requests} list-group-item-warning{/if}">
+<div id="grouplist_{$group->id}" class="list-group-item {if $group->membershiptype == 'invite' || $group->membershiptype == 'request' || $group->requests} list-group-item-warning{/if}">
     <a href="{$group->homeurl}" class="outer-link"><span class="sr-only">{$group->name}</span></a>
     <div class="row">
         <div class="col-md-8">
@@ -15,7 +15,7 @@
                 {$group->description|str_shorten_html:100:true:true:false|safe}
             </p>
             <div class="groupsdetails text-small">
-                 {if $group->editwindow}
+                {if $group->editwindow}
                 <div class="groupeditable">
                     {str tag=editable section=group}:
                     {$group->editwindow}
@@ -24,10 +24,12 @@
                 {if $group->admins}
                 <div class="groupadmin">
                     <strong>{str tag=groupadmins section=group}:</strong>
+                    {strip}
                     {foreach name=admins from=$group->admins item=user}
                         <a href="{profile_url($user)}" class="inner-link"> {$user|display_name}</a>
-                    {if !$.foreach.admins.last},
-                    {/if}{/foreach}
+                        {if !$.foreach.admins.last},{/if}
+                    {/foreach}
+                    {/strip}
                 </div>
                 {/if}
                 {if $group->membercount}
@@ -36,6 +38,29 @@
                             {str tag=Members section=group}: {$group->membercount}
                         </a>
                     </div>
+                {/if}
+                {if $group->labels}
+                <div class="grouplabels">
+                    <strong>{str tag=mygrouplabel section=group}:</strong>
+                    {strip}
+                    {foreach name=labels from=$group->labels item=label}
+                        {assign var=labelselected value=0}
+                        {if $activegrouplabels}
+                            {foreach from=$activegrouplabels item=grouplabel}
+                                {if $grouplabel === $label}
+                                    {assign var=labelselected value=1}
+                                {/if}
+                            {/foreach}
+                        {/if}
+                        {if $labelselected}
+                            &nbsp;{$label}
+                        {else}
+                            <a href="{$paramsurl}&labelfilter={urlencode($label)}" title='{str tag=addgrouplabelfilter section=group arg1=$label}' class="inner-link"> {$label}</a>
+                        {/if}
+                        {if !$.foreach.labels.last},{/if}
+                    {/foreach}
+                    {/strip}
+                </div>
                 {/if}
             </div>
         </div>

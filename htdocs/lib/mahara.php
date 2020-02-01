@@ -3865,15 +3865,16 @@ function profile_sideblock() {
     if ($sortorder = $USER->get_account_preference('groupsideblocksortby')) {
         $sort = $sortorder;
     }
+    $grouplabels = (array)json_decode($USER->get_account_preference('groupsideblocklabels'));
     if ($limitto === null) {
-        $data['groups'] = group_get_user_groups($USER->get('id'), null, $sort);
+        $data['groups'] = group_get_user_groups($USER->get('id'), null, $sort, null, 0, true, $grouplabels);
         $total = count($data['groups']);
     }
     else if ($limitto === 0) {
         $data['groups'] = null;
     }
     else {
-        list($data['groups'], $total) = group_get_user_groups($USER->get('id'), null, $sort, $limitto);
+        list($data['groups'], $total) = group_get_user_groups($USER->get('id'), null, $sort, $limitto, 0, true, $grouplabels);
     }
     $limitstr = '';
     if (!empty($limitto) && $limitto < $total) {

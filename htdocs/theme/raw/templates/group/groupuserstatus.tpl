@@ -1,6 +1,12 @@
 {if $group->membershiptype == 'member'}
 <div class="btn-action-list">
     <div class="groupuserstatus btn-top-right btn-group btn-group-top">
+        {if $list}
+        <a href="#" class="label-btn btn btn-secondary" data-id="{$group->id}" title='{str tag="labelfor" section="group" arg1=$group->name}'>
+            <span class="icon icon-tag" role="presentation" aria-hidden="true"></span>
+            <span class="btn-title">{str tag="label" section="group"}</span>
+        </a>
+        {/if}
         {if $group->canleave}
             <a href ="{$WWWROOT}group/leave.php?id={$group->id}" class="btn btn-secondary">
                 <span class="icon icon-long-arrow-alt-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
@@ -24,6 +30,12 @@
 {elseif $group->membershiptype == 'admin'}
     <div class="btn-action-list">
         <div class="groupuserstatus btn-top-right btn-group btn-group-top">
+            {if $list}
+            <a href="#" class="label-btn btn btn-secondary" data-id="{$group->id}" title='{str tag="labelfor" section="group" arg1=$group->name}'>
+                <span class="icon icon-tag" role="presentation" aria-hidden="true"></span>
+                <span class="btn-title">{str tag="label" section="group"}</span>
+            </a>
+            {/if}
             {if $viewid}
             <a href="{$WWWROOT}view/blocks.php?id={$viewid}&group={$group->id}" title="{str tag=editcontentandlayout section='view'}" class="btn btn-secondary">
                 <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>

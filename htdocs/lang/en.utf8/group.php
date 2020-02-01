@@ -415,3 +415,20 @@ $string['groupparticipationreportsdesc1'] = "Group administrators can access a r
 
 $string['returntogroupportfolios'] = "Return to group pages and collections";
 $string['showintroduction'] = "Introduction";
+
+$string['addgrouplabel'] = 'Add group labels';
+$string['addgrouplabeldescription'] = 'Add one or more labels to this group that are only visible to you. By adding a label, you can organise the groups to your liking. You can also determine, which groups you want to see in the sidebar and on your profile page.';
+$string['addgrouplabelfilter'] = 'Add the group label filter "%s"';
+$string['addlabel'] = 'Add label';
+$string['displayonlylabels'] = 'Display only groups labeled with';
+$string['filterbygrouplabel'] = 'Filter by label';
+$string['grouplabelnotmember'] = 'Currently, you are not a member of this group. Please refresh the page.';
+$string['grouplabeladded'] = 'Group label added';
+$string['grouplabelupdated'] = 'Group label updated';
+$string['groupnovalidlabelsupplied'] = 'Your label must consist of at least two characters.';
+$string['label'] = 'Label';
+$string['labelfor'] = 'Add a label to group "%s"';
+$string['mygrouplabel'] = 'My group labels';
+$string['removegrouplabelfilter'] = 'Remove the group label filter "%s"';
+$string['agrouplabeltooshort'] = 'One or more group labels are too short, they need at least %s characters.';
+$string['agrouplabeltoolong'] = 'One or more group labels are too long, they can have at most %s characters.';
