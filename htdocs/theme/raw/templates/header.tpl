@@ -134,7 +134,7 @@
         {include file="header/pageheader.tpl"}
     {elseif $headertype == "profile"}
         {include file="header/profileheader.tpl"}
-    {elseif $headertype == "matrix"}
+    {elseif $headertype == "matrix" || $headertype == "progresscompletion"}
         {include file="header/matrixheader.tpl"}
     {/if}
 

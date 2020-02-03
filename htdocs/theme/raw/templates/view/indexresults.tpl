@@ -184,8 +184,11 @@
 
                             {if $view.collid}
                                 {assign var=fullnumviews value=$view.numviews}
+                                {if $view.progresscompletion}
+                                    {assign var=fullnumviews value=$fullnumviews + 1}
+                                {/if}
                                 {if $view.framework}
-                                    {assign var=fullnumviews value=$view.numviews + 1}
+                                    {assign var=fullnumviews value=$fullnumviews + 1}
                                 {/if}
                                 <div class="collection-list" title="{str tag='numviewsincollection' section='collection' arg1='$fullnumviews'}">
                                     {if $view.numviews > 0}
@@ -209,6 +212,14 @@
                                     {/if}
                                     {if $view.collid && $view.collviews > 0}
                                     <ul class="dropdown-menu" role="menu">
+                                        {if $view.progresscompletion}
+                                        <li class="dropdown-item">
+                                            <a href="{$view.progresscompletion->fullurl}">
+                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span>
+                                                <span class="link-text">{$view.progresscompletion->title}</span>
+                                            </a>
+                                        </li>
+                                        {/if}
                                         {if $view.framework}
                                         <li class="dropdown-item">
                                             <a href="{$view.framework->fullurl}">

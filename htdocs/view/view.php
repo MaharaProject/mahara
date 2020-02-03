@@ -140,8 +140,11 @@ if ($commented_on_blockid) {
 define('TITLE', $view->get('title'));
 
 $collection = $view->get('collection');
-// Do we need to redirect to the matrix page on first visit via token access?
-if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has_framework()) {
+// Do we need to redirect to the progress completion or matrix page on first visit via token access?
+if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has_progresscompletion()) {
+    redirect($collection->get_progresscompletion_url($collection, true));
+}
+else if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has_framework()) {
     redirect($collection->get_framework_url($collection, true));
 }
 $submittedgroup = (int)$view->get('submittedgroup');
@@ -558,6 +561,9 @@ if ($collection) {
             $viewnav = $views['views'];
             if ($collection->has_framework()) {
                 array_unshift($viewnav, $collection->collection_nav_framework_option());
+            }
+            if ($collection->has_progresscompletion()) {
+                array_unshift($viewnav, $collection->collection_nav_progresscompletion_option());
             }
             $smarty->assign('collection', $viewnav);
         }

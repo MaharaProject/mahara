@@ -7,13 +7,14 @@
                     {include file=collectionnav.tpl}
                 {/if}
 
+                {if $name}
                 <h1 id="viewh1" class="page-header">
                     <span class="section-heading">{$name}</span>
                 </h1>
                 <div class="with-heading text-small">
                     {include file=author.tpl}
                 </div>
-
+                {/if}
             </div>
         </div>
     </div>

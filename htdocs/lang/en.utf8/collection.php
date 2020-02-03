@@ -85,8 +85,8 @@ $string['noviewsincollection'] = 'No pages in collection.';
 $string['noviewsaddsome'] = 'No pages in collection. %sAdd some%s.';
 $string['noviews'] = 'No pages.';
 $string['overrideaccess'] = 'Override access';
+$string['portfoliocompletion'] = 'Portfolio completion';
 $string['potentialviews'] = 'Potential pages';
-$string['progresscompletiondesc'] = 'Add a progression completion page to the collection';
 $string['saveapply'] = 'Apply and save';
 $string['savecollection'] = 'Save collection';
 $string['smartevidence'] = 'SmartEvidence';
@@ -131,3 +131,7 @@ $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
 $string['viewingpage'] = 'You are on page ';
 $string['navtopage'] = 'Navigate to page:';
+
+// progress completion page
+$string['progresscompletiondesc'] = "Add the 'Portfolio completion' page at the start of this collection.";
+$string['overallcompletion'] = 'Overall completion as signed off by %s';

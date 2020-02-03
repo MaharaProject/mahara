@@ -4047,6 +4047,9 @@ class View {
                     if ($collobj->has_framework()) {
                         $data['framework'] = $collobj->collection_nav_framework_option();
                     }
+                    if ($collobj->has_progresscompletion()) {
+                        $data['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
+                    }
                 }
 
                 $data['removable'] = self::can_remove_viewtype($data['type']);
@@ -6586,7 +6589,7 @@ class View {
                 c.id AS cid, c.name AS cname, c.framework,
                 c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
                 db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus,
-                cv.displayorder
+                c.progresscompletion, cv.displayorder
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
@@ -6671,7 +6674,13 @@ class View {
                         $collections[$cid]['ownername'] = $v['ownername'];
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
                     }
-                    if (!empty($r['framework'])) {
+                    if (!empty($r['progresscompletion'])) {
+                        require_once('collection.php');
+                        $coll = new stdClass();
+                        $coll->id = $cid;
+                        $collections[$cid]['url'] = Collection::get_progresscompletion_url($coll);
+                    }
+                    else if (!empty($r['framework'])) {
                         require_once('collection.php');
                         $coll = new stdClass();
                         $coll->id = $cid;

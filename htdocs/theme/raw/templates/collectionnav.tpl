@@ -7,15 +7,16 @@
     <span id="collectionbtns" class="collection-nav-btns">
       <nav class="custom-dropdown dropdown">
           {foreach from=$collection item=view name=page}
-              {if $view->view == $viewid}
+              {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid)}
                   {$currentindex = $dwoo.foreach.page.index}
               {/if}
           {/foreach}
           <span class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</span>
+
           <ul id="pagelist" class="collapse">
               {foreach from=$collection item=view name=page}
               <li>
-                  {if $view->view == $viewid}
+                  {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid)}
                       {$currentindex = $dwoo.foreach.page.index}
                       <span data-index="{$dwoo.foreach.page.index}" data-location="{$view->fullurl}">{$view->title}</span>
                   {else}

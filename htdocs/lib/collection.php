@@ -668,9 +668,7 @@ class Collection {
             );
         }
 
-        $institution = !empty($this->institution) ? $this->institution : 'mahara';
-        $institution = new Institution($institution);
-        if (is_plugin_active('signoff', 'blocktype') && $institution->progresscompletion) {
+        if ($this->can_have_progresscompletion()) {
             $elements['progresscompletion'] = array(
                 'type'  => 'switchbox',
                 'title' => get_string('progresscompletion', 'admin'),
@@ -796,6 +794,45 @@ class Collection {
     }
 
     /**
+     * Check that a collection can have a portfolio progress completion
+     *
+     * @return bool
+     */
+    public function can_have_progresscompletion() {
+        $allowspc = false;
+        if (isset($this->group)) {
+            return $allowspc;
+        }
+        if (is_plugin_active('signoff', 'blocktype')) {
+            require_once(get_config('docroot') . 'lib/institution.php');
+            if ($this->institution) {
+                $institution = $this->institution;
+                $institution = new Institution($institution);
+                $allowspc = ($institution->progresscompletion) ? $institution : false;
+            }
+            else {
+                $user = new User();
+                $user->find_by_id($this->owner);
+                $institutionids = array_keys($user->get('institutions'));
+                if (!empty($institutionids)) {
+                    foreach ($institutionids as $institution) {
+                        $institution = new Institution($institution);
+                        if ($institution->progresscompletion == true) {
+                            $allowspc = $institution;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    $institution = new Institution('mahara');
+                    $allowspc = ($institution->progresscompletion) ? $institution : false;
+                }
+            }
+        }
+        return $allowspc;
+    }
+
+    /**
      * Check if any allowed institutions lets a collection have a framework
      * and return first valid one.
      *
@@ -891,6 +928,27 @@ class Collection {
     }
 
     /**
+     * Check that a collection has progress completion enable
+     * - The collection can have progress completion enabled
+     * - It has progress completion enabled
+     * - It has views in the collection
+     *
+     * @return boolean
+     */
+    public function has_progresscompletion() {
+        if (!$this->can_have_progresscompletion()) {
+            return false;
+        }
+        if (!$this->progresscompletion) {
+            return false;
+        }
+        if (!$this->views()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Get collection framework option for collection navigation
      *
      * @return object $option;
@@ -903,6 +961,23 @@ class Collection {
         $option->framework = true;
 
         $option->fullurl = self::get_framework_url($option);
+
+        return $option;
+    }
+
+
+    /**
+     * Get collection framework option for collection navigation
+     *
+     * @return object $option;
+     */
+    public function collection_nav_progresscompletion_option() {
+        $option = new stdClass();
+        $option->id = $this->id;
+        $option->title = get_string('progresscompletion', 'admin');
+        $option->progresscompletion = true;
+
+        $option->fullurl = self::get_progresscompletion_url($option);
 
         return $option;
     }
@@ -933,6 +1008,22 @@ class Collection {
      */
     public static function get_framework_url($data, $fullurl = true) {
         $url = 'module/framework/matrix.php?id=' . $data->id;
+        if ($fullurl) {
+            return get_config('wwwroot') . $url;
+        }
+        return $url;
+    }
+
+    /**
+     * Making the framework url
+     *
+     * @param object $data    Either a collection or standard object
+     * @param bool   $fullurl Return full url rather than relative one
+     *
+     * @return $url
+     */
+    public static function get_progresscompletion_url($data, $fullurl = true) {
+        $url = 'collection/progresscompletion.php?id=' . $data->id;
         if ($fullurl) {
             return get_config('wwwroot') . $url;
         }
@@ -1222,7 +1313,17 @@ class Collection {
 
         $views = $this->views();
         if (!empty($views)) {
-            if ($this->framework) {
+            if ($this->has_progresscompletion()) {
+                if ($full) {
+                    $this->fullurl = Collection::get_progresscompletion_url($this);
+                    return $this->fullurl;
+                }
+                else {
+                    $this->progresscompletionurl = Collection::get_progresscompletion_url($this, false);
+                    return $this->progresscompletionurl;
+                }
+            }
+            else if ($this->framework) {
                 if ($full) {
                     $this->fullurl = Collection::get_framework_url($this);
                     return $this->fullurl;
@@ -1583,6 +1684,26 @@ class Collection {
             return $result->group;
         }
         return false;
+    }
+
+    /**
+     * Gets the percentage of pages in the collection that have been signed off
+     *
+     * @return integer
+     */
+    public function get_signed_off_percentage() {
+        $numberofpages = $this->views['count'];
+        if ($numberofpages == 0) return 0;
+
+        safe_require('artefact', 'peerassessment');
+        $numberofpageswithsignoff = 0;
+        foreach ($this->views['views'] as $view) {
+            $viewobj = new View($view->view);
+            if (ArtefactTypePeerassessment::is_signed_off($viewobj)) {
+                $numberofpageswithsignoff++;
+            }
+        }
+        return round(($numberofpageswithsignoff/$numberofpages)*100);
     }
 }
 

@@ -65,6 +65,9 @@ if (!$can_edit) {
                 if ($collobj->has_framework()) {
                     $item['framework'] = $collobj->collection_nav_framework_option();
                 }
+                if ($collobj->has_progresscompletion()) {
+                    $item['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
+                }
             }
         }
     }

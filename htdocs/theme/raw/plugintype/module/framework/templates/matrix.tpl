@@ -198,7 +198,7 @@
             <div class="modal-header">
                 <button name="close_configuration" class="deletebutton close">
                     <span class="times">×</span>
-                    <span class="sr-only">Close configuration</span>
+                    <span class="sr-only">{str tag='closeconfiguration' section='view'}</span>
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline"></h4>
                 <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x float-right"></span>

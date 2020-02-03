@@ -114,7 +114,12 @@ if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
         $viewnav = $views['views'];
-        array_unshift($viewnav, $collection->collection_nav_framework_option());
+        if ($collection->has_framework()) {
+            array_unshift($viewnav, $collection->collection_nav_framework_option());
+        }
+        if ($collection->has_progresscompletion()) {
+            array_unshift($viewnav, $collection->collection_nav_progresscompletion_option());
+        }
         $smarty->assign('collection', $viewnav);
     }
 }

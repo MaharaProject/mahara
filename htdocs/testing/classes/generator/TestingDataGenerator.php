@@ -2005,8 +2005,10 @@ EOD;
         }
         $data->navigation = 1;
         $data->submittedstatus = 0;
+        $data->progresscompletion = 0;
         $collection = new Collection(0, $data);
         $collection->commit();
+
         // Add views to the collection
         if (!empty($addviews)) {
             $collection->add_views($addviews);
