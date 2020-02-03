@@ -57,7 +57,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I check "Page admin_02"
   And I press "Add pages"
   And I should see "1 page added to collection"
-  And I follow "Done"
+  And I follow "Next: Edit access"
 
   # Copy a collection directly from its location
   And I choose "Pages and collections" in "Create" from main menu
@@ -66,16 +66,17 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I follow "Copy"
   And I press "Collection"
   And I press "Next: Edit collection pages"
-  And I follow "Done"
+  And I follow "Next: Edit access"
 
   # Copy a collection
   And I choose "Pages and collections" in "Create" from main menu
   And I follow "Copy"
   And I click on "Copy collection" in "Collection admin_01" row
   And I press "Next: Edit collection pages"
-  And I follow "Done"
+  And I follow "Next: Edit access"
 
   #veryfying if the collection is copied directly from its location
+  And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01 v.2"
   And I press "Next page"
   And I press "Next page"

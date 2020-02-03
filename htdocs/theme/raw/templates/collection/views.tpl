@@ -70,7 +70,7 @@
         </div>
     </div>
     <div id="collectiondonewrap">
-        <a class="btn btn-primary" href="{$baseurl}">{str tag=done}</a>
+        <a class="btn btn-primary" href="{$accessurl}">{str tag=nexteditaccess section=collection}</a>
     </div>
 
 {include file="footer.tpl"}

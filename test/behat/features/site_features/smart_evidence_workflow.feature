@@ -60,14 +60,14 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Verifying that the pages were added
     Then I should see "Page UserA_01"
     And I should see "Page UserA_03"
-    When I follow "Done"
-    Then I should see "Pages and collections"
+    When I follow "Next: Edit access"
+    Then I should see "Edit access"
 
     # Mahara member makes to page visible to public
+    And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
-    And I click on "Return to pages and collections"
     # Verify user is on correct page
     And I should see "Smart Evidence Collection 1"
 

@@ -76,6 +76,7 @@ $string['manageviewsspecific'] = 'Manage pages in "%s"';
 $string['name'] = 'Collection name';
 $string['needtoselectaview'] = 'You need to select a page to add to the collection.';
 $string['newcollection'] = 'New collection';
+$string['nexteditaccess'] = 'Next: Edit access';
 $string['nocollections'] = 'No collections yet.';
 $string['nocollectionsaddone'] = 'No collections yet. %sAdd one%s.';
 $string['nooverride'] = 'No override';

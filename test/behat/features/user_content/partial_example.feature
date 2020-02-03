@@ -36,7 +36,8 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I check "test page name 1"
     And the "test page name 1" checkbox should be checked
     And I press "Add pages"
-    And I follow "Done"
+    And I follow "Next: Edit access"
+    And I click on "Return to pages and collections"
     And I click on "test collection name" card menu
     And I should see "Delete"
     And I go to the homepage
