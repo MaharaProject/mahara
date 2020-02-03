@@ -48,7 +48,7 @@
             {mahara_version}
         </div>
 
-        <div class="metadata text-center fullwidth site-performace">
+        <div class="metadata fullwidth site-performace">
             <!-- there is a div id="performance-info" wrapping this -->
             {mahara_performance_info}
         </div>
