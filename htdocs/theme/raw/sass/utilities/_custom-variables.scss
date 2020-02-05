@@ -29,6 +29,10 @@ $assessment-incomplete-color:               theme-color("danger") !default;
 $assessment-partial-color:                  theme-color("warning") !default;
 $assessment-completed-color:                theme-color("success") !default;
 
+// Progress completion page
+$progresscompletion-verified-color:         theme-color("success") !default;
+$progresscompletion-notverified-color:      theme-color("danger") !default;
+
 // Pages and collections page header
 $pageheader-bg:                             #f7f7f7 !default;
 

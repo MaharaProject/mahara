@@ -133,5 +133,10 @@ $string['viewingpage'] = 'You are on page ';
 $string['navtopage'] = 'Navigate to page:';
 
 // progress completion page
+$string['overallcompletion'] = 'Overall completion of sign-off and verification';
 $string['progresscompletiondesc'] = "Add the 'Portfolio completion' page at the start of this collection.";
-$string['overallcompletion'] = 'Overall completion as signed off by %s';
+$string['signedoff'] = 'Signed off';
+$string['needssignedoff'] = 'Needs to be signed off';
+$string['verified'] = 'Verified';
+$string['needsverified'] = 'Needs to be verified';
+$string['verification'] = 'Verification';

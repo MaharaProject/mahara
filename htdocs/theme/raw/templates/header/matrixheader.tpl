@@ -10,6 +10,7 @@
                 {if $name}
                 <h1 id="viewh1" class="page-header">
                     <span class="section-heading">{$name}</span>
+                    {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                 </h1>
                 <div class="with-heading text-small">
                     {include file=author.tpl}

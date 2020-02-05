@@ -22,10 +22,9 @@ $collectionid = param_integer('id');
 
 $collection = new Collection($collectionid);
 
-define('TITLE', $collection->get('name'));
 $javascript = array('js/collection-navigation.js',
 'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
-'tinymce', 'module/framework/js/matrix.js',
+'tinymce',
 'js/jquery/jquery-ui/js/jquery-ui.min.js');
 
 $views = $collection->get('views');
@@ -56,10 +55,23 @@ $smarty = smarty(
     ),
     array(
         'sidebars' => false,
+        'pagehelp' => true,
     )
 );
 
-$smarty->assign('maintitle', get_string('portfoliocompletion', 'collection'));
+$smarty->assign('maintitle', $collection->get('name'));
+$smarty->assign('name', get_string('portfoliocompletion', 'collection'));
+
+if ($view->is_anonymous()) {
+    $smarty->assign('author', get_string('anonymoususer'));
+    if ($view->is_staff_or_admin_for_page()) {
+        $smarty->assign('realauthor', $view->display_author());
+    }
+}
+else {
+    $smarty->assign('author', $view->display_author());
+}
+
 // collection top navigation
 if ($collection) {
     $shownav = $collection->get('navigation');
@@ -76,9 +88,29 @@ if ($collection) {
 $smarty->assign('progresscompletion', true);
 
 // progress bar
-$collectionowner = new User();
-$collectionowner->find_by_id($collection->get('owner'));
-$smarty->assign('quotamessage', get_string('overallcompletion', 'collection', display_name($collectionowner)));
-$smarty->assign('signoffpercentage', $collection->get_signed_off_percentage());
+$smarty->assign('quotamessage', get_string('overallcompletion', 'collection'));
+list($completedactionspercentage, $totalactions) = $collection->get_signed_off_and_verified_percentage();
+$smarty->assign('completedactionspercentage', $completedactionspercentage);
+$smarty->assign('totalactions', $totalactions);
+
+
+// table
+foreach ($views['views'] as &$view) {
+    $viewobj = new View($view->id);
+    $owneraction = $viewobj->get_progress_action('owner');
+    $manageraction = $viewobj->get_progress_action('manager');
+
+    $view->ownericonclass = $owneraction->get_icon();
+    $view->owneraction = $owneraction->get_action();
+    $view->ownertitle = $owneraction->get_title();
+    $view->signedoff = ArtefactTypePeerassessment::is_signed_off($viewobj);
+
+    $view->managericonclass = $manageraction->get_icon();
+    $view->manageraction = $manageraction->get_action();
+    $view->managertitle = $manageraction->get_title();
+    $view->verified = ArtefactTypePeerassessment::is_verified($viewobj);
+}
+
+$smarty->assign('views', $views['views']);
 
 $smarty->display('collection/progresscompletion.tpl');

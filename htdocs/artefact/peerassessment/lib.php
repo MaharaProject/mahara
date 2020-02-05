@@ -547,6 +547,21 @@ class ArtefactTypePeerassessment extends ArtefactType {
         return (bool)get_field_sql("SELECT signoff FROM {view_signoff_verify} WHERE view = ? LIMIT 1", array($view->get('id')));
     }
 
+    /*
+     * Checks if the verify options is enabled for the page
+     * @param $view the view object of the view to verify
+    */
+    public static function is_verify_enabled(View $view) {
+        $configdata = get_field_sql("SELECT configdata FROM {block_instance} WHERE view = ? AND blocktype = ? LIMIT 1", array($view->get('id'), 'signoff'));
+        if ($configdata) {
+            $configdata = unserialize($configdata);
+            if (isset($configdata['verify'])) {
+                return $configdata['verify'];
+            }
+        }
+        return false;
+    }
+
     public static function is_verifiable(View $view) {
         global $USER;
 

@@ -1687,23 +1687,35 @@ class Collection {
     }
 
     /**
-     * Gets the percentage of pages in the collection that have been signed off
+     * Gets the percentage of verified and signed off actions in the collection that have been completed
      *
-     * @return integer
+     * @return integer percentage of completed actions
+     * @return integer total of actions
      */
-    public function get_signed_off_percentage() {
+    public function get_signed_off_and_verified_percentage() {
         $numberofpages = $this->views['count'];
-        if ($numberofpages == 0) return 0;
+        if ($numberofpages == 0) return false;
 
         safe_require('artefact', 'peerassessment');
-        $numberofpageswithsignoff = 0;
+        $numberofcompletedactions = 0;
+        $numberofactions = 0;
         foreach ($this->views['views'] as $view) {
             $viewobj = new View($view->view);
-            if (ArtefactTypePeerassessment::is_signed_off($viewobj)) {
-                $numberofpageswithsignoff++;
+            if ($viewobj->has_signoff_block()) {
+                $numberofactions++;
+                if (ArtefactTypePeerassessment::is_signed_off($viewobj)) {
+                    $numberofcompletedactions++;
+                }
+                if (ArtefactTypePeerassessment::is_verify_enabled($viewobj)) {
+                    $numberofactions++;
+                    if (ArtefactTypePeerassessment::is_verified($viewobj)) {
+                        $numberofcompletedactions++;
+                    }
+                }
             }
         }
-        return round(($numberofpageswithsignoff/$numberofpages)*100);
+        if ($numberofactions == 0) return false;
+        return array(round(($numberofcompletedactions/$numberofactions)*100), $numberofactions);
     }
 }
 
