@@ -65,11 +65,18 @@ foreach (array_keys($plugins) as $plugin) {
                         foreach ($types as $t) {
                             $classname = generate_artefact_class_name($t);
                             if ($collapseto = call_static_method($classname, 'collapse_config')) {
-                                $plugins[$plugin]['installed'][$key]['types'][$collapseto] = true;
+                                $plugins[$plugin]['installed'][$key]['types'][$collapseto]['config'] = true;
                             }
                             else {
-                                $plugins[$plugin]['installed'][$key]['types'][$t] =
+                                $plugins[$plugin]['installed'][$key]['types'][$t]['config'] =
                                     call_static_method($classname, 'has_config');
+                            }
+                            if ($collapseto = call_static_method($classname, 'collapse_config_info')) {
+                                $plugins[$plugin]['installed'][$key]['types'][$collapseto]['info'] = true;
+                            }
+                            else {
+                                $plugins[$plugin]['installed'][$key]['types'][$t]['info'] =
+                                    call_static_method($classname, 'has_config_info');
                             }
                         }
                     }
@@ -79,6 +86,9 @@ foreach (array_keys($plugins) as $plugin) {
                     safe_require($plugin, $key);
                     if (call_static_method($classname, 'has_config')) {
                         $plugins[$plugin]['installed'][$key]['config'] = true;
+                    }
+                    if (call_static_method($classname, 'has_config_info')) {
+                        $plugins[$plugin]['installed'][$key]['info'] = true;
                     }
                 }
             }

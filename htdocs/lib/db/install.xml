@@ -1486,5 +1486,17 @@
                 <KEY NAME="templatefk" TYPE="foreign" FIELDS="originaltemplate" REFTABLE="view" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
+        <TABLE NAME="client_connections_config">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="connection" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="field" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="value" TYPE="text" LENGTH="small" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="ccifk" TYPE="foreign" FIELDS="connection" REFTABLE="client_connections_institution" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>

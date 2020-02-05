@@ -24,7 +24,8 @@ input[type=password],
 textarea,
 select {
     @extend .form-control;
-    .modal & {
+    .modal &,
+    .singular & {
         width: auto;
         max-width: 100%;
     }

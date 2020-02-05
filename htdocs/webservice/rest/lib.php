@@ -155,7 +155,7 @@ class webservice_rest_client {
                 if ($functionname) {
                     $this->auth = $this->auth .  (empty($this->auth) ? '' : '&') . 'wsfunction=' . $functionname;
                 }
-                $url = $this->serverurl . '?' . $this->auth . (empty($this->auth) ? '' : '&') . 'alt=json';
+                $url = $this->serverurl . '?' . $this->auth . (empty($this->auth) ? '' : '&');
                 $this->serverurl = $url;
                 $hostname = parse_url($url, PHP_URL_HOST);
                 $headers = (empty($this->headers) ? "" : implode("\r\n", $this->headers)."\r\n");
@@ -163,8 +163,8 @@ class webservice_rest_client {
                                                   'header' => "Content-Type: application/json\r\n".
                                                   $headers.
                                                   "Connection: close\r\nContent-Length: " . strlen($data) . "\r\n",
-                                                  'content'=>$data,
-                                                  'request_fulluri' => true,),
+                                                  'content' => $data,
+                                                  'request_fulluri' => true),
                         );
                 if (get_config('disablesslchecks')) {
                     $context['ssl'] = array('verify_host' => false,
@@ -173,12 +173,13 @@ class webservice_rest_client {
                                        'SNI_server_name' => $hostname,
                                        'SNI_enabled'     => true,);
                 }
-                // echo "<pre>";
-                // var_dump($context);
+                if (strtolower($method) == strtolower('GET')) {
+                    // Add the params onto the url string
+                    $url .= http_build_query($params);
+                }
+
                 $context = stream_context_create($context);
                 $result = @file_get_contents($url, false, $context);
-                // var_dump($result);
-                // var_dump($http_response_header);
                 $values = (array)json_decode($result, true);
                 return $values;
             }

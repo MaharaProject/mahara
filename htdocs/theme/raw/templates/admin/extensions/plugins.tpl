@@ -50,6 +50,12 @@
                     <div class="list-group-item-heading">
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
                         <div class="btn-group btn-group-top">
+                        {if $data.info}
+                            <a class="btn btn-secondary float-left btn-group-item info-item" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
+                                 <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                                 <span class="accessible-hidden sr-only ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
+                            </a>
+                        {/if}
                         {if $data.config}
                             <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
@@ -68,12 +74,17 @@
                     </div>
 
                     {if $data.types}
-
                         <ul>
                         {foreach from=$data.types key='type' item='config'}
                             <li>
                             {$type}
-                            {if $config}
+                            {if $config.info}
+                                <a class="btn btn-secondary btn-sm btn-group float-right" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}' data-type='{$type}'>
+                                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
+                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
+                                </a>
+                            {/if}
+                            {if $config.config}
                                 <a class="btn btn-secondary btn-sm btn-group float-right" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
                                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
@@ -82,7 +93,6 @@
                             </li>
                         {/foreach}
                         </ul>
-
                     {/if}
                 </li>
             {/foreach}
@@ -91,5 +101,47 @@
 {/foreach}
 </div>
 
+<script>
+function show_config_info(info) {
+    var opts = {
+        'plugintype': $(info).data('plugintype'),
+        'pluginname': $(info).data('pluginname'),
+        'type': $(info).data('type')
+    };
+    sendjsonrequest(config['wwwroot'] + 'admin/extensions/plugininfo.json.php', opts, 'POST', function(data) {
+        $('#infomodal .modal-title').html(data.data.info_header);
+        $('#infomodal .modal-body').html(data.data.info_body);
+    });
+}
+var infochosen;
+jQuery(function($) {
+    $('.info-item').on("click", function(e) {
+        e.preventDefault();
+        console.log('here?');
+        infochosen = e.target;
+        $("#infomodal").modal("show");
+    });
+    $("#infomodal").on('show.bs.modal', function (e) {
+        show_config_info(infochosen);
+    });
+    $("#infomodal .close").on('click', function () {
+        $("#infomodal").modal("hide");
+    });
+});
+</script>
 
+<div class="modal modal-docked modal-docked-right modal-shown closed" id="infomodal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                    <span class="times">×</span>
+                    <span class="sr-only">{str tag=Close}</span>
+                </button>
+                <h4 class="modal-title blockinstance-header text-inline modal-docks-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
 {include file='footer.tpl'}
