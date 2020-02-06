@@ -150,7 +150,7 @@ function updateTranslatedGridRows(blocks) {
           if (block.row > 1) {
               // get the actual y value based on the max height of previous rows
               for (var i = 1; i < block.row; i++) {
-                  if (typeof(maxheight[i]) != 'undefined') {
+                  if (typeof(maxheight[i]) != 'undefined' && !isNaN(maxheight[i])) {
                       y += maxheight[i];
                   }
               }
@@ -186,7 +186,11 @@ function updateTranslatedGridRows(blocks) {
           else {
               height[block.row][block.column] += realheight;
           }
-          maxheight[block.row] = Math.max.apply(null, height[block.row]);
+          // need to filter values that are not numbers
+          var allnumbers = height[block.row].filter(function (el) {
+              return Number.isInteger(el);
+          });
+          maxheight[block.row] = Math.max.apply(null, allnumbers);
       });
       // update all blocks together
       moveBlocks(updatedGrid);
