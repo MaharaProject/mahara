@@ -88,6 +88,15 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
         $results = array();
 
+        // 'tagsin' and 'tagsout' are configdata values brought in by Leap2A export
+        // but we need to add them in one go
+        if (isset($configdata['tagsvialeap2a'])) {
+            self::save_tag_selection($configdata['tagsvialeap2a'], $instance);
+            unset($configdata['tagsvialeap2a']);
+            $instance->set('configdata', $configdata);
+            $instance->commit();
+        }
+
         $tagsin = $tagsout = array();
         if ($versioning) {
             $tagrecords = $configdata['tagrecords'];
@@ -189,6 +198,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         // Display all posts, from all blogs, owned by this user
         $tagsin = $tagsout = array();
         $results = self::get_blog_posts_in_block($instance, $tagsin, $tagsout, $versioning);
+
         if ($tagsin || $tagsout) {
 
             $smarty->assign('blockid', $instance->get('id'));

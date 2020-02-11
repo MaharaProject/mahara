@@ -3094,6 +3094,7 @@ class View {
                     $method .= "_$format";
                   }
                   $config['rows'][$rowkey]['columns'][$colkey][] = array(
+                    'id' => $bi->get('id'),
                     'blocktype' => $bi->get('blocktype'),
                     'title'     => $bi->get('title'),
                     'config'    => call_static_method($classname, $method, $bi),

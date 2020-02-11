@@ -652,7 +652,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
      */
     private static function setup_outoflinecontent_relationship(SimpleXMLElement $entry, PluginImportLeap $importer) {
         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$entry->id);
-        if (count($artefactids) == 2) {
+        if (count((array)$artefactids) == 2) {
             // In this case, a file was created as a result of
             // importing a blog entry with out-of-line content. We
             // attach the file to this post.
@@ -661,5 +661,35 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
             $blogpost->commit();
         }
     }
+}
 
+/**
+* This function inserts tag data into a taggedpost's block configdata
+* The tag is put into the block['config'] as an array of ['tagsin'] or ['tagsout']
+* @param array $blockinstance    the leap2a data containing blockinstance information
+* @param array &$block    by reference, the block['config'] array
+* @return array $block  the block['config'] array
+*/
+class LeapImportTaggedPosts {
+
+    public function get_blocktype_import_data($blockinstance, &$block) {
+
+        $block['tagsvialeap2a'] = array();
+        if ($tagsin = $blockinstance->xpath('mahara:tagsin')) {
+            foreach ($tagsin as $tagin) {
+                $tagin = (string)$tagin;
+                array_push($block['tagsvialeap2a'], $tagin);
+            }
+        }
+        if ($tagsout = $blockinstance->xpath('mahara:tagsout')) {
+            foreach ($tagsout as $tagout) {
+                $tagout = (string)$tagout;
+                if (substr($tagout, 0, 1) != '-') {
+                    $tagout = '-' . $tagout;
+                }
+                array_push($block['tagsvialeap2a'], $tagout);
+            }
+        }
+        return $block;
+    }
 }

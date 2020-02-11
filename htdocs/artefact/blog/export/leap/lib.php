@@ -54,3 +54,70 @@ class LeapExportElementBlog extends LeapExportElement {
         return 'html';
     }
 }
+
+class LeapExportTaggedPosts {
+
+    /**
+    * This function inserts tag data into a taggedpost's block configdata
+    * The tag is put into the configdata as an array of ['tagsin'] or ['tagsout']
+    * based on its type (included: 1 or excluded: 0)
+    * @param array &$config    by reference, the configdata array containing block data
+    * @return array &$config   the configdata array
+    */
+    public function get_blocktype_export_data(&$config, $view, $oldlayout=false) {
+        if ($oldlayout) {
+           foreach ($config as &$row) {
+               foreach($row as $columns => &$column) {
+                   foreach ($column as &$blocks) {
+                       foreach($blocks as &$block) {
+                           if ($block['blocktype'] == 'taggedposts') {
+                                $sql = '
+                                SELECT tag, tagtype
+                                FROM {blocktype_taggedposts_tags}
+                                WHERE block_instance = ?
+                                ';
+                                if ($tags = get_records_sql_array($sql, array($block['id']))) {
+                                    foreach ($tags as $tag) {
+                                        if ($tag->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
+                                            isset($block['config']['tagsin']) ? array_push($block['config']['tagsin'], $tag->tag) : $block['config']['tagsin'] = array($tag->tag);
+                                        }
+                                        else {
+                                            $excludedtag = '-' . $tag->tag;
+                                            isset($block['config']['tagsout']) ? array_push($block['config']['tagsout'], $excludedtag) : $block['config']['tagsout'] = array($excludedtag);
+                                        }
+                                    }
+                                }
+                            }
+                       }#end foreach blocks
+                   }#end foreach column
+               }#end foreach row
+           }#end foreach config
+        }
+        else {
+            $sql = '
+            SELECT bid.block, bid.positionx, bid.positiony, tp.tag, tp.tagtype
+            FROM {block_instance_dimension} AS bid INNER JOIN {block_instance} bi on bid.block = bi.id
+            INNER JOIN {blocktype_taggedposts_tags} AS tp
+            ON bid.block = tp.block_instance WHERE bi.view = ?
+            ';
+            if ($taggedpostplacement = get_records_sql_array($sql, array($view))) {
+                foreach ($taggedpostplacement as $tpp) {
+                    foreach ($config as &$cg) {
+                        if ($cg['positionx'] == $tpp->positionx && $cg['positiony'] == $tpp->positiony) {
+                            if ($tpp->tagtype == PluginBlocktypeTaggedposts::TAGTYPE_INCLUDE) {
+                                isset($cg['config']['tagsin']) ? array_push($cg['config']['tagsin'], $tpp->tag) : $cg['config']['tagsin'] = array($tpp->tag);
+                            }
+                            else {
+                                $excludedtag = '-' . $tpp->tag;
+                                isset($cg['config']['tagsout']) ? array_push($cg['config']['tagsout'], $excludedtag) : $cg['config']['tagsout'] = array($excludedtag);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $config;
+    }
+
+}
