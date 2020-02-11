@@ -424,7 +424,7 @@
                             $(window).on('resize', function() {
                                 var timeline = $("#jtlinesection");
                                 var eventwrapsize = timeline.find('.events-wrapper').width();
-                                var navportsize = parseInt(timeline.find('.events-wrapper .events ol li:last a').css('left'), 10);
+                                var navportsize = parseInt(timeline.find('.events-wrapper .events ol li').last().find ('a').css('left'), 10);
                                 if ((navportsize + 50) >= eventwrapsize) {
                                     timeline.find('.cd-timeline-navigation').find('.next').removeClass('inactive');
                                 }

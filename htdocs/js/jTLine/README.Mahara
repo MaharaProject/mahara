@@ -9,8 +9,15 @@ Build upon the fantastic "codyhouse" article.
 
 Changes:
 
+* This file is forked from the original. You can see what it looked
+like before our changes in the original commit: 65337cd7971c9a82c159caeaa22cd3ca32c75d67
+Diff that against the new version, then, if there are useful changes,
+make them in our fork.
+
 * Removed demo examples
 * Adjusted ajax setting to accept parameters from Mahara
 * Moved the css styles to htdocs/theme/raw/sass/features/_timeline.scss
 and removed the directory jTline/js/css
 * Added prev / next arrows for the events
+
+*Changed deprecated jQuery :last selector to .last()
