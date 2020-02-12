@@ -2,9 +2,9 @@
 Feature: Create a site portfolio page with template blocks
 In order to create a site portfolio page
 As an admin
-I can edit the site portfolio page and populate with template blocks
+I check the templates cannot be shared then create a site page from the Page template with an added profile block
 As a user
-I can copy the site page and have blocks pre-populated with information
+I can copy the site page and have the block pre-populated with information.
 
 Background:
     Given the following "users" exist:
@@ -12,16 +12,37 @@ Background:
     | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User     | mahara      | internal | member | superA1   | Wellington | nz      | Plumber    |
     | UserB    | Kupuh1pa! | UserB@example.org | Bob       | User     | mahara      | internal | member | normalB2  | Oslo       | Norway  | Welder     |
 
-Scenario: Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
+Scenario: Check templates not editable then create and use the Page template with a profile block.
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Configure site" from administration menu
-    # Check for access to share template BUG - # 1824767
-    And I should not see "Access rules for \"Dashboard template\""
+    # Check there is no access to "Share" on any of the four template cards BUG - # 1824767
+    And I should not see "Manage access"
+    # Check there is no access to "Share" on each of the four edit template pages BUG - # 1824767
     When I follow "Dashboard template"
-    Then I should not see "Share"
+    Then I should not see "Share" in the "Vertical button group" property
     When I go to "/view/accessurl.php?id=2"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
+    When I choose "Pages and collections" in "Configure site" from administration menu
+    And I follow "Group homepage template"
+    Then I should not see "Share" in the "Vertical button group" property
+    When I go to "/view/accessurl.php?id=3"
+    Then I should see "Access denied"
+    And I should see "You do not have access to view this page."
+    When I choose "Pages and collections" in "Configure site" from administration menu
+    And I follow "Profile template"
+    Then I should not see "Share" in the "Vertical button group" property
+    When I go to "/view/accessurl.php?id=1"
+    Then I should see "Access denied"
+    And I should see "You do not have access to view this page."
+    When I choose "Pages and collections" in "Configure site" from administration menu
+    And I follow "Page template"
+    Then I should not see "Share" in the "Vertical button group" property
+    When I go to "/view/accessurl.php?id=4"
+    Then I should see "Access denied"
+    And I should see "You do not have access to view this page."
+
+    # Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Add"
     And I click on "Page" in the dialog
