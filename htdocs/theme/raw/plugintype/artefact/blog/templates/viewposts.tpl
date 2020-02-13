@@ -61,23 +61,20 @@
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
                     <li class="list-group-item">
-                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}" class="outer-link icon-on-hover">
-                            <span class="sr-only">
-                                {str tag=Download section=artefact.file} {$file->title}
-                            </span>
-                        </a>
-                        {if $file->icon}
+                    {if $file->icon}
                         <img class="file-icon" src="{$file->icon}" alt="">
-                        {else}
+                    {else}
                         <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
-                        {/if}
+                    {/if}
                         <span class="title">
                             <span class="text-small">{$file->title}</span>
-                            <span class="metadata"> -
-                                [{$file->size|display_size}]
-                            </span>
+                            <span class="metadata"> [{$file->size|display_size}]</span>
                         </span>
-                        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}">
+                            <span class="sr-only">{str tag=Download section=artefact.file} {$file->title}</span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                        </a>
                     </li>
                 {/foreach}
                 </ul>

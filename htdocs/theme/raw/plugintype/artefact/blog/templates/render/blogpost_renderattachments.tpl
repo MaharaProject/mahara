@@ -13,28 +13,21 @@
                 <ul class="list-unstyled list-group">
                 {foreach from=$attachments item=item}
                     <li class="list-group-item">
-                        <a href="{$item->downloadpath}" class="outer-link icon-on-hover" {if $item->description} title="{$item->description}" data-toggle="tooltip"{/if}>
-                            <span class="sr-only">
-                                {str tag=Download section=artefact.file} {$item->title}
-                            </span>
-                        </a>
-
-                        {if $item->iconpath}
+                    {if $item->iconpath}
                         <img class="file-icon" src="{$item->iconpath}" alt="">
-                        {else}
+                    {else}
                         <span class="icon icon-{$item->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
-                        {/if}
+                    {/if}
 
                         <span class="title">
-                            <span class="inner-link text-small">
-                                {$item->title}
-                            </span>
-                            <span class="metadata"> -
-                                [{$item->size|display_size}]
-                            </span>
+                            <span class="text-small">{$item->title}</span>
+                            <span class="metadata"> [{$item->size|display_size}]</span>
                         </span>
 
-                        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                        <a href="{$item->downloadpath}" {if $item->description}title="{$item->description}" data-toggle="tooltip"{/if}>
+                            <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                        </a>
                     </li>
                 {/foreach}
                 </ul>

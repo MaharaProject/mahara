@@ -5,12 +5,12 @@
         <div class="usericon-heading">
             <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
                 {if $item->author && !$item->author->deleted}
-                    <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
+                    <a href="{$item->author->profileurl}"><img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/></a>
                 {else}
                     <img src="{profile_icon_url user=null maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h5 class="float-left list-group-item-heading">
+            <h4 class="float-left list-group-item-heading">
                 {if $item->author && !$item->author->deleted}
                 <a href="{$item->author->profileurl}">
                 <span>{$item->author|display_name}</span>
@@ -38,7 +38,7 @@
                     {/for}
                 </span>
                 {/if}
-            </h5>
+            </h4>
             <!-- The "comment-item-buttons" class is used as an identifier by Javascript -->
             <div class="btn-group btn-group-top comment-item-buttons">
                 {if !$onview}
@@ -105,20 +105,17 @@
                     </a>
                 </h4>
                 <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
-                    <ul class=" list-group list-group-unbordered">
+                    <ul class="list-unstyled list-group">
                     {strip}
                         {foreach $item->attachments item=a name=attachments}
                         <li class="list-group-item">
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}" class="outer-link icon-on-hover">
-                                <span class="sr-only">{$a->attachtitle}</span>
-                            </a>
                             <span class="title">
-                                {$a->attachtitle}
-                                <span class="attachsize metadata">
-                                    [{$a->attachsize}]
-                                </span>
+                                <span class="text-small">{$a->attachtitle}</span>
+                                <span class="metadata"> [{$a->attachsize}]</span>
                             </span>
-                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">
+                                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            </a>
                         </li>
                         {/foreach}
                     {/strip}

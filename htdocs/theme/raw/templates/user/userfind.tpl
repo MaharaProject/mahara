@@ -5,8 +5,7 @@
                 <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
             <h4 class="list-group-item-heading middle inline">
-                <a href="{profile_url($user)}" >
-                    <span class="sr-only">{$user->display_name}</span>
+                <a href="{profile_url($user)}">
                     {$user->display_name}
                 </a>
                 {if $user->pending}

@@ -84,11 +84,6 @@
 
     // Plan blocks
     .list-group .task-item {
-        a[data-toggle="collapse"] .collapse-indicator,
-        a[data-toggle="collapse"].collapsed .collapse-indicator {
-            margin-right: 10px;
-            margin-top: 17px;
-        }
         .plan-task-icon {
             vertical-align: top;
             padding-top: 4px;
@@ -97,8 +92,8 @@
             cursor: pointer;
         }
         .plan-task-heading {
-            max-width: 60%;
-            display: inline-block;
+            margin-top: -1.3rem;
+            margin-left: 25px;
         }
         .plan-task-detail {
             margin-left: 22px;
@@ -106,12 +101,6 @@
             .tags {
                 margin-bottom: 0;
             }
-        }
-    }
-    &.bt-plans-editor .list-group .task-item {
-        a[data-toggle="collapse"] .collapse-indicator,
-        a[data-toggle="collapse"].collapsed .collapse-indicator {
-            margin-right: 90px;
         }
     }
 }

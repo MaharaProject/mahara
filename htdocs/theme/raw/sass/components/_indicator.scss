@@ -45,6 +45,10 @@
 
 tr[data-toggle="collapse"],
 a[data-toggle="collapse"] {
+    &:hover,
+    &:focus {
+      outline: none;
+    }
     &:hover .collapse-indicator,
     &:focus .collapse-indicator{
         color: $collapse-indicator-hover-color;

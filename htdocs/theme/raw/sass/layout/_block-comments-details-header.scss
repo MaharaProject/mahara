@@ -72,15 +72,12 @@
   .list-group {
     .block-header {
       ~ .list-group-item {
-        .icon-on-hover ~ .icon-action {
-          left: -65px;
+        .icon-download {
+          left: -70px;
         }
         .title {
           display: inline-block;
           max-width: 55%;
-        }
-        img.file-icon {
-          vertical-align: top;
         }
 
         // reverts folder and file downloads margin-right
@@ -92,7 +89,7 @@
 
       &.d-none {
         ~ .list-group-item {
-          .icon-on-hover ~ .icon-action {
+          .icon-download {
             left: 0;
           }
           .title {
@@ -115,9 +112,10 @@
     }
   }
 }
-// exception of pdf block
+// exception of pdf and tagged posts blocks
 .card.card-secondary {
-  &.bt-pdf {
+  &.bt-pdf,
+  &.bt-taggedposts {
     .block-header {
         margin-top: 0;
     }
@@ -147,3 +145,5 @@
     }
   }
 }
+
+// when block details/comments turned on, attached file download icon is hidden behind it, need this to move it

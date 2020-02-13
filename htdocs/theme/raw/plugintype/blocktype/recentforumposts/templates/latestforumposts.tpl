@@ -7,18 +7,17 @@
                     <a href="{profile_url($postinfo->author)}" class="user-icon user-icon-20 small-icon">
                         <img src="{profile_icon_url user=$postinfo->author maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$postinfo->author|display_default_name}" />
                     </a>
-
                     <h4 class="title list-group-item-heading">
                          <a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic|escape}&post={$postinfo->id}">
                             {$postinfo->topicname}
-                            <span class="metadata text-small">
-                                {if !$postinfo->author->deleted}
-                                    - {$postinfo->author|display_name}
-                                {else}
-                                    - {$postinfo->author|full_name}
-                                {/if}
-                            </span>
                         </a>
+                        <span class="metadata text-small">
+                            {if !$postinfo->author->deleted}
+                                - <a href="{profile_url($postinfo->author)}">{$postinfo->author|display_name}</a>
+                            {else}
+                                - <a href="{profile_url($postinfo->author)}">{$postinfo->author|full_name}</a>
+                            {/if}
+                        </span>
                     </h4>
                 </div>
                 <div class="detail">
@@ -40,23 +39,20 @@
                         <ul class="list-group list-unstyled">
                         {foreach from=$postinfo->attachments item=file}
                             <li class="list-group-item">
-                                <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}&amp;post={$postinfo->id}" class="outer-link icon-on-hover">
-                                    <span class="sr-only">
-                                        {str tag=Download section=artefact.file} {$file->title}
-                                    </span>
-                                </a>
-                                {if $file->icon}
+                            {if $file->icon}
                                 <img class="file-icon" src="{$file->icon}" alt="">
-                                {else}
+                            {else}
                                 <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
-                                {/if}
+                            {/if}
                                 <span class="title">
-                                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}&post={$postinfo->id}" class="inner-link">
-                                        {$file->title}
-                                        <span class="metadata"> - [{$file->size|display_size}]</span>
-                                    </a>
+                                    <span class="text-small">{$file->title}</span>
+                                    <span class="metadata"> [{$file->size|display_size}]</span>
                                 </span>
-                                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+
+                                <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}&amp;post={$postinfo->id}">
+                                    <span class="sr-only">{str tag=Download section=artefact.file} {$file->title}</span>
+                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                                </a>
                             </li>
                         {/foreach}
                         </ul>

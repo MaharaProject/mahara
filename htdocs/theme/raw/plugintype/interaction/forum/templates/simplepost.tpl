@@ -47,25 +47,39 @@
 
             {$post->body|clean_html|safe}
             {if $post->attachments}
-            <div class="postattachments">
-                <h5 class="title">
-                    <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
-                    {str tag="attachedfiles" section="artefact.blog"}
+            <div class="has-attachment card collapsible">
+                <h5 class="card-header">
+                    <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
+                        <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
+                        <span class="text-small"> {str tag="attachedfiles" section="artefact.blog"} </span>
+                        <span class="metadata">
+                            ({$postinfo->filecount})
+                        </span>
+                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                    </a>
                 </h5>
-                <ul class="list-group list-group-unbordered">
+                <div class="collapse" id="post-attach-{$post->id}">
+                    <ul class="list-group list-unstyled">
                     {foreach from=$post->attachments item=file}
-                    <li class="list-group-item list-group-item-link small">
-                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->fileid}&post={$file->post}" {if $file->fileid} title="{$file->description}" data-toggle="tooltip"{/if}>
+                        <li class="list-group-item">
                         {if $file->icon}
-                            <img src="{$file->icon}" alt="" class="file-icon">
+                            <img class="file-icon" src="{$file->icon}" alt="">
                         {else}
                             <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                         {/if}
-                        <span>{$file->title|truncate:40} - ({$file->size|display_size})</span>
-                        </a>
-                    </li>
+                            <span class="title">
+                                <span class="text-small">{$file->title}</span>
+                                <span class="metadata"> [{$file->size|display_size}]</span>
+                            </span>
+
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->fileid}&post={$file->post}" {if $file->fileid} title="{$file->description}" data-toggle="tooltip"{/if}>
+                                <span class="sr-only">{str tag=Download section=artefact.file} {$file->title}</span>
+                                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            </a>
+                        </li>
                     {/foreach}
-                </ul>
+                    </ul>
+                </div>
             </div>
             {/if}
             {if $post->edit}

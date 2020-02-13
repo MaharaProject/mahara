@@ -2,15 +2,14 @@
 {foreach from=$results.cdata item=row}
 {foreach from=$row item=r}
 <div class="list-group-item {if $membershiptype == 'invite' || $membershiptype == 'request'} list-group-item-warning{/if}">
-    <a href="{profile_url($r)}" class="outer-link"><span class="sr-only">{$r.name}</span></a>
      <div class="row">
         <div class="col-md-8">
             <div class="user-icon user-icon-40 float-left">
-                <img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}">
+                <a href="{profile_url($r)}"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}"></a>
             </div>
 
             <h4 class="list-group-item-heading">
-                {$r.name}
+                <a href="{profile_url($r)}">{$r.name}</a>
                 {if $r.role}
                 <span class="grouprole text-small text-midtone"> -
                     {$results.roles[$r.role]->display}
@@ -29,7 +28,7 @@
                         <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$r.id}"
                            href="#userintro{$r.id}" role="button" aria-expanded="false"
                            aria-controls="userintro{$r.id}">
-                           <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
+                           <span class="icon icon-chevron-down collapse-indicator text-inline" role="presentation" aria-hidden="true"></span>
                            {str tag=showintroduction section=group}
                         </a>
                     </div>

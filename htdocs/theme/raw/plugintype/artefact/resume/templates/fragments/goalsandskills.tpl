@@ -28,32 +28,33 @@
             justdetails=$justdetails
             displayiconsonly = true}
             <li class="list-group-item">
-                <a href="{$item->downloadpath}" class="outer-link icon-on-hover">
-                    <span class="sr-only">
-                        {str tag=Download section=artefact.file} {$item->title}
-                    </span>
-                </a>
-
+            {if !$editing}
+                <a class="modal_link text-small" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
+            {/if}
                 {if $item->iconpath}
-                <img class="file-icon" src="{$item->iconpath}" alt="">
+                    <img class="file-icon" src="{$item->iconpath}" alt="">
                 {else}
-                <span class="icon icon-{$item->artefacttype} icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-{$item->artefacttype} icon-lg text-default" role="presentation" aria-hidden="true"></span>
                 {/if}
+            {if !$editing}
+                </a>
+            {/if}
 
                 <span class="title">
-                    {if !$editing}
-                    <a class="modal_link text-small inner-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
+                {if !$editing}
+                    <a class="modal_link text-small" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                         {$item->title}
                     </a>
-                    {else}
-                    <span class="text-small inner-link">{$item->title}</span>
-                    {/if}
-                    <span class="metadata"> -
-                        [{$item->size|display_size}]
-                    </span>
+                {else}
+                    <span class="text-small">{$item->title}</span>
+                {/if}
+                    <span class="metadata"> [{$item->size|display_size}]</span>
                 </span>
 
-                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                <a href="{$item->downloadpath}">
+                    <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
+                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                </a>
             </li>
         {/foreach}
         </ul>

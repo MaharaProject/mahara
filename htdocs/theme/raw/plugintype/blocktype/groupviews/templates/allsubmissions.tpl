@@ -1,9 +1,6 @@
 {foreach from=$items item=item}
-    <li class="list-group-item text-midtone">
-        <a href="{$item.url}" class="outer-link">
-            <span class="sr-only">{$item.name|str_shorten_text:60:true}</span>
-        </a>
-        <h5 class="text-inline">{$item.name|str_shorten_text:60:true}</h5>
+    <li class="list-group-item flush">
+        <h5 class="list-group-item-heading"><a href="{$item.url}">{$item.name|str_shorten_text:60:true}</a></h5>
         <span class="owner metadata inner-link text-small">
             {str tag=by section=view}
             <a href="{$item.ownerurl}" class="text-link text-small">

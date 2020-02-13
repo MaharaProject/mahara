@@ -32,15 +32,6 @@
                 justdetails=$justdetails
                 displayiconsonly=true}
             <li class="filedownload-item list-group-item">
-                {if $child->artefacttype != 'folder'}
-                <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}" class="outer-link icon-on-hover">
-                    <span class="sr-only">
-                        {str tag=Details section=artefact.file}
-                        {$child->title}
-                    </span>
-                </a>
-                {/if}
-
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                 {else}
@@ -61,7 +52,13 @@
                     {/if}
                 </h4>
                 {if $child->artefacttype != 'folder'}
-                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}">
+                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                    <span class="sr-only">
+                        {str tag=Details section=artefact.file}
+                        {$child->title}
+                    </span>
+                </a>
                 {/if}
                 {if $child->description}
                 <p class="file-description text-small text-midtone">

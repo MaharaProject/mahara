@@ -1,19 +1,38 @@
 {if $data}
 {foreach from=$data item=user}
-    <div class="{cycle values='r0,r1'} listrow">
-          <div class="peoplelistinfo">
-            <div class="leftdiv user-icon user-icon-40" id="onlineinfo_{$user->id}">
-                <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+<div class="list-group-item">
+    <div class="row" id="onlineinfo_{$user->id}">
+        <div class="col-md-12">
+            <div class="user-icon user-icon-40 float-left">
+                <a href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></a>
             </div>
-
-            <div class="rightdiv">
-              <h3 class="title"><a href="{profile_url($user)}">{$user->display_name}</a></h3>
+            <h3 class="list-group-item-heading title">
+              <a href="{profile_url($user)}">{$user->display_name}</a>
+            </h3>
+            {if $user->institutions}
+            <div class="memberof detail text-small">
+                <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
+                {$user->institutions|safe}
             </div>
-
-            <div class="cb"></div>
-
-          </div>
+            {/if}
+            {if $user->introduction}
+            <div class="text-small detail text-midtone">
+                <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
+                    href="#userintro{$user->id}" role="button" aria-expanded="false"
+                    aria-controls="userintro{$user->id}">
+                    <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
+                    {str tag=showintroduction section=group}
+                </a>
+            </div>
+            <div class="introduction detail text-small">
+                <div class="collapse" id="userintro{$user->id}">
+                    {$user->introduction|safe}
+                </div>
+            </div>
+            {/if}
+        </div>
     </div>
+</div>
 {/foreach}
 {else}
     <div class="message">{str tag=nopeopleonlinefound section=mahara}</div>
