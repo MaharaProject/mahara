@@ -228,8 +228,18 @@ class PluginSearchInternal extends PluginSearch {
         $sql = '
             SELECT
                 u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.studentid, u.staff,
-                u.admin, u.profileicon, u.urlid
-            FROM {usr} u';
+                u.admin, u.profileicon, u.urlid';
+        $weightorder = '';
+        if (!empty($data['weightusers'])) {
+            if (!empty($data['weightinstitutions'])) {
+                $sql .= ', CASE WHEN (SELECT true AS flag FROM {usr_institution} ui WHERE ui.usr = u.id AND ui.institution IN (' .  join(',', array_map('db_quote', $data['weightinstitutions'])) . ') LIMIT 1) THEN 1 ELSE 0 END AS weight';
+            }
+            else {
+                $sql .= ', CASE WHEN (SELECT true AS flag FROM {usr_institution} ui WHERE ui.usr = u.id LIMIT 1) THEN 0 ELSE 1 END AS weight';
+            }
+            $weightorder = ' weight DESC, ';
+        }
+        $sql .= ' FROM {usr} u';
 
         if (isset($data['group'])) {
             $sql .= $groupjoin;
@@ -238,7 +248,7 @@ class PluginSearchInternal extends PluginSearch {
                 LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = 'hiderealname')";
 
         $sql .= $where . '
-            ORDER BY ' . $data['orderby'];
+            ORDER BY ' . $weightorder . $data['orderby'];
 
         $result['data'] = get_records_sql_array($sql, $values, $offset, $limit);
 

@@ -205,7 +205,9 @@ $string['sharedwithothers'] = 'Share with others';
 $string['moreoptions'] = 'Advanced options';
 $string['moreinstitutions'] = 'More institutions';
 $string['allviews'] = 'All pages';
-
+$string['peopleinmyinstitution'] = "People in \"%s\"";
+$string['peopleinmyinstitutions'] = 'People in my institutions';
+$string['otherpeople'] = 'Other people';
 $string['addaccess'] = 'Add access for "%s"';
 $string['addaccessinstitution'] = 'Add access for institution "%s"';
 $string['addaccessgroup'] = 'Add access for group "%s"';
