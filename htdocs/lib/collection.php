@@ -800,13 +800,18 @@ class Collection {
      */
     public function can_have_progresscompletion() {
         $allowspc = false;
-        if (isset($this->group)) {
+        if (isset($this->group) && $this->group) {
             return $allowspc;
         }
         if (is_plugin_active('signoff', 'blocktype')) {
             require_once(get_config('docroot') . 'lib/institution.php');
             if ($this->institution) {
                 $institution = $this->institution;
+                $institution = new Institution($institution);
+                $allowspc = ($institution->progresscompletion) ? $institution : false;
+            }
+            else if ($this->group) {
+                $institution = get_field('group', 'institution', 'id', $this->group);
                 $institution = new Institution($institution);
                 $allowspc = ($institution->progresscompletion) ? $institution : false;
             }

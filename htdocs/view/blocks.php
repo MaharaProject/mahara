@@ -232,17 +232,19 @@ $(function () {
 
     grid.gridstack(options);
     grid = $('.grid-stack').data('gridstack');
-    grid.resizable('.grid-stack-item', true);
-    // should add the blocks one by one
-    var blocks = {$blocksencode};
-    if ({$blockresizeonload}) {
-        // update block heights when they are loaded
-        loadGridTranslate(grid, blocks);
+    if (grid) {
+        grid.resizable('.grid-stack-item', true);
+        // should add the blocks one by one
+        var blocks = {$blocksencode};
+        if ({$blockresizeonload}) {
+            // update block heights when they are loaded
+            loadGridTranslate(grid, blocks);
+        }
+        else {
+            loadGrid(grid, blocks);
+        }
+        {$reorder}
     }
-    else {
-        loadGrid(grid, blocks);
-    }
-    {$reorder}
 });
 ";
 

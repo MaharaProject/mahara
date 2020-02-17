@@ -608,6 +608,15 @@ if ($institution || $add) {
             );
         }
     }
+    if (is_plugin_active('signoff', 'blocktype')) {
+        $elements['progresscompletion'] = array(
+          'type'         => 'switchbox',
+          'title'        => get_string('progresscompletion', 'admin'),
+          'description'  => get_string('progresscompletiondescription','admin'),
+          'defaultvalue' => isset($data->progresscompletion) && $data->progresscompletion,
+          'help'         => true,
+        );
+    }
     $elements['allowinstitutionsmartevidence'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('allowinstitutionsmartevidence', 'admin'),
@@ -629,15 +638,6 @@ if ($institution || $add) {
         'disabled'     => get_config('defaultreviewselfdeletion') == true,
         'defaultvalue' => get_config('defaultreviewselfdeletion') ? get_config('defaultreviewselfdeletion') : (isset($data->reviewselfdeletion) && $data->reviewselfdeletion),
     );
-    if (is_plugin_active('signoff', 'blocktype')) {
-        $elements['progresscompletion'] = array(
-          'type'         => 'switchbox',
-          'title'        => get_string('progresscompletion', 'admin'),
-          'description'  => get_string('progresscompletiondescription','admin'),
-          'defaultvalue' => isset($data->progresscompletion) && $data->progresscompletion,
-          'help'         => true,
-        );
-    }
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
         'class' => 'last with-formgroup',

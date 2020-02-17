@@ -384,14 +384,16 @@ $(function () {
     grid.gridstack(options);
     grid = $('.grid-stack').data('gridstack');
 
-    var blocks = {$blocks};
-    if ({$blockresizeonload}) {
-        // the page was copied from an old layout page
-        // and the blocks still need to be resized
-        loadGridTranslate(grid, blocks);
-    }
-    else {
-        loadGrid(grid, blocks);
+    if (grid) {
+        var blocks = {$blocks};
+        if ({$blockresizeonload}) {
+            // the page was copied from an old layout page
+            // and the blocks still need to be resized
+            loadGridTranslate(grid, blocks);
+        }
+        else {
+            loadGrid(grid, blocks);
+        }
     }
 });
 EOF;

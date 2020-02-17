@@ -985,6 +985,9 @@ class PluginImportLeap extends PluginImport {
             if ($updated = strtotime((string)$entry->updated)) {
                 $collectiondata['mtime'] = $updated;
             }
+            if (isset($entry->progresscompletion)) {
+                $collectiondata['progresscompletion'] = true;
+            }
 
             PluginImportLeap::add_import_entry_request($importid, (string)$entry->id, self::STRATEGY_IMPORT_AS_COLLECTION, 'core', array(
                 'owner'   => $this->get('usr'),

@@ -59,6 +59,7 @@ $smarty = smarty(
     )
 );
 
+$smarty->assign('PAGETITLE', get_string('portfoliocompletion', 'collection'));
 $smarty->assign('maintitle', $collection->get('name'));
 $smarty->assign('name', get_string('portfoliocompletion', 'collection'));
 

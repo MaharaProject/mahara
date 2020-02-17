@@ -234,6 +234,8 @@ class PluginExportLeap extends PluginExport {
             if ($collection->get('coverimage')) {
                 $this->smarty->assign('coverimage',  'portfolio:artefact' . $collection->get('coverimage'));
             }
+            $this->smarty->assign('progresscompletion', $collection->has_progresscompletion());
+
             $tags = $collection->get('tags');
             if ($tags) {
                 $tags = array_map(function ($a) {

@@ -241,6 +241,8 @@ class PluginExportHtml extends PluginExport {
         $this->notify_progress_callback(55, get_string('exportingviews', 'export'));
         $this->dump_view_export_data();
 
+        $this->export_progresscompletion_pages();
+
         $this->export_artefact_metadata_modals();
 
         if (!$this->exportingoneview) {
@@ -400,6 +402,13 @@ class PluginExportHtml extends PluginExport {
         static $menus = array();
         if (!isset($menus[$collectionid])) {
             $menus[$collectionid] = array();
+            if ($progresscompletion = $this->collections[$collectionid]->has_progresscompletion()) {
+                $menus[$collectionid][] = array(
+                    'id'   => 'progresscompletion',
+                    'url'  => self::text_to_URLpath(self::text_to_filename($this->collections[$collectionid]->get('name') . '_progresscompletion')) . '/index.html',
+                    'text' => get_string('progresscompletion', 'admin'),
+                );
+            }
             foreach ($this->collectionview[$collectionid] as $viewid) {
                 $title = $this->views[$viewid]->get('title');
                 $menus[$collectionid][] = array(
@@ -412,6 +421,64 @@ class PluginExportHtml extends PluginExport {
         return $menus[$collectionid];
     }
 
+    /**
+     * Dumps all collections progress completion pages into the HTML export
+     */
+    private function export_progresscompletion_pages() {
+        $rootpath = ($this->exportingoneview) ? $this->get_root_path() : $this->get_root_path(3);
+        $smarty = $this->get_smarty($rootpath);
+        foreach ($this->collections as $collection) {
+            if ($collection->has_progresscompletion()) {
+
+                $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . self::text_to_filename($collection->get('name') . '_progresscompletion');
+                if (!check_dir_exists($directory)) {
+                    throw new SystemException("Could not create directory for progress completion page from collection " . $collection->get('name'));
+                }
+
+                if ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS
+                        || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS) {
+                    $smarty->assign('collectionname', $collection->get('name'));
+                    $smarty->assign('collectionmenu', $this->collection_menu($collection->get('id')));
+                }
+                $views = $collection->get('views');
+                $firstview = $views['views'][0];
+                $view = new View($firstview->id);
+                $smarty->assign('maintitle', $collection->get('name'));
+                $smarty->assign('name', get_string('portfoliocompletion', 'collection'));
+                $smarty->assign('author', $view->display_author());
+                // progress bar
+                $collectionowner = new User();
+                $collectionowner->find_by_id($collection->get('owner'));
+                $displayname = display_name($collectionowner);
+                $smarty->assign('quotamessage', get_string('overallcompletion', 'collection', $displayname));
+                list($completedactionspercentage, $totalactions) = $collection->get_signed_off_and_verified_percentage();
+                $smarty->assign('completedactionspercentage', $completedactionspercentage);
+
+                // table
+                foreach ($views['views'] as &$view) {
+                    $viewobj = new View($view->id);
+                    $owneraction = $viewobj->get_progress_action('owner');
+                    $manageraction = $viewobj->get_progress_action('manager');
+
+                    $view->ownericonclass = $owneraction->get_icon();
+                    $view->ownertitle = $owneraction->get_title();
+                    $view->signedoff = ArtefactTypePeerassessment::is_signed_off($viewobj);
+
+                    $view->managericonclass = $manageraction->get_icon();
+                    $view->managertitle = $manageraction->get_title();
+                    $view->verified = ArtefactTypePeerassessment::is_verified($viewobj);
+                    $view->fullurl = '../' . $viewobj->get('id') . '_' . self::text_to_filename($viewobj->get('title')) . '/index.html';
+                }
+                $smarty->assign('page_heading', get_string('portfoliocompletion', 'collection'));
+                $smarty->assign('views', $views['views']);
+
+                $content = $smarty->fetch('export:html:progresscompletion.tpl');
+                if (!file_put_contents("$directory/index.html", $content)) {
+                    throw new SystemException("Could not write view page for view $viewid");
+                }
+            }
+        }
+    }
     /**
      * Dumps all views into the HTML export
      */
@@ -522,6 +589,10 @@ class PluginExportHtml extends PluginExport {
                 'title' => $collection->get('name'),
                 'views' => array(),
             );
+            if ($progresscompletion = $collection->has_progresscompletion()) {
+                $list['collections'][$id]['progresscompletion'] = true;
+                $list['collections'][$id]['progresscompletionfolder'] = self::text_to_filename($collection->get('name') . '_progresscompletion');
+            }
         }
 
         $ncollections = count($this->collections);
@@ -1182,6 +1253,13 @@ class HtmlExportOutputFilter {
             $html
         );
 
+        // Links to views
+        $html = preg_replace_callback(
+            '#' . $wwwroot . 'collection/progresscompletion\.php\?id=(\d+)#',
+            array($this, 'replace_progresscompletion_link'),
+            $html
+        );
+
         return $html;
     }
 
@@ -1217,6 +1295,17 @@ class HtmlExportOutputFilter {
             return '<a href="' . $filterpath . $this->viewtitles[$viewid] . '/index.html">' . $matches[4] . '</a>';
         }
         return $matches[4];
+    }
+
+    /**
+     * Callback to replace progress completion links to point to the correct location in
+     * the HTML export
+     */
+    private function replace_progresscompletion_link($matches) {
+        $collectionid = $matches[1];
+
+        $collectionname = PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename(get_field('collection', 'name', 'id', $collectionid)));
+        return $this->basepath . '/views/' . $collectionname . '_progresscompletion/index.html';
     }
 
     /**

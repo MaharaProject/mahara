@@ -10,13 +10,15 @@ $(function () {
         grid.gridstack(options);console.log(grid);
         grid = $('.grid-stack').data('gridstack');
 
-        // should add the blocks one by one
-        var blocks = {json_encode arg=$blocks};
-        loadGrid(grid, blocks);
-        jQuery(document).trigger('blocksloaded');
-    {/if}
-    // Prevent Image Gallery block images from overlapping
-    carouselHeight();
+        if (grid) {
+            // should add the blocks one by one
+            var blocks = {json_encode arg=$blocks};
+            loadGrid(grid, blocks);
+            jQuery(document).trigger('blocksloaded');
+        }
+        {/if}
+        // Prevent Image Gallery block images from overlapping
+        carouselHeight();
 });
 </script>
 

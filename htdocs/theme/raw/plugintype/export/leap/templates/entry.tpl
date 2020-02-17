@@ -7,6 +7,9 @@
 {/if}
 {if $updated}        <updated>{$updated}</updated>{/if}
 {if $created}        <published>{$created}</published>{/if}
+{if $progresscompletion}
+                     <progresscompletion>true</progresscompletion>
+{/if}
 {if $summary}        <summary{if $summarytype != 'text'} type="{$summarytype}"{/if}>{if $summarytype == 'xhtml'}<div xmlns="http://www.w3.org/1999/xhtml">{/if}{if $summarytype == 'xhtml'}{$summary|export_leap_rewrite_links|safe}{elseif $summarytype == 'html'}{$summary|export_leap_rewrite_links}{else}{$summary}{/if}{if $summarytype == 'xhtml'}</div>{/if}</summary>{/if}
 {if $coverimage}     <coverimage>{$coverimage}</coverimage>{/if}
 {if $instructions}   <subtitle{if $instructionstype != 'text'} type="{$instructionstype}"{/if}>{if $instructionstype == 'xhtml'}<div xmlns="http://www.w3.org/1999/xhtml">{/if}{if $instructionstype == 'xhtml'}{$instructions|export_leap_rewrite_links|safe}{elseif $instructionstype == 'html'}{$instructions|export_leap_rewrite_links}{else}{$instructions}{/if}{if $instructionstype == 'xhtml'}</div>{/if}</subtitle>{/if}
