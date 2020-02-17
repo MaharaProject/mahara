@@ -549,7 +549,27 @@ EOF;
         list($selector, $locator) = $this->transform_selector('link_or_button', $link_or_button);
         $elementnode = $this->find($selector, $locator, false, $rownode);
         $this->ensure_node_is_visible($elementnode);
-        $elementnode->click();
+        $this->avoidStaleClick($selector, $locator, $rownode);
+    }
+
+    /**
+     * Try to avoid the problem where the item exist and is visible but when
+     * we go to click it the DOM has changed, eg via Ajax, and so the element is stale
+     */
+    public function avoidStaleClick($selector, $locator, $rownode) {
+        $attempts = 0;
+        while ($attempts < 10) {
+            try {
+                $this->find($selector, $locator, false, $rownode)->click();
+                return;
+            }
+            catch (StaleElementReference $e) {
+            }
+            catch (ElementNotFoundException $e) {
+            }
+            $attempts++;
+        }
+        throw new Exception('Unable to avoid a stale click');
     }
 
     /**
