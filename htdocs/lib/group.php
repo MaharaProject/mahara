@@ -279,7 +279,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
             r.see_submitted_views
         FROM
             {group_member} m
-            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0)
+            INNER JOIN {group} g ON (m.group = g.id AND g.deleted = 0 AND g.submittableto = 1)
             INNER JOIN {grouptype_roles} r ON (g.grouptype = r.grouptype AND r.role = m.role)
         WHERE
             m.member = ?

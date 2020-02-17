@@ -49,7 +49,7 @@ class PluginModuleSubmissions extends PluginModule {
             $groupTab = [
                 'groupsubmissions' => [
                     'path' => 'groups/groupsubmissions',
-                    'url' => 'module/submissions/index.php?group='.$groupid,
+                    'url' => 'module/submissions/index.php?group=' . $groupid,
                     'title' => get_string('Submissions', 'module.submissions'),
                     'weight' => 80,
                 ],

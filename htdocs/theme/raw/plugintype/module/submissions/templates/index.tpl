@@ -62,7 +62,7 @@
             responsive: true,
             fixedHeader: true,      // To avoid colvis column assignment issues
             colReorder: true,      // Set to false due to Quickfilter issues on referring to wrong columns after reordering
-            dom: '<"toolbar"<"dt-buttons row col-auto"lBf>>tip',
+            dom: '<"toolbar"<"dbut"B><"dt-buttons row col-auto"f>>t<"pagein"ipl>',
             buttons: [
                 'colvis',
                 {
@@ -196,6 +196,9 @@
                     name: 'ownerName',
                     data: 'ownerName',
                     responsivePriority: 1,
+                    render: function(data, type, row, meta) {
+                        return row.userElementTitleHtml;
+                    }
                 },
                 {
                     name: 'ownerPreferredName',
@@ -222,9 +225,7 @@
                         if (['sort', 'filter'].includes(type)) {
                             return data;
                         }
-
-                        let options = {weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'};
-                        return new Date(data).toLocaleString('{/literal}{$language}{literal}', options);
+                        return row.submissionDateFormat;
                     }
                 },
                 {
@@ -325,21 +326,25 @@
                                     return '{/literal}{str tag='Success' section='module.submissions'}{literal}';
                             }
                         }
-
+                        var tooltip = '';
                         switch (parseInt(data) || null) {
                             case null:
                                 classes += 'icon icon-question text-info';
+                                tooltip = '{/literal}{$tooltip.question}{literal}';
                                 break;
                             case 1:
                                 classes += 'icon icon-refresh text-warning';
+                                tooltip = '{/literal}{$tooltip.refresh}{literal}';
                                 break;
                             case 2:
                                 classes += 'icon icon-remove text-danger';
+                                tooltip = '{/literal}{$tooltip.remove}{literal}';
                                 break;
                             default:
                                 classes += 'icon icon-check text-success';
+                                tooltip = '{/literal}{$tooltip.success}{literal}';
                         }
-                        return '<' + element + elementType + 'class="' + classes + '">' + '</' + element + '>';
+                        return '<' + element + elementType + 'class="' + classes + '" title="' + tooltip + '">' + '</' + element + '>';
                     }
                 },
                 {
@@ -521,7 +526,7 @@
                                 ]
                             },
                     {/literal}{/if}{literal}
-                        {
+/*                        {
                             columnName: 'ownerName',
                             title: '{/literal}{str tag='Name' section='module.submissions'}{literal}',
                             items: [
@@ -558,7 +563,7 @@
                                         }
                                     }
                                 ]
-                        },
+                        }, */
                         {
                             columnName: 'taskTitle',
                             title: '{/literal}{str tag='Task' section='module.submissions'}{literal}',

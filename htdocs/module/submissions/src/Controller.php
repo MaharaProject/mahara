@@ -70,8 +70,6 @@ class Controller {
             $this->group = get_group_by_id($groupId);
         }
 
-        $this->defineMaharaConstants($command);
-
         if ($this->group) {
             // User is group assessor (role admin or tutor)
             if (group_user_can_assess_submitted_views($this->group->id, $this->user->get('id'))) {
@@ -82,12 +80,15 @@ class Controller {
                 if (!group_user_access($this->group->id, $this->user->get('id'))) {
                     throw new \AccessDeniedException(get_string('notamember', 'group'));
                 }
-                $this->context = Context::GroupSubmitter;
+                $this->context = Context::ContentUser; // Context::GroupSubmitter;
+                $this->group = null;
             }
         }
         else {
             $this->context = Context::ContentUser;
         }
+
+        $this->defineMaharaConstants($command);
     }
 
     /**
@@ -114,15 +115,15 @@ class Controller {
         switch ($command) {
             case 'index':
                 if ($this->isInGroupContext()) {
-                    define('TITLE', $this->group->name . ' - submissions');
+                    define('TITLE', get_string("submissionstitlegroup", "module.submissions", $this->group->name));
                     define('SUBSECTIONHEADING', hsc(get_string("Submissions", "module.submissions")));
                     define('GROUP', $this->group->id);
                     define('MENUITEM', 'engage/index');
                     define('MENUITEM_SUBPAGE', 'groupsubmissions');
                 }
                 else {
-                    define('TITLE', 'My submissions');
-                    define('MENUITEM', 'create/submissions');
+                    define('TITLE', get_string("Submissions", "module.submissions"));
+                    define('MENUITEM', 'share/submissions');
                 }
                 break;
             case 'index.json':
@@ -163,13 +164,15 @@ class Controller {
         $headers[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/DataTables/datatables.min.css">';
         $headers[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'module/submissions/js/piertables.css">';
         $smarty = smarty($js, $headers);
-
+        setpageicon($smarty, 'icon-hand-holding');
         $smarty->assign('language', strstr(current_language(), '.', true));
         $smarty->assign('options', $options);
-
         $smarty->assign('SIDEBLOCKS', []);
         $smarty->assign('SIDEBARS', []);
-
+        $smarty->assign('tooltip', array('question' => get_string('tooltip_question', 'module.submissions'),
+                                         'refresh'  => get_string('tooltip_refresh', 'module.submissions'),
+                                         'remove'   => get_string('tooltip_remove', 'module.submissions'),
+                                         'success'  => get_string('tooltip_success', 'module.submissions')));
         $smarty->display('module:submissions:index.tpl');
     }
 
@@ -212,6 +215,7 @@ class Controller {
             $record->ownerName = SubmissionTools::concatFirstAndLastName($record->ownerFirstName, $record->ownerLastName);
             $record->evaluatorName = ($record->evaluatorId ? SubmissionTools::concatFirstAndLastName($record->evaluatorFirstName, $record->evaluatorLastName) : null);
         }
+        $record->userElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->ownerId, $record->ownerName, '', '');
 
         // If submission is not released yet
         if ((bool)$record->liveUserIsAssessor && ((int)$record->status === Submission::StatusSubmitted || (int)$record->status === Submission::StatusReleasing)) {
@@ -244,7 +248,7 @@ class Controller {
             }
             $record->editOptions['evaluatorName']['arrayValueText'] = $evaluatorSelection;
         }
-
+        $record->submissionDateFormat = format_date(strtotime($record->submissionDate), 'strftimedate');
         return $record;
     }
 

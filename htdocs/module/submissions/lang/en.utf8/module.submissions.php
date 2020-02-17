@@ -4,6 +4,7 @@ defined('INTERNAL') || die();
 
 $string['pluginname'] = 'Submissions';
 $string['Submissions'] = 'Submissions';
+$string['submissionstitlegroup'] = '%s - Submissions';
 
 // Table
 $string['Group'] = 'Group';
@@ -35,6 +36,10 @@ $string['unassignedselectboxitem'] = '- Unassigned -';
 // Table messages
 $string['releasesubmission'] = 'Complete evaluation and release submitted portfolio?';
 $string['fixsubmission'] = 'Fix submission?';
+$string['tooltip_success'] = 'Completed';
+$string['tooltip_remove'] = 'Failed';
+$string['tooltip_refresh'] = 'Partial fail';
+$string['tooltip_question'] = 'Ungraded';
 
 // Datatables
 $string['decimal'] = '';

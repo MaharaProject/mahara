@@ -406,7 +406,7 @@ $(document).ready(function () {
             let categoryContainer = $('<div class="row small">');
 
             // We need this wrapper for running the animation which doesn't work directly on flexbox elements
-            let categoryContainerWrapper = $('<div class="container">');
+            let categoryContainerWrapper = $('<div class="container" style="display: none;">');
             categoryContainer.appendTo(categoryContainerWrapper);
 
             allOffButtonElement.appendTo(filterTitlebarElement);
@@ -474,6 +474,7 @@ $(document).ready(function () {
             });
             categoryContainerWrapper.appendTo(filterElement);
             filterElement.prependTo($('div.toolbar'));
+            $('div.dbut').detach().appendTo(categoryContainerWrapper);
         };
 
         Me.attachEditOptionsToColumns(options);
