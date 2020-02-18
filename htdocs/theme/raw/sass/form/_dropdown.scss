@@ -219,3 +219,17 @@
     background-color: $dropdown-link-hover-bg !important;
     color: $dropdown-link-hover-color !important;
 }
+
+// dropdowns on Share
+.search-user-dropdown {
+  .select2-results ul li > div {
+    margin-left: 50px;
+    margin-right: 20px; // needed so it doesn't horizontally scroll for some long ones
+    color: $theme-text-midtone-color;
+    font-size: $font-size-sm;
+    &.name {
+      color: $theme-text-color;
+      font-size: $font-size-base;
+    }
+  }
+}

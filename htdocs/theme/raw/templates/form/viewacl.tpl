@@ -239,6 +239,8 @@ jQuery(function($) {
             $(self).select2({
                 placeholder: {{jstr tag=search section=view}},
                 dropdownCssClass: 'search-user-dropdown',
+                dropdownAutoWidth : 'true',
+                width: 'auto',
                 ajax: {
                     url: "access.json.php",
                     dataType: 'json',
