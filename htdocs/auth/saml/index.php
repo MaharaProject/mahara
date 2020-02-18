@@ -207,8 +207,9 @@ if ($can_login) {
         $wantsurl = $CFG->wwwroot;
     }
     // if redirecting to using homepage but using custom landing page
-    if ($wantsurl === $CFG->wwwroot && get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
-        $wantsurl = get_config('homepageredirecturl');
+    $homepageredirecturl = get_config('homepageredirecturl');
+    if ($wantsurl === $CFG->wwwroot && get_config('homepageredirect') && !empty($homepageredirecturl)) {
+        $wantsurl = $homepageredirecturl;
     }
     @session_write_close();
     redirect($wantsurl);

@@ -2115,8 +2115,9 @@ function login_submit(Pieform $form, $values) {
 
     if ($requesturi == '/' || $requesturi == '/index.php') {
         // we are going to the homepage
-        if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
-            $requesturi = get_config('homepageredirecturl');
+        $homepageredirecturl = get_config('homepageredirecturl');
+        if (get_config('homepageredirect') && !empty($homepageredirecturl)) {
+            $requesturi = $homepageredirecturl;
         }
     }
     redirect($requesturi);

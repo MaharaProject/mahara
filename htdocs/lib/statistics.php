@@ -4702,9 +4702,11 @@ function get_report_types($institution = null) {
     }
 
     // But ignore $optgroups above if $USER is only institution staff and only allowed to see old user related reports
+    $allstaffstats = get_config('staffstats');
+    $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
     if (!empty($institution)) {
         if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
-            $USER->is_institutional_staff($institution) && empty(get_config('staffstats')) && !empty(get_config('staffreports'))) {
+            $USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
             $usersoptions = array(
                 'users_accesslist' => get_string('reportaccesslist', 'statistics'),
                 'users_masquerading' => get_string('reportmasquerading', 'statistics'),
@@ -4756,11 +4758,13 @@ function userhasaccess($institution, $report) {
     if ($USER->get('admin') || $USER->is_institutional_admin($institution)) {
         return true;
     }
-    if ($USER->is_institutional_staff($institution) && !empty(get_config('staffstats'))) {
+    $allstaffstats = get_config('staffstats');
+    $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
+    if ($USER->is_institutional_staff($institution) && !empty($allstaffstats)) {
         return true;
     }
 
-    if ($USER->is_institutional_staff($institution) && empty(get_config('staffstats')) && !empty(get_config('staffreports'))) {
+    if ($USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
         if (in_array($report, array('accesslist', 'masquerading', 'userdetails'))) {
             return true;
         }

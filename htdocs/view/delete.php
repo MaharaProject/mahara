@@ -32,8 +32,9 @@ if ($collection) {
 
 // Check to see if the view is being used as a landing page url
 $landingpagenote = '';
-if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
-    $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+$homepageredirecturl = get_config('homepageredirecturl');
+if (get_config('homepageredirect') && !empty($homepageredirecturl)) {
+    $landing = translate_landingpage_to_tags(array($homepageredirecturl));
     foreach ($landing as $land) {
         if ($land->type == 'view' && $land->typeid == $viewid) {
             $landingpagenote = get_string('islandingpage', 'admin');

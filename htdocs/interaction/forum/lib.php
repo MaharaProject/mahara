@@ -929,8 +929,9 @@ class InteractionForumInstance extends InteractionInstance {
 
         db_begin();
         // Check to see if the group's forum is being used as a landing page url and if the changes affect it
-        if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
-            $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+        $homepageredirecturl = get_config('homepageredirecturl');
+        if (get_config('homepageredirect') && !empty($homepageredirecturl)) {
+            $landing = translate_landingpage_to_tags(array($homepageredirecturl));
             foreach ($landing as $land) {
                 if ($land->type == 'forum' && $land->typeid == $this->id) {
                     set_config('homepageredirecturl', null);
