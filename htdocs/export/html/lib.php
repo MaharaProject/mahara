@@ -422,8 +422,12 @@ class PluginExportHtml extends PluginExport {
                 $smarty->assign('view', $outputfilter->filter($view->build_rows(false, true)));
             }
             else {
+                $blocks = $view->get_blocks(false, true);
+                if ($blocks && isset($blocks[0]['content'])) {
+                    $blocks[0]['content'] = $outputfilter->filter($blocks[0]['content']);
+                }
                 $smarty->assign('newlayout', true);
-                $smarty->assign('blocks', $view->get_blocks(false, true));
+                $smarty->assign('blocks', $blocks);
             }
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
