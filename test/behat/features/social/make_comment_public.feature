@@ -31,7 +31,7 @@ Background:
     And I click on "Edit access" in "Collection UserA_01" row
     And I set the select2 value "Page UserA_03" for "editaccess_views"
     And I select "Users" from "Search for..." in shared with select2 box
-    And I select "Bob User" from select2 search box in row number "1"
+    And I select "Bob User" from select2 nested search box in row number "1"
     And I press "Save"
     And I log out
 

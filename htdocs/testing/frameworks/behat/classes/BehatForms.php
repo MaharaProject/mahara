@@ -199,14 +199,13 @@ class BehatForms extends BehatBase {
     }
 
     /**
-    *
-    * Open select2 share menu and choose item by value from optgroup label
-    *
-    * @When I select :value from :label in shared with select2 box
-    * @When /^I select "(?P<value>(?:[^"]|\\")*)" from  "(?P<label>(?:[^"]|\\")*)" in shared with select2 box$/
-    * @param string $value
-    * @param string $label
-    */
+     * Open select2 share menu and choose item by value from optgroup label
+     *
+     * @When I select :value from :label in shared with select2 box
+     * @When /^I select "(?P<value>(?:[^"]|\\")*)" from  "(?P<label>(?:[^"]|\\")*)" in shared with select2 box$/
+     * @param string $value
+     * @param string $label
+     */
     public function share_with_select2($value, $label) {
         //make select2 list visible on page
         $this->i_click_on_element("span.picker.input-short", "css_element");
@@ -240,15 +239,13 @@ class BehatForms extends BehatBase {
     }
 
     /**
-    *
-    * Step to select from a previously hidden search box
-    * needs to be called after calling with share_with_select2's "Search for..." option
-    *
-    * @When I select :user from select2 search box in row number :row_num
-    * @param string $user
-    * @param int $row_num
-    */
-
+     * Step to select from a previously hidden search box
+     * needs to be called after calling with share_with_select2's "Search for..." option
+     *
+     * @When I select :user from select2 search box in row number :row_num
+     * @param string $user
+     * @param int $row_num
+     */
     public function select_from_search_box($user, $row_num) {
         $row_num = $row_num -1;
         //create xpath for correct search box
@@ -259,7 +256,24 @@ class BehatForms extends BehatBase {
         $this->i_click_on_element($user_xpath, 'xpath_element');
     }
 
-
+    /**
+     * Step to select from a previously hidden user search box where the results
+     * are nested / display in optgroups.
+     * Needs to be called after calling with share_with_select2's "Search for..." option
+     *
+     * @When I select :user from select2 nested search box in row number :row_num
+     * @param string $user
+     * @param int $row_num
+     */
+    public function select_from_nested_search_box($user, $row_num) {
+        $row_num = $row_num -1;
+        //create xpath for correct search box
+        $search_xpath = "//*[@id=\"select2-hidden-user-search-$row_num-container\"]";
+        $this->i_click_on_element($search_xpath, 'xpath_element');
+        //create xpath for the user being searched for within optgroup
+        $user_xpath = "//*[@id[starts-with(., 'select2-hidden-user-search')]]/li/div[contains(text(),  \"$user\")]";
+        $this->i_click_on_element($user_xpath, 'xpath_element');
+    }
 
     /**
      * Select value in choice list
