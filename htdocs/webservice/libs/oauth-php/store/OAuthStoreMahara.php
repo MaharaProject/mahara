@@ -209,18 +209,18 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
             }
             else {
                 // User is an admin, allow a key owner to be changed or key to be shared
-                if (array_key_exists('userid',$consumer)) {
+                if (array_key_exists('userid', $consumer)) {
                     if (is_null($consumer['userid'])) {
                         execute_sql('
                             UPDATE {oauth_server_registry}
-                            SET userid = NULL, mtime = NOW(),
+                            SET userid = NULL, mtime = NOW()
                             WHERE id = ?
                             ', array($consumer['id']));
                     }
                     else {
                         execute_sql('
                             UPDATE {oauth_server_registry}
-                            SET userid = ?, mtime = NOW(),
+                            SET userid = ?, mtime = NOW()
                             WHERE id = ?
                             ', array($consumer['userid'], $consumer['id']));
                     }
@@ -265,8 +265,9 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
             $consumer_key   = $this->generateKey(true);
             $consumer_secret= $this->generateKey();
 
-            // When the user is an admin, then the user can be forced to something else that the user
-            if ($user_is_admin && array_key_exists('userid',$consumer)) {
+            // When the user is an admin, then the userid field can be forced to be set
+            // to something other than the user
+            if ($user_is_admin && array_key_exists('userid', $consumer)) {
                 if (is_null($consumer['userid'])) {
                     $owner_id = 'NULL';
                 }
