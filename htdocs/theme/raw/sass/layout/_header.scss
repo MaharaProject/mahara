@@ -12,18 +12,15 @@
         float: left;
     }
 
-    // CHANGE this value to switch between large and small logo
-    $screen-width-small-logo: 480px;
-
     .logo {
         padding: 6px 15px 6px 0;
         display: inline-block;
-        height: $navbar-height; // CHANGE this value
+        height: $navbar-height;
 
         // When small logo is uploaded 'change-to-small' class is added.
         &.change-to-small {
           display: none;
-          @media (min-width: $screen-width-small-logo) {
+          @include media-breakpoint-up(md) {
               display: inline-block;
           }
         }
@@ -32,7 +29,7 @@
     .logoxs {
         margin: 6px 15px 6px 0;
         height: 48px;
-        @media (min-width: $screen-width-small-logo) {
+        @include media-breakpoint-up(md) {
           display: none;
         }
     }
@@ -61,7 +58,7 @@
     .navbar-main.navbar {
         min-height: auto;
         @include media-breakpoint-up(md) {
-            height: $navbar-height; // CHANGE this value
+            height: $navbar-height;
         }
     }
 }
