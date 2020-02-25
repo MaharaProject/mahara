@@ -658,6 +658,7 @@ function webservice_function_groups_form() {
             'successcallback' => 'webservice_function_groups_submit',
             'class'           => 'form-inline',
             'jsform'          => false,
+            'autofocus'       => false,
             'action'          => get_config('wwwroot') . 'webservice/admin/index.php',
             'elements' => array(
                 'service'    => array(
