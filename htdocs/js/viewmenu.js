@@ -147,46 +147,77 @@ function isTinyMceUsed() {
 
 // Attach all js events to the comments and details modal
 function set_up_modal_events() {
+
     var modal_textarea_id = null;
     $('#configureblock').find('textarea.wysiwyg').each(function() {
         modal_textarea_id = $(this).attr('id');
-        // Remove any existing tinymce
-        tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
-        // Attach tinymce
-        tinymce.EditorManager.execCommand('mceAddEditor',true, modal_textarea_id);
+
+        if (isTinyMceUsed()) {
+            // Remove any existing tinymce
+            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+            // Attach tinymce
+            tinymce.EditorManager.execCommand('mceAddEditor',true, modal_textarea_id);
+        }
     });
 
-    $('#configureblock .submitcancel[name="submit"]').off('click');
-    $('#configureblock .submitcancel[name="submit"]').on('click', function(e) {
-        if (tinymce.activeEditor.getContent()) {
-            $('#configureblock').find('textarea.wysiwyg').each(function() {
-                modal_textarea_id = $(this).attr('id');
-                tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
-            });
-            dock.hide();
+    $('#configureblock .submitcancel.submit').off('click');
+    $('#configureblock .submitcancel.submit').on('click', function(e) {
+
+        if (isTinyMceUsed()) {
+            if (tinymce.activeEditor.getContent()) {
+                $('#configureblock').find('textarea.wysiwyg').each(function() {
+                    modal_textarea_id = $(this).attr('id');
+                    tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+                });
+                dock.hide();
+            }
         }
+        else {
+            var hasEmptyFields = false;
+            // Comment text area
+            $('#configureblock').find('textarea.wysiwyg').each(function() {
+                if ($(this).val().length === 0) {
+                    hasEmptyFields = true;
+                }
+            });
+            // Name text input
+            $('#configureblock .required').find(':text').each(function() {
+                if ($(this).val().length === 0) {
+                    hasEmptyFields = true;
+                }
+            });
+
+            if (!hasEmptyFields) {
+                dock.hide();
+            }
+        }
+
         $("#configureblock input:file").each(function() {
             var element = $(this);
             if (element.val() != '') {
                 // Found at least one attachment
-                if (tinymce.activeEditor.getContent()) {
-                    $('#configureblock').find('textarea.wysiwyg').each(function() {
-                        modal_textarea_id = $(this).attr('id');
-                        tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
-                    });
+                if (isTinyMceUsed()) {
+                    if (tinymce.activeEditor.getContent()) {
+                        $('#configureblock').find('textarea.wysiwyg').each(function() {
+                            modal_textarea_id = $(this).attr('id');
+                            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+                        });
+                    }
+                    dock.hide();
                 }
-                dock.hide();
             }
         });
     });
 
-    $('#configureblock .submitcancel[name="cancel_submit"]').off('click');
-    $('#configureblock .submitcancel[name="cancel_submit"]').on('click', function(e) {
-        if (tinymce.activeEditor.getContent()) {
-            $('#configureblock').find('textarea.wysiwyg').each(function() {
-                modal_textarea_id = $(this).attr('id');
-                tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
-            });
+    $('#configureblock .submitcancel.cancel').off('click');
+    $('#configureblock .submitcancel.cancel').on('click', function(e) {
+        if (isTinyMceUsed()) {
+            if (tinymce.activeEditor.getContent()) {
+                $('#configureblock').find('textarea.wysiwyg').each(function() {
+                    modal_textarea_id = $(this).attr('id');
+                    tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+                });
+            }
         }
         e.stopPropagation();
         e.preventDefault();
