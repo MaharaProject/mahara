@@ -353,7 +353,7 @@ function sendjsonrequest(url, data, method, successcallback, errorcallback, quie
         }
 
         if (error) {
-            errorcallback();
+            errorcallback(data);
         }
         else {
             try {
@@ -375,7 +375,7 @@ function sendjsonrequest(url, data, method, successcallback, errorcallback, quie
             displayMessage(get_string('unknownerror'), 'error');
         }
 
-        errorcallback();
+        errorcallback(null);
         processingStop();
     });
 }

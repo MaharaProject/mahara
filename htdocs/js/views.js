@@ -199,63 +199,63 @@
                 };
                 pd['action_changeblockinstance_id_' + blockid + '_new_' + isnew + '_blocktype_' + option + '_title_' + title] = true;
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                    if (data.data.returnCode == 1) {
-                        console.log('error: ' + data.data.message);
-                    }
-                    else {
-                        console.log('success: ' + data.data.message);
-                        // Update block on page to be of new type
-                        var newdata = {};
-                        newdata.blockid = data.data.blockid;
-                        newdata.viewid = data.data.viewid;
-                        newdata.data = {};
-                        newdata.data.html = data.data.display.html;
-                        newdata.data.javascript = data.data.display.javascript;
-                        var blockinstance = ViewManager.replaceConfigureBlock(newdata);
-                        if (data.data.configure) {
-                           // The new block has configuration so update config modal to have new config form
-                            if (data.data.isnew) {
-                                addConfigureBlock(blockinstance, data.data.configure, true);
-                            }
-                            else {
-                                // wire up the cancel button on chosen blocktype form to revert the block back to placeholder block
-                                addConfigureBlock(blockinstance, data.data.configure);
-                                var blockinstanceId = blockinstance.attr('data-id');
-                                var cancelbutton = jQuery('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
-                                cancelbutton.off('click');
-                                cancelbutton.on('click',function(e) {
-                                    e.stopPropagation();
-                                    e.preventDefault();
-                                    var revpd = {
-                                        'id': $('#viewid').val(),
-                                        'change': 1,
-                                        'blocktype': 'placeholder',
-                                    };
-                                    revpd['action_revertblockinstance_id_' + data.data.blockid + '_title_' + data.data.oldtitle] = true;
-                                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', revpd, 'POST', function(revdata) {
-                                        if (data.data.returnCode == 1) {
-                                            console.log('error: ' + revdata.data.message);
-                                        }
-                                        else {
-                                            console.log('success: ' + revdata.data.message);
-                                            var revnewdata = {};
-                                            revnewdata.blockid = revdata.data.blockid;
-                                            revnewdata.viewid = revdata.data.viewid;
-                                            revnewdata.data = {};
-                                            revnewdata.data.html = revdata.data.display.html;
-                                            revnewdata.data.javascript = revdata.data.display.javascript;
-                                            var blockinstance = ViewManager.replaceConfigureBlock(revnewdata);
-                                            var configbutton = jQuery('.view-container button[name="action_configureblockinstance_id_' + revdata.data.blockid + '"]');
-                                            onModalCancel(e, configbutton);
-                                        }
-                                    });
-                                });
-                            }
+                    // Update block on page to be of new type
+                    var newdata = {};
+                    newdata.blockid = data.data.blockid;
+                    newdata.viewid = data.data.viewid;
+                    newdata.data = {};
+                    newdata.data.html = data.data.display.html;
+                    newdata.data.javascript = data.data.display.javascript;
+                    var blockinstance = ViewManager.replaceConfigureBlock(newdata);
+                    if (data.data.configure) {
+                        // The new block has configuration so update config modal to have new config form
+                        if (data.data.isnew) {
+                            addConfigureBlock(blockinstance, data.data.configure, true);
                         }
                         else {
-                            // No configure form so we just need to close the modal
-                            hideDock();
+                            // wire up the cancel button on chosen blocktype form to revert the block back to placeholder block
+                            addConfigureBlock(blockinstance, data.data.configure);
+                            var blockinstanceId = blockinstance.attr('data-id');
+                            var cancelbutton = jQuery('#cancel_instconf_action_configureblockinstance_id_' + blockinstanceId);
+                            cancelbutton.off('click');
+                            cancelbutton.on('click',function(e) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                var revpd = {
+                                    'id': $('#viewid').val(),
+                                    'change': 1,
+                                    'blocktype': 'placeholder',
+                                };
+                                revpd['action_revertblockinstance_id_' + data.data.blockid + '_title_' + data.data.oldtitle] = true;
+                                sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', revpd, 'POST', function(revdata) {
+                                    console.log('success: ' + revdata.data.message);
+                                    var revnewdata = {};
+                                    revnewdata.blockid = revdata.data.blockid;
+                                    revnewdata.viewid = revdata.data.viewid;
+                                    revnewdata.data = {};
+                                    revnewdata.data.html = revdata.data.display.html;
+                                    revnewdata.data.javascript = revdata.data.display.javascript;
+                                    var blockinstance = ViewManager.replaceConfigureBlock(revnewdata);
+                                    var configbutton = jQuery('.view-container button[name="action_configureblockinstance_id_' + revdata.data.blockid + '"]');
+                                    onModalCancel(e, configbutton);
+                                },
+                                function (revdata) {
+                                    if (revdata.message) {
+                                        console.log('error: ' + revdata.message);
+                                    }
+                                });
+                            });
                         }
+                    }
+                    else {
+                        // No configure form so we just need to close the modal
+                        hideDock();
+                    }
+                },
+                function (data) {
+                    if (data.message && data.placement) {
+                        $('#' + data.placement).find('.alert').remove();
+                        $('#' + data.placement).prepend('<div class="alert alert-danger">' + data.message + '</div>');
                     }
                 });
             });

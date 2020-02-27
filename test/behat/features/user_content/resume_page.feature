@@ -146,6 +146,8 @@ Scenario: Editing Education and Employment info
     Then I should see "Address: 150 Willis St"
     # Test whether Education history shows address
     When I follow "Machine Learning - Creation 2.1 (Masters of Philosophy) at University College"
+    And I wait "1" seconds
+    And I scroll to the base of id "bottom-pane"
     Then I should see "Address: 23a O'Dell Boulevard"
     # Test whether a qualification with just start date and title also shows address
     When I scroll to the base of id "bottom-pane"
@@ -176,6 +178,7 @@ Scenario: Adding Achievements
     | addcertification_description | Designed for testers holding the ISTQB® Foundation Certificate, this extension course provides an understanding of the fundamentals of testing in Agile projects. |
     And I scroll to the base of id "addcertification"
     And I attach the file "Image2.png" to "Attach file"
+    And I wait "1" seconds
     And I press "Save"
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"

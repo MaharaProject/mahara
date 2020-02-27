@@ -49,4 +49,4 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I should see "Wall" in the "Content types" property
     And I click on "Wall" in the "Content types" property
     And I press "Save"
-    Then I should see "Cannot put more than one wall block type into a page."
+    Then I should see "Cannot put more than one \"Wall\" block type into a page."

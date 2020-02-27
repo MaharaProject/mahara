@@ -32,7 +32,7 @@ if ($change) {
         json_reply(false, $returndata);
     }
     catch (Exception $e) {
-        json_reply(true, $e->getMessage());
+        json_reply(true, array('message' => $e->getMessage(), 'placement' => 'placeholderlist'));
     }
 }
 // else we're just reading data...
