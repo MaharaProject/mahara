@@ -125,13 +125,17 @@
                         {else}
                             <span class="text-small">{$item->title}</span>
                         {/if}
-                            <span class="metadata"> [{$item->size}]</span>
                         </span>
 
                         <a href="{$item->downloadpath}">
                             <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
                             <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                         </a>
+                        {if $item->description}
+                            <div class="file-description text-small">
+                                {$item->description|clean_html|safe}
+                            </div>
+                        {/if}
                     </li>
                     {/foreach}
                 </ul>

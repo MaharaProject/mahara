@@ -45,13 +45,18 @@
                             {/if}
                                 <span class="title">
                                     <span class="text-small">{$file->title}</span>
-                                    <span class="metadata"> [{$file->size|display_size}]</span>
                                 </span>
 
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}&amp;post={$postinfo->id}">
                                     <span class="sr-only">{str tag=Download section=artefact.file} {$file->title}</span>
                                     <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                                 </a>
+
+                                {if $file->description}
+                                    <div class="file-description text-small">
+                                        {$file->description|clean_html|safe}
+                                    </div>
+                                {/if}
                             </li>
                         {/foreach}
                         </ul>

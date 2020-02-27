@@ -25,27 +25,26 @@
         <ul class="list-unstyled list-group">
             {foreach from=$attachments item=item}
             <li class="list-group-item">
-            {if !$editing}
+                {if !$editing}
                 <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
-            {/if}
-                {if $item->iconpath}
-                    <img class="file-icon" src="{$item->iconpath}" alt="">
-                {else}
-                    <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
                 {/if}
-            {if !$editing}
-                </a>
-            {/if}
+                    {if $item->iconpath}
+                        <img class="file-icon" src="{$item->iconpath}" alt="">
+                    {else}
+                        <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                    {/if}
+                {if !$editing}
+                    </a>
+                {/if}
 
                 <span class="title">
                 {if !$editing}
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
-                        <span class="text-small">{$item->title}</span>
-                    </a>
-                {else}
+                <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                     <span class="text-small">{$item->title}</span>
+                </a>
+                {else}
+                <span class="text-small">{$item->title}</span>
                 {/if}
-                    <span class="metadata"> [{$item->size|display_size}]</span>
                 </span>
 
                 <a href="{$item->downloadpath}">
@@ -53,6 +52,11 @@
                     <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                 </a>
 
+                {if $item->description}
+                    <div class="file-description text-small">
+                        {$item->description|clean_html|safe}
+                    </div>
+                {/if}
             </li>
             {/foreach}
         </ul>

@@ -86,7 +86,7 @@
                 {/if}
             </td>
             <td class="filedescription d-none d-md-table-cell">
-                {$file->description|safe|clean_html}
+                {$file->description|clean_html|safe}
                 {if $showtags}
                     {if $file->tags}
                     <div class="tags filetags text-small">

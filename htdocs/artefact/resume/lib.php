@@ -1073,15 +1073,17 @@ EOF;
                         jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring})
                       )[0];
                     }
-                    var link = jQuery('<a>', {'class': 'toggle textonly', 'href': ''}).append({$titlestring})[0];
-                    jQuery(link).on('click', function (e) {
-                        e.preventDefault();
-                        return showhideComposite(row, {$bodystring}, {$attachstring}, {$addressstring});
-                    });
-                    var extra = jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring});
-                    return jQuery('<td>', {'id': 'composite-' + row.artefact + '-' + row.id}).append(
-                        jQuery('<div>', {'class': 'expandable-head'}).append(link, extra)
-                    )[0];
+                    else {
+                        var link = jQuery('<a>', {'class': 'toggle textonly', 'href': ''}).append({$titlestring})[0];
+                        jQuery(link).on('click', function (e) {
+                            e.preventDefault();
+                            return showhideComposite(row, {$bodystring}, {$attachstring}, {$addressstring});
+                        });
+                        var extra = jQuery('<div>', {'class': 'detail text-midtone'}).append({$extrastring});
+                        return jQuery('<div>', {'id': 'composite-' + row.artefact + '-' + row.id}).append(
+                            jQuery('<div>', {'class': 'expandable-head'}).append(link, extra)
+                            )[0];
+                    }
                 },
 EOF;
     }
@@ -1096,11 +1098,10 @@ EOF;
                     bodyNode.toggleClass('d-none');
                     return false;
                 }
-                    var newNode = jQuery('<div>', {'id': 'composite-body-' + row.artefact + '-' + row.id}).append(
-                      jQuery('<div>', {'class':'content-text'}).append(content),
-                      address,
-                      attachments
-                      );
+
+                var newNode = jQuery('<div>', {'id': 'composite-body-' + row.artefact + '-' + row.id}).append(
+                    jQuery('<div>', {'class':'content-text'}).append(content).append(address).append(attachments)
+                );
                 newNode.insertAfter(titleTD.find('.expandable-head').first());
             }
 EOF;
@@ -1220,11 +1221,13 @@ function listAttachments(attachments) {
         for (var i=0; i < attachments.length; i++) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
-            var link = jQuery('<a>', {'href': href, 'text': '{$downloadstr}' });
+            var linkcontent = '<span class="sr-only">' + {$downloadstr} + item.title + '</span>';
+            linkcontent += '<span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>';
+            var link = jQuery('<a href="' + href + '">' + linkcontent + '</a>');
             tbody.append(
               jQuery('<tr>').append(
                 jQuery('<td>').append(
-                  item.title + ' (' + formatSize(item.size) + ') - ',
+                  item.title,
                   jQuery('<span>').append(link)
                 )
               )

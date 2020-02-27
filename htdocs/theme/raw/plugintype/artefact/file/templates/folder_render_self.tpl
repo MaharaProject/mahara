@@ -32,11 +32,22 @@
                 justdetails=$justdetails
                 displayiconsonly=true}
             <li class="filedownload-item list-group-item">
-                {if $child->iconsrc}
-                    <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
+                {if !$editing}
+                <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                    {if $child->iconsrc}
+                        <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
+                    {else}
+                        <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                    {/if}
+                </a>
                 {else}
-                    <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                    {if $child->iconsrc}
+                        <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
+                    {else}
+                        <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                    {/if}
                 {/if}
+
                 <h4 class="title list-group-item-heading text-inline">
                 {if !$editing}
                 <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
@@ -45,12 +56,8 @@
                 {else}
                 <span class="inner-link">{$child->title}</span>
                 {/if}
-                    {if !$simpledisplay}
-                    <span class="filedate metadata">
-                        {$child->date}
-                    </span>
-                    {/if}
                 </h4>
+
                 {if $child->artefacttype != 'folder'}
                 <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}">
                     <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
@@ -60,10 +67,12 @@
                     </span>
                 </a>
                 {/if}
+
                 {if $child->description}
                 <p class="file-description text-small text-midtone">
-                    {$child->description|safe|clean_html}
+                    {$child->description|clean_html|safe}
                 </p>
+
                 <script>
                 jQuery(".file-description a").addClass('inner-link');
                 </script>

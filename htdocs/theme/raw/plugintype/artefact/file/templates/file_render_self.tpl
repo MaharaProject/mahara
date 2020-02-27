@@ -17,7 +17,7 @@
     {if $description}
     <tr>
         <th>{str tag=Description section=artefact.file}:</th>
-        <td>{$description|safe|clean_html}</td>
+        <td>{$description|clean_html|safe}</td>
     </tr>
     {/if}
     {if $tags}

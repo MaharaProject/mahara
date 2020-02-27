@@ -826,7 +826,7 @@ var FileBrowser = (function($) {
         $('#' + self.id + '_filelist button.editable').each(function () {
             var id = this.name.replace(/.*_edit\[(\d+)\]$/, '$1');
             var row = $(this).closest('tr');
-            var newtitle = row.find('a').first();
+            var newtitle = row.find('.filename a').first();
             var newdescription =  row.find('td.filedescription').first();
             if (self.selecteddata[id]) {
                 var hiddeninput = $('#' + self.id + '_selected\\[' + id + '\\]');
@@ -839,7 +839,7 @@ var FileBrowser = (function($) {
                 if (filetitle.length) {
                     filetitle.html(newtitle.html());
                 }
-                var filedesc = row2update.find('td.filedescription');
+                var filedesc = row2update.find('div.filedescription');
                 if (filedesc) {
                     filedesc.html(newdescription.html());
                 }
@@ -905,8 +905,10 @@ var FileBrowser = (function($) {
             }
         }
         if (!existed) {
-            var remove = $('<button>', {'class': 'btn btn-link text-small button submit unselect',
-                                            'type': 'submit', 'name': self.id+'_unselect[' + id + ']', 'title': get_string('remove')});
+            var remove = $('<button>', {'class': 'btn btn-secondary btn-sm text-small button submit unselect',
+                                        'type': 'submit',
+                                        'name': self.id+'_unselect[' + id + ']',
+                                        'title': get_string('remove')});
             remove.append(
                 $('<span>', {'class': 'icon icon-times icon-lg text-danger left'}),
                 $('<span>', { 'text': get_string('remove')})
@@ -1012,6 +1014,10 @@ var FileBrowser = (function($) {
           else {
               var hiddeninput = r.find('input.d-none').first();
               if (hiddeninput.length) {
+                  var legend2update = hiddeninput.closest('fieldset').find('legend h4 span.file-name');
+                  if (legend2update.length) {
+                      legend2update.html('');
+                  }
                   hiddeninput.remove();
               }
               r.addClass('d-none');

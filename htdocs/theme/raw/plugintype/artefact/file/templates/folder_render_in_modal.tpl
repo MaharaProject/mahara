@@ -39,14 +39,9 @@
                         {$child->title}
                     </span>
                 </a>
-                {if !$simpledisplay}
-                <div class="filedate metadata">
-                    {$child->date}
-                </div>
-                {/if}
                 {if $child->description}
                 <div class="file-description text-small text-midtone">
-                    {$child->description|safe|clean_html}
+                    {$child->description|clean_html|safe}
                 </div>
                 {/if}
             </li>

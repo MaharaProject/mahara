@@ -6,7 +6,7 @@
             </a>
         {if $showdescription && $image.title}
         <p class="text-small title">
-            {$image.title|truncate:60|safe|clean_html}
+            {$image.title|truncate:60|clean_html|safe}
         </p>
         {/if}
         </div>

@@ -55,6 +55,10 @@
     &.attachment-incontent {
         border-left: 1px solid $list-group-border-color; // Full Journal attachment list block
     }
+
+    .modal_link .icon {
+        color: $theme-text-color;
+    }
 }
 
 .list-group-item,

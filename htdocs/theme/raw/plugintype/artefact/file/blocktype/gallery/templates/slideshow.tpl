@@ -9,7 +9,7 @@
 
                 {if $showdescription && $image.title}
                 <div class="carousel-caption" id="description_{$instanceid}_{$k}">
-                    {$image.title|safe|clean_html}
+                    {$image.title|clean_html|safe}
                 </div>
                 {/if}
             </div>

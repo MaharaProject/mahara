@@ -45,7 +45,7 @@
         </div>
     {else}
         <div class="content-text">
-            {$item->description|safe|clean_html}
+            {$item->description|clean_html|safe}
         </div>
 
         {if $item->attachmessage}

@@ -53,7 +53,7 @@
                         <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                         <span class="text-small"> {str tag="attachedfiles" section="artefact.blog"} </span>
                         <span class="metadata">
-                            ({$postinfo->filecount})
+                            ({$post->filecount})
                         </span>
                         <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                     </a>
@@ -69,13 +69,17 @@
                         {/if}
                             <span class="title">
                                 <span class="text-small">{$file->title}</span>
-                                <span class="metadata"> [{$file->size|display_size}]</span>
                             </span>
 
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->fileid}&post={$file->post}" {if $file->fileid} title="{$file->description}" data-toggle="tooltip"{/if}>
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->fileid}&post={$file->post}">
                                 <span class="sr-only">{str tag=Download section=artefact.file} {$file->title}</span>
                                 <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                             </a>
+                        {if $file->description}
+                            <div class="file-description text-small">
+                                {$file->description|clean_html|safe}
+                            </div>
+                        {/if}
                         </li>
                     {/foreach}
                     </ul>

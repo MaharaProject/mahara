@@ -18,16 +18,26 @@
                     {else}
                         <span class="icon icon-{$item->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
                     {/if}
-
+                    {if !$editing}
+                    <span class="title">
+                        <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
+                            <span class="text-small">{$item->title}</span>
+                        </a>
+                    </span>
+                    {else}
                         <span class="title">
                             <span class="text-small">{$item->title}</span>
-                            <span class="metadata"> [{$item->size|display_size}]</span>
                         </span>
-
-                        <a href="{$item->downloadpath}" {if $item->description}title="{$item->description}" data-toggle="tooltip"{/if}>
+                    {/if}
+                        <a href="{$item->downloadpath}">
                             <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
                             <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                         </a>
+                        {if $item->description}
+                        <div class="file-description text-small">
+                            {$item->description|clean_html|safe}
+                        </div>
+                        {/if}
                     </li>
                 {/foreach}
                 </ul>
