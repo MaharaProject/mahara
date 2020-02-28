@@ -16,7 +16,7 @@ And the following "pages" exist:
 
 Scenario: Creating and accessing social media buttons (Bug 1448948)
  Given I log in as "UserA" with password "Kupuh1pa!"
- And I choose "Profile" from user menu
+ And I choose "Profile" from account menu
  And I follow "Social media"
  And I follow "New social media account"
  And I select "Facebook URL" from "Social network"

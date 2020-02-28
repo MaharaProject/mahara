@@ -249,8 +249,8 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             }
             if ($deletedcount > 0) {
                 $record->tousr[] = array(
-                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
-                    'display' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
+                    'username' => $deletedcount . ' ' . get_string('deleteduser1', 'module.multirecipientnotification'),
+                    'display' => $deletedcount . ' ' . get_string('deleteduser1', 'module.multirecipientnotification'),
                     'link' => null,
                 );
             }
@@ -620,8 +620,8 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
             }
             if ($deletedcount > 0) {
                 $record->tousr[] = array(
-                    'username' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
-                    'display' => $deletedcount . ' ' . get_string('deleteduser', 'module.multirecipientnotification'),
+                    'username' => $deletedcount . ' ' . get_string('deleteduser1', 'module.multirecipientnotification'),
+                    'display' => $deletedcount . ' ' . get_string('deleteduser1', 'module.multirecipientnotification'),
                     'link' => null,
                 );
             }

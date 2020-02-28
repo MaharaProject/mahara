@@ -164,7 +164,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
                     if (!isset($adminnotified[$k])) {
                         $message = (object) array(
                             'users' => get_column('usr', 'id', 'admin', 1),
-                            'subject' => get_string('adminnotificationerror', 'activity'),
+                            'subject' => get_string('adminnotificationerror1', 'activity'),
                             'message' => $e,
                         );
                         $adminnotified[$k] = 1;

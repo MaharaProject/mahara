@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-define('TITLE', get_string('onlineusers'));
+define('TITLE', get_string('peopleonline'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'user');
 define('SECTION_PAGE', 'onlineusers');

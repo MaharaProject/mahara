@@ -1,8 +1,8 @@
 @javascript @core @core_view
-Feature: Allow user themes on pages
-In order to allow a user theme on a page
-Enable "Users can choose page themes" setting
-Log in as user and confirm it works
+Feature: Allow page themes
+In order to allow an author to use a theme on a page
+Enable "People can choose page themes" setting
+Log in as a person and confirm it works
 
 Background:
   Given the following "users" exist:
@@ -17,10 +17,10 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  And I choose "Configure site" from administration menu
  # I set the page themes option
  And I expand the section "User settings"
- And I enable the switch "Users can choose page themes"
+ And I enable the switch "Authors can choose page themes"
  And I press "Update site options"
  And I log out
- # Now set a theme as a user and confirm logo changes
+ # Now set a theme as an author and confirm logo changes
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I follow "Page UserA_01"
  And I follow "Edit"

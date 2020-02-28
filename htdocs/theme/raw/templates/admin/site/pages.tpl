@@ -5,7 +5,7 @@
         {if $noinstitutions}
             <p class="lead">{$noinstitutions}</p>
         {else}
-            <p class="lead">{str tag=staticpagespagedescription section=admin}</p>
+            <p class="lead">{str tag=staticpagespagedescription1 section=admin}</p>
         {/if}
     </div>
     {if $pageeditform}

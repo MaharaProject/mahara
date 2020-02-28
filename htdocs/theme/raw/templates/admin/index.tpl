@@ -193,7 +193,7 @@
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/search.php">{str tag=usersearch section=admin}</a>
-                <small>{str tag=usersearchdescription section=admin}</small>
+                <small>{str tag=usersearchdescription1 section=admin}</small>
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/suspended.php">{str tag=suspendeduserstitle section=admin}</a>
@@ -201,7 +201,7 @@
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/staff.php">{str tag=sitestaff section=admin}</a>
-                <small>{str tag=staffusersdesc section=admin}</small>
+                <small>{str tag=staffusersdesc1 section=admin}</small>
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/admins.php">{str tag=siteadmins section=admin}</a>
@@ -272,7 +272,7 @@
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/institutionstaff.php">{str tag=staff section=statistics}</a>
-                <small>{str tag=institutionstaffdesc section=admin}</small>
+                <small>{str tag=institutionstaffdesc1 section=admin}</small>
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/users/institutionadmins.php">{str tag=Admins section=admin}</a>

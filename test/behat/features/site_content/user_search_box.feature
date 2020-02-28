@@ -21,7 +21,7 @@ Given the following "users" exist:
  #Verifying if UserA can see User B in the search results
  And I should see "UserB"
  #Change the display name of "UserA"
- And I choose "Profile" from user menu
+ And I choose "Profile" from account menu
  And I follow "About me"
  And I fill in the following:
  | Display name  | Alpha |

@@ -17,26 +17,26 @@ Background:
 Scenario: Adding and deleting public comments
     # Adding
     Given I go to portfolio page "Page UserA_01"
-    # The label for message text area - anonymous users
+    # The label for message text area - anonymous people
     And I fill in "Name" with "Joe Anonymous"
-    # No TinyMCE editor for anonymous users
-    And I fill in "Comment" with "Public comment by anonymous user"
+    # No TinyMCE editor for anonymous people
+    And I fill in "Comment" with "Public comment by anonymous person"
     And I enable the switch "Make comment public"
     And I press "Comment"
     And I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_01"
-    # The label for message text area - logged in users
+    # The label for message text area - logged in people
     And I fill in "Comment by page owner" in editor "Comment"
     And I press "Comment"
     Then I should see "Joe Anonymous"
-    And I should see "Public comment by anonymous user"
+    And I should see "Public comment by anonymous person"
     And I should see "Comment by page owner"
 
     # Deleting
-    Given I delete the "Public comment by anonymous user" row
+    Given I delete the "Public comment by anonymous person" row
     # If a comment with replies is deleted, we hide its contents but leave a placeholder
     # in place to give context to the replies
-    Then I should not see "Public comment by anonymous user"
+    Then I should not see "Public comment by anonymous person"
     And I should see "Comment removed by the owner"
     And I should see "Joe Anonymous"
     # Make sure only the selected comment was deleted"
@@ -53,10 +53,10 @@ Scenario: Adding and deleting public comments
 
 Scenario: Add comments block to page
     Given I go to portfolio page "Page UserA_01"
-    # The label for message text area - anonymous users
+    # The label for message text area - anonymous people
     And I fill in "Name" with "Joe Anonymous"
-    # No TinyMCE editor for anonymous users
-    And I fill in "Comment" with "Public comment by anonymous user"
+    # No TinyMCE editor for anonymous people
+    And I fill in "Comment" with "Public comment by anonymous person"
     And I enable the switch "Make comment public"
     And I press "Comment"
     Given I log in as "UserA" with password "Kupuh1pa!"
@@ -72,7 +72,7 @@ Scenario: Add comments block to page
     Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."
     And I display the page
     Then I should see "Joe Anonymous"
-    And I should see "Public comment by anonymous user"
+    And I should see "Public comment by anonymous person"
 
 Scenario: Comments update the page's mtime
     Given I log in as "admin" with password "Kupuh1pa!"

@@ -8,7 +8,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     # Log in
     Given I log in as "admin" with password "Kupuh1pa!"
     # Updating Profile
-    When I choose "Profile" from user menu
+    When I choose "Profile" from account menu
     And I follow "About me"
     And I fill in the following:
     | First name | Test     |
@@ -46,7 +46,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I choose "Dashboard" from main menu
     And I should see "Test Admin"
     # Resetting/Editing details
-    And I choose "Profile" from user menu
+    And I choose "Profile" from account menu
     And I follow "About me"
     # check that Student ID saved
     And the following fields match these values:

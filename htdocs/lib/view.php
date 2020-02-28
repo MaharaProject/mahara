@@ -7544,7 +7544,7 @@ function install_system_portfolio_view() {
         'institution' => 'mahara',
         'template'    => 2,
         'title'       => get_string('templateportfoliotitle', 'view'),
-        'description' => get_string('templateportfoliodescription', 'view'),
+        'description' => get_string('templateportfoliodescription1', 'view'),
     ), 0);
     $view->set_access(array(array(
         'type' => 'loggedin'

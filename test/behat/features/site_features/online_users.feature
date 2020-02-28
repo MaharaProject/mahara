@@ -1,6 +1,6 @@
 @javascript @core @blocktype @blocktype_online_users
-Feature: Online users side block is displayed on right hand side of pages
-    and displays all users that have been online within the last 10 minutes
+Feature: "People online"" side block is displayed on right hand side of pages
+    and displays all people that have been online within the last 10 minutes
     So I can know who is on line or online within the last 10 minutes
 
 Background:
@@ -22,7 +22,7 @@ Background:
     | UserJ | Kupuh1pa! | UserJ@example.org | Jake | User | mahara  | internal | member |
     | UserO | Kupuh1pa! | UserP@example.org | Olive | User | mahara  | internal | member |
 
-    # Users A-O log in and log out. User D logs in and views the Online users block
+    # Users A-O log in and log out. User D logs in and views the "People online" block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I log out
     And I log in as "UserB" with password "Kupuh1pa!"
@@ -44,12 +44,12 @@ Background:
     And I log in as "UserJ" with password "Kupuh1pa!"
     And I log out
 
-Scenario: log in as the latest user and check the following
-    1) User should see last 10 users online within the last 10 minutes
-    2) when user follows show all online users
-    3) User can click a user name and be redirected to the user profile page
+Scenario: log in as the latest person and check the following
+    1) Person should see last 10 others online within the last 10 minutes
+    2) when person follows, show all people that are online
+    3) Person can click the name of somebody else and be redirected to their profile page
     When I log in as "UserO" with password "Kupuh1pa!"
-    #User should see last 10 users online within the last 10 minutes
+    #Person should see last 10 people online within the last 10 minutes
     Then I should see "Olive User" in the "Online users block" property
     And I should see "Jake User" in the "Online users block" property
     And I should see "Ian User" in the "Online users block" property
@@ -61,14 +61,14 @@ Scenario: log in as the latest user and check the following
     And I should see "Carol User" in the "Online users block" property
     And I should see "Bob User" in the "Online users block" property
     And I should not see "Angela User" in the "Online users block" property
-    # when user follows show all online users,
-    # 1) User should be redirected to show all users page
-    # 2) User should see all users online within the last 10 minutes
-    # 3) Pagination occurs when there are more than 10 users in the table
+    # when person follows show people online,
+    # 1) Person should be redirected to "People online" page
+    # 2) Person should see all people online within the last 10 minutes
+    # 3) Pagination occurs when there are more than 10 people in the table
     # 4) The table is ordered in Alphabetical order
-    When I follow "Show all online users"
+    When I follow "Show people online"
     Then I am on "/user/online.php"
-    And I should see "Online users" in the "H1 heading" property
+    And I should see "People online" in the "H1 heading" property
     And I should see "Earl User"
     And I should see "Dave User"
     And I should see "Carol User"
@@ -77,7 +77,7 @@ Scenario: log in as the latest user and check the following
     And I should not see "Olive User (UserO)"
     When I jump to page "2" of the list "onlinelist_pagination"
     Then I should see "Olive User (UserO)"
-    # User can click a user name and be redirected to the user profile page
+    # Person can click a person's name and be redirected to their profile page
     When I follow "Olive User (UserO)"
     Then I should see "Olive User"
     And I should see "About me"
@@ -87,11 +87,11 @@ Scenario: Site adminsets Inst setting to show only Inst members instone member l
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Settings" in "Institutions" from administration menu
     And I click on "Edit" in "instone" row
-    And I select "Institution only" from "Show online users"
+    And I select "Institution only" from "Show who is online"
     When I press "Submit"
     Then I should see "Institution updated successfully."
     And I log out
-    # Institution member logs in - Verify user only sees other institution members
+    # Institution member logs in - Verify person only sees other institution members
     Given I log in as "UserA" with password "Kupuh1pa!"
     Then I should see "Carol User"
     And I should not see "Gail User"

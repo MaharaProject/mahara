@@ -81,7 +81,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Hide membership | 1 |
     | Hide membership from members | 1 |
     | Participation report | 1 |
-    | Auto-add users | 1 |
+    | Auto-add people | 1 |
     | Send forum posts immediately | 1 |
     And I press "Save group"
     And I follow "Edit \"The Avengers\" Settings"
@@ -99,7 +99,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Hide membership | 0 |
     | Hide membership from members | 0 |
     | Participation report | 0 |
-    | Auto-add users | 0 |
+    | Auto-add people | 0 |
     # Checking Friend Invitation and Recommendations can't both be on
     And I enable the switch "Friend invitations"
     And the "Recommendations" checkbox should not be checked

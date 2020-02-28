@@ -1,6 +1,6 @@
 @javascript @core @blocktype @blocktype_peerassessment @blocktype_signoff
 Feature: Interacting with the peer assessment and signoff blocks
-    As a user
+    As an author
     I want to add a peer assessment and signoff block to my page
     So I can get peer assessment before signing off the page
     As a peer
@@ -54,7 +54,7 @@ Background:
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I click on "Edit"
-    # user adds sign off block
+    # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
@@ -67,7 +67,7 @@ Background:
     And I follow "Return to pages and collections"
     And I go to portfolio page "Page UserA_01"
     And I click on "Edit"
-    # user adds sign off block
+    # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
@@ -81,7 +81,7 @@ Background:
     # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
     And I click on "Edit"
-    # user adds sign off block
+    # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I click on "Show more"
@@ -92,11 +92,11 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
     And I follow "Return to pages and collections"
-    # share the page with Users and give a role
+    # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_03" row
-    And I select "User" from "accesslist[0][searchtype]"
+    And I select "Person" from "accesslist[0][searchtype]"
     And I select "UserD" from select2 search box in row number "1"
     And I select "Peer and manager" from "accesslist[0][role]"
     And I press "Save"
@@ -153,7 +153,7 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     Then I should see "Verification status updated"
     And I log out
 
-# Log in as UserD with role of Peer and Manager verify user can see published content and make an assessment
+# Log in as UserD with role of Peer and Manager verify they can see published content and make an assessment
     Given I log in as "UserD" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_03"
     And I should see "This is some text"

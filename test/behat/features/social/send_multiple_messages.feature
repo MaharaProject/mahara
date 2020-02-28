@@ -1,8 +1,8 @@
 @javascript @core @core_messages @core_group @core_account
-Feature: Send messages to other users
-   In order to send a message to another user
-   As an admin I need to create an user
-   So I can send it messages
+Feature: Send messages to other people
+   In order to send a message to another person
+   As an admin I need to create a person
+   So I can send them messages
 
 Background:
 Given the following "users" exist:
@@ -10,7 +10,7 @@ Given the following "users" exist:
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
 
-Scenario: Sending messages between user and admin (Bug 1426983)
+Scenario: Sending messages between people and admin (Bug 1426983)
    # Log in as "Admin" user
    Given I log in as "admin" with password "Kupuh1pa!"
    # Sending message 1
@@ -31,7 +31,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I fill in the following:
    | Message   | Written with a pen, sealed with a kiss, if you are my friend, please answer me this |
    And I press "Request friendship"
-   # Log out as "Admin" user
+   # Log out as "Admin"
    And I log out
    # Log in as user 1
    Then I log in as "UserA" with password "Kupuh1pa!"
@@ -46,7 +46,7 @@ Scenario: Sending messages between user and admin (Bug 1426983)
    And I log out
    #Sending friend requests from student to admin (Bug 1440908)
    Then I log in as "admin" with password "Kupuh1pa!"
-   And I choose "User search" in "People" from administration menu
+   And I choose "People search" in "People" from administration menu
    And I follow "Bob"
    And I follow "Log in as UserB"
    And I follow "Admin User"

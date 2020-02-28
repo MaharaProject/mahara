@@ -64,8 +64,8 @@ $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription2'] = 'Comments on pages and artefacts remain private until you approve them. Comments by people not logged into their accounts always go into a moderation queue and need to be approved.';
 $string['newcommentnotificationsubject'] = 'New comment on %s';
 $string['progress_feedback'] = array(
-    'Comment on another user\'s page',
-    'Comment on %s other users\' pages',
+    'Comment on another person\'s page',
+    'Comment on %s other people\'s pages',
 );
 $string['rating'] = 'Rating';
 $string['reallydeletethiscomment'] = 'Are you sure you want to delete this comment?';
@@ -113,7 +113,7 @@ To see %s online, follow this link:
 %s";
 
 $string['artefactdefaultpermissions'] = 'Default comment permission';
-$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation. Users can override these settings for individual artefacts.';
+$string['artefactdefaultpermissionsdescription'] = 'The selected artefact types will have comments enabled on creation. Authors can override these settings for individual artefacts.';
 
 // Extension config form
 $string['commentratings'] = 'Enable comment ratings';

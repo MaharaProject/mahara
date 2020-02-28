@@ -45,7 +45,7 @@
   And I log out
   And I log in as "UserB" with password "Kupuh1pa!"
   And I choose "Shared with me" in "Share" from main menu
-  And I check "Registered users"
+  And I check "Registered people"
   And I check "Public"
   And I select "title" from "sort"
   And I press "search_submit"

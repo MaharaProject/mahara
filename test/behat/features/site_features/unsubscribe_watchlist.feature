@@ -21,7 +21,7 @@ And the following "permissions" exist:
 
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Given I log in as "UserB" with password "Kupuh1pa!"
- And I choose "Notifications" in "Settings" from user menu
+ And I choose "Notifications" in "Settings" from account menu
  And I select "Email" from "Watchlist"
  And I press "Save"
  And I am on homepage

@@ -1262,7 +1262,7 @@ function full_name($user=null) {
        $userobj = $user;
     }
 
-   return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser') : $userobj->firstname . ' ' . $userobj->lastname;
+   return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser1') : $userobj->firstname . ' ' . $userobj->lastname;
 }
 
 /**

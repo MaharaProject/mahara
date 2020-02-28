@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['typemaharamessage'] = 'System message';
-$string['typeusermessage'] = 'Message from other users';
+$string['typeusermessage'] = 'Message from other people';
 $string['typefeedback'] = 'Comment';
 $string['typewatchlist'] = 'Watchlist';
 $string['typeviewaccess'] = 'New page access';
@@ -193,7 +193,7 @@ $string['removefromwatchlist'] = 'Remove from watchlist';
 $string['missingparam'] = 'Required parameter %s was empty for activity type %s';
 
 $string['institutionrequestsubject'] = '%s has requested membership of %s.';
-$string['institutionrequestmessage'] = 'You can add users to institutions on the "Institution members" page:';
+$string['institutionrequestmessage'] = 'You can add people to institutions on the "Institution members" page:';
 
 $string['institutioninvitesubject'] = 'You have been invited to join the institution %s.';
 $string['institutioninvitemessage'] = 'You can confirm your membership of this institution on your "Institution settings" page:';
@@ -204,4 +204,4 @@ $string['reallydeleteallnotifications'] = 'Are you sure you want to delete all y
 $string['viewsubmittedsubject1'] = 'Submission to %s';
 $string['viewsubmittedmessage1'] = '%s has submitted "%s" to %s';
 
-$string['adminnotificationerror'] = 'User notification error was probably caused by your server configuration.';
+$string['adminnotificationerror1'] = 'A notification error was probably caused by your server configuration.';

@@ -78,7 +78,7 @@
                     <li>
                         {if $edit.deleteduser}
                             <img src="{profile_icon_url user=null maxheight=20 maxwidth=20}" alt="{str tag=profileimagetextanonymous}"/>
-                            {str tag=deleteduser}
+                            {str tag=deleteduser1}
                         {else}
                             <a href="{profile_url($edit.editor)}"
                             {if $edit.editor == $groupowner} class="groupowner"

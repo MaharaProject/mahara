@@ -1,6 +1,6 @@
 @javascript @core @core_group
 Feature: Switching switch on and off when editing a forum
- In order to automatically subscribe users via switchbox
+ In order to automatically subscribe people via switchbox
  As an admin
  I need to be able to flick the switch on and off
 
@@ -21,12 +21,12 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     And I follow "Edit forum"
     # There are 2 settings links on the page and it needs to identify which one to follow
     And I follow "Forum settings"
-    # Checking "Automatically subscribe users" switchbox is on by default
+    # Checking "Automatically subscribe group members" switchbox is on by default
     And the "edit_interaction_autosubscribe" checkbox should be checked
     # Checking it can be turned off
-    And I disable the switch "Automatically subscribe users"
+    And I disable the switch "Automatically subscribe group members"
     # Checking it can turn back on
-    And I enable the switch "Automatically subscribe users"
+    And I enable the switch "Automatically subscribe group members"
     # Verifying that it did turn back on
     And the "edit_interaction_autosubscribe" checkbox should be checked
     # Checking off is the default setting on the close new topics checkbox
@@ -43,12 +43,12 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     | Title | Freshwater turtles |
     | Description | All about freshwater turtles |
     And I follow "Forum settings"
-    # Checking "Automatically subscribe users" switchbox is on by default
+    # Checking "Automatically subscribe people" switchbox is on by default
     And the "edit_interaction_autosubscribe" checkbox should be checked
     And I press "Save"
     And I log out
 
-# User joins group and unsubscribes from Freshwater turtles forum
+# Person joins group and unsubscribes from Freshwater turtles forum
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     And I select "All groups" from "filter"

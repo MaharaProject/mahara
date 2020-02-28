@@ -16,5 +16,5 @@
     </div>
 {/foreach}
 {else}
-    <div class="message">{str tag=noonlineusersfound section=mahara}</div>
+    <div class="message">{str tag=nopeopleonlinefound section=mahara}</div>
 {/if}

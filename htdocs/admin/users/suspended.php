@@ -208,7 +208,7 @@ $form = pieform_instance(array(
                     'type'    => 'submit',
                     'isformgroup' => false,
                     'renderelementsonly' => true,
-                    'confirm' => get_string('confirmdeleteusers', 'admin'),
+                    'confirm' => get_string('confirmdeleteusers1', 'admin'),
                     'name'    => 'delete',
                     'value'   => get_string('deleteusers', 'admin')
                 )

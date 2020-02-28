@@ -1,6 +1,6 @@
 @javascript @core @core_artefact
-Feature: Mahara users can view comments and details of their content on pages
-As a user
+Feature: Mahara people can view comments and details of their content on pages
+As a person
 I want to view details and comments of my content on pages
 
 Background:

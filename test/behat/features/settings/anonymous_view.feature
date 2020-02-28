@@ -32,7 +32,7 @@ Scenario: Testing that views & collections are collated properly
     | Anonymise | 1 |
     And I press "Save"
     And I follow "Share" in the "Toolbar buttons" property
-    And I select "Registered users" from "accesslist[0][searchtype]"
+    And I select "Registered people" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out
 

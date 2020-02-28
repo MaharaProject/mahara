@@ -24,8 +24,8 @@ $string['notification']         = 'Notifications';
 $string['cantsendemptysubject'] = 'Your subject is empty. Please enter a subject.';
 $string['cantsendemptytext']    = 'Your message is empty. Please enter a message.';
 $string['cantsendnorecipients'] = 'Please select at least one recipient.';
-$string['removeduserfromlist']  = 'A user that can\'t receive messages from you has been removed from the list of recipients.';
-$string['deleteduser']           = 'deleted user(s)';
+$string['removeduserfromlist']  = 'A person that can\'t receive messages from you has been removed from the list of recipients.';
+$string['deleteduser']           = 'deleted account(s)';
 $string['fromuser']             = 'From';
 $string['touser']               = 'To';
 
@@ -35,9 +35,9 @@ $string['replyall']             = 'Reply all';
 $string['linkindicator']        = '»';
 
 $string['labeloutbox1']          = 'Sent';
-$string['outboxdesc']         = 'Messages sent to other users';
+$string['outboxdesc']         = 'Messages sent to others';
 $string['labelinbox']           = 'Inbox';
-$string['inboxdesc1']          = 'Messages received from the system and other users';
+$string['inboxdesc1']          = 'Messages received from the system and other people';
 
 $string['nothingtorender']      = '';
 $string['replybuttonplaceholder'] = '...';

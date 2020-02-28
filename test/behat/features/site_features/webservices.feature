@@ -78,7 +78,7 @@ Scenario: As administrator I can
     And I follow "Configuration for module mobileapi"
     And I enable the switch "Manual token generation"
     And I press "Save"
-    When I choose "Connected apps" in "Settings" from user menu
+    When I choose "Connected apps" in "Settings" from account menu
     And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
     And I click on "Generate"
     Then I should see "Manually created"
@@ -98,7 +98,7 @@ Scenario: As administrator I can
     When I log in as "UserA" with password "Kupuh1pa!"
     And I go to "webservice/admin/index.php"
     Then I should see "You are forbidden from accessing the administration section."
-    When I choose "Connected apps" in "Settings" from user menu
+    When I choose "Connected apps" in "Settings" from account menu
     And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
     And I click on "Generate"
     Then I should see "Manually created"

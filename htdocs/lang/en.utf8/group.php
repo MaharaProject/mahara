@@ -24,12 +24,12 @@ $string['membershiprequests'] = 'Membership requests';
 $string['sendinvitation'] = 'Send invite';
 $string['invitetogroupsubject'] = 'You were invited to join a group';
 $string['invitetogroupmessage'] = '%s has invited you to join a group, \'%s\'. Click on the link below for more information.';
-$string['inviteuserfailed'] = 'Failed to invite the user';
+$string['inviteuserfailed'] = 'Failed to invite';
 $string['userinvited'] = 'Invite sent';
 $string['addedtogroupsubject'] = 'You were added to a group';
 $string['addedtogroupmessage'] = '%s has added you to a group, \'%s\'. Click on the link below to see the group.';
-$string['adduserfailed'] = 'Failed to add the user';
-$string['useradded'] = 'User added';
+$string['adduserfailed'] = 'Failed to add';
+$string['useradded'] = 'Person added';
 $string['editgroup'] = 'Edit group';
 $string['savegroup'] = 'Save group';
 $string['groupsaved'] = 'Group saved successfully';
@@ -43,10 +43,10 @@ $string['groupurltaken'] = 'That URL is already taken by another group.';
 $string['Membership'] = 'Membership';
 $string['Roles'] = 'Roles';
 $string['Open'] = 'Open';
-$string['opendescription'] = 'Users can join the group without approval from group administrators.';
-$string['requestdescription'] = 'Users can send membership requests to group administrators.';
+$string['opendescription'] = 'People can join the group without approval from group administrators.';
+$string['requestdescription'] = 'People can send membership requests to group administrators.';
 $string['Controlled'] = 'Controlled';
-$string['controlleddescription'] = 'Group administrators can add users to the group without their consent, and members cannot leave the group.';
+$string['controlleddescription'] = 'Group administrators can add people to the group without their consent, and members cannot leave the group.';
 $string['membershiptype'] = 'Group membership type';
 $string['membershiptype.controlled'] = 'Controlled membership';
 $string['membershiptype.approve']    = 'Approved membership';
@@ -85,8 +85,8 @@ $string['publiclyviewablegroupdescription1'] = 'Allow anyone online to view this
 $string['Type'] = 'Type';
 $string['publiclyvisible'] = 'Publicly visible';
 $string['Public'] = 'Public';
-$string['usersautoadded'] = 'Auto-add users';
-$string['usersautoaddeddescription1'] = 'Automatically add any user who joins the site to this group.';
+$string['usersautoadded'] = 'Auto-add people';
+$string['usersautoaddeddescription1'] = 'Automatically add anybody who joins the site to this group.';
 $string['groupcategory'] = 'Group category';
 $string['allcategories'] = 'All categories';
 $string['groupoptionsset'] = 'Group options have been updated.';
@@ -114,7 +114,7 @@ $string['invitefriends'] = 'Invite friends';
 $string['Recommendations'] = 'Recommendations';
 $string['suggestfriendsdescription1'] = 'Allow members to send a recommendation for joining this group to their friends from a button on the group homepage.';
 $string['suggesttofriends'] = 'Recommend to friends';
-$string['userstosendrecommendationsto'] = 'Users who will be sent a recommendation';
+$string['userstosendrecommendationsto'] = 'People who will be sent a recommendation';
 $string['suggestgroupnotificationsubject'] = '%s suggested you join a group';
 $string['suggestgroupnotificationmessage'] = '%s suggested that you join the group "%s" on %s';
 $string['nrecommendationssent'] = array(
@@ -137,7 +137,7 @@ $string['removedfromngroupsmessage'] = array(
         0 => "%2\$s has removed you from the group:\n\n%3\$s\n\n",
         1 => "%2\$s has removed you from the groups:\n\n%3\$s\n\n",
 );
-$string['cantremovememberfromgroup'] = "You cannot remove users from %s.";
+$string['cantremovememberfromgroup'] = "You cannot remove members from %s.";
 $string['current'] = "Current";
 $string['requests'] = "Requests";
 $string['invites'] = "Invites";
@@ -208,8 +208,8 @@ $string['groupnotfound'] = 'Group with id %s not found';
 $string['groupnotfoundname'] = 'Group %s not found';
 $string['groupconfirmleave'] = 'Are you sure you want to leave this group?';
 $string['cantleavegroup'] = 'You cannot leave this group.';
-$string['usercantleavegroup'] = 'This user cannot leave this group.';
-$string['usercannotchangetothisrole'] = 'The user cannot change to this role.';
+$string['usercantleavegroup'] = 'This group member cannot leave this group.';
+$string['usercannotchangetothisrole'] = 'This group member cannot change to this role.';
 $string['leavespecifiedgroup'] = 'Leave group \'%s\'';
 $string['memberslist'] = 'Members: ';
 $string['nogroups'] = 'No groups';
@@ -242,8 +242,8 @@ $string['invitationssent'] = '%d invitations sent';
 $string['newmembersadded'] = 'Added %d new members';
 $string['potentialmembers'] = 'Potential members';
 $string['sendinvitations'] = 'Send invitations';
-$string['userstobeadded'] = 'Users to be added';
-$string['userstobeinvited'] = 'Users to be invited';
+$string['userstobeadded'] = 'People to be added';
+$string['userstobeinvited'] = 'People to be invited';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';
@@ -276,7 +276,7 @@ $string['removefromfriends'] = 'Remove %s from friends';
 $string['removedfromfriendslistsubject'] = 'Removed from friends list';
 $string['removedfromfriendslistmessage'] = '%s has removed you from their friends list.';
 $string['removedfromfriendslistmessagereason'] = '%s has removed you from their friends list. Their reason was: ';
-$string['cantremovefriend'] = 'You cannot remove this user from your friends list.';
+$string['cantremovefriend'] = 'You cannot remove this person from your friends list.';
 
 $string['friendshipalreadyrequested'] = 'You have requested to be added to %s\'s friends list.';
 $string['friendshipalreadyrequestedowner'] = '%s has requested to be added to your friends list.';
@@ -318,17 +318,17 @@ $string['existingfriend'] = 'existing friend';
 $string['nosearchresultsfound'] = 'No search results found';
 $string['friend'] = 'friend';
 $string['friends'] = 'friends';
-$string['user'] = 'user';
-$string['users'] = 'users';
+$string['user'] = 'person';
+$string['users'] = 'persons';
 $string['Friends'] = 'Friends';
 $string['friendrequests'] = 'Friend requests';
 $string['Everyone'] = 'Everyone';
 $string['myinstitutions'] = 'My institutions';
 
 $string['friendlistfailure'] = 'Failed to modify your friends list';
-$string['userdoesntwantfriends'] = 'This user does not want any new friends.';
+$string['userdoesntwantfriends'] = 'This person does not want any new friends.';
 $string['cannotrequestfriendshipwithself'] = 'You cannot request friendship with yourself.';
-$string['cantrequestfriendship'] = 'You cannot request friendship with this user.';
+$string['cantrequestfriendship'] = 'You cannot request friendship with this person.';
 
 // Messaging between users
 $string['messagebody'] = 'Send message'; // wtf
@@ -347,16 +347,16 @@ $string['denyfriendrequest'] = 'Deny friend request';
 $string['deny'] = 'Deny';
 $string['sendfriendshiprequest'] = 'Send %s a friendship request';
 $string['cantdenyrequest'] = 'That is not a valid friendship request.';
-$string['cantmessageuser'] = 'You cannot send this user a message.';
-$string['cantmessageuserdeleted'] = 'You cannot send this user a message because the account has been deleted.';
+$string['cantmessageuser'] = 'You cannot send this person a message.';
+$string['cantmessageuserdeleted'] = 'You cannot send this person a message because the account has been deleted.';
 $string['cantviewmessage'] = 'You cannot view this message.';
 $string['requestedfriendship'] = 'requested friendship';
 $string['notinanygroups'] = 'Not in any groups';
 $string['addusertogroup'] = 'Add to ';
 $string['inviteusertojoingroup'] = 'Invite to ';
 $string['invitemembertogroup'] = 'Invite %s to join \'%s\'';
-$string['cannotinvitetogroup'] = 'You cannot invite this user to this group.';
-$string['useralreadyinvitedtogroup'] = 'This user has already been invited to, or is already a member of, this group.';
+$string['cannotinvitetogroup'] = 'You cannot invite this person to this group.';
+$string['useralreadyinvitedtogroup'] = 'This person has already been invited to, or is already a member of, this group.';
 $string['removefriend'] = 'Remove friend';
 $string['denyfriendrequestlower'] = 'Deny friend request';
 
@@ -379,14 +379,14 @@ $string['currentrole'] = 'Current role';
 $string['changerolefromto'] = 'Change role from %s to';
 $string['rolechanged'] = 'Role changed';
 $string['removefromgroup'] = 'Remove from group';
-$string['userremoved'] = 'User removed';
+$string['userremoved'] = 'Group member removed';
 $string['About'] = 'About';
 $string['aboutgroup'] = 'About %s';
 
 $string['Joined'] = 'Joined';
 
-$string['invitemembersdescription'] = 'You can invite users to join this group through their profile pages or <a href="%s">send multiple invitations at once</a>.';
-$string['membersdescription:controlled'] = 'This is a controlled membership group. You can add users directly through their profile pages or <a href="%s">add many users at once</a>.';
+$string['invitemembersdescription'] = 'You can invite people to join this group through their profile pages or <a href="%s">send multiple invitations at once</a>.';
+$string['membersdescription:controlled'] = 'This is a controlled membership group. You can add people directly through their profile pages or <a href="%s">add many people at once</a>.';
 
 // View submission
 $string['submit'] = 'Submit';

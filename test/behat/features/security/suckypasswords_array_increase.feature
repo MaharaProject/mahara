@@ -11,7 +11,7 @@ Background:
 
 Scenario: Admin can't change password to anything not fitting password policy
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "Preferences" in "Settings" from user menu
+ And I choose "Preferences" in "Settings" from account menu
  And I fill in "Current password" with "Kupuh1pa!"
  And I fill in "New password" with "abc123"
  And I fill in "Confirm password" with "abc123"
@@ -31,7 +31,7 @@ Scenario: Admin can't change password to anything not fitting password policy
 
 Scenario: Student can't change password to anything not fitting password policy
  Given I log in as "Supercool" with password "Kupuh1pa!"
- And I choose "Preferences" in "Settings" from user menu
+ And I choose "Preferences" in "Settings" from account menu
  And I fill in "Current password" with "Kupuh1pa!"
  And I fill in "New password" with "fastdog"
  And I fill in "Confirm password" with "fastdog"

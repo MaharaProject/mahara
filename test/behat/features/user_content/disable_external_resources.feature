@@ -53,7 +53,7 @@ Scenario: Enable/disable external resources in mahara pages
  When I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I expand the section "Security settings"
- And I enable the switch "Disable external resources in user HTML"
+ And I enable the switch "Disable external resources in HTML"
  And I press "Update site options"
  And I log out
  And I log in as "UserA" with password "Kupuh1pa!"

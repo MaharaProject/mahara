@@ -2861,7 +2861,7 @@ function institutional_staff_nav() {
 }
 
 /**
- * Returns the entries in the standard user menu
+ * Returns the entries in the standard account menu
  *
  * See the function find_menu_children() in lib/web.php
  * for a description of the expected array structure.

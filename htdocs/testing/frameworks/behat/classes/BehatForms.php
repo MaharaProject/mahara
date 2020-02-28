@@ -222,7 +222,7 @@ class BehatForms extends BehatBase {
             case "General":
               $value = strtolower($value);
               $id = "#potentialpresetitemssharewith";
-              $value = ($value == "registered users" ? "loggedin" : $value);
+              $value = ($value == "registered people" ? "loggedin" : $value);
               break;
             //works on name, not display name
             case "Institutions":

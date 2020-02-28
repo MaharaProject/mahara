@@ -24,23 +24,23 @@ $string['saveinstitutiondetailsfirst'] = 'Please save the institution details be
 $string['editauthority'] = 'Edit an authority';
 $string['addauthority']  = 'Add an authority';
 
-$string['updateuserinfoonlogin'] = 'Update user info on login';
-$string['updateuserinfoonlogindescription'] = 'Retrieve user info from the remote server and update your local user record each time the user logs in.';
+$string['updateuserinfoonlogin'] = 'Update personal information on login';
+$string['updateuserinfoonlogindescription'] = 'Retrieve personal information from the remote server and update your local record each time the person logs in.';
 $string['xmlrpcserverurl'] = 'XML-RPC server URL';
 $string['ipaddress'] = 'IP address';
 $string['shortname'] = 'Short name for your site';
 $string['name'] = 'Site name';
 $string['nodataforinstance1'] = 'Could not find data for authentication instance "%s".';
 $string['authname'] = 'Authority name';
-$string['weautocreateusers'] = 'We auto-create users';
-$string['theyautocreateusers'] = 'They auto-create users';
+$string['weautocreateusers'] = 'We auto-create accounts';
+$string['theyautocreateusers'] = 'They auto-create accounts';
 $string['parent'] = 'Parent authority';
 $string['wessoout'] = 'We SSO out';
 $string['weimportcontent'] = 'We import content';
 $string['weimportcontentdescription'] = '(some applications only)';
 $string['theyssoin'] = 'They SSO in';
-$string['authloginmsg2'] = "When you have not chosen a parent authority, enter a message to display when a user tries to log in via the login form.";
-$string['authloginmsgnoparent'] = "Enter a message to display when a user tries to log in via the login form.";
+$string['authloginmsg2'] = "When you have not chosen a parent authority, enter a message to display when somebody tries to log in via the login form.";
+$string['authloginmsgnoparent'] = "Enter a message to display when somebody tries to log in via the login form.";
 $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW root fields are correct and that networking is enabled on the remote host.';
 $string['ssodirection'] = 'SSO direction';
@@ -71,9 +71,9 @@ $string['noauthpluginconfigoptions'] = 'There are no configuration options assoc
 $string['hostwwwrootinuse'] = 'WWW root already in use by another institution (%s).';
 
 // Error messages for external authentication usernames
-$string['duplicateremoteusername'] = 'This external authentication username is already in use by the user %s. External authentication usernames must be unique within an authentication method.';
+$string['duplicateremoteusername'] = 'This external authentication username is already in use by %s. External authentication usernames must be unique within an authentication method.';
 $string['duplicateremoteusernameformerror'] = 'External authentication usernames must be unique within an authentication method.';
-$string['cannotjumpasmasqueradeduser'] = 'You cannot jump to another application whilst masquerading as another user.';
+$string['cannotjumpasmasqueradeduser'] = 'You cannot jump to another application whilst masquerading as somebody else.';
 
 // Shared warning messages.
 $string['warninstitutionregistration'] = '$cfg->usersuniquebyusername is turned on but registration is allowed for an institution. For security reasons all institutions need to have \'Registration allowed\' turned off. To adjust this via the web interface you will need to temporarily set $cfg->usersuniquebyusername = false.';
@@ -81,6 +81,6 @@ $string['warninstitutionregistrationinstitutions'] = array(
     0 => "The following institution has registration enabled:\n  %2\$s",
     1 => "The following institutions have registration enabled:\n  %2\$s",
 );
-$string['warnmultiinstitutionsoff'] = '$cfg->usersuniquebyusername is turned on but the site option \'Users allowed multiple institutions\' is off. This makes no sense, as users will then change institution every time they log in from somewhere else. Please turn this setting on in Administration -> Configure site -> Institution settings.';
+$string['warnmultiinstitutionsoff'] = '$cfg->usersuniquebyusername is turned on but the site option \'People allowed multiple institutions\' is off. This makes no sense, as people will then change institutions every time they log in from somewhere else. Please turn this setting on in Administration -> Configure site -> Institution settings.';
 $string['alternativelogins'] = 'Administration login';
 $string['unabletosigninviasso'] = 'Unable to sign in via external authentication (SSO)';

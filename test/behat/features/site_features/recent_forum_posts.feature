@@ -29,7 +29,7 @@ Scenario: Create forum and add block to group page
     | Title | Group A's forum |
     | Description | Talking about things this group can do |
     And I select "Fully expand" from "Forum indent mode"
-    And I enable the switch "Automatically subscribe users"
+    And I enable the switch "Automatically subscribe group members"
     And I press "Save"
     And I follow "New topic"
     And I set the following fields to these values:
@@ -90,7 +90,7 @@ Scenario: Administrative forum bulk actions
     | Title | Group A's forum |
     | Description | Talking about things this group can do |
     And I select "Fully expand" from "Forum indent mode"
-    And I enable the switch "Automatically subscribe users"
+    And I enable the switch "Automatically subscribe group members"
     And I press "Save"
     # Create 3 topics
     And I follow "New topic"

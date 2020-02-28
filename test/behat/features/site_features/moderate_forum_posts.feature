@@ -28,7 +28,7 @@ Scenario: Group moderator approved a forum post
     | Description | Talking about things this group can do |
     And I select "Fully expand" from "Forum indent mode"
     # Group owner sets up moderation of forum and adds a moderator "UserC"
-    And I disable the switch "Allow users to unsubscribe"
+    And I disable the switch "Allow group members to unsubscribe"
     And I select "UserC" from "Potential moderators"
     And I press "rightarrow"
     And the "moderateposts" select box should contain "None"

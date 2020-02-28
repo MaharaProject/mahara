@@ -17,7 +17,7 @@ $string['description'] = 'Authenticate against Mahara\'s database';
 
 $string['completeregistration'] = 'Complete registration';
 $string['emailalreadytaken'] = 'This email address has already been registered here.';
-$string['emailalreadytakenbyothers'] = 'This email address has been taken by another user.';
+$string['emailalreadytakenbyothers'] = 'This email address has been taken by somebody else.';
 $string['iagreetothetermsandconditions'] = 'I agree to the Terms and Conditions.';
 $string['passwordinvalidform1'] = 'Your password must be at least %s characters long. Passwords are case sensitive and must be different from your username. Your password must contain %s.';
 $string['recaptcharegistertitle'] = 'reCAPTCHA challenge';
@@ -106,10 +106,10 @@ $string['registeredokawaitingemail2'] = 'You have successfully submitted your ap
 $string['registrationreason'] = 'Registration reason';
 $string['registrationreasondesc1'] = 'The reason for requesting registration with your chosen institution and any other details you think might be useful for the administrator in processing your application.';
 
-$string['pendingregistrationadminemailsubject'] = "New user registration for institution '%s' at %s.";
+$string['pendingregistrationadminemailsubject'] = "New account registration for institution '%s' at %s.";
 $string['pendingregistrationadminemailtext'] = "Hi %s,
 
-A new user has requested to join the institution '%s'.
+Somebody has requested to join the institution '%s'.
 
 Because you are listed as an administrator of this institution you need to approve or deny this registration request. To do this, select the following link: %s
 
@@ -126,7 +126,7 @@ Registration reason:
 Regards,
 The %s Team";
 $string['pendingregistrationadminemailhtml'] = "<p>Hi %s,</p>
-<p>A new user has requested to join the institution '%s'.</p>
+<p>Somebody has requested to join the institution '%s'.</p>
 <p>Because you are listed as an administrator of this institution you need to approve or deny this registration request. To do this, select the following link: <a href='%s'>%s</a></p>
 <p>You will need to approve or deny this registration request within %s.</p>
 <p>Details of the registration request follows:</p>
@@ -139,11 +139,11 @@ Regards,
 The %s Team</pre>";
 
 
-// pending user account deletion
+// pending account deletion
 $string['userdeletionnosuchid'] = 'Sorry, this deletion request does not exist. Perhaps it has already been evaluated?';
 $string['userdeletiondeniedmessage'] = 'Hello %s,
 
-We have received your request to delete your user account on %s and
+We have received your request to delete your account on %s and
 decided not to delete your data.
 
 If you think that this decision was incorrect, please get in touch with me
@@ -153,7 +153,7 @@ Regards
 %s';
 $string['userdeletiondeniedmessagereason'] = 'Hello %s,
 
-We have received your request to delete your user account on %s and decided
+We have received your request to delete your account on %s and decided
 not to delete your data for the following reason:
 
 %s
@@ -163,17 +163,17 @@ via email.
 
 Regards
 %s';
-$string['userdeletiondeniedemailsubject'] = 'User account deletion attempt at %s denied.';
-$string['userdeletionemailsubject'] = 'Your user account was deleted from %s';
+$string['userdeletiondeniedemailsubject'] = 'Account deletion attempt at %s denied.';
+$string['userdeletionemailsubject'] = 'Your account was deleted from %s';
 $string['userdeletionemailmessagetext'] = 'Hello %s,
 
-Your user account was deleted successfully from %s.
+Your account was deleted successfully from %s.
 
 --
 Regards,
 The %s Team';
 $string['userdeletionemailmessagehtml'] = '<p>Hello %s,</p>
-<p>Your user account was deleted successfully from %s.</p>
+<p>Your account was deleted successfully from %s.</p>
 
 <pre>--
 Regards,

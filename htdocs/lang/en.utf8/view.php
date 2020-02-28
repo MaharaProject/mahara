@@ -45,13 +45,13 @@ $string['startdatemustbebeforestopdate'] = 'Start date must be before stop date'
 $string['newstopdatecannotbeinpast'] = 'The end date for \'%s\' access cannot be in the past.';
 $string['newstartdatemustbebeforestopdate'] = 'The start date for \'%s\' access must be before the end date.';
 $string['unrecogniseddateformat'] = 'Unrecognised date format';
-$string['allowcommentsonview1']    = 'Allow users to leave comments.';
+$string['allowcommentsonview1']    = 'Allow people to leave comments.';
 $string['ownerformat']            = 'Name display format';
 $string['ownerformatdescription'] = 'How do you want people who look at your page to see your name?';
 $string['createtags']             = 'Create via tags';
 $string['createtagsdesc1']        = 'Search for or enter tags to pull content into your page automatically. If you enter more than one tag, only content that is tagged with all these tags will appear on the page. You can then re-arrange and delete blocks.';
 $string['anonymise']              = 'Anonymise';
-$string['anonymisedescription']   = 'Hide your name as the author of the page from other users. Administrators will still be able to see your name if they so desire.';
+$string['anonymisedescription']   = 'Hide your name as the author of the page from others. Administrators will still be able to see your name if they so desire.';
 $string['Locked']                 = 'Locked';
 $string['lockedgroupviewdesc']    = 'If you lock this page, only group administrators will be able to edit it.';
 $string['profileviewtitle']       = 'Profile page';
@@ -63,14 +63,14 @@ $string['templategrouphomepage']  = 'Group homepage template';
 $string['templateprofile']        = 'Profile template';
 $string['templateportfolio']      = 'Page template';
 $string['templateportfoliotitle']       = 'Untitled';
-$string['templateportfoliodescription'] = 'Set up the default layout for the pages that your users create. You can also add blocks. Please note that any content you add to the default page will appear on every page that your users create.';
+$string['templateportfoliodescription1'] = 'Set up the default layout for the pages that are created. You can also add blocks. Please note that any content you add to the default page will appear on every page that is created after you made the change.';
 
 // my views
 $string['artefacts'] = 'Artefacts';
 $string['groupviews'] = 'Group pages and collections';
 $string['institutionviews'] = 'Institution pages';
 $string['institutionviewscollections'] = 'Institution pages and collections';
-$string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these users access to the page?';
+$string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these people access to the page?';
 $string['viewdeleted'] = 'Page deleted';
 $string['viewsubmitted'] = 'Page submitted';
 $string['deletethisview'] = 'Delete this page';
@@ -132,13 +132,13 @@ $string['listedinpages'] = 'Listed in pages';
 
 // access levels
 $string['public'] = 'Public';
-$string['registeredusers'] = 'Registered users';
+$string['registeredusers'] = 'Registered people';
 $string['friends'] = 'Friends';
 $string['groups'] = 'Groups';
-$string['users'] = 'Users';
+$string['users'] = 'People';
 $string['friend'] = 'Friend';
 $string['group'] = 'Group';
-$string['user'] = 'User';
+$string['user'] = 'Person';
 $string['everyoneingroup'] = 'Everyone in group';
 $string['nospecialrole'] = 'No special role';
 $string['peer'] = 'Peer';
@@ -157,10 +157,10 @@ $string['generatesecreturl'] = 'Generate a new secret URL for "%s".';
 $string['secreturls'] = 'Secret URLs';
 $string['existingURLS'] = 'Existing URLs';
 $string['publicaccessnotallowed'] = "Your institution or site administrator has disabled public pages and secret URLs. Any secret URLs you see listed here are currently inactive.";
-$string['publicaccessnotallowedforprobation'] = "Sorry, newly registered users aren't allowed to create secret URLs.";
+$string['publicaccessnotallowedforprobation'] = "Sorry, newly registered people aren't allowed to create secret URLs.";
 // view user
-$string['inviteusertojoingroup'] = 'Invite this user to join a group';
-$string['addusertogroup'] = 'Add this user to a group';
+$string['inviteusertojoingroup'] = 'Invite this person to join a group';
+$string['addusertogroup'] = 'Add this person to a group';
 
 // view view
 $string['addedtowatchlist'] = 'This page has been added to your watchlist.';
@@ -183,7 +183,7 @@ $string['viewvisitcount'] = array(
     0 => '%d page visit from %s to %s',
     1 => '%d page visits from %s to %s',
 );
-$string['profilenotshared'] = 'Full access to this user profile is restricted.';
+$string['profilenotshared'] = 'Full access to this profile is restricted.';
 
 $string['profileicon'] = 'Profile picture';
 $string['Updatedon'] = 'Updated on';
@@ -199,7 +199,7 @@ $string['accesslist'] = 'Access list';
 $string['defaultaccesslistmessage'] = 'Nobody besides you can view your selected pages / collections. Add people to give them access.';
 $string['sharewithmygroups'] = 'Share with my groups';
 $string['sharewithmyinstitutions'] = 'Share with my institutions';
-$string['sharewithusers'] = 'Share with users';
+$string['sharewithusers'] = 'Share with people';
 $string['shareview1'] = 'Share';
 $string['sharedwithothers'] = 'Share with others';
 $string['moreoptions'] = 'Advanced options';
@@ -389,8 +389,8 @@ $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
 $string['retainviewrights1'] = 'Retain view access on copied pages or collections';
 $string['templatedescriptionplural2'] = 'If people have access to your selected pages / collections, they can make their own copies.';
-$string['retainviewrightsdescription2'] = 'Add access for you to view copies of the selected pages / collections that are copied by other users. Those users can revoke this access later on if they wish. Pages that are copied from a copy of this page or collection will not have this same access.';
-$string['retainviewrightsgroupdescription2'] = 'Add access for members of this group to view copies of the selected pages / collections that are copied by other users. Those users can revoke this access later on if they wish. Pages that are copied from a copy of this page or collection will not have this same access.';
+$string['retainviewrightsdescription2'] = 'Add access for you to view copies of the selected pages / collections that are copied by others. They can revoke this access later on if they wish. Portfolios that are created from a copy of this page or collection will not have this same access.';
+$string['retainviewrightsgroupdescription2'] = 'Add access for members of this group to view copies of the selected pages / collections that are copied by others. They can revoke this access later on if they wish. Portfolios that are created from a copy of this page or collection will not have this same access.';
 $string['choosetemplatepageandcollectiondescription'] = '<p>Here you can search through the pages that you are allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p>';
 $string['choosetemplategrouppageandcollectiondescription'] = '<p>Here you can search through the pages that this group is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Groups cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
 $string['choosetemplateinstitutionpageandcollectiondescription'] = '<p>Here you can search through the pages that this institution is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Institutions cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
@@ -414,10 +414,10 @@ $string['Untitled'] = 'Untitled';
 $string['copyforexistingmembersprogress'] = 'Copying portfolios for existing group members';
 $string['existinggroupmembercopy'] = 'Copy for existing group members';
 $string['existinggroupmembercopydesc1'] = 'Copy the selected pages / collections to the personal portfolio area of all existing group members. The slide switch resets after saving. Group members will only get a copy once.';
-$string['copyfornewusers'] = 'Copy for new users';
-$string['copyfornewusersdescription2'] = 'Whenever a new user is created, automatically make a personal copy of the selected pages / collections in the user\'s account. If you want these users to be able to copy the selected pages / collections later on as well, please allow copying in general.';
+$string['copyfornewusers'] = 'Copy into new accounts';
+$string['copyfornewusersdescription2'] = 'Whenever a new account is created, automatically make a personal copy of the selected pages / collections in the new account. If you want these people to be able to copy the selected pages / collections later on as well, please allow copying in general.';
 $string['copyfornewmembers'] = 'Copy for new institution members';
-$string['copyfornewmembersdescription2'] = 'Automatically make a personal copy of the selected pages / collections for all new members of %s. If you want these users to be able to copy the selected pages / collections later on as well, please allow copying in general.';
+$string['copyfornewmembersdescription2'] = 'Automatically make a personal copy of the selected pages / collections for all new members of %s. If you want these people to be able to copy the selected pages / collections later on as well, please allow copying in general.';
 $string['copyfornewgroups'] = 'Copy for new groups';
 $string['copyfornewgroupsdescription1'] = 'Make a copy of the selected pages / collections in all new groups with these roles:';
 $string['owner'] = 'owner';
@@ -430,15 +430,15 @@ $string['listviews'] = 'List pages';
 $string['nocopyableviewsfound'] = 'No pages that you can copy';
 $string['noownersfound'] = 'No owners found';
 $string['Preview'] = 'Preview';
-$string['viewscopiedfornewusersmustbecopyable'] = 'You must allow copying before you can set a page to be copied for new users.';
+$string['viewscopiedfornewusersmustbecopyable'] = 'You must allow copying before you can set a page to be copied for new accounts.';
 $string['viewswithretainviewrightsmustbecopyable'] = 'You must allow copying before you can set a page to retain view access.';
 $string['viewscopiedfornewgroupsmustbecopyable'] = 'You must allow copying before you can set a page to be copied for new groups.';
-$string['copynewusergroupneedsloggedinaccess'] = 'Pages copied for new users or groups must give access to logged-in users.';
+$string['copynewusergroupneedsloggedinaccess'] = 'Pages copied for new accounts or groups must give access to registered people.';
 $string['viewcopywouldexceedquota'] = 'Copying this page would exceed your file quota.';
 $string['viewcreatewouldexceedquota'] = 'Creating this page would exceed your file quota.';
 
 $string['blockcopypermission'] = 'Block copy permission';
-$string['blockcopypermissiondesc'] = 'If you allow other users to copy this page, you may choose how this block will be copied';
+$string['blockcopypermissiondesc'] = 'If you allow other people to copy this page, you may choose how this block will be copied.';
 
 // Sort by
 $string['defaultsort'] = 'Alphabetical';

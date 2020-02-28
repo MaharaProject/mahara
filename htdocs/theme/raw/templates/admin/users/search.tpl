@@ -119,7 +119,7 @@
         </fieldset>
     </div>
 </div>
-<p class="lead view-description">{str tag="usersearchinstructions" section="admin"}</p>
+<p class="lead view-description">{str tag="peoplesearchinstructions" section="admin"}</p>
 <div id="results" class="section card view-container">
     <h2 class="card-header" id="resultsheading">{str tag="Results"}</h2>
     {if $results}

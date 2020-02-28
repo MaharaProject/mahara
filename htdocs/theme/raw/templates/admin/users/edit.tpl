@@ -24,7 +24,7 @@
         <div class="col-lg-9 main">
             <div class="card card-body">
                 <h2>{str tag="siteaccountsettings" section="admin"}</h2>
-                <p class="errmsg">{str tag="usereditwarning" section="admin"}</p>
+                <p class="errmsg">{str tag="usereditwarning1" section="admin"}</p>
                 {$siteform|safe}
                 {if ($institutions)}
                    {$institutionform|safe}
