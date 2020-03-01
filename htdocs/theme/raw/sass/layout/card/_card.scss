@@ -86,3 +86,12 @@
     padding-left: 5px;
   }
 }
+
+// cover image card
+.card-body.coverimage {
+    overflow: hidden;
+    img {
+        object-fit: cover;
+        height: 187px;
+    }
+}

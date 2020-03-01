@@ -66,6 +66,7 @@ class View {
     private $newlayout = 1;
     private $grid;
     private $accessibleview = 0;
+    private $coverimage;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -667,6 +668,9 @@ class View {
         if ($field == 'columnsperrow') {
             return $this->get_columnsperrow();
         }
+        if ($field == 'coverimage') {
+            return $this->get_coverimage();
+        }
         return $this->{$field};
     }
 
@@ -685,6 +689,13 @@ class View {
             return true;
         }
         throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
+
+    public function get_coverimage() {
+        if ($this->coverimage && get_field('artefact', 'id', 'id', $this->coverimage)) {
+            return $this->coverimage;
+        }
+        return null;
     }
 
     public function get_tags() {
@@ -3782,17 +3793,17 @@ class View {
 
         $select = '
             SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
-            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid';
+            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid, v.coverimage';
         $collselect = '
             UNION
             SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0) as id,
             null AS vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
             c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null AS vvisits,
-                   (SELECT COUNT(*) FROM {collection_view} cv WHERE cv.collection = c.id) AS numviews, c.id AS collid';
+                   (SELECT COUNT(*) FROM {collection_view} cv WHERE cv.collection = c.id) AS numviews, c.id AS collid, c.coverimage';
         $emptycollselect = '
             UNION
             SELECT null as id, null as vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
-            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, c.id AS collid';
+            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, c.id AS collid, c.coverimage';
 
         $from = '
             FROM {view} v
@@ -5694,6 +5705,13 @@ class View {
                 if ($view->id) {
                     $v['collection'] = $view->get_collection();
                 }
+                if ($view->get('coverimage') && ($coverimage = get_record('artefact', 'id', $view->get('coverimage')))) {
+                    safe_require('artefact', 'file');
+                    $v['coverimageurl'] = ArtefactTypeImage::get_coverimage(array('id' => $coverimage->id));
+                    if ($coverimage->description) {
+                        $v['coverimagedescription'] = $coverimage->description;
+                    }
+                }
             }
         }
     }
@@ -5801,6 +5819,13 @@ class View {
                 else {
                     $collection = new Collection(0, $c);
                 }
+                if ($collection->get('coverimage') && ($coverimage = get_record('artefact', 'id', $collection->get('coverimage')))) {
+                    safe_require('artefact', 'file');
+                    $c['coverimageurl'] = ArtefactTypeImage::get_coverimage(array('id' => $coverimage->id));
+                    if ($coverimage->description) {
+                        $c['coverimagedescription'] = $coverimage->description;
+                    }
+                }
 
                 $views = $collection->views();
                 if (!empty($views)) {
@@ -5889,6 +5914,9 @@ class View {
             require_once('embeddedimage.php');
             $this->set('description', EmbeddedImage::prepare_embedded_images($this->copy_setting_info($template, $artefactcopies, 'description'), 'description', $this->get('id')));
             $this->set('instructions', EmbeddedImage::prepare_embedded_images($this->copy_setting_info($template, $artefactcopies, 'instructions'), 'instructions', $this->get('id')));
+        }
+        if ($template->get('coverimage')) {
+            $this->set('coverimage', $this->copy_setting_coverimage($template, $artefactcopies));
         }
         $this->set('tags', $template->get('tags'));
 
@@ -6031,6 +6059,39 @@ class View {
             }
         }
         return $new_setting_field;
+    }
+
+    /**
+     * Copy the cover image of the view template
+     *
+     * @param View $template the view template
+     * @param array &$artefactcopies the artefact mapping
+     * @return int new image artefact id
+     */
+    private function copy_setting_coverimage(View $template, array &$artefactcopies) {
+        safe_require('artefact', 'file');
+        $coverimageid = $template->get('coverimage');
+        if ($coverimageid) {
+            try {
+                $a = artefact_instance_from_id($coverimageid);
+                if ($a instanceof ArtefactTypeImage) {
+                $artefactcopies[$coverimageid] = (object) array(
+                  'oldid' => $coverimageid,
+                  'oldparent' => $a->get('parent')
+                );
+                $artefactcopies[$coverimageid]->newid = $a->copy_for_new_owner(
+                  $this->get('owner'),
+                  $this->get('group'),
+                  $this->get('institution')
+                );
+                }
+                return $artefactcopies[$coverimageid]->newid;
+            }
+            catch (Exception $e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     /**
