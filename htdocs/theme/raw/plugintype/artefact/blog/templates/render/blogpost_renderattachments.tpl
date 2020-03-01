@@ -31,7 +31,7 @@
                     {/if}
                         <a href="{$item->downloadpath}">
                             <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
-                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=Download section=artefact.file} {$item->title}"></span>
                         </a>
                         {if $item->description}
                         <div class="file-description text-small">

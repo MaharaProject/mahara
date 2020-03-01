@@ -76,7 +76,12 @@
         </div>
         <div  id="recent_post_{$post->id}" class="collapse content-text">
             <span>{$post->description|safe}</span>
+            {if isset($post->attachments) && !$modal}
+                {include file="artefact:blog:render/blogpost_renderattachments.tpl" attachments=$post->attachments postid=$post->id}
+            {/if}
         </div>
+
+
     </div>
 {/foreach}
 </div>
