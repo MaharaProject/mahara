@@ -1,0 +1,63 @@
+$logged-in-height: 187px;
+$logged-in-height-mobile: 110px;
+// cover image card
+.card-body.coverimage {
+    overflow: hidden;
+
+    .widget-detail {
+        img {
+          object-fit: cover;
+          height: 187px;
+        }
+        @include transition(0.03s);
+        // opacity:0;
+        // border-radius: $border-radius;
+        margin-top: -$logged-in-height * 2;
+        border: none;
+        position: relative;
+        display: inline-block;
+        z-index: 2;
+        background-color: $card-header-bg;
+        height: $logged-in-height;
+        vertical-align: top;
+        width:100%;
+        // @include media-breakpoint-between(md, lg) {
+        //     margin-top: -$logged-in-height-mobile * 2;
+        //     // height: $logged-in-height-mobile;
+        // }
+        // @include media-breakpoint-down(sm) {
+        //     // border-radius: 0 0 $border-radius $border-radius;
+        //     margin-top: 0;
+        //     border: 1px solid $gray-100;
+        //     // background-color: $body-bg;
+        //     // opacity: 1;
+        //     height: auto;
+        // }
+        // p {
+        //     // color: $white;
+        //
+        //     @include media-breakpoint-down(sm) {
+        //         color:$theme-text-color;
+        //     }
+        // }
+    }
+
+    &:hover {
+        .widget-heading {
+            @include media-breakpoint-down(sm) {
+                background: scale-color($dashboard-widget-bg, $lightness: -5%);
+            }
+        }
+        .widget-detail {
+            @include transition(0.3s);
+            opacity: 1;
+            margin-top: -$logged-in-height;
+            @include media-breakpoint-between(md, lg) {
+                margin-top: -$logged-in-height-mobile;
+            }
+            @include media-breakpoint-down(sm) {
+                margin-top: 0;
+            }
+        }
+    }
+}

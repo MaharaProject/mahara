@@ -17,6 +17,7 @@ require_once(get_config('libroot') . 'group.php');
 require_once(get_config('libroot') . 'layoutpreviewimage.php');
 require_once(get_config('docroot') . 'blocktype/lib.php');
 require_once(get_config('libroot') . 'view.php');
+safe_require('artefact', 'file');
 
 $id = param_integer('id', false);
 $new = param_boolean('new', false);
@@ -133,9 +134,16 @@ function create_settings_pieform() {
     $inlinejavascript = '';
 
     //get elements for each section of the form
+    $extrasettingformfields = array();
     if ($canedittitle) {
         $basicelements = get_basic_elements();
-        $advancedelements = get_advanced_elements();
+        list($advancedelements, $inlinejs) = get_advanced_elements();
+        $inlinejavascript .= $inlinejs;
+        $extrasettingformfields = array(
+            'jsform'     => true,
+            'jssuccesscallback' => 'settings_callback',
+            'jserrorcallback'   => 'settings_callback',
+        );
     }
 
     if ($canuseskins) {
@@ -179,7 +187,7 @@ function create_settings_pieform() {
         );
     }
 
-    $formelements['submit'] = array(
+    $formelements['submitform'] = array(
             'type' => 'submit',
             'class' => 'btn-primary',
             'value' => get_string('save'),
@@ -203,11 +211,14 @@ function create_settings_pieform() {
     //main form
     $settingsform = array(
         'name'      => $pieformname,
+        'method'     => 'post',
         'renderer'   => 'div',
         'plugintype' => 'core',
         'pluginname' => 'admin',
         'elements'   => $elements,
     );
+
+    $settingsform = array_merge($settingsform, $extrasettingformfields);
 
     return array(pieform($settingsform), $inlinejavascript);
 }
@@ -384,6 +395,41 @@ function get_advanced_elements() {
         );
     }
 
+    $folder = ArtefactTypeImage::get_coverimage_folder($USER, $group, $institution);
+
+    $highlight = array(0);
+
+    $elements['coverimage'] = array(
+        'type'         => 'filebrowser',
+        'title'        => get_string('coverimage', 'view'),
+        'description'  => get_string('coverimagedescription', 'view'),
+        'folder'       => $folder,
+        'highlight'    => $highlight,
+        'accept'       => 'image/jpg,image/png',
+        'institution'  => $institution,
+        'group'        => $group,
+//         // 'browse'       => $browse,
+        'page'         => $view->get_url() . '&browse=1',
+//         // 'browsehelp'   => 'browsemyfiles',
+        'filters'      => array(
+             'artefacttype' => array('image'),
+        ),
+        'config'       => array(
+            'upload'          => true,
+            'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+            'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+            'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+            'createfolder'    => false,
+            'edit'            => false,
+            'select'          => true,
+            'selectone'       => true,
+        ),
+        'defaultvalue'       => ($view->get('coverimage') ? array($view->get('coverimage')) : null),
+        'selectlistcallback' => 'artefact_get_records_by_id',
+        'selectcallback'     => 'add_view_coverimage',
+        'unselectcallback'   => 'delete_view_coverimage',
+    );
+
     // Theme dropdown
     $theme = $view->set_user_theme();
     $allowedthemes = get_user_accessible_themes();
@@ -404,7 +450,14 @@ function get_advanced_elements() {
             'defaultvalue'  => $theme,
         );
     };
-    return $elements;
+
+    $inlinejs = <<<EOF
+function settings_callback(form, data) {
+    settings_coverimage.callback(form, data);
+};
+EOF;
+
+    return array($elements, $inlinejs);
 }
 
 function get_skin_elements() {
@@ -492,9 +545,9 @@ function change_skin(view, skin) {
        'pieformname': "{$pieformname}"
        }
   sendjsonrequest(config['wwwroot'] + 'view/skins.json.php', pd, 'POST', function(data) {
-      $('#settings_skins_html_container').html(data.html);
-      $('#settings_skinid').val(data.skin);
-      formchangemanager.setFormState($('#' + data.pieformname), FORM_CHANGED);
+      jQuery('#settings_skins_html_container').html(data.html);
+      jQuery('#settings_skinid').val(data.skin);
+      formchangemanager.setFormState(jQuery('#' + data.pieformname), FORM_CHANGED);
   });
 };
 
@@ -537,10 +590,21 @@ function settings_submit(Pieform $form, $values) {
     if ($canuseskins && isset($values['skinid'])) {
         $view->set('skin', $values['skinid']);
     }
+    $view->set('coverimage', (isset($values['coverimage']) ? $values['coverimage'] : null));
 
     $view->commit();
-    $SESSION->add_ok_msg(get_string('viewsavedsuccessfully', 'view'));
-    redirect('/view/blocks.php?id=' . $view->get('id'));
+
+    $result = array(
+        'error'   => false,
+        'message' => get_string('viewsavedsuccessfully', 'view'),
+        'goto'    => '/view/blocks.php?id=' . $view->get('id'),
+    );
+    if ($form->submitted_by_js()) {
+        // Redirect back to the page from within the iframe
+        $SESSION->add_ok_msg($result['message']);
+        $form->json_reply(PIEFORM_OK, $result, false);
+    }
+    $form->reply(PIEFORM_OK, $result);
 }
 
 function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=null) {
@@ -867,5 +931,20 @@ function set_view_advanced(Pieform $form, $values) {
     }
     else if (isset($values['urlid'])) {
         $view->set('urlid', strlen($values['urlid']) == 0 ? null : $values['urlid']);
+    }
+}
+
+
+function add_view_coverimage($coverimageid) {
+    global $view;
+    if ($view) {
+        $view->set('coverimage', $coverimageid);
+    }
+}
+
+function delete_view_coverimage($coverimageid=null) {
+    global $view;
+    if ($view) {
+        $view->set('coverimage', 0);
     }
 }

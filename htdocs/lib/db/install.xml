@@ -756,6 +756,7 @@
                 <FIELD NAME="instructions" TYPE="text" NOTNULL="false" />
                 <FIELD NAME="instructionscollapsed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="accessibleview" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="coverimage" TYPE="int" LENGTH="10" NOTNULL="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -765,6 +766,7 @@
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="view_type" REFFIELDS="type" />
+                <KEY NAME="coverimagefk" TYPE="foreign" FIELDS="coverimage" REFTABLE="artefact" REFFIELDS="id" />
             </KEYS>
             <INDEXES>
                 <INDEX NAME="urliduk" UNIQUE="true" FIELDS="urlid,owner,group,institution" />
@@ -1032,6 +1034,7 @@
                 <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="false" />
                 <FIELD NAME="framework" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="coverimage" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1040,6 +1043,7 @@
                 <KEY NAME="submittedhostfk" TYPE="foreign" FIELDS="submittedhost" REFTABLE="host" REFFIELDS="wwwroot" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id"  />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  />
+                <KEY NAME="coverimagefk" TYPE="foreign" FIELDS="coverimage" REFTABLE="artefact" REFFIELDS="id"  />
             </KEYS>
         </TABLE>
         <TABLE NAME="collection_view">

@@ -103,15 +103,19 @@ else {
         $confirm = null;
     }
 }
-$elements['submit'] = array(
+$elements['submitform'] = array(
     'type'      => $type,
     'class' => 'btn-primary',
     'value'     => $submitstr,
     'confirm'   => $confirm,
+    'goto'      => $baseurl,
 );
-
 $form = pieform(array(
     'name' => 'edit',
+    'method'     => 'post',
+    'jsform'     => true,
+    'jssuccesscallback' => 'edit_callback',
+    'jserrorcallback'   => 'edit_callback',
     'plugintype' => 'core',
     'pluginname' => 'collection',
     'validatecallback' => 'collectionedit_validate',
@@ -119,11 +123,17 @@ $form = pieform(array(
     'elements' => $elements,
 ));
 
+$inlinejs = <<<EOF
+function edit_callback(form, data) {
+    edit_coverimage.callback(form, data);
+};
+EOF;
+
 $smarty = smarty();
 setpageicon($smarty, 'icon-folder-open');
 
 $smarty->assign('headingclass', 'page-header');
-
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('form', $form);
 $smarty->display('collection/edit.tpl');
 
@@ -154,11 +164,21 @@ function collectionedit_submit(Pieform $form, $values) {
     if (empty($values['framework'])) {
         $values['framework'] = null;
     }
+    $values['coverimage'] = (isset($values['coverimage']) ? $values['coverimage'] : null);
     $collection = Collection::save($values);
-    if (!$new) {
-        $SESSION->add_ok_msg(get_string('collectionsaved', 'collection'));
+
+    $result = array(
+        'error'   => false,
+        'message' => get_string('collectionsaved', 'collection'),
+        'goto'    => $collection->post_edit_redirect_url($new, $copy, $urlparams),
+    );
+
+    if ($form->submitted_by_js()) {
+        // Redirect back to the note page from within the iframe
+        $SESSION->add_ok_msg($result['message']);
+        $form->json_reply(PIEFORM_OK, $result, false);
     }
-    $collection->post_edit_redirect($new, $copy, $urlparams);
+    $form->reply(PIEFORM_OK, $result);
 }
 
 function edit_cancel_submit() {
