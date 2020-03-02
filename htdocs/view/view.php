@@ -435,8 +435,10 @@ jQuery(window).on('blocksloaded', {}, function() {
         var modal_textarea_id = null;
         $('#configureblock').find('textarea.wysiwyg').each(function() {
             modal_textarea_id = $(this).attr('id');
-            //Remove any existing tinymce
-            tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+            if (isTinyMceUsed()) {
+                //Remove any existing tinymce
+                tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+            }
         });
         clear();
     });
