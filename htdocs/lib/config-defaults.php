@@ -717,9 +717,9 @@ $cfg->passwordsaltalt1 = 'old salt value';
 
 /**
  * @global array $cfg->openbadgedisplayer_source The open badge sources
- * The default sources are Mozilla Backpack and openbadgepassport.com
+ * The default sources are openbadgepassport.com and Badgr
  */
-$cfg->openbadgedisplayer_source = '{"backpack":"https://backpack.openbadges.org/","passport":"https://openbadgepassport.com/","badgr":"https://api.badgr.io/"}';
+$cfg->openbadgedisplayer_source = '{"passport":"https://openbadgepassport.com/","badgr":"https://api.badgr.io/"}';
 
 /**
  * @global string $cfg->memcacheservers

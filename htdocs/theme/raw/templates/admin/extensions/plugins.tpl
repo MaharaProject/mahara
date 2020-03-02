@@ -46,7 +46,6 @@
                 <li class="list-group-item{if !$data.active} list-group-item-warning{/if}" id="{$plugintype}.{$plugin}">
                     <div class="list-group-item-heading">
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
-                        {if $data.deprecated}{str tag=deprecated section=admin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.config}
                             <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
@@ -58,6 +57,7 @@
                             {$data.activateform|safe}
                         {/if}
                         </div>
+                        {if $data.deprecated}{if gettype($data.deprecated) eq 'string'}<div class="alert alert-warning text-small">{$data.deprecated}</div>{else}{str tag=deprecated section=admin}{/if}{/if}
                     </div>
 
                     {if $data.types}

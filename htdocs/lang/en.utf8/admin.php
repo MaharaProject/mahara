@@ -19,6 +19,8 @@ $string['release'] = 'version %s (%s)';
 $string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="https://wiki.mahara.org/wiki/Contributors">Catalyst IT and others</a>';
 $string['installmahara'] = 'Install Mahara';
 $string['component'] = 'Component or plugin';
+$string['componentdeprecated'] = 'Component "%s" deprecated';
+$string['plugindeprecated'] = 'Plugin is deprecated';
 $string['continue'] = 'Continue';
 $string['coredata'] = 'core data';
 $string['coredatasuccess'] = 'Successfully installed core data';

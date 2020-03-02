@@ -77,6 +77,8 @@ $string['missingbadgesources'] = 'Missing sources setting. Please add it to your
 $string['selectall'] = 'Select all';
 $string['selectnone'] = 'Select none';
 
+$string['deprecatedhost'] = '<p class="alert alert-warning">Badges from the following services are not displayed because they have been discontinued: %s</p>';
+
 // Badgr token page
 $string['featuredisabled'] = 'The openbadgedisplayer blocktype is not active';
 $string['badgrsourcemissing1'] = 'Badgr is not in the sources configuration in your config.php file.';
