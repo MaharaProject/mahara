@@ -28,12 +28,16 @@
 {/if}
 {if $configerror}
     <p class="text-midtone">{str tag='configerror' section='blocktype.blog/taggedposts'}</p>
+</div>
 {elseif $badnotag && $badtag}
     <p class="text-midtone">{str tag='notagsboth' section='blocktype.blog/taggedposts' arg1=$badtag arg2=$badnotag}</p>
+</div>
 {elseif $badnotag}
     <p class="text-midtone">{str tag='notagsomit' section='blocktype.blog/taggedposts' arg1=$badnotag}</p>
+</div>
 {elseif $badtag}
     <p class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</p>
+</div>
 {elseif $full}
 </div>
 
@@ -82,6 +86,7 @@
         {/foreach}
     </div>
 {else}
+</div>
 <div class="taggedposts list-group">
     {foreach from=$results item=post}
     {if !$editing}
