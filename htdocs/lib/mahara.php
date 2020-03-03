@@ -1946,6 +1946,15 @@ function handle_event($event, $data, $ignorefields = array()) {
         }
         $data = (array)$data;
     }
+
+    // Set viewaccess rules for elasticsearch
+    if ($event == 'updateviewaccess' && get_config('searchplugin') == 'elasticsearch' && is_array($data)) {
+        if (isset($data['rules']) && isset($data['rules']->view)) {
+            safe_require('search', 'elasticsearch');
+            ElasticsearchIndexing::add_to_queue($data['rules']->view, 'view');
+        }
+    }
+
     $refid = $reftype = $parentrefid = $parentreftype = null;
     // Need to set dirty to false for all the classes with destructors
     if ($logdata instanceof View) {
