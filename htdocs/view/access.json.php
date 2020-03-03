@@ -38,6 +38,16 @@ switch ($type) {
         $options['exclude'] = $USER->get('id');
         $options['friends'] = true;
         $data = search_user($query, $limit, $offset, $options);
+        if (!empty($data['data'])) {
+            foreach ($data['data'] as $key => $value) {
+                $info = array(
+                    'id' => $value['id'],
+                    'name' => display_name($value['id'])
+                );
+                $data['data'][$key] = $info;
+            }
+        }
+        $count = $data['count'];
         break;
     case 'user':
         $options['exclude'] = $USER->get('id');
@@ -46,6 +56,13 @@ switch ($type) {
         $data['roles'] =  array();
         foreach ($roles as $r) {
             $data['roles'][] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));
+        }
+        foreach ($data['data'] as $key => $value) {
+            $info = array(
+                'id' => $value['id'],
+                'name' => display_name($value['id']),
+            );
+            $data['data'][$key] = $info;
         }
         break;
     case 'group':
@@ -69,14 +86,30 @@ switch ($type) {
         foreach ($roles as $r) {
             $data['roles'][$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.'.$r->grouptype));
         }
-        foreach ($data['data'] as &$r) {
-            $r->url = group_homepage_url($r);
+        if (!empty($data['data'])) {
+            foreach ($data['data'] as $key => $value) {
+                $info = array(
+                    'id' => $value->id,
+                    'url' => group_homepage_url($value),
+                    'name' => $value->name,
+                    'grouptype' => $value->grouptype
+                );
+                $data['data'][$key] = $info;
+            }
         }
+        $data['profilepic'] = false;
         break;
     default:
         $options['exclude'] = $USER->get('id');
         $options['friends'] = true;
         $data = search_user($query, $limit, $offset, $options);
+        foreach ($data as $key => $value) {
+            $info = array(
+                'id' => $value['id'],
+                'name' => display_name($value['id'])
+            );
+            $data['data'][$key] = $info;
+        }
         break;
 }
 $more = $data['count'] > $limit * $page;
