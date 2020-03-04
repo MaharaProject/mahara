@@ -1,3 +1,40 @@
+19.10.2 (2020-03-04)
+- Bug 1840201: Elastic search: Search results are not restricted for aretfacts on pages shared with group
+- Bug 1849771: Need a isGridstackRendering flag
+- Bug 1850578: TinyMCE editor does not appear in Chrome on Android
+- Bug 1850859: Consolidate CSS for skins to work better with new header and details mode
+- Bug 1851155: LTI duplicate email addresses causing problems
+- Bug 1851557: Members from other institution can be seen when sharing portfolios despite isolated institutions
+- Bug 1852522: 'Display page' button should not be displayed for site templates
+- Bug 1852584: Cannot delete a group collection if already pushed to users
+- Bug 1852644: Allowing a site admin to set an external app owner to be someone other than themselves
+- Bug 1853189: Not all fields are showing in xml-rpc auth modal
+- Bug 1853364: find_by_instanceid_username can cause error
+- Bug 1853387: jsform field defaults to no when field is disabled
+- Bug 1855023: Warning produced when adding/ editing an image gallery block
+- Bug 1855614: Problems with restricting profile access
+- Bug 1856506: gridstack - too much recursion error when translating from old layout
+- Bug 1856759: Issues with layout/tinymce/gridstack and IE11
+- Bug 1857274: "Display page" button is highlighted in edit mode when it shouldn't be
+- Bug 1858512: Stop displaying an email profile field as one of the normal fields
+- Bug 1859127: When having restricted file uploading it fails to restrict list on subsequent upload
+- Bug 1859355: Peer assessor can delete another peers assessment
+- Bug 1860050: module_assessmentreport module giving errors on portfolio submission
+- Bug 1860368: Arrow bar in Modern and Ocean not correct wen hovering over non-active tab
+- Bug 1863043: Don't display personal information beyond what is necessary in "Edit access" Ajax response
+- Bug 1864757: Can't comment on artefacts on public or secret URL pages
+- Bug 1865400: Security Upgrade SimpleSAML 1.17.7 to 1.18.4
+- Bug 1845133: "Delete" button visible on timeline for comments
+- Bug 1850559: Problem with deleting a plan task
+- Bug 1857255: signoff/verify modal issue in IE11
+- Bug 1858707: Links in a header with skin turned on shows normal link color instead of header color
+- Bug 1859364: The gridstack drag icon is showing on the display page as well as edit page
+- Bug 1859605: Mahara portfolio as Moodle assignment cannot be previewed
+- Bug 1838999: Recaptcha link in admin is a 404
+- Bug 1852358: need to update the name for Macedonia
+- Bug 1853066: Allow behat suite to ignore some features
+- Bug 1855348: Missing language string in elasticsearch: 'servererror'
+
 19.10.1 (2019-11-12)
 - 1829943  Error deleting institution due to foreign key constraint with view table
 - 1850220  Can't get to site's contacts page from profile page
