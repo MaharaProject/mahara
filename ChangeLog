@@ -1,3 +1,20 @@
+19.04.4 (2020-03-04)
+- 1840201	Elastic search: Search results are not restricted for aretfacts on pages shared with group
+- 1851155	LTI duplicate email addresses causing problems
+- 1851557	Members from other institution can be seen when sharing portfolios despite isolated institutions
+- 1852584	Cannot delete a group collection if already pushed to users
+- 1855614	Problems with restricting profile access
+- 1858512	Stop displaying an email profile field as one of the normal fields
+- 1859355	Peer assessor can delete another peers assessment
+- 1863043	Don't display personal information beyond what is necessary in "Edit access" Ajax response
+- 1865400	Security Upgrade SimpleSAML 1.17.7 to 1.18.4
+- 1836664	TinyMCE issue on mobile devices
+- 1845133	"Delete" button visible on timeline for comments
+- 1859605	Mahara portfolio as Moodle assignment cannot be previewed
+- 1852358	need to update the name for Macedonia
+- 1853066	Allow behat suite to ignore some features 
+- 1855348	Missing language string in elasticsearch: 'servererror'
+
 19.04.3 (2019-11-12)
 - 1829943  Error deleting institution due to foreign key constraint with view table
 - 1847345  Only mention ssphp needs updating if installed
