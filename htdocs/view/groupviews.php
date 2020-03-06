@@ -95,27 +95,13 @@ $js = <<< EOF
 jQuery(function ($) {
     {$pagination['javascript']}
     showmatchall();
-EOF;
-if ($offset > 0) {
-    $js .= <<< EOF
-    if ($('#groupviews').length) {
-        $('#groupviews a:first').trigger("focus");
-    }
-    if ($('#myviews').length) {
-        $('#myviews a:first').trigger("focus");
-    }
-EOF;
-}
-else {
-    $js .= <<< EOF
     if ($('#searchresultsheading').length) {
         $('#searchresultsheading').addClass('hidefocus')
             .prop('tabIndex', -1)
             .trigger("focus");
     }
+});
 EOF;
-}
-$js .= '});';
 
 $urlparamsstr = '';
 if (!empty($group->id)) {
