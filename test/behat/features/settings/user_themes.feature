@@ -16,7 +16,7 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Configure site" from administration menu
  # I set the page themes option
- And I expand the section "User settings"
+ And I expand the section "Account settings"
  And I enable the switch "Authors can choose page themes"
  And I press "Update site options"
  And I log out

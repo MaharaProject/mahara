@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 // Strings for statistics
 $string['allowpublicprofiles'] = 'Allow public profiles';
-$string['allowpublicviews'] = 'Allow public pages';
+$string['allowpublicviews1'] = 'Allow public portfolios';
 $string['artefact_type_academicgoal'] = 'Artefact: Academic goals';
 $string['artefact_type_academicskill'] = 'Artefact: Academic skills';
 $string['artefact_type_address'] = 'Artefact: Postal address';

@@ -360,7 +360,7 @@ $string['siteadminsonly'] = 'Site administrators only';
 $string['adminsonly'] = 'Administrators only';
 $string['adminsandstaffonly'] = 'Administrators and staff only';
 $string['advanced'] = 'Advanced';
-$string['allowpublicviews'] = 'Allow public pages';
+$string['allowpublicviews1'] = 'Allow public portfolios';
 $string['allowpublicviewsdescription2'] = 'People can create portfolios that are accessible to the public rather than only to registered people.';
 $string['allowinstitutionpublicviews1'] = 'Allow public institution portfolios';
 $string['allowinstitutionpublicviewsdescription3'] = 'Allow institution members to create portfolios that are accessible to the public rather than only to registered people.';
@@ -1257,13 +1257,13 @@ $string['Advanced'] = 'Advanced';
 
 //admin option fieldset legends
 $string['sitesettingslegend'] = 'Site settings';
-$string['usersettingslegend'] = 'User settings';
+$string['accesssettingslegend'] = 'Access settings';
 $string['groupsettingslegend'] = 'Group settings';
 $string['searchsettingslegend'] = 'Search settings';
 $string['institutionsettingslegend'] = 'Institution settings';
 $string['accountsettingslegend'] = 'Account settings';
 $string['securitysettingslegend'] = 'Security settings';
-$string['generalsettingslegend'] = 'General settings';
+$string['sideblocksettingslegend'] = 'Side block settings';
 $string['loggingsettingslegend'] = 'Logging settings';
 
 $string['groupname'] = 'Group name';

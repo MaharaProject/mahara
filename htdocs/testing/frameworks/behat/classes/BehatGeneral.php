@@ -1122,6 +1122,34 @@ EOF;
     }
 
     /**
+     * Checks, that the first specified element appears before the second one within a container.
+     *
+     * @Given :preelement :preselectortype should appear before :postelement :postselectortype within :containelement :containselectortype
+     * @throws ExpectationException
+     * @param string $preelement The locator of the preceding element
+     * @param string $preselectortype The locator of the preceding element
+     * @param string $postelement The locator of the following element
+     * @param string $postselectortype The selector type of the following element
+     * @param string $containelement The locator of the container element
+     * @param string $containselectortype The selector type of the container element
+     */
+    public function should_appear_before_within($preelement, $preselectortype, $postelement, $postselectortype, $containelement, $containselectortype) {
+
+        // Getting the container where the text elements should be found.
+        $container = $this->get_selected_node($containselectortype, $containelement);
+
+        $prexpath = $this->get_node_in_container($preselectortype, $preelement, $containselectortype, $containelement)->getXpath();
+        $postxpath = $this->get_node_in_container($postselectortype, $postelement, $containselectortype, $containelement)->getXpath();
+
+        // Using following xpath axe to find it.
+        $msg = '"' . $preelement . '" "' . $preselectortype . '" does not appear before "' . $postelement . '" "' . $postselectortype . '" within "' . $containelement . '" "' . $containselectortype . '"';
+        $xpath = $prexpath . '/following::*[contains(., ' . $postxpath . ')]';
+        if (!$this->getSession()->getDriver()->find($xpath)) {
+            throw new ExpectationException($msg, $this->getSession());
+        }
+    }
+
+    /**
      * Checks, that the first specified element appears after the second one.
      *
      * @Given /^"(?P<following_element_string>(?:[^"]|\\")*)" "(?P<selector1_string>(?:[^"]|\\")*)" should appear after "(?P<preceding_element_string>(?:[^"]|\\")*)" "(?P<selector2_string>(?:[^"]|\\")*)"$/
