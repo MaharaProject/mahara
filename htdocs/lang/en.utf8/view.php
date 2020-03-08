@@ -498,7 +498,8 @@ $string['theme'] = 'Theme';
 $string['choosethemedesc'] = 'Choose a theme for the page.';
 
 $string['lockblocks'] = "Lock blocks";
-$string['lockblocksdescription'] = "You can lock the blocks on the page and prevent them from being removed when people copy the page.";
+$string['lockblocksdescription1'] = "You can lock the blocks on the page and prevent them from being removed when you edit the page. You can remove the lock at any time to remove blocks if needed.";
+$string['lockblocksdescriptioninstitution'] = "Lock the blocks on the page and prevent them from being removed when people copy the page into their personal or group portfolio area. You can still remove blocks while you are editing this site or institution page.";
 $string['instructions'] = 'Instructions';
 $string['advanced']     = 'Advanced';
 
