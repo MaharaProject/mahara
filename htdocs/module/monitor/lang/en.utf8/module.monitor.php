@@ -21,6 +21,9 @@ $string['cronlockhoursdescription'] = 'The maximum number of hours a cron proces
 $string['hourstoconsiderelasticsearchrecordold'] = 'Hours to consider elasticsearch queue old';
 $string['hourstoconsiderelasticsearchrecordolddescription'] = 'Number of hours that elasticsearch record can remain unprocessed before drawing attention to it';
 $string['monitormodulenotactive'] = 'The monitor plugin is not active. Please go to the "Administration menu" → "Extensions" → "Plugin administration" page to install or activate the plugin.';
+$string['allowedips'] = 'Allowed IPs';
+$string['allowedipsdescription'] = 'Enter safe IP addresses, one per line, for the monitor to respond to. If left blank then the monitor will be restricted by $cfg->urlsecret if that is set.';
+$string['accessdeniednotvalidip'] = 'Your IP "%s" is not in the allowed IP list and you will be blocked from checking the monitor.';
 
 // cron processes check
 $string['croncheckhelp'] = 'Identify which cron processes are long running:

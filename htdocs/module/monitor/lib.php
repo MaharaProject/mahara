@@ -88,6 +88,7 @@ class PluginModuleMonitor extends PluginModule {
      * @return array A list of config options.
      */
     public static function get_config_options() {
+        global $OVERRIDDEN;
         $elements = array(
             'cronlockhours' => array(
                 'title' => get_string('cronlockhours', 'module.monitor'),
@@ -110,6 +111,15 @@ class PluginModuleMonitor extends PluginModule {
                 'defaultvalue' => self::get_config_value('ldapsuspendeduserspercentage'),
                 'rules' => array('integer' => true, 'required' => true, 'maxlength' => 2, 'minvalue' => 1),
             ),
+            'allowedips' => array(
+                'title' => get_string('allowedips', 'module.monitor'),
+                'description' => get_string('allowedipsdescription', 'module.monitor'),
+                'type' => 'textarea',
+                'defaultvalue' => self::get_config_value('allowedips'),
+                'rows' => 5,
+                'cols' => 76,
+                'disabled' => in_array('plugin_module_monitor_allowedips', $OVERRIDDEN),
+            ),
         );
         return array('elements' => $elements);
     }
@@ -123,11 +133,12 @@ class PluginModuleMonitor extends PluginModule {
      */
     public static function get_config_value($name) {
         $value = get_config_plugin('module', 'monitor', $name);
-
         if (is_null($value)) {
             $value = self::get_default_config_value($name);
         }
-
+        if ($name == 'allowedips') {
+            $value = implode("\n", explode(',', $value));
+        }
         return $value;
     }
 
@@ -170,6 +181,7 @@ class PluginModuleMonitor extends PluginModule {
         set_config_plugin('module', 'monitor', 'cronlockhours', $values['cronlockhours']);
         set_config_plugin('module', 'monitor', 'hourstoconsiderelasticsearchrecordold', $values['hourstoconsiderelasticsearchrecordold']);
         set_config_plugin('module', 'monitor', 'ldapsuspendeduserspercentage', $values['ldapsuspendeduserspercentage']);
+        set_config_plugin('module', 'monitor', 'allowedips', implode(',', explode("\n", $values['allowedips'])));
     }
 
     /**
@@ -211,6 +223,29 @@ class PluginModuleMonitor extends PluginModule {
             }
         }
         return $types;
+    }
+
+    public static function check_monitor_access() {
+        // Check that if we are hitting a monitor URL via browser then we either need
+        // to have the urlsecret present or be on a whitelisted IP
+        if (!is_cli() && get_config('urlsecret') !== null) {
+            $allowedips = get_config_plugin('module', 'monitor', 'allowedips');
+            if ($allowedips && trim($allowedips) != '') {
+                require_once(get_config('docroot') . 'webservice/lib.php');
+                if (!remoteip_in_list($allowedips)) {
+                    $message = get_string('accessdeniednotvalidip', 'module.monitor', getremoteaddr(null));
+                    return $message;
+                }
+            }
+            else {
+                $urlsecret = param_alphanumext('urlsecret', -1);
+                if ($urlsecret !== get_config('urlsecret')) {
+                    $message = get_string('accessdeniednourlsecret', 'error');
+                    return $message;
+                }
+            }
+        }
+        return false;
     }
 }
 
