@@ -2,19 +2,24 @@ Chart.js in Mahara
 ==================
 
 Website: http://www.chartjs.org
-Version: 2.7.3
+Version: 2.9.3
 
-Removed the samples/ docs/ scripts/ src/ test/
-.codeclimate.yml .editorconfig .eslintignore .eslintrc.yml
-.gitignore .htmllintrc .npmignore .travis.yml
-book.json bower.json composer.json gulpfile.js
-karma.conf.js package.json files
-that are not needed for this plugin
+To update:
+- Go to https://github.com/chartjs/Chart.js and choose the
+  latest (non master) branch
+- Download zip file to some local folder and unzip
+- Go to the Chart.js directory and run the following (note you made
+  need to use sudo)
 
-Removed Chart.bundle.js, Chart.bundle.min.js:
-The bundled build includes Moment.js in a single file.
-You should not use this build if your application already included Moment.js.
-We are using Moment js already so it can be deleted.
+npm install
+npm install -g gulp-cli
+gulp build
+
+This builds the 'dist' folder
+
+copy the LICENSE.md, MAINTAINING.md, and README.md files to htdocs/js/chartjs/ folder
+copy the dist/Chart.min.js to htdocs/js/chartjs/dist/ folder
+copy the dist/Chart.css to the bottom of htdocs/theme/raw/sass/lib/_graph.scss
 
 Changes:
 
