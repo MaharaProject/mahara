@@ -1166,7 +1166,7 @@ class PluginAuthSaml extends PluginAuth {
             $discoHandler = new PluginAuthSaml_IdPDisco(array('saml20-idp-remote', 'shib13-idp-remote'), 'saml');
             return $discoHandler->getTheIdPs();
         }
-        return array('list' => 0);
+        return array('list' => array());
     }
 
     public static function get_disco_list($lang = null, $entityidps = array()) {
