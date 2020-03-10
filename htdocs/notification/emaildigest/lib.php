@@ -106,6 +106,10 @@ class PluginNotificationEmaildigest extends PluginNotification {
                     if (stripos($entry->url, 'http://') !== 0 && stripos($entry->url, 'https://') !== 0) {
                         $entry->url = get_config('wwwroot') . $entry->url;
                     }
+                    // Allow for email links to redirect to external source to login first
+                    if (get_config('emailexternalredirect')) {
+                        $entry->url = append_email_institution($user->user, $entry->url);
+                    }
                     $body .= "\n" . $entry->url;
                 }
                 if (!empty($entry->unsubscribetoken)) {
@@ -114,6 +118,10 @@ class PluginNotificationEmaildigest extends PluginNotification {
                 $body .= "\n\n";
             }
             $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
+            if (get_config('emailexternalredirect')) {
+                $prefurl = append_email_institution($user->user, $prefurl);
+            }
+
             $body .= "\n\n" . get_string_from_language($lang, 'emailbodyending', 'notification.emaildigest', $prefurl);
             try {
                 email_user($user->user, null, $subject, $body);

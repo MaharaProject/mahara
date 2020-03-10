@@ -58,6 +58,11 @@ class PluginNotificationEmail extends PluginNotification {
                 $data->url = get_config('wwwroot') . $data->url;
             }
 
+            // Allow for email links to redirect to external source to login first
+            if ($data->url && get_config('emailexternalredirect')) {
+                $data->url = append_email_institution($user, $data->url);
+            }
+
             if ($data->activityname == 'usermessage') {
                 // Do not include the message body in user messages when they are sent by email
                 // because it encourages people to reply to the email.

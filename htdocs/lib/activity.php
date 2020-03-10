@@ -1779,3 +1779,19 @@ function get_special_notifications($user, $activitytypes) {
 
     return $activitytypes;
 }
+
+function append_email_institution($user, $url) {
+    if (!isset($user->id) || (isset($user->id) && empty($user->id))) {
+        return $url;
+    }
+    // Ignore auth methods 'internal' and 'ldap' as they login direct with login box
+    $local = array('internal', 'ldap');
+    if ($auth = get_field_sql("SELECT ai.id
+                                FROM {usr} u
+                                JOIN {auth_instance} ai ON ai.id = u.authinstance
+                                AND ai.authname NOT IN (" . join(',',  array_map('db_quote', $local)) . ")
+                                AND u.id = ?", array($user->id))) {
+        $url .= (strpos($url, '?') === false ? '?' : '&') . 'authid=' . $auth;
+    }
+    return $url;
+}

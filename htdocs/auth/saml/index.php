@@ -202,10 +202,18 @@ if ($can_login) {
     if (preg_match('/\/auth\/saml\//', $wantsurl)) {
         $wantsurl = $CFG->wwwroot;
     }
-    // must be within this domain
-    if (!preg_match('/'.$_SERVER['HTTP_HOST'] . '/', $wantsurl)) {
+
+    // Schema present then it must be within this domain
+    if (preg_match('/\:\/\//', $wantsurl) && !preg_match('/' . $_SERVER['HTTP_HOST'] . '/', $wantsurl)) {
         $wantsurl = $CFG->wwwroot;
     }
+
+    // If relative path then add wwwroot
+    if (!preg_match('/\:\/\//', $wantsurl) && preg_match('/\//', $wantsurl)) {
+        $wantsurl = preg_replace('/^\//', '', $wantsurl); // remove leading /
+        $wantsurl = $CFG->wwwroot . $wantsurl;
+    }
+
     // if redirecting to using homepage but using custom landing page
     $homepageredirecturl = get_config('homepageredirecturl');
     if ($wantsurl === $CFG->wwwroot && get_config('homepageredirect') && !empty($homepageredirecturl)) {
