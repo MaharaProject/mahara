@@ -1926,7 +1926,36 @@ function handle_event($event, $data, $ignorefields = array()) {
     if ($event == 'updateviewaccess' && get_config('searchplugin') == 'elasticsearch' && is_array($data)) {
         if (isset($data['rules']) && isset($data['rules']->view)) {
             safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue($data['rules']->view, 'view');
+            $viewid = $data['rules']->view;
+            $table = 'view';
+            // Add the queue item
+            $sql = "INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                    SELECT ?, ? WHERE NOT EXISTS (
+                        SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = ? AND type = ?
+                    )";
+            execute_sql($sql, array($viewid, $table, $viewid, $table));
+
+            // We need to update the user and artefacts for the view
+            $sql = "INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                    SELECT u.id, ? AS type FROM {usr} u
+                    INNER JOIN {view} v ON v.owner = u.id
+                    WHERE v.type = ?
+                    AND v.id = ?
+                    AND NOT EXISTS (
+                        SELECT q.id FROM {search_elasticsearch_queue} q
+                        WHERE q.type = ? AND q.itemid = u.id
+                    )";
+            execute_sql($sql, array('usr', 'profile', $viewid, 'usr'));
+
+            $artefacttypes_str = ElasticsearchIndexing::artefacttypes_filter_string();
+            $sql = "INSERT INTO {search_elasticsearch_queue} (itemid, type)
+                    SELECT va.artefact, ? AS type
+                    FROM {view_artefact} va
+                    INNER JOIN {artefact} a ON va.artefact = a.id
+                    WHERE va.view = ?
+                    AND va.artefact NOT IN (SELECT itemid FROM {search_elasticsearch_queue} WHERE type = ?)
+                    AND a.artefacttype IN " . $artefacttypes_str;
+            execute_sql($sql, array('artefact', $viewid, 'artefact'));
         }
     }
 
