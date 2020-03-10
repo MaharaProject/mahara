@@ -2,7 +2,7 @@ HTMLPurifier in Mahara
 ======================
 
 Website: http://www.htmlpurifier.org/
-Version: 4.11.0
+Version: 4.12.0
 
 This library is used by clean_html, to strip malicious HTML from user-generated
 content.
@@ -10,9 +10,19 @@ content.
 Changes:
 We only use the /library/HTMLPurifier folder from the download, however the configuration change below requires a script that depends on some other code to be run, so for a start grab /extras, /library and /maintenence from the download.
 
-  * Add the configuration directive Filter.ExtractStyleBlocks.PreserveCSS to allow the comments while cleaning CSS (commit: 859478ef6e3f05dbdedb0df0d1d2a922bdc16b0e)
-  Note the change to clean_css in HTMLPurifier/Filter/ExtractStyleBlocks.php
-  Run /maintenence/generate-schema-cache.php to update HTMLPurifier/ConfigSchema/schema.ser
-  Once that file is updated, you can delete /maintenence, /extras and everything except the HTMLPurifier folder from /library
+Steps to update:
+- Download latest .zip file and extract somewhere locally (not in mahara directory)
 
-  * Altered SafeIframe.php so that an HTTPS site will rewrite HTTP iframes to protocol-relative
+- Add the change to HTMLPurifier/Filter/ExtractStyleBlocks.php (from commit: a485b22c302f862e1bfd4254320a837418c24511)
+  Add in the HTMLPurifier/ConfigSchema/schema/Filter.ExtractStyleBlocks.PreserveCSS.txt
+  Allows CSS comments to not be stripped out.
+  Used in custom skins.
+
+- Add the change to HTMLPurifier/URIFilter/SafeIframe.php (from commit: f11abcae0b426b1eb5023f8fc21b0f9a1a9dcb4b)
+  To allow protocol relative urls
+  Prevents HTTP iframes on HTTPS sites
+
+- Go into maintenence/generate-schema-cache.php directory and run
+  php generate-schema-cache.php
+
+- Copy all the content from library/ to htdocs/lib/htmlpurifier/
