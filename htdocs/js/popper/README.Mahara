@@ -2,7 +2,7 @@ Popper.js for bootstrap
 =======================
 
 Website: https://popper.js.org/
-Version: 1.15.0
+Version: 1.16.0
 
 A library used to position poppers in web applications.
 
@@ -11,7 +11,10 @@ page/collection card on view/index.php.
 
 It's a requirement of Bootstrap 4 dropdowns and tooltips
 
-It was fetched from https://unpkg.com/popper.js@1.15.0/dist/umd/popper.min.js
+It was fetched from https://unpkg.com/popper.js@1.16.0/dist/umd/popper.min.js
 
 Changes:
-- None
+- Removed the last line of popper.min.js file:
+	//# sourceMappingURL=popper.min.js.map
+	Because although it is a comment it is producing a source map warning
+	see (https://stackoverflow.com/questions/47549298/webpack-installing-bootstrap-missing-popper-js-map)
