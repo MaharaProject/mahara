@@ -148,7 +148,8 @@ Scenario: Editing Education and Employment info
     When I follow "Machine Learning - Creation 2.1 (Masters of Philosophy) at University College"
     Then I should see "Address: 23a O'Dell Boulevard"
     # Test whether a qualification with just start date and title also shows address
-    When I follow "Mail-order PhD"
+    When I scroll to the base of id "bottom-pane"
+    And I follow "Mail-order PhD"
     Then I should see "45 Empty St"
 
 Scenario: Adding Achievements
