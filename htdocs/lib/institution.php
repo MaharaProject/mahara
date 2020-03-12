@@ -361,7 +361,7 @@ class Institution {
         if ($profileview = $userobj->get_profile_view()) {
             $profileview->add_owner_institution_access(array($this->name));
         }
-        if (is_isolated() && !$admin) {
+        if (is_isolated() && !$userobj->get('admin')) {
             // If isolated institutions are on and this user is not an admin make sure their existing pages
             // are not shared with people outside their new institution
             $toremove1 = get_column_sql("SELECT va.id FROM {view} v JOIN {view_access} va ON va.view = v.id WHERE v.owner = ? AND (va.institution IS NOT NULL AND va.institution != ?)", array($user->id, $this->name));
