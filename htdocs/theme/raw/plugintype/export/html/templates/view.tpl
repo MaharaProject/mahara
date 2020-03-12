@@ -42,10 +42,6 @@ $(function () {
 
 {if $view}
     {$view|safe}
-{elseif !$blocks}
-    <div class="alert alert-info">
-      {str tag=nopeerassessmentrequired section=artefact.peerassessment}
-    </div>
 {else}
     <div class="container-fluid">
       <div class="grid-stack">
