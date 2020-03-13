@@ -15,6 +15,6 @@ It was fetched from https://unpkg.com/popper.js@1.16.0/dist/umd/popper.min.js
 
 Changes:
 - Removed the last line of popper.min.js file:
-	//# sourceMappingURL=popper.min.js.map
-	Because although it is a comment it is producing a source map warning
-	see (https://stackoverflow.com/questions/47549298/webpack-installing-bootstrap-missing-popper-js-map)
+    //# sourceMappingURL=popper.min.js.map
+    Because although it is a comment it is producing a source map warning
+    see (https://stackoverflow.com/questions/47549298/webpack-installing-bootstrap-missing-popper-js-map)
