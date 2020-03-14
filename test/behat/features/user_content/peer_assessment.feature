@@ -97,7 +97,7 @@ Background:
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_03" row
     And I select "Person" from "accesslist[0][searchtype]"
-    And I select "Dmitri User" from select2 search box in row number "1"
+    And I select "Dmitri User" from select2 nested search box in row number "1"
     And I select "Peer and manager" from "accesslist[0][role]"
     And I press "Save"
     And I log out

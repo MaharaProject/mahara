@@ -202,14 +202,19 @@ jQuery(function($) {
 
             var markup;
 
-            // Need to know which row
-            if (data.grouptype !== undefined) {
+            if (data.text !== undefined && data.text.length > 0) {
+                markup = data.text;
+            }
+            else if (data.text !== undefined && data.text.length === 0 && data.name === undefined) {
+                markup = '';
+            }
+            else if (data.grouptype !== undefined) {
                 markup = data.name;
             }
             else {
                 markup =
                 '<img class="select2-user-icon" src="' + config.wwwroot + 'thumb.php?type=profileicon&maxwidth=40&maxheight=40&id=' + data.id + '" />' +
-                '<span>' + data.name + '</span>';
+                '<div class="name">' + data.name + '</div>';
             }
             return markup;
         }
@@ -228,9 +233,14 @@ jQuery(function($) {
 
         function attachSelect2Search(object) {
             var self = object;
+            var showtitlein = false;
+            var showtitleout = false;
 
             $(self).select2({
                 placeholder: {{jstr tag=search section=view}},
+                dropdownCssClass: 'search-user-dropdown',
+                dropdownAutoWidth : 'true',
+                width: 'auto',
                 ajax: {
                     url: "access.json.php",
                     dataType: 'json',
@@ -242,6 +252,8 @@ jQuery(function($) {
                             'query': params.term, // search term
                             'offset': 0,
                             'limit': 10,
+                            'showtitlein': showtitlein,
+                            'showtitleout': showtitleout,
                             'page': params.page || 0,
                             'sesskey': config.sesskey
                         };
@@ -253,6 +265,8 @@ jQuery(function($) {
                         if (data.message.roles) {
                             $(self).attr('data-roles', JSON.stringify(data.message.roles));
                         }
+                        showtitlein = data.message.showtitlein;
+                        showtitleout = data.message.showtitleout;
 
                         return {
                             results: (data.message.count > 0) ? data.message.data : [],
@@ -287,9 +301,16 @@ jQuery(function($) {
                         return {{jstr tag=noResults section=mahara}};
                     },
                     searching: function () {
+                        showtitlein = false;
+                        showtitleout = false;
                         return {{jstr tag=searching section=mahara}};
                     }
                 }
+            });
+
+            $(self).on("select2:opening", function (e) {
+                showtitlein = false;
+                showtitleout = false;
             });
 
             $(self).on("select2:select", function (e) {
