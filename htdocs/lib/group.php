@@ -1495,7 +1495,7 @@ function group_denyuser_submit(Pieform $form, $values) {
         $SESSION->add_error_msg(get_string('accessdenied', 'error'));
         redirect('/group/members.php?id=' . $group . '&membershiptype=request');
     }
-    delete_records('group_member_request', 'group', $values['group'], 'member', $values['member']);
+    delete_records('group_member_request', 'group', $values['group'], 'member', $values["member"]);
     $SESSION->add_ok_msg(get_string('declinerequestsuccess', 'group'));
     if (count_records('group_member_request', 'group', $group)) {
         redirect('/group/members.php?id=' . $group . '&membershiptype=request');

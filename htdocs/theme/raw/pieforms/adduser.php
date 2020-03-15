@@ -94,7 +94,9 @@ echo $form_tag;
 
                     // Render account preferences with a renderer (inside this template :D)
                     $accountprefs = (object) expected_account_preferences();
-                    $accountprefs = array_keys(general_account_prefs_form_elements($accountprefs));
+                    $accountprefs = general_account_prefs_form_elements($accountprefs);
+                    unset($accountprefs['groupsideblocklabels']);
+                    $accountprefs = array_keys($accountprefs);
                     $fieldset_elements = array();
                     foreach ($accountprefs as $p) {
                         if (isset($elements[$p])) {

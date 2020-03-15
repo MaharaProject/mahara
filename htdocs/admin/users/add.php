@@ -142,7 +142,7 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
 $prefs = (object) expected_account_preferences();
 $elements = array_merge($elements, general_account_prefs_form_elements($prefs));
 unset($prefs);
-
+unset($elements['groupsideblocklabels']);
 
 $form = pieform(array(
     'name'       => 'adduser',

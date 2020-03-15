@@ -73,7 +73,8 @@ if (count($authinstances) > 0) {
 }
 
 $prefs = (object) expected_account_preferences();
-
+$prefs = general_account_prefs_form_elements($prefs);
+unset($prefs['groupsideblocklabels']);
 $form = array(
     'name' => 'uploadcsv',
     'jsform' => true,
@@ -124,7 +125,7 @@ $form = array(
             'collapsible' => true,
             'collapsed' => true,
             'class' => 'last with-formgroup',
-            'elements' => general_account_prefs_form_elements($prefs),
+            'elements' => $prefs,
         ),
         'progress_meter_token' => array(
             'type' => 'hidden',

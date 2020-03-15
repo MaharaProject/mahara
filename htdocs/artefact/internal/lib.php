@@ -363,7 +363,7 @@ class PluginArtefactInternal extends PluginArtefact {
             case 'joingroup':
                 $sql = "SELECT COUNT(*) AS completed
                          FROM {group_member}
-                       WHERE member = ?";
+                       WHERE \"member\" = ?";
                 $count = get_records_sql_array($sql, array($USER->get('id')));
                 $meta->completed = $count[0]->completed;
                 break;

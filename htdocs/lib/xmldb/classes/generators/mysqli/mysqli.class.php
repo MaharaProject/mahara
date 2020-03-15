@@ -273,7 +273,7 @@ class XMLDBmysqli extends XMLDBGenerator {
     /// and https://mariadb.com/kb/en/mariadb/reserved-words/
         $reserved_words = array (
             'accessible', 'add', 'admin', 'all', 'alter', 'analyze', 'and',
-            'as', 'asc',
+            'array', 'as', 'asc',
             'asensitive', 'before', 'between', 'bigint', 'binary',
             'blob', 'both', 'by', 'call', 'cascade', 'case', 'change',
             'char', 'character', 'check', 'collate', 'column', 'columns',
@@ -301,7 +301,7 @@ class XMLDBmysqli extends XMLDBGenerator {
             'lock', 'long', 'longblob', 'longtext', 'loop', 'low_priority',
             'master_bind',
             'master_heartbeat_period', 'master_ssl_verify_server_cert',
-            'match', 'maxvalue', 'mediumblob', 'mediumint', 'mediumtext',
+            'match', 'maxvalue', 'mediumblob', 'mediumint', 'mediumtext', 'member',
             'middleint', 'minute_microsecond', 'minute_second',
             'mod', 'modifies', 'natural', 'not', 'no_write_to_binlog',
             'nth_value', 'ntile',

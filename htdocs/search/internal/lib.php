@@ -176,7 +176,7 @@ class PluginSearchInternal extends PluginSearch {
             }
             $where .= '
                 AND (u.id IN (
-                    SELECT member FROM {group_member} WHERE "group" IN ('
+                    SELECT "member" FROM {group_member} WHERE "group" IN ('
                 . join(',', array_map('db_quote', array_map('intval', $groupids))) . ')
                 )';
 
@@ -334,7 +334,7 @@ class PluginSearchInternal extends PluginSearch {
         }
         else {
             if ($field == 'email') {
-                $sql = '(' . $alias . '.email ' . db_ilike() . " '%' || ? || '%' OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email " . db_ilike() . " '%' || ? || '%' AND ai.owner = u.id AND ai.verified = 1 LIMIT 1) " . db_ilike() . " '%' ||  ? || '%')";
+                $sql = '(' . $alias . '.email ' . db_ilike() . " '%' || ? || '%' OR (SELECT email FROM {artefact_internal_profile_email} ai WHERE ai.email " . db_ilike() . " '%' || ? || '%' AND ai.owner = u.id AND ai.verified = 1 LIMIT 1) " . db_ilike() . " '%' || ? || '%')";
                 $values = 3;
             }
             else {
@@ -714,7 +714,7 @@ class PluginSearchInternal extends PluginSearch {
                 FROM {usr} u
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
-                    AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)';
+                    AND NOT u.id IN (SELECT "member" FROM {group_member} gm WHERE gm.group = ?)';
             $values[] = $group;
             $orderby = 'u.firstname, u.lastname, u.id';
         }
@@ -725,8 +725,8 @@ class PluginSearchInternal extends PluginSearch {
                 FROM {usr} u
                     LEFT OUTER JOIN {usr_account_preference} h ON (u.id = h.usr AND h.field = \'hiderealname\')
                 WHERE u.id > 0 AND u.deleted = 0 ' . $searchsql . '
-                    AND NOT u.id IN (SELECT member FROM {group_member} gm WHERE gm.group = ?)
-                    AND NOT u.id IN (SELECT member FROM {group_member_invite} gmi WHERE gmi.group = ?)';
+                    AND NOT u.id IN (SELECT "member" FROM {group_member} gm WHERE gm.group = ?)
+                    AND NOT u.id IN (SELECT "member" FROM {group_member_invite} gmi WHERE gmi.group = ?)';
             $values[] = $group;
             $values[] = $group;
             $orderby = 'u.firstname, u.lastname, u.id';
@@ -844,7 +844,7 @@ class PluginSearchInternal extends PluginSearch {
         $studentid = '';
         if (!is_null($institution->member)) {
             $sql .= '
-                LEFT OUTER JOIN {usr_institution} member ON (member.usr = u.id
+                LEFT OUTER JOIN {usr_institution} "member" ON (member.usr = u.id
                     AND member.institution = ' . db_quote($institution->name) . ')';
             $where .= '
                 AND ' . ($institution->member ? ' NOT ' : '') . ' member.usr IS NULL';
