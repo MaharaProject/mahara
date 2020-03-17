@@ -978,7 +978,7 @@
          * changes the intructions so they are for ajax
          */
         $('#blocksinstruction').html(strings['blocksinstructionajaxlive1']);
-        $('#viewinstructions-dropdown').on('hide.bs.collapse show.bs.collapse', function(event) {
+        $('.blocks #viewinstructions-dropdown').on('hide.bs.collapse show.bs.collapse', function(event) {
             var pd = {
                 'viewid': $('#viewid').val(),
                 'action': event.type

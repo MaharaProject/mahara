@@ -543,7 +543,18 @@ $string['accessibilitymodedescription'] = 'This page has the accessible layout e
  To change a block position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
 $string['blocktypeis'] = ' %s blocktype';
 
+
 // Cover image
 $string['coverimage'] = 'Cover image';
 $string['coverimagefolder'] = 'Cover images';
 $string['coverimagedescription'] = 'The recommended dimensions are 180px wide by 130px high.';
+
+// templates and copies
+$string['locktemplate'] = 'Template';
+$string['locktemplatedescription'] = 'When this is set to "Yes", people copying the page into their personal account will not be able to change any page or artefact instructions.';
+$string['linktooriginaltemplate'] = 'Original template';
+$string['linktooriginaltemplatedescription'] = 'This page is based on a template. This is the link to it.';
+$string['linktooriginaltemplatedescriptiondeleted'] = 'This page is based on a template.';
+$string['deletedview'] = 'Page deleted';
+$string['copylocked'] = 'Copy locked';
+$string['copylockeddescription'] = 'This is a template copy. Change this setting to lock/unlock the instruction fields on this copy.';

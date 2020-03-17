@@ -334,8 +334,19 @@ function get_advanced_elements() {
         $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
     }
 
-    $elements = array(
-        'instructions' => array(
+    $elements = array();
+    if ($view->is_instruction_locked()) {
+        if (!empty($view->get('instructions'))) {
+            $elements['instructions'] = array(
+              'type'         => 'html',
+              'title'        => get_string('instructions','view'),
+              'class'        => 'view-description',
+              'value'        => clean_html($view->get('instructions')),
+            );
+        }
+    }
+    else {
+        $elements['instructions'] = array(
             'type'         => 'wysiwyg',
             'title'        => get_string('instructions','view'),
             'rows'         => 5,
@@ -343,17 +354,19 @@ function get_advanced_elements() {
             'class'        => 'view-description',
             'defaultvalue' => $view->get('instructions'),
             'rules'        => array('maxlength' => 1000000),
-        ),
-        'urlid'       => array(
-            'type'         => 'text',
-            'title'        => get_string('viewurl', 'view'),
-            'prehtml'      => '<span class="description">' . (isset($cleanurlbase) ? $cleanurlbase : '') . '</span> ',
-            'description'  => get_string('viewurldescription', 'view') . ' ' . get_string('cleanurlallowedcharacters'),
-            'defaultvalue' => $view->get('urlid'),
-            'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
-            'ignore'       => !$urlallowed,
-        ),
+        );
+    }
+
+    $elements['urlid'] = array(
+        'type'         => 'text',
+        'title'        => get_string('viewurl', 'view'),
+        'prehtml'      => '<span class="description">' . (isset($cleanurlbase) ? $cleanurlbase : '') . '</span> ',
+        'description'  => get_string('viewurldescription', 'view') . ' ' . get_string('cleanurlallowedcharacters'),
+        'defaultvalue' => $view->get('urlid'),
+        'rules'        => array('maxlength' => 100, 'regex' => get_config('cleanurlvalidate')),
+        'ignore'       => !$urlallowed,
     );
+
     if ($group) {
         $grouproles = $USER->get('grouproles');
         if ($grouproles[$group] == 'admin') {
@@ -429,6 +442,67 @@ function get_advanced_elements() {
         'selectcallback'     => 'add_view_coverimage',
         'unselectcallback'   => 'delete_view_coverimage',
     );
+
+    if (!$view->is_instruction_locked()) { //later i'll need to check the role of the login user
+        $elements['locktemplate'] = array(
+          'type'         => 'switchbox',
+          'title'        => get_string('locktemplate','view'),
+          'description'  => get_string('locktemplatedescription','view'),
+          'defaultvalue' => $view->get('locktemplate'),
+        );
+    }
+    else {
+        if ($originaltemplate = $view->get_original_template()) {
+            $originaltemplate = new View($originaltemplate);
+            if (can_view_view($view)) {
+                $html = '<a href="' . $originaltemplate->get_url() . '">' . $originaltemplate->get('title') . '</a>';
+            }
+            else {
+                $html = $originaltemplate->get('title');
+            }
+            $description = get_string('linktooriginaltemplatedescription', 'view');
+        }
+        else {
+            $html = get_string('deletedview', 'view');
+            $description = get_string('linktooriginaltemplatedescriptiondeleted', 'view');
+        }
+        $elements['linktooriginaltemplate'] = array(
+            'type'  => 'html',
+            'title' => get_string('linktooriginaltemplate', 'view'),
+            'value' => $html,
+            'description' => $description,
+        );
+    }
+    // give possibility to unlock the view to some roles
+    // site admins in institution and site pages
+    // institution admins in institution pages
+    // group admins in group pages
+    if (record_exists('view_instructions_lock', 'view', $view->get('id'))) {
+        $canremovelock = false;
+        // site admin
+        if ($USER->get('admin') && $view->get('institution')) {
+            $canremovelock = true;
+        }
+        //institution admin
+        else if ($institution = $view->get('institution') && $USER->is_institutional_admin($institution)) {
+            $canremovelock = true;
+        }
+        // group admin
+        else if ($group = $view->get('group')) {
+            $role = get_field('group_member', 'role', 'group', $group, 'member', $USER->get('id'));
+            if ($role == 'admin') {
+                $canremovelock = true;
+            }
+        }
+        if ($canremovelock) {
+            $elements['copylocked'] = array(
+              'type'         => 'switchbox',
+              'title'        => get_string('copylocked','view'),
+              'description'  => get_string('copylockeddescription','view'),
+              'defaultvalue' => $view->is_instruction_locked(),
+            );
+        }
+    }
 
     // Theme dropdown
     $theme = $view->set_user_theme();
@@ -591,6 +665,15 @@ function settings_submit(Pieform $form, $values) {
         $view->set('skin', $values['skinid']);
     }
     $view->set('coverimage', (isset($values['coverimage']) ? $values['coverimage'] : null));
+
+    if (isset($values['copylocked'])) {
+        if ($values['copylocked']) {
+            $view->lock_instructions_edit($view->get_original_template());
+        }
+        else {
+            $view->unlock_instructions_edit();
+        }
+    }
 
     $view->commit();
 
@@ -899,12 +982,15 @@ function set_view_title_and_description(Pieform $form, $values) {
     if (isset($values['accessibleview'])) {
         $view->set('accessibleview', (int)$values['accessibleview']);
     }
+    if (isset($values['locktemplate'])) {
+        $view->set('locktemplate', (int)$values['locktemplate']);
+    }
 }
 
 function set_view_advanced(Pieform $form, $values) {
     global $view, $urlallowed, $new;
 
-    if (trim($values['instructions']) !== '') {
+    if (isset($values['instructions']) && trim($values['instructions']) !== '') {
         require_once('embeddedimage.php');
         $view->set('instructions', EmbeddedImage::prepare_embedded_images($values['instructions'], 'instructions', $view->get('id')));
     }

@@ -115,16 +115,36 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         if (array_key_exists('instructions', $configdata)) {
             $instructions = $configdata['instructions'];
         }
-        $elements = array (
-            'instructions' => array (
-                'type' => 'wysiwyg',
-                'title' => get_string('blockcontent', 'blocktype.peerassessment/peerassessment'),
-                'width' => '100%',
-                'height' => $height . 'px',
-                'defaultvalue' => $instructions,
-                'rules' => array('maxlength' => 1000000),
-            ),
-        );
+        if (!$instance->get('view_obj')->is_instruction_locked()) {
+            $elements = array (
+                'instructions' => array (
+                    'type' => 'wysiwyg',
+                    'title' => get_string('blockcontent', 'blocktype.peerassessment/peerassessment'),
+                    'width' => '100%',
+                    'height' => $height . 'px',
+                    'defaultvalue' => $instructions,
+                    'rules' => array('maxlength' => 1000000),
+                ),
+            );
+        }
+        else {
+            $elements = array (
+                'instructionstitle' => array(
+                    'type' => 'html',
+                    'value' => '<a href="#instconf_instructions_container" aria-controls="instconf_instructions_container" class="" data-toggle="collapse"
+                     aria-expanded="' . (!empty($instructions) ? 'true' : 'false') . '">'
+                        . get_string('instructions', 'view')
+                        . '<span class="icon icon-chevron-down collapse-indicator right text-inline block-config-modal"></span>'
+                        . '</a>',
+                ),
+                'instructions' => array (
+                    'name' => 'instructions',
+                    'type'  => 'html',
+                    'value' => clean_html($instructions),
+                    'class' => !empty($instructions) ? 'show' : '',
+                ),
+            );
+        }
         return $elements;
     }
 

@@ -1812,5 +1812,26 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020060501) {
+        log_debug('Adding locktemplate column to view table');
+        $table = new XMLDBTable('view');
+        $field = new XMLDBField('locktemplate');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+        log_debug('Adding view_instructions_lock');
+        $table = new XMLDBTable('view_instructions_lock');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, true);
+            $table->addFieldInfo('originaltemplate', XMLDB_TYPE_INTEGER, 10, null, true);
+            $table->addFieldInfo('locked', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('view'));
+            $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+
+            create_table($table);
+        }
+    }
+
     return $status;
 }

@@ -61,6 +61,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
                 $newinstructions = ArtefactTypeFolder::append_view_url($configdata['instructions'], $instance->get('view'));
                 $smarty->assign('instructions', $newinstructions);
                 $smarty->assign('blockid', $instance->get('id'));
+                $smarty->assign('editing', $editing);
             }
         }
         else {
@@ -94,17 +95,20 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         // show the draft switch only if it's a new text block or if it's still in draft
         // once the text gets published it can't be set back to draft
         $showdraftswitch = ($new || param_boolean('new', false) || (isset($configdata['draft']) && $configdata['draft']));
-
         $elements = array (
             'instructionstitle' => array(
                 'type' => 'html',
-                'value' => '<a href="#instconf_instructions_container" aria-controls="instconf_instructions_container" class="" data-toggle="collapse"
+                'value' => '<a href="#instconf_instructions_container" aria-controls="instconf_instructions_container"
+                 class="' . (empty($instructions) ? 'collapsed' : '') . '" data-toggle="collapse"
                  aria-expanded="' . (!empty($instructions) ? 'true' : 'false') . '">'
                     . get_string('instructions', 'view')
                     . '<span class="icon icon-chevron-down collapse-indicator right text-inline block-config-modal"></span>'
                     . '</a>',
             ),
-            'instructions' => array (
+        );
+
+        if (!$instance->get('view_obj')->is_instruction_locked()) {
+            $elements['instructions'] = array (
                 'name' => 'instructions',
                 'type'  => 'wysiwyg',
                 'width' => '100%',
@@ -112,15 +116,28 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
                 'defaultvalue' => $instructions,
                 'rules' => array('maxlength' => 1000000),
                 'class' => (!empty($instructions) ? '' : 'collapse'),
-            ),
-            'text' => array (
-                'type' => 'wysiwyg',
-                'title' => get_string('blockcontent', 'blocktype.text'),
-                'width' => '100%',
-                'height' => $height . 'px',
-                'defaultvalue' => $text,
-                'rules' => array('maxlength' => 1000000),
-            ),
+            );
+        }
+        else {
+            if (empty($instructions)) {
+                unset($elements['instructionstitle']);
+            }
+            else {
+                $elements['instructions'] = array (
+                    'name' => 'instructions',
+                    'type'  => 'html',
+                    'value' => clean_html($instructions),
+                    'class' => 'collapse',
+                );
+            }
+        }
+        $elements['text'] = array (
+              'type' => 'wysiwyg',
+              'title' => get_string('blockcontent', 'blocktype.text'),
+              'width' => '100%',
+              'height' => $height . 'px',
+              'defaultvalue' => $text,
+              'rules' => array('maxlength' => 1000000),
         );
         if ($showdraftswitch) {
             $elements['draft'] = array(
