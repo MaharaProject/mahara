@@ -37,7 +37,7 @@
             data-blockid="{$blockid}"
             data-artefactid="{$artefactid}"
             title="{str tag=Details section=artefact.comment}">
-            <span class="icon icon-search-plus" role="presentation" aria-hidden="true" title="{str tag=Details section=artefact.comment}"></span>
+            <span class="icon icon-search-plus bh-details-only" role="presentation" aria-hidden="true" title="{str tag=Details section=artefact.comment}"></span>
             {if !$displayiconsonly}
                 {str tag=Details section=mahara}
             {/if}

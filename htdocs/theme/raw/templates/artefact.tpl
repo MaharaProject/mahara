@@ -37,12 +37,11 @@
                     <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                         <span class="text-small">{$item->title}</span>
                     </a>
-                    <span class="metadata"> [{$item->size|display_size}]</span>
                 </span>
 
                 <a href="{$item->downloadpath}">
-                    <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
-                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                    <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size|display_size}</span>
+                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size|display_size}"></span>
                 </a>
 
             </li>

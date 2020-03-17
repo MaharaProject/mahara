@@ -126,8 +126,8 @@
                         </span>
 
                         <a href="{$item->downloadpath}">
-                            <span class="sr-only">{str tag=Download section=artefact.file} {$item->title}</span>
-                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}</span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>
                         {if $item->description}
                             <div class="file-description text-small">

@@ -78,8 +78,8 @@
                         </span>
                     {/if}
                         <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}">
-                            <span class="sr-only">{str tag=Download section=artefact.file} {$file->title}</span>
-                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                            <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}</span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
                         </a>
                         {if $file->description}
                         <div class="file-description text-small">

@@ -81,6 +81,7 @@ $string['Details'] = 'Details';
 $string['View'] = 'View';
 $string['Download'] = 'Download';
 $string['downloadfile'] = 'Download %s';
+$string['downloadfilesize'] = 'Download %s [%s]';
 $string['downloadoriginalversion'] = 'Download the original version';
 $string['dragdrophere'] = 'Drop files here to upload';
 $string['editfile'] = 'Edit file';
