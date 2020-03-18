@@ -13,11 +13,11 @@
        background-color: $theme-block-header-hover-bg-color;
        color: $theme-block-header-hover-color;
      }
+   }
 
-     &.active-block {
-        background-color: $theme-block-header-active-bg-color;
-        color: $theme-block-header-active-color;
-     }
+   &.active-block a {
+      background-color: $theme-block-header-active-bg-color;
+      color: $theme-block-header-active-color;
    }
 }
 
@@ -42,7 +42,7 @@
           border: 0;
         }
 
-        &.active-block {
+        &.active-block .btn-secondary {
           background-color: $theme-block-header-active-bg-color;
           color: $theme-block-header-active-color;
         }
@@ -139,11 +139,14 @@
         border: 0;
       }
 
-      &:not(:disabled):not(.disabled):active,
-      &.active-block {
+      &:not(:disabled):not(.disabled):active {
         background-color: $theme-block-header-active-bg-color;
         color: $theme-block-header-active-color;
       }
+    }
+    &.active-block .btn-secondary {
+      background-color: $theme-block-header-active-bg-color;
+      color: $theme-block-header-active-color;
     }
   }
 }

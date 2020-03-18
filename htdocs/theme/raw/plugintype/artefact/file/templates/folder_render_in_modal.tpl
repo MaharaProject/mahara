@@ -74,8 +74,8 @@
 </div>
 
 <script>
-    jQuery('.modal_link').off('click');
-    jQuery('.modal_link').on('click', function(e) {
+    jQuery('#configureblock .modal_link').off('click');
+    jQuery('#configureblock .modal_link').on('click', function(e) {
         open_modal(e);
         toggleDetailsBtn();
     });
