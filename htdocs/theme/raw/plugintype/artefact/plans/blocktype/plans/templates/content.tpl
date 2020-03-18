@@ -24,6 +24,8 @@
         {/if}
         {if $plan.description}
             <p>{$plan.description}</p>
+        {else}
+            <div class="clearfix"></div>
         {/if}
         {if $plan.tags}
             <div class="tags text-small">
