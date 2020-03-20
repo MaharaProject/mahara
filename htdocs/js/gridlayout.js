@@ -15,6 +15,14 @@ function loadGridTranslate(grid, blocks) {
     gridRemoveEvents();
     // load grid with empty blocks
     $.each(blocks, function(index, block) {
+        if (block.content == null) {
+            block.content = '';
+        }
+        else {
+            if (!$(block.content).children().hasClass('collapse')) {
+              minHeight = block.height;
+            }
+        }
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '<div/><div/>');
@@ -47,16 +55,21 @@ function loadGridTranslate(grid, blocks) {
 
 function loadGrid(grid, blocks) {
     var minWidth = grid.opts.minCellColumns,
-        minHeight;
+        minHeight, content;
     window.isGridstackRendering = true;
     $.each(blocks, function(index, block) {
         minHeight = null;
+        if (block.content == null) {
+            block.content = '';
+        }
+        else {
+            if (!$(block.content).children().hasClass('collapse')) {
+              minHeight = block.height;
+            }
+        }
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '<div/><div/>');
-        if (!$(block.content).children().hasClass('collapse')) {
-            minHeight = block.height;
-        }
         addNewWidget(blockContent, block.id, block, grid, block.class, minWidth, minHeight);
     });
 
@@ -203,17 +216,20 @@ function updateBlockSizes(grid) {
     $.each(grid.children(), function(index, element) {
         var width = $(element).attr('data-gs-width'),
         prevHeight = $(element).attr('data-gs-height'),
-        height = Math.ceil(
-          (
-            $(element).find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
-            grid.data('gridstack').opts.verticalMargin
-          )
-          /
-          (
-            grid.data('gridstack').cellHeight() +
-            grid.data('gridstack').opts.verticalMargin
-          )
-        );
+        height = 1;
+        if ($(element).find('.grid-stack-item-content .gridstackblock').length > 0) {
+            height = Math.ceil(
+              (
+                $(element).find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
+                grid.data('gridstack').opts.verticalMargin
+              )
+              /
+              (
+                grid.data('gridstack').cellHeight() +
+                grid.data('gridstack').opts.verticalMargin
+              )
+            );
+        }
         if (+prevHeight != height) {
             grid.data('gridstack').resize(element, +width, height);
         }
