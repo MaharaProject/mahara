@@ -19,11 +19,11 @@ Background:
 
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Site options" in "Configure site" from administration menu
-    And I expand the section "User settings"
+    And I expand the section "Side block settings"
     And I enable the switch "Show profile completion"
     And I press "Update site options"
 
-Scenario Outline: 1) site admin enables profile completion for the site admin menu > configure site > site options  . user settings
+Scenario Outline: 1) Site admin enables the side block 'Profile completion' in Admin menu > Configure site > Site options > Side block settings
     2) site admin verify sections on the profile completion page
     3) site admin verify field options for profile section
     4) site admin enable 4 fields

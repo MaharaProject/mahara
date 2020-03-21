@@ -36,7 +36,7 @@ Scenario: Turning the switches on and off on the "Site options" page (Bug 143156
 | SURBL URL blacklist | 1 |
 | Disable external resources in HTML | 1 |
 | reCAPTCHA on account registration / contact us forms | 1 |
-| Allow public pages | 0 |
+| Allow public portfolios | 0 |
 | Allow public profiles | 0 |
 | Allow anonymous pages | 1 |
 | Sitemap | 0 |

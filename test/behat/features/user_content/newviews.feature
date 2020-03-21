@@ -1,5 +1,5 @@
 @javascript @core @blocktype @blocktype_newviews
-Feature: Looking at the "Latest Pages" (newviews) block on my dashboard
+Feature: Looking at the "Latest changes I can view" (newviews) block on my dashboard
     In order to see new pages across the site
     So I can know what people are up to
 
