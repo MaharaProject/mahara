@@ -57,8 +57,7 @@ $owner = $collection->get('owner');
 $views = $collection->get('views');
 
 // Get the first view from the collection
-$firstview = $views['views'][0];
-$view = new View($firstview->id);
+$view = $collection->first_view();
 
 if (!can_view_view($view->get('id'))) {
     throw new AccessDeniedException();

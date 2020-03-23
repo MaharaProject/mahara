@@ -17,19 +17,18 @@ require_once(get_config('libroot') . 'collection.php');
 
 $id = param_integer('id');
 $collection = new \Collection($id);
-$viewIds = $collection->get_viewids();
 
-if (empty($viewIds)) {
+$firstview = $collection->first_view();
+
+if ($firstview === null) {
     json_reply(true, array(
         'message' => get_string('noviewsincollection', 'collection'),
     ));
 }
 
-$firstViewId = $viewIds[0];
-if (!can_view_view($firstViewId)) {
+if (!can_view_view($firstview)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
-$firstview = new View($firstViewId);
 $collection = $firstview->get('collection');
 
 if ($firstview->uses_new_layout()) {
@@ -37,7 +36,7 @@ if ($firstview->uses_new_layout()) {
     $newlayout = true;
 }
 else {
-    $blocks = $view->build_rows();
+    $blocks = $firstview->build_rows();
     $newlayout = false;
 }
 

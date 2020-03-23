@@ -674,6 +674,30 @@ class Collection {
     }
 
     /**
+     * Returns first view in the current collection
+     *
+     * @return View the first view of the collection, null if the collection is empty
+     */
+    public function first_view() {
+
+        $viewid = get_field('collection_view', 'view', 'collection', $this->get('id'), 'displayorder', '0');
+        $viewid = get_field_sql("SELECT cv.view
+            FROM {collection_view} cv
+            WHERE cv.collection = ?
+            AND cv.displayorder = (
+                SELECT MIN(displayorder)
+                FROM {collection_view} cv2
+                WHERE cv2.collection = ?)",
+            array($this->get('id'), $this->get('id')));
+        if ($viewid) {
+            require_once('view.php');
+            $view = new View($viewid);
+            return $view;
+        }
+        return null;
+    }
+
+    /**
      * Check that a collection can have a framework
      *
      * @return bool

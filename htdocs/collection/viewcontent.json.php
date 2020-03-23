@@ -27,7 +27,7 @@ if ($firstview->uses_new_layout()) {
     $newlayout = true;
 }
 else {
-    $blocks = $view->build_rows();
+    $blocks = $firstview->build_rows();
     $newlayout = false;
 }
 
