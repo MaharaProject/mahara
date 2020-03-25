@@ -1,8 +1,5 @@
 {foreach from=$items item=item}
-    <li class="list-group-item text-midtone">
-        <a href="{$item->url}" class="outer-link">
-            <span class="sr-only">{$item->displayname}</span>
-        </a>
-        <h5 class="text-inline">{$item->displayname}</h5>
+    <li class="list-group-item flush">
+        <h5 class="list-group-item-heading"><a href="{$item->url}">{$item->displayname}</a></h5>
     </li>
 {/foreach}

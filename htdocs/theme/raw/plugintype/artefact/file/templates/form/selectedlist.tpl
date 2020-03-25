@@ -23,6 +23,11 @@
                         {$displaytitle}
                     </a>
                 {/if}
+                {if $file->description}
+                    <div class="file-description text-small">
+                        {$file->description|truncate:60|clean_html|safe}
+                    </div>
+                {/if}
             </td>
             <td class="text-right s">
                 <button id="{$prefix}_unselect_{$file->id}" name="{$prefix}_unselect[{$file->id}]" class="btn btn-secondary btn-sm text-small button submit unselect" title="{str tag=remove}">

@@ -21,40 +21,26 @@
         <ul class="list-group">
             {foreach from=$children item=child}
             <li class="filedownload-item list-group-item">
-                {if $child->artefacttype != 'folder'}
-                <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}" class="outer-link icon-on-hover">
-                    <span class="sr-only">
-                        {str tag=Details section=artefact.file}
-                        {$child->title}
-                    </span>
-                </a>
-                {/if}
-
+                <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline {if $modal}file-icon-render-in-modal{/if}">
                 {else}
                     <span class="icon icon-{$child->artefacttype} icon-lg left {if $modal}file-icon-render-in-modal{/if}" role="presentation" aria-hidden="true"></span>
                 {/if}
-                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
-                <h4 class="title list-group-item-heading text-inline">
-                    <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                </a>
+                <h4 class="title list-group-item-heading">
+                    <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                         {$child->title}
                     </a>
-                    {if !$simpledisplay}
-                    <span class="filedate metadata">
-                        {$child->date}
-                    </span>
-                    {/if}
                 </h4>
-                {if $child->artefacttype != 'folder'}
-                {/if}
+                <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}">
+                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$child->title arg2=$child->size}"></span>
+                    <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$child->title arg2=$child->size}</span>
+                </a>
                 {if $child->description}
-                <p class="file-description text-small text-midtone">
-                    {$child->description|safe|clean_html}
-                </p>
-                <script>
-                jQuery(".file-description a").addClass('inner-link');
-                </script>
+                <div class="file-description text-small text-midtone">
+                    {$child->description|clean_html|safe}
+                </div>
                 {/if}
             </li>
             {/foreach}

@@ -11,7 +11,7 @@
 
     {if $showdescription}
     <div class="detail" itemprop="description">
-        {$description|safe|clean_html}
+        {$description|clean_html|safe}
     </div>
     {/if}
 </div>

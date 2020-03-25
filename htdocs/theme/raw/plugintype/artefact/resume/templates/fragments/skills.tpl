@@ -50,16 +50,23 @@
                 <div id="attach_skill_{$n->id}" class="collapse">
                     <ul class="list-unstyled list-group">
                         {foreach from=$n->files item=file}
-                        <li class="list-group-item-text list-group-item-link">
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" '{if $file->description}' title="{$file->description}" data-toggle="tooltip" '{/if}'>
+                            <li class="list-group-item">
                                 {if $file->icon}
                                 <img src="{$file->icon}" alt="" class="file-icon">
                                 {else}
                                 <span class="icon icon-{$file->artefacttype} icon-lg text-default" role="presentation" aria-hidden="true"></span>
                                 {/if}
-                                {$file->title|truncate:40}
-                            </a>
-                        </li>
+                                <span class="text-small">{$file->title|truncate:40}</span>
+                                <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">
+                                    <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}</span>
+                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                                </a>
+                                {if $file->description}
+                                <div class="file-description metadata">
+                                    {$file->description|clean_html|safe}
+                                </div>
+                                {/if}
+                            </li>
                         {/foreach}
                     </ul>
                 </div>

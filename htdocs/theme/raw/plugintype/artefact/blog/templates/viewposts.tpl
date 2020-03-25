@@ -61,23 +61,31 @@
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
                     <li class="list-group-item">
-                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}" class="outer-link icon-on-hover">
-                            <span class="sr-only">
-                                {str tag=Download section=artefact.file} {$file->title}
-                            </span>
-                        </a>
-                        {if $file->icon}
+                    {if $file->icon}
                         <img class="file-icon" src="{$file->icon}" alt="">
-                        {else}
+                    {else}
                         <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
-                        {/if}
+                    {/if}
+                    {if !$options.editing}
+                    <span class="title">
+                        <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$file->attachment}">
+                            <span class="text-small">{$file->title}</span>
+                        </a>
+                    </span>
+                    {else}
                         <span class="title">
                             <span class="text-small">{$file->title}</span>
-                            <span class="metadata"> -
-                                [{$file->size|display_size}]
-                            </span>
                         </span>
-                        <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                    {/if}
+                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}&amp;view={$options.viewid}">
+                            <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}</span>
+                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                        </a>
+                        {if $file->description}
+                        <div class="file-description text-small">
+                            {$file->description|clean_html|safe}
+                        </div>
+                        {/if}
                     </li>
                 {/foreach}
                 </ul>

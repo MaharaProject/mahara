@@ -55,6 +55,14 @@
     &.attachment-incontent {
         border-left: 1px solid $list-group-border-color; // Full Journal attachment list block
     }
+
+    .modal_link .icon {
+        color: $theme-text-color;
+    }
+
+    .modal_link .bh-details-only {
+        color: $white;
+    }
 }
 
 .list-group-item,
@@ -67,14 +75,13 @@
 }
 
 .list-group-item-heading {
-    font-family: $headings-font-family;
-    font-weight: $headings-font-weight;
+    font-family: $font-family-base;
     margin-top: 0;
     margin-bottom: 5px;
     a {
         &:hover {
             color: $link-color;
-            text-decoration: none;
+            text-decoration: underline;
             &.inner-link {
                 text-decoration: underline;
             }
@@ -307,6 +314,9 @@
     .detail {
         padding-top: 8px;
     }
+    .tags {
+        margin-bottom: 0;
+    }
     + .pagination-container {
         padding-top: 10px;
         padding-bottom: 10px;
@@ -424,7 +434,8 @@
 }
 
 .memberswrap,
-#friendslist {
+#friendslist,
+#onlinelist {
     .list-group-item {
         .user-icon {
             margin-top: 0;
@@ -480,8 +491,7 @@
   > .block,
   > .block > .listing,
   > .block .file-download-list,
-  > .block .forumposts,
-  > .block .blog {
+  > .block .forumposts {
     > .list-group {
       .list-group-item:first-child,
       + .list-group-item:first-child,
@@ -534,4 +544,20 @@
       }
     }
   }
+}
+
+// online users page
+#onlinelist .list-group-item {
+    .list-group-item-heading {
+      float: none;
+    }
+}
+
+// comments attachments take out bottom border
+.comment-item {
+    &.list-group-item {
+        .comment-attachment .list-group .list-group-item {
+            border-bottom: 0;
+        }
+    }
 }

@@ -1,11 +1,8 @@
 {foreach from=$items item=view}
-    <li class="list-group-item">
-        <a href="{$view.fullurl}" class="outer-link">
-            <span class="sr-only">{$view.title}</span>
-        </a>
+    <li class="list-group-item flush">
         <div class="clearfix">
             <h5 class="float-left list-group-item-heading">
-                {$view.title}
+                <a href="{$view.fullurl}">{$view.title}</a>
                 <br>
                 {if $view.sharedby}
                 <span class="owner inner-link text-small text-midtone">

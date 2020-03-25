@@ -1,9 +1,8 @@
 <div id="grouplist_{$group->id}" class="list-group-item {if $group->membershiptype == 'invite' || $group->membershiptype == 'request' || $group->requests} list-group-item-warning{/if}">
-    <a href="{$group->homeurl}" class="outer-link"><span class="sr-only">{$group->name}</span></a>
     <div class="row">
         <div class="col-md-8">
             <h3 class="list-group-item-heading text-inline">
-                {$group->name}
+                <a href="{$group->homeurl}">{$group->name}</a>
             </h3>
             {if $group->settingsdescription}
             <span class="text-midtone">
@@ -11,9 +10,11 @@
             </span>
             {/if}
 
+            {if $group->description}
             <p class="groupdesc">
                 {$group->description|str_shorten_html:100:true:true:false|safe}
             </p>
+            {/if}
             <div class="groupsdetails text-small">
                 {if $group->editwindow}
                 <div class="groupeditable">

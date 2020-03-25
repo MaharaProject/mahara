@@ -126,7 +126,7 @@
                 </p>
                 <p>
                 {if ($item->fromusr != 0)}
-                    {$item->message|safe|clean_html}
+                    {$item->message|clean_html|safe}
                 {else}
                     {$item->message|safe}
                 {/if}

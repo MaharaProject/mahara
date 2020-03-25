@@ -30,18 +30,18 @@ Scenario: User view members page, verify user list displayed and sorted by selec
     And I follow "Members"
     Then I should see "Admin first" in the "[name='sortoption']" element
     And the "sorted by:" select box should contain "Admin first"
-    And I should see "Admin User" in the "#membersearchresults .list-group-item:nth-of-type(1) .outer-link" "css_element"
-    And I should see "Iria User" in the "#membersearchresults .list-group-item:nth-of-type(2) .outer-link" "css_element"
-    And I should see "Julius User" in the "#membersearchresults .list-group-item:nth-of-type(3) .outer-link" "css_element"
-    And I should see "Angela User" in the "#membersearchresults .list-group-item:nth-of-type(4) .outer-link" "css_element"
-    And I should see "Dmitri User" in the "#membersearchresults .list-group-item:nth-of-type(6) .outer-link" "css_element"
+    And I should see "Admin User" in the "#membersearchresults .list-group-item:nth-of-type(1) .list-group-item-heading" "css_element"
+    And I should see "Iria User" in the "#membersearchresults .list-group-item:nth-of-type(2) .list-group-item-heading" "css_element"
+    And I should see "Julius User" in the "#membersearchresults .list-group-item:nth-of-type(3) .list-group-item-heading" "css_element"
+    And I should see "Angela User" in the "#membersearchresults .list-group-item:nth-of-type(4) .list-group-item-heading" "css_element"
+    And I should see "Dmitri User" in the "#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading" "css_element"
     When I select "Name Z to A" from "sorted by:"
     And I press "Search"
-    Then I should see "Kristina User" in the "#membersearchresults .list-group-item:nth-of-type(1) .outer-link" "css_element"
-    And I should see "Julius User" in the "#membersearchresults .list-group-item:nth-of-type(2) .outer-link" "css_element"
-    And I should see "Iria User" in the "#membersearchresults .list-group-item:nth-of-type(3) .outer-link" "css_element"
-    And I should see "Hugo User" in the "#membersearchresults .list-group-item:nth-of-type(4) .outer-link" "css_element"
-    And I should see "Fergus User" in the "#membersearchresults .list-group-item:nth-of-type(6) .outer-link" "css_element"
+    Then I should see "Kristina User" in the "#membersearchresults .list-group-item:nth-of-type(1) .list-group-item-heading" "css_element"
+    And I should see "Julius User" in the "#membersearchresults .list-group-item:nth-of-type(2) .list-group-item-heading" "css_element"
+    And I should see "Iria User" in the "#membersearchresults .list-group-item:nth-of-type(3) .list-group-item-heading" "css_element"
+    And I should see "Hugo User" in the "#membersearchresults .list-group-item:nth-of-type(4) .list-group-item-heading" "css_element"
+    And I should see "Fergus User" in the "#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading" "css_element"
 
 Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)
     # Log in as "Admin" user

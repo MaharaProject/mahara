@@ -42,7 +42,7 @@
         <div class="comment-text">
             <div class="comment-content">
                 {if $item->author}
-                    {$item->description|safe|clean_html}
+                    {$item->description|clean_html|safe}
                 {else}
                     {$item->description|safe}
                 {/if}
