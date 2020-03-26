@@ -32,8 +32,9 @@ define('TITLE', get_string('deleteinteraction', 'group', get_string('name', 'int
 
 // Check to see if the forum is being used as a landing page url
 $landingpagenote = '';
-if (get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
-    $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+$homepageredirecturl = get_config('homepageredirecturl');
+if (get_config('homepageredirect') && !empty($homepageredirecturl)) {
+    $landing = translate_landingpage_to_tags(array($homepageredirecturl));
     foreach ($landing as $land) {
         if ($land->type == 'forum' && $land->typeid == $id) {
             $landingpagenote = get_string('islandingpage', 'admin');

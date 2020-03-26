@@ -1455,7 +1455,8 @@ class User {
     * admin to delete its account
     */
     public function requires_delete_approval() {
-        $institutions = !empty($this->get('institutions')) ? array_keys($this->get('institutions')) : array('mahara');
+        $institutions = $this->get('institutions');
+        $institutions = !empty($institutions) ? array_keys($institutions) : array('mahara');
         foreach ($institutions as $institution) {
             $instobj = new Institution($institution);
             if ($instobj->requires_user_deletion_approval()) {

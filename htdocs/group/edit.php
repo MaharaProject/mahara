@@ -545,8 +545,9 @@ function editgroup_submit(Pieform $form, $values) {
     );
 
     // Check to see if the group's forum is being used as a landing page url and if the changes affect it
-    if ($group_data->id && get_config('homepageredirect') && !empty(get_config('homepageredirecturl'))) {
-        $landing = translate_landingpage_to_tags(array(get_config('homepageredirecturl')));
+    $homepageredirecturl = get_config('homepageredirecturl');
+    if ($group_data->id && get_config('homepageredirect') && !empty($homepageredirecturl)) {
+        $landing = translate_landingpage_to_tags(array($homepageredirecturl));
         foreach ($landing as $land) {
             $forumgroup = get_field('interaction_instance', 'group', 'id', $land->typeid);
             if ($land->type == 'forum' && !empty($forumgroup) && $forumgroup == $group_data->id && empty($newvalues['public'])) {

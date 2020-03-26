@@ -63,7 +63,7 @@ $subtype = param_alpha('subtype', '');
 
 if (isset($institution)) {
     if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
-        $USER->is_institutional_staff($institution) && empty(get_config('staffstats')) && !empty(get_config('staffreports'))) {
+        $USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
         // we need to give them the correct default report
         $subtype = !empty($subtype) ? $subtype : 'information';
     }

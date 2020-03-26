@@ -163,7 +163,8 @@ function ensure_sanity() {
 }
 
 function get_dwoo_dir() {
-    return !empty(get_config('customdwoocachedir')) ? get_config('customdwoocachedir') . '/dwoo/' : get_config('dataroot') . 'dwoo/';
+    $custom = get_config('customdwoocachedir');
+    return !empty($custom) ? get_config('customdwoocachedir') . '/dwoo/' : get_config('dataroot') . 'dwoo/';
 }
 
 /**
@@ -5705,7 +5706,8 @@ function get_institutions_to_associate() {
  * @param  bool $parts  When true we return an array of the policy parts and when false return the policy string
  */
 function get_password_policy($parts = false) {
-    $policy = !empty(get_config('passwordpolicy')) ? get_config('passwordpolicy') : '8_ulns';
+    $passwordpolicy = get_config('passwordpolicy');
+    $policy = !empty($passwordpolicy) ? $passwordpolicy : '8_ulns';
     if ($parts) {
         return explode('_', $policy);
     }
