@@ -620,6 +620,8 @@ class PluginSearchInternal extends PluginSearch {
 
         $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $join . $where, $values);
 
+        $offset = get_max_offset($offset, $limit, $count);
+
         if ($count > 0) {
 
             $data = get_records_sql_assoc('
@@ -791,6 +793,8 @@ class PluginSearchInternal extends PluginSearch {
         }
 
         $count = get_field_sql('SELECT COUNT(*)' . $from, $values);
+
+        $offset = get_max_offset($offset, $limit, $count);
 
         if ($count > 0) {
             $data = get_records_sql_assoc('
@@ -1004,6 +1008,8 @@ class PluginSearchInternal extends PluginSearch {
         }
 
         $count = get_field_sql('SELECT COUNT(*) '.$sql, $values);
+
+        $offset = get_max_offset($offset, $limit, $count);
 
         if ($count > 0) {
             $sql = 'SELECT g.* ' . $sql . ' ORDER BY name';

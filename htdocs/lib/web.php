@@ -4369,7 +4369,7 @@ function build_pagination($params) {
 
 
         // Build the next/last links
-        $islast = $page == $last;
+        $islast = $page >= $last;
         $output .= build_pagination_pagelink(
             '',
             ' &raquo;',
