@@ -52,6 +52,7 @@ jQuery(function($) {
     JSONEditor.defaults.languages.en.button_move_down_title = get_string('moveright'); // Move right
     JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
     JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
+    JSONEditor.defaults.languages.en.remove_element_message = get_string('removestandardorelementconfirm');
 
     // Enable select2
     JSONEditor.plugins.select2.enable = true;
@@ -1051,15 +1052,99 @@ jQuery(function($) {
      */
     function update_delete_standard_button_handlers() {
         $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function() {
+        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function(e) {
+            var standardid = 0,
+                last_standardid = 0,
+                standard_array_temp = standard_array;
+
+            // get the last standard id from the list of standards,
+            // to check if it's the one being deleted
+            if (standard_array.length) {
+                last_standardid = standard_array[standard_array.length - 1]
+            }
+
             update_standard_shortname_handler();
             update_standard_array();
             update_delete_standard_button_handlers();
             textarea_init();
             set_editor_dirty();
+            // get the standard id that was deleted
+            standardid = $(standard_array_temp).not(standard_array).get()[0];
+            // delete all the standard elements under the standard that was removed
+            delete_child_standard_elements(standardid, '');
+
+            // if the standard is the last one (or the one that has focus) change the standar element count
+            if ((last_standardid == standardid)) {
+                update_eid_number();
+            }
+
         });
     }
 
+    function update_eid_number() {
+        // no standard or no standard elements, then reset the count
+        if (!standard_array.length || parent_array.length < 2) {
+            eid = 0;
+        }
+        else {
+            // last standard element name
+            var spl = parent_array[parent_array.length -1].split('.');
+            // last standard element parent matches last added standard
+            if (spl[0] == standard_array[standard_array.length - 1]) {
+                eid = spl[spl.length-1];
+            }
+            else {
+                // last added standard doesnt have standard elements
+                eid = 0;
+            }
+        }
+    }
+
+    function delete_child_standard_elements(std_id, el_id) {
+        var change_tab = false,
+            new_rows = [],
+            new_i = 0,
+            el_ids_to_check = [];
+        $.each(editor.getEditor("root.standardelements").rows, function(i,row) {
+            var
+            is_parent_standard = (std_id != '' && $(this)[0].value.standardid == std_id),
+            is_parent_element = (el_id != '' && $(this)[0].value.parentelementid == el_id);
+
+            if (is_parent_standard || is_parent_element) {
+                el_ids_to_check.push($(this)[0].value.elementid);
+                if (row.tab == editor.getEditor("root.standardelements").active_tab) change_tab = true;
+                if (row.tab && row.tab.parentNode) row.tab.parentNode.removeChild(row.tab);
+                editor.getEditor("root.standardelements").destroyRow(row,true);
+                editor.getEditor("root.standardelements").row_container;
+                editor.getEditor("root.standardelements").row_cache[i] = null;
+                editor.getEditor("root.standardelements").rows[i] = null;
+                se_index--;
+                set_editor_dirty();
+            }
+            else {
+                new_rows[new_i] = row;
+                new_i++;
+            }
+        });
+
+        update_parent_array();
+        set_parent_array();
+
+        editor.getEditor("root.standardelements").row_cache = new_rows;
+        editor.getEditor("root.standardelements").rows = new_rows;
+
+        if (change_tab && editor.getEditor("root.standardelements").rows.length) {
+            editor.getEditor("root.standardelements").active_tab = editor.getEditor("root.standardelements").rows[0];
+            editor.getEditor("root.standardelements").theme.markTabActive(editor.getEditor("root.standardelements").rows[0]);
+        }
+        editor.getEditor("root.standardelements").refreshValue();
+        editor.getEditor("root").refreshValue();
+
+        // delete children of the deleted elements as well
+        $.each(el_ids_to_check, function(index, el_id) {
+          delete_child_standard_elements('', el_id);
+        });
+    }
     /**
      * Manually add the handlers for the standard elements delete buttons
      * needs to add it also after deleting one standard element because
@@ -1068,12 +1153,20 @@ jQuery(function($) {
     function update_delete_element_button_handlers() {
         $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').off('click');
         $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').on('click', function() {
+            var el_id = 0,
+            parent_array_temp = parent_array;
+
             update_parent_array();
             se_index--;
             // If it's the last element
             if (parseInt(this.attributes['data-i'].value) == parent_array.length) {
                 eid--;
             }
+
+            // get the standard id that was deleted
+            el_id = $(parent_array_temp).not(parent_array).get()[0];
+
+            delete_child_standard_elements('', el_id);
             update_delete_element_button_handlers();
             set_parent_array();
             textarea_init();

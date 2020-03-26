@@ -4025,7 +4025,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
   askConfirmation: function() {
     if (this.jsoneditor.options.prompt_before_delete === true) {
-      if (confirm("Are you sure you want to remove this node?") === false) {
+      if (confirm(this.translate('remove_element_message')) === false) {
         return false;
       }
     }
@@ -10744,7 +10744,11 @@ JSONEditor.defaults.languages.en = {
   /**
     * Title on Flatpickr clear buttons
     */
-  flatpickr_clear_button: "Clear"
+  flatpickr_clear_button: "Clear",
+  /**
+    * Message to display when deleting a standard element
+    */
+  remove_element_message: "Are you sure you want to remove this node?"
 };
 
 // Miscellaneous Plugin Settings
