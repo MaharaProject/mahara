@@ -177,6 +177,7 @@ class Framework {
     private $id;
     private $name;
     private $institution;
+    private $institution_name;
     private $description;
     private $selfassess;
     private $active = 1; // active by default
@@ -214,6 +215,9 @@ class Framework {
                 }
                 if ($field == 'selfassess' || $field == 'active') {
                     $value = (int) $value;
+                }
+                if ($field === 'institution' && $value != 'all') {
+                    $this->institution_name = get_field('institution', 'displayname', 'name', $value);
                 }
                 $this->{$field} = $value;
             }

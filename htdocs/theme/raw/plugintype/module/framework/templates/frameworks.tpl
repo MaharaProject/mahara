@@ -7,6 +7,7 @@
 <thead>
     <tr>
         <th>{str tag="name"}</th>
+        <th>{str tag="institution" section="mahara"}</th>
         <th>{str tag="usedincollections" section="module.framework"}</th>
         <th>{str tag="selfassess" section="module.framework"}</th>
         <th>{str tag="active"}</th>
@@ -17,6 +18,7 @@
 {foreach from=$frameworks key=k item=item}
     <tr>
         <td>{$item->name}</td>
+        <td>{$item->institution_name}</td>
         <td>{$item->collections}</td>
         <td>{$item->selfassess}</td>
         <td>
