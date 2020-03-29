@@ -47,7 +47,7 @@ $string['errorbadmetadata'] = 'Badly formed SAML metadata. Ensure XML contains o
 $string['errorbadinstitutioncombo'] = 'There is already an existing authentication instance with this institution attribute and institution value combination.';
 $string['errormissingmetadata'] = 'You have chosen to add new Identity Provider metadata but none is supplied.';
 $string['errormissinguserattributes1'] = 'You seem to be authenticated, but we did not receive the required user attributes. Please check that your Identity Provider releases the first name, surname, and email fields for SSO to %s or inform the administrator.';
-$string['errorregistrationenabledwithautocreate1'] = 'An institution has registration enabled. For security reasons this excludes account auto-creation, unless you are using remote usernames.';
+$string['errorregistrationenabledwithautocreate1'] = 'An institution has enabled registration. For security reasons, this excludes account auto-creation, unless you are using remote usernames.';
 $string['errorremoteuser1'] = 'Matching on "remoteuser" is mandatory if "usersuniquebyusername" is turned off.';
 $string['IdPSelection'] = 'Identity Provider selection';
 $string['noidpsfound'] = 'No Identity Providers found';
@@ -91,16 +91,16 @@ $string['samlfieldforavatar'] = 'SSO field for avatar icon';
 $string['samlfieldforavatardescription'] = 'Supplied avatar needs to contain a base64 encoded image string';
 $string['samlfieldforrole'] = 'SSO field for roles';
 $string['samlfieldforroleprefix'] = 'SSO field for role prefix';
-$string['samlfieldforrolesiteadmin'] = 'Role mapping for site administrator';
-$string['samlfieldforrolesitestaff'] = 'Role mapping for site staff';
-$string['samlfieldforroleinstadmin'] = 'Role mapping for institution administrator';
-$string['samlfieldforroleinststaff'] = 'Role mapping for institution staff';
-$string['samlfieldfororganisationname'] = 'SSO field for Organisation';
-$string['populaterolestoallsaml'] = 'Copy roles to all SAML auth instances';
-$string['populaterolestoallsamldescription'] = 'If this switch is enabled then on submission of the form the values for all the "Role" fields are copied to all the other SAML auth instances that use the same Identity Provider. This field then resets back to "No".';
-$string['samlfieldforautogroups'] = 'Roles have auto group administration';
-$string['samlfieldforautogroupsall'] = 'Auto group administration to all groups';
-$string['samlfieldforautogroupsalldescription'] = 'If enabled then the person will be added as a group admin to all groups otherwise they are only added as a group admin to groups within their institution.';
+$string['samlfieldforrolesiteadmin'] = "Role mapping for 'Site administrator'";
+$string['samlfieldforrolesitestaff'] = "Role mapping for 'Site staff'";
+$string['samlfieldforroleinstadmin'] = "Role mapping for 'Institution administrator'";
+$string['samlfieldforroleinststaff'] = "Role mapping for 'Institution staff'";
+$string['samlfieldfororganisationname'] = "SSO field for 'Organisation'";
+$string['populaterolestoallsaml'] = 'Copy roles to all SAML instances';
+$string['populaterolestoallsamldescription'] = "If this switch is enabled, the values for all the 'Role' fields are copied to all other SAML authentication instances that use the same Identity Provider on submission of this form. This field then resets to 'No'.";
+$string['samlfieldforautogroups'] = "Role mapping for 'Auto group administration'";
+$string['samlfieldforautogroupsall'] = 'Auto group administration of all groups on the site';
+$string['samlfieldforautogroupsalldescription'] = "If enabled, the persons that have the 'Auto group administration' role will be added as a group administrator to all groups on the entire site. Otherwise, they are only added as a group administrator to groups within their institution.";
 $string['samlfieldauthloginmsg'] = 'Wrong login message';
 $string['spentityid'] = "Service Provider entityId";
 $string['title'] = 'SAML';
@@ -125,13 +125,12 @@ $string['keyrollfailed'] = 'Failed to remove old key / certificate';
 // SSO labels
 // The SSO buttons will be labelled with the display name of your institution
 $string['ssolabelfor'] = '%s login';
-// If you want to have a custom label you can either add them here
+// If you want to have a custom label, you can either add them here
 // or create a htdocs/local/lang/en.utf8/auth.saml.php file and add them there.
-// They need to have the key 'login' + shortname of institution, eg:
+// They need to have the key 'login' + shortname of institution, e.g.
 // For 'testinstitution' it would be: $string['logintestinstitution'] = 'Special label';
 
 $string['noentityidpfound'] = 'No Identity Provider ID found';
 $string['novalidauthinstanceprovided'] = 'Your selection is not possible. Please select a different institution.';
 $string['identityprovider'] = 'Identity Provider';
-$string['selectmigrateto'] = 'Select institution to move to ...';
-
+$string['selectmigrateto'] = 'Select institution to move to...';

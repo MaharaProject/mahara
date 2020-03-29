@@ -81,6 +81,6 @@ $string['warninstitutionregistrationinstitutions'] = array(
     0 => "The following institution has registration enabled:\n  %2\$s",
     1 => "The following institutions have registration enabled:\n  %2\$s",
 );
-$string['warnmultiinstitutionsoff'] = '$cfg->usersuniquebyusername is turned on but the site option \'People allowed multiple institutions\' is off. This makes no sense, as people will then change institutions every time they log in from somewhere else. Please turn this setting on in Administration -> Configure site -> Institution settings.';
+$string['warnmultiinstitutionsoff'] = '$cfg->usersuniquebyusername is turned on but the site option \'People allowed multiple institutions\' is off. This makes no sense, as people will then change institutions every time they log in from somewhere else. Please turn this setting on in "Administration → Configure site → Institution settings".';
 $string['alternativelogins'] = 'Administration login';
 $string['unabletosigninviasso'] = 'Unable to sign in via external authentication (SSO)';
