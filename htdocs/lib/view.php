@@ -2265,28 +2265,6 @@ class View {
             }
             else {
                 $result = $blockinstance->render_viewing($exporting, $versioning);
-                if ($exporting) {
-                    // Blocks with toolbars will export with their info withing the block itself instead
-                    $classname = generate_class_name('blocktype', $blockinstance->get('blocktype'));
-                    $instanceinfo = call_static_method(
-                        $classname,
-                        'get_instance_toolbars',
-                        $blockinstance
-                    );
-                    foreach($instanceinfo as $info) {
-                        if (is_array($info)) {
-                            if (isset($info['buttons'])) {
-                                $result .= $info['buttons'];
-                            }
-                            if (isset($info['toolbarhtml'])) {
-                                $result .= $info['toolbarhtml'];
-                            }
-                        }
-                        else if (is_string($info)) {
-                            $result .= $info;
-                        }
-                    }
-                }
                 $blockcontent .= $result;
             }
         }

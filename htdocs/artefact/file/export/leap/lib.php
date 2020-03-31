@@ -40,7 +40,7 @@ class LeapExportElementFile extends LeapExportElement {
     }
 
     public function add_attachments() {
-        $this->filename = $this->exporter->add_attachment($this->artefact->get_path(), $this->artefact->get('title'));
+        $this->filename = $this->exporter->add_attachment($this->artefact->get_path(), $this->artefact->get('id') . '-' . $this->artefact->get('title'));
         $this->add_enclosure_link($this->filename, $this->get_content_type());
     }
 

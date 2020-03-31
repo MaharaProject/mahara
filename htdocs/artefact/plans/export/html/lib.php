@@ -37,7 +37,7 @@ class HtmlExportPlans extends HtmlExportArtefactPlugin {
         foreach ($this->exporter->get('artefacts') as $artefact) {
             if ($artefact instanceof ArtefactTypePlan) {
                 $plans[] = array(
-                    'link' => 'files/plans/' . PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename($artefact->get('title'))) . '/index.html',
+                    'link' => 'content/plans/' . PluginExportHtml::text_to_URLpath(PluginExportHtml::text_to_filename($artefact->get('title'))) . '/index.html',
                     'title' => $artefact->get('title'),
                 );
             }

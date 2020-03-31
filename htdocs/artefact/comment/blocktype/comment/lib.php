@@ -96,6 +96,20 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         return $html;
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        global $USER;
+
+        $view = new View($instance->get('view'));
+        safe_require('artefact', 'comment');
+        $commentoptions = ArtefactTypeComment::get_comment_options();
+        $commentoptions->view = $instance->get_view();
+        $feedback = ArtefactTypeComment::get_comments($commentoptions);
+        $smarty = smarty_core();
+        $smarty->assign('feedback', $feedback);
+        $html = $smarty->fetch('blocktype:comment:comment.tpl');
+        return $html;
+    }
+
     public static function has_instance_config() {
         return false;
     }

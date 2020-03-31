@@ -38,7 +38,6 @@ Scenario: Creating a collection AND adding pages
 
     # Exporting pages and collections
     And I choose "Export" in "Manage" from main menu
-    And I select the radio "Standalone HTML website"
     And I select the radio "Just some of my pages"
     And I should see "Pages to export"
     And I select the radio "Just some of my collections"

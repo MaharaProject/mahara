@@ -1,1 +1,1 @@
-<p><a href="files/resume/index.html">{str tag=viewyourresume section=artefact.resume}</a></p>
+<p><a href="content/resume/index.html">{str tag=viewyourresume section=artefact.resume}</a></p>

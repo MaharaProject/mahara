@@ -39,11 +39,6 @@ foreach ($exportplugins as $plugin) {
 }
 
 $elements = array(
-    'format' => array(
-        'type' => 'radio',
-        'options' => $exportoptions,
-        'defaultvalue' => 'html',
-    ),
     'what' => array(
         'type' => 'radio',
         'options' => array(
@@ -172,7 +167,7 @@ function export_submit(Pieform $form, $values) {
         }
     }
 
-    if ($values['format'] == 'leap' && get_config('exporttoqueue') == 1) {
+    if (get_config('exporttoqueue') == 1) {
         // insert into the export_queue;
         require_once(get_config('docroot') . 'export/lib.php');
         $objectarray = array();
@@ -194,7 +189,6 @@ function export_submit(Pieform $form, $values) {
     }
     else {
         $exportdata = array(
-            'format'          => $values['format'],
             'what'            => $values['what'],
             'views'           => $views,
             'includefeedback' => $values['includefeedback'],
@@ -212,6 +206,6 @@ $smarty = smarty(
     $jsfiles
 );
 setpageicon($smarty, 'icon-upload');
-$smarty->assign('pagedescription', get_string('exportportfoliodescription', 'export'));
+$smarty->assign('pagedescriptionhtml', get_string('exportportfoliodescription1', 'export'));
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');

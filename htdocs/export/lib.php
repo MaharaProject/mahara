@@ -153,6 +153,12 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     public $views = array();
 
     /**
+     * The exporter type - to allow it to be used as a string variable
+     */
+    public $exporttype;
+
+
+    /**
      * Whether the user requested to export comments as well
      */
     public $includefeedback = false;
@@ -373,6 +379,8 @@ abstract class PluginExport extends Plugin implements IPluginExport {
         if (!check_dir_exists($this->exportdir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
+
+
 
         $this->messages = array();
 
@@ -929,4 +937,60 @@ function create_zip_archive($exportdir, $filename, $files) {
     else {
         throw new SystemException('could not open zip file');
     }
+}
+
+class PluginExportAll extends PluginExport {
+
+    protected $htmlexporter;
+    protected $leapexporter;
+    protected $exportdir;
+    protected $zipfile;
+
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
+        safe_require('export', 'html');
+        safe_require('export', 'leap');
+        $this->htmlexporter = new PluginExportHtml($user, $views, $artefacts, $progresscallback);
+        $this->leapexporter = new PluginExportLeap($user, $views, $artefacts, $progresscallback);
+
+        $this->exportdir = $this->htmlexporter->get('exportdir');
+        $this->zipfile = 'mahara-export-user'
+        . $user->get('id') . '-' . date('Y-m-d_H-i', time()) . '.zip';
+    }
+
+    public function is_diskspace_available() {
+        return ($this->htmlexporter->is_diskspace_available() && $this->leapexporter->is_diskspace_available());
+    }
+    public static function get_title() {}
+    public static function get_description() {}
+
+    public function export() {
+
+        $this->htmlexporter->includefeedback = $this->includefeedback;
+        $this->leapexporter->includefeedback = $this->includefeedback;
+        $this->notify_progress_callback(0, get_string('startinghtmlexport', 'export'));
+        try {
+            $html = $this->htmlexporter->export();
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed create html export: ' . $e->getMessage());
+        }
+        $this->notify_progress_callback(0, get_string('startingleapexport', 'export'));
+        try {
+            $leap = $this->leapexporter->export();
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed to create leap2a export: ' . $e->getMessage());
+        }
+
+        $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
+        try {
+            create_zip_archive($this->exportdir, $this->zipfile, array_merge($html['dirs'], $leap['dirs']));
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
+        }
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
+        return $this->zipfile;
+    }
+
 }

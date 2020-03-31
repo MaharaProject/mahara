@@ -47,7 +47,7 @@ class PluginExportLeap extends PluginExport {
     /**
     * attachment directory for files
     */
-    protected $filedir     = 'files/';
+    protected $filedir     = 'export_info/files/';
 
     /**
     * name of resultant zipfile
@@ -72,7 +72,7 @@ class PluginExportLeap extends PluginExport {
     public function __construct(User $user, $views, $artefacts, $progresshandler=null) {
         parent::__construct($user, $views, $artefacts, $progresshandler);
         $this->smarty = smarty_core();
-
+        $this->exporttype = 'leap';
         if (!check_dir_exists($this->exportdir . '/' . $this->filedir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
@@ -119,9 +119,11 @@ class PluginExportLeap extends PluginExport {
     }
 
     /**
-    * main export routine
-    */
-    public function export() {
+     * Main export routine
+     * @param $createarchive Boolean specifies whether a zipfile will be created here
+     * or later on, i.e. in PluginExportAll which creates a zipfile of all export formats.
+     */
+    public function export($createarchive=false) {
         global $SESSION;
         // the xml stuff
         $this->export_header();
@@ -169,11 +171,30 @@ class PluginExportLeap extends PluginExport {
         foreach ($this->attachments as $id => $fileinfo) {
             $existingfile = $fileinfo->file;
             $desiredname  = $fileinfo->name;
-            if (!is_file($existingfile) || !copy($existingfile, $this->exportdir . $this->filedir . $id . '-' . $desiredname)) {
+            if (!is_file($existingfile) || !copy($existingfile, $this->exportdir . $this->filedir . $desiredname)) {
                 $SESSION->add_error_msg(get_string('couldnotcopyattachment', 'export', $desiredname));
             }
         }
-        return true;
+
+        if (!$createarchive) {
+            return array(
+                'exportdir' => $this->exportdir,
+                'dirs' => array(
+                    $this->leapfile,
+                    $this->filedir,
+                ),
+            );
+        }
+
+        // zip everything up
+        try {
+            create_zip_archive($this->exportdir, $this->zipfile, array($this->leapfile, $this->filedir));
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
+        }
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
+        return $this->zipfile;
     }
 
     public function cleanup() {
@@ -251,7 +272,7 @@ class PluginExportLeap extends PluginExport {
         $i = 0;
         foreach ($views as $view) {
             $percent = intval($progressstart + ($i++ / $viewcount) * ($progressend - $progressstart));
-            $this->notify_progress_callback($percent, get_string('exportingviewsprogress', 'export', $i, $viewcount));
+            $this->notify_progress_callback($percent, get_string('exportingviewsprogressleap', 'export', $i, $viewcount));
 
             $config = $this->rewrite_artefact_ids($view->export_config('leap'));
             $this->smarty->assign('title',       $config['title']);
@@ -281,7 +302,7 @@ class PluginExportLeap extends PluginExport {
 
             $this->smarty->assign('contenttype', 'xhtml');
             if (!$view->uses_new_layout()) {
-                if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, true), $view->get('id'))) {
+                if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, $this->exporttype), $view->get('id'))) {
                     $this->smarty->assign('content', clean_html($viewcontent, true));
                 }
                 $this->smarty->assign('viewdata',    $config['rows']);
@@ -294,7 +315,7 @@ class PluginExportLeap extends PluginExport {
                 $this->smarty->assign('layout',      $widths);
             }
             else {
-                if ($viewblocks = self::parse_xhtmlish_content($view->get_blocks(false, true), $view->get('id'))) {
+                if ($viewblocks = self::parse_xhtmlish_content($view->get_blocks(false, $this->exporttype), $view->get('id'))) {
                     $this->smarty->assign('content', clean_html($viewblocks, true));
                     $this->smarty->assign('blocks', $config['grid']);
                 }
@@ -634,7 +655,8 @@ class PluginExportLeap extends PluginExport {
         }
         $newname = substr(str_replace('/', '_', $newname), 0, 245);
         $this->attachments[] = (object)array('file' => $filepath, 'name' => $newname);
-        return (count($this->attachments) -1) . '-' . $newname;
+        // return (count($this->attachments) -1) . '-' . $newname;
+        return $newname;
     }
 
     /**
