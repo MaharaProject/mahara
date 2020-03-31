@@ -35,7 +35,7 @@ $string['exportingcollections'] = 'Exporting collections';
 $string['exportingviewsprogresshtml'] = 'Exporting pages for HTML: %s/%s';
 $string['exportingviewsprogressleap'] = 'Exporting pages for Leap2A: %s/%s';
 $string['exportportfoliodescription1'] = '<p class="lead">This tool exports all of your portfolio information and pages. It does not export your site settings or any of the content you uploaded or created in groups.
-</p><p p class="lead">You can export your personal portfolio content. Your account settings or content uploaded or created in groups are not exported.</p>';
+</p><p class="lead">You can export your personal portfolio content. Your account settings or content uploaded or created in groups are not exported.</p>';
 $string['exportyourportfolio'] = 'Export your portfolio';
 $string['generateexport'] = 'Generate export';
 $string['noexportpluginsenabled'] = 'No export plugins have been enabled by the site administrator, so you are unable to use this feature';
