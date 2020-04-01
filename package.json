@@ -12,15 +12,14 @@
     "es6-promise": "^4.2.4",
     "event-stream": "3.3.4",
     "globule": "^1.0.0",
-    "gulp": "<=3.9.1",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-clean-css": "^3.0.2",
-    "gulp-help": "^1.6.1",
     "gulp-if": "^2.0.2",
     "gulp-sass": "^4.0.1",
-    "node-sass": "<=4.8.3",
+    "node-sass": "^4.13.0",
     "path": "^0.11.14",
-    "yargs": "^11.0.0"
+    "yargs": "^15.1.0"
   },
   "devDependencies": {},
   "scripts": {
