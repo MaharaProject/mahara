@@ -69,7 +69,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         $smarty = smarty_core();
         if ($editing) {
             $smarty->assign('editing', $editing);
-            $smarty->assign('placeholder', get_string('placeholder', 'blocktype.peerassessment/signoff'));
+            $smarty->assign('placeholder', get_string('placeholder1', 'blocktype.peerassessment/signoff'));
             $html = $smarty->fetch('blocktype:signoff:signoff.tpl');
         }
         else {

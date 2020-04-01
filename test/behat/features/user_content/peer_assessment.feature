@@ -63,7 +63,8 @@ Background:
     And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
-    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
+    Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
+    And I wait "1" seconds
     And I follow "Return to pages and collections"
     And I go to portfolio page "Page UserA_01"
     And I click on "Edit"
@@ -76,7 +77,8 @@ Background:
     And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
-    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
+    Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
+    And I wait "1" seconds
     And I follow "Return to pages and collections"
     # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
@@ -90,7 +92,8 @@ Background:
     And I click on "Sign-off" in the "Content types" property
     And I enable the switch "Verify"
     And I press "Save"
-    Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
+    Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
+    And I wait "1" seconds
     And I follow "Return to pages and collections"
     # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
