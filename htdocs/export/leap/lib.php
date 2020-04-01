@@ -260,6 +260,29 @@ class PluginExportLeap extends PluginExport {
         }
     }
 
+    /**
+     * Get any extra configdata that should export to a blockinstance, i.e tags for taggedposts
+     * by getting all distinct, installed blocktypes on a view then calling the get_blocktype_export_data(...)
+     * for each block type where necessary.
+     * @param array &$config    by reference, the configdata array containing block data
+     * @param int  $viewid    id of the view containing the blocks
+     *
+     */
+    private function get_block_export_data_for_blocktype(&$config, $viewid, $oldlayout=false) {
+        $blocktypes = get_records_sql_array('
+        SELECT DISTINCT bi.blocktype, b.artefactplugin
+        FROM {block_instance} bi
+        JOIN {blocktype_installed} b
+        ON b.name = bi.blocktype
+        WHERE view = ?',
+        array($viewid));
+        foreach ($blocktypes as $blocktype) {
+            $classname = 'LeapExport' . $blocktype->blocktype;
+            if (class_exists($classname) && method_exists($classname, 'get_blocktype_export_data')) {
+                call_user_func_array(array($classname, 'get_blocktype_export_data'), array(&$config, $viewid, $oldlayout));
+            }
+        }
+    }
 
     /**
      * Export the views
@@ -305,7 +328,6 @@ class PluginExportLeap extends PluginExport {
                 if ($viewcontent = self::parse_xhtmlish_content($view->build_rows(false, $this->exporttype), $view->get('id'))) {
                     $this->smarty->assign('content', clean_html($viewcontent, true));
                 }
-                $this->smarty->assign('viewdata',    $config['rows']);
                 $layout = $view->get_layout();
                 $widths = '';
                 foreach ($layout->rows as $row){
@@ -313,12 +335,16 @@ class PluginExportLeap extends PluginExport {
                 }
                 $widths = substr($widths, 0, -1);
                 $this->smarty->assign('layout',      $widths);
+                $this->get_block_export_data_for_blocktype($config['rows'], $view->get('id'), true);
+
+                $this->smarty->assign('viewdata',    $config['rows']);
             }
             else {
                 if ($viewblocks = self::parse_xhtmlish_content($view->get_blocks(false, $this->exporttype), $view->get('id'))) {
                     $this->smarty->assign('content', clean_html($viewblocks, true));
-                    $this->smarty->assign('blocks', $config['grid']);
+                    $this->get_block_export_data_for_blocktype($config['grid'], $view->get('id'));
                 }
+                $this->smarty->assign('blocks', $config['grid']);
                 $this->smarty->assign('newlayout', true);
             }
 

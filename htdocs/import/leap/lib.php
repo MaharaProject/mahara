@@ -1309,50 +1309,56 @@ class PluginImportLeap extends PluginImport {
 
               $colindex = 1;
               foreach ($columns as $column) {
-                $blockinstances = $column->xpath('mahara:blockinstance');
-                $order = 1;
-                $config['grid'][$rowindex][$colindex] = array();
-                $config['grid'][$rowindex][$colindex]['blocks'] = array();
-                $config['grid'][$rowindex][$colindex]['width'] = $columnwidths[$rowindex-1][$colindex-1];
-                foreach ($blockinstances as $blockinstance) {
-                  $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
-                  if (!isset($attrs['blocktype'])) {
-                    $this->trace("  No mahara:blocktype attribute set for blockinstance at row $rowindex col $colindex, order $order: skipping");
-                    continue;
-                  }
-                  $this->trace("  Found block with type {$attrs['blocktype']} at [$rowindex][$colindex][$order]", self::LOG_LEVEL_VERBOSE);
-
-                  if ($blocktypes_installed === null) {
-                    $blocktypes_installed = array_map(function($a) { return $a->name; }, plugins_installed('blocktype'));
-                  }
-
-                  if (in_array($attrs['blocktype'], $blocktypes_installed)) {
-                    $configelements = $blockinstance->xpath('mahara:*');
-                    $config['grid'][$rowindex][$colindex]['blocks'][$order] = array(
-                      'type'   => $attrs['blocktype'],
-                      'title'  => $attrs['blocktitle'],
-                      'row'    => $rowindex,
-                      'column' => $colindex,
-                      'order'  => $order,
-                      'config' => array()
-                    );
-                    foreach ($configelements as $element) {
-                      $value = json_decode((string)$element);
-                      if (is_array($value) && isset($value[0])) {
-                        $config['grid'][$rowindex][$colindex]['blocks'][$order]['config'][$element->getName()] = $value[0];
+                  $blockinstances = $column->xpath('mahara:blockinstance');
+                  $order = 1;
+                  $config['grid'][$rowindex][$colindex] = array();
+                  $config['grid'][$rowindex][$colindex]['blocks'] = array();
+                  $config['grid'][$rowindex][$colindex]['width'] = $columnwidths[$rowindex-1][$colindex-1];
+                  foreach ($blockinstances as $blockinstance) {
+                      $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                      if (!isset($attrs['blocktype'])) {
+                          $this->trace("  No mahara:blocktype attribute set for blockinstance at row $rowindex col $colindex, order $order: skipping");
+                          continue;
                       }
-                      else {
-                        $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
-                        $this->trace($value);
-                      }
+                      $this->trace("  Found block with type {$attrs['blocktype']} at [$rowindex][$colindex][$order]", self::LOG_LEVEL_VERBOSE);
+
+                    if ($blocktypes_installed === null) {
+                        $blocktypes_installed = array_map(function($a) { return $a->name; }, plugins_installed('blocktype'));
                     }
 
-                    $order++;
-                  }
-                  else {
-                    $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
-                  }
+                    if (in_array($attrs['blocktype'], $blocktypes_installed)) {
+                        $configelements = $blockinstance->xpath('mahara:*');
+
+                        $config['grid'][$rowindex][$colindex]['blocks'][$order] = array(
+                            'type'   => $attrs['blocktype'],
+                            'title'  => $attrs['blocktitle'],
+                            'row'    => $rowindex,
+                            'column' => $colindex,
+                            'order'  => $order,
+                            'config' => array()
+                            );
+                        foreach ($configelements as $element) {
+                            $value = json_decode((string)$element);
+                            if (is_array($value) && isset($value[0])) {
+                                $config['grid'][$rowindex][$colindex]['blocks'][$order]['config'][$element->getName()] = $value[0];
+                            }
+                            else {
+                                $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
+                                $this->trace($value);
+                            }
+                        }
+                        // If the block has any extra import data (i.e taggedpost tags data), call its import function
+                        $classname = 'LeapImport' . $attrs['blocktype'];
+                        if (class_exists($classname) && method_exists($classname, 'get_blocktype_import_data')) {
+                            call_user_func_array(array($classname, 'get_blocktype_import_data'), array($blockinstance, & $config['grid'][$rowindex][$colindex]['blocks'][$order]['config']));
+                        }
+                        $order++;
+                    }
+                    else {
+                        $this->trace("  Ignoring unknown blocktype {$attrs['blocktype']}");
+                    }
                 }
+
                 $colindex++;
               } // cols
               $rowindex++;
@@ -1395,6 +1401,11 @@ class PluginImportLeap extends PluginImport {
                             $this->trace("  Value for {$element->getName()} is not an array, ignoring (value follows below)");
                             $this->trace($value);
                         }
+                    }
+                    // If the block has any extra import data (i.e taggedpost tags data), call its import function
+                    $classname = 'LeapImport' . $attrs['blocktype'];
+                    if (class_exists($classname) && method_exists($classname, 'get_blocktype_import_data')) {
+                        call_user_func_array(array($classname, 'get_blocktype_import_data'), array($blockinstance, &$block['config']));
                     }
                     $config['grid'][] = $block;
                 }
