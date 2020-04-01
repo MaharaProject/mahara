@@ -4,7 +4,7 @@
     <div id="progressbar-construct">
         <p>{str tag="profilecompletenesspreview" section="admin"}</p>
         {if !$enabled}
-        <p>{str tag=progressbardisablednote section=admin args=$WWWROOT}</p>
+        <p>{str tag=progressbardisablednote1 section=admin args=$WWWROOT}</p>
         {/if}
         {$progressbarform|safe}
     </div>
