@@ -229,7 +229,7 @@ class PluginExportPdf extends PluginExportHtml {
                     if (preg_match('/var blocks = (\[.*?\]);/', $filedata, $matches)) {
                         $content = json_decode($matches[1]);
                         foreach ($content as $c) {
-                            $c->content = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\/a\>/s', "$1", $c->content); // $1 = url, $2 = name
+                            $c->content = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\\/a\>/s', "$1", $c->content); // $1 = url, $2 = name
                             // Strip other links out
                             $c->content = preg_replace('/\<a.*? href=.*?\>(.*?)\<\\/a\>/s', "$1", $c->content); // $1 = name
                         }
@@ -259,7 +259,7 @@ class PluginExportPdf extends PluginExportHtml {
                 }
 
                 $page->pdf(['printBackground' => true,
-                            'preferCSSPageSize' => true])->saveToFile($pdfname);
+                            'preferCSSPageSize' => true])->saveToFile($pdfname, 60000); // 60s timeout
 
                 if (!file_exists($filename) || !is_readable($filename)) {
                     throw new SystemException("Could not read view page for creating pdf for $viewid");

@@ -1028,6 +1028,8 @@ class PluginExportAll extends PluginExport {
         $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
         try {
             if ($this->pdfactive && isset($pdf) && !empty($pdf['dirs'])) {
+                // wait for 2 seconds
+                usleep(2000000);
                 create_zip_archive($this->exportdir, $this->zipfile, array_merge($html['dirs'], $leap['dirs'], $pdf['dirs']));
             }
             else {
