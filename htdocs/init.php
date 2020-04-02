@@ -159,11 +159,11 @@ try {
     // Now we have a connection, verify the server is a new enough version
     $dbversion = $db->ServerInfo();
     if (is_postgres()) {
-        $okversion = '8.3';
+        $okversion = '9.3';
         $dbfriendlyname = 'PostgreSQL';
     }
     else if (is_mysql()) {
-        $okversion = '5.0.25';
+        $okversion = '5.6';
         $dbfriendlyname = 'MySQL';
     }
     if (floatval($dbversion['version']) <  floatval($okversion)) {
