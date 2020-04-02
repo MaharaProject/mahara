@@ -71,7 +71,6 @@ class PluginExportHtml extends PluginExport {
     public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback);
-
         $this->rootdir = 'HTML';
         $this->exporttype = 'html';
 
@@ -416,7 +415,7 @@ class PluginExportHtml extends PluginExport {
     /**
      * Dumps all views into the HTML export
      */
-    private function dump_view_export_data() {
+    protected function dump_view_export_data() {
         safe_require('artefact', 'comment');
         $progressstart = 55;
         $progressend   = 75;
@@ -440,9 +439,6 @@ class PluginExportHtml extends PluginExport {
                     array('text' => $view->get('title'), 'path' => 'index.html'),
                 ));
                 $directory = $this->exportdir . '/' . $this->rootdir . '/views/' . $view->get('id') . '_' . self::text_to_filename($view->get('title'));
-                if (is_dir($directory)) {
-                    throw new SystemException(get_string('duplicatepagetitle', 'export.html'));
-                }
                 if (!check_dir_exists($directory)) {
                     throw new SystemException("Could not create directory for view $viewid");
                 }
@@ -497,6 +493,7 @@ class PluginExportHtml extends PluginExport {
                 $smarty->assign('blocks', $blocks);
                 $smarty->assign('view', false);
             }
+
             $content = $smarty->fetch('export:html:view.tpl');
             if (!file_put_contents("$directory/index.html", $content)) {
                 throw new SystemException("Could not write view page for view $viewid");
@@ -517,7 +514,7 @@ class PluginExportHtml extends PluginExport {
      *          'description' => ...
      *      )
      */
-    private function get_view_collection_summary() {
+    protected function get_view_collection_summary() {
 
         $list = array();
         foreach ($this->collections as $id => $collection) {
@@ -689,15 +686,17 @@ class PluginExportHtml extends PluginExport {
 */
     private function get_resume_field_modals(&$idarray, BlockInstance $bi) {
         $configdata = $bi->get('configdata');
-        $field = $bi->get_artefact_instance($configdata['artefactid']);
-        $attachmentids = array();
-        if ($attachment = $field->get_attachments()) {
-            foreach ($attachment as $a) {
-                array_push($attachmentids, $a->{'id'});
+        if (isset($configdata['artefactid'])) {
+            $field = $bi->get_artefact_instance($configdata['artefactid']);
+            $attachmentids = array();
+            if ($attachment = $field->get_attachments()) {
+                foreach ($attachment as $a) {
+                    array_push($attachmentids, $a->{'id'});
+                }
             }
-        }
-        if (!empty($attachmentids)) {
-            $idarray = array_merge($idarray, $attachmentids);
+            if (!empty($attachmentids)) {
+                $idarray = array_merge($idarray, $attachmentids);
+            }
         }
     }
 
@@ -840,7 +839,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
     /**
      * Copies the static files (stylesheets etc.) into the export
      */
-    private function copy_static_files() {
+    protected function copy_static_files() {
         global $THEME, $SESSION;
         require_once('file.php');
         $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';

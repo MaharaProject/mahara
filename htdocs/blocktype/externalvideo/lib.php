@@ -122,6 +122,49 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return array('externalvideo' => array('media'));
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        $configdata = $instance->get('configdata');
+        // The exporting for pdf
+        $sources = self::load_media_sources();
+        $vidurl = preg_match('/"(https?:.*?)"/', $configdata['videoid'], $matches);
+        if (empty($matches[1])) {
+            // Can't work out what the url is
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        $video = array();
+        $vidurl = $matches[1];
+        foreach ($sources as $name => $source) {
+            if ($video = $source->validate_url($vidurl)) {
+                break;
+            }
+        }
+        $html = '';
+        if (isset($video['vimeo'])) {
+            // Fetch the metadata for the video
+            $res = mahara_http_request(array(CURLOPT_URL => 'http://vimeo.com/api/v2/video/' . $video['vimeo'] . '.json'));
+            if ($res->info['http_code'] == '200') {
+                $json = json_decode($res->data);
+                if (isset($json[0]->thumbnail_large)) {
+                    $html .= '<div class="image"><img src="' . $json[0]->thumbnail_large . '"></div>';
+                }
+            }
+        }
+        else if (isset($video['youtube'])) {
+            // We can fetch the thumbnail of the video and display that
+            $html .= '<div class="image"><img src="https://img.youtube.com/vi/' . $video['youtube'] . '/0.jpg"></div>';
+        }
+        $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+        $html .= '<br>' . get_string('notrendertopdflink', 'artefact.file');
+        // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
+        // We then override the link in the PDF pdf_view_export_data() function.
+        $html .= '<a class="" href="' . $vidurl . '">' . $instance->get('title') . '</a>';
+        $html .= '</div>';
+        return $html;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $THEME;
 

@@ -60,8 +60,13 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         safe_require('artefact','plans');
 
         $configdata = $instance->get('configdata');
-        $limit = (!empty($configdata['count'])) ? $configdata['count'] : 10;
+
         $smarty = smarty_core();
+        $limit = (!empty($configdata['count'])) ? $configdata['count'] : 10;
+        if ($exporter && get_class($exporter) == 'PluginExportPdf') {
+            $limit = 0;
+            $smarty->assign('pdfexport', true);
+        }
 
         $plans = array();
         $alltasks = array();
@@ -106,6 +111,9 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                     $configdata['view'] = $instance->get('view');
                     $configdata['block'] = $blockid;
                     $configdata['versioning'] = $versioning;
+                    if ($exporter && get_class($exporter) == 'PluginExportPdf') {
+                        $configdata['pdfexport'] = true;
+                    }
                     ArtefactTypeTask::render_tasks($tasks, $template, $configdata, $pagination, $editing, $versioning);
                     if (($exporter || $versioning) && $tasks['count'] > $tasks['limit']) {
                         $artefacturl = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') .'&modal=1&artefact=' . $planid;

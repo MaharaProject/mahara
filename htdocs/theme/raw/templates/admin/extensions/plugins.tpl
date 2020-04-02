@@ -27,9 +27,12 @@
                     <li class="list-group-item list-group-item-danger" id="{$plugintype}.{$plugin}">
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
                         {if $data.notinstallable}
-                            {str tag='notinstallable'}: {$data.notinstallable}
+                            {str tag='notinstallable'}: {$data.notinstallable|clean_html|safe}
                         {else}
-                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'} <span class="accessible-hidden sr-only">{$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span></a>)</span>
+                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}<span class="accessible-hidden sr-only"> {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span></a>)</span>
+                        {/if}
+                        {if $data.dependencies}
+                            {if $data.dependencies.needs}<div class="notes">{$data.dependencies.needs|safe}</div>{/if}
                         {/if}
                         <span id="{$plugintype}.{$plugin}.message"></span>
                     </li>
@@ -58,6 +61,10 @@
                         {/if}
                         </div>
                         {if $data.deprecated}{if gettype($data.deprecated) eq 'string'}<div class="alert alert-warning text-small">{$data.deprecated}</div>{else}{str tag=deprecated section=admin}{/if}{/if}
+                        {if $data.dependencies}
+                            {if $data.dependencies.needs}<div class="notes">{$data.dependencies.needs|safe}</div>{/if}
+                            {if $data.dependencies.requires}<div class="danger">{$data.dependencies.requires|safe}</div>{/if}
+                        {/if}
                     </div>
 
                     {if $data.types}

@@ -73,6 +73,7 @@ class PluginExportLeap extends PluginExport {
         parent::__construct($user, $views, $artefacts, $progresshandler);
         $this->smarty = smarty_core();
         $this->exporttype = 'leap';
+
         if (!check_dir_exists($this->exportdir . '/' . $this->filedir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }

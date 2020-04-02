@@ -18,8 +18,8 @@ class Media_vimeo implements MediaBase {
 
         self::$iframe_sources = array(
             array(
-                    'match' => '#^http://player\.vimeo\.com/video/([0-9]+).*#',
-                    'url'   => $this->httpstr . '://player.vimeo.com/video/$1'
+                    'match' => '#^https?://(player)\.vimeo\.com/video/([0-9]+).*#', // we do a dummy capture on 'player' so both this and the other one match ID at position $2
+                    'url'   => $this->httpstr . '://player.vimeo.com/video/$2'
             ),
             array(
                     'match' => '#^https?://(www\.|secure\.)?vimeo\.com/([0-9]+)#',
@@ -57,8 +57,8 @@ class Media_vimeo implements MediaBase {
 
     public function validate_url($input) {
         foreach (self::$iframe_sources as $source) {
-            if (preg_match($source['match'], $input)) {
-                return true;
+            if (preg_match($source['match'], $input, $matches)) {
+                return array('vimeo' => $matches[2]); // the type/id of the video
             }
         }
         return false;

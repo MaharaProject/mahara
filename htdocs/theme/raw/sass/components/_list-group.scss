@@ -105,6 +105,15 @@
     .text-small {
         font-family: $font-family-base;
     }
+
+    .notes {
+        font-weight: $font-weight-base;
+        font-size: $font-size-base;
+        color: $gray-300;
+        &.bold {
+            font-weight: $font-weight-bold;
+        }
+    }
 }
 
 .list-group-item h4.list-group-item-heading {
@@ -123,7 +132,16 @@
     background-color: $state-warning-bg;
     .list-group-item-heading {
         color: $state-warning-text;
-
+    }
+}
+.list-group-item-danger {
+    .notes {
+        font-weight: $font-weight-base;
+        font-size: $font-size-base;
+        color: $gray-300;
+        &.bold {
+            font-weight: $font-weight-bold;
+        }
     }
 }
 .list-group-item-private {

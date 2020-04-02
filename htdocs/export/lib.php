@@ -157,7 +157,6 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      */
     public $exporttype;
 
-
     /**
      * Whether the user requested to export comments as well
      */
@@ -535,7 +534,7 @@ function export_add_to_queue($object, $external = null, $submitter = null, $type
     else {
         $queue->usr = $queue->submitter;
     }
-    $queue->exporttype = 'leap';
+    $queue->exporttype = 'all';
     if (!empty($type)) {
         $queue->type = $type;
     }
@@ -648,7 +647,9 @@ function export_process_queue($id = false) {
             continue;
         }
 
-        safe_require('export', $row->exporttype);
+        if ($row->exporttype != 'all') {
+            safe_require('export', $row->exporttype);
+        }
         $user = new User();
         $user->find_by_id($row->usr);
         $class = generate_class_name('export', $row->exporttype);
@@ -668,7 +669,14 @@ function export_process_queue($id = false) {
                 log_warn(get_string('unabletoexportportfoliousingoptionsadmin', 'export'));
         }
 
-        $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
+        if ($row->exporttype == 'leap') {
+            $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
+            $createarchive = true;
+        }
+        else {
+            $exporter->includefeedback = true;
+            $createarchive = false;
+        }
 
         // Get an estimate of how big the unzipped export file would be
         // so we can check that we have enough disk space for it
@@ -679,8 +687,7 @@ function export_process_queue($id = false) {
         }
 
         try {
-            $exporter->export();
-            $zipfile = $exporter->export_compress();
+            $zipfile = $exporter->export($createarchive);
         }
         catch (SystemException $e) {
             $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
@@ -780,12 +787,12 @@ function export_process_queue($id = false) {
                 'message'   => false,
                 'strings'   => (object) array(
                     'subject' => (object) array(
-                        'key'     => 'exportdownloademailsubject',
+                        'key'     => 'exportdownloademailsubject1',
                         'section' => 'admin',
                         'args'    => array($filetitle),
                     ),
                     'message' => (object) array(
-                        'key'     => 'exportdownloademailmessage',
+                        'key'     => 'exportdownloademailmessage1',
                         'section' => 'admin',
                         'args'    => array(hsc($arg), $filetitle),
                     ),
@@ -943,6 +950,8 @@ class PluginExportAll extends PluginExport {
 
     protected $htmlexporter;
     protected $leapexporter;
+    protected $pdfexporter;
+    protected $pdfactive;
     protected $exportdir;
     protected $zipfile;
 
@@ -951,15 +960,25 @@ class PluginExportAll extends PluginExport {
         safe_require('export', 'leap');
         $this->htmlexporter = new PluginExportHtml($user, $views, $artefacts, $progresscallback);
         $this->leapexporter = new PluginExportLeap($user, $views, $artefacts, $progresscallback);
-
+        $this->pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
+        if ($this->pdfactive) {
+            safe_require('export', 'pdf');
+            $this->pdfexporter = new PluginExportPdf($user, $views, $artefacts, $progresscallback);
+        }
         $this->exportdir = $this->htmlexporter->get('exportdir');
         $this->zipfile = 'mahara-export-user'
         . $user->get('id') . '-' . date('Y-m-d_H-i', time()) . '.zip';
     }
 
     public function is_diskspace_available() {
-        return ($this->htmlexporter->is_diskspace_available() && $this->leapexporter->is_diskspace_available());
+        $spaceok = true;
+        if ($this->pdfactive) {
+            $spaceok = ($spaceok && $this->pdfexporter->is_diskspace_available());
+        }
+        $spaceok = ($spaceok && $this->htmlexporter->is_diskspace_available() && $this->leapexporter->is_diskspace_available());
+        return $spaceok;
     }
+
     public static function get_title() {}
     public static function get_description() {}
 
@@ -967,6 +986,15 @@ class PluginExportAll extends PluginExport {
 
         $this->htmlexporter->includefeedback = $this->includefeedback;
         $this->leapexporter->includefeedback = $this->includefeedback;
+        if ($this->pdfactive) {
+            $this->notify_progress_callback(0, get_string('startingpdfexport', 'export'));
+            try {
+                $pdf = $this->pdfexporter->export();
+            }
+            catch (SystemException $e) {
+                throw new SystemException('Failed create pdf export: ' . $e->getMessage());
+            }
+        }
         $this->notify_progress_callback(0, get_string('startinghtmlexport', 'export'));
         try {
             $html = $this->htmlexporter->export();

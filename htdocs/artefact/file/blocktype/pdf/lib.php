@@ -33,6 +33,38 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 8000);
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        // The exporting for PDF
+        require_once(get_config('docroot') . 'lib/view.php');
+        $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
+        $configdata['viewid'] = $instance->get('view');
+        $view = new View($configdata['viewid']);
+        $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
+        $html = '';
+        if ($artefactid) {
+            $artefact = $instance->get_artefact_instance($configdata['artefactid']);
+            if (!file_exists($artefact->get_path())) {
+                return '';
+            }
+            $urlbase = get_config('wwwroot');
+            $url = $urlbase . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $view->get('id');
+            $description = $artefact->get('description');
+            if ($description) {
+                $html .= '<div class="card-body">' . $description . '</div>';
+            }
+            $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+            $html .= '<br>' . get_string('notrendertopdffiles', 'artefact.file', 1);
+            // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
+            // We then override the link in the PDF pdf_view_export_data() function.
+            $html .= '<a href="' . $url . '">' . $artefact->get('title') . '</a>';
+            $html .= '</div>';
+        }
+        return $html;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
         require_once(get_config('docroot') . 'lib/view.php');

@@ -92,6 +92,66 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         );
     }
 
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        // The exporting for pdf
+        $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
+        $viewid = $instance->get('view');
+        $style = isset($configdata['style']) ? intval($configdata['style']) : 2;
+
+        if ($style !== 1) {
+            // If not the slideshow then render in normal way
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        else {
+            safe_require('artefact', 'file');
+            // Slideshow piles all the images on top of each other in PDF so we need to avoid this
+            if (isset($configdata['select']) && $configdata['select'] == 1 && is_array($configdata['artefactids'])) {
+                $artefactids = $configdata['artefactids'];
+            }
+            else if ($versioning && !empty($configdata['existing_artefacts'])) {
+                $artefactids = (array) $configdata['existing_artefacts'];
+            }
+            else if (!empty($configdata['artefactid'])) {
+                // Get descendents of this folder.
+                $artefactids = artefact_get_descendants(array(intval($configdata['artefactid'])));
+            }
+
+            $artefactids = $instance->order_artefacts_by_title($artefactids);
+            $html = '';
+
+            if ($artefactids) {
+                $firstdone = false;
+                foreach ($artefactids as $artefactid) {
+                    $artefact = $instance->get_artefact_instance($artefactid);
+                    if ($artefact->get('artefacttype') == 'folder') {
+                        continue;
+                    }
+                    if (!file_exists($artefact->get_path())) {
+                        continue;
+                    }
+                    $urlbase = get_config('wwwroot');
+                    $url = $urlbase . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid;
+                    $description = $artefact->get('description');
+                    if (!$firstdone) {
+                        $html .= '<div class="image"><img src="' . $url . '" alt="' . $artefact->get('title') . '"></div>';
+                        if ($description) {
+                            $html .= '<div class="card-body">' . $description . '</div>';
+                        }
+                        $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+                        $html .= '<br>' . get_string('notrendertopdffiles', 'artefact.file', count($artefactids));
+                        $firstdone = true;
+                    }
+                    $html .= '<br><a href="' . $url . '">' . $artefact->get('title') . '</a>';
+                }
+                $html .= '</div>';
+            }
+            return $html;
+        }
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');

@@ -155,7 +155,9 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
     }
     else {
         if (isset($options['overridecontenttype'])) {
-            header('Content-Type: ' . $options['overridecontenttype']);
+            if ($options['overridecontenttype'] != 'none') {
+                header('Content-Type: ' . $options['overridecontenttype']);
+            }
         }
         else {
             header('Content-Type: ' . $mimetype);

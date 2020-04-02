@@ -1,90 +1,50 @@
 {foreach from=$tasks.data item=task}
-    {if $task->completed == -1}
-        <div class="task-item plan_incomplete list-group-item">
-            {if $editing}
-                <div class="float-right btn-group">
-                    <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
-                    <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
-                </div>
-            {/if}
-            <span class="overdue-task">
-                <span class="icon icon-times text-danger icon-lg left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
-                <div class="plan-task-heading">
-                    {if $task->description || $task->tags}
-                    <a class="collapsed" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
-                    {/if}
-                        <span class="text-danger">{$task->title}</span>
-                    {if $task->description || $task->tags}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
-                    </a>
-                    {/if}
-                    {if $task->completiondate}
-                    <br />
-                    <span class="text-small text-midtone">
-                        {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
-                    </span>
-                    {/if}
-                </div>
-
-                {if $task->description || $task->tags}
-                <div class="collapse plan-task-detail" id="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
-                    {if $task->description}
-                        {$task->description|clean_html|safe}
-                    {/if}
-                    {if $task->tags}
-                        <div class="tags text-small">
-                            <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
-                        </div>
-                    {/if}
-                </div>
-                {/if}
-            </span>
+    <div class="task-item {if $task->completed == -1}plan_incomplete{/if} list-group-item">
+        {if $editing}
+        <div class="float-right btn-group">
+            <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
+            <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
         </div>
-    {else}
-        <div class="task-item list-group-item">
-            {if $editing}
-                <div class="float-right btn-group">
-                    <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
-                    <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
-                </div>
-            {/if}
-            <span class="complete-task">
-            {if $task->completed == 1}
+        {/if}
+        <span class="{if $task->completed == -1}overdue-task{else}complete-task{/if}">
+            {if $task->completed == -1}
+                <span class="icon icon-times text-danger icon-lg left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
+                <span class="sr-only">{str tag=overdue section=artefact.plans}</span>
+            {elseif $task->completed == 1}
                 <span class="icon icon-regular icon-check-square icon-lg text-success left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
                 <span class="sr-only">{str tag=completed section=artefact.plans}</span>
             {else}
                 <span class="icon-regular icon-square icon icon-lg text-midtone left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
                 <span class="sr-only">{str tag=incomplete section=artefact.plans}</span>
             {/if}
-                <div class="plan-task-heading">
-                    {if $task->description || $task->tags}
-                    <a class="collapsed" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="false" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
-                    {/if}
-                    <span class="text-default">{$task->title}</span>
-                    {if $task->description || $task->tags}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
-                    </a>
-                    {/if}
-                    {if $task->completiondate}
-                    <br />
-                    <span class="text-midtone text-small">
-                        {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
-                    </span>
-                    {/if}
-                </div>
-            </span>
-            {if $task->description || $task->tags}
-            <div class="collapse plan-task-detail" id="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
-                {if $task->description}
-                    {$task->description|clean_html|safe}
+            <div class="plan-task-heading">
+                {if $task->description || $task->tags}
+                <a class="{if !$options.pdfexport}collapsed{/if}" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="{if !$options.pdfexport}true{else}false{/if}" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
                 {/if}
-                {if $task->tags}
-                    <div class="tags text-small">
-                        <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
-                    </div>
+                    <span class="{if $task->completed == -1}text-danger{else}text-default{/if}">{$task->title}</span>
+                {if $task->description || $task->tags}
+                    <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                </a>
+                {/if}
+                {if $task->completiondate}
+                <br />
+                <span class="text-small text-midtone">
+                    {str tag='completiondate' section='artefact.plans'}: {$task->completiondate}
+                </span>
                 {/if}
             </div>
+        </span>
+        {if $task->description || $task->tags}
+        <div class="collapse{if $options.pdfexport} show{/if} plan-task-detail" id="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
+            {if $task->description}
+                {$task->description|clean_html|safe}
+            {/if}
+            {if $task->tags}
+                <div class="tags text-small">
+                    <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
+                </div>
             {/if}
         </div>
-    {/if}
+        {/if}
+    </div>
 {/foreach}
