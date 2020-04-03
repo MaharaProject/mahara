@@ -15,7 +15,10 @@ $pdfactive = false;
 if (db_table_exists('export_installed')) {
     $pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
 }
-if ($pdfactive && !file_exists(get_config('docroot') . 'lib/chrome-php/headless-chromium-php-master/vendor/autoload.php')) {
+
+$chromephpexists = file_exists(get_config('docroot') . 'lib/chrome-php/headless-chromium-php-master/vendor/autoload.php');
+if (($pdfactive && !$chromephpexists) ||
+    ($pdfactive && $chromephpexists && !get_config('usepdfexport'))) {
     global $SESSION;
     // need to disable the PDF export option
     execute_sql("UPDATE {export_installed} SET active = 0 WHERE name = ?", array('pdf'));
