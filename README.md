@@ -33,7 +33,7 @@ The following is a check list of the steps you need to take. Please refer to the
 
 # UPGRADING
 
-Mahara 20.04 supports direct upgrades from previous Mahara versions 17.04.0 and later.
+Mahara 20.04 supports direct upgrades from previous Mahara versions 18.04.0 and later.
 
 If you are upgrading from an earlier version you will need to upgrade
 in either two or three steps:
@@ -125,19 +125,18 @@ Some aspects of Mahara may not function as expected
 Mahara should be accessible in any modern web browser with Javascript support.
 However, it is only actively tested in the most recent versions of Firefox,
 Chrome (also for Android), Safari (also for iOS), and Opera. Microsoft browsers,
-i.e. Internet Explorer and Microsoft Edge, are supported to a maximum of the
+i.e. Microsoft Edge, are supported to a maximum of the
 three most recent versions that are officially supported by Microsoft.
 
 You can still use Mahara on older browsers, but may not have all functionality
 available.
 
 For Mahara 20.04, the supported browser versions are:
-// TODO: Review list of browsers closer to the release date.
  * Firefox - 56.0
  * Chrome - 61.0
  * Safari - 11
  * Opera - 47.0
- * IE - 11 and Edge
+ * IE - Edge
  * Safari for iOS
  * Chrome for Android
 
