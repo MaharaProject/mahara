@@ -129,7 +129,7 @@ jenkinsaccept: minaccept
 	@find ./ ! -path './.git/*' -type f -print0 | xargs -0 clamscan > /dev/null && echo All good!
 
 sshargs := $(shell git config --get remote.gerrit.url | sed -re 's~^ssh://([^@]*)@([^:]*):([0-9]*)/mahara~-p \3 -l \1 \2~')
-mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/master)
+mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/20.04_STABLE)
 sha1chain := $(shell git log $(mergebase)..HEAD --pretty=format:%H | xargs)
 changeidchain := $(shell git log $(mergebase)..HEAD --pretty=format:%b | grep '^Change-Id:' | cut -d' ' -f2)
 
@@ -146,16 +146,16 @@ securitycheck:
 push: securitycheck minaccept
 	@echo "Pushing the change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/publish/master; \
+		git push gerrit HEAD:refs/publish/20.04_STABLE; \
 	else \
-		git push gerrit HEAD:refs/publish/master/$(TAG); \
+		git push gerrit HEAD:refs/publish/20.04_STABLE/$(TAG); \
 	fi
 
 security: minaccept
 	@echo "Pushing the SECURITY change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/drafts/master; \
+		git push gerrit HEAD:refs/drafts/20.04_STABLE; \
 	else \
-		git push gerrit HEAD:refs/drafts/master/$(TAG); \
+		git push gerrit HEAD:refs/drafts/20.04_STABLE/$(TAG); \
 	fi
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
