@@ -441,7 +441,7 @@ div.toolbarhtml {
 }
 .viewinstruction-export {
     border: 1px solid $card-border-color;
-    padding: 10px 15px;
+    padding: $card-spacer-y $card-spacer-x;
     margin-bottom: -1px; //remove double border
     background-color: $gray-100 !important;
 }
@@ -541,10 +541,11 @@ div.toolbarhtml {
 }
 
 .validfiletypes {
-    border: 1px solid $card-border-color;
-    margin: 15px;
-    padding: 5px;
-    background-color: #F8F4F6; /* $theme-accent-color for rangaranga */
+    margin: 15px 15px 0 15px;
+    padding: $card-spacer-y $card-spacer-x;
+    background-color: scale-color($gray-100, $lightness: 35%);
+    border-radius: $border-radius;
+    font-size: $font-size-sm;
 
     span {
         padding-right: 3px;
@@ -559,12 +560,16 @@ div.toolbarhtml {
     max-width: 420px;
 }
 
-.activegrouplabels.noresults form .form-group {
-    padding: $card-spacer-y $card-spacer-x;
-    border-bottom: 1px solid $input-border-color;
-}
+.activegrouplabels {
+    background-color: scale-color($gray-100, $lightness: 35%);
 
-.activegrouplabels form .form-group {
-    border-bottom: 0;
-    padding: 0;
+    form .form-group {
+        border-bottom: 0;
+        padding: 0;
+    }
+
+    &.noresults form .form-group {
+        padding: $card-spacer-y $card-spacer-x;
+        border-bottom: 1px solid $input-border-color;
+    }
 }

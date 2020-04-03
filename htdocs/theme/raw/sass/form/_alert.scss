@@ -102,4 +102,15 @@
     background-color: $state-submitted-bg;
     border: 1px solid $state-submitted-border;
     color: $state-submitted-text;
+    padding-left: 1.25rem;
+}
+
+// people search when noone is selected and edit button is pressed
+#nousersselected {
+  margin-top: 1rem;
+}
+
+// alerts in list-group-item like plugin administration
+.list-group-item .alert {
+  margin: .5rem 0 0 0;
 }

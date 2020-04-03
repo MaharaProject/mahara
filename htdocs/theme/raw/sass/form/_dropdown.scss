@@ -145,6 +145,7 @@
 
 .dropdown-menu {
     z-index: 10;
+    padding: 0;
     > li {
         padding: 3px 0;
         > a {
@@ -172,6 +173,15 @@
 
 .dropdown-item {
     padding: 0;
+    a {
+      padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+      display: block;
+
+      &:hover,
+      &:focus {
+          text-decoration: none;
+      }
+    }
 }
 
 .card-footer {

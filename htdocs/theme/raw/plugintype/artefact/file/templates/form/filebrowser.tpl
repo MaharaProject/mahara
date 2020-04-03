@@ -136,7 +136,7 @@
                 <div class="validfiletypes">
                     <span class="label">{str tag='validfiletypes' section='artefact.file'}</span>
                     {foreach from=$validfiletypes item=itype name=loopidx}
-                        .<span>{$itype}</span>
+                        <span>.{$itype}</span>
                     {/foreach}
                  </div>
                  {/if}

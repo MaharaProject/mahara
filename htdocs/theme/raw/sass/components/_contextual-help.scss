@@ -65,6 +65,10 @@ div.help {
     .help-dismiss {
         font-size: $font-size-base * 1.14285;
         color: $gray-500;
+
+        .icon-times {
+          margin-top: 9px;
+        }
     }
 
     h3 {

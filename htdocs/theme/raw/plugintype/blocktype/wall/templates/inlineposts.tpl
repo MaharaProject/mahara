@@ -1,4 +1,4 @@
-<div id="wall" class="wall">
+<div id="wall" class="wall list-group">
     {if $wallmessage}
         <div class="card-body lead text-small text-center">{$wallmessage}</div>
     {/if}

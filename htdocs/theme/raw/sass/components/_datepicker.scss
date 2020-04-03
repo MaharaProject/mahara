@@ -379,7 +379,7 @@
  	&:before {
  		border-left: 7px solid transparent;
  		border-right: 7px solid transparent;
- 		border-bottom: 7px solid #ccc;
+ 		border-bottom: 7px solid $gray-200;
  		border-bottom-color: rgba(0, 0, 0, 0.2);
  		top: -7px;
  		left: 7px;
@@ -396,7 +396,7 @@
  	&:before {
  		border-left: 7px solid transparent;
  		border-right: 7px solid transparent;
- 		border-top: 7px solid #ccc;
+ 		border-top: 7px solid $gray-200;
  		border-top-color: rgba(0, 0, 0, 0.2);
  		bottom: -7px;
  		left: 6px;

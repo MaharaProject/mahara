@@ -23,6 +23,9 @@
     &.focus {
         background-color: scale-color($btn-primary-bg, $lightness: -10.05);
     }
+    &.btn-sm {
+        border-color: $btn-primary-border;
+    }
 }
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
@@ -546,4 +549,21 @@ a[type="submit"],
 
 .connections button {
     margin-top: 10px;
+}
+
+// left/right vertical buttons
+.lrbuttons .btn-group-vertical {
+  > .btn:not(:last-child):not(.dropdown-toggle).rightarrow {
+    border-top-right-radius: $btn-border-radius;
+  }
+  > .btn:not(:first-child).leftarrow {
+    border-bottom-left-radius: $btn-border-radius;
+    margin-left: 0;
+  }
+}
+
+// admin people search button alignment
+.form-inline .admin-user-search .form-group.no-label {
+  vertical-align: text-bottom;
+  top: -5px;
 }

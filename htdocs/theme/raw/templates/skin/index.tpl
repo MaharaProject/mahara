@@ -10,16 +10,16 @@
         <span class="sr-only">{str tag="moreoptions"}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li>
-            <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" class="btn btn-link" type="submit">
-                <span class="icon icon-upload icon-lg left" role="presentation" aria-hidden="true"></span>
-                {str tag=importskinsmenu section=skin}
+        <li class="dropdown-item">
+            <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" type="submit">
+                <span class="icon icon-upload left" role="presentation" aria-hidden="true"></span>
+                <span class="link-text">{str tag=importskinsmenu section=skin}</span>
             </a>
         </li>
-        <li>
-            <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" class="btn btn-link" type="submit">
-                <span class="icon icon-download icon-lg left" role="presentation" aria-hidden="true"></span>
-                {str tag=exportskinsmenu section=skin}
+        <li class="dropdown-item">
+            <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" type="submit">
+                <span class="icon icon-download left" role="presentation" aria-hidden="true"></span>
+                <span class="link-text">{str tag=exportskinsmenu section=skin}</span>
             </a>
         </li>
     </ul>
