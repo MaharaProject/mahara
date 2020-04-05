@@ -107,6 +107,8 @@ class PluginSearchInternal extends PluginSearch {
         global $USER;
 
         $data = self::prepare_search_user_options($data);
+        $exclude = isset($data['exclude']) ? ' AND u.id != ' . $data['exclude'] : '';
+
         $sql = '
             SELECT
                 COUNT(u.id)
@@ -124,7 +126,7 @@ class PluginSearchInternal extends PluginSearch {
 
         $where = '
             WHERE
-                u.id != 0 AND u.active = 1 AND u.deleted = 0';
+                u.id != 0 AND u.active = 1 AND u.deleted = 0' . $exclude;
 
         if (!empty($data['friends']) && !get_config('friendsnotallowed')) {
             // Only include friends in search
@@ -137,7 +139,7 @@ class PluginSearchInternal extends PluginSearch {
             $where .= '
                 AND (u.id IN (
                     SELECT usr FROM {usr_institution} WHERE institution IN ('
-                . join(',', array_map('db_quote', $data['institutions'])) . ')
+                . join(',', array_map('db_quote', $data['institutions'])) . ')' . $exclude . '
                 )';
 
             if (isset($data['showadmins']) && !empty($data['showadmins'])) {
@@ -193,7 +195,7 @@ class PluginSearchInternal extends PluginSearch {
                     OR (u.id IN (
                         SELECT usr FROM {usr_institution} WHERE institution IN ('
                     . join(',', array_map('db_quote', $data['institutions'])) . ')
-                        AND (staff = 1 OR admin = 1))
+                        AND (staff = 1 OR admin = 1)' . $exclude . ')
                     )';
             }
         }
@@ -204,12 +206,6 @@ class PluginSearchInternal extends PluginSearch {
         list($namesql, $values) = self::name_search_sql($query_string);
 
         $where .= $namesql;
-
-        if (isset($data['exclude'])) {
-            $where .= '
-                AND u.id != ?';
-            $values[] = $data['exclude'];
-        }
 
         $sql .= $where;
         $count = count_records_sql($sql, $values);
