@@ -12,7 +12,7 @@
                 {$title}
                 {if $feedlink}
                     <a href="{$feedlink}" class="secondary-link inner-link">
-                        <span class="icon-rss icon icon-large mahara-rss-icon right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon-rss icon icon-lg mahara-rss-icon right" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">RSS</span>
                     </a>
                 {/if}

@@ -83,7 +83,7 @@
                         {if $MAINNAVADMIN}
                             <button class="admin-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="main-nav-admin" title='{str tag="adminmenu"}'>
                                 <span class="sr-only">{str tag="showadminmenu"}</span>
-                                <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
                             </button>
                         {/if}
                         {if $LOGGEDIN}
@@ -111,7 +111,7 @@
                         {if $LANGCHOICES}
                             <button class="lang-toggle navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-language" aria-expanded="false" aria-controls="main-language" title='{str tag="chooselanguage"}'>
                                 <span class="sr-only">{str tag="chooselanguage"}</span>
-                                <span class="icon icon-language icon-large" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-language icon-lg" role="presentation" aria-hidden="true"></span>
                             </button>
                         {/if}
                         <!-- HIDE WHEN ON DESKTOP -->

@@ -234,7 +234,7 @@ section .navbar-form.navbar-collapse.search-form {
             <!-- Nav Two Button -->
             <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
                 <span class="sr-only">Show nav two</span>
-                <span class="icon icon-wrench icon-large" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Three Button and icon -->
             <a href="" class="user-icon" title="Profile page">
