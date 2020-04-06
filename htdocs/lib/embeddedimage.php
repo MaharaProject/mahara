@@ -229,10 +229,7 @@ class EmbeddedImage {
             $matches = array();
             if (preg_match_all(
                     '#<img([^>]+)src=("|\\")'
-                    . preg_quote(
-                        get_config('wwwroot')
-                        . 'artefact/file/download.php?file='
-                    )
+                    . 'https?\://.*?/artefact/file/download\.php\?file\='
                     . '([\d]+)'
                     . '(&|&amp;)embedded=1([^"]*)"#',
                     $text,
@@ -242,10 +239,7 @@ class EmbeddedImage {
                     if (!empty($artefactids["portfolio:artefact$id"])) {
                         // Replace the old image id by the new one
                         $regexp[] = '#<img([^>]+)src=("|\\")'
-                            . preg_quote(
-                                get_config('wwwroot')
-                                . 'artefact/file/download.php?file=' . $id
-                            )
+                            . 'https?\://.*?/artefact/file/download\.php\?file\=' . $id
                             . '(&|&amp;)embedded=1#';
                         $replacetext[] = '<img$1src="' . get_config('wwwroot')
                             . 'artefact/file/download.php?file='
