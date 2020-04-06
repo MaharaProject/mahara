@@ -4468,9 +4468,9 @@ function cron_clean_internal_activity_notifications() {
 }
 
 /**
- * Cronjob to check Launchpad for the latest Mahara version
+ * Cronjob to check Mahara.org for the latest Mahara version
  */
-function cron_check_for_updates() {
+function cron_check_for_updates($raw=false) {
 
     $url = 'https://mahara.org/local/versions.php';
     $request = array(
@@ -4489,6 +4489,9 @@ function cron_check_for_updates() {
         return;
     }
     $versions = $data->message->versions;
+    if ($raw) {
+        return $versions;
+    }
 
     // Lets record the needed info locally as the cron only fetches the info once a day
     $latestmajorversion = max(array_keys((array)$versions));
