@@ -277,10 +277,12 @@ class PluginExportLeap extends PluginExport {
         ON b.name = bi.blocktype
         WHERE view = ?',
         array($viewid));
-        foreach ($blocktypes as $blocktype) {
-            $classname = 'LeapExport' . $blocktype->blocktype;
-            if (class_exists($classname) && method_exists($classname, 'get_blocktype_export_data')) {
-                call_user_func_array(array($classname, 'get_blocktype_export_data'), array(&$config, $viewid, $oldlayout));
+        if ($blocktypes) {
+            foreach ($blocktypes as $blocktype) {
+                $classname = 'LeapExport' . $blocktype->blocktype;
+                if (class_exists($classname) && method_exists($classname, 'get_blocktype_export_data')) {
+                    call_user_func_array(array($classname, 'get_blocktype_export_data'), array(&$config, $viewid, $oldlayout));
+                }
             }
         }
     }
