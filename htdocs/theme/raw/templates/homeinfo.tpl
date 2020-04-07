@@ -7,7 +7,7 @@
         {else}
         <div class="logged-out thumbnail-widget first">
         {/if}
-            <div id="home-info-create" class="widget">
+            <div id="home-info-create" class="widget home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
                         <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
@@ -32,7 +32,7 @@
         {else}
         <div class="logged-out thumbnail-widget">
         {/if}
-            <div id="home-info-share" class="home-info-box">
+            <div id="home-info-share" class="widget home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
                         <span class="icon icon-unlock" role="presentation" aria-hidden="true"></span>
@@ -57,7 +57,7 @@
         {else}
         <div class="logged-out thumbnail-widget last">
         {/if}
-            <div id="home-info-engage" class="home-info-box">
+            <div id="home-info-engage" class="widget home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
                         <span class="icon icon-users" role="presentation" aria-hidden="true"></span>
