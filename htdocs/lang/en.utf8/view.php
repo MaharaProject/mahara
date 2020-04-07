@@ -385,6 +385,7 @@ $string['noaccesstoview'] = 'You do not have permission to access this page.';
 $string['wrongblocktype'] = 'The ID supplied is not for a valid blocktype.';
 $string['changeviewtheme'] = 'The theme you have chosen for this page is no longer available to you. Please select a different theme.';
 $string['nothemeselected1'] = 'Use institution theme';
+$string['usesitetheme'] = 'Use site theme';
 
 // Templates
 $string['Template'] = 'Template';

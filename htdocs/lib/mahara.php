@@ -777,7 +777,7 @@ function get_user_accessible_themes() {
         }
 
     }
-    $themes = array_merge(array('sitedefault' => get_string('nothemeselected1', 'view')), $themes);
+    $themes = array_merge(array('sitedefault' => get_string('usesitetheme', 'view')), $themes);
     unset($themes['custom']);
 
     return $themes;

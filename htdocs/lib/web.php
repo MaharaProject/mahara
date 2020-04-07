@@ -1019,6 +1019,10 @@ class Theme {
                 $user->find_by_id($userid);
                 $themedata = $user->get_themedata();
                 $themedata->viewbasename = $themedata->basename;
+                if (empty($themedata->viewbasename) && !empty($themedata->altname)
+                    && $themedata->altname == 'sitedefault') {
+                    $themedata->viewbasename = get_config('theme');
+                }
                 unset($themedata->basename);
             }
         }
