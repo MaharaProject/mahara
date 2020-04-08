@@ -69,13 +69,25 @@ class PluginExportPdf extends PluginExportHtml {
     public static function has_pdf_combiner() {
         // Check we have a valid way to combine pdfs
         $combiner = false;
-        if ($pdfunite = exec('apt-cache policy poppler-utils | grep Installed')) {
+
+        if ($pdfunite = exec('apt-cache policy poppler-utils | grep Installed')) { // Ubuntu
             if (!preg_match('/Installed\: \(none\)/', $pdfunite)) {
                 $combiner = 'pdfunite';
             }
         }
-        if ($ghostscript = exec('apt-cache policy ghostscript | grep Installed')) {
+        else if ($pdfunite = exec('rpm -q poppler-utils')) { // RHEL / CentOS
+            if (!preg_match('/is not installed/', $pdfunite)) {
+                $combiner = 'pdfunite';
+            }
+        }
+
+        if ($ghostscript = exec('apt-cache policy ghostscript | grep Installed')) { // Ubuntu
             if (!preg_match('/Installed\: \(none\)/', $ghostscript)) {
+                $combiner = 'ghostscript';
+            }
+        }
+        else if ($ghostscript = exec('rpm -q ghostscript')) { // RHEL / CentOS
+            if (!preg_match('/is not installed/', $ghostscript)) {
                 $combiner = 'ghostscript';
             }
         }
