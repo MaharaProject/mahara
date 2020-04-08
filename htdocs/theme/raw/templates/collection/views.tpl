@@ -69,8 +69,10 @@
             </fieldset>
         </div>
     </div>
-    <div id="collectiondonewrap">
-        <a class="btn btn-primary" href="{$accessurl}">{str tag=nexteditaccess section=collection}</a>
+
+    <div id="collectiondonewrap" class=" primary submitcancel form-group">
+        <a class="btn-primary submitcancel submit btn" href="{$accessurl}">{str tag=nexteditaccess section=collection}</a>
+        <a class="btn-primary submitcancel cancel btn" href="{$baseurl}">{str tag=cancel}</a>
     </div>
 
 {include file="footer.tpl"}

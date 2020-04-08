@@ -26,7 +26,7 @@ if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
-        $SESSION->add_error_msg(get_string('emptycollectionnoaccessurl', 'collection'));
+        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess', 'collection'));
         redirect('/collection/views.php?id=' . $collectionid);
     }
     // Pick any old view, they all have the same access records.

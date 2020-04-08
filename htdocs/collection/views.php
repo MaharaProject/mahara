@@ -55,30 +55,40 @@ EOF;
 $owner = $collection->get('owner');
 $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
+$urlparams = array();
 if (!empty($groupid)) {
     define('MENUITEM', 'engage/index');
     define('MENUITEM_SUBPAGE', 'views');
     define('GROUP', $groupid);
     $group = group_current_group();
     define('TITLE', $group->name . ' - ' . get_string('editviews', 'collection'));
+    $baseurl = get_config('wwwroot') . 'view/groupviews.php';
+    $urlparams['group'] = $groupid;
 }
 else if (!empty($institutionname)) {
     if ($institutionname == 'mahara') {
         define('ADMIN', 1);
         define('MENUITEM', 'configsite/views');
+        $baseurl = get_config('wwwroot') . 'admin/site/views.php';
     }
     else {
         define('INSTITUTIONALADMIN', 1);
         define('MENUITEM', 'manageinstitutions/institutionviews');
+        $baseurl = get_config('wwwroot') . 'view/institutionviews.php';
     }
     define('TITLE', get_string('editviews', 'collection'));
+    $urlparams['institution'] = $institutionname;
 }
 else {
     define('MENUITEM', 'create/views');
     define('TITLE', get_string('editviews', 'collection'));
+    $baseurl = get_config('wwwroot') . 'view/index.php';
 }
 define('SUBSECTIONHEADING', $collection->get('name'));
 
+if ($urlparams) {
+    $baseurl .= '?' . http_build_query($urlparams);
+}
 $accessurl = get_config('wwwroot') . 'view/accessurl.php?collection=' . $id;
 
 if ($collection->is_submitted()) {
@@ -163,6 +173,7 @@ setpageicon($smarty, 'icon-folder-open');
 $smarty->assign('id', $id);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('accessurl', $accessurl);
+$smarty->assign('baseurl', $baseurl);
 $smarty->assign('displayurl', get_config('wwwroot') . 'collection/views.php?id=' . $id);
 $smarty->assign('removeurl', get_config('wwwroot') . 'collection/deleteview.php?id=' . $id);
 $smarty->assign('views', $views);
