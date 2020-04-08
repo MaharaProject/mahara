@@ -1372,10 +1372,12 @@ function pieform_element_filebrowser_delete(Pieform $form, $element, $artefact) 
     if (!$USER->can_edit_artefact($artefact)) {
         return array('error' => true, 'message' => get_string('nodeletepermission', 'mahara'));
     }
+    if ($artefact instanceof ArtefactTypeImage && $artefact->is_used_as_coverimage()) {
+        return array('error' => true, 'message' => get_string('cantbedeletedbeingusedascoverimage', 'mahara'));
+    }
     if (!$artefact->can_be_deleted()) {
         return array('error' => true, 'message' => get_string('cantbedeleted', 'mahara'));
     }
-
     $parentfolder = $artefact->get('parent');
 
     // Remove the skin background and update the skin thumbs

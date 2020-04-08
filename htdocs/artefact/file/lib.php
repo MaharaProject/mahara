@@ -2483,6 +2483,18 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return $result;
     }
 
+    public function can_be_deleted() {
+        return parent::can_be_deleted() && !$this->is_used_as_coverimage();
+    }
+
+    public function is_used_as_coverimage() {
+        if (get_record('view', 'coverimage', $this->get('id')) ||
+            get_record('collection', 'coverimage', $this->get('id'))) {
+                return true;
+        }
+        return false;
+    }
+
     public function delete() {
         if (empty($this->id)) {
             return;

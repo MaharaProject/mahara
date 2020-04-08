@@ -16,8 +16,8 @@
                                 {$view.displaytitle}
                             </a>
                         </h3>
-                        <div class="card-body coverimage">
-                            {if $view.coverimageurl}
+                        <div class="card-body{if $view.coverimage} coverimage{/if}">
+                            {if $view.coverimage && $view.coverimageurl}
                             <div class="widget-heading">
                                 <img src="{$view.coverimageurl}"
                                 {if $view.coverimagedescription}
@@ -45,19 +45,19 @@
                             {else}
                             <div class="detail">
                                 {if $view.type == 'profile'}
-                                    <div class="detail">{str tag=profiledescription}</div>
+                                    <p>{str tag=profiledescription}</p>
                                 {elseif $view.type == 'dashboard'}
-                                    <div class="detail">{str tag=dashboarddescription}</div>
+                                    <p>{str tag=dashboarddescription}</p>
                                 {elseif $view.type == 'grouphomepage'}
-                                    <div class="detail">{str tag=grouphomepagedescription section=view}</div>
+                                    <p>{str tag=grouphomepagedescription section=view}</p>
                                 {elseif $view.description}
-                                    <div class="detail">
+                                    <p>
                                     {if $view.issitetemplate && $view.type == 'portfolio'}
                                        {$view.description|str_shorten_html:160:true|strip_tags|safe}
                                     {else}
                                        {$view.description|str_shorten_html:120:true|strip_tags|safe}
                                     {/if}
-                                    </div>
+                                  </p>
                                 {else}
                                 &nbsp;
                                 {/if}
