@@ -142,13 +142,19 @@ class PluginExportPdf extends PluginExportHtml {
         $progressend   = 95;
         $i = 0;
         $viewcount = count($this->views);
+        if (system('command -v dpkg')) { // Ubuntu
+            $command = 'dpkg -l';
+        }
+        else { // RHEL / CentOS
+            $command = 'rpm -qa';
+        }
 
         if (!isset($pdfrun) || $pdfrun == 'first' || $pdfrun == 'all') {
             $browsertype = 'chromium-browser';
-            system('dpkg -l | grep ' . $browsertype, $error);
+            system($command . ' | grep ' . $browsertype, $error);
             if ($error) {
                 $browsertype = 'chrome';
-                system('dpkg -l | grep ' . $browsertype, $error2);
+                system($command . ' | grep ' . $browsertype, $error2);
                 if ($error2) {
                     throw new MaharaException('Need to have a Chrome browser installed to use the headless pdf option');
                 }
