@@ -231,7 +231,9 @@ class PluginExportLeap extends PluginExport {
             $this->smarty->assign('contenttype', 'text');
             $this->smarty->assign('content',     clean_html($collection->get('description')));
             $this->smarty->assign('leaptype',    'selection');
-
+            if ($collection->get('coverimage')) {
+                $this->smarty->assign('coverimage',  'portfolio:artefact' . $collection->get('coverimage'));
+            }
             $tags = $collection->get('tags');
             if ($tags) {
                 $tags = array_map(function ($a) {
@@ -324,6 +326,9 @@ class PluginExportLeap extends PluginExport {
             else {
                 $this->smarty->assign('instructionstype', 'text');
                 $this->smarty->assign('instructions',     clean_html($instructions));
+            }
+            if ($view->get('coverimage')) {
+                $this->smarty->assign('coverimage',  'portfolio:artefact' . $view->get('coverimage'));
             }
 
             $this->smarty->assign('contenttype', 'xhtml');

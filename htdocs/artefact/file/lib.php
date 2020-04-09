@@ -2488,8 +2488,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public function is_used_as_coverimage() {
-        if (get_record('view', 'coverimage', $this->get('id')) ||
-            get_record('collection', 'coverimage', $this->get('id'))) {
+        if (record_exists('view', 'coverimage', $this->get('id')) ||
+            record_exists('collection', 'coverimage', $this->get('id'))) {
                 return true;
         }
         return false;
@@ -2549,7 +2549,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return false;
     }
 
-    public static function get_coverimage($options=null) {
+    public static function get_coverimage_url($options=null) {
+        if (empty($options['id'])) {
+            throw new ArtefactNotFoundException();
+        }
         $url = get_config('wwwroot') . 'thumb.php?type=coverimagebyid&id=' . hsc($options['id']);
 
         if (isset($options['viewid'])) {
