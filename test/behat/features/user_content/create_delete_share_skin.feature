@@ -52,7 +52,8 @@ Background:
      And I follow "Skin"
      And I scroll to the base of id "settings_skin_open"
      Then I select the skin "A fabulous new skin" from "userskins"
-     And I should see "A fabulous new skin" in the "#userskins" "css_element"
+     And I wait "1" seconds
+     And I should see "A fabulous new skin" in the ".col-md-3" "css_element"
      And I press "Save"
      And I click on "Display page"
      #Delete the skin
@@ -102,6 +103,7 @@ Scenario: Create a private skin and check its visibility
     # Apply a a skin saved to favourite skins
     And I follow "Favourite skins"
     Then I select the skin "A fabulous public skin" from "userskins"
-    And I should see "A fabulous public skin" in the "#favorskins" "css_element"
+    And I wait "1" seconds
+    And I should see "A fabulous public skin" in the ".col-md-3" "css_element"
     And I press "Save"
     And I click on "Display page"

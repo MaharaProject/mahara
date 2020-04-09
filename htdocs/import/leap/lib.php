@@ -945,6 +945,9 @@ class PluginImportLeap extends PluginImport {
                     'ownerformat' => FORMAT_NAME_DISPLAYNAME, // TODO
                     'owner'       => $this->get('usr'),
                 );
+                if (isset($entry->coverimage)) {
+                    $viewdata['coverimage'] = (string)$entry->coverimage;
+                }
                 if ($published = strtotime((string)$entry->published)) {
                     $viewdata['ctime'] = $published;
                 }
@@ -973,6 +976,9 @@ class PluginImportLeap extends PluginImport {
                 'tags'        => self::get_entry_tags($entry),
                 'owner'       => $this->get('usr'),
             );
+            if (isset($entry->coverimage)) {
+                $collectiondata['coverimage'] = (string)$entry->coverimage;
+            }
             if ($published = strtotime((string)$entry->published)) {
                 $collectiondata['ctime'] = $published;
             }
@@ -1007,6 +1013,10 @@ class PluginImportLeap extends PluginImport {
                 case self::STRATEGY_IMPORT_AS_COLLECTION:
                     require_once('collection.php');
                     $collectiondata = unserialize($entry_request->entrycontent);
+
+                    if (isset($collectiondata['coverimage']) && !empty($collectiondata['coverimage'])) {
+                        $collectiondata['coverimage'] = $this->artefactids[$collectiondata['coverimage']][0];
+                    }
                     $collection = new Collection(0, $collectiondata);
                     $collection->commit();
                     $this->collectionids[$entry_request->entryid] = $collection->get('id');
@@ -1061,6 +1071,10 @@ class PluginImportLeap extends PluginImport {
             $view->set('mtime', $viewdata->mtime);
         }
         $view->set('owner', $this->get('usr'));
+
+        if (isset($viewdata['coverimage']) && !empty($viewdata['coverimage'])) {
+            $view->set('coverimage', $this->artefactids[$viewdata['coverimage']][0]);
+        }
 
         $view->commit();
         $this->viewids[$entry_request->entryid] = $view->get('id');
@@ -1293,6 +1307,9 @@ class PluginImportLeap extends PluginImport {
             'ownerformat' => $ownerformat,
             'newlayout'   => $gridlayout,
         );
+        if (isset($entry->coverimage)) {
+            $config['coverimage'] = (string)$entry->coverimage;
+        }
         if (!$gridlayout) {
             $rowindex = 1;
             foreach ($rows as $row) {

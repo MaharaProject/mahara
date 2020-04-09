@@ -3068,6 +3068,7 @@ class View {
             'tags'        => $this->get('tags'),
             'ownerformat' => $this->get('ownerformat'),
             'instructions' => $this->get('instructions'),
+            'coverimage'  => $this->get('coverimage'),
         );
 
         if (!$this->uses_new_layout()) {
@@ -5707,7 +5708,7 @@ class View {
                 }
                 if ($view->get('coverimage') && ($coverimage = get_record('artefact', 'id', $view->get('coverimage')))) {
                     safe_require('artefact', 'file');
-                    $v['coverimageurl'] = ArtefactTypeImage::get_coverimage(array('id' => $coverimage->id));
+                    $v['coverimageurl'] = ArtefactTypeImage::get_coverimage_url(array('id' => $coverimage->id));
                     if ($coverimage->description) {
                         $v['coverimagedescription'] = $coverimage->description;
                     }
@@ -5821,7 +5822,7 @@ class View {
                 }
                 if ($collection->get('coverimage') && ($coverimage = get_record('artefact', 'id', $collection->get('coverimage')))) {
                     safe_require('artefact', 'file');
-                    $c['coverimageurl'] = ArtefactTypeImage::get_coverimage(array('id' => $coverimage->id));
+                    $c['coverimageurl'] = ArtefactTypeImage::get_coverimage_url(array('id' => $coverimage->id));
                     if ($coverimage->description) {
                         $c['coverimagedescription'] = $coverimage->description;
                     }

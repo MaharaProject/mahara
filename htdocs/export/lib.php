@@ -306,6 +306,34 @@ abstract class PluginExport extends Plugin implements IPluginExport {
                 $this->artefactexportmode = self::EXPORT_LIST_OF_ARTEFACTS;
             }
         }
+
+
+
+        $this->collections = array();
+        if (empty($this->views)) {
+            $collections = FALSE;
+        }
+        else {
+            $collections = get_records_sql_assoc('
+                    SELECT * FROM {collection} WHERE id IN (
+                        SELECT collection
+                        FROM {collection_view}
+                        WHERE view IN (' . join(',', array_keys($this->views)) . ')
+                        )',
+                    array());
+        }
+
+        if ($collections) {
+            require_once('collection.php');
+            foreach ($collections as &$c) {
+                $this->collections[$c->id] = new Collection(0, $c);
+                // add cover imge to artefacts to export
+                if ($c->coverimage) {
+                    $tmpartefacts[] = $c->coverimage;
+                }
+            }
+        }
+
         $typestoplugins = get_records_assoc('artefact_installed_type');
         $ids_to_get = array();
         foreach ($tmpartefacts as $a) {
@@ -319,6 +347,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
                 $ids_to_get[] = $a;
             }
         }
+
         $artefacts = artefact_instances_from_ids($ids_to_get);
         foreach ($tmpartefacts as $a) {
             $artefact = null;
@@ -349,27 +378,6 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             }
         }
 
-        $this->collections = array();
-        if (empty($this->views)) {
-            $collections = FALSE;
-        }
-        else {
-            $collections = get_records_sql_assoc('
-                    SELECT * FROM {collection} WHERE id IN (
-                        SELECT collection
-                        FROM {collection_view}
-                        WHERE view IN (' . join(',', array_keys($this->views)) . ')
-                        )',
-                    array());
-        }
-
-        if ($collections) {
-            require_once('collection.php');
-            foreach ($collections as &$c) {
-                $this->collections[$c->id] = new Collection(0, $c);
-            }
-        }
-
         // Now set up the temporary export directories
         $this->exportdir = get_config('dataroot')
             . 'export/'
@@ -378,8 +386,6 @@ abstract class PluginExport extends Plugin implements IPluginExport {
         if (!check_dir_exists($this->exportdir)) {
             throw new SystemException("Couldn't create the temporary export directory $this->exportdir");
         }
-
-
 
         $this->messages = array();
 
@@ -438,6 +444,14 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             if (is_callable($classname . '::view_export_extra_artefacts')) {
                 if ($artefacts = call_static_method($classname, 'view_export_extra_artefacts', array_keys($this->views))) {
                     $extra = array_unique(array_merge($extra, $artefacts));
+                }
+            }
+        }
+        // add any cover images in the views
+        if ($this->views) {
+            foreach ($this->views as $key => $view) {
+                if ($view->get('coverimage') && get_record('artefact', 'id', $view->get('coverimage'))) {
+                    $extra[] = $view->get('coverimage');
                 }
             }
         }

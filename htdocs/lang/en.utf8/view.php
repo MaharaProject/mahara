@@ -543,4 +543,4 @@ $string['blocktypeis'] = ' %s blocktype';
 // Cover image
 $string['coverimage'] = 'Cover image';
 $string['coverimagefolder'] = 'Cover images';
-$string['coverimagedescription'] = 'The dimensions recommended are width 180px and height is 130px.';
+$string['coverimagedescription'] = 'The recommended dimensions are 180px wide by 130px high.';
