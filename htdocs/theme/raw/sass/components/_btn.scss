@@ -7,10 +7,20 @@
     box-shadow: none;
     &:hover,
     &.focus {
-        background-color: scale-color($btn-secondary-bg, $lightness: -10.05);
+        color: $btn-secondary-color;
+        background-color: scale-color($btn-secondary-bg, $lightness: -10%);
+        border-color: scale-color($btn-secondary-border, $lightness: -10%);
     }
     &.disabled {
+        color: $white;
+        border-color: $btn-bg-disabled-color;
         background: $btn-bg-disabled-color;
+        &:hover,
+        &.focus {
+            color: $white;
+            border-color: $btn-bg-disabled-color;
+            background: $btn-bg-disabled-color;
+        }
     }
 }
 
@@ -21,23 +31,32 @@
     box-shadow: none;
     &:hover,
     &.focus {
-        background-color: scale-color($btn-primary-bg, $lightness: -10.05);
+        color: $btn-primary-color;
+        background-color: scale-color($btn-primary-bg, $lightness: -10%);
+        border-color: scale-color($btn-primary-border, $lightness: -10%);
     }
     &.btn-sm {
+        color: $btn-primary-color;
+        background-color: $btn-primary-bg;
         border-color: $btn-primary-border;
+        &:hover,
+        &.focus {
+            color: $btn-primary-color;
+            background-color: scale-color($btn-primary-bg, $lightness: -10%);
+            border-color: scale-color($btn-primary-border, $lightness: -10%);
+        }
     }
 }
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     color: inherit;
-    background-color: $gray-400;
     border-color: $btn-secondary-border;
     box-shadow: none;
 }
 
 .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
     color: $gray-900;
-    background-color: scale-color($btn-secondary-bg, $lightness: -15.26);
+    background-color: scale-color($btn-secondary-bg, $lightness: -15%);
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 
@@ -213,7 +232,7 @@ td.action-list-copy {
         border-color: transparent;
         background: scale-color($btn-secondary-bg, $lightness: 40%);
         &:hover {
-            background: rgba($btn-secondary-bg, 1);
+            background: $btn-secondary-bg;
         }
         &:first-child {
             border-radius: $btn-border-radius 0 0 $btn-border-radius;
@@ -272,7 +291,6 @@ td.action-list-copy {
                 &:hover {
                     +.btn {
                         border-top-color: scale-color($btn-secondary-border, $lightness: -15%);
-                    ;
                     }
                 }
             }
@@ -348,9 +366,10 @@ td.action-list-copy {
         border-color: $btn-primary-border;
         font-family: $font-family-base;
 
-        &:hover {
+        &:hover,
+        &:focus {
             background-color: scale-color($btn-primary-bg, $lightness: -32%);
-
+            border-color: scale-color($btn-primary-border, $lightness: -32%);
         }
 
         .mce-txt {
@@ -361,14 +380,17 @@ td.action-list-copy {
 
 .modal-tinymce {
     .pieform {
-            button.submit {
+        button.submit {
             background-color: $btn-primary-bg;
             border-color: $btn-primary-border;
             font-family: $btn-font-family;
             color: $btn-primary-color;
 
-            &:hover {
+            &:hover,
+            &:focus {
                 background-color: scale-color($btn-primary-bg, $lightness: -32%);
+                border-color: scale-color($btn-primary-border, $lightness: -32%);
+                color: $btn-primary-color;
             }
         }
     }
@@ -453,6 +475,7 @@ td.action-list-copy {
         &:focus {
           color: $white;
           background-color: scale-color($danger, $lightness: -10%);
+          border-color: scale-color($danger, $lightness: -10%);
         }
     }
 }
@@ -463,6 +486,11 @@ td.action-list-copy {
     color: $state-danger-text;
     border-color: $state-danger-border;
     margin-left: .5rem;
+    &:hover,
+    &:focus {
+      background-color: scale-color($state-danger-bg, $lightness: -5%);
+      border-color: scale-color($state-danger-border, $lightness: -5%);
+    }
 }
 
 // Web services add service groups btn
@@ -479,6 +507,13 @@ td.action-list-copy {
     border-radius: $border-radius;
     width: auto;
     margin-top: 12px;
+
+    &:hover,
+    &.focus {
+        color: $btn-primary-color;
+        background-color: scale-color($btn-primary-bg, $lightness: -10%);
+        border-color: scale-color($btn-primary-border, $lightness: -10%);
+    }
 }
 
 #forums-list .button {
