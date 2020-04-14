@@ -88,7 +88,7 @@
                         <div class="skin">
                             <a onClick = "change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="card card-body" width="180" alt="{$skin->title}"/>
-                                 <div class="lead text-center text-small">
+                                 <div class="skin-footer text-center text-small">
                                 {$skin->title}
                                 </div>
                             </a>
@@ -109,7 +109,7 @@
                         <div class="skin">
                             <a onClick = "change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="card card-body" width="180" alt="{$skin->title}"/>
-                                 <div class="lead text-center text-small">
+                                 <div class="skin-footer text-center text-small">
                                 {$skin->title}
                                 </div>
                             </a>
@@ -130,7 +130,7 @@
                         <div class="skin">
                             <a onClick="change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="card card-body" width="180" alt="{$skin->title}"/>
-                                 <div class="lead text-center text-small">
+                                 <div class="skin-footer text-center text-small">
                                 {$skin->title}
                                 </div>
                             </a>
