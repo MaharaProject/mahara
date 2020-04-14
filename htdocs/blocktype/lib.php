@@ -2112,7 +2112,7 @@ class BlockInstance {
         foreach ($jsfiles as $jsfile) {
             if (is_array($jsfile) && empty($jsfile['file']) && !empty($jsfile['initjs'])) {
                 // Just dealing with initjs option only so do this on page load
-                $js .= "jQuery(function() {\n" . $jsfile['initjs'] . "\n})";
+                $js .= "jQuery(function() {\n" . $jsfile['initjs'] . "\n});";
             }
             else {
                 $file = (is_array($jsfile) && !empty($jsfile['file'])) ? $jsfile['file'] : $jsfile;
