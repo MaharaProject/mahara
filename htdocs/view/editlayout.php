@@ -387,6 +387,8 @@ function get_advanced_elements() {
     // Theme dropdown
     $theme = $view->set_user_theme();
     $allowedthemes = get_user_accessible_themes();
+    $allowedthemes = array_merge(array('' => get_string('nothemeselected1', 'view')), $allowedthemes);
+
     if ($theme && !isset($allowedthemes[$theme])) {
         // We have page set with an unknown theme
         // So redirect it to the choose theme page first
