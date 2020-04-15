@@ -119,16 +119,22 @@ function _get_manual_language() {
 function _get_mahara_version() {
     $release = get_config("release");
     $series = get_config("series");
-    if (preg_match('/dev$/', $release)) {
-        list($year, $month) = explode('.', $series);
-        if ($month == '04') {
-            $month = '10';
-            $year = (int)$year - 1;
+    if (preg_match('/dev$/', $release) || preg_match('/rc/', $release)) {
+        // We are either on master or a branch in release candidate
+        // so we need the latest released branch
+        $versions = cron_check_for_updates(true);
+
+        // Need this of PHP older than 7.3
+        if (!function_exists('array_key_first')) {
+            function array_key_first(array $arr) {
+                foreach($arr as $key => $unused) {
+                    return $key;
+                }
+                return NULL;
+            }
         }
-        else {
-            $month = '04';
-        }
-        $series = $year . '.' . $month;
+
+        $series = array_key_first((array)$versions);
     }
     return $series;
 }
