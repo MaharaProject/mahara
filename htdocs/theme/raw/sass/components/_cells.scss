@@ -1,12 +1,3 @@
 .modal .cell-radios > .form-group.radio > div.radio {
     display: none;
 }
-
-#addblock_blocklegend_container {
-    border: 0;
-    padding: 0;
-    .pieform-fieldset legend {
-        @extend body;
-        padding-top: 0;
-    }
-}
