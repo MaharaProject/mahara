@@ -486,7 +486,7 @@ div.toolbarhtml {
 
 // Mostly used to make the table matrix popups work
 .d-none.popover {
-    visibility: hidden;
+    display: none !important;
 }
 
 // Backup for libraries that still need hidden class instead of bootstrap 4s new .d-none
