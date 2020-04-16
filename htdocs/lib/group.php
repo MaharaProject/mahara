@@ -3183,33 +3183,27 @@ function group_copy($groupid, $return) {
         // Now update new homepage with the duplicated old one - it's blocks should be connected
         // to any new artefacts created.
         $new_homepage = get_record('view', 'group', $new_groupid, 'type', 'grouphomepage');
-        delete_records('block_instance', 'view', $new_homepage->id);
 
-        $old_homepage_blocks = get_records_sql_array("
-            SELECT bi.* FROM {block_instance} bi
+        if ($blocks = get_records_array('block_instance', 'view', $new_homepage->id)) {
+            foreach ($blocks as $b) {
+                $bi = new BlockInstance($b->id);
+                $bi->delete();
+            }
+        }
+
+        if ($old_homepage_blocks = get_records_sql_array("
+            SELECT bi.*, bid.* FROM {block_instance} bi
             JOIN {view} v ON v.id = bi.view
-            WHERE v.id = ?", array($duplicate_homepage->get('id')));
-        foreach ($old_homepage_blocks as $block) {
-            unset($block->id);
-            $block->view = $new_homepage->id;
-            insert_record('block_instance', $block);
+            LEFT JOIN {block_instance_dimension} bid on bi.id = bid.block
+            WHERE v.id = ?", array($duplicate_homepage->get('id')))) {
+                foreach ($old_homepage_blocks as $block) {
+                    unset($block->id);
+                    $newblock = new BlockInstance(0, $block);
+                    $newblock->set('view', $new_homepage->id);
+                    $newblock->commit();
+                }
         }
-        // Add back correct layout
-        update_record('view', array(
-                'layout' => $duplicate_homepage->get('layout'),
-                'numrows' => $duplicate_homepage->get('numrows'),
-            ), array('id' => $new_homepage->id));
 
-        // Clear the existing view_rows_columns and add in correct ones
-        delete_records('view_rows_columns', 'view', $new_homepage->id);
-        $rowscolumns = $duplicate_homepage->get('columnsperrow');
-        foreach ($rowscolumns as $row) {
-            insert_record('view_rows_columns', array(
-                'row' => $row->row,
-                'columns' => $row->columns,
-                'view' => $new_homepage->id)
-            );
-        }
         // Now delete the duplicate homepage
         $duplicate_homepage->delete();
     }
