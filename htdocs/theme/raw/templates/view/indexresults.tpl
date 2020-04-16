@@ -16,26 +16,53 @@
                                 {$view.displaytitle}
                             </a>
                         </h3>
-                        <div class="card-body">
+                        <div class="card-body{if $view.coverimage} coverimage{/if}">
+                            {if $view.coverimage && $view.coverimageurl}
+                            <div class="widget-heading">
+                                <img src="{$view.coverimageurl}"
+                                {if $view.coverimagedescription}
+                                    alt="{$view.coverimagedescription|str_shorten_html:120:true|strip_tags|safe}"
+                                {/if}
+                                width="100%">
+                            </div>
+                            {if $view.type == 'profile'}
+                            <div class="widget-detail"><p>{str tag=profiledescription}</p></div>
+                            {elseif $view.type == 'dashboard'}
+                            <div class="widget-detail"><p>{str tag=dashboarddescription}</p></div>
+                            {elseif $view.type == 'grouphomepage'}
+                            <div class="widget-detail"><p>{str tag=grouphomepagedescription section=view}</p></div>
+                            {elseif $view.description}
+                            <div class="widget-detail">
+                                <p>
+                                {if $view.issitetemplate && $view.type == 'portfolio'}
+                                   {$view.description|str_shorten_html:160:true|strip_tags|safe}
+                                {else}
+                                   {$view.description|str_shorten_html:120:true|strip_tags|safe}
+                                {/if}
+                                </p>
+                            </div>
+                            {/if}
+                            {else}
                             <div class="detail">
                                 {if $view.type == 'profile'}
-                                    <div class="detail">{str tag=profiledescription}</div>
+                                    <p>{str tag=profiledescription}</p>
                                 {elseif $view.type == 'dashboard'}
-                                    <div class="detail">{str tag=dashboarddescription}</div>
+                                    <p>{str tag=dashboarddescription}</p>
                                 {elseif $view.type == 'grouphomepage'}
-                                    <div class="detail">{str tag=grouphomepagedescription section=view}</div>
+                                    <p>{str tag=grouphomepagedescription section=view}</p>
                                 {elseif $view.description}
-                                    <div class="detail">
+                                    <p>
                                     {if $view.issitetemplate && $view.type == 'portfolio'}
                                        {$view.description|str_shorten_html:160:true|strip_tags|safe}
                                     {else}
                                        {$view.description|str_shorten_html:120:true|strip_tags|safe}
                                     {/if}
-                                    </div>
+                                  </p>
                                 {else}
                                 &nbsp;
                                 {/if}
                             </div>
+                            {/if}
                         </div>
                         <div class="card-footer">
                             {* Note: This is positioned relative to base of card-quarter *}

@@ -52,6 +52,7 @@ Background:
      And I follow "Skin"
      And I scroll to the base of id "settings_skin_open"
      Then I select the skin "A fabulous new skin" from "userskins"
+     And I wait "1" seconds
      And I should see "A fabulous new skin" in the ".col-md-3" "css_element"
      And I press "Save"
      And I click on "Display page"
@@ -81,7 +82,7 @@ Scenario: Create a private skin and check its visibility
     And I click on "Create skin"
     And I follow "General"
     And I set the following fields to these values:
-     | Skin title | "A fabulous public skin |
+     | Skin title | A fabulous public skin |
     # Create a public skin
     And I select "This is a public skin" from "designskinform_viewskin_access"
     And I press "Save"
@@ -102,6 +103,7 @@ Scenario: Create a private skin and check its visibility
     # Apply a a skin saved to favourite skins
     And I follow "Favourite skins"
     Then I select the skin "A fabulous public skin" from "userskins"
+    And I wait "1" seconds
     And I should see "A fabulous public skin" in the ".col-md-3" "css_element"
     And I press "Save"
     And I click on "Display page"

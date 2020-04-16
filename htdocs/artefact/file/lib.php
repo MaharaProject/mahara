@@ -2483,6 +2483,18 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         return $result;
     }
 
+    public function can_be_deleted() {
+        return parent::can_be_deleted() && !$this->is_used_as_coverimage();
+    }
+
+    public function is_used_as_coverimage() {
+        if (record_exists('view', 'coverimage', $this->get('id')) ||
+            record_exists('collection', 'coverimage', $this->get('id'))) {
+                return true;
+        }
+        return false;
+    }
+
     public function delete() {
         if (empty($this->id)) {
             return;
@@ -2535,6 +2547,91 @@ class ArtefactTypeImage extends ArtefactTypeFile {
 
     public static function is_metaartefact() {
         return false;
+    }
+
+    public static function get_coverimage_url($options=null) {
+        if (empty($options['id'])) {
+            throw new ArtefactNotFoundException();
+        }
+        $url = get_config('wwwroot') . 'thumb.php?type=coverimagebyid&id=' . hsc($options['id']);
+
+        if (isset($options['viewid'])) {
+            $url .= '&view=' . $options['viewid'];
+        }
+        if (isset($options['size'])) {
+            $url .= '&size=' . $options['size'];
+        }
+        else {
+            $url .= '&width=200';
+        }
+
+        return $url;
+    }
+
+    /**
+     * Render's the cover image thumbnail and exits
+     */
+    public static function download_coverimage_thumbnail($artefactid, $type=null) {
+        global $USER;
+        $id = $artefactid;
+        $size = get_imagesize_parameters();
+        $earlyexpiry = param_boolean('earlyexpiry', false);
+
+        $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
+
+        if ($id && $fileid = get_field('artefact_file_files', 'fileid', 'artefact', $id)) {
+            $orientation = get_field('artefact_file_image', 'orientation', 'artefact', $id);
+
+            if ($path = get_dataroot_image_path('artefact/file', $fileid, $size, $orientation)) {
+                if ($mimetype) {
+                    header('Content-type: ' . $mimetype);
+
+                    if (!get_config('nocache')) {
+                        // We can't cache 'profileicon' for as long, because the
+                        // user can change it at any time.
+                        $maxage = 600; // 10 minutes
+                        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                        header('Cache-Control: max-age=' . $maxage);
+                        header('Pragma: public');
+                    }
+
+                    readfile($path);
+                    perf_to_log();
+                    exit;
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Gets the id of the Cover images folder for the user/group/institution/site
+     * @param $user the user object of the owner of the view/collection
+     * @param $group the group id of the view/collection to get the image cover
+     * @param $institution the institution name that owns the view/collection to get the image cover
+     * institution='mahara' if it's a site's portfolio
+     */
+    public static function get_coverimage_folder($user=null, $group=null, $institution=null) {
+        $foldername = get_string('coverimagefolder', 'view');
+        if ($folder = ArtefactTypeFolder::get_folder_by_name($foldername, null, $user->get('id'), $group, $institution)) {
+            $folderid = $folder->id;
+        }
+        else {
+            $data = array('title' => $foldername);
+            if ($group) {
+                $data['group'] = $group;
+            }
+            else if ($institution) {
+                $data['institution'] = $institution;
+            }
+            else {
+                $data['owner'] = $user->get('id');
+            }
+            $folder = new ArtefactTypeFolder(0, (object) $data);
+            $folder->commit();
+            $folderid = $folder->get('id');
+        }
+        return $folderid;
     }
 }
 

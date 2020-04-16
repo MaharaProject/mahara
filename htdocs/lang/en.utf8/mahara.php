@@ -916,6 +916,7 @@ $string['artefactnotrendered'] = 'Artefact not rendered';
 $string['nodeletepermission'] = 'You do not have permission to delete this artefact.';
 $string['noeditpermission'] = 'You do not have permission to edit this artefact.';
 $string['cantbedeleted'] = 'This artefact cannot be deleted because it and/or its sub artefacts are in submitted pages.';
+$string['cantbedeletedbeingusedascoverimage'] = 'This artefact cannot be deleted because it is being used as cover image in an existing portfolio.';
 $string['Permissions'] = 'Permissions';
 $string['republish'] = 'Publish';
 $string['view'] = 'Page';

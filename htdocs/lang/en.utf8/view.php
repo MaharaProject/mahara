@@ -539,3 +539,8 @@ $string['accessibilitymodedescription'] = 'This page has the accessible layout e
  In this mode, the page blocks will have full page width and will be displayed one after the other.
  To change a block position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
 $string['blocktypeis'] = ' %s blocktype';
+
+// Cover image
+$string['coverimage'] = 'Cover image';
+$string['coverimagefolder'] = 'Cover images';
+$string['coverimagedescription'] = 'The recommended dimensions are 180px wide by 130px high.';

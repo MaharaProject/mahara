@@ -1653,5 +1653,30 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020040600) {
+        log_debug('Update the View table to add coverimage column');
+        $table = new XMLDBTable('view');
+        if (table_exists($table)) {
+            log_debug('Adding coverimage to view table');
+            $field = new XMLDBField('coverimage');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+                add_field($table, $field);
+                $table->addKeyInfo('coverimagefk', XMLDB_KEY_FOREIGN, array('coverimage'), 'artefact', array('id'));
+            }
+        }
+        log_debug('Update the Collection table to add coverimage column');
+        $table = new XMLDBTable('collection');
+        if (table_exists($table)) {
+            log_debug('Adding coverimage to collection table');
+            $field = new XMLDBField('coverimage');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+                add_field($table, $field);
+                $table->addKeyInfo('coverimagefk', XMLDB_KEY_FOREIGN, array('coverimage'), 'artefact', array('id'));
+            }
+        }
+    }
+
     return $status;
 }

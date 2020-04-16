@@ -29,6 +29,7 @@ class Collection {
     private $views;
     private $tags;
     private $framework;
+    private $coverimage;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -77,6 +78,9 @@ class Collection {
         }
         if ($field == 'views') {
             return $this->views();
+        }
+        if ($field == 'coverimage') {
+            return $this->get_coverimage();
         }
         return $this->{$field};
     }
@@ -262,6 +266,38 @@ class Collection {
     }
 
     /**
+     * Copy the cover image of the collection template
+     *
+     * @param Collection $template the collection template
+     * @param array $collectiondata contains data about owner, group, institution of the copy
+     * @return int new image artefact id
+     */
+    private static function copy_setting_coverimage(Collection $template, $collectiondata) {
+        safe_require('artefact', 'file');
+        $coverimageid = $template->get('coverimage');
+        $owner = isset($collectiondata['owner']) ? $collectiondata['owner'] : null;
+        $group = isset($collectiondata['group']) ? $collectiondata['group'] : null;
+        $institution = isset($collectiondata['institution']) ? $collectiondata['institution'] : null;
+        if ($coverimageid) {
+            try {
+                $a = artefact_instance_from_id($coverimageid);
+                if ($a instanceof ArtefactTypeImage) {
+                    $newid = $a->copy_for_new_owner(
+                      $owner,
+                      $group,
+                      $institution
+                    );
+                }
+                return $newid;
+            }
+            catch (Exception $e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Creates a Collection for the given user, based off a given template and other
      * Collection information supplied.
      *
@@ -310,6 +346,7 @@ class Collection {
             $data->name = $collectiondata['name'];
         }
         $data->description = $colltemplate->get('description');
+        $data->coverimage = self::copy_setting_coverimage($colltemplate, $collectiondata);
         $data->tags = $colltemplate->get('tags');
         $data->navigation = $colltemplate->get('navigation');
         if (!empty($collectiondata['group'])) {
@@ -325,6 +362,7 @@ class Collection {
             $data->owner = $userid;
         }
         $data->framework = $colltemplate->get('framework');
+        $data->coverimage = $colltemplate->get('coverimage');
         $data->submittedstatus = 0;
 
         $collection = self::save($data);
@@ -546,6 +584,11 @@ class Collection {
     * @return array $elements
     */
     public function get_collectionform_elements() {
+        safe_require('artefact', 'file');
+        global $USER;
+        $folder = ArtefactTypeImage::get_coverimage_folder($USER, $this->group, $this->institution);
+
+        $highlight = array(0);
         $elements = array(
             'name' => array(
                 'type' => 'text',
@@ -578,6 +621,35 @@ class Collection {
                 'description' => get_string('viewnavigationdesc','collection'),
                 'defaultvalue' => 1,
             ),
+            'coverimage' => array(
+                'type'         => 'filebrowser',
+                'title'        => get_string('coverimage', 'view'),
+                'description'  => get_string('coverimagedescription', 'view'),
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'accept'       => 'image/jpg,image/png',
+                'institution'  => $this->institution,
+                'group'        => $this->group,
+        //         // 'browse'       => $browse,
+                'page'         => '',
+        //         // 'browsehelp'   => 'browsemyfiles',
+                'filters'      => array(
+                     'artefacttype' => array('image'),
+                ),
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                    'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                    'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                    'createfolder'    => false,
+                    'edit'            => false,
+                    'select'          => true,
+                    'selectone'       => true,
+                ),
+                'selectlistcallback' => 'artefact_get_records_by_id',
+                'selectcallback'     => 'add_view_coverimage',
+                'unselectcallback'   => 'delete_view_coverimage',
+            ),
         );
         if ($frameworks = $this->get_available_frameworks()) {
             $options = array('' => get_string('noframeworkselected', 'module.framework'));
@@ -599,6 +671,9 @@ class Collection {
             foreach ($elements as $k => $element) {
                 if ($k === 'tags') {
                     $elements[$k]['defaultvalue'] = $this->get_tags();
+                }
+                else if ($k == 'coverimage') {
+                    $elements[$k]['defaultvalue'] = ($this->get('coverimage') ? array($this->get('coverimage')) : null);
                 }
                 else {
                     $elements[$k]['defaultvalue'] = $this->$k;
@@ -1047,6 +1122,14 @@ class Collection {
      * after editing the collection, redirect back to the appropriate place
      */
     public function post_edit_redirect($new=false, $copy=false, $urlparams=null) {
+        $redirecturl = post_edit_redirect_url($new, $copy, $urlparams);
+        redirect($redirecturl);
+    }
+
+    /**
+     * returns the url that we need to redirect to sfter editing a collection
+     */
+    public function post_edit_redirect_url($new=false, $copy=false, $urlparams=null) {
         if ($new || $copy) {
             $urlparams['id'] = $this->get('id');
             $redirecturl = '/collection/views.php';
@@ -1074,7 +1157,7 @@ class Collection {
         if ($urlparams) {
             $redirecturl .= '?' . http_build_query($urlparams);
         }
-        redirect($redirecturl);
+        return $redirecturl;
     }
 
     public static function search_by_view_id($viewid) {
@@ -1385,6 +1468,13 @@ class Collection {
                 )
             );
         }
+    }
+
+    public function get_coverimage() {
+        if ($this->coverimage && get_field('artefact', 'id', 'id', $this->coverimage)) {
+            return $this->coverimage;
+        }
+        return null;
     }
 
     /**

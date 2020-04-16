@@ -31,6 +31,11 @@ switch ($type) {
         $artefactid = param_integer('id');
         ArtefactTypeProfileIcon::download_thumbnail($artefactid, $type);
         exit();
+    case 'coverimagebyid':
+        safe_require('artefact', 'file');
+        $artefactid = param_integer('id');
+        ArtefactTypeImage::download_coverimage_thumbnail($artefactid, $type);
+        exit();
     case 'logobyid':
         $filedata = get_record('artefact_file_files', 'artefact', param_integer('id'));
         if ($path = get_dataroot_image_path('artefact/file/profileicons', $filedata->fileid, get_imagesize_parameters())) {

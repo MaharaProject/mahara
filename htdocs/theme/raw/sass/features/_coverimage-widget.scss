@@ -1,0 +1,60 @@
+$coverimage-height: 133px;
+
+// cover image card
+.card-view .card-body.coverimage, .card-collection .card-body.coverimage {
+    overflow: hidden;
+    padding: 0;
+
+    .widget-heading {
+        img {
+          object-fit: cover;
+          height: $coverimage-height;
+        }
+    }
+    .widget-detail {
+        @include transition(0.03s);
+        opacity:0;
+        margin-top: -$coverimage-height * 2;
+        border: none;
+        position: relative;
+        display: inline-block;
+        z-index: 2;
+        background-color: rgba(255, 255, 255, 0.85);
+        height: $coverimage-height;
+        vertical-align: top;
+        width:100%;
+
+        p {
+            padding: 5px;
+        }
+    }
+
+    &:hover {
+        .widget-heading {
+            @include media-breakpoint-down(sm) {
+                background: scale-color($dashboard-widget-bg, $lightness: -5%);
+            }
+        }
+        .widget-detail {
+            @include transition(0.3s);
+            opacity: 1;
+            margin-top: -$coverimage-height;
+        }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+        /* Touch screen device style goes here */
+        &:focus {
+            .widget-heading {
+                @include media-breakpoint-down(sm) {
+                    background: scale-color($dashboard-widget-bg, $lightness: -5%);
+                }
+            }
+            .widget-detail {
+                @include transition(0.3s);
+                opacity: 1;
+                margin-top: -$coverimage-height;
+            }
+        }
+    }
+}
