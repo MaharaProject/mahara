@@ -294,6 +294,15 @@ EOF;
         return false;
     }
 
+
+    public static function shows_details_in_modal(BlockInstance $instance) {
+        return false;
+    }
+
+    public static function render_details_in_modal(BlockInstance $instance) {
+        return false;
+    }
+
     /**
      * Indicates whether this block can be loaded by Ajax after the page is done. This
      * improves page-load times by allowing blocks to be rendered in parallel instead
@@ -1375,9 +1384,9 @@ class BlockInstance {
         // If this block is for just one artefact, we set the title of the
         // block to be a link to view more information about that artefact
         $configdata = $this->get('configdata');
+        $smarty->assign('blockid', $this->get('id'));
         if (!empty($configdata['artefactid']) && $displayforrole) {
             if (call_static_method($classname, 'has_title_link')) {
-                $smarty->assign('blockid', $this->get('id'));
                 $smarty->assign('artefactid', $configdata['artefactid']);
             }
         }
@@ -1405,7 +1414,7 @@ class BlockInstance {
         $blockheader = call_static_method($classname, 'single_artefact_per_block', $this->blocktype);
         // Set up template for the blocks that have the comments and details header
         // Check also that an artefact has been attached to ensure empty blocks don't get empty modals
-        if ($blockheader && !empty($configdata['artefactid'])) {
+        if ($blockheader && (!empty($configdata['artefactid']) || call_static_method($classname, 'shows_details_in_modal', $this))) {
             $smarty->assign('blockheader', $blockheader);
             if (!empty($configdata['artefactid'])) {
                 $smarty->assign('artefactid', $configdata['artefactid']);

@@ -923,4 +923,49 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         }
         return $artefacts;
     }
+
+    public static function shows_details_in_modal(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        return isset($configdata['artefactids']);
+    }
+
+    public static function render_details_in_modal(BlockInstance $instance) {
+        $artefacts = $instance->get('configdata')['artefactids'];
+        $smarty = smarty_core();
+
+        if ($artefacts) {
+            safe_require('artefact', 'comment');
+            $childrecords = array();
+            foreach ($artefacts as $a) {
+                $c = artefact_instance_from_id($a);
+                $child = new StdClass();
+                $child->id = $a;
+                $child->description = $c->get('description');
+                $child->size = $c->describe_size();
+                $child->title = $child->hovertitle = $c->get('title');
+                $child->artefacttype = $c->get('artefacttype');
+                $child->iconsrc = call_static_method(generate_artefact_class_name($c->get('artefacttype')), 'get_icon', array('id' => $a, 'viewid' => $instance->get('view')));
+                $count = ArtefactTypeComment::count_comments(null, array($child->id));
+                if ($count) {
+                    $child->commentcount = $count[$child->id]->comments;
+                }
+                else {
+                    $child->commentcount = 0;
+                }
+                $childrecords[] = $child;
+            }
+            $smarty->assign('children', $childrecords);
+        }
+        $smarty->assign('blockid', $instance->get('id'));
+        $smarty->assign('modal', true);
+        $smarty->assign('viewid', $instance->get('view'));
+
+        $template = 'artefact:file:folder_render_in_modal.tpl';
+
+        return array(
+            'html' => $smarty->fetch($template),
+            'artefactids' =>  $instance->get('configdata')['artefactids'],
+            'javascript'=>'',
+        );
+    }
 }
