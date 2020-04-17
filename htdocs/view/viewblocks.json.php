@@ -19,12 +19,12 @@ safe_require('artefact', 'comment');
 
 $viewid = param_integer('viewid');
 $blockid = param_variable('blockid', null);
-$artefactid = param_integer('artefactid');
+$artefactid = param_integer('artefactid', 0);
 
 if (!can_view_view($viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
-if (!artefact_in_view($artefactid, $viewid)) {
+if ($artefactid && !artefact_in_view($artefactid, $viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
 
@@ -35,7 +35,9 @@ if ($blockid) {
         json_reply('local', get_string('accessdenied', 'error'));
     }
     $view = $block->get_view();
-    $artefact = $block->get_artefact_instance($artefactid);
+    if ($artefactid) {
+        $artefact = $block->get_artefact_instance($artefactid);
+    }
 }
 else {
     $artefact = artefact_instance_from_id($artefactid);
@@ -56,16 +58,24 @@ $options = array(
 
 if ($blockid) {
     $options['blockid'] = $blockid;
+    safe_require_plugin('blocktype', $block->get('blocktype'));
+    $classname = generate_class_name('blocktype', $block->get('blocktype'));
+    if (call_static_method($classname, 'shows_details_in_modal', $block)) {
+        $rendered = call_static_method($classname, 'render_details_in_modal', $block);
+    }
+    $title = $block->get('title');
+}
+if ($artefactid) {
+  $rendered = $artefact->render_self($options);
 }
 
-$rendered = $artefact->render_self($options);
 if (!empty($rendered['javascript'])) {
     $html = '<script>' . $rendered['javascript'] . '</script>';
 }
 $html .= $rendered['html'];
 
 // Get any existing comments for display
-if ($artefact->get('allowcomments')) {
+if (isset($artefact) && $artefact->get('allowcomments')) {
     $commentoptions = ArtefactTypeComment::get_comment_options();
     $commentoptions->view = $view;
     $commentoptions->artefact = $artefact;
@@ -96,7 +106,7 @@ if ($artefact->get('allowcomments')) {
     $html .= $smarty->fetch('blocktype:comment:comment.tpl');
 }
 
-if ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))) {
+if (isset($artefact) && $artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))) {
     $tmpview = new View($viewid);
     $commenttype = $tmpview->user_comments_allowed($USER);
     $moderate = !$USER->is_logged_in() || (isset($commenttype) && $commenttype === 'private');
@@ -106,8 +116,10 @@ if ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_lo
     $html .= $link;
     $html .= pieform(ArtefactTypeComment::add_comment_form(false, $moderate));
 }
+if (isset($artefact)) {
+    $title = $artefact->display_title();
+}
 
-$title = $artefact->display_title();
 json_reply(false, array(
     'message' => '',
     'title' => $title,
