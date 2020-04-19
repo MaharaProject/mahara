@@ -263,7 +263,7 @@ class PluginExportPdf extends PluginExportHtml {
         if ($combiner) {
             foreach ($colpdfs as $collectionid => $collection) {
                 $collectionname = $this->collections[$collectionid]->get('name');
-                $collectionname = preg_replace('/\s+/', '_', $collectionname);
+                $collectionname = parent::text_to_filename($collectionname);
                 if ($combiner == 'pdfunite') {
                     exec('pdfunite ' . implode(' ', $collection) . ' ' . $directory . '/' . $collectionid . '_' . $collectionname . '.pdf', $output);
                 }
