@@ -1001,6 +1001,7 @@ class PluginExportAll extends PluginExport {
         $this->htmlexporter->includefeedback = $this->includefeedback;
         $this->leapexporter->includefeedback = $this->includefeedback;
         if ($this->pdfactive) {
+            $this->pdfexporter->includefeedback = $this->includefeedback;
             $this->notify_progress_callback(0, get_string('startingpdfexport', 'export'));
             try {
                 $pdf = $this->pdfexporter->export();
