@@ -42,6 +42,11 @@ use HeadlessChromium\Cookies\Cookie;
 class PluginExportPdf extends PluginExportHtml {
 
     /**
+    * The name of the directory where files will be placed in the export
+    **/
+    protected $pdfdir = 'PDF';
+
+    /**
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
@@ -52,6 +57,11 @@ class PluginExportPdf extends PluginExportHtml {
 
         $this->zipfile = 'mahara-export-pdf-user'
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
+
+        $pdfdirectory = "{$this->exportdir}/{$this->pdfdir}";
+        if (!check_dir_exists($pdfdirectory)) {
+            throw new SystemException("Couldn't create the temporary export directory $pdfdirectory");
+        }
     }
 
     public static function get_title() {
@@ -130,7 +140,11 @@ class PluginExportPdf extends PluginExportHtml {
     public function export($createarchive=false) {
         parent::export($createarchive);
         $this->pdf_view_export_data();
-        return true;
+        return array(
+            'exportdir' => $this->exportdir,
+            'zipfile' => $this->zipfile,
+            'dirs' => array($this->pdfdir, $this->infodir),
+        );
     }
 
     /**
@@ -260,15 +274,16 @@ class PluginExportPdf extends PluginExportHtml {
 
         $output = array();
         $directory = $this->exportdir . '/' . $this->rootdir;
+        $pdfdirectory = "{$this->exportdir}/{$this->pdfdir}";
         if ($combiner) {
             foreach ($colpdfs as $collectionid => $collection) {
                 $collectionname = $this->collections[$collectionid]->get('name');
                 $collectionname = parent::text_to_filename($collectionname);
                 if ($combiner == 'pdfunite') {
-                    exec('pdfunite ' . implode(' ', $collection) . ' ' . $directory . '/' . $collectionid . '_' . $collectionname . '.pdf', $output);
+                    exec('pdfunite ' . implode(' ', $collection) . ' ' . $pdfdirectory . '/' . $collectionid . '_' . $collectionname . '.pdf', $output);
                 }
                 else {
-                    exec('gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=' .  $directory . '/' . $collectionid . '_' . $collectionname . '.pdf -dBATCH ' . implode(' ', $collection), $output);
+                    exec('gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=' .  $pdfdirectory . '/' . $collectionid . '_' . $collectionname . '.pdf -dBATCH ' . implode(' ', $collection), $output);
                 }
                 // remove the page pdfs that are now in collections
                 foreach ($collection as $c) {
@@ -280,7 +295,7 @@ class PluginExportPdf extends PluginExportHtml {
         foreach ($viewpdfs as $view) {
             $path = explode('/', $view);
             $file = array_pop($path);
-            rename($view, $directory . '/' . $file);
+            rename($view, $pdfdirectory . '/' . $file);
         }
     }
 }
