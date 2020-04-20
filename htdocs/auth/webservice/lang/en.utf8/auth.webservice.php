@@ -138,6 +138,7 @@ $string['name'] = 'Name';
 $string['component'] = 'Component';
 $string['customservicegroup'] = '(Custom)';
 $string['functions'] = 'Functions';
+$string['functionlist'] = 'Function list';
 $string['enableservice'] = 'Enable or disable the service';
 $string['restricteduserswarning'] = 'Warning: There are existing token users for this service, who may be unable to access it if you enable "%s".';
 $string['tokenuserswarning'] = 'Warning: There are existing token users for this service, who may be unable to access it if you disable "%s".';
