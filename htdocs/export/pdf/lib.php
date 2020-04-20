@@ -179,7 +179,7 @@ class PluginExportPdf extends PluginExportHtml {
 
             $browserFactory = new BrowserFactory($browsertype);
             // starts headless chrome
-            $browser = $browserFactory->createBrowser(['windowSize' => [1280,800],
+            $browser = $browserFactory->createBrowser(['windowSize' => [960,600],
                                                        'ignoreCertificateErrors' => true,
                                                        'connectionDelay' => 0.8]);
 
@@ -245,7 +245,7 @@ class PluginExportPdf extends PluginExportHtml {
                 file_put_contents($filename, $filedata, LOCK_EX);
 
                 // Navigate to the needed page
-                $page->navigate('file://' . $filename)->waitForNavigation();
+                $page->navigate('file://' . $filename)->waitForNavigation('networkIdle');
                 $shortname = generate_urlid($view->get('title'), get_config('cleanurlviewdefault'), 3, 50);
 
                 // Create the pdf file
