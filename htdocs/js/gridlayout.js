@@ -141,6 +141,12 @@ function initJs() {
         updateBlockSizes(grid);
     });
 
+    $(window).resize(function() {
+        var grid = $('.grid-stack');
+        grid = grid.gridstack();
+        updateBlockSizes(grid);
+    });
+
 }
 
 function updateTranslatedGridRows(blocks) {
