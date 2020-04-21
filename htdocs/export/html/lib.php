@@ -62,7 +62,7 @@ class PluginExportHtml extends PluginExport {
      * These javascript files will be included in index.html via the
      * export/html/templates/header.tpl
      */
-    private $scripts = array('jquery', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout');
+    private $scripts = array('jquery', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
 
     /**
     * constructor.  overrides the parent class
@@ -879,6 +879,8 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
         $directoriestocopy[get_config('docroot') . 'js/lodash/lodash.js'] = $jsdir . 'lodash.js';
         $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack.js'] = $jsdir . 'gridstack.js';
         $directoriestocopy[get_config('docroot') . 'js/gridlayout.js'] = $jsdir . 'gridlayout.js';
+        $directoriestocopy[get_config('docroot') . 'js/masonry/masonry.min.js'] = $jsdir . 'masonry.min.js';
+        $directoriestocopy[get_config('docroot') . 'js/select2/select2.full.js'] = $jsdir . 'select2.full.js';
 
         foreach ($this->pluginstaticdirs as $dir) {
             $destinationdir = str_replace('export/html/', '', $dir);
