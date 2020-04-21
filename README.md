@@ -1,3 +1,5 @@
+@TODO This is only a draft. Review before the final .0 release and update the information accordingly.
+
 # Mahara Readme
 
 Mahara is an open source ePortfolio system. An ePortfolio is a type of
@@ -46,9 +48,13 @@ then/else upgrade version to 17.04
 
  * Upgrade version 'X' -> 17.04.X (latest 17.04 version)
 
+then/else
+
+ * Upgrade version 'X' -> 18.04.X
+
 then
 
- * Upgrade version 17.04.X -> 'Y'
+ * Upgrade version 18.04.X -> 'Y'
 
 Note: Older versions of Mahara are not compatible with latest versions
 of PHP so you will need to do intermediate upgrade steps before
@@ -70,11 +76,11 @@ Here are the system requirements needed to run Mahara 20.10.
 
 ### OS
 
-Mahara is only officially supported on Debian (7.0/"Wheezy" or later) and
-Ubuntu (14.04/"Trusty Tahr" or later), however it will probably run in any
+Mahara is only officially supported on Debian (8.0/"Jessie" LTS or later) and
+Ubuntu (16.04/"Xenial Xerus" LTS or later), however it will probably run in any
 OS with a suitable web server.
 
-Note: This version of Mahara has NOT been tested on Debian 9+ / Ubuntu 17.10+
+Note: This version of Mahara has NOT been tested on Debian 10+ / Ubuntu 19.04+
 
 ### Web Server
 
@@ -87,14 +93,14 @@ Mahara requires either Postgres or MySQL. It would require extensive
 modification to support other databases.
  * Postgres 9.4 or later
  * MySQL 5.6 or later
- * MariaDB 10.0 or later
+ * MariaDB 10.1 or later
 
-Note: This version of Mahara has NOT been tested on Postgres 10+, MySQL 8.0+,
+Note: This version of Mahara has NOT been tested on Postgres 12+,
 MariaDB 10.3+ versions.
 
 ### PHP
 
-Mahara requires PHP version 7.0.X. The "magic_quotes" and "register_globals"
+Mahara requires PHP version 7.2.X. The "magic_quotes" and "register_globals"
 settings should be turned *off* (which is the default on modern PHP installations).
 
 The following PHP extensions are also required:
@@ -132,12 +138,11 @@ You can still use Mahara on older browsers, but may not have all functionality
 available.
 
 For Mahara 20.10, the supported browser versions are:
-// TODO: Review list of browsers closer to the release date.
- * Firefox - 56.0
- * Chrome - 61.0
- * Safari - 11
- * Opera - 47.0
- * IE - Edge
+ * Firefox - 75.0
+ * Chrome - 81.0
+ * Safari - 13.1
+ * Opera - 67.0
+ * MS Edge - 81.0
  * Safari for iOS
  * Chrome for Android
 
@@ -147,17 +152,11 @@ Mahara has been translated into many languages. You can get language packs from:
 
 * https://wiki.mahara.org/wiki/Language_Packs
 
-# MOODLE
-
-Documentation on integrating Mahara with Moodle can be found in the
-3.1MB PDF here:
-
- * https://wiki.mahara.org/images/d/d5/Mahoodle.pdf
 
 ------------------
 # Copyright notice
 
-Copyright (C) 2006-2017 Catalyst IT and others; see:
+Copyright (C) 2006-2020 Catalyst IT and others; see:
 https://wiki.mahara.org/wiki/Contributors
 
 This program is free software: you can redistribute it and/or modify
