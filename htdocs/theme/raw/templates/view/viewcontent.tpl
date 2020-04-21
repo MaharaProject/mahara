@@ -1,22 +1,25 @@
-{if $newlayout}
 <script>
 $(function () {
-    var options = {
-        verticalMargin: 10,
-        float: true,
-        ddPlugin: false,
-    };
-    var grid = $('.grid-stack');
-    grid.gridstack(options);console.log(grid);
-    grid = $('.grid-stack').data('gridstack');
+    {if $newlayout}
+        var options = {
+            verticalMargin: 10,
+            float: true,
+            ddPlugin: false,
+        };
+        var grid = $('.grid-stack');
+        grid.gridstack(options);console.log(grid);
+        grid = $('.grid-stack').data('gridstack');
 
-    // should add the blocks one by one
-    var blocks = {json_encode arg=$blocks};
-    loadGrid(grid, blocks);
-    jQuery(document).trigger('blocksloaded');
+        // should add the blocks one by one
+        var blocks = {json_encode arg=$blocks};
+        loadGrid(grid, blocks);
+        jQuery(document).trigger('blocksloaded');
+    {/if}
+    // Prevent Image Gallery block images from overlapping
+    carouselHeight();
 });
 </script>
-{/if}
+
 <h2>
     {$viewtitle}
     {if $ownername}
