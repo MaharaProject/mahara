@@ -210,6 +210,7 @@ class PluginExportPdf extends PluginExportHtml {
                 // Adjust the relative links to files to be textual to mention where the file lives within the zip file
                 // Because we can't make relative links in a pdf export
                 $filedata = file_get_contents($filename);
+                $filedata = preg_replace('/<div class="breadcrumbs collection">.*?<\/div>/s', '', $filedata);
                 if ($view->get('newlayout')) {
                     if (preg_match('/var blocks = (\[.*?\]);/', $filedata, $matches)) {
                         $content = json_decode($matches[1]);
