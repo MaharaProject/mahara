@@ -2,6 +2,10 @@
 <div class="card-body">
     <p class="alert alert-info">{$editing}</p>
 </div>
+{elseif $exporting && !$includefeedback}
+<p>
+    {str tag=commentsnotincluded section=artefact.comment}
+</p>
 {elseif $feedback}
     {* Do not change the id because it is used by paginator.js *}
     <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackblock fullwidth">
