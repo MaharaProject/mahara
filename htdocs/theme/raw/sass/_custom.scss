@@ -585,3 +585,14 @@ div.toolbarhtml {
         border-bottom: 1px solid $input-border-color;
     }
 }
+
+#webservices_function_groups_add {
+    input.text {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    input.submit {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
