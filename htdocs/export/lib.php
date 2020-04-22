@@ -1027,7 +1027,12 @@ class PluginExportAll extends PluginExport {
 
         $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
         try {
-            create_zip_archive($this->exportdir, $this->zipfile, array_merge($html['dirs'], $leap['dirs']));
+            if ($this->pdfactive && isset($pdf) && !empty($pdf['dirs'])) {
+                create_zip_archive($this->exportdir, $this->zipfile, array_merge($html['dirs'], $leap['dirs'], $pdf['dirs']));
+            }
+            else {
+                create_zip_archive($this->exportdir, $this->zipfile, array_merge($html['dirs'], $leap['dirs']));
+            }
         }
         catch (SystemException $e) {
             throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
