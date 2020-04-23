@@ -49,7 +49,7 @@ $(function () {
     </div>
 {/if}
 
-{if $feedback && $feedback->count}
+{if $feedback && $feedback->count && $feedback->position == 'base'}
 <div class="viewfooter">
     <table id="feedbacktable" class="feedbacktable fullwidth table">
       <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
