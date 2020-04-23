@@ -123,7 +123,7 @@ var FileBrowser = (function($) {
 
     this.add_upload_message = function (messageType, filename) {
         self.nextupload++;
-        var message = $(makeMessage($('<span>').addClass('icon icon-spinner icon-pulse'), messageType));
+        var message = $(makeMessage($('<span>'), messageType));
         message.append(' ' + get_string('uploadingfiletofolder', 'artefact.file', filename, self.foldername));
         message.prop('id', 'uploadstatusline' + self.nextupload);
         message.appendTo('#' + self.id + '_upload_messages');
@@ -132,7 +132,7 @@ var FileBrowser = (function($) {
 
     this.upload_presubmit_dropzone = function (e) {
         // Display upload status
-        self.add_upload_message('info', e.name);
+        self.add_upload_message('pending', e.name);
         return true;
     };
 
@@ -141,7 +141,7 @@ var FileBrowser = (function($) {
         if ($('#' + self.id + '_userfile').prop('files')) {
             for (var i = 0; i < $('#' + self.id + '_userfile').prop('files').length; ++ i) {
                 var localname = $('#' + self.id + '_userfile').prop('files')[i].name;
-                self.add_upload_message('ok', localname);
+                self.add_upload_message('pending', localname);
             }
         }
         return true;
