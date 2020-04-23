@@ -228,6 +228,8 @@ function makeMessage(message, type, temp) {
             return messageContainer.addClass('alert-danger').get(0);
         case 'warning':
             return messageContainer.addClass('alert-warning').get(0);
+        case 'pending':
+            return messageContainer.addClass('alert-pending').get(0);
         default:
             return messageContainer.addClass('alert-info').get(0);
     }
@@ -240,8 +242,12 @@ function displayMessage(message, type, hideprevmsg) {
     if (message === undefined || message == '') {
         return;
     }
-    // ensure we have type 'ok', 'error', or 'info' (the default)
-    if (!type || (type != 'ok' && type != 'error')) {
+    // ensure we have type of
+    // 'ok'          - eg. on save success
+    // 'pending'     - eg. on file uploading
+    // 'error'       - on failed saving
+    // 'info'        - helpful message (the default)
+    if (!type || (type != 'ok' && type != 'error' && type != 'pending')) {
         type = 'info';
     }
 

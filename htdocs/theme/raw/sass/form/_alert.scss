@@ -71,6 +71,16 @@
       color: scale-color($success, $lightness: -30%);
     }
 }
+.alert-pending {
+    color: scale-color($info, $lightness: -30%);
+    background-color: scale-color($info, $lightness: 70%);
+    border-color: scale-color($info, $lightness: 50%);
+    &:before {
+      content: fa-content($fa-var-spinner);
+      color: scale-color($info, $lightness: -30%);
+      animation: fa-spin 1s infinite steps(8);
+    }
+}
 .alert-info {
     color: scale-color($info, $lightness: -30%);
     background-color: scale-color($info, $lightness: 70%);
