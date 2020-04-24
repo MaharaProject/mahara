@@ -379,11 +379,11 @@ function xmldb_core_upgrade($oldversion=0) {
             $total = count_records_select('event_log', 'data != ?', array('{}'));
             if ($total > 0) {
                 for ($i = 0; $i <= $total; $i += $chunk) {
-                    $results = get_records_sql_array("SELECT id, event, data FROM {event_log}", array(), $count, $chunk);
-                    foreach ($results as $result) {
-                        $data = json_decode($result->data);
-                        $where = clone $result;
-                        switch ($result->event) {
+                    if ($results = get_records_sql_array("SELECT id, event, data FROM {event_log}", array(), $count, $chunk)) {
+                        foreach ($results as $result) {
+                            $data = json_decode($result->data);
+                            $where = clone $result;
+                            switch ($result->event) {
                             case 'saveview':
                             case 'deleteview':
                                 $result->resourceid = $data->id;
@@ -429,20 +429,21 @@ function xmldb_core_upgrade($oldversion=0) {
                                 $result->resourceid = $data->requester;
                                 $result->resourcetype = 'friend';
                                 break;
+                            }
+                            list($ownerid, $ownertype) = event_find_owner_type($result);
+                            $result->ownerid = $ownerid;
+                            $result->ownertype = $ownertype;
+                            unset($result->id); // No reason to update the ID.
+                            update_record('event_log', $result, array('id'=>$where->id));
                         }
-                        list ($ownerid, $ownertype) = event_find_owner_type($result);
-                        $result->ownerid = $ownerid;
-                        $result->ownertype = $ownertype;
-                        unset($result->id); // No reason to update the ID.
-                        update_record('event_log', $result, array('id'=>$where->id));
-                    }
-                    $count += $chunk;
-                    if (($count % $limit) == 0 || $count >= $total) {
-                        if ($count > $total) {
-                            $count = $total;
+                        $count += $chunk;
+                        if (($count % $limit) == 0 || $count >= $total) {
+                            if ($count > $total) {
+                                $count = $total;
+                            }
+                            log_debug("$count/$total");
+                            set_time_limit(30);
                         }
-                        log_debug("$count/$total");
-                        set_time_limit(30);
                     }
                 }
             }
@@ -1263,25 +1264,22 @@ function xmldb_core_upgrade($oldversion=0) {
                                             if ($tags = get_column('tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $planid)) {
                                                 $plan->tags = $tags;
                                             }
-                                            $tasks = get_records_sql_array("SELECT a.id, apt.artefact AS task, apt.completed, apt.completiondate,
-                                                                             a.title, a.description, a.parent, a.owner
-                                                                            FROM {artefact} a
-                                                                            JOIN {artefact_plans_task} apt ON apt.artefact = a.id
-                                                                            WHERE a.parent = ?", array($planid));
-                                            foreach ($tasks as $t => $task) {
-                                                if ($tasktags = get_column('tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $task->id)) {
-                                                    $task->tags = $tasktags;
+                                            if ($tasks = get_records_sql_array("SELECT a.id, apt.artefact AS task, apt.completed, apt.completiondate,
+                                             a.title, a.description, a.parent, a.owner
+                                             FROM {artefact} a
+                                             JOIN {artefact_plans_task} apt ON apt.artefact = a.id
+                                             WHERE a.parent = ?", array($planid))) {
+                                                foreach ($tasks as $t => $task) {
+                                                    if ($tasktags = get_column('tag', 'tag', 'resourcetype', 'artefact', 'resourceid', $task->id)) {
+                                                        $task->tags = $tasktags;
+                                                    }
                                                 }
+                                                $artefacts[$planid]['tasks'] = array('count' => count($tasks), 'data' => $tasks, 'offset' => 0, 'limit' => 0, 'id' => $planid);
+                                                $artefacts[$planid]['title'] = $plan->title;
+                                                $artefacts[$planid]['description'] = $plan->description;
+                                                $artefacts[$planid]['tags'] = $plan->tags;
+                                                $artefacts[$planid]['owner'] = $plan->owner;
                                             }
-                                            $artefacts[$planid]['tasks'] = array('count' => count($tasks),
-                                                                                 'data' => $tasks,
-                                                                                 'offset' => 0,
-                                                                                 'limit' => 0,
-                                                                                 'id' => $planid);
-                                            $artefacts[$planid]['title'] = $plan->title;
-                                            $artefacts[$planid]['description'] = $plan->description;
-                                            $artefacts[$planid]['tags'] = $plan->tags;
-                                            $artefacts[$planid]['owner'] = $plan->owner;
                                         }
                                         if (!empty($artefacts)) {
                                             foreach ($artefacts as $key => $artefact) {

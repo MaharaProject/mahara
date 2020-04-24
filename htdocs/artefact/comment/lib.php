@@ -166,8 +166,9 @@ class PluginArtefactComment extends PluginArtefact {
                          FROM {artefact}
                        WHERE artefacttype='comment'
                          AND owner <> ? AND author = ?";
-                $count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')));
-                $meta->completed = $count[0]->completed;
+                if ($count = get_records_sql_array($sql, array($USER->get('id'), $USER->get('id')))) {
+                    $meta->completed = $count[0]->completed;
+                }
                 break;
             default:
                 return false;
@@ -508,7 +509,7 @@ class ArtefactTypeComment extends ArtefactType {
                 WHERE ' . $where . '
                 ORDER BY ' . $orderby, array(), $offset, $limit);
 
-            $files = ArtefactType::attachments_from_id_list(array_keys($comments));
+            $files = ArtefactType::attachments_from_id_list(array_keys($comments ? $comments : array()));
 
             if ($files) {
                 safe_require('artefact', 'file');
@@ -670,13 +671,14 @@ class ArtefactTypeComment extends ArtefactType {
             $where = 'c.onview = ?';
             $values = array($view);
         }
-        $newest = get_records_sql_array('
+        if ($newest = get_records_sql_array('
             SELECT a.id, a.ctime
             FROM {artefact} a INNER JOIN {artefact_comment_comment} c ON a.id = c.artefact
             WHERE c.private = 0 AND c.hidden = 0 AND ' . $where . '
             ORDER BY a.ctime DESC', $values, 0, 1
-        );
-        return $newest[0];
+        )) {
+            return $newest[0];
+        }
     }
 
     /**

@@ -74,7 +74,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $smarty->assign('folder', $folder);
     $smarty->assign('foldername', $path[0]->title);
     $smarty->assign('path', array_reverse($path));
-    $smarty->assign('highlight', $element['highlight'][0]);
+    $smarty->assign('highlight', !empty($element['highlight'][0]) ? $element['highlight'][0] : -1);
     $smarty->assign('edit', !empty($element['edit']) ? $element['edit'] : -1);
     if (isset($element['browse'])) {
         $smarty->assign('browse', (int) $element['browse']);

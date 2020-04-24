@@ -510,7 +510,7 @@ class cli {
         }
         print("\n");
         $input = trim($input);
-        if ($input === '') {
+        if ($input === '' || $input === false) {
             $input = $default;
         }
         if ($options) {

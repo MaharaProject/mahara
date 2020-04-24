@@ -3024,10 +3024,12 @@ class View {
 
         if ($layoutid) {
             $layout->id = $layoutid;
-            $layoutsrowscols = get_records_select_array('view_layout_rows_columns', 'viewlayout = ?', array($layoutid));
-            foreach ($layoutsrowscols as $layoutrowcol) {
-                $layout->rows[$layoutrowcol->row]['widths'] = self::$layoutcolumns[$layoutrowcol->columns]->widths;
-                $layout->rows[$layoutrowcol->row]['columns'] = self::$layoutcolumns[$layoutrowcol->columns]->columns;
+            if ($layoutsrowscols = get_records_select_array('view_layout_rows_columns', 'viewlayout = ?', array($layoutid))) {
+
+                foreach ($layoutsrowscols as $layoutrowcol) {
+                    $layout->rows[$layoutrowcol->row]['widths'] = self::$layoutcolumns[$layoutrowcol->columns]->widths;
+                    $layout->rows[$layoutrowcol->row]['columns'] = self::$layoutcolumns[$layoutrowcol->columns]->columns;
+                }
             }
 
         }
@@ -4026,7 +4028,7 @@ class View {
                                               $emptycollselect . $emptycollfrom . $emptycollwhere . $groupby .
                                               $sort, $values, $offset, $limit);
         }
-        $count = $count[0]->count;
+        $count = !empty($count[0]->count) ? $count[0]->count : false;
 
         View::get_extra_view_info($viewdata, false);
         View::get_extra_collection_info($viewdata, false, 'collid');

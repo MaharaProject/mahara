@@ -131,7 +131,7 @@ function parse_name_query($text) {
   // Classify tokens
   foreach ($matches as $match) {
     // Strip off phrase quotes
-    if ($match[1]{0} == '"') {
+    if ($match[1][0] == '"') {
       $phrase = preg_replace('/\s\s+/', ' ', strtolower(substr($match[1], 1, -1)));
       $phraselist = explode(' ', $phrase);
       if (count($phraselist) == 2) {

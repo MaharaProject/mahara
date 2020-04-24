@@ -706,7 +706,7 @@ class OAuthRequest
 					{
 						$v = trim($v);
 						list($name,$value) = explode('=', $v, 2);
-						if (!empty($value) && $value{0} == '"' && substr($value, -1) == '"')
+						if (!empty($value) && $value[0] == '"' && substr($value, -1) == '"')
 						{
 							$value = substr(substr($value, 1), 0, -1);
 						}

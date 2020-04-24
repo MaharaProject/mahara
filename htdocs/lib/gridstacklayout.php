@@ -115,11 +115,12 @@ function get_blocks_in_old_layout($viewid) {
         WHERE view = ?
         ORDER BY row, " . db_quote_identifier('column') . ", " . db_quote_identifier('order');
     $oldblocks = get_records_sql_array($sql, array($viewid));
-
-    foreach ($oldlayout as $row) {
-        $columnwidths = get_column_widths($viewid, $row->row);
-        for ($i=1; $i <= $row->columns ; $i++) {
-            $content[$row->row][$i]['width'] = $columnwidths[$i-1];
+    if ($oldlayout) {
+        foreach ($oldlayout as $row) {
+            $columnwidths = get_column_widths($viewid, $row->row);
+            for ($i=1; $i <= $row->columns ; $i++) {
+                $content[$row->row][$i]['width'] = $columnwidths[$i-1];
+            }
         }
     }
     if ($oldblocks) {

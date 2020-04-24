@@ -376,36 +376,38 @@ function auth_saml_find_authinstance($saml_attributes) {
     }
     // find all the possible institutions/auth instances of type saml
     $instances = recordset_to_array(get_recordset_sql("SELECT * FROM {auth_instance_config} aic, {auth_instance} ai WHERE ai.id = aic.instance AND ai.authname = 'saml' AND ai.active = 1 AND aic.field = 'institutionattribute'"));
-    foreach ($instances as $row) {
-        $institutions[]= $row->instance . ':' . $row->institution . ':' . $row->value;
-        if (isset($saml_attributes[$row->value])) {
-            // does this institution use a regex match against the institution check value?
-            if ($configvalue = get_record('auth_instance_config', 'instance', $row->instance, 'field', 'institutionregex')) {
-                $is_regex = (boolean) $configvalue->value;
-            }
-            else {
-                $is_regex = false;
-            }
-            if ($configvalue = get_record('auth_instance_config', 'instance', $row->instance, 'field', 'institutionvalue')) {
-                $institution_value = $configvalue->value;
-            }
-            else {
-                $institution_value = $row->institution;
-            }
+    if ($instances) {
+        foreach ($instances as $row) {
+            $institutions[]= $row->instance . ':' . $row->institution . ':' . $row->value;
+            if (isset($saml_attributes[$row->value])) {
+                // does this institution use a regex match against the institution check value?
+                if ($configvalue = get_record('auth_instance_config', 'instance', $row->instance, 'field', 'institutionregex')) {
+                    $is_regex = (boolean) $configvalue->value;
+                }
+                else {
+                    $is_regex = false;
+                }
+                if ($configvalue = get_record('auth_instance_config', 'instance', $row->instance, 'field', 'institutionvalue')) {
+                    $institution_value = $configvalue->value;
+                }
+                else {
+                    $institution_value = $row->institution;
+                }
 
-            if ($is_regex) {
-                foreach ($saml_attributes[$row->value] as $attr) {
-                    if (preg_match('/' . trim($institution_value) . '/', $attr)) {
-                        $instance = $row;
-                        break;
+                if ($is_regex) {
+                    foreach ($saml_attributes[$row->value] as $attr) {
+                        if (preg_match('/' . trim($institution_value) . '/', $attr)) {
+                            $instance = $row;
+                            break;
+                        }
                     }
                 }
-            }
-            else {
-                foreach ($saml_attributes[$row->value] as $attr) {
-                    if ($attr == $institution_value) {
-                        $instance = $row;
-                        break;
+                else {
+                    foreach ($saml_attributes[$row->value] as $attr) {
+                        if ($attr == $institution_value) {
+                            $instance = $row;
+                            break;
+                        }
                     }
                 }
             }
@@ -627,8 +629,10 @@ function login_test_all_user_authinstance($username, $password) {
                 ON ai.id = aru.authinstance
                 WHERE ai.active = 1 AND ai.authname NOT IN(\'saml\', \'xmlrpc\', \'none\') AND aru.localusr = ?';
     $authinstances = get_records_sql_array($sql, array($user->id));
-    foreach ($authinstances as $authinstance) {
-        $instances[]= $authinstance->id;
+    if ($authinstances) {
+        foreach ($authinstances as $authinstance) {
+            $instances[]= $authinstance->id;
+        }
     }
 
     // determine the internal authinstance ID associated with the base 'mahara'

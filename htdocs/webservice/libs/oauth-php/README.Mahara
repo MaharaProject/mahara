@@ -25,3 +25,5 @@ OAuthStore.php:
 OAuthStoreMahara.php
 
 * Modified use of $_SESSION to $SESSION since session is normally closed.
+* Modified oauth-php/signature_method/OAuthSignatureMethod_MD5.php
+ to work with PHP7.3/7.4 replacing {} for [] in arrays

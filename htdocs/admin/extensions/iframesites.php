@@ -24,14 +24,19 @@ $iframesources = get_records_menu('iframe_source', '', '', 'name,prefix');
 $iframedomains = get_records_menu('iframe_source_icon');
 $fa_domains = PluginBlocktypeExternalvideo::get_fa_brand_icons();
 $data = array();
-foreach ($iframedomains as $name => $domain) {
-    $data[$name]['name'] = $domain;
-    $data[$name]['icon'] = favicon_display_url($domain);
-    $lname = strtolower($name);
-    if (isset($fa_domains[$lname])) {
-        $data[$name]['faicon'] = $fa_domains[$lname]['faicon'];
-        $data[$name]['style'] = $fa_domains[$lname]['style'];
+if ($iframedomains) {
+    foreach ($iframedomains as $name => $domain) {
+        $data[$name]['name'] = $domain;
+        $data[$name]['icon'] = favicon_display_url($domain);
+        $lname = strtolower($name);
+        if (isset($fa_domains[$lname])) {
+            $data[$name]['faicon'] = $fa_domains[$lname]['faicon'];
+            $data[$name]['style'] = $fa_domains[$lname]['style'];
+        }
     }
+}
+else {
+    $data[$name] = array();
 }
 
 $newform = pieform(array(
@@ -63,67 +68,69 @@ $newform = pieform(array(
 
 $editurls = array();
 $i = 0;
-foreach ($iframesources as $url => $name) {
-    $elements = array(
-        'url' => array(
-            'type' => 'hidden',
-            'value' => $url,
-        ),
-        'name' => array(
-            'type' => 'text',
-            'title' => get_string('displayname'),
-            'description' => get_string('iframedisplaynamedescription', 'admin'),
-            'defaultvalue' => $name,
-        ),
-        'icon' => array(
-            'type' => 'text',
-            'title' => get_string('iframeiconhost', 'admin'),
-            'description' => get_string('iframeiconhostdescription', 'admin'),
-            'defaultvalue' => $iframedomains[$name],
-            'rules' => array(
-                'minlength' => 4,
-                'maxlength' => 253,
-                'regex'     => '/^[a-zA-Z0-9-]{1,63}(\.[a-zA-Z0-9-]{1,63})+$/', // approximately
+if ($iframesources) {
+    foreach ($iframesources as $url => $name) {
+        $elements = array(
+            'url' => array(
+                'type' => 'hidden',
+                'value' => $url,
             ),
-        ),
-        'submit' => array(
-            'type'  => 'submit',
-            'class' => 'btn-primary btn-sm',
-            'value' => get_string('save'),
-        ),
-    );
-    $editurls[$i] = array(
-        'id'         => $i,
-        'url'        => $url,
-        'name'       => $name,
-        'icon'       => $data[$name],
-        'editform'   => pieform(array(
-            'name'             => 'editurl_' . $i,
-            'successcallback'  => 'editurl_submit',
-            'elements'         => $elements,
-        )),
-        'deleteform' => pieform(array(
-            'name'             => 'deleteurl_' . $i,
-            'successcallback'  => 'deleteurl_submit',
-            'renderer'         => 'div',
-            'class'            => 'form-inline form-as-button float-right btn-group',
-            'elements'         => array(
-                'submit' => array(
-                    'type'         => 'button',
-                    'class'        => 'btn-secondary btn-sm',
-                    'usebuttontag' => true,
-                    'value'          => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
-
-                    'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+            'name' => array(
+                'type' => 'text',
+                'title' => get_string('displayname'),
+                'description' => get_string('iframedisplaynamedescription', 'admin'),
+                'defaultvalue' => $name,
+            ),
+            'icon' => array(
+                'type' => 'text',
+                'title' => get_string('iframeiconhost', 'admin'),
+                'description' => get_string('iframeiconhostdescription', 'admin'),
+                'defaultvalue' => $iframedomains[$name] || '',
+                'rules' => array(
+                    'minlength' => 4,
+                    'maxlength' => 253,
+                    'regex'     => '/^[a-zA-Z0-9-]{1,63}(\.[a-zA-Z0-9-]{1,63})+$/', // approximately
                 ),
-                 'url'  => array(
-                    'type'         => 'hidden',
-                    'value'        => $url,
-                )
             ),
-        )),
-    );
-    $i++;
+            'submit' => array(
+                'type'  => 'submit',
+                'class' => 'btn-primary btn-sm',
+                'value' => get_string('save'),
+            ),
+        );
+        $editurls[$i] = array(
+            'id'         => $i,
+            'url'        => $url,
+            'name'       => $name,
+            'icon'       => $data[$name],
+            'editform'   => pieform(array(
+                'name'             => 'editurl_' . $i,
+                'successcallback'  => 'editurl_submit',
+                'elements'         => $elements,
+            )),
+            'deleteform' => pieform(array(
+                'name'             => 'deleteurl_' . $i,
+                'successcallback'  => 'deleteurl_submit',
+                'renderer'         => 'div',
+                'class'            => 'form-inline form-as-button float-right btn-group',
+                'elements'         => array(
+                    'submit' => array(
+                        'type'         => 'button',
+                        'class'        => 'btn-secondary btn-sm',
+                        'usebuttontag' => true,
+                        'value'          => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+
+                        'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+                    ),
+                    'url'  => array(
+                        'type'         => 'hidden',
+                        'value'        => $url,
+                    )
+                ),
+            )),
+        );
+        $i++;
+    }
 }
 
 function editurl_submit(Pieform $form, $values) {
