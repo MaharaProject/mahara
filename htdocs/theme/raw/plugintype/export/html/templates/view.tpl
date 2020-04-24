@@ -16,6 +16,8 @@ $(function () {
     var blocks = {json_encode arg=$blocks};
     loadGrid(grid, blocks);
     jQuery(document).trigger('blocksloaded');
+    // Prevent image gallery images from overlapping
+    carouselHeight();
 });
 </script>
 {/if}

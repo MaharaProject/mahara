@@ -1,5 +1,6 @@
 /*jslint browser: true, nomen: true,  white: true */
 /* global jQuery, $ */
+
 jQuery(function($) {
 "use strict";
 
@@ -12,7 +13,7 @@ jQuery(function($) {
             affixheight,
             i;
 
-        for(i = 0; i < affix.length; i = i + 1) {
+        for (i = 0; i < affix.length; i = i + 1) {
             affixwidth = $(affix[i]).parent().width();
             affixheight = $(affix[i]).height() + 100;
 
@@ -26,7 +27,7 @@ jQuery(function($) {
         $(window).on('resize colresize', function(){
             var i;
 
-            for(i = 0; i < affix.length; i = i + 1) {
+            for (i = 0; i < affix.length; i = i + 1) {
                 affixwidth = $(affix[i]).parent().width();
                 affixheight = $(affix[i]).height() + 100;
 
@@ -48,7 +49,8 @@ jQuery(function($) {
         if ($('.site-messages').length === 0) {
             $('.header').addClass('no-site-messages');
             $('.main-nav').addClass('no-site-messages');
-        } else if ($('.site-messages') !== undefined) {
+        }
+        else if ($('.site-messages') !== undefined) {
             message = $('.site-messages').find('.site-message');
             $('.header').addClass('message-count-'+ message.length);
             $('.header').removeClass('no-site-messages');
@@ -71,7 +73,7 @@ jQuery(function($) {
         $('[data-action~="reset-on-collapse"]').on('d-none.bs.collapse', function () {
             var i,
                 forms =$(this).find('form');
-            for (i = 0; i < forms.length; i = i + 1){
+            for (i = 0; i < forms.length; i = i + 1) {
                 forms[i].reset();
             }
         });
@@ -88,7 +90,7 @@ jQuery(function($) {
     /*
      * Calculate carousel(image gallery) height
      */
-    function carouselHeight() {
+    window.carouselHeight = function () {
         var carousel = $('.carousel'),
             i, j,
             carouselItem,
@@ -138,9 +140,10 @@ jQuery(function($) {
         }
 
         context.find('.js-with-dropdown input').attr('placeholder', val);
-        if(context.find('.js-dropdown-context').length > 0){
+        if (context.find('.js-dropdown-context').length > 0) {
             context.find('.js-dropdown-context').html('(' + val + ')');
-        } else {
+        }
+        else {
             context.find('.js-with-dropdown label').append('<em class="js-dropdown-context text-midtone text-small">('+ val + ')</em>');
         }
     }
@@ -213,12 +216,6 @@ jQuery(function($) {
     if (document.readyState === "complete") {
       carouselHeight();
       initUserThumbnailMasonry();
-    }
-    else {
-        $(window).on('load', function() {
-            carouselHeight();
-            initUserThumbnailMasonry();
-        });
     }
 
     $('.block.collapse').on('shown.bs.collapse', function() {

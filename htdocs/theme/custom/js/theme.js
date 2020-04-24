@@ -1,5 +1,6 @@
 /*jslint browser: true, nomen: true,  white: true */
 /* global jQuery, $ */
+
 jQuery(function($) {
 "use strict";
 
@@ -89,7 +90,7 @@ jQuery(function($) {
     /*
      * Calculate carousel(image gallery) height
      */
-    function carouselHeight() {
+     window.carouselHeight = function () {
         var carousel = $('.carousel'),
             i, j,
             carouselItem,
@@ -255,10 +256,10 @@ jQuery(function($) {
         responsiveObjectVideo()
     });
 
-    $(window).on('load', function() {
-        carouselHeight();
-        initUserThumbnailMasonry();
-    });
+    if (document.readyState === "complete") {
+      carouselHeight();
+      initUserThumbnailMasonry();
+    }
 
     $('.block.collapse').on('shown.bs.collapse', function() {
         carouselHeight();
