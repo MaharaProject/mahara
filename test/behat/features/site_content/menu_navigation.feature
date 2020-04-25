@@ -60,7 +60,7 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  And I click on "Show administration menu"
  Then I follow "Reports"
 
-Scenario: Checking menu items are available as admin (Bug 1467368)
+Scenario: Checking menu items are available as site admin (Bug 1467368)
  Given I log in as "admin" with password "Kupuh1pa!"
  # Checking the sub navigation in Administration
  And I click on "Show administration menu"
@@ -103,6 +103,7 @@ Scenario: Checking menu items are available as admin (Bug 1467368)
  When I press "Show menu for Groups" in the "Administration menu" property
  Then I should see "Administer groups" in the "Admin Groups sub-menu" property
  And I should see "Group categories" in the "Admin Groups sub-menu" property
+ And I should see "Default group settings" in the "Admin Groups sub-menu" property
  And I should see "Archived submissions" in the "Admin Groups sub-menu" property
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" property
