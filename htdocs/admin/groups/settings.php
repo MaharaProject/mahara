@@ -14,7 +14,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'managegroups/settings');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('groupsettings', 'admin'));
+define('TITLE', get_string('groupdefaultsettings', 'admin'));
 // Set up default options
 $default_group_data = (object) array(
    'open'           => 1,
@@ -354,9 +354,9 @@ function groupsettings_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-cog');
+setpageicon($smarty, 'icon-users-cog');
 
-$smarty->assign('PAGEHEADING', hsc(get_string('groupsettings', 'admin')));
+$smarty->assign('PAGEHEADING', hsc(get_string('groupdefaultsettings', 'admin')));
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('optionform', $optionform);
 $smarty->display('admin/groups/groupsettings.tpl');

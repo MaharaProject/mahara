@@ -2421,7 +2421,7 @@ function admin_nav() {
         'managegroups/settings' => array(
             'path'   => 'managegroups/settings',
             'url'    => 'admin/groups/settings.php',
-            'title'  => get_string('groupsettings', 'admin'),
+            'title'  => get_string('groupdefaultsettings', 'admin'),
             'weight' => 25,
         ),
         'managegroups/uploadcsv' => array(

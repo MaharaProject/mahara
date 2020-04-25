@@ -1526,7 +1526,7 @@ $string['groupid'] = 'Group ID';
 $string['blocktypeupdatedsuccess'] = 'Updated blocktype sort order';
 
 // Change group settings
-$string['groupsettings'] = 'Group settings';
+$string['groupdefaultsettings'] = 'Default group settings';
 $string['introtext'] = 'You can change the default settings that are used when a new group is created. Some settings are only available to people who have a certain role. The options that are not available to them are ignored when they create a new group, and the default value is used instead.';
 $string['savedgroupconfigsuccessfully'] = 'Saved default group settings.';
 $string['defaultreset'] = 'Reset to default';
