@@ -12,7 +12,7 @@
 
 //== Typography
 $headings-font-family:    $font-family-sans-serif;
-$headings-color:          #333333;
+$headings-color:          $theme-text-color;
 
 //== Tabs
 $nav-tabs-border-color:             $theme-accent-color;
@@ -21,7 +21,7 @@ $nav-tabs-link-active-bg:           scale-color($theme-accent-color, $lightness:
 $nav-tabs-link-active-border-color: $theme-accent-color;
 
 //== Progress bars
-$progress-bar-color:          #333333;
+$progress-bar-color:          $theme-text-color;
 $progress-bar-bg:             #bc9f54;
 
 //== List group

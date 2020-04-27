@@ -78,7 +78,7 @@
     span.pseudolabel,
     label {
         display: table-cell;
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
     @include media-breakpoint-up(md) {
         float: right;
@@ -118,7 +118,7 @@
         :first-child {
             clear: both;
         }
-        border-bottom: 1px solid $list-group-border-color;
+        border-bottom: $list-group-border-width solid $list-group-border-color;
     }
     .checkbox input[type=checkbox] {
         margin-left: 0;
@@ -129,7 +129,7 @@
 }
 .exportable-artefact-container {
     padding: 15px 15px 0;
-    background-color: rgba($gray-100, 0.2);
+    background-color: $accent-bg;
 }
 
 // Admin user search page (advanced options)
@@ -179,7 +179,7 @@
         display: block;
         background-color: $card-footer-bg;
         padding: 6px;
-        border: 1px solid $card-border-color;
+        border: $card-border-width solid $card-border-color;
         width: 180px; /* to match the img width */
     }
 }
@@ -239,7 +239,7 @@
         width: auto;
         background-color: rgba(255,255,255,0);
         thead tr th {
-            font-weight: 400;
+            font-weight: $font-weight-normal;
             font-size: $font-size-base * 0.85715;
             padding: 2px 8px 8px;
         }
@@ -448,14 +448,14 @@ div.toolbarhtml {
         margin-right: 20px;
     }
     div.fieldset-body {
-        background-color: $gray-100 !important;
+        background-color: $accent-bg !important;
     }
 }
 .viewinstruction-export {
-    border: 1px solid $card-border-color;
+    border: $card-border-width solid $card-border-color;
     padding: $card-spacer-y $card-spacer-x;
-    margin-bottom: -1px; //remove double border
-    background-color: $gray-100 !important;
+    margin-bottom: -$card-border-width; //remove double border
+    background-color: $accent-bg !important;
 }
 .releaseviewform {
     position: relative;
@@ -492,7 +492,7 @@ div.toolbarhtml {
 }
 
 .elasticsearch-filters {
-    border-bottom: 1px solid $card-border-color;
+    border-bottom: $card-border-width solid $card-border-color;
     background-color: $card-header-bg;
 }
 
@@ -545,17 +545,17 @@ div.toolbarhtml {
 }
 
 #login_login_container fieldset {
-    border-bottom: 1px solid $card-border-color;
+    border-bottom: $card-border-width solid $card-border-color;
     h4 a {
         font-size: 80%;
-        font-weight: normal;
+        font-weight: $font-weight-normal;
     }
 }
 
 .validfiletypes {
     margin: 15px 15px 0 15px;
     padding: $card-spacer-y $card-spacer-x;
-    background-color: scale-color($gray-100, $lightness: 35%);
+    background-color: $accent-bg;
     border-radius: $border-radius;
     font-size: $font-size-sm;
 
@@ -563,7 +563,7 @@ div.toolbarhtml {
         padding-right: 3px;
         display: inline-block;
         &.label {
-            font-weight: 700;
+            font-weight: $font-weight-bold;
         }
     }
 }
@@ -573,7 +573,7 @@ div.toolbarhtml {
 }
 
 .activegrouplabels {
-    background-color: scale-color($gray-100, $lightness: 35%);
+    background-color: $accent-bg;
 
     form .form-group {
         border-bottom: 0;
@@ -582,7 +582,7 @@ div.toolbarhtml {
 
     &.noresults form .form-group {
         padding: $card-spacer-y $card-spacer-x;
-        border-bottom: 1px solid $input-border-color;
+        border-bottom: $input-border-width solid $input-border-color;
     }
 }
 

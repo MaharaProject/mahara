@@ -1,11 +1,13 @@
 .loading-inner {
-    margin: 15px 10px 5px 0;
-    @include media-breakpoint-down(md) {
-        margin-top: 10px;
-    }
+    margin: 20px 10px 5px 0;
+    color: $navbar-toggle-color;
 }
 .loading-message {
     margin-left: 5px;
+
+    @include media-breakpoint-down(md) {
+        display: none;
+    }
 }
 .applying-box {
     font-size: 1.2em;

@@ -3,10 +3,17 @@
         padding: 20px 10px;
 
         .nav-link {
-            font-weight: 700;
+            font-weight: $font-weight-bold;
         }
     }
     &.upgrade-footer a {
-        font-weight: 700;
+        font-weight: $font-weight-bold;
     }
+}
+
+// viewfooter
+.viewfooter {
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
 }

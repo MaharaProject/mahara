@@ -23,8 +23,8 @@
             @include fa-icon();
             border-radius: $border-radius;
             bottom: 0;
-            background: $gray-100;
-            color: $gray-700;
+            background: $card-header-bg;
+            color: $theme-text-midtone-color;
             padding:3px;
             content: "\f040";
             display: block;

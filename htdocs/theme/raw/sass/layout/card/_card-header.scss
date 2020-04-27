@@ -6,7 +6,7 @@
     position: relative;
     display: block;
     font-family: $font-family-base;
-    font-weight: 300;
+    font-weight: $font-weight-light;
     p {
         margin: 0;
     }
@@ -21,7 +21,7 @@
         a:not(.secondary-link) {
             border-width: 0;
             &.user-icon {
-                border: 1px solid $thumbnail-border-color;
+                border: $thumbnail-border-width solid $thumbnail-border-color;
             }
         }
     }
@@ -35,7 +35,7 @@
         display: block;
         color: inherit;
         padding: 10px 15px;
-        border: 1px solid $card-border-color;
+        border: $card-border-width solid $card-border-color;
         border-bottom: 0;
         font-size: $font-size-base * 1.14285;
         .card-secondary > & {
@@ -144,7 +144,7 @@ h3 {
 
     &.text-weight-bold {
         .card-header {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
     }
 }

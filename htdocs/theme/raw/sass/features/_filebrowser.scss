@@ -1,12 +1,12 @@
 .fileupload {
     padding: 20px;
-    border: 1px solid $gray-100;
+    border: $border-width solid $border-color;
     background-color: $body-bg;
     .intro {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
     .description {
-        color: $gray-300;
+        color: $theme-text-midtone-color;
         font-size: $font-size-base * 0.9285;
     }
     .title {
@@ -19,7 +19,7 @@
     margin-bottom: 15px;
     .title {
         padding: 0;
-        margin: 15 0 15px 0;
+        margin: 15px 0 15px 0;
     }
 }
 
@@ -66,7 +66,7 @@
 }
 .filebrowser.form-group {
     margin-bottom: 0;
-    border-bottom: 1px solid $list-group-border-color;
+    border-bottom: $list-group-border-width solid $list-group-border-color;
 }
 #files .filebrowser.form-group {
     border-bottom: 0;

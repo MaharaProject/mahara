@@ -33,7 +33,7 @@
                 }
             }
             legend h4 {
-                border-bottom: 1px solid $card-border-color;
+                border-bottom: $card-border-width solid $card-border-color;
             }
 
             .fieldset-body {
@@ -74,10 +74,10 @@
         }
 
         .fieldset-body {
-            border: 1px solid $card-border-color;
+            border: $card-border-width solid $card-border-color;
             padding: 10px 15px;
             background: $card-bg;
-            margin-bottom: -1px; //remove double border
+            margin-bottom: -$card-border-width; //remove double border
             .jstabs & {
                 border: 0;
             }
@@ -87,7 +87,7 @@
                 margin: 0;
                 position: relative;
                 padding: 20px 0;
-                border-bottom: 1px solid $list-group-border-color;
+                border-bottom: $list-group-border-width solid $list-group-border-color;
                 &.alert {
                     padding: 10px 50px;
                 }
@@ -116,7 +116,7 @@
                         background-color: $card-bg !important;
                         color: $link-color;
                         font-size: $font-size-base !important;
-                        font-weight: 400 !important;
+                        font-weight: $font-weight-normal !important;
                         &:hover,
                         &:focus {
                             text-decoration: underline !important;
@@ -168,7 +168,7 @@
 
     &.card-primary{
         .card-header a {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
     }
 
@@ -185,7 +185,7 @@
     .card-body,
     .card-footer,
     .card-header a {
-        border: 1px solid $card-border-color;
+        border: $card-border-width solid $card-border-color;
     }
 
     .card-header a,
@@ -196,13 +196,13 @@
     // last class will add bottom border to collapsible element(s)
     // Except has-attachment, it doesn't need one.
     &.last .card-header a.collapsed {
-        border-bottom-width: 1px;
+        border-bottom-width: $card-border-width;
     }
 
     // For attachment collapsible
     &.has-attachment {
         border-radius: $border-radius-sm;
-        border-width: 1px;
+        border-width: $card-border-width;
         margin-bottom: 10px;
     }
 }

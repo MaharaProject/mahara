@@ -2,7 +2,7 @@
     display: inline-block;
     margin-right: 5px;
     &.label-default {
-        color: $gray-700;
+        color: $theme-text-color;
     }
 }
 
@@ -16,7 +16,7 @@ a.label.label-default,
 
 .badge {
     margin-right: 5px;
-    padding: 0.2em 0.6em 0.3em;
+    padding: $badge-padding-y $badge-pill-padding-x;
     @include border-radius($badge-border-radius);
     &.badge-warning {
         @extend .text-white;
@@ -32,7 +32,7 @@ a.label.label-default,
 
 .field-label-bold {
     label {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
 }
 

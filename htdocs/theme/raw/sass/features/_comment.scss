@@ -5,7 +5,7 @@
         border-top-width: 0;
     }
     &.list-group-item:first-child {
-        border-top-width: 1px;
+        border-top-width: $list-group-border-width;
     }
 
     .col-width-100 .bt-comment &,
@@ -24,7 +24,7 @@
             .comment-attachment {
                 padding-left: 15px;
                 margin-left: 15px;
-                border-left: 1px solid theme-color("secondary");
+                border-left: $list-group-border-width solid theme-color("secondary");
                 margin-top: -50px;
                 float: left;
                 width: 32%;
@@ -73,7 +73,7 @@
     .collapse & {
         &:first-child {
             // To override card listgroup no top border on first-child
-            border-top: 1px solid $list-group-border-color !important;
+            border-top: $list-group-border-width solid $list-group-border-color !important;
             border-bottom: 0;
         }
     }
@@ -97,7 +97,7 @@
 
     // Nested comments
     .commentreplyview & {
-        border-top-width: 1px;
+        border-top-width: $list-group-border-width;
         width: 100%;
     }
 }

@@ -1,7 +1,7 @@
 .arrow-bar {
     border-radius: $border-radius;
     overflow: hidden;
-    margin-bottom: $grid-gutter-width;
+    margin-bottom: 2rem;
     line-height: 46px;
     display: block;
     width: 100%;
@@ -33,7 +33,7 @@
             @include ellipsis(true);
             display: block;
             color: $arrow-text-color;
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
     }
 

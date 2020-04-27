@@ -4,7 +4,7 @@ $logged-in-height-mobile: 110px;
 
 .dashboard-widget-container {
     @include clearfix;
-    margin-top: $grid-gutter-width;
+    margin-top: 2rem;
 
     .remove-widgets {
         font-size: $font-size-sm;
@@ -56,7 +56,7 @@ $logged-in-height-mobile: 110px;
 
             h2 {
                 margin: 5px 0 3px;
-                font-weight: bold;
+                font-weight: $font-weight-bold;
                 color: $dashboard-widget-title-color;
             }
 
@@ -69,7 +69,7 @@ $logged-in-height-mobile: 110px;
 
         .widget-detail {
             padding: 10px;
-            border: 1px solid $gray-100;
+            border: $border-width solid $border-color;
 
             p {
                 margin-bottom: 0;
@@ -114,7 +114,7 @@ $logged-in-height-mobile: 110px;
                 @include media-breakpoint-down(sm) {
                     border-radius: 0 0 $border-radius $border-radius;
                     margin-top: 0;
-                    border: 1px solid $gray-100;
+                    border: $border-width solid $border-color;
                     background-color: $body-bg;
                     opacity: 1;
                     height: auto;
@@ -151,8 +151,8 @@ $logged-in-height-mobile: 110px;
 }
 
 .dashboard-editable {
-    margin-top: $grid-gutter-width;
-    border-top: 1px solid $btn-secondary-border;
+    margin-top: 2rem;
+    border-top: $border-width solid $border-color;
 
     #editdashboard {
         margin-top: 0;

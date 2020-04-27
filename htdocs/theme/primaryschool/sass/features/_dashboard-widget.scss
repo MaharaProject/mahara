@@ -121,7 +121,7 @@ $logged-in-height-phone: 120px;
 
             h2 {
                 font-family: 'Shadows Into Light Two', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-weight: 400;
+                font-weight: $font-weight-normal;
                 font-size: 30px;
                 color: $white;
 
@@ -217,7 +217,7 @@ $logged-in-height-phone: 120px;
 
                 h2 {
                     margin: 10px 0 15px 0;
-                    font-weight: normal;
+                    font-weight: $font-weight-normal;
 
                     @include media-breakpoint-down (lg) {
                         font-size: 24px;
@@ -237,7 +237,7 @@ $logged-in-height-phone: 120px;
                 opacity:0;
                 margin-top: -$logged-in-height * 2;
                 border: none;
-                font-weight: bold;
+                font-weight: $font-weight-bold;
                 display: inline-block;
                 z-index: 2;
                 background-color: $theme-primary-color;

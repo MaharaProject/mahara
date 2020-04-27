@@ -1,5 +1,5 @@
 .option-alt {
-    border-top: 1px solid $card-border-color;
+    border-top: $card-border-width solid $card-border-color;
     position: relative;
     &.card-body {
         padding: 30px 15px;

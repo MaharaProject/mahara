@@ -351,7 +351,7 @@
  	.timepicker-minute,
  	.timepicker-second {
  		width: 54px;
- 		font-weight: bold;
+ 		font-weight: $font-weight-bold;
  		font-size: $font-size-base * 1.215;
  		margin: 0;
  	}

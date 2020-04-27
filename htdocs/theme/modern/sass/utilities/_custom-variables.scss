@@ -59,6 +59,7 @@ $navbar-inverse-toggle-active-color:        $white;
 $navbar-inverse-toggle-active-bg:           $theme-secondary-color;
 
 // Buttons + Forms
+$btn-secondary-color:              $theme-text-color;
 $btn-secondary-bg:                 #e8eaec;
 $btn-secondary-border:             #caced3;
 
@@ -69,9 +70,6 @@ $btn-primary-border:             scale-color($btn-primary-bg, $lightness: -8%);
 
 // Popovers
 $popover-fallback-border-color:       #ccc;
-
-// Code
-$pre-bg:                      #f5f5f5;
 
 // Cards
 $card-border-color:          #ccc;

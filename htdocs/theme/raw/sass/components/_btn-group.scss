@@ -53,18 +53,18 @@
 // Btn-group works when there are multiple elements eg a, form, button
 .group-item:not(:first-child),
 .btn-group-item:not(:first-child) {
-    margin-left: -1px;
+    margin-left: -$btn-border-width;
 }
 
 .form-as-button.btn-first {
-    margin-right: -1px;
+    margin-right: -$btn-border-width;
 }
 
 .group-item,
 .btn-group-item {
     &.btn,
     .btn {
-        border-right-width: 1px !important; // Overriding standard styling above
+        border-right-width: $btn-border-width !important; // Overriding standard styling above
         padding-top: 3px !important; // Override standard btn padding
     }
     &:only-of-type .btn {
@@ -74,7 +74,7 @@
 
 .btn-group.only-button .btn {
     border-bottom-right-radius: $btn-border-radius !important;
-    border-right-width: 1px !important;
+    border-right-width: $btn-border-width !important;
 }
 
 .btn-group.only-button-top .btn {

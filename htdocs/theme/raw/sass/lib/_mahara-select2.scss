@@ -35,11 +35,11 @@
 
 .select2-container--default {
     .select2-selection--multiple {
-        border: 1px solid $input-border-color;
+        border: $input-border-width solid $input-border-color;
         border-radius: $border-radius;
 
         &:focus {
-            border: 1px solid $input-focus-border-color;
+            border: $input-focus-width solid $input-focus-border-color;
         }
 
         .select2-selection__choice {
@@ -64,7 +64,7 @@
     }
 
     &.select2-container--focus .select2-selection--multiple {
-        border: 1px solid $input-border-color;
+        border: $input-border-width solid $input-border-color;
     }
 
     .select2-dropdown {

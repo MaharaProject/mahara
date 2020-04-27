@@ -126,9 +126,8 @@ iframe {
 
 .btn-action-list + .view-container,
 .btn-group-top + .view-container {
-    margin-top: 60px;
-    @include media-breakpoint-down(sm) {
-        margin-top: 0;
+    @include media-breakpoint-up(md) {
+        margin-top: 60px;
     }
 }
 
@@ -223,30 +222,6 @@ body.presentation-iframe {
         @include media-breakpoint-down(md) {
             padding-top: 20px;
             padding-bottom: 30px;
-        }
-    }
-}
-
-@for $i from 1 through 5 {
-    .header.message-count-#{$i} {
-
-        ~ .pageheader {
-            margin-top: $navbar-height + ($i * 33px);
-
-            @include media-breakpoint-down(sm) {
-                margin-top: 0;
-            }
-        }
-
-    }
-}
-
-.no-site-messages {
-    ~ .pageheader {
-        margin-top: $navbar-height;
-
-        @include media-breakpoint-down(sm) {
-            margin-top: 0;
         }
     }
 }

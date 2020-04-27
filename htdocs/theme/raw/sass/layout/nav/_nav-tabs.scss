@@ -1,15 +1,15 @@
 .nav-tabs {
     padding-left: 0 !important;
     margin-bottom: 0 !important;
-    border-bottom: 1px solid $nav-tabs-border-color;
+    border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
     &.nav {
         li > a {
             margin-right: 2px;
             display: block;
-            font-weight: 300;
+            font-weight: $font-weight-light;
             border: 0;
             border-bottom: 3px solid transparent;
-            padding: 8px 10px;
+            padding: $nav-link-padding-y $nav-link-padding-x;
             font-size: $font-size-base * 1.0714;
             text-decoration: none;
             border-radius: $nav-tabs-border-radius;
