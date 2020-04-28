@@ -46,6 +46,10 @@ if ($labelfilter) {
     set_account_preference($USER->get('id'), 'grouplabels', json_encode(array_values($userlabels)));
 }
 $filter = param_alpha('filter', 'allmy');
+if ($filter == 'all' && $labelfilter !== null) {
+     // when selecting a label in 'All groups' search view switch to 'All my groups'
+    $filter = 'allmy';
+}
 $offset = param_integer('offset', 0);
 $groupcategory = param_signed_integer('groupcategory', 0);
 $groupsperpage = 10;
