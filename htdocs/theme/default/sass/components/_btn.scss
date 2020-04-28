@@ -3,21 +3,3 @@
     border-top: 1px dotted $gray-100;
     padding: 10px;
 }
-
-.drag-default-button {
-    background: $btn-secondary-bg;
-    &:hover,
-    &:focus {
-        background: scale-color($btn-secondary-bg, $lightness: -9.7%);
-        color: $btn-secondary-color;
-        border-color: scale-color($btn-secondary-border, $lightness: -12%);
-    }
-}
-
-.btn-secondary {
-    background: scale-color($btn-secondary-bg, $lightness: -4.75%);
-    &:hover,
-    &:focus {
-        background: scale-color($btn-secondary-bg, $lightness: -14.5%);
-    }
-}
