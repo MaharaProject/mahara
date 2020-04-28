@@ -15,13 +15,15 @@
         display: inline-block;
         margin: 0 15px;
         padding: 7px 15px;
-        color: $navbar-default-link-color;
+        color: $navbar-toggle-color;
         border-radius: $border-radius;
+        font-weight: $font-weight-bold;
 
         &:focus,
         &:hover {
-          color: $navbar-default-link-hover-color;
-          background-color: $navbar-default-link-hover-bg;
+          color: $navbar-toggle-hover-color;
+          background-color: $navbar-toggle-hover-bg;
+          text-decoration: none;
         }
     }
 }
