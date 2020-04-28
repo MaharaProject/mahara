@@ -688,6 +688,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('recaptchaprivatekey'),
                     'disabled' => in_array('recaptchaprivatekey', $OVERRIDDEN)
                 ),
+                'hstsoverride' => array(
+                    'type' => 'switchbox',
+                    'title' => get_string('hstsoverride', 'admin'),
+                    'description' => get_string('hstsoverridedesc', 'admin'),
+                    'defaultvalue' => get_config('hstsoverride'),
+                    'disabled' => in_array('hstsoverride', $OVERRIDDEN)
+                ),
             ),
         ),
         # TODO: this should become "Network Settings" at some point
@@ -882,7 +889,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'timezone', 'userscanchooseviewthemes', 'internalnotificationexpire',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'passwordpolicy',
-        'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'loggedinprofileviewaccess', 'disableexternalresources',
+        'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'hstsoverride', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'owngroupsonly', 'wysiwyg',
