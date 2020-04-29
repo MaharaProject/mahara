@@ -30,7 +30,7 @@
                 {/if}
             </td>
             <td class="text-right s">
-                <button id="{$prefix}_unselect_{$file->id}" name="{$prefix}_unselect[{$file->id}]" class="btn btn-secondary btn-sm text-small button submit unselect" title="{str tag=remove}">
+                <button id="{$prefix}_unselect_{$file->id}" name="{$prefix}_unselect[{$file->id}]" class="btn btn-secondary btn-sm text-small button submit unselect" title="{str tag=remove}" type="button">
                     <span class="icon icon-times icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
                     <span>{str tag=remove}</span>
                 </button>

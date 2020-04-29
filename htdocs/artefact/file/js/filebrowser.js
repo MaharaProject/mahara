@@ -906,8 +906,9 @@ var FileBrowser = (function($) {
         }
         if (!existed) {
             var remove = $('<button>', {'class': 'btn btn-secondary btn-sm text-small button submit unselect',
-                                        'type': 'submit',
                                         'name': self.id+'_unselect[' + id + ']',
+                                        'type': 'button',
+                                        'id': 'editcomposite_filebrowser_unselect_' + id,
                                         'title': get_string('remove')});
             remove.append(
                 $('<span>', {'class': 'icon icon-times icon-lg text-danger left'}),
