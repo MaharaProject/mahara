@@ -1,3 +1,8 @@
+18.10.6 (2020-04-30)
+- 1866913 	Elasticsearch::add_to_queue() not found in 19.04
+- 1871018 	Importing page with embedded image not working in all cases
+- 1813101 	Default no-reply email address is not in valid email address syntax
+
 18.10.5 (2020-03-04)
 - Bug 1840201: 	Elastic search: Search results are not restricted for aretfacts on pages shared with group
 - Bug 1851155: 	LTI duplicate email addresses causing problems
