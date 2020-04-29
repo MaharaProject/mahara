@@ -1,3 +1,177 @@
+20.04.0 (2020-04-29)
+- Bug 1800319: Revise merging of sharing permissions for a collection
+- Bug 1829943: Error deleting institution due to foreign key constraint with view table
+- Bug 1836984: Elasticsearch not restricting the user search when isolated institutions turned on
+- Bug 1840099: Library upgrade: CSS Tidy to 1.7.1
+- Bug 1840201: Elastic search: Search results are not restricted for aretfacts on pages shared with group
+- Bug 1843206: Peer assessment sign-off block has incorrect message
+- Bug 1843357: Library upgrade: remove jquery deprecations
+- Bug 1843847: Select2 accessibility for labelling and removing tags
+- Bug 1845228: Mahara installation issues with MySQL 8.0.17
+- Bug 1846994: Mozilla Backpack needs to be deprecated
+- Bug 1847379: The 'read' column for module_multirecipient_userrelation is a char and not integer
+- Bug 1848100: Skins - cannot Save changes once background image file previewed
+- Bug 1849771: Need a isGridstackRendering flag
+- Bug 1850220: Can't get to site's contacts page from profile page
+- Bug 1850578: TinyMCE editor does not appear in Chrome on Android
+- Bug 1850786: Upgrade script to 19.10 from 19.04.1 fails when converting artefact audio - elasticsearch triggers
+- Bug 1850859: Consolidate CSS for skins to work better with new header and details mode
+- Bug 1850869: Text block - internal anchor does not work
+- Bug 1851155: LTI duplicate email addresses causing problems
+- Bug 1851165: display_tag() missing index error
+- Bug 1851174: 19.10 upgrade is failing at artefact_plans_plan
+- Bug 1851175: Unformatted table name breaks matrix
+- Bug 1851176: Unformatted table name breaks skin editing
+- Bug 1851288: Error when alterting the block placeholder name before choosing block type
+- Bug 1851418: Security upgrade simplesamlphp to 1.17.7
+- Bug 1851557: Members from other institution can be seen when sharing portfolios despite isolated institutions
+- Bug 1851699: cron.php with '$cfg->urlsecret' dosen't work on cronjob under PHP FastCGI enviroment.
+- Bug 1852020: Nav menu missing import / export items
+- Bug 1852522: 'Display page' button should not be displayed for site templates
+- Bug 1852584: Cannot delete a group collection if already pushed to users
+- Bug 1852644: Allowing a site admin to set an external app owner to be someone other than themselves
+- Bug 1853189: Not all fields are showing in xml-rpc auth modal
+- Bug 1853364: find_by_instanceid_username can cause error
+- Bug 1853387: jsform field defaults to no when field is disabled
+- Bug 1855023: Warning produced when adding/ editing an image gallery block
+- Bug 1855373: Update gulp
+- Bug 1855614: Problems with restricting profile access
+- Bug 1856506: gridstack - too much recursion error when translating from old layout
+- Bug 1856759: Issues with layout/tinymce/gridstack and IE11
+- Bug 1857274: "Display page" button is highlighted in edit mode when it shouldn't be
+- Bug 1857379: File attachment display consolidation
+- Bug 1857380: Profile picture settings page needs its own form_id
+- Bug 1857381: Cover letter styles can't be targetted independently for full resume and individual item
+- Bug 1858512: Stop displaying an email profile field as one of the normal fields
+- Bug 1859127: When having restricted file uploading it fails to restrict list on subsequent upload
+- Bug 1859355: Peer assessor can delete another peers assessment
+- Bug 1860050: module_assessmentreport module giving errors on portfolio submission
+- Bug 1860368: Arrow bar in Modern and Ocean not correct wen hovering over non-active tab
+- Bug 1863043: Don't display personal information beyond what is necessary in "Edit access" Ajax response
+- Bug 1863197: Primary school theme home page and dashboard widgets display incorrectly
+- Bug 1863820: navigation block html export - views titles link back to original site
+- Bug 1864757: Can't comment on artefacts on public or secret URL pages
+- Bug 1865400: Security Upgrade SimpleSAML 1.17.7 to 1.18.4
+- Bug 1865822: tagged posts blocktype broken when diplaying a view
+- Bug 1866773: Auth SAML get disco list issue
+- Bug 1866942: user creation will set groupsideblocklabels to 'Array' on the DB
+- Bug 1868613: Design freeze prep for Mahara 20.04
+- Bug 1868916: Image Gallery Blocks do not allow retractable option other than no
+- Bug 1869548: Language string review for Mahara 20.04
+- Bug 1870256: Path to file listed in pdf export is not correct
+- Bug 1870989: Warning produced when trying to copy a group page
+- Bug 1870993: Site not respecting the usepdfexport flag
+- Bug 1871018: Importing page with embedded image not working in all cases
+- Bug 1871473: Incorrect theme displayed for new pages when saved
+- Bug 1873112: Export collections not creating the export pdf
+- Bug 1873113: Pdf export: print preview layout can cause placement / truncation issues of text / images
+- Bug 1873121: HTML / PDF export of Gallery block in slideshow mode is broken
+- Bug 1873357: Have exported pdf files for pages / collections end up in a PDF/ directory next to the HTML/ one
+- Bug 1874540: Page settings form not behaving as expected
+- Bug 1874961: 'Publish' button in peer assessment block dosn't have primary brand colour applied in theme 'Default'
+- Bug 1875103: Change the menu item and page 'Group settings' to 'Default group settings'
+- Bug 1875267: 'Login' button not visible in 'Default' theme when only a link
+- Bug 1690291: Behat: Combine multiple tests for webservices into one
+- Bug 1759054: datepicker not accessible by screen reader
+- Bug 1762845: HTML export still contains the 'details' /'add comment' links for blocks on the pages
+- Bug 1821813: Behat: Add inbox notifications functionality to Objectionable content
+- Bug 1823801: Behat: Confirm Inst tags can be used on Inst pages
+- Bug 1825918: A bit more space between action buttons and skin cards
+- Bug 1829080: Behat: SmartEvidence framework matrix editor functionality
+- Bug 1830811: Mahara.org feeds don't work in rss block
+- Bug 1837340: Behat: Isolated institutions scripts needed
+- Bug 1841501: Behat: check required to verify that the share icon is not displayed for Site page templates
+- Bug 1844076: Only 1 error message shown even though there are 2 on "Site options"
+- Bug 1845133: "Delete" button visible on timeline for comments
+- Bug 1848130: Behat: group_view_block.feature failing consistently
+- Bug 1850559: Problem with deleting a plan task
+- Bug 1850865: iPad iOS 13.1 block comments and details modal content scrolls horizontally
+- Bug 1850880: Profile completion tips links - some are inaccurate
+- Bug 1851193: 'skip to main content' link is not working
+- Bug 1851589: Console error in image gallery
+- Bug 1852513: Behat test coverage for details mode and changes to skins
+- Bug 1853230: Library upgrade: jTLine needs updating to fix jquery deprecations
+- Bug 1853905: keyboard navigation options not working in FF / Chrome
+- Bug 1854421: Get site options form to reload page on updating certain fields
+- Bug 1855349: Tagged Journal Entries are not importing in Leap2a
+- Bug 1857255: signoff/verify modal issue in IE11
+- Bug 1857370: Adjust color of "No tasks yet" in "Plans"
+- Bug 1857371: Left-align performance footer messages
+- Bug 1858707: Links in a header with skin turned on shows normal link color instead of header color
+- Bug 1859364: The gridstack drag icon is showing on the display page as well as edit page
+- Bug 1859528: Update adodb to version 5.20.16
+- Bug 1859605: Mahara portfolio as Moodle assignment cannot be previewed
+- Bug 1861046: Increase contrast of the class "text-midtone" to be accessible in all themes
+- Bug 1861370: group member search could result in fatal error message
+- Bug 1864581: Plan tasks in a block in 'Edit' mode need to have more space
+- Bug 1865409: Replace "user" with more appropriate term on auth.saml.php
+- Bug 1866148: add a function in class Collection to get the first view in the collection
+- Bug 1866528: Reorder options in the site options panels
+- Bug 1866710: Update PHP Mailer to 6.1.5
+- Bug 1866713: Update Chart.js to 2.9.3
+- Bug 1866720: Update htmlpurifier to 4.1.12
+- Bug 1866934: Upgrade Library: popper to v1.16.0
+- Bug 1867707: Add comments and details block headers not changing colour when active
+- Bug 1867999: Empty annotation in peer review mode is not working right
+- Bug 1868657: Image Gallery blocks that display from individually images don't have the details block header
+- Bug 1869966: Multiple html p tags on lang/en.utf8/export.php
+- Bug 1870998: Can accidentally choose yourself when sharing a page when isolated institutions is on
+- Bug 1871219: Footer help link to manual is incorrect during rc release
+- Bug 1871504: error when exporting an empty page
+- Bug 1871515: pdfunite and ghostscript availability check for RHEL/CentOS
+- Bug 1871718: Chrome browser availability check for RHEL/CentOS
+- Bug 1871722: manage collection pages: needs a cancel button and missing lang string
+- Bug 1872860: Choose skin option on edit page settings needs style fix
+- Bug 1873115: Page comments in html export not present in the pdf export
+- Bug 1873122: Comments block not displaying as expected in HTML / PDF export
+- Bug 1874140: Collection exported in PDF has page links that are not helpful
+- Bug 1874143: Websservice configuration page needs some UX tidying
+- Bug 1874375: file uploading message has a 'tick' background
+- Bug 1875118: When clicking a group label on 'All groups' screen, switch to 'All my groups' screen
+- Bug 1838999: Recaptcha link in admin is a 404
+- Bug 1852026: using URLSearchParams to get url parameters in js
+- Bug 1852358: need to update the name for Macedonia
+- Bug 1854297: Behat: fix custome_landing_Page.feature
+- Bug 1855348: Missing language string in elasticsearch: 'servererror'
+- Bug 1855553: Not show the change password required heading when auth method doesn't allow this
+- Bug 1860049: Webservices logs page fails to sort results correctly
+- Bug 1861252: JSON editor library - removed duplicated libray code in src/editors directory
+- Bug 1863804: "Can't use function return value in write context" for finding dwoo directory
+- Bug 1866289: obsolete code in groupviews.php
+- Bug 1825231: Allow bulk export page to export in options other than Leap2A
+- Bug 1826284: PDF export for collections and entire account
+- Bug 1833664: "Lock blocks" doesn't work in group pages
+- Bug 1839411: Update codebase for php 7.3 and php 7.4
+- Bug 1840195: Add a function to check if a cron callfunction needs to run before actually executing it
+- Bug 1846412: To be able to migrate a SAML authed account from one IdP to another
+- Bug 1848092: Add personal labels to groups to allow group filtering
+- Bug 1853066: Allow behat suite to ignore some features
+- Bug 1853069: Combine export options into one export file
+- Bug 1855327: Allow Mahara to record SAML auth attributes to help diagnose auth problems
+- Bug 1855331: Allow one to toggle language setting easier
+- Bug 1855333: Create groups with a pre-defined set of settings different to the default options
+- Bug 1855344: Allow institution short name to be a string containing numbers and allow the string to be minimum 1 char long
+- Bug 1855351: Allow the site to restrict what files are allowed to be uploaded
+- Bug 1855358: Allow the login box to adjust if there are both internal and external login options available
+- Bug 1855383: Create new user_roles system where you can assign custom roles to a user
+- Bug 1855556: Allow minimum information when creating a user via SAML
+- Bug 1855560: Allow SAML auth to set admin/staff roles on create user
+- Bug 1855561: Only set the Strict-Transport-Security header once
+- Bug 1855622: Allow SAML to create institution if it doesn't exist before adding new user to it
+- Bug 1855771: Allow non-mahara exceptions to show a bit more detail
+- Bug 1856260: SmartEvidence framework editor improvements
+- Bug 1857366: Allow Artefact File save_file() function to save image as profileicon if needed
+- Bug 1857374: Make the mobile logo appear at a proper break point
+- Bug 1857401: Make Mahara theming more efficient by consolidating elements and using variables
+- Bug 1857929: Add sign-off and verification details
+- Bug 1857934: Alert to peers when page has been signed off
+- Bug 1857935: Display people from own institution(s) first when searching for them during portfolio sharing
+- Bug 1858143: Replace "user" with a more appropriate term where possible
+- Bug 1859115: Allow SAML UserNotfound be SAML specific
+- Bug 1859120: Allow a 'parent' saml auth instance update the roles for all the similiar instances
+- Bug 1865095: when using mahara.php json_reply() function we are not able to return data on error
+- Bug 1870444: Cover image for page and collection to be seen on 'Pages and collections' overview page
+
 20.04rc2 (2020-04-22)
 
 20.04rc1 (2020-04-03)
