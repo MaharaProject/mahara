@@ -2205,6 +2205,14 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $child->title = $child->hovertitle = $c->get('title');
                 $child->date = format_date(strtotime($child->mtime), 'strftimedaydatetime');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                if (!empty($options['pdfexportfiledir'])) {
+                    if ($child->artefacttype == 'folder') {
+                        $child->title = $child->title . ' [' . $options['pdfexportfiledir'] . $this->get('title') . '/' . $child->title . ']';
+                    }
+                    else {
+                        $child->title = $child->title . ' [' . $options['pdfexportfiledir'] . $child->id . '-' . $child->title . ']';
+                    }
+                }
                 $count = ArtefactTypeComment::count_comments(null, array($child->id));
                 if ($count) {
                     $child->commentcount = $count[$child->id]->comments;

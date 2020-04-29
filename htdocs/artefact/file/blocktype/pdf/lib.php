@@ -59,7 +59,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             $html .= '<br>' . get_string('notrendertopdffiles', 'artefact.file', 1);
             // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
             // We then override the link in the PDF pdf_view_export_data() function.
-            $html .= '<a href="' . $url . '">' . $artefact->get('title') . '</a>';
+            $html .= '<a href="' . $url . '">export_info/files/' . $artefact->get('id') . '_' . $artefact->get('title') . '</a>';
             $html .= '</div>';
         }
         return $html;

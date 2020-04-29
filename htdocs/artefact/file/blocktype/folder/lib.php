@@ -48,6 +48,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         $configdata['viewid'] = $instance->get('view');
         $configdata['simpledisplay'] = true;
         $configdata['pdfexport'] = true; // pass down flag that we are in pdf export
+        $configdata['pdfexportfiledir'] = 'export_info/files/';
         list($result, $commentcount, $comments) = self::render_instance_data($instance, $editing, $versioning, $configdata);
 
         $smarty = smarty_core();

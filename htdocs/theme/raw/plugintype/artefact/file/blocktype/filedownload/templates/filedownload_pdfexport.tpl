@@ -10,7 +10,7 @@
 
         <h4 class="title list-group-item-heading text-inline">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}" class="inner-link">
-                 {$file.title}
+                 {$file.title} [export_info/files/{$file.id}-{$file.title}]
                  <span class="sr-only">
                     {str tag=Details section=artefact.file}
                 </span>
