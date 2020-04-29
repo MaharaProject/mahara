@@ -186,7 +186,8 @@
         </div>
 
         {* Edit form used when js is available *}
-        {if $edit <= 0}
+        {* we show edit buttons if one of this conditions is true $config.edit or $config.editmeta, see filelist.tpl *}
+        {if $edit <= 0 && ($config.edit || $config.editmeta)}
         <table class="d-none">
             <tbody id="{$prefix}_edit_placeholder">
             {include file="artefact:file:form/editfile.tpl" prefix=$prefix groupinfo=$groupinfo colspan=$colspan}

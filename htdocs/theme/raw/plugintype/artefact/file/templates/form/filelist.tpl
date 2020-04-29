@@ -107,7 +107,7 @@
             <td class="right s nowrap text-right">
                 <div class="btn-group">
                 {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
-                    <button type="submit" class="btn btn-sm btn-secondary" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" title="{str tag=select}">
+                    <button type="button" class="btn btn-sm btn-secondary" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" title="{str tag=select}">
                         <span class="icon icon-check icon-lg" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag=selectspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
                     </button>
