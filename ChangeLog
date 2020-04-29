@@ -1,3 +1,13 @@
+19.10.3 (2020-04-30)
+- Bug 836984: Elasticsearch not restricting the user search when isolated institutions turned on
+- Bug 863820: navigation block html export - views titles link back to original site
+- Bug 1865822: tagged posts blocktype broken when diplaying a view
+- Bug 1871018: Importing page with embedded image not working in all cases
+- Bug 1871249: Shared access with users produces a warning in 19.10 when search results count = 0
+- Bug 1867707: Add comments and details block headers not changing colour when active
+- Bug 1867999: Empty annotation in peer review mode is not working right
+- Bug 1872860: Choose skin option on edit page settings needs style fix
+
 19.10.2 (2020-03-04)
 - Bug 1840201: Elastic search: Search results are not restricted for aretfacts on pages shared with group
 - Bug 1849771: Need a isGridstackRendering flag
