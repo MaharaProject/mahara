@@ -1,3 +1,10 @@
+19.04.5 (2020-04-30)
+- Bug 1836984: Elasticsearch not restricting the user search when isolated institutions turned on
+- Bug 1866913: Elasticsearch::add_to_queue() not found in 19.04
+- Bug 1871018: Importing page with embedded image not working in all cases
+- Bug 1871249: Shared access with users produces a warning in 19.10 when search results count = 0
+- Bug 1872860: Choose skin option on edit page settings needs style fix
+
 19.04.4 (2020-03-04)
 - 1840201	Elastic search: Search results are not restricted for aretfacts on pages shared with group
 - 1851155	LTI duplicate email addresses causing problems
