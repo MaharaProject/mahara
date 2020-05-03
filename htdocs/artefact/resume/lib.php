@@ -1297,7 +1297,7 @@ class ArtefactTypeEmploymenthistory extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_address_js_string()
                 ) . ",
                 function (row, data) {
-                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
+                    return jQuery('<span>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
@@ -1632,7 +1632,7 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
                 function (row, data) {
-                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
+                    return jQuery('<span>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
@@ -1752,7 +1752,7 @@ class ArtefactTypeBook extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_urladdress_js_string()
                 ) . ",
                 function (row, data) {
-                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
+                    return jQuery('<span>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
@@ -1893,7 +1893,7 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                     self::get_tablerenderer_attachments_js_string()
                 ) . ",
                 function (row, data) {
-                    return jQuery('<td>', {'style':'text-align:center'}).append(row.clipcount);
+                    return jQuery('<span>', {'style':'text-align:center'}).append(row.clipcount);
                 },
         ";
     }
