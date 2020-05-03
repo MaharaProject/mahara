@@ -158,20 +158,17 @@ if ($data) {
         $n->deleteform = pieform(deletenote_form($id, $n));
     }
 }
-
 // Get the attached files.
 $noteids = array();
 if ($data) {
     $noteids = array_keys($data);
 }
-$files = ArtefactType::attachments_from_id_list($noteids);
-if ($files) {
-    safe_require('artefact', 'file');
+if ($files = ArtefactType::attachments_from_id_list($noteids)) {
     foreach ($files as $file) {
-        $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
         $data[$file->artefact]->files[] = $file;
     }
 }
+
 // Add Attachments count for each Note
 if ($data) {
     foreach ($data as $item) {

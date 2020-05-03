@@ -1210,7 +1210,7 @@ abstract class ArtefactType implements IArtefactType {
         return array();
     }
 
-    public function attachments_from_id_list($artefactids) {
+    public function attachments_from_id_list($artefactids, $viewid=null, $itemid=null) {
         if (empty($artefactids)) {
             return array();
         }
@@ -1219,18 +1219,42 @@ abstract class ArtefactType implements IArtefactType {
         // move all these attachment functions to the artefact file
         // plugin, or we could allow artefact plugins to add stuff
         // to this query.
-        $attachments = get_records_sql_array('
+        $sql = '
             SELECT
                 aa.artefact, aa.attachment, a.artefacttype, a.title, a.description, f.size
             FROM {artefact_attachment} aa
                 INNER JOIN {artefact} a ON aa.attachment = a.id
                 LEFT JOIN {artefact_file_files} f ON a.id = f.artefact
-            WHERE aa.artefact IN (' . join(', ', array_map('intval', $artefactids)) . ')', array());
+            WHERE aa.artefact IN (' . join(', ', array_map('intval', $artefactids)) . ')';
+        $values = array();
+        if ($itemid) {
+            $sql .= ' AND aa.item = ?';
+            array_push($values, $itemid);
+        }
+
+        $attachments = get_records_sql_array($sql, $values);
+
         if (!$attachments) {
             return array();
         }
+
+        $options = array();
+        if ($itemid) {
+          $options['itemid'] = $itemid;
+        }
+        if ($viewid) {
+            $options['viewid'] = $viewid;
+        }
+
+        safe_require('artefact', 'file');
+        foreach ($attachments as &$file) {
+            $options['id'] = $file->attachment;
+            $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', $options);
+        }
+
         return $attachments;
     }
+
 
     public function tags_from_id_list($artefactids) {
         if (empty($artefactids)) {

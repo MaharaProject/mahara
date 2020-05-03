@@ -1048,15 +1048,9 @@ class ArtefactTypeBlogPost extends ArtefactType {
 
         // Get the attached files.
         $postids = array_map(function ($a) { return $a->id; }, $data);
-        $files = ArtefactType::attachments_from_id_list($postids);
-        if ($files) {
-            safe_require('artefact', 'file');
+        $viewid = isset($viewoptions['viewid']) ? $viewoptions['viewid'] : null;
+        if ($files = ArtefactType::attachments_from_id_list($postids, $viewid)) {
             foreach ($files as &$file) {
-                $params = array('id' => $file->attachment);
-                if (!empty($viewoptions['viewid'])) {
-                    $params['viewid'] = $viewoptions['viewid'];
-                }
-                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', $params);
                 $data[$file->artefact]->files[] = $file;
             }
         }

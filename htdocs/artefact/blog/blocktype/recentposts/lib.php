@@ -127,20 +127,11 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
                     $data->tags = $tags;
                 }
                 $data->owner = $blog->get('owner');
-                $sql = 'SELECT a.title, a.id, a.artefacttype, af.size, a.description
-                        FROM {artefact} a
-                        JOIN {artefact_file_files} af ON af.artefact = a.id
-                        JOIN {artefact_attachment} at ON at.attachment = a.id
-                        WHERE at.artefact = ?
-                        ORDER BY a.title';
-                if ($attachments = get_records_sql_array($sql, array($data->id))) {
-                    foreach ($attachments as &$attachment) {
-                        $f = artefact_instance_from_id($attachment->id);
-                        $attachment->iconpath = $f->get_icon(array('id' => $attachment->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                        $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->id;
-                        if (isset($options['viewid'])) {
-                            $attachment->downloadpath .= '&view=' . $options['viewid'];
-                        }
+                if ($attachments = ArtefactType::attachments_from_id_list(array($data->id), $instance->get('view'))) {
+                    foreach ($attachments as $attachment) {
+                        $attachment->id = $attachment->attachment;
+                        $attachment->iconpath = $attachment->icon;
+                        $attachment->downloadpath = get_config('wwwroot') . 'artefact/file/download.php?file=' . $attachment->attachment;
                     }
                     $data->attachments = $attachments;
                 }
