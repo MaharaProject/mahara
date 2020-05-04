@@ -111,14 +111,14 @@
                 </option>
                 {/if}
 
-            {if $moderator && !empty($otherforums) && (count($otherforums) > 0)}
+            {if $moderator && is_array($otherforums) && (count($otherforums) > 0)}
                 <option value="moveto">
                     {str tag="Moveto" section="interaction.forum"}
                 </option>
             {/if}
             </select>
 
-            {if $moderator && !empty($otherforums) && (count($otherforums) > 0)}
+            {if $moderator && is_array($otherforums) && (count($otherforums) > 0)}
             <select name="newforum" id="otherforums" class="d-none form-control select">
                 {foreach from=$otherforums item=otherforum}
                 <option value="{$otherforum->id}">
