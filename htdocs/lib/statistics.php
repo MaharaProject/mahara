@@ -75,13 +75,13 @@ function site_statistics($full=false) {
             $data['uptodate'] = get_string('uptodate', 'admin');
         }
         else {
-            $download_page = 'https://launchpad.net/mahara/+download';
+            $download_page = 'https://www.mahara.org/download';
             $data['strlatestversion'] = get_string('latestversionis', 'admin', $download_page, $latestversion);
         }
     }
     if ($branchlatest = get_config('latest_branch_version')) {
         if ($data['release'] != $branchlatest) {
-            $download_page = 'https://launchpad.net/mahara/+milestone/' . $branchlatest;
+            $download_page = 'https://www.mahara.org/download';
             $data['strlatestbranchversion'] = get_string('latestbranchversionis', 'admin', $download_page, $branchlatest);
         }
     }
