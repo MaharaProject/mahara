@@ -28,7 +28,7 @@
         font-family: $headings-font-family;
         font-size: $h4-font-size;
         font-weight: $headings-font-weight;
-        border-bottom: 2px solid $card-secondary-border;
+        border-bottom: $card-secondary-border-width solid $card-secondary-border-color;
         margin-top: 0;
 
         // In page builder we can choose to not have a heading,
@@ -36,8 +36,7 @@
         // Use a placeholder for visual help
         // will appear with the no-heading class in view mode
         &.card-header-placeholder {
-            border: 1px solid scale-color($gray-300, $lightness: -10.93);
-            border-style: dashed;
+            border: $card-border-width dashed $card-border-color;
             background-color: $card-bg;
             .blockinstance-header {
                 opacity:0.6;
@@ -49,16 +48,16 @@
     }
     &.card-warning {
          > .card-header, .card-header-nested {
-            border-left: 4px solid $card-secondary-border;
+            border-left: ($card-secondary-border-width * 2) solid $card-secondary-border-color;
             background-color: $state-warning-bg;
-            border-bottom: 1px solid $state-warning-border;
+            border-bottom: $card-border-width solid $state-warning-border;
         }
         .card-body {
             background-color: $state-warning-bg;
         }
     }
     .card-header-plain {
-        border: 1px solid scale-color($gray-300, $lightness: -10.93);
+        border: $card-border-width solid $card-border-color;
     }
     .list-group .list-group-item {
         border-left: 0;

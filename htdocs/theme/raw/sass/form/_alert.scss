@@ -21,7 +21,7 @@
         >thead>tr>th {
             color: inherit;
             vertical-align: bottom;
-            border-bottom: 1px solid rgba($gray-300, 0.05);
+            border-bottom: $table-border-width solid rgba($table-border-color, 0.05);
         }
         >thead>tr>th,
         >thead>tr>td,
@@ -29,14 +29,14 @@
         >tbody>tr>td,
         >tfoot>tr>th,
         >tfoot>tr>td {
-            border-top: 1px solid $state-info-border;
+            border-top: $table-border-width solid $table-border-color;
             &:first-child {
                 padding-left:0;
             }
         }
     }
     a {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
 }
 
@@ -56,8 +56,8 @@
 
 .alert-default {
     background-color: rgba($body-bg, 0.4);
-    border: 1px solid scale-color($gray-400, $lightness: 8%);
-    color: $gray-500;
+    border: $alert-border-width solid scale-color($gray-400, $lightness: 8%);
+    color: $theme-text-midtone-color;
     padding-left: 1.25rem;
 }
 
@@ -110,7 +110,7 @@
 }
 .alert-submitted {
     background-color: $state-submitted-bg;
-    border: 1px solid $state-submitted-border;
+    border: $alert-border-width solid $state-submitted-border;
     color: $state-submitted-text;
     padding-left: 1.25rem;
 }

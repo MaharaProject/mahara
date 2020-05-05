@@ -31,10 +31,10 @@ td.tiny {
 
     thead {
         text-transform: uppercase;
-        color: $gray-500;
+        color: $theme-text-midtone-color;
         font-size: $font-size-base;
         th, td {
-            font-weight: 300;
+            font-weight: $font-weight-light;
         }
         .allnone-toggles {
             .btn-sm {
@@ -64,7 +64,7 @@ td.tiny {
             position: relative;
             top: -3px;
             margin-left: 3px;
-            color: $gray-300;
+            color: $theme-text-midtone-color;
         }
         .asc > a::after {
             content: fa-content(\f0d7);
@@ -120,7 +120,7 @@ td.tiny {
             }
         }
         h3 {
-            font-weight: 300;
+            font-weight: $font-weight-light;
             font-family: $font-family-sans-serif;
             font-size: $font-size-base * 1.214285;
             margin: 0;
@@ -160,7 +160,7 @@ td.tiny {
             background-color: $table-active-bg;
         }
         > th {
-            border-top: 1px solid $table-border-color;
+            border-top: $table-border-width solid $table-border-color;
         }
         &.warning td {
             background-color: $state-warning-bg;
@@ -288,7 +288,7 @@ table.table tr {
     vertical-align: bottom;
     margin: 5px;
     font-size: $font-size-base * 1.14285;
-    font-weight: 300;
+    font-weight: $font-weight-light;
 }
 
 // Unset border top on the first row of the table
@@ -317,15 +317,14 @@ table.table tr {
         word-break: break-all;
     }
     >tbody>tr:first-child>td {
-        border-top-width: 1px;
+        border-top-width: $table-border-width;
     }
 }
 // unless being displayed in a block
 .bt-entireresume,
 .bt-entireresume-editor,
 .bt-resumefield,
-.bt-resumefield-editor
- {
+.bt-resumefield-editor {
     .table.profile-info {
         >tbody>tr:first-child>th,
         >tbody>tr:first-child>td {

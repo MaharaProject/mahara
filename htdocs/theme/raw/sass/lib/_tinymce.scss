@@ -78,7 +78,7 @@ label.sr-only + div.tox-tinymce {
     .tox-dialog__title {
         font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
         font-size: 16px;
-        font-weight: 300;
+        font-weight: $font-weight-light;
     }
 
     .tox-textfield,
@@ -105,7 +105,7 @@ label.sr-only + div.tox-tinymce {
     background-color: transparent;
     border-color: transparent;
     text-decoration-line: underline;
-    font-weight: 400;
+    font-weight: $font-weight-normal;
     color: $btn-primary-bg;
     box-shadow: none;
     &:hover {

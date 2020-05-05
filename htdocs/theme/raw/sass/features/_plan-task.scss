@@ -6,8 +6,8 @@
 }
 
 .plan_incomplete {
-  background: #FEE7E7;
-  color: #333333;
+  background: scale-color($danger, $lightness: 90%);
+  color: $theme-text-color;
 }
 
 .task-item .complete-task .icon,

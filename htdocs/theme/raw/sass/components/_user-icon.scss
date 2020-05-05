@@ -3,7 +3,7 @@
     background-color: $card-bg;
     padding: 3px;
     display: table;
-    border: 1px solid $thumbnail-border-color;
+    border: $thumbnail-border-width solid $thumbnail-border-color;
     overflow: hidden;
     position: relative;
 

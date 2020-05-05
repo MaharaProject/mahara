@@ -4,7 +4,7 @@ legend {
 }
 
 input + label {
-    font-weight: normal;
+    font-weight: $font-weight-normal;
 }
 
 input[type=text],
@@ -34,7 +34,7 @@ label,
     // @extend .col-form-label;
     max-width: 100%;
     padding-right: 10px;
-    font-weight: normal;
+    font-weight: $font-weight-normal;
     .form-condensed & {
         min-width: 100px;
         &.pseudolabel {
@@ -49,7 +49,7 @@ label,
         width:0;
     }
     .topic & {
-        font-weight: 300;
+        font-weight: $font-weight-light;
     }
     .form-inline & {
         min-width: 0;
@@ -143,7 +143,7 @@ label,
     min-height: $line-height-computed; // Ensure the input doesn't jump when there is no text
     padding-left: 20px;
     margin-bottom: 0;
-    font-weight: normal;
+    font-weight: $font-weight-normal;
     cursor: pointer;
   }
 }
@@ -258,7 +258,7 @@ textarea.resizable {
 }
 
 .form-control:disabled {
-    color: $gray-300;
+    color: $theme-text-midtone-color;
 }
 
 .form-message-inline  {
@@ -330,7 +330,7 @@ textarea.resizable {
 }
 
 #progress-iframe { // old style progress bars, e.g. portfolio export
-    border: 1px solid $gray-500;
+    border: $border-width solid $border-color;
     height: 40px;
     width: 100%;
     max-width: 650px;

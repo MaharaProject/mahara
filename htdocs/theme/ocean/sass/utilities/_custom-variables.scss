@@ -11,7 +11,7 @@ $arrow-link-background-color:   $white;
 
 // color for the secondary title in sections (cf. groups)
 $dashboard-widget-bg:                       scale-color($theme-secondary-color, $lightness: 90%);
-$dashboard-widget-title-color:              #333333;
+$dashboard-widget-title-color:              $theme-text-color;
 $dashboard-widget-circle-bg:                transparent;
 $dashboard-widget-cirlce-icon-color:        $theme-secondary-color;
 

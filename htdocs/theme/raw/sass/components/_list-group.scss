@@ -53,7 +53,7 @@
     }
 
     &.attachment-incontent {
-        border-left: 1px solid $list-group-border-color; // Full Journal attachment list block
+        border-left: $list-group-border-width solid $list-group-border-color; // Full Journal attachment list block
     }
 
     .modal_link .icon {
@@ -79,9 +79,8 @@
     margin-top: 0;
     margin-bottom: 5px;
     a {
-        &:hover {
-            color: $link-color;
-            text-decoration: underline;
+        &:hover,
+        &:focus {
             &.inner-link {
                 text-decoration: underline;
             }
@@ -109,7 +108,7 @@
     .notes {
         font-weight: $font-weight-base;
         font-size: $font-size-base;
-        color: $gray-300;
+        color: $theme-text-lighttone-color;
         &.bold {
             font-weight: $font-weight-bold;
         }
@@ -138,14 +137,14 @@
     .notes {
         font-weight: $font-weight-base;
         font-size: $font-size-base;
-        color: $gray-300;
+        color: $theme-text-midtone-color;
         &.bold {
             font-weight: $font-weight-bold;
         }
     }
 }
 .list-group-item-private {
-    background-color: $gray-100;
+    background-color: $list-group-disabled-bg;
     .text-midtone {
         color: $theme-text-color;
     }
@@ -164,15 +163,13 @@
 .list-group-item-link {
     padding: 0;
     a {
-        @extend .text-default;
         font-size: $font-size-sm;
         display: block;
         padding: 10px 15px;
-        color: $link-color;
-        &:hover {
+        &:hover,
+        &:focus {
             background: $list-group-hover-bg;
             text-decoration: none;
-            color:$link-hover-color;
         }
         small {
             color: $link-color;
@@ -221,9 +218,6 @@
     &.draft,
     &.list-group-item-warning {
         @extend .list-group-item-warning;
-    }
-    &.published {
-        background: $body-bg;
     }
     &.flush {
         padding: 10px 0;
@@ -288,11 +282,11 @@
         margin: 10px 0;
     }
     &.ui-sortable-handle {
-        border-bottom: 1px solid $list-group-border-color;
+        border-bottom: $list-group-border-width solid $list-group-border-color;
     }
 }
 
-.list-group-item-default{
+.list-group-item-default {
     background-color: rgba(scale-color(theme-color("secondary"), $lightness: 62.75), 0.5);
 }
 
@@ -362,7 +356,7 @@
 }
 
 .annotation-feedback {
-    border-top: 1px solid $list-group-border-color !important;
+    border-top: $list-group-border-width solid $list-group-border-color !important;
 }
 
 .feedback.modal {
@@ -406,19 +400,19 @@
 }
 
 .card.bt-wall > .block .list-group:last-child .list-group-item:last-child {
-    border-bottom: 1px solid $list-group-border;
+    border-bottom: $list-group-border-width solid $list-group-border;
 }
 
 .card.card-secondary.bt-entireresume,
 .card.card-secondary.bt-entireresume-editor {
     .list-group {
         h4.title {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
             margin: 10px 0;
         }
         .resume-content {
             h5.title {
-              font-weight: bold;
+              font-weight: $font-weight-bold;
             }
             .card-body {
               padding: 0 0 15px 0;
@@ -433,10 +427,10 @@
 .bt-groupviews,
 .bt-groupviews-editor {
     h4.title {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
         font-size: $font-size-base;
         padding: 10px 0;
-        border-bottom: 1px solid $list-group-border;
+        border-bottom: $list-group-border-width solid $list-group-border;
         margin: 0;
     }
 }
@@ -444,7 +438,7 @@
 .bt-plans,
 .bt-plans-editor {
     h4.title {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
         font-size: $font-size-base;
         margin: 0;
         padding-bottom: 10px;
@@ -525,38 +519,51 @@
     .list-group-item:first-child,
     + .list-group-item:first-child,
     .block-header:first-child + .list-group-item {
-      border-top: 1px solid $list-group-border-color;
+      border-top: $list-group-border-width solid $list-group-border-color;
     }
   }
-
   &.bt-plans .block .listing,
   &.bt-plans-editor .block .listing {
-    h4 + .list-group,
-    p + .list-group,
-    .tags + .list-group {
+    h4 ~ .list-group,
+    p ~ .list-group,
+    .tags ~ .list-group {
       .list-group-item:first-child,
       + .list-group-item:first-child,
       .block-header:first-child + .list-group-item {
-        border-top: 1px solid $list-group-border-color;
+        border-top: $list-group-border-width solid $list-group-border-color;
       }
     }
+  }
+  // when folder block has content-text above list
+  .content-text ~ .folder-card {
+    border-top: $list-group-border-width solid $list-group-border-color;
   }
 
   // leave the bottom border in last child in card-secondary
   .list-group {
       &:last-child .list-group-item:last-child {
-          border-bottom: 1px solid $list-group-border-color;
+          border-bottom: $list-group-border-width solid $list-group-border-color;
           border-bottom-right-radius: 0;
           border-bottom-left-radius: 0;
       }
   }
-  // exceptions
+
+  // attachment list
+  .has-attachment.card {
+    .list-group .list-group-item:first-child {
+      border-top: $list-group-border-width solid $list-group-border-color;
+    }
+    .list-group .list-group-item:last-child {
+      border-bottom: 0;
+    }
+  }
+
+  // remove padding around flushed elements in resume
   &.bt-entireresume,
-  &.bt-entireresume-editor {
+  &.bt-entireresume-editor,
+  &.bt-resumefield,
+  &.bt-resumefield-editor {
     .list-group-item {
-      .resume-content:last-child .list-group .list-group-item:last-child {
-        border-bottom: 0;
-      }
       &.flush {
         padding-bottom: 0;
       }

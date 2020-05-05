@@ -4,12 +4,12 @@ a.card-footer {
     display: block;
     &:hover {
         color: $link-hover-color;
-        background: $gray-100;
+        background: scale-color($card-footer-bg, $lightness: 20%);
         text-decoration: none;
         .icon {
-            color: $gray-300;
+            color: $theme-text-midtone-color;
         }
-        .icon.float-right { //only apply link colorto right aligned icons
+        .icon.float-right { //only apply link color to right aligned icons
             color: $link-color;
         }
     }
@@ -63,7 +63,7 @@ a.card-footer {
         }
     }
     a:not(.btn) {
-        color: $gray-700;
+        color: $theme-text-color;
     }
 }
 

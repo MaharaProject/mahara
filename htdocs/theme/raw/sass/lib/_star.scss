@@ -56,7 +56,7 @@
     &.star-rating-off {
         a {
             @extend .icon-star;
-             color: $gray-300;
+             color: $theme-text-midtone-color;
         }
     }
     &.heart-rating-hover,
@@ -68,7 +68,7 @@
     &.heart-rating-off {
         a {
             @extend .icon-heart;
-            color: $gray-300;
+            color: $theme-text-midtone-color;
         }
     }
     &.thumbs-up-rating-hover,
@@ -80,7 +80,7 @@
     &.thumbs-up-rating-off {
         a {
             @extend .icon-thumbs-up;
-            color: $gray-300;
+            color: $theme-text-midtone-color;
         }
     }
     &.check-circle-rating-hover,
@@ -92,7 +92,7 @@
     &.check-circle-rating-off {
         a {
             @extend .icon-check-circle;
-            color: $gray-300;
+            color: $theme-text-midtone-color;
         }
     }
 }

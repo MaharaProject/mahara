@@ -90,7 +90,7 @@
             color: $navbar-default-link-color;
             background-color: $navbar-default-link-bg;
             padding: 10px 15px;
-            font-weight: normal;
+            font-weight: $font-weight-normal;
             border-top: 1px solid $navbar-default-link-border;
             border-bottom: 1px solid $navbar-default-link-border;
             margin-top: -1px;
@@ -137,7 +137,7 @@
             background-color: $navbar-inverse-bg;
             padding: 9px 2.5em 9px;
             margin-top: -1px;
-            font-weight: normal;
+            font-weight: $font-weight-normal;
             &:hover,
             &:focus {
                 text-decoration: none;
@@ -147,7 +147,7 @@
         }
 
         .active > a {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
             background-color: $navbar-inverse-link-active-bg;
             color: $navbar-inverse-link-active-color;
             &:hover,

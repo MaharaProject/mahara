@@ -6,7 +6,7 @@ $width-sm: 90%;
 .blockinstance-as-modal {
     background: $white;
     padding: 20px;
-    border: 1px solid $modal-header-border-color;
+    border: $modal-header-border-width solid $modal-header-border-color;
 }
 
 
@@ -42,7 +42,7 @@ $width-sm: 90%;
         max-height: 100%;
     }
     .modal-body {
-        @include border-bottom-radius(3px);
+        @include border-bottom-radius($border-radius);
         max-height: 90%;
         height: 90%;
         overflow-y: auto;
@@ -100,7 +100,7 @@ $width-sm: 90%;
     padding: 10px 15px;
     h4, .mce-title {
         font-family: $font-family-base;
-        font-weight: 300;
+        font-weight: $font-weight-light;
         font-size: $font-size-base * 1.14285;
     }
     .close,

@@ -10,7 +10,7 @@
 .elasticsearch-filters {
     background-color: scale-color($card-bg, $lightness: -1.40%);
     + .no-results {
-        border-top: 1px solid $card-border-color;
+        border-top: $card-border-width solid $card-border-color;
     }
     .filter {
         padding: 0 15px;
@@ -60,11 +60,11 @@
         padding-left: 25px;
     }
     .search-highlight {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
 }
 
 .elasticsearch-status {
     color: scale-color($link-color, $lightness: -31.75%);
-    font-weight: bold;
+    font-weight: $font-weight-bold;
 }

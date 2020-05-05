@@ -48,13 +48,13 @@ div.help {
     font-family: $font-family-base;
     font-size: $font-size-base;
     text-transform: none;
-    font-weight: normal;
+    font-weight: $font-weight-normal;
     line-height: $line-height-base;
     text-align: left;
     background-color: $popover-bg;
     background-clip: padding-box;
-    border: 1px solid $popover-border-color;
-    border-radius: $border-radius-lg;
+    border: $popover-border-width solid $popover-border-color;
+    border-radius: $popover-border-radius;
     padding: 0 14px 8px;
     @include box-shadow(0 5px 10px rgba(0,0,0,.2));
     color: $theme-text-color;
@@ -64,7 +64,7 @@ div.help {
 
     .help-dismiss {
         font-size: $font-size-base * 1.14285;
-        color: $gray-500;
+        color: $theme-text-midtone-color;
 
         .icon-times {
           margin-top: 9px;
@@ -76,8 +76,8 @@ div.help {
         font-size: $font-size-base;
         padding: 8px 14px;
         background-color: $popover-header-bg;
-        border-bottom: 1px solid scale-color($popover-header-bg, $lightness: -5%);
-        border-radius: $border-radius $border-radius 0 0;
+        border-bottom: $popover-border-width solid scale-color($popover-header-bg, $lightness: -5%);
+        border-radius: $popover-border-radius $popover-border-radius 0 0;
         font-weight: $headings-font-weight;
     }
 }

@@ -9,7 +9,7 @@
     }
 
     h2 {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
         font-size: $font-size-base;
         margin-top: 0;
         padding-bottom: 10px;
@@ -17,7 +17,7 @@
         @include media-breakpoint-up(lg) {
           margin-right: 300px;
           margin-bottom: 0;
-          border-bottom: 1px solid $list-group-border-color;
+          border-bottom: $border-width solid $border-color;
         }
         @include media-breakpoint-down(md) {
           padding-bottom: 0;
@@ -31,12 +31,6 @@
         right: 0px;
         bottom: -1px;
       }
-    }
-    .prevpage {
-        background-color: $body-bg;
-    }
-    .nextpage {
-        background-color: $body-bg;
     }
     nav.custom-dropdown {
         margin: 0 auto;

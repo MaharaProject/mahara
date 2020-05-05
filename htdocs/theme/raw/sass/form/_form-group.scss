@@ -14,13 +14,13 @@
     &.select {
         label {
             display: block;
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
     }
 }
 
 .form-group {
-    border-bottom: 1px solid $list-group-border-color;
+    border-bottom: $list-group-border-width solid $list-group-border-color;
     margin: 0;
     padding: 20px 0;
     position: relative;
@@ -32,7 +32,7 @@
             padding-bottom: 0;
         }
         &.input-pair ~ .input-pair {
-            border-left: 1px solid $list-group-border-color;
+            border-left: $list-group-border-width solid $list-group-border-color;
             padding-left: 20px;
             margin-left: 15px;
             padding-top: 0;
@@ -127,7 +127,7 @@
     &.submit {
         background: transparent;
         padding: 0;
-        padding-top: $grid-gutter-width;
+        padding-top: 2rem;
         border: 0;
         .form-inline & {
             padding: 0;
@@ -315,7 +315,7 @@
             margin: 0;
         }
         &.htmldescription {
-            border-bottom: 1px solid $list-group-border-color;
+            border-bottom: $list-group-border-width solid $list-group-border-color;
         }
     }
     &.double {
@@ -423,7 +423,7 @@
     }
 
     .modal .fieldset & {
-        border-bottom: 1px solid $list-group-border-color;;
+        border-bottom: $list-group-border-width solid $list-group-border-color;;
     }
 
     &.wysiwyg {
@@ -523,7 +523,7 @@
     }
 
     .description:not(.html) {
-        color: $gray-300;
+        color: $theme-text-midtone-color;
         font-style: italic;
         font-size: $font-size-base * 0.9285;
         max-width: 90%;
@@ -558,7 +558,7 @@
     }
 
     &.top-line {
-        border-top: 1px solid $list-group-border-color;
+        border-top: $list-group-border-width solid $list-group-border-color;
     }
 
     input[type=text].secondary-textbox {
@@ -575,18 +575,18 @@
 
 // Style placeholder text
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color: $gray-300 !important;
+    color: $theme-text-midtone-color !important;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color: $gray-300 !important;
+   color: $theme-text-midtone-color !important;
    opacity:  1;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color: $gray-300 !important;
+   color: $theme-text-midtone-color !important;
    opacity:  1;
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color: $gray-300 !important;
+   color: $theme-text-midtone-color !important;
 }
 
 // upload forms browse button overlaps on phone

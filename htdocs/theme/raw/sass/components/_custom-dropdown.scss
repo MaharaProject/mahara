@@ -15,7 +15,7 @@
         padding: 0;
         margin: 0;
         background-color: $body-bg;
-        border: 1px solid $btn-secondary-border;
+        border: $btn-border-width solid $btn-secondary-border;
 
         > li > a {
             // option links

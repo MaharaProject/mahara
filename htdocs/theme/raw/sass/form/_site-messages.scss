@@ -76,9 +76,14 @@
                 margin-top: $navbar-height + ($i * 33px);
             }
         }
+
+        ~ .pageheader {
+            @include media-breakpoint-up(md) {
+                margin-top: $navbar-height + ($i * 33px);
+            }
+        }
     }
 }
-
 
 .no-site-messages {
     top: 0;
@@ -86,6 +91,12 @@
 
     + .main-content,
     + .main-content .toolbar-affix.affix {
+        @include media-breakpoint-up(md) {
+            margin-top: $navbar-height;
+        }
+    }
+
+    ~ .pageheader {
         @include media-breakpoint-up(md) {
             margin-top: $navbar-height;
         }

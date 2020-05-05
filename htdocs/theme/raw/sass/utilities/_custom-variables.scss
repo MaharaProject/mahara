@@ -105,23 +105,27 @@ $state-submitted-bg:                        scale-color($yellow, $lightness: 90%
 $state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
 
 // Buttons + Forms
-$btn-font-family:                           $font-family-base;
-$btn-secondary-color:                       #theme-text-color;
+$btn-font-family:                           $font-family-base !default;
+
+$btn-secondary-color:                       $theme-text-color !default;
 $btn-secondary-bg:                          #F9F9F9 !default;
-$btn-secondary-border:                      $secondary !default;
+$btn-secondary-border:                      $border-color !default;
 
 $btn-primary-color:                         $white !default;
 $btn-primary-bg:                            $theme-primary-color !default;
 $btn-primary-border:                        scale-color($theme-primary-color, $lightness: -16%) !default;
 
-$btn-bg-disabled-color:                     #f9f9f9 !default;
+$btn-disabled-color:                        #ddd !default;
+$btn-disabled-bg:                           #f9f9f9 !default;
+$btn-disabled-border:                       #ddd !default;
 
 // Cards
 $card-border-color:                         #ddd !default;
 $card-header-bg:                            #f9f9f9 !default;
 $card-footer-bg:                            #f5f5f5 !default;
 
-$card-secondary-border:                     #ddd !default;
+$card-secondary-border-color:               #ddd !default;
+$card-secondary-border-width:               2px !default;
 
 // Tables
 $cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
@@ -159,3 +163,11 @@ $theme-block-header-active-color:           $white !default;
 // Collapse/expand indicator
 $collapse-indicator-color:                  scale-color($gray-500, $lightness: 37.5%) !default;
 $collapse-indicator-hover-color:            $gray-500 !default;
+
+// Accent back for forms/search/admin
+$accent-bg:                                 scale-color($gray-100, $lightness: 35%) !default;
+
+// Form with header's background color
+$form-with-heading-bg:                      scale-color($gray-100, $lightness: 35%) !default;
+$h1heading-border-color:                    rgba($black, .125) !default;
+$h1heading-border-width:                    1px !default;

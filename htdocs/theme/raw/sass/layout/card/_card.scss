@@ -1,6 +1,6 @@
 .card {
     margin-bottom: $line-height-computed;
-    border: 1px solid $card-border-color;
+    border: $card-border-width solid $card-border-color;
     border-radius: $card-border-radius;
     form {
         margin:0;
@@ -12,7 +12,7 @@
     small {
         margin-top:5px;
         line-height: 1.5em;
-        color: $gray-500;
+        color: $theme-text-midtone-color;
         display: block;
     }
 
@@ -33,7 +33,7 @@
         }
 
         dd {
-            color: $gray-500;
+            color: $theme-text-midtone-color;
             line-height: 1.5em;
             font-size: $font-size-base * 0.85715;
         }
@@ -52,7 +52,7 @@
 
     .has-attachment {
         border-radius: $border-radius-sm;
-        border-width: 1px;
+        border-width: $card-border-width;
     }
     .activegrouplabels {
         padding: $card-spacer-y $card-spacer-x;

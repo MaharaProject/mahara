@@ -64,8 +64,8 @@
             float: left;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
-            border-left: 1px solid $btn-secondary-border;
-            margin-left: -1px;
+            border-left: $btn-border-width solid $btn-secondary-border;
+            margin-left: -$btn-border-width;
             @include media-breakpoint-up(md) {
                 float: right;
             }

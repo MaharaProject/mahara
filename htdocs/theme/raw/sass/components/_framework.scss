@@ -79,8 +79,8 @@
             font-size: $font-size-sm;
             margin: 0;
             padding: 8px 14px;
-            background-color: scale-color($table-accent-bg, $lightness: -2%);
-            border-bottom: 1px solid scale-color($gray-100, $lightness: -3.78);
+            background-color: $card-header-bg;
+            border-bottom: $border-width solid scale-color($border-color, $lightness: -3.78);
             border-radius: $border-radius $border-radius 0 0;
         }
         .popover-content {
@@ -104,7 +104,7 @@
             position: relative;
 
             &:hover .dot {
-                color: $gray-300;
+                color: $theme-text-midtone-color;
             }
 
             &:hover:before,
@@ -140,7 +140,7 @@
 
 }
 .assessment {
-    color: $gray-700;
+    color: $theme-text-color;
 
     .assessmentfeedback {
         &.begun {

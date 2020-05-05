@@ -2,25 +2,22 @@
 
 
 body, p {
-    font-weight: 400;
+    font-weight: $font-weight-normal;
 }
 
 h1 {
     @extend .page-header;
-    .admin & {
-        text-shadow: 1px 1px 0 rgba($text-shadow, 0.5);
-        color: $gray-500;
-        border-bottom-color: $list-group-border-color;
-    }
-
-    .page-header & {
-        border-bottom:0;
-    }
+    padding-bottom: $line-height-computed * 0.4525;
+    margin-bottom: 20px;
+    border-bottom: $h1heading-border-width solid $h1heading-border-color;
 }
 
 #notifications-page-header {
     @extend .page-header;
     clear: both;
+    padding-bottom: $line-height-computed * 0.4525;
+    margin-bottom: 20px;
+    border-bottom: $h1heading-border-width solid $h1heading-border-color;
 }
 
 // Add padding if there is no navigation
@@ -30,6 +27,9 @@ h1 {
 
 // Page or collections page header title
 .pageheader {
+    padding-bottom: $line-height-computed * 0.4525;
+    margin-bottom: 20px;
+    margin-top:0;
     h1 {
         margin: 40px 0 10px 0;
         padding: 0;
@@ -43,23 +43,19 @@ h1 {
 }
 
 .page-header {
-    padding-bottom: $line-height-computed * 0.4525;
-    margin-bottom: 20px;
-    border-bottom: 1px solid $gray-200;
     ~ .with-heading {
-        margin-top: -16px;
-        @include media-breakpoint-down(sm) {
-            margin-top: 0;
+        @include media-breakpoint-up(md) {
+            margin-top: -16px;
         }
     }
     ~ form.with-heading,
     ~ form .with-heading,
     ~ .form.with-heading {
-        @include border-bottom-radius(3px);
-        background-color: scale-color($gray-100, $lightness: 35%);
+        @include border-bottom-radius($border-radius);
+        background-color: $form-with-heading-bg;
         padding: 20px 10px 10px 10px;
         margin-top: -20px;
-        border-bottom: 1px solid $gray-100;
+        border-bottom: $h1heading-border-width solid $h1heading-border-color;
         &.invite-friend,
         &#addmember {
             @include border-radius(0);
@@ -82,11 +78,11 @@ h1 {
             padding: 10px;
         }
         .admin & {
-            background-color: scale-color($gray-100, $lightness: -2.4%);
+            background-color: $form-with-heading-bg;
 
-            border-color: $list-group-border-color;
-            border-left: 1px solid $gray-100;
-            border-right: 1px solid $gray-100;
+            border-color: $h1heading-border-color;
+            border-left: 0;
+            border-right: 0;
         }
         ~ form.with-heading {
             padding-top: 0;
@@ -103,7 +99,7 @@ h1 {
         padding-bottom: 10px;
         margin-bottom: 10px;
         @include media-breakpoint-down(sm) {
-            border-bottom: 1px solid $gray-100;
+            border-bottom: $h1heading-border-width solid $h1heading-border-color;
         }
         a {
             margin-right: 5px;
@@ -114,7 +110,7 @@ h1 {
     }
 }
 
-.page-header,
+
 h1, h2 {
     margin-top:0;
 }
@@ -124,8 +120,7 @@ h4 {
 }
 
 h2 {
-
-    font-weight:300;
+    font-weight: $font-weight-light;
 }
 
 h2, h3, h4, h5, legend {
@@ -154,9 +149,6 @@ a {
     &:hover {
         text-decoration-color: $link-hover-color;
         outline-color: $input-focus-border-color;
-        .text-orange {
-            color: $link-color;
-        }
     }
 }
 
@@ -167,7 +159,7 @@ a {
 }
 
 .link-unstyled {
-    color: $gray-700;
+    color: $theme-text-color;
     &:hover {
         text-decoration: none;
         color: inherit;
@@ -239,14 +231,10 @@ blockquote {
 
 .lead,
 .lead p {
-    font-size: $font-size-base * 1.14285;
-    font-weight: 300;
+    font-size: $lead-font-size;
+    font-weight: $lead-font-weight;
     line-height: 1.4;
     margin-bottom: 15px;
-
-    @include media-breakpoint-up(md) {
-        font-size: $font-size-base * 1.215;
-    }
 
     &.text-small {
         font-size: $font-size-sm;
@@ -266,16 +254,16 @@ label.lead {
 }
 
 .metadata {
-    font-family: $font-family-sans-serif;
+    font-family: $font-family-base;
     font-size: $font-size-sm;
-    font-weight: 400;
+    font-weight: $font-weight-normal;
     color: $theme-text-midtone-color;
 }
 
 .postedon {
-    font-family: $font-family-sans-serif;
+    font-family: $font-family-base;
     font-size: $font-size-sm;
-    font-weight: 400;
+    font-weight: $font-weight-normal;
     color: $theme-text-midtone-color;
 }
 
@@ -296,21 +284,21 @@ pre {
     word-break: break-all;
     word-wrap: break-word;
     background-color: $pre-bg;
-    border: $border-width solid $card-border-color;
+    border: $border-width solid $border-color;
     border-radius: $border-radius-sm;
     span.wsname {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
     span.wsdescription {
         color: $info;
         padding-right: 10px;
 
         .wsrequired {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
             color: theme-color("danger");
         }
         .wsoptional {
-            font-weight: bold;
+            font-weight: $font-weight-bold;
         }
         .wsdescriptiontext {
             font-style: italic;
@@ -345,7 +333,7 @@ pre {
 .exportable-artefact-container {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
-    font-weight: bold;
+    font-weight: $font-weight-bold;
     color: $theme-text-color;
 
     /* but not some titles */
@@ -368,7 +356,7 @@ pre {
 
 // Matrix header, move small text under H1 back to original
 .matrixheader {
-    h1.page-header ~ div.with-heading {
+    h1.pageheader-actions ~ div.with-heading {
         margin-top: 0;
     }
 }

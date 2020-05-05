@@ -27,12 +27,12 @@
 }
 .mytags .selected,
 .tag-results .selected {
-    font-weight: bold;
-    color: $gray-500;
+    font-weight: $font-weight-bold;
+    color: $theme-text-midtone-color;
     .badge {
         border: 1px solid transparent;
         color: $white;
-        background-color: $gray-500;
+        background-color: $theme-text-midtone-color;
     }
 }
 .tag-results .btn-top-right {
