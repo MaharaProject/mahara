@@ -1557,5 +1557,25 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {block_instance} SET title = '' WHERE blocktype = 'signoff'");
     }
 
+    if ($oldversion < 2019093017) {
+        log_debug('Fixing skins for new format options');
+        if ($skins = get_column('skin', 'id')) {
+            require_once('skin.php');
+            safe_require('artefact', 'file');
+            foreach ($skins as $skinid) {
+                $skinobj = new Skin($skinid);
+                $viewskin = $skinobj->get('viewskin');
+                if (!isset($viewskin['view_block_header_font'])) {
+                    $viewskin['view_block_header_font'] = '';
+                }
+                if (!isset($viewskin['view_block_header_font_color'])) {
+                    $viewskin['view_block_header_font_color'] = '';
+                }
+                $skinobj->set('viewskin', $viewskin);
+                $skinobj->commit();
+            }
+        }
+    }
+
     return $status;
 }
