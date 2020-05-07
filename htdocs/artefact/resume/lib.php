@@ -2078,11 +2078,8 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
             if ($record) {
                 $record->exists = 1;
                 // Add attachments
-                $files = ArtefactType::attachments_from_id_list(array($record->id));
-                if ($files) {
-                    safe_require('artefact', 'file');
-                    foreach ($files as &$file) {
-                        $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->attachment));
+                if ($files = ArtefactType::attachments_from_id_list(array($record->id))) {
+                    foreach ($files as $file) {
                         $record->files[] = $file;
                     }
                     $record->count = count($files);

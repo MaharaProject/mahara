@@ -54,14 +54,9 @@ foreach ($data as &$row) {
 // Add artefact attachments it there are any
 $datawithattachments = array();
 foreach ($data as $record) {
-    $sql = 'SELECT a.title, a.id, af.size
-            FROM {artefact} a
-            JOIN {artefact_file_files} af ON af.artefact = a.id
-            JOIN {artefact_attachment} at ON at.attachment = a.id
-            WHERE at.artefact = ? AND at.item = ?
-            ORDER BY a.title';
-    $attachments = get_records_sql_array($sql, array($record->artefact, $record->id));
-    $record->attachments = $attachments;
+    if ($attachments = ArtefactType::attachments_from_id_list(array($record->artefact), null, $record->id)) {
+        $record->attachments = $attachments;
+    }
     if (!is_array($attachments)) {
         $record->clipcount = 0;
     }
