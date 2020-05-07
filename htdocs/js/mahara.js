@@ -1112,7 +1112,19 @@ Number.isInteger = Number.isInteger || function(value) {
  * Replace target=_blank with JS opener for security reasons
  */
 jQuery(function($) {
-    $("a").each(function() {
+    replaceTarget();
+    jQuery(window).on('blocksloaded', {}, function() {
+        var element = '.grid-stack';
+        replaceTarget(element);
+    });
+});
+
+function replaceTarget(element) {
+    var selector = 'a';
+    if (element) {
+        selector = element + ' ' + selector;
+    }
+    $(selector).each(function() {
         var url = $(this).attr('href');
         if (typeof url !== typeof undefined && url !== false) {
             if ($(this).attr('target') == '_blank' || (url.match("^http") && !url.match(config.wwwroot) && $(this).attr('target') != '_self')) {
@@ -1130,7 +1142,7 @@ jQuery(function($) {
             }
         }
     });
-});
+}
 
 /**
  * Custom handling for the navigation accessibility
