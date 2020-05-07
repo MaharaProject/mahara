@@ -80,8 +80,14 @@ function pieform_element_calendar(Pieform $form, $element) {
     }
     $tooltips = json_encode(pieform_element_calendar_tooltip_lang_strings());
     if ($value) {
-        $result .= '
-            date: moment("' . $value . '", "' . $options['dateFormat'] . '"),';
+        if (!empty($options['showsTime'])) {
+            $result .= '
+                date: moment("' . $value . '", "' . $options['dateFormat'] . ' ' . $options['timeFormat'] . '"),';
+        }
+        else {
+            $result .= '
+                date: moment("' . $value . '", "' . $options['dateFormat'] . '"),';
+        }
     }
     $result .= '
         locale: "' . strstr(current_language(), '.', true) . '",

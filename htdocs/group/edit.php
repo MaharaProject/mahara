@@ -88,9 +88,12 @@ else {
                                                  WHERE institution = ? AND field LIKE ? || '%'", array('mahara', $group_prefix))) {
         foreach ($group_defaults as $k => $v) {
             $item = preg_replace('/^' . $group_prefix . '/', '', $v->field);
-            if (isset($group_data->$item)) {
+            if (array_key_exists($item, $group_data)) {
                 if ($item == 'controlled' && !$cancreatecontrolled) {
                     $v->value = 0;
+                }
+                if ($item == 'editwindowstart' || $item == 'editwindowend') {
+                    $v->value = strtotime($v->value);
                 }
                 $group_data->$item = $v->value;
             }
@@ -366,6 +369,9 @@ $elements['editwindowstart'] = array (
     'minyear'      => $currentdate['year'],
     'maxyear'      => $currentdate['year'] + 20,
     'time'         => true,
+    'caloptions'   => array(
+        'showsTime'      => true,
+    )
 );
 
 $elements['editwindowend'] = array (
@@ -376,7 +382,10 @@ $elements['editwindowend'] = array (
     'description'  => get_string('windowenddescription', 'group'),
     'minyear'      => $currentdate['year'],
     'maxyear'      => $currentdate['year'] + 20,
-    'time'         => true
+    'time'         => true,
+    'caloptions'   => array(
+        'showsTime'      => true,
+    )
 );
 
 $elements['general'] = array(
