@@ -525,30 +525,21 @@ function designskinform_submit(Pieform $form, $values) {
     if ($siteskin && !$USER->get('admin')) {
         $values['viewskin_access'] = 'private';
     }
-
-    // Join all view skin css/formating data to array...
-    $skin = array();
-    $skin['body_background_color'] = $values['body_background_color'];
-    if (!$siteskin) {
-        $skin['body_background_image'] = $values['body_background_image'];
-        $skin['body_background_repeat'] = $values['body_background_repeat'];
-        $skin['body_background_attachment'] = $values['body_background_attachment'];
-        $skin['body_background_position'] = $values['body_background_position'];
+    $skin = Skin::$defaultviewskin;
+    foreach ($skin as $k => $v) {
+        if (array_key_exists($k, $values)) {
+            $skin[$k] = $values[$k];
+        }
     }
-    $skin['view_block_header_font'] = $values['view_block_header_font'];
-    $skin['view_block_header_font_color'] = $values['view_block_header_font_color'];
-    $skin['view_text_font_family'] = $values['view_text_font_family'];
-    $skin['view_heading_font_family'] = $values['view_heading_font_family'];
-    $skin['view_text_font_size'] = $values['view_text_font_size'];
-    $skin['view_text_font_color'] = $values['view_text_font_color'];
-    $skin['view_text_heading_color'] = $values['view_text_heading_color'];
-    $skin['header_background_color'] = $values['header_background_color'];
-    $skin['header_background_image'] = $values['header_background_image'];
-    $skin['view_link_normal_color'] = $values['view_link_normal_color'];
-    $skin['view_link_normal_underline'] = $values['view_link_normal_underline'];
-    $skin['view_link_hover_color'] = $values['view_link_hover_color'];
-    $skin['view_link_hover_underline'] = $values['view_link_hover_underline'];
-    $skin['view_custom_css'] = clean_css($values['view_custom_css'], $preserve_css=true);
+    if ($siteskin) {
+        // Site skin can't have background images
+        unset($skin['body_background_image']);
+        unset($skin['body_background_repeat']);
+        unset($skin['body_background_attachment']);
+        unset($skin['body_background_position']);
+    }
+    // clean the css
+    $skin['view_custom_css'] = clean_css($skin['view_custom_css'], $preserve_css=true);
 
     $viewskin = array();
     $viewskin['id'] = $values['id'];

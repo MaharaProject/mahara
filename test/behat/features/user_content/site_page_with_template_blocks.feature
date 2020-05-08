@@ -42,6 +42,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
     | Town           | 1 |
     | Country        | 1 |
     And I press "Save"
+    And I wait "1" seconds
     And I should see "Postal address"
     And I follow "Share" in the "Toolbar buttons" property
     And I select "Registered people" from "General" in shared with select2 box

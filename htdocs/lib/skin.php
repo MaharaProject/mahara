@@ -59,7 +59,8 @@ class Skin {
     private $mtime;
     private $ctime;
 
-    private $viewskin = array(
+    private $viewskin;
+    public static $defaultviewskin = array(
         'body_background_color' => '#FFFFFF',
         'body_background_image' => 0,
         'body_background_repeat' => 4,
@@ -71,6 +72,10 @@ class Skin {
 
         'view_text_font_family' => 'Arial',
         'view_heading_font_family' => 'Arial',
+
+        'view_block_header_font' => 'Arial',
+        'view_block_header_font_color' => '#333333',
+
         'view_text_font_size' => 'small',
         'view_text_font_color' => '#000000',
         'view_text_heading_color' => '#000000',
@@ -120,7 +125,7 @@ class Skin {
                 if ($field == 'viewskin' && is_array($value)) {
                     // For viewskin, do an array_merge so we get the default values for anything that wasn't
                     // specified
-                    $this->viewskin = array_merge($this->viewskin, $value);
+                    $this->viewskin = array_merge(Skin::$defaultviewskin, $value);
                 }
                 else {
                     $this->{$field} = $value;

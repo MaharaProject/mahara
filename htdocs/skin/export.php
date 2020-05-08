@@ -58,7 +58,11 @@ if (!empty($exportskins)) {
         if (!$skinobj->can_edit()) {
             continue;
         }
+
+        // Get default viewksin settings and merge with skin to export in case this skin hasn't been updated
+        $defaultskin = Skin::$defaultviewskin;
         $viewskin = unserialize($exportskin->viewskin);
+        $viewskin = array_merge($defaultskin, $viewskin);
 
         $rootelement = $xmldoc->createElement('skin');
         $rootnode = $topelement->appendChild($rootelement);
@@ -127,6 +131,33 @@ if (!empty($exportskins)) {
                 $childelement = $xmldoc->createElement('image');
                 $itemnode = $rootelement->appendChild($childelement);
                 $itemnode->setAttribute('type', 'body-background-image');
+                $itemnode->setAttribute('artefact', serialize($artefact));
+                $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
+                $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
+                $itemnode->setAttribute('contents', base64_encode($contents));
+            }
+        }
+
+        // Skin header background image element...
+        $headerbg = $viewskin['header_background_image'];
+        if (!empty($headerbg) && $headerbg > 0) {
+            // Get existing skin background image data...
+            $artefactobj = new ArtefactTypeImage($headerbg);
+            if ($USER->can_view_artefact($artefactobj)) {
+                $artefact = get_record('artefact', 'id', $headerbg, null, null, null, null, 'artefacttype,title,description,note');
+                $artefactfilefiles = get_record('artefact_file_files', 'artefact', $headerbg);
+                $artefactfileimage = get_record('artefact_file_image', 'artefact', $headerbg);
+
+                // Open and read the contents of each file...
+                $headerbgimage = $artefactobj->get_path();
+                $fp = fopen($headerbgimage, 'rb');
+                $filesize = filesize($headerbgimage);
+                $contents = fread($fp, $filesize);
+                fclose($fp);
+                // Export each file...
+                $childelement = $xmldoc->createElement('image');
+                $itemnode = $rootelement->appendChild($childelement);
+                $itemnode->setAttribute('type', 'header-background-image');
                 $itemnode->setAttribute('artefact', serialize($artefact));
                 $itemnode->setAttribute('artefact_file_files', serialize($artefactfilefiles));
                 $itemnode->setAttribute('artefact_file_image', serialize($artefactfileimage));
