@@ -40,7 +40,6 @@ require_once(get_config('docroot') . 'testing/frameworks/behat/lib.php');
 require_once(get_config('docroot') . 'testing/frameworks/behat/classes/util.php');
 require_once(get_config('docroot') . 'testing/frameworks/behat/classes/BehatCommand.php');
 
-
 $cli = get_cli();
 
 $options = array();
@@ -49,6 +48,11 @@ $options['init'] = new stdClass();
 $options['init']->description = 'Initialise the test environment for behat tests';
 $options['init']->required = false;
 $options['init']->defaultvalue = false;
+
+$options['inithtml'] = new stdClass();
+$options['inithtml']->description = 'Initialise the test environment for behat tests with html output';
+$options['inithtml']->required = false;
+$options['inithtml']->defaultvalue = false;
 
 $options['install'] = new stdClass();
 $options['install']->shortoptions = array('i');
@@ -123,7 +127,7 @@ if ($statuscode == BEHAT_EXITCODE_CANNOTRUN) {
 }
 
 try {
-    if ($cli->get_cli_param('init')) {
+    if ($cli->get_cli_param('init') || $cli->get_cli_param('inithtml')) {
 
         // No need to init; already initialized.
         if ($statuscode === 0) {
@@ -139,9 +143,14 @@ try {
             // Update behat and dependencies using composer
             testing_update_dependencies();
         }
-        //now composer is updated, apply custom styling to the html report
-        set_report_styling();
-        reverse_implode();//interim fix to overwrite mink
+
+        if ($cli->get_cli_param('inithtml')) {
+            // Now composer is updated, apply custom styling to the html report
+            // Only need to run if html flag is set.
+            echo "Setup report styles";
+            set_report_styling();
+            reverse_implode(); // interim fix to overwrite mink and be PHP 7.4 compatible
+        }
 
         BehatConfigManager::update_config_file();
         // Other possible actions we may need to take.

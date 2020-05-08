@@ -28,5 +28,4 @@ define('CLI', 1);
 
 // No access from web!
 isset($_SERVER['REMOTE_ADDR']) && die('Can not run this script from web.');
-
-passthru('php ' . __DIR__ . DIRECTORY_SEPARATOR . 'util.php --init', $code);
+passthru('php ' . __DIR__ . DIRECTORY_SEPARATOR . 'util.php --init' . ((isset($argv[1]) && $argv[1] == 'html') ? 'html' : ''), $code);
