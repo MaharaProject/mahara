@@ -2294,7 +2294,8 @@ class ElasticsearchIndexing {
 
         // Add the queue item
         $sql = "INSERT INTO {search_elasticsearch_queue} (itemid, type)
-                SELECT ?, ? WHERE NOT EXISTS (
+                SELECT ?, ? FROM (SELECT 1) AS dummytable
+                WHERE NOT EXISTS (
                     SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = ? AND type = ?
                 )";
         execute_sql($sql, array($id, $table, $id, $table));
@@ -2325,7 +2326,8 @@ class ElasticsearchIndexing {
         $artefacttypes = explode(',', get_config_plugin('search', 'elasticsearch', 'artefacttypes'));
         if ($artefacttype && in_array($artefacttype, $artefacttypes)) {
             $sql = "INSERT INTO {search_elasticsearch_queue} (itemid, type, artefacttype)
-                    SELECT ?, ?, ? WHERE NOT EXISTS (
+                    SELECT ?, ?, ? FROM (SELECT 1) AS dummytable
+                    WHERE NOT EXISTS (
                         SELECT 1 FROM {search_elasticsearch_queue} WHERE itemid = ? AND type = ? AND artefacttype = ?
                     )";
             execute_sql($sql, array($id, $table, $artefacttype, $id, $table, $artefacttype));
