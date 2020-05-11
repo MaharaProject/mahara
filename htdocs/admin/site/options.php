@@ -89,7 +89,6 @@ $siteoptionform = array(
                     'description'  => get_string('sitetimezonedescription', 'admin'),
                     'defaultvalue' => get_config('timezone'),
                     'options'      => array('' => get_string('notimezoneselected', 'admin')) + $timezones,
-                    'help'         => true,
                     'disabled'     => in_array('timezone', $OVERRIDDEN),
                 ),
                 'theme' => array(
