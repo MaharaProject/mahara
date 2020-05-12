@@ -70,6 +70,7 @@ $string['editable'] = 'Editable';
 $string['editability'] = 'Editability';
 $string['windowstart'] = 'Start date';
 $string['windowstartdescription'] = 'The group cannot be edited by normal group members before this date. This date will also be used as default start date for any imported plans.';
+$string['windowdatedescriptionadmin'] = 'Only set this date if required and you are adding groups in bulk. Remember to clear this field once you are done.';
 $string['windowend'] = 'End date';
 $string['windowenddescription'] = 'The group cannot be edited by normal group members after this date. This date will also be used as default completion date for any imported plans.';
 $string['editwindowbetween'] = 'Between %s and %s';

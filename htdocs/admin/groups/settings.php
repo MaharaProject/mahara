@@ -31,6 +31,8 @@ $default_group_data = (object) array(
    'hidemembers'    => GROUP_HIDE_NONE,
    'hidemembersfrommembers'  => GROUP_HIDE_NONE,
    'groupparticipationreports' => 0,
+   'editwindowstart'  => null,
+   'editwindowend'    => null,
    'category'       => 0,
    'usersautoadded' => 0,
    'viewnotify'     => GROUP_ROLES_ALL,
@@ -44,6 +46,9 @@ foreach ($default_group_data as $k => $v) {
     $opt = get_config_institution('mahara', 'group_' . $k);
     if ($opt !== null) {
         $v = $opt;
+        if ($k == 'editwindowstart' || $k == 'editwindowend') {
+            $v = strtotime($v);
+        }
     }
     $group_data->$k = $v;
 }
@@ -52,6 +57,7 @@ $groupcategories = get_records_menu('group_category', '', '', 'displayorder', 'i
 $groupcategories = $groupcategories ? $groupcategories : array();
 $notifyroles = group_get_editroles_options(true);
 $notifyroles = $notifyroles ? $notifyroles : array();
+$currentdate = getdate();
 
 $optionform = pieform(array(
     'name'       => 'groupsettings',
@@ -129,7 +135,7 @@ $optionform = pieform(array(
         ),
         'visibility' => array(
             'type'         => 'html',
-            'value'        => '<h4>' .get_string('Visibility') . '</h4>',
+            'value'        => '<h4>' . get_string('Visibility') . '</h4>',
         ),
         'public' => array(
             'type'         => 'switchbox',
@@ -163,6 +169,36 @@ $optionform = pieform(array(
             'title'        => get_string('groupparticipationreports', 'group'),
             'description'  => get_string('groupparticipationreportsdesc1', 'group'),
             'defaultvalue' => $group_data->groupparticipationreports,
+        ),
+        'editability' => array(
+            'type'        => 'html',
+            'value'       => '<h4>' . get_string('editability', 'group') . '</h4>',
+        ),
+        'editwindowstart' => array(
+            'type'        => 'calendar',
+            'class'        => '',
+            'title'        => get_string('windowstart', 'group'),
+            'defaultvalue' => $group_data->editwindowstart,
+            'description'  => get_string('windowstartdescription', 'group') . ' ' . get_string('windowdatedescriptionadmin', 'group'),
+            'minyear'      => $currentdate['year'],
+            'maxyear'      => $currentdate['year'] + 20,
+            'time'         => true,
+            'caloptions'   => array(
+                'showsTime'      => true,
+            )
+        ),
+        'editwindowend' => array(
+            'type'        => 'calendar',
+            'class'        => '',
+            'title'        => get_string('windowend', 'group'),
+            'defaultvalue' => $group_data->editwindowend,
+            'description'  =>  get_string('windowenddescription', 'group') . ' ' . get_string('windowdatedescriptionadmin', 'group'),
+            'minyear'      => $currentdate['year'],
+            'maxyear'      => $currentdate['year'] + 20,
+            'time'         => true,
+            'caloptions'   => array(
+                'showsTime'      => true,
+            )
         ),
         'general' => array(
             'type'         => 'html',
@@ -344,6 +380,9 @@ function groupsettings_submit(Pieform $form, $values) {
                     execute_sql("DELETE FROM {institution_config} WHERE institution = ? AND field = ?", array('mahara', 'group_' . $k));
                 }
                 else {
+                    if ($k == 'editwindowstart' || $k == 'editwindowend') {
+                        $v = db_format_timestamp($v);
+                    }
                     set_config_institution('mahara', 'group_' . $k, $v);
                 }
             }
