@@ -10,7 +10,7 @@
     {if $profileinfo.introduction}
         {$profileinfo.introduction|clean_html|safe}
     {/if}
-    {if $profileinfo.internalprofiles && count($profileinfo.internalprofiles) > 0}
+    {if is_array($profileinfo.internalprofiles) && count($profileinfo.internalprofiles) > 0}
         <ul class="unstyled profile-info">
         {foreach from=$profileinfo.internalprofiles key=key item=item}
             <li><strong>{str tag=$item.type section=artefact.internal}:</strong> {$item.description|clean_html|safe}</li>

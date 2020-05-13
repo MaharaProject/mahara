@@ -1,4 +1,4 @@
-{if (count($r.email) == 0)}
+{if (!is_array($r.email) || count($r.email) == 0)}
 <div class="error">
     {str tag='noemailfound' section='admin'}
 </div>

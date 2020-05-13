@@ -100,7 +100,7 @@ $smarty->assign('limit', $limit);
 $smarty->assign('loggedintypes', $loggedintypes);
 $smarty->assign('loggedindate', $loggedindate);
 $smarty->assign('alphabet', explode(',', get_string('alphabet')));
-$smarty->assign('institutions', $institutions);
+$smarty->assign('institutions', !empty($institutions) ? $institutions : array());
 $smarty->assign('results', $html);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->assign('columns', $columns);
