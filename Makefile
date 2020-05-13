@@ -105,13 +105,14 @@ endif
 
 revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
 whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
-breakpoints := $(shell git diff-tree --diff-filter=ACM --name-only --no-commit-id -r -z $(revision) |  grep -rn --include=*.feature "I insert breakpoint"  test/behat/features)
+mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/master)
+breakpoints := $(shell git diff-tree --diff-filter=ACM --no-commit-id -r -z -p $(mergebase) HEAD test/behat/features |  grep "I insert breakpoint")
 
 minaccept:
 	@echo "Running minimum acceptance test..."
 ifdef breakpoints
 	@echo "Oops, you left breakpoints in your tests :/"
-	@git diff-tree --diff-filter=ACM --name-only --no-commit-id -r -z $(revision) |  grep -rn --include=*.feature "I insert breakpoint"  test/behat/features
+	@git diff-tree --diff-filter=ACM --no-commit-id -r -z -p $(mergebase) HEAD test/behat/features |  grep "I insert breakpoint"
 	@echo "Please remove breakpoints, commit and push again"
 	exit 1
 endif
@@ -129,7 +130,6 @@ jenkinsaccept: minaccept
 	@find ./ ! -path './.git/*' -type f -print0 | xargs -0 clamscan > /dev/null && echo All good!
 
 sshargs := $(shell git config --get remote.gerrit.url | sed -re 's~^ssh://([^@]*)@([^:]*):([0-9]*)/mahara~-p \3 -l \1 \2~')
-mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/master)
 sha1chain := $(shell git log $(mergebase)..HEAD --pretty=format:%H | xargs)
 changeidchain := $(shell git log $(mergebase)..HEAD --pretty=format:%b | grep '^Change-Id:' | cut -d' ' -f2)
 
