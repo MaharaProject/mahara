@@ -34,6 +34,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I press "Select \"Image2.png\""
  And I scroll to the base of id "imgbrowserconf_action_submitimage"
  And I press "Submit"
+ And I wait "1" seconds
  And I press "Save"
 
  # Add a "Text" block with an embedded external image

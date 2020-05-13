@@ -4,6 +4,10 @@ Feature: "People online"" side block is displayed on right hand side of pages
     So I can know who is on line or online within the last 10 minutes
 
 Background:
+    And the following site settings are set:
+    | field                | value |
+    | isolatedinstitutions | 0     |
+
     Given the following "institutions" exist:
     | name | displayname | registerallowed | registerconfirm |
     | instone | Institution One | ON | OFF |
