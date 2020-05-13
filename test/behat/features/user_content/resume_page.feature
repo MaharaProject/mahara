@@ -120,6 +120,7 @@ Scenario: Editing Education and Employment info
     And I click on "Move up" in "Test Analyst" row
     # delete employment and education history  (Bug 1755669)
     And I scroll to the base of id "employmenthistorylist"
+    And I wait "1" seconds
     And I click on "Delete \"North American Cultural Studies (Masters of Arts) at University of Life\"" delete button
     And I click on "Delete \"Code Ninja: Xero\"" delete button
 
@@ -208,6 +209,7 @@ Scenario: Adding Achievements
     And I attach the file "Image2.png" to "addbook_attachments_files_0"
     And I click on "addbook_submit"
     And I scroll to the id "main-nav"
+    And I wait "1" seconds
     And I should see "Saved successfully"
     And I click on "Move down" in "Measurement of the neutron beta decay asymmetry using machine learning" row
     And I click on "Move up" in "Measurement of the neutron beta decay asymmetry using machine learning" row
