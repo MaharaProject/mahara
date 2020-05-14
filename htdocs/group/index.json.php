@@ -30,7 +30,7 @@ $searchmode = 'find';
 
 // check that the filter is valid, if not default to 'all'
 if (in_array($filter, array('allmy', 'member', 'admin', 'invite', 'notmember', 'canjoin'))) {
-    if ($filter == 'allmy' || $filter == 'admin' || $filter == 'invite') {
+    if ($filter == 'allmy' || $filter == 'admin' || $filter == 'member' || $filter == 'invite') {
         $searchmode = 'mygroups';
     }
     $type = $filter;
