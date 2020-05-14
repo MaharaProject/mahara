@@ -10,6 +10,7 @@
  */
 
 define('INTERNAL', 1);
+define('PUBLIC', 1);
 define('MENUITEM', 'configextensions/pluginadminwebservices');
 define('SECTION_PAGE', 'webservice');
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -36,28 +37,40 @@ if ($functionid) {
 }
 else if ($functionname) {
     $dbfunction = get_record('external_functions', 'name', $functionname);
+    if (empty($dbfunction)) {
+        $SESSION->add_error_msg(get_string('invalidfunction', 'auth.webservice'));
+    }
 }
 if (empty($dbfunction)) {
-    $SESSION->add_error_msg(get_string('invalidfunction', 'auth.webservice'));
-    redirect('/webservice/admin/index.php');
+    define('TITLE', get_string('function', 'auth.webservice') . ': ' . get_string('functionlist', 'auth.webservice'));
+    $dbfunctions = get_records_array('external_functions', null, null, 'name');
+    foreach ($dbfunctions as $k => $v) {
+        $dbfunctionlist[$v->classname][] = $v;
+    }
+    $smarty = smarty();
+    safe_require('auth', 'webservice');
+    PluginAuthWebservice::menu_items($smarty, 'webservice');
+    $smarty->assign('functionlist', $dbfunctionlist);
+    $smarty->display('auth:webservice:wsdoclist.tpl');
 }
+else {
+    define('TITLE', get_string('function', 'auth.webservice') . ': ' . $dbfunction->name);
 
-define('TITLE', get_string('function', 'auth.webservice') . ': ' . $dbfunction->name);
+    $fdesc = webservice_function_info($dbfunction->name);
 
-$fdesc = webservice_function_info($dbfunction->name);
-
-$smarty = smarty();
-safe_require('auth', 'webservice');
-PluginAuthWebservice::menu_items($smarty, 'webservice');
-$smarty->assign('function', $dbfunction);
-$smarty->assign('functiondescription', $fdesc->description);
-$smarty->assign('fdesc', $fdesc);
-$smarty->assign('xmlrpcactive', webservice_protocol_is_enabled('xmlrpc'));
-$smarty->assign('restactive', webservice_protocol_is_enabled('rest'));
-$smarty->assign('soapactive', webservice_protocol_is_enabled('soap'));
-$smarty->assign('PAGEHEADING', get_string('wsdoc', 'auth.webservice'));
-$smarty->assign('dialog', $dialog);
-$smarty->display('auth:webservice:wsdoc.tpl');
+    $smarty = smarty();
+    safe_require('auth', 'webservice');
+    PluginAuthWebservice::menu_items($smarty, 'webservice');
+    $smarty->assign('function', $dbfunction);
+    $smarty->assign('functiondescription', $fdesc->description);
+    $smarty->assign('fdesc', $fdesc);
+    $smarty->assign('xmlrpcactive', webservice_protocol_is_enabled('xmlrpc'));
+    $smarty->assign('restactive', webservice_protocol_is_enabled('rest'));
+    $smarty->assign('soapactive', webservice_protocol_is_enabled('soap'));
+    $smarty->assign('PAGEHEADING', get_string('wsdoc', 'auth.webservice'));
+    $smarty->assign('dialog', $dialog);
+    $smarty->display('auth:webservice:wsdoc.tpl');
+}
 die;
 
 /**
