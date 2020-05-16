@@ -2165,7 +2165,9 @@ class View {
      */
     public function build_rows($editing=false, $exporting=false, $versioning=false) {
         $numrows = $this->get('numrows');
+
         $result = '';
+
         for ($i = 1; $i <= $numrows; $i++) {
             $result .= $this->build_columns($i, $editing, $exporting, $versioning);
         }
@@ -5935,26 +5937,38 @@ class View {
             $blocks = get_records_sql_array($sql, array($template->get('id')));
         }
         else {
+            // check if description needs to be moved to a text block
+            $newdescriptionblock = 0;
+            if ($description = $this->get('description')) {
+                $simpletextdescription = can_extract_description_text($description);
+                if ($simpletextdescription) {
+                    // remove tags from description text
+                    $this->set('description', $simpletextdescription);
+                }
+                else {
+                    // add a text block with description
+                    $newdescriptionblock = 1;
+                    $this->description_to_block();
+                    $this->set('description', '');
+                }
+            };
+
             require_once(get_config('libroot') . 'gridstacklayout.php');
             // get blocks in old layout
             $blocks = get_records_array('block_instance', 'view', $template->get('id'));
             // translate layout
             $oldlayoutcontent = get_blocks_in_old_layout($template->get('id'));
-            $newlayoutcontent = translate_to_new_layout($oldlayoutcontent);
+            $newlayoutcontent = translate_to_new_layout($oldlayoutcontent, $newdescriptionblock);
             foreach ($newlayoutcontent as $block) {
                 $dimensions[$block['block']] = $block;
             }
-
             foreach ($blocks as $block) {
                 $block->positionx = $dimensions[$block->id]['positionx'];
                 $block->positiony = $dimensions[$block->id]['positiony'];
                 $block->width = $dimensions[$block->id]['width'];
                 $block->height = $dimensions[$block->id]['height'];
             }
-
         }
-
-
 
         $numcopied = array('blocks' => 0);
 
@@ -7232,6 +7246,38 @@ class View {
         $data->html = $html;
         return $data;
     }
+
+    public function description_to_block() {
+        $description = $this->get('description');
+        $configdata = array(
+           'text' => $description,
+           'retractable' => false,
+           'retractedonload' => false,
+        );
+        $bi = new BlockInstance(0,
+           array(
+               'blocktype'  => 'text',
+               'title'      => get_string('description'),
+               'configdata' => serialize($configdata),
+               'view'       => $this->get('id'),
+               'view_obj'   => $this,
+               'row'        => 0,
+               'column'     => 0,
+               'order'      => 0,
+               'positionx'  => 0,
+               'positiony'  => 0,
+               'width'      => 12,
+               'height'     => 1,
+           )
+        );
+        $bi->commit();
+
+        // check artefact_file_embedded table
+        update_record('artefact_file_embedded',
+            (object) array('resourcetype' => 'text', 'resourceid' => $bi->get('id')),
+            array('resourcetype' => 'description', 'resourceid' => $this->get('id'))
+        );
+    }
 }
 
 class ViewSubmissionException extends UserException {
@@ -7683,4 +7729,19 @@ function filter_isolated_view_access($view, $viewaccess) {
     }
     $viewaccess = array_values($viewaccess);
     return $viewaccess;
+}
+
+/**
+ * Checks if the tinymce text has any tags other than <p> or <br>
+ * if it doesn't have extra tags, then it will remove them and return only the text
+ */
+function can_extract_description_text($description) {
+    //remove html tags form the text but leaving only the tags that can be translated to text
+    $texttagsonly_description = strip_tags($description, '<p><br><span><em><strong>');
+    $cleandescription = strip_tags($description);
+
+    if ($description == $texttagsonly_description && strlen($cleandescription) <= 160) {
+        return $cleandescription;
+    }
+    return false;
 }

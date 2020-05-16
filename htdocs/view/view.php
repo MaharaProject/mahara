@@ -646,8 +646,8 @@ if ($showmnetlink) {
     }
 }
 
-$smarty->assign('viewdescription', ArtefactTypeFolder::append_view_url($view->get('description'), $view->get('id')));
-$smarty->assign('viewinstructions', ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
+$smarty->assign('viewdescription', $view->get('description'), $view->get('id'));
+$smarty->assign('viewinstructions',  ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
 $smarty->assign('newlayout', $newlayout);
 if ($newlayout) {
     $smarty->assign('blocks', (isset($blocks) ? $blocks : null));

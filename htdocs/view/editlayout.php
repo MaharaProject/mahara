@@ -269,7 +269,7 @@ function get_basic_elements() {
             'rules'        => array( 'required' => true ),
         ),
         'description' => array(
-            'type'         => 'wysiwyg',
+            'type'         => 'textarea',
             'title'        => get_string('description','view'),
             'rows'         => 5,
             'cols'         => 70,
@@ -667,15 +667,7 @@ function set_view_title_and_description(Pieform $form, $values) {
     global $view, $urlallowed, $new, $USER;
 
     $view->set('title', $values['title']);
-    if (trim($values['description']) !== '') {
-        // Add or update embedded images in the view description
-        require_once('embeddedimage.php');
-        $view->set('description', EmbeddedImage::prepare_embedded_images($values['description'], 'description', $view->get('id')));
-    }
-    else {
-        // deleting description
-        $view->set('description', '');
-    }
+    $view->set('description', trim($values['description']));
     $tags = $values['tags'] ? $values['tags'] : array();
     $view->set('tags', $tags);
     if (isset($values['createtags'])) {

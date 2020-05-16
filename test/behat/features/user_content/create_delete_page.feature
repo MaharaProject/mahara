@@ -12,9 +12,7 @@ Background:
 Scenario: Creating a page with content in it (Bug 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
-    # set up for being able to use an image in WYSIWYG editor
     And I choose "Files" in "Create" from main menu
-    And I attach the file "Image2.png" to "files_filebrowser_userfile"
     # Navigating to Portfolio to create a page
     # This is the test for manually creating a page
     And I choose "Pages and collections" in "Create" from main menu
@@ -23,25 +21,17 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I follow "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
-    | Page title | Test view |
-    And I fill in "First description" in first editor
+    | Page title       | Test view         |
+    | Page description | First description |
     And I press "Save"
     # Editing the pages
     And I follow "Settings" in the "Toolbar buttons" property
     #Change the Page title
     And I fill in the following:
-    | Page title | This is the edited page title |
-    # Change the page description
-    And I fill in "This is the edited description" in first editor
-    # Upload an image into the WYSIWYG editor
-    And I click the "Insert/edit image" button in the editor
-    And I expand the section "Image"
-    And I press "Select \"Image2.png\""
-    And I press "Submit"
-    And I wait "1" seconds
+    | Page title       | This is the edited page title |
+    | Page description | This is the edited description |
     And I press "Save"
-    # Adding media blockAnd I fill in the following:
-    | Page title | This is the edited page title |
+    # Adding media block
     # confirm h1 page title displayed
     And I should see "This is the edited page title" in the "h1 heading" property
     # confirm settings, edit and share buttons displayed
@@ -89,7 +79,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "More options"
     And I follow "Save to timeline"
     # Check that the image is displayed on page and ensure the link is correct
-    Then I should see image "Image2.png" on the page
+    #Then I should see image "Image2.png" on the page
     # The "..." button should only have the option to print and delete the page
     And I should see "More options"
     And I press "More options"
@@ -114,8 +104,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     | Page title | This is my page now |
     And I press "Save"
     And I follow "Display page"
-    # Check that the image is displayed on copied page and ensure the link is correct
-    Then I should see image "Image2.png" on the page
+    And I should see "This is the edited description"
     And I log out
 
     # check page can be deleted (Bug 1755682)
