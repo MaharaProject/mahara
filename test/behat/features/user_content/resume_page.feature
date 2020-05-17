@@ -80,6 +80,7 @@ Scenario: Editing Education and Employment info
     And I attach the file "Image2.png" to "Attach file"
     And I click on "addeducationhistory_submit"
     And I click on "Move down" in "North American Cultural Studies" row
+    And I wait "1" seconds
     And I click on "Move up" in "North American Cultural Studies" row
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
@@ -240,6 +241,7 @@ Scenario: Adding Achievements
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Accredited Technologist" row
+    And I wait "1" seconds
     And I click on "Move up" in "Accredited Technologist" row
     # check achievements can be deleted (Bug 1755669)
     And I click on "Delete \"sdrtyh\"" delete button

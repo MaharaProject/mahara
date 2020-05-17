@@ -52,6 +52,7 @@ Scenario: Create a block and see comments and details modal and headers update a
     And I close the dialog
     And I click on "Edit" in the ".pageactions" "css_element"
     And I configure the block "Image Block"
+    And I wait "1" seconds
     And I click on "Image - Image1.jpg"
     And I click on "Edit file \"Image1.jpg\""
     And I scroll to the base of id "instconf_artefactid_edit_allowcomments"
