@@ -157,6 +157,20 @@ EOD;
     }
 
     /**
+     * Gets the view id from it's title and owner.
+     * @param string $viewtitle
+     * @param int $ownerid
+     * @return int the view id
+     *     = false if not exists
+     */
+    protected function get_view_id_by_owner($viewtitle, $ownerid) {
+        if ($res = get_record('view', 'title', $viewtitle, 'owner', $ownerid)) {
+            return $res->id;
+        }
+        return false;
+    }
+
+    /**
      * Gets the id of one site administrator.
      * @return int the admin id
      *     = false if not exists
@@ -657,17 +671,33 @@ EOD;
      */
     public function create_block($record) {
         global $USER;
-        $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
-        $page = strtolower(trim($record['page']));
+        $sql = $page = $ownerid = $view = $viewid = null;
 
-        $view = trim($record['page']);
-        $viewid = $this->get_view_id($view);
+        if (preg_match('/^Dashboard page\:/', $record['page'])) {
+            list($record['page'], $ownername) = explode(":", $record['page']);
+            $ownerid = get_field('usr', 'id', 'username', $ownername);
+            $sql = "SELECT id FROM {view} WHERE type = 'dashboard' AND LOWER(TRIM(title)) = ? AND \"owner\" = ?";
+            $page = strtolower(trim($record['page']));
+            $view = trim($record['page']);
+            $viewid = $this->get_view_id_by_owner($view, $ownerid);
+        }
+        else {
+            $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
+            $page = strtolower(trim($record['page']));
+            $view = trim($record['page']);
+            $viewid = $this->get_view_id($view);
+        }
 
         if (!isset(self::$viewcolcounts[$viewid])) {
           self::$viewcolcounts[$viewid] = 1;
         }
 
-        $ids = get_records_sql_array($sql, array($page));
+        if ($ownerid != null) {
+            $ids = get_records_sql_array($sql, array($page,$ownerid));
+        }
+        else {
+            $ids = get_records_sql_array($sql, array($page));
+        }
         if (!$ids || count($ids) > 1) {
             throw new SystemException("Invalid page name '" . $record['page'] . "'. The page title does not exist, or is duplicated.");
         }
