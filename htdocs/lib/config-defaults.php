@@ -852,3 +852,9 @@ $cfg->saml_log_attributes = false;
  * your server to ustilise the print to PDF commandline option - Use with caution.
  */
 //$cfg->usepdfexport = true;
+
+/**
+ * Allow the site to not set the HTTP Strict Transport Security header
+ * This is useful if the server or a downstream program sets this header already
+ */
+//$cfg->hstsoverride = true;

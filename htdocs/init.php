@@ -375,7 +375,7 @@ if (!defined('CLI')) {
     header('X-Content-Type-Options: nosniff');
     header('X-Permitted-Cross-Domain-Policies: master-only');
     if (is_https()) {
-        if (!preg_grep("/^Strict-Transport-Security/", headers_list())) {
+        if (!get_config('hstsoverride') && !preg_grep("/^Strict-Transport-Security/", headers_list())) {
             // Set this header only if not already set by the server
             header('Strict-Transport-Security: max-age=63072000');
         }
