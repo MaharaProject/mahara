@@ -1376,7 +1376,7 @@ class HtmlExportOutputFilter {
                     return '';
                 }
                 $rootpath = ($this->exporter->get('exportingoneview')) ? $this->exporter->get_root_path(2) : $this->exporter->get_root_path(3);
-                return str_replace($rootpath, $rootpath . 'export_info/', $this->get_export_path_for_file($icon, $options, '/static/profileicons/'));
+                return $rootpath . $this->get_export_path_for_file($icon, $options, 'HTML/static/profileicons/');
             default:
                 return '';
             }
@@ -1460,7 +1460,7 @@ class HtmlExportOutputFilter {
         }
 
         unset($options['view']);
-        if (!$this->exporter->get('user')->can_view_artefact($file)) {
+        if (!$this->exporter->get('user')->can_view_artefact($file) && $file->get('artefacttype') != 'profileicon') {
             $SESSION->add_info_msg(get_string('unabletocopyartefact', 'export', $file->get('title')));
             return '';
         }
