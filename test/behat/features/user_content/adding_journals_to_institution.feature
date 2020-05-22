@@ -116,8 +116,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     # Adding journal block to the page
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Journal" in the "Content types" property
+    And I click on blocktype "Journal"
     And I select the radio "Site journal 1"
     And I select "Others will get their own copy of your journal" from "Block copy permission"
     And I press "Save"

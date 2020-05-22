@@ -57,10 +57,7 @@ Background:
     # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Sign-off" in the "Content types" property
+    And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
@@ -71,10 +68,7 @@ Background:
     # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Sign-off" in the "Content types" property
+    And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
@@ -86,10 +80,7 @@ Background:
     # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Sign-off" in the "Content types" property
+    And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
