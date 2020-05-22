@@ -42,10 +42,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I click on "Edit" in "Page UserA_01" card menu
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
- And I click on "Show more"
- And I click on "Show more"
- And I click on "Show more"
- And I click on "Social media" in the "Content types" property
+ And I click on blocktype "Social media"
  And I set the field "Block title" to "Social Media"
  And I check "Facebook (Social media)"
  And I check "Twitter (Social media)"

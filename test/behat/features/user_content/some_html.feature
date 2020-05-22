@@ -21,10 +21,7 @@ Scenario:
     # Configuring the block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Some HTML" in the "Content types" property
+    And I click on blocktype "Some HTML"
     And I set the field "Block title" to "Some HTML"
     And I follow "File"
     And I attach the file "test_html.html" to "File"

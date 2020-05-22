@@ -57,8 +57,7 @@ Scenario: Creating institution tags
     And I press "Save"
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Tagged journal entries" in the "Content types" property
+    And I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "One tag" and select "Institution One: One tag"
     And I press "Save"
     Then I should see "Journal entries with tag \"Institution One: One tag\""

@@ -21,10 +21,7 @@ Scenario: Open badges block
     And I click on "Edit" in "Page UserA_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Open Badges" in the "Content types" property
+    And I click on blocktype "Open Badges"
     And I press "Save"
 
     # Need to add delays as Mahara needs to talk to external site.

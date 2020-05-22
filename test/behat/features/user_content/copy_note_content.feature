@@ -17,18 +17,14 @@ Scenario: Use content from another note (Bug 1710988)
   And I follow "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
-  And I click on "Show more"
-  And I click on "Show more"
-  And I click on "Note" in the "Content types" property
+  And I click on blocktype "Note"
   And I set the following fields to these values:
   | Block title | Note block 1 |
   | Block content | This is a test |
   And I press "Save"
   When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
-  And I click on "Show more"
-  And I click on "Show more"
-  And I click on "Note" in the "Content types" property
+  And I click on blocktype "Note"
   And I follow "Use content from another note"
   And I select the radio "Note block 1"
   # Set title after selection as selection updates the title with original one

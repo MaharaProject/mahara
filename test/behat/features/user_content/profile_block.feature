@@ -30,10 +30,7 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   And I follow "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
-  And I click on "Show more"
-  And I click on "Show more"
-  And I click on "Show more"
-  And I click on "Profile information" in the "Content types" property
+  And I click on blocktype "Profile information"
   And I set the field "Block title" to "Profile information"
   # Choose information to display
   And I check "First name"

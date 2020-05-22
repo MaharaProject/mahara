@@ -21,8 +21,7 @@ Scenario:
     # Configuring the block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "PDF" in the "Content types" property
+    And I click on blocktype "PDF"
     And I fill in the following:
     | Block title | Mahara about PDF |
 

@@ -66,9 +66,7 @@ Scenario: Add comments block to page
     # Add a comments block so that comments will now be at the top of the page
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Comments" in the "Content types" property
+    And I click on blocktype "Comments"
     Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."
     And I display the page
     Then I should see "Joe Anonymous"

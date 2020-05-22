@@ -363,6 +363,35 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click on the link or button.
+     *
+     * @When /^I click on blocktype "(?P<blocktype>(?:[^"]|\\")*)"$/
+     * @param string $link_or_button we look for
+     */
+    public function i_click_on_blocktype($blocktype) {
+        $show_more_button = "Show more";
+        $property = "Content types";
+        // get the blocktypes container
+        $css_locator = get_property($property);
+
+        $found = false;
+        while (!$found) {
+            try {
+                //check if the blocktype is there
+                $node = $this->get_node_in_container('link_or_button', $blocktype, 'css_element', '#placeholderlist');
+                $this->ensure_node_is_visible($node);
+                $found = true;
+            }
+            catch(Exception $e) {
+                // do nothing, keep looking
+                $this->i_click_on($show_more_button);
+            }
+        }
+
+        $this->i_click_on_in_the($blocktype, $css_locator[0], $css_locator[1]);
+    }
+
+    /**
      * Click on the delete confirm link or button.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" delete button$/

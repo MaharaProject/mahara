@@ -26,10 +26,9 @@ Background:
     And I click on "Edit" in "Celeste's Page" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
 
 Scenario: Add Journal block to the page
-    Given I click on "Journal" in the "Content types" property
+    Given I click on blocktype "Journal"
     And I select the radio "Mars journal"
     And I press "Save"
     And I display the page
@@ -53,7 +52,7 @@ Scenario: Add Journal block to the page
     And I should see "The contents of this entry ABCD123"
 
 Scenario: Add specific Journal entry to the page
-    Given I click on "Journal entry" in the "Content types" property
+    Given I click on blocktype "Journal entry"
     And I select the radio "I'm going to Mars! (Mars journal)"
     And I press "Save"
     And I display the page
@@ -61,14 +60,14 @@ Scenario: Add specific Journal entry to the page
     And I should not see "Spacefood is kind of gross"
 
 Scenario: Add a recent journal entries block to the page
-    Given I click on "Recent journal entries" in the "Content types" property
+    Given I click on blocktype "Recent journal entries"
     And I select the radio "Mars journal"
     And I press "Save"
     And I display the page
     Then I should see "Spacefood"
 
 Scenario: Add a tagged journal entry block to the page
-    Given I click on "Tagged journal entries" in the "Content types" property
+    Given I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "food" and select "food"
     And I press "Save"
     And I display the page

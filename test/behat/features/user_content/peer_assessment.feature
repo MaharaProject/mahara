@@ -57,10 +57,7 @@ Background:
     # user adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Sign-off" in the "Content types" property
+    And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
@@ -70,10 +67,7 @@ Background:
     # user adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Sign-off" in the "Content types" property
+    And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"
@@ -84,10 +78,7 @@ Background:
     # user adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Sign-off" in the "Content types" property
+    And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed below the page heading rather than in a block itself on the page"

@@ -28,9 +28,7 @@ Scenario:
   And I follow "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
-  And I click on "Show more"
-  And I click on "Show more"
-  And I click on "Navigation" in the "Content types" property
+  And I click on blocktype "Navigation"
   And I select "Collection UserA_02" from "Collection"
   And I set the field "Block title" to "Nav for collection B"
   And I enable the switch "Add to all pages"

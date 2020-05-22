@@ -65,9 +65,7 @@ Scenario: Create forum and add block to group page
     And I click on "Edit" in "Page UserC_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Recent forum posts" in the "Content types" property
+    And I click on blocktype "Recent forum posts"
     # TODO could test other options
     And I press "Save"
     And I display the page
