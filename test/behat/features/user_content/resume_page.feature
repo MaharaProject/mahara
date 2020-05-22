@@ -131,10 +131,7 @@ Scenario: Editing Education and Employment info
     And I click on "Edit" in "Profile page" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "My entire résumé" in the "Content types" property
+    And I click on blocktype "My entire résumé"
     And I set the field "Block title" to "My entire résumé"
     And I select "Automatically retract" from "Retractable"
     And I press "Save"
@@ -325,10 +322,7 @@ Scenario: Adding interests
     And I click on "Edit" in "Page UserA_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "One résumé field" in the "Content types" property
+    And I click on blocktype "One résumé field"
     And I select the radio "Interests"
     And I press "Save"
     And I display the page

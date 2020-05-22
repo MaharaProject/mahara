@@ -23,9 +23,7 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     And I click on "Edit" in "Page admin_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Plans" in the "Content types" property
+    And I click on blocktype "Plans"
     And I set the field "Block title" to ""
     # select the plan to display in block
     And I check "Plan 9 from outer space"
@@ -136,9 +134,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     And I click on "Edit" in "Page admin_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Plans" in the "Content types" property
+    And I click on blocktype "Plans"
     And I set the following fields to these values:
     | Plan 9 from outer space | 1 |
     | Tasks to display | 5 |

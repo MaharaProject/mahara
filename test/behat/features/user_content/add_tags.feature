@@ -75,9 +75,7 @@ Background:
    # Creating a Note with a tag
    When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
-   And I click on "Show more"
-   And I click on "Show more"
-   And I click on "Note" in the "Content types" property
+   And I click on blocktype "Note"
    # create a note block with a Unique name (Note Block 3304)
    And I fill in the following:
    | Block title | Note Block 3304 |
@@ -97,20 +95,14 @@ Background:
    # Creating a resume field with a tag
    When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
-   And I click on "Show more"
-   And I click on "Show more"
-   And I click on "Show more"
-   And I click on "One résumé field" in the "Content types" property
+   And I click on blocktype "One résumé field"
    And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
    And I press "Save"
    # Creating an external video block with a tag
    # need to do this one last as the loading of video effects takes focus away from the add block modal
    When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
-   And I click on "Show more"
-   And I click on "Show more"
-   And I click on "Show more"
-   And I click on "External media" in the "Content types" property
+   And I click on blocktype "External media"
    And I fill in "URL or embed code" with "https://www.youtube.com/embed/VeS1iqQ6VIc"
    And I fill in select2 input "instconf_tags" with "ègreen" and select "ègreen"
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"

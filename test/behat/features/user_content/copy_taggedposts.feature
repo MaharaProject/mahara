@@ -26,8 +26,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I click on "Edit" in "Page UserA_01" card menu
   When I follow "Drag to add a new block" in the "blocktype sidebar" property
   And I press "Add"
-  And I click on "Show more"
-  And I click on "Tagged journal entries" in the "Content types" property
+  And I click on blocktype "Tagged journal entries"
   And I fill in select2 input "instconf_tagselect" with "blog" and select "blog"
   And I fill in select2 input "instconf_tagselect" with "one" and select "one"
   And I fill in select2 input "instconf_tagselect" with "-two" and select "two"
