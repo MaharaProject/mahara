@@ -37,6 +37,14 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
                     $this->otherfiles[$id] = $id;
                 }
             }
+            // include the comments profile icons
+            if ($artefact->get('artefacttype') == 'comment') {
+                $author = $artefact->get('author');
+                if ($profileicon = get_field('usr', 'profileicon', 'id', $author)) {
+                    $profileiconartefact = new ArtefactTypeProfileIcon($profileicon);
+                    $this->artefactdata[$profileicon] = $profileiconartefact;
+                }
+            }
         }
 
         // Grab all parent folders of all artefacts owned by the exporting user, so we can export
