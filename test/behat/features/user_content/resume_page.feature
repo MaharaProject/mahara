@@ -117,6 +117,7 @@ Scenario: Editing Education and Employment info
     And I click on "addemploymenthistory_submit"
     Then I should see "Saved successfully"
     And I click on "Move down" in "Test Analyst" row
+    And I wait "1" seconds
     And I click on "Move up" in "Test Analyst" row
     # delete employment and education history  (Bug 1755669)
     And I scroll to the base of id "employmenthistorylist"
@@ -180,6 +181,7 @@ Scenario: Adding Achievements
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Scrum Master Certification" row
+    And I wait "1" seconds
     And I click on "Move up" in "Scrum Master Certification" row
 
     And I scroll to the base of id "addbookbutton"
@@ -207,6 +209,7 @@ Scenario: Adding Achievements
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Measurement of the neutron beta decay asymmetry using machine learning" row
+    And I wait "1" seconds
     And I click on "Move up" in "Measurement of the neutron beta decay asymmetry using machine learning" row
 
     # Adding Professional memberships
