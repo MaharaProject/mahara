@@ -82,7 +82,7 @@ jQuery(function($) {
                     'initialgroups': initialgroups[addtype].join(',')
                 }, 'POST',
             function() {
-                $('.modal.in').modal('hide');
+                $('.modal.show').modal('hide');
             });
         }
     });
