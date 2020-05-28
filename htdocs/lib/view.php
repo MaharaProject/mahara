@@ -3043,7 +3043,6 @@ class View {
             foreach ($columnsperrow as $row) {
                 $numcolumns = $row->columns;
                 $widths = self::$defaultcolumnlayouts[$numcolumns];
-                $layout->id = get_field('view_layout_columns', 'id', 'columns', $numcolumns, 'widths', $widths);
                 $layout->rows[$row->row]['widths'] = $widths;
                 $layout->rows[$row->row]['columns'] = $numcolumns;
             }
