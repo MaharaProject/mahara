@@ -900,17 +900,7 @@ class View {
             }
         }
 
-        $columnsperrowchanged = (!empty($this->oldcolumnsperrow)) ? array_udiff($this->oldcolumnsperrow, $this->columnsperrow, function($oa, $ob) {
-            $rows = $oa->row - $ob->row;
-            $columns = $oa->columns - $ob->columns;
-            if ($rows != 0) {
-                return $rows;
-            }
-            else if ($columns != 0) {
-                return $columns;
-            }
-            return 0;
-        }) : false;
+        $columnsperrowchanged = $this->columnsperrow != $this->oldcolumnsperrow;
 
         if (isset($this->columnsperrow) && (!empty($columnsperrowchanged) || $creating)) {
             delete_records('view_rows_columns', 'view', $this->get('id'));
