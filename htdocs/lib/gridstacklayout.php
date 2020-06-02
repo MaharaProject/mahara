@@ -106,17 +106,8 @@ function get_column_widths($viewid, $row) {
 
     // get the view's layout
     $view = new View($viewid);
-    $layout = $view->get_layout()->id;
-
-    $sql = "SELECT vlc.widths
-        FROM {view_layout_columns} vlc
-        INNER JOIN {view_layout_rows_columns} vlrc
-        ON vlc.id = vlrc.columns
-        WHERE vlrc.viewlayout = ?
-        AND vlrc.row = ?";
-    $values = array($layout, $row);
-    $widths = get_record_sql($sql, $values);
-    $widths = explode(",", $widths->widths);
+    $layout = $view->get_layout();
+    $widths = explode(",", $layout->rows[$row]['widths']);
     return (array_map(function($col) { return round(12 * $col/100);}, $widths));
 }
 
