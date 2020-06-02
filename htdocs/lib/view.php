@@ -3048,7 +3048,6 @@ class View {
             foreach ($columnsperrow as $row) {
                 $numcolumns = $row->columns;
                 $widths = self::$defaultcolumnlayouts[$numcolumns];
-                $layout->id = get_field('view_layout_columns', 'id', 'columns', $numcolumns, 'widths', $widths);
                 $layout->rows[$row->row]['widths'] = $widths;
                 $layout->rows[$row->row]['columns'] = $numcolumns;
             }
@@ -5921,6 +5920,7 @@ class View {
             $blocks = get_records_sql_array($sql, array($template->get('id')));
         }
         else {
+
             require_once(get_config('libroot') . 'gridstacklayout.php');
             // get blocks in old layout
             $blocks = get_records_array('block_instance', 'view', $template->get('id'));
