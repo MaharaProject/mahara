@@ -161,6 +161,9 @@ function collectionedit_validate(Pieform $form, $values) {
 function collectionedit_submit(Pieform $form, $values) {
     global $SESSION, $new, $copy, $urlparams;
     $values['navigation'] = (int) $values['navigation'];
+    if (isset($values['progresscompletion'])) {
+        $values['progresscompletion'] = (int) $values['progresscompletion'];
+    }
     if (empty($values['framework'])) {
         $values['framework'] = null;
     }

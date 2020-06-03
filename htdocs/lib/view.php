@@ -4046,6 +4046,9 @@ class View {
                     if ($collobj->has_framework()) {
                         $data['framework'] = $collobj->collection_nav_framework_option();
                     }
+                    if ($collobj->has_progresscompletion()) {
+                        $data['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
+                    }
                 }
 
                 $data['removable'] = self::can_remove_viewtype($data['type']);
@@ -6585,7 +6588,7 @@ class View {
                 c.id AS cid, c.name AS cname, c.framework,
                 c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
                 db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus,
-                cv.displayorder
+                c.progresscompletion, cv.displayorder
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
@@ -6670,7 +6673,13 @@ class View {
                         $collections[$cid]['ownername'] = $v['ownername'];
                         $collections[$cid]['ownerurl'] = $v['ownerurl'];
                     }
-                    if (!empty($r['framework'])) {
+                    if (!empty($r['progresscompletion'])) {
+                        require_once('collection.php');
+                        $coll = new stdClass();
+                        $coll->id = $cid;
+                        $collections[$cid]['url'] = Collection::get_progresscompletion_url($coll);
+                    }
+                    else if (!empty($r['framework'])) {
                         require_once('collection.php');
                         $coll = new stdClass();
                         $coll->id = $cid;
@@ -7276,6 +7285,150 @@ class View {
             (object) array('resourcetype' => 'text', 'resourceid' => $bi->get('id')),
             array('resourcetype' => 'description', 'resourceid' => $this->get('id'))
         );
+    }
+
+    public function has_signoff_block() {
+        $blocks = get_record('block_instance', 'blocktype', 'signoff', 'view', $this->id);
+        return ($blocks ? true : false);
+    }
+
+    public function get_progress_action($column = 'owner') {
+        return new ProgressAction($this, $column);
+    }
+}
+
+class ProgressAction {
+    private $status;
+    private $action;
+    private $column;
+    private $view_as;
+
+    const STATUS_NOTHING = 0;
+    const STATUS_NEEDSACTION = 1;
+    const STATUS_ACTIONNOTALLOWED = 2;
+    const STATUS_COMPLETED = 3;
+
+    const ACTION_SIGNOFF = 4;
+    const ACTION_UNSIGNOFF = 5;
+    const ACTION_VERIFY = 6;
+
+    public function __construct($view, $column) {
+        global $USER;
+        $this->action = false;
+        $this->column = $column;
+        // Who is accessing the view
+        $this->view_as = '';
+        if ($view->get('owner') == $USER->get('id')) {
+            $this->view_as = 'owner';
+        }
+        else if ($USER->is_manager($view)) {
+            $this->view_as = 'manager';
+        }
+
+        $hassignoffblock = $view->has_signoff_block();
+        $issignedoff = ArtefactTypePeerassessment::is_signed_off($view);
+        $isverifiedenabled = ArtefactTypePeerassessment::is_verify_enabled($view);
+        $isverified = ArtefactTypePeerassessment::is_verified($view);
+
+        $this->status = self::STATUS_NOTHING;
+        if ($hassignoffblock) {
+            if ($column == 'owner') {
+                if ($issignedoff) {
+                    $this->status = self::STATUS_COMPLETED;
+                    if ($this->view_as == 'owner') {
+                        $this->action = self::ACTION_UNSIGNOFF;
+                    }
+                }
+                else {
+                    if ($this->view_as == 'owner') {
+                        $this->status = self::STATUS_NEEDSACTION;
+                        $this->action = self::ACTION_SIGNOFF;
+                    }
+                    else {
+                        $this->status = self::STATUS_ACTIONNOTALLOWED;
+                    }
+                }
+            }
+            else if ($column == 'manager') {
+                if ($isverifiedenabled) {
+                    if (!$issignedoff) {
+                        $this->status = self::STATUS_ACTIONNOTALLOWED;
+                    }
+                    else if ($isverified) {
+                        $this->status = self::STATUS_COMPLETED;
+                    }
+                    else {
+                        if ($this->view_as == 'manager') {
+                            $this->status = self::STATUS_NEEDSACTION;
+                            $this->action = self::ACTION_VERIFY;
+                        }
+                        else {
+                            $this->status = self::STATUS_ACTIONNOTALLOWED;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function get_icon() {
+        $notallowedicon = "icon icon-circle dot disabled";
+        $actionicon = "icon icon-circle action";
+        $completedicon = "icon icon-check-circle completed";
+        switch ($this->status) {
+          case self::STATUS_NEEDSACTION:
+                $icon = $actionicon;
+            break;
+          case self::STATUS_ACTIONNOTALLOWED:
+                $icon = $notallowedicon;
+            break;
+          case self::STATUS_COMPLETED:
+                $icon = $completedicon;
+            break;
+          default:
+                $icon = '';
+            break;
+        }
+        return $icon;
+    }
+
+    public function get_action() {
+        switch ($this->action) {
+            case self::ACTION_SIGNOFF:
+                $action = 'signoff_action';
+            break;
+            case self::ACTION_VERIFY:
+                  $action = 'verify_action';
+              break;
+            case self::ACTION_UNSIGNOFF:
+                $action = 'unsignoff_action';
+            break;
+            default:
+                $action = false;
+            break;
+        }
+        return $action;
+    }
+
+    public function get_title() {
+        $title = '';
+        if ($this->column == 'owner') {
+            if ($this->status == self::STATUS_NEEDSACTION || $this->status == self::STATUS_ACTIONNOTALLOWED) {
+                $title = get_string('needssignedoff', 'collection');
+            }
+            else if ($this->status == self::STATUS_COMPLETED) {
+                $title = get_string('signedoff', 'collection');
+            }
+        }
+        else if ($this->column == 'manager') {
+            if ($this->status == self::STATUS_NEEDSACTION || $this->status == self::STATUS_ACTIONNOTALLOWED) {
+                $title = get_string('needsverified', 'collection');
+            }
+            else if ($this->status == self::STATUS_COMPLETED) {
+                $title = get_string('verified', 'collection');
+            }
+        }
+        return $title;
     }
 }
 

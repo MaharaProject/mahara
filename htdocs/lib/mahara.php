@@ -3149,7 +3149,7 @@ function can_view_view($view, $user_id=null) {
  *
  * @return object Containing viewid,        // the id of first view
                              collectionid,  // the id of collection (if exists)
-                             gotomatrix     // go to the collection matrix page on first arrival
+                             gotomatrix     // go to the collection progress completion or matrix page on first arrival
  */
 function get_view_from_token($token, $visible=true) {
     // Set up object to return
@@ -3178,7 +3178,7 @@ function get_view_from_token($token, $visible=true) {
         // if any of the views are in collection(s), either pick the view
         // with the lowest displayorder or if there is a matrix page go to that.
         $order = get_records_sql_array('
-            SELECT cv.view, cv.collection, c.framework
+            SELECT cv.view, cv.collection, c.framework, c.progresscompletion
             FROM {collection_view} cv
             JOIN {collection} c ON c.id = cv.collection
             WHERE cv.view IN (' . join(',', $viewids) . ')
@@ -3187,7 +3187,7 @@ function get_view_from_token($token, $visible=true) {
         );
         if ($order) {
             if ($token != get_cookie('caccess:'.$order[0]->collection)) {
-                if (!empty($order[0]->framework)) {
+                if (!empty($order[0]->progresscompletion) || !empty($order[0]->framework)) {
                     $result->gotomatrix = true;
                 }
                 set_cookie('caccess:'.$order[0]->collection, $token, 0, true);

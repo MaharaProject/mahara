@@ -11,10 +11,12 @@ $(function () {
     var grid = $('.grid-stack');
     grid.gridstack(options);
     grid = $('.grid-stack').data('gridstack');
-    // should add the blocks one by one
-    var blocks = {json_encode arg=$blocks};
-    loadGrid(grid, blocks);
-    jQuery(document).trigger('blocksloaded');
+    if (grid) {
+        // should add the blocks one by one
+        var blocks = {json_encode arg=$blocks};
+        loadGrid(grid, blocks);
+        jQuery(document).trigger('blocksloaded');
+    }
 });
 </script>
 <div class="container-fluid">

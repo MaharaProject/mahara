@@ -1405,6 +1405,23 @@ class User {
         return false;
      }
 
+     /**
+      * Function to check if the user has manager access role to the view
+      *
+      * @param $v  View object that the user has access to
+      */
+      public function is_manager($v) {
+         $user_roles = get_column('view_access', 'role', 'usr', $this->get('id'), 'view', $v->get('id'));
+         if (!empty($user_roles)) {
+             foreach ($user_roles as $i => $role) {
+                if ($role == 'manager' || $role == 'peermanager') {
+                   return true;
+                }
+             }
+         }
+         return false;
+      }
+
    /**
     * Function to check if the user has access role as peer only
     *

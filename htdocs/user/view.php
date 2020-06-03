@@ -122,9 +122,11 @@ if (!$restrictedview) {
                 grid.gridstack(options);
                 grid = $('.grid-stack').data('gridstack');
 
-                // should add the blocks one by one
-                var blocks = {$blocks};
-                loadGrid(grid, blocks);
+                if (grid) {
+                    // should add the blocks one by one
+                    var blocks = {$blocks};
+                    loadGrid(grid, blocks);
+                }
             });
 EOF;
     }

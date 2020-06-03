@@ -51,6 +51,11 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                     $framework = $collection->collection_nav_framework_option();
                     array_unshift($views['views'], $framework);
                 }
+                if ($collection->has_progresscompletion()) {
+                    // Add the progress completion link to start of list
+                    $progresscompletion = $collection->collection_nav_progresscompletion_option();
+                    array_unshift($views['views'], $progresscompletion);
+                }
                 $smarty->assign('views', $views['views']);
             }
         }

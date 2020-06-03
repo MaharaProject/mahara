@@ -1,0 +1,42 @@
+table.progresscompletion {
+    td {
+      .icon {
+        text-align: center;
+        vertical-align: middle;
+        display: block;
+        font-size: $font-size-base * 1.215;
+        &.completed {
+          color: $progresscompletion-verified-color;
+        }
+        &.action {
+          color: $progresscompletion-notverified-color;
+        }
+        &.dot.disabled {
+          color: scale-color($gray-300, $lightness: 28%);
+          cursor: $cursor-disabled;
+          // Override dot icon with minus icon
+          &:before {
+            content: "\f068";
+          }
+        }
+        a {
+            cursor: pointer;
+        }
+      }
+    }
+
+    .userrole {
+      text-align: center;
+      vertical-align: middle;
+    }
+}
+
+.card.progresscompletion {
+    width: 45%;
+}
+
+@media (max-width: 992px) {
+    .card.progresscompletion {
+        width: 100%;
+    }
+}

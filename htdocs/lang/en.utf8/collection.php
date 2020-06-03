@@ -85,6 +85,7 @@ $string['noviewsincollection'] = 'No pages in collection.';
 $string['noviewsaddsome'] = 'No pages in collection. %sAdd some%s.';
 $string['noviews'] = 'No pages.';
 $string['overrideaccess'] = 'Override access';
+$string['portfoliocompletion'] = 'Portfolio completion';
 $string['potentialviews'] = 'Potential pages';
 $string['saveapply'] = 'Apply and save';
 $string['savecollection'] = 'Save collection';
@@ -130,3 +131,12 @@ $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
 $string['viewingpage'] = 'You are on page ';
 $string['navtopage'] = 'Navigate to page:';
+
+// progress completion page
+$string['overallcompletion'] = 'Overall completion of sign-off and verification';
+$string['progresscompletiondesc'] = "Add the 'Portfolio completion' page at the start of this collection.";
+$string['signedoff'] = 'Signed off';
+$string['needssignedoff'] = 'Needs to be signed off';
+$string['verified'] = 'Verified';
+$string['needsverified'] = 'Needs to be verified';
+$string['verification'] = 'Verification';
