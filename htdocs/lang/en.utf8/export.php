@@ -14,6 +14,7 @@ defined('INTERNAL') || die();
 $string['allmydata'] = 'All my data';
 $string['chooseanexportformat'] = 'Choose an export format';
 $string['exportarchivedescription1'] = 'You will receive a ZIP archive that includes the content, which you selected to export, in both HTML and Leap2A. You can view your portfolio in a browser via the index.html file or import the content in another portfolio platform that supports the Leap2A format.';
+$string['exportarchivedescriptionpdf'] = 'You will receive a ZIP archive that includes the content, which you selected to export, in HTML, Leap2A, and PDF. You can view your portfolio in a browser via the index.html, in the exported PDfs files, or import the content in another portfolio platform that supports the Leap2A format.';
 $string['clicktopreview'] = 'Click to preview';
 $string['collectionstoexport'] = 'Collections to export';
 $string['creatingzipfile'] = 'Creating zip file';
