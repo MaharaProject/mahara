@@ -357,11 +357,9 @@ $string['reportdescgroups'] = '<ul>
 
 // Content reports
 $string['reportdesccontent'] = '<ul>
-<li>Title</li>
-<li>Number of modifications</li>
-<li>Total</li>
-<li>Number of unique users who made the modifications</li>
-<li>Number of unique users over the total</li>
+<li>Name</li>
+<li>Total modified during time period</li>
+<li>Total existing at end of time period</li>
 </ul>';
 $string['reportdescobjectionable'] = "<ul>
 <li>Page title</li>

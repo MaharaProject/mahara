@@ -3081,7 +3081,8 @@ function content_stats_table($limit, $offset, $extra) {
         $fromsql .= " WHERE sr.id IN (SELECT id FROM {site_registration} ORDER BY time DESC LIMIT 2)";
     }
     $fromsql .= " AND sd.value " . (is_postgres() ? '~ E' : 'REGEXP ') . "'^[0-9]+$'
-                  AND sd.field NOT LIKE '%version'";
+                  AND sd.field NOT LIKE '%version'
+                  AND sd.field NOT IN ('allowpublicviews', 'allowpublicprofiles', 'newstats')";
     $regdata = get_records_sql_array("SELECT DISTINCT sr.id, sr.time " . $fromsql . " ORDER BY sr.time DESC", $values);
 
     $count = ($regdata) ? count_records_sql("SELECT COUNT(*) " . $fromsql . " AND sr.id = " . $regdata[0]->id, $values) : 0;
