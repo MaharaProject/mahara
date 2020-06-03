@@ -34,7 +34,8 @@ function display_artefacts($array, $itemsinrow) {
 }
 
 echo $form_tag;
-echo '<p class="lead">' . get_string('exportarchivedescription1', 'export') . '</p>';
+$leadstr = get_field('export_installed', 'active', 'name', 'pdf') ? 'exportarchivedescriptionpdf' : 'exportarchivedescription1';
+echo '<p class="lead">' . get_string($leadstr, 'export') . '</p>';
 echo '<h2 class="heading">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
 echo '<div class="element form-group" id="whattoexport-buttons">';
 echo '<div>'. $elements['what']['html'] . '</div>';
