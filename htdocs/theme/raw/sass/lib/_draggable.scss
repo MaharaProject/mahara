@@ -1,6 +1,7 @@
 .drag-default-button {
-    @extend .btn-secondary; // Button like styling for drag element
-    background-color: #fff;
+    color: $theme-text-color;
+    box-shadow: none;
+    background-color: $white;
     border-color: $list-group-border-color;
 }
 

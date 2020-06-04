@@ -6,7 +6,7 @@
     border-color: $btn-secondary-border;
     box-shadow: none;
     &:hover,
-    &.focus {
+    &:focus {
         color: $btn-secondary-color;
         background-color: scale-color($btn-secondary-bg, $lightness: -10%);
         border-color: scale-color($btn-secondary-border, $lightness: -10%);
@@ -16,7 +16,7 @@
         border-color: $btn-disabled-border;
         background: $btn-disabled-bg;
         &:hover,
-        &.focus {
+        &:focus {
             color: $btn-disabled-color;
             border-color: $btn-disabled-border;
             background: $btn-disabled-bg;
@@ -30,7 +30,7 @@
     border-color: $btn-primary-border;
     box-shadow: none;
     &:hover,
-    &.focus {
+    &:focus {
         color: $btn-primary-color;
         background-color: scale-color($btn-primary-bg, $lightness: -10%);
         border-color: scale-color($btn-primary-border, $lightness: -10%);
@@ -40,7 +40,7 @@
         background-color: $btn-primary-bg;
         border-color: $btn-primary-border;
         &:hover,
-        &.focus {
+        &:focus {
             color: $btn-primary-color;
             background-color: scale-color($btn-primary-bg, $lightness: -10%);
             border-color: scale-color($btn-primary-border, $lightness: -10%);
@@ -203,9 +203,9 @@ td.action-list-copy {
             margin-bottom: 11px;
         }
         .btn {
-            @extend .btn-sm;
-            padding-top: 3px;
-            border-top: $btn-border-width solid $btn-secondary-border;
+            font-size: $font-size-sm;
+            border: $btn-border-width solid $btn-secondary-border;
+            padding: $btn-padding-y-sm $btn-padding-x-sm;
             @include media-breakpoint-up(lg) {
                 border-top-left-radius: 0;
                 border-top-right-radius: 0;
@@ -511,7 +511,7 @@ td.action-list-copy {
     margin-top: 12px;
 
     &:hover,
-    &.focus {
+    &:focus {
         color: $btn-primary-color;
         background-color: scale-color($btn-primary-bg, $lightness: -10%);
         border-color: scale-color($btn-primary-border, $lightness: -10%);
@@ -565,14 +565,6 @@ a[type="submit"],
 }
 
 // Notifications search and bulk action select alignment
-.form-inline {
-    input {
-        @extend .form-control;
-        &.btn-primary {
-            @extend .btn-primary;
-        }
-    }
-}
 .notification-parent {
     .bulk-actions {
         input {
