@@ -101,6 +101,8 @@ else {
     }
 }
 
+$namemaxlength = 128;
+
 $form = array(
     'name'       => 'editgroup',
     'plugintype' => 'core',
@@ -109,7 +111,7 @@ $form = array(
         'name' => array(
             'type'         => 'text',
             'title'        => get_string('groupname', 'group'),
-            'rules'        => array( 'required' => true, 'maxlength' => 128 ),
+            'rules'        => array( 'required' => true, 'maxlength' => $namemaxlength),
             'defaultvalue' => $group_data->name,
         ),
         'shortname' => group_get_shortname_element($group_data),
@@ -451,13 +453,16 @@ else {
 $form['elements']['settings']['elements'] = $elements;
 $editgroup = pieform($form);
 
+
 function editgroup_validate(Pieform $form, $values) {
-    global $group_data;
+    global $group_data, $namemaxlength;
     if ($group_data->name != $values['name']) {
         // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
         if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {
             if (count($ids) > 1 || $ids[0]->id != $group_data->id) {
-                $form->set_error('name', get_string('groupalreadyexists', 'group'));
+                // the group name already exists so generate name group suggestion
+                $suggestedname = group_generate_name($values['name'], $namemaxlength);
+                $form->set_error('name', get_string('groupalreadyexistssuggest', 'group', $suggestedname));
             }
         }
     }

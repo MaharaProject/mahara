@@ -2951,6 +2951,31 @@ function group_generate_shortname($groupname) {
 }
 
 /**
+ * Generate a suggested valid name for the group, based on the specified group name
+ *
+ * @param string $displayname
+ * @return string
+ */
+function group_generate_name($displayname, $namemaxlength = 128) {
+    $basename = mb_substr($displayname, 0, $namemaxlength);
+    $basename = strtolower($basename);
+    // Make sure the name is unique. If it is not, add a suffix and see if
+    // that makes it unique
+    $finalname = $basename;
+    $suffix = 'a';
+    while (record_exists_sql("SELECT * FROM {group} WHERE LOWER(TRIM(name)) = ?", array($finalname))) {
+        // Add the suffix but make sure the name length doesn't go over 255
+        $finalname = substr($basename, 0, $namemaxlength - strlen($suffix)) . $suffix;
+
+        // Will iterate a-z, aa-az, ba-bz, etc.
+        // See: http://php.net/manual/en/language.operators.increment.php
+        $suffix++;
+    }
+
+    return $finalname;
+}
+
+/**
  * Return an element for the shortname field of the group form.
  *
  * @param object $group_data Group data object.

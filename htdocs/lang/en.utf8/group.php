@@ -62,6 +62,7 @@ $string['reason']                    = 'Reason';
 $string['approve']                   = 'Approve';
 $string['reject']                    = 'Reject';
 $string['groupalreadyexists'] = 'A group by this name already exists.';
+$string['groupalreadyexistssuggest'] = 'A group by this name already exists. The name "%s" is available';
 $string['groupshortnamealreadyexists'] = 'A group by this short name already exists.';
 $string['invalidshortname'] = 'Invalid group short name.';
 $string['shortnameformat1'] = 'Group short names can be from 2 to 255 characters in length and contain only lowercase alphanumeric characters, ".", "-", and "_".';
