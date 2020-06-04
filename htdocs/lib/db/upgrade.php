@@ -1762,5 +1762,41 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020060400) {
+        $table = new XMLDBTable('artefact_plans_plan');
+        if (table_exists($table)) {
+            log_debug('Remove sequence from artefact_plans_plan "artefact" field');
+            $key = new XMLDBKEY('artefactfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+            drop_key($table, $key);
+            $field = new XMLDBField('artefact');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            change_field_default($table, $field);
+            $key = new XMLDBKey('primary');
+            $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
+            add_key($table, $key);
+            $key = new XMLDBKEY('artefactfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+            add_key($table, $key);
+        }
+
+        $table = new XMLDBTable('artefact_plans_task');
+        if (table_exists($table)) {
+            log_debug('Remove sequence from artefact_plans_task "artefact" field');
+            $key = new XMLDBKEY('artefactfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+            drop_key($table, $key);
+            $field = new XMLDBField('artefact');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            change_field_default($table, $field);
+            $key = new XMLDBKey('primary');
+            $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
+            add_key($table, $key);
+            $key = new XMLDBKEY('artefactfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
+            add_key($table, $key);
+        }
+    }
+
     return $status;
 }

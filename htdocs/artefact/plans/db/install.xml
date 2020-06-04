@@ -9,7 +9,7 @@
     that doesn't exist in the artefact table. -->
     <TABLE NAME="artefact_plans_task">
         <FIELDS>
-            <FIELD NAME="artefact" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="startdate" TYPE="datetime" NOTNULL="false" />
             <FIELD NAME="completiondate" TYPE="datetime" NOTNULL="false" />
             <FIELD NAME="completed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
@@ -39,7 +39,7 @@
 
     <TABLE NAME="artefact_plans_plan">
         <FIELDS>
-            <FIELD NAME="artefact" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+            <FIELD NAME="artefact" TYPE="int" LENGTH="10" NOTNULL="true" />
             <FIELD NAME="template" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" />
             <FIELD NAME="roottemplate" TYPE="int" LENGTH="10" NOTNULL="false" />
             <FIELD NAME="rootgroupplan" TYPE="int" LENGTH="10" NOTNULL="false" />
