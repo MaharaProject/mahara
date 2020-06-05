@@ -380,3 +380,18 @@
         margin: 5px 0;
     }
 }
+
+// Inbox subject to not wrap responsively
+.inboxblock {
+    .icon.left {
+        display: inline-block;
+        vertical-align: text-top;
+    }
+    .subject {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 80%;
+        white-space: nowrap;
+    }
+}
