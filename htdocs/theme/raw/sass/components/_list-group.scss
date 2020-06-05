@@ -1,35 +1,24 @@
 // // modifications for list elements such a list of pages, collections
 
-// Left card
 .list-group {
-    margin-bottom: 0;
     a {
-        // color: inherit;
-        &.tag {
-            display:inline-block;
-        }
         &.text-success {
             @extend .text-success;
         }
         &.text-link {
             @extend .text-link;
         }
-
-    }
-    .card &,
-    .card-body & {
-        margin-bottom: 0;
     }
     .user-card & {
-        min-height: 41px;
         max-height: 400px;
         overflow-y: auto;
     }
-
     .list-nested {
         margin: 5px -15px 0;
         > li > a {
-            padding: 3px 15px;
+            padding: 5px 15px;
+            display: block;
+            line-height: 1;
         }
         small {
             @extend .text-midtone;
@@ -37,6 +26,10 @@
     }
     &.list-group-unbordered {
         border: 0;
+        > .list-group-item {
+            border: 0;
+            padding: 5px 0;
+        }
         li {
             border:0;
             padding: 5px 7px;
@@ -54,81 +47,61 @@
         border-right: 0;
     }
 
-    &.attachment-incontent {
-        border-left: $list-group-border-width solid $list-group-border-color; // Full Journal attachment list block
+    // removes list-group-item first child's border-top when list-item includes block editing header links
+    .block-header:first-child + .list-group-item {
+        border-top-width: 0;
     }
 
-    .modal_link .icon {
-        color: $theme-text-color;
+    // removes card-footer border-top if it comes straight after list-group
+    ~ .card-footer {
+        border-top-width: 0;
     }
 
-    .modal_link .bh-details-only {
-        color: $white;
-    }
-}
-
-.list-group-item,
-.usericon-heading {
-    .inner-link.with-introduction {
-        span {
-            margin-right: 5px;
+    // adds the first child border-top back
+    &.list-group-top-border {
+        &.clearboth {
+            clear: both;
         }
+        .list-group-item {
+            border-top-width: $list-group-border-width;
+        }
+    }
+
+    // titles that aren't .list-group-item-heading
+    .title {
+        margin-top: 0;
+        font-size: $h4-font-size;
     }
 }
 
 .list-group-item-heading {
-    font-family: $font-family-base;
     margin-top: 0;
-    margin-bottom: 5px;
-    a {
-        &:hover,
-        &:focus {
-            &.inner-link {
-                text-decoration: underline;
-            }
-            .metadata {
-                color: $link-color;
-            }
-        }
-        &.collapsible {
-            display: block;
-        }
-    }
-
-    .collection-item & {
-        font-size: $h3-font-size;
-    }
-
-    .postedon {
-        font-family: $font-family-base;
-    }
+    font-size: $h4-font-size;
 
     .text-small {
         font-family: $font-family-base;
     }
 
     .notes {
-        font-weight: $font-weight-base;
-        font-size: $font-size-base;
         color: $theme-text-lighttone-color;
-        &.bold {
-            font-weight: $font-weight-bold;
+    }
+
+    &.text-inline {
+        @include media-breakpoint-down(sm) {
+            display: block;
         }
     }
 }
 
-.list-group-item h4.list-group-item-heading {
-    font-size: $font-size-base * 1.0714;
-    margin-bottom: 5px;
-    a {
-        padding: 0;
-    }
+.card-secondary .list-group-item-heading {
+    font-family: $font-family-base;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: $font-size-base * 1.1428571428571428; // 16px
+    font-weight: $font-weight-normal;
 }
 
-.list-group-item h5 {
-    font-size: $font-size-base * 1.0714;
-}
-
+.list-group-item.draft,
 .list-group-item-warning {
     background-color: $state-warning-bg;
     .list-group-item-heading {
@@ -137,12 +110,7 @@
 }
 .list-group-item-danger {
     .notes {
-        font-weight: $font-weight-base;
-        font-size: $font-size-base;
         color: $theme-text-midtone-color;
-        &.bold {
-            font-weight: $font-weight-bold;
-        }
     }
 }
 .list-group-item-private {
@@ -152,63 +120,19 @@
     }
 }
 
-// Sidebar notification item styles
-.list-group-item-profile-notification {
-    word-wrap: normal;
-    white-space: normal;
-    &:first-child {
-        padding-right: 80px;
-    }
-}
-
-// Attachment list
 .list-group-item-link {
     padding: 0;
     a {
-        font-size: $font-size-sm;
         display: block;
-        padding: 10px 15px;
         &:hover,
         &:focus {
             background: $list-group-hover-bg;
             text-decoration: none;
         }
-        small {
-            color: $link-color;
-        }
-        .file-icon {
-            display: inline-block;
-            width: 22px;
-            height: 22px;
-            margin-right: 5px;
-        }
-        .file-title {
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .file-size {
-            float: right;
-            color: $theme-text-lighttone-color;
-        }
-    }
 
-    // Online user link see onlineusers.tpl
-    .online-user {
-        position: relative;
-        padding-left: 50px;
-        min-height: 50px;
-        line-height: 28px;
-
-        .user-icon {
-            position: absolute;
-            left: 20px;
-            top: 15px;
-        }
-
-        .user-name {
-            display: inline-block;
-            vertical-align: middle;
-            line-height: 1.5;
+        // online users sidebar
+        &.online-user {
+            padding: 10px 15px;
         }
     }
 }
@@ -217,54 +141,49 @@
 .list-group-item {
     border-left-width: 0;
     border-right-width: 0;
-    &.draft,
-    &.list-group-item-warning {
-        @extend .list-group-item-warning;
+
+    // default list-group-item has border-top and last child border-bottom
+    // first-child needs to take away border-top
+    &:first-child {
+        border-top-width: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
     }
+
+    // last-child needs to take away border-bottom-radius
+    &:last-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
     &.flush {
-        padding: 10px 0;
+        padding-left: 0;
+        padding-right: 0;
     }
-    &.list-group-item-heading {
-        margin-bottom: 0;
+
+    // for list-group-items that has collapsible indicator on right but need left flushed
+    &.flush-collapsible {
+        padding-left: 0;
     }
-    .list-group-item-heading {
-        float: none;
-        @include media-breakpoint-up(md) {
-            float: left;
-        }
-        .card & {
-            float: none;
-        }
-    }
+
+    // blog post buttons
     .list-group-item-controls {
         float: none;
         @include media-breakpoint-up(md) {
             float: right;
         }
-        // For planlist page
-        .btn-group-top {
-            margin-top: 0;
-            float:none;
-            @include media-breakpoint-up(md) {
-                margin-top: 5px;
-            }
-            @include media-breakpoint-up(lg) {
-                margin-top: -13px;
-            }
-        }
     }
-    .list-group-item-detail {
-        margin: 10px 0;
-    }
+
     .btn-title {
         padding-left: 5px;
         @include media-breakpoint-down(md) {
             @include sr-only;
         }
     }
+
     .usericon-heading {
         @extend .clearfix;
-        padding-bottom: 8px;
+
         .user-icon {
             display: block;
             margin: 0 5px 0 0;
@@ -279,73 +198,38 @@
             margin-top: 10px;
         }
     }
-    .post-heading {
-        @extend .clearfix;
+}
+
+.details-before-list-group {
+    margin: 0;
+
+    p {
         margin: 10px 0;
     }
-    &.ui-sortable-handle {
-        border-bottom: $list-group-border-width solid $list-group-border-color;
+
+    ~ .list-group .list-group-item:first-child,
+    ~ .list-group .block-header:first-child + .list-group-item {
+        border-top-width: $list-group-border-width;
+    }
+    ~ .folder-card .list-group-item:first-child,
+    ~ .folder-card .block-header:first-child + .list-group-item {
+        border-top-width: $list-group-border-width;
     }
 }
 
 .list-group-item-default {
-    background-color: rgba(scale-color(theme-color("secondary"), $lightness: 62.75), 0.5);
+    background-color: rgba(scale-color($gray-100, $lightness: 62.75), 0.5);
 }
 
 .list-group-item-text {
-    margin-top: 5px;
     background-color: transparent;
-    line-height: 1.3;
-}
-
-// Modifiy for list-groups in cards
-.card > .block {
-    > .list-group {
-        margin-bottom: 0;
-    }
-    .list-group {
-        .list-group-item {
-            border-radius: 0;
-        }
-        &:last-child .list-group-item:last-child {
-            border-bottom: 0;
-            border-bottom-right-radius: $card-border-radius;
-            border-bottom-left-radius: $card-border-radius;
-        }
-    }
-}
-.card .card-header ~ .list-group .list-group-item:first-child {
-  border-top-right-radius: 0;
-  border-top-left-radius: 0;
-}
-
-.grouppages .list-group-item {
-    h5 {
-        font-size: $font-size-base;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-    .detail {
-        padding-top: 8px;
-    }
-    .tags {
-        margin-bottom: 0;
-    }
-    + .pagination-container {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-}
-
-.list-group + .card-footer {
-    border-top-width: 0;
+    color: $theme-text-color;
 }
 
 .section-import {
     .list-group-item .list-group,
     .fieldset-body .list-group {
         padding-top: 10px;
-        margin-bottom: 0;
         .list-group-item:last-child {
             border-bottom: 0;
         }
@@ -354,16 +238,6 @@
         .list-group-item-heading {
             float: none;
         }
-    }
-}
-
-.annotation-feedback {
-    border-top: $list-group-border-width solid $list-group-border-color !important;
-}
-
-.feedback.modal {
-    .btn-group-top.comment-item-buttons {
-        margin-top: -13px;
     }
 }
 
@@ -398,52 +272,80 @@
     text-align: center;
     clear: both;
     width: 100%;
-    cursor: pointer;
 }
 
-.card.bt-wall > .block .list-group:last-child .list-group-item:last-child {
-    border-bottom: $list-group-border-width solid $list-group-border;
+// wall block list-group-item-heading
+.wall .list-group-item-heading {
+    font-size: $font-size-base;
 }
 
-.card.card-secondary.bt-entireresume,
-.card.card-secondary.bt-entireresume-editor {
-    .list-group {
-        h4.title {
-            font-weight: $font-weight-bold;
-            margin: 10px 0;
-        }
-        .resume-content {
-            h5.title {
-              font-weight: $font-weight-bold;
-            }
-            .card-body {
-              padding: 0 0 15px 0;
-            }
-            .list-group .list-group-item:last-child {
-              border-bottom: 0;
-            }
-        }
+// file folder list-group
+.filedownload-item {
+    .list-group-item-heading {
+        font-size: $font-size-base;
+    }
+    a {
+        word-break: break-all;
+        vertical-align: top;
+    }
+    .file-description {
+        margin-left: 33px;
     }
 }
 
-.bt-groupviews,
-.bt-groupviews-editor {
-    h4.title {
-        font-weight: $font-weight-bold;
-        font-size: $font-size-base;
-        padding: 10px 0;
-        border-bottom: $list-group-border-width solid $list-group-border;
-        margin: 0;
+// attachment files list-group
+.has-attachment .list-group {
+    // when opened first child needs border-top
+    .block-header:first-child + .list-group-item,
+    .list-group-item:first-child {
+        border-top-width: $list-group-border-width;
+    }
+
+    // last-child needs to take away border-bottom but bring back border-radius
+    .list-group-item:last-child {
+        border-bottom-width: 0;
+        border-bottom-left-radius: $list-group-border-radius;
+        border-bottom-right-radius: $list-group-border-radius;
+    }
+
+    .list-group-item .title {
+        font-size: $font-size-sm;
     }
 }
 
-.bt-plans,
-.bt-plans-editor {
-    h4.title {
-        font-weight: $font-weight-bold;
+// Resume entire block
+.resume-content {
+    padding: 0 0 10px 0;
+
+    .title {
+        font-size: $h5-font-size;
+        margin-top: 2em;
+    }
+}
+
+// Entire resume blocks need to have all list-group-item borders removed but not child list-group ones
+.bt-entireresume,
+.bt-entireresume-editor {
+    .list-group-item.flush {
+        border-width: 0;
+    }
+}
+
+// Resume field blocks need first-child border-top removed
+.bt-resumefield,
+.bt-resumefield-editor {
+    .list-group-item:first-child {
+        border-top-width: 0;
+    }
+}
+
+// Plugins list-group
+.plugins-list-group {
+    h3.list-group-item-heading {
+        margin-bottom: 0;
+    }
+    div.list-group-item-heading {
         font-size: $font-size-base;
-        margin: 0;
-        padding-bottom: 10px;
     }
 }
 
@@ -451,140 +353,30 @@
 #friendslist,
 #onlinelist {
     .list-group-item {
-        .user-icon {
-            margin-top: 0;
-            margin-left: 0;
-        }
-        h4.list-group-item-heading {
-            font-size: $h4-font-size;
+        .list-group-item-heading {
+            margin-bottom: 0;
         }
         .detail {
             margin-left: 53px;
-        }
-    }
-}
-
-// filelist in modal
-.modal-body {
-    .list-group-item {
-        .list-group-item-heading {
-            float: none;
-        }
-    }
-}
-
-// files for download and attachment files
-.file-download-list,
-.has-attachment {
-    .card-header {
-        border-bottom: 0;
-    }
-    .list-group {
-        .list-group-item {
-            .icon-on-hover ~ .icon-action {
-                left: 0;
-            }
-            .title {
-                max-width: 80%;
-                display: inline-block;
-            }
-            img.file-icon,
-            .icon.text-default {
-                vertical-align: top;
-            }
-            .icon-download {
-                position: relative;
-                top: 0;
+            margin-top: 5px;
+            .collapse-indicator {
+                margin-right: 5px;
             }
         }
     }
 }
 
-// Rmove some list's first child top border when they don't have anything between card header and list
-.card.card-secondary {
-  > .block,
-  > .block > .listing,
-  > .block .file-download-list,
-  > .block .forumposts {
-    > .list-group {
-      .list-group-item:first-child,
-      + .list-group-item:first-child,
-      .block-header:first-child + .list-group-item {
-        border-top: 0;
-      }
-    }
-  }
-  // exceptions
-  &.bt-taggedposts > .block > .list-group,
-  &.bt-taggedposts-editor > .block > .list-group,
-  .list-group .list-group {
-    .list-group-item:first-child,
-    + .list-group-item:first-child,
-    .block-header:first-child + .list-group-item {
-      border-top: $list-group-border-width solid $list-group-border-color;
-    }
-  }
-  &.bt-plans .block .listing,
-  &.bt-plans-editor .block .listing {
-    h4 ~ .list-group,
-    p ~ .list-group,
-    .tags ~ .list-group {
-      .list-group-item:first-child,
-      + .list-group-item:first-child,
-      .block-header:first-child + .list-group-item {
-        border-top: $list-group-border-width solid $list-group-border-color;
-      }
-    }
-  }
-  // when folder block has content-text above list
-  .content-text ~ .folder-card {
-    border-top: $list-group-border-width solid $list-group-border-color;
-  }
-
-  // leave the bottom border in last child in card-secondary
-  .list-group {
-      &:last-child .list-group-item:last-child {
-          border-bottom: $list-group-border-width solid $list-group-border-color;
-          border-bottom-right-radius: 0;
-          border-bottom-left-radius: 0;
-      }
-  }
-
-  // attachment list
-  .has-attachment.card {
-    .list-group .list-group-item:first-child {
-      border-top: $list-group-border-width solid $list-group-border-color;
-    }
-    .list-group .list-group-item:last-child {
-      border-bottom: 0;
-    }
-  }
-
-  // remove padding around flushed elements in resume
-  &.bt-entireresume,
-  &.bt-entireresume-editor,
-  &.bt-resumefield,
-  &.bt-resumefield-editor {
-    .list-group-item {
-      &.flush {
-        padding-bottom: 0;
-      }
-    }
-  }
-}
-
-// online users page
-#onlinelist .list-group-item {
-    .list-group-item-heading {
-      float: none;
+// when user icon float left of list-group-item-heading and details under needs to left align with heading
+.usericon-heading {
+    ~ .detail {
+        margin-left: 31px;
     }
 }
 
-// comments attachments take out bottom border
-.comment-item {
-    &.list-group-item {
-        .comment-attachment .list-group .list-group-item {
-            border-bottom: 0;
-        }
+// Blog post details
+.post,
+.post-heading {
+    .metadata {
+        margin: 5px 0;
     }
 }

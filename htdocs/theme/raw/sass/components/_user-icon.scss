@@ -6,6 +6,7 @@
     border: $thumbnail-border-width solid $thumbnail-border-color;
     overflow: hidden;
     position: relative;
+    line-height: 1;
 
     &.left {
         position:absolute;
@@ -25,10 +26,8 @@
     }
     .list-group-item & {
         float: left;
-        margin-top: -5px;
-        margin-left: -5px;
+        margin-top: -3px;
         margin-right: 5px;
-        max-width: 20%;
     }
     img {
         margin: 0;
@@ -37,15 +36,11 @@
         width: 20px;
         height: 20px;
         object-fit: cover;
+        border-radius: 0;
     }
     p {
         margin-top: 3px;
         margin-bottom: 0;
-    }
-
-    // Style for blocktype forum post
-    .forumposts & {
-        margin-top: 10px;
     }
 
     .page-header & {
@@ -167,6 +162,10 @@ a.user-icon, a .user-icon {
 .user-thumbnails {
     .user-icon {
         margin: 0 10px 10px 0;
+        border-radius: $border-radius;
+        img {
+            border-radius: 0;
+        }
     }
 }
 

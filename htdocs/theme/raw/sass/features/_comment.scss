@@ -1,33 +1,28 @@
 .comment-item {
     @include clearfix;
-    &.list-group-item {
-        margin-bottom: 0;
-        border-top-width: 0;
-    }
-    &.list-group-item:first-child {
-        border-top-width: $list-group-border-width;
+
+    .usericon-heading {
+        .list-group-item-heading {
+            font-size: $font-size-base;
+            font-family: $font-family-base;
+            font-weight: $font-weight-normal;
+        }
     }
 
     .col-width-100 .bt-comment &,
     .viewfooter &,
     .modal-docked.active & {
-        @include media-breakpoint-up(lg) {
-            .comment-text {
-                float: left;
-                width: 65%;
-            }
+        .comment-content {
+          padding-left: 43px;
+        }
 
+        @include media-breakpoint-up(lg) {
             .comment-text::after {
                 content: "\00A0";
             }
 
             .comment-attachment {
-                padding-left: 15px;
-                margin-left: 15px;
-                border-left: $list-group-border-width solid theme-color("secondary");
-                margin-top: -50px;
-                float: left;
-                width: 32%;
+                border-left: $list-group-border-width solid $list-group-border-color;
 
                 .card {
                     @include card-as-link();
@@ -38,7 +33,7 @@
                     pointer-events: none;
                 }
                 // no need to collapse
-                .collapse-indicator{
+                .collapse-indicator {
                     display: none;
                 }
                 .collapse {
@@ -46,13 +41,9 @@
                     display: block;
                     visibility: visible;
                 }
-                .list-group-item {
-                    font-size: $font-size-sm;
-                    background-color: transparent;
-                }
                 .attachmessage {
                     display: block;
-                    padding-top: 15px;
+                    margin: 10px 0;
                 }
             }
         }

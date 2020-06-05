@@ -216,9 +216,17 @@ td.action-list-copy {
             margin: 0; // negate nested margin
         }
     }
-    .btn-action-list{
-        float: right;
-        width: 100%;
+    .btn-action-list {
+        @include media-breakpoint-up(sm) {
+            float: right;
+            width: 100%;
+        }
+        .btn-group-top {
+            @include media-breakpoint-down(sm) {
+                float: left;
+                text-align: left;
+            }
+        }
     }
 }
 // Edit page configure buttons

@@ -1,5 +1,5 @@
     {foreach $views as item=view}
-        <li class="list-group-item">
+        <li class="list-group-item flush">
             <h4 class="title list-group-item-heading">
                 <a href="{$view->fullurl}">{$view->title}</a>
             </h4>

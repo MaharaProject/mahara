@@ -1,13 +1,18 @@
-{if $description}
-<div class="content-text">
-    {$description}
-</div>
+{if $description || $tags}
+<div class="details-before-list-group">
 {/if}
-
+{if $description}
+    <div class="content-text">
+        {$description}
+    </div>
+{/if}
 {if $tags}
-<div class="tags">
-    <strong>{str tag=tags}</strong>:
-    {list_tags owner=$owner tags=$tags view=$viewid}
+    <div class="tags">
+        <strong>{str tag=tags}</strong>:
+        {list_tags owner=$owner tags=$tags view=$viewid}
+    </div>
+{/if}
+{if $description || $tags}
 </div>
 {/if}
 
@@ -24,7 +29,7 @@
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                 {else}
-                    <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-{$child->artefacttype} icon-lg left text-default file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
                 <h4 class="title list-group-item-heading text-inline">
                     <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" class="inner-link" title="{$child->hovertitle}">

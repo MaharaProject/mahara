@@ -36,6 +36,19 @@
     }
     + .list-group {
         min-height: 41px;
+
+        .list-group-item-heading {
+            font-size: $font-size-base;
+        }
+    }
+}
+
+// Sidebar notification item styles
+.list-group-item-profile-notification {
+    word-wrap: normal;
+    white-space: normal;
+    &:first-child {
+        padding-right: 80px;
     }
 }
 

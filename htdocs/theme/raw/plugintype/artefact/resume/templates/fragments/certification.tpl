@@ -55,9 +55,9 @@
 {/if}
 
 <!-- Render certification blockinstance on page view -->
-<div id="certificationlist{$suffix}" class="list-group list-group-lite">
+<div id="certificationlist{$suffix}" class="list-group list-group-lite list-group-top-border">
     {foreach from=$rows item=row}
-    <div class="list-group-item">
+    <div class="list-group-item flush-collapsible">
 
         {if $row->description || $row->attachments}
             <h5 class="list-group-item-heading">
@@ -109,7 +109,7 @@
                         {if $item->iconpath}
                             <img class="file-icon" src="{$item->iconpath}" alt="">
                         {else}
-                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
                     {if !$editing}
                         </a>

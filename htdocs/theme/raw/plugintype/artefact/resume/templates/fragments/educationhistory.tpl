@@ -50,9 +50,9 @@
 </div>
 {else}
 <!-- Render education blockinstance on page view -->
-<div id="educationhistorylist{$suffix}" class="list-group list-group-lite">
+<div id="educationhistorylist{$suffix}" class="list-group list-group-lite list-group-top-border">
     {foreach from=$rows item=row}
-    <div class="list-group-item">
+    <div class="list-group-item flush-collapsible">
         {if $row->qualdescription || $row->attachments || $row->institutionaddress}
             <h4 class="list-group-item-heading">
                 <a href="#education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
@@ -110,7 +110,7 @@
                         {if $item->iconpath}
                             <img class="file-icon" src="{$item->iconpath}" alt="">
                         {else}
-                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
                     {if !$editing}
                         </a>

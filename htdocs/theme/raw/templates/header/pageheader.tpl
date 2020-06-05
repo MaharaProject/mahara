@@ -44,13 +44,13 @@
                         </h1>
                         {/if}
 
+                        {if $toolbarhtml}
                         <div class="btn-group-top-below">
-                            {if $toolbarhtml}
-                                {$toolbarhtml|safe}
-                            {/if}
+                            {$toolbarhtml|safe}
                         </div>
+                        {/if}
 
-                        <div class="text-small">
+                        <div class="text-small font-weight-thin">
                             {include file=author.tpl}
 
                             {if $alltags}

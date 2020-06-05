@@ -24,7 +24,7 @@
     {/if}
 
     {if $posts.count > 0}
-    <div id="postlist" class="postlist list-group list-group-lite">
+    <div id="postlist" class="postlist list-group list-group-lite list-group-top-border">
         {$posts.tablerows|safe}
     </div>
     <div id="blogpost_page_container" class="d-none">{$posts.pagination|safe}</div>

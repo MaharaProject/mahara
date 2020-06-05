@@ -31,7 +31,7 @@ h1 {
     margin-bottom: 20px;
     margin-top:0;
     h1 {
-        margin: 40px 0 10px 0;
+        margin: 40px 0 20px 0;
         padding: 0;
         border-bottom: 0;
         font-size: $font-size-base * 2.5715;
@@ -52,38 +52,29 @@ h1 {
     ~ form .with-heading,
     ~ .form.with-heading {
         @include border-bottom-radius($border-radius);
-        background-color: $form-with-heading-bg;
+        background-color: $form-bg;
         padding: 20px 10px 10px 10px;
         margin-top: -20px;
-        border-bottom: $h1heading-border-width solid $h1heading-border-color;
+
+        @include media-breakpoint-down(md) {
+            padding: 10px;
+        }
+        @include media-breakpoint-down(xs) {
+            margin-top: 5px;
+        }
+
         &.invite-friend,
         &#addmember {
             @include border-radius(0);
             padding: 0;
             margin-top: 10px;
-            border-bottom: 0;
             background: none;
 
             .input-group-append {
                 margin-left: 0;
             }
         }
-        @include media-breakpoint-down(sm) {
-            margin-top: -20px;
-        }
-        @include media-breakpoint-down(xs) {
-            margin-top: 5px;
-        }
-        @include media-breakpoint-down(md) {
-            padding: 10px;
-        }
-        .admin & {
-            background-color: $form-with-heading-bg;
 
-            border-color: $h1heading-border-color;
-            border-left: 0;
-            border-right: 0;
-        }
         ~ form.with-heading {
             padding-top: 0;
             margin-top: -1px;
@@ -108,19 +99,6 @@ h1 {
             margin-right: 0;
         }
     }
-}
-
-
-h1, h2 {
-    margin-top:0;
-}
-
-h4 {
-    margin-bottom: 5px;
-}
-
-h2 {
-    font-weight: $font-weight-light;
 }
 
 h2, h3, h4, h5, legend {
@@ -160,7 +138,8 @@ a {
 
 .link-unstyled {
     color: $theme-text-color;
-    &:hover {
+    &:hover,
+    &:focus {
         text-decoration: none;
         color: inherit;
     }
@@ -176,12 +155,13 @@ a {
             padding: 5px 20px;
         }
     }
-    font-size: $font-size-base * 0.9285;
-    float: left;
+    font-size: $font-size-sm;
     margin: 10px 0;
     padding: 5px 7px;
-    &:hover {
-        background-color: $btn-secondary-bg;
+    display: inline-block;
+    &:hover,
+    &:focus {
+        background-color: $accent-bg;
         text-decoration: none;
     }
     .icon {
@@ -201,8 +181,14 @@ img {
     &.artefact-img {
         margin-right: 10px;
     }
-    &.file-icon {
-        margin-right: 5px;
+}
+
+.file-icon {
+    margin-right: 5px;
+    vertical-align: top;
+
+    &.icon {
+        width: 24px;
     }
 }
 
@@ -215,6 +201,12 @@ ul {
         padding: 0;
         margin: 0;
         list-style-type: none;
+    }
+
+    // People page
+    &.user-action-list {
+        margin-top: 5px;
+        margin-bottom: 0;
     }
 }
 
@@ -241,6 +233,10 @@ blockquote {
     }
     &.link {
         margin-bottom: 0;
+    }
+
+    &.view-description {
+        margin-top: 1em;
     }
 }
 
@@ -324,12 +320,6 @@ pre {
 .view-description,
 .forum-post .postedits,
 .mce-content-body,
-.bt-entireresume,
-.bt-entireresume-editor,
-.bt-resumefield,
-.bt-resumefield-editor,
-.bt-taggedposts .post,
-.bt-taggedposts-editor .post,
 .exportable-artefact-container {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
@@ -349,7 +339,7 @@ pre {
   /* remove border bottom, padding and margin for h1 */
   h1 {
     border-bottom: 0;
-    padding: 0 !important;
+    padding: 0;
     margin-bottom: 10px;
   }
 }
@@ -369,4 +359,20 @@ body#tinymce {
 //font list list group item title
 #fontlist h2.title {
   margin-top: 0;
+}
+
+// group views block heading titles
+.bt-groupviews,
+.bt-groupviews-editor {
+    .title {
+        margin-top: 2em;
+        font-size: $h6-font-size;
+    }
+}
+
+// Group listing user status on right
+.groupuserstatus {
+    @include media-breakpoint-up(md) {
+        text-align: right;
+    }
 }

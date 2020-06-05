@@ -52,7 +52,7 @@
                         {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                         {else}
-                            <span class="icon icon-{$file->artefacttype} icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-{$file->artefacttype} icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
                             <span class="text-small">{$file->title|truncate:40}</span>
                             <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">

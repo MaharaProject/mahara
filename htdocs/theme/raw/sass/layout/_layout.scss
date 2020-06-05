@@ -11,9 +11,6 @@ body {
         @include media-breakpoint-up(lg) {
             padding-bottom:50px;
         }
-        .grouphomepage {
-            padding-top: 30px;
-        }
     }
 }
 
@@ -126,7 +123,7 @@ iframe {
 
 .btn-action-list + .view-container,
 .btn-group-top + .view-container {
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(sm) {
         margin-top: 60px;
     }
 }

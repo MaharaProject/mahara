@@ -25,7 +25,7 @@
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline {if $modal}file-icon-render-in-modal{/if}">
                 {else}
-                    <span class="icon icon-{$child->artefacttype} icon-lg left {if $modal}file-icon-render-in-modal{/if}" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-{$child->artefacttype} icon-lg left {if $modal}file-icon-render-in-modal{/if} text-default file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
                 </a>
                 <h4 class="title list-group-item-heading">

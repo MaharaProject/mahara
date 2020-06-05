@@ -64,7 +64,7 @@
             {/if}
         </div>
         <div class="col-md-4">
-            <div class="inner-link btn-action-list">
+            <div class="btn-action-list">
                 <div class="btn-top-right btn-group btn-group-top">
                     {if $r.role}
                         {$r.removeform|safe}

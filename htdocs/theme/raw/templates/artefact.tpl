@@ -29,7 +29,7 @@
                 {if $item->icon}
                     <img class="file-icon" src="{$item->iconpath}" alt="">
                 {else}
-                    <span class="icon icon-{$item->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-{$item->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
                 </a>
 

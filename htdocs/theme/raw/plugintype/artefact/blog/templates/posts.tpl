@@ -1,7 +1,7 @@
 {foreach from=$posts item=post}
     <div id="posttitle_{$post->id}" class="{if $post->published} published{else} draft{/if} list-group-item">
         <div class="post-heading">
-            <h2 class="list-group-item-heading">
+            <h2 class="list-group-item-heading title text-inline">
                 {$post->title}
             </h2>
 
@@ -83,15 +83,15 @@
             <div class="collapse" id="attach_{$post->id}">
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
-                    <li class="list-group-item-link">
+                    <li class="list-group-item">
                         <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
                             {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                             {else}
-                            <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-{$file->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span>
                             {/if}
-                            <span class="file-title">{$file->title|truncate:40}</span>
-                            <span class="file-size">
+                            <span class="text-small">{$file->title|truncate:40}</span>
+                            <span class="text-midtone text-small float-right">
                             ({$file->size|display_size})
                             </span>
                         </a>

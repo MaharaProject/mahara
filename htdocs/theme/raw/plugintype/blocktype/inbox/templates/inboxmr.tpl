@@ -22,7 +22,7 @@
                         <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     {/if}
                     <span class="sr-only">{$i->strtype}</span>
-                    {$i->subject|str_shorten_html:45:true|safe}
+                    {$i->subject|str_shorten_html:42:true|safe}
                     <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a></h4>
             {/if}

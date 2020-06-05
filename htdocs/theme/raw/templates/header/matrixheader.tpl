@@ -12,7 +12,7 @@
                     <span class="section-heading">{$name}</span>
                     {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                 </h1>
-                <div class="with-heading text-small">
+                <div class="text-small font-weight-thin">
                     {include file=author.tpl}
                 </div>
                 {/if}

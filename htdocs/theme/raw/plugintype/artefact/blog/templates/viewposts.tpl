@@ -14,7 +14,7 @@
 {/if}
     <div class="post list-group-item clearfix flush">
         <div class="post-heading">
-            <h4 class="title">
+            <h4 class="list-group-item-heading title">
                 {if !$options.editing}
                     <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$options.blockid}" data-artefactid="{$post->id}">
                         {$post->title}
@@ -64,7 +64,7 @@
                     {if $file->icon}
                         <img class="file-icon" src="{$file->icon}" alt="">
                     {else}
-                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span>
                     {/if}
                     {if !$options.editing}
                     <span class="title">

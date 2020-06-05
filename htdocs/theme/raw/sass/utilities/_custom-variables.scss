@@ -168,10 +168,12 @@ $theme-block-header-active-color:           $white !default;
 $collapse-indicator-color:                  scale-color($gray-500, $lightness: 37.5%) !default;
 $collapse-indicator-hover-color:            $gray-500 !default;
 
-// Accent back for forms/search/admin
+// Accent background for info/hover
 $accent-bg:                                 scale-color($gray-100, $lightness: 35%) !default;
 
-// Form with header's background color
-$form-with-heading-bg:                      scale-color($gray-100, $lightness: 35%) !default;
+// Form background color
+$form-bg:                                   scale-color($gray-100, $lightness: 35%) !default;
+
+// Page heading border-bottom
 $h1heading-border-color:                    rgba($black, .125) !default;
 $h1heading-border-width:                    1px !default;

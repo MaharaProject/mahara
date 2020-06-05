@@ -22,7 +22,10 @@
 </div>
 {/if}
 
-<div class="taggedpost-title card-body flush">
+{if $blockheading || $configerror || $badnotag || $badtag || $full}
+  <div class="details-before-list-group">
+{/if}
+
 {if $blockheading}
     <p class="text-midtone">{$blockheading|clean_html|safe}</p>
 {/if}
@@ -39,7 +42,10 @@
     <p class="text-midtone">{str tag='notags' section='blocktype.blog/taggedposts' arg1=$badtag}</p>
 </div>
 {elseif $full}
-</div>
+
+{if $blockheading || $configerror || $badnotag || $badtag || $full}
+  </div>
+{/if}
 
     <div id="postlist_{$blockid}" class="list-group">
         {foreach from=$results item=post}
@@ -57,7 +63,7 @@
                 displayiconsonly=true}
         {/if}
         <div class="post list-group-item flush">
-            <h4 class="title">
+            <h4 class="list-group-item-heading title">
                 {if !($editing)}
                      <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                          {$post->title}
@@ -76,7 +82,7 @@
                 {list_tags owner=$post->owner tags=$post->taglist view=$view}
             </div>
 
-            <div class="detail list-group-item-detail">
+            <div class="detail list-group-item-detail content-text">
                 {$post->description|clean_html|safe}
             </div>
             {if $post->attachments}
@@ -102,8 +108,8 @@
             justdetails=$justdetails
             displayiconsonly=true}
     {/if}
-    <div class="list-group-item">
-        <h4 class="list-group-item-heading">
+    <div class="list-group-item flush-collapsible">
+        <h4 class="list-group-item-heading title">
             {if !($editing)}
             <a class="modal_link list-group-item-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                 {$post->title}

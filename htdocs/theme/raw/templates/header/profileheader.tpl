@@ -12,33 +12,32 @@
                     {/if}
                 </h1>
 
-                <div class="userdetail view-container">
+                <div class="text-small font-weight-thin">
                     {if $siterole}
-                    <p class="lead text-small">
+                    <div>
                         <span class="icon icon-lg icon-university left" role="presentation" aria-hidden="true"></span>
                         {$siterole|safe}
-                    </p>
+                    </div>
                     {/if}
                     {if $institutions}
-                    <p class="lead text-small">
+                    <div>
                         <span class="icon icon-lg icon-university left" role="presentation" aria-hidden="true"></span>
                         {$institutions|safe}
-                    </p>
+                    </div>
                     {/if}
                     {if $invitedlist}
-                    <p class="lead text-small">
+                    <div>
                         <span class="icon icon-lg icon-users left" role="presentation" aria-hidden="true"></span>
                         {str tag=groupinvitesfrom section=group}
                         {$invitedlist}
-                    </p>
+                    </div>
                     {/if}
-
                     {if $requestedlist}
-                    <p class="lead text-small">
+                    <div>
                         <span class="icon icon-lg icon-users left" role="presentation" aria-hidden="true"></span>
                         {str tag=requestedmembershipin section=group}
                         {$requestedlist}
-                    </p>
+                    </div>
                     {/if}
                 </div>
 

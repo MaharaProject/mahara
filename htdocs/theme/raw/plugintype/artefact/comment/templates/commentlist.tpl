@@ -1,7 +1,7 @@
 <!-- The "feedbacktable" class is used as an identifier by Javascript -->
-<div class="list-group list-group-lite">
+<div class="list-group list-group-lite list-group-top-border">
 {foreach from=$data item=item}
-    <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-private{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
+    <div id="comment{$item->id}" class="comment-item list-group-item flush {if $item->pubmessage}list-group-item-private{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if} {if !$item->deletedmessage && $item->attachments}has-attachment{/if}">
         <div class="usericon-heading">
             <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
                 {if $item->author && !$item->author->deleted}
@@ -10,7 +10,7 @@
                     <img src="{profile_icon_url user=null maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h4 class="float-left list-group-item-heading">
+            <h4 class="list-group-item-heading text-inline">
                 {if $item->author && !$item->author->deleted}
                 <a href="{$item->author->profileurl}">
                 <span>{$item->author|display_name}</span>
@@ -60,73 +60,76 @@
                 {/if}
             </div>
         </div>
-        <div class="comment-text">
-            <div class="comment-content">
-                {if $item->deletedmessage}
-                    <span class="metadata">
-                        {$item->deletedmessage}
-                    </span>
-                {else}
-                    {if $item->author}
-                        {$item->description|clean_html|safe}
+
+        <div class="row">
+            <div class="col-md-8 comment-text">
+                <div class="comment-content">
+                    {if $item->deletedmessage}
+                        <span class="metadata">
+                            {$item->deletedmessage}
+                        </span>
                     {else}
-                        {$item->description|safe}
+                        {if $item->author}
+                            {$item->description|clean_html|safe}
+                        {else}
+                            {$item->description|safe}
+                        {/if}
                     {/if}
-                {/if}
-            </div>
-
-            {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
-            <div class="metadata">
-                {if $item->pubmessage}
-                <em class="privatemessage"> {$item->pubmessage}
-                </em> -
-                {/if}
-
-                {if $item->makepublicform}
-                    {$item->makepublicform|safe}
-                {/if}
-
-                {if $item->makepublicrequested && !$item->deletedmessage}
-                    <span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>
-                    <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>
-                {/if}
-            </div>
-            {/if}
-        </div>
-
-        {if !$item->deletedmessage && $item->attachments}
-        <div class="comment-attachment">
-            <div class="card has-attachment collapsible">
-                <h4 class="card-header">
-                    <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
-                        <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
-                        <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>
-                        <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
-                    </a>
-                </h4>
-                <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
-                    <ul class="list-unstyled list-group">
-                    {strip}
-                        {foreach $item->attachments item=a name=attachments}
-                        <li class="list-group-item">
-                            <span class="title">
-                                <span class="text-small">{$a->attachtitle}</span>
-                                <span class="metadata"> [{$a->attachsize}]</span>
-                            </span>
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">
-                                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
-                            </a>
-                        </li>
-                        {/foreach}
-                    {/strip}
-                    </ul>
                 </div>
+
+                {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
+                <div class="metadata">
+                    {if $item->pubmessage}
+                    <em class="privatemessage"> {$item->pubmessage} </em> -
+                    {/if}
+
+                    {if $item->makepublicform}
+                        {$item->makepublicform|safe}
+                    {/if}
+
+                    {if $item->makepublicrequested && !$item->deletedmessage}
+                        <span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>
+                        <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>
+                    {/if}
+                </div>
+                {/if}
             </div>
-            {if $item->attachmessage}
-                <em class="attachmessage metadata">{$item->attachmessage}</em>
+
+            {if !$item->deletedmessage && $item->attachments}
+            <div class="col-md-4 comment-attachment">
+                <div class="card has-attachment collapsible">
+                    <h4 class="card-header">
+                        <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
+                            <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
+                            <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>
+                            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                        </a>
+                    </h4>
+                    <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
+                        <ul class="list-unstyled list-group">
+                        {strip}
+                            {foreach $item->attachments item=a name=attachments}
+                            <li class="list-group-item flush">
+                                <span>
+                                    <span class="text-small">{$a->attachtitle}</span>
+                                    <span class="metadata"> [{$a->attachsize}]</span>
+                                </span>
+                                <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">
+                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                                </a>
+                            </li>
+                            {/foreach}
+                        {/strip}
+                        </ul>
+                    </div>
+                </div>
+
+                {if $item->attachmessage}
+                    <em class="attachmessage metadata">{$item->attachmessage}</em>
+                {/if}
+            </div>
             {/if}
         </div>
-        {/if}
     </div>
 {/foreach}
 </div>

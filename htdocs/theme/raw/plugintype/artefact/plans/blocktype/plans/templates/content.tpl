@@ -2,7 +2,7 @@
     <p class="editor-description">{$noplans}</p>
 {/if}
 {foreach from=$plans item=plan}
-    <div class="listing{if $plan.title} card-body flush{/if}">
+    <div class="listing">
         {if $editing}
             <div class="float-right btn-group">
                 <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/plan/edit.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
@@ -19,24 +19,29 @@
                 </a>
             </div>
         {/if}
+
+        {if count($plans) > 1 || $plan.description || $plan.tags}
+            <div class="details-before-list-group">
+        {/if}
         {if count($plans) > 1}
             <h4 class="title">{$plan.title}</h4>
         {/if}
         {if $plan.description}
-            <p>{$plan.description}</p>
-        {else}
-            <div class="clearfix"></div>
+            <p class="text-midtone description">{$plan.description}</p>
         {/if}
         {if $plan.tags}
-            <div class="tags text-small">
+            <p class="text-midtone tags">
                 <strong>{str tag=tags}:</strong> {list_tags owner=$plan.owner tags=$plan.tags view=$plan.view}
+            </p>
+        {/if}
+        {if count($plans) > 1 || $plan.description || $plan.tags}
             </div>
         {/if}
 
         {if $plan.numtasks != 0}
             {foreach from=$alltasks item=tasks}
                 {if $tasks.planid == $plan.id}
-                    <div id="tasklist_{$blockid}_plan{$tasks.planid}" class="list-group list-unstyled">
+                    <div id="tasklist_{$blockid}_plan{$tasks.planid}" class="list-group list-unstyled{if $editing} list-group-top-border clearboth{/if}">
                         {$tasks.tablerows|safe}
                     </div>
                     {if $tasks.pagination}

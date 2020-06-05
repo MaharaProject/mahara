@@ -1,6 +1,6 @@
 {if $group->membershiptype == 'member'}
 <div class="btn-action-list">
-    <div class="groupuserstatus btn-top-right btn-group btn-group-top">
+    <div class="btn-top-right btn-group btn-group-top">
         {if $list}
         <a href="#" class="label-btn btn btn-secondary" data-id="{$group->id}" title='{str tag="labelfor" section="group" arg1=$group->name}'>
             <span class="icon icon-tag" role="presentation" aria-hidden="true"></span>
@@ -29,7 +29,7 @@
 
 {elseif $group->membershiptype == 'admin'}
     <div class="btn-action-list">
-        <div class="groupuserstatus btn-top-right btn-group btn-group-top">
+        <div class="btn-top-right btn-group btn-group-top">
             {if $list}
             <a href="#" class="label-btn btn btn-secondary" data-id="{$group->id}" title='{str tag="labelfor" section="group" arg1=$group->name}'>
                 <span class="icon icon-tag" role="presentation" aria-hidden="true"></span>
@@ -64,7 +64,7 @@
     </div>
 
     {if $group->requests}
-        <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="text-small">
+        <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request" class="text-small groupuserstatus">
             <span class="badge badge-warning">{$group->requests}</span>
             <span class="text-warning">
                 {str tag="membershiprequests" section="group"}
@@ -78,13 +78,13 @@
     </div>
 
     {if $group->role}
-        <div class="text-small">
+        <div class="text-small groupuserstatus">
             {assign var=grouptype value=$group->grouptype}
             {assign var=grouprole value=$group->role}
             {str tag="grouphaveinvitewithrole" section="group"} "{str tag="$grouprole" section="grouptype.$grouptype"}"
         </div>
     {else}
-        <div class="metadata">
+        <div class="metadata groupuserstatus">
             {str tag="grouphaveinvite" section="group"}
         </div>
     {/if}
@@ -98,12 +98,12 @@
     </div>
 
 {elseif $group->membershiptype == 'request'}
-    <div class="requestedtojoin text-small">
+    <div class="requestedtojoin text-small groupuserstatus">
         {str tag="requestedtojoin" section="group"}
     </div>
 {elseif $group->request}
     <div class="btn-action-list requestedtojoin">
-        <div class="groupuserstatus btn-top-right btn-group btn-group-top">
+        <div class="btn-top-right btn-group btn-group-top">
             <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}" class="btn btn-secondary">
                 <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
                 {str tag="requestjoingroup" section="group"}
@@ -111,17 +111,17 @@
         </div>
     </div>
 {elseif $group->jointype == 'controlled'}
-    <div class="controlled text-small">
+    <div class="controlled text-small groupuserstatus">
         {str tag="membershipcontrolled" section="group"}
     </div>
 {else}
-    <div class="controlled text-small">
+    <div class="controlled text-small groupuserstatus">
         {str tag="membershipbyinvitationonly" section="group"}
     </div>
 {/if}
 
 {if $group->membershiptype == 'member'}
-    <div class="text-small">
+    <div class="text-small groupuserstatus">
         {if $group->role == 'member' || $group->role == 'admin'}
             {str tag="youaregroup$group->role" section="group"}
         {else}

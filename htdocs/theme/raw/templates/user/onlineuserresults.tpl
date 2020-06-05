@@ -1,12 +1,12 @@
 {if $data}
 {foreach from=$data item=user}
-<div class="list-group-item">
+<div class="list-group-item flush">
     <div class="row" id="onlineinfo_{$user->id}">
         <div class="col-md-12">
             <div class="user-icon user-icon-40 float-left">
                 <a href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></a>
             </div>
-            <h3 class="list-group-item-heading title">
+            <h3 class="list-group-item-heading">
               <a href="{profile_url($user)}">{$user->display_name}</a>
             </h3>
             {if $user->institutions}

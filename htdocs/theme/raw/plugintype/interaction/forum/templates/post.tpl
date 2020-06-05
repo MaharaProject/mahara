@@ -42,7 +42,7 @@
                     {if !$moderator && !$post->approved }
                         <i>{str tag="awaitingapproval" section=interaction.forum}</i>
                     {else}
-                        <a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}">
+                        <a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}" class="link-blocktype">
                             <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
                             {str tag="Reply" section=interaction.forum}
                         </a>
@@ -50,21 +50,21 @@
                 {/if}
 
                 {if $post->canedit}
-                <a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id}">
+                <a href="{$WWWROOT}interaction/forum/editpost.php?id={$post->id}" class="link-blocktype">
                     <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                     {str tag="edit"}
                 </a>
                 {/if}
 
                 {if $moderator && $post->parent}
-                <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id}">
+                <a href="{$WWWROOT}interaction/forum/deletepost.php?id={$post->id}" class="link-blocktype">
                     <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                     {str tag="delete"}
                 </a>
                 {/if}
 
                 {if $LOGGEDIN && !$post->ownpost && !$highlightreported}
-                <a href="{$WWWROOT}interaction/forum/reportpost.php?id={$post->id}">
+                <a href="{$WWWROOT}interaction/forum/reportpost.php?id={$post->id}" class="link-blocktype">
                     <span class="icon icon-flag text-danger" role="presentation" aria-hidden="true"></span>
                     {str tag=reportobjectionablematerial section=interaction.forum}
                 </a>

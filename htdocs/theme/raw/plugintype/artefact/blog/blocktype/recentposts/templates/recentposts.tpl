@@ -38,8 +38,8 @@
             justdetails=$justdetails
             displayiconsonly=true}
     {/if}
-    <div class="list-group-item">
-        <h4 class="list-group-item-heading">
+    <div class="list-group-item flush-collapsible">
+        <h4 class="list-group-item-heading title">
             {if !($editing)}
                  <a class="modal_link text-left" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                      {$post->title}

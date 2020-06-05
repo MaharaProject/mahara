@@ -43,7 +43,7 @@
                             </div>
                             {/if}
                             {else}
-                            <div class="detail">
+                            <div class="detail text-small">
                                 {if $view.type == 'profile'}
                                     <p>{str tag=profiledescription}</p>
                                 {elseif $view.type == 'dashboard'}

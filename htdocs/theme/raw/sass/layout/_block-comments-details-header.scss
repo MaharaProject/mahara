@@ -49,14 +49,12 @@
       }
     }
 
-    ~ .list-group-item h4.list-group-item-heading,
-    ~ .list-group-item h4.title {
+    ~ .list-group-item .title {
         margin-right: 100px;
     }
 
     &.d-none {
-      ~ .list-group-item h4.list-group-item-heading,
-      ~ .list-group-item h4.title {
+      ~ .list-group-item .title {
         margin-right: 0;
       }
     }
@@ -73,17 +71,14 @@
     .block-header {
       ~ .list-group-item {
         .icon-download {
-          left: -70px;
+          left: -80px;
+          position: relative;
+          top: 0;
         }
         .title {
           display: inline-block;
           max-width: 55%;
-        }
-
-        // reverts folder and file downloads margin-right
-        h4.list-group-item-heading,
-        h4.title {
-            margin-right: 0;
+          margin-right: 0;
         }
       }
 

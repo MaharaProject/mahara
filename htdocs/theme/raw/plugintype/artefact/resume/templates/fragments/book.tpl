@@ -50,9 +50,9 @@
 {/if}
 
 <!-- Render book blockinstance on page view -->
-<div id="booklist{$suffix}" class="list-group list-group-lite">
+<div id="booklist{$suffix}" class="list-group list-group-lite list-group-top-border">
     {foreach from=$rows item=row}
-    <div class="list-group-item">
+    <div class="list-group-item flush-collapsible">
         {if $row->description || $row->attachments || $row->url}
             <h5 class="list-group-item-heading">
             <a href="#book-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
@@ -110,7 +110,7 @@
                         {if $item->iconpath}
                             <img class="file-icon" src="{$item->iconpath}" alt="">
                         {else}
-                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
                     {if !$editing}
                         </a>

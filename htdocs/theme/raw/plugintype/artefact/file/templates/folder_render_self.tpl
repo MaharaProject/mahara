@@ -1,13 +1,18 @@
-{if $description}
-<div class="content-text">
-    {$description}
-</div>
+{if $description || $tags}
+<div class="details-before-list-group">
 {/if}
-
+{if $description}
+    <div class="content-text">
+    {$description}
+    </div>
+{/if}
 {if $tags}
-<div class="tags">
-    <strong>{str tag=tags}</strong>:
-    {list_tags owner=$owner tags=$tags view=$viewid}
+    <div class="tags">
+        <strong>{str tag=tags}</strong>:
+        {list_tags owner=$owner tags=$tags view=$viewid}
+    </div>
+{/if}
+{if $description || $tags}
 </div>
 {/if}
 
@@ -17,7 +22,7 @@
         {str tag=foldercontents section=artefact.file}:
     </h4>
 
-    <div class="fullwidth file-download-list">
+    <div class="fullwidth file-download-list has-attachments">
         <ul class="list-group">
             {foreach from=$children item=child}
             {if !$child->allowcomments}
@@ -31,20 +36,20 @@
                 allowcomments=$child->allowcomments
                 justdetails=$justdetails
                 displayiconsonly=true}
-            <li class="filedownload-item list-group-item">
+            <li class="filedownload-item list-group-item flush">
                 {if !$editing}
-                <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                     {if $child->iconsrc}
                         <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                     {else}
-                        <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-{$child->artefacttype} icon-lg left text-default file-icon" role="presentation" aria-hidden="true"></span>
                     {/if}
                 </a>
                 {else}
                     {if $child->iconsrc}
                         <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                     {else}
-                        <span class="icon icon-{$child->artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-{$child->artefacttype} icon-lg left text-default file-icon" role="presentation" aria-hidden="true"></span>
                     {/if}
                 {/if}
 

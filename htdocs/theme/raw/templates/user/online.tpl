@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 <div id="onlinelistcontainer">
     <p>({str tag="lastminutes" args=$lastminutes})</p>
-    <div id="onlinelist" class="list-group">
+    <div id="onlinelist" class="list-group list-group-top-border">
     {$data.tablerows|safe}
     </div>
 </div>

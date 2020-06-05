@@ -40,9 +40,9 @@
             </span>
         </div>
         {if $view.description}
-        <p class="detail list-group-item-text text-small">
+        <div class="detail list-group-item-text text-small">
             {$view.description|str_shorten_html:100:true|strip_tags|safe}
-        </p>
+        </div>
         {/if}
     </div>
     {/foreach}

@@ -9,13 +9,22 @@
         </a>
     {/if}
 
-    <div id="blogdescription">{$description|clean_html|safe}
-    {if $tags}
-    <div class="tags">
-        <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}
-    </div>
+    {if $description || $tags}
+    <div class="details-before-list-group">
     {/if}
-    </div>
+    {if $description}
+        <p class="text-midtone description">
+            {$description|clean_html|safe}
+        </p>
+    {/if}
+    {if $tags}
+        <p class="text-midtone tags">
+            <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}
+        </p>
+    {/if}
+    {if $description || $tags}
+        </div>
+    {/if}
 
     {if $posts.tablerows}
         <div id="postlist{if $blockid}_{$blockid}{/if}" class="fullwidth list-group">

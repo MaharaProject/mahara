@@ -1,8 +1,8 @@
 <div class="list-group-item {if $user->pending} list-group-item-warning{/if}">
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
-            <div class="user-icon user-icon-40 float-left">
-                <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+            <div class="user-icon user-icon-50 float-left">
+                <img src="{profile_icon_url user=$user maxwidth=50 maxheight=50}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
             <h4 class="list-group-item-heading middle inline">
                 <a href="{profile_url($user)}">
@@ -52,13 +52,14 @@
             {/if}
         </div>
         <div class="col-md-4">
-            <ul class="list-unstyled inner-link user-action-list">
+            <ul class="list-unstyled user-action-list text-small">
                 {if $user->pending}
-                <p class="list-group-item-heading">{str tag="pendingfriend" section="group"}</p>
-                <span class="whymakemeyourfriend text-small">
+                <span class="whymakemeyourfriend">
                     <strong>
-                        {str tag='whymakemeyourfriend' section='group'}
+                        {str tag="pendingfriend" section="group"}
                     </strong>
+                    <br />
+                    {str tag='whymakemeyourfriend' section='group'}:
                     <p>{$user->message|format_whitespace|safe}</p>
                 </span>
                 <li>

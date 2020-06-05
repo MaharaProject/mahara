@@ -8,7 +8,7 @@
         {/if}
 
         {if $full}
-            <div class="list-group">
+            <div class="list-group{if $description} list-group-top-border{/if}">
                 {foreach from=$entries item=entry}
                 <div class="list-group-item flush">
                     {if $entry->link}
@@ -30,7 +30,7 @@
                 {/foreach}
             </div>
         {else}
-            <ol class="list-group">
+            <ol class="list-group{if $description} list-group-top-border{/if}">
             {foreach from=$entries item=entry}
                 <li class="list-group-item flush">
                     <h4 class="list-group-item-heading">

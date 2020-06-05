@@ -21,7 +21,7 @@
                 {if $task->description || $task->tags}
                 <a class="{if !$options.pdfexport}collapsed{/if}" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="{if !$options.pdfexport}true{else}false{/if}" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
                 {/if}
-                    <span class="{if $task->completed == -1}text-danger{else}text-default{/if}">{$task->title}</span>
+                    <span class="list-group-item-heading {if $task->completed == -1}text-danger{else}text-default{/if}">{$task->title}</span>
                 {if $task->description || $task->tags}
                     <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a>

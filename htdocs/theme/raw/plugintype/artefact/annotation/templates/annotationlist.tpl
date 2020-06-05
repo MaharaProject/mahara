@@ -8,7 +8,7 @@
                 <img src="{profile_icon_url user=null maxheight=20 maxwidth=20}" alt="{str tag=profileimagetextanonymous}">
             {/if}
         </span>
-        <h5 class="list-group-item-heading float-left">
+        <h5 class="list-group-item-heading text-inline">
             {if $item->author}
             <a href="{$item->author->profileurl}">
             {/if}

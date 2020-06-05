@@ -18,14 +18,14 @@
                 {if $file.iconsrc}
                     <img src="{$file.iconsrc}" alt="" class="file-icon text-inline" />
                 {else}
-                    <span class="icon icon-{$file.artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-{$file.artefacttype} icon-lg left text-default file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
             </a>
             {else}
                 {if $file.iconsrc}
                     <img src="{$file.iconsrc}" alt="" class="file-icon text-inline" />
                 {else}
-                    <span class="icon icon-{$file.artefacttype} icon-lg left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-{$file.artefacttype} icon-lg left text-default file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
             {/if}
 

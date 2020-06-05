@@ -3,14 +3,14 @@
         <div class="card-body lead text-small text-center">{$wallmessage}</div>
     {/if}
     {if $wallposts}
-        <div class="list-group list-group-lite">
+        <div class="list-group list-group-lite list-group-top-border">
         {foreach from=$wallposts item=wallpost}
             <div class="list-group-item {if $wallpost->private} list-group-item-private{/if} wallpost">
                 <div class="usericon-heading">
                     <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
                         <a href="{$wallpost->profileurl}"><img src="{profile_icon_url user=$wallpost maxheight=30 maxwidth=30}" alt="{str tag=profileimagetext arg1=$wallpost|display_default_name}" /></a>
                     </span>
-                    <h5 class="float-left list-group-item-heading"><a href="{$wallpost->profileurl}">{$wallpost->displayname}</a><br /><span class="postedon text-small text-midtone">{$wallpost->postdate|format_date}</span></h5>
+                    <h5 class="list-group-item-heading text-inline"><a href="{$wallpost->profileurl}">{$wallpost->displayname}</a><br /><span class="postedon text-small text-midtone">{$wallpost->postdate|format_date}</span></h5>
 
                     {if $wallpost->deletable}
                     <div class="btn-group btn-group-top comment-item-buttons">

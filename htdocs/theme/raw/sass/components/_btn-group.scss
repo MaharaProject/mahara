@@ -121,7 +121,6 @@
 
 .btn-group {
     z-index: 3;
-    margin-left: 5px;
 }
 // except add pages to collections need no margin-left
 .pagesavailable .btn-group {
@@ -151,4 +150,11 @@ fieldset.btn-group {
 .extensions h2 .btn-group-top {
     margin-top: -11px;
     margin-bottom: 0;
+}
+
+// annotation modal
+.feedback.modal {
+    .btn-group-top.comment-item-buttons {
+        margin-top: -13px;
+    }
 }

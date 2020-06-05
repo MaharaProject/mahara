@@ -10,7 +10,7 @@
 
     &.thumbnail {
         &:hover,
-        &.focus,
+        &:focus,
         &.active {
             background-color: scale-color($thumbnail-bg, $lightness: 38%);
             color: $theme-text-color;

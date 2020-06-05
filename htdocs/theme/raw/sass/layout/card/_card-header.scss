@@ -151,5 +151,10 @@ h3 {
 
 // remove border radius from first child list-group-item in a card that appears under a card-header
 .card-header + .list-group .list-group-item:first-child {
-  border-radius: 0;
+    border-radius: 0;
+}
+
+// remove border-bottom for attachments list card-header
+.has-attachment .card-header {
+    border-bottom: 0;
 }

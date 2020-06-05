@@ -39,7 +39,7 @@
                                         {if $file->icon}
                                         <img src="{$file->icon}" alt="" class="file-icon">
                                         {else}
-                                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-{$file->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span>
                                         {/if}
                                         <span>{$file->title|truncate:40} - ({$file->size|display_size})</span>
                                     </a>
