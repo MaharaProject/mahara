@@ -3057,6 +3057,10 @@ function can_view_view($view, $user_id=null) {
         }
     }
 
+    // Grant temporary access if LTI signed request was made
+    if ($view->get('id') == $SESSION->get('lti.canviewview')) {
+        return true;
+    }
 
     // Overriding start/stop dates are set by the owner to deny access
     // to users who would otherwise be allowed to see the view.  However,

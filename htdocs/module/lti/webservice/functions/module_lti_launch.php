@@ -328,7 +328,15 @@ class module_lti_launch extends external_api {
             exit;
         }
 
-        redirect(get_config('wwwroot'));
+        // Redirect if the resource_link_id is a link to a view or collection
+        $matches = [];
+        if (preg_match('/\/view\/view\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
+            $SESSION->set('lti.canviewview', $matches[1]);
+            redirect($params['resource_link_id']);
+        }
+        else {
+            redirect(get_config('wwwroot'));
+        }
 
     }
 }
