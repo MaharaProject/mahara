@@ -24,6 +24,24 @@ $services = array(
         // behavior of this service and its exposed functions.
         'apiversion' => 1,
     ),
+
+    'Moodle Assignment Submission' => array(
+        'shortname' => 'maharaltimoodleassign',
+        'functions' => [
+            'mahara_user_get_extended_context',
+            'mahara_submission_get_views_for_user',
+            'mahara_submission_submit_view_for_assessment',
+            'mahara_submission_release_submitted_view',
+            'module_lti_launch',
+        ],
+        'enabled' => 1,
+        'restrictedusers' => 0,
+        'tokenusers' => 0,
+
+        // Increment this whenever you make a change to the profile or
+        // behavior of this service and its exposed functions.
+        'apiversion' => 1,
+    ),
 );
 
 $functions = array(

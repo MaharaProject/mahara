@@ -1790,6 +1790,7 @@ function external_reload_component($component) {
         $dbservice->restrictedusers    = ((isset($service['restrictedusers']) && $service['restrictedusers'] == 1) ? 1 : 0);
         $dbservice->tokenusers         = ((isset($service['tokenusers']) && $service['tokenusers'] == 1) ? 1 : 0);
         $dbservice->component          = $component;
+        $dbservice->apiversion         = (isset($service['apiversion']) ? $service['apiversion'] : null);
         $dbservice->ctime              = db_format_timestamp(time());
         $dbservice->mtime = $dbservice->ctime;
         $dbservice->id = insert_record('external_services', $dbservice, 'id', true);
