@@ -1018,28 +1018,29 @@ class Collection {
      * after editing the collection, redirect back to the appropriate place
      */
     public function post_edit_redirect($new=false, $copy=false, $urlparams=null) {
+        $redirecturl = get_config('wwwroot');
         if ($new || $copy) {
             $urlparams['id'] = $this->get('id');
-            $redirecturl = '/collection/views.php';
+            $redirecturl .= 'collection/views.php';
         }
         else {
             if ($this->get('group')) {
                 // Group owned collection
-                $redirecturl = '/view/groupviews.php';
+                $redirecturl .= 'view/groupviews.php';
             }
             else if ($this->get('institution')) {
                 if ($this->get('institution') == 'mahara') {
                     // Site owned collection
-                    $redirecturl = '/admin/site/views.php';
+                    $redirecturl .= 'admin/site/views.php';
                 }
                 else {
                     // Institution owned collection
-                    $redirecturl = '/view/institutionviews.php';
+                    $redirecturl .= 'view/institutionviews.php';
                 }
             }
             else {
                 // User owned collection
-                $redirecturl = '/view/index.php';
+                $redirecturl .= 'view/index.php';
             }
         }
         if ($urlparams) {

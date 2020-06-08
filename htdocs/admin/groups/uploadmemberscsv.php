@@ -235,7 +235,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
     $form->reply(PIEFORM_OK, array(
         'message'  => get_string('csvfileprocessedsuccessfully', 'admin'),
-        'goto'     => '/admin/groups/uploadmemberscsv.php',
+        'goto'     => get_config('wwwroot') . 'admin/groups/uploadmemberscsv.php',
     ));
 }
 

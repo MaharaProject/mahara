@@ -180,7 +180,7 @@ function logsearchform_submit(Pieform $form, $values) {
             }
         }
     }
-    $goto = '/webservice/admin/webservicelogs.php?' . http_build_query($query);
+    $goto = get_config('wwwroot') . 'webservice/admin/webservicelogs.php?' . http_build_query($query);
     redirect($goto);
 }
 
