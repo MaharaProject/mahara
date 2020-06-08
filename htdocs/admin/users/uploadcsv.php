@@ -497,7 +497,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         if ($members + count($CSVDATA) > $maxusers) {
             $form->reply(PIEFORM_ERR, array(
                 'message'  => get_string('uploadcsvfailedusersexceedmaxallowed', 'admin'),
-                'goto'     => '/admin/users/uploadcsv.php',
+                'goto'     => get_config('wwwroot') . 'admin/users/uploadcsv.php',
             ));
         }
     }

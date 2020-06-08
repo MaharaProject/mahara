@@ -994,7 +994,7 @@ function siteoptions_submit(Pieform $form, $values) {
     if (!$connect) {
         $form->reply(PIEFORM_ERR, array(
             'message' => get_string('searchconfigerror1', 'admin', $values['searchplugin']),
-            'goto'    => '/admin/site/options.php',
+            'goto'    => get_config('wwwroot') . 'admin/site/options.php',
         ));
     }
 
@@ -1051,7 +1051,7 @@ function siteoptions_submit(Pieform $form, $values) {
     if ($count) {
         $message .= ' ' . get_string('numberusersupdated','admin', $count);
     }
-    $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => '/admin/site/options.php'));
+    $form->reply(PIEFORM_OK, array('message' => $message, 'goto' => get_config('wwwroot') . 'admin/site/options.php'));
 }
 
 $usermultipleinstitutions = (!empty(users_in_multiple_institutions()) ? "true" : "false");
