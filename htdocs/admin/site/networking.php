@@ -139,7 +139,7 @@ function networkingform_submit(Pieform $form, $values) {
 
     $form->reply(PIEFORM_OK, array(
         'message' => ($reply == '') ? get_string('networkingunchanged','admin') : $reply,
-        'goto'    => '/admin/site/networking.php',
+        'goto'    => get_config('wwwroot') . 'admin/site/networking.php',
     ));
 }
 
