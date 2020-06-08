@@ -764,7 +764,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="ownerfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="submittedgroupfk" TYPE="foreign" FIELDS="submittedgroup" REFTABLE="group" REFFIELDS="id" />
-                <KEY NAME="submittedhostfk" TYPE="foreign" FIELDS="submittedhost" REFTABLE="host" REFFIELDS="wwwroot" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id" />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name" />
                 <KEY NAME="typefk" TYPE="foreign" FIELDS="type" REFTABLE="view_type" REFFIELDS="type" />
@@ -1043,7 +1042,6 @@
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="owner" REFTABLE="usr" REFFIELDS="id"  />
                 <KEY NAME="submittedgroupfk" TYPE="foreign" FIELDS="submittedgroup" REFTABLE="group" REFFIELDS="id" />
-                <KEY NAME="submittedhostfk" TYPE="foreign" FIELDS="submittedhost" REFTABLE="host" REFFIELDS="wwwroot" />
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id"  />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  />
                 <KEY NAME="coverimagefk" TYPE="foreign" FIELDS="coverimage" REFTABLE="artefact" REFFIELDS="id"  />
