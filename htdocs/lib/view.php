@@ -3978,10 +3978,10 @@ class View {
         if ($userid) {
             $select .= ',v.submittedtime, v.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
+                v.submittedhost AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
             $collselect .= ', c.submittedtime, c.submittedstatus,
                 g.id AS submitgroupid, g.name AS submitgroupname, g.urlid AS submitgroupurlid,
-                h.wwwroot AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
+                c.submittedhost AS submithostwwwroot, h.name AS submithostname' . ($haslti ? ', a.id AS ltiassessment' : '');
             $emptycollselect .= ', c.submittedtime, c.submittedstatus,
                 NULL AS submitgroupid, NULL AS submitgroupname, NULL AS submitgroupurlid,
                 NULL AS submithostwwwroot, NULL AS submithostname' . ($haslti ? ', NULL AS ltiassessment' : '');
@@ -4074,8 +4074,9 @@ class View {
                     }
                     else if (!empty($data['submithostwwwroot'])) {
                         $url = $data['submithostwwwroot'];
-                        $name = hsc($data['submithostname']);
+                        $name = !empty($data['submithostname']) ? hsc($data['submithostname']) : $data['submithostwwwroot'];
                     }
+
                     $time = (!empty($data['submittedtime'])) ? format_date(strtotime($data['submittedtime'])) : null;
 
                     if (!empty($status) && !empty($time)) {
