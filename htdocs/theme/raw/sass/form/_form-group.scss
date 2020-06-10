@@ -605,3 +605,14 @@
 div.form-group .form-control-label {
     vertical-align: top;
 }
+
+// site config > fonts > install fonts
+.individualfiles {
+  label {
+    min-width: 265px;
+  }
+  .align-with-input.file {
+    margin-top: 0;
+    margin-left: 0;
+  }
+}
