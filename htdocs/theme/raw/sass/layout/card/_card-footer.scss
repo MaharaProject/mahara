@@ -19,14 +19,16 @@ a.card-footer {
 }
 
 .has-attachment {
-    position: relative;
-    z-index: 1;
     background-color: $card-bg;
 }
 
 // only to get top row of boxes on goals and skills page to not hide under boxes below
-.goals-wrapper .has-attachment {
-    z-index: 2;
+.goals-wrapper,
+.skills {
+  .has-attachment .show {
+      z-index: 1;
+      position: relative;
+  }
 }
 
 .card-footer {

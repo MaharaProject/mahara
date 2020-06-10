@@ -12,7 +12,7 @@
             allowcomments=$file.allowcomments
             justdetails=$justdetails
             displayiconsonly = true}
-        <li class="filedownload-item list-group-item">
+        <li class="filedownload-item list-group-item flush">
             {if !$editing}
             <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$file.id}" data-blockid="{$blockid}" title="{$file.title}">
                 {if $file.iconsrc}

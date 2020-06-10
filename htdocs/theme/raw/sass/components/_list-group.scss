@@ -283,13 +283,18 @@
 .filedownload-item {
     .list-group-item-heading {
         font-size: $font-size-base;
+        font-family: $font-family-base;
+        font-weight: $font-weight-normal;
+        margin-bottom: 0;
+        display: inline-block;
+        width: 80%;
     }
     a {
         word-break: break-all;
         vertical-align: top;
     }
     .file-description {
-        margin-left: 33px;
+        margin-left: 38px;
     }
 }
 
@@ -310,6 +315,14 @@
 
     .list-group-item .title {
         font-size: $font-size-sm;
+        margin-top: 0;
+    }
+
+    // comments attachment list flush needs padding
+    @include media-breakpoint-down(md) {
+        .list-group-item.flush {
+            padding: $list-group-item-padding-y $list-group-item-padding-x;
+        }
     }
 }
 

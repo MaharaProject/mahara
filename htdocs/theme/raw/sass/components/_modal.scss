@@ -43,8 +43,6 @@ $width-sm: 90%;
     }
     .modal-body {
         @include border-bottom-radius($border-radius);
-        max-height: 90%;
-        height: 90%;
         overflow-y: auto;
         overflow-x: hidden;
         &.flush {
@@ -172,7 +170,7 @@ $width-sm: 90%;
 
     .modal-header {
         background:  theme-color("primary");
-        padding: 10px 15px;
+        padding: $modal-header-padding-y $modal-header-padding-x;
         color: $modal-header-color;
         border-radius: 0;
          h4, a {
@@ -187,8 +185,8 @@ $width-sm: 90%;
             opacity: 1;
             position: absolute;
             top: 1px;
-            left: -26px;
-            padding: 8px 7px 14px;
+            left: -28px;
+            padding: $modal-header-padding-y 7px;
             background: $modal-header-color;
             border: 0;
             .times {

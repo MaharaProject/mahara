@@ -13,7 +13,7 @@
     }
 
     .logo {
-        padding: 6px 15px 6px 0;
+        padding: 6px 6px 6px 0;
         display: inline-block;
         height: $navbar-height;
 
@@ -27,7 +27,7 @@
     }
 
     .logoxs {
-        margin: 6px 15px 6px 0;
+        margin: 6px 0px 6px 0;
         height: 48px;
         @include media-breakpoint-up(md) {
           display: none;
