@@ -420,3 +420,35 @@ function is_number($value) {
         return false;
     }
 }
+
+/**
+ * Is current ip in give list?
+ *
+ * @param string $list
+ * @return bool
+ */
+function remoteip_in_list($list) {
+    $inlist = false;
+    $clientip = getremoteaddr(null);
+
+    if (!$clientip) {
+        // Ensure access on cli.
+        return true;
+    }
+    if (!is_array($list)) {
+        if (strpos($list, ',') !== false) {
+            $list = explode(",", $list);
+        }
+        else {
+            $list = explode("\n", $list);
+        }
+    }
+    foreach ($list as $subnet) {
+        $subnet = trim($subnet);
+        if (address_in_subnet($clientip, $subnet)) {
+            $inlist = true;
+            break;
+        }
+    }
+    return $inlist;
+}
