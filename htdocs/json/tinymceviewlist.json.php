@@ -33,19 +33,15 @@ if (!empty($views) || !empty($collections)) {
         }
     }
     foreach ($collections as $collection) {
-        $collectionitem = array();
-        if (!isset($collection['views'][$viewid])) { // dont list the collection that contains the current view
-            $collectionitem['title'] = $collection['name'];
-            usort($collection['views'], function($a, $b) {return $a['displayorder'] > $b['displayorder'];});
-            foreach ($collection['views'] as $view) {
-                if ($viewid != $view['id']) {
-                    $collectionitem['menu'][] = array(
-                        'title' => $view['name'],
-                        'value' => $view['url'],
-                    );
-                }
+        foreach ($collection['views'] as $view) {
+            if ($viewid != $view['id']) {
+                // tinymce dropped support for nested link lists. If it changes we should
+                // use a nested way of displaying the collection titles and their pages
+                $linklist[] = array(
+                    'title' => $view['name'] . ' (' . $collection['name'] . ')',
+                    'value' => $view['url'],
+                );
             }
-            $linklist[] = $collectionitem;
         }
     }
 }
