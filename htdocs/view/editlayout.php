@@ -56,7 +56,7 @@ if ($new && $id === false) {
 }
 
 $view = new View($id);
-
+$viewid = $view->get('id'); // for tinymce editor
 define('TITLE', $view->get('title'));
 define('SUBSECTIONHEADING', TITLE);
 
