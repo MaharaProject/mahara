@@ -11,7 +11,7 @@
     <div class="col-md-12">
         <p class='lead'>{str tag=sitelicensesdesc section=admin}</p>
         {if !$enabled}
-        <p class="alert alert-warning">{str tag=sitelicensesdisablednote section=admin args=$WWWROOT}</p>
+        <p class="alert alert-warning">{str tag=sitelicensesdisablednote1 section=admin args=$WWWROOT}</p>
         {/if}
         <div class="card">
             <div class="card-body">

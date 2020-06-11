@@ -110,7 +110,7 @@ $string['sitefontsdesc'] = 'Upload and manage fonts that everyone can use in ski
 $string['sitelicenses'] = 'Licenses';
 $string['sitelicensesadd'] = 'Add license';
 $string['sitelicensesdesc']     = 'Configure the list of licenses that people can use on their content';
-$string['sitelicensesdisablednote']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "General settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people will be able to specify licenses.';
+$string['sitelicensesdisablednote1']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "Site settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people will be able to specify licenses.';
 $string['sitelicensesedit'] = 'Edit license';
 $string['sitefilesdescription'] = 'Upload and administer files that can be put in the "Links and resources" menu and in site pages';
 $string['siteskins'] = 'Site skins';
@@ -1149,7 +1149,7 @@ $string['Admins'] = 'Administrators';
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate people with an institution, you should create the institution first.';
 $string['noinstitutionreports'] = 'Unable to view institution reports';
-$string['noinstitutionreportsdescription'] = 'Staff report access needs to be turned on for the site to allow staff to view their institution reports. A site administrator can turn this setting on in "User settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
+$string['noinstitutionreportsdescription1'] = 'Staff report access needs to be turned on for the site to allow staff to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
 $string['noinstitutionstaticpages'] = 'You do not have permission to edit any institution static pages or no institutions have been created yet.';
 $string['noinstitutionstaticpagesadmin'] = 'If you are a site administrator, please edit the default static pages in <a href="%s">Configure site</a>.';
 
@@ -1352,7 +1352,7 @@ $string['progressbar'] = 'Profile completion';
 $string['showprogressbar'] = 'Show profile completion';
 $string['progressbarsaved'] = 'Progress bar saved successfully.';
 $string['showprogressbardescription2'] = 'In a sidebar, display a progress bar with tips about what to complete in the profile. This can be disabled in the account preferences.';
-$string['progressbardisablednote1'] = '<b>Note</b>: Profile completion is currently disabled. You will need to enable it in the "Account settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people can track their progress towards completing their profile.';
+$string['progressbardisablednote2'] = '<b>Note</b>: Profile completion is currently disabled. You will need to enable it in the "Side block settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people can track their progress towards completing their profile.';
 $string['profilecompletiondesc'] = 'If profile completion is enabled, select content that counts towards a completed profile';
 $string['profilecompletenessdesc1'] = 'The profile completion allows people to have a visual indicator in the sidebar showing them how complete their profile already is. You can choose the artefacts that will count towards the profile completion. All other artefacts can be used, but do not factor into the completion count.';
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';

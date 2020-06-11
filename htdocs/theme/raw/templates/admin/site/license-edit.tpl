@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-body">
         {if !$enabled}
-        <p class="alert alert-warning">{str tag=sitelicensesdisablednote section=admin args=$WWWROOT}</p>
+        <p class="alert alert-warning">{str tag=sitelicensesdisablednote1 section=admin args=$WWWROOT}</p>
         {/if}
         {$form|safe}
         </div>
