@@ -29,6 +29,8 @@
  *
  * @param Pieform  $form    The form to render the element for
  * @param array    $element The element to render
+ *                          The element can have 'class' option where the classes are added to both the submit and cancel options
+ *                          and have 'subclass' array where we can add different classes to each.
  * @return string           The HTML for the element
  */
 function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
@@ -49,6 +51,9 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
             if (function_exists($function)) {
                 $item = $element;
                 $item['class'] = isset($element['class']) ? $element['class'] . ' ' . $key : $key;
+                if (isset($element['subclass']) && is_array($element['subclass']) && !empty($element['subclass'][$key])) {
+                    $item['class'] .= ' ' . Pieform::hsc($element['subclass'][$key]);
+                }
                 $item['usebuttontag'] = ($key == 'button') ? true : false;
                 $item['value'] = $element['value'][$key];
                 if (isset($element['confirm']) && isset($element['confirm'][$key])) {
@@ -69,10 +74,16 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
     else if (isset($element['value'][0]) && isset($element['value'][1])) { // ensure default numeric indices exist
         $submitelement = $element;
         $submitelement['class'] = (isset($submitelement['class'])) ? $submitelement['class'] . ' submit' : 'submit';
+        if (isset($element['subclass']) && is_array($element['subclass']) && !empty($element['subclass'][0])) {
+            $submitelement['class'] .= ' ' . Pieform::hsc($element['subclass'][0]);
+        }
         $submitelement['value'] = $element['value'][0];
         $submitelement['usebuttontag'] = true;
         $cancelelement = $element;
         $cancelelement['class'] = (isset($cancelelement['class'])) ? $cancelelement['class'] . ' cancel' : 'cancel';
+        if (isset($element['subclass']) && is_array($element['subclass']) && !empty($element['subclass'][1])) {
+            $cancelelement['class'] .= ' ' . Pieform::hsc($element['subclass'][1]);
+        }
         $cancelelement['value'] = $element['value'][1];
         if (isset($element['confirm']) && isset($element['confirm'][0])) {
             $submitelement['confirm'] = $element['confirm'][0];

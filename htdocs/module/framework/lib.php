@@ -917,7 +917,7 @@ class Framework {
             if ($options) {
                 $form['elements']['submitcancel'] = array(
                     'type' => 'submitcancel',
-                    'class' => 'btn-secondary',
+                    'subclass' => array('btn-secondary'),
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => $frameworkurl->fullurl,
                 );
@@ -1245,7 +1245,7 @@ function upload_matrix_form() {
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'value' => array(get_string('savematrix','module.framework'), get_string('cancel')),
             'goto' => get_config('wwwroot') . 'module/framework/frameworks.php',
         )

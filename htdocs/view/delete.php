@@ -102,7 +102,7 @@ $form = pieform(array(
     'elements' => array(
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn-secondary',
+            'subclass' => array('btn-secondary'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . $goto,
         )

@@ -2231,7 +2231,8 @@ function simple_resumefield_form($defaults, $goto, $options = array()) {
                 ),
                 $t . 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'js-hidden btn-primary',
+                    'class' => 'js-hidden',
+                    'subclass' => array('btn-primary'),
                     'value' => array(get_string('save'), get_string('cancel')),
                     'goto' => get_config('wwwroot') . $goto,
                 ),

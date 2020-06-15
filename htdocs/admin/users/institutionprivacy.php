@@ -114,7 +114,7 @@ if ($versionid !== null) {
                     )
                 ),
                 'submit' => array(
-                    'class' => 'btn-primary',
+                    'subclass' => array('btn-primary'),
                     'type'  => 'submitcancel',
                     'value' => array(get_string('savechanges', 'admin'), get_string('cancel')),
                     'goto'  => get_config('wwwroot') . 'admin/users/institutionprivacy.php?institution=' . $institution . '&fs=' . $selectedtab,

@@ -418,7 +418,7 @@ $elements['fs'] = array(
 );
 $elements['submitform'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn-primary',
+        'subclass' => array('btn-primary'),
         'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
         'goto' => $goto,
 );

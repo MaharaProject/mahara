@@ -147,7 +147,7 @@ $form = array(
         ),
         'submit' => array(
             'type'         => 'submitcancel',
-            'class'        => 'btn-primary',
+            'subclass'     => array('btn-primary'),
             'value'        => array(get_string('savegroup', 'group'), get_string('cancel')),
             'goto'         => get_config('wwwroot') . 'group/index.php',
         ),

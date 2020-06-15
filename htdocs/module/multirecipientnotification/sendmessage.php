@@ -239,7 +239,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'value' => array($messages ? get_string('Reply', 'group') : get_string('sendmessage', 'group'), get_string('cancel')),
             'goto' => get_config('wwwroot') . $goto,
         )

@@ -40,7 +40,7 @@ if ($requiresapproval) {
             'rules' => array('required' => true),
         ),
         'submit' => array(
-            'class' => 'btn-secondary',
+            'subclass' => array('btn-secondary'),
             'type' => 'submitcancel',
             'value' => array(get_string('senddeletenotification', 'mahara'), get_string('back')),
             'goto' => get_config('wwwroot'). 'account/index.php',
@@ -61,7 +61,7 @@ else {
         );
     }
     $elements['submit'] = array(
-        'class' => 'btn-secondary',
+        'subclass' => array('btn-secondary'),
         'type' => 'submitcancel',
         'value' => array(get_string('deleteaccount1', 'mahara'), get_string('back')),
         'goto' => get_config('wwwroot'). 'account/index.php',

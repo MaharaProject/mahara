@@ -224,7 +224,7 @@ if ($institution || $add) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'btn-secondary',
+                    'subclass' => array('btn-secondary'),
                     'value' => array(get_string('yes'), get_string('no'))
                 )
             )
@@ -686,7 +686,7 @@ if ($institution || $add) {
 
     $elements['submit'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn-primary',
+        'subclass' => array('btn-primary'),
         'value' => array(get_string('submit'), get_string('cancel'))
     );
 

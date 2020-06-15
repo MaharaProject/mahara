@@ -75,7 +75,7 @@ if ($institution && $plugin) {
 
     $form['elements']['submit'] = array(
         'type' => 'submitcancel',
-        'class' => 'btn-primary',
+        'subclass' => array('btn-primary'),
         'value' => array(get_string('submit'), get_string('cancel')),
         'goto'  => get_config('wwwroot') . 'admin/users/institutions.php?i=' . $institution,
     );

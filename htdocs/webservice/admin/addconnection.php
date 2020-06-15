@@ -484,7 +484,7 @@ $connection_details['elements']['isfatal'] = array(
 
 $connection_details['elements']['submit'] = array(
     'type'  => 'submitcancel',
-    'class' => 'btn-primary',
+    'subclass' => array('btn-primary'),
     'value' => array(get_string('submit'), get_string('cancel')),
     'goto'  => 'addconnection.php?c=1',
 );

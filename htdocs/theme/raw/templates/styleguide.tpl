@@ -71,7 +71,7 @@ This pair of buttons is used for deleting or editing an item.
     <button type="submit" class="btn-secondary submitcancel submit btn" name="submit" tabindex="0">
         {str tag='yes'}
     </button>
-    <input type="submit" class="btn-secondary submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='no'}">
+    <input type="submit" class="submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='no'}">
 </div>
 ```
 </section>
@@ -522,7 +522,7 @@ A delete card.
         <p>{str tag=deleteinstitutionconfirm section=admin}</p>
         <div class=" default submitcancel form-group">
             <button type="submit" class="btn-secondary submitcancel submit btn" tabindex="0">{str tag='yes'}</button>
-            <input type="submit" class="btn-secondary submitcancel cancel" tabindex="0" value="{str tag='no'}">
+            <input type="submit" class="submitcancel cancel" tabindex="0" value="{str tag='no'}">
         </div>
     </div>
 </div>
@@ -1035,7 +1035,7 @@ A fold down modal. This is typially used to report objectionable content.
                         <button type="submit" class="btn-secondary submitcancel submit btn" data-confirm="Are you sure you wish to report this page as containing objectionable material?" id="objection_form_submit" name="submit" tabindex="0">
                             Notify administrator
                         </button>
-                        <input type="submit" class="btn-secondary submitcancel cancel" id="cancel_objection_form_submit" name="cancel_submit" tabindex="0" value="Cancel">
+                        <input type="submit" class="submitcancel cancel" id="cancel_objection_form_submit" name="cancel_submit" tabindex="0" value="Cancel">
                     </div>
                 </form>
             </div>
