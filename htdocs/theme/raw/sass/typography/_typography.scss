@@ -24,8 +24,13 @@ h1 {
 }
 
 // Add padding if there is no navigation
-.header + .container h1 {
-    padding-top: 10px;
+.header + .container {
+    .card-body h1 {
+        padding-top: 0;
+    }
+    > h1 {
+        padding-top: 10px;
+    }
 }
 
 // Page or collections page header title

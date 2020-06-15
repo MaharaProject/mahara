@@ -2,12 +2,13 @@
 $(function () {
     {if $newlayout}
         var options = {
-            verticalMargin: 10,
+            verticalMargin: 5,
+            cellHeight: 10,
             float: true,
             ddPlugin: false,
         };
         var grid = $('.grid-stack');
-        grid.gridstack(options);console.log(grid);
+        grid.gridstack(options);
         grid = $('.grid-stack').data('gridstack');
 
         // should add the blocks one by one
