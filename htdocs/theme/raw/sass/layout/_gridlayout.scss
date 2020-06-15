@@ -25,3 +25,21 @@
 #view .ui-draggable {
     cursor: default;
 }
+
+.block,
+.grid-stack-item-content {
+    &.draft {
+        background-color: $state-warning-bg !important;
+        > div.blockinstructions fieldset.pieform-fieldset {
+            legend h4 a.linkinstructions,
+            div.fieldset-body {
+              background-color: $state-warning-bg !important;
+              color: $theme-text-color;
+            }
+        }
+    }
+}
+
+.blockinstructions legend h4 a {
+   outline: 0;
+}

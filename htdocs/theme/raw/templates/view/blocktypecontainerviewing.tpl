@@ -2,6 +2,9 @@
     {if !$editing && $blockheader && !$versioning && !$peerroleonly}
         {include file='header/block-comments-details-header.tpl' artefactid=$artefactid blockid=$blockid commentcount=$commentcount}
     {/if}
+    {if $showquickedit}
+        {include file='header/block-quickedit-header.tpl' blockid=$blockid}
+    {/if}
     {if $title}
         <h3 class="title card-header js-heading">
             {if $retractable}
@@ -31,7 +34,10 @@
         {/if}
     {/if}
 
-    <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} show{/if}{/if}"  id="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
+    <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} show{/if}{/if}{if $draft} draft{/if}"  id="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
+        {if $draft}
+        <span class="sr-only">{str tag='draft' section='artefact.blog'}</span>
+        {/if}
         {if !$loadbyajax}
             {$content|safe}
         {else}

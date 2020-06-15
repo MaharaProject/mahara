@@ -55,10 +55,12 @@ function loadGridTranslate(grid, blocks) {
 
 function loadGrid(grid, blocks) {
     var minWidth = grid.opts.minCellColumns,
-        minHeight, content;
+        minHeight, content, draftclass, srelement;
     window.isGridstackRendering = true;
     $.each(blocks, function(index, block) {
         minHeight = null;
+        draftclass = '';
+        srelement ='';
         if (block.content == null) {
             block.content = '';
         }
@@ -67,7 +69,13 @@ function loadGrid(grid, blocks) {
               minHeight = block.height;
             }
         }
-        var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
+        if (typeof(block.draft) != 'undefined' && block.draft) {
+            draftclass = 'draft';
+            srelement = '<span class="sr-only">' + get_string('draft') + '</span>';
+        }
+        var blockContent = $('<div id="block_' + block.id + '">'
+            + srelement +
+            '<div class="grid-stack-item-content ' + draftclass + '">'
             + block.content +
             '<div/><div/>');
         addNewWidget(blockContent, block.id, block, grid, block.class, minWidth, minHeight);
@@ -90,12 +98,13 @@ function loadGrid(grid, blocks) {
 }
 
 function initJs() {
+
     // initialize js function for edit view
-    if (typeof editViewInit !== "undefined") {
+    if (typeof editViewInit !== "undefined" && document.location.pathname.includes("view/blocks.php")) {
         editViewInit();
     }
     // initialize js function for display view
-    if (typeof viewmenuInit !== "undefined") {
+    if (typeof viewmenuInit !== "undefined" && document.location.pathname.includes("view/view.php")) {
         viewmenuInit();
     }
 

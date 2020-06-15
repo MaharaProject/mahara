@@ -1672,9 +1672,9 @@ function xmldb_core_upgrade($oldversion=0) {
                 $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
                 add_field($table, $field);
                 $table->addKeyInfo('coverimagefk', XMLDB_KEY_FOREIGN, array('coverimage'), 'artefact', array('id'));
-              }
-          }
-      }
+            }
+        }
+    }
 
     if ($oldversion < 2020050600) {
         log_debug('Fixing skins for new format options');
@@ -1795,6 +1795,20 @@ function xmldb_core_upgrade($oldversion=0) {
             $key = new XMLDBKEY('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
             add_key($table, $key);
+        }
+    }
+
+    if ($oldversion < 2020060500) {
+        log_debug('Add quickedit column to blocktype_installed table');
+        $table = new XMLDBTable('blocktype_installed');
+        if (table_exists($table)) {
+            $field = new XMLDBField('quickedit');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+                // set quick edit to 'true' for text block
+                set_field('blocktype_installed', 'quickedit', 1, 'name', 'text');
+            }
         }
     }
 

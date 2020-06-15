@@ -2099,6 +2099,8 @@ class View {
             if ($editing) {
                 $result = $blockinstance->render_editing();
                 $result = $result['html'];
+                $configdata = $blockinstance->get('configdata');
+                $block['draft'] = (isset($configdata['draft']) ? $configdata['draft'] : 0);
             }
             else {
                 $result = $blockinstance->render_viewing($exporting, $versioning);

@@ -29,7 +29,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I click on "Text" in the "Content types" property
  And I set the following fields to these values:
  | Block title | Text block with an internal image |
- And I click the "Insert/edit image" button in the editor
+ And I click the "Insert/edit image" button in the editor "text"
  And I expand the section "Image"
  And I press "Select \"Image2.png\""
  And I scroll to the base of id "imgbrowserconf_action_submitimage"

@@ -720,6 +720,21 @@ class BehatForms extends BehatBase {
         $actionbutton->click();
     }
 
+
+        /**
+         * Click a button in the TinyMCE editor toolbar
+         *
+         * @Given I click the :action button in the editor :editor
+         */
+        public function i_click_button_editor_toolbar_editorid($action, $editor) {
+            $exception = new ElementNotFoundException($this->getSession(), 'button', null, 'the action button "' . $action . '" in the editor toolbar');
+            $editorid = "#instconf_" . $editor . "_container";
+            $actionbutton = $this->find('css', "div.wysiwyg" . $editorid . " button[aria-label='" . $action . "']", $exception);
+            $this->ensure_node_is_visible($actionbutton);
+            $actionbutton->click();
+        }
+
+
     /**
      * Press a submit button with a confirm event attached
      *

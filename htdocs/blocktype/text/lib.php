@@ -32,6 +32,9 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         if (empty($configdata['text'])) {
             $artefacts = array();
         }
+        else if (empty($configdata['instructions'])) {
+            $artefacts = array();
+        }
         else {
             $artefacts = array_unique(artefact_get_references_in_html($configdata['text']));
         }
@@ -43,12 +46,22 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
+        global $USER;
         safe_require('artefact', 'file');
         $configdata = $instance->get('configdata');
         $smarty = smarty_core();
-        if (array_key_exists('text', $configdata)) {
+
+        $canedit = $USER->can_edit_view($instance->get('view_obj'));
+        $isdraft = isset($configdata['draft']) && $configdata['draft'];
+        // show text content only if it's not draft or I'm a user that can edit the page
+        if (array_key_exists('text', $configdata) && (!$isdraft || $canedit)) {
             $newtext = ArtefactTypeFolder::append_view_url($configdata['text'], $instance->get('view'));
             $smarty->assign('text', $newtext);
+            if (isset($configdata['instructions'])) {
+                $newinstructions = ArtefactTypeFolder::append_view_url($configdata['instructions'], $instance->get('view'));
+                $smarty->assign('instructions', $newinstructions);
+                $smarty->assign('blockid', $instance->get('id'));
+            }
         }
         else {
             $smarty->assign('text', '');
@@ -60,7 +73,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         return true;
     }
 
-    public static function instance_config_form(BlockInstance $instance) {
+    public static function instance_config_form(BlockInstance $instance, $template=0, $new=false) {
         require_once('license.php');
         $configdata = $instance->get('configdata');
         if (!$height = get_config('blockeditorheight')) {
@@ -73,8 +86,33 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         if (array_key_exists('text', $configdata)) {
             $text = $configdata['text'];
         }
+        $instructions = '';
+        if (array_key_exists('instructions', $configdata)) {
+            $instructions = $configdata['instructions'];
+        }
+
+        // show the draft switch only if it's a new text block or if it's still in draft
+        // once the text gets published it can't be set back to draft
+        $showdraftswitch = ($new || param_boolean('new', false) || (isset($configdata['draft']) && $configdata['draft']));
 
         $elements = array (
+            'instructionstitle' => array(
+                'type' => 'html',
+                'value' => '<a href="#instconf_instructions_container" aria-controls="instconf_instructions_container" class="" data-toggle="collapse"
+                 aria-expanded="' . (!empty($instructions) ? 'true' : 'false') . '">'
+                    . get_string('instructions', 'view')
+                    . '<span class="icon icon-chevron-down collapse-indicator right text-inline block-config-modal"></span>'
+                    . '</a>',
+            ),
+            'instructions' => array (
+                'name' => 'instructions',
+                'type'  => 'wysiwyg',
+                'width' => '100%',
+                'height' => $height . 'px',
+                'defaultvalue' => $instructions,
+                'rules' => array('maxlength' => 1000000),
+                'class' => (!empty($instructions) ? '' : 'collapse'),
+            ),
             'text' => array (
                 'type' => 'wysiwyg',
                 'title' => get_string('blockcontent', 'blocktype.text'),
@@ -83,13 +121,31 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
                 'defaultvalue' => $text,
                 'rules' => array('maxlength' => 1000000),
             ),
-            'tags'  => array(
-                'type'         => 'tags',
-                'title'        => get_string('tags'),
-                'description'  => get_string('tagsdescblock'),
-                'defaultvalue' => $instance->get('tags'),
-                'help'         => false,
-            )
+        );
+        if ($showdraftswitch) {
+            $elements['draft'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('draft', 'artefact.blog'),
+                'description'  => get_string('drafttextblockdescription', 'view'),
+                'defaultvalue' => isset($configdata['draft']) && $configdata['draft'],
+            );
+        }
+        $elements['tags'] = array(
+            'type'         => 'tags',
+            'title'        => get_string('tags'),
+            'description'  => get_string('tagsdescblock'),
+            'defaultvalue' => $instance->get('tags'),
+            'help'         => false,
+        );
+
+        return $elements;
+    }
+
+    public static function instance_quickedit_form(BlockInstance $instance) {
+        $elements = self::instance_config_form($instance);
+        $elements['quickedit'] = array(
+            'type' => 'hidden',
+            'value' => true
         );
         return $elements;
     }
@@ -98,12 +154,18 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         require_once('embeddedimage.php');
         $newtext = EmbeddedImage::prepare_embedded_images($values['text'], 'text', $instance->get('id'));
         $values['text'] = $newtext;
+        if (isset($values['instructions'])) {
+            $newinstructions = EmbeddedImage::prepare_embedded_images($values['instructions'], 'instructions', $instance->get('id'));
+            $values['instructions'] = $newinstructions;
+        }
+        unset($values['instructionstitle']);
         return $values;
     }
 
     public static function delete_instance(BlockInstance $instance) {
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('text', $instance->get('id'));
+        EmbeddedImage::delete_embedded_images('instructions', $instance->get('id'));
     }
 
     public static function default_copy_type() {
@@ -135,13 +197,20 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
      *      See more PluginBlocktype::import_rewrite_blockinstance_extra_config_leap()
      */
     public static function import_rewrite_blockinstance_extra_config_leap(array $artefactids, array $configdata) {
-        // Rewrite embedded image urls in the configdata['text']
+        // Rewrite embedded image urls in the configdata['text'] and configdata['instructions']
         if (!empty($configdata['text'])) {
             require_once('embeddedimage.php');
             $configdata['text'] = EmbeddedImage::rewrite_embedded_image_urls_from_import($configdata['text'], $artefactids);
         }
         else {
             $configdata['text'] = '';
+        }
+        if (!empty($configdata['instructions'])) {
+            require_once('embeddedimage.php');
+            $configdata['instructions'] = EmbeddedImage::rewrite_embedded_image_urls_from_import($configdata['instructions'], $artefactids);
+        }
+        else {
+            $configdata['instructions'] = '';
         }
         return $configdata;
     }
@@ -156,7 +225,8 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
     public static function export_blockinstance_config_leap(BlockInstance $bi) {
         $configdata = $bi->get('configdata');
         $text = !empty($configdata['text']) ? json_encode(array($configdata['text'])) : '';
-        $result = array('text' => $text);
+        $instructions = !empty($configdata['instructions']) ? json_encode(array($configdata['instructions'])) : '';
+        $result = array('text' => $text, 'instructions' => $instructions);
         return $result;
     }
 
@@ -328,6 +398,16 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
             $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $copyobj->newid . '$2';
         }
         $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
+        if (isset($configdata['instructions'])) {
+            $configdata['instructions'] = preg_replace($regexp, $replacetext, $configdata['instructions']);
+        }
         return $configdata;
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion < 2020020700) {
+            // set the blocktype that have quickmode
+            set_field('blocktype_installed', 'quickedit', 1, 'name', 'text');
+        }
     }
 }
