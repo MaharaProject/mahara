@@ -38,6 +38,7 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I set the following fields to these values:
     | Block title | Note block 2 |
     And I press "Save"
+    And I scroll to the base of id "column-container"
     And I should see "This is a test" in the block "Note block 2"
     # Verifying the attachment saved
     And I choose "Notes" in "Create" from main menu

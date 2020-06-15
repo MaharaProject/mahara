@@ -114,7 +114,8 @@ if (!$restrictedview) {
         $blocksjs = <<<EOF
             $(function () {
                 var options = {
-                    verticalMargin: 10,
+                    verticalMargin: 5,
+                    cellHeight: 10,
                     disableDrag : true,
                     disableResize: true,
                 };

@@ -392,7 +392,8 @@ if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
         $blocksjs =  <<<EOF
 $(function () {
     var options = {
-        verticalMargin: 10,
+        verticalMargin: 5,
+        cellHeight: 10,
         disableDrag : true,
         disableResize: true,
         minCellColumns: {$mincolumns},

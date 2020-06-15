@@ -25,6 +25,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I click on "Show more"
     And I click on "Show more"
     And I click on "Show more"
+    And I wait "1" seconds
     And I should see "My portfolios" in the "Content types" property
     And I should see "Watched pages" in the "Content types" property
     And I click on "My friends" in the "Content types" property
