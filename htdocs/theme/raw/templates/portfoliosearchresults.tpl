@@ -2,7 +2,7 @@
     <div class="list-group-item">
         <div class="row">
         {if $result->type == 'artefact'}
-            <div class="col-md-8">
+            <div class="col-md-7">
             {if $result->thumb}
                 <img src="{$result->thumb}" alt="" class="artefact-img">
                 <h3 class="title list-group-item-heading text-inline">
@@ -40,18 +40,18 @@
                     ({$result->typelabel})
                 {/if}
                 </span>
-                <div class="detail">
+                <div class="detail text-small">
                 {$result->description|str_shorten_html:140:true|safe}
                 </div>
                 <!-- TAGS -->
                 {if is_array($result->tags) && count($result->tags) > 0}
-                <div class="tags">
+                <div class="tags text-small">
                     <strong>{str tag=tags}: </strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
             <!-- VIEWS -->
             {if is_array($result->views) && count($result->views) > 0}
                 <div class="usedon">
@@ -94,7 +94,7 @@
             {/if}
             </div>
         {elseif $result->type == 'blocktype'}
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <h3 class="title list-group-item-heading text-inline">
                 <span class="icon left pull-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
                 {if $result->link}
@@ -109,18 +109,18 @@
                 <span class="artefacttype text-midtone">
                     ({$result->typelabel})
                 </span>
-                <div class="detail">
+                <div class="detail text-small">
                 {$result->description|str_shorten_html:140:true|safe}
                 </div>
                 <!-- TAGS -->
                 {if is_array($result->tags) && count($result->tags) > 0}
-                <div class="tags">
+                <div class="tags text-small">
                     <strong>{str tag=tags}: </strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
             <!-- VIEWS -->
             {if is_array($result->views) && count($result->views) > 0}
                 <div class="usedon">
@@ -136,23 +136,23 @@
             {/if}
             </div>
         {else}
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <h3 class="list-group-item-heading title text-inline">
                     <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
                     <a href="{$result->url}">{$result->title}</a>
                 </h3>
                 <span class="tag-type text-midtone">({$result->typelabel})</span>
-                <p>{$result->ctime}</p>
-                <p>
+                <span class="text-small text-midtone">{$result->ctime}</span>
+                <div class="detail text-small">
                     {$result->description|str_shorten_html:100|strip_tags|safe}
-                </p>
+                </div>
                 {if is_array($result->tags) && count($result->tags) > 0}
-                <div class="tags"><strong>{str tag=tags}:</strong>
+                <div class="tags text-small"><strong>{str tag=tags}:</strong>
                     {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 {if is_array($result->views) && count($result->views) > 0}
                     <div class="usedon">
                     {if count($result->views) > 1}
@@ -166,7 +166,7 @@
                     </div>
                 {/if}
                 {if $result->viewtags}
-                    <div class="tags">
+                    <div class="tags text-small">
                         <strong>{str tag=viewtags}: </strong>
                         {list_tags tags=$result->viewtags owner=$owner view=$result->viewid}
                     </div>

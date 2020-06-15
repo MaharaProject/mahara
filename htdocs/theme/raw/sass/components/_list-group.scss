@@ -1,4 +1,4 @@
-// // modifications for list elements such a list of pages, collections
+// modifications for list elements such a list of pages, collections
 
 .list-group {
     a {
@@ -85,12 +85,6 @@
     .notes {
         color: $theme-text-lighttone-color;
     }
-
-    &.text-inline {
-        @include media-breakpoint-down(sm) {
-            display: block;
-        }
-    }
 }
 
 .card-secondary .list-group-item-heading {
@@ -164,6 +158,10 @@
     // for list-group-items that has collapsible indicator on right but need left flushed
     &.flush-collapsible {
         padding-left: 0;
+        // for when flushed items has an icon on the left that looks odd when flushed
+        .icon.left {
+          padding-left: 5px;
+        }
     }
 
     // blog post buttons
@@ -397,14 +395,13 @@
 // Inbox subject to not wrap responsively
 .inboxblock {
     .icon.left {
-        display: inline-block;
         vertical-align: text-top;
     }
     .subject {
         display: inline-block;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 80%;
+        max-width: 85%;
         white-space: nowrap;
     }
 }

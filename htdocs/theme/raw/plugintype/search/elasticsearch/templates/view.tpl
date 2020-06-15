@@ -11,7 +11,7 @@
     </h3>
     <span class="artefacttype text-midtone">({str tag=page section=search.elasticsearch})</span>
     {if $record->createdbyname}
-      <div class="createdby">
+      <div class="createdby text-small">
         {if $record->anonymise}
             {str tag=createdbyanon section=search.elasticsearch}
         {else}
@@ -19,7 +19,7 @@
         {/if}
       </div>
     {/if}
-      <div class="detail">
+      <div class="detail text-small">
           {if $record->highlight}
               {$record->highlight|safe}
           {else}
@@ -28,7 +28,7 @@
       </div>
     <!-- TAGS -->
     {if is_array($record->tags) && count($record->tags) > 0}
-    <div class="tags"><strong>{str tag=tags section=search.elasticsearch}:</strong>
+    <div class="tags text-small"><strong>{str tag=tags section=search.elasticsearch}:</strong>
     {foreach from=$record->tags item=tag name=tags}
         <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
     {/foreach}
