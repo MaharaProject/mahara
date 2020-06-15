@@ -63,7 +63,7 @@ $form = pieform(array(
         'submit' => array(
             'type' => 'submitcancel',
             'title' => $submittitle,
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'value' => array(get_string('yes'), get_string('no')),
             'goto' => get_config('wwwroot') . 'admin/site/fonts.php',
         )

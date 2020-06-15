@@ -63,7 +63,7 @@ $form = pieform(array(
             ),
         ),
         'submit' => array(
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'type' => 'submitcancel',
             'value' => array(get_string('requestfriendship', 'group'), get_string('cancel')),
             'goto' => $goto,

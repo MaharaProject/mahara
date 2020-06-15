@@ -1342,7 +1342,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'class' => 'btn-secondary',
+            'subclass' => array('btn-secondary'),
             'value' => array(get_string('placeannotationfeedback', 'artefact.annotation'), get_string('cancel')),
             'goto' => $view->get_url(true),
         );

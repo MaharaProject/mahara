@@ -316,7 +316,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
         'type'  => 'submitcancel',
         'value' => array(get_string('save'), get_string('back')),
         'goto'  => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
-        'class'        => 'btn-primary',
+        'subclass' => array('btn-primary'),
     );
 
     $elements = array(
@@ -635,7 +635,7 @@ function webservice_server_config_form($serverid) {
             'type'  => 'submitcancel',
             'value' => array(get_string('save'), get_string('back')),
             'goto'  => get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php',
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
         );
 
         $elements['id'] = array(

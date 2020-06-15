@@ -53,7 +53,7 @@ else {
             ),
             'submit' => array(
                 'type' => 'submitcancel',
-                'class' => 'btn-primary',
+                'subclass' => array('btn-primary'),
                 'goto' => get_config('wwwroot') . 'account/migrateinstitutionconfirm.php?key=' . $key . '&token=' . $token,
                 'value' => array(get_string('confirmmigration'), get_string('cancel')),
             ),

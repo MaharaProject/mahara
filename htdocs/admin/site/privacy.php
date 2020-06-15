@@ -71,7 +71,7 @@ if ($versionid) {
                     )
                 ),
                 'submit' => array(
-                    'class' => 'btn-primary',
+                    'subclass' => array('btn-primary'),
                     'type'  => 'submitcancel',
                     'value' => array(get_string('savechanges', 'admin'), get_string('cancel')),
                     'goto'  => get_config('wwwroot') . 'admin/site/privacy.php?fs=' . $selectedtab,

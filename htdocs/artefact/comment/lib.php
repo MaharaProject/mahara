@@ -1007,7 +1007,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'class' => 'btn-secondary',
+            'subclass' => array('btn-secondary'),
             'value' => array(get_string('Comment', 'artefact.comment'), get_string('cancel')),
         );
         if ($artefact) {

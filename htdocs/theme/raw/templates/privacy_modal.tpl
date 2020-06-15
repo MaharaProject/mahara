@@ -15,10 +15,10 @@
                     </p>
                     <p>{str tag=confirmprivacyrefusal section=admin}</p>
                     <div class="default submitcancel form-group">
-                        <button id="suspend-account-btn" class="btn-primary button btn">
+                        <button id="suspend-account-btn" class="btn-primary submitcancel submit">
                             {str tag=suspendaccount section=admin}
                         </button>
-                        <button id="back-button" type="submit" class="btn-secondary submitcancel cancel">{str tag="cancel"}</button>
+                        <button id="back-button" type="submit" class="submitcancel cancel">{str tag="cancel"}</button>
                     </div>
                 </div>
             </div>

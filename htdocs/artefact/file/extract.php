@@ -117,7 +117,7 @@ if ($zipinfo) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
-                    'class' => 'btn btn-primary',
+                    'subclass' => array('btn btn-primary'),
                     'value' => array(get_string('Decompress', 'artefact.file'), get_string('cancel')),
                     'goto' => $goto,
                 )

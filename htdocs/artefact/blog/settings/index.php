@@ -93,7 +93,7 @@ $form = pieform(array(
         'licensing_advanced' => license_form_el_advanced($blog),
         'submit' => array(
             'type'  => 'submitcancel',
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'value' => array(
                 get_string('savesettings', 'artefact.blog'),
                 get_string('cancel', 'artefact.blog')

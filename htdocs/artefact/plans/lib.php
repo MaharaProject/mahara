@@ -651,7 +651,7 @@ class ArtefactTypePlan extends ArtefactType {
 
         $elements['submit'] = [
             'type' => 'submitcancel',
-            'class' => 'btn-primary',
+            'subclass' => ['btn-primary'],
             'value' => [get_string('saveplan','artefact.plans'), get_string('cancel')],
             'goto' => $returnurl,
         ];
@@ -1112,7 +1112,7 @@ class ArtefactTypeTask extends ArtefactType {
         $elements = self::get_taskform_elements($parentPlanId, $group, $task);
         $elements['submit'] = [
             'type' => 'submitcancel',
-            'class' => 'btn-primary',
+            'subclass' => ['btn-primary'],
             'value' => [get_string('savetask','artefact.plans'), get_string('cancel')],
             'goto' => $returnurl,
         ];

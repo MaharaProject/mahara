@@ -59,7 +59,7 @@ foreach ((array)$deletion as $key => $value) {
 $elements['submit'] = array(
     'type' => 'submitcancel',
     'value' => array($submitbtn, get_string('cancel')),
-    'class' => 'btn-primary',
+    'subclass' => array('btn-primary'),
     'goto' => get_config('wwwroot') . 'admin/users/pendingdeletions.php'
 );
 

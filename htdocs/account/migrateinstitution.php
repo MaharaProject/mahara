@@ -176,7 +176,7 @@ if (!empty($institutions)) {
                 'rules'        => array( 'required' => true ),
              ),
             'submit' => array(
-                'class' => 'btn-primary',
+                'subclass' => array('btn-primary'),
                 'type'  => 'submitcancel',
                 'value' => array(get_string('sendrequest'), get_string('cancel')),
              ),

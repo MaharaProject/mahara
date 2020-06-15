@@ -4502,7 +4502,7 @@ function report_config_form($extra, $institutionelement) {
 
     $form['elements']['submit'] = array(
         'type'  => 'submitcancel',
-        'class' => 'btn-primary',
+        'subclass' => array('btn-primary'),
         'value' => array(get_string('submit'), get_string('cancel')),
         'goto'  => format_goto(get_config('wwwroot') . 'admin/users/statistics.php?institution=' . $institution, $extra->extra, array('sort', 'sortdesc')),
     );

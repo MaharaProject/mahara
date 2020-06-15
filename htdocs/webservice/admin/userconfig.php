@@ -152,7 +152,7 @@ $serviceuser_details['elements']['publickeyexpires']= array(
 
 $serviceuser_details['elements']['submit'] = array(
     'type'  => 'submitcancel',
-    'class' => 'btn-primary',
+    'subclass' => array('btn-primary'),
     'value' => array(get_string('save'), get_string('back')),
     'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_user',
 );

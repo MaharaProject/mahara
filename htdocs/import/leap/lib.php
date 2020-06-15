@@ -299,8 +299,8 @@ class PluginImportLeap extends PluginImport {
         $html .=
             '<div class="submitcancel form-group">'.
             '<input type="hidden" value="' . DOIMPORT_ACT . '" name="action">
-            <input type="submit" value="' . get_string('Import', 'import') . '" name="import_submit" id="import_submit" class="btn btn-primary submitcancel submit">
-            <input type="submit" value="' . get_string('cancel') . '" name="cancel_import_submit" id="cancel_import_submit" class="btn-primary submitcancel cancel"></div>
+            <input type="submit" value="' . get_string('Import', 'import') . '" name="import_submit" id="import_submit" class="btn-primary submitcancel submit">
+            <input type="submit" value="' . get_string('cancel') . '" name="cancel_import_submit" id="cancel_import_submit" class="submitcancel cancel"></div>
         </form>';
         return $html;
     }
