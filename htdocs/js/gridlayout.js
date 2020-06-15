@@ -116,23 +116,25 @@ function initJs() {
     $(window).on('hidden.bs.collapse shown.bs.collapse', function(e) {
         var grid = $(e.target).closest('.grid-stack');
         var id = grid.attr('id');
-        //check we are not in timeline view
-        if (typeof id === 'undefined') {
-            updateBlockSizes();
+        // ignore if we are not inside a grid
+        if (grid.length > 0) {
+            // check we are not in timeline view
+            if (typeof id === 'undefined') {
+                updateBlockSizes();
+            }
+            else {
+                // on timeline view
+                grid.gridstack();
+                updateBlockSizes(grid);
+            }
+            if (e.type == 'hidden' && $(e.target).hasClass('block')) {
+                var block = $(e.target).closest('.grid-stack-item');
+                grid.data('gridstack').resize(block, block.attr('data-gs-width'), 1);
+            }
+            else {
+                updateBlockSizes();
+            }
         }
-        else {
-            // on timeline view
-            grid.gridstack();
-            updateBlockSizes(grid);
-        }
-        if (e.type == 'hidden' && $(e.target).hasClass('block')) {
-            var block = $(e.target).closest('.grid-stack-item');
-            grid.data('gridstack').resize(block, block.attr('data-gs-width'), 1);
-        }
-        else {
-            updateBlockSizes();
-        }
-
     });
 
     $(window).on('timelineviewresizeblocks', function() {

@@ -2,7 +2,8 @@
 <script>
 $(function () {
     var options = {
-        verticalMargin: 10,
+        verticalMargin: 5,
+        cellHeight: 10,
         float: true,
         ddPlugin: false,
     };

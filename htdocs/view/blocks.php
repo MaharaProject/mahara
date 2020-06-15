@@ -218,7 +218,8 @@ else {
 $blocksjs ="
 $(function () {
     var options = {
-        verticalMargin: 10,
+        verticalMargin: 5,
+        cellHeight: 10,
         resizable: false,
         acceptWidgets: '.blocktype-drag',
         draggable: {

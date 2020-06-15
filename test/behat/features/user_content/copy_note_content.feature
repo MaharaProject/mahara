@@ -31,4 +31,5 @@ Scenario: Use content from another note (Bug 1710988)
   And I set the following fields to these values:
   | Block title | Note block 2 |
   And I press "Save"
+  And I wait "1" seconds
   And I should see "This is a test" in the block "Note block 2"
