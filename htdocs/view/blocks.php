@@ -40,7 +40,7 @@ if (empty($id)) {
 if (!empty($id) && empty($view)) {
     $view = new View($id);
 }
-
+$viewid = $view->get('id'); // for tinymce editor
 if (!$USER->can_edit_view($view)) {
     throw new AccessDeniedException();
 }
