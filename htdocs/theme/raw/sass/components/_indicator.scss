@@ -48,9 +48,11 @@
 
 tr[data-toggle="collapse"],
 a[data-toggle="collapse"] {
-    &:hover,
-    &:focus {
+    &:hover {
       outline: none;
+    }
+    &:focus {
+      outline: medium solid $input-focus-border-color;
     }
     &:hover .collapse-indicator,
     &:focus .collapse-indicator{
@@ -68,6 +70,20 @@ a[data-toggle="collapse"] {
         transform: rotate(0deg);
         transition-duration: 0.3s;
     }
+}
+
+// need to be float right for blog post list
+.taggedposts,
+.recentblogpost {
+  a[data-toggle="collapse"] {
+    display: inline-block;
+    float: right;
+  }
+  // but not the attachments
+  .has-attachment a[data-toggle="collapse"] {
+    display: block;
+    float: none;
+  }
 }
 
 .expand-indicator {

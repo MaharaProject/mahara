@@ -83,13 +83,15 @@
             height: $input-height;
             left: 0;
             margin: 0;
-            outline: none;
             padding-right: 50px;
             cursor: pointer;
             position: absolute;
             top: 0;
             width: 240px;
             z-index: 5;
+            &:focus {
+              outline: medium solid $input-focus-border-color;
+            }
         }
         label {
             @include sr-only;

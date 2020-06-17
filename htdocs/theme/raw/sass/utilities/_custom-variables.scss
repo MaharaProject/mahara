@@ -166,7 +166,7 @@ $theme-block-header-active-color:           $white !default;
 
 // Collapse/expand indicator
 $collapse-indicator-color:                  scale-color($gray-500, $lightness: 37.5%) !default;
-$collapse-indicator-hover-color:            $gray-500 !default;
+$collapse-indicator-hover-color:            $component-active-bg !default;
 
 // Accent background for info/hover
 $accent-bg:                                 scale-color($gray-100, $lightness: 35%) !default;

@@ -30,7 +30,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
             &:focus {
                 + .switch-label {
                    @include tab-focus;
-                   outline-color: theme-color("info");
+                   outline: medium solid $input-focus-border-color;
                    .switch-inner:before,
                    .switch-inner:after {
                        background-color: scale-color(theme-color("secondary"), $lightness: -5.5%);

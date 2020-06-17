@@ -142,6 +142,9 @@
 .icon-drag:hover {
     cursor: move;
 }
+.icon-drag:focus {
+    outline: medium solid $input-focus-border-color;
+}
 
 table.filelist .filename {
     word-break: break-all;

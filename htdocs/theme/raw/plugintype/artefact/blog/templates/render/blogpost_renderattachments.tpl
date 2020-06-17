@@ -14,9 +14,9 @@
                 {foreach from=$attachments item=item}
                     <li class="list-group-item">
                     {if $item->iconpath}
-                        <img class="file-icon" src="{$item->iconpath}" alt="">
+                        <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}"><img class="file-icon" src="{$item->iconpath}" alt=""></a>
                     {else}
-                        <span class="icon icon-{$item->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span>
+                        <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}"><span class="icon icon-{$item->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span></a>
                     {/if}
                     {if !$editing}
                     <span class="title">
@@ -29,7 +29,7 @@
                             <span class="text-small">{$item->title}</span>
                         </span>
                     {/if}
-                        <a href="{$item->downloadpath}">
+                        <a href="{$item->downloadpath}" class="download-link">
                             <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size|display_size}</span>
                             <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size|display_size}"></span>
                         </a>

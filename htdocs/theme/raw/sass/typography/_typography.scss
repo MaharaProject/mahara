@@ -134,6 +134,7 @@ a {
     }
     &:hover {
         text-decoration-color: $link-hover-color;
+        outline: 0;
     }
     &:focus {
         text-decoration-color: $link-hover-color;

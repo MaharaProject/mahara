@@ -33,7 +33,8 @@
         .card-header {
             background-color: transparent;
             border: none;
-            a:hover {
+            a:hover,
+            a:focus {
                 background-color: $card-cap-bg;
             }
         }
@@ -82,7 +83,7 @@
             }
         }
         .dropdown-toggle:focus {
-            outline: 1px dotted $theme-text-lighttone-color;
+            outline: medium solid $input-focus-border-color;
         }
 
         .dropdown-menu {
@@ -100,7 +101,8 @@
                 background-color: $dropdown-bg;
                 padding: $dropdown-item-padding-y $dropdown-item-padding-x;
 
-                &:hover {
+                &:hover,
+                &:focus {
                     background-color: $dropdown-link-hover-bg;
                 }
             }

@@ -101,6 +101,10 @@
         display: inline-block;
         float: right;
     }
+    &.focus,
+    &:focus {
+        outline: medium solid $input-focus-border-color;
+    }
 }
 
 h1 + div > .btn-top-left,

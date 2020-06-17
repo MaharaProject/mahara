@@ -314,16 +314,26 @@
         border-bottom-right-radius: $list-group-border-radius;
     }
 
-    .list-group-item .title {
-        font-size: $font-size-sm;
-        margin-top: 0;
+    .list-group-item {
+      .modal_link {
+        vertical-align: top;
+      }
+      .title {
+          font-size: $font-size-sm;
+          display: inline-block;
+          max-width: 78%;
+          margin-right: 0;
+      }
+      .file-description {
+        margin-left: 33px;
+      }
     }
+}
 
-    // comments attachment list flush needs padding
-    @include media-breakpoint-down(md) {
-        .list-group-item.flush {
-            padding: $list-group-item-padding-y $list-group-item-padding-x;
-        }
+// comments attachment list flush needs padding
+@include media-breakpoint-down(md) {
+    .list-group-item.flush {
+        padding: $list-group-item-padding-y $list-group-item-padding-x;
     }
 }
 
@@ -331,7 +341,7 @@
 .resume-content {
     padding: 0 0 10px 0;
 
-    .title {
+    h5.title {
         font-size: $h5-font-size;
         margin-top: 2em;
     }
@@ -408,4 +418,12 @@
         max-width: 85%;
         white-space: nowrap;
     }
+}
+
+// filedown icon need to be accessible
+.list-group {
+  .download-link {
+    display: inline-block;
+    float: right;
+  }
 }
