@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-7">
         {if $record->link}
             <h3 class="title list-group-item-heading text-inline">
                 <span class="icon icon-file left" role="presentation" aria-hidden="true"></span>
@@ -18,9 +18,9 @@
             {/if}
         </span>
         {if $record->createdbyname}
-            <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
+            <div class="createdby text-small">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
         {/if}
-        <div class="content-text">
+        <div class="content-text text-small">
             {if $record->highlight}
                 {$record->highlight|safe}
             {else}
@@ -29,7 +29,7 @@
         </div>
         <!-- TAGS -->
         {if is_array($record->tags) && count($record->tags) > 0}
-        <div class="tags"><strong>{str tag=tags section=search.elasticsearch}:</strong>
+        <div class="tags text-small"><strong>{str tag=tags section=search.elasticsearch}:</strong>
             {foreach from=$record->tags item=tag name=tags}
                 <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
             {/foreach}
@@ -38,7 +38,7 @@
     </div>
     <!-- VIEWS -->
     {if is_array($record->views) && count($record->views) > 0}
-    <div class="col-md-4">
+    <div class="col-md-5">
         <div class="usedon">
             {if $record->views}
                 <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>

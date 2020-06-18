@@ -93,7 +93,7 @@
       &.d-none {
         ~ .list-group-item {
           .icon-download {
-            left: 0;
+            left: -5px;
           }
           .title {
             max-width: 80%;

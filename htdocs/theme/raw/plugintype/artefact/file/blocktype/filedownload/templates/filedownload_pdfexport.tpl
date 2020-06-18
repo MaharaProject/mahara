@@ -21,10 +21,8 @@
             [{$file.size|display_size}]
         </span>
         {if $file.description}
-        <div class="file-description">
-            <p class="text-small">
-                {$file.description|safe|clean_html}
-            </p>
+        <div class="file-description text-small">
+            {$file.description|safe|clean_html}
         </div>
         {/if}
     </li>

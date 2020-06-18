@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-7">
         {if ($secfacetterm == "Image" || $record->artefacttype == 'profileicon') && $record->thumb}
             <img src="{$record->thumb}" alt="" class="artefact-img">
             <h3 class="title list-group-item-heading text-inline">
@@ -51,11 +51,11 @@
             {/if}
         </span>
         {if $record->createdbyname}
-        <div class="createdby">
+        <div class="createdby text-small">
             {str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}
         </div>
         {/if}
-        <div class="detail">
+        <div class="detail text-small">
             {if $record->highlight}
                 {$record->highlight|safe}
             {else}
@@ -64,7 +64,7 @@
         </div>
         <!-- TAGS -->
         {if is_array($record->tags) && count($record->tags) > 0}
-        <div class="tags"><strong>{str tag=tags section=search.elasticsearch}:</strong>
+        <div class="tags text-small"><strong>{str tag=tags section=search.elasticsearch}:</strong>
             {foreach from=$record->tags item=tag name=tags}
                 <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
             {/foreach}
@@ -72,7 +72,7 @@
         {/if}
     </div>
     <!-- RESUMEITEMS -->
-    <div class="col-md-4">
+    <div class="col-md-5">
         {if is_array($record->resumeitems) && count($record->resumeitems) > 0}
         <strong>{str tag=contains section=search.elasticsearch}:</strong>
         <ul>

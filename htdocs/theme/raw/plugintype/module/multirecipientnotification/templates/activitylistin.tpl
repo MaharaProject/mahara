@@ -1,6 +1,6 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
-    <div class="card collapsible notification collapsible-group  {if !$item->read}card text-weight-bold js-card-unread{else}card{/if} {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if} ">
+    <div class="card collapsible notification collapsible-group{if !$item->read} text-weight-bold js-card-unread{/if}{if $dwoo.foreach.notification.first} first{/if}{if $dwoo.foreach.notification.last} last{/if} ">
         <div class="card-header">
             <label class="card-control">
                 <span class="control {if !$item->read}unread{/if}">

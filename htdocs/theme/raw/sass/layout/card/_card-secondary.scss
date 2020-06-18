@@ -85,7 +85,7 @@
 .thumbnails {
     padding-top: 20px;
     .thumb {
-        margin: 5px 0px 10px 5px;
+        margin: 5px;
     }
 }
 .thumbnail {
@@ -106,6 +106,5 @@
     }
     &.card.card-secondary > .block > .card-body {
         overflow: hidden;
-        padding: 15px 20px;
     }
 }

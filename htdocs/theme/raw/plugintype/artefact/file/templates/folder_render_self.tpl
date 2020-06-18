@@ -71,9 +71,9 @@
                 {/if}
 
                 {if $child->description}
-                <p class="file-description text-small text-midtone">
+                <div class="file-description text-small text-midtone">
                     {$child->description|clean_html|safe}
-                </p>
+                </div>
 
                 <script>
                 jQuery(".file-description a").addClass('inner-link');

@@ -137,6 +137,7 @@ p ~ div > .btn-group-top,
     @include media-breakpoint-down(md) {
         margin: 0 0 10px 0;
         width: 100%;
+        float: none;
         .btn-group .btn,
         .form-as-button,
         .btn {
@@ -195,15 +196,12 @@ td.action-list-copy {
 .card-header {
     .btn-group-top {
         @include clearfix;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: block;
         @include media-breakpoint-up(md) {
             margin-top: -12px;
             text-align: right;
             float: right;
         }
-        @include media-breakpoint-between(sm,md) {
+        @include media-breakpoint-down(md) {
             margin-top: -13px;
             text-align: right;
             float: right;
@@ -212,16 +210,15 @@ td.action-list-copy {
             font-size: $font-size-sm;
             border: $btn-border-width solid $btn-secondary-border;
             padding: $btn-padding-y-sm $btn-padding-x-sm;
-            @include media-breakpoint-up(lg) {
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-                border-top: 0;
-            }
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top: 0;
         }
         .btn-top-right {
             margin: 0; // negate nested margin
         }
     }
+    // Groups page has something different
     .btn-action-list {
         .btn-group-top {
             text-align: left;
@@ -231,7 +228,32 @@ td.action-list-copy {
                 text-align: right;
                 float: right;
             }
+            @include media-breakpoint-down(md) {
+                margin-top: -12px;
+            }
+            @include media-breakpoint-down(sm) {
+                margin-top: 5px;
+                float: none;
+            }
+            .btn {
+                @include media-breakpoint-down(sm) {
+                    border-top: $btn-border-width solid $btn-secondary-border;
+                    &:first-child {
+                      border-top-left-radius: $btn-border-radius;
+                    }
+                    &:last-child {
+                      border-top-right-radius: $btn-border-radius;
+                    }
+                }
+            }
         }
+    }
+    &.wall {
+      .btn-group-top {
+        @include media-breakpoint-down(md) {
+            margin-top: -12px;
+        }
+      }
     }
 }
 // Edit page configure buttons

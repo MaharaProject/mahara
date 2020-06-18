@@ -40,9 +40,9 @@
                     </span>
                 </h4>
                 {if $child->description}
-                <p class="file-description text-small text-midtone">
+                <div class="file-description text-small text-midtone">
                     {$child->description|safe|clean_html}
-                </p>
+                </div>
                 {/if}
             </li>
             {/foreach}

@@ -27,8 +27,13 @@ h1 {
 }
 
 // Add padding if there is no navigation
-.header + .container h1 {
-    padding-top: 10px;
+.header + .container {
+    h1 {
+      padding-top: 10px;
+    }
+    .card h1 {
+      padding-top: 0;
+    }
 }
 
 // Page or collections page header title
@@ -130,7 +135,7 @@ a {
     &:focus,
     &:hover {
         text-decoration-color: $link-hover-color;
-        outline-color: $input-focus-border-color;
+        outline: medium solid $input-focus-border-color;
     }
 }
 
