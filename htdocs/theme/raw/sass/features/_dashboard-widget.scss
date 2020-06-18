@@ -152,7 +152,9 @@ $logged-in-height-mobile: 110px;
 
 .dashboard-editable {
     margin-top: 2rem;
-    border-top: $h1heading-border-width solid $h1heading-border-color;
+    @include media-breakpoint-up(md) {
+      border-top: $h1heading-border-width solid $h1heading-border-color;
+    }
 
     #editdashboard {
         margin-top: 0;

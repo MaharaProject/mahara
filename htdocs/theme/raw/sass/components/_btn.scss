@@ -134,7 +134,7 @@ p ~ div > .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -20px;
     margin-left: -100%;
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-down(md) {
         margin: 0 0 10px 0;
         width: 100%;
         .btn-group .btn,
@@ -144,6 +144,7 @@ p ~ div > .btn-group-top,
             margin-left: 1px;
             margin-right: 1px;
             width: 100%;
+            border-top: $btn-border-width solid $btn-secondary-border;
             border-right-width: $btn-border-width;
             border-radius: $btn-border-radius !important;
             .btn {
@@ -161,7 +162,7 @@ p ~ div > .btn-group-top,
 .btn-group-top {
     position: relative;
     z-index: 4;
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(md) {
         float: right;
         .btn {
             @include border-top-radius(0);
@@ -194,13 +195,18 @@ td.action-list-copy {
 .card-header {
     .btn-group-top {
         @include clearfix;
-        text-align: right;
-        float: right;
         margin-top: 10px;
+        margin-bottom: 10px;
+        display: block;
         @include media-breakpoint-up(md) {
-            @include clearfix;
+            margin-top: -12px;
+            text-align: right;
+            float: right;
+        }
+        @include media-breakpoint-between(sm,md) {
             margin-top: -13px;
-            margin-bottom: 11px;
+            text-align: right;
+            float: right;
         }
         .btn {
             font-size: $font-size-sm;
@@ -217,14 +223,13 @@ td.action-list-copy {
         }
     }
     .btn-action-list {
-        @include media-breakpoint-up(sm) {
-            float: right;
-            width: 100%;
-        }
         .btn-group-top {
-            @include media-breakpoint-down(sm) {
-                float: left;
-                text-align: left;
+            text-align: left;
+            float: none;
+            display: inline-flex;
+            @include media-breakpoint-up(sm) {
+                text-align: right;
+                float: right;
             }
         }
     }
@@ -603,4 +608,15 @@ a[type="submit"],
 .form-inline .admin-user-search .form-group.no-label {
   vertical-align: text-bottom;
   top: -5px;
+}
+
+// comments block btn-group-top alignment
+@include media-breakpoint-up(lg) {
+  .feedbacktable .list-group {
+    .btn-group-top {
+      .delete-comment {
+        margin-top: -1px;
+      }
+    }
+  }
 }

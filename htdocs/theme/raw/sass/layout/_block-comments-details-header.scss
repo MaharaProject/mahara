@@ -27,6 +27,8 @@
       margin-top: 0;
       margin-bottom: 0;
       height: 0;
+      text-align: right;
+      float: right;
 
       .btn-secondary {
         display: inline-block;
@@ -77,8 +79,14 @@
         }
         .title {
           display: inline-block;
-          max-width: 55%;
+          max-width: 50%;
           margin-right: 0;
+          @include media-breakpoint-between(sm,md) {
+              max-width: 40%;
+          }
+          @include media-breakpoint-down(sm) {
+              max-width: 60%;
+          }
         }
       }
 

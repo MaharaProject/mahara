@@ -116,14 +116,14 @@ iframe {
 .toolbar + .lead {
     clear: both;
     margin-top: 15px;
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(md) {
         margin-top: 60px;
     }
 }
 
 .btn-action-list + .view-container,
 .btn-group-top + .view-container {
-    @include media-breakpoint-up(sm) {
+    @include media-breakpoint-up(md) {
         margin-top: 60px;
     }
 }

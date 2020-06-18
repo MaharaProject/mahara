@@ -20,7 +20,7 @@
     <div class="fullwidth file-download-list">
         <ul class="list-group">
             {foreach from=$children item=child}
-            <li class="filedownload-item list-group-item">
+            <li class="filedownload-item list-group-item flush">
                 <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline {if $modal}file-icon-render-in-modal{/if}">
@@ -28,7 +28,7 @@
                     <span class="icon icon-{$child->artefacttype} icon-lg left {if $modal}file-icon-render-in-modal{/if} text-default file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
                 </a>
-                <h4 class="title list-group-item-heading">
+                <h4 class="title list-group-item-heading text-inline">
                     <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                         {$child->title}
                     </a>

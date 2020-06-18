@@ -87,12 +87,14 @@
 
         .dropdown-menu {
             top: 100%;
-            width: 200%; // to allow it to expand to almost 2 card blocks wide
             max-height: 200px;
             overflow: auto;
             padding: 0;
             margin: 0;
             min-width: auto;
+            @include media-breakpoint-up(md) {
+              width: 200%; // to allow it to expand to almost 2 card blocks wide but only for md and up
+            }
             a {
                 white-space: normal;
                 background-color: $dropdown-bg;
