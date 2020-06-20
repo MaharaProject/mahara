@@ -4471,24 +4471,29 @@ function cron_clean_internal_activity_notifications() {
  * Cronjob to check Mahara.org for the latest Mahara version
  */
 function cron_check_for_updates($raw=false) {
+    global $SESSION;
+    if (!$raw || !($versions = $SESSION->get('mahara_org_version'))) {
+        $url = 'https://mahara.org/local/versions.php';
+        $request = array(
+            CURLOPT_URL => $url,
+        );
 
-    $url = 'https://mahara.org/local/versions.php';
-    $request = array(
-        CURLOPT_URL => $url,
-    );
+        $result = mahara_http_request($request);
 
-    $result = mahara_http_request($request);
-
-    if (!empty($result->errno) || $result->info['http_code'] != '200') {
-        log_debug('Could not access Mahara.org for versioning information.');
-        return;
+        if (!empty($result->errno) || $result->info['http_code'] != '200') {
+            log_debug('Could not access Mahara.org for versioning information.');
+            return;
+        }
+        $data = json_decode($result->data);
+        if ($data->returnCode == 1) {
+            log_debug('Could not retrieve Mahara versions information file from Mahara.org');
+            return;
+        }
+        $versions = $data->message->versions;
+        if ($raw) {
+            $SESSION->set('mahara_org_version', $versions);
+        }
     }
-    $data = json_decode($result->data);
-    if ($data->returnCode == 1) {
-        log_debug('Could not retrieve Mahara versions information file from Mahara.org');
-        return;
-    }
-    $versions = $data->message->versions;
     if ($raw) {
         return $versions;
     }
