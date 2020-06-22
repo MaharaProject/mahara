@@ -15,6 +15,11 @@
     }
     .card {
         border-radius: 0;
+        &.has-attachment {
+          border-radius: $card-border-radius;
+          margin-top: 10px;
+          margin-bottom: 0;
+        }
     }
 }
 
@@ -25,10 +30,10 @@
         @include box-shadow(none);
         &.last {
             .card-header {
-                @include border-bottom-radius($border-radius-sm);
+                @include border-bottom-radius($card-border-radius);
                 a {
                     &.collapsed {
-                        @include border-bottom-radius($border-radius-sm);
+                        @include border-bottom-radius($card-border-radius);
                     }
                 }
             }
@@ -38,11 +43,11 @@
 
             .fieldset-body {
                 border-top:0;
-                @include border-bottom-radius($border-radius-sm);
+                @include border-bottom-radius($card-border-radius);
             }
         }
         &.first .card-header a {
-            @include border-top-radius($border-radius);
+            @include border-top-radius($card-border-radius);
         }
 
         .section-import & {
@@ -66,8 +71,8 @@
             padding: 0;
 
             .pieform > .collapsible-group:first-child & {
-                border-top-left-radius: $border-radius;
-                border-top-right-radius: $border-radius;
+                border-top-left-radius: $card-border-radius;
+                border-top-right-radius: $card-border-radius;
             }
         }
 
@@ -199,17 +204,13 @@
 
     // For attachment collapsible
     &.has-attachment {
-        border-radius: $border-radius-sm;
+        border-radius: $card-border-radius;
         border-width: $card-border-width;
-        margin-bottom: 10px;
+        margin-top: 10px;
     }
 }
 
 .collapse > .collapse {
     display: block ; // fix for not being able to put a class just on the wrapper
     visibility: visible;
-}
-
-.post .has-attachment {
-    margin-bottom: 10px;
 }

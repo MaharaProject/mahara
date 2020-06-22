@@ -7,9 +7,6 @@
             background-color: transparent;
             color: $link-hover-color;
         }
-        &:hover, &:focus {
-            background-color: none;
-        }
     }
 }
 
@@ -31,8 +28,4 @@
     .text-midtone {
         color: $white;
     }
-}
-
-.card-header:first-child {
-    @include border-top-radius(0);
 }

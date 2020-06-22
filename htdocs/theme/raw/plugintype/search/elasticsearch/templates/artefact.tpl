@@ -97,8 +97,8 @@
                 <li>
                     <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
                     <!-- Profile artefact can only be displayed in views -->
-                    {if $secfacetterm != "Profile"} |
-                    <span class="viewartefact">
+                    {if $secfacetterm != "Profile"}
+                    <span class="viewartefact text-small">[
                         <a href="{$WWWROOT}view/view.php?id={$id}&modal=1&artefact={$record->id}">
                         {str tag=viewartefact}
                         {if $secfacetterm == "Journalentry"}
@@ -116,7 +116,7 @@
                         {else}
                             {$secfacetterm|lower}
                         {/if}
-                        </a>
+                        </a>]
                     </span>
                 {/if}
                 </li>

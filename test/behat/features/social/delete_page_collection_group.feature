@@ -42,10 +42,10 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I click on "Manage" in "Collection UserA_01" card menu
     And I click on "Remove" in "Page UserA_01" row
     And I log out
-
+    And I wait "1" seconds
     # Log in as UserB
-   And I log in as "UserB" with password "Kupuh1pa!"
-   And I choose "Groups" in "Engage" from main menu
-   And I follow "GroupA"
-   And I follow "Collection UserA_01"
-   And I should see "Page UserA_02"
+    And I log in as "UserB" with password "Kupuh1pa!"
+    And I choose "Groups" in "Engage" from main menu
+    And I follow "GroupA"
+    And I follow "Collection UserA_01"
+    And I should see "Page UserA_02"

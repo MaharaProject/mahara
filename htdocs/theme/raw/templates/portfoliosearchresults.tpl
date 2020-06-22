@@ -13,7 +13,6 @@
                 {else}
                     {$result->title|str_shorten_html:50:true|safe}
                 {/if}
-                </h3>
             {else}
                 <h3 class="title list-group-item-heading text-inline">
                 <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
@@ -24,10 +23,9 @@
                 {else}
                     {$result->title|str_shorten_html:50:true|safe}
                 {/if}
-                </h3>
             {/if}
 
-                <span class="artefacttype text-midtone">
+                <span class="artefacttype text-midtone text-regular">
                 {if $result->artefacttype == "blogpost"}
                     ({str tag=blogpost section=search.elasticsearch})
                 {elseif $result->artefacttype == "forumpost"}
@@ -40,6 +38,7 @@
                     ({$result->typelabel})
                 {/if}
                 </span>
+                </h3>
                 <div class="detail text-small">
                 {$result->description|str_shorten_html:140:true|safe}
                 </div>
@@ -65,8 +64,8 @@
                     <li>
                         <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
                         <!-- Profile artefact can only be displayed in views -->
-                        {if $view->type != "profile"} |
-                            <span class="viewartefact">
+                        {if $view->type != "profile"}
+                            <span class="viewartefact text-small">[
                                 <a href="{$WWWROOT}view/view.php?id={$id}&modal=1&artefact={$result->id}">
                                     {str tag=viewartefact}
                                     {if $result->artefacttype == "blogpost"}
@@ -84,7 +83,7 @@
                                     {else}
                                         {$result->artefacttype|lower}
                                     {/if}
-                                </a>
+                                </a>]
                             </span>
                         {/if}
                     </li>
@@ -104,11 +103,10 @@
                 {else}
                     {$result->title|str_shorten_html:50:true|safe}
                 {/if}
-                </h3>
-
-                <span class="artefacttype text-midtone">
+                <span class="artefacttype text-midtone text-regular">
                     ({$result->typelabel})
                 </span>
+                </h3>
                 <div class="detail text-small">
                 {$result->description|str_shorten_html:140:true|safe}
                 </div>
@@ -140,9 +138,9 @@
                 <h3 class="list-group-item-heading title text-inline">
                     <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
                     <a href="{$result->url}">{$result->title}</a>
+                    <span class="tag-type text-midtone text-regular">({$result->typelabel})</span>
                 </h3>
-                <span class="tag-type text-midtone">({$result->typelabel})</span>
-                <span class="text-small text-midtone">{$result->ctime}</span>
+                <div class="text-small text-midtone">{$result->ctime}</div>
                 <div class="detail text-small">
                     {$result->description|str_shorten_html:100|strip_tags|safe}
                 </div>

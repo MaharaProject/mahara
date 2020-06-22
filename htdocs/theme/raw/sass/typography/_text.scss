@@ -44,8 +44,19 @@
     color: $state-danger-text !important; // Needs to be important to override default
 }
 
-#inboxblock .link-block.unread {
-    font-weight: $font-weight-bold;
+.inboxblock {
+  .unread {
+      font-weight: $font-weight-bold;
+  }
+  a {
+      &:hover,
+      &:focus {
+        text-decoration: none;
+        .subject {
+          text-decoration: underline;
+        }
+      }
+  }
 }
 
 .errormsg {

@@ -132,8 +132,10 @@ a {
     &.link-block {
         display: block;
     }
-    &:focus,
     &:hover {
+        text-decoration-color: $link-hover-color;
+    }
+    &:focus {
         text-decoration-color: $link-hover-color;
         outline: medium solid $input-focus-border-color;
     }
@@ -385,5 +387,15 @@ body#tinymce {
     clear: both;
     @include media-breakpoint-up(md) {
         text-align: right;
+        padding: 8px 0;
     }
+}
+
+// view artefact
+.viewartefact {
+  font-weight: $font-weight-light;
+}
+
+.artefacttype {
+  font-family: $font-family-base;
 }

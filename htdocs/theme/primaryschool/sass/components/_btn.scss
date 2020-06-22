@@ -1,16 +1,3 @@
-// Often the same template is used to render buttons at the top of the page and
-// in a list group. cf. groups table/groups
-.list-group,
-.card-header {
-    .btn-group {
-        @include media-breakpoint-down(sm) {
-            &.btn-group-top .btn {
-                border-top: 0;
-            }
-        }
-    }
-}
-
 // login box btns for external login
 .login-externallink {
     display: inline-block;
@@ -43,47 +30,9 @@
     }
 }
 
-
-// makes certain buttons primary colour
-.col-collapse-offset.col-with-collapse .btn {
-    color: $white;
-    background-color: $theme-primary-color;
-    border-color: scale-color($btn-primary-bg, $lightness: -5%);
-    .icon {
-        color: $white;
-    }
-    &:focus,
-    &:hover {
-        background-color: scale-color($theme-primary-color, $lightness: 5%);
-    }
-}
-.submitcancel .btn {
-    color: $white;
-    background-color: $theme-primary-color;
-    border-color: scale-color($btn-primary-bg, $lightness: -5%);
-    .icon {
-        color: $white;
-    }
-    &:focus,
-    &:hover {
-        background-color: scale-color($theme-primary-color, $lightness: 5%);
-    }
-}
-.btn-with-heading {
-    color: $white;
-    background-color: $theme-primary-color;
-    border-color: scale-color($btn-primary-bg, $lightness: -5%);
-    .icon {
-        color: $white;
-    }
-    &:focus,
-    &:hover {
-        background-color: scale-color($theme-primary-color, $lightness: 5%);
-        color: $white;
-    }
-}
-
-.card-secondary .blockinstance-controls .btn-group-top .btn {
+// Edit page configure buttons
+.card-secondary .card-header .blockinstance-controls .btn-group-top {
+  .btn {
     color: $gray-700;
     .text-danger {
         color: $state-danger-text;
@@ -91,38 +40,5 @@
     &:hover {
         background-color: $gray-200;
     }
-}
-
-// Tinymce primary button
-.mce-container,
-.mce-widget,
-.mce-reset {
-    .mce-primary {
-        background-color: $btn-primary-bg;
-        border-color: $btn-primary-border;
-        font-family: $font-family-sans-serif;
-
-        &:hover {
-            background-color: scale-color($btn-primary-bg, $lightness: 5%);
-        }
-
-        .mce-txt {
-            color: $btn-primary-color;
-        }
-    }
-}
-
-.modal-tinymce {
-    .pieform {
-        button.btn-secondary {
-            background-color: $btn-primary-bg;
-            border-color: $btn-primary-border;
-            font-family: $font-family-sans-serif;
-            color: $btn-primary-color;
-
-            &:hover {
-                background-color: scale-color($btn-primary-bg, $lightness: 5%);
-            }
-        }
-    }
+  }
 }

@@ -1,5 +1,5 @@
 {if $record->deleted}
-    <h3 class="title list-group-item-heading text-inline">
+    <h3 class="list-group-item-heading title text-inline">
         <span class="icon icon-folder-open left" role="presentation" aria-hidden="true"></span>
         {$record->name}
     </h3>

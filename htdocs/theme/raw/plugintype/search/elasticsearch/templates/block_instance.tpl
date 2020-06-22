@@ -20,7 +20,7 @@
         {if $record->createdbyname}
             <div class="createdby text-small">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
         {/if}
-        <div class="content-text text-small">
+        <div class="text-small">
             {if $record->highlight}
                 {$record->highlight|safe}
             {else}

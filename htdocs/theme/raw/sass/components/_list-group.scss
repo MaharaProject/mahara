@@ -162,6 +162,9 @@
         .icon.left {
           padding-left: 5px;
         }
+        .has-attachment {
+          margin-right: -$list-group-item-padding-x;
+        }
     }
 
     // blog post buttons
@@ -395,7 +398,8 @@
 // Inbox subject to not wrap responsively
 .inboxblock {
     .icon.left {
-        vertical-align: text-top;
+        vertical-align: top;
+        line-height: 1.5;
     }
     .subject {
         display: inline-block;

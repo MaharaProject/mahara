@@ -14,12 +14,12 @@
     .modal-docked.active & {
         .comment-content {
           padding-left: 43px;
+          p {
+            margin: .5rem 0 0 0;
+          }
         }
 
         @include media-breakpoint-up(lg) {
-            .comment-text::after {
-                content: "\00A0";
-            }
 
             .comment-attachment {
                 border-left: $list-group-border-width solid $list-group-border-color;
@@ -27,6 +27,7 @@
                 .card {
                     @include card-as-link();
                     width: 100%;
+                    margin-top: 0;
                 }
                 .collapsed {
                     font-size: $font-size-base;
@@ -69,7 +70,7 @@
         }
     }
 
-    // Indetation for nested comments
+    // Indentation for nested comments
     @for $i from 1 through 5 {
         &.indent-#{$i} {
             $width: 100 - percentage(($i * 2)/100);
