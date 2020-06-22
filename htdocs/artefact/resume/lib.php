@@ -1214,7 +1214,7 @@ function formatSize(size) {
     return (size / 1048576).toFixed(1).replace(/\.0$/, '') + 'M';
 }
 function listAttachments(attachments) {
-    if (attachments.length > 0) {
+    if (typeof attachments !== 'undefined' && attachments.length > 0) {
         var togglelink = jQuery('<span>').append({$attachmentsstr});
         var thead = jQuery('<thead>').append(jQuery('<tr>').append(jQuery('<th>').append(togglelink)));
         var tbody = jQuery('<tbody>');
