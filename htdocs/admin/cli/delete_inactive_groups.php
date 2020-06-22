@@ -217,7 +217,7 @@ if ($records = get_records_sql_array($selectsql . $joinsql . $wheresql . $unions
             $count++;
             if (($count % $limit) == 0 || $count == $total) {
                 $cli->cli_print("$count/$total");
-                set_time_limit(30);
+                set_time_limit(120);
             }
         }
         $cli->cli_print("--- " . date('Y-m-d H:i:s', time()) . " ---");
