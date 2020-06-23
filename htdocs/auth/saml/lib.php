@@ -569,6 +569,12 @@ class PluginAuthSaml extends PluginAuth {
         }
     }
 
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('auth', 'saml', 'keypass', get_config('sitename'));
+        }
+    }
+
     public static function can_be_disabled() {
         return true;
     }
@@ -596,6 +602,9 @@ class PluginAuthSaml extends PluginAuth {
         copy(AuthSaml::get_certificate_path() . 'server.crt', get_config('dataroot') . 'temp/server.crt.' . date('Ymdhis', time()));
         copy(AuthSaml::get_certificate_path() . 'server.pem', get_config('dataroot') . 'temp/server.pem.' . date('Ymdhis', time()));
         if (rename(AuthSaml::get_certificate_path() . 'server_new.crt', AuthSaml::get_certificate_path() . 'server.crt')) {
+            // move the new keypass to keypass
+            set_config_plugin('auth', 'saml', 'keypass', get_config_plugin('auth', 'saml', 'newkeypass'));
+            set_config_plugin('auth', 'saml', 'newkeypass', null);
             return rename(AuthSaml::get_certificate_path() . 'server_new.pem', AuthSaml::get_certificate_path() . 'server.pem');
         }
         return false;
@@ -625,7 +634,7 @@ class PluginAuthSaml extends PluginAuth {
             'organizationalUnitName' => ($occupation ? $occupation : 'Mahara'),
         );
 
-        $privkeypass = get_config('sitename');
+        $privkeypass = ($altname && get_config_plugin('auth', 'saml', 'newkeypass')) ? get_config_plugin('auth', 'saml', 'newkeypass') : get_config_plugin('auth', 'saml', 'keypass');
         $privkey = openssl_pkey_new();
         $csr     = openssl_csr_new($dn, $privkey);
         $sscert  = openssl_csr_sign($csr, null, $privkey, $numberofdays);
@@ -788,6 +797,23 @@ class PluginAuthSaml extends PluginAuth {
                 'defaultvalue' => $signaturealgo,
                 'help' => true,
             ),
+            'keypass' => array(
+                'type' => 'text',
+                'size' => 50,
+                'title' => get_string('keypass', 'auth.saml'),
+                'rules' => array(
+                    'required' => true,
+                ),
+                'defaultvalue' => get_config_plugin('auth', 'saml', 'keypass'),
+                'description'  => get_string('keypassdesc', 'auth.saml'),
+            ),
+            'newkeypass' => array(
+                'type' => 'text',
+                'size' => 50,
+                'title' => get_string('newkeypass', 'auth.saml'),
+                'defaultvalue' => get_config_plugin('auth', 'saml', 'newkeypass') ? get_config_plugin('auth', 'saml', 'newkeypass') : '',
+                'description'  => get_string('newkeypassdesc', 'auth.saml'),
+            ),
             'makereallysure' => array(
                 'type'         => 'html',
                 'value'        => "<script>jQuery(function() {     jQuery('#pluginconfig_save').on('click', function() {
@@ -944,9 +970,15 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function save_config_options(Pieform $form, $values) {
-
+        set_config_plugin('auth', 'saml', 'keypass', $values['keypass']);
         if ($form->get_submitvalue() === 'createnewkey') {
             global $SESSION;
+            if (!empty($values['newkeypass'])) {
+                set_config_plugin('auth', 'saml', 'newkeypass', $values['newkeypass']);
+            }
+            else {
+                set_config_plugin('auth', 'saml', 'newkeypass', $values['keypass']);
+            }
             error_log("auth/saml: Creating new certificate");
             self::create_certificates(3650, true);
             $SESSION->add_ok_msg(get_string('newkeycreated', 'auth.saml'));

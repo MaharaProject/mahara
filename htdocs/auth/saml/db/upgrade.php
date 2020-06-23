@@ -53,6 +53,12 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
     if ($oldversion < 2020030100) {
         set_config_plugin('auth', 'saml', 'version', '1.18.4');
     }
+    if ($oldversion < 2020070900) {
+        set_config_plugin('auth', 'saml', 'keypass', get_config('sitename'));
+        if (file_exists(AuthSaml::get_certificate_path() . 'server_new.crt')) {
+            set_config_plugin('auth', 'saml', 'newkeypass', get_config('sitename'));
+        }
+    }
 
     return $status;
 }
