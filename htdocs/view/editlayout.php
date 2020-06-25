@@ -438,7 +438,7 @@ function get_advanced_elements() {
     if ($theme && !isset($allowedthemes[$theme])) {
         // We have page set with an unknown theme
         // So redirect it to the choose theme page first
-        redirect('/view/blocks.php?id=' . $view->get('id'));
+        redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
     }
 
     if (get_config('userscanchooseviewthemes') && $view->is_themeable()) {
@@ -597,7 +597,7 @@ function settings_submit(Pieform $form, $values) {
     $result = array(
         'error'   => false,
         'message' => get_string('viewsavedsuccessfully', 'view'),
-        'goto'    => '/view/blocks.php?id=' . $view->get('id'),
+        'goto'    => get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'),
     );
     if ($form->submitted_by_js()) {
         // Redirect back to the page from within the iframe
