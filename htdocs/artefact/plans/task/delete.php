@@ -65,7 +65,7 @@ $deleteform = [
     'elements' => [
         'submit' => [
             'type' => 'submitcancel',
-            'class' => 'btn-secondary',
+            'subclass' => array('btn-secondary'),
             'value' => [get_string('deletetask','artefact.plans'), get_string('cancel')],
             'goto' => $returnurl,
         ],

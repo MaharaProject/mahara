@@ -91,6 +91,8 @@ if ($copy) {
     $type = 'submit';
     $submitstr = get_string('next') . ': ' . get_string('editviews', 'collection');
     $confirm = null;
+    $class = 'btn-primary';
+    $subclass = null;
 }
 else {
     $type = 'submitcancel';
@@ -102,10 +104,13 @@ else {
         $submitstr = array(get_string('save'), get_string('cancel'));
         $confirm = null;
     }
+    $class = '';
+    $subclass = array('btn-primary');
 }
 $elements['submitform'] = array(
     'type'      => $type,
-    'class' => 'btn-primary',
+    'class'     => $class,
+    'subclass'  => $subclass,
     'value'     => $submitstr,
     'confirm'   => $confirm,
     'goto'      => $baseurl,

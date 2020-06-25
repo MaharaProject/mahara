@@ -96,7 +96,7 @@ foreach ($dbfunctions as $function) {
 
 $functions['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'class' => 'btn-primary submitcancel',
+            'subclass' => array('btn-primary'),
             'value' => array(get_string('save'), get_string('back')),
             'goto'  => get_config('wwwroot') . 'webservice/admin/index.php?open=webservices_function_groups',
         );

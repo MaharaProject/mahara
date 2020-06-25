@@ -41,7 +41,7 @@ $form = pieform(array(
         ),
         'submit' => array(
             'type' => 'submitcancel',
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'value' => array(get_string('request', 'group'), get_string('cancel')),
             'goto' => $goto
         )

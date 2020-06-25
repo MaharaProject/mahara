@@ -240,7 +240,7 @@ if (!empty($authtype)) {
 $elements['submit'] = array(
             'type'  => 'submitcancel',
             'value' => array($nextaction, get_string('cancel')),
-            'class' => 'btn-primary',
+            'subclass' => array('btn-primary'),
             'goto'  => get_config('wwwroot') . 'webservice/testclient.php',
         );
 if (!empty($elements['protocol']['options'])) {

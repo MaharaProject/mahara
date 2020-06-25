@@ -76,7 +76,7 @@ $elements = array(
     ),
     'submit' => array(
         'type'    => 'submitcancel',
-        'class'   => 'btn-primary',
+        'subclass'   => array('btn-primary'),
         'value'   => array(get_string('save'), get_string('cancel')),
         'confirm' => null,
     )

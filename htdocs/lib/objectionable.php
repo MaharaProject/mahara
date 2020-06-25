@@ -41,7 +41,7 @@ function objection_form() {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
-        'class'   => 'btn-secondary',
+        'subclass'   => array('btn-secondary'),
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorconfirm')),
     );
@@ -305,7 +305,7 @@ function stillrude_form() {
             ),
             'submitcancel' => array(
                 'type' => 'submitcancel',
-                'class' => 'btn-primary',
+                'subclass' => array('btn-primary'),
                 'value' => array(get_string('submit'), get_string('cancel')),
                 'goto' => $view->get_url(),
             ),
@@ -430,7 +430,7 @@ function review_form($viewid = null) {
 
     $form['elements']['submit'] = array(
         'type'    => 'submitcancel',
-        'class'   => 'btn-secondary',
+        'subclass'   => array('btn-secondary'),
         'value'   => array(get_string('notifyadministrator'), get_string('cancel')),
         'confirm' => array(get_string('notifyadministratorreview')),
     );
