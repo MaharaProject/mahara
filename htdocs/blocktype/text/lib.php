@@ -392,6 +392,10 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
     public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies) {
         $regexp = array();
         $replacetext = array();
+        if (isset($configdata['draft']) && $configdata['draft']) {
+            $configdata['text'] = '';
+            $configdata['draft'] = false;
+        }
         foreach ($artefactcopies as $copyobj) {
             // Change the old image id to the new one
             $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $copyobj->oldid . '([^0-9])#';
