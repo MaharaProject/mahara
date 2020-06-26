@@ -794,6 +794,7 @@ class Collection {
      * @return object $institution or false
      */
      public function get_framework_institution() {
+        require_once('institution.php');
         if (!empty($this->group)) {
             return false;
         }
