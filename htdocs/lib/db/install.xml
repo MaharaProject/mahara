@@ -758,6 +758,7 @@
                 <FIELD NAME="instructionscollapsed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="accessibleview" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="coverimage" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="locktemplate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1473,6 +1474,18 @@
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="view_instructions_lock">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="originaltemplate" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="view" />
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+                <KEY NAME="templatefk" TYPE="foreign" FIELDS="originaltemplate" REFTABLE="view" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
     </TABLES>

@@ -67,6 +67,7 @@ class View {
     private $grid;
     private $accessibleview = 0;
     private $coverimage;
+    private $locktemplate = 0;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -465,6 +466,11 @@ class View {
 
         // Lockblocks if set on template
         $view->set('lockblocks', $template->get('lockblocks'));
+
+        if ($template->get('locktemplate')) {
+            $view->set('locktemplate', 0);
+            $view->lock_instructions_edit($template->get('id'));
+        }
 
         $view->commit();
 
@@ -979,6 +985,7 @@ class View {
         delete_records('view_visit','view',$this->id);
         delete_records('view_versioning', 'view', $this->id);
         delete_records('existingcopy', 'view', $this->id);
+        delete_records('view_instructions_lock', 'view', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
             $eventdata['collection'] = $collection->get('id');
@@ -7296,6 +7303,53 @@ class View {
 
     public function get_progress_action($column = 'owner') {
         return new ProgressAction($this, $column);
+    }
+
+    /**
+     * Checks if the view is a copy of a template and it has the instructions locked for edit
+     * @return boolean
+     */
+    public function is_instruction_locked() {
+        if (get_field('view_instructions_lock', 'locked', 'view', $this->get('id'))) {
+            return true;
+        }
+        return false;
+    }
+
+    /*
+     * Gets the id of the view that this view is a copy of
+     * @return integer view id of the original view, 0 if this view is not a copy
+     */
+    public function get_original_template() {
+        if (($originaltemplate = get_field('view_instructions_lock', 'originaltemplate', 'view', $this->get('id')))
+            && get_record('view', 'id', $originaltemplate)) {
+            return $originaltemplate;
+        }
+        return 0;
+    }
+
+    /*
+     * Lock the instructions edit for this copy
+     * @param integer $templateid the view id of the template this view is a copy of
+     */
+    public function lock_instructions_edit($templateid) { //todo: dont allow to change the template id if the record exists already
+        ensure_record_exists('view_instructions_lock',
+            (object) array(
+                'view'=> $this->get('id')
+            ),
+            (object) array(
+                'view'=> $this->get('id'),
+                'originaltemplate'=> $templateid,
+                'locked'=> 1
+            )
+        );
+    }
+
+    /*
+     * Unlock the instructions edit for this copy
+     */
+    public function unlock_instructions_edit() {
+        set_field('view_instructions_lock', 'locked', 0, 'view', $this->get('id'));
     }
 }
 
