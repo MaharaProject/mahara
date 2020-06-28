@@ -38,23 +38,25 @@ if (method_exists($authobj, 'change_password')) {
             'title' => '',
             'class' => 'd-none',
             'value' => 'decoypassword',
-        ),
-        'oldpassword' => array(
+        )
+    );
+    if ($USER->get('password')) {
+        $elements['oldpassword'] = array(
             'type' => 'password',
             'title' => get_string('oldpassword'),
             'help'  => true,
             'autocomplete' => 'off',
-        ),
-        'password1' => array(
-            'type' => 'password',
-            'title' => get_string('newpassword'),
-            'description' => get_password_policy_description(),
-            'showstrength' => true
-        ),
-        'password2' => array(
-            'type' => 'password',
-            'title' => get_string('confirmpassword')
-        ),
+        );
+    }
+    $elements['password1'] = array(
+        'type' => 'password',
+        'title' => get_string('newpassword'),
+        'description' => get_password_policy_description(),
+        'showstrength' => true
+    );
+    $elements['password2'] = array(
+        'type' => 'password',
+        'title' => get_string('confirmpassword')
     );
 }
 else if ($url = get_config_plugin_instance('auth', $USER->authinstance, 'changepasswordurl')) {
@@ -168,6 +170,9 @@ function accountprefs_validate(Pieform $form, $values) {
         else if ($values['password1'] !== '' || $values['password2'] !== '') {
             $form->set_error('oldpassword', get_string('mustspecifyoldpassword'));
         }
+    }
+    else if (empty($USER->get('password')) && !empty($values['password1'])) {
+        password_validate($form, $values, $USER);
     }
 
     if (isset($values['username']) && $values['username'] != $USER->get('username')) {
@@ -285,6 +290,7 @@ function accountprefs_submit(Pieform $form, $values) {
         // Destroy other sessions of the user
         require_once(get_config('docroot') . 'auth/session.php');
         remove_user_sessions($USER->get('id'));
+        $reload = true;
     }
 
     db_commit();
