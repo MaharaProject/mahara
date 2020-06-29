@@ -143,9 +143,6 @@ $javascript = array('paginator',
 $javascript = array_merge($javascript, $layoutjs);
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
-if (is_plugin_active('externalvideo', 'blocktype')) {
-    $javascript = array_merge($javascript, array((is_https() ? 'https:' : 'http:') . '//cdn.embedly.com/widgets/platform.js'));
-}
 $inlinejs = <<<JS
 jQuery(function($) {
 JS;

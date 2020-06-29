@@ -547,6 +547,9 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return array(
             array(
                 'file'   => 'js/voki.js',
+            ),
+            array(
+                'file'   =>  (is_https() ? 'https:' : 'http:') . '//cdn.embedly.com/widgets/platform.js',
             )
         );
     }
