@@ -159,9 +159,6 @@ if ($view->get('accessibleview')) {
 }
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
-if (is_plugin_active('externalvideo', 'blocktype')) {
-    $javascript = array_merge($javascript, array((is_https() ? 'https:' : 'http:') . '//cdn.embedly.com/widgets/platform.js'));
-}
 $inlinejs = "jQuery( function() {\n" . join("\n", $blocktype_js['initjs']) . "\n});";
 require_once('pieforms/pieform/elements/select.php');
 $inlinejs .= pieform_element_select_get_inlinejs();
