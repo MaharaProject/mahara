@@ -1,4 +1,3 @@
-
 .collapsible legend h4,
 .collapsible legend h3,
 .card-header {
@@ -60,7 +59,7 @@
         }
         .pieform > .collapsible-group:first-child &,
         .card.first & {
-            @include border-top-radius($border-radius);
+            @include border-top-radius($card-border-radius);
         }
     }
     .help a { //fix css on contextual help icons
@@ -112,7 +111,7 @@ h3 {
         &.last {
             .card-header {
                 a.collapsed {
-                    border-bottom-width: $border-width;
+                    border-bottom-width: $card-border-width;
                 }
             }
         }

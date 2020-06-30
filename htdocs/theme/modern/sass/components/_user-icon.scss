@@ -6,17 +6,21 @@
   }
 }
 
-// turns thumbnail user-icons in grid back to rectangular
-.user-thumbnails .user-icon {
-    border-radius: $border-radius;
-    img {
-        border-radius: $border-radius;
-    }
+// Profile images page
+.profileiconcell {
+  img {
+    border-radius: 50%;
+  }
 }
 
-// Profile images page
-.profileiconcell img {
-    border-radius: 50%;
+// turns thumbnail user-icons in grid back to rectangular
+.user-thumbnails {
+  .user-icon {
+      border-radius: $border-radius;
+      img {
+          border-radius: $border-radius;
+      }
+  }
 }
 
 // Select-2 user list user icons

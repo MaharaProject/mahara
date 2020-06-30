@@ -45,7 +45,7 @@
             </div>
         </div>
     </div>
-    <div class="viewfooter view-container">
+    <div class="view-container{if $feedback->position eq 'base' || $releaseform || $view_group_submission_form || $ltisubmissionform} viewfooter{/if}">
         {if $releaseform}
         <div class="releaseviewform alert alert-submitted clearfix">
             {$releaseform|safe}

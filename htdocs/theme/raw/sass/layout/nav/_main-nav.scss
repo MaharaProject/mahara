@@ -34,22 +34,22 @@
         @include media-breakpoint-up(md) {
             position: absolute;
             right: 15px;
-            top: $navbar-height - 2px;
+            top: $navbar-height;
             max-width: 300px;
+            z-index: 5;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            margin-right: 0;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
 
             .header.no-site-messages & {
                 max-height: calc(100vh - (#{$navbar-height} + 20px));
             }
-            z-index: 5;
             @for $i from 1 through 5 {
                 .header.message-count-#{$i} & {
                     max-height: calc(100vh - (#{$navbar-height} + (#{$i} * 33px) + 20px));
                 }
             }
-            overflow-y: hidden;
-            overflow-x: hidden;
-            margin-right: 0;
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
             &.show {
                 overflow-y: auto;
             }

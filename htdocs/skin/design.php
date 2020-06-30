@@ -153,6 +153,7 @@ $elements['skinbg'] = array(
             'options' => array(
                 'themedefault' => $themeheaderbgcolor,
             ),
+            'class' => 'input-push-right',
         ),
         'header_background_image' => array(
             'type'         => 'filebrowser',
@@ -188,6 +189,7 @@ $elements['skinbg'] = array(
             'options' => array(
                 'themedefault' => '#FFFFFF',
             ),
+            'class' => 'input-push-right',
         )
     )
 );
@@ -286,7 +288,7 @@ $elements['viewcontent'] = array(
             'header_title' => array(
                 'type' => 'html',
                 'value' => '<h4>' . get_string('header', 'skin') .'</h4>',
-                'class' => 'title card-header',
+                'class' => 'title',
             ),
             'view_heading_font_family' => array(
                 'type' => 'select',
@@ -304,11 +306,12 @@ $elements['viewcontent'] = array(
                     'options' => array(
                         'themedefault' => $themeheadingcolor,
                     ),
+                    'class' => 'input-push-right',
             ),
             'block_header_title' => array(
                 'type' => 'html',
                 'value' => '<h4>' . get_string('blockheading', 'skin') .'</h4>',
-                'class' => 'title card-header',
+                'class' => 'title',
             ),
             'view_block_header_font' => array(
                 'type' => 'select',
@@ -325,12 +328,13 @@ $elements['viewcontent'] = array(
                 'options' => array(
                     'themedefault' => $themeblockheadingfontcolor,
                 ),
+                'class' => 'input-push-right',
 
             ),
             'content_title' => array(
                 'type' => 'html',
                 'value' => '<h4>' . get_string('content', 'mahara') .'</h4>',
-                'class' => 'title card-header',
+                'class' => 'title',
             ),
             'view_text_font_family' => array(
                     'type' => 'select',
@@ -363,6 +367,7 @@ $elements['viewcontent'] = array(
                     'options' => array(
                         'themedefault' => $themetextcolor,
                     ),
+                    'class' => 'input-push-right',
             ),
             'view_link_normal_color' => array(
                     'type' => 'color',
@@ -372,6 +377,7 @@ $elements['viewcontent'] = array(
                     'options' => array(
                         'themedefault' => $themelinkcolor,
                     ),
+                    'class' => 'input-push-right',
             ),
             'view_link_normal_underline' => array(
                     'type' => 'switchbox',
@@ -386,6 +392,7 @@ $elements['viewcontent'] = array(
                     'options' => array(
                         'themedefault' => $themefocusedlinkcolor,
                     ),
+                    'class' => 'input-push-right',
             ),
             'view_link_hover_underline' => array(
                     'type' => 'switchbox',

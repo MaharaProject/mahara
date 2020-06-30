@@ -5,10 +5,6 @@ $logged-in-height-phone: 120px;
 
 .dashboard-widget-container {
 
-    .remove-widgets {
-        font-size: $font-size-sm - 1;
-    }
-
     .thumbnail-widget {
         position: relative;
         display: inline-block;
@@ -358,10 +354,6 @@ $logged-in-height-phone: 120px;
             }
         }
     }
-}
-
-.dashboard-editable {
-    border-top: 1px solid $gray-200;
 }
 
 .loggedout .dashboard-widget-container {

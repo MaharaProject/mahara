@@ -42,23 +42,23 @@
 
 // see emaillist.tpl
 .email-list {
-    margin-top: 20px;
     display: block;
     .description:not(.html) {
-        padding: 4px 0 0 18px
+        padding: 0 0 0.25rem 18px
     }
-    .stacked-label {
+    input[type="radio"] {
+        margin-top: 0.5rem;
+    }
+    .stacked-label,
+    .pseudolabel {
         width: auto;
-        margin-right: 10px;
-        vertical-align: super;
+        margin: 0 10px 0.25rem 0;
+        vertical-align: middle;
     }
     .unvalidated, .unsent, .validated {
-        margin-top: 20px;
-        &:last-of-type {
-            margin-bottom: 20px;
-        }
+        margin-bottom: 0.5rem;
         + .input-group {
-            margin: 20px 0;
+            margin: 1rem 0;
         }
     }
     @include media-breakpoint-up(md) {

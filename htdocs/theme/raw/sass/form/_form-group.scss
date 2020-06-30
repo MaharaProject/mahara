@@ -561,6 +561,15 @@
         border-top: $list-group-border-width solid $list-group-border-color;
     }
 
+    // for when inputs don't have a label on the left but need to visually align with other form elements
+    &.input-push-right {
+        input[type="text"] {
+          @include media-breakpoint-up(md) {
+            margin-left: 266px;
+          }
+        }
+    }
+
     input[type=text].secondary-textbox {
         margin-top: 15px;
         @include media-breakpoint-up(xl) {

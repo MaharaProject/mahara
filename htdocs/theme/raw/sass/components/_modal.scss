@@ -57,7 +57,7 @@ $width-sm: 90%;
             }
         }
         &.blockinstance-content {
-            padding: 0 15px;
+            padding: $modal-inner-padding;
         }
         .file-icon-render-in-modal {
             margin-left: 10px;
