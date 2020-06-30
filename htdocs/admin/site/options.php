@@ -876,14 +876,14 @@ function siteoptions_submit(Pieform $form, $values) {
       $fields = array_merge($fields, array('dropdownmenu'));
     }
     $count = 0;
-    $where_sql = " WHERE \"admin\" = 0 AND id != 0";
+    $where_sql = " WHERE u.admin = 0 AND id != 0";
     // if default account lifetime expiry has no end date
     if (empty($values['defaultaccountlifetime'])) {
         if ($values['defaultaccountlifetimeupdate'] == 'all') {
             // need to remove user expiry
             db_begin();
-            $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
-            execute_sql("UPDATE {usr} SET expiry = NULL $where_sql");
+            $count = count_records_sql("SELECT COUNT(*) FROM {usr} u " . $where_sql);
+            execute_sql("UPDATE {usr} u SET expiry = NULL " . $where_sql);
             db_commit();
         }
         else {
@@ -898,16 +898,16 @@ function siteoptions_submit(Pieform $form, $values) {
         if ($values['defaultaccountlifetimeupdate'] == 'some') {
             // and the user's expiry is not set
             $where_sql .= " AND expiry IS NULL";
-            $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
+            $count = count_records_sql("SELECT COUNT(*) FROM {usr} u " . $where_sql);
             db_begin();
-            execute_sql("UPDATE {usr} SET expiry = ? $where_sql", array(format_date($user_expiry)));
+            execute_sql("UPDATE {usr} u SET expiry = ? " . $where_sql, array(format_date($user_expiry)));
             db_commit();
         }
         else if ($values['defaultaccountlifetimeupdate'] == 'all') {
             // and the user's expiry is set
             db_begin();
-            $count = count_records_sql("SELECT COUNT(*) FROM {usr} $where_sql");
-            execute_sql("UPDATE {usr} SET expiry = ? $where_sql", array(format_date($user_expiry)));
+            $count = count_records_sql("SELECT COUNT(*) FROM {usr} u " . $where_sql);
+            execute_sql("UPDATE {usr} u SET expiry = ? " . $where_sql, array(format_date($user_expiry)));
             db_commit();
         }
     }
