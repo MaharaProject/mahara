@@ -28,7 +28,7 @@
             {/if}
             <div class="collapse" id="message_content_{$i->type}_{$i->id}">
                 {if $i->message}
-                    <p class="content-text">{$i->message|safe}</p>
+                    <p class="content-text">{$i->message|clean_html|safe}</p>
                     {if $i->url}
                     <a href="{$WWWROOT}{$i->url}" class="text-small">
                         {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm" role="presentation" aria-hidden="true"></span>

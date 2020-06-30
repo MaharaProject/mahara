@@ -1416,9 +1416,25 @@ class View {
                 $view = new View($viewid);
                 $views[] = array('id' => $view->get('id'),
                                  'title' => $view->get('title'),
-                                 );
+                                 'collection_id' => $view->get_collection() ? $view->get_collection()->get('id') : null,
+                                 'collection_name' => $view->get_collection() ? $view->get_collection()->get('name') : null,
+                                 'collection_url' => $view->get_collection() ? $view->get_collection()->get_url() : null,
+                             );
             }
             $data->views = $views;
+        }
+        else if (!empty($viewids) && sizeof($viewids) == 1) {
+            // dealing with a one page collection
+            $view = new View($viewids[0]);
+            if ($view->get_collection()) {
+                $views [] = array('id' => $view->get('id'),
+                                 'title' => $view->get('title'),
+                                 'collection_id' => $view->get_collection() ? $view->get_collection()->get('id') : null,
+                                 'collection_name' => $view->get_collection() ? $view->get_collection()->get('name') : null,
+                                 'collection_url' => $view->get_collection() ? $view->get_collection()->get_url() : null,
+                             );
+                $data->views = $views;
+            }
         }
 
         activity_occurred('viewaccess', $data);

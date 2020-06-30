@@ -38,7 +38,9 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
         $delayed->type = $at->id;
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
-        insert_record('activity_queue', $delayed);
+        if (!record_exists('activity_queue', 'type', $delayed->type, 'data', $delayed->data)) {
+            insert_record('activity_queue', $delayed);
+        }
     }
     else {
         handle_activity($at, $data);
@@ -1392,7 +1394,6 @@ class ActivityTypeViewAccess extends ActivityType {
 
     private $title, $ownername;
 
-    private $incollection = false;
     /**
      * @param array $data Parameters:
      *                    - view (int)
@@ -1406,43 +1407,39 @@ class ActivityTypeViewAccess extends ActivityType {
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
-        $this->url = $viewinfo->get_url(false);
+        $this->url = 'view/sharedviews.php';
         $this->users = array_diff_key(
             activity_get_viewaccess_users($this->view),
             $this->oldusers
         );
-        if ($viewinfo->get_collection()) {
-            $this->incollection = true;
-            $this->title = $viewinfo->get_collection()->get('name');
-            $this->add_urltext(array('key' => 'Collection', 'section' => 'collection'));
-        }
-        else {
+        if (!$viewinfo->get_collection()) {
             $this->title = $viewinfo->get('title');
-            $this->add_urltext(array('key' => 'View', 'section' => 'view'));
         }
         $this->ownername = $viewinfo->formatted_owner();
+        $this->overridemessagecontents = true;
     }
 
-    public function get_view_titles() {
-        $views = (!empty($this->views) && is_array($this->views) && sizeof($this->views) > 1) ? $this->views : false;
-        if (!$views) {
-            return false;
-        }
-        $titles = array();
-        foreach ($views as $view) {
-            $titles[$view['id']] = $view['title'];
-        }
-        return $titles;
-    }
     public function get_subject($user) {
-        if ($titles = $this->get_view_titles()) {
-            // because we may be updating access rules on pages both in and not in a collection
-            // it is easiest just to return a list of the pages we have updated
-            return get_string('newviewaccesssubjectviews', 'activity', implode('", "', $titles));
+        $subject = get_string('newaccessubjectdefault', 'activity');
+        if ($titles = $this->get_view_titles_urls()) {
+            //covers collection(s), page(s) and combination of both
+            if ($this->ownername) {
+                $subject = get_string('newaccesssubjectname', 'activity', count($titles), $this->ownername);
+            }
+            else {
+                $subject = get_string('newaccesssubject', 'activity', count($titles));
+            }
         }
         else {
-            return $this->incollection ? get_string('newcollectionaccesssubject', 'activity', $this->title) : get_string('newviewaccesssubject1', 'activity', $this->title);
+            //dealing with a single page
+            if ($this->ownername) {
+                $subject = get_string('newaccesssubjectname', 'activity', 1, $this->ownername);
+            }
+            else {
+                $subject = get_string('newaccesssubject', 'activity', 1);
+            }
         }
+        return $subject;
     }
 
     public function get_view_access_message($user) {
@@ -1465,29 +1462,69 @@ class ActivityTypeViewAccess extends ActivityType {
         return $accessdatemessage;
     }
 
-    public function get_message($user) {
-        $title = $this->title;
-        $plural = '';
-        if ($titles = $this->get_view_titles()) {
-            $title = implode('", "', $titles);
-            $plural = 'views';
+    public function get_view_titles_urls() {
+        $items = array();
+        if (!empty($this->views)) {
+            //handle collection(s), page(s) and combination of both
+            $views = $this->views;
+            foreach ($views as $view) {
+                if ($view['collection_id']) {
+                    //collections
+                    $items[$view['collection_id']] = [
+                        'name' => $view['collection_name'],
+                        'url'  => $view['collection_url'],
+                    ];
+                }
+                else {
+                    //pages outside of collections
+                    $items[$view['id']] = [
+                        'name' => $view['title'],
+                        'url' => get_config('wwwroot') . 'view/view.php?id=' . $view['id'],
+                    ];
+               }
+            }
+            return $items;
         }
-        $accessdatemessage = ($this->view && $user->id) ? $this->get_view_access_message($user) : null;
+        return false;
+    }
 
-        $newaccessmessagestr = $this->incollection ? 'newcollectionaccessmessage' . $plural : 'newviewaccessmessage' . $plural;
-        if ($this->ownername) {
-            $message = get_string_from_language($user->lang, $newaccessmessagestr, 'activity',
-                                            $title, $this->ownername, $this->title);
+    public function _getmessage($user) {
+        $accessitems = array();
+        if ($items = $this->get_view_titles_urls()) {
+            $accessitems = $items;
         }
         else {
-            $newaccessmessagenoownerstr = $this->incollection ? 'newcollectionaccessmessagenoowner' : 'newviewaccessmessagenoowner' . $plural;
-            $message = get_string_from_language($user->lang, $newaccessmessagenoownerstr, 'activity', $title, $this->title);
+            //we are dealing with a single page
+            $accessitems[$this->view] = [
+                'name' => $this->title,
+                'url' => get_config('wwwroot') . 'view/view.php?id=' . $this->view,
+            ];
         }
+        $accessdatemessage = ($this->view && $user->id) ? $this->get_view_access_message($user) : null;
+        $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
+        $sitename = get_config('sitename');
 
-        if ($accessdatemessage) {
-            $message .= "\n\n" . $accessdatemessage;
-        }
-        return $message;
+        $smarty = smarty_core();
+        $smarty->assign('accessitems', $accessitems);
+        $smarty->assign('accessdatemsg', $accessdatemessage . "\n");
+        $smarty->assign('url', get_config('wwwroot') . $this->url);
+        $smarty->assign('sitename', $sitename);
+        $smarty->assign('prefurl', $prefurl);
+        $messagebody = $smarty->fetch('account/activity/access.tpl');
+
+        return $messagebody;
+    }
+
+    public function get_message($user) {
+        return strip_tags($this->_getmessage($user));
+    }
+
+    public function get_emailmessage($user) {
+        return strip_tags($this->_getmessage($user));
+    }
+
+    public function get_htmlmessage($user) {
+        return $this->_getmessage($user);
     }
 
     public function get_required_parameters() {
