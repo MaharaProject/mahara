@@ -114,10 +114,11 @@ The following PHP extensions are also required:
  * pgsql; or mysqli; or mysql
  * session
  * SimpleXML
+ * intl - for language internationalisation
  * bz2 (optional)
  * imagick (optional)
  * openssl and xmlrpc (optional; for networking support)
- * memcache (optional; for SAML auth plugin)
+ * memcached (optional; for SAML auth plugin)
  * zlib (optional)
  * adodb (optional; improves performance)
  * enchant or pspell (optional; for TinyMCE spellcheck button)

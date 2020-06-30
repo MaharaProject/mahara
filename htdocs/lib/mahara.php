@@ -79,6 +79,9 @@ function ensure_sanity() {
     if (!extension_loaded('mbstring')) {
         throw new ConfigSanityException(get_string('mbstringextensionnotloaded', 'error'));
     }
+    if (!extension_loaded('intl')) {
+        throw new ConfigSanityException(get_string('intlextensionnotloaded', 'error'));
+    }
     // Check for freetype in the gd extension
     $gd_info = gd_info();
     if (!$gd_info['FreeType Support']) {
@@ -674,6 +677,9 @@ function get_languages() {
                             if ($langname = get_string_from_file('thislanguage', $langfile)) {
                                 $langs[$subdir] = $langname;
                             }
+                            else {
+                                log_warn(get_string('brokenlangpack', 'langpacks', $langfile, $searchpath), true, false);
+                            }
                         }
                     }
                 }
@@ -681,7 +687,7 @@ function get_languages() {
                 asort($langs);
             }
             else {
-                log_warn('Unable to read language directory ' . $langbase);
+                log_warn(get_string('unreadablelangpack', 'langpacks', $langbase), true, false);
             }
         }
     }
@@ -5838,7 +5844,7 @@ function clear_all_caches($clearsessiondirs = false) {
             rmdirr($session_dir);
             Session::create_directory_levels($session_dir);
         }
-
+        clear_language_cache();
         clearstatcache();
 
         handle_event('clearcaches', array());
@@ -5876,6 +5882,15 @@ function clear_resized_images_cache($profileonly=false) {
         }
     }
     return true;
+}
+
+/**
+ * Clear the info for installed language packs
+ * from the dataroot temp directory and from config db table
+ */
+function clear_language_cache() {
+    execute_sql('DELETE FROM {config} WHERE field LIKE ?', array('lang_%_etag'));
+    rmdirr(get_config('dataroot') . 'temp');
 }
 
 /*
