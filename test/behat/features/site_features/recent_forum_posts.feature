@@ -45,6 +45,7 @@ Scenario: Create forum and add block to group page
     Then I should see "cat photography is often underrated"
     And I should see "I just use my phone"
     And I expand the section "Attached files"
+    And I wait "1" seconds
     And I should see "Image2.png"
     And I should see "mahara_about.pdf"
     And I should see "Image3.png"

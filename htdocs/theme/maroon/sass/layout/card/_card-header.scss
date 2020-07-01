@@ -1,0 +1,144 @@
+
+.card {
+    .card-header:before {
+        @include fonttype(solid);
+        color: $theme-secondary-color;
+        padding-right: 5px;
+        vertical-align: top;
+    }
+    // custom icons to some blocks, they do not appear on the edit page
+    &.bt-newviews .card-header:before {
+        content: fa-content($fa-var-bullhorn);
+    }
+    &.bt-inbox .card-header:before{
+        content: fa-content($fa-var-inbox);
+    }
+    &.bt-myviews .card-header:before {
+        content: fa-content($fa-var-file);
+    }
+    &.bt-filedownload .card-header:before {
+        content: fa-content($fa-var-download);
+    }
+    &.bt-folder .card-header:before {
+        content: fa-content($fa-var-folder);
+    }
+    &.bt-gallery .card-header:before {
+        content: fa-content($fa-var-images);
+    }
+    &.bt-internalmedia .card-header:before {
+        content: fa-content($fa-var-video);
+    }
+    &.bt-pdf .card-header:before {
+        content: fa-content($fa-var-file-pdf);
+    }
+    &.bt-html .card-header:before {
+        content: fa-content($fa-var-code);
+    }
+    &.bt-blog .card-header:before {
+        content: fa-content($fa-var-pen);
+    }
+    &.bt-blogpost .card-header:before {
+        content: fa-content($fa-var-file-alt);
+    }
+    &.bt-recentposts .card-header:before {
+        content: fa-content($fa-var-clock);
+    }
+    &.bt-taggedposts .card-header:before {
+        content: fa-content($fa-var-tags);
+    }
+    &.bt-comment .card-header:before {
+        content: fa-content($fa-var-comment);
+    }
+    &.bt-annotation .card-header:before {
+        content: fa-content($fa-var-sticky-note);
+    }
+    &.bt-creativecommons .card-header:before {
+        content: fa-content($fa-var-creative-commons);
+    }
+    &.bt-navigation .card-header:before {
+        content: fa-content($fa-var-location-arrow);
+    }
+    &.bt-plans .card-header:before {
+        content: fa-content($fa-var-tasks);
+    }
+    &.bt-recentforumposts .card-header:before {
+        content: fa-content($fa-var-comments);
+    }
+    &.bt-textbox .card-header:before {
+        content: fa-content($fa-var-edit);
+    }
+    &.bt-profileinfo .card-header:before {
+        content: fa-content($fa-var-address-card);
+    }
+    &.bt-socialprofile .card-header:before {
+        content: fa-content($fa-var-thumbs-up);
+    }
+    &.bt-entireresume .card-header:before {
+        content: fa-content($fa-var-star);
+    }
+    &.bt-resumefield .card-header:before {
+        content: fa-content($fa-var-star);
+    }
+    &.bt-externalfeed .card-header:before {
+        content: fa-content($fa-var-rss);
+    }
+    &.bt-externalvideo .card-header:before {
+        content: fa-content($fa-var-youtube);
+    }
+    &.bt-googleapps .card-header:before {
+        content: fa-content($fa-var-google);
+    }
+    &.bt-wall h3.card-header:before {
+        content: fa-content($fa-var-quote-left);
+    }
+    &.bt-myfriends .card-header:before {
+        content: fa-content($fa-var-user-friends);
+    }
+    &.bt-mygroups .card-header:before {
+        content: fa-content($fa-var-users);
+    }
+    &.bt-image .card-header:before {
+        content: fa-content($fa-var-image);
+    }
+    &.bt-text .card-header:before {
+        content: fa-content($fa-var-font);
+    }
+    &.bt-watchlist .card-header:before {
+        content: fa-content($fa-var-eye);
+    }
+    &.bt-peerassessment .card-header:before {
+        content: fa-content($fa-var-list);
+    }
+    &.bt-signoff .card-header:before {
+        content: fa-content($fa-var-signature);
+    }
+    &.bt-openbadgedisplayer .card-header:before {
+        content: fa-content($fa-var-shield-alt);
+    }
+}
+.card.card-regular .card-header:before {
+    @include fonttype(regular);
+}
+.card.card-brand .card-header:before {
+    @include fonttype(brands);
+}
+
+// remove the empty icon in attached files header
+.has-attachment .card-header::before {
+    display: none;
+}
+
+.card-header {
+  .link-indicator,
+  .icon-arrow-right {
+    color: $theme-secondary-color;
+    &:hover,
+    &:focus {
+      color: scale-color($theme-secondary-color, $lightness: -40%);
+    }
+  }
+}
+
+.collapse-inline {
+    width: 75%;
+}

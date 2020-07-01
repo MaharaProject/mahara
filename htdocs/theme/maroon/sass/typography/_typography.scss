@@ -1,0 +1,22 @@
+h1.page-header {
+  font-weight: $font-weight-bolder;
+  .icon {
+    color: $theme-secondary-color;
+
+    &.icon-info-circle {
+      color: $help-icon-color;
+    }
+  }
+}
+
+#results .list-group-item-heading .icon {
+  color: $theme-secondary-color;
+}
+
+.page-header {
+    ~ form.with-heading,
+    ~ form .with-heading,
+    ~ .form.with-heading {
+        border-radius: 0;
+    }
+}

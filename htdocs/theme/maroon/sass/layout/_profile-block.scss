@@ -1,0 +1,69 @@
+.sidebar .profile-block.card-header {
+    .username {
+      color: $white;
+    }
+    .user-icon {
+      border: 0 !important;
+      border-radius: 0;
+      background-color: scale-color($theme-accent-color, $lightness: 50%);
+
+      &:hover,
+      &:focus {
+          background-color: scale-color($theme-accent-color, $lightness: 55%);
+      }
+    }
+    a {
+        &:after {
+            background-color: $white;
+            color: $gray-700;
+        }
+    }
+}
+
+.sidebar .user-card .card {
+  background-color: $theme-accent-color;
+  border: 0;
+  .card-header {
+    background-color: transparent;
+    color: $white;
+  }
+  .list-group-item-heading {
+    font-size: $font-size-base;
+  }
+  .list-group-item {
+    background-color: transparent;
+    color: $white;
+    border: 0;
+    a {
+      color: $white;
+
+      &:hover,
+      &:focus {
+        text-decoration-color: $white;
+      }
+    }
+    small {
+      color: $gray-100;
+    }
+
+    .list-group-item-link a:hover {
+      background: $theme-primary-color;
+      color: $white;
+    }
+
+    &.list-group-item-warning,
+    &.list-group-item.draft {
+        background-color: $state-warning-bg;
+        .list-group-item-heading {
+            color: $state-warning-text;
+        }
+        a {
+            color: $state-warning-text;
+            &:hover,
+            &:focus {
+              text-decoration-color: $state-warning-text;
+            }
+        }
+    }
+  }
+}

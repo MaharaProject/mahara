@@ -1,0 +1,29 @@
+.navbar-default {
+  border-bottom: 0;
+}
+
+.navbar-toggle {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.nav .navbar-showchildren {
+  height: auto;
+}
+
+.navbar-main .nav-toggle-area {
+  padding: 17px 0 12px 0;
+}
+
+.navbar-form.navbar-collapse {
+  top: 17px;
+}
+
+// Header messagebox form
+.navbar-messages {
+    .navbar-messages-count {
+      border-radius: 0;
+      padding: 0 5px;
+      font-weight: $font-weight-bold;
+    }
+}

@@ -1,0 +1,44 @@
+.sidebar {
+    .card {
+        border: 5px solid $theme-accent-color;
+        border-radius: 0;
+
+        a {
+          color: $theme-primary-color;
+          &:hover,
+          &:focus {
+            color: scale-color($theme-primary-color, $lightness: 20%);
+          }
+        }
+
+        .card-header {
+          font-weight: $font-weight-bold;
+          background: none;
+        }
+
+        .card-footer {
+          background-color: scale-color($theme-accent-color, $lightness: 80%);
+          border: 0;
+          a {
+            color: $theme-primary-color;
+            &:hover,
+            &:focus {
+              color: scale-color($theme-primary-color, $lightness: 20%);
+            }
+          }
+        }
+    }
+}
+
+.card-header, .collapsible legend h3, .collapsible legend h4 {
+  font-weight: $font-weight-bold;
+}
+
+.card-half.card,
+.card-quarter .card {
+  border-color: $gray-200;
+}
+
+.card-collection .collection-stack::after, .card-collection .collection-stack::before {
+  border-color: $gray-200;
+}

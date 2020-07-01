@@ -1,0 +1,67 @@
+@include media-breakpoint-up(md) {
+
+  @for $i from 1 through 5 {
+    .header.message-count-#{$i} {
+      + .main-content::before {
+        content: "";
+        position: absolute;
+        right: 1px;
+        top: $navbar-height + ($i * 36px);
+        border-style: solid;
+        border-color: transparent;
+        border-width: 2vh 50vw;
+        border-top-color: $theme-primary-color;
+        border-left-color: $theme-primary-color;
+        background: $body-bg;
+      }
+
+      + .main-content {
+        padding-top: 50px;
+      }
+    }
+  }
+
+  .pageheader {
+    position: relative;
+    margin-bottom: 0;
+    background-color: $pageheader-bg;
+    padding-top: 50px;
+    padding-bottom: 40px;
+
+    + .main-content::before {
+        position: inherit;
+        right: auto;
+        top: auto;
+        border: 0;
+        background: $body-bg;
+  	}
+  }
+  .pageheader::before {
+        content: "";
+        position: absolute;
+        right: 1px;
+        top: 0;
+        border-style: solid;
+        border-color: transparent;
+        border-width: 2vh 50vw;
+        border-top-color: $theme-primary-color;
+        border-left-color: $theme-primary-color;
+        // background: $pageheader-bg;
+  }
+  .pageheader::after {
+    content: "";
+    position: absolute;
+    right: 1px;
+    bottom: 0;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 2vh 50vw;
+    border-bottom-color: $body-bg;
+    border-left-color: $body-bg;
+    // background: $body-bg;
+  }
+}
+
+.tag-results .btn-top-right {
+    margin-top: -41px;
+}

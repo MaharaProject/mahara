@@ -1,0 +1,52 @@
+.site-messages {
+    position: absolute;
+}
+
+//adjust header and fixed elements for sitemessages
+@for $i from 1 through 5 {
+    .header.message-count-#{$i} {
+        top: $i * 36px;
+
+        @include media-breakpoint-down(sm) {
+            top: 0;
+        }
+
+        ~ .container {
+            .toolbar-affix.affix {
+                @include media-breakpoint-up(md) {
+                    margin-top: $i * 36px;
+                }
+            }
+        }
+
+        + .main-content {
+            @include media-breakpoint-up(md) {
+                margin-top: $i * 36px;
+            }
+        }
+
+        ~ .pageheader {
+            @include media-breakpoint-up(md) {
+                margin-top: $i * 36px;
+            }
+        }
+    }
+}
+
+.no-site-messages {
+    top: 0;
+    padding-top: 0;
+
+    + .main-content,
+    + .main-content .toolbar-affix.affix {
+        @include media-breakpoint-up(md) {
+            margin-top: 0;
+        }
+    }
+
+    ~ .pageheader {
+        @include media-breakpoint-up(md) {
+            margin-top: 0;
+        }
+    }
+}

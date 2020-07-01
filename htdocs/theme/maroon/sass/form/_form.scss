@@ -1,0 +1,51 @@
+#editprofileform_profiletype_other,
+.form-control,
+input[type="password"],
+input[type="text"],
+select,
+textarea {
+  height: calc(2.0625rem + 5px);
+  font-size: 1rem;
+}
+
+.dropdown,
+.pieform {
+  .picker {
+    select,
+    select#editprofileform_profiletype_other,
+    select.form-control {
+      height: calc(2.0625rem + 5px);
+    }
+  }
+}
+
+.pieform .input-group .no-label {
+  margin-top: 12px;
+}
+
+.pieform .input-group fieldset.input-group .input-group-append {
+  height: calc(2.0625rem + 5px);
+}
+
+.dropdown-group .picker {
+  height: calc(2.0625rem + 5px);
+}
+
+.dropdown-group .with-dropdown {
+  height: calc(2.0625rem + 5px);
+}
+
+.pieform .input-group .pieform-fieldset > .form-group {
+  .form-control.text,
+  .text#editprofileform_profiletype_other,
+  input.text[type="password"],
+  input.text[type="text"],
+  select.text,
+  textarea.text {
+      height: calc(2.0625rem + 5px);
+  }
+}
+
+.activegrouplabels {
+    background-color: $card-footer-bg;
+}

@@ -1,0 +1,82 @@
+// Custom component variables (non-bootstrap components)
+
+//Arrow compoanent variables
+$arrow-color:                   scale-color($theme-secondary-color, $lightness: -25%);
+$arrow-bar-bg:                  $theme-secondary-color;
+$arrow-text-color:              $white;
+$arrow-link-color:              $theme-primary-color;
+$arrow-link-hover-color:        $theme-primary-color;
+$arrow-link-active-color:       $theme-text-color;
+$arrow-link-background-color:   $white;
+
+// color for the secondary title in sections (cf. groups)
+$dashboard-widget-bg:                       $theme-secondary-color;
+$dashboard-widget-title-color:              scale-color($theme-secondary-color, $lightness: -65%);
+$dashboard-widget-circle-bg:                scale-color($theme-secondary-color, $lightness: 30%);
+$dashboard-widget-cirlce-icon-color:        scale-color($theme-secondary-color, $lightness: -35%);
+
+// Pages and collections page header
+$pageheader-bg:                 scale-color($theme-accent-color-two, $lightness: 90%);
+
+// Site footer background colors
+$site-footer-bg:                            $gray-900;
+$site-footer-color:                         $white;
+$site-footer-hover-color:                   $white;
+$site-footer-hover-bg:                      scale-color($site-footer-bg, $lightness: 10%);
+
+// Header navbar
+$navbar-height:                             72px;
+$navbar-default-bg:                         $theme-primary-color;
+$navbar-default-border:                     scale-color($navbar-default-bg, $lightness: 5%);
+
+// Navbar toggle
+$navbar-toggle-color:                       $white;
+$navbar-toggle-bg:                          transparent;
+$navbar-toggle-hover-color:                 $theme-secondary-color;
+$navbar-toggle-hover-bg:                    scale-color($navbar-default-bg, $lightness: -5.5%);
+$navbar-toggle-active-color:                $theme-secondary-color;
+$navbar-toggle-active-bg:                   scale-color($navbar-default-bg, $lightness: -5.5%);
+
+// Navbar menu
+$navbar-default-link-border:                scale-color($theme-primary-color, $lightness: 5%);
+$navbar-default-link-color:                 $white;
+$navbar-default-link-hover-color:           $white;
+$navbar-default-link-bg:                    scale-color($theme-primary-color, $lightness: 3%);
+$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: 5%);
+$navbar-default-active-color:               $white;
+$navbar-default-active-bg:                  $theme-primary-color;
+
+// Navbar menus children
+$navbar-inverse-bg:                         scale-color($theme-secondary-color, $lightness: 90%);
+$navbar-inverse-link-color:                 $theme-text-color;
+$navbar-inverse-link-hover-color:           $theme-text-color;
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
+$navbar-inverse-link-active-color:          $black;
+$navbar-inverse-link-active-bg:             scale-color($navbar-inverse-bg, $lightness: -2%);
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               $white;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         $gray-700;
+$navbar-inverse-toggle-hover-bg:            scale-color($theme-secondary-color, $lightness: 90%);
+$navbar-inverse-toggle-active-color:        $black;
+$navbar-inverse-toggle-active-bg:           scale-color($theme-secondary-color, $lightness: 90%);
+
+$btn-primary-color:                         $white;
+$btn-primary-bg:                            scale-color($theme-secondary-color, $lightness: -35%);
+$btn-primary-border:                        scale-color($theme-secondary-color, $lightness: -35%);
+
+// Header inbox message count background color
+$navbar-messages-count-color:               $white;
+$navbar-messages-count-bg:                  scale-color($theme-secondary-color, $lightness: -35%);
+
+// Collapse/expand indicator
+$collapse-indicator-color:                  scale-color($theme-secondary-color, $lightness: 10%);
+$collapse-indicator-hover-color:            $theme-secondary-color;
+
+// Form background color
+$form-bg:                                   scale-color($theme-secondary-color, $lightness: 85%);
+
+// Page heading border-bottom
+$h1heading-border-color:                    $theme-secondary-color;
+$h1heading-border-width:                    5px;

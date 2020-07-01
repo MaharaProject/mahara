@@ -1,0 +1,23 @@
+/**
+ * Stylesheet index for Mahara's Bootstrap theme.
+ *
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ * This file is licensed under the same terms as Mahara itself
+ */
+
+// Import our theme based variables (colors, fonts, padding, etc)
+@import "utilities/theme-variables"; // Import our brand variables
+@import "../../raw/sass/utilities/bootstrap-variables";
+
+@import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
+@import "utilities/custom-variables";  // ...and our custom variables file
+
+// Import raw default variables (colors, fonts, padding, etc)
+@import "../../raw/sass/style";
+
+@import "utilities/index"; // custom components / layout / forms / features
+
+@import "custom";                  // Custom theme additional

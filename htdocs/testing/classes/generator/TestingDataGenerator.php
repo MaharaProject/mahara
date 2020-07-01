@@ -2165,15 +2165,17 @@ EOD;
       );
 
       // check for custom config in table
-      $config_arr= explode(',', trim($record['config']));
+      if (isset($record['config'])) {
+          $config_arr= explode(',', trim($record['config']));
 
-      foreach ($config_arr as $key => $value) {
-        $found_equals = strpos($value, '=');
-        if ($found_equals === false) {
-            continue;
-        }
-        list($setting, $value) = explode('=', $value);
-        $configdata[$setting] = $value;
+          foreach ($config_arr as $key => $value) {
+              $found_equals = strpos($value, '=');
+              if ($found_equals === false) {
+                  continue;
+              }
+              list($setting, $value) = explode('=', $value);
+              $configdata[$setting] = $value;
+          }
       }
 
       // check that the group exists
