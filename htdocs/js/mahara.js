@@ -823,7 +823,13 @@ function quotaUpdate(quotaused, quota) {
         var percentage = Math.round(data.quotaused / data.quota * 100);
         jQuery('#quota_used').text(data.quotaused_display);
         jQuery('#quota_total').text(data.quota_display);
-        jQuery('#quota_fill').css('width', percentage + '%').text(percentage + '%').attr('aria-valuenow', percentage);
+        jQuery('#quota_fill').css('width', percentage + '%').find('span').text(percentage + '%').attr('aria-valuenow', percentage);
+        if (percentage > 10) {
+            jQuery('#quota_fill').removeClass('small-progress');
+        }
+        else {
+            jQuery('#quota_fill').addClass('small-progress');
+        }
     };
 
     if ((typeof(quotaused) == 'number' || typeof(quotaused) == 'string') && quota) {
