@@ -1292,37 +1292,6 @@ class PluginSearchElasticsearch extends PluginSearch {
        $data['pagination'] = $pagination['html'];
        $data['pagination_js'] = $pagination['javascript'];
    }
-
-    /**
-     * Fix the $query string for things that can break elasticsearch.
-     * @param string $query
-     *
-     * @return string
-     */
-    public function clean_query($query) {
-        $query = stripslashes($query); // to remove any backslashes
-        $badchars = array(
-            '"',
-            '[',
-            ']',
-            '{',
-            '}',
-            '~',
-            '^',
-            '(',
-            ')',
-            '-',
-            '+',
-            '/',
-            '!',
-            ':'
-        );
-        foreach ($badchars as $bad) {
-            // Replace with a space.
-            $query = preg_replace('/\\'.$bad.'/',' ',$query);
-        }
-        return $query;
-    }
 }
 
 /**

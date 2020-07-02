@@ -51,7 +51,7 @@ $limit  = param_integer('limit', 10);
 
 $filter = 'all';
 
-$query = PluginSearchElasticsearch::clean_query($query);
+$query = clean_str_replace($query, ' ', array("'", '@', '&', '*', '|'));
 $data = PluginSearchElasticsearch::search_all($query, $limit, $offset, $options, $mainfacetterm, $USER);
 
 $data['query'] = $query;

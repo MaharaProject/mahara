@@ -5940,3 +5940,43 @@ function get_max_offset($offset, $limit, $count) {
     }
     return $offset;
 }
+
+/**
+ * Use to replace special characters with something else
+ * If replace is unspecified it will replace with '_'
+ *
+ * @param string $str      The raw string to remove bad characters from
+ * @param string $replace  The character to replace the bad characters with
+ * @param array  $exclude  Ignore the exclusion of these characters
+ *
+ * @return string
+ */
+function clean_str_replace($str, $replace='', $exclude=array()) {
+    $str = stripslashes($str); // to remove any backslashes
+    $badchars = array(
+        '"',
+        '[',
+        ']',
+        '{',
+        '}',
+        '~',
+        '^',
+        '(',
+        ')',
+        '-',
+        '+',
+        '/',
+        '!',
+        ':',
+        '@',
+        '&',
+        '*',
+        '|',
+        "'"
+    );
+    $badchars = array_diff($badchars, $exclude);
+    foreach ($badchars as $bad) {
+        $str = preg_replace('/\\' . $bad . '/', $replace, $str);
+    }
+    return $str;
+}
