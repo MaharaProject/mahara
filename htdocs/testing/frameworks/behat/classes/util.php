@@ -48,7 +48,7 @@ class BehatTestingUtil extends TestingUtil {
     /**
      * @var array Files to skip when resetting dataroot folder
      */
-    protected static $datarootskiponreset = array('.', '..', 'behat', 'behattestdir.txt');
+    protected static $datarootskiponreset = array('.', '..', 'behat', 'behattestdir.txt', 'sessions');
 
     /**
      * @var array Files to skip when dropping dataroot folder
