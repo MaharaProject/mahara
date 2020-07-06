@@ -140,15 +140,17 @@ $institutions = get_records_sql_array("
     ORDER BY aic.value, i.displayname",
     array('saml', 1, 'institutionidpentityid', $USER->get('id')));
 
-foreach ($institutions as $k => $v) {
-    if (!isset($disco[$v->idpentityid])) {
-        unset($institutions[$k]);
+if (!empty($institutions)) {
+    foreach ($institutions as $k => $v) {
+        if (!isset($disco[$v->idpentityid])) {
+            unset($institutions[$k]);
+        }
+        else {
+            $name = $disco[$v->idpentityid] . ' - ' . $v->displayname;
+            $institutions[$k]->idpname = $name;
+        }
+        $seen[$v->idpentityid] = true;
     }
-    else {
-        $name = $disco[$v->idpentityid] . ' - ' . $v->displayname;
-        $institutions[$k]->idpname = $name;
-    }
-    $seen[$v->idpentityid] = true;
 }
 
 // Migrate institution membership for the institutions containing saml auth
