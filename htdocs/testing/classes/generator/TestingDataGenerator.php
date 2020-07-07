@@ -1367,7 +1367,7 @@ EOD;
      * @return array
      */
     public static function generate_configdata_openbadgedisplayer($fields) {
-        return array('badgegroup' => 'null' );
+        return array('badgegroup' => array());
     }
 
     /**
@@ -2824,7 +2824,7 @@ EOD;
     }
 
     /**
-     * A fixture to set up  RESUME - PROFESSIONAL MEMEBERSHIPS in bulk.
+     * A fixture to set up  RESUME - PROFESSIONAL MEMBERSHIPS in bulk.
      *
      * Example:
      * And the following "professionalmemberships" exist:
