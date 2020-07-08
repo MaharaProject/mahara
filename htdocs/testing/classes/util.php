@@ -65,6 +65,11 @@ abstract class TestingUtil {
     private static $originaldatafilesjsonadded = false;
 
     /**
+     * @var array contains database tables foreign keys.
+     */
+    private static $foreignkeys = array();
+
+    /**
      * Return the name of the JSON file containing the init filenames.
      *
      * @static
@@ -74,6 +79,24 @@ abstract class TestingUtil {
         return self::$originaldatafilesjson;
     }
 
+
+        /**
+     * Return the name of the JSON file containing the init filenames.
+     *
+     * @static
+     * @return array
+     */
+    public static function get_foreignkeys($tables) {
+        $foreignkeys = array();
+        if (!self::$foreignkeys && $tables) {
+            foreach ($tables as $table) {
+                $tablename = $table->getName();
+                $foreignkeys = array_merge($foreignkeys, get_foreign_keys($tablename));
+            }
+            self::$foreignkeys = $foreignkeys;
+        }
+        return self::$foreignkeys;
+    }
     /**
      * Return the mahara root dir which should contains htdocs and test directories
      *
@@ -315,8 +338,6 @@ abstract class TestingUtil {
      * @return array of table names, empty if unknown
      */
     protected static function guess_unmodified_empty_tables() {
-        $data = self::get_tabledata();
-        $structure = self::get_tablestructure();
         $prefix = get_config('dbprefix');
         $unmodifiedorempties = array();
         if (is_mysql()) {
@@ -337,14 +358,16 @@ abstract class TestingUtil {
             unset($records);
         }
         else if (is_postgres()) {
+            $data = self::get_tabledata();
+            $structure = self::get_tablestructure();
             $tables = get_tables_from_xmldb();
             foreach ($tables as $table) {
                 $tablename = $table->getName();
-                $columns = get_columns($tablename);
                 if (!record_exists($tablename) && empty($data[$tablename])) {
                     $unmodifiedorempties[$tablename] = $tablename;
                     continue;
                 }
+                $columns = get_columns($tablename);
                 if (isset($columns['ID']) && isset($columns['ID']->auto_increment)) {
                     if ($columns['ID']->auto_increment == 1) {
                         $unmodifiedorempties[$tablename] = $tablename;
@@ -461,11 +484,7 @@ abstract class TestingUtil {
 
         db_begin();
         // Temporary drop current foreign key contraints
-        $foreignkeys = array();
-        foreach ($tables as $table) {
-            $tablename = $table->getName();
-            $foreignkeys = array_merge($foreignkeys, get_foreign_keys($tablename));
-        }
+        $foreignkeys = self::get_foreignkeys($tables);
         // Drop foreign key contraints
         if (is_mysql()) {
             foreach ($foreignkeys as $key) {
@@ -506,13 +525,42 @@ abstract class TestingUtil {
                             . '(' . implode(',', array_map('db_quote_identifier', $key['fields'])) . ')'
                             . ' REFERENCES ' . db_quote_identifier($key['reftable']) . '(' . implode(',', array_map('db_quote_identifier', $key['reffields'])) . ')');
         }
-
         db_commit();
 
         // reset all next record ids - aka sequences
         self::reset_all_database_sequences($unmodifiedorempties);
 
         return true;
+    }
+
+    /**
+     * Clear content in sessions directory
+     * @static
+     * @return void
+     */
+    public static function clear_sessions() {
+        $characters = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+        if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
+            $characters = array_merge($characters, array('g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                                                        'o', 'p', 'q', 'r', 's', 't', 'u', 'v'));
+        }
+        $sessionpath = self::get_dataroot() . "sessions";
+
+        $ignore = array('.', '..');
+        foreach ($characters as $c1) {
+            foreach ($characters as $c2) {
+                foreach ($characters as $c3) {
+                    $content = scandir("$sessionpath/$c1/$c2/$c3");
+                    if (count($content) > 2) {
+                        foreach($content as $file) {
+                            if (!in_array($file, $ignore)) {
+                                unlink("$sessionpath/$c1/$c2/$c3/$file");
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -527,7 +575,7 @@ abstract class TestingUtil {
 
         // Do not delete automatically installed files.
         self::skip_original_data_files($childclassname);
-
+        self::clear_sessions();
         // Clean up the dataroot folder.
         $handle = opendir(self::get_dataroot());
         while (false !== ($item = readdir($handle))) {
