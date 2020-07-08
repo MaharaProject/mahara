@@ -127,7 +127,7 @@
                         {/if}
                         </span>
 
-                        <a href="{$item->downloadpath}">
+                        <a href="{$item->downloadpath}" class="download-link">
                             <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}</span>
                             <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>

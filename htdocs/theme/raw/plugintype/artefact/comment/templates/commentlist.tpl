@@ -114,7 +114,7 @@
                                     <span class="text-small">{$a->attachtitle}</span>
                                     <span class="metadata"> [{$a->attachsize}]</span>
                                 </span>
-                                <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">
+                                <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}" class="download-link">
                                     <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
                                 </a>
                             </li>

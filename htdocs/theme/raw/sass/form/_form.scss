@@ -7,6 +7,18 @@ input + label {
     font-weight: $font-weight-normal;
 }
 
+button {
+  &:focus {
+    outline: medium solid $input-focus-border-color;
+  }
+}
+
+.form-control {
+  &:focus {
+    outline: medium solid $input-focus-border-color;
+  }
+}
+
 input[type=text],
 input[type=password],
 textarea,
@@ -384,4 +396,11 @@ input:disabled[type="text"] {
     float: left;
     top: 0;
     margin-right: 5px;
+}
+
+input[type="file"],
+input[type="radio"] {
+  &:focus  {
+    outline: medium solid $input-focus-border-color;
+  }
 }

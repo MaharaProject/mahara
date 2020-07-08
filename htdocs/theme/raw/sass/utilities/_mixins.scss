@@ -98,7 +98,7 @@
 
 @mixin tab-focus() {
   // Default
-  outline: thin dotted;
+  outline: medium solid $input-focus-border-color;
   // WebKit
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;

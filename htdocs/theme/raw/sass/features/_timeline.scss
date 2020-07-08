@@ -299,7 +299,10 @@ ul.cd-timeline-navigation-second {
 }
 
 .jtline .events a:hover {
-  outline-color: $link-hover-color;
+  outline: 0;
+}
+.jtline .events a:focus {
+  outline: medium solid $input-focus-border-color;
 }
 
 .jtline .timeline .cd-timeline-navigation,

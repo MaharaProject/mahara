@@ -194,13 +194,15 @@ $width-sm: 90%;
                 opacity:0.4;
             }
             &:hover,
-            &:focus,
             &:active {
                 outline: none;
                 opacity: 1;
                 .times {
                     opacity:0.8;
                 }
+            }
+            &:focus {
+                outline: medium solid $input-focus-border-color;
             }
 
         }

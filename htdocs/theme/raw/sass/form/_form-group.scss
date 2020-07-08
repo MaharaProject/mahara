@@ -258,6 +258,9 @@
             &:hover {
                 color: $link-hover-color;
             }
+            &:focus {
+                outline: medium solid $input-focus-border-color;
+            }
         }
     }
 

@@ -72,14 +72,14 @@
   .list-group {
     .block-header {
       ~ .list-group-item {
-        .icon-download {
-          left: -80px;
-          position: relative;
-          top: 0;
+        .download-link {
+          display: inline-block;
+          float: right;
+          margin-right: 70px;
         }
         .title {
           display: inline-block;
-          max-width: 50%;
+          max-width: 53%;
           margin-right: 0;
           @include media-breakpoint-between(sm,md) {
               max-width: 40%;
@@ -92,11 +92,11 @@
 
       &.d-none {
         ~ .list-group-item {
-          .icon-download {
-            left: -5px;
+          .download-link {
+            margin-right: 0;
           }
           .title {
-            max-width: 80%;
+            max-width: 78%;
           }
         }
       }
