@@ -13,7 +13,6 @@ define('ADMIN', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('webservices_title', 'auth.webservice'));
 define('SUBSECTIONHEADING', get_string('addconnection', 'auth.webservice'));
-require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 $institution = param_variable('i');
 $connector   = param_variable('p', '');

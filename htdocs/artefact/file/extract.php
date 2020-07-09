@@ -53,7 +53,10 @@ if (!($file instanceof ArtefactTypeArchive)) {
     throw new NotFoundException();
 }
 
-if (!$USER->can_edit_artefact($file)) {
+if ($file->get('owner') && $file->get('owner') != $USER->get('id')) {
+    throw new AccessDeniedException();
+}
+else if (!$USER->can_edit_artefact($file)) {
     throw new AccessDeniedException();
 }
 
@@ -106,7 +109,7 @@ if ($zipinfo) {
 
     if ($quotaallowed && !$badzipfile) {
         $name = $file->unzip_directory_name();
-        $message = get_string('fileswillbeextractedintofolder', 'artefact.file', $name['fullname']);
+        $message = get_string('fileswillbeextractedintofolder1', 'artefact.file', $name['fullname']);
 
         $form = pieform(array(
             'name' => 'unzip_artefact',
@@ -172,6 +175,7 @@ function unzip_artefact_submit(Pieform $form, $values) {
     $from = files_page($file);
 
     if (count($zipinfo->names) > 10) {
+        $SESSION->set('unzipprogress', false);
         $SESSION->set('unzip', array('file' => $file->get('id'),
                                      'from' => $from,
                                      'artefacts' => count($zipinfo->names),

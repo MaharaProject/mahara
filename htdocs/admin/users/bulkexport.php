@@ -129,8 +129,7 @@ function bulkexport_submit(Pieform $form, $values) {
 
         if (empty($usernames)) {
             // All explicit usernames were rejected
-            require_once(get_config('docroot') . '/lib/htmloutput.php');
-            print_export_iframe_die(get_string('bulkexportempty', 'admin'), null);
+            set_progress_done('bulkexport', array('message', get_string('bulkexportempty', 'admin')));
         }
     }
 
@@ -199,8 +198,7 @@ function bulkexport_submit(Pieform $form, $values) {
     }
 
     if (!$zipfile = create_zipfile($listing, $files)) {
-        require_once(get_config('docroot') . '/lib/htmloutput.php');
-        print_export_iframe_die(get_string('bulkexportempty', 'admin'), null);
+        set_progress_done('bulkexport', array('message', get_string('bulkexportempty', 'admin')));
     }
 
     log_info("Exported $exportcount users to $zipfile");
