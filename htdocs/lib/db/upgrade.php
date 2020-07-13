@@ -1329,6 +1329,9 @@ function xmldb_core_upgrade($oldversion=0) {
             $count = 0;
             $limit = 1000;
             $total = count($artefacts);
+
+            // enable user error handling, this will ignore warnings if the xml is malfomed
+            libxml_use_internal_errors(true);
             // Loop through all of them and update the description
             $dom = new DOMDocument();
             $dom->preserveWhiteSpace = false;
@@ -1350,6 +1353,7 @@ function xmldb_core_upgrade($oldversion=0) {
                     set_time_limit(30);
                 }
             }
+            libxml_clear_errors();
         }
     }
 
