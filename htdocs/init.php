@@ -166,7 +166,7 @@ try {
         $okversion = '5.6';
         $dbfriendlyname = 'MySQL';
     }
-    if (floatval($dbversion['version']) <  floatval($okversion)) {
+    if (version_compare($dbversion['version'], $okversion, '<')) {
         throw new ConfigSanityException(get_string('dbversioncheckfailed', 'error', $dbfriendlyname, $dbversion['version'], $okversion));
     }
 
