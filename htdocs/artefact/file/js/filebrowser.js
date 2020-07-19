@@ -124,7 +124,7 @@ var FileBrowser = (function($) {
     this.add_upload_message = function (messageType, filename) {
         self.nextupload++;
         var message = $(makeMessage($('<span>').addClass('icon icon-spinner icon-pulse'), messageType));
-        message.append(' ' + get_string('uploadingfiletofolder', 'artefact.file', filename, self.foldername));
+        message.text(' ' + get_string('uploadingfiletofolder', 'artefact.file', filename, self.foldername));
         message.prop('id', 'uploadstatusline' + self.nextupload);
         message.appendTo('#' + self.id + '_upload_messages');
         $('#' + self.id + '_uploadnumber').val(self.nextupload);
@@ -254,7 +254,7 @@ var FileBrowser = (function($) {
             // pass the artefacttype to update progress bar
             progressbarUpdate(data.artefacttype, data.deleted);
         }
-        var newmessage = makeMessage($('<div>').append(data.message), infoclass);
+        var newmessage = makeMessage($('<div>').text(data.message), infoclass);
         $(newmessage).prop('id', 'uploadstatusline' + data.uploadnumber);
         if (data.uploadnumber) {
             $('#uploadstatusline'+data.uploadnumber).remove();
@@ -895,10 +895,10 @@ var FileBrowser = (function($) {
 
             filelink = '';
             if (self.filedata[id].artefacttype == 'folder') {
-                filelink = self.filedata[id].title;
+                filelink = $('').text(self.filedata[id].title);
             }
             else {
-                filelink = $('<a>', {'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}).append(self.filedata[id].title);
+                filelink = $('<a>', {'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}).text(self.filedata[id].title);
             }
 
             fileIconImg = '';
