@@ -13,23 +13,25 @@ jQuery(function($) {
     }
 
     /*
-     * Display selected file name next to collapsible element title 
+     * Display selected file name next to collapsible element title
      */
-    function updateFileLegend(e){
+    function updateFileLegend(e) {
         // Get collapsible element with select-file class and
         // title of the file from filebrowser.js
         var selectfileTitle = $('.select-file legend a'),
             title = e.originalEvent.data.title;
 
         // Display the file name
-        if(selectfileTitle.find('.file-name').length > 0) {
+        if (selectfileTitle.find('.file-name').length > 0) {
             selectfileTitle.find('.file-name').text(' - ' + title);
-        } else {
-            selectfileTitle.find('.collapse-indicator').before('<span class="text-small text-midtone file-name"> - '+ title + '</span>');
+        }
+        else {
+            selectfileTitle.find('.collapse-indicator').before('<span class="text-small text-midtone file-name"></span>');
+            selectfileTitle.find('.file-name').text(' - ' + title);
         }
     }
 
-    $(document).on('fileselect', function(e){
+    $(document).on('fileselect', function(e) {
         updateFileLegend(e);
         // Collapse the file browser
         $('.select-file').find('.collapse').collapse('hide');
