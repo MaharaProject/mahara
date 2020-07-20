@@ -37,11 +37,13 @@ jQuery(function($) {
                 var target = currentIndex - 1;
                 findLink(target);
             });
-            // setup swipe prev
-            $('#main-column-container').on('swiperight', function() {
-                var target = currentIndex - 1;
-                findLink(target);
-            });
+            if (isTouchDevice()) {
+                // setup swipe prev
+                $('#header-content').on('swiperight', function() {
+                    var target = currentIndex - 1;
+                    findLink(target);
+                });
+            }
         }
 
         // setup next
@@ -52,13 +54,18 @@ jQuery(function($) {
                 var target = currentIndex + 1;
                 findLink(target);
             });
-            // setup swipe next
-            $('#main-column-container').on('swipeleft', function() {
-                var target = currentIndex + 1;
-                findLink(target);
-            });
+            if (isTouchDevice()) {
+                // setup swipe next
+                $('#header-content').on('swipeleft', function() {
+                    var target = currentIndex + 1;
+                    findLink(target);
+                });
+            }
         }
 
     }());
 
+    function isTouchDevice() {
+        return 'ontouchstart' in document.documentElement;
+    }
 });
