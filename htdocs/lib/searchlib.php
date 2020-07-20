@@ -132,7 +132,7 @@ function parse_name_query($text) {
   foreach ($matches as $match) {
     // Strip off phrase quotes
     if ($match[1][0] == '"') {
-      $phrase = preg_replace('/\s\s+/', ' ', strtolower(substr($match[1], 1, -1)));
+      $phrase = preg_replace('/\s\s+/', ' ', mb_strtolower(substr($match[1], 1, -1)));
       $phraselist = explode(' ', $phrase);
       if (count($phraselist) == 2) {
         $fullnames[] = $phraselist;
@@ -140,7 +140,7 @@ function parse_name_query($text) {
         $words = array_merge($words, array($phrase));
       }
     } else {
-      $words = array_merge($words, array(strtolower($match[1])));
+      $words = array_merge($words, array(mb_strtolower($match[1])));
     }
   }
   return array($words, $fullnames);
