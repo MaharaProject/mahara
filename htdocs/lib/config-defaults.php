@@ -749,9 +749,12 @@ $cfg->sessionhandler = 'file';
 /**
  * Redis session handling
  */
+// If accessing a redis sentinel server
 //$cfg->redissentinelservers = "localhost:26379";  // A comma seperated string of hosts:ports
 //$cfg->redismastergroup = 'mymaster';
 //$cfg->redisprefix = 'mahara';
+// Otherwise use direct redis connection
+//$cfg->redisserver = "localhost:26379";  // A string of a single host:port
 
 /**
  * SQL session store configs for SimpleSAMLphp
