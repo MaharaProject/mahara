@@ -13,6 +13,9 @@ require_once(get_config('libroot') . 'institution.php');
 require_once(get_config('libroot') . 'group.php');
 require_once(get_config('libroot') . 'view.php');
 
+// constants
+define("ATTACHMENTS", "attachments");
+
 /**
  * Data generator class for unit tests and other tools like behat that need to create fake test sites.
  *
@@ -546,6 +549,11 @@ EOD;
             set_field('group', 'institution', $record['institution'], 'id', $group_data['id']);
         }
         db_commit();
+
+        // Attachments
+        if (self::check_attachments($record)) {
+            self::process_attachments_get_ids($record[ATTACHMENTS], null, $group_data['id']);
+        }
 
         $this->groupcount++;
         return $group_data['id'];
@@ -2137,8 +2145,8 @@ EOD;
      * Currently it doesn't support indenting and other additional settings
      *
      * And the following "forums" exist:
-     *  | group  | title     | description          | creator |
-     *  | Group1 | unicorns! | magic mahara unicorns| UserB   |
+     *  | group  | title     | description          | creator | config          |
+     *  | Group1 | unicorns! | magic mahara unicorns| UserB   | autosubscribe=1 |
      *
      * @param unknown $record
      * @throws SystemException
@@ -2149,9 +2157,24 @@ EOD;
       $record['creator'] = trim($record['creator']);
       $record['group'] = trim($record['group']);
 
-      $groupid;
-      $creatorid;
-      $isadmin;
+      // default forum forum config
+      $configdata = array(
+        'createtopicusers' => 'members',
+        'autosubscribe'    => 1,
+        'justcreated'      => 1,
+      );
+
+      // check for custom config in table
+      $config_arr= explode(',', trim($record['config']));
+
+      foreach ($config_arr as $key => $value) {
+        $found_equals = strpos($value, '=');
+        if ($found_equals === false) {
+            continue;
+        }
+        list($setting, $value) = explode('=', $value);
+        $configdata[$setting] = $value;
+      }
 
       // check that the group exists
       if (!$groupid = get_field('group', 'id', 'name',$record['group'] )) {
@@ -2164,7 +2187,7 @@ EOD;
       }
 
       //check that the creator is an admin of the group (for permission to create forum)
-      if (!$isadmin = get_field('group_member', 'member', 'group', $groupid, 'role', "admin", "member", $creatorid)) {
+      if (!get_field('group_member', 'member', 'group', $groupid, 'role', "admin", "member", $creatorid)) {
         throw new SystemException("The " . $record['creator'] . " does not have admin rights in group " . $record['group'] . "to create a forum");
       }
 
@@ -2178,11 +2201,7 @@ EOD;
       $forum->commit();
 
       // configure other settings
-      PluginInteractionForum::instance_config_save($forum, array(
-          'createtopicusers' => 'members',
-          'autosubscribe'    => 1,
-          'justcreated'      => 1,
-      ));
+      PluginInteractionForum::instance_config_save($forum, $configdata);
     }
 
     /**
@@ -2288,6 +2307,54 @@ EOD;
             'subject' => ($newtopic || $newsubject) ? $record['subject'] : null
         );
         $postid = insert_record('interaction_forum_post', $post, 'id', true);
+
+        $forum = new InteractionForumInstance($forumid);
+
+
+        // Check for attachments attachments
+        if (self::check_attachments($record)) {
+            $attachmentids = self::process_attachments_get_ids($record[ATTACHMENTS], $userid);
+            foreach($attachmentids as $artefactid) {
+                $forum->attach($postid, $artefactid);
+            }
+        }
+    }
+
+    public static function check_attachments($record) {
+        return isset($record[ATTACHMENTS]) && !empty($record[ATTACHMENTS]);
+    }
+
+    /**
+     * Creates artefacts for each attachment and connects them to given user/group
+     */
+    public static function process_attachments_get_ids($attachments, $userid=null, $groupid=null) {
+        $resultartefactids = array();
+
+        if (empty($userid) && empty($groupid)) {
+            throw new SystemException('Cannot find a userid or groupid to process attachments');
+        }
+
+        if (empty($attachments)) {
+            return $resultartefactids;
+        }
+
+        $files_arr = explode(',', $attachments);
+        if (!empty($files_arr)) {
+            foreach ($files_arr as $filename) {
+                $file = trim($filename);
+
+                // connect file to user/group
+                if (!empty($userid)) {
+                    $artefactid = self::process_attachment($file, 'user', $userid);
+                }
+                else if (!empty($groupid)) {
+                    $artefactid = self::process_attachment($file, 'group', $groupid);
+                }
+
+                $resultartefactids[] = $artefactid;
+            }
+        }
+        return $resultartefactids;
     }
 
     /**

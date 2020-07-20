@@ -76,6 +76,7 @@ class BehatDataGenerators extends BehatBase {
                 'admins'           => 'text',
                 'institution'      => 'text',
                 'public'           => 'bool',
+                'attachments'      => 'text'
             ),
             'required' => array('name', 'owner')
         ),
@@ -231,7 +232,8 @@ class BehatDataGenerators extends BehatBase {
             'title'                => 'text',
             'description'          => 'text',
             'group'                => 'text',
-            'creator'              => 'text'
+            'creator'              => 'text',
+            'config'               => 'text'
           ),
           'required' => array('title','description','group','creator')
         ),
@@ -244,6 +246,7 @@ class BehatDataGenerators extends BehatBase {
             'message'              => 'text',
             'user'                 => 'text',
             'topic'                => 'text',
+            'attachments'          => 'text'
           ),
           'required' => array('group', 'message', 'user')
         ),
