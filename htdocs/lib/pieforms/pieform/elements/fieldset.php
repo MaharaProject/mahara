@@ -84,7 +84,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
 
     // Render legend and associated objects
     if (isset($element['legend'])) {
-        $fieldset .= '<legend><h4>' . $legendcontent;
+        $fieldset .= '<legend>' . $legendcontent;
 
         // Help icon
         if (!empty($element['help'])) {
@@ -101,7 +101,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
                 $fieldset .= '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
             }
         }
-        $fieldset .= "</h4></legend>\n";
+        $fieldset .= "</legend>\n";
     }
 
     // Render the body of the fieldset

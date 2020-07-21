@@ -221,7 +221,7 @@ function management_section() {
                                 'type'         => 'button',
                                 'class'        => 'btn-secondary btn-sm button',
                                 'usebuttontag' => true,
-                                'value'        => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                                'value'        => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
                                 'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                             ),
                             'framework'  => array(
@@ -243,7 +243,7 @@ function management_section() {
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
-                            'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
+                            'value'        => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',

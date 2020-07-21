@@ -16,11 +16,11 @@
                 <tr>
                     <td colspan="4" class="text-right">
                         <button id="settings_default" type="submit" class="submit btn btn-secondary" name="default">
-                            <span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-check text-success left" role="presentation" aria-hidden="true"></span>
                             {str tag="setdefault" section=artefact.file}
                         </button>
                         <button id="settings_delete" type="submit" class="delete btn btn-secondary" name="delete">
-                             <span class="icon icon-trash-alt icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                              {str tag="deleteselectedicons" section=artefact.file}
                          </button>
                     </td>

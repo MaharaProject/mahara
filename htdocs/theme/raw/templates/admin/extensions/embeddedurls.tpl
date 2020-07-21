@@ -10,7 +10,7 @@
 
         {if $grandtotal}
         <div class="card">
-            <h3 class="card-header">{str tag=potentialembeddedurls section=admin}</h3>
+            <h2 class="card-header">{str tag=potentialembeddedurls section=admin}</h2>
             <div class="card-body">
                 {$checkform|safe}
             </div>

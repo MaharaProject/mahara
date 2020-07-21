@@ -3,7 +3,7 @@
 <div class="btn-top-right btn-group btn-group-top">
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-secondary newforumtopic">
-            <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str tag="newtopic" section="interaction.forum"}
         </a>
         {if $admin}

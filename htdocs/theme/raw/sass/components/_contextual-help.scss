@@ -2,23 +2,23 @@
 span.help {
     font-size: $font-size-lg;
     vertical-align: top;
-    padding-left:10px;
+    padding-left: $spacing-base;
     display: inline-block;
 
     .icon {
         color: $help-icon-color;
-        font-size: $font-size-lg;
+        font-size: 1.25rem; // 20px
         opacity: 0.8;
     }
     &:hover {
         .icon {
-            opacity:1;
+            opacity: 1;
         }
     }
     .table & {
-        margin-top:-6px;
+        margin-top: -0.375rem; // -6px;
         .icon {
-            font-size: $font-size-sm;
+            font-size: 1.25rem; // 20px
         }
     }
     a {
@@ -42,11 +42,10 @@ div.help {
 .contextualHelp {
     position: absolute;
     z-index: $zindex-popover;
-    width: 300px;
-    padding: 1px;
+    width: $popover-max-width;
     // Reset font and text propertes given new insertion method
     font-family: $font-family-base;
-    font-size: $font-size-base;
+    font-size: $popover-font-size;
     text-transform: none;
     font-weight: $font-weight-normal;
     line-height: $line-height-base;
@@ -55,42 +54,41 @@ div.help {
     background-clip: padding-box;
     border: $popover-border-width solid $popover-border-color;
     border-radius: $popover-border-radius;
-    padding: 0 14px 8px;
-    @include box-shadow(0 5px 10px rgba(0,0,0,.2));
+    padding: 0 $popover-body-padding-x $popover-body-padding-y;
+    box-shadow: $popover-box-shadow;
     color: $theme-text-color;
 
     // Overrides for proper insertion
     white-space: normal;
 
     .help-dismiss {
-        font-size: $font-size-base * 1.14285;
         color: $theme-text-midtone-color;
+        margin-left: $popover-body-padding-x;
 
         .icon-times {
-          margin-top: 9px;
+          margin-top: $popover-body-padding-y;
+          line-height: $headings-line-height;
         }
     }
 
-    h3 {
-        margin: 0 -14px 20px;
-        font-size: $font-size-base;
-        padding: 8px 14px;
+    h2, h3, h4, h5 {
+      font-size: $h6-font-size;
+    }
+
+    h1, h3 {
+      &:first-child {
+        margin-left: -$popover-body-padding-x;
+        margin-right: -$popover-body-padding-x;
+        margin-top: 0;
+        font-size: $h6-font-size;
+        padding: $popover-header-padding-y $popover-header-padding-x !important;
         background-color: $popover-header-bg;
         border-bottom: $popover-border-width solid scale-color($popover-header-bg, $lightness: -5%);
         border-radius: $popover-border-radius $popover-border-radius 0 0;
         font-weight: $headings-font-weight;
+        line-height: $headings-line-height;
+      }
     }
-}
-// Needed to be more specific
-table.table td .contextualHelp h3 {
-    margin: 0 -14px 20px;
-    font-size: $font-size-base;
-}
-.pieform-fieldset.collapsible .contextualHelp h3 {
-    margin: 0 -14px 20px;
-    padding: 8px 14px;
-    font-family: $headings-font-family;
-    font-size: $font-size-base;
 }
 
 .form-select-filter .contextualHelp {
@@ -101,9 +99,9 @@ table.table td .contextualHelp h3 {
 
 .input-group.with-help {
     position: relative;
-    padding-right:40px;
+    padding-right: 2.5rem; // 40px;
     select:not(:first-child),
     input:not(:first-child) {
-        @include border-right-radius(3px);
+        @include border-right-radius($border-radius-sm);
     }
 }

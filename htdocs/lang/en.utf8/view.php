@@ -240,7 +240,7 @@ $string['editaccessdescription'] = 'You may set multiple items to have identical
 $string['editaccessgrouppagedescription'] = 'By default, only those group members who can add and edit pages and collections can see group collections and pages. ' . $string['editaccessdescription'];
 $string['editaccessinstitutionpagedescription'] = 'By default, only the administrators of your institution can see your institution collections and pages. ' . $string['editaccessdescription'];
 $string['editaccesssitepagedescription'] = 'By default, only site administrators can see site collections and pages. ' . $string['editaccessdescription'];
-$string['editsecreturlsintable'] = '<b>Secret URLs</b> cannot be set on this page as they must be generated individually. To set secret URLs, please return to the <a href="%s">list of collections and pages</a>.';
+$string['editsecreturlsintable'] = '<strong>Secret URLs</strong> cannot be set on this page as they must be generated individually. To set secret URLs, please return to the <a href="%s">list of collections and pages</a>.';
 $string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of pages and collections.';
 
 $string['overridingstartstopdate'] = 'Overriding start/stop dates';

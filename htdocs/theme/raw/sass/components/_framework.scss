@@ -16,7 +16,7 @@
     }
     th.viewtab {
         text-align: center;
-        max-width: 70px;
+        max-width: 4.375rem; // 70px;
     }
 
     td {
@@ -25,7 +25,7 @@
             vertical-align: middle;
             .icon {
                 display: block;
-                font-size: $font-size-base * 1.215;
+                font-size: $font-size-base * 1.25;
                 cursor: pointer;
                 &.begun {
                     color: $assessment-begun-color;
@@ -40,7 +40,7 @@
                     color: $assessment-completed-color;
                 }
                 &.dot {
-                    font-size: $font-size-base * 0.785;
+                    font-size: $font-size-base * 0.75;
                     color: scale-color($gray-300, $lightness: 28%);
                 }
                 &.dot.disabled {
@@ -78,16 +78,16 @@
         .popover-title {
             font-size: $font-size-sm;
             margin: 0;
-            padding: 8px 14px;
-            background-color: $card-header-bg;
-            border-bottom: $border-width solid scale-color($border-color, $lightness: -3.78);
-            border-radius: $border-radius $border-radius 0 0;
+            padding: $popover-header-padding-y $popover-header-padding-x;
+            background-color: $popover-header-bg;
+            border-bottom: $popover-border-width solid $popover-border-color;
+            border-radius: $popover-border-radius $popover-border-radius 0 0;
         }
         .popover-content {
-            padding: 8px 14px;
+            padding: $popover-body-padding-y $popover-body-padding-x;
             ol,
             ul {
-                padding-left: 15px;
+                padding-left: $spacing-lg;
             }
         }
     }
@@ -131,10 +131,10 @@
     .matrixindent {
         display: inline-block;
     }
-    $matrix-slug: matrixlevel !default
+    $matrix-slug: matrixlevel !default;
     @for $i from 1 through 5 {
         .#{$matrix-slug}#{$i} .matrixindent {
-            padding-left: 5px * $i
+            padding-left: $spacing-sm * $i;
         }
     }
 
@@ -164,20 +164,20 @@
 
 td.completedcount {
     vertical-align: middle !important;
-    padding-left: 1px !important;
-    padding-right: 1px !important;
+    padding-left: 0.0625rem !important; // 1px
+    padding-right: 0.0625rem !important; // 1px
 }
 
 th.statusheader {
     vertical-align: middle !important;
-    padding-left: 1px !important;
-    padding-right: 1px !important;
+    padding-left: 0.0625rem !important; // 1px
+    padding-right: 0.0625rem !important; // 1px
 }
 
 div.statusheader{
     .icon {
-        padding-left: 8px;
-        padding-right: 8px;
+        padding-left: 0.5rem; // 8px;
+        padding-right: 0.5rem; // 8px;
     }
 }
 
@@ -185,7 +185,7 @@ div.statusheader,
 th.statusheader,
 div.toolbarhtml {
     .icon {
-        font-size: $font-size-base * 1.215;
+        font-size: $font-size-base * 1.25;
         &.begun {
             color: $assessment-begun-color;
         }
@@ -199,7 +199,7 @@ div.toolbarhtml {
             color: $assessment-completed-color;
         }
         &.dot {
-            font-size: $font-size-base * 0.785;
+            font-size: $font-size-base * 0.75;
             color: scale-color($gray-300, $lightness: 28%);
         }
         &.dot.disabled {
@@ -224,7 +224,7 @@ th.smartevidencedash, td.smartevidencedash {
   // Pick the screen size you want it might be $screen-md-min.
   @include media-breakpoint-up(md) {
     // addjust pixel value
-    max-width: 14px;
+    max-width: 0.875rem; // 14px;
   }
 }
 .smartevidencedash {
@@ -232,12 +232,12 @@ th.smartevidencedash, td.smartevidencedash {
   // might not need media query because you might want to force the dash cell to be all the same.
   @include media-breakpoint-up(md) {
     // addjust pixel value
-    max-width: 3px;
+    max-width: $spacing-xs;
   }
 }
 
 div.pseudolabel {
     @include media-breakpoint-up(md) {
-        min-width: 265px !important;
+        min-width: 16.5625rem !important; // 265px !important;
     }
 }

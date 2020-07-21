@@ -2,9 +2,9 @@
 <div class="list-group">
     {foreach from=$views item=view}
     <div class="list-group-item flush">
-        <h4 class="list-group-item-heading text-inline">
+        <h3 class="list-group-item-heading text-inline">
             <a href="{$view.fullurl}">{$view.title}</a>
-        </h4>
+        </h3>
         <span class="text-small text-midtone">{if $view.collid}({str tag=nviews section=view arg1=$view.numpages}){/if}</span>
         {if $view.sharedby}
         <div class="groupuserdate text-small">

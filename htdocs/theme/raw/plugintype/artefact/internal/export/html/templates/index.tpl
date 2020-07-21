@@ -5,7 +5,7 @@
 {foreach from=$sections key=sectionname item=section}
     {if is_array($section) && count($section)}
         <div class="profileinfo">
-            <h3>{str tag=$sectionname section=artefact.internal}</h3>
+            <h2>{str tag=$sectionname section=artefact.internal}</h2>
             <table>
             {foreach from=$section key=title item=value}
                 {if $title == 'socialprofile'}

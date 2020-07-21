@@ -124,7 +124,7 @@ function register_submit(Pieform $form, $values) {
         }
         $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering', 'admin'));
         $info = '
-<h4>' . get_string('datathathavebeensent', 'admin') . '</h4>
+<h3>' . get_string('datathathavebeensent', 'admin') . '</h3>
 <table class="table table-striped table-bordered" id="register-table">
     <thead>
         <tr>

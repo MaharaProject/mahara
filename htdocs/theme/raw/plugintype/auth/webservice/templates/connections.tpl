@@ -68,7 +68,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             <td class="text-right">
             <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
-            <a class="btn btn-link text-midtone" href="#" onclick="move({{$instance->id}}, 'down'); return false;">
+            <a class="btn text-default order-sort-control arrow-down text-midtone" href="#" onclick="move({{$instance->id}}, 'down'); return false;">
                 <span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemdown}}</span>
             </a>
@@ -76,7 +76,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="emptybtnspace"></span>
             {{/if}}
             {{if $instance->index != 0 }}
-            <a class="btn btn-link text-midtone" href="#" onclick="move({{$instance->id}}, 'up'); return false;">
+            <a class="btn text-default order-sort-control arrow-up text-midtone" href="#" onclick="move({{$instance->id}}, 'up'); return false;">
                 <span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=moveitemup}}</span>
             </a>
@@ -85,11 +85,11 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             {{/if}}
             <div class="btn-group btn-tasks">
             <a href="#" class="btn btn-secondary btn-sm" onclick="editinstance({{$instance->id}},'{{$instance->name}}'); return false;" title="{{str tag=edit}}">
-                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=editspecific section=mahara arg1="$instance->name"}}</span>
             </a>
             <a href="#" class="btn btn-secondary btn-sm" onclick="removeConnection({{$instance->id}}); return false;" title="{{str tag=delete}}">
-                <span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{{str tag=deletespecific section=mahara arg1="$instance->name"}}</span>
             </a>
             </div>

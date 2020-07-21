@@ -10,7 +10,7 @@
         </h2>
     {/if}
 
-    <div class="postdetails metadata">
+    <div class="postdetails text-small text-midtone">
         <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
         {$postedbyon}
         {if $updatedon}
@@ -21,7 +21,7 @@
     </div>
 
     {if $artefacttags}
-        <div class="tags metadata">
+        <div class="tags text-small text-midtone">
             <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
             <strong>{str tag=tags}:</strong>
             {list_tags owner=$artefactowner tags=$artefacttags view=$artefactview}

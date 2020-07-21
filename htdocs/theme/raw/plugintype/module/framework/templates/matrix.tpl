@@ -70,7 +70,7 @@
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>
                 <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
-                <h3>{$standard->shortname}</h3>
+                <h2>{$standard->shortname}</h2>
                 <span class="sr-only status">{if $standard->settingstate == 'closed'}{str tag="collapsedsection" section="module.framework"}{/if}</span>
                 <a href="#">
                   <span class="sr-only action">
@@ -82,7 +82,7 @@
                   </span>
                 </a>
                 <div class="matrixtooltip popover d-none">
-                    <h3 class="popover-title">{$standard->name}</h3>
+                    <h2 class="popover-title">{$standard->name}</h2>
                     <div class="popover-content">
                         {$standard->description|clean_html|safe}
                     </div>
@@ -100,7 +100,7 @@
                     <span class="matrixindent">{$option->shortname}</span>
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
-                        <h3 class="popover-title">{$option->name}</h3>
+                        <h2 class="popover-title">{$option->name}</h2>
                         <div class="popover-content">
                             {$option->description|clean_html|safe}
                         </div>
@@ -116,7 +116,7 @@
                     <span class="matrixindent">{$option->shortname}</span>
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
-                        <h3 class="popover-title">{$option->name}</h3>
+                        <h2 class="popover-title">{$option->name}</h2>
                         <div class="popover-content">
                             {$option->description|clean_html|safe}
                         </div>
@@ -200,7 +200,7 @@
                     <span class="times">×</span>
                     <span class="sr-only">{str tag='closeconfiguration' section='view'}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header text-inline"></h4>
+                <h1 class="modal-title blockinstance-header text-inline"></h1>
                 <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x float-right"></span>
             </div>
             <div class="modal-body blockinstance-content">

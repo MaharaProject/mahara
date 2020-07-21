@@ -9,14 +9,14 @@
 
 // Tag result page
 .mytags {
-    margin-top: 25px;
+    margin-top: 1.5625rem; // 25px
     .tagfreq.badge {
         color: inherit;
         border: 1px solid $link-color;
         background-color: transparent;
     }
     .tag {
-        margin-right: 10px;
+        margin-right: $spacing-base;
     }
 }
 .mytags .selected,
@@ -30,9 +30,9 @@
     }
 }
 .tag-results .btn-top-right {
-    margin-right: -1px;
-    margin-top: -42px;
-    height: 40px;
+    margin-right: -0.0625rem; // -1px;
+    margin-top: -2.625rem; // -42px;
+    height: 2.5rem; // 40px;
     margin-left: 70%;
     margin-bottom: 0;
 
@@ -44,10 +44,10 @@
 .tag-filters {
     @extend .clearfix;
     background: scale-color($card-bg, $lightness: -1.5%);
-    padding: 10px 15px;
+    padding: $card-spacer-y $card-spacer-x;
     border-bottom: $card-border-width solid $card-border-color;
     .float-right {
-      margin-top: 8px;
+      margin-top: 0.5rem; // 8px;
     }
 }
 
@@ -55,18 +55,16 @@
 .tag-action-description {
     color: $theme-text-lighttone-color;
     font-style: italic;
-    font-size: $font-size-base * 0.9285;
+    font-size: $font-size-sm;
     max-width: 90%;
     display: block;
-    padding-top: 10px;
-    margin-top: 25px;
-    margin-left: 30px;
-    margin-bottom: 15px;
+    margin-top: $spacing-base;
+    margin-bottom: $spacing-lg;
 }
 
 .moretags {
     .icon-ellipsis-h {
-        vertical-align: -3px;
-        padding-left: 2px;
+        vertical-align: -$spacing-xs;
+        padding-left: 0.125rem; // 2px;
     }
 }

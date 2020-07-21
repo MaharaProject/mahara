@@ -1007,7 +1007,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $form['elements']['submit'] = array(
             'type'  => 'submitcancel',
-            'subclass' => array('btn-secondary'),
+            'subclass' => array('btn-primary'),
             'value' => array(get_string('Comment', 'artefact.comment'), get_string('cancel')),
         );
         if ($artefact) {
@@ -1077,7 +1077,7 @@ class ArtefactTypeComment extends ArtefactType {
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn-secondary btn-sm',
-                    'value' => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span> <span class="sr-only">' . get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span> <span class="sr-only">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethiscomment', 'artefact.comment'),
                     'name'  => 'delete_comment_submit',
                 ),
@@ -1933,7 +1933,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
                                                            'view' => $view->get('id'),
                                                            'ctime' => db_format_timestamp(time()),
                                                            'unsubscribetoken' => get_random_key(24)));
-        $updatelink = '<span class="icon icon-lg icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span>';
+        $updatelink = '<span class="icon icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span>';
         $updatelink .= ($artefact) ? get_string('removefromwatchlistartefact', 'view', hsc($view->get('title'))) : get_string('removefromwatchlist', 'view');
     }
 

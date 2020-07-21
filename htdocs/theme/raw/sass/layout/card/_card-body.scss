@@ -1,18 +1,21 @@
 // Display objects in cards differently
 .card-body {
     ul:not(.profile-info) {
-        font-size: $font-size-base * 0.85715;
+        font-size: $font-size-sm;
         &:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
-            padding-left: 20px;
-            margin: 0 0 20px;
+            padding-left: $spacing-xl;
+            margin: 0 0 $spacing-xl;
             &.select2-choices {
                 margin-bottom: 0;
             }
         }
+        &.fieldslist {
+          font-size: $font-size-base;
+        }
     }
     .sidebar & .form-group,
     .login-card & .form-group {
-        padding: 8px 0 8px 0;
+        padding: $spacing-base 0;
     }
     .form-group.login{
         padding: 0;
@@ -22,10 +25,13 @@
     }
     > .card-footer,
     form .card-footer {
-        clear:both;
-        margin: 15px -15px -15px; //alter padding for card footers inside card-body (needed for some forms) c.f. login form
+        clear: both;
+        margin-top: $spacing-lg;
+        margin-right: -$spacing-lg;
+        margin-bottom: -$spacing-lg;
+        margin-left: -$spacing-lg;
     }
     &.flush {
-        padding: 15px 0 0 0;
+        padding: $spacing-lg 0 0 0;
     }
 }

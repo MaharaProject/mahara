@@ -1,8 +1,8 @@
 .move-indicator {
     @extend .text-muted;
-    font-size: $font-size-base * 0.785;
+    font-size: $font-size-base * 0.75;
     vertical-align: middle;
-    margin-left: -4px;
+    margin-left: -$spacing-sm;
     opacity: 0.7;
 
     a:hover &,
@@ -11,26 +11,30 @@
     }
     .card-secondary & {
         float: left;
-        margin-top: 5px;
-        margin-left: 0;
-        margin-right: 4px;
+        margin: $card-spacer-y $spacing-sm;
+        font-size: $font-size-base;
     }
 }
 
 //dash
 .collapse-indicator {
     color: $collapse-indicator-color;
-    font-size: $font-size-base * 0.9285;
+    font-size: $font-size-sm;
     display: block;
     transition-duration: 0.3s;
-    &.float-right {
-        margin: 2px 0 0;
-    }
+    line-height: $headings-line-height;
+    margin-top: $spacing-sm;
     &.text-small {
-        font-size: $font-size-base * 0.785;
+        font-size: $font-size-sm;
     }
     .collapsed & {
         color: $collapse-indicator-color;
+    }
+    // advanced options collapsible
+    .link-expand-right & {
+        margin-top: 0;
+        padding-left: $spacing-sm;
+        padding-right: $spacing-sm;
     }
     a:hover &,
     a:focus & {
@@ -39,10 +43,9 @@
     .collapsed ~ & {
         transform: rotate(180deg);
         transition-duration: 0.3s;
-        margin-top: 5px;
     }
     &.block-config-modal {
-        margin-left: 5px;
+        margin-left: $spacing-sm;
     }
 }
 
@@ -62,8 +65,6 @@ a[data-toggle="collapse"] {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
         color: $collapse-indicator-color;
-        margin-top: 5px;
-        line-height: 13px;
         height: auto;
     }
     &.collapsed .collapse-indicator {
@@ -89,10 +90,12 @@ a[data-toggle="collapse"] {
 .expand-indicator {
     @extend .text-muted;
     font-size: $font-size-sm;
-    padding-right: 5px;
+    padding-right: $spacing-sm;
+    margin-top: 0;
     + .icon {
         color: $collapse-indicator-color;
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
             color: $collapse-indicator-hover-color;
         }
     }
@@ -132,7 +135,7 @@ a[data-toggle="collapse"] {
 // Align in edit mode
 .editing {
     .icon-chevron-down {
-        padding-right: 5px;
+        padding-right: $spacing-sm;
     }
     .columns1,
     .columns2,

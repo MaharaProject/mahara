@@ -18,7 +18,7 @@
         {/if}
     </td>
     <td class="topic">
-        <h3 class="title text-inline">
+        <h2 class="title text-inline">
             {if $membership && (!$forum->subscribed || $moderator)}
             <label for="topic_{$topic->id}">
             {/if}
@@ -53,7 +53,7 @@
                     </a>
                 {/if}
             </span>
-        </h3>
+        </h2>
         <div class="threaddetails">
             {$topic->body|str_shorten_html:50:true:false|safe}
         </div>
@@ -86,13 +86,13 @@
     <td class="control-buttons">
         <div class="btn-group">
             <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="edit"}">
-                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </a>
             <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="delete"}">
-                <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>

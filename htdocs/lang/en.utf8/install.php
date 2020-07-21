@@ -12,9 +12,9 @@
 defined('INTERNAL') || die();
 
 $string['aboutdefaultcontent'] = '<h2>About us</h2>
-<p><i>Add text about your organisation or the installation here</i></p>
+<p><em>Add text about your organisation or the installation here</em></p>
 
-<p><strong>[<i>Name of your installation here</i>]</strong> is powered by <a href="https://mahara.org">Mahara</a>. Mahara is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
+<p><strong>[<em>Name of your installation here</em>]</strong> is powered by <a href="https://mahara.org">Mahara</a>. Mahara is provided freely as open source software (under the GNU General Public License). In brief, this means that you are allowed to copy, use and modify Mahara provided you agree to:</p>
 
 <ul>
     <li>provide the source code to others, </li>
@@ -28,8 +28,8 @@ $string['homedefaultcontent'] = '<h1>Welcome</h1>
 $string['loggedouthomedefaultcontent'] = '<h1>Welcome</h1>
 
 <p>Edit this text via %s.</p>';
-$string['privacydefaultcontent'] = '<p>Add your <b>privacy statement</b> for the site in %s.</p>';
-$string['termsandconditionsdefaultcontent'] = '<p>Add your <b>terms and conditions</b> for the site in %s.</p>';
+$string['privacydefaultcontent'] = '<p>Add your <strong>privacy statement</strong> for the site in %s.</p>';
+$string['termsandconditionsdefaultcontent'] = '<p>Add your <strong>terms and conditions</strong> for the site in %s.</p>';
 $string['uploadcopyrightdefaultcontent'] = 'Yes: The file I am attempting to upload is my own or I have express permission to reproduce and/or distribute this item. My use of this file does not breach any local copyright legislation. This file also adheres to the terms and conditions outlined on this site.';
 
 // Note: these license names (long and short) are taken from the SPDX License
@@ -50,6 +50,6 @@ $string['licenseshortnamebync']   = 'CC-BY-NC-4.0';
 $string['licenseshortnamebyncnd'] = 'CC-BY-NC-ND-4.0';
 $string['licenseshortnamegfdl']   = 'GFDL-1.3';
 
-$string['staticpageconfigdefaults'] = '"Administration menu" → "Configure site" → <a href="%s">"<b>Static pages</b>"</a>';
-$string['versionedpageconfigdefault'] = '"Administration menu" → "Configure site" → <a href="%s">"<b>Legal</b>"</a>';
-$string['staticpageconfiginstitutions'] = '"Administration menu" → "Institutions" → <a href="%s">"<b>Static pages</b>"</a>';
+$string['staticpageconfigdefaults'] = '"Administration menu" → "Configure site" → <a href="%s">"<strong>Static pages</strong>"</a>';
+$string['versionedpageconfigdefault'] = '"Administration menu" → "Configure site" → <a href="%s">"<strong>Legal</strong>"</a>';
+$string['staticpageconfiginstitutions'] = '"Administration menu" → "Institutions" → <a href="%s">"<strong>Static pages</strong>"</a>';

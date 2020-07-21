@@ -2,7 +2,7 @@
 
 {if $file}
     {if $zipinfo}
-    <h3>{$file->get('title')}</h3>
+    <h2>{$file->get('title')}</h2>
     <div class="row">
         <div class="col-md-6">
             <p class="detail">
@@ -28,7 +28,7 @@
         </div>
         <div class="col-md-6">
             <div class="extract-files">
-                <h4>{str tag=Contents section=artefact.file}:</h4>
+                <h3>{str tag=Contents section=artefact.file}:</h3>
                 <ul class="list-group list-group-unbordered text-small">
                 {foreach from=$zipinfo->names item=name}
                     <li class="list-group-item">{$name}</li>

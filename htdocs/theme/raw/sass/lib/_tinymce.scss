@@ -76,15 +76,15 @@ label.sr-only + div.tox-tinymce {
 .tox .tox-dialog.mahara-dialog {
 
     .tox-dialog__title {
-        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-        font-size: 16px;
+        font-family: $font-family-base;
+        font-size: $font-size-lg;
         font-weight: $font-weight-light;
     }
 
     .tox-textfield,
     .tox-form__group .tox-selectfield select {
-        font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-        font-size: 14px;
+        font-family: $font-family-base;
+        font-size: $font-size-base;
     }
 }
 

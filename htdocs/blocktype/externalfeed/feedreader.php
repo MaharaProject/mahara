@@ -80,7 +80,7 @@ class FeedReader {
         xml_set_character_data_handler($xml_parser, 'parse_data');
 
         if (!xml_parse($xml_parser, $inputcontent)) {
-            throw new MaharaException(sprintf(get_class() . ": Error <b>%s</b> at line <b>%d</b><br>",
+            throw new MaharaException(sprintf(get_class() . ": Error <strong>%s</strong> at line <strong>%d</strong><br>",
                     xml_error_string(xml_get_error_code($xml_parser)),
                     xml_get_current_line_number($xml_parser)));
         }

@@ -1,11 +1,11 @@
 .link-thumb {
     text-align: center;
-    min-width: 62px;
+    min-width: 3.875rem; // 62px;
     position: relative;
     display: block;
-    padding: 7px 15px 15px;
-    font-size: $font-size-base * 1.428;
-    margin-bottom: 4px;
+    padding: 0.4375rem 0.9375rem 0.9375rem; // 7px 15px 15px;
+    font-size: $font-size-base * 1.25; // 20px
+    margin-bottom: 0.25rem; // 4px;
     background-color: $thumbnail-bg;
 
     &.thumbnail {
@@ -19,10 +19,10 @@
         }
     }
     .metadata {
-        font-size: $font-size-base * 0.715;
+        font-size: $font-size-base * 0.75;
         position: absolute;
-        bottom: 3px;
-        right: 3px;
+        bottom: $spacing-xs;
+        right: $spacing-xs;
     }
 }
 

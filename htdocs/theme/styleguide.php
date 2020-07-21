@@ -38,7 +38,7 @@ $inlinecss = <<<EOT
         clear: left;
     }
 
-    section[data-markdown] h3:first-child {
+    section[data-markdown] h2:first-child {
         margin-top: 0;
     }
 

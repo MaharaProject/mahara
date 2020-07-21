@@ -9,14 +9,14 @@
  */
 
 .openbadgedisplayer {
-    padding: 15px 0 0 0;
+    padding: $spacing-lg 0 0 0;
 }
 
 .openbadgedisplayer img {
     cursor: pointer;
-    margin: 0 10px 10px 0;
-    width: 90px;
-    height: 90px;
+    margin: 0 $spacing-base $spacing-base 0;
+    width: 5.625rem; // 90px;
+    height: 5.625rem; // 90px;
 }
 
 .badge-template {
@@ -24,40 +24,40 @@
 }
 
 .badge-container .badge-image {
-    width: 90px;
-    height: 90px;
+    width: 5.625rem; // 90px;
+    height: 5.625rem; // 90px;
     float: left;
 }
 
 .badge-container .openbadge-details {
-    margin-left: 120px;
+    margin-left: 7.5rem; // 120px;
 }
 
 .openbadges-block img {
-    width: 90px;
-    height: 90px;
+    width: 5.625rem; // 90px;
+    height: 5.625rem; // 90px;
     float: left;
     cursor: pointer;
-    padding: 5px;
+    padding: $spacing-sm;
 }
 
 .openbadge-img {
     float: left;
-    width: 90px;
+    width: 5.625rem; // 90px;
 }
 
 .openbadge-details {
-    margin-left: 120px;
+    margin-left: 7.5rem; // 120px;
 }
 
-.openbadge-details h3:first-child {
+.openbadge-details h2:first-child {
     margin-top: 0;
 }
 
 .openbadge-details tr td:first-child {
-    min-width: 80px;
+    min-width: 5rem; // 80px;
 }
 
 .openbadge-details table td {
-    padding: 0 9px;
+    padding: 0 0.5625rem; // 0 9px;
 }

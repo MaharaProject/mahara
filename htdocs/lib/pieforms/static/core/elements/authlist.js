@@ -258,21 +258,21 @@
             if (displayArray.length > 1) {
                 if (i + 1 != displayArray.length) {
                     jQuery(displayArray[i]).find('span.authIcons').first()
-                        .append('<a class="btn btn-link text-midtone" href="" onclick="PieformAuthlist.move_down('+outputArray[i]+'); ' +
+                        .append('<a class="btn text-default order-sort-control arrow-down text-midtone" href="" onclick="PieformAuthlist.move_down('+outputArray[i]+'); ' +
                             'return false;"><span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true">' +
                             '</span><span class="sr-only">'+get_string('moveitemdown')+'</span></a>'+"\n");
                 }
                 if (i != 0) {
                     jQuery(displayArray[i]).find('span.authIcons').first()
-                        .append('<a class="btn btn-link text-midtone" href="" onclick="PieformAuthlist.move_up('+outputArray[i]+'); ' +
+                        .append('<a class="btn text-default order-sort-control arrow-up text-midtone" href="" onclick="PieformAuthlist.move_up('+outputArray[i]+'); ' +
                             'return false;"><span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true">' +
                             '</span><span class="sr-only">'+get_string('moveitemup')+'</span></a>'+"\n");
                 }
             }
 
             jQuery(displayArray[i]).find('span.authIcons').first()
-                .append('<a class="btn btn-default btn-sm" href="" onclick="PieformAuthlist.remove_auth('+outputArray[i]+'); ' +
-                    'return false;"><span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true">' +
+                .append('<a class="btn btn-sm" href="" onclick="PieformAuthlist.remove_auth('+outputArray[i]+'); ' +
+                    'return false;"><span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true">' +
                     '</span><span class="sr-only">'+get_string('deleteitem')+'</span></a>'+"\n");
 
 

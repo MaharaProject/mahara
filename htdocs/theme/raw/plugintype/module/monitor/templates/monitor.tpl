@@ -1,16 +1,14 @@
 {include file="header.tpl"}
 
-    <div class="panel panel-default double">
-        <div class="panel-heading">
-                <h3>{$subpagedata.tabletitle}{if $subpagedata.help}{$subpagedata.help|safe}{/if}</h3>
-        </div>
-
-        <div class="subpage panel-body row" id="site-stats-wrap2">
+    <div class="card double">
+        <h2 class="card-header">{$subpagedata.tabletitle}{if $subpagedata.help}{$subpagedata.help|safe}{/if}</h2>
+        
+        <div class="subpage card-body row" id="site-stats-wrap2">
             <div id="monitor_table_container" class="col-md-12">
 
                 {if $subpagedata.tablesubtitle}<div class="small">{$subpagedata.tablesubtitle}</div>{/if}
             {if $subpagedata.table.count == 0}
-                <div class="panel-body">
+                <div class="card-body">
                     <div class="no-results">{str tag="noresultsfound"}</div>
                 </div>
             {else}
@@ -34,7 +32,7 @@
         </div>
 
         {if $subpagedata.table.csv}
-            <a href="{$WWWROOT}download.php" class="panel-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportresultscsv section=module.monitor}</a>
+            <a href="{$WWWROOT}download.php" class="card-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportresultscsv section=module.monitor}</a>
         {/if}
     </div>
 

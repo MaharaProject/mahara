@@ -16,7 +16,7 @@
         <tr class="{cycle values='r0,r1'}">
             <td class="pendinginfo">
                 <div id="pendinginfo_{$registration->id}">
-                    <h3 class="title">{$registration->firstname} {$registration->lastname}</h3>
+                    <h2 class="title">{$registration->firstname} {$registration->lastname}</h2>
                     <div class="detail">{$registration->email}</div>
                 </div>
             </td>
@@ -37,11 +37,11 @@
                 {else}
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=approve">
-                        <span class="icon icon-lg left icon-check text-success" role="presentation" aria-hidden="true"></span>
+                        <span class="icon left icon-check text-success" role="presentation" aria-hidden="true"></span>
                         <span class="btn-approve">{str tag=approve section=admin}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" href="{$WWWROOT}admin/users/actionregistration.php?r={$registration->id}&action=deny">
-                        <span class="icon icon-lg left icon-ban text-danger" role="presentation" aria-hidden="true"></span>
+                        <span class="icon left icon-ban text-danger" role="presentation" aria-hidden="true"></span>
                         <span class="btn-deny">{str tag=deny section=admin}</span>
                     </a>
                 </div>

@@ -1,8 +1,8 @@
     {foreach $views as item=view}
         <li class="list-group-item flush">
-            <h4 class="title list-group-item-heading">
+            <h3 class="title list-group-item-heading">
                 <a href="{$view->fullurl}">{$view->title}</a>
-            </h4>
+            </h3>
             {if $view->sharedby}
                 <div class="groupuserdate text-small">
                 {if $view->group && $loggedin}

@@ -5,20 +5,19 @@
     label {
         min-width: auto;
         display: inline-block;
-        margin-bottom: 5px;
     }
     .detail {
-        margin-left: 17px;
+        margin-left: 1.1875rem; // 19px;
     }
 }
 
 .artefactchooser-tabs {
-    margin-bottom: 20px;
+    margin-bottom: $spacing-xl;
     width: 100%;
 }
 
 .artefactchooser-search {
-    padding: 10px 0;
+    padding: $spacing-base 0;
     > input {
         float: left;
     }
@@ -26,5 +25,5 @@
 
 .artefactchooser-subtabs-selected {
     display: inline-block;
-    padding: 7px;
+    padding: 0.4375rem; // 7px;
 }

@@ -1,7 +1,7 @@
 .pagination-wrapper {
-    margin: 1rem 0;
+    margin: $spacing-base 0;
     .table-responsive & {
-        margin: 15px;
+        margin: $spacing-lg;
     }
     @extend .clearfix;
     .lead {
@@ -11,7 +11,7 @@
         margin: 0;
         padding-left: 0 !important;
         @include media-breakpoint-down(md) {
-            padding-top: 10px;
+            padding-top: $spacing-base;
             .hidden-xs {
                 display: none;
             }
@@ -22,7 +22,7 @@
     }
     .form-pagination {
         font-size: $font-size-sm;
-        margin-top: 10px;
+        margin-top: $spacing-base;
         label {
             min-width: inherit;
         }
@@ -39,7 +39,7 @@
 
 // Small
 .pagination-sm {
-    @include pagination-size($pagination-padding-y-xs, $pagination-padding-x-xs, $font-size-sm, $pagination-line-height, $border-radius-sm);
+    @include pagination-size($pagination-padding-y-sm, $pagination-padding-x-sm, $font-size-sm, $pagination-line-height, $border-radius-sm);
 
     .page-link {
         white-space: nowrap;

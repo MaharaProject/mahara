@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-lg-9" id="editmenus">
         <div class="card">
-            <h3 class="card-header">{str tag=linksandresourcesmenu section=admin }</h3>
+            <h2 class="card-header">{str tag=linksandresourcesmenu section=admin }</h2>
             <div class="card-body">
                 <p class="lead">{str tag=linksandresourcesmenupagedescription section=admin args=$descriptionstrargs}</p>
                 <div class="dropdown form-group">
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="card">
-            <h3 class="card-header">{str tag=footermenu section=admin}</h3>
+            <h2 class="card-header">{str tag=footermenu section=admin}</h2>
             <div class="card-body">
                 <p class="lead">
                     {str tag=footermenudescription section=admin}

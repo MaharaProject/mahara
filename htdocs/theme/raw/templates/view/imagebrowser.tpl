@@ -6,9 +6,9 @@
                     <span class="times">×</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header text-inline" id="addblock-heading">
+                <h1 class="modal-title blockinstance-header text-inline" id="addblock-heading">
                     {$title|default:"[$strnotitle]"}
-                </h4>
+                </h1>
             </div>
             <div class="modal-body blockinstance-content">
                 <p class="lead text-small">{$description|default:""}</p>

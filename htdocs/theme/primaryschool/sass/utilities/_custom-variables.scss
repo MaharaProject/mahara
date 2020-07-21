@@ -18,13 +18,10 @@ $admin-title-color:                         $white;
 $admin-title-bg:                            transparent;
 
 $dashboard-widget-bg:                       $white;
-$dashboard-widget-color:                    $white;
+$dashboard-widget-hover-bg:                 $theme-primary-color;
 
 $help-icon-color:                           #047DB1;
 $rss-icon-color:                            #FE6500;
-
-
-// LEGACY BOOTSTRAP 3 VARIABLES
 
 // Header navbar
 $navbar-default-bg:                         $theme-primary-color;

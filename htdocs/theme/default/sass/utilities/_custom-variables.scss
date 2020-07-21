@@ -15,9 +15,11 @@ $section-heading-color:                     #999;
 $admin-title-color:                         $theme-primary-color;
 $admin-title-bg:                            $theme-primary-color;
 
+$dashboard-widget-border-radius:            50%;
 $dashboard-widget-bg:                       $theme-primary-color;
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: -20%);
 $dashboard-widget-title-color:              $white;
-$dashboard-widget-circle-bg:                $theme-primary-color;
+$dashboard-widget-circle-bg:                transparent;
 $dashboard-widget-cirlce-icon-color:        scale-color($theme-primary-color, $lightness: 60%);
 
 $help-icon-color:                           #5b8fc8;

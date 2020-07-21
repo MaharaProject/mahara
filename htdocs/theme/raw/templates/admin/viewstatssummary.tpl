@@ -3,7 +3,7 @@
 {/if}
 {if $blocktypecounts}
     <div class="card-body">
-        <h4>{str tag=blockcountsbytype section=admin}</h4>
+        <h3>{str tag=blockcountsbytype section=admin}</h3>
         <canvas class="graphcanvas" id="sitestatsblocktypesgraph"></canvas>
         <script>
         {literal}
@@ -22,7 +22,7 @@
 {/if}
 {if $viewtypes}
     <div class="card-body">
-        <h4>{str tag=viewsbytype section=admin}</h4>
+        <h3>{str tag=viewsbytype section=admin}</h3>
         <canvas class="graphcanvas" id="sitestatsviewtypesgraph"></canvas>
         <script>
         {literal}

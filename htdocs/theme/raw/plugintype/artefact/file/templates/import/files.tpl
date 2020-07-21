@@ -5,9 +5,9 @@
     <div class="{cycle name=rows values='r0,r1'} list-group-item">
         <div id="entryfile-{$file.id}" class="row">
             <div class="col-md-8">
-                <h5 class="title list-group-item-heading text-inline">
+                <h3 class="title list-group-item-heading text-inline">
                     {$file.title|str_shorten_text:80:true}
-                </h5>
+                </h3>
                  <span class="filesize text-small text-midtone">
                     ({$file.filesize|display_size})
                 </span>

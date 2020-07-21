@@ -1,15 +1,15 @@
     {foreach $views as item=owner}
         <li class="list-group-item">
-            <h4 class="title list-group-item-heading">
+            <h3 class="title list-group-item-heading">
                 <span class="icon icon-user"></span>
-                <b>{$owner[0].sharedby}</b>
-            </h4>
+                <strong>{$owner[0].sharedby}</strong>
+            </h3>
         </li>
         {foreach $owner as item=view}
             <li class="list-group-item">
-                <h4 class="title list-group-item-heading">
+                <h3 class="title list-group-item-heading">
                     <a href="{$view.fullurl}">{$view.title}</a>
-                </h4>
+                </h3>
                 {if $view.sharedby}
                     <div class="groupuserdate text-small">
                     {if $view.group && $loggedin}

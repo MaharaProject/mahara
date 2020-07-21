@@ -3,7 +3,7 @@
 {/if}
 
 {foreach from=$tasks.data item=task}
-    <tr class="task {if $task->outcomeiscurrentlysubmitted}submitted{/if}">
+    <tr class="task{if $task->outcomeiscurrentlysubmitted} submitted{/if}">
 
         {*Column 1 - Completion checkbox : Only visible if task is editable, is no template and no selection task *}
         {if $canedit && !$task->template && !$tasks.selectiontasks}
@@ -18,7 +18,7 @@
                     <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                 </td>
             {else}
-                <td class="task incomplete task-status">
+                <td class="incomplete task-status">
                     <span class="completed-checkbox icon icon-regular icon-square icon-lg" data-taskid="{$task->id}" data-completed="{$task->completed}" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=completed section=artefact.plans}</span>
                 </td>
@@ -29,11 +29,11 @@
             <div class="plantasktitle">{$task->title}</div>
         </td>
 
-        <td class="completiondate">{$task->completiondate}</td>
+        <td class="completiondate text-small">{$task->completiondate}</td>
 
-        <td class="plantaskdescription">
+        <td class="plantaskdescription text-small">
             {$task->description|clean_html|safe}
-            {if $task->tags}<span>{str tag=tags}: </span>{list_tags owner=$task->owner tags=$task->tags}{/if}
+            {if $task->tags}<span class="text-small text-midtone"><strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}</span>{/if}
         </td>
 
         <td class="planscontrols text-right">
@@ -41,31 +41,31 @@
                 <div class="btn-group btn-tasks">
                     {if $task->taskview}
                         <a href="{$WWWROOT}view/view.php?id={$task->taskview}" class="btn btn-secondary btn-sm btn-view" title="{$showassignedview}">
-                            <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                         </a>
                     {/if}
 
                     {if $task->outcomeurl}
                         <a href="{$task->outcomeurl}" class="btn btn-secondary btn-sm btn-outcome" title="{$editassignedoutcome}" {if $task->sourceoutcomeurl}data-sourceoutcomeurl="{$task->sourceoutcomeurl}"{/if}>
-                            <span class="icon icon-file icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-file" role="presentation" aria-hidden="true"></span>
                         </a>
                     {/if}
 
                     {if !$task->outcomeiscurrentlysubmitted}
                         {if $task->outcomesubmissionurl}
                             <a href="{$task->outcomesubmissionurl}" title="{$submitassignedoutcome}" class="btn btn-secondary btn-sm">
-                                <span class="icon icon-file-upload icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-file-upload" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{$submitassignedoutcome}</span>
                             </a>
                         {/if}
 
                         {if $canedit}
                             <a href="{$WWWROOT}artefact/plans/task/edit.php?{$groupurlquery}id={$task->task}" title="{str tag=edit}" class="btn btn-secondary btn-sm">
-                                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>
                             </a>
                             <a href="{$WWWROOT}artefact/plans/task/delete.php?{$groupurlquery}id={$task->task}" title="{str tag=delete}" class="btn btn-secondary btn-sm">
-                                <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str(tag=deletespecific arg1=$task->title)|escape:html|safe}</span>
                             </a>
                         {/if}

@@ -21,7 +21,9 @@ body > .main-content > .row {
     background: {$header_background_image|safe} ;
     background-size: 100%;
 }
-
+h1#viewh1 {
+    color:  {$view_text_heading_color};
+}
 .collection-nav h2 {
     color:  {$view_text_heading_color};
     border-bottom: 1px solid {$view_text_heading_color};
@@ -86,8 +88,7 @@ body > .main-content > .row {
 .user-page-content h5,
 .user-page-content h6,
 .user-page-content .list-group-item-heading,
-#viewh1 {
-    color: {$view_text_heading_color};
+h1#viewh1 {
     font-family: {$view_heading_font_family|safe};
 }
 
@@ -97,7 +98,6 @@ body > .main-content > .row {
 .user-page-content .block-header a {
     color: #FFFFFF;
 }
-
 .user-page-content .card .card-header:not(.feedtitle) {
     font-weight: bold;
     color: {$view_block_header_font_color};
@@ -109,7 +109,8 @@ body > .main-content > .row {
     color: {$view_link_hover_color};
     text-decoration: none;
 }
-.user-page-content .card .card-header .collapse-indicator {
+.user-page-content .card .card-header .collapse-indicator,
+.card .card-header::before {
     color: {$view_block_header_font_color};
 }
 .user-page-content .link-blocktype:hover {
@@ -118,7 +119,23 @@ body > .main-content > .row {
 .user-page-content .card {
     background-color: transparent; /* take away default white card bg */
 }
-
+.user-page-content h1,
+.user-page-content h2,
+.user-page-content h3,
+.user-page-content h4,
+.user-page-content h5,
+.user-page-content h6,
+.user-page-content .text-midtone,
+.user-page-content .metadata,
+.user-page-content .postedon {
+    color: {$view_text_font_color};
+}
+a[data-toggle="collapse"] .collapse-indicator,
+tr[data-toggle="collapse"] .collapse-indicator,
+.card.collapsible:not(.card-secondary).has-attachment .card-header .collapse-indicator,
+.card.collapsible:not(.card-secondary).has-attachment .card-header .metadata {
+    color: {$view_link_normal_color};
+}
 
 /* list groups */
 

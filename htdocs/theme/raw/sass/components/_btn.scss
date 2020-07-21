@@ -72,8 +72,22 @@
     min-width: 0;
 }
 
+.btn.btn-link {
+    display: block;
+    width: 100%;
+    &:hover,
+    &:focus {
+      background: $dropdown-link-hover-bg;
+      text-decoration: none;
+    }
+}
+
 .btn-link-danger {
     color: theme-color("danger");
+    &:hover,
+    &:focus {
+      color: scale-color(theme-color("danger"), $lightness: -10%);
+    }
 }
 
 .btn-text {
@@ -136,18 +150,18 @@ p ~ div > .btn-group-top,
 .page-header ~ div.btn-group-top,
 .page-header + .btn-action-list .btn-group-top,
 .nav-tabs +  div.btn-group-top {
-    margin-top: -20px;
+    margin-top: -1.25rem; // -20px;
     margin-left: -100%;
     @include media-breakpoint-down(md) {
-        margin: 0 0 10px 0;
+        margin: 0 0 $spacing-base 0;
         width: 100%;
         float: none;
         .btn-group .btn,
         .form-as-button,
         .btn {
-            margin-bottom: 3px;
-            margin-left: 1px;
-            margin-right: 1px;
+            margin-bottom: $spacing-xs;
+            margin-left: $btn-border-width;
+            margin-right: $btn-border-width;
             width: 100%;
             border-top: $btn-border-width solid $btn-secondary-border;
             border-right-width: $btn-border-width;
@@ -184,14 +198,7 @@ p ~ div > .btn-group-top,
 }
 
 td.btn-group {
-    min-width: 300px;
-}
-
-td.action-list-copy {
-    min-width: 195px;
-    .btn-group-top {
-        margin-top: -8px;
-    }
+    min-width: 18.75rem; // 300px;
 }
 
 // Often the same template is used to render buttons at the top of the page and
@@ -201,12 +208,12 @@ td.action-list-copy {
     .btn-group-top {
         @include clearfix;
         @include media-breakpoint-up(md) {
-            margin-top: -12px;
+            margin-top: -0.75rem; // -12px;
             text-align: right;
             float: right;
         }
         @include media-breakpoint-down(md) {
-            margin-top: -13px;
+            margin-top: -0.8125rem; // -13px;
             text-align: right;
             float: right;
         }
@@ -233,10 +240,10 @@ td.action-list-copy {
                 float: right;
             }
             @include media-breakpoint-down(md) {
-                margin-top: -12px;
+                margin-top: -0.75rem; // -12px;
             }
             @include media-breakpoint-down(sm) {
-                margin-top: 5px;
+                margin-top: $spacing-sm;
                 float: none;
             }
             .btn {
@@ -255,22 +262,28 @@ td.action-list-copy {
     &.wall {
       .btn-group-top {
         @include media-breakpoint-down(md) {
-            margin-top: -12px;
+            margin-top: -0.75rem; // -12px;
         }
+      }
+    }
+    &.plan-list-group {
+      .btn-group-top {
+        margin-top: -0.8125rem; // -13px;
       }
     }
 }
 // Edit page configure buttons
 .card-secondary .card-header .blockinstance-controls .btn-group-top {
     position: absolute;
-    top: 11px;
-    right: 10px;
+    top: 0.6875rem; // 11px;
+    right: $spacing-base;
     margin-top: 0px;
     .btn {
         border-radius: $btn-border-radius;
         border-color: transparent;
-        background: scale-color($btn-secondary-bg, $lightness: 40%);
-        &:hover {
+        background: scale-color($btn-secondary-bg, $lightness: 20%);
+        &:hover,
+        &:focus {
             background: $btn-secondary-bg;
         }
         &:first-child {
@@ -278,6 +291,9 @@ td.action-list-copy {
         }
         &:last-child {
             border-radius: 0 $btn-border-radius $btn-border-radius 0;
+        }
+        .icon:before {
+          font-size: 1.25em;
         }
     }
 }
@@ -304,17 +320,17 @@ td.action-list-copy {
 //page builder collapsible
 .btn-accordion.ui-accordion {
     &.btn-help {
-        padding-left: 27px;
+        padding-left: 1.6875rem; // 27px;
     }
 }
 .btn-accordion.ui-accordion .ui-accordion-content {
     @include box-sizing(border-box);
     border-radius: 0;
-    margin-top: 10px;
-    margin-bottom:15px;
+    margin-top: $spacing-base;
+    margin-bottom: $spacing-lg;
     padding: 0;
-    max-width:100%;
-    border:0;
+    max-width: 100%;
+    border: 0;
     .btn-group-vertical {
         @include box-sizing(border-box);
         max-width: 100%;
@@ -339,7 +355,7 @@ td.action-list-copy {
 
 // Hack to fix the inline script tags that keep getting in places they don't belong
 .btn-group .form-as-button.last + script + .btn {
-    margin-left: -1px;
+    margin-left: -0.0625rem; // -1px;
 }
 
 .btn {
@@ -359,28 +375,17 @@ td.action-list-copy {
     }
 }
 
-// Fix the compose button positionning in the inbox/sent notifications pages.
-.notifications + #messages + h1 {
-    border-bottom: none;
-    display: inline-block;
-    margin-bottom: 0;
-    padding-bottom: 6.5px;
-    + .btn-with-heading {
-        float: right;
-    }
-}
-
 .collapsible-group + .button {
-    margin-top: 30px;
+    margin-top: $spacing-xxl;
 }
 
 .socialbtn {
-    margin-bottom: 10px;
+    margin-bottom: $spacing-base;
 }
 
 // edit page btn-group
 .btn-toolbar .btn-title {
-    padding-left: 5px;
+    padding-left: $spacing-sm;
     @include media-breakpoint-between(sm, md) {
         @include sr-only;
     }
@@ -391,9 +396,14 @@ td.action-list-copy {
     vertical-align: bottom;
 }
 
+// For site menu
+#rownew td .radio {
+    margin-top: 0;
+}
+
 .reportsettings .btn.filter {
     line-height: 1;
-    padding: 1px 4px;
+    padding: 0.0625rem 0.25rem; // 1px 4px;
 }
 
 // Tinymce primary button
@@ -445,7 +455,6 @@ td.action-list-copy {
 }
 
 .card.first .card-header {
-    a:not(.secondary-link),
     a.btn-sm {
         border-radius: $btn-border-radius-sm;
 
@@ -484,23 +493,30 @@ td.action-list-copy {
         }
         &.addaction {
             border-top-left-radius: 0;
-            margin-top: -1px;
+            margin-top: -0.0625rem; // -1px;
+        }
+        .icon {
+          font-size: 1.33em;
         }
     }
 }
 
 // Profile page accept friends form
 .pendingfriendscard {
-    .btn form {
-        display: inline-block;
+    .acceptfriendbutton {
+        form {
+            display: inline-block;
+            font-size: $btn-font-size-sm;
 
-        button {
-            padding: 0;
-            border: 0;
+            button {
+                padding: 0;
+                border: 0;
+                font-size: $btn-font-size-sm;
 
-            &:hover,
-            &:focus {
-                text-decoration: none;
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                }
             }
         }
     }
@@ -526,7 +542,7 @@ td.action-list-copy {
     background-color: $state-danger-bg;
     color: $state-danger-text;
     border-color: $state-danger-border;
-    margin-left: .5rem;
+    margin-left: 0.5rem; // 8px;
     &:hover,
     &:focus {
       background-color: scale-color($state-danger-bg, $lightness: -5%);
@@ -538,23 +554,6 @@ td.action-list-copy {
 #webservices_function_groups_add_submit,
 #webservices_token_generate_submit {
     width: auto;
-}
-
-// Find groups search
-#search_searchfield {
-    color: $btn-primary-color;
-    background-color: $btn-primary-bg;
-    border: $btn-border-width solid $btn-primary-border;
-    border-radius: $border-radius;
-    width: auto;
-    margin-top: 12px;
-
-    &:hover,
-    &:focus {
-        color: $btn-primary-color;
-        background-color: scale-color($btn-primary-bg, $lightness: -10%);
-        border-color: scale-color($btn-primary-border, $lightness: -10%);
-    }
 }
 
 #forums-list .button {
@@ -571,9 +570,9 @@ td.action-list-copy {
 // Find people results approve request alignment
 .approvefriend .pieform {
     display: inline-block;
-    margin-left: 3px;
+    margin-left: $spacing-xs;
     button {
-        font-size: $font-size-base * 0.85715;
+        font-size: $font-size-sm;
     }
 }
 
@@ -598,25 +597,13 @@ a[type="submit"],
 }
 
 .btn-search.btn.btn-primary.admin-groups.button.btn {
-    margin-left: -13px;
-    margin-top: 2px;
+    margin-left: -0.8125rem; // -13px;
+    margin-top: 0.125rem; // 2px;
     vertical-align: text-top;
 }
 
-// Notifications search and bulk action select alignment
-.notification-parent {
-    .bulk-actions {
-        input {
-            margin-top: 1px;
-        }
-        button {
-            height: calc(2.0625rem + 2px);
-        }
-    }
-}
-
 .connections button {
-    margin-top: 10px;
+    margin-top: $spacing-base;
 }
 
 // left/right vertical buttons
@@ -633,7 +620,7 @@ a[type="submit"],
 // admin people search button alignment
 .form-inline .admin-user-search .form-group.no-label {
   vertical-align: text-bottom;
-  top: -5px;
+  top: -$spacing-sm;
 }
 
 // comments block btn-group-top alignment
@@ -641,8 +628,21 @@ a[type="submit"],
   .feedbacktable .list-group {
     .btn-group-top {
       .delete-comment {
-        margin-top: -1px;
+        margin-top: -$btn-border-width;
       }
     }
+  }
+}
+
+// order sorting arrows
+.authIcons {
+  .order-sort-control {
+      border: 0;
+  }
+  .order-sort-control.arrow-down + .btn-sm {
+      margin-left: 2rem; // 32px;
+  }
+  .order-sort-control.arrow-up:first-child {
+      padding-left: 2.8125rem; // 45px;
   }
 }

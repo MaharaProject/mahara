@@ -18,7 +18,7 @@
     @extend .icon;
     font-family: $font-family-base;
     font-size: $font-size-base;
-    padding: 10px 12px 10px 35px;
+    padding: $card-spacer-y $card-spacer-x $card-spacer-y 2.25rem; // 35px;
     text-align: left;
     border-radius: 0;
 
@@ -28,24 +28,23 @@
         box-sizing: border-box;
         color: $theme-text-midtone-color;
         opacity: 0.7;
-        line-height: 1;
         text-rendering: auto;
         display: block;
         height: 100%;
         left: 0;
-        line-height: 1.3em;
-        padding: 10px 15px 5px;
+        line-height: 1.5;
+        padding: $card-spacer-y $card-spacer-x $spacing-sm;
         position: absolute;
         top: 0;
-        width: 22px;
+        width: $font-size-base * 1.25; // 20px
     }
     &.checkbox {
         margin-top: -1px;
         margin-bottom: 0;
     }
     .checkbox {
-        right: 10px;
-        top: 10px;
+        right: $card-spacer-x;
+        top: 0.875rem; // 14px;
     }
     label {
         font-size: $font-size-base;
@@ -66,7 +65,7 @@
 .icon-drag:before {
     display: block;
     float: left;
-    margin-right: 10px;
+    margin-right: $card-spacer-x;
     height: 100%;
     color: $theme-text-midtone-color;
 }

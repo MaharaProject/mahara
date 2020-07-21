@@ -18,27 +18,29 @@
 
 <div id="commentfiles" class="folder-card">
     {if (isset($children))}
-    <h4 class="sr-only">
+    <h3 class="sr-only">
         {str tag=foldercontents section=artefact.file}:
-    </h4>
+    </h3>
 
     <div class="fullwidth">
         <ul class="list-group">
             {foreach from=$children item=child}
             <li class="filedownload-item list-group-item">
+                <a class="inner-link file-icon-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                 {else}
                     <span class="icon icon-{$child->artefacttype} icon-lg left text-default file-icon" role="presentation" aria-hidden="true"></span>
                 {/if}
-                <h4 class="title list-group-item-heading text-inline">
+                </a>
+                <h3 class="title list-group-item-heading text-inline">
                     <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" class="inner-link" title="{$child->hovertitle}">
                         {$child->title}
                     </a>
                     <span class="filedate metadata">
                         {$child->date}
                     </span>
-                </h4>
+                </h3>
                 {if $child->description}
                 <div class="file-description text-small text-midtone">
                     {$child->description|safe|clean_html}

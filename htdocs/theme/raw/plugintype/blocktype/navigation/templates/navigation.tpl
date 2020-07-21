@@ -2,7 +2,7 @@
     <div id="collection-nav" class="list-group">
         {foreach from=$views item=item name=view}
             <div class="list-group-item flush">
-                <h4 class="list-group-item-heading">
+                <h3 class="list-group-item-heading">
                   {if $currentview != $item->view}
                       <a href="{$item->fullurl}">
                   {/if}
@@ -10,7 +10,7 @@
                   {if $currentview != $item->view}
                       </a>
                   {/if}
-                </h4>
+                </h3>
             </div>
         {/foreach}
     </div>

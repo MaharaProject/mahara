@@ -1,10 +1,6 @@
-$logged-in-height: 100px;
-$logged-in-height-mobile: 110px;
-
-
 .dashboard-widget-container {
-    @include clearfix;
-    margin-top: 2rem;
+    clear: both;
+    margin-top: $spacing-xl;
 
     .remove-widgets {
         font-size: $font-size-sm;
@@ -16,7 +12,8 @@ $logged-in-height-mobile: 110px;
     .thumbnail-widget {
         position: relative;
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: $spacing-lg;
+
         @include media-breakpoint-up(md) {
             float:left;
             width: 10 / 3 * 10%;
@@ -27,37 +24,40 @@ $logged-in-height-mobile: 110px;
         }
 
         .widget-heading {
-            @include clearfix;
-            padding: 10px;
-            height: $logged-in-height;
-            border-top: 3px solid $dashboard-widget-circle-bg;
+            clear: both;
+            padding: $spacing-base;
             background-color: $dashboard-widget-bg;
-
-            @include media-breakpoint-between(md, lg) {
-                height: $logged-in-height-mobile;
-            }
+            border-radius: $dashboard-widget-border-radius;
 
             .circle-bg {
-                margin-right: 10px;
+                margin-right: $spacing-base;
+                margin-bottom: $spacing-lg;
                 border-radius: 50%;
                 position: relative;
                 float: left;
                 background-color: $dashboard-widget-circle-bg;
-                width: 60px;
-                height: 60px;
-                text-align:center;
+                width: 3.75rem; // 60px;
+                height: 3.75rem; // 60px;
+                text-align: center;
 
                 .icon {
                     color: $dashboard-widget-cirlce-icon-color;
-                    padding-top:16px;
-                    font-size: $font-size-base * 2.15;
+                    line-height: 1.8;
+                    font-size: $font-size-base * 2; // 32px;
+                }
+            }
+
+            .widget-content {
+                @media (min-width: 767px) and (max-width: 979px) {
+                    clear: both; // need this for when the titles are long in other languages and wrap oddly
                 }
             }
 
             h2 {
-                margin: 5px 0 3px;
+                margin: $spacing-base 0; // 5px 0;
                 font-weight: $font-weight-bold;
                 color: $dashboard-widget-title-color;
+                line-height: 1;
             }
 
             p {
@@ -67,91 +67,19 @@ $logged-in-height-mobile: 110px;
             }
         }
 
-        .widget-detail {
-            padding: 10px;
-            border: $border-width solid $border-color;
-
-            p {
-                margin-bottom: 0;
-                color: $theme-text-color;
-            }
-        }
-
-        &.logged-in {
+        &:hover,
+        &:focus {
             text-decoration: none;
-            overflow:hidden;
-
-            @include media-breakpoint-down(sm) {
-                height: auto;
-            }
 
             .widget-heading {
-                @include clearfix;
-                border-radius: $border-radius;
-
-                @include media-breakpoint-down(sm) {
-                    border-radius: $border-radius $border-radius 0 0;
-                }
-            }
-
-            .widget-detail {
-                @include transition(0.03s);
-                border-radius: $border-radius;
-                opacity:0;
-                margin-top: -$logged-in-height * 2;
-                border: none;
-                position: relative;
-                display: inline-block;
-                z-index: 2;
-                background-color: $dashboard-widget-circle-bg;
-                height: $logged-in-height;
-                vertical-align: top;
-                width:100%;
-                @include media-breakpoint-between(md, lg) {
-                    margin-top: -$logged-in-height-mobile * 2;
-                    height: $logged-in-height-mobile;
-                }
-                @include media-breakpoint-down(sm) {
-                    border-radius: 0 0 $border-radius $border-radius;
-                    margin-top: 0;
-                    border: $border-width solid $border-color;
-                    background-color: $body-bg;
-                    opacity: 1;
-                    height: auto;
-                }
-                p {
-                    color: $white;
-
-                    @include media-breakpoint-down(sm) {
-                        color:$theme-text-color;
-                    }
-                }
-            }
-
-            &:hover {
-                .widget-heading {
-                    @include media-breakpoint-down(sm) {
-                        background: scale-color($dashboard-widget-bg, $lightness: -5%);
-                    }
-                }
-                .widget-detail {
-                    @include transition(0.3s);
-                    opacity: 1;
-                    margin-top: -$logged-in-height;
-                    @include media-breakpoint-between(md, lg) {
-                        margin-top: -$logged-in-height-mobile;
-                    }
-                    @include media-breakpoint-down(sm) {
-                        margin-top: 0;
-                    }
-                }
+                background: $dashboard-widget-hover-bg;
             }
         }
     }
 }
 
 .dashboard-editable {
-    margin-top: 2rem;
+    margin-top: $spacing-xl;
     @include media-breakpoint-up(lg) {
       border-top: $h1heading-border-width solid $h1heading-border-color;
     }

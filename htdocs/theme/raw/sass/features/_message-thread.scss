@@ -39,15 +39,14 @@
 
 .message-content {
     width: 100%;
-    padding-left: 65px;
+    padding-left: 4.0625rem; // 65px;
     .date,
     .recipients {
         margin-bottom: 0;
     }
     .subject {
-        padding-bottom:10px;
-        margin-bottom: 21px;
-        margin-bottom: 21px;
+        padding-bottom: $card-spacer-y;
+        margin-bottom: 1.3125rem; // 21px;
         border-bottom: $card-border-width solid $card-border-color;
     }
     .date,

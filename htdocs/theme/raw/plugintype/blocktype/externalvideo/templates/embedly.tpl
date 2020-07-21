@@ -5,7 +5,7 @@
 {/if}
 
 {if $type == 'card'}
-    <blockquote class="embedly-card" {$data}><h4><a href="{$url}">{if $title}{$title}{/if}</a></h4>{if $desc}<p>{$desc}</p>{/if}</blockquote>
+    <blockquote class="embedly-card" {$data}><h3><a href="{$url}">{if $title}{$title}{/if}</a></h3>{if $desc}<p>{$desc}</p>{/if}</blockquote>
 {/if}
 
 {if $type == 'div'}

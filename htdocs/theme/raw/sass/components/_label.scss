@@ -1,6 +1,6 @@
 .label {
     display: inline-block;
-    margin-right: 5px;
+    margin-right: $spacing-sm;
     &.label-default {
         color: $theme-text-color;
     }
@@ -15,18 +15,11 @@ a.label.label-default,
 }
 
 .badge {
-    margin-right: 5px;
-    padding: $badge-padding-y $badge-pill-padding-x;
+    margin-right: $spacing-sm;
+    padding: $badge-padding-y $badge-padding-x;
     @include border-radius($badge-border-radius);
     &.badge-warning {
         @extend .text-white;
-    }
-}
-
-// Share with me search filter
-#search_share_container {
-    label {
-        margin-top: 13px;
     }
 }
 
@@ -37,10 +30,10 @@ a.label.label-default,
 }
 
 .notification-parent .bulk-actions label.btn-secondary {
-  padding-bottom: 3px;
+    padding-bottom: $spacing-xs;
 }
 
 .forassessment label {
-  display: inline-block !important;
-  margin-top: -25px;
+    display: inline-block !important;
+    margin-top: -1.5625rem; // -25px;
 }

@@ -42,13 +42,14 @@ Scenario: Person changes preference settings
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I choose "Preferences" in "Settings" from account menu
     Then I should see "Preferences" in the ".section-heading" "css_element"
-    And I should see "New password" in the "#accountprefs h3" "css_element"
+
+    And I should see "New password" in the "#accountprefs h2" "css_element"
     When I fill in "Current password" with "Kupuh1pa!"
     And I fill in "New password" with "Password123!"
     And I fill in "Confirm password" with "Password123!"
     And I press "Save"
     Then I should see "Preferences saved"
-    And I should see "Change username" in the "//form[@id='accountprefs']/h3[contains(text(),'Change username')]" "xpath_element"
+    And I should see "Change username" in the "//form[@id='accountprefs']/h2[contains(text(),'Change username')]" "xpath_element"
     When I fill in "New username" with "UserAA"
     And I press "Save"
     Then I should see "There was an error with submitting this form. Please check the marked fields and try again."

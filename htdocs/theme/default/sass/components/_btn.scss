@@ -1,5 +1,5 @@
 // forum buttons
 .forum-post-btns {
-    border-top: 1px dotted $gray-100;
-    padding: 10px;
+    border-top: $border-width dotted $gray-100;
+    padding: $spacing-base;
 }

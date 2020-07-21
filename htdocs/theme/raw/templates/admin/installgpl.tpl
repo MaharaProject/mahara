@@ -1,5 +1,5 @@
 {include file='header.tpl' nosearch=true}
-            <h3 class="center"><a href="https://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs}</h3>
+            <h2 class="center"><a href="https://mahara.org">Mahara</a> {str section='admin' tag='release' args=$releaseargs}</h2>
 
             <div id="gpl-terms">
  {str tag='copyright' section='admin'}

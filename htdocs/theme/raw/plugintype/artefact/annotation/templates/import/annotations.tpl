@@ -5,9 +5,9 @@
     <div class="list-group-item">
         <div id="entryannotation" class="row">
             <div class="col-md-8">
-                <h3 class="title list-group-item-heading">
+                <h2 class="title list-group-item-heading">
                     {$annotation.title|str_shorten_text:80:true}
-                </h3>
+                </h2>
                 <div id="{$annotation.id}_desc" class="detail">
                     {$annotation.description|clean_html|safe}
                 </div>
@@ -50,9 +50,9 @@
             <div class="list-group-item">
                 <div id="annotationfeedbacktitle_{$feedback.id}" class="{if $feedback.private}private{else}public{/if} row">
                     <div class="col-md-8">
-                        <h4 class="title list-group-item-heading">
+                        <h3 class="title list-group-item-heading">
                             {$feedback.title|str_shorten_text:80:true}
-                        </h4>
+                        </h3>
                         <div id="{$feedback.id}_desc" class="detail d-none">
                             {$feedback.description|clean_html|safe}
                         </div>

@@ -1,9 +1,9 @@
 <div class="card">
-    <h3 class="card-header">
+    <h2 class="card-header">
         {str tag="peopleonline" args=$sbdata.count}
         <br>
         <span id="lastminutes" class="text-small text-midtone">({str tag="lastminutes" args=$sbdata.lastminutes})</span>
-    </h3>
+    </h2>
     <ul class="list-group">
         {foreach from=$sbdata.users item=user}
             <li class="list-unstyled list-group-item-link list-group-item">

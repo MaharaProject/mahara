@@ -1,8 +1,8 @@
 {foreach from=$items item=view}
     <div class="list-group-item flush">
-        <h4 class="title list-group-item-heading text-inline">
+        <h3 class="title list-group-item-heading text-inline">
             <a href="{$view.fullurl}">{$view.title}</a>
-        </h4>
+        </h3>
 
         {if $view.collid}
         <span class="text-small text-midtone">

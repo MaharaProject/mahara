@@ -2,7 +2,7 @@
 {if $canedit}
     <div class="btn-top-right btn-group btn-group-top">
         <a class="btn btn-secondary settings" href="{$newtasklink}">
-            <span class="icon icon-lg icon-plus left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str section="artefact.plans" tag="newtask"}
         </a>
     </div>
@@ -23,7 +23,7 @@
     </div>
 {else}
     <div class="table-responsive">
-        <table id="taskslist" class="task-listing table table-striped text-small">
+        <table id="taskslist" class="task-listing table table-striped">
             <thead>
                 <tr>
                     {if $canedit && !$task[0]->template && !$tasks.selectiontasks}

@@ -10,7 +10,7 @@
 
 		{if $cleanurls}
 		<div class="card">
-			<h3 class="card-header">{str tag=cleanurlsettings section=admin}</h3>
+			<h2 class="card-header">{str tag=cleanurlsettings section=admin}</h2>
 			<table class="table">
 				{foreach from=$cleanurlconfig key=key item=item}
 				<tr><td>$cfg->{$key}:</td><td>{$item}</td></tr>

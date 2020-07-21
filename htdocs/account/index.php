@@ -28,7 +28,7 @@ if (method_exists($authobj, 'change_password')) {
 
     $elements = array(
         'changepassworddesc' => array(
-            'value' => '<tr><td colspan="2"><h3>' . get_string('changepassworddesc', 'account') . '</h3></td></tr>'
+            'value' => '<tr><td colspan="2"><h2>' . get_string('changepassworddesc', 'account') . '</h2></td></tr>'
         ),
         // HACK: A decoy password field to prevent Firefox from trying to autofill the "oldpassword" field.
         // (FF will fill in this one instead, because it comes first. Then we can just ignore it.
@@ -63,7 +63,7 @@ else if ($url = get_config_plugin_instance('auth', $USER->authinstance, 'changep
     // @todo contextual help
     $elements = array(
         'changepasswordotherinterface' => array(
-            'value' => '<tr><td colspan="2"><h3>' . get_string('changepasswordotherinterface', 'account', $url) . '</h3></td></tr>'
+            'value' => '<tr><td colspan="2"><h2>' . get_string('changepasswordotherinterface', 'account', $url) . '</h2></td></tr>'
         )
     );
 }
@@ -73,7 +73,7 @@ else {
 
 if ($authobj->authname == 'internal') {
     $elements['changeusernameheading'] = array(
-        'value' => '<tr><td colspan="2"><h3>' . get_string('changeusernameheading', 'account') . '</h3></td></tr>'
+        'value' => '<tr><td colspan="2"><h2>' . get_string('changeusernameheading', 'account') . '</h2></td></tr>'
     );
     $elements['username'] = array(
         'type' => 'text',
@@ -91,7 +91,7 @@ if ($authobj->authname == 'internal') {
 
 if (get_config('cleanurls') && get_config('cleanurlusereditable')) {
     $elements['changeprofileurl'] = array(
-        'value' => '<tr><td colspan="2"><h3>' . get_string('changeprofileurl', 'account') . '</h3></td></tr>'
+        'value' => '<tr><td colspan="2"><h2>' . get_string('changeprofileurl', 'account') . '</h2></td></tr>'
     );
     if (get_config('cleanurlusersubdomains')) {
         list($proto, $rest) = explode('://', get_config('wwwroot'));
@@ -114,7 +114,7 @@ if (get_config('cleanurls') && get_config('cleanurlusereditable')) {
 }
 
 $elements['accountoptionsdesc'] = array(
-    'value' => '<tr><td colspan="2"><h3>' . get_string('accountoptionsdesc', 'account') . '</h3></td></tr>'
+    'value' => '<tr><td colspan="2"><h2>' . get_string('accountoptionsdesc', 'account') . '</h2></td></tr>'
 );
 
 // Add general account options

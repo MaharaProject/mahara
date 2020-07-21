@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 
 <div id="delete_submit_container" class=" default submitcancel form-group">
-    <button type="submit" class="btn-primary submitcancel submit" name="submit" tabindex="0">
+    <button type="submit" class="btn btn-primary submitcancel submit" name="submit" tabindex="0">
         {str tag='save'}
     </button>
-    <button id='preview' class='btn-default button btn'>{str tag="Preview" section="view"}</button>
+    <button id='preview' class='button btn'>{str tag="Preview" section="view"}</button>
     <input type="submit" id='cancel' class="submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='cancel'}">
 </div>
 <div id='edit_framework' class="select form-group"><label for=edit>{str tag="editsavedframework" section="module.framework"}</label>
@@ -21,7 +21,7 @@
 {* the json editor form is all in 'editor_holder' *}
 <div id='editor_holder'></div>
 <div id="delete_submit_container_end" class=" default submitcancel form-group">
-    <button type="submit" class="btn-primary submitcancel submit" name="submit" tabindex="0">
+    <button type="submit" class="btn btn-primary submitcancel submit" name="submit" tabindex="0">
         {str tag='save'}
     </button>
     <input type="submit" id='cancel_end' class="submitcancel cancel" name="cancel_submit" tabindex="0" value="{str tag='cancel'}">

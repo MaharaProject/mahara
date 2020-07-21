@@ -1,23 +1,23 @@
 {if $record->deleted}
-    <h3 class="list-group-item-heading title text-inline">
+    <h2 class="list-group-item-heading text-inline">
         <span class="icon icon-folder-open left" role="presentation" aria-hidden="true"></span>
         {$record->name}
-    </h3>
+    </h2>
     <span class="artefacttype text-midtone">({str tag=deleted section=search.elasticsearch})</span>
 {else}
+    <h2 class="list-group-item-heading text-inline">
+        <span class="icon float-left icon-folder-open left" role="presentation" aria-hidden="true"></span>
+        {if $record->viewid}
+        <a href="{$WWWROOT}view/view.php?id={$record->viewid}">
+            {$record->name}
+        </a>
+        {else}
+            {$record->name}
+        {/if}
+    </h2>
+    <span class="artefacttype text-midtone">({str tag=collection section=search.elasticsearch})</span>
     <div class="row">
         <div class="col-md-7">
-            <h3 class="list-group-item-heading title text-inline">
-                <span class="icon float-left icon-folder-open left" role="presentation" aria-hidden="true"></span>
-                {if $record->viewid}
-                <a href="{$WWWROOT}view/view.php?id={$record->viewid}">
-                    {$record->name}
-                </a>
-                {else}
-                    {$record->name}
-                {/if}
-            </h3>
-            <span class="artefacttype">({str tag=collection section=search.elasticsearch})</span>
             {if $record->createdbyname}
                 <div class="createdby text-small">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
             {/if}
@@ -42,13 +42,13 @@
         <div class="col-md-5">
             <!-- PAGES -->
             {if is_array($record->views) && count($record->views) > 0}
-                <div class="usedon">
+                <div class="usedon text-small">
                 {if count($record->views) > 1}
                     <strong>{str tag=views}:</strong>
                 {else}
                     <strong>{str tag=view}:</strong>
                 {/if}
-                <ul class="list-group list-unstyled">
+                <ul class="list-group list-unstyled text-small">
                 {foreach from=$record->views key=id item=view name=views}
                     <li><a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a></li>
                 {/foreach}

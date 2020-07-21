@@ -1,31 +1,34 @@
-$logged-in-height: 220px;
-$logged-in-height-tablet: 200px;
-$logged-in-height-phone: 120px;
-
+$logged-in-height: 13.75rem; // 220px
+$logged-in-height-tablet: 12.5rem; // 200px;
+$logged-in-height-phone: 7.5rem; // 120px;
 
 .dashboard-widget-container {
 
     .thumbnail-widget {
         position: relative;
         display: inline-block;
-        margin-bottom: 10px;
+        margin-bottom: $spacing-base;
         margin-left: 0;
         vertical-align: top;
+        float:left;
+        width: 10 / 4 * 10%;
+        padding: 0;
 
-        @include media-breakpoint-up(sm)  {
-            float:left;
-            width: 10 / 4 * 10%;
-            padding: 0;
-        }
+        text-decoration: none;
+        height: $logged-in-height;
+        overflow:hidden;
 
         @include media-breakpoint-between (sm, lg) {
             width: 10 / 3.7 * 10%;
             border-left: 0;
+            height: $logged-in-height-tablet;
         }
 
         @include media-breakpoint-down(sm) {
             width: 10 / 3.1 * 10%;
             border-left: 0;
+            height: auto;
+            overflow: visible;
         }
 
         .widget {
@@ -52,7 +55,7 @@ $logged-in-height-phone: 120px;
                 border-radius: 30px 120px 120px 30px;
                 display: block;
                 position: relative;
-                left: -10px;
+                left: -$spacing-base;
                 top: 30%;
 
                 @include media-breakpoint-between (sm, lg) {
@@ -94,11 +97,9 @@ $logged-in-height-phone: 120px;
         }
 
         .widget-heading {
-            padding: 10px 15px;
+            padding: $spacing-base $spacing-lg;
             height: $logged-in-height;
-            border-top: 0;
             background-color: transparent;
-
             position: relative;
             top: -80px;
             text-align: center;
@@ -106,39 +107,35 @@ $logged-in-height-phone: 120px;
             @include media-breakpoint-between (sm, lg) {
                 height: $logged-in-height-tablet;
                 top: -60px;
-                padding: 10px 15px;
+                padding: $spacing-base $spacing-lg;
             }
 
             @include media-breakpoint-down(sm) {
                 height: $logged-in-height-phone;
                 top: 0;
-                padding: 10px;
+                padding: $spacing-sm;
             }
 
             h2 {
                 font-family: 'Shadows Into Light Two', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
                 font-weight: $font-weight-normal;
-                font-size: 30px;
+                font-size: 1.875rem; // 30px;
                 color: $white;
 
                 @include media-breakpoint-between (sm, lg) {
-                    font-size: 32px;
+                    font-size: 2rem; // 32px;
                     margin: 0;
                 }
 
                 @include media-breakpoint-down(sm) {
-                    font-size: 26px;
+                    font-size: 1.375rem; // 22px;
                     margin: 0;
                 }
             }
 
             .pict {
-                margin: 5px 0 5px 25px;
+                margin: $spacing-sm 0 $spacing-sm 1.5625rem; // 5px 0 5px 25px;
                 text-align: center;
-
-                @include media-breakpoint-between (sm, lg) {
-                    margin: 5px 0 5px 25px;
-                }
 
                 img {
                     max-width: 100%;
@@ -156,7 +153,7 @@ $logged-in-height-phone: 120px;
 
                 @include media-breakpoint-down(sm) {
                     margin: 0;
-                    line-height: 1.1em;
+                    line-height: 1.1;
                 }
             }
 
@@ -165,115 +162,10 @@ $logged-in-height-phone: 120px;
             }
         }
 
-        .widget-detail {
-            padding: 10px 15px;
-            position: relative;
-            top: -80px;
-            border: 0;
-
-            @include media-breakpoint-between (sm, lg) {
-                top: -60px;
-            }
-
-            @include media-breakpoint-down(sm) {
-                display: none
-            }
-
-            p {
-                margin-bottom: 0;
-                color: $gray-700;
-
-                @include media-breakpoint-down(sm) {
-                    font-size: $font-size-sm;
-                }
-            }
-        }
-
-        &.logged-in {
-            text-decoration: none;
-            height: $logged-in-height;
-            overflow:hidden;
-
-            @include media-breakpoint-between (sm, lg) {
-                height: $logged-in-height-tablet;
-            }
-
-            @include media-breakpoint-down(sm) {
-                height: auto;
-                overflow: visible;
-            }
-
+        &:hover,
+        &:focus {
             .widget-heading {
-                @include clearfix;
-                border-radius: 0;
-
-                @include media-breakpoint-down(sm) {
-                    border-radius: 0;
-                }
-
-                h2 {
-                    margin: 10px 0 15px 0;
-                    font-weight: $font-weight-normal;
-
-                    @include media-breakpoint-down (lg) {
-                        font-size: 24px;
-                        margin: 0;
-                    }
-                }
-
-                p {
-                    font-size: $font-size-sm;
-                    color: $white;
-                }
-            }
-
-            .widget-detail {
-                @include transition(0.03s);
-                border-radius: 0;
-                opacity:0;
-                margin-top: -$logged-in-height * 2;
-                border: none;
-                font-weight: $font-weight-bold;
-                display: inline-block;
-                z-index: 2;
                 background-color: $theme-primary-color;
-                height: $logged-in-height;
-                margin-right: 0;
-                vertical-align: top;
-                width:100%;
-
-                @include media-breakpoint-between (sm, lg) {
-                    margin-top: -$logged-in-height-tablet * 2;
-                    height: $logged-in-height-tablet;
-                }
-
-                @include media-breakpoint-down(sm) {
-                    display: none;
-                }
-
-                p {
-                    color: $white;
-                }
-            }
-
-            &:hover {
-                .widget-heading {
-                    background-color: $theme-primary-color;
-                }
-
-                .widget-detail {
-                    @include transition(0.3s);
-                    opacity: 1;
-                    margin-top: -$logged-in-height;
-
-                    @include media-breakpoint-between (sm, lg) {
-                        margin-top: -$logged-in-height-tablet;
-                    }
-
-                    @include media-breakpoint-down(sm) {
-                        display: none;
-                    }
-                }
             }
         }
     }
@@ -286,7 +178,7 @@ $logged-in-height-phone: 120px;
         border-left: 100px solid #fcdcb9;
         border-bottom: 90px solid transparent;
         vertical-align: top;
-        margin-bottom: 10px;
+        margin-bottom: $spacing-base;
         width: 125px;
 
         @include media-breakpoint-between (sm, lg) {

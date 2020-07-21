@@ -5,8 +5,9 @@
      text-align: right;
      text-decoration: none;
      background-color: $theme-block-header-bg-color;
-     padding: 7px 10px;
+     padding: $btn-padding-y $btn-padding-x;
      border: 0;
+     font-size: $font-size-sm;
 
      &:hover,
      &:focus {
@@ -32,7 +33,7 @@
 
       .btn-secondary {
         display: inline-block;
-        padding: 7px 10px;
+        padding: $btn-padding-y $btn-padding-x;
         border: 0;
         background-color: $theme-block-header-bg-color;
         color: $theme-block-header-color;
@@ -52,7 +53,7 @@
     }
 
     ~ .list-group-item .title {
-        margin-right: 100px;
+        margin-right: 6.25rem; // 100px;
     }
 
     &.d-none {
@@ -64,7 +65,7 @@
 }
 
 .bh-margin-left {
-   margin-left: 10px;
+   margin-left: $spacing-base;
 }
 
 .file-download-list,
@@ -72,31 +73,26 @@
   .list-group {
     .block-header {
       ~ .list-group-item {
-        .download-link {
-          display: inline-block;
-          float: right;
-          margin-right: 70px;
+        .icon-download {
+          left: -5.75rem; // -92px;
+          position: relative;
+          top: $spacing-xs;
         }
         .title {
           display: inline-block;
-          max-width: 53%;
+          max-width: calc(100% - ((2.25rem * 2) + 5.5rem));
           margin-right: 0;
-          @include media-breakpoint-between(sm,md) {
-              max-width: 40%;
-          }
-          @include media-breakpoint-down(sm) {
-              max-width: 60%;
-          }
+
         }
       }
 
       &.d-none {
         ~ .list-group-item {
-          .download-link {
-            margin-right: 0;
+          .icon-download {
+            left: 0;
           }
           .title {
-            max-width: 78%;
+            max-width: calc(100% - (2.25rem * 2));
           }
         }
       }
@@ -106,7 +102,7 @@
 
 .card.card-secondary .card-body {
   .block-header {
-      margin-top: -15px;
+      margin-top: -$spacing-lg;
   }
   // exception of attachments lists in resume
   .has-attachment .list-group {
@@ -131,7 +127,7 @@
       background-color: $theme-block-header-bg-color;
       color: $theme-block-header-color;
       border: 0;
-      padding: 7px 10px;
+      padding: $input-btn-padding-y $input-btn-padding-x;
 
       &:hover,
       &:focus {

@@ -5,7 +5,7 @@
       }
     }
     .footer-inner {
-        padding: 20px 10px;
+        padding: $spacing-xl $spacing-base;
     }
     &.upgrade-footer a {
         font-weight: $font-weight-bold;
@@ -14,7 +14,7 @@
 
 // viewfooter
 .viewfooter {
-    padding: 15px;
+    padding: $spacing-lg;
     background-color: #f7f7f7;
-    border-radius: 10px;
+    border-radius: $spacing-base;
 }

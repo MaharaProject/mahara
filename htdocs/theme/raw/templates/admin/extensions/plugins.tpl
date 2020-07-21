@@ -8,7 +8,7 @@
         {if $plugins.configure}
             <div class="btn-group btn-group-top">
                 <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype}" href="plugintypeconfig.php?plugintype={$plugintype}">
-                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
                     <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype}</span>
                 </a>
             </div>
@@ -20,7 +20,7 @@
         {if $notinstalled}
             <ul class="notinstalled list-group plugins-list-group" id="{$plugintype}.notinstalled">
                 <li class="list-group-item list-group-item-heading list-group-item-warning">
-                    <h3 class="list-group-item-heading h4">{str tag='notinstalledplugins'}</h3>
+                    <h3 class="list-group-item-heading">{str tag='notinstalledplugins'}</h3>
                 </li>
 
                 {foreach from=$notinstalled key='plugin' item='data'}
@@ -43,7 +43,7 @@
 
         <ul class="list-group plugins-list-group" id="{$plugintype}.installed">
             <li class="list-group-item list-group-item-heading">
-                <h3 class="list-group-item-heading h4">{str tag='installedplugins'}</h3>
+                <h3 class="list-group-item-heading">{str tag='installedplugins'}</h3>
             </li>
             {foreach from=$installed key='plugin' item='data'}
                 <li class="list-group-item{if !$data.active} list-group-item-warning{/if}" id="{$plugintype}.{$plugin}">
@@ -58,7 +58,7 @@
                         {/if}
                         {if $data.config}
                             <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
-                                 <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
+                                 <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </a>
                         {/if}
@@ -86,7 +86,7 @@
                             {/if}
                             {if $config.config}
                                 <a class="btn btn-secondary btn-sm btn-group float-right" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
-                                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
+                                    <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
                                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                                 </a>
                             {/if}

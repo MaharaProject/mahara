@@ -43,7 +43,7 @@
         {if $siteadmin}
         <form class="form-as-button float-left btn-first" action="" method="post">
             <button class="submit btn btn-secondary" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
-                <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
             </button>
         </form>
@@ -52,7 +52,7 @@
         {if $countinstitutions > 1}
 
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="icon icon-pencil-alt icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title sr-only">{str tag="edit"}</span>
             </button>
@@ -60,22 +60,22 @@
 
             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                 <li class="">
-                    <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
-                        <button class="submit btn btn-link" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
+                    <form class="form-as-button" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
+                        <button class="submit btn btn-link text-left" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
                             {str tag="editmembers" section="admin"}
                         </button>
                     </form>
                 </li>
                 <li class="">
-                    <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
-                        <button class="submit btn btn-link" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
+                    <form class="form-as-button" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
+                        <button class="submit btn btn-link text-left" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
                             {str tag="editstaff" section="admin"}
                         </button>
                     </form>
                 </li>
                 <li class="">
-                    <form class="form-as-button float-left" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
-                          <button class="submit btn btn-link" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
+                    <form class="form-as-button" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
+                          <button class="submit btn btn-link text-left" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
                             {str tag="editadmins" section="admin"}
                         </button>
                     </form>

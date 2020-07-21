@@ -20,10 +20,15 @@
 }
 
 .form-group {
-    border-bottom: $list-group-border-width solid $list-group-border-color;
     margin: 0;
-    padding: 20px 0;
+    padding: $spacing-xl 0;
     position: relative;
+    border-bottom: $list-group-border-width solid $list-group-border-color;
+
+    // exceptions that don't need border-bottom
+    &.form-group-no-border {
+      border-bottom: 0;
+    }
 
     @include media-breakpoint-up(md) {
         &.input-pair {
@@ -33,8 +38,8 @@
         }
         &.input-pair ~ .input-pair {
             border-left: $list-group-border-width solid $list-group-border-color;
-            padding-left: 20px;
-            margin-left: 15px;
+            padding-left: $spacing-xl;
+            margin-left: $spacing-lg;
             padding-top: 0;
         }
     }
@@ -46,7 +51,7 @@
     }
 
     &.input-pair {
-        padding-top: 10px;
+        padding-top: $spacing-base;
         .select2 {
             max-width: 100%;
             width: 100%;
@@ -64,14 +69,14 @@
     &.fieldset,
     .form-group-nested & {
         .form-group {
-           padding: 20px 0;
+           padding: $spacing-xl 0;
         }
     }
 
     .form-simple & {
         border: 0;
         label {
-            min-width: 100px;
+            min-width: 6.25rem; // 100px;
         }
         .form-switch label {
             min-width: auto;
@@ -79,14 +84,14 @@
     }
 
     .form-condensed & {
-        padding: 7px 0;
+        padding: 0.4375rem 0; // 7px 0;
         border: 0;
          .form-group { //nested form groups
             padding: 0;
         }
         &.fieldset {
             .form-group {
-               padding: 20px 0;
+               padding: $spacing-xl 0;
             }
         }
     }
@@ -101,7 +106,7 @@
         input {
             @include box-shadow(none);
             border: 0;
-            line-height: 14px;
+            line-height: 0.875; // 14px;
         }
     }
 
@@ -136,7 +141,7 @@
 
     //used when adding email addresses to profiles (anywhere else?)
     .message {
-        font-size: $font-size-base * 0.85715;
+        font-size: $font-size-sm;
         color: $gray-500;
     }
 
@@ -145,12 +150,8 @@
     }
 
     .modal-body & {
-        padding: 10px 0;
         position: static;
-
-        .description:not(.html) {
-            padding-top: 5px;
-        }
+        padding: $spacing-xl 0;
     }
 
     &.hide-label,
@@ -192,17 +193,17 @@
 
     &.with-padding {
         .form-group {
-            padding: 20px 0;
+            padding: $spacing-xl 0;
         }
     }
 
     &.checkboxes {
         .btn-group {
-            margin: 10px 0;
+            margin: $spacing-base 0;
             display: block;
         }
          input[type=checkbox] {
-            top: 3px;
+            top: $spacing-xs;
             margin-left: 0;
             width: auto;
         }
@@ -210,14 +211,14 @@
             .checkboxes-option {
                 margin-left: 0;
                 label {
-                    padding-left: 20px;
-                    padding-right: 10px;
-                    margin-top: 2px;
+                    padding-left: $spacing-xl;
+                    padding-right: $spacing-base;
+                    margin-top: 0.125rem; // 2px;
                 }
             }
         }
         .checkboxes-option {
-            margin-left: 265px;
+            margin-left: 16.5625rem; // 265px;
             display: inline-block;
         }
     }
@@ -238,7 +239,7 @@
     &.calendar {
         .calendar {
             margin-left: 0;
-            width: 165px;
+            width: 10.3125rem; // 165px;
         }
     }
 
@@ -253,10 +254,11 @@
         .cancel {
             background-color: transparent;
             border: none;
-            text-decoration: underline;
             color: $link-color;
-            &:hover {
+            &:hover,
+            &:focus {
                 color: $link-hover-color;
+                text-decoration: $link-hover-decoration;
             }
             &:focus {
                 outline: medium solid $input-focus-border-color;
@@ -274,7 +276,7 @@
      &.checkbox {
          .description {
             margin-left:0;
-            max-width: 700px;
+            max-width: 43.75rem; // 700px;
          }
     }
 
@@ -308,13 +310,13 @@
         }
         input {
             &.color {
-                max-width: 240px;
+                max-width: 15rem; // 240px;
             }
         }
     }
     &.html {
         border-bottom: none;
-        h4 {
+        h3 {
             margin: 0;
         }
         &.htmldescription {
@@ -332,10 +334,10 @@
             max-width: 45%;
             display: inline-block;
             @include media-breakpoint-up(md) {
-                width: 150px;
+                width: 9.375rem; // 150px;
             }
             @include media-breakpoint-up(xl) {
-                width: 150px;
+                width: 9.375rem; // 150px;
             }
         }
     }
@@ -350,14 +352,14 @@
         input[type=password],
         select {
             @include media-breakpoint-up(md) {
-                width: 155px;
+                width: 9.6875rem; // 155px;
             }
             @include media-breakpoint-up(xl) {
-                width: 150px;
+                width: 9.375rem; // 150px;
             }
         }
         select {
-            margin-left: 5px;
+            margin-left: $spacing-sm;
         }
         label + select {
             margin-left: 0; // padding provided by label instead
@@ -365,43 +367,37 @@
         &.multi-label {
 
              > .field {
-                width: 167px;
+                width: 10.4375rem; // 167px;
 
                 select {
                     max-width: 90%;
                 }
 
                 label {
-                    font-size: $font-size-base * 0.785;
+                    font-size: $font-size-base * 0.75;
                     color: $theme-text-midtone-color;
                 }
             }
         }
     }
 
-    h4,
-    h3 {
-        padding-bottom: 5px;
-        margin-bottom: 20px;
+    h3,
+    h2 {
         &.filter-result-heading {
             margin-bottom: 0;
-            padding-bottom: 10px;
-            margin-top: 20px;
+            padding-bottom: $spacing-base;
+            margin-top: $spacing-xl;
             font-family: $font-family-base;
-            font-size: $font-size-base * 1.285;
+            font-size: $font-size-base * 1.25;
         }
-    }
-      h3 {
-        font-size: $font-size-lg;
-        padding-bottom: 10px;
     }
 
 
     .form-control {
         display: inline-block;
-        max-width: calc(100% - 30px);
+        max-width: calc(100% - 1.875rem); //calc(100% - 30px);
         @include media-breakpoint-up(md) {
-            width: 370px;
+            width: 23.125rem; // 370px;
             .columns3 &,
             .form-inline & {
                 max-width:100%;
@@ -411,7 +407,7 @@
             }
         }
         @include media-breakpoint-up(xl) {
-            width: 500px;
+            width: 31.25rem; // 500px;
         }
     }
 
@@ -426,7 +422,7 @@
     }
 
     .modal .fieldset & {
-        border-bottom: $list-group-border-width solid $list-group-border-color;;
+        border-bottom: $list-group-border-width solid $list-group-border-color;
     }
 
     &.wysiwyg {
@@ -438,11 +434,23 @@
             }
         }
     }
+    .mce-tinymce {
+        @include media-breakpoint-up(md) {
+            width: 26.25rem; // 420px;
+            max-width: 100%;
+            .columns3 & {
+                max-width: 100%;
+            }
+        }
+        @include media-breakpoint-up(xl) {
+            width: 31.25rem; // 500px;
+        }
+    }
 
     &.radio {
         .pseudolabel,
         .radio-wrapper {
-            max-width: calc(100% - 30px);
+            max-width: calc(100% - 1.875rem); // calc(100% - 30px);
             display: inline-block;
         }
         .pseudolabel {
@@ -462,19 +470,8 @@
         }
     }
 
-    .form-group.radio,
-    .radio {
-        @include media-breakpoint-up(md) {
-            margin-top: 0;
-        }
-        input[type=radio] {
-            margin-top: 5px;
-            margin-left: 0;
-        }
-    }
-
     .help {
-        margin-top: 5px;
+        margin-top: $spacing-sm;
         float:right; // can't use absolute because it messes up the pop out
     }
 
@@ -494,18 +491,18 @@
         @extend .align-with-input;
         color: theme-color("danger");
         display: block;
-        padding-top: 10px;
-        font-size: $font-size-base * 0.85715
+        padding-top: $spacing-base;
+        font-size: $font-size-sm;
 
         &:before {
           @include fonttype(solid);
           content: fa-content($fa-var-times);
           color: scale-color($danger, $lightness: -30%);
-          padding-right: 5px;
+          padding-right: $spacing-sm;
         }
 
         @include media-breakpoint-up(lg) {
-            margin-left: 265px;
+            margin-left: 16.5625rem; // 265px;
         }
     }
 
@@ -516,10 +513,10 @@
     .description:not(.html) {
         color: $theme-text-midtone-color;
         font-style: italic;
-        font-size: $font-size-base * 0.9285;
+        font-size: $font-size-sm;
         max-width: 90%;
         display: block;
-        padding-top: 10px;
+        padding-top: $spacing-base;
     }
     .requiredmarker,
     .oneofmarker {
@@ -531,7 +528,7 @@
         color: scale-color(theme-color("danger"), $lightness: -8.5%);
         border: 0;
         font-style: italic;
-        font-size: $font-size-base * 0.9285;
+        font-size: $font-size-sm;
         padding-bottom: 0;
     }
     &.has-oneof {
@@ -556,21 +553,21 @@
     &.input-push-right {
         input[type="text"] {
           @include media-breakpoint-up(md) {
-            margin-left: 266px;
+            margin-left: 16.625rem; // 266px;
           }
         }
     }
 
     input[type=text].secondary-textbox {
-        margin-top: 15px;
+        margin-top: $spacing-lg;
         @include media-breakpoint-up(xl) {
-            margin-left: 265px;
+            margin-left: 16.5625rem; // 265px;
         }
     }
 }
 
 .card .form-group-nested {
-    padding-bottom: 20px;
+    padding-bottom: $spacing-xl;
 }
 
 // Style placeholder text
@@ -609,7 +606,7 @@ div.form-group .form-control-label {
 // site config > fonts > install fonts
 .individualfiles {
   label {
-    min-width: 265px;
+    min-width: 16.5625rem; // 265px;
   }
   .align-with-input.file {
     margin-top: 0;

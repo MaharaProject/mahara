@@ -31,7 +31,7 @@
                         <input type="hidden" name="id" value="{$post->id}">
                         <div class="first">
                             <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
-                                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
                             </button>
                         </div>
@@ -41,7 +41,7 @@
                 {/if}
             </div>
         </div>
-        <div id="postdetails_{$post->id}" class="postdetails postdate">
+        <div id="postdetails_{$post->id}" class="postdetails postdate text-small text-midtone">
             <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
             <strong>
                 {str tag=postedon section=artefact.blog}:
@@ -70,13 +70,11 @@
 
         {if $post->files}
         <div class="has-attachment card collapsible" id="postfiles_{$post->id}">
-            <div class="card-header has-link">
+            <div class="card-header">
                 <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
-                     <span class="metadata">
-                        ({$post->files|count})
-                    </span>
+                    <span class="metadata">({$post->files|count})</span>
                     <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a>
             </div>
@@ -84,17 +82,19 @@
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
                     <li class="list-group-item">
-                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                        <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
                             {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                             {else}
                             <span class="icon icon-{$file->artefacttype} icon-lg text-default left file-icon" role="presentation" aria-hidden="true"></span>
                             {/if}
-                            <span class="text-small">{$file->title|truncate:40}</span>
-                            <span class="text-midtone text-small float-right">
-                            ({$file->size|display_size})
-                            </span>
                         </a>
+                        <span class="title">
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                                <span class="text-small">{$file->title|truncate:40}</span>
+                            </a>
+                        </span>
+                        <span class="text-midtone text-small float-right">({$file->size|display_size})</span>
                     </li>
                 {/foreach}
                 </ul>

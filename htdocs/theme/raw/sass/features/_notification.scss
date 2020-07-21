@@ -1,63 +1,65 @@
-.form-notificationlist {
-    .selectall {
-        margin-top: 15px;
-        margin-right: 30px;
-        font-size: $font-size-sm;
+// Fix the compose button positionning in the inbox/sent notifications pages.
+.notifications + #messages + h1 {
+    border-bottom-width: 0;
+    @include media-breakpoint-up(md) {
+        display: inline-block;
     }
+    + .btn-with-heading {
+        @include media-breakpoint-up(md) {
+            margin-top: $spacing-lg;
+            float: right;
+        }
+    }
+}
+
+.form-notificationlist {
     .notification-list {
-        padding-top: 20px;
+        padding-top: $spacing-base;
         clear: both;
     }
 }
 .notification-parent {
-    .bulk-actions {
-        label {
-            font-size: $font-size-base * 1.14285;
-        }
-        @include media-breakpoint-up(sm) {
-            float: left;
-        }
-        .activity-buttons {
-            .btn {
-                text-align: left;
-            }
-        }
-    }
     .form-select-filter {
-        margin-top: 10px;
-        @include media-breakpoint-up(sm) {
+        margin-top: $spacing-base;
+        @include media-breakpoint-up(md) {
             margin-top: 0;
             float: right;
-        }
-        .input-group .form-group,
-        .input-group-addon {
-            width: auto;
-            @include media-breakpoint-up(sm) {
-                display: table-cell;
-            }
         }
     }
 }
 .notification {
+    // giving each message heading more visual breathing space
+    .card-header a:not(.secondary-link),
+    .card-header a:not(.secondary-link).collapsed {
+        padding-top: $spacing-lg;
+        padding-bottom: $spacing-lg;
+    }
     .card-control {
-        top: 5px;
+        padding-top: 1rem; // 16px;
         + a[data-toggle="collapse"] {
-            padding-left: 60px;
-            padding-right: 30px;
+            padding-left: 4rem; // 64px
+            padding-right: 2rem; // 32px
         }
     }
     .details-group {
         display: block;
         position: relative;
+        margin: 0;
+        font-size: $font-size-lg;
+        font-family: $font-family-base;
+        line-height: 1;
+
         > .icon:not(.collapse-indicator) {
             position: absolute;
-            left: -53px;
-            top: 4px;
+            left: -3.5rem; // -56px;
         }
         .collapse-indicator {
             position: absolute;
-            right: -20px;
-            top: 0;
+            right: -1.25rem; // -20px;
+        }
+        .username,
+        .sentdate {
+            font-weight: $font-weight-normal;
         }
     }
     .details-group span {
@@ -68,10 +70,10 @@
         margin-bottom: 0;
     }
     .tousers {
-        margin-bottom: 15px;
+        margin-bottom: $spacing-lg;
     }
     .action {
-        padding-right: 10px;
+        padding-right: $spacing-base;
     }
     .subject {
         overflow: hidden;
@@ -79,12 +81,9 @@
         white-space: nowrap;
         max-width: 100%;
     }
-    .card-header {
-        font-weight: $font-weight-light;
+    &.text-weight-bold {
+        .subject {
+          font-weight: $font-weight-bold;
+        }
     }
-}
-
-.touser,
-.fromuser {
-    padding-right: 10px;
 }

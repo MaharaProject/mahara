@@ -1,7 +1,7 @@
 {foreach from=$topics item=topic}
     <tr>
         <td>
-            <h3 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->topicname|str_shorten_text:65:true}</a></h3>
+            <h2 class="title"><a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">{$topic->topicname|str_shorten_text:65:true}</a></h2>
 
             <div class="forumpath text-small text-midtone">
                 <a href="{$topic->groupurl}" class="topicgroup text-muted">{$topic->groupname|str_shorten_text:20:true}</a> /

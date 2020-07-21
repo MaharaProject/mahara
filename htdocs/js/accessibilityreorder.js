@@ -10,16 +10,16 @@ function accessibilityReorder() {
         handle: '.access-drop-handle',
         announcement: {
             grabbed: function(el) {
-                var title = $(el).find('h3 .blockinstance-header')[0].innerText;
+                var title = $(el).find('h2 .blockinstance-header')[0].innerText;
                 return get_string('itemgrabbed', 'view', title);
             },
             dropped: function(el) {
-                var title = $(el).find('h3 .blockinstance-header')[0].innerText;
+                var title = $(el).find('h2 .blockinstance-header')[0].innerText;
                 return get_string('itemdropped', 'view', title);
             },
             reorder: function(el, items) {
                 const pos = items.indexOf(el) + 1;
-                var title = $(el).find('h3 .blockinstance-header')[0].innerText;
+                var title = $(el).find('h2 .blockinstance-header')[0].innerText;
                 return get_string('itemreorder', 'view', title, pos, items.length);
             },
             cancel: get_string('reordercancelled', 'view'),
@@ -28,11 +28,11 @@ function accessibilityReorder() {
 
     // setting event handlers to update gridstack values and save them on the db
     window.dragonDrop.on('grabbed', function (container, item) {
-        var title = $(item).find('h3 .blockinstance-header')[0].innerText;
+        var title = $(item).find('h2 .blockinstance-header')[0].innerText;
         console.log(get_string('itemgrabbed', 'view', title));
     })
     .on('dropped', function (container, item) {
-        var title = $(item).find('h3 .blockinstance-header')[0].innerText;
+        var title = $(item).find('h2 .blockinstance-header')[0].innerText;
         console.log(get_string('itemdropped', 'view', title));
     })
     .on('reorder', function (container, item) {

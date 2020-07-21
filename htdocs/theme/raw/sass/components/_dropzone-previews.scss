@@ -1,13 +1,13 @@
 .dropzone-previews {
     border-radius: $border-radius;
     clear: both;
-    padding: 40px;
+    padding: 2.5rem; // 40px;
     background-color: $form-bg;
     border: 2px dashed $border-color;
 
     &.dropzone-small {
-        padding: 10px;
-        margin-bottom:10px;
+        padding: $spacing-base;
+        margin-bottom: $spacing-base;
         .dz-message {
             font-size: $font-size-base;
         }
@@ -44,8 +44,8 @@
 // Extending dropzone-previews for adding artefact to a page
 .block-placeholder {
     @extend .dropzone-previews;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: $spacing-xl;
+    margin-bottom: $spacing-xl;
 }
 
 .highlight {

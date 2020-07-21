@@ -3,7 +3,7 @@
         <label class="inline-label">{str section='module.multirecipientnotification' tag='labelsearch'}</label>
         <input type="text" name="search" id="search" autofocus="autofocus" value="{$searchdata->searchtext}">
         <input type="hidden" name="searcharea" value="All_data">
-        <button type="submit" name="buttonsubmit" class="btn btn-primary submitcancel submit">{str tag='go'}</button>
+        <button type="submit" name="buttonsubmit" class="btn btn-secondary submitcancel submit">{str tag='go'}</button>
     </div>
 </form>
 {if $searchdata->searchtext}

@@ -27,7 +27,7 @@
                                 {/if}
                                 <div class="form-group">
                                 <a id="review_link" class="btn btn-secondary" href="#" data-toggle="modal" data-target="#review-form">
-                                    <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                                    <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                                     {str tag=objectionreview}
                                 </a>
                                 </div>
@@ -50,7 +50,7 @@
                         </div>
                         {/if}
 
-                        <div class="text-small font-weight-thin">
+                        <div class="text-small">
                             {include file=author.tpl}
 
                             {if $alltags}

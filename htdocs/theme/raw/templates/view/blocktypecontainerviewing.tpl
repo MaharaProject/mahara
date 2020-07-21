@@ -6,7 +6,7 @@
         {include file='header/block-quickedit-header.tpl' blockid=$blockid}
     {/if}
     {if $title}
-        <h3 class="title card-header js-heading">
+        <h2 class="title card-header js-heading">
             {if $retractable}
             <a data-toggle="collapse" href="#blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" class="outer-link{if $retractedonload} collapsed{/if}"></a>
             {/if}
@@ -25,7 +25,7 @@
             <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
             {/if}
 
-        </h3>
+        </h2>
     {else}
         {if $link}
             <a href="{$link}" class="text-default btn-secondary btn-sm float-right">

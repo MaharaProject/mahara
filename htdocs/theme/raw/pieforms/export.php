@@ -36,12 +36,12 @@ function display_artefacts($array, $itemsinrow) {
 echo $form_tag;
 $leadstr = get_field('export_installed', 'active', 'name', 'pdf') ? 'exportarchivedescriptionpdf' : 'exportarchivedescription1';
 echo '<p class="lead">' . get_string($leadstr, 'export') . '</p>';
-echo '<h2 class="heading">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
-echo '<div class="element form-group" id="whattoexport-buttons">';
+echo '<h2 class="title">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
+echo '<div class="element form-group form-group-no-border" id="whattoexport-buttons">';
 echo '<div>'. $elements['what']['html'] . '</div>';
 echo '</div>';
 
-echo '<div id="whatviews" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container"><h3 class="heading-exportable-pages">' . get_string('viewstoexport', 'export') . "</h3>";
+echo '<div id="whatviews" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container card card-body"><h3 class="title no-margin-top">' . get_string('viewstoexport', 'export') . "</h3>";
 $body = array();
 $row = $col = 0;
 // Number of items in a row, this should be 1, 2, 3, 4, 6 or 12
@@ -58,7 +58,7 @@ foreach ($elements as $key => $element) {
 }
 
 if ($body) {
-    echo '<div id="whatviewsselection" class="d-none btn-group"><a href="" id="selection_all" class="btn btn-secondary btn-sm">'
+    echo '<div id="whatviewsselection" class="d-none btn-group text-inline"><a href="" id="selection_all" class="btn btn-secondary btn-sm">'
         . get_string('selectall') . '</a><a href="" id="selection_reverse" class="btn btn-secondary btn-sm">'
         . get_string('reverseselection', 'export') . '</a></div>';
     echo display_artefacts($body, $itemsinrow);
@@ -81,8 +81,8 @@ foreach ($elements as $key => $element) {
 }
 
 if ($body) {
-    echo '<div id="whatcollections" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container"><h3 class="heading-exportable-pages">' . get_string('collectionstoexport', 'export') . "</h3>";
-    echo '<div id="whatcollectionsselection" class="d-none btn-group"><a href="" id="selection_all_collections" class="btn btn-secondary btn-sm">'
+    echo '<div id="whatcollections" class="js-hidden exportable-artefacts"><div class="exportable-artefact-container card card-body"><h3 class="title no-margin-top">' . get_string('collectionstoexport', 'export') . "</h3>";
+    echo '<div id="whatcollectionsselection" class="d-none btn-group text-inline"><a href="" id="selection_all_collections" class="btn btn-secondary btn-sm">'
         . get_string('selectall') . '</a><a href="" id="selection_reverse_collections" class="btn btn-secondary btn-sm">'
         . get_string('reverseselection', 'export') . '</a></div>';
     echo display_artefacts($body, $itemsinrow);

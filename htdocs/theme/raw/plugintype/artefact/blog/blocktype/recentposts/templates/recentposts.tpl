@@ -16,7 +16,7 @@
             </select>
             <span class="input-group-append">
                 <a class="btn btn-secondary btnshortcut">
-                    <span class="icon icon-plus text-success left" role="presentation" aria-hidden="true"></span> {str tag='shortcutadd' section='artefact.blog'}
+                    <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span> {str tag='shortcutadd' section='artefact.blog'}
                 </a>
             </span>
         </div>
@@ -39,7 +39,7 @@
             displayiconsonly=true}
     {/if}
     <div class="list-group-item flush-collapsible">
-        <h4 class="list-group-item-heading title">
+        <h3 class="list-group-item-heading title">
             {if !($editing)}
                  <a class="modal_link text-left" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                      {$post->title}
@@ -47,7 +47,7 @@
             {else}
                 <span class="list-group-item-heading no-link">{$post->title}</span>
             {/if}
-        </h4>
+        </h3>
         <a class="collapsed" data-toggle="collapse" href="#recent_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
             <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>

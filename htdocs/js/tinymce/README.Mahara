@@ -16,6 +16,7 @@ Changes:
     -plugins/spellchecker to use $CFG->spellcheckerengine
     if that is enabled instead of default browser spellchecker.
     (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
+    - changed the heading of help file for mathslate plugin
 
  * Removed
     min.js files from main and plugin folders

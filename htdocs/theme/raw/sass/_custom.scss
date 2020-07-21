@@ -11,25 +11,27 @@
 }
 
 #preview_submit {
-    width: auto;
+    margin-top: 1.5rem;
 }
 
 .no-results {
-    @extend .lead;
+    font-size: $font-size-base;
+    font-weight: $font-weight-base;
+    margin-bottom: $spacing-lg;
     clear: both;
     text-align: center;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 3.125rem; // 50px;
+    padding-bottom: 3.125rem; // 50px;
 }
 
 .no-results-small {
     @extend .no-results;
-    padding: 15px 0;
+    padding: $spacing-lg 0;
 }
 
 .toolbar-affix.affix {
     position: fixed;
-    top: 30px;
+    top: $spacing-xxl; // 30px;
     z-index: 1;
 }
 
@@ -41,19 +43,16 @@
 .email-list {
     display: block;
     .description:not(.html) {
-        padding: 0 0 0.25rem 18px
-    }
-    input[type="radio"] {
-        margin-top: 0.5rem;
+        padding: 0 0 0.25rem 1.125rem; // 0 0 4px 18px;
     }
     .stacked-label,
     .pseudolabel {
         width: auto;
-        margin: 0 10px 0.25rem 0;
+        margin: 0 $spacing-base 0.25rem 0; // 0 10px 4px 0;
         vertical-align: middle;
     }
     .unvalidated, .unsent, .validated {
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.5rem; // 8px;
         + .input-group {
             margin: 1rem 0;
         }
@@ -69,77 +68,42 @@
 
 // Style label institution selection
 .institutionselector {
-    .select {
-        margin-bottom: 15px;
-    }
-    span.pseudolabel,
+    float: right;
+    display: inline-block;
+    margin-top: $spacing-xl;
     label {
-        display: table-cell;
         font-weight: $font-weight-bold;
+        width: auto;
+        display: table-cell;
     }
-    @include media-breakpoint-up(md) {
-        float: right;
-        width: 50%;
-        .form-group {
-            float: right;
-        }
-        label {
-            display: table-cell;
-            width: auto;
-        }
-        .picker {
-            width: auto;
-            display: table-cell;
-        }
+    .picker {
+        width: auto;
+        display: table-cell;
+    }
+    span.pseudolabel {
+        font-weight: $font-weight-bold;
     }
     > form {
         justify-content: flex-end;
     }
 }
 
-// Reset checkout boxes inside col in portfolio export page
-.portfolio-export {
-    .heading {
-        margin-top: 15px;
-    }
-    .heading-exportable-pages {
-        margin-top: 0;
-        float: left;
-    }
-    .btn-group {
-        float: right;
-    }
-}
-.exportable-artefacts {
-    .row {
-        :first-child {
-            clear: both;
-        }
-        border-bottom: $list-group-border-width solid $list-group-border-color;
-    }
-    .checkbox input[type=checkbox] {
-        margin-left: 0;
-    }
-    label {
-        margin-bottom: 10px;
-    }
-}
-.exportable-artefact-container {
-    padding: 15px 15px 0;
-    background-color: $accent-bg;
-}
-
 // Admin user search page (advanced options)
 // limit the size of dynamic to match select box above
 .userserach-filter {
-    margin-bottom: 15px;
+    margin-bottom: $spacing-lg;
     .loggedindate-container {
-        margin-top: 10px;
+        margin-top: $spacing-base;
         max-width: 250px;
     }
     .duplicateemail-filter {
-        margin-top: 10px;
+        margin-top: $spacing-base;
         justify-content: flex-start;
+    }
+
+    input.checkbox {
+      margin-top: $spacing-sm !important;
+      margin-left: -$spacing-xl;
     }
 }
 
@@ -147,7 +111,7 @@
 .form-condensed {
     .picker {
         &.first {
-            margin-left: 270px;
+            margin-left: 16.875rem; // 270px;
         }
     }
 }
@@ -156,7 +120,7 @@
 .google-app {
     font-style: normal;
     img {
-        height: 20px;
+        height: $spacing-xl;
     }
     a {
         color: #245dc1;
@@ -166,7 +130,7 @@
 // Choose skin
 .skin {
     float: left;
-    margin: 0 10px 10px 0;
+    margin: 0 $spacing-base $spacing-base 0;
     img.card {
         margin-bottom: 0;
     }
@@ -174,24 +138,29 @@
         text-align:center;
         color: $link-color;
         display: block;
-        background-color: $card-footer-bg;
-        padding: 6px;
+        padding: 0.375rem; // 6px;
         border: $card-border-width solid $card-border-color;
-        width: 180px; /* to match the img width */
+        // width: 180px; /* to match the img width */
+    }
+    a:hover,
+    a:focus {
+      cursor: pointer;
+      .skin-footer {
+        background-color: $card-cap-bg;
+      }
     }
 }
 
 .objectionable-message {
-    padding: 0 0 10px 0;
+    padding: 0 0 $spacing-base 0;
 }
 
 // Other social media input
 #editprofileform_profiletype_other {
-    @extend .form-control;
-    width: 250px !important;
-    margin-top: 10px;
+    width: 15.625rem !important; // 250px !important;
+    margin-top: $spacing-base;
     @include media-breakpoint-up(sm) {
-        margin-left: 10px;
+        margin-left: $spacing-base;
     }
     @include media-breakpoint-up(md) {
         margin-top: 0;
@@ -201,8 +170,8 @@
 // Editgroup membership modal
 // see editgroupmemship.tpl
 .editgroup-container {
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+    padding-bottom: $spacing-xl;
+    margin-bottom: $spacing-xl;
     &:last-child {
         border-bottom-width: 0;
         margin-bottom: 0;
@@ -210,6 +179,7 @@
     }
     .heading {
         margin: 0;
+        font-size: $h4-font-size;
     }
     .checkbox {
         display: inline-block;
@@ -219,9 +189,9 @@
 // Used to make the forum settings look like it should
 @include media-breakpoint-up(md) {
     #edit_interaction_weight_container {
-        padding-left: 265px;
+        padding-left: 16.5625rem; // 265px;
         label, span.description {
-            margin-left: -265px;
+            margin-left: -16.5625rem; // -265px;
         }
     }
 }
@@ -237,36 +207,39 @@
         background-color: rgba(255,255,255,0);
         thead tr th {
             font-weight: $font-weight-normal;
-            font-size: $font-size-base * 0.85715;
-            padding: 2px 8px 8px;
+            font-size: $font-size-sm;
+            padding: 0.125rem 0.5rem 0.5rem; // 2px 8px 8px;
         }
         thead tr,
         tbody td {
-            min-width: 50px;
+            min-width: 3.125rem; // 50px;
         }
     }
 }
 
 #needprotocolspro {
-    padding-left: 10px;
+    padding-left: $spacing-base;
 }
 
 #needprotocolsreq {
-    padding-left: 10px;
+    padding-left: $spacing-base;
 }
 
 .secreturls .list-group-item {
     .secret-url {
         word-wrap: break-word;
     }
+    .btn-group-top .btn-sm {
+      border-top-width: 0;
+    }
 }
 .iframesources .buttonscell a {
-    font-size: $font-size-base * 0.85715;
+    font-size: $font-size-sm;
 }
 
 // Remove the link colour from a comment that has an attachement
 @include media-breakpoint-up(lg) {
-    .viewfooter .comment-item .comment-attachment .card.collapsible h4 a.collapsed {
+    .viewfooter .comment-item .comment-attachment .card.collapsible h3 a.collapsed {
         color: $theme-text-color;
     }
 }
@@ -283,8 +256,9 @@
     .skin {
         position: relative;
         min-height: 1px;
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: $spacing-lg;
+        padding-right: $spacing-lg;
+        margin: 0;
         width: 100%;
         float: none;
         @include media-breakpoint-up(sm) {
@@ -297,33 +271,36 @@
     }
 }
 .manage-skins-btn {
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-top: $spacing-base;
+  margin-bottom: $spacing-xl;
 }
 
 .defaultskin {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin-top: $spacing-base;
+    margin-bottom: $spacing-xl;
 }
 
-.authInstance .authitem {
-    padding:5px;
-    &.inactive {
-        background: $state-warning-bg;
-        color: $state-warning-text;
+.authInstance {
+    margin-bottom: $spacing-xs;
+    .authitem {
+        padding: $spacing-sm;
+        &.inactive {
+            background: $state-warning-bg;
+            color: $state-warning-text;
+        }
     }
 }
 
 .emptybtnspace {
     display: inline-block;
-    width: 30px;
+    width: 1.875rem; // 30px;
 }
 
 // Make the other license text box align correctly on files page
 .fileuploadlicense input[type=text].secondary-textbox,
 .fileedittable input[type=text].secondary-textbox {
     @include media-breakpoint-up(xl) {
-        margin-left: 100px;
+        margin-left: 6.25rem; // 100px;
     }
 }
 
@@ -335,60 +312,61 @@
 }
 
 .accessurl-button {
-    margin-bottom: 15px;
+    margin-bottom: $spacing-lg;
 }
 
 #reportconfigform {
     fieldset {
-        margin-top: 10px;
+        margin-top: $spacing-base;
     }
     .checkbox.form-group {
-        padding: 10px 0;
+        padding: $spacing-base 0;
         label {
-            padding-left: 28px;
+            padding-left: 1.75rem; // 28px;
             display: block;
         }
         input[type=checkbox] {
             position: absolute;
-            top: 9px;
+            top: 0.5625rem; // 9px;
         }
     }
 }
 
 .reportsettings {
-    margin-top: -5px;
+    margin-top: -$spacing-sm; // -5px;
 }
 
 .statinfoblock {
-    width: 360px;
-    float: left;
-    margin-right: 15px;
-
-    h3 {
+    h2 {
         margin-top: 0;
     }
-    h4 {
-        padding: 0 1rem;
-        margin: 0;
+    h3 {
         font-size: $font-size-base;
+        padding: 0 .5rem;
     }
-
+    .list-group-item {
+      padding: .5rem;
+    }
     table {
-        padding: 10px;
+      th {
+        white-space: nowrap;
+      }
     }
     .card-header {
       background-color: white;
+      padding-left: 0;
+      padding-right: 0;
     }
 }
 
 .ownersubtab {
-    padding: 4px 0;
+    padding: 0.25rem 0; // 4px 0;
 }
 
 .deletion-message {
     float: right;
     position: relative;
-    padding: 5px;
+    padding: $spacing-sm;
     clear: right;
 }
 
@@ -398,31 +376,31 @@
 }
 
 .image-rotator {
-    height: 110px;
-    line-height: 75px;
+    height: 6.875rem; // 110px;
+    line-height: 4.6875rem; // 75px;
 
     .image-rotator-inner {
         display: inline-block;
         text-align: center;
-        width: 110px;
+        width: 6.875rem; // 110px;
     }
 }
 
 #searchviews_matchalltags_container {
     width: 100%;
-    margin-top: 5px;
+    margin-top: $spacing-sm;
     label {
-        margin-left: 28px;
+        margin-left: 1.75rem; // 28px;
     }
     input {
-        margin-left: 3px;
-        margin-top: -18px;
+        margin-left: $spacing-xs;
+        margin-top: -1.125rem; // -18px;
         float: left;
         width: auto;
         height: auto;
     }
     div {
-        margin-left: 3px;
+        margin-left: $spacing-xs;
         padding-top: 0;
         span {
             padding-top: 0;
@@ -431,7 +409,7 @@
 }
 
 div.toolbarhtml {
-    margin-top: 5px;
+    margin-top: $spacing-sm;
     clear: both;
     float: right;
     div {
@@ -443,7 +421,7 @@ div.toolbarhtml {
 .peerinstructions,
 .blockinstructions {
     &.with-toolbar {
-        margin-right: 20px;
+        margin-right: $spacing-xl;
     }
     div.fieldset-body {
         background-color: $accent-bg !important;
@@ -457,7 +435,7 @@ div.toolbarhtml {
 }
 .releaseviewform {
     position: relative;
-    top: 15px;
+    top: $spacing-lg;
 }
 
 #pendinglist {
@@ -472,10 +450,10 @@ div.toolbarhtml {
 // Add space when there are 2 selects next to each other
 .select {
     + .select {
-        margin-left: 5px;
+        margin-left: $spacing-sm;
     }
     + .submit:not(.input-group-append) {
-        margin-left: 5px;
+        margin-left: $spacing-sm;
     }
     #bulkexport & {
         + .select {
@@ -510,12 +488,12 @@ div.toolbarhtml {
 
 // Forum select wrap too close to text
 .forumselectwrap {
-    margin: 0 0 10px 10px;
+    margin: 0 0 $spacing-base $spacing-base;
 }
 
 .consentbutton div,
 .consentbutton span.description {
-    padding: 0px !important;
+    padding: 0 !important;
 }
 
 // reduce size of uploaded logos appearing instituion settings page
@@ -523,13 +501,13 @@ div.toolbarhtml {
     max-height: $navbar-height;
 }
 #institution_logoxshtml_container img {
-    height: 48px;
+    height: 3rem; // 48px;
 }
 #institution_logohtml_container,
 #institution_deletelogo_container,
 #institution_logoxshtml_container,
 #institution_deletelogoxs_container {
-    padding-left: 275px;
+    padding-left: 17.1875rem; // 275px;
     @include media-breakpoint-down(sm) {
         padding-left: 0;
     }
@@ -538,27 +516,27 @@ div.toolbarhtml {
 // shared view filter in smaller screens too close to top element
 @include media-breakpoint-down(lg) {
   #search_inputgroupsort_container {
-    margin-top: 10px;
+    margin-top: $spacing-base;
   }
 }
 
 #login_login_container fieldset {
     border-bottom: $card-border-width solid $card-border-color;
-    h4 a {
-        font-size: 80%;
+    h3 a {
+        font-size: $font-size-sm;
         font-weight: $font-weight-normal;
     }
 }
 
 .validfiletypes {
-    margin: 15px 15px 0 15px;
+    margin: $spacing-lg $spacing-lg 0 $spacing-lg;
     padding: $card-spacer-y $card-spacer-x;
     background-color: $accent-bg;
     border-radius: $border-radius;
     font-size: $font-size-sm;
 
     span {
-        padding-right: 3px;
+        padding-right: $spacing-xs;
         display: inline-block;
         &.label {
             font-weight: $font-weight-bold;
@@ -601,4 +579,9 @@ div.toolbarhtml {
 
 .course-date {
     margin-bottom: 0;
+}
+
+// Group categories edit buttons alignment
+#editmenus td.edit .btn-group {
+    margin-top: $line-height-base * 1rem;
 }

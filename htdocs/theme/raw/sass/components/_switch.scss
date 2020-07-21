@@ -1,7 +1,8 @@
 $transition: 0.1s ease-in 0s;
-$height: 28px;
-$indicator-horizontal-margin : 9px;
-$indicator-size: 10px;
+$height: 2rem; // 32px;
+$indicator-horizontal-margin: 0.625rem; // 10px;
+$indicator-vertical-margin: 0.25rem; // 4px;
+$indicator-size: 0.625rem; // 10px;
 $label-font-size: $font-size-base;
 
 $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
@@ -9,7 +10,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
 .switchbox.form-group {
     > label {
         vertical-align: bottom;
-        line-height: $height;
+        line-height: $height + ($indicator-vertical-margin * 2);
     }
 }
 
@@ -23,7 +24,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         user-select: none;
         position: relative;
         overflow: hidden;
-        width: 60px; // Overridden with inline styles
+        width: 3.75rem; // 60px; // Overridden with inline styles
         input {
             @extend .sr-only;
 
@@ -74,6 +75,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         display: block;
         width: 200%;
         margin-left: -100%;
+        line-height: $height;
 
         &:before,
         &:after {
@@ -137,9 +139,9 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         top: 0;
         height: $height;
         width: 100%;
-        padding: 0 $indicator-horizontal-margin;
+        padding: $indicator-vertical-margin $indicator-horizontal-margin;
         font-size: $label-font-size;
-        line-height: $height;
+        line-height: 1.5;
         backface-visibility: hidden;
         &.off {
             padding-left: $indicator-total-width;

@@ -24,7 +24,7 @@
             <div class="details-before-list-group">
         {/if}
         {if count($plans) > 1}
-            <h4 class="title">{$plan.title}</h4>
+            <h3 class="title">{$plan.title}</h3>
         {/if}
         {if $plan.description}
             <p class="text-midtone description">{$plan.description}</p>

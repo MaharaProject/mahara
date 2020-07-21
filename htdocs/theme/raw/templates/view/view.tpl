@@ -11,12 +11,10 @@
     <div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
     <fieldset  class="pieform-fieldset collapsible collapsible-small">
         <legend>
-            <h4>
-                <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
-                    {str tag='instructions' section='view'}
-                    <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
-                </a>
-            </h4>
+            <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
+                {str tag='instructions' section='view'}
+                <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+            </a>
         </legend>
         <div class="viewinstructions fieldset-body collapse" id="viewinstructions-dropdown">
             {$viewinstructions|clean_html|safe}
@@ -67,9 +65,9 @@
         {if $feedback->position eq 'base' && $feedback->baseplacement}
         <div class="comment-container">
             {if $feedback->count || $enablecomments}
-            <h3 class="title">
+            <h2 class="title">
                 {str tag="Comments" section="artefact.comment"}
-            </h3>
+            </h2>
             {* Do not change the id because it is used by paginator.js *}
             <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackbase fullwidth">
                 {$feedback->tablerows|safe}
@@ -92,10 +90,10 @@
                             <span class="times">&times;</span>
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
-                        <h4 class="modal-title">
-                            <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
+                        <h1 class="modal-title">
+                            <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                             {str tag=addcomment section=artefact.comment}
-                        </h4>
+                        </h1>
                     </div>
 
                     <div id="comment_modal_messages"></div>
@@ -113,10 +111,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        <h1 class="modal-title">
+                            <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=reportobjectionablematerial}
-                        </h4>
+                        </h1>
                     </div>
                     <div class="modal-body">
                         {$objectionform|safe}
@@ -131,10 +129,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        <h1 class="modal-title">
+                            <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=objectionreview}
-                        </h4>
+                        </h1>
                     </div>
                     <div class="modal-body">
                         {$reviewform|safe}
@@ -148,10 +146,10 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">
-                            <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        <h1 class="modal-title">
+                            <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=confirmcopytitle section=view}
-                        </h4>
+                        </h1>
                     </div>
                     <div class="modal-body">
                         <p>{str tag=confirmcopydesc section=view}</p>

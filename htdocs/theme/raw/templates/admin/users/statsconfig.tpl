@@ -1,6 +1,6 @@
-<div class="flexbox">
+<div class="flexbox row">
     {if $form}
-    <div class="col-md-6">
+    <div class="col-lg-6">
         {$form|safe}
         {if $tableheadings}
             <div class="collapsible reportconfig float-right">
@@ -23,8 +23,8 @@
         {/if}
     </div>
     {/if}
-    <div class="{if $form}col-md-6{/if}">
-        <h4>{str tag="reportdesctitle" section="statistics"}</h4>
+    <div class="{if $form}col-lg-6{/if}">
+        <h3>{str tag="reportdesctitle" section="statistics"}</h3>
         {$reportinformation|safe}
     </div>
 </div>

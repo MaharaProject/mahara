@@ -101,13 +101,13 @@ class PluginModuleMultirecipientnotification extends PluginModule {
                 'class' => 'notifications'
             ),
             'inbox' => array(
-                'iconclass' => 'icon icon-inbox icon-lg',
+                'iconclass' => 'icon icon-inbox',
                 'url' => 'module/multirecipientnotification/inbox.php',
                 'title' => get_string('labelinbox', 'module.multirecipientnotification'),
                 'tooltip' => get_string('inboxdesc1', 'module.multirecipientnotification'),
             ),
             'outbox' => array(
-                'iconclass' => 'icon icon-paper-plane icon-lg',
+                'iconclass' => 'icon icon-paper-plane',
                 'url' => 'module/multirecipientnotification/outbox.php',
                 'title' => get_string('labeloutbox1', 'module.multirecipientnotification'),
                 'tooltip' => get_string('outboxdesc', 'module.multirecipientnotification'),

@@ -20,12 +20,12 @@
 
     .nav-toggle-area {
         float: right;
-        padding: 13px 0 12px 0;
+        padding: 0.8125rem 0 0.75rem 0; // 13px 0 12px 0;
     }
 
     .navbar-collapse {
-        margin-right: -15px;
-        margin-left: -15px;
+        margin-right: -$spacing-lg;
+        margin-left: -$spacing-lg;
         padding: 0;
         position: static;
         clear: both;
@@ -33,7 +33,7 @@
 
         @include media-breakpoint-up(md) {
             position: absolute;
-            right: 15px;
+            right: $spacing-lg;
             top: $navbar-height;
             max-width: 300px;
             z-index: 5;
@@ -43,15 +43,16 @@
             box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
 
             .header.no-site-messages & {
-                max-height: calc(100vh - (#{$navbar-height} + 20px));
+                max-height: calc(100vh - #{($navbar-height + $site-message-height)});
             }
             @for $i from 1 through 5 {
                 .header.message-count-#{$i} & {
-                    max-height: calc(100vh - (#{$navbar-height} + (#{$i} * 33px) + 20px));
+                    max-height: calc(100vh - #{($navbar-height + ($i * $site-message-height))});
                 }
             }
             &.show {
                 overflow-y: auto;
+                background-color: $navbar-default-link-bg;
             }
         }
 
@@ -81,7 +82,6 @@
 
         // Styles for all links inside navbar-nav
         a  {
-            @include text-overflow;
             display: block;
             width: 100%;
         }
@@ -89,7 +89,7 @@
         > li > a {
             color: $navbar-default-link-color;
             background-color: $navbar-default-link-bg;
-            padding: 10px 15px;
+            padding: $navbar-default-padding-y $navbar-default-padding-x;
             font-weight: $font-weight-normal;
             border-top: 1px solid $navbar-default-link-border;
             border-bottom: 1px solid $navbar-default-link-border;
@@ -108,8 +108,8 @@
                 border: 1px solid $navbar-default-link-border;
             }
             .icon {
-                margin-right: 5px;
-                width: 1.5em;
+                margin-right: $spacing-sm;
+                width: 1.5em; // 24px
                 text-align: center;
             }
         }
@@ -129,15 +129,16 @@
     .child-nav {
         border-top:0;
         max-width: 100%;
-        overflow: hidden;
+        // overflow: hidden;
         padding: 0;
 
         li > a {
             color: $navbar-inverse-link-color;
             background-color: $navbar-inverse-bg;
-            padding: 9px 2.5em 9px;
+            padding: $navbar-default-padding-y $navbar-default-padding-x $navbar-default-padding-y 2.8125rem;
             margin-top: -1px;
             font-weight: $font-weight-normal;
+            white-space: normal;
             &:hover,
             &:focus {
                 text-decoration: none;

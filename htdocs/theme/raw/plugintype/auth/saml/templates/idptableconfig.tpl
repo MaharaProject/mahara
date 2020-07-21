@@ -1,4 +1,4 @@
-<h3 class="title">{str tag='idptable' section='auth.saml'}</h3>
+<h2 class="title">{str tag='idptable' section='auth.saml'}</h2>
 <table id="idplist" class="table table-striped listing">
     <thead>
         <tr>

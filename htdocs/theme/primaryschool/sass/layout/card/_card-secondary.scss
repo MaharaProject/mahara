@@ -3,7 +3,7 @@
     > .card-header, .card-header-nested {
         border-radius: 0;
         border-bottom: 0;
-        padding-left: 10px;
+        padding-left: $spacing-base;
 
         a {
             text-decoration: underline;

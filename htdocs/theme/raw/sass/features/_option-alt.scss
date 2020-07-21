@@ -2,7 +2,7 @@
     border-top: $card-border-width solid $card-border-color;
     position: relative;
     &.card-body {
-        padding: 30px 15px;
+        padding: $spacing-xxl $card-spacer-x;
     }
 }
 
@@ -10,10 +10,10 @@
     color: $theme-text-lighttone-color;
     background: $card-bg;
     text-transform: uppercase;
-    font-size: $font-size-base * 1.215;
+    font-size: $font-size-base * 1.25;
     position: absolute;
-    top: -15px;
+    top: -0.9375rem; // -15px;
     left: 43%;
     text-align: center;
-    padding: 0 10px;
+    padding: 0 $spacing-base;
 }

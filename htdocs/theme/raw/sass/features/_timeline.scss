@@ -6,7 +6,7 @@ Main Components
 .jtline {
   /* opacity: 0; */
   color: $theme-text-color;
-  margin: 2em auto;
+  margin: $spacing-xxl auto;
   -webkit-transition: opacity 0.2s;
   -moz-transition: opacity 0.2s;
   transition: opacity 0.2s;
@@ -22,16 +22,16 @@ Main Components
 }
 .jtline .timeline {
   position: relative;
-  height: 80px;
+  height: 5rem; // 80px;
   width: 100%;
-  max-width: 1150px;
+  max-width: calc($grid-breakpoints(xxl) - $spacing-xxxl);
   margin: 0 auto;
   border-bottom: $border-width solid $border-color;
 }
 .jtline .events-wrapper {
   position: relative;
   height: 90%;
-  margin: -40px 40px 0 40px;
+  margin: -2.5rem 2.5rem 0 2.5rem; // -40px 40px 0 40px;
   overflow: hidden;
 }
 .jtline .events-wrapper::after, .jtline .events-wrapper::before {
@@ -41,7 +41,7 @@ Main Components
   z-index: 2;
   top: 0;
   height: 100%;
-  width: 20px;
+  width: $spacing-xl;
 }
 .jtline .events-wrapper::before {
   left: 0;
@@ -54,10 +54,10 @@ Main Components
   position: absolute;
   z-index: 1;
   left: 0;
-  top: 49px;
-  height: 3px;
+  top: 3.0625rem; // 49px;
+  height: $spacing-xs;
   /* width will be set using JavaScript */
-  width: 1000px;
+  width: 62.5rem; // 1000px;
   background: $gray-400;
   -webkit-transition: -webkit-transform 0.4s;
   -moz-transition: -moz-transform 0.4s;
@@ -91,8 +91,8 @@ Main Components
   bottom: 0;
   z-index: 2;
   text-align: center;
-  font-size: $font-size-base * 1.285;
-  padding-bottom: 15px;
+  font-size: $font-size-base * 1.25;
+  padding-bottom: $spacing-lg;
   color: $link-color;
   /* fix bug on Safari - text flickering while timeline translates */
   -webkit-transform: translateZ(0);
@@ -119,9 +119,9 @@ Main Components
   -ms-transform: translateX(-50%);
   -o-transform: translateX(-50%);
   transform: translateX(-50%);
-  bottom: -5px;
-  height: 15px;
-  width: 15px;
+  bottom: -$spacing-sm; // -5px;
+  height: $spacing-lg; // 15px;
+  width: $spacing-lg; // 15px;
   border-radius: 50%;
   border: 2px solid $gray-400;
   background-color: $gray-100;
@@ -156,19 +156,19 @@ Main Components
 ul.cd-timeline-navigation-second {
   list-style-type: none !important;
   padding: 0;
-  top: 400px;
+  top: 25rem; // 400px;
 }
 
 .cd-timeline-navigation-second a {
   top: 90%;
-  bottom: 10px;
+  bottom: $spacing-base;
 }
 
 .cd-timeline-navigation a {
   top: 64%;
 }
 .cd-timeline-navigation-second a {
-  top: 90px;
+  top: 5.625rem; // 90px;
 }
 
 .cd-timeline-navigation a,
@@ -182,8 +182,8 @@ ul.cd-timeline-navigation-second {
   -ms-transform: translateY(-50%);
   -o-transform: translateY(-50%);
   transform: translateY(-50%);
-  height: 34px;
-  width: 34px;
+  height: 2.125rem; // 34px;
+  width: 2.125rem; // 34px;
   list-style-type: none !important;
   text-indent: 100%;
   font-size: 0;
@@ -197,7 +197,7 @@ ul.cd-timeline-navigation-second {
     content: fa-content($fa-var-chevron-circle-right);
     color: $theme-primary-color;
     font-size: $font-size-base * 2;
-    top: -5px;
+    top: -$spacing-sm; // -5px;
     position: relative;
 
   }
@@ -231,7 +231,7 @@ ul.cd-timeline-navigation-second {
 }
 .cd-timeline-navigation a.inactive::after,
 .cd-timeline-navigation-second a.inactive::after {
-  background-position: 0 -16px;
+  background-position: 0 -1rem;
 }
 .no-touch .cd-timeline-navigation a.inactive:hover,
 .no-touch .cd-timeline-navigation-second a.inactive:hover {
@@ -317,12 +317,12 @@ ul.cd-timeline-navigation-second {
 
 .jtline .timeline ol, .ListeOL {
   margin: 0 0 0 0;
-  padding: 50px;
+  padding: $spacing-xxxl;
 }
 
 .jtline .events-content ol {
-  margin: 15px;
-  padding: 0 30px;
+  margin: $spacing-lg;
+  padding: 0 $spacing-xxl;
 }
 
 @-webkit-keyframes cd-enter-right {
@@ -406,20 +406,20 @@ ul.cd-timeline-navigation-second {
   div {
     display: inline-block;
     border-bottom: 0;
-    padding: 10px 0 20px 0;
+    padding: $spacing-base 0 $spacing-xl 0;
     label {
         min-width: 0;
     }
     &.submit {
-        padding: 10px 0;
+        padding: $spacing-base 0;
     }
   }
 }
 
 // TODO: remove this style when the embedded media video block is fixed to play in timeline
 .video-js {
-    width: 300px;
-    height: 150px;
+    width: 18.75rem; // 300px;
+    height: 9.375rem; // 150px;
 }
 .vjs-fluid {
     padding-top: 56.25%
@@ -427,9 +427,9 @@ ul.cd-timeline-navigation-second {
 
 // version number
 .jtline .events-content .lineli.selected .jtline .events-content p {
-    margin-top: 18px;
-    margin-bottom: 20px;
-    font-size: $font-size-base * 1.14285;
+    margin-top: 1.125rem; // 18px;
+    margin-bottom: $spacing-xl;
+    font-size: $font-size-lg;
 }
 
 .jtline .events-content .container-fluid {

@@ -1,22 +1,3 @@
-.collapsible legend h4,
-.collapsible legend h3,
-.card-header {
-    &.has-link {
-        a .collapse-indicator {
-            color: $theme-primary-color;
-        }
-    }
-    .metadata {
-        margin-top: 3px;
-        @include media-breakpoint-up(md) {
-          @include media-breakpoint-down(lg) {
-            float: none !important;
-            font-size: 11px;
-          }
-        }
-    }
-}
-
 .collapse-inline {
     width: 78%;
 }
@@ -138,6 +119,7 @@
         }
         .collapse-indicator {
           color: $theme-primary-color;
+          line-height: 1;
         }
     }
 }
@@ -146,7 +128,8 @@
     .card-header:before {
         @include fonttype(solid);
         color: rgba(255, 255, 255, 0.6);
-        padding-right: 5px;
+        padding-right: $spacing-sm;
+        vertical-align: top;
     }
     // custom icons to some blocks, they do not appear on the edit page
     &.bt-newviews .card-header:before {
@@ -230,7 +213,7 @@
     &.bt-googleapps .card-header:before {
         content: fa-content($fa-var-google);
     }
-    &.bt-wall h3.card-header:before {
+    &.bt-wall .card-header:before {
         content: fa-content($fa-var-quote-left);
     }
     &.bt-myfriends .card-header:before {

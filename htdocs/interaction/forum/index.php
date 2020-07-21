@@ -85,7 +85,7 @@ if ($forums) {
                     'usebuttontag' => true,
                     'class' => 'btn-secondary btn-sm' . (isset($allowunsubscribe) && $allowunsubscribe == 0 ? ' disabled' : ''),
                     'renderelementsonly' => true,
-                    'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times left text-danger" role="presentation" aria-hidden="true"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="icon icon-lg icon-star left" role="presentation" aria-hidden="true"></span> ' . get_string('Subscribe', 'interaction.forum'),
+                    'value' => $forum->subscribed ? '<span class="icon icon-times left text-danger" role="presentation" aria-hidden="true"></span> ' . get_string('Unsubscribe', 'interaction.forum') : '<span class="icon icon-star left" role="presentation" aria-hidden="true"></span> ' . get_string('Subscribe', 'interaction.forum'),
                     'help' => false
                     ),
                     'forum' => array(

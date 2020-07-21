@@ -4,9 +4,9 @@
     <div class="list-group-item">
         <div id="entryplan-{$plan.id}" class="row">
             <div class="col-md-8">
-                <h3 class="title list-group-item-heading">
+                <h2 class="title list-group-item-heading">
                     {$plan.title|str_shorten_text:80:true}
-                </h3>
+                </h2>
                 {if $plan.description}
                 <div id="{$plan.id}_desc" class="detail d-none">
                     {$plan.description|clean_html|safe}
@@ -53,11 +53,11 @@
             <div class="list-group-item">
                 <div id="tasktitle_{$task.id}" class="row">
                     <div class="col-md-8">
-                        <h4 class="title list-group-item-heading text-inline">
+                        <h3 class="title list-group-item-heading text-inline">
                             <a class="tasktitle" href="" id="{$task.id}">
                                 {$task.title|str_shorten_text:80:true}
                             </a>
-                        </h4>
+                        </h3>
                         {if $task.completed == 1}
                         <span class="completed text-small text-midtone">
                             ({str tag=completed section=artefact.plans})

@@ -6,7 +6,7 @@
         content: "";
         position: absolute;
         right: 1px;
-        top: $navbar-height + ($i * 36px);
+        top: $navbar-height + ($i * $site-message-height);
         border-style: solid;
         border-color: transparent;
         border-width: 2vh 50vw;
@@ -16,17 +16,15 @@
       }
 
       + .main-content {
-        padding-top: 50px;
+        padding-top: $spacing-xxxl;
       }
     }
   }
 
   .pageheader {
-    position: relative;
     margin-bottom: 0;
-    background-color: $pageheader-bg;
-    padding-top: 50px;
-    padding-bottom: 40px;
+    padding-top: $spacing-xxxl;
+    padding-bottom: $spacing-xxxl;
 
     + .main-content::before {
         position: inherit;
@@ -34,7 +32,7 @@
         top: auto;
         border: 0;
         background: $body-bg;
-  	}
+    }
   }
   .pageheader::before {
         content: "";
@@ -63,5 +61,5 @@
 }
 
 .tag-results .btn-top-right {
-    margin-top: -41px;
+    margin-top: -2.5625rem; // -41px;
 }

@@ -6,9 +6,6 @@
             background-color: $state-success-bg;
             color: $state-success-text;
         }
-        .card-body {
-            background-color: $card-bg;
-        }
         .card-footer {
             background-color: scale-color($state-success-bg, $lightness: 70%);
             color: $state-success-text;
@@ -42,9 +39,7 @@
             background-color: $state-info-bg;
             color: $state-info-text;
         }
-        .card-body,
         table {
-            background-color: $card-bg;
             &.table {
                 table-layout: fixed;
                 tr:not(:first-of-type) {
@@ -88,9 +83,6 @@
             background-color: $state-warning-bg;
             color: $state-warning-text;
         }
-        .card-body {
-            background-color: $card-bg;
-        }
         .card-footer {
             background-color: scale-color($state-warning-bg, $lightness: 70%);
             color: $state-warning-text;
@@ -119,13 +111,10 @@
 
     &.bg-danger {
         border-color: $state-danger-border;
-        // background-color: $card-bg;
+        background-color: $card-bg !important;
         .card-header {
             background-color: $state-danger-bg;
             color: $state-danger-text;
-        }
-        .card-body {
-            background-color: $card-bg;
         }
         .card-footer {
             background-color: scale-color($state-danger-bg, $lightness: 70%);

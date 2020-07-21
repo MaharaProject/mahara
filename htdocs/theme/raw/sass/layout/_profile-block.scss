@@ -1,62 +1,47 @@
 .profile-block.card-header {
     padding:0;
-    .username {
-        padding: 10px 90px 10px 15px;
+    a.username {
+        padding: $spacing-base 5.625rem $spacing-base $spacing-lg; // 10px 90px 10px 15px;
         display: block;
         word-break: break-word;
     }
-    .user-icon {
+    a.user-icon {
         z-index: 5;
         position: absolute;
-        right: 10px;
-        top: 10px;
-        padding: 5px;
+        right: $spacing-base;
+        top: $spacing-base;
+        padding: $thumbnail-padding;
+
         &:hover,
         &:focus {
-            background-color: $card-bg;
+          background: $thumbnail-bg;
         }
     }
-    a {
-        border-width: 0;
-        &:after {
-            @include transition(opacity 0.5s);
-            @include fa-icon();
-            border-radius: $border-radius;
-            bottom: 0;
-            background: $card-header-bg;
-            color: $theme-text-midtone-color;
-            padding:3px;
-            content: "\f040";
-            display: block;
-            opacity:0;
-            position: absolute;
-            right: 0;
-            visibility: hidden;
-        }
-    }
+
     + .list-group {
-        min-height: 41px;
+        min-height: 2.625rem; // 42px;
 
         .list-group-item-heading {
             font-size: $font-size-base;
+            margin-bottom: ($list-group-item-padding-y / 2);
         }
     }
 }
 
 // Sidebar notification item styles
 .list-group-item-profile-notification {
-    word-wrap: normal;
-    white-space: normal;
+    font-size: $font-size-sm;
+
     &:first-child {
-        padding-right: 80px;
+        padding-right: 4.5rem; // 72px; // for the usericon
     }
 }
 
 .loginas {
-    padding-right: 60px;
+    padding-right: 3.75rem; // 60px;
 }
 
 // account settings user block has overlap of text
 body.admin .user-card .profile-block.card-header {
-    min-height: 90px;
+    min-height: 5.625rem; // 90px;
 }

@@ -22,20 +22,16 @@
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
-                    <h4>
-                        <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                            {str tag="siteprivacy" section="admin"}
-                            <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
-                        </a>
-                    </h4>
+                    <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                        {str tag="siteprivacy" section="admin"}
+                        <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+                    </a>
                 </legend>
                 <div class="fieldset-body collapse" id="dropdown-privacyst-{$sitecontent['privacy']->id}">
-                    <span class="text-midtone float-right">
+                    {$sitecontent['privacy']->content|safe}
+                    <span class="text-midtone text-small">
                         {str tag="lastupdated" section="admin"} {$sitecontent['privacy']->ctime|date_format:'%d %B %Y %H:%M %p'}
                     </span>
-                    <div class="last-updated-offset">
-                        {$sitecontent['privacy']->content|safe}
-                    </div>
                 </div>
             </fieldset>
         </div>
@@ -47,20 +43,16 @@
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
-                    <h4>
-                        <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                            {str tag="sitetermsandconditions" section="admin"}
-                            <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
-                        </a>
-                    </h4>
+                    <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                        {str tag="sitetermsandconditions" section="admin"}
+                        <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+                    </a>
                 </legend>
                 <div class="fieldset-body collapse" id="dropdown-terms-{$sitecontent['termsandconditions']->id}">
-                    <span class="text-midtone float-right">
+                    {$sitecontent['termsandconditions']->content|safe}
+                    <span class="text-midtone text-small">
                         {str tag="lastupdated" section="admin"} {$sitecontent['termsandconditions']->ctime|date_format:'%d %B %Y %H:%M %p'}
                     </span>
-                    <div class="last-updated-offset">
-                        {$sitecontent['termsandconditions']->content|safe}
-                    </div>
                 </div>
             </fieldset>
         </div>

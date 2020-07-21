@@ -52,9 +52,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">
+                <h1 class="modal-title">
                     {str tag=signoffpagetitle section=blocktype.peerassessment/signoff}
-                </h4>
+                </h1>
             </div>
             <div class="modal-body">
                 <p id="signoff-on" class="hidden">{str tag=signoffpageundodesc section=blocktype.peerassessment/signoff}</p>
@@ -73,9 +73,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">
+                <h1 class="modal-title">
                     {str tag=verifypagetitle section=blocktype.peerassessment/signoff}
-                </h4>
+                </h1>
             </div>
             <div class="modal-body">
                 <p>{str tag=verifypagedesc section=blocktype.peerassessment/signoff}</p>

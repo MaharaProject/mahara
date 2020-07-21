@@ -119,14 +119,14 @@ else {
 
     foreach ($dbservices as $service) {
 
-        $client = '<h3 class="title">';
+        $client = '<h2 class="title">';
         if ($service->clientname) {
             $client .= $service->clientname;
         }
         else {
             $client .= get_string('clientnotspecified', 'module.mobileapi');
         }
-        $client .= '</h3>';
+        $client .= '</h2>';
 
         if ($service->clientenv) {
             $client .= " ({$service->clientenv})";
@@ -171,7 +171,7 @@ else {
                                 'type'  => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-secondary btn-sm',
-                                'value' => '<span class="icon icon-trash-alt icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
+                                'value' => '<span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
                                 'elementtitle' => get_string('deletespecific', 'mahara', $service->clientname),
                             ),
                     ),

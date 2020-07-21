@@ -2,7 +2,7 @@
                 <div class="card-quarter {if $view.collid}card-collection{else}card-view{/if}">
                     <div class="card {if $view.submittedto} bg-submitted{/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
-                        <h3 class="card-header has-link">
+                        <h2 class="card-header has-link">
                             <a class="title-link title"
                             href="
                                 {if $view.template == $sitetemplate}
@@ -15,7 +15,7 @@
                             title="{$view.displaytitle}">
                                 {$view.displaytitle}
                             </a>
-                        </h3>
+                        </h2>
                         <div class="card-body{if $view.coverimage} coverimage{/if}">
                             {if $view.coverimage && $view.coverimageurl}
                             <div class="widget-heading">

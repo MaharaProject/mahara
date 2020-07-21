@@ -1,7 +1,7 @@
 {foreach from=$views item=view}
     <tr>
       <td class="sharedpages">
-        <h3 class="title"><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a>{if $view.collid} ({str tag=nviews section=view arg1=$view.numpages}){/if}</h3>
+        <h2 class="title"><a href="{$view.fullurl}">{$view.title|str_shorten_text:65:true}</a>{if $view.collid} ({str tag=nviews section=view arg1=$view.numpages}){/if}</h2>
         {if $view.sharedby}
           <div class="groupdate">
           {if $view.group}

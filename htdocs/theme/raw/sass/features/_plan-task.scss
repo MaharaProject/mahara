@@ -1,40 +1,26 @@
 // Forcing the cell to be as wide as TH
 .task-status {
-  width: 1px;
   white-space: nowrap;
   text-align: center;
-}
-
-.plan_incomplete {
-  background: scale-color($danger, $lightness: 90%);
-  color: $theme-text-color;
-}
-
-
-.task-item .btn-group {
-  a {
-    font-size: 10px;
-    padding: 2px 8px;
-  }
 }
 
 // Plan blocks
 .list-group .task-item {
     .plan-task-icon {
         vertical-align: top;
-        padding-top: 4px;
+        padding-top: $spacing-xs;
         z-index: 3;
         position: relative;
         cursor: pointer;
     }
     .plan-task-heading {
-        margin-top: -1.3rem;
-        margin-left: 25px;
+        margin-top: -1.5rem;
+        margin-left: 1.5rem; // 24px;
     }
     .plan-task-detail {
-        margin-left: 25px;
+        margin-left: 1.5rem; // 24px;
         > * {
-            margin: 10px 0 0 0;
+            margin: $spacing-base 0 0 0;
         }
     }
 }

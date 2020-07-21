@@ -11,7 +11,7 @@
 }
 
 .meter-outline {
-    background: none repeat scroll 0 0 $progress-bar-color;
+    background: $progress-bar-color;
     border: 1px solid;
     position: relative;
     padding: 20px;
@@ -32,7 +32,7 @@
 }
 
 .meter-value {
-    background-color: $progress-bar-bg;
+    background-color: scale-color($progress-bar-bg, $lightness: 80%);
     height: 100%;
 }
 

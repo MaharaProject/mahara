@@ -2415,9 +2415,9 @@ function friendscontrol_submit(Pieform $form, $values) {
 }
 
 function acceptfriend_form($friendid, $modalmode='') {
-    $value = ($modalmode == 'modal' ? get_string('approverequest', 'group') : '<span class="icon icon-check icon-lg text-success left" role="presentation" aria-hidden="true"></span>' . get_string('approve', 'group'));
+    $value = ($modalmode == 'modal' ? get_string('approverequest', 'group') : '<span class="icon icon-check text-success left" role="presentation" aria-hidden="true"></span>' . get_string('approve', 'group'));
     $elementclass = $modalmode == 'modal' ? 'form-as-button' : 'form-as-button pull-left';
-    $class = $modalmode == 'modal' ? 'link-unstyled' : 'default btn-secondary';
+    $class = $modalmode == 'modal' ? 'link-unstyled' : 'default btn-secondary btn-sm first';
 
     return pieform(array(
         'name' => 'acceptfriend' . (int) $friendid,
@@ -2501,7 +2501,7 @@ function acceptfriend_submit(Pieform $form, $values) {
 
 // Form to add someone who has friendscontrol set to 'auto'
 function addfriend_form($friendid, $displaymode='') {
-    $value = $displaymode == 'pageactions' ? '<span class="icon icon-user-plus icon-lg left" role="presentation"></span>' : '<span class="icon icon-user-plus icon-lg left" role="presentation"></span>' . get_string('addtofriendslist', 'group');
+    $value = $displaymode == 'pageactions' ? '<span class="icon icon-user-plus left" role="presentation"></span>' : '<span class="icon icon-user-plus left" role="presentation"></span>' . get_string('addtofriendslist', 'group');
     return pieform(array(
         'name' => 'addfriend' . (int) $friendid,
         'validatecallback' => 'addfriend_validate',

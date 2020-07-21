@@ -5,12 +5,12 @@
     }
 }
 td.short {
-    width: 180px;
+    width: 11.25rem; // 180px;
 }
 td.tiny {
-    width: 20px;
+    width: 1.25rem; // 20px;
     &.with-icon {
-        padding: 20px 0 8px 8px;
+        padding: 1.25rem 0 0.5rem 0.5rem; // 20px 0 8px 8px;
     }
 }
 
@@ -19,10 +19,7 @@ td.tiny {
     border-collapse: separate;
     border-spacing: 0;
     .icon-cell {
-        min-width: 50px; //width of two icons
-        .icon {
-            margin-left: 5px;
-        }
+        min-width: 3.125rem; // 50px; //width of two icons
     }
 
     label {
@@ -38,7 +35,7 @@ td.tiny {
         }
         .allnone-toggles {
             .btn-sm {
-                font-size: $font-size-base * 0.715;
+                font-size: $font-size-sm;
             }
         }
 
@@ -46,11 +43,11 @@ td.tiny {
             position: relative;
 
             &:last-child {
-                min-width: 100px;
+                min-width: 6.25rem; // 100px;
             }
 
             & > a::after {
-                right: 4px;
+                right: 0.25rem; // 4px;
                 text-decoration: none;
                 color: $theme-text-midtone-color;
             }
@@ -62,8 +59,8 @@ td.tiny {
         a::after {
             @include fonttype(solid);
             position: relative;
-            top: -3px;
-            margin-left: 3px;
+            top: -$spacing-xs;
+            margin-left: $spacing-xs;
             color: $theme-text-midtone-color;
         }
         .asc > a::after {
@@ -72,7 +69,7 @@ td.tiny {
         .desc > a::after,
         .sorted > a::after {
             content: fa-content(\f0d8);
-            top: 2px;
+            top: 0.125rem; // 2px;
         }
     }
 
@@ -97,32 +94,32 @@ td.tiny {
     td {
         white-space: normal;
         &.movebuttons {
-            width: 50px;
+            width: 3.125rem; // 50px;
             .movedown,
             .moveup {
                 @extend .text-midtone;
-                font-size: $font-size-base * 1.428;
+                font-size: $font-size-base * 1.5;
             }
         }
         &.control-buttons {
-            width: 90px;
+            width: 5.625rem; // 90px;
             text-align: right;
             a,
             .pieform {
                 display: inline-block;
             }
             .btn-sm {
-                padding: 2px 7px;
+                padding: 0.125rem 0.4375rem; // 2px 7px;
             }
             // Allows space for when you also have a unzip button in the control button butn-group
             &.includes-unzip {
-                width: 110px;
+                width: 6.875rem; // 110px;
             }
         }
-        h3 {
-            font-weight: $font-weight-light;
-            font-family: $font-family-sans-serif;
-            font-size: $font-size-base * 1.214285;
+        h2 {
+            font-weight: $font-weight-normal;
+            font-family: $font-family-base;
+            font-size: $font-size-lg;
             margin: 0;
         }
     }
@@ -132,24 +129,24 @@ td.tiny {
     }
 
     .narrow {
-        width: 20px;
+        width: 1.25rem; // 20px;
         .checkbox {
-            margin-top: 20px;
+            margin-top: 1.25rem; // 20px;
         }
     }
 
     .tiny .checkbox {
-        margin-top: 10px;
+        margin-top: $spacing-base;
     }
 
     small {
-        font-size: $font-size-sm;
+        font-size: $font-size-base * 0.75; // 12px
     }
 
     // admin configure site add link table
     &.nohead {
         th:not(:last-child) {
-            min-width: 150px;
+            min-width: 9.375rem; // 150px;
             @include media-breakpoint-up(md) {
                 min-width: auto;
             }
@@ -195,16 +192,16 @@ td.tiny {
 
 .table-padded {
     >tbody>tr>td {
-        padding-top: 15px;
-        padding-bottom: 15px;
+        padding-top: $spacing-lg;
+        padding-bottom: $spacing-lg;
     }
 }
 
 
 .table-small{
-    font-size: $font-size-base * 0.785;
+    font-size: $font-size-base * 0.75;
     th {
-        font-size: $font-size-base * 0.785;
+        font-size: $font-size-base * 0.75;
     }
     >thead>tr>th,
     >thead>tr>td,
@@ -212,21 +209,21 @@ td.tiny {
     >tbody>tr>td,
     >tfoot>tr>th,
     >tfoot>tr>td {
-        padding: 5px 3px;
+        padding: $table-cell-padding-sm $spacing-xs;
         &:first-child {
-            padding-left:8px;
+            padding-left: 0.5rem; // 8px;
         }
         &:last-child {
-            padding-right: 8px;
+            padding-right: 0.5rem; // 8px;
         }
     }
 
     > thead>tr> th {
-        padding: 10px 3px;
+        padding: $spacing-base $spacing-xs;
     }
 
     .btn-sm {
-        font-size: $font-size-base * 0.715;
+        font-size: $btn-font-size-sm;
     }
 }
 
@@ -239,44 +236,47 @@ td.tiny {
 
 .table-selectedlist {
     font-size: $font-size-sm;
+    border-top: $table-border-width solid $table-border-color;
+    border-bottom: $table-border-width solid $table-border-color;
+    margin-top: $spacing-base;
 }
 
 table.table tr {
     .with-checkbox {
-        min-width: 74px;
+        min-width: 4.625rem; // 74px;
 
         input {
-            margin-top:12px;
-            margin-right:3px;
-            float:left;
+            margin-top: 0.75rem; // 12px;
+            margin-right: $spacing-xs;
+            float: left;
         }
     }
     .with-selectall {
-        min-width: 110px;
+        min-width: 6.875rem; // 110px;
     }
 }
 
 .table > thead > tr.th-has-shared > th {
-    padding-bottom: 15px;
+    padding-bottom: $spacing-lg;
 }
 
 .th-shared-wrap {
     position: relative;
-    padding-top: 7px;
+    padding-top: 0.4375rem; // 7px;
 }
 
 .th-shared-heading {
     position: absolute;
-    top: -8px;
+    top: -0.5rem; // -8px;
     left: 0;
-    width: 100px;
+    width: 6.25rem; // 100px;
     text-align: center;
 }
 
 .th-shared-title {
-    font-size: $font-size-base * 0.785;
+    font-size: $font-size-base * 0.75;
     position: relative;
-    margin-bottom: -12px;
+    margin-bottom: -0.75rem; // -12px;
     display: block;
 }
 
@@ -284,10 +284,10 @@ table.table tr {
     @extend .text-midtone;
     float: right;
     display: block;
-    line-height: 30px;
+    // line-height: 30px;
     vertical-align: bottom;
-    margin: 5px;
-    font-size: $font-size-base * 1.14285;
+    margin: $spacing-sm;
+    font-size: $font-size-lg;
     font-weight: $font-weight-light;
 }
 
@@ -339,5 +339,5 @@ table.table tr {
 
 // table cells that need to be fixed 70px width
 .width-70 {
-    width: 70px;
+    width: 4.375rem; // 70px;
 }

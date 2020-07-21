@@ -3,10 +3,10 @@
  */
 .card-control {
     display: block;
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
     margin: 0;
     min-width: 0;
-    padding: 12px 0 12px 15px;
+    padding: 0.75rem 0 0.75rem $spacing-lg; // 12px 0 12px 15px
     position: absolute;
     width: auto;
     z-index: 5;
@@ -17,14 +17,11 @@
             padding-top:0;
         }
     }
-     &.card-header-form-actions {
-        right:0;
-        top:0;
-        padding:0;
-        .btn {
-
-        }
-     }
+    &.card-header-form-actions {
+      right:0;
+      top:0;
+      padding:0;
+    }
 
     input,
     input[type='checkbox'] {

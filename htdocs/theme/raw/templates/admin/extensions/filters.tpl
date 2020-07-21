@@ -3,7 +3,7 @@
 
 <div class="card card-body">
 	{if $filters}
-	<h3>{str tag=installed section=admin}:</h3>
+	<h2>{str tag=installed section=admin}:</h2>
 	<ul>
 	  {foreach from=$filters item=filter}
 	  <li>{$filter->site}</li>

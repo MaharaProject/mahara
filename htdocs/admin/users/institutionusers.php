@@ -177,7 +177,7 @@ if ($usertype == 'lastinstitution') {
 if ($usertype == 'requesters') {
     $userlistform['elements']['reject'] = array(
         'type' => 'submit',
-        'class' => 'btn-secondary',
+        'class' => 'btn btn-danger',
         'value' => get_string('declinerequests', 'admin'),
     );
 }

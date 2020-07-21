@@ -8,7 +8,7 @@
     @include media-breakpoint-down(md) {
         .title,
         .indicator {
-            font-size: $font-size-base * 0.715;
+            font-size: $font-size-sm;
         }
     }
 
@@ -19,7 +19,7 @@
 }
 
 .col-with-collapse {
-    @extend .col-lg-11;
+    @extend .col-lg-12;
     @extend .col-sm-10;
 }
 

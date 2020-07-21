@@ -642,7 +642,7 @@ EOF;
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the elipsis button for the card
-        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls .moremenu')[0].click();";
+        $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls .moremenu')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -663,7 +663,7 @@ EOF;
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the collection box for the card
-        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.collection-list')[0].click();";
+        $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.collection-list')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -685,7 +685,7 @@ EOF;
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the elipsis button for the card
-        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -707,7 +707,7 @@ EOF;
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the elipsis button for the card
-        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-access a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
+        $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-access a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -729,7 +729,7 @@ EOF;
         $rownode = $this->find('xpath', $xpath, $exception);
 
         // Click on the elipsis button for the card
-        $jscode = "jQuery(\"div.card h3:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find(\"a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")\")[0].click();";
+        $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find(\"a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")\")[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -776,7 +776,7 @@ EOF;
             "//a[contains(concat(' ', normalize-space(@class), ' '), ' title-link ')]";
         $rownode = $this->find('xpath', $xpath, $exception);
 
-        $jscode = "jQuery(\"div.card h3 a.title-link:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\")[0].click();";
+        $jscode = "jQuery(\"div.card h2 a.title-link:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\")[0].click();";
         $this->getSession()->executeScript($jscode);
     }
 
@@ -1827,7 +1827,7 @@ JS;
         $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
-                         " and contains(h3, " . $blocktitleliteral . ")]//img";
+                         " and contains(h2, " . $blocktitleliteral . ")]//img";
         // Wait until it finds the text inside the block title.
         try {
             $blockimages = $this->find_all('xpath', $xpath);
@@ -1887,7 +1887,7 @@ JS;
         $textliteral = $this->escaper->escapeLiteral($text);
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
-                         " and contains(h3, " . $blocktitleliteral . ")]" .
+                         " and contains(h2, " . $blocktitleliteral . ")]" .
                      "//div[contains(normalize-space(.), " . $textliteral . ")]";
         // Wait until it finds the text inside the block title.
         try {
@@ -1930,7 +1930,7 @@ JS;
         $blocktitleliteral = $this->escaper->escapeLiteral($blocktitle);
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' grid-stack-item-content ')]" .
                      "/div[contains(@id,'blockinstance_')" .
-                         " and contains(h3, " . $blocktitleliteral . ")]" .
+                         " and contains(h2, " . $blocktitleliteral . ")]" .
                          "[count(descendant::img) = 0]";
         // Wait until it finds the text inside the block title.
         try {

@@ -164,7 +164,7 @@ function notrude_form() {
                         'class' => 'btn-secondary text-inline',
                         'type' => 'html',
                         'value' => '<button type="button" class="btn btn-secondary" data-toggle="modal-docked" data-target="#objection-review">
-                                        <span class="icon icon-lg icon-check text-danger left" role="presentation" aria-hidden="true"></span>' .
+                                        <span class="icon icon-check text-danger left" role="presentation" aria-hidden="true"></span>' .
                                         get_string('stillobjectionable') .
                                     '</button>'
                     ),
@@ -173,7 +173,7 @@ function notrude_form() {
                         'name' => 'submit', // must be called submit so we can access it's value
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'content' => '<span class="icon icon-lg icon-times text-danger left" role="presentation" aria-hidden="true"></span> '.get_string('notobjectionable'),
+                        'content' => '<span class="icon icon-times text-danger left" role="presentation" aria-hidden="true"></span> '.get_string('notobjectionable'),
                         'value' => 'submit'
                     )
                 )

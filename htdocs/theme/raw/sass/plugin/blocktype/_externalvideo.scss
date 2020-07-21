@@ -9,13 +9,13 @@
  */
 
 .embedservice_content {
-    padding: 10px 0;
+    padding: $spacing-base 0;
 }
 .embedservice_content table#embedservice_table {
     width: 100%;
 }
 .embedservice_content table#embedservice_table td {
     border: 1px solid transparent;
-    padding: 0 10px;
+    padding: 0 $spacing-base;
     font-size: larger;
 }

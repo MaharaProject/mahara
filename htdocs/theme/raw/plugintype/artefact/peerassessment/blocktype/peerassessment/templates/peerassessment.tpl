@@ -42,22 +42,20 @@
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
-                    <h4 class="modal-title">
-                        <span class="icon icon-lg icon-peerassessment" role="presentation" aria-hidden="true"></span>
+                    <h1 class="modal-title">
+                        <span class="icon icon-peerassessment" role="presentation" aria-hidden="true"></span>
                         {str tag=title section=blocktype.peerassessment/peerassessment}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     {if $instructions}
                     <div class="last form-group collapsible-group small-group peerinstructions">
                         <fieldset class="pieform-fieldset collapsible collapsible-small">
                             <legend>
-                                <h4>
-                                    <a href="#peerassessment-{$blockid}-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="peerassessment-{$blockid}-dropdown" class="collapsed">
-                                        {str tag=instructions section=blocktype.peerassessment/peerassessment}
-                                        <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
-                                    </a>
-                                </h4>
+                                <a href="#peerassessment-{$blockid}-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="peerassessment-{$blockid}-dropdown" class="collapsed">
+                                    {str tag=instructions section=blocktype.peerassessment/peerassessment}
+                                    <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+                                </a>
                             </legend>
                             <div class="fieldset-body collapse" id="peerassessment-{$blockid}-dropdown">
                                 {$instructions|safe}

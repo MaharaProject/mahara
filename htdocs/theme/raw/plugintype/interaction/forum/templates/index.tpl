@@ -3,7 +3,7 @@
 {if $admin}
 <div id="forumbtn" class="btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn btn-secondary newforum">
-        <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag="newforum" section=interaction.forum}
     </a>
 </div>
@@ -38,7 +38,7 @@
 
             <tr>
                 <td>
-                    <h3 class="title">
+                    <h2 class="title">
                         <a href="{$WWWROOT}interaction/forum/view.php?id={$forum->id}">
                             {$forum->title}
                         </a>
@@ -48,7 +48,7 @@
                            <span class="icon-rss icon icon-sm right mahara-rss-icon" role="presentation" aria-hidden="true"></span>
                         </a>
                         {/if}
-                    </h3>
+                    </h2>
                     <div class="detail text-small">
                         {$forum->description|str_shorten_html:1000:true|safe}
                     </div>
@@ -85,12 +85,12 @@
                 <td class="right control-buttons">
                     <div class="btn-group">
                         <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="btn btn-secondary btn-sm" title="{str tag=edit}">
-                            <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=editspecific arg1=$forum->title}</span>
                         </a>
 
                         <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="btn btn-secondary btn-sm" title="{str tag=delete}">
-                            <span class="text-danger icon icon-trash-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="text-danger icon icon-trash-alt" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=deletespecific arg1=$forum->title}</span>
                         </a>
                     </div>

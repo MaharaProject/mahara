@@ -5,12 +5,9 @@ body {
     max-width: 100%;
 
     .main {
-        margin: 0 0 20px;
-        padding-top: 30px;
-        padding-bottom: 30px;
-        @include media-breakpoint-up(lg) {
-            padding-bottom:50px;
-        }
+        margin: 0;
+        padding-top: $spacing-xxl;
+        padding-bottom: $spacing-xxl;
     }
 }
 
@@ -27,45 +24,41 @@ body {
 .sidebar {
     padding-top: 0;
     @include media-breakpoint-up(md) {
-        padding-top: 30px;
+        padding-top: $spacing-xxl;
     }
 }
 
 // Expose a section of the page
 .expose {
     background-color: theme-color("secondary");
-    margin-bottom: 40px;
-    margin-top: -109px;
-    padding: 40px 0 20px;
+    margin-bottom: 2.5rem; // 40px;
+    margin-top: -6.8125rem; // -109px;
+    padding: 2.5rem 0 1.25rem; // 40px 0 20px;
 }
 
 .subpage {
-    clear:both;
+    clear: both;
 }
 
 .wall {
-    margin-top: 20px;
+    margin-top: $spacing-xl;
     .lead {
         background-color: $gray-100;
         padding: $alert-padding-y $alert-padding-x;
     }
-}
 
-.columns3,
-.columns4,
-.columns5 {
-    .wallpost .card-header {
-        font-size: $font-size-sm;
-        padding-right:40px;
-        h4 {
-            font-size: $font-size-sm;
-        }
+    // in editor remove margin-top and border-top as no form
+    .bt-wall-editor & {
+      margin-top: 0;
+      .list-group.list-group-top-border .list-group-item:first-child {
+        border-top: 0;
+      }
     }
 }
 
 .viewfooter {
     clear: both;
-    margin-top: 2rem;
+    margin-top: $spacing-xxl;
 
     #releaseview_submit_container {
       margin-left: 1rem;
@@ -103,11 +96,11 @@ iframe {
 }
 
 .progress-container {
-    padding-top: 20px;
+    padding-top: $spacing-xl;
 }
 
 .section-import {
-    padding-top: 30px;
+    padding-top: $spacing-xxl;
 }
 
 .btn-group-top + .lead,
@@ -115,44 +108,47 @@ iframe {
 .btn-group-top + .view-description,
 .toolbar + .lead {
     clear: both;
-    margin-top: 15px;
+    margin-top: $spacing-lg;
     @include media-breakpoint-up(md) {
-        margin-top: 60px;
+        margin-top: 3.75rem; // 60px;
     }
 }
 
 .btn-action-list + .view-container,
 .btn-group-top + .view-container {
     @include media-breakpoint-up(md) {
-        margin-top: 60px;
+        margin-top: 3.75rem; // 60px;
     }
 }
 
 .view-container {
-    margin-top: 15px;
+    margin-top: $spacing-lg;
     clear: both;
 }
 
 .view-description {
-    margin-bottom: 2rem;
+    margin-bottom: $spacing-xl;
     &.with-toolbar {
-        margin-right: 20px;
+        margin-right: $spacing-xl;
     }
     &.with-addblock {
-        margin-bottom: 2rem;
+        margin-bottom: $spacing-xl;
+    }
+    &.lead {
+        margin-top: $spacing-base;
     }
 }
 
 .postlist {
-    margin-top: 20px;
+    margin-top: $spacing-xl;
 }
 
 .forumfooter {
-    margin: 15px 0;
+    margin: $spacing-lg 0;
 }
 
 .dropdown-menu li span.nolink {
-    padding: 3px 20px;
+    padding: $spacing-xs $spacing-xl;
     display: block;
     white-space: nowrap;
 }
@@ -166,36 +162,16 @@ body.presentation-iframe {
         display: none;
     }
 }
-// Online users
-
-.peoplelistinfo {
-    clear: both;
-    .profile img {
-      margin-right: 10px;
-    }
-    .leftdiv {
-        float: left;
-        margin-bottom: 5px;
-    }
-    .rightdiv {
-        margin-left: 60px;
-        h3 {
-            margin-top: 7px;
-            padding-top: 5px;
-        }
-    }
-}
 
 // Pages and collections page header
-
 .pageactions {
     position: absolute;
     top: 0px;
 
     .btn-group-vertical {
         position: fixed;
-        right: -1px;
-        margin-top: 30px;
+        right: -$btn-border-width;
+        margin-top: $spacing-xxl;
         z-index: $zindex-fixed;
         .btn.first-of-group {
             border-top-left-radius: $border-radius;
@@ -209,16 +185,16 @@ body.presentation-iframe {
 }
 
 .pageheader {
-    background: $pageheader-bg;
+    background-color: $pageheader-bg;
     position: relative;
 
     .main {
-        padding-top: 30px;
-        padding-bottom: 50px;
+        padding-top: $spacing-xxxl;
+        padding-bottom: $spacing-xxxl;
 
         @include media-breakpoint-down(md) {
-            padding-top: 20px;
-            padding-bottom: 30px;
+            padding-top: $spacing-base;
+            padding-bottom: $spacing-xxl;
         }
     }
 }
@@ -229,24 +205,24 @@ body.presentation-iframe {
 
     .pageheader-content {
         @media (max-width: 1270px) {
-            padding-right: 50px;
+            padding-right: 1.25rem; // 50px;
         }
     }
 }
 form#settings,
 .view-instructions {
     @media (max-width: 1270px) {
-        padding-right: 50px;
+        padding-right: 1.25rem; // 50px;
     }
 }
 
 // Profile page accept friends form
 .pendingfriendscard {
-    margin-top: 60px;
-    margin-bottom: 20px;
+    margin-top: $spacing-xxxl + $spacing-xl;
+    margin-bottom: $spacing-xl;
 
     @include media-breakpoint-down(md) {
-        margin-top: -30px;
+        margin: 0;
     }
 }
 
@@ -277,5 +253,6 @@ body {
 }
 
 .last-updated {
-  margin: 1rem 0 0 0;
+  margin: $spacing-xl 0 0 0;
+  font-weight: $font-weight-light;
 }

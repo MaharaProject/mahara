@@ -12,11 +12,11 @@
     width: 100%;
 }
 #resumewrap table.resumecomposite {
-    margin: 5px 0;
-    padding: 10px 15px;
+    margin: $spacing-sm 0;
+    padding: $spacing-base $spacing-lg;
 }
 #resumewrap table table {
-    margin: 5px 0;
+    margin: $spacing-sm 0;
 }
 .movebuttons a {
     display: block;
@@ -29,5 +29,5 @@
     padding: 0;
 }
 #container #resumewrap table td.errmsg {
-    padding-left: 20px;
+    padding-left: $spacing-xl;
 }

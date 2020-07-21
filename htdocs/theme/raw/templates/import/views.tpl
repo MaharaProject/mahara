@@ -5,9 +5,9 @@
     <div class="list-group-item">
         <div id="entryview-{$view.id}" class="row">
             <div class="col-md-8">
-                <h5 class="title list-group-item-heading">
+                <h4 class="title list-group-item-heading">
                     {$view.title|str_shorten_text:80:true}
-                </h5>
+                </h4>
                 {if $view.description}
                 <div id="{$view.id}_desc" class="detail">
                     {$view.description|clean_html|safe}

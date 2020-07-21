@@ -1,11 +1,11 @@
 {if $sbdata}
 <div class="card">
-    <h3 class="card-header">
+    <h2 class="card-header">
         {str tag="networkservers" section="auth.xmlrpc"}
         <span class="float-right">
             {contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}
         </span>
-    </h3>
+    </h2>
     <ul id="sitemenu" class="list-group">
         {foreach from=$sbdata item=peer}
         {if $peer.instance != $userauthinstance}

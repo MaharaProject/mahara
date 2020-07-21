@@ -784,7 +784,7 @@ $deleteform = pieform(array(
             'type' => 'button',
             'usebuttontag' => true,
             'class' => 'btn-secondary',
-            'value'          => '<span class="icon icon-trash-alt icon-lg text-danger left" role="presentation" aria-hidden="true"></span><span>'. get_string('deleteuser', 'admin') . '</span>',
+            'value'          => '<span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span>'. get_string('deleteuser', 'admin') . '</span>',
             'confirm' => get_string('confirmdeleteuser', 'admin'),
         ),
     ),
@@ -925,7 +925,7 @@ if ($USER->get('admin')
     if (!empty($options)) {
         $elements['addinstitutionheader'] = array(
             'type'  => 'markup',
-            'value' => '<h4>' . get_string('addusertoinstitution1', 'admin') . '</h4>',
+            'value' => '<h3>' . get_string('addusertoinstitution1', 'admin') . '</h3>',
         );
         $elements['addinstitution'] = array(
             'type'         => 'select',

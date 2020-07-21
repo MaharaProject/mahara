@@ -1,25 +1,21 @@
 .fileupload {
-    padding: 20px;
-    border: $border-width solid $border-color;
-    background-color: $body-bg;
     .intro {
         font-weight: $font-weight-bold;
     }
     .description {
         color: $theme-text-midtone-color;
-        font-size: $font-size-base * 0.9285;
+        font-size: $font-size-sm;
     }
     .title {
         padding: 0;
-        margin: 0 0 15px 0;
+        margin: 0 0 $spacing-lg 0;
     }
 }
 
 .card-fake {
-    margin-bottom: 15px;
-    .title {
-        padding: 0;
-        margin: 15px 0 15px 0;
+    margin: $spacing-lg 0;
+    .card-header {
+        padding: $card-spacer-y $card-spacer-x !important;
     }
 }
 
@@ -38,18 +34,18 @@
 .filelist.table,
 .fileuploadlicense {
     .form-group {
-        padding: 10px 0 !important;
+        padding: $spacing-base 0 !important;
         border-bottom-width: 0 !important;
     }
 }
 
 .uploadform + .fileuploadlicense {
-    margin-top: 15px;
+    margin-top: $spacing-lg;
 }
 
 .fileuploadlicense {
     input, .picker {
-        max-width: 200px;
+        max-width: 12.5rem; // 200px;
     }
     @include media-breakpoint-between(lg, lg) {
         label {
@@ -58,12 +54,6 @@
     }
 }
 
-// reset padding and margin inside collapsible
-.filelist.table,
-.filelist-wrapper.card {
-    margin-bottom: 0;
-    padding: 0 !important;
-}
 .filebrowser.form-group {
     margin-bottom: 0;
     border-bottom: $list-group-border-width solid $list-group-border-color;
@@ -73,11 +63,11 @@
 }
 
 .uploadform.userfile {
-    margin-bottom: 20px;
+    margin-bottom: $spacing-xl;
     .fileupload-container.col-md-12 & {
         width: 50%;
         float: left;
-        margin-bottom: 20px;
+        margin-bottom: $spacing-xl;
     }
     .file {
         display: block;
@@ -87,8 +77,8 @@
 .filelist {
     .file-move-list {
         list-style-type: none;
-        margin-top: 10px;
-        padding-left: 15px;
+        margin-top: $spacing-base;
+        padding-left: $spacing-lg;
 
         li .icon {
             color: $theme-secondary-color;
@@ -101,20 +91,20 @@
 }
 .table .fileedittablewrap {
     background-color: $table-accent-bg;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
 }
 
 // file browser inside modal screen
 .modal-filebrowser {
-    margin-top: 50px;
-    padding: 10px 20px 20px;
+    margin-top: 3.125rem; // 50px;
+    padding: $spacing-base $spacing-xl $spacing-xl;
 
     .close {
         width: 100%;
         text-align: right;
         float: none;
-        margin-bottom: 10px;
+        margin-bottom: $spacing-base;
     }
 }
 
@@ -122,21 +112,14 @@
     background-color: $state-warning-bg;
 }
 
-.filelist-wrapper {
-    .card-header {
-        padding: 10px 0 10px 20px;
-        margin-bottom: 10px;
-    }
-}
-
 .file-wrapper {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem; // 8px;
 }
 
 .filedata-icon {
     float: left;
-    margin-right: 60px;
-    padding-bottom: 30px;
+    margin-right: 3.75rem; // 60px;
+    padding-bottom: $spacing-xxl;
 }
 
 .icon-drag:hover {

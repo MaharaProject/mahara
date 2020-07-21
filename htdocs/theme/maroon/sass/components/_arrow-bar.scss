@@ -1,24 +1,13 @@
 .arrow-bar {
-  line-height: 36px;
   border-radius: 0;
-
-  .right-text {
-      padding: 0 15px;
-  }
-  .arrow::after {
-    border-bottom: 24px solid transparent;
-    border-top: 25px solid transparent;
-  }
 }
 
 .nav-inpage {
     &.nav > li {
         > a, button {
-            line-height: 45px;
             margin-top: 1px;
             margin-bottom: 0;
-            white-space: nowrap;
-            text-align: center;
+            padding: 1rem .5rem;
             border-radius: 0;
         }
     }

@@ -1,6 +1,6 @@
 {foreach from=$blogs->data item=blog}
 <div class="card {if $blog->locked}card bg-warning{else} card{/if} blog card-half">
-    <h3 class="card-header has-link">
+    <h2 class="card-header has-link">
         <a class="title-link title" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
         {$blog->title}
         {if $blog->postcount == 0}
@@ -14,7 +14,7 @@
         {/if}
          <span class="icon icon-arrow-right float-right link-indicator" role="presentation" aria-hidden="true"></span>
         </a>
-    </h3>
+    </h2>
 
     <div id="blogdesc" class="card-body">
         <a class="link-unstyled" href="{$WWWROOT}artefact/blog/view/index.php?id={$blog->id}">
@@ -25,7 +25,7 @@
     {if $blog->canedit}
     <div class="card-footer has-form">
         <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-secondary btn-sm">
-            <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
             {str tag=addpost section=artefact.blog}
         </a>
@@ -35,7 +35,7 @@
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
             <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
-                <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
             </a>
             {$blog->deleteform|safe}

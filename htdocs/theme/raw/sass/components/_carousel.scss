@@ -30,7 +30,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        padding: 10px 0 0 0;
+        padding: $spacing-base 0 0 0;
     }
     .carousel-control {
         width: auto;
@@ -42,21 +42,21 @@
             vertical-align: middle;
         }
         &.left {
-            left: -25px;
+            left: -2rem; // -32px;
         }
         &.right {
-            right: -25px;
+            right: -1.5625rem; // -25px;
         }
         &:hover,
         &:focus {
             opacity: 1;
         }
         .icon-lg {
-            font-size: $font-size-base * 2.15;
+            font-size: $font-size-base * 2; // 32px;
         }
         .carousel-control-first,
         .carousel-control-last {
-            margin-top: 35px;
+            margin-top: 2.1875rem; // 35px;
         }
         .carousel-control-last {
             text-align: right;
@@ -68,11 +68,14 @@
                 margin-left: 0;
             }
         }
+        .carousel-control-prev {
+            margin-left: 0.4375rem;
+        }
         a {
             display: block;
             color: $theme-text-color;
             opacity: .5;
-            width: 20px;
+            width: 1.25rem; // 20px;
             &:hover,
             &:focus {
                 outline: 0;

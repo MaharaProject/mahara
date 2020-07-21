@@ -9,18 +9,18 @@
         {/if}
         {if $group->canleave}
             <a href ="{$WWWROOT}group/leave.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-long-arrow-alt-right icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-long-arrow-alt-right text-danger left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="leavegroup" section="group"}</span>
             </a>
         {/if}
         {if $group->invitefriends}
             <a href ="{$WWWROOT}group/inviteusers.php?id={$group->id}&friends=1" class="btn btn-secondary">
-                <span class="icon icon-user-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="invitefriends" section="group"}</span>
             </a>
         {elseif $group->suggestfriends && ($group->request || $group->jointype == 'open')}
             <a href ="{$WWWROOT}group/suggest.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-regular icon-lightbulb icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-regular icon-lightbulb left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="suggesttofriends" section="group"}</span>
             </a>
         {/if}
@@ -105,7 +105,7 @@
     <div class="btn-action-list requestedtojoin">
         <div class="btn-top-right btn-group btn-group-top">
             <a href="{$WWWROOT}group/requestjoin.php?id={$group->id}" class="btn btn-secondary">
-                <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                 {str tag="requestjoingroup" section="group"}
             </a>
         </div>

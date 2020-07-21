@@ -40,7 +40,7 @@ jQuery(function($) {
         for (i = 0; i < tabcontent.length; i = i + 1) {
             // get id and title from div (tabcontent)
             id = $(tabcontent[i]).attr('id');
-            heading = $(tabcontent[i]).find('legend h4').first().text();
+            heading = $(tabcontent[i]).find('legend').first().text();
 
             // if the tab-pane isn't hidden
             if (!$(tabcontent[i]).hasClass('d-none')) {

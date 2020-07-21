@@ -3,8 +3,8 @@
 }
 
 .navbar-toggle {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 0.5rem; // 8px;
+  padding-bottom: 0.5rem; // 8px;
 }
 
 .nav .navbar-showchildren {
@@ -12,18 +12,18 @@
 }
 
 .navbar-main .nav-toggle-area {
-  padding: 17px 0 12px 0;
+  padding: 1.0625rem 0 0.75rem 0; // 17px 0 12px 0;
 }
 
 .navbar-form.navbar-collapse {
-  top: 17px;
+  top: 1.0625rem; // 17px;
 }
 
 // Header messagebox form
 .navbar-messages {
     .navbar-messages-count {
       border-radius: 0;
-      padding: 0 5px;
+      padding: 0 $spacing-xs;
       font-weight: $font-weight-bold;
     }
 }

@@ -1,41 +1,40 @@
 .forum-post {
-    border-left: 1px solid $gray-200;
+    border-left: $border-width solid $gray-200;
     padding-left: 0;
 
     margin-top: 0;
-    padding-top: 15px;
-    border-top: 1px solid $gray-200;
-    border-right: 1px solid $gray-200;
+    padding-top: $spacing-lg;
+    border-top: $border-width solid $gray-200;
+    border-right: $border-width solid $gray-200;
 
     .forumpostleft {
-        padding-left: 10px;
+        padding-left: $spacing-base;
         .media-object {
             border-radius: 50%;
         }
     }
     .media-body {
-        padding-right: 10px;
+        padding-right: $spacing-base;
     }
 }
 .forum-post-btns {
     background-color: $gray-200;
-    padding: 5px;
+    padding: $spacing-sm;
     a {
         color: $theme-text-color;
-
         background-color: $btn-secondary-bg;
-        border: 1px solid $btn-secondary-border;
+        border: $btn-border-width solid $btn-secondary-border;
         border-radius: $border-radius;
         cursor: pointer;
         display: inline-block;
         font-size: $font-size-sm;
         font-weight: $font-weight-normal;
-        line-height: 1.5;
+        line-height: $line-height-base;
         margin-bottom: 0;
-        padding: 6px 9px;
+        padding: $btn-padding-y $btn-padding-x;
         text-align: center;
         white-space: nowrap;
-        margin-left: 5px;
+        margin-left: $spacing-sm;
         &:focus,
         &:hover {
             text-decoration: none;

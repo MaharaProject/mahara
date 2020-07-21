@@ -832,8 +832,8 @@ class PluginAuthSaml extends PluginAuth {
 
                                                 'pubkey' => array(
                                                     'type'         => 'html',
-                                                    'value'        => '<h5 class="title">' . get_string('publickey','admin') . '</h5>' .
-                                                      '<pre style="font-size: 0.7em; white-space: pre;">' . $cert . '</pre>'
+                                                    'value'        => '<h4 class="title">' . get_string('publickey','admin') . '</h4>' .
+                                                      '<pre style="font-size: 0.75rem; white-space: pre;">' . $cert . '</pre>'
                                                 ),
                                                 'sha1fingerprint' => array(
                                                     'type'         => 'html',
@@ -866,8 +866,8 @@ class PluginAuthSaml extends PluginAuth {
                     ),
                     'pubkey' => array(
                         'type'         => 'html',
-                        'value'        => '<h5 class="title">' . get_string('newpublickey','auth.saml') . '</h5>' .
-                        '<pre style="font-size: 0.7em; white-space: pre;">' . $newcert . '</pre>'
+                        'value'        => '<h4 class="title">' . get_string('newpublickey','auth.saml') . '</h4>' .
+                        '<pre style="font-size: 0.75rem; white-space: pre;">' . $newcert . '</pre>'
                     ),
                     'sha1fingerprint' => array(
                         'type'         => 'html',
@@ -896,7 +896,7 @@ class PluginAuthSaml extends PluginAuth {
             'name' => 'submit', // must be called submit so we can access it's value
             'type'  => 'button',
             'usebuttontag' => true,
-            'content' => '<span class="icon icon-sync-alt icon-lg left text-danger" role="presentation" aria-hidden="true"></span> '. get_string($certstatus . 'text', 'auth.saml'),
+            'content' => '<span class="icon icon-sync-alt left text-danger" role="presentation" aria-hidden="true"></span> '. get_string($certstatus . 'text', 'auth.saml'),
             'value' => $certstatus,
         );
 

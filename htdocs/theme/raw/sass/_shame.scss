@@ -48,11 +48,11 @@
           > tr {
             > th:first-child,
             > td:first-child {
-              padding-left: 8px;
+              padding-left: 0.5rem; // 8px;
             }
             > th:last-child,
             > td:last-child {
-              padding-right: 8px;
+              padding-right: 0.5rem; // 8px;
             }
           }
         }

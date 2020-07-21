@@ -41,11 +41,11 @@
                             <td class="control-buttons">
                                 <div class="btn-group">
                                     <a href="license-edit.php?edit={$l->name|escape:url}" title="{str tag=edit}" class="btn btn-secondary btn-sm">
-                                        <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str(tag=editspecific arg1=$l->shortname)|escape:html|safe}</span>
                                     </a>
                                     <button class="btn btn-secondary btn-sm" type="submit" title="{str tag=delete}" name="license_delete[{$l->name}]" alt="{str(tag=deletespecific arg1=$l->shortname)|escape:html|safe}">
-                                        <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag=delete}</span>
                                     </button>
                                 </div>

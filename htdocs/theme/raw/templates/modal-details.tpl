@@ -6,7 +6,7 @@
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header text-inline"></h4>
+                <h1 class="modal-title blockinstance-header text-inline"></h1>
             </div>
             <div id="modal_messages"></div>
             <div class="modal-body blockinstance-content">
