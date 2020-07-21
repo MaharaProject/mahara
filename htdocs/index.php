@@ -57,7 +57,8 @@ if ($USER->is_logged_in()) {
         $blocksjs = <<<EOF
         $(function () {
             var options = {
-                verticalMargin: 10,
+                verticalMargin: 5,
+                cellHeight: 10,
                 disableDrag : true,
                 disableResize: true,
             };

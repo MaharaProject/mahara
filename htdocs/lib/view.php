@@ -2104,7 +2104,9 @@ class View {
                     $b->set('positionx', $block->positionx);
                     $b->set('positiony', $block->positiony);
                     $b->set('width', $block->width);
-                    $b->set('height', $block->height);
+                    // when editing there's extr height for the rezise handler
+                    // when displaying the view this is not needed
+                    $b->set('height', ($editing ? $block->height : $block->height-2));
                     $b->set('configdata', (array)$block->configdata);
                 }
                 else {
@@ -2401,7 +2403,7 @@ class View {
             $smarty->assign('blockcontent', $display['html']);
             $smarty->assign('id', $bi->get('id'));
             $smarty->assign('width', $bi->get('width'));
-            $smarty->assign('height', $bi->get('height'));
+            $smarty->assign('height', (empty($newtitle) ? $bi->get('height')-2 : $bi->get('height')));
             $smarty->assign('positionx', $bi->get('positionx'));
             $smarty->assign('positiony', $bi->get('positiony'));
             $display['html'] = $smarty->fetch('view/gridcell.tpl');

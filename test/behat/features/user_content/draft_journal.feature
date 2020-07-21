@@ -61,6 +61,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I click on blocktype "Tagged journal entries"
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
  And I press "Save"
+ And I wait "1" seconds
  Then I should see "My diary entry two"
  And I go to portfolio page "Page UserA_01"
  And I follow "Edit"
