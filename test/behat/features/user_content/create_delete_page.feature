@@ -47,24 +47,17 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Adding Journal block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Recent journal entries" in the "Content types" property
+    And I click on blocktype "Recent journal entries"
     And I press "Save"
     # Adding profile info block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Profile information" in the "Content types" property
+    And I click on blocktype "Profile information"
     And I press "Save"
     # Adding external media block - but remove it instead
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "External media" in the "Content types" property
+    And I click on blocktype "External media"
     And I press "Remove"
 
     And I display the page

@@ -32,10 +32,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     # add "My groups" block and verify it is displayed on the page
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "My groups" in the "Content types" property
+    And I click on blocktype "My groups"
     And I press "Save"
 
     # Site admin Site admin set up "Profile template" to include the following:

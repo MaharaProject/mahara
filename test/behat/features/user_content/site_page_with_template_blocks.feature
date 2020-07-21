@@ -32,10 +32,7 @@ Scenario: Add a text block into the site default portfolio page and create a new
     # Add a Profile information block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I click on "Profile information" in the "Content types" property
+    And I click on blocktype "Profile information"
     And I set the following fields to these values:
     | First name     | 1 |
     | Last name      | 1 |

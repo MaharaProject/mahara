@@ -30,9 +30,7 @@ Scenario: Accessing annotation block (Bug 1443730)
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I set the field "Block title" to "Annotation"
- And I click on "Show more"
- And I click on "Show more"
- And I click on "Annotation" in the "Content types" property
+ And I click on blocktype "Annotation"
  And I press "Save"
 # Checking empty annotation message
  And I should see "This field is required"

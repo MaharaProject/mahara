@@ -85,8 +85,7 @@ Scenario: Creating a Journal entry
  And I follow "Edit"
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
- And I click on "Show more"
- And I click on "Tagged journal entries" in the "Content types" property
+ And I click on blocktype "Tagged journal entries"
  And I set the field "Block title" to "Tagged journal entries"
  And I scroll to the base of id "instconf_tagselect_container"
  And I fill in select2 input "instconf_tagselect" with "one" and select "one"
@@ -100,7 +99,6 @@ Scenario: Creating a Journal entry
  And I press "Save"
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
- And I click on "Show more"
- And I click on "Recent journal entries" in the "Content types" property
+ And I click on blocktype "Recent journal entries"
  And I check "Admin User's Journal"
  And I press "Save"
