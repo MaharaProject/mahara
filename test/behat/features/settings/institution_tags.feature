@@ -94,7 +94,7 @@ Scenario: Inst admin can use Institution tags when creating Institution pages
     # Inst admin put an institution tag on a text block artefact on an institution page
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Text" in the "Content types" property
+    And I click on blocktype "Text"
     And I set the field "Block title" to "Text Block 1"
     And I set the field "Block content" to "Here is a new block."
     And I fill in select2 input "instconf_tags" with "One" and select "Institution One: One tag"

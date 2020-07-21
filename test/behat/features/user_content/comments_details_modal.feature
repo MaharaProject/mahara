@@ -19,7 +19,7 @@ Scenario: Create a block and see comments and details modal and headers update a
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I set the field "Block title" to "Image Block"
-    And I click on "Image" in the "Content types" property
+    And I click on blocktype "Image"
     And I follow "Image"
     And I attach the file "Image1.jpg" to "File"
     And I press "Save"
@@ -75,7 +75,7 @@ Scenario: Add a block with multiple artefacts and see the comments and details h
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I set the field "Block title" to "File(s) to Download Block"
-    And I click on "File(s) to download" in the "Content types" property
+    And I click on blocktype "File(s) to download"
     And I expand "Files" node in the "#instconf_artefactfieldset_container" "css_element"
     And I attach the file "Image2.png" to "File"
     And I attach the file "mahara_about.pdf" to "File"

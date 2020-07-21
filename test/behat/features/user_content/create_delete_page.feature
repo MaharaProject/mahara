@@ -42,7 +42,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Adding media block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "File(s) to download" in the "Content types" property
+    And I click on blocktype "File(s) to download"
     And I press "Save"
     # Adding Journal block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property

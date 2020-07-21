@@ -19,7 +19,7 @@ Scenario: Add Files to download block
     And I click on "Edit" in "Page UserA_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "File(s) to download" in the "Content types" property
+    And I click on blocktype "File(s) to download"
     And I expand "Files" node in the "#instconf_artefactfieldset_container" "css_element"
 
     And I attach the file "mahara_about.pdf" to "File"

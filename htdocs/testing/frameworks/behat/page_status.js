@@ -44,7 +44,8 @@ function isMaharaPageReady() {
         && (window.isEditorInitializing === false)
         && (window.isModalRendering === false)
         && (document.readyState === "complete")
-        && (window.isGridstackRendering === false);
+        && (window.isGridstackRendering === false)
+        && (jQuery.active == 0);
 }
 
 jQuery(function() {

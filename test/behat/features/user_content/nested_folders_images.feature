@@ -58,7 +58,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I click on "Edit" in "Page UserA_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Folder" in the "Content types" property
+    And I click on blocktype "Folder"
     And I expand "Folders" node
     And I click on "Select" in "Folder1" row
     # Set the block title to blank so it uses the name of the folder

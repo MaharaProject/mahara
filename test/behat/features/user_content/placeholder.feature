@@ -36,7 +36,7 @@ Scenario: Adding a placeholder block to the page
     # Change placeholder block to a text block
     And I fill in the following:
     | Block title | Mahara text block title |
-    And I click on "Text" in the "Content types" property
+    And I click on blocktype "Text"
     And I set the field "Block content" to "Mahara text block content"
     And I press "Save"
     Then I should see "Mahara text block title"
