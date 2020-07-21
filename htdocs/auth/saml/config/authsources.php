@@ -62,7 +62,7 @@ $config = array(
         'encryption.blacklisted-algorithms' => array(),
         'signature.algorithm' => $signaturealgo,
         'privatekey' => $key,
-        'privatekey_pass' => get_config('sitename'),
+        'privatekey_pass' => get_config_plugin('auth', 'saml', 'keypass'),
         'certificate' => $cert,
 
         'redirect.sign' => TRUE,
@@ -73,6 +73,6 @@ $config = array(
 
 if (file_exists($newcert) && file_exists($newkey)) {
     $config['default-sp']['new_privatekey'] = $newkey;
-    $config['default-sp']['new_privatekey_pass'] = get_config('sitename');
+    $config['default-sp']['new_privatekey_pass'] = get_config_plugin('auth', 'saml', 'newkeypass');
     $config['default-sp']['new_certificate'] = $newcert;
 }
