@@ -7,6 +7,7 @@ SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
 BEHATROOT=`grep -v '^//\|^#' $MAHARAROOT/htdocs/config.php | grep behat_dataroot | grep -o "['\"].*['\"];" | sed "s/['\";]//g"`
 SERVER=0
+SERVERXVFB=0
 test -z $SELENIUM_PORT && export SELENIUM_PORT=4444
 test -z $PHP_PORT && export PHP_PORT=8000
 test -z $XVFB_PORT && export XVFB_PORT=10
@@ -26,17 +27,47 @@ function is_selenium_running {
     return 1;
 }
 
+function run_xvfb {
+    echo "Starting Xvfb ..."
+    XVFB_CLIENTS="-maxclients 512"
+    XVFB_INET6="-nolisten inet6"
+    XVFB_SCREEN="-screen 0 1280x1024x24+32"
+    until [ $XVFB_PORT -gt 20 ]
+    do
+        if xdpyinfo -display :${XVFB_PORT} >/dev/null 2>&1
+        then
+            XVFB_PORT=$(( XVFB_PORT+1 ))
+        else
+            Xvfb :${XVFB_PORT} ${XVFB_CLIENTS} ${XVFB_INET6} ${XVFB_SCREEN} -ac > /tmp/xvfb-${XVFB_PORT}.log 2>&1 &
+            sleep 2
+            SERVERXVFB=$!
+            echo "Xvfb is at : ${XVFB_PORT}"
+            echo "PID [${SERVERXVFB}]"
+            return 0
+        fi
+    done
+    echo "Too many Xvfb instances running"
+    return 1
+}
+
 function cleanup {
     echo "Shutdown Selenium"
     # we cant kill it this way anymore as the option has been removed
     # curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
     # so find the process running on the prot and kill it
-    lsof -t -i :${SELENIUM_PORT} | xargs kill
-
+    if is_selenium_running; then
+       lsof -t -i :${SELENIUM_PORT} | xargs kill
+    fi
 
     if [[ $REPORT == 'html' ]]
     then
         xdg-open file://${BEHATROOT}/behat/html_results/index.html
+    fi
+
+    if [[ $SERVERXVFB ]]
+    then
+        echo "Shutdown Xvfb"
+        kill $SERVERXVFB
     fi
 
     if [[ $SERVER ]]
@@ -109,8 +140,8 @@ then
     else
         echo "Start Selenium..."
 
-        SELENIUM_VERSION_MAJOR=3.11
-        SELENIUM_VERSION_MINOR=0
+        SELENIUM_VERSION_MAJOR=3.141
+        SELENIUM_VERSION_MINOR=5
 
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar
         SELENIUM_PATH=./test/behat/$SELENIUM_FILENAME
@@ -127,8 +158,8 @@ then
         if [ $ACTION = 'runheadless' -o $ACTION = 'rundebugheadless' ]
         then
             # we want to run selenium headless on a different display - this allows for that ;)
-            echo "Starting Xvfb ..."
-            Xvfb :${XVFB_PORT} -ac > /tmp/xvfb-${XVFB_PORT}.log 2>&1 & echo "PID [$!]"
+            run_xvfb
+
             DISPLAY=:${XVFB_PORT} nohup java -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -jar $SELENIUM_PATH -port ${SELENIUM_PORT} -log /tmp/selenium-${SELENIUM_PORT}.log > /tmp/selenium-${SELENIUM_PORT}.log 2>&1 & echo $!
         else
             java -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -jar $SELENIUM_PATH -port ${SELENIUM_PORT} -log /tmp/selenium-${SELENIUM_PORT}.log > /tmp/selenium-${SELENIUM_PORT}.log 2>&1 &
@@ -164,6 +195,18 @@ then
     then
           OPTIONS=$OPTIONS" --format=pretty"
     fi
+
+    # if it exists we're in jenkins, force junit
+    if [ ! -z ${MULTI_JOB_NAME} ]
+    then
+      # we're in jenkins mode, add junit style options.
+      rm -rf test/behat/results
+      mkdir -p test/behat/results
+
+      OPTIONS=$OPTIONS" --format=junit --out=test/behat/results --format=progress --out=std"
+    fi
+
+    echo OPTIONS: $OPTIONS
 
     if [ "$TAGS" ]; then
         OPTIONS=$OPTIONS" --tags "$TAGS
