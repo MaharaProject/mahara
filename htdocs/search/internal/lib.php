@@ -282,7 +282,7 @@ class PluginSearchInternal extends PluginSearch {
             $valuecount += $matchcount;
         }
 
-        $querydata = self::split_query_string(strtolower(trim($query_string)));
+        $querydata = self::split_query_string(mb_strtolower(trim($query_string)));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
         $searchusernamesallowed = $USER->get('admin') || $USER->get('staff') || !get_config('nousernames') ? 'TRUE' : 'FALSE';
 
@@ -525,7 +525,7 @@ class PluginSearchInternal extends PluginSearch {
         $ilike = db_ilike();
 
         // Generate the part that matches the search term
-        $querydata = self::split_query_string(strtolower(trim($query_string)));
+        $querydata = self::split_query_string(mb_strtolower(trim($query_string)));
 
         $matches = array();
         $valuecount = 0;
@@ -1075,7 +1075,7 @@ class PluginSearchInternal extends PluginSearch {
                 (LOWER(at.tag) = ?)
             )";
         array_unshift($querydata[1], $USER->get('id'));
-        array_push($querydata[1], strtolower($querystring));
+        array_push($querydata[1], mb_strtolower($querystring));
 
         $results = array(
             'data'   => get_records_sql_array($sql, $querydata[1], $offset, $limit),
@@ -1605,7 +1605,7 @@ class PluginSearchInternal extends PluginSearch {
       $text = self::decode_entities($text);
 
       // Lowercase
-      $text = strtolower($text);
+      $text = mb_strtolower($text);
 
       // Call an external processor for word handling.
       //search_preprocess($text);
