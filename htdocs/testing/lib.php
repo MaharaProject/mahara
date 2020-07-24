@@ -203,6 +203,50 @@ function testing_update_dependencies() {
     }
 }
 
+/*
+ * Will check if changes have been made in the composer.json file.
+ * This is done by calculating the composer.json hash and then comparing it with the hash saved in composer.lock
+ * The composer.lock file is generated everytime there is a change composer.json
+ *
+ * @return boolean
+ */
+function needs_dependencies_update() {
+    $content = json_decode(file_get_contents(get_config('docroot') . '../external/composer.json'), true);
+    // calculate composer.json hash manually because it's not saved in composer.lock like it used to be
+    // copied the following code from the composer function that used to generate the hash
+    $relevantKeys = array(
+        'name',
+        'version',
+        'require',
+        'require-dev',
+        'conflict',
+        'replace',
+        'provide',
+        'minimum-stability',
+        'prefer-stable',
+        'repositories',
+        'extra',
+    );
+
+    $relevantContent = array();
+
+    foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
+        $relevantContent[$key] = $content[$key];
+    }
+    if (isset($content['config']['platform'])) {
+        $relevantContent['config']['platform'] = $content['config']['platform'];
+    }
+
+    ksort($relevantContent);
+
+    $json = md5(json_encode($relevantContent));
+
+    $hash = 'content-hash';
+    $lock = json_decode(file_get_contents(get_config('docroot') . '../external/composer.lock'))->$hash;
+
+    return ($lock !== $json);
+}
+
 /**
 * Copies mahara styling to external html folder
 */
