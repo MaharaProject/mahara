@@ -153,7 +153,13 @@ try {
         }
         else {
             // Update behat and dependencies using composer
-            testing_update_dependencies();
+            if (needs_dependencies_update()) {
+                cli::cli_print("Composer lock file out of date");
+                testing_update_dependencies();
+            }
+            else {
+                cli::cli_print("Composer lock file up to date");
+            }
         }
 
         if ($cli->get_cli_param('inithtml')) {
@@ -253,3 +259,5 @@ catch (Exception $e) {
 }
 
 exit(0);
+
+
