@@ -52,12 +52,10 @@ function can_download_artefact($artefact) {
 */
 function zip_filename_from($name) {
     $name = preg_replace('#\s+#', '_', strtolower($name));
+    $name = get_string('zipfilenameprefix', 'artefact.file') . '-' . $name;
     // \pL is used to match any letter in any alphabet (http://php.net/manual/en/regexp.reference.unicode.php)
     $name = extension_loaded('mbstring') ? mb_eregi_replace('#[^\pL0-9_\-]+#', '', $name) : preg_replace('#[^\pL0-9_\-]+#', '', $name);
-    if ($name != '') {
-        $name = '-' . $name;
-    }
-    return get_string('zipfilenameprefix', 'artefact.file') . $name . '.zip';
+    return $name . '.zip';
 }
 
 /*
@@ -68,15 +66,16 @@ function zip_clean_temp_dir() {
     global $USER;
 
     $temp_path = get_config('dataroot').'temp/';
-    $regex = '#' . '([0-9]+)-([0-9]+)-' . get_string('zipfilenameprefix', 'artefact.file') . '-([\pL0-9_\-]+)\.zip#';
+    $regex = '#^' . '([0-9]+)-([0-9]+)-' . get_string('zipfilenameprefix', 'artefact.file') . '-([\pL0-9_\-]+)\.zip#';
+    $regex_dir = '#^' . 'directory-([0-9]+)-([0-9]+)-([\pL0-9_\-]+)\.zip#';
     $zipfiles = glob($temp_path.'*.zip');
     $zips = array();
-
     // Create an array of zip files that have been created by this script for the current user.
     foreach ($zipfiles as $zipfile) {
         $zip = str_replace($temp_path, '', $zipfile);
-        if (preg_match($regex, $zip, $matches)) {
-            if ((int) $matches[1] == $USER->get('id')) {
+        if (preg_match($regex, $zip, $matches) || preg_match($regex_dir, $zip, $matches)) {
+            $time_now = time() - (int) $matches[2];
+            if ((int) $matches[1] == $USER->get('id') || ($time_now >= get_config_plugin('artefact', 'file', 'folderdownloadkeepzipfor'))) {
                 $filename = $matches[3];
 
                 if (!isset($zips[$filename])) {
@@ -297,15 +296,17 @@ else {
             $zip = new ZipArchive();
 
             $foldername = $folderinfo->title;
+            $foldername = clean_str_replace($foldername, '_');
 
-            $filename = 'directory-'.$USER->get('id').'-'.$foldername.'-'.time().'.zip';
-            $filepath = get_config('dataroot').'temp/'.$filename;
+            $filename = 'directory-' . $USER->get('id') . '-' . time() . '-' . $foldername . '.zip';
+            $filename = str_replace(' ', '-', $filename);
+            $filepath = get_config('dataroot') . 'temp/' . $filename;
 
             if ($zip->open($filepath, ZIPARCHIVE::CREATE) !== true) {
                 throw new NotFoundException();
             }
 
-            $files = zip_process_directory($zip, $folderid, $folderinfo->title.'/');
+            $files = zip_process_directory($zip, $folderid, $folderinfo->title . '/');
             zip_write_contents($zip, $filepath, $files);
             $zip->close();
 
