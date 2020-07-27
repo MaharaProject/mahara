@@ -468,11 +468,14 @@ jQuery(function($) {
             update_delete_standard_button_handlers();
             std_index = standard_array.length;
             var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
-            sid_field.setValue(standard_array.length + 1);
-            // var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-            // if (se_sid_field) {
-            //     se_sid_field.setValue(standard_array.length + 1);
-            // }
+            var max_standard_id = Math.max.apply(Math, standard_array);
+            if (max_standard_id > 0 ) {
+                sid_field.setValue(max_standard_id + 1);
+            }
+            else {
+                // in case of an empty standard_array, Math.max will return -Infinity
+                sid_field.setValue(1);
+            }
             // Reset standard element count
             eid = 0;
             update_standard_shortname_handler();
