@@ -16,58 +16,29 @@ Given the following "users" exist:
     | Page UserC_01 | Page 01| user | UserC |
 
     And the following "groups" exist:
-    | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-    | GroupA | UserA | GroupA owned by UserA | standard | ON | OFF | all | ON | OFF | UserB, UserC |  |
+    | name   | owner | description           | grouptype| open | invitefriends | editroles | submittableto | allowarchives | members | staff | attachments |
+    | GroupA | UserA | GroupA owned by UserA | standard | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |  |Image3.png |
+
+    And the following "forums" exist:
+    | group  | title           | description                            | creator | config |
+    | GroupA | Group A's forum | Talking about things this group can do | UserA   | indentmode=full_indent, autosubscribe=1 |
+
+    And the following "forumposts" exist:
+    | group  | forum           | user  | topic                | subject | message                                                 | attachments |
+    | GroupA | Group A's forum | UserA | Taking photos of cats|         | The difficulty of cat photography is often underrated.  | Image2.png, mahara_about.pdf, Image3.png |
+    | GroupA | Group A's forum | UserB | Taking photos of cats|         | I don't know Angela, I just use my phone to photograph my cat, and I've got some pretty good ones! ||
+    | GroupA | Group A's forum | UserA |Taking photos of cats |         |The difficulty of cat photography is often underrated. You need a fast lens to accurately capture the speed and agility of the cat.||
+    | GroupA | Group A's forum | UserA |Taking photos of Dogs |         |The difficulty of Dog photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Dog.|| 
+    | GroupA | Group A's forum | UserA |Taking photos of Cows |         |The difficulty of Cows photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Cows.||
+    And the following "blocks" exist:
+    | title              | type            | page          |retractable | data |
+    | Recent Forum Posts | recentforumposts| Page UserC_01 | no         | groupname=GroupA; |
 
 Scenario: Create forum and add block to group page
-    Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Groups" in "Engage" from main menu
-    And I follow "Edit \"GroupA\" Settings"
-    And I follow "Forums (tab)"
-    And I follow "New forum"
-    And I set the following fields to these values:
-    | Title | Group A's forum |
-    | Description | Talking about things this group can do |
-    And I select "Fully expand" from "Forum indent mode"
-    And I enable the switch "Automatically subscribe group members"
-    And I press "Save"
-    And I follow "New topic"
-    And I set the following fields to these values:
-    | Subject | Taking photos of cats |
-    | Message | The difficulty of cat photography is often underrated. You need a fast lens to accurately capture the speed and agility of the cat. |
-    And I enable the switch "Send message now"
-    And I press "Post"
-    And I log out
-    And I log in as "UserB" with password "Kupuh1pa!"
-    # Add a file so we can test existing files bit later
-    And I choose "Files" in "Create" from main menu
-    And I attach the file "Image2.png" to "files_filebrowser_userfile"
-    And I am on homepage
-    And I wait "1" seconds
-    And I scroll to the id 'inboxblock'
-    And I follow "Taking photos of cats"
-    And I follow "Topic"
-    And I follow "Reply"
-    And I set the field "Message" to "I don't know Angela, I just use my phone to photograph my cat, and I've got some pretty good ones!"
-    And I press "Add a file"
-    And I click on "My files"
-    # Attach existing user file
-    And I press "Select \"Image2.png\""
-    # Upload a new file to user section
-    And I attach the file "mahara_about.pdf" to "File"
-    And I click on "Group files"
-    And I attach the file "Image3.png" to "File"
-    And I press "Close" in the "Upload dialog" property
-    And I press "Post"
-    And I log out
-    And I log in as "UserC" with password "Kupuh1pa!"
+    Given I log in as "UserC" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserC_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
-    And I press "Add"
-    And I click on blocktype "Recent forum posts"
     # TODO could test other options
-    And I press "Save"
     And I display the page
     # Allow the ajax block to load
     And I wait "1" seconds
@@ -83,36 +54,6 @@ Scenario: Administrative forum bulk actions
     And I choose "Groups" in "Engage" from main menu
     And I follow "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
-    And I follow "New forum"
-    And I set the following fields to these values:
-    | Title | Group A's forum |
-    | Description | Talking about things this group can do |
-    And I select "Fully expand" from "Forum indent mode"
-    And I enable the switch "Automatically subscribe group members"
-    And I press "Save"
-    # Create 3 topics
-    And I follow "New topic"
-    And I set the following fields to these values:
-    | Subject | Taking photos of cats |
-    | Message | The difficulty of cat photography is often underrated. You need a fast lens to accurately capture the speed and agility of the cat. |
-    And I enable the switch "Send message now"
-    And I press "Post"
-    And I follow "Group A's forum"
-    # Second topic
-    And I follow "New topic"
-    And I set the following fields to these values:
-    | Subject | Taking photos of Dogs |
-    | Message | The difficulty of Dog photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Dog. |
-    And I enable the switch "Send message now"
-    And I press "Post"
-    And I follow "Group A's forum"
-    # Third topic
-    And I follow "New topic"
-    And I set the following fields to these values:
-    | Subject | Taking photos of Cows |
-    | Message | The difficulty of Cows photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Cows. |
-    And I enable the switch "Send message now"
-    And I press "Post"
     And I follow "Group A's forum"
     # Perform bulk actions of
     And I check "Taking photos of Cows"
