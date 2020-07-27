@@ -1,5 +1,5 @@
 <div class="section-import">
-    <h2>{str tag=plan section=artefact.plans}</h2>
+    <h2>{str tag=Plan section=artefact.plans}</h2>
     {foreach from=$entryplans item=plan}
     <div class="list-group-item">
         <div id="entryplan-{$plan.id}" class="row">
