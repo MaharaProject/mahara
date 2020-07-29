@@ -25,7 +25,7 @@ function loadGridTranslate(grid, blocks) {
         }
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
-            '<div/><div/>');
+            '</div></div>');
         el = grid.addWidget(
               blockContent,
               block.positionx,
@@ -69,7 +69,7 @@ function loadGrid(grid, blocks) {
         }
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
-            '<div/><div/>');
+            '</div></div>');
         addNewWidget(blockContent, block.id, block, grid, block.class, minWidth, minHeight);
     });
 

@@ -7,24 +7,24 @@
         $j('#blockinstance_{$blockid} .js-heading a[data-toggle="collapse"]').on("click", function() {
             if (blockinstance_{$blockid}_loaded === false) {
                 {if $jsflashvars}
-                var embedobj = $j('<object />').attr('width', '{$width}')
+                var embedobj = $j('<object></object>').attr('width', '{$width}')
                                                .attr('height', '{$height}');
-                $j('<param />').attr('name', 'movie')
+                $j('<param></param>').attr('name', 'movie')
                                .attr('value', '{$jsurl}')
                                .appendTo(embedobj);
-                $j('<param />').attr('name', 'allowfullscreen')
+                $j('<param></param>').attr('name', 'allowfullscreen')
                                .attr('value', 'true')
                                .appendTo(embedobj);
-                $j('<param />').attr('name', 'allowscriptaccess')
+                $j('<param></param>').attr('name', 'allowscriptaccess')
                                .attr('value', 'always')
                                .appendTo(embedobj);
-                $j('<param />').attr('name', 'wmode')
+                $j('<param></param>').attr('name', 'wmode')
                                .attr('value', 'transparent')
                                .appendTo(embedobj);
-                $j('<param />').attr('name', 'flashvars')
+                $j('<param></param>').attr('name', 'flashvars')
                                .attr('value', '{$jsflashvars}')
                                .appendTo(embedobj);
-                $j('<embed />').attr('src', '{$jsurl}')
+                $j('<embed></embed>').attr('src', '{$jsurl}')
                                .attr('allow', 'fullscreen')
                                .attr('wmode', 'transparent')
                                .attr('allowscriptaccess', 'always')
@@ -37,7 +37,7 @@
                 $j('#user_block_{$blockid}_waiting').css('display','none');
                 {else}
                 var jsurl = '{$jsurl}'.replace(/&amp;/g,'&');
-                $j('<iframe />').attr('src', jsurl)
+                $j('<iframe></iframe>').attr('src', jsurl)
                                 .attr('width', '{$width}')
                                 .attr('height', '{$height}')
                                 .attr('allowfullscreen', '')
