@@ -718,11 +718,21 @@ function is_redis_configured() {
 
 function get_redis_master() {
     $master = null;
-    foreach (get_redis_servers() as $server) {
-        if (!empty($server['server']) && !empty($server['mastergroup']) && !empty($server['prefix'])) {
-            require_once(get_config('libroot') . 'redis/sentinel.php');
-            $sentinel = new sentinel($server['server']);
-            $master = $sentinel->get_master_addr($server['mastergroup']);
+
+    if ($redisserver = get_config('redisserver')) {
+        // Skipping REDIS SENTINEL master interrogation if redisserver variable configured in config.php.
+        $master = new \stdClass();
+        list($redisserverhost, $redisserverport) = explode(':', $redisserver);
+        $master->ip = $redisserverhost;
+        $master->port = $redisserverport;
+    }
+    else {
+        foreach (get_redis_servers() as $server) {
+            if (!empty($server['server']) && !empty($server['mastergroup']) && !empty($server['prefix'])) {
+                require_once(get_config('libroot') . 'redis/sentinel.php');
+                $sentinel = new sentinel($server['server']);
+                $master = $sentinel->get_master_addr($server['mastergroup']);
+            }
         }
     }
 
@@ -730,11 +740,11 @@ function get_redis_master() {
 }
 
 function get_redis_servers() {
-    $redissentinelservers = get_config('redissentinelservers');
+    $redisserver = get_config('redisserver') ? get_config('redisserver') : get_config('redissentinelservers');
     $redismastergroup = get_config('redismastergroup');
     $redisprefix = get_config('redisprefix');
     $redis_servers[] = array(
-        'server' => $redissentinelservers,
+        'server' => $redisserver,
         'mastergroup' => $redismastergroup,
         'prefix' => $redisprefix
     );
