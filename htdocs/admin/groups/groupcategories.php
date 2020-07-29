@@ -123,7 +123,7 @@ jQuery(function($) {
       var buttongroup = $('<span>', {'class': 'btn-group'});
       buttongroup.append(edit, del);
 
-      var row = $('<tr />', {'id':'menuitem_'+item.id});
+      var row = $('<tr></tr>', {'id':'menuitem_'+item.id});
       row.append('<td>' + item.name + '</td>');
       row.append(buttongroup.wrap('<td>').parent());
       return row;

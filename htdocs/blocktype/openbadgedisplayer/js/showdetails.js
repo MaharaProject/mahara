@@ -31,7 +31,7 @@
             if (!url) {
                 return '-';
             }
-            return jQuery('<a/>').attr({ href: url, title: url }).text(shorten(url));
+            return jQuery('<a></a>').attr({ href: url, title: url }).text(shorten(url));
         }
 
         function buildBadgeContent(assertion) {

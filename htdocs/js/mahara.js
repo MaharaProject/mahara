@@ -139,7 +139,7 @@ function formStartProcessing(form, btn) {
     if (button.length) {
         // we add a hidden input field so the "disabled" button still gets to
         // pass its value through
-        var node = jQuery('<input type="hidden" />').attr({
+        var node = jQuery('<input type="hidden"></input>').attr({
             'value': button.val(),
             'name': button.attr('name')
         });
