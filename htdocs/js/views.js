@@ -364,7 +364,7 @@
             },
             helper: function(event) {
                 var original = $(this),
-                    helper = $("<div />").append(original.clone());
+                    helper = $("<div></div>").append(original.clone());
 
                 helper.children().each(function(index) {
                     // Set helper cell sizes to match at least the original sizes
