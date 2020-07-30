@@ -1389,6 +1389,7 @@
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="taguk" TYPE="unique" FIELDS="tag,resourcetype,resourceid" />
                 <KEY NAME="editedbyfk" TYPE="foreign" FIELDS="editedby" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
