@@ -68,10 +68,37 @@ function edit_tag_submit(Pieform $form, $values) {
         redirect(get_config('wwwroot') . 'edittags.php?tag=' . urlencode($tag));
     }
     db_begin();
+    // Check we don't end up with a clash where the tag value change matches another tag on the same object
+    if ($newtags = get_records_sql_assoc("SELECT id, tag, resourcetype, resourceid
+                                          FROM {tag} WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection', 'blocktype')",
+                                          array($values['tagname'], 'user', $userid))) {
+        $newtagarray = array();
+        foreach ($newtags as $nk => $nv) {
+            $tagstr = $nv->tag . $nv->resourcetype . $nv->resourceid;
+            $newtagarray[$tagstr] = 1;
+        }
+
+        if ($oldtags = get_records_sql_assoc("SELECT id, tag, resourcetype, resourceid
+                                              FROM {tag} WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection', 'blocktype')",
+                                              array($tag, 'user', $userid))) {
+            $deltags = array();
+            foreach ($oldtags as $ok => $ov) {
+                $potentialtagstr = $values['tagname'] . $ov->resourcetype . $ov->resourceid;
+                if (isset($newtagarray[$potentialtagstr])) {
+                    $deltags[] = $ov->id;
+                }
+            }
+            if ($deltags) {
+                execute_sql("DELETE FROM {tag} WHERE id IN (" . implode(',', $deltags) . ")");
+            }
+        }
+    }
+
     execute_sql(
-        "UPDATE {tag} SET tag = ? WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection')",
+        "UPDATE {tag} SET tag = ? WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection', 'blocktype')",
         array($values['tagname'], $tag, 'user', $userid)
     );
+
     db_commit();
     $SESSION->add_ok_msg(get_string('tagupdatedsuccessfully'));
     redirect(get_config('wwwroot') . 'tags.php?tag=' . urlencode($values['tagname']));
@@ -84,7 +111,7 @@ function delete_tag_submit(Pieform $form, $values) {
     }
     db_begin();
     execute_sql(
-        "DELETE FROM {tag} WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection')",
+        "DELETE FROM {tag} WHERE tag = ? AND ownertype = ? AND ownerid = ? AND resourcetype IN ('artefact', 'view', 'collection', 'blocktype')",
         array($tag, 'user', $userid)
     );
     db_commit();
