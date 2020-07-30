@@ -221,7 +221,7 @@ class Collection {
             }
             delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->get('id'));
             $tags = check_case_sensitive($this->get_tags(), 'tag');
-            foreach ($tags as $tag) {
+            foreach (array_unique($tags) as $tag) {
                 //truncate the tag before insert it into the database
                 $tag = substr($tag, 0, 128);
                 $tag = check_if_institution_tag($tag);
