@@ -10,14 +10,16 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio');
-
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('editcomment', 'artefact.comment'));
 safe_require('artefact', 'comment');
+require_once('view.php');
 
 $id = param_integer('id');
 $viewid = param_integer('view');
+$view = new View ($viewid);
+View::set_nav($view->get('group'), $view->get('institution'), false, false, false);
+
 $comment = new ArtefactTypeComment($id);
 
 if ($USER->get('id') != $comment->get('author')) {
