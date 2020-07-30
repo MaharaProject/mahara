@@ -1368,5 +1368,30 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019031923) {
+        log_debug('Adding unique key to tag table');
+        $table = new XMLDBTable('tag');
+        // Add the new unique index
+        $index = new XMLDBIndex('taguk');
+        $index->setAttributes(XMLDB_INDEX_UNIQUE, array('tag', 'resourcetype', 'resourceid'));
+        if (!index_exists($table, $index)) {
+            // make sure there are no doubleups in tags
+            if ($taginfo = get_records_sql_array("SELECT tag, resourcetype, resourceid, ownertype, ownerid
+                                                   FROM {tag}
+                                                   GROUP BY tag, resourcetype, resourceid, ownertype, ownerid
+                                                   HAVING COUNT(*) > 1")) {
+                // we have duplicates so we need to delete all but the first one
+                foreach ($taginfo as $tag) {
+                    $ids = get_column_sql("SELECT t.id FROM {tag} t WHERE t.tag = ? AND t.resourcetype = ?
+                                           AND t.resourceid = ? AND t.ownertype = ? AND t.ownerid = ?",
+                                          array($tag->tag, $tag->resourcetype, $tag->resourceid, $tag->ownertype, $tag->ownerid));
+                    array_shift($ids);
+                    execute_sql("DELETE FROM {tag} WHERE id IN (" . implode(', ', $ids) . ")");
+                }
+            }
+            add_index($table, $index);
+        }
+    }
+
     return $status;
 }

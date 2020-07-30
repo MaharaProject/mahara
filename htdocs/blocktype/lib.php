@@ -811,7 +811,7 @@ class BlockInstance {
         }
         $this->tags = check_case_sensitive($tags, 'tag');
         delete_records('tag', 'resourcetype', 'blocktype', 'resourceid', $this->get('id'));
-        foreach ($this->tags as $tag) {
+        foreach (array_unique($this->tags) as $tag) {
             // truncate the tag before insert it into the database
             $tag = substr($tag, 0, 128);
             $tag = check_if_institution_tag($tag);
