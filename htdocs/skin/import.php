@@ -70,6 +70,16 @@ $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', hsc(TITLE));
 $smarty->display('form.tpl');
 
+function importskin_font_check($font) {
+    if (!get_field('skin_fonts', 'name', 'name', $font)) {
+        // Check the font without space / underscore
+        $font = preg_replace('/(\s+|_)/', '', $font);
+        if (!get_field('skin_fonts', 'name', 'name', $font)) {
+            return '';
+        }
+    }
+    return $font;
+}
 
 function importskinform_validate(Pieform $form, $values) {
     global $USER, $SESSION;
@@ -112,55 +122,46 @@ function importskinform_submit(Pieform $form, $values) {
 
     foreach ($skinsdata as $skindata) {
         db_begin();
-        // Join all view skin css/formating data to array...
-        $skin = array();
+        // Get default viewksin settings
+        $skin = Skin::$defaultviewskin;
 
+        // Join all view skin css/formating data to array...
         // Body element...
         $items = $skindata->getElementsByTagName('body');
         foreach ($items as $item) {
-            $skin = array_merge($skin, array('body_background_color' => $item->getAttribute('background-color')));
-            $skin = array_merge($skin, array('body_background_image' => 0));
-            $skin = array_merge($skin, array('body_background_repeat' => Skin::background_repeat_value_to_number($item->getAttribute('background-repeat'))));
-            $skin = array_merge($skin, array('body_background_attachment' => $item->getAttribute('background-attachment')));
-            $skin = array_merge($skin, array('body_background_position' => Skin::background_position_value_to_number($item->getAttribute('background-position'))));
+            $skin['body_background_color'] = $item->getAttribute('background-color');
+            $skin['body_background_image'] = 0;
+            $skin['body_background_repeat'] = Skin::background_repeat_value_to_number($item->getAttribute('background-repeat'));
+            $skin['body_background_attachment'] = $item->getAttribute('background-attachment');
+            $skin['body_background_position'] = Skin::background_position_value_to_number($item->getAttribute('background-position'));
         }
 
         // Header element...
         $items = $skindata->getElementsByTagName('header');
         foreach ($items as $item) {
-            $skin = array_merge($skin, array('header_background_color' => $item->getAttribute('background-color')));
-            $skin = array_merge($skin, array('header_background_image' => 0));
+            $skin['header_background_color'] = $item->getAttribute('background-color');
+            $skin['header_background_image'] = 0;
         }
 
         // Text element...
         $items = $skindata->getElementsByTagName('text');
         foreach ($items as $item) {
-            $skin = array_merge($skin, array('view_text_font_family' => $item->getAttribute('text-font')));
-            $skin = array_merge($skin, array('view_heading_font_family' => $item->getAttribute('heading-font')));
-            $skin = array_merge($skin, array('view_text_font_size' => $item->getAttribute('font-size')));
-            $skin = array_merge($skin, array('view_text_font_color' => $item->getAttribute('font-color')));
-            $skin = array_merge($skin, array('view_text_heading_color' => $item->getAttribute('heading-color')));
-            $skin = array_merge($skin, array('view_block_header_font' => $item->getAttribute('block-heading-font')));
-            $skin = array_merge($skin, array('view_block_header_font_color' => $item->getAttribute('block-heading-color')));
+            $skin['view_text_font_family'] = importskin_font_check($item->getAttribute('text-font'));
+            $skin['view_heading_font_family'] = importskin_font_check($item->getAttribute('heading-font'));
+            $skin['view_text_font_size'] = $item->getAttribute('font-size');
+            $skin['view_text_font_color'] = $item->getAttribute('font-color');
+            $skin['view_text_heading_color'] = $item->getAttribute('heading-color');
+            $skin['view_block_header_font'] = $item->getAttribute('block-heading-font');
+            $skin['view_block_header_font_color'] = $item->getAttribute('block-heading-color');
         }
 
         // Link element...
         $items = $skindata->getElementsByTagName('link');
         foreach ($items as $item) {
-            $skin = array_merge($skin, array('view_link_normal_color' => $item->getAttribute('normal-color')));
-            if ($item->getAttribute('normal-decoration') == 'none') {
-                $skin = array_merge($skin, array('view_link_normal_underline' => 0));
-            }
-            else {
-                $skin = array_merge($skin, array('view_link_normal_underline' => 1));
-            }
-            $skin = array_merge($skin, array('view_link_hover_color' => $item->getAttribute('hover-color')));
-            if ($item->getAttribute('hover-decoration') == 'none') {
-                $skin = array_merge($skin, array('view_link_hover_underline' => 0));
-            }
-            else {
-                $skin = array_merge($skin, array('view_link_hover_underline' => 1));
-            }
+            $skin['view_link_normal_color'] = $item->getAttribute('normal-color');
+            $skin['view_link_normal_underline'] = ($item->getAttribute('normal-decoration') == 'none') ? 0 : 1;
+            $skin['view_link_hover_color'] = $item->getAttribute('hover-color');
+            $skin['view_link_hover_underline'] = ($item->getAttribute('hover-decoration') == 'none') ? 0 : 1;
         }
 
         // Custom CSS element...
@@ -175,75 +176,75 @@ function importskinform_submit(Pieform $form, $values) {
             }
         }
 
-        // Image element...
-        // TODO: Background image file support for site skins
-        if ($siteskin) {
-            $skin['body_background_image'] = 0;
-            $skin['header_background_image'] = 0;
-        }
-        else {
-            $items = $skindata->getElementsByTagName('image');
-            foreach ($items as $item) {
-                // Write necessary data in 'artefact' table...
-                // TODO: When we rework the file upload code to make it more general,
-                // rewrite this to reuse content from filebrowser.php
-                $now = date("Y-m-d H:i:s");
-                $artefact_attr = $item->getAttribute('artefact');
-                $artefact_file_files_attr = $item->getAttribute('artefact_file_files');
-                $artefact_file_image_attr = $item->getAttribute('artefact_file_image');
-                if (is_valid_serialized_skin_attribute($artefact_attr)
-                    && is_valid_serialized_skin_attribute($artefact_file_files_attr)
-                    && is_valid_serialized_skin_attribute($artefact_file_image_attr)
-                    ) {
-                    $artefact = (object)array_merge(
-                        (array)unserialize($artefact_attr),
-                        (array)unserialize($artefact_file_files_attr),
-                        (array)unserialize($artefact_file_image_attr)
-                    );
-                }
-                else {
-                    $artefact = new stdClass();
-                }
-                unset($artefact->id);
-                unset($artefact->fileid);
-                $artefact->owner  = $USER->get('id');
-                $artefact->author = $USER->get('id');
-                $artefact->atime = $now;
-                $artefact->ctime = $now;
-                $artefact->mtime = $now;
-                $artobj = new ArtefactTypeImage(0, $artefact);
-                $artobj->commit();
-                $id = $artobj->get('id');
+        // Image elements...
+        $items = $skindata->getElementsByTagName('image');
+        foreach ($items as $item) {
+            $type = $item->getAttribute('type');
+            if ($siteskin && $type == 'body-background-image') {
+                // TODO: Background image file support for site skins
+                $skin['body_background_image'] = 0;
+                continue;
+            }
 
-                // Create folder and file inside it. then write contents into it...
-                $imagedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($id);
-                if (!check_dir_exists($imagedir, true, true)) {
-                    throw new SystemException("Unable to create folder $imagedir");
-                }
-                else {
-                    // Write contents to a file...
-                    $imagepath = $imagedir . '/' . $id;
-                    $contents = base64_decode($item->getAttribute('contents'));
-                    $fp = fopen($imagepath, 'w');
-                    fwrite($fp, $contents);
-                    fclose($fp);
-                    // We can keep going, but the skin will be missing one of its files
-                    if (get_config('viruschecking')) {
-                        if ($clamerror = mahara_clam_scan_file($imagepath)) {
-                            $SESSION->add_error_msg($clamerror);
-                            clam_handle_infected_file($imagepath);
-                        }
+            // Write necessary data in 'artefact' table...
+            // TODO: When we rework the file upload code to make it more general,
+            // rewrite this to reuse content from filebrowser.php
+            $now = date("Y-m-d H:i:s");
+            $artefact_attr = $item->getAttribute('artefact');
+            $artefact_file_files_attr = $item->getAttribute('artefact_file_files');
+            $artefact_file_image_attr = $item->getAttribute('artefact_file_image');
+            if (is_valid_serialized_skin_attribute($artefact_attr)
+                && is_valid_serialized_skin_attribute($artefact_file_files_attr)
+                && is_valid_serialized_skin_attribute($artefact_file_image_attr)
+                ) {
+                $artefact = (object)array_merge(
+                    (array)unserialize($artefact_attr),
+                    (array)unserialize($artefact_file_files_attr),
+                    (array)unserialize($artefact_file_image_attr)
+                );
+            }
+            else {
+                $artefact = new stdClass();
+            }
+            unset($artefact->id);
+            unset($artefact->fileid);
+            $artefact->owner  = $USER->get('id');
+            $artefact->author = $USER->get('id');
+            $artefact->atime = $now;
+            $artefact->ctime = $now;
+            $artefact->mtime = $now;
+            $artobj = new ArtefactTypeImage(0, $artefact);
+            $artobj->commit();
+            $id = $artobj->get('id');
+
+            // Create folder and file inside it. then write contents into it...
+            $imagedir = get_config('dataroot') . ArtefactTypeFile::get_file_directory($id);
+            if (!check_dir_exists($imagedir, true, true)) {
+                throw new SystemException("Unable to create folder $imagedir");
+            }
+            else {
+                // Write contents to a file...
+                $imagepath = $imagedir . '/' . $id;
+                $contents = base64_decode($item->getAttribute('contents'));
+                $fp = fopen($imagepath, 'w');
+                fwrite($fp, $contents);
+                fclose($fp);
+                // We can keep going, but the skin will be missing one of its files
+                if (get_config('viruschecking')) {
+                    if ($clamerror = mahara_clam_scan_file($imagepath)) {
+                        $SESSION->add_error_msg($clamerror);
+                        clam_handle_infected_file($imagepath);
                     }
-                    chmod($imagepath, get_config('filepermissions'));
                 }
+                chmod($imagepath, get_config('filepermissions'));
+            }
 
-                $type = $item->getAttribute('type');
-                if ($type == 'body-background-image') {
-                    $skin['body_background_image'] = $id;
-                }
-                if ($type == 'header-background-image') {
-                    $skin['header_background_image'] = $id;
-                }
+            $type = $item->getAttribute('type');
+            if ($type == 'body-background-image') {
+                $skin['body_background_image'] = $id;
+            }
+            if ($type == 'header-background-image') {
+                $skin['header_background_image'] = $id;
             }
         }
 

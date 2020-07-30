@@ -27,6 +27,7 @@ Scenario: Enable/disable external resources in mahara pages
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Text" in the "Content types" property
+ And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | Text block with an internal image |
  And I click the "Insert/edit image" button in the editor "text"
