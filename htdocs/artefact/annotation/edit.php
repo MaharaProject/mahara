@@ -10,14 +10,16 @@
  */
 
 define('INTERNAL', 1);
-define('MENUITEM', 'myportfolio');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('editannotationfeedback', 'artefact.annotation'));
 safe_require('artefact', 'annotation');
+require_once('view.php');
 
 $annotationfeedbackid = param_integer('id');
 $viewid = param_integer('viewid');
+$view = new View($viewid);
+View::set_nav($view->get('group'), $view->get('institution'), false, false, false);
 $annotationfeedback = new ArtefactTypeAnnotationFeedback((int) $annotationfeedbackid);
 
 if ($USER->get('id') != $annotationfeedback->get('author')) {
