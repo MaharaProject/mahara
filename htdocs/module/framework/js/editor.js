@@ -58,7 +58,10 @@ jQuery(function($) {
     JSONEditor.plugins.select2.enable = true;
 
     var parent_array = [''];
+
+    // standard ids from the Standards form
     var standard_array = [];
+    // standard names from the Standards form
     var standard_names = [];
 
     // Counts to increment standard and standardelement ids
@@ -465,11 +468,14 @@ jQuery(function($) {
             update_delete_standard_button_handlers();
             std_index = standard_array.length;
             var sid_field = editor.getEditor("root.standards." + std_index + ".standardid");
-            sid_field.setValue(standard_array.length + 1);
-            // var se_sid_field = editor.getEditor("root.standardelements." + se_index + ".standardid");
-            // if (se_sid_field) {
-            //     se_sid_field.setValue(standard_array.length + 1);
-            // }
+            var max_standard_id = Math.max.apply(Math, standard_array);
+            if (max_standard_id > 0 ) {
+                sid_field.setValue(max_standard_id + 1);
+            }
+            else {
+                // in case of an empty standard_array, Math.max will return -Infinity
+                sid_field.setValue(1);
+            }
             // Reset standard element count
             eid = 0;
             update_standard_shortname_handler();
@@ -1021,6 +1027,8 @@ jQuery(function($) {
     * @param standardid id to set
     */
     function update_standard_in_standard_element(index, standardid) {
+        // in case standardid is a string
+        standardid = +standardid;
         // Set the standardid hidden field
         var sid_field = editor.getEditor("root.standardelements." + index + "." + "standardid");
         if (sid_field && standard_array.length > 0) {
@@ -1029,7 +1037,7 @@ jQuery(function($) {
         // Select corresponding element in the dropdown
         var sidoptions_field = editor.getEditor("root.standardelements." + index + "." + "standardoptions");
         set_standard_array_field($(sidoptions_field.container));
-        sidoptions_field.input.selectedIndex = standardid - 1;
+        sidoptions_field.input.selectedIndex = $.inArray(+standardid, standard_array);
     }
 
     function update_standard_shortname_handler() {
@@ -1052,6 +1060,9 @@ jQuery(function($) {
     function update_delete_standard_button_handlers() {
         $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').off('click');
         $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
             var standardid = 0,
                 last_standardid = 0,
                 standard_array_temp = standard_array;
@@ -1075,6 +1086,11 @@ jQuery(function($) {
             // if the standard is the last one (or the one that has focus) change the standar element count
             if ((last_standardid == standardid)) {
                 update_eid_number();
+            }
+            // if the standard has the last element as child
+            // we need to add an empty standard element to the form (there should be at least one)
+            if (editor.getEditor("root.standardelements").rows.length < 1) {
+                $("#add_standardelement")[0].click();
             }
 
         });
