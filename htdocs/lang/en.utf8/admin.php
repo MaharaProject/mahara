@@ -1567,3 +1567,11 @@ $string['savedgroupconfigsuccessfully'] = 'Saved default group settings.';
 $string['defaultreset'] = 'Reset to default';
 $string['defaultresetlabel'] = 'Reset';
 $string['defaultresetdesc'] = 'Reset all of the above options to their default values.';
+
+//Mahara map/ Component library
+$string['componentmap'] = 'Components library';
+$string['development'] = 'Development';
+$string['exportthirdpartycsv'] = 'Export plugins in CSV format';
+$string['Path'] = 'Path';
+$string['thirdpartyplugins'] = 'Third party plugins - List based on README.Mahara files';
+$string['url'] = 'url';

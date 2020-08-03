@@ -2576,6 +2576,19 @@ function admin_nav() {
             'title'  => get_string('cleanurls', 'admin'),
             'weight' => 40,
         ),
+        'development' => array(
+            'path'   => 'development',
+            'url'    => 'map/componentmap.php',
+            'title'  => get_string('development', 'admin'),
+            'weight' => 80,
+            'iconclass' => 'code',
+        ),
+        'development/componentmap' => array(
+            'path'   => 'development/componentmap',
+            'url'    => 'map/componentmap.php',
+            'title'  => get_string('componentmap', 'admin'),
+            'weight' => 20,
+        ),
     );
 
     // Add the menu items for skins, if that feature is enabled
