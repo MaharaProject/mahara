@@ -1,3 +1,18 @@
+19.04.6 (2020-08-04)
+- Bug 1876625: Date picker not working for Admin -> People when selecting a date to filter users
+- Bug 1879410: Add a text block in Dashboard page using TestingDataGenerator.php
+- Bug 1880803: errors when copying a page after editing column widths manually
+- Bug 1882103: Wrong redirect when creating Pages when Mahara is in a subdir
+- Bug 1885231: Class 'Institution' not found when viewing another user's profile page
+- Bug 1885784: Need to update site options submit function to use alias
+- Bug 1888163: Security issue: File / folder name not being escaped correctly in filebrowser
+- Bug 1889485: Security Upgrade SimpleSAML 1.18.4 to 1.18.7
+- Bug 1879847: String missing for allow public views in Reports
+- Bug 1887317: LoadXML error when upgrading from 18.10 to 20.04
+- Bug 1875958: 'My groups' sidebar can get very long if you are in lots of groups
+- Bug 1880771: When adjusting group membership via the Engage -> People page the modal doesn't close on submit
+- Bug 1884466: The delete_inactive_users cli script can timeout
+
 19.04.5 (2020-04-30)
 - Bug 1836984: Elasticsearch not restricting the user search when isolated institutions turned on
 - Bug 1866913: Elasticsearch::add_to_queue() not found in 19.04
