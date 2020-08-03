@@ -3055,8 +3055,16 @@ function can_view_view($view, $user_id=null) {
     }
 
     // Grant temporary access if LTI signed request was made
-    if ($view->get('id') == $SESSION->get('lti.canviewview')) {
-        return true;
+    if ($ltiview = $SESSION->get('lti.canviewview')) {
+        if ($view->get('id') == $ltiview) {
+            // this page is allowed directly
+            return true;
+        }
+        else if (record_exists_select('collection_view', 'collection = (SELECT collection FROM {collection_view} WHERE view = ?) AND view = ?',
+            array($ltiview, $view->get('id')))) {
+            // this page is part of a collection that is allowed
+            return true;
+        }
     }
 
     // Overriding start/stop dates are set by the owner to deny access
