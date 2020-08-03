@@ -103,4 +103,4 @@ setpageicon($smarty, 'icon-cogs');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('data', $data);
 $smarty->assign('hascore', $hascore);
-$smarty->display('testing/behatvariables.tpl');
+$smarty->display('misc/behatvariables.tpl');

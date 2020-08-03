@@ -1488,7 +1488,7 @@ $string['behatvariables'] = 'Behat steps';
 $string['behatvariablesdesc'] = 'Tool to find available Behat steps quickly';
 $string['nobehatfeaturefiles'] = 'No Behat feature files found';
 $string['behatmatchingrows'] = '%s in ';
-$string['behatnocore'] = 'Unable to read core Behat steps from behat.yml file';
+$string['behatnocoresteps'] = '<p>Unable to read Behat steps from the behat.yml file. To see them, <a href="https://wiki.mahara.org/wiki/Testing_Area/Behat_Testing/Setup#chown">make the www-data the owner of your Behat dataroot directory.</a></p>';
 $string['behatstepnotused'] = 'Currently, this Behat step is not used.';
 
 // Privacy Statement section
@@ -1568,10 +1568,11 @@ $string['defaultreset'] = 'Reset to default';
 $string['defaultresetlabel'] = 'Reset';
 $string['defaultresetdesc'] = 'Reset all of the above options to their default values.';
 
-//Mahara map/ Component library
+// Mahara map / component library
 $string['componentmap'] = 'Components library';
 $string['development'] = 'Development';
-$string['exportthirdpartycsv'] = 'Export plugins in CSV format';
+$string['exportthirdpartycsv'] = 'Export plugin information in CSV format';
 $string['Path'] = 'Path';
+$string['styleguide'] = 'Style guide';
 $string['thirdpartyplugins'] = 'Third party plugins - List based on README.Mahara files';
 $string['url'] = 'url';

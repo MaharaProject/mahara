@@ -2583,11 +2583,23 @@ function admin_nav() {
             'weight' => 80,
             'iconclass' => 'code',
         ),
+        'development/behatsteps' => array(
+            'path'   => 'development/behatsteps',
+            'url'    => 'testing/frameworks/behat/behat_steps_used.php',
+            'title'  => get_string('behatvariables', 'admin'),
+            'weight' => 10,
+        ),
         'development/componentmap' => array(
             'path'   => 'development/componentmap',
             'url'    => 'map/componentmap.php',
             'title'  => get_string('componentmap', 'admin'),
             'weight' => 20,
+        ),
+        'development/styleguide' => array(
+            'path'   => 'development/styleguide',
+            'url'    => 'theme/styleguide.php',
+            'title'  => get_string('styleguide', 'admin'),
+            'weight' => 30,
         ),
     );
 

@@ -1,7 +1,7 @@
 {include file="header.tpl"}
-<p>{str tag=behatvariablesdesc section=admin}</p>
+<p class="lead view-description">{str tag=behatvariablesdesc section=admin}</p>
 {if !$hascore}
-<div class="alert alert-warning">{str tag=behatnocore section=admin}</div>
+<div class="alert alert-warning">{str tag=behatnocoresteps section=admin}</div>
 {/if}
 {if $data}
     {assign var="prevkey" value=''}
