@@ -59,6 +59,9 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
             set_config_plugin('auth', 'saml', 'newkeypass', get_config('sitename'));
         }
     }
+    if ($oldversion < 2020073000) {
+         set_config_plugin('auth', 'saml', 'version', '1.18.7');
+    }
 
     return $status;
 }
