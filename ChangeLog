@@ -1,3 +1,23 @@
+19.10.4 (2020-08-04)
+- 1888163 	Security issue: File / folder name not being escaped correctly in filebrowser 		High 	  	Confirmed
+- 1889485 	Security Upgrade SimpleSAML 1.18.4 to 1.18.7 		High 	  	In Progress
+- 1876625 	Date picker not working for Admin -> People when selecting a date to filter users 		High 	  	Fix Committed
+- 1877001 	Skins not showing after upgrade 		High 	  	Fix Committed
+- 1879410 	Add a text block in Dashboard page using TestingDataGenerator.php 		High 	  	Fix Committed
+- 1880803 	errors when copying a page after editing column widths manually 		High 	  	Fix Committed
+- 1882103 	Wrong redirect when creating Pages when Mahara is in a subdir 		High 	  	Fix Committed
+- 1883043 	collection pages unvailable as link options in tinyMCE 		High 	  	Fix Committed
+- 1885231 	Class 'Institution' not found when viewing another user's profile page 		High 	  	Fix Committed
+- 1885784 	Need to update site options submit function to use alias 		High 	  	Fix Committed
+- 1875785 	External links in Mahara no longer open in external tab/window by default 		Medium 	  	Fix Committed
+- 1877906 	MariaDB error when creating secret URL 		Medium 	  	Fix Committed
+- 1879847 	String missing for allow public views in Reports 		Medium 	  	Fix Committed
+- 1883471 	reduce block margin on gridstack 		Medium 	  	Fix Committed
+- 1887317 	LoadXML error when upgrading from 18.10 to 20.04 		Medium 	  	Fix Committed
+- 1875958 	'My groups' sidebar can get very long if you are in lots of groups 		Low 	  	Fix Committed
+- 1880771 	When adjusting group membership via the Engage -> People page the modal doesn't close on submit 		Low 	  	Fix Committed
+- 1884466 	The delete_inactive_users cli script can timeout
+
 19.10.3 (2020-04-30)
 - Bug 836984: Elasticsearch not restricting the user search when isolated institutions turned on
 - Bug 863820: navigation block html export - views titles link back to original site
