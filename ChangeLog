@@ -1,3 +1,32 @@
+20.04.1 (2020-08-04)
+- Bug 1888163:  Security issue: File / folder name not being escaped correctly in filebrowser
+- Bug 1889485:  Security Upgrade SimpleSAML 1.18.4 to 1.18.7
+- Bug 1875154:  PDF export not mentioned on export page when it's available
+- Bug 1876625:  Date picker not working for Admin -> People when selecting a date to filter users
+- Bug 1876810:  More of the count(): Parameter must be an array or an object that implements Countable
+- Bug 1877001:  Skins not showing after upgrade
+- Bug 1879410:  Add a text block in Dashboard page using TestingDataGenerator.php
+- Bug 1880803:  errors when copying a page after editing column widths manually
+- Bug 1882103:  Wrong redirect when creating Pages when Mahara is in a subdir
+- Bug 1883043:  collection pages unvailable as link options in tinyMCE
+- Bug 1885231:  Class 'Institution' not found when viewing another user's profile page
+- Bug 1885784:  Need to update site options submit function to use alias
+- Bug 1871280:  Allow grouproles to be reset for users when roles updated via webservices
+- Bug 1875785:  External links in Mahara no longer open in external tab/window by default
+- Bug 1875973:  Mahara: Site information block needs link to download updated
+- Bug 1877906:  MariaDB error when creating secret URL
+- Bug 1879847:  String missing for allow public views in Reports
+- Bug 1882870:  Button obscuring text on Install Fonts page
+- Bug 1883031:  The cancel link (button) on forms has an odd style once clicked
+- Bug 1883179:  Profile Completion has incorrect instructions
+- Bug 1883471:  reduce block margin on gridstack 
+- Bug 1886371:  Migrate Institution is producing a warning message
+- Bug 1886596:  Behat testing data generator throws null on openbadgedisplayer
+- Bug 1887317:  LoadXML error when upgrading from 18.10 to 20.04
+- Bug 1875958:  'My groups' sidebar can get very long if you are in lots of groups 
+- Bug 1880771:  When adjusting group membership via the Engage -> People page the modal doesn't close on submit
+- Bug 1884466:  The delete_inactive_users cli script can timeout
+
 20.04.0 (2020-04-29)
 - Bug 1800319: Revise merging of sharing permissions for a collection
 - Bug 1829943: Error deleting institution due to foreign key constraint with view table
