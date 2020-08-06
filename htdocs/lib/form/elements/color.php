@@ -35,12 +35,11 @@ function pieform_element_color(Pieform $form, $element) {
             function {$baseid}_toggle(x) {
                 if ( x.checked ) {
                     {$baseid}_oldval = jQuery('#{$baseid}').val();
-                    document.getElementById('{$baseid}')._jscLinkedInstance.fromString('{$themedefault}');
+                    window['jsc{$baseid}'].fromString('{$themedefault}');
                     jQuery('#{$baseid}').prop('disabled', true);
                 }
                 else {
-                    jQuery('#{$baseid}').val({$baseid}_oldval);
-                    document.getElementById('{$baseid}')._jscLinkedInstance.fromString({$baseid}_oldval);
+                    window['jsc{$baseid}'].fromString({$baseid}_oldval);
                     jQuery('#{$baseid}').prop('disabled', false);
                 }
             }
@@ -127,10 +126,10 @@ function pieform_element_color_get_headdata($element, Pieform $form) {
     $name = Pieform::hsc($form->get_name() . '_' . $element['name']);
     $result = '<script>';
     $result .= "var jsc" . $name . " = ''\n";
-    $result .= "PieformManager.connect('onload', null, function() {\n";
+    $result .= "PieformManager.connect('onload', '" . $form->get_name() . "', function() {\n";
     $result .= "  jQuery(function($) { \n";
     $result .= "      // rewire up the picker to show up\n";
-    $result .= "      jsc" . $name . " = new jscolor('" . $name . "'); \n";
+    $result .= "      jsc" . $name . " = new jscolor('#" . $name . "'); \n";
     $result .= "  }); \n";
     $result .= "});</script>";
     $results = array(
