@@ -1836,9 +1836,6 @@ function generate_class_name_from_table() {
 function generate_plugin_type_from_table() {
     $tableargs = func_get_args();
     $table = $tableargs[0];
-    if ($prefix = get_config('dbprefix')) {
-        $table = preg_replace('/' . $prefix . '/', '', $table);
-    }
     $tableargs = explode('_', $table);
 
     if (count($tableargs) > 2) {
