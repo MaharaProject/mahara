@@ -171,6 +171,9 @@ class BehatConfigManager {
                             'capabilities' => array(
                                'chrome' => array(
                                   'switches' => array('--disable-dev-shm-usage')
+                               ),
+                               'extra_capabilities' => array(
+                                  'unexpectedAlertBehaviour' => 'ignore'
                                )
                             )
                         ),
