@@ -11,7 +11,7 @@
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
-define('MENUITEM', 'myportfolio');
+define('MENUITEM', 'create/tags');
 require('init.php');
 require_once('searchlib.php');
 require_once('view.php');
