@@ -20,6 +20,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  # Attaching the groups via CSV
  And I attach the file "groups.csv" to "CSV file"
  When I press "Add groups by CSV"
+ And I wait until "//div[text()='Your CSV file was processed successfully.']" "xpath_element" exists
  And I should see "Your CSV file was processed successfully."
  And I choose "Update group members by CSV" in "Groups" from administration menu
  # Verify the warnings there
