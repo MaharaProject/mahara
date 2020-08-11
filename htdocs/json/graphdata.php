@@ -65,6 +65,15 @@ if (!defined('CRON')) {
                     }
                 }
             }
+            // in case any cached data get cached with a broken label string
+            if (isset($jsondata->labels) && is_array($jsondata->labels)) {
+                foreach ($jsondata->labels as $key => $label) {
+                    if (preg_match('/^\[\[(.*?)\/(.*?)\]\]$/', $label, $matches)) {
+                        $jsondata->labels[$key] = get_string($matches[1], $matches[2]);
+                    }
+                }
+            }
+
             $data['datastr'] = json_encode($jsondata);
             $data['configstr'] = json_encode($data['configs']);
             json_reply(false, array('data' => $data));
