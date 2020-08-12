@@ -27,17 +27,38 @@ if (!PluginModuleFramework::is_active()) {
 $upload = param_boolean('upload');
 $uploadmatrix = param_boolean('uploadmatrix');
 
-function get_institutions() {
-    $insts = get_records_array('institution');
-    $inst_names = array();
-    foreach ($insts as $inst) {
-        array_push($inst_names, $inst->displayname);
-    }
-    return $inst_names;
+if ($uploadmatrix) {
+    import_matrix_file_section();
+}
+else if ($upload) {
+    edit_framework_section();
+}
+else {
+    management_section();
 }
 
+// on frameworks page (rubbish bin icon)
+function framework_delete_submit(Pieform $form, $values) {
+    global $SESSION;
 
-if ($uploadmatrix) {
+    $framework = new Framework($values['framework']);
+    if (!$framework->is_in_collections()) {
+        $framework->delete();
+        $SESSION->add_ok_msg(get_string('itemdeleted'));
+    }
+    else {
+        $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
+    }
+
+    redirect('/module/framework/frameworks.php');
+}
+
+// edit framework on main page
+function framework_config_submit(Pieform $form, $values) {
+    redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
+}
+
+function import_matrix_file_section() {
     //show Browse for matrix file form.
     define('SUBSECTIONHEADING', get_string('upload'));
     $active_tab = 'import';
@@ -50,9 +71,10 @@ if ($uploadmatrix) {
     $smarty->display('module:framework:uploadframework.tpl');
     exit;
 }
-else if ($upload) {
-    //jsoneditor page:
-    //get existing frameworks.
+
+function edit_framework_section() {
+    global $SESSION;
+
     define('SUBSECTIONHEADING', get_string('editor', 'module.framework'));
     $active_tab = 'editor';
     $fw = array();
@@ -143,7 +165,7 @@ else if ($upload) {
     );
 
     //set up variables for correct selection of framework from dropdowns
-    $inst_names = get_institutions();
+    $inst_names = get_column('institution', 'displayname');
     $inst_stg = get_string('all', 'module.framework') . ',';
     foreach ($inst_names as $inst) {
         $inst_stg .= $inst . ',';
@@ -164,45 +186,64 @@ else if ($upload) {
     $smarty->display('module:framework:jsoneditor.tpl');
     exit;
 }
-else {
-    //for overview page
-    $active_tab = 'overview';
-}
 
-define('SUBSECTIONHEADING', get_string('Management', 'module.framework'));
-$frameworks = Framework::get_frameworks('any');
-if ($frameworks) {
-    foreach ($frameworks as $framework) {
-        $fk = new Framework($framework->id);
-        $framework->institution_name = ($fk->get('institution_name')) ? $fk->get('institution_name') : '';
-        if ($fk->get('active')) {
-            $framework->active = array(
-                'title' => 'Enabled',
-                'classes' => 'icon icon-lg icon-check text-success displayicon'
-            );
-        }
-        else {
-            $framework->active = array(
-                'title' => 'Disabled',
-                'classes' => 'icon icon-lg icon-times text-danger displayicon'
-            );
-        }
-        $framework->collections = count($fk->get_collectionids());
-        $framework->delete = false;
-        if (empty($framework->collections)) {
-            $framework->delete = pieform(
+function management_section() {
+    define('SUBSECTIONHEADING', get_string('Management', 'module.framework'));
+    $active_tab = 'overview';
+    $frameworks = Framework::get_frameworks('any');
+    if ($frameworks) {
+        foreach ($frameworks as $framework) {
+            $fk = new Framework($framework->id);
+            $framework->institution_name = ($fk->get('institution_name')) ? $fk->get('institution_name') : '';
+            if ($fk->get('active')) {
+                $framework->active = array(
+                    'title' => 'Enabled',
+                    'classes' => 'icon icon-lg icon-check text-success displayicon'
+                );
+            }
+            else {
+                $framework->active = array(
+                    'title' => 'Disabled',
+                    'classes' => 'icon icon-lg icon-times text-danger displayicon'
+                );
+            }
+            $framework->collections = count($fk->get_collectionids());
+            $framework->delete = false;
+            if (empty($framework->collections)) {
+                $framework->delete = pieform(
+                    array(
+                        'name' => 'framework_delete_' . $framework->id,
+                        'successcallback' => 'framework_delete_submit',
+                        'renderer' => 'div',
+                        'class' => 'btn-group-last',
+                        'elements' => array(
+                            'submit' => array(
+                                'type'         => 'button',
+                                'class'        => 'btn-secondary btn-sm button',
+                                'usebuttontag' => true,
+                                'value'        => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                                'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+                            ),
+                            'framework'  => array(
+                                'type'         => 'hidden',
+                                'value'        => $framework->id,
+                            )
+                        ),
+                    )
+                );
+            }
+            $framework->config = pieform(
                 array(
-                    'name' => 'framework_delete_' . $framework->id,
-                    'successcallback' => 'framework_delete_submit',
+                    'name' => 'framework_config_' . $framework->id,
+                    'successcallback' => 'framework_config_submit',
                     'renderer' => 'div',
-                    'class' => 'btn-group-last',
+                    'class' => (empty($framework->collections) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
-                            'value'        => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
-                            'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
+                            'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',
@@ -212,53 +253,12 @@ if ($frameworks) {
                 )
             );
         }
-        $framework->config = pieform(
-            array(
-                'name' => 'framework_config_' . $framework->id,
-                'successcallback' => 'framework_config_submit',
-                'renderer' => 'div',
-                'class' => (empty($framework->collections) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
-                'elements' => array(
-                    'submit' => array(
-                        'type'         => 'button',
-                        'class'        => 'btn-secondary btn-sm button',
-                        'usebuttontag' => true,
-                        'value'        => '<span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
-                    ),
-                    'framework'  => array(
-                        'type'         => 'hidden',
-                        'value'        => $framework->id,
-                    )
-                ),
-            )
-        );
-    }
-}
-
-//on frameworks page (rubbish bin icon)
-function framework_delete_submit(Pieform $form, $values) {
-    global $SESSION;
-
-    $framework = new Framework($values['framework']);
-    if (!$framework->is_in_collections()) {
-        $framework->delete();
-        $SESSION->add_ok_msg(get_string('itemdeleted'));
-    }
-    else {
-        $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
     }
 
-    redirect('/module/framework/frameworks.php');
+    $smarty = smarty();
+    setpageicon($smarty, 'icon-th');
+    $smarty->assign('frameworks', $frameworks);
+    $smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
+    $smarty->assign('wwwroot', get_config('wwwroot'));
+    $smarty->display('module:framework:frameworks.tpl');
 }
-
-//edit framework on main page
-function framework_config_submit(Pieform $form, $values) {
-    redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
-}
-
-$smarty = smarty();
-setpageicon($smarty, 'icon-th');
-$smarty->assign('frameworks', $frameworks);
-$smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
-$smarty->assign('wwwroot', get_config('wwwroot'));
-$smarty->display('module:framework:frameworks.tpl');
