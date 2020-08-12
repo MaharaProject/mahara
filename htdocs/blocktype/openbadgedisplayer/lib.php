@@ -415,6 +415,10 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         foreach ($sources as $source => $url) {
             if (!empty($url)) {
                 $title = get_string('title_' . $source, 'blocktype.openbadgedisplayer');
+                // the url for the user should not be the api url
+                if ($url == 'https://api.badgr.io/') {
+                    $url = 'https://badgr.com';
+                }
                 $sourcelinks[] = '<a href="' . $url . '">' . $title . '</a>';
             }
         }
