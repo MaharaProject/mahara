@@ -483,6 +483,7 @@ function edituser_site_submit(Pieform $form, $values) {
         if ($unexpire) {
             $user->expirymailsent = 0;
             $user->lastaccess = db_format_timestamp(time());
+            $user->active = 1;
         }
     }
 
