@@ -1,4 +1,4 @@
-<div class="block-header d-none ">
+<div class="block-header quick-edit d-none ">
     <a class="modal_link list-group-heading "
         data-toggle="modal-docked"
         data-target="#configureblock"

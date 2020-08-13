@@ -64,9 +64,13 @@
             });
             var newblock = temp.find('div.gridstackblock');
             // check if block has header link for quick edit
-            var oldheader = oldblock.find('.block-header')
+            var oldheader = oldblock.find('.block-header.quick-edit');
             if (oldheader.length) {
-                // add the header to the new block
+                if (newblock.find('.block-header.quick-edit').length > 0) {
+                    // remove new one as it's events are not present
+                    newblock.find('.block-header.quick-edit').remove();
+                }
+                // add the wired up header to the new block
                 newblock.prepend(oldheader);
             }
             $('.blockinstance-header', newblock).on("mousedown", function() {
