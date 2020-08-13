@@ -20,6 +20,7 @@ function allowed_graph_functions() {
         'graph_institution_data_weekly',
         'user_institution_graph',
         'view_type_graph_render',
+        'block_type_graph',
         'group_type_graph_render',
         'graph_site_data_weekly',
     );
@@ -97,14 +98,14 @@ function get_bar_graph_json($data, $colours = null, $cron = false) {
     $x = 0;
     $graphdata['labels'] = $data['labels'];
     foreach ($data['data'] as $key => $value) {
-        $dataobj['backgroundColor'] = "rgba(" . $data['colours'][$x] . ",0.2)";
-        $dataobj['borderColor'] = "rgba(" . $data['colours'][$x] . ",1)";
+        $dataobj['backgroundColor'][] = "rgba(" . $data['colours'][$x] . ",0.2)";
+        $dataobj['borderColor'][] = "rgba(" . $data['colours'][$x] . ",1)";
         $dataobj['borderWidth'] = 1.5;
         $dataobj['label'] = !empty($data['labellang']) ? get_string($key, $data['labellang']) : $key;
-        $dataobj['data'] = is_array($value) ? array_values($value) : array($value);
-        $graphdata['datasets'][] = $dataobj;
+        $dataobj['data'][] = is_array($value) ? array_values($value) : $value;
         $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
     }
+    $graphdata['datasets'][] = $dataobj;
     $configs = isset($data['configs']) ? $data['configs'] : (object) array();
     return array($graphdata, $configs);
 }

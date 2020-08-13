@@ -2,12 +2,23 @@
 <p class="lead small-text">{str tag=noviews1 section=view}</p>
 {/if}
 {if $blocktypecounts}
-    <h4>{str tag=blockcountsbytype section=admin}</h4>
-    <ul class="list-group list-group-lite unstyled">
-    {foreach from=$blocktypecounts item=item}
-        <li class="list-group-item">{$item->title}: {$item->blocks}</li>
-    {/foreach}
-    </ul>
+    <div class="card-body">
+        <h4>{str tag=blockcountsbytype section=admin}</h4>
+        <canvas class="graphcanvas" id="sitestatsblocktypesgraph"></canvas>
+        <script>
+        {literal}
+        jQuery(function() {
+            fetch_graph_data({'id':'sitestatsblocktypesgraph','type':'horizontalbar','graph':'block_type_graph',
+                'extradata': {
+                    'configs': {
+                        'showlegendcallback': false
+                    }
+                }
+            });
+        });
+        {/literal}
+        </script>
+    </div>
 {/if}
 {if $viewtypes}
     <div class="card-body">

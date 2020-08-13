@@ -211,7 +211,7 @@ function site_statistics($full=false) {
 
         // Views graph
         $smarty = smarty_core();
-        $maxblocktypes = 5;
+        $maxblocktypes = 1;
         $blocktypecounts = get_records_sql_array("
             SELECT
                 b.blocktype,
@@ -223,13 +223,6 @@ function site_statistics($full=false) {
             ORDER BY blocks DESC",
             array(), 0, $maxblocktypes
         );
-        if (is_array($blocktypecounts)) {
-            foreach ($blocktypecounts as $blocktype) {
-                safe_require('blocktype', $blocktype->blocktype);
-                $classname = generate_class_name('blocktype', $blocktype->blocktype);
-                $blocktype->title = $classname::get_title();
-            }
-        }
         $smarty->assign('blocktypecounts', $blocktypecounts);
 
         $smarty->assign('viewtypes', true);
@@ -2730,6 +2723,41 @@ function view_type_graph_render($type = null) {
     if ($jsondata = json_decode(get_field('site_data','value','type','view-type-graph'))) {
         $data['jsondata'] = json_encode($jsondata[0]);
         return $data;
+    }
+}
+
+function block_type_graph($type = null) {
+    // Draw a bar graph of 10 most common blocks used broken down by block type.
+    $maxblocktypes = 10;
+    $blocktypecounts = get_records_sql_array("
+        SELECT
+            b.blocktype,
+        COUNT(b.id) AS blocks
+        FROM {block_instance} b
+        JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
+        JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
+        GROUP BY b.blocktype",
+        array(), 0, $maxblocktypes
+    );
+    if (is_array($blocktypecounts)) {
+        $dataarray = array();
+        foreach ($blocktypecounts as $blocktype) {
+            safe_require('blocktype', $blocktype->blocktype);
+            $classname = generate_class_name('blocktype', $blocktype->blocktype);
+            $blocktype->title = $classname::get_title();
+            $dataarray[$blocktype->title] = $blocktype->blocks;
+        }
+        ksort($dataarray);
+        $data['graph'] = 'HorizontalBar';
+        $data['graph_function_name'] = 'block_type_graph';
+        $data['title'] = get_string('blockcountsbytype', 'admin');
+        $data['labels'] = array_keys($dataarray);
+        $data['data'] = $dataarray;
+        require_once(get_config('libroot') . 'graph.php');
+        $graphdata = get_bar_graph_json($data);
+        $out['graph'] = $data['graph'];
+        $out['jsondata'] = json_encode($graphdata[0]);
+        return $out;
     }
 }
 
