@@ -2736,7 +2736,8 @@ function block_type_graph($type = null) {
         FROM {block_instance} b
         JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
         JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
-        GROUP BY b.blocktype",
+        GROUP BY b.blocktype
+        ORDER BY blocks DESC",
         array(), 0, $maxblocktypes
     );
     if (is_array($blocktypecounts)) {

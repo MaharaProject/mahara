@@ -981,7 +981,18 @@ function fetch_graph_data(opts) {
                         display: false,
                     }
                 }
-              };
+            };
+            // Make horizontal bar graphs start from zero
+            if (json.data.graphsafe == 'horizontalBar') {
+                config.options.scales = {
+                    "xAxes": [{
+                        "ticks": {
+                            "beginAtZero":true
+                        }
+                    }]
+                };
+            }
+
             chartobject = new Chart(canvascontext, config);
             document.getElementById(opts.id + 'legend').innerHTML = chartobject.generateLegend();
 
