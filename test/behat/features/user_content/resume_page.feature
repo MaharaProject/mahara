@@ -205,6 +205,7 @@ Scenario: Adding Achievements
     And I click on "addbook_submit"
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
+    And I wait "1" seconds
     And I click on "Move down" in "Measurement of the neutron beta decay asymmetry using machine learning" row
     And I wait "1" seconds
     And I click on "Move up" in "Measurement of the neutron beta decay asymmetry using machine learning" row
@@ -236,6 +237,7 @@ Scenario: Adding Achievements
     And I should see "Saved successfully"
     And I click on "Move down" in "Accredited Technologist" row
     And I click on "Move up" in "Accredited Technologist" row
+    And I wait "1" seconds
     # check achievements can be deleted (Bug 1755669)
     And I click on "Delete \"sdrtyh\"" delete button
     And I wait "1" seconds
