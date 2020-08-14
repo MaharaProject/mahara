@@ -935,16 +935,20 @@ function fetch_graph_data(opts) {
             var configstr = JSON.parse(json.data.configstr);
 
             var config = {
-                type: json.data.graph.toLowerCase(),
+                type: json.data.graphsafe,
                 data: {
                     datasets: datastr.datasets,
                     labels: datastr.labels,
                 },
+                showlegendcallback: configstr.showlegendcallback,
                 options: {
                     responsive: true,
                     legendCallback: function(chart) {
                         var text = [];
-                        if (chart.config.type != 'undefined' && chart.config.type == 'line') {
+                        if (chart.config.showlegendcallback === false) {
+                            return '';
+                        }
+                        else if (chart.config.type != 'undefined' && chart.config.type == 'line') {
                             text.push('<ul class="' + chart.id + '-legend">');
                             for (var i = 0; i < chart.data.datasets.length; i++) {
                                 text.push('<li><span style="background-color:' +

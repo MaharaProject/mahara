@@ -48,4 +48,5 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I choose "Groups" in "Engage" from main menu
     And I follow "GroupA"
     And I follow "Collection UserA_01"
+    And I wait "1" seconds
     And I should see "Page UserA_02"
