@@ -21,6 +21,7 @@ Scenario: Clicking ID's (Bug 1428456)
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Text" in the "Content types" property
+ And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | Ulysses |
  | Block content | <p>Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed ...</p> |
@@ -38,6 +39,7 @@ Scenario: Clicking ID's (Bug 1428456)
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on "Text" in the "Content types" property
+ And I wait "1" seconds
  And I set the following fields to these values:
  | Block title | 1984 |
  | Block content | <p>It was a bright cold day in April, and the clocks were striking thirteen. Winston Smith, his chin nuzzled into his breast in an effort to escape the vile wind...</p> |
