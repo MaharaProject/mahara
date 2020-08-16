@@ -569,10 +569,10 @@ jQuery(function($) {
         // Get data from existing framework
         sendjsonrequest(url, {'framework_id': framework_id} , 'POST', function(data) {
             if (edit) {
-                fw_id = data.data.title.id;
+                fw_id = data.data.info.id;
             }
-            // Set the values for the first 'title' section
-            $.each(data.data.title, function (k, value) {
+            // Set the values for the first 'info' section
+            $.each(data.data.info, function (k, value) {
                 if (k === 'selfassess') {
                     if (value == 1) {
                         value = true;
@@ -746,6 +746,9 @@ jQuery(function($) {
 
             update_delete_element_button_handlers();
             update_delete_standard_button_handlers();
+        },
+        function() {
+             displayMessage(get_string_ajax('noframeworkfoundondb', 'module.framework'), 'error');
         });
     }
     // End of populate_editor()

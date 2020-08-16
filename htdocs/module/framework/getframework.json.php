@@ -9,77 +9,87 @@
  *
  */
 
-//This file is for getting a framework from the db
-
 define('INTERNAL', 1);
-define('JSON',1);
-
+define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-
 safe_require('module', 'framework');
+
 if (!PluginModuleFramework::is_active()) {
     json_reply(true, get_string('pluginnotactive1', 'error', get_string('frameworknav', 'module.framework')));
 }
 
-//@TODO - nothing done with errors
-if (!$_POST) {
-    //error
+if ($framework_id = param_integer('framework_id', null)) {
+    if (record_exists('framework', 'id', $framework_id)) {
+        $fw_data = get_smartevidence_framework($framework_id);
+        json_reply(false, (object) array('data' => $fw_data));
+    }
+    else {
+        json_reply(true, get_string('noframeworkfoundondb', 'module.framework'));
+    }
 }
 else {
-    $form_data = $_POST;
+    json_reply(true, get_string('missingparamframeworkid', 'module.framework'));
 }
 
-$framework_id = param_variable('framework_id', null);
-$table = 'framework';
-//@TODO - check error invalid arg for foreach "framework", "6") -> ln 54
-$fw_data = get_framework($table, $framework_id);
-
-function get_framework($table, $select, $se_depth=0) {
+/*
+ * Get the framework from the database
+ * @param integer $framework_id the id from the framework on the DB
+ */
+function get_smartevidence_framework($id) {
+    // the return variable
     $data = array();
-    if (record_exists_select($table, "id='$select'")) {
-        $fw_data = get_record($table, 'id', $select);
-        if ($fw_data->institution != 'all') {
-            $displayname = get_field('institution', 'displayname', 'name', $fw_data->institution);
-            $fw_data->institution = $displayname;
-        }
-        $data['title'] = $fw_data;
+    // raw data from DB
+    $fw_data = get_record('framework', 'id', $id);
+    if (!$fw_data) {
+        json_reply(true, get_string('missingrecordsdb', 'module.framework', 'framework'));
     }
-    if (isset($fw_data->id)) {
-        $evidence_statuses = get_records_array('framework_evidence_statuses', 'framework', $fw_data->id);
-        $data['evidencestatuses'] = $evidence_statuses;
-        $standard_data = get_records_array('framework_standard', 'framework', $fw_data->id, 'priority');
-        $data['standards'] = $standard_data;
-        $se_data = array();
-        foreach ($standard_data as $sk => $se) {
-            if ($se_data = get_records_array('framework_standard_element', 'standard', $se->id, 'priority')) {
-                $se_depth = 0;
-                foreach($se_data as $se) {
-                    $se->depth = add_depth_to_ses($se, $se_data, $se_depth);
-                }
-                $data['standards']['element'][$sk] = $se_data;
+    if ($fw_data->institution != 'all') {
+        $fw_data->institution = get_field('institution', 'displayname', 'name', $fw_data->institution);
+    }
+    $data['info'] = $fw_data;
+
+    $data['evidencestatuses'] = get_records_array('framework_evidence_statuses', 'framework', $id);
+
+    $fields = 'id, framework, shortname, name, description, priority';
+    $standard_data = get_records_array('framework_standard', 'framework', $id, 'priority', $fields);
+    if (!$standard_data) {
+        json_reply(true, get_string('missingrecordsdb', 'module.framework', 'standard'));
+    }
+    $data['standards'] = $standard_data;
+
+    $fields = 'id, standard, shortname, name, description, priority, parent';
+    foreach ($standard_data as $sk => $standard) {
+        if ($children_of_standard = get_records_array('framework_standard_element', 'standard', $standard->id, 'priority', $fields)) {
+            foreach($children_of_standard as $se) {
+                $se->depth = get_element_depth($se, $children_of_standard);
             }
+            $data['standards']['element'][$sk] = $children_of_standard;
         }
     }
     return $data;
 }
 
-function add_depth_to_ses($se, $se_data, $se_depth) {
-    if (($parent_id = $se->parent) !== null) {
-        $se_depth ++;
-        $se_with_id_of_parent = get_parent($se_data, $parent_id);
-        add_depth_to_ses($se_with_id_of_parent, $se_data, $se_depth);
-        return $se_depth;
+/*
+ * Get the distance between the element and the standard
+ * (how many parent element are between them)
+ */
+function get_element_depth($se, $children_of_standard) {
+    $depth = 0;
+    if ($se->parent !== null) {
+        $parent_element = get_parent_element($children_of_standard, $se->parent);
+        $depth = get_element_depth($parent_element, $children_of_standard) + 1;
     }
-    else {
-        return $se_depth;
-    }
+    return $depth;
 }
-function get_parent($se_data, $parent_id) {
-    foreach($se_data as $se) {
+
+/*
+ * Given a standard element parent id, this will return the data
+ * of that parent element
+ */
+function get_parent_element($children_of_standard, $parent_id) {
+    foreach($children_of_standard as $se) {
         if ($se->id == $parent_id) {
             return $se;
         }
     }
 }
-
-json_reply(false, (object) array('data' => $fw_data));
