@@ -178,6 +178,10 @@ jQuery(function($) {
 
             // Reset the "Copy" dropdown
             $("#copy option").eq(0).prop('selected', true);
+            editor.destroy();
+            refresh_editor();
+            populate_editor(data.data.id);
+            set_editor_clean();
         });
         window.scrollTo(0,0);
     });
@@ -449,7 +453,12 @@ jQuery(function($) {
         // Add class for correct styling of help block text
         $('[data-schemaid="standards"] > p').addClass("help-block");
         $('[data-schemaid="evidencestatuses"] > p').addClass("help-block");
-
+        parent_array = [''];
+        standard_array = [];
+        standard_names = [];
+        std_index = 0;
+        eid = 1;
+        se_index = 0;
         // Add id to the framework description textarea
         $('div[data-schemapath="root.description"] > div > textarea').attr("id", "title_description_textarea");
         textarea_init();
