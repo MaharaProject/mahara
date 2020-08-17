@@ -71,24 +71,6 @@
     padding: 15px 0;
 }
 
-.wysiwyg {
-    label {
-        display:block;
-    }
-    label  + .mce-tinymce {
-        width:100%;
-    }
-}
-
-.wysiwyg.view-description {
-    width: 70%;
-}
-.wysiwyg.under-label-help {
-    label  + .mce-tinymce {
-        width:70%;
-    }
-}
-
 .toolbar-affix.affix {
     position: fixed;
     top: 30px;
@@ -503,29 +485,6 @@
 .manage-skins-btn {
   margin-top: 10px;
   margin-bottom: 20px;
-}
-
-#configureauthinstance-modal {
-    .modal-body textarea.under-label,
-    .modal-body .under-label-help.wysiwyg .mce-tinymce {
-        width: calc(100% - 30px) !important;
-    }
-    .modal-body .form-group.text {
-        label {
-            max-width: calc(50% - 30px);
-        }
-        input[type="text"] {
-            max-width: 50%;
-        }
-    }
-    .modal-body .form-group.password {
-        label {
-            max-width: calc(50% - 30px);
-        }
-        input[type="password"] {
-            max-width: 50%;
-        }
-    }
 }
 
 .defaultskin {
