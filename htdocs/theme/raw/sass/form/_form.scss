@@ -126,7 +126,7 @@ label,
     label {
         display: block;
         vertical-align: top;
-        + .mce-tinymce {
+        + .tox-tinymce {
             width:100%;
         }
     }
@@ -134,7 +134,7 @@ label,
         width: 70%;
     }
     &.under-label-help {
-        label + .mce-tinymce {
+        label + .tox-tinymce {
             width:70%;
         }
     }

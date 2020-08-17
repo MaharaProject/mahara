@@ -438,18 +438,6 @@
             }
         }
     }
-    .mce-tinymce {
-        @include media-breakpoint-up(md) {
-            width: 420px;
-            max-width: 100%;
-            .columns3 & {
-                max-width: 100%;
-            }
-        }
-        @include media-breakpoint-up(xl) {
-            width: 500px;
-        }
-    }
 
     &.radio {
         .pseudolabel,
