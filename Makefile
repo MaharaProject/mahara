@@ -1,3 +1,21 @@
+# The mode that behat tests are run with.
+BEHAT_MODE = rundebugheadless
+# Can limit what behat tests are run, e.g `make -e BEHAT_TESTS=change_account_settings.feature behat`
+BEHAT_TESTS = null
+# ask for test reports to be generated possible values are <empty>, 'html', 'junit'
+BEHAT_REPORT =
+# The Ubuntu version that the Mahara base image will be based on
+DOCKER_UBUNTU_VERSION = bionic
+TEST_ADMIN_PASSWD = Kupuh1pa!
+TEST_ADMIN_EMAIL  = user@example.org
+
+# Make expects targets to create a file that matches the target name
+# unless the target is phony.
+# Refer to: https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
+.PHONY: css clean-css help imageoptim installcomposer initcomposer cleanssphp ssphp \
+		cleanpdfexport pdfexport install phpunit behat minaccept jenkinsaccept securitycheck \
+		push security docker-image docker-builder
+
 all: css
 
 production = true
@@ -24,12 +42,16 @@ help:
 	@echo "Run 'make' to do "build" Mahara (currently only CSS)"
 	@echo "Run 'make initcomposer' to install Composer and phpunit"
 	@echo "Run 'make phpunit' to execute phpunit tests"
+	@echo "Run 'make install' runs the Mahara install script"
+	@echo "Run 'make behat' to execute behat tests"
 	@echo "Run 'make ssphp' to install SimpleSAMLphp"
 	@echo "Run 'make cleanssphp' to remove SimpleSAMLphp"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
 	@echo "Run 'make minaccept' to run the quick pre-commit tests"
 	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
 	@echo "Run 'make push' to push your changes to the repo"
+	@echo "Run 'make docker-image' to build a Mahara docker image"
+	@echo "Run 'make docker-builder' builds the docker builder image required for docker-build"
 
 imageoptim:
 	find . -iname '*.png' -exec optipng -o7 -q {} \;
@@ -94,7 +116,10 @@ endif
 
 vendorphpunit := $(shell external/vendor/bin/phpunit --version 2>/dev/null)
 
-phpunit:
+install:
+	php htdocs/admin/cli/install.php --adminpassword=$(TEST_ADMIN_PASSWD) --adminemail=$(TEST_ADMIN_EMAIL)
+
+phpunit: install
 	@echo "Running phpunit tests..."
 ifdef vendorphpunit
 	@external/vendor/bin/phpunit --log-junit logs/tests/phpunit-results.xml htdocs/
@@ -102,6 +127,8 @@ else
 	@phpunit --log-junit logs/tests/phpunit-results.xml htdocs/
 endif
 
+behat:
+	./test/behat/mahara_behat.sh $(BEHAT_MODE) $(BEHAT_TESTS) $(BEHAT_REPORT)
 
 revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
 whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
@@ -159,3 +186,25 @@ security: minaccept
 		git push gerrit HEAD:refs/drafts/master/$(TAG); \
 	fi
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
+
+# Builds Mahara server docker image
+docker-image:
+	docker build --pull --file docker/Dockerfile.mahara-base \
+	  --build-arg BASE_VERSION=$(DOCKER_UBUNTU_VERSION) \
+		--tag mahara-base:$(DOCKER_UBUNTU_VERSION) .
+	docker build --file docker/Dockerfile.mahara-web \
+	  --build-arg BASE_IMAGE=mahara-base:$(DOCKER_UBUNTU_VERSION) \
+	  --tag mahara .
+
+# Builds a docker image that is able to build Mahara. Useful if you don't want
+# to install dependencies on your system.
+# The builder is made for the user that will use it. This is so that the built
+# files are owned by the user and not some other user (eg not root)
+docker-builder:
+	docker build --pull --file docker/Dockerfile.mahara-base \
+	  --build-arg BASE_VERSION=$(DOCKER_UBUNTU_VERSION) \
+		--tag mahara-base:$(DOCKER_UBUNTU_VERSION) .
+	docker build --file docker/Dockerfile.mahara-builder \
+	  --build-arg BASE_IMAGE=mahara-base:$(DOCKER_UBUNTU_VERSION) \
+		--build-arg IMAGE_UID=$(shell id -u) --build-arg IMAGE_GID=$(shell id -g) \
+		--tag mahara-builder .

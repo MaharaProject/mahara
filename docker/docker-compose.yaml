@@ -1,0 +1,112 @@
+version: '3.4'
+
+services:
+  db:
+    image: postgres:9.5
+    container_name: mahara-db
+    environment:
+      POSTGRES_DB: ${MAHARA_DB_NAME}
+      POSTGRES_PASSWORD: ${MAHARA_DB_PASSWD}
+      POSTGRES_USER: ${MAHARA_DB_USER}
+    volumes:
+      - mahara-db:/var/lib/postgresql/data
+
+  mahara-redis:
+    image: redis:6.0
+    container_name: mahara-redis
+
+  # mahara-elastic can be used instead of the "internal" search. To do so
+  # requires the elastic plugin to be configured, and then search settings
+  # changed to 'elastic' in the Mahara site options.
+  mahara-elastic:
+    image: elasticsearch:6.8.12
+    container_name: mahara-elastic
+    environment:
+      discovery.type: single-node
+    volumes:
+      - mahara-elastic:/usr/share/elasticsearch/data
+
+  mahara:
+    image: mahara
+    container_name: mahara
+    # Inject any MAHARA environment variables from the host into the container.
+    # This values could come from:
+    # - environment variables in the host
+    # - .env file in the directory that docker compose is run from
+    # - default value here.
+    environment:
+      - MAHARA_WWW_SERVERNAME
+      - MAHARA_WWW_SERVEADMIN
+      - MAHARA_DB_TYPE
+      - MAHARA_DB_HOST
+      - MAHARA_DB_USER
+      - MAHARA_DB_NAME
+      - MAHARA_DB_PASSWD
+      - MAHARA_DATA_ROOT
+      - MAHARA_WWW_ROOT
+      - MAHARA_SEND_EMAIL
+      - MAHARA_SEND_ALL_EMAIL_TO
+      - MAHARA_PRODUCTION_MODE
+      - MAHARA_PERF_TO_FOOT
+      - MAHARA_SKINS
+      - MAHARA_ISOLOATED_INSTITUTIONS
+      - MAHARA_DB_PREFIX
+      - MAHARA_SITE_THEME_PREFS
+      - MAHARA_CLEAN_URLS
+      - MAHARA_PUBLIC_SEARCH_ALLOWED
+      - MAHARA_PROBATION_ENABLED
+      - MAHARA_SHOW_LOGIN_INSIDE_BLOCK
+      - MAHARA_EXTERNAL_LOGIN
+      - MAHARA_URL_SECRET
+      - MAHARA_PASSWORD_SALT_MAIN
+      - MAHARA_PASSWORD_SALT_ALT1
+      - MAHARA_SESSION_HANDLER=redis
+      - MAHARA_REDIS_SERVER=mahara-redis:6379
+      - MAHARA_REDIS_SENTINEL_SERVERS
+      - MAHARA_REDIS_MASTER_GROUP
+      - MAHARA_REDIS_PREFIX
+      - MAHARA_ELASTICSEARCH_HOST=mahara-elastic
+      - MAHARA_ELASTICSEARCH_PORT
+      - MAHARA_ELASTICSEARCH_SCHEME=http
+      - MAHARA_ELASTICSEARCH_USERNAME
+      - MAHARA_ELASTICSEARCH_PASSWD
+      - MAHARA_ELASTICSEARCH_INDEXING_USERNAME
+      - MAHARA_ELASTICSEARCH_INDEXING_PASSWD
+      - MAHARA_ELASTICSEARCH_INDEX_NAME
+      - MAHARA_ELASTICSEARCH_BYPASS_INDEX_NAME
+      - MAHARA_ELASTICSEARCH_ANALYZER
+      - MAHARA_ELASTICSEARCH_TYPES
+      - MAHARA_ELASTICSEARCH_IGNORE_SSL
+      - MAHARA_ELASTICSEARCH_REQUEST_LIMIT
+      - MAHARA_ELASTICSEARCH_REDO_LIMIT
+    ports:
+      # The Mahara docker image only supports http on port 80. If https is
+      # required (strongly recommended) This can be achieved by an intermediary
+      # such as a NGINX reverse proxy that also terminates the https connection
+      # and passed http onto Mahara.
+      - "${MAHARA_DOCKER_PORT}:80"
+    volumes:
+      - mahara-data:/mahara/data
+
+  # The admin instance is responsible for triggering the cron task periodically.
+  # In this compose setup we use a periodic curl command to the web container
+  # to keep this simple. In a real deployment environment there may be better
+  # tools for triggering scheduled tasks.
+  mahara-admin:
+    image: jsonfry/curl-cron
+    container_name: mahara-admin
+    environment:
+      - MAHARA_URL_SECRET
+      - CRON_SCHEDULE=* * * * *
+      - OPTIONS=http://mahara/lib/cron.php?urlsecret=${MAHARA_URL_SECRET}
+
+volumes:
+  mahara-db:
+    external: true
+    name: ${MAHARA_DB_VOLUME:-mahara-db}
+  mahara-data:
+    external: true
+    name: ${MAHARA_DATA_VOLUME:-mahara-data}
+  mahara-elastic:
+    external: true
+    name: ${MAHARA_ELASTIC_VOLUME:-mahara-elastic}

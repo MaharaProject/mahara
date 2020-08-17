@@ -2,6 +2,8 @@
 .buildpath
 .settings/
 .settings
+.envrc
+behat-root/
 logs
 htdocs/config.php
 htdocs/.project

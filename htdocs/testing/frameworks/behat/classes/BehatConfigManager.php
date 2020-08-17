@@ -167,7 +167,12 @@ class BehatConfigManager {
                         'javascript_session' => 'selenium2',
                         'selenium2' => array(
                             'browser' => 'chrome',
-                            'wd_host' => $CFG->behat_selenium2
+                            'wd_host' => $CFG->behat_selenium2,
+                            'capabilities' => array(
+                               'chrome' => array(
+                                  'switches' => array('--disable-dev-shm-usage')
+                               )
+                            )
                         ),
                         'goutte' => null,
                      ),
