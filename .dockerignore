@@ -1,0 +1,8 @@
+#Start by ignoring everything
+**
+
+#Now we will allow only the paths that are needed
+!Makefile
+!docker
+!htdocs
+
