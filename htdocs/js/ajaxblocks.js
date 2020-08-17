@@ -10,6 +10,8 @@ jQuery(window).on('blocksloaded', {}, function() {
             blocks,
             i,
             id;
+        // keep count of the blocks loaded by ajax
+        window.ajaxBlocksCount = $('div.block[data-blocktype-ajax]').length;
 
         if($('.block').is('[data-blocktype-ajax]')){
             blocks = $('.block[data-blocktype-ajax]');
@@ -23,6 +25,11 @@ jQuery(window).on('blocksloaded', {}, function() {
                     }
                     if (config.mathjax && MathJax !== undefined) {
                         MathJax.Hub.Queue(["Typeset", MathJax.Hub, blocks.get(i)]);
+                    }
+                    window.ajaxBlocksCount--;
+                    // trigger block resize after the last ajax block has been loaded
+                    if (window.ajaxBlocksCount == 0) {
+                        $(window).trigger('colresize');
                     }
                });
 
@@ -40,9 +47,5 @@ jQuery(window).on('blocksloaded', {}, function() {
     });
 
     ajaxBlocks();
-
-    window.setTimeout(function(){
-       $(window).trigger('colresize');
-    }, 300);
 
 });
