@@ -370,10 +370,10 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'id'              => new external_value(PARAM_INTEGER, 'ID of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'viewid'          => new external_value(PARAM_INTEGER, 'View ID', VALUE_REQUIRED),
                             'iscollection'    => new external_value(PARAM_BOOL, 'Is a Collection', VALUE_OPTIONAL),
                             'lock'            => new external_value(PARAM_BOOL, 'Lock the object', VALUE_OPTIONAL),
@@ -602,13 +602,15 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'id'              => new external_value(PARAM_INTEGER, 'ID of the person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'viewid'          => new external_value(PARAM_INTEGER, 'View ID', VALUE_REQUIRED),
                             'iscollection'    => new external_value(PARAM_BOOL, 'Is a Collection', VALUE_OPTIONAL),
                             'viewoutcomes'    => new external_value(PARAM_RAW, 'View outcomes', VALUE_OPTIONAL),
+                            'archiveonrelease' => new external_value(PARAM_BOOL, 'Archive on release of submission', VALUE_OPTIONAL),
+                            'externalid'      => new external_value(PARAM_RAW, 'External ID the archive relates to', VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -655,17 +657,30 @@ class mahara_view_external extends external_api {
             $userid = $user->id;
 
             db_begin();
-            $teacher = $user;
+            $teacher = new User();
+            $teacher->find_by_id($userid);
+            $external = new stdClass();
+            $external->id = $v['externalid'];
             if (isset($v['iscollection']) && $v['iscollection']) {
                 require_once('collection.php');
                 $collection = new Collection($v['viewid']);
                 log_debug('releasing collection');
-                $collection->release($teacher);
+                if ($v['archiveonrelease']) {
+                    $collection->pendingrelease($teacher, $external);
+                }
+                else {
+                    $collection->release($teacher);
+                }
             }
             else {
                 $view = new View($v['viewid']);
                 log_debug('releasing view');
-                View::_db_release(array($v['viewid']), $view->get('owner'));
+                if ($v['archiveonrelease']) {
+                    $view->pendingrelease($teacher, $external);
+                }
+                else {
+                    $view->release($teacher);
+                }
             }
 
             // Provide each artefact plugin the opportunity to handle the remote submission release

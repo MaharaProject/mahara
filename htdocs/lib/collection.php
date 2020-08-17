@@ -1381,8 +1381,9 @@ class Collection {
      * the submission item to the export queue ready for archiving.
      *
      * @param object $releaseuser The user releasing the collection
+     * @param string $externalid  An external ID that the archive relates to
      */
-    public function pendingrelease($releaseuser=null) {
+    public function pendingrelease($releaseuser=null, $externalid=null) {
         $submitinfo = $this->submitted_to();
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
@@ -1398,7 +1399,7 @@ class Collection {
         db_commit();
 
         require_once(get_config('docroot') . 'export/lib.php');
-        add_submission_to_export_queue($this, $releaseuser);
+        add_submission_to_export_queue($this, $releaseuser, $externalid);
     }
 
     /**

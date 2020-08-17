@@ -1913,5 +1913,13 @@ function xmldb_core_upgrade($oldversion=0) {
         install_skins_default();
     }
 
+    if ($oldversion < 2020092100) {
+        log_debug('Adjust archived_submissions table');
+        $table = new XMLDBTable('archived_submissions');
+        $field = new XMLDBField('group');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10);
+        change_field_notnull($table, $field);
+    }
+
     return $status;
 }

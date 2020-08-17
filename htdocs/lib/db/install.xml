@@ -1275,7 +1275,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="archiveid" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="group" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="externalhost" TYPE="char" LENGTH="50" NOTNULL="false" />
                 <FIELD NAME="externalid" TYPE="char" LENGTH="255" NOTNULL="false" />
             </FIELDS>

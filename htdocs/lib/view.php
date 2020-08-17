@@ -1646,7 +1646,7 @@ class View {
         return null;
     }
 
-    public function pendingrelease($releaseuser=null) {
+    public function pendingrelease($releaseuser=null, $externalid=null) {
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
@@ -1654,7 +1654,7 @@ class View {
         db_begin();
         self::_db_pendingrelease(array($this->get('id')));
         require_once(get_config('docroot') . 'export/lib.php');
-        add_submission_to_export_queue($this, $releaseuser);
+        add_submission_to_export_queue($this, $releaseuser, $externalid);
         db_commit();
     }
 
