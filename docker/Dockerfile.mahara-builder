@@ -1,0 +1,45 @@
+# Creates an image that can be used to build and test Mahara.
+#
+# The image is created for the person that will use it to prevent built files
+# being owned by other users.
+#
+ARG BASE_IMAGE=mahara-base
+FROM ${BASE_IMAGE}
+
+ARG IMAGE_UID=1000
+ARG IMAGE_GID=1000
+
+# Set the enviroment variable as non interactive
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Setup the builder user
+RUN set -o errexit -o nounset \
+    && groupadd --system --gid ${IMAGE_GID} builder \
+    && useradd --system --gid builder --uid ${IMAGE_UID} --shell /bin/bash --create-home builder
+
+# Install dependencies
+RUN apt-get update && apt-get -y install \
+      curl \
+      git \
+      lsof \
+      make \
+      nodejs-dev \
+      node-gyp \
+      npm \
+      openjdk-8-jre-headless \
+      unzip \
+      wget \
+      xvfb \
+    && npm config set prefix /usr/local \
+    && npm install -g gulp --silent
+
+# Create docbuilder/source volume
+# We expect this to be volume mounted to supply the document source files
+VOLUME "/opt/mahara"
+WORKDIR /opt/mahara
+
+RUN chown ${IMAGE_UID}:${IMAGE_GID} /opt/mahara
+
+USER builder
+
+ENTRYPOINT ["make"]
