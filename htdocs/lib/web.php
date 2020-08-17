@@ -87,7 +87,9 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
     // Only add additional stylesheets when configurable theme is set.
     if ($THEME->basename == 'custom') {
         $sheets = $THEME->additional_stylesheets();
-        $stylesheets = array_merge($stylesheets, $sheets);
+        if (!empty($sheets) && is_array($sheets)) {
+            $stylesheets = array_merge($stylesheets, $sheets);
+        }
     }
 
     // Give the skin a chance to affect the page

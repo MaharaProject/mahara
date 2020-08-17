@@ -930,11 +930,12 @@ function institution_submit(Pieform $form, $values) {
 
         $properties = array();
         $record = (object) array('style' => $styleid);
-        foreach (array_keys($customthemedefaults) as $name) {
+        foreach ($customthemedefaults as $name => $val) {
+            $newvalue = !empty($values['resetcustom']) ? $val['value'] : $values[$name];
             $record->field = $name;
-            $record->value = $values[$name];
+            $record->value = $newvalue;
             insert_record('style_property', $record);
-            $properties[$name] = $values[$name];
+            $properties[$name] = $newvalue;
         }
 
         // Cache the css
@@ -953,7 +954,7 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->licensedefault = (isset($values['licensedefault'])) ? $values['licensedefault'] : '';
     }
 
-    if (!empty($values['resetcustom']) && !empty($oldinstitution->style)) {
+    if (!empty($values['resetcustom']) && $newinstitution->theme !== 'custom' && !empty($oldinstitution->style)) {
         $newinstitution->style = null;
     }
 
