@@ -21,16 +21,3 @@ Scenario: Add file, rename and add description
     And I should see "I hope I can see my saved changes"
     And I reload the page
     And I should not see "mahara_about.pdf"
-    # Verify Quota is displayed on the sidebar of the Content->Files page and default maximum of 50.0MB
-    And I should see "You have used 0.1MB of your 50.0MB quota."
-
-    # Verify folder show content size
-    When I fill in "Folder1" for "files_filebrowser_createfolder_name"
-    And I press "Create folder"
-    And I follow "Folder1"
-    And I attach the file "Image3.png" to "File"
-    And I attach the file "Image2.png" to "File"
-    And I attach the file "testvid3.mp4" to "File"
-    And I follow "Parent folder"
-    Then I should see "96.5K"
-    And I should see "You have used 0.2MB of your 50.0MB quota."
