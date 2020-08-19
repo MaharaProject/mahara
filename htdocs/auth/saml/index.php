@@ -444,6 +444,21 @@ function add_institution_saml_auth($institution, $configs=array()) {
  * @param string $preferred
 */
 function auth_saml_disco_screen($list, $preferred) {
+    // Find the metadata that is actually being used by an institution
+    $activeauths = get_column_sql("SELECT aic.value FROM {auth_instance_config} aic
+                                   JOIN {auth_instance} ai ON ai.id = aic.instance
+                                   WHERE ai.authname = ? AND ai.active = 1
+                                   AND aic.field = 'institutionidpentityid' AND aic.value IS NOT NULL",
+                                  array('saml'));
+    if (empty($activeauths)) {
+        $activeauths = array();
+    }
+
+    foreach ($list as $key => $idp) {
+        if (!in_array($key, $activeauths)) {
+            unset($list[$key]);
+        }
+    }
 
     list ($cols, $html) = PluginAuthSaml::idptable($list, $preferred);
     $smarty = smarty(array(), array(), array(), array('pagehelp' => false, 'sidebars' => false));
