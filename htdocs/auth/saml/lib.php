@@ -1392,7 +1392,7 @@ EOF;
                         JOIN {auth_instance} ai ON (ai.authname = 'saml' AND ai.id = aic.instance)
                         WHERE aic.field = 'institutionidpentityid' AND aic.value = ? AND aic.instance != ?",
                         array($values['institutionidpentityid'], $values['instance']));
-                    if ($duplicates[0]->instances > 0) {
+                    if ($duplicates && is_array($duplicates) && $duplicates[0]->instances > 0) {
                         $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
                     }
                     else {
