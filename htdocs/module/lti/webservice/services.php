@@ -50,5 +50,6 @@ $functions = array(
         'methodname' => 'launch',
         'description' => "Launch an LTI activity",
         'type' => 'write',
+        'hasconfig' => 1,
     ),
 );

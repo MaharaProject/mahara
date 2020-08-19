@@ -590,6 +590,16 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         create_table($table);
     }
 
+    if ($oldversion < 2020081900) {
+        $table = new XMLDBTable('external_functions');
+        $field = new XMLDBField('hasconfig');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        if (!field_exists($table, $field)) {
+            log_debug('Adding field to external_functions table');
+            add_field($table, $field);
+        }
+    }
+
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
 
