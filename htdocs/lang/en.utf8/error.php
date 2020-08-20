@@ -103,6 +103,7 @@ $string['institutionprivacystatementnotfound'] = 'The privacy statement for "%s"
 $string['viewnotfoundexceptiontitle'] = 'Page not found';
 $string['viewnotfoundexceptionmessage'] = 'You tried to access a page that does not exist.';
 $string['viewnotfound'] = 'Page with id %s not found.';
+$string['collectionnotfound'] = 'Collection with id %s not found';
 $string['viewnotfoundbyname'] = 'Page %s by %s not found.';
 $string['youcannotviewthisusersprofile'] = 'You cannot view this profile.';
 $string['notinthesamegroup'] = 'You cannot view this profile because you are not members of the same group.';

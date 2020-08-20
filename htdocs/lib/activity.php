@@ -1407,7 +1407,36 @@ class ActivityTypeViewAccess extends ActivityType {
             }
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
         }
+        if ($this->views && $this->views[0] && $this->views[0]['collection_id']) {
+            require_once('collection.php');
+            if (!$collectioninfo = new Collection($this->views[0]['collection_id'])) {
+                if (!empty($this->cron)) { // probably deleted already
+                    return;
+                }
+                throw new ViewNotFoundException(get_string('collectionnotfound', 'error', $this->views[0]['collection_id']));
+            }
+        }
+
+        // default url
         $this->url = 'view/sharedviews.php';
+        // if we are dealing with one portfolio update url to go to that portfolio page
+        if (!$this->views) {
+            //we are dealing with a single page
+            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
+            $this->add_urltext(array('key' => 'Portfolio', 'section' => 'view'));
+        }
+        else {
+            // check to see if it's just one collection
+            if ($collectionids = array_column($this->views, 'collection_id')) {
+                if (count(array_unique($collectionids)) === 1) {
+                    if ($this->views[0]['collection_url']) {
+                        $this->url = $this->views[0]['collection_url'];
+                        $this->add_urltext(array('key' => 'Collection', 'section' => 'view'));
+                    }
+                }
+            }
+        }
+
         $this->users = array_diff_key(
             activity_get_viewaccess_users($this->view),
             $this->oldusers
@@ -1488,7 +1517,7 @@ class ActivityTypeViewAccess extends ActivityType {
         return false;
     }
 
-    public function _getmessage($user) {
+    public function _getmessage($user, $template) {
         $accessitems = array();
         if ($items = $this->get_view_titles_urls()) {
             $accessitems = $items;
@@ -1510,21 +1539,21 @@ class ActivityTypeViewAccess extends ActivityType {
         $smarty->assign('url', get_config('wwwroot') . $this->url);
         $smarty->assign('sitename', $sitename);
         $smarty->assign('prefurl', $prefurl);
-        $messagebody = $smarty->fetch('account/activity/access.tpl');
+        $messagebody = $smarty->fetch($template);
 
         return $messagebody;
     }
 
     public function get_message($user) {
-        return strip_tags($this->_getmessage($user));
+        return strip_tags($this->_getmessage($user, 'account/activity/accessinternal.tpl'));
     }
 
     public function get_emailmessage($user) {
-        return strip_tags($this->_getmessage($user));
+        return strip_tags($this->_getmessage($user, 'account/activity/accessemail.tpl'));
     }
 
     public function get_htmlmessage($user) {
-        return $this->_getmessage($user);
+        return $this->_getmessage($user, 'account/activity/accessemail.tpl');
     }
 
     public function get_required_parameters() {

@@ -2,11 +2,15 @@
 <p>{str tag=emailheader section=notification.email arg1=$sitename}</p>
 ------------------------------------------------------------------------
 <p>You have been given access to the following:</p>
+{foreach from=$accessitems item=item}
+{if count($accessitems) == 1}
+<a href={$item.url}>{$item.name|clean_html|safe}</a>
+{else}
 <ul class="list-unstyled">
-    {foreach from=$accessitems item=item}
-        <li style='padding: 0.5em'>{$item.name|clean_html|safe}   <a href={$item.url}>{$item.url}</a></li>
-    {/foreach}
+    <li style='padding: 0.5em'><a href={$item.url}>{$item.name|clean_html|safe}</a></li>
 </ul>
+{/if}
+{/foreach}
 {strip}
 {if accessdatemsg}
     <p>{$accessdatemsg}</p>

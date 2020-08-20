@@ -460,6 +460,7 @@ $string['Profile'] = 'Profile';
 $string['profile'] = 'profile'; // for stats
 $string['Portfolio'] = 'Portfolio';
 $string['Portfolios'] = 'Portfolios';
+$string['Collection'] = 'Collection';
 $string['Grouphomepage'] = 'Group homepage';
 $string['grouphomepage'] = 'group homepage'; // for stats
 

@@ -30,9 +30,9 @@
                 {if $i->message}
                     <p class="content-text">{$i->message|clean_html|safe}</p>
                     {if $i->url}
-                    <a href="{$WWWROOT}{$i->url}" class="text-small">
-                        {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm" role="presentation" aria-hidden="true"></span>
-                    </a>
+                        <a href="{$i->url}" class="text-small">
+                            {if $i->urltext}{$i->urltext}{else}{str tag="more..."}{/if} <span class="icon icon-arrow-right mls icon-sm" role="presentation" aria-hidden="true"></span>
+                        </a>
                     {/if}
                     {if $i->canreplyall}
                     <a title="{str tag=replyall section=module.multirecipientnotification}" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$i->id}&returnto=outbox" class="text-small">
