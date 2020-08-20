@@ -2092,9 +2092,19 @@ class View {
             else {
                 $result = $blockinstance->render_viewing($exporting, $versioning);
             }
+            // check if the height needs to be defined when loading the block
+            // this will happen when the block content in edit mode is different from
+            // the block content in view mode
+            $classname = generate_class_name('blocktype', $blockinstance->get('blocktype'));
+            if (call_static_method($classname, 'set_block_height_on_load', $blockinstance)) {
+                $block['height'] = 1;
+            }
+            else {
+                $block['height'] = $blockinstance->get('height');
+            }
+
             $block['content'] = $result;
             $block['width'] = $blockinstance->get('width');
-            $block['height'] = $blockinstance->get('height');
             $block['positionx'] = $blockinstance->get('positionx');
             $block['positiony'] = $blockinstance->get('positiony');
             $block['row'] = $blockinstance->get('row');

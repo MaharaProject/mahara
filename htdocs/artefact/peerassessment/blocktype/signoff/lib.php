@@ -138,4 +138,8 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         ensure_record_exists('view_signoff_verify', (object) array('view' => $viewid), (object) array('view' => $viewid), 'id', true);
         return $configdata;
     }
+
+    public static function set_block_height_on_load() {
+        return true;
+    }
 }
