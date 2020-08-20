@@ -792,6 +792,18 @@ EOF;
     public static function display_for_roles($roles) {
         return !(count($roles) == 1 && $roles[0] == 'peer');
     }
+
+    /**
+     * Defines if the block has to always be resized on load
+     *
+     * This method should be overridden in the child class, if the block
+     * content is different when viewing than when editing
+     *
+     * @return boolean whether the height set on the DB should be ignored
+     */
+    public static function set_block_height_on_load() {
+        return false;
+    }
 }
 
 
