@@ -1,7 +1,7 @@
-@javascript @core @view @versioning
+@javascript @core @view
 Feature: Creating versions of a page
     As a user
-    I want to be able to view older versions of my page
+    I want to be able to view older versions of my page on a timeline
     So I can control the content
 
 Background:
