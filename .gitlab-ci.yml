@@ -1,0 +1,125 @@
+#
+stages:
+  - prepare-base-image
+  - prepare-builder-image
+  - prepare
+  - build-css
+  - test
+  - build
+  - package
+
+variables:
+  IMAGE_TAG: ${CI_PIPELINE_ID}
+  BASE_IMAGE: ${CI_REGISTRY_IMAGE}/mahara-base
+  BUILDER_IMAGE: ${CI_REGISTRY_IMAGE}/mahara-builder
+  MAHARA_IMAGE: ${CI_REGISTRY_IMAGE}/mahara
+
+.kaniko-common:
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  before_script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+
+# Builds the docker base image
+build-base-image:
+  stage: prepare-base-image
+  extends: .kaniko-common
+  script:
+    - /kaniko/executor --context docker/ --dockerfile ./Dockerfile.mahara-base --destination ${BASE_IMAGE}:${IMAGE_TAG}
+
+# Builds the docker image that is used to build and test Mahara
+build-builder:
+  stage: prepare-builder-image
+  extends: .kaniko-common
+  script:
+    - /kaniko/executor --context docker/ --dockerfile ./Dockerfile.mahara-builder --build-arg BASE_IMAGE=${BASE_IMAGE}:${IMAGE_TAG} --destination ${BUILDER_IMAGE}:${IMAGE_TAG}
+
+# Many of the later build steps require composer to be initialized and the
+# dependencies downloaded. We do this in a separate step and add `external` as
+# an artifact to pass these on to later build stages.
+prepare-composer:
+  stage: prepare
+  when: always
+  image:
+    name: ${BUILDER_IMAGE}:${IMAGE_TAG}
+    entrypoint: [""]
+  script:
+    - make initcomposer
+  artifacts:
+    paths:
+      - external/
+
+# Mahara requires the css to be built to run the behat and phpunit tests.
+build-css:
+  stage: build-css
+  when: always
+  image:
+    name: ${BUILDER_IMAGE}:${IMAGE_TAG}
+    entrypoint: [""]
+  script:
+    - make css
+  artifacts:
+    paths:
+      - htdocs/
+
+# Contains tasks that are required when running the tests
+.test-common:
+  image:
+    name: ${BUILDER_IMAGE}:${IMAGE_TAG}
+    entrypoint: [""]
+  before_script:
+    - cp htdocs/config-test.php htdocs/config.php
+  after_script:
+    - rm htdocs/config.php
+  services:
+    - name: postgres:9.5
+      alias: mahara-db
+  variables:
+    POSTGRES_DB: mahara
+    POSTGRES_PASSWORD: mahara
+    POSTGRES_USER: mahara
+    MAHARA_DB_HOST: mahara-db
+    MAHARA_DB_NAME: mahara
+    MAHARA_DB_PORT: 5432
+
+unit-test:
+  stage: test
+  extends: .test-common
+  script:
+    - make minaccept install phpunit
+
+behat-test:
+  stage: test
+  extends: .test-common
+  script:
+    - mkdir behat-root
+    - export MAHARA_BEHAT_DATA_ROOT=$(pwd)/behat-root
+    - make behat -e BEHAT_REPORT=junit
+  artifacts:
+    reports:
+      junit: behat-root/behat/junit-reports/*.xml
+  timeout: 3h
+
+# A full version of Mahara should have single sign on and pdf export features.
+# These are added to the build after the test phase so any tests that they contain
+# do not break our test phase.
+build:
+  stage: build
+  image:
+    name: ${BUILDER_IMAGE}:${IMAGE_TAG}
+    entrypoint: [""]
+  script:
+    - make ssphp pdfexport
+  artifacts:
+    paths:
+      - htdocs/
+
+# Builds a self contained image that can run the Mahara web application.
+mahara-image:
+  stage: package
+  extends: .kaniko-common
+  script:
+    - cp docker/web/mahara/config.php htdocs/config.php
+    - /kaniko/executor --context ./ --dockerfile docker/Dockerfile.mahara-web --build-arg BASE_IMAGE=${BASE_IMAGE}:${IMAGE_TAG} --destination ${MAHARA_IMAGE}:${IMAGE_TAG}
+
