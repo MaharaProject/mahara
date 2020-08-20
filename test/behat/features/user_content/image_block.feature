@@ -20,7 +20,7 @@ Scenario: Create and delete image block
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
     And I set the field "Block title" to "Image Block 1"
-    And I click on "Image" in the "Content types" property
+    And I click on blocktype "Image"
     Then I should see "Image Block 1: Configure"
     And I follow "Image"
     And I attach the file "Image1.jpg" to "File"

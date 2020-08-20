@@ -42,9 +42,6 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     # Verify that only one block of a certin type can be added to a template page  (ie only 1 Wall block)
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     And I press "Add"
-    And I click on "Show more"
-    And I click on "Show more"
-    And I should see "Wall" in the "Content types" property
-    And I click on "Wall" in the "Content types" property
+    And I click on blocktype "Wall"
     And I press "Save"
     Then I should see "Cannot put more than one \"Wall\" block type into a page."

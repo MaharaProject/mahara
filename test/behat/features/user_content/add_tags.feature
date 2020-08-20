@@ -85,7 +85,7 @@ Background:
    # Creating a Text block with a tag
    When I follow "Drag to add a new block" in the "blocktype sidebar" property
    And I press "Add"
-   And I click on "Text" in the "Content types" property
+   And I click on blocktype "Text"
    # create a text block with a Unique name (Text Block 101)
    And I fill in the following:
    | Block title | Text Block 101 |

@@ -389,6 +389,7 @@ class BehatGeneral extends BehatBase {
         }
 
         $this->i_click_on_in_the($blocktype, $css_locator[0], $css_locator[1]);
+        $this->wait_until_the_page_is_ready();
     }
 
     /**

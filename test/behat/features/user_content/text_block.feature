@@ -19,7 +19,7 @@ Scenario: Create and delete text block
     And I click on "Edit" in "Page UserA_01" card menu
     When I follow "Drag to add a new block" in the "blocktype sidebar" property
     When I press "Add"
-    And I click on "Text" in the "Content types" property
+    And I click on blocktype "Text"
     And I set the field "Block title" to "Text block 1"
     And I set the field "Block content" to "Here is a new block."
     And I press "Save"

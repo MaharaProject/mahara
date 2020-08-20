@@ -26,8 +26,7 @@ Scenario: Enable/disable external resources in mahara pages
  # Add a "Text" block with an image from file area
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
- And I click on "Text" in the "Content types" property
- And I wait "1" seconds
+ And I click on blocktype "Text"
  And I set the following fields to these values:
  | Block title | Text block with an internal image |
  And I click the "Insert/edit image" button in the editor "text"
@@ -41,7 +40,7 @@ Scenario: Enable/disable external resources in mahara pages
  # Add a "Text" block with an embedded external image
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
- And I click on "Text" in the "Content types" property
+ And I click on blocktype "Text"
  And I set the following fields to these values:
  | Block title | Text block with an external image |
  | Block content | <p><img title="Open source logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Opensource.svg/744px-Opensource.svg.png" alt="" width="300" /></p> |
