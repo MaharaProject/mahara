@@ -14,9 +14,30 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
-     And the following "pages" exist:
+    And the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01| user | UserA |
+
+    And the following "educationhistory" exist:
+    | user  | startdate  | enddate    | institution        | institutionaddress    | qualtype              | qualname                        | qualdescription                                                                                 | attachment |
+    | UserA | 1 Jan 2009 | 2 Dec 2010 | University of Life | 2/103 Industrial Lane | Masters of Arts       | North American Cultural Studies | This qualification is a 4.5-year degree that ends in writing a Master's thesis.                 | Image2.png |
+    | UserA | 1 Jan 2009 | 2 Dec 2010 | University College | 23a O'Dell Boulevard  | Masters of Philosophy | Machine Learning - Creation 2.1 | This qualification is a 4 to 6 year degree that ends in an alternate (self-contained) universe. | Image2.png |
+
+    And the following "employmenthistory" exist:
+    | user  | startdate  | enddate     | employer    | employeraddress | jobtitle     | attachment | positiondescription |
+    | UserA | 1 Jan 2009 | 02 Dec 2010 | Catalyst IT | 150 Willis St   | Test Analyst | Image2.png | Software testing can be described as the process which helps to identify the correctness, completeness, security and quality of developed computer software. In a nutshell, testing is finding out how well something works; a good tester will try multiple avenues to break whatever it is they are testing. In computer hardware and software development, testing is used at key checkpoints in the overall process to determine whether objectives are being met. |
+
+    And the following "achievements" exist:
+    | user  | date       | title                      | attachment | description |
+    | UserA | 12/07/2017 | Scrum Master Certification | Image2.png | The main role of a Scrum Master is to ensure smooth establishment, efficient and healthy progress and continuous improvement of Scrum Practices in an agile Scrum team. Therefore, competence and perspective of every single Scrum Team Member in an agile Scrum team to be able to act on behalf of and with a Scrum Master is a fundamental factor which determines the success level and lifetime of an agile Scrum team. Whether you act as Scrum Master or not in your Scrum team, it is profoundly important for you to have a clear understanding about how and what makes Scrum far more successful, efficient and delightful to work with than other project management frameworks. Therefore, we recommend you to obtain your Scrum Master Accredited Certification™ (SMAC) if you are conducting one of the following Software Engineering roles: Architect, Business Analyst, Designer, Product Manager, Program Manager, Programmer, Project Manager, Team Leader, Tester |
+
+    And the following "books and publications" exist:
+    | user  | date       | title                                                                  | contribution                        | description      | attachment |
+    | UserA | 13/07/2017 | Measurement of the neutron beta decay asymmetry using machine learning | Dissertation – Doctor of Philosophy | Details ashgashg | Image2.png |
+
+    And the following "professionalmemberships" exist:
+    | user  | startdate   | enddate | title                       | description        | attachment |
+    | UserA | 13/07/2017  | 14/09/2022 |Accredited Technologist | Accredited Technologist is the new standard for IT Professionals within the first few years of their career. | Image2.png |
 
 Scenario: Creating a Cover letter
     Given I log in as "UserA" with password "Kupuh1pa!"
@@ -52,58 +73,18 @@ Scenario: Editing Education and Employment info
     When I choose "Résumé" in "Create" from main menu
     And I follow "Education and employment"
     # Adding Education history
-    And I press "Add education history"
-    And I set the following fields to these values:
-     | addeducationhistory_startdate | 1 Jan 2009 |
-     | addeducationhistory_enddate | 2 Dec 2010 |
-     | addeducationhistory_institution | University of Life |
-     | addeducationhistory_institutionaddress | 2/103 Industrial Lane |
-     | addeducationhistory_qualtype | Masters of Arts |
-     | addeducationhistory_qualname | North American Cultural Studies |
-     | addeducationhistory_qualdescription | This qualification is a 4.5-year degree that ends in writing a Master's thesis. |
-    And I scroll to the base of id "educationhistoryform"
-    And I attach the file "Image2.png" to "Attach file"
-    # Saving the changes
-    And I click on "addeducationhistory_submit"
-    And I scroll to the id "main-nav"
-    And I should see "Saved successfully"
-    And I press "Add education history"
-    And I set the following fields to these values:
-     | addeducationhistory_startdate | 1 Jan 2009 |
-     | addeducationhistory_enddate | 2 Dec 2010 |
-     | addeducationhistory_institution | University College |
-     | addeducationhistory_institutionaddress | 23a O'Dell Boulevard |
-     | addeducationhistory_qualtype | Masters of Philosophy |
-     | addeducationhistory_qualname | Machine Learning - Creation 2.1 |
-     | addeducationhistory_qualdescription | This qualification is a 4 to 6 year degree that ends in an alternate (self-contained) universe. |
-    And I scroll to the base of id "educationhistoryform"
-    And I attach the file "Image2.png" to "Attach file"
-    And I click on "addeducationhistory_submit"
     And I click on "Move down" in "North American Cultural Studies" row
     And I wait "1" seconds
     And I click on "Move up" in "North American Cultural Studies" row
     And I scroll to the id "main-nav"
-    And I should see "Saved successfully"
     And I press "Add education history"
     And I set the following fields to these values:
     | addeducationhistory_startdate | 1 Jan 2017 |
     | addeducationhistory_institution | Mail-order PhD |
     | addeducationhistory_institutionaddress | 45 Empty St |
     And I click on "addeducationhistory_submit"
+    And I should see "Saved successfully"
     # Adding an Employment history
-    And I press "Add employment history"
-    And I set the following fields to these values:
-     | addemploymenthistory_startdate | 1 Jan 2009 |
-     | addemploymenthistory_enddate | 02 Dec 2010 |
-     | addemploymenthistory_employer | Catalyst IT |
-     | addemploymenthistory_employeraddress | 150 Willis St |
-     | addemploymenthistory_jobtitle | Test Analyst |
-     | addemploymenthistory_positiondescription | Software testing can be described as the process which helps to identify the correctness, completeness, security and quality of developed computer software. In a nutshell, testing is finding out how well something works; a good tester will try multiple avenues to break whatever it is they are testing. In computer hardware and software development, testing is used at key checkpoints in the overall process to determine whether objectives are being met. |
-    And I scroll to the base of id "addemploymenthistory"
-    And I attach the file "Image2.png" to "addemploymenthistory_attachments_files_0"
-    # Verifying it saved
-    And I click on "addemploymenthistory_submit"
-    Then I should see "Saved successfully"
     And I press "Add employment history"
     And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
@@ -160,18 +141,6 @@ Scenario: Adding Achievements
     When I choose "Résumé" in "Create" from main menu
     And I follow "Achievements"
     And I click on "Add certifications, accreditations and awards"
-    # Adding Certifications, accreditations and awards
-    And I set the following fields to these values:
-    | addcertification_date | 12/07/2017 |
-    | addcertification_title | Scrum Master Certification |
-    | addcertification_description | The main role of a Scrum Master is to ensure smooth establishment, efficient and healthy progress and continuous improvement of Scrum Practices in an agile Scrum team. Therefore, competence and perspective of every single Scrum Team Member in an agile Scrum team to be able to act on behalf of and with a Scrum Master is a fundamental factor which determines the success level and lifetime of an agile Scrum team. Whether you act as Scrum Master or not in your Scrum team, it is profoundly important for you to have a clear understanding about how and what makes Scrum far more successful, efficient and delightful to work with than other project management frameworks. Therefore, we recommend you to obtain your Scrum Master Accredited Certification™ (SMAC) if you are conducting one of the following Software Engineering roles: Architect, Business Analyst, Designer, Product Manager, Program Manager, Programmer, Project Manager, Team Leader, Tester |
-    And I scroll to the base of id "addcertification"
-    And I attach the file "Image2.png" to "Attach file"
-    And I press "Save"
-    And I scroll to the id "main-nav"
-    And I should see "Saved successfully"
-    And I scroll to the base of id "addcertificationbutton"
-    And I click on "Add certifications, accreditations and awards"
     And I set the following fields to these values:
     | addcertification_date | 13/07/2017 |
     | addcertification_title | ISTQB Foundation Agile Tester Extension |
@@ -186,18 +155,6 @@ Scenario: Adding Achievements
     And I wait "1" seconds
     And I click on "Move up" in "Scrum Master Certification" row
 
-    And I scroll to the base of id "addbookbutton"
-    And I click on "Add books and publications"
-    And I set the following fields to these values:
-    | addbook_date | 13/07/2017 |
-    | addbook_title | Measurement of the neutron beta decay asymmetry using machine learning  |
-    | addbook_contribution | Dissertation – Doctor of Philosophy |
-    | addbook_description | Details ashgashg |
-    And I scroll to the base of id "addbook"
-    And I attach the file "Image2.png" to "addbook_attachments_files_0"
-    And I click on "addbook_submit"
-    And I scroll to the id "main-nav"
-    And I should see "Saved successfully"
     And I scroll to the base of id "addbookbutton"
     And I click on "Add books and publications"
     And I set the following fields to these values:
@@ -216,18 +173,6 @@ Scenario: Adding Achievements
     And I click on "Move up" in "Measurement of the neutron beta decay asymmetry using machine learning" row
 
     # Adding Professional memberships
-    And I scroll to the base of id "addmembershipbutton"
-    And I press "Add professional membership"
-    And I set the following fields to these values:
-    | addmembership_startdate | 13/07/2017 |
-    | addmembership_enddate | 14/09/2022 |
-    | addmembership_title | Accredited Technologist |
-    | addmembership_description | Accredited Technologist is the new standard for IT Professionals within the first few years of their career. |
-    And I scroll to the base of id "addmembership"
-    And I attach the file "Image2.png" to "addmembership_attachments_files_0"
-    And I click on "addmembership_submit"
-    And I scroll to the id "main-nav"
-    And I should see "Saved successfully"
     And I scroll to the base of id "addmembershipbutton"
     And I press "Add professional membership"
     And I set the following fields to these values:
