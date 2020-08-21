@@ -130,10 +130,6 @@ $width-sm: 90%;
     right: 0;
     bottom: 0;
 
-    .mce-tinymce {
-        display:none;
-    }
-
     &.active,
     &.in {
         @include transition(visibility 0s 0.01s);
@@ -142,9 +138,7 @@ $width-sm: 90%;
             @include transition(right 0.3s ease-in-out);
             right: 0;
         }
-        .mce-tinymce {
-            display: block;
-        }
+
         .collapse.in {
             backface-visibility: hidden;
         }
@@ -233,7 +227,7 @@ $width-sm: 90%;
 
 #configureauthinstance-modal {
     .modal-body textarea.under-label,
-    .modal-body .under-label-help.wysiwyg .mce-tinymce {
+    .modal-body .under-label-help.wysiwyg .tox-tinymce {
         width: calc(100% - 30px) !important;
     }
     .modal-body .form-group.text {
