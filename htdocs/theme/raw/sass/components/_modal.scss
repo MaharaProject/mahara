@@ -130,10 +130,6 @@ $width-sm: 90%;
     right: 0;
     bottom: 0;
 
-    .mce-tinymce {
-        display:none;
-    }
-
     &.active,
     &.in {
         @include transition(visibility 0s 0.01s);
@@ -142,9 +138,7 @@ $width-sm: 90%;
             @include transition(right 0.3s ease-in-out);
             right: 0;
         }
-        .mce-tinymce {
-            display: block;
-        }
+
         .collapse.in {
             backface-visibility: hidden;
         }
@@ -224,4 +218,27 @@ $width-sm: 90%;
 
 .modal-title {
     margin-top: 0;
+}
+
+#configureauthinstance-modal {
+    .modal-body textarea.under-label,
+    .modal-body .under-label-help.wysiwyg .tox-tinymce {
+        width: calc(100% - 30px) !important;
+    }
+    .modal-body .form-group.text {
+        label {
+            max-width: calc(50% - 30px);
+        }
+        input[type="text"] {
+            max-width: 50%;
+        }
+    }
+    .modal-body .form-group.password {
+        label {
+            max-width: calc(50% - 30px);
+        }
+        input[type="password"] {
+            max-width: 50%;
+        }
+    }
 }

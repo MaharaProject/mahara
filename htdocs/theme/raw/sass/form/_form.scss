@@ -106,9 +106,22 @@ label,
     margin:0;
 }
 
-.wysiwyg label,
-.textarea label {
-    vertical-align: top;
+.wysiwyg {
+    label {
+        display: block;
+        vertical-align: top;
+        + .tox-tinymce {
+            width:100%;
+        }
+    }
+    &.view-description {
+        width: 70%;
+    }
+    &.under-label-help {
+        label + .tox-tinymce {
+            width:70%;
+        }
+    }
 }
 
 // BS3 code - begin
