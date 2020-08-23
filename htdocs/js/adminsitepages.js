@@ -75,7 +75,7 @@ function connectElements() {
         jQuery('#editsitepage_pageusedefault').on('change', updateSiteDefault);
     }
     // create hidden div to place over tinymce to 'show' when it is disabled from editing
-    var changeboxdiv = jQuery('<div />', {'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'});
+    var changeboxdiv = jQuery('<div></div>', {'id':'changecheckboxdiv','style':'display:none;background-color: rgba(200,200,200,0.5)'});
     jQuery(document.body).append(changeboxdiv);
 }
 
