@@ -119,16 +119,16 @@ function get_column_widths($viewid, $row) {
 function get_blocks_in_old_layout($viewid) {
 
     // get old layout structure
-    $sql = "SELECT row, columns
+    $sql = "SELECT " . db_quote_identifier('row') . ", columns
         FROM {view_rows_columns}
-        WHERE view = ? ORDER BY row";
+        WHERE view = ? ORDER BY " . db_quote_identifier('row');
     $oldlayout = get_records_sql_array($sql, array($viewid));
 
     // get blocks in old layout
-    $sql = "SELECT id, row, " . db_quote_identifier('column') . ", " . db_quote_identifier('order') . "
+    $sql = "SELECT id, " . db_quote_identifier('row') . ", " . db_quote_identifier('column') . ", " . db_quote_identifier('order') . "
         FROM {block_instance}
         WHERE view = ?
-        ORDER BY row, " . db_quote_identifier('column') . ", " . db_quote_identifier('order');
+        ORDER BY " . db_quote_identifier('row') . ", " . db_quote_identifier('column') . ", " . db_quote_identifier('order');
     $oldblocks = get_records_sql_array($sql, array($viewid));
     if ($oldlayout) {
         foreach ($oldlayout as $row) {
