@@ -33,20 +33,29 @@ class PluginModuleLti extends PluginModule {
             $field = new XMLDBField('resourcelinkid');
             if (field_exists($table, $field)) {
                 $index = new XMLDBIndex('resourcelinkididx');
-                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('resourcelinkid' . $mysqlsuffix));
-                add_index($table, $index);
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('resourcelinkid'));
+                if (!index_exists($table, $index)) {
+                    $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('resourcelinkid' . $mysqlsuffix));
+                    add_index($table, $index);
+                }
             }
             $field = new XMLDBField('contextid');
             if (field_exists($table, $field)) {
                 $index = new XMLDBIndex('contextididx');
-                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('contextid' . $mysqlsuffix));
-                add_index($table, $index);
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('contextid'));
+                if (!index_exists($table, $index)) {
+                    $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('contextid' . $mysqlsuffix));
+                    add_index($table, $index);
+                }
             }
             $field = new XMLDBField('listresultsourceid');
             if (field_exists($table, $field)) {
-                $index = new XMLDBIndex('lisresultsourceididx');
-                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('lisresultsourceid' . $mysqlsuffix));
-                add_index($table, $index);
+                $index = new XMLDBIndex('listresultsourceididx');
+                $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('listresultsourceid'));
+                if (!index_exists($table, $index)) {
+                    $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('listresultsourceid' . $mysqlsuffix));
+                    add_index($table, $index);
+                }
             }
         }
 
