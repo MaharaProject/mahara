@@ -43,6 +43,10 @@ class BehatGeneral extends BehatBase {
     public function i_login_as($username, $password) {
         $this->visitPath("/");
         $this->wait_until_the_page_is_ready();
+
+        $this->wait_until_exists("//*[@id='login_login_username']",
+            "xpath_element", 5 * self::EXTENDED_TIMEOUT);
+
         $this->getSession()->getPage()->fillField(
             "login_login_username",
             $username
@@ -307,8 +311,8 @@ class BehatGeneral extends BehatBase {
      * @param string $selector
      * @return void
      */
-    public function wait_until_exists($element, $selectortype) {
-        $this->ensure_element_exists($element, $selectortype);
+    public function wait_until_exists($element, $selectortype, $timeout = self::EXTENDED_TIMEOUT) {
+        $this->ensure_element_exists($element, $selectortype, $timeout);
     }
 
     /**
@@ -1067,6 +1071,19 @@ EOF;
             },
             array('nodes' => $nodes, 'text' => $text, 'element' => $element)
         );
+    }
+
+    /**
+     * Checks, that the *page* contains the specified text. When running Javascript tests it also considers that texts may be hidden.
+     *
+     * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)" in the page$/
+     * @throws ElementNotFoundException
+     * @throws ExpectationException
+     * @param string $text
+     */
+    public function assert_page_contains_text($text) {
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $this->find_all("xpath", "//*[contains(text(), $textliteral)]");
     }
 
     /**
