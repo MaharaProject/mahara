@@ -67,7 +67,12 @@ switch ($type) {
             AND usr != ?
             ";
             $peoplein = get_records_sql_assoc($sql, array($USER->get('id')));
-            $peoplein = array_keys($peoplein);
+            if ($peoplein) {
+                array_keys($peoplein);
+            }
+            else {
+                $peoplein = array();
+            }
             // $sorted will be set up as a structure that select2 can handle for dropdowns with labels
             $sorted = array();
             foreach ($data['data'] as $key => $user) {
