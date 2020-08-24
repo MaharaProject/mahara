@@ -42,7 +42,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         return array('portfolio');
     }
 
-    public static function display_for_roles($roles) {
+    public static function display_for_roles(BlockInstance $bi, $roles) {
         return true;
     }
 

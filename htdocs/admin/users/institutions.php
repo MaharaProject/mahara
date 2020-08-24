@@ -249,6 +249,7 @@ if ($institution || $add) {
         $data->commentsortorder = get_config_institution($institution, 'commentsortorder');
         $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
         $data->allowinstitutionsmartevidence = get_config_institution($institution, 'allowinstitutionsmartevidence');
+        $data->allowpeersviewcontent = get_config_institution($institution, 'allowpeersviewcontent');
         $data->reviewselfdeletion = get_config_institution($institution, 'reviewselfdeletion');
         $data->progresscompletion = get_config_institution($institution, 'progresscompletion');
         $data->showonlineusers = (is_isolated() && $data->showonlineusers == 2 ? 1 : $data->showonlineusers);
@@ -284,6 +285,7 @@ if ($institution || $add) {
         $data->defaultmembershipperiod = null;
         $data->showonlineusers = is_isolated() ? 1 : 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
+        $data->allowpeersviewcontent = 0;
         $data->allowinstitutionsmartevidence = 0;
         $data->progresscompletion = 0;
         $data->tags = 0;
@@ -591,6 +593,14 @@ if ($institution || $add) {
             'description'  => get_string('allowinstitutionpublicviewsdescription3','admin'),
             'defaultvalue' => get_config('allowpublicviews') && $data->allowinstitutionpublicviews,
             'disabled'     => get_config('allowpublicviews') == false,
+            'help'         => true,
+        );
+
+        $elements['allowpeersviewcontent'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('allowpeersviewcontent', 'admin'),
+            'description'  => get_string('allowpeersviewcontentdescription','admin'),
+            'defaultvalue' => isset($data->allowpeersviewcontent) ? $data->allowpeersviewcontent : false,
             'help'         => true,
         );
 
@@ -1002,6 +1012,7 @@ function institution_submit(Pieform $form, $values) {
     }
 
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
+    $newinstitution->allowpeersviewcontent =  (isset($values['allowpeersviewcontent']) && $values['allowpeersviewcontent']) ? 1 : 0;
     $newinstitution->allowinstitutionsmartevidence  = (isset($values['allowinstitutionsmartevidence']) && $values['allowinstitutionsmartevidence']) ? 1 : 0;
     $newinstitution->tags  = (isset($values['allowinstitutiontags']) && $values['allowinstitutiontags']) ? 1 : 0;
     $newinstitution->progresscompletion  = (isset($values['progresscompletion']) && $values['progresscompletion']) ? 1 : 0;
