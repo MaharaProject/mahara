@@ -278,6 +278,13 @@ class Collection {
         $owner = isset($collectiondata['owner']) ? $collectiondata['owner'] : null;
         $group = isset($collectiondata['group']) ? $collectiondata['group'] : null;
         $institution = isset($collectiondata['institution']) ? $collectiondata['institution'] : null;
+
+        // if the owner of the template and the copy are the same, use the same file
+        $sameowner = ($template->get('owner') && $template->get('owner') == $owner) ||
+            ($template->get('group') && $template->get('group') == $group) ||
+            ($template->get('institution') && $template->get('institution') == $institution);
+        if ($sameowner) return $coverimageid;
+
         if ($coverimageid) {
             try {
                 $a = artefact_instance_from_id($coverimageid);
@@ -288,6 +295,15 @@ class Collection {
                       $institution
                     );
                 }
+                // move to cover image forlder
+                $userobj = null;
+                if ($owner) {
+                    $userobj = new User();
+                    $userobj->find_by_id($owner);
+                }
+                $newa = artefact_instance_from_id($newid);
+                $folderid = ArtefactTypeImage::get_coverimage_folder($userobj, $group, $institution);
+                $newa->move($folderid);
                 return $newid;
             }
             catch (Exception $e) {
@@ -362,7 +378,6 @@ class Collection {
             $data->owner = $userid;
         }
         $data->framework = $colltemplate->get('framework');
-        $data->coverimage = $colltemplate->get('coverimage');
         $data->submittedstatus = 0;
 
         $collection = self::save($data);
