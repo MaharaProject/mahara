@@ -431,7 +431,7 @@ var badIE = false;
 function contextualHelpIcon(formName, helpName, pluginType, pluginName, page, section) {
     var link = jQuery(
         '<a href="#">' +
-            '<span class="icon icon-info-circle" alt="' + get_string('Help') + '></span>' +
+            '<span class="icon icon-info-circle" alt="' + get_string('Help') + '"></span>' +
         '</a>'
     );
     link.on("click", function(e) {
