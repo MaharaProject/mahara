@@ -2626,7 +2626,8 @@ class ArtefactTypeImage extends ArtefactTypeFile {
      */
     public static function get_coverimage_folder($user=null, $group=null, $institution=null) {
         $foldername = get_string('coverimagefolder', 'view');
-        if ($folder = ArtefactTypeFolder::get_folder_by_name($foldername, null, $user->get('id'), $group, $institution)) {
+        $userid = (isset($user) ? $user->get('id') : null);
+        if ($folder = ArtefactTypeFolder::get_folder_by_name($foldername, null,  $userid, $group, $institution)) {
             $folderid = $folder->id;
         }
         else {
