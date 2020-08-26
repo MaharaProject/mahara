@@ -1392,3 +1392,18 @@ class ArtefactTypeUserroles extends ArtefactTypeProfileField {
         return get_column('usr_roles', 'role', 'usr', $userid);
     }
 }
+
+/**
+ * Allow custom fields to have varying titles depending on context
+ */
+function get_desired_field_title($element) {
+    $classname = 'ArtefactType' . ucfirst($element);
+    // check if this is a local profile icon and has it's own display title
+    if (is_callable(array($classname, 'static_display_title'))) {
+        $title = $classname::static_display_title();
+    }
+    else {
+        $title = get_string($element, 'artefact.internal');
+    }
+    return $title;
+}

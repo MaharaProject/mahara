@@ -5,7 +5,7 @@
         {$artefact->description}
         <span class="metadata">({str tag=$artefact->artefacttype section=artefact.internal})</span>
         {else}
-        {str tag=$artefact->artefacttype section=artefact.internal}
+        {get_desired_field_title($artefact->artefacttype)}
         {/if}
     </label>
 </div>
