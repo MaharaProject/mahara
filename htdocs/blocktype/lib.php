@@ -1283,6 +1283,9 @@ class BlockInstance {
         $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock1', 'view', $id) : get_string('removeblock1', 'view', "'$title'", $id));
         $smarty->assign('strremovetitletexttooltip', get_string('removeblock2', 'view'));
         $smarty->assign('lockblocks', ($this->get_view()->get('lockblocks') && ($this->get_view()->get('owner') || $this->get_view()->get('group')))); // Only lock blocks for user's portfolio and group pages
+        $smarty->assign('cssicontype', call_static_method($blocktypeclass, 'get_css_icon_type',  $this->get('blocktype')));
+        $smarty->assign('cssicon', call_static_method($blocktypeclass, 'get_css_icon',  $this->get('blocktype')));
+        $smarty->assign('blocktypename', call_static_method($blocktypeclass, 'get_title'));
 
         $configdata = $this->get('configdata');
         $smarty->assign('draft', (isset($configdata['draft']) ? $configdata['draft'] : 0));

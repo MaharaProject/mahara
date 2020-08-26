@@ -2,7 +2,10 @@
     <h3 class="card-header js-heading drag-handle {if !$title}card-header-placeholder{/if} access-drop-handle" title="{$strmovetitletexttooltip}">
         <span class="icon icon-arrows-alt move-indicator" role="presentation" aria-hidden="true"></span>
         <span class="blockinstance-header">
-            {if $configure}{$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}{/if}
+            {if $configure}
+                <div class="icon icon-sm icon-{$cssicon} {$cssicontype}" title="{$blocktypename}"></div>
+                {$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}
+            {/if}
             {if $retractable && !$configure}
             <span class="icon icon-chevron-down text-watermark icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=retractable section=view}</span>
