@@ -3959,6 +3959,14 @@ function clean_css($input_css, $preserve_css=false) {
     $config->set('HTML.DefinitionID', 'Mahara customisations to default config for CSS');
     $config->set('HTML.DefinitionRev', get_config('cacheversion', 0));
     $config->set('CSS.DefinitionRev', get_config('cacheversion', 0));
+    $config->set('CSS.AllowImportant', true);
+    $config->set('CSS.Trusted', true);
+    /**
+     * Uncomment the following lines to allow further CSS property options to be valid.
+     * To see which will become valid see the file htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     */
+    // $config->set('CSS.AllowTricky', true);
+    // $config->set('CSS.Proprietary', true);
 
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
