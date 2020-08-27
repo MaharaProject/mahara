@@ -183,17 +183,20 @@ then
 
     #added html format for html report
     OPTIONS=''
-    if [[ $REPORT == 'html' ]]
-      then
-      if [ "$ACTION" = "rundebug" -o "$ACTION" = "rundebugheadless" ]
-      then
-          OPTIONS=$OPTIONS" --format=pretty --format=html"
-      else
-          OPTIONS=$OPTIONS" --format=progress --format=html"
-      fi
-    elif [ "$ACTION" = "rundebug" -o "$ACTION" = "rundebugheadless" ]
+    if [ "$ACTION" = "rundebug" -o "$ACTION" = "rundebugheadless" ]
     then
-          OPTIONS=$OPTIONS" --format=pretty"
+        OPTIONS=$OPTIONS" --format=pretty --out=std"
+    else
+        OPTIONS=$OPTIONS" --format=progress --out=std"
+    fi
+
+    if [[ $REPORT == 'html' ]]
+    then
+        OPTIONS=$OPTIONS" --format=html"
+    elif [[ $REPORT == 'junit' ]]
+    then
+        mkdir -p "${BEHATROOT}/behat/junit-reports"
+        OPTIONS=$OPTIONS" --format=junit --out=${BEHATROOT}/behat/junit-reports"
     fi
 
     # if it exists we're in jenkins, force junit
@@ -203,7 +206,7 @@ then
       rm -rf test/behat/results
       mkdir -p test/behat/results
 
-      OPTIONS=$OPTIONS" --format=junit --out=test/behat/results --format=progress --out=std"
+      OPTIONS=$OPTIONS" --format=junit --out=test/behat/results"
     fi
 
     echo OPTIONS: $OPTIONS
