@@ -146,7 +146,7 @@ then
         SELENIUM_FILENAME=selenium-server-standalone-$SELENIUM_VERSION_MAJOR.$SELENIUM_VERSION_MINOR.jar
         SELENIUM_PATH=./test/behat/$SELENIUM_FILENAME
         # @todo make this more flexible, cross-platform?
-        CHROMEDRIVER_PATH=./test/behat/chromedriver-2.38-linux64
+        CHROMEDRIVER_PATH=./test/behat/chromedriver-84.0.4147.30-linux64
 
         # If no Selenium installed, download it
         if [ ! -f $SELENIUM_PATH ]; then
