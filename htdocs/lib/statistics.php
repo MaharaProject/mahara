@@ -219,6 +219,7 @@ function site_statistics($full=false) {
             FROM {block_instance} b
             JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
             JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
+            WHERE bi.active = 1
             GROUP BY b.blocktype
             ORDER BY blocks DESC",
             array(), 0, $maxblocktypes
@@ -2736,6 +2737,7 @@ function block_type_graph($type = null) {
         FROM {block_instance} b
         JOIN {blocktype_installed} bi ON (b.blocktype = bi.name)
         JOIN {view} v ON (b.view = v.id AND v.type = 'portfolio')
+        WHERE bi.active = 1
         GROUP BY b.blocktype
         ORDER BY blocks DESC",
         array(), 0, $maxblocktypes
