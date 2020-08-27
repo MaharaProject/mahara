@@ -127,6 +127,18 @@
     border-top-color: {$data.headings};
 }
 
+.dashboard-widget-container .thumbnail-widget .widget-heading {
+    border-top-color: {$data.headings};
+}
+
+.dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg {
+    background-color: {$data.headings};
+}
+
+.dashboard-widget-container .widget-detail {
+    background-color: {$data.headings} !important;
+}
+
 .dashboard-widget-container .logged-in .widget-heading p,
 a.card-footer:hover .icon.float-right,
 .modal-docked .modal-header .close:hover .times,
