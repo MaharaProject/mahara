@@ -489,9 +489,10 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
 
     // Check each constraint to see if it has the right columns
     foreach ($constraintrec as $c) {
+        $constraint_name = property_exists($c, 'CONSTRAINT_NAME') ? $c->CONSTRAINT_NAME : $c->constraint_name;
         if ($isfk) {
             $colsql = $fkcolsql;
-            $colparams = array($dbname, $c->constraint_name, $tablename, $dbname, $reftable);
+            $colparams = array($dbname, $constraint_name, $tablename, $dbname, $reftable);
         }
         else {
             $colsql = "SELECT ku.column_name
@@ -503,7 +504,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
                     AND ku.constraint_name = ?
                 ORDER BY ku.ordinal_position, ku.position_in_unique_constraint
             ";
-            $colparams = array($tablename, $dbname, $dbname, $c->constraint_name);
+            $colparams = array($tablename, $dbname, $dbname, $constraint_name);
         }
         $colrecs = get_records_sql_array($colsql, $colparams);
 
@@ -538,7 +539,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
 
         // If they made it this far, then it's a match!
         $db->debug = $olddbdebug;
-        return $c->constraint_name;
+        return $constraint_name;
     }
 
     // None matched, so return false
