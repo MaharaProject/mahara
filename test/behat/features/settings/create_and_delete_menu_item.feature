@@ -1,29 +1,107 @@
 @javascript @core @core_administration
-Feature: Creating/Deleting external links from the Links and Resources sideblock
+Feature: Creating/Deleting links from the Links and Resources sideblock
    In order to use external links
-   As an admin I need to create an external link and delete it
+   As an admin I need to create a link and delete it
    So I can verify that it's usable
 
 Scenario: Creating and deleting external links (Selenium 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
-    # Entering an external link
+    # Creating external links
     And I choose "Menus" in "Configure site" from administration menu
-    And I select "Logged-in links and resources" from "Edit"
-    And I fill in "namenew" with "Test Menu Link"
+    # Creating an external link on the Dashboard page
+    When I select "Logged-in links and resources" from "Edit"
+    And I fill in "namenew" with "Dashboard: test external resource link"
     And I fill in "linkedtonew" with "https://mahara.org/"
     And I press "Add"
     # Verifying item was saved
-    And I should see "Item saved"
-    And I press "Save changes"
-    # Verifying the link as been added successfully
-    And I choose "Dashboard" from main menu
-    Then I should see "Test Menu Link"
+    Then I should see "Item saved"
+     # Creating an external link on the Homepage
+    When I select "Public links and resources" from "Edit"
+    And I fill in "namenew" with "Homepage: test external resource link"
+    And I fill in "linkedtonew" with "https://mahara.org/"
+    And I press "Add"
+    # Verifying item was saved
+    Then I should see "Item saved"
+
+    # Verifying the links have been added successfully
+    When I choose "Dashboard" from main menu
+    Then I should see "Dashboard: test external resource link"
+    And I should not see "Homepage: test external resource link"
+    When I log out
+    Then I should see "Homepage: test external resource link"
+    And I should not see "Dashboard: test external resource link"
+
+    # Verifying that both external resource links can be removed
+    When I log in as "admin" with password "Kupuh1pa!"
     And I choose "Menus" in "Configure site" from administration menu
     And I select "Logged-in links and resources" from "Edit"
-    And I delete the link and resource menu item "Test Menu Link"
-    And I should see "Item deleted"
-    And I press "Save changes"
+    And I delete the link and resource menu item "Dashboard: test external resource link"
+    Then I should see "Item deleted"
+    When I select "Public links and resources" from "Edit"
+    And I delete the link and resource menu item "Homepage: test external resource link"
+    Then I should see "Item deleted"
+
+    # Verifying the links have been removed successfully
+    When I choose "Dashboard" from main menu
+    Then I should not see "Dashboard: test external resource link"
+    When I log out
+    Then I should not see "Homepage: test external resource link"
+
+Scenario: Creating and deleting site file link options
+    # Log in as "Admin" user
+    Given I log in as "admin" with password "Kupuh1pa!"
+
+    # I upload some site files
+    And I choose "Files" in "Configure site" from administration menu
+    And I attach the file "testvid3.mp4" to "File"
+    And I follow "public"
+    And I attach the file "mahara_about.pdf" to "File"
+
+    # Create file resource link on Homepage
+    When I choose "Menus" in "Configure site" from administration menu
+    And I select "Public links and resources" from "Edit"
+    And I set the following fields to these values:
+    | Site file | 1 |
+    Then the "linkedtonew" select box should contain "mahara_about.pdf"
+    And the "linkedtonew" select box should not contain "testvid3.mp4"
+    When I fill in "namenew" with "Homepage: test file resource link"
+    And I press "Add"
+    Then I should see "Item saved"
+
+    # Create file resource link on Dashboard page
+    When I select "Logged-in links and resources" from "Edit"
+    And I set the following fields to these values:
+    | Site file | 1 |
+    Then the "linkedtonew" select box should not contain "mahara_about.pdf"
+    And the "linkedtonew" select box should contain "testvid3.mp4"
+    When I fill in "namenew" with "Dashboard: test file resource link"
+    And I press "Add"
+    Then I should see "Item saved"
+
+    # Verifying the file links have been added successfully
+    When I choose "Dashboard" from main menu
+    Then I should see "Dashboard: test file resource link"
+    And I should not see "Homepage: test file resource link"
+    When I log out
+    Then I should see "Homepage: test file resource link"
+    And I should not see "Dashboard: test file resource link"
+
+    # Verifying that both file resource links can be removed
+    When I log in as "admin" with password "Kupuh1pa!"
+    And I choose "Menus" in "Configure site" from administration menu
+    And I select "Logged-in links and resources" from "Edit"
+    And I delete the link and resource menu item "Dashboard: test file resource link"
+    Then I should see "Item deleted"
+    When I select "Public links and resources" from "Edit"
+    And I delete the link and resource menu item "Homepage: test file resource link"
+    Then I should see "Item deleted"
+
+    # Verifying the file links have been removed successfully
+    When I choose "Dashboard" from main menu
+    Then I should not see "Dashboard: test file resource link"
+    When I log out
+    Then I should not see "Homepage: test file resource link"
 
 Scenario: Make sure blogs do not show in site file link options (Bug #1537426)
     # Log in as "Admin" user
