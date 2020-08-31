@@ -16,6 +16,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Resume field block'                        => array(".bt-resumefield", "css_element"),
     'Watched pages'                             => array(".bt-watchlist", "css_element"),
     'Select'                                    => array(".btn[title='Select']", "css_element"),
+    "Vertical button group"                     => array(".btn-group-vertical", "css_element"),
     'Top right button group'                    => array(".btn-top-right.btn-group", "css_element"),
     'Comment preview'                           => array(".commentreplyview", "css_element"),
     'Comment text'                              => array(".comment-text", "css_element"),
