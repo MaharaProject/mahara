@@ -48,6 +48,14 @@ Scenario: Creating a collection AND adding pages
 
     # Sharing the collection then adding in a new page
     And I choose "Shared by me" in "Share" from main menu
+    # Check that the Collection tab opens by default etc. (Bug 1890971)
+    And I should see "Collection name"
+    And I should not see "Page title"
+    And I follow "Pages"
+    And I should not see "Collection name"
+    And I should see "Page title"
+    And I follow "Collections"
+    # Continue initial test
     And I follow "Edit access"
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I press "Save"
