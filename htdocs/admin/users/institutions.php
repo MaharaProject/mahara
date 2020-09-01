@@ -369,7 +369,7 @@ if ($institution || $add) {
             'instancearray' => $instancearray,
             'instancestring' => $instancestring,
             'institution' => $institution,
-            'help'   => true,
+            'help'   => 'top',
             'ignore' => ($add)
         );
     }
