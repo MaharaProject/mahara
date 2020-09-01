@@ -128,7 +128,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
                 'url'   => $httpstr . '://drive.google.com/$1folderview?id=$2',
                 'type'  => 'spanicon',
             ),
-            // drive.google.com/folderview or drive.google.com/open - Google Drive folders
+            // drive.google.com/folderview or drive.google.com/open or drive.google.com/folders - Google Drive folders
             // (formerly Google Docs collections)
             array(
                 'match' => '#.*drive.google.com/([a-zA-Z0-9\_\-\.\/]*)open\?id=([a-zA-Z0-9\_\-]+).*#',
@@ -138,6 +138,11 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
             array(
                 'match' => '#.*drive.google.com/([a-zA-Z0-9\_\-\.\/]*)folderview\?id=([a-zA-Z0-9\_\-]+).*#',
                 'url'   => $httpstr . '://drive.google.com/$1folderview?id=$2',
+                'type'  => 'spanicon',
+            ),
+            array(
+                'match' => '#.*drive.google.com/drive/folders/([a-zA-Z0-9\_\-\.\/]*)#',
+                'url'   => $httpstr . '://drive.google.com/drive/folders/$1',
                 'type'  => 'spanicon',
             ),
             // docs.google.com/present - Google presentation incl. custom domain presentation
