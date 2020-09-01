@@ -21,11 +21,13 @@
                 {if $configurable && !$configure}
                 <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
+                    <span class="sr-only">{$strconfigtitletext}</span>
                 </button>
                 {/if}
                 {if !$lockblocks}
                 <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
                     <span class="icon icon-trash text-danger icon-lg" role="presentation" aria-hidden="true" title="{$strremovetitletexttooltip}"></span>
+                    <span class="sr-only">{$strremovetitletext}</span>
                 </button>
                 {/if}
             </span>
