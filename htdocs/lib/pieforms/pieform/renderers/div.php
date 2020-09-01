@@ -96,6 +96,10 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         $inner .= $element['labelhtml'];
     }
 
+    if (isset($element['helphtml']) && $element['help'] === 'top') {
+        $inner .= ' ' . $element['helphtml'];
+    }
+
     if (isset($element['prehtml'])) {
         $inner .= '<span class="prehtml">' . $element['prehtml'] . '</span>';
     }
@@ -108,7 +112,7 @@ function pieform_renderer_div(Pieform $form, $element) {/*{{{*/
         $inner .= '<span class="posthtml">' . $element['posthtml'] . '</span>';
     }
 
-    if (isset($element['helphtml'])) {
+    if (isset($element['helphtml']) && $element['help'] !== 'top') {
         $inner .= ' ' . $element['helphtml'];
     }
 
