@@ -1,7 +1,7 @@
 @javascript @core @portfolio
 Feature: Creating a page with stuff in it
    In order to have a portfolio
-   As a user I need navigate to to portfolio
+   As a user I need navigate to a portfolio
    So I can create a page and add content to it
 
 Background:
@@ -23,6 +23,12 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I fill in the following:
     | Page title       | Test view         |
     | Page description | First description |
+    # Open the 'Advanced' accordion and check for the instructions field and 'Lock blocks' toggle
+    # (Bug 1891265)
+    When I follow "Advanced"
+    Then I should see "Instructions"
+    And I should see "Lock blocks"
+    # (Bug 1891265 end)
     And I press "Save"
     # Editing the pages
     And I follow "Settings" in the "Toolbar buttons" property
