@@ -2663,6 +2663,7 @@ function view_stats_table($limit, $offset, $extra) {
         if ($v->collection) {
             $v->collectiontitle = $v->collection->get('name');
         }
+        $v->canbeviewed = $v->id ? can_view_view($v->id) : false;
     }
 
     $daterange = array_map(function ($obj) { return $obj->ctime; }, $viewdata);
@@ -2924,6 +2925,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
         }
         $v->name = ($v->collection) ? $v->collection->get('name') : null;
         $v->collectiontitle = $v->name;
+        $v->canbeviewed = $v->id ? can_view_view($v->id) : false;
     }
 
     $daterange = array_map(function ($obj) { return $obj->ctime; }, $viewdata);
@@ -3814,6 +3816,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
             FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL LIMIT 1)",
             array($item->viewid, $item->viewid));
         $item->hasaccessrules = !empty($item->access);
+        $item->canbeviewed = $item->viewid ? can_view_view($item->viewid) : false;
         $item->pending = is_view_suspended($item->viewid);
     }
 
