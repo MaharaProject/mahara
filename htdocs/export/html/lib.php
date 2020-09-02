@@ -1368,7 +1368,15 @@ class HtmlExportOutputFilter {
             list($key, $value) = explode('=', $matches[$i]);
             $options[$key] = $value;
         }
-        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path(3, $this->exporter->get('filedir'));
+        if (isset($matches[3]) && (substr($matches[3], 0, 4) === 'view')) {
+            // file is in a view
+            $distance = 3;
+        }
+        else {
+            // we are not in a view, could be blog post attachement or Notes attachement
+            $distance = 4;
+        }
+        $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path($distance, $this->exporter->get('filedir'));
         return $this->get_export_path_for_file($artefact, $options, $filterpath);
     }
 
