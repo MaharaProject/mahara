@@ -320,7 +320,21 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('export_time', $this->exporttime);
         $smarty->assign('sitename', get_config('sitename'));
         $smarty->assign('stylesheets', $stylesheets);
-        $smarty->assign('scripts', $this->scripts);
+        $smarty->assign('WWWROOT', get_config('wwwroot'));
+        $htmldir = ($this->exportingoneview ? '' : 'HTML/');
+        $scripts = [];
+        foreach($this->scripts as $i => $script) {
+            // theme should be in theme folder use,
+            // the rest of the scripts don't depend on the theme
+            if ($script == 'theme') {
+                $scripts[$i] = $rootpath . $htmldir . $this->theme_path('js/') .  $script . '.js';
+            }
+            else {
+                $scripts[$i] = $rootpath . $htmldir . 'static/theme/raw/static/js/' . $script . '.js';
+            }
+        }
+        $smarty->assign('scripts', $scripts);
+
         if ($this->exportingoneview) {
             $smarty->assign('scriptspath', $rootpath . $this->theme_path('js/'));
         }

@@ -6,8 +6,13 @@
 {foreach from=$stylesheets item=sheet}
         <link rel="stylesheet" type="text/css" href="{$rootpath}{if !$exportingoneview}HTML/{/if}static/{$sheet}">
 {/foreach}
+        <script>
+        var config = {literal}{{/literal}
+            'wwwroot': '{$WWWROOT}',
+        {literal}}{/literal};
+        </script>
 {foreach from=$scripts item=script}
-        <script type='text/javascript' src='{$scriptspath}{$script}.js'></script>
+        <script type='text/javascript' src='{$script}'></script>
 {/foreach}
     </head>
     <body>
