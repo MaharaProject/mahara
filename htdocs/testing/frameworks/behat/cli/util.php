@@ -84,6 +84,11 @@ $options['config']->description = 'Get behat YML config path';
 $options['config']->required = false;
 $options['config']->defaultvalue = false;
 
+$options['behat-root'] = new stdClass();
+$options['behat-root']->description = 'Get behat data root directory';
+$options['behat-root']->required = false;
+$options['behat-root']->defaultvalue = false;
+
 $options['format'] = new stdClass();
 $options['format']->shortoptions = array('f');
 $options['format']->description = 'Get behat format options';
@@ -238,6 +243,9 @@ try {
         else {
             echo BehatTestingUtil::get_behat_config_path();
         }
+    }
+    else if ($cli->get_cli_param('behat-root')) {
+        echo $CFG->behat_dataroot;
     }
 }
 catch (Exception $e) {
