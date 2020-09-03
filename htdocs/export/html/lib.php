@@ -62,7 +62,7 @@ class PluginExportHtml extends PluginExport {
      * These javascript files will be included in index.html via the
      * export/html/templates/header.tpl
      */
-    private $scripts = array('jquery', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
+    private $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
 
     /**
     * constructor.  overrides the parent class
@@ -945,6 +945,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
 
         // Copy over bootstrap and jquery files
         $jsdir =  $staticdir . 'theme/' . $theme . '/static/js/';
+        $directoriestocopy[get_config('docroot') . 'js/popper/popper.min.js'] = $jsdir . 'popper.min.js';
         $directoriestocopy[get_config('docroot') . 'lib/bootstrap/assets/javascripts/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
         $directoriestocopy[get_config('docroot') . 'js/jquery/jquery.js'] = $jsdir . 'jquery.js';
         $directoriestocopy[get_config('docroot') . 'js/lodash/lodash.js'] = $jsdir . 'lodash.js';
