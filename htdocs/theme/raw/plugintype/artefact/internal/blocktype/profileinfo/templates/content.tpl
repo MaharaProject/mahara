@@ -13,7 +13,7 @@
     {if is_array($profileinfo.internalprofiles) && count($profileinfo.internalprofiles) > 0}
         <ul class="unstyled profile-info">
         {foreach from=$profileinfo.internalprofiles key=key item=item}
-            <li><strong>{str tag=$item.type section=artefact.internal}:</strong> {$item.description|clean_html|safe}</li>
+            <li><strong>{get_desired_field_title($item.type)}:</strong> {$item.description|clean_html|safe}</li>
         {/foreach}
         </ul>
     {/if}

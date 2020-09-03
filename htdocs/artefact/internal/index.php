@@ -65,7 +65,6 @@ if ($profilefields['email']['all']) {
     }
 }
 
-
 $items = array();
 foreach ( $element_list as $element => $type ) {
     if ($type == 'wysiwyg' && isset($lockedfields[$element]) && !$USER->get('admin')) {
@@ -73,7 +72,7 @@ foreach ( $element_list as $element => $type ) {
         // into an html element instead.
         $items[$element] = array(
             'type'  => 'html',
-            'title' => get_string($element, 'artefact.internal'),
+            'title' => get_desired_field_title($element),
             'value' => '--',
         );
         if (isset($profilefields[$element])) {
@@ -84,7 +83,7 @@ foreach ( $element_list as $element => $type ) {
 
     $items[$element] = array(
         'type'  => $type,
-        'title' => get_string($element, 'artefact.internal'),
+        'title' => get_desired_field_title($element),
     );
 
     if (isset($element_data[$element]['rules'])) {

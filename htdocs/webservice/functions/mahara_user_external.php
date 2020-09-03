@@ -34,7 +34,14 @@ global $WEBSERVICE_OAUTH_USER;
 */
 class mahara_user_external extends external_api {
 
-    static private $ALLOWEDKEYS = array(
+    private static $ALLOWEDKEYS;
+    private static $localoptions;
+
+    private function get_allowed_keys() {
+        if (is_array(self::$ALLOWEDKEYS)) {
+            return self::$ALLOWEDKEYS;
+        }
+        $types = array(
             'remoteuser',
             'introduction',
             'officialwebsite',
@@ -52,6 +59,28 @@ class mahara_user_external extends external_api {
             'occupation',
             'industry',
         );
+        $localtypes = self::get_local_options();
+        if (is_array($localtypes)) {
+            $types = array_merge($types, array_keys($localtypes));
+        }
+        self::$ALLOWEDKEYS = $types;
+        return self::$ALLOWEDKEYS;
+    }
+
+    private function get_local_options() {
+        if (is_array(self::$localoptions)) {
+            return self::$localoptions;
+        }
+        if (file_exists(get_config('docroot') . 'local/lib/artefact_internal.php')) {
+            safe_require('artefact', 'internal');
+            include_once(get_config('docroot') . 'local/lib/artefact_internal.php');
+        }
+        if (class_exists('PluginArtefactInternalLocal', false)) {
+            $localtypes = PluginArtefactInternalLocal::get_webservice_options();
+            self::$localoptions = $localtypes;
+        }
+        return self::$localoptions;
+    }
 
     /**
      * parameter definition for input of delete_users method
@@ -182,40 +211,43 @@ class mahara_user_external extends external_api {
      */
     public static function create_users_parameters() {
 
+        $options = array(
+            'username'        => new external_value(PARAM_RAW, 'Between 3 and 30 characters long. Letters, numbers and most standard symbols are allowed'),
+            'password'        => new external_value(PARAM_RAW, 'Must be at least 6 characters long. Must be different from the username'),
+            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
+            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
+            'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address'),
+            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution', VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED),
+            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc', VALUE_DEFAULT, 'internal', NULL_NOT_ALLOWED),
+            'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
+            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_DEFAULT, '0'),
+            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_DEFAULT, ''),
+            'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_DEFAULT, ''),
+            'preferredname'   => new external_value(PARAM_TEXT, 'User preferred name', VALUE_OPTIONAL),
+            'address'         => new external_value(PARAM_RAW, 'Street address of the user', VALUE_OPTIONAL),
+            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
+            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
+            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
+            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
+            'businessnumber'  => new external_value(PARAM_RAW, 'Business phone number', VALUE_OPTIONAL),
+            'mobilenumber'    => new external_value(PARAM_RAW, 'Mobile phone number', VALUE_OPTIONAL),
+            'faxnumber'       => new external_value(PARAM_RAW, 'Fax number', VALUE_OPTIONAL),
+            'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
+            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
+            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
+            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
+            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile needs both the type and url entered', VALUE_OPTIONAL),
+            'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
+            'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
+        );
+        $localoptions = self::get_local_options();
+        if (is_array($localoptions)) {
+            $options = array_merge($options, $localoptions);
+        }
         return new external_function_parameters(
             array(
                 'users' => new external_multiple_structure(
-                    new external_single_structure(
-                        array(
-                            'username'        => new external_value(PARAM_RAW, 'Between 3 and 30 characters long. Letters, numbers and most standard symbols are allowed'),
-                            'password'        => new external_value(PARAM_RAW, 'Must be at least 6 characters long. Must be different from the username'),
-                            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-                            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-                            'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address'),
-                            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution', VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED),
-                            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc', VALUE_DEFAULT, 'internal', NULL_NOT_ALLOWED),
-                            'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
-                            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_DEFAULT, '0'),
-                            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_DEFAULT, ''),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_DEFAULT, ''),
-                            'preferredname'   => new external_value(PARAM_TEXT, 'User preferred name', VALUE_OPTIONAL),
-                            'address'         => new external_value(PARAM_RAW, 'Street address of the user', VALUE_OPTIONAL),
-                            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
-                            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
-                            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
-                            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
-                            'businessnumber'  => new external_value(PARAM_RAW, 'Business phone number', VALUE_OPTIONAL),
-                            'mobilenumber'    => new external_value(PARAM_RAW, 'Mobile phone number', VALUE_OPTIONAL),
-                            'faxnumber'       => new external_value(PARAM_RAW, 'Fax number', VALUE_OPTIONAL),
-                            'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
-                            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
-                            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
-                            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
-                            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile needs both the type and url entered', VALUE_OPTIONAL),
-                            'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
-                            'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
-                        )
-                    )
+                    new external_single_structure($options)
                 )
             )
         );
@@ -302,7 +334,7 @@ class mahara_user_external extends external_api {
             // handle profile fields
             $profilefields = new stdClass();
             $remoteuser = null;
-            foreach (self::$ALLOWEDKEYS as $field) {
+            foreach (self::get_allowed_keys() as $field) {
                 if (isset($user[$field])) {
                     if ($field == 'remoteuser') {
                         $remoteuser = $user[$field];
@@ -433,41 +465,44 @@ class mahara_user_external extends external_api {
      */
     public static function update_users_parameters() {
 
-       return new external_function_parameters(
+        $options = array(
+            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+            'password'        => new external_value(PARAM_RAW, 'Plain text password consisting of any characters', VALUE_OPTIONAL),
+            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user', VALUE_OPTIONAL),
+            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user', VALUE_OPTIONAL),
+            'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address', VALUE_OPTIONAL),
+            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution', VALUE_OPTIONAL),
+            'auth'            => new external_value(PARAM_TEXT, 'Auth plugins include manual, ldap, imap, etc', VALUE_OPTIONAL),
+            'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
+            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_OPTIONAL),
+            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_OPTIONAL),
+            'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_OPTIONAL),
+            'preferredname'   => new external_value(PARAM_TEXT, 'Userpreferred name', VALUE_OPTIONAL),
+            'address'         => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
+            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
+            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
+            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
+            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
+            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number', VALUE_OPTIONAL),
+            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number', VALUE_OPTIONAL),
+            'faxnumber'       => new external_value(PARAM_RAW, 'fax number', VALUE_OPTIONAL),
+            'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
+            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
+            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
+            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
+            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile', VALUE_OPTIONAL),
+            'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
+            'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
+        );
+        $localoptions = self::get_local_options();
+        if (is_array($localoptions)) {
+            $options = array_merge($options, $localoptions);
+        }
+        return new external_function_parameters(
             array(
                 'users' => new external_multiple_structure(
-                    new external_single_structure(
-                        array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'password'        => new external_value(PARAM_RAW, 'Plain text password consisting of any characters', VALUE_OPTIONAL),
-                            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user', VALUE_OPTIONAL),
-                            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user', VALUE_OPTIONAL),
-                            'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address', VALUE_OPTIONAL),
-                            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution', VALUE_OPTIONAL),
-                            'auth'            => new external_value(PARAM_TEXT, 'Auth plugins include manual, ldap, imap, etc', VALUE_OPTIONAL),
-                            'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
-                            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_OPTIONAL),
-                            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_OPTIONAL),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_OPTIONAL),
-                            'preferredname'   => new external_value(PARAM_TEXT, 'Userpreferred name', VALUE_OPTIONAL),
-                            'address'         => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
-                            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
-                            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
-                            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
-                            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
-                            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number', VALUE_OPTIONAL),
-                            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number', VALUE_OPTIONAL),
-                            'faxnumber'       => new external_value(PARAM_RAW, 'fax number', VALUE_OPTIONAL),
-                            'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
-                            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
-                            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
-                            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
-                            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile', VALUE_OPTIONAL),
-                            'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
-                            'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
-                            )
-                    )
+                    new external_single_structure($options)
                 )
             )
         );
@@ -554,7 +589,7 @@ class mahara_user_external extends external_api {
 
             $profilefields = new stdClass();
             $remoteuser = null;
-            foreach (self::$ALLOWEDKEYS as $field) {
+            foreach (self::get_allowed_keys() as $field) {
                 if (isset($user[$field])) {
                     if ($field == 'remoteuser') {
                         $remoteuser = $user[$field];
@@ -661,10 +696,8 @@ class mahara_user_external extends external_api {
             }
             // get the remoteuser
             $user->remoteuser = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
-            foreach (array('introduction', 'country', 'city', 'address',
-                           'town', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber',
-                           'officialwebsite', 'personalwebsite', 'blogaddress', 'socialprofile',
-                           'occupation', 'industry') as $attr) {
+            $options = self::get_allowed_keys();
+            foreach ($options as $attr) {
                 if ($art = get_record('artefact', 'artefacttype', $attr, 'owner', $user->id)) {
                     $user->{$attr} = $art->title;
                 }
@@ -749,7 +782,7 @@ class mahara_user_external extends external_api {
                 $userarray['auth'] = $auth_instance->authname;
                 $userarray['studentid'] = $user->studentid;
                 $userarray['preferredname'] = $user->preferredname;
-                foreach (self::$ALLOWEDKEYS as $field) {
+                foreach (self::get_allowed_keys() as $field) {
                     $userarray[$field] = ((isset($user->{$field}) && $user->{$field}) ? $user->{$field} : '');
                 }
                 $userarray['institution'] = $auth_instance->institution;
@@ -776,42 +809,46 @@ class mahara_user_external extends external_api {
      * @return external_description
      */
     public static function get_users_by_id_returns() {
+
+        $options = array(
+            'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
+            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
+            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
+            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
+            'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
+            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
+            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
+            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
+            'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
+            'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
+            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
+            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
+            'address'         => new external_value(PARAM_RAW, 'Introduction text'),
+            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
+            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
+            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
+            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
+            'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
+            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
+            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
+            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
+            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
+            'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
+            'industry'        => new external_value(PARAM_TEXT, 'Industry'),
+            'auths'           => new external_multiple_structure(
+                                    new external_single_structure(
+                                        array(
+                                            'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
+                                            'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
+                                        ), 'Connected Remote Users')
+                                 ),
+        );
+        $localoptions = self::get_local_options();
+        if (is_array($localoptions)) {
+            $options = array_merge($options, $localoptions);
+        }
         return new external_multiple_structure(
-                new external_single_structure(
-                        array(
-                    'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-                    'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-                    'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-                    'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-                    'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
-                    'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                    'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
-                    'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
-                    'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
-                    'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
-                    'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
-                    'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
-                    'address'         => new external_value(PARAM_RAW, 'Introduction text'),
-                    'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
-                    'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
-                    'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
-                    'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
-                    'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
-                    'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
-                    'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
-                    'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-                    'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
-                    'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
-                    'industry'        => new external_value(PARAM_TEXT, 'Industry'),
-                    'auths'           => new external_multiple_structure(
-                                            new external_single_structure(
-                                                array(
-                                                    'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                                                    'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
-                                                ), 'Connected Remote Users')
-                                        ),
-                        )
-                )
+            new external_single_structure($options)
         );
     }
 
@@ -953,41 +990,44 @@ class mahara_user_external extends external_api {
      * @return external_description
      */
     public static function get_my_user_returns() {
-        return new external_single_structure(
-                 array(
-                    'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-                    'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-                    'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-                    'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-                    'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
-                    'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                    'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
-                    'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
-                    'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
-                    'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
-                    'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
-                    'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
-                    'address'         => new external_value(PARAM_RAW, 'Introduction text'),
-                    'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
-                    'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
-                    'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
-                    'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
-                    'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
-                    'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
-                    'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
-                    'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-                    'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
-                    'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
-                    'industry'        => new external_value(PARAM_TEXT, 'Industry'),
-                    'auths'           => new external_multiple_structure(
-                                            new external_single_structure(
-                                                array(
-                                                    'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                                                    'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
-                                                ), 'Connected Remote Users')
-                                        ),
-                        )
-                );
+        $options = array(
+            'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
+            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
+            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
+            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
+            'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
+            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
+            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
+            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
+            'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
+            'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
+            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
+            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
+            'address'         => new external_value(PARAM_RAW, 'Introduction text'),
+            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
+            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
+            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
+            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
+            'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
+            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
+            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
+            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
+            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
+            'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
+            'industry'        => new external_value(PARAM_TEXT, 'Industry'),
+            'auths'           => new external_multiple_structure(
+                                     new external_single_structure(
+                                         array(
+                                             'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
+                                             'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
+                                         ), 'Connected Remote Users')
+                                 ),
+        );
+        $localoptions = self::get_local_options();
+        if (is_array($localoptions)) {
+            $options = array_merge($options, $localoptions);
+        }
+        return new external_single_structure($options);
     }
 
     /**
