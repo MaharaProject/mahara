@@ -463,9 +463,10 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      * @throws ExpectationException
      * @param string $element
      * @param string $selectortype
+     * @param integer $timeout (optional, seconds)
      * @return void
      */
-    protected function ensure_element_exists($element, $selectortype) {
+    protected function ensure_element_exists($element, $selectortype, $timeout=self::EXTENDED_TIMEOUT) {
 
         // Getting the behat selector & locator.
         list($selector, $locator) = $this->transform_selector($selectortype, $element);
@@ -484,7 +485,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
                 return false;
             },
             array('selector' => $selector, 'locator' => $locator),
-            self::EXTENDED_TIMEOUT,
+            $timeout,
             $exception,
             true
         );
