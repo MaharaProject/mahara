@@ -33,7 +33,7 @@ class sspmod_memcached_Store_Store extends SimpleSAML\Store {
      * This function implements the constructor for this class. It loads the Memcache configuration.
      */
     protected function __construct() {
-        $config = SimpleSAML_Configuration::getInstance();
+        $config = SimpleSAML\Configuration::getInstance();
         $this->prefix = $config->getString('memcache_store.prefix', 'simpleSAMLphp');
     }
     /**
