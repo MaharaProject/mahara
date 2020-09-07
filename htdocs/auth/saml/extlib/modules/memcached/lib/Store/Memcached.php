@@ -99,8 +99,8 @@ class sspmod_memcached_Store_Memcached
         if ($latestData === null) {
             if ($allDown) {
                 // all servers are down, panic!
-                $e = new SimpleSAML_Error_Error('MEMCACHEDOWN', null, 503);
-                throw new SimpleSAML_Error_Exception('All memcache servers are down', 503, $e);
+                $e = new SimpleSAML\Error\Error('MEMCACHEDOWN', null, 503);
+                throw new SimpleSAML\Error\Exception('All memcache servers are down', 503, $e);
             }
             // we didn't find any data matching the key
             SimpleSAML\Logger::debug("key $key not found in memcache");
@@ -304,7 +304,7 @@ class sspmod_memcached_Store_Memcached
         // initialize the servers-array
         self::$serverGroups = array();
         // load the configuration
-        $config = SimpleSAML_Configuration::getInstance();
+        $config = SimpleSAML\Configuration::getInstance();
         $groups = $config->getArray('memcache_store.servers');
         // iterate over all the groups in the 'memcache_store.servers' configuration option
         foreach ($groups as $index => $group) {
@@ -347,8 +347,8 @@ class sspmod_memcached_Store_Memcached
     private static function getExpireTime()
     {
         // get the configuration instance
-        $config = SimpleSAML_Configuration::getInstance();
-        assert($config instanceof SimpleSAML_Configuration);
+        $config = SimpleSAML\Configuration::getInstance();
+        assert($config instanceof SimpleSAML\Configuration);
         // get the expire-value from the configuration
         $expire = $config->getInteger('memcache_store.expires', 0);
         // it must be a positive integer

@@ -908,7 +908,7 @@ class PluginAuthSaml extends PluginAuth {
         }
         else {
             require(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-            $config = SimpleSAML_Configuration::getInstance();
+            $config = SimpleSAML\Configuration::getInstance();
 
             //simplesaml version we install with 'make ssphp'
             $libversion = get_config_plugin('auth', 'saml', 'version');
@@ -1177,7 +1177,7 @@ class PluginAuthSaml extends PluginAuth {
         require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
         require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
 
-        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+        SimpleSAML\Configuration::init(get_config('docroot') . 'auth/saml/config');
     }
 
     public static function get_idps($xml) {
@@ -1879,8 +1879,8 @@ if ($discofileexists && class_exists('SimpleSAML\XHTML\IdPDisco')) {
             assert('is_string($instance)');
 
             // initialize standard classes
-            $this->config = SimpleSAML_Configuration::getInstance();
-            $this->metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
+            $this->config = SimpleSAML\Configuration::getInstance();
+            $this->metadata = SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
             $this->instance = $instance;
             $this->metadataSets = $metadataSets;
             $this->isPassive = false;
@@ -1964,8 +1964,8 @@ class Metarefresh {
             //Include autoloader and setup config dir correctly
             PluginAuthSaml::init_simplesamlphp();
 
-            $config = SimpleSAML_Configuration::getInstance();
-            $mconfig = SimpleSAML_Configuration::getOptionalConfig('config-metarefresh.php');
+            $config = SimpleSAML\Configuration::getInstance();
+            $mconfig = SimpleSAML\Configuration::getOptionalConfig('config-metarefresh.php');
 
             $sets = $mconfig->getConfigList('sets', array());
 
@@ -1988,7 +1988,7 @@ class Metarefresh {
                 $outputDir = $config->resolvePath($outputDir);
                 $outputFormat = $set->getValueValidate('outputFormat', array('flatfile', 'serialize'), 'flatfile');
 
-                $oldMetadataSrc = SimpleSAML_Metadata_MetaDataStorageSource::getSource(array(
+                $oldMetadataSrc = SimpleSAML\Metadata\MetaDataStorageSource::getSource(array(
                     'type' => $outputFormat,
                     'directory' => $outputDir,
                 ));
@@ -2058,7 +2058,7 @@ class Metarefresh {
                 }
 
                 if ($set->hasValue('arp')) {
-                    $arpconfig = SimpleSAML_Configuration::loadFromArray($set->getValue('arp'));
+                    $arpconfig = SimpleSAML\Configuration::loadFromArray($set->getValue('arp'));
                     $metaloader->writeARPfile($arpconfig);
                 }
             }
