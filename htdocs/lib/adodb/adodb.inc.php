@@ -14,7 +14,7 @@
 /**
 	\mainpage
 
-	@version   v5.20.16  12-Jan-2020
+	@version   v5.20.18  28-Jun-2020
 	@copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 	@copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
 
@@ -99,24 +99,6 @@ if (!defined('_ADODB_LAYER')) {
 		define('ADODB_FORCE_VALUE',3);
 	// ********************************************************
 
-	/**
-	 * Associative array case constants
-	 *
-	 * By defining the ADODB_ASSOC_CASE constant to one of these values, it is
-	 * possible to control the case of field names (associative array's keys)
-	 * when operating in ADODB_FETCH_ASSOC fetch mode.
-	 *   - LOWER:  $rs->fields['orderid']
-	 *   - UPPER:  $rs->fields['ORDERID']
-	 *   - NATIVE: $rs->fields['OrderID'] (or whatever the RDBMS will return)
-	 *
-	 * The default is to use native case-names.
-	 *
-	 * NOTE: This functionality is not implemented everywhere, it currently
-	 * works only with: mssql, odbc, oci8 and ibase derived drivers
-	 */
-		define('ADODB_ASSOC_CASE_LOWER', 0);
-		define('ADODB_ASSOC_CASE_UPPER', 1);
-		define('ADODB_ASSOC_CASE_NATIVE', 2);
 
 	if (!$ADODB_EXTENSION || ADODB_EXTENSION < 4.0) {
 
@@ -147,6 +129,25 @@ if (!defined('_ADODB_LAYER')) {
 		define('ADODB_FETCH_NUM', 1);
 		define('ADODB_FETCH_ASSOC', 2);
 		define('ADODB_FETCH_BOTH', 3);
+
+	/**
+	 * Associative array case constants
+	 *
+	 * By defining the ADODB_ASSOC_CASE constant to one of these values, it is
+	 * possible to control the case of field names (associative array's keys)
+	 * when operating in ADODB_FETCH_ASSOC fetch mode.
+	 *   - LOWER:  $rs->fields['orderid']
+	 *   - UPPER:  $rs->fields['ORDERID']
+	 *   - NATIVE: $rs->fields['OrderID'] (or whatever the RDBMS will return)
+	 *
+	 * The default is to use native case-names.
+	 *
+	 * NOTE: This functionality is not implemented everywhere, it currently
+	 * works only with: mssql, odbc, oci8 and ibase derived drivers
+	 */
+		define('ADODB_ASSOC_CASE_LOWER', 0);
+		define('ADODB_ASSOC_CASE_UPPER', 1);
+		define('ADODB_ASSOC_CASE_NATIVE', 2);
 
 
 		if (!defined('TIMESTAMP_FIRST_YEAR')) {
@@ -223,7 +224,7 @@ if (!defined('_ADODB_LAYER')) {
 		/**
 		 * ADODB version as a string.
 		 */
-		$ADODB_vers = 'v5.20.16  12-Jan-2020';
+		$ADODB_vers = 'v5.20.17  31-Mar-2020';
 
 		/**
 		 * Determines whether recordset->RecordCount() is used.
@@ -301,8 +302,8 @@ if (!defined('_ADODB_LAYER')) {
 		//print "Errorno ($fn errno=$errno m=$errmsg) ";
 		$thisConnection->_transOK = false;
 		if ($thisConnection->_oldRaiseFn) {
-			$fn = $thisConnection->_oldRaiseFn;
-			$fn($dbms, $fn, $errno, $errmsg, $p1, $p2,$thisConnection);
+			$errfn = $thisConnection->_oldRaiseFn;
+			$errfn($dbms, $fn, $errno, $errmsg, $p1, $p2,$thisConnection);
 		}
 	}
 
@@ -3604,7 +3605,7 @@ http://www.stanford.edu/dept/itss/docs/oracle/10g/server.101/b10759/statements_1
 		}
 
 		// Determine whether the array is associative or 0-based numeric
-		$numIndex = is_array($this->fields) && array_key_exists(0, $this->fields);
+		$numIndex = array_keys($this->fields) == range(0, count($this->fields) - 1);
 
 		$results = array();
 
