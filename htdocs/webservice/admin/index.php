@@ -184,7 +184,7 @@ function webservice_admin_main_form() {
                 )
             ),
             'collapsible' => true,
-            'collapsed'   => true,
+            'collapsed'   => false,
         ),
 
         // System Certificates
@@ -255,7 +255,7 @@ function webservice_admin_main_form() {
                 )
             ),
             'collapsible' => true,
-            'collapsed'   => false,
+            'collapsed'   => true,
         ),
 
         // fieldset for managing service tokens
@@ -273,7 +273,7 @@ function webservice_admin_main_form() {
                 )
             ),
             'collapsible' => true,
-            'collapsed'   => false,
+            'collapsed'   => true,
         ),
     );
 

@@ -432,3 +432,8 @@ $string['institutionunknown'] = '- unknown -';
 $string['unabletodeleteadmin'] = 'Unable to delete user with ID "%s" as they are an admin';
 $string['notuserblog'] = 'The journal is not owned by "%s"';
 $string['oneof'] = 'One of';
+
+$string['servicetype'] = 'Service type';
+$string['authtype'] = 'Auth type';
+$string['jsonenabled'] = 'JSON response';
+$string['customfields'] = 'Custom fields';

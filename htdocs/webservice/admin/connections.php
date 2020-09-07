@@ -52,43 +52,25 @@ if (empty($institution)) {
 }
 $institutionelement['defaultvalue'] = $institution;
 
-$ids         = param_variable('ids', '');
 $reorder     = param_boolean('reorder', 0);
-$json        = param_boolean('j', 0);
-
-if ($reorder && $json) {
-    try {
-        form_validate(param_alphanum('sesskey', null));
+$row         = param_integer('row', 0);
+$direction   = param_alpha('direction', null);
+if ($reorder && $row && $direction) {
+    $dbconnection = get_record('client_connections_institution', 'id', $row, 'institution', $institution);
+    if (empty($dbconnection)) {
+        json_reply(true, 'connection not found for: ' . $row);
     }
-    catch (UserException $e) {
-        json_reply(true, $e->getMessage());
+    $cons = get_column_sql('SELECT id FROM {client_connections_institution}
+                            WHERE institution = ? AND connection = ?
+                            ORDER BY priority ASC', array($institution, $dbconnection->connection));
+    $index = array_search($row, $cons);
+    $out = array_splice($cons, $index, 1);
+    $dir = $direction == 'up' ? -1 : 1;
+    array_splice($cons, ($index + $dir), 0, $out);
+    foreach ($cons as $k => $c) {
+        execute_sql('UPDATE {client_connections_institution} SET priority = ? WHERE id = ?', array($k + 1, $c));
     }
-    $len = count(explode(',', $ids));
-    $ids = array_map("intval", explode(',', $ids));
-    if (count(array_unique($ids)) != $len) {
-        json_reply(true, 'Unique check failed for: ' . var_export($ids, true));
-    }
-
-    $cons = array();
-    $idx = 1;
-    foreach ($ids as $id) {
-        $dbconnection = get_record('client_connections_institution', 'id', $id, 'institution', $institution);
-        if (empty($dbconnection)) {
-            json_reply(true, 'connection not found for: ' . $id);
-        }
-        else {
-            $dbconnection->priority = $idx++;
-            $cons[]= $dbconnection;
-        }
-    }
-    if (count($cons) != $len) {
-        json_reply(true, 'Not all connections found: ' . var_export($ids, true));
-    }
-
-    foreach ($cons as $c) {
-        update_record('client_connections_institution', $c, array('id' => $c->id));
-    }
-    echo json_encode(array('rc' => 'succeeded'));
+    json_reply(false, array('success' => 'true'));
     exit();
 }
 
@@ -148,8 +130,8 @@ function webservice_connection_classes($institution) {
     $connections = array();
     foreach ($plugin_connections as $plugin => $objects) {
         foreach ($objects['connections'] as $object) {
-            $id = $objects['type'].':'.$objects['key'].':'.$object['connection'];
-            $connections[$id] = (object)array('id' => $id, 'name' => $object['name'], 'type' => $objects['type'], 'key' => $objects['key'], 'shortname' => $plugin.':'.$object['connection']);
+            $id = $objects['type'] . ':' . $objects['key'] . ':' . $object['connection'];
+            $connections[$id] = (object)array('id' => $id, 'name' => $object['name'], 'type' => $objects['type'], 'key' => $objects['key'], 'shortname' => $plugin . ':' . $object['connection']);
         }
     }
 

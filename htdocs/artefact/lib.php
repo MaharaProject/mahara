@@ -988,11 +988,19 @@ abstract class ArtefactType implements IArtefactType {
         return false;
     }
 
+    public static function has_config_info() {
+        return false;
+    }
+
     public static function get_config_options() {
         return array();
     }
 
     public static function collapse_config() {
+        return false;
+    }
+
+    public static function collapse_config_info() {
         return false;
     }
 

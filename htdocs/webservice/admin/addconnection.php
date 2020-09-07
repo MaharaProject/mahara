@@ -57,7 +57,7 @@ else {
     $classname = $dbconnection->class;
 }
 safe_require($type, strtolower($plugin));
-$plugin_desc = get_string('name', strtolower($type).".".strtolower($plugin));
+$plugin_desc = get_string('name', strtolower($type) . "." . strtolower($plugin));
 
 if ($delete) {
     try {
@@ -73,7 +73,7 @@ if ($delete) {
     else {
         $rc = 'succeeded';
     }
-    echo json_encode(array('rc' => $rc));
+    json_reply($rc == 'failed', array('rc' => $rc));
     exit();
 }
 
@@ -224,6 +224,30 @@ function allocate_client_connection_submit(Pieform $form, $values) {
     else {
         update_record('client_connections_institution', $clientconnection, array('id' => $values['id']));
     }
+
+    if (method_exists($clientconnection->class, 'define_webservice_connections')) {
+        if ($conns = call_static_method($clientconnection->class, 'define_webservice_connections')) {
+            foreach ($conns as $k => $conn) {
+                if (!empty($conn['config_fields'])) {
+                    foreach ($conn['config_fields'] as $fk => $fv) {
+                        if (isset($values[$fk])) {
+                            ensure_record_exists('client_connections_config',
+                                                 (object) array(
+                                                     'connection' => $values['id'],
+                                                     'field' => $fk
+                                                 ),
+                                                 (object) array(
+                                                     'connection' => $values['id'],
+                                                     'field' => $fk,
+                                                     'value'=> $values[$fk]
+                                                 ));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     redirect(get_config('wwwroot') . 'webservice/admin/connections.php?i=' . $values['i']);
 }
 
@@ -481,6 +505,27 @@ $connection_details['elements']['isfatal'] = array(
     'disabled'     => false,
     'title'        => get_string('isfatal', 'auth.webservice'),
 );
+
+if (method_exists($classname, 'define_webservice_connections')) {
+    if ($conns = call_static_method($classname, 'define_webservice_connections')) {
+        foreach ($conns as $k => $conn) {
+            if (!empty($conn['config_fields'])) {
+                $connection_details['elements']['custom'] = array(
+                    'type' => 'html',
+                    'value' => '<h5>' . get_string('customfields', 'auth.webservice') . '</h5>',
+                );
+                foreach ($conn['config_fields'] as $fk => $fv) {
+                    foreach ($fv as $sk => $sv) {
+                        $connection_details['elements'][$fk][$sk] = $sv;
+                    }
+                    if ($val = get_field('client_connections_config', 'value', 'field', $fk, 'connection', $connectionid)) {
+                        $connection_details['elements'][$fk]['defaultvalue'] = $val;
+                    }
+                }
+            }
+        }
+    }
+}
 
 $connection_details['elements']['submit'] = array(
     'type'  => 'submitcancel',

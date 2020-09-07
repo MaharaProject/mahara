@@ -10,7 +10,7 @@
 
 </script>
 
-<div class="select connections lead">
+<div class="select connections lead singular">
     <span class="picker">
         <select class="select form-control" name="dummy" id="dummySelect">
         {{foreach $connections connection}}
