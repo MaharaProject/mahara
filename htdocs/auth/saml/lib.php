@@ -1277,6 +1277,11 @@ class PluginAuthSaml extends PluginAuth {
                     }
                 }
             }
+            else if ($list = PluginAuthSaml::get_disco_list()) {
+                if (isset($list[self::$default_config['institutionidpentityid']])) {
+                    $entityid = self::$default_config['institutionidpentityid'];
+                }
+            }
         }
 
         $idp_title = get_string('institutionidp', 'auth.saml', $institution);
@@ -1590,6 +1595,11 @@ EOF;
                 $form->set_error('institutionidp', get_string('errorbadmetadata', 'auth.saml'));
             }
         }
+        else if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
+            if (!isset($list[$values['institutionidpentityid']])) {
+                $form->set_error('institutionidpentityid', get_string('errormissingmetadata', 'auth.saml'));
+            }
+        }
         else {
             $form->set_error('institutionidpentityid', get_string('errormissingmetadata', 'auth.saml'));
         }
@@ -1672,9 +1682,17 @@ EOF;
         if (empty($current)) {
             $current = array();
         }
-
-        // grab the entityId from the metadata
-        list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+        $entityid = null;
+        if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
+            if (isset($list[$values['institutionidpentityid']])) {
+                // we have xml/php info for this IdP
+                $entityid = $values['institutionidpentityid'];
+            }
+        }
+        if (!$entityid) {
+            // grab the entityId from the metadata
+            list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+        }
 
         $changedxml = false;
         if ($values['institutionidpentityid'] != 'new') {
@@ -1778,7 +1796,7 @@ EOF;
         }
 
         // save the institution config
-        if ($changedxml) {
+        if ($changedxml && !empty($values['institutionidp'])) {
             $idpfile = AuthSaml::prepare_metadata_path($values['institutionidpentityid']);
             file_put_contents($idpfile, $values['institutionidp']);
         }

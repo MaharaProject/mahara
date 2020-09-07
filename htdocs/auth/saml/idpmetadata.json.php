@@ -23,6 +23,14 @@ if (file_exists(AuthSaml::prepare_metadata_path($idp))) {
     $data->metadata = $rawxml;
     $data->error = false;
 }
+else if ($list = PluginAuthSaml::get_disco_list()) {
+    if (isset($list[$idp])) {
+        $data->metarefresh_metadata_url = Metarefresh::get_metadata_url($idp, true);
+    }
+    else {
+        $data->error = 'unable to find metadata';
+    }
+}
 else {
     $data->error = 'unable to find metadata';
 }
