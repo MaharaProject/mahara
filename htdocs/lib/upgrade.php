@@ -1466,7 +1466,7 @@ function site_warnings() {
         $autoload = get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php';
         if (file_exists($autoload)) {
             require(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-            $config = SimpleSAML_Configuration::getInstance();
+            $config = SimpleSAML\Configuration::getInstance();
 
             $libversion = get_config_plugin('auth', 'saml', 'version');
             if (!empty($libversion) && $config->getVersion() != $libversion) {

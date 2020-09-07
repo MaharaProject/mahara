@@ -44,18 +44,18 @@ if (get_field('auth_installed', 'active', 'name', 'saml') != 1) {
 
 PluginAuthSaml::init_simplesamlphp();
 
-$config = SimpleSAML_Configuration::getInstance();
+$config = SimpleSAML\Configuration::getInstance();
 if ($config->getBoolean('admin.protectmetadata', false)) {
     SimpleSAML\Utils\Auth::requireAdmin();
 }
 $sourceId = 'default-sp';
-$source = SimpleSAML_Auth_Source::getById($sourceId);
+$source = SimpleSAML\Auth\Source::getById($sourceId);
 if ($source === null) {
-    throw new SimpleSAML_Error_AuthSource($sourceId, 'Could not find authentication source.');
+    throw new SimpleSAML\Error\AuthSource($sourceId, 'Could not find authentication source.');
 }
 
 if (!($source instanceof \SimpleSAML\Module\saml\Auth\Source\SP)) {
-    throw new SimpleSAML_Error_AuthSource($sourceId,
+    throw new SimpleSAML\Error\AuthSource($sourceId,
         'The authentication source is not a SAML Service Provider.');
 }
 
@@ -207,7 +207,7 @@ if ($orgName !== null) {
 
     $metaArray20['OrganizationURL'] = $spconfig->getLocalizedString('OrganizationURL', null);
     if ($metaArray20['OrganizationURL'] === null) {
-        throw new SimpleSAML_Error_Exception('If OrganizationName is set, OrganizationURL must also be set.');
+        throw new SimpleSAML\Error\Exception('If OrganizationName is set, OrganizationURL must also be set.');
     }
 }
 
@@ -266,7 +266,7 @@ $supported_protocols = array('urn:oasis:names:tc:SAML:1.1:protocol', SAML2_Const
 $metaArray20['metadata-set'] = 'saml20-sp-remote';
 $metaArray20['entityid'] = $entityId;
 
-$metaBuilder = new SimpleSAML_Metadata_SAMLBuilder($entityId);
+$metaBuilder = new SimpleSAML\Metadata\SAMLBuilder($entityId);
 $metaBuilder->addMetadataSP20($metaArray20, $supported_protocols);
 $metaBuilder->addOrganizationInfo($metaArray20);
 
@@ -282,11 +282,11 @@ if (isset($metaArray20['attributes']) && is_array($metaArray20['attributes'])) {
 }
 
 // sign the metadata if enabled
-$xml = SimpleSAML_Metadata_Signer::sign($xml, $spconfig->toArray(), 'SAML 2 SP');
+$xml = SimpleSAML\Metadata\Signer::sign($xml, $spconfig->toArray(), 'SAML 2 SP');
 
 if (array_key_exists('output', $_REQUEST) && $_REQUEST['output'] == 'xhtml') {
 
-    $t = new SimpleSAML_XHTML_Template($config, 'metadata.php', 'admin');
+    $t = new SimpleSAML\XHTML\Template($config, 'metadata.php', 'admin');
 
     $t->data['clipboard.js'] = true;
     $t->data['available_certs'] = $availableCerts;
