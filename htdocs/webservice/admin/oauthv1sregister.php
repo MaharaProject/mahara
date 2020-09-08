@@ -515,44 +515,47 @@ function webservice_server_list_form($sopts, $iopts) {
                 'key' => $consumer->consumer_key,
                 'class' => 'webserviceconfigcontrols btn-group icon-cell',
             );
-
             // Check if service has extra settings
-            if ($consumer->component) {
-                list($moduletype, $module) = explode("/", $consumer->component);
+            if ($consumer_functions = get_records_sql_array("
+                SELECT ef.component FROM {external_services_functions} esf
+                JOIN {external_functions} ef ON ef.name = esf.functionname
+                WHERE esf.externalserviceid = ?
+                AND ef.hasconfig = ?", array($consumer->externalserviceid, 1))) {
+                    $hasconfig = false;
+                    foreach ($consumer_functions as $cf) {
+                        list($moduletype, $module) = explode("/", $cf->component);
 
-                $hasconfig = false;
+                        if (safe_require_plugin($moduletype, $module)) {
+                            $classname = generate_class_name($moduletype, $module);
+                            if (is_callable(array($classname, 'has_oauth_service_config'))) {
+                                $hasconfig = call_static_method($classname, 'has_oauth_service_config');
+                            }
+                        }
 
-                if (safe_require_plugin($moduletype, $module)) {
-                    $classname = generate_class_name($moduletype, $module);
-                    if (is_callable(array($classname, 'has_oauth_service_config'))) {
-                        $hasconfig = call_static_method($classname, 'has_oauth_service_config');
+                        if ($hasconfig) {
+                            $form['elements']['id' . $consumer->id . '_actions']['value'] .=
+                                pieform(array(
+                                    'name' => 'webservices_server_config_' . $consumer->id,
+                                    'renderer' => 'div',
+                                    'class' => 'form-as-button float-left',
+                                    'elementclasses' => false,
+                                    'successcallback' => 'webservices_server_submit',
+                                    'jsform' => false,
+                                    'elements' => array(
+                                        'token' => array('type' => 'hidden', 'value' => $consumer->id),
+                                        'action' => array('type' => 'hidden', 'value' => 'config'),
+                                        'submit' => array(
+                                            'type' => 'button',
+                                            'usebuttontag' => true,
+                                            'class' => 'btn-secondary btn-sm',
+                                            'value' => '<span class="icon icon-cog icon-lg " role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('managespecific', 'mahara', $consumer->application_title).'</span>',
+                                            'elementtitle' => get_string('managespecific', 'mahara', $consumer->application_title),
+                                        ),
+                                    ),
+                                ));
+                        }
                     }
-                }
-
-                if ($hasconfig) {
-                    $form['elements']['id' . $consumer->id . '_actions']['value'] .=
-                        pieform(array(
-                            'name' => 'webservices_server_config_' . $consumer->id,
-                            'renderer' => 'div',
-                            'class' => 'form-as-button float-left',
-                            'elementclasses' => false,
-                            'successcallback' => 'webservices_server_submit',
-                            'jsform' => false,
-                            'elements' => array(
-                                'token' => array('type' => 'hidden', 'value' => $consumer->id),
-                                'action' => array('type' => 'hidden', 'value' => 'config'),
-                                'submit' => array(
-                                    'type' => 'button',
-                                    'usebuttontag' => true,
-                                    'class' => 'btn-secondary btn-sm',
-                                    'value' => '<span class="icon icon-cog icon-lg " role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('managespecific', 'mahara', $consumer->application_title).'</span>',
-                                    'elementtitle' => get_string('managespecific', 'mahara', $consumer->application_title),
-                                ),
-                            ),
-                        ));
-                }
             }
-
         }
 
         $pieform = pieform_instance($form);

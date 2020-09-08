@@ -1694,6 +1694,14 @@ function external_reload_component($component) {
                 $dbfunction->classpath = $function['classpath'];
                 $update = true;
             }
+            if (isset($function['hasconfig']) && $dbfunction->hasconfig != $function['hasconfig']) {
+                $dbfunction->hasconfig = $function['hasconfig'];
+                $update = true;
+            }
+            else if (!isset($function['hasconfig']) && $dbfunction->hasconfig !== 0) {
+                $dbfunction->hasconfig = 0;
+                $update = true;
+            }
             if ($update) {
                 update_record('external_functions', $dbfunction);
             }
@@ -1707,6 +1715,7 @@ function external_reload_component($component) {
         $dbfunction->methodname = $function['methodname'];
         $dbfunction->classpath  = empty($function['classpath']) ? null : $function['classpath'];
         $dbfunction->component  = $component;
+        $dbfunction->hasconfig  = isset($function['hasconfig']) ? $function['hasconfig'] : 0;
         $dbfunction->id = insert_record('external_functions', $dbfunction);
     }
     unset($functions);
