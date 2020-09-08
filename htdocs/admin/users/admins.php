@@ -27,10 +27,11 @@ $adminusers = get_column('usr', 'id', 'admin', 1, 'deleted', 0);
 
 $form = pieform(array(
     'name' => 'adminusers',
+    'validatecallback' => 'adminusers_validate',
     'elements' => array(
         'users' => array(
             'type' => 'userlist',
-            'title' => get_string('adminusers1', 'admin'),
+            'title' => get_string('searchforaperson', 'admin'),
             'defaultvalue' => $adminusers,
             'lefttitle' => get_string('potentialadmins', 'admin'),
             'righttitle' => get_string('currentadmins', 'admin'),
@@ -41,9 +42,6 @@ $form = pieform(array(
                 'limit' => 250,
                 'orderby' => 'lastname',
             ),
-            'rules' => array(
-                'required' => true
-            )
         ),
         'submit' => array(
             'class' => 'btn-primary',
@@ -52,6 +50,13 @@ $form = pieform(array(
         )
     )
 ));
+
+function adminusers_validate(Pieform $form, $values) {
+    global $SESSION;
+    if (empty($values['users'])) {
+        $form->set_error('users', get_string('noadminspecified', 'admin'));
+    }
+}
 
 function adminusers_submit(Pieform $form, $values) {
     global $SESSION;
