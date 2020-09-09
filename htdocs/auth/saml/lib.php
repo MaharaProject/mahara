@@ -1684,14 +1684,15 @@ EOF;
                 if ($rawxml != $values['institutionidp']) {
                     $changedxml = true;
                     // find out which institutions are using it
-                    if ($duplicates = get_records_sql_array("
+                    $duplicates = get_records_sql_array("
                         SELECT COUNT(aic.instance) AS instances
                         FROM {auth_instance_config} aic
                         JOIN {auth_instance} ai ON (ai.authname = 'saml' AND ai.id = aic.instance)
                         WHERE aic.field = 'institutionidpentityid' AND aic.value = ? AND aic.instance != ?",
-                        array($values['institutionidpentityid'], $values['instance'])) && $duplicates[0]->instances > 0) {
-                            $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
-                        }
+                        array($values['institutionidpentityid'], $values['instance']));
+                    if ($duplicates && is_array($duplicates) && $duplicates[0]->instances > 0) {
+                        $SESSION->add_ok_msg(get_string('idpentityupdatedduplicates', 'auth.saml', $duplicates[0]->instances));
+                    }
                     else {
                         $SESSION->add_ok_msg(get_string('idpentityupdated', 'auth.saml'));
                     }
