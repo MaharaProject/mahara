@@ -382,36 +382,37 @@ class AuthSaml extends Auth {
                 if (!get_field('usr_institution', 'ctime', 'usr', $user->id, 'institution', $institutionname)) {
                     require_once('institution.php');
                     $institution = new Institution($institutionname);
-                    if ($institutionrole == 'admin') {
+                    if (!empty($roles) && $institutionrole == 'admin') {
                         $institution->addUserAsStaff($user);
                     }
-                    else if ($institutionrole == 'staff') {
+                    else if (!empty($roles) && $institutionrole == 'staff') {
                         $institution->addUserAsStaff($user);
                     }
                     else {
+                        // if no roles then always add as a normal member
                         $institution->addUserAsMember($user);
                     }
                 }
                 else {
-                    if ($institutionrole == 'admin') {
+                    if (!empty($roles) && $institutionrole == 'admin') {
                         set_field('usr_institution', 'admin', 1, 'usr', $user->id, 'institution', $institutionname);
                         set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
                     }
-                    else if ($institutionrole == 'staff') {
+                    else if (!empty($roles) && $institutionrole == 'staff') {
                         set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
                         set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $institutionname);
                     }
-                    else {
+                    else if (!empty($roles) && $institutionrole == 'member') {
                         set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
                         set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
                     }
                 }
             }
-            if (empty($usr_is_siteadmin)) {
+            if (!empty($roles) && empty($usr_is_siteadmin)) {
                 // make sure they are not site admin anymore
                 $user->admin = 0;
             }
-            if (empty($usr_is_sitestaff)) {
+            if (!empty($roles) && empty($usr_is_sitestaff)) {
                 // make sure they are not site staff anymore
                 $user->staff = 0;
             }
