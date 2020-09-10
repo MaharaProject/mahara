@@ -122,7 +122,7 @@ class PluginModuleAssessmentreport extends PluginModule {
             $type = get_string('collection', 'collection');
         }
         $subject = get_string('subject', 'module.assessmentreport', $type);
-        $message = get_string('message', 'module.assessmentreport', $type, $data['name'], $data['groupname'], date("d-m-Y, H:i"));
+        $message = get_string('message', 'module.assessmentreport', $type, $data['name'], $data['groupname'], format_date(strtotime("now"), 'strftimedatetimesuffix'));
 
         activity_occurred(
             'maharamessage',
