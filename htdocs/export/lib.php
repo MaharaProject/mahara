@@ -934,7 +934,8 @@ function create_zip_archive($exportdir, $filename, $files) {
                 $archive->addFile($exportdir . $file, $file);
             }
             else {
-                $directories[] = $file . '/';
+                if (substr($file, -1) != "/") $file = $file . '/';
+                $directories[] = $file;
             }
         }
         // add the contents of all directories and subdirectories
