@@ -409,7 +409,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
         // The query to find all the columns for a foreign key constraint
         $fkcolsql = "
             SELECT
-                ku.column_name,
+                ku.column_name AS column_name,
                 ccu.column_name AS refcolumn_name
             FROM
                 information_schema.key_column_usage ku
@@ -433,7 +433,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
         // The query to find all the columns for a foreign key constraint
         $fkcolsql = '
             SELECT
-                ku.column_name,
+                ku.column_name AS column_name,
                 ku.referenced_column_name AS refcolumn_name
             FROM information_schema.key_column_usage ku
             WHERE
@@ -463,7 +463,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
 
     // Get the main record for the constraint
     $sql = "
-        SELECT tc.constraint_name
+        SELECT tc.constraint_name AS constraint_name
         FROM
             information_schema.table_constraints tc
         WHERE
@@ -489,13 +489,12 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
 
     // Check each constraint to see if it has the right columns
     foreach ($constraintrec as $c) {
-        $constraint_name = property_exists($c, 'CONSTRAINT_NAME') ? $c->CONSTRAINT_NAME : $c->constraint_name;
         if ($isfk) {
             $colsql = $fkcolsql;
-            $colparams = array($dbname, $constraint_name, $tablename, $dbname, $reftable);
+            $colparams = array($dbname, $c->constraint_name, $tablename, $dbname, $reftable);
         }
         else {
-            $colsql = "SELECT ku.column_name
+            $colsql = "SELECT ku.column_name AS column_name
                 FROM information_schema.key_column_usage ku
                 WHERE
                     ku.table_name = ?
@@ -504,7 +503,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
                     AND ku.constraint_name = ?
                 ORDER BY ku.ordinal_position, ku.position_in_unique_constraint
             ";
-            $colparams = array($tablename, $dbname, $dbname, $constraint_name);
+            $colparams = array($tablename, $dbname, $dbname, $c->constraint_name);
         }
         $colrecs = get_records_sql_array($colsql, $colparams);
 
@@ -539,7 +538,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
 
         // If they made it this far, then it's a match!
         $db->debug = $olddbdebug;
-        return $constraint_name;
+        return $c->constraint_name;
     }
 
     // None matched, so return false
@@ -1530,7 +1529,7 @@ function get_foreign_keys($tablename) {
         // The query to find all the columns for a foreign key constraint
         $fkcolsql = "
             SELECT
-                ku.column_name,
+                ku.column_name AS column_name,
                 ccu.table_name AS reftable_name,
                 ccu.column_name AS refcolumn_name
             FROM
@@ -1554,7 +1553,7 @@ function get_foreign_keys($tablename) {
         // The query to find all the columns for a foreign key constraint
         $fkcolsql = '
             SELECT
-                ku.column_name,
+                ku.column_name AS column_name,
                 ku.referenced_table_name AS reftable_name,
                 ku.referenced_column_name AS refcolumn_name
             FROM information_schema.key_column_usage ku
@@ -1567,7 +1566,7 @@ function get_foreign_keys($tablename) {
         ';
     }
     $sql = "
-        SELECT tc.constraint_name
+        SELECT tc.constraint_name AS constraint_name
         FROM information_schema.table_constraints tc
         WHERE
             tc.table_name = ?
