@@ -418,12 +418,10 @@ function get_advanced_elements() {
         'description'  => get_string('coverimagedescription', 'view'),
         'folder'       => $folder,
         'highlight'    => $highlight,
-        'accept'       => 'image/jpg,image/png',
+        'accept'       => 'image/*',
         'institution'  => $institution,
         'group'        => $group,
-//         // 'browse'       => $browse,
         'page'         => $view->get_url() . '&browse=1',
-//         // 'browsehelp'   => 'browsemyfiles',
         'filters'      => array(
              'artefacttype' => array('image'),
         ),
