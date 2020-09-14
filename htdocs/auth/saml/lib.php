@@ -1181,6 +1181,25 @@ class PluginAuthSaml extends PluginAuth {
     }
 
     public static function get_idps($xml) {
+        if (!preg_match('/\<\?xml.*?\?\>/', $xml)) {
+            $xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' . $xml;
+        }
+        // find the namespaces that the xml markup expects
+        $errors = '';
+        if (preg_match_all('/\<\/?(\w+):.*?\>/', $xml, $nsexpected)) {
+            $nsexpected = array_unique($nsexpected[1]);
+            // check that the namespaces are declared
+            if (preg_match_all('/xmlns\:(.*?)=/', $xml, $nsused)) {
+                $nsused = array_unique($nsused[1]);
+                $nsexpected = array_diff($nsexpected, $nsused);
+            }
+            foreach ($nsexpected as $expected) {
+                $errors .= get_string('missingnamespace', 'auth.saml', $expected) . ". ";
+            }
+        }
+        if (!empty($errors)) {
+            return array(null, null, $errors);
+        }
         $xml = new SimpleXMLElement($xml);
         $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
         $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
@@ -1190,7 +1209,7 @@ class PluginAuthSaml extends PluginAuth {
         if ($idps && isset($idps[0])) {
             $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
         }
-        return array($entityid, $idps);
+        return array($entityid, $idps, $errors);
     }
 
     public static function get_raw_disco_list() {
@@ -1267,7 +1286,7 @@ class PluginAuthSaml extends PluginAuth {
                     unlink($idpfile);
                 }
                 else {
-                    list ($entityid, $idps) = self::get_idps($rawxml);
+                    list ($entityid, $idps, $errors) = self::get_idps($rawxml);
                     if ($entityid) {
                         self::$default_config['institutionidp'] = $rawxml;
                     }
@@ -1586,13 +1605,18 @@ EOF;
 
         if (!empty($values['institutionidp'])) {
             try {
-                list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+                list ($entityid, $idps, $errors) = self::get_idps($values['institutionidp']);
                 if (!$entityid) {
-                    throw new Exception("Could not find entityId", 1);
+                    if (!empty($errors)) {
+                        throw new Exception($errors, 1);
+                    }
+                    else {
+                        throw new Exception(get_string('noentityidpfound', 'auth.saml') . '. ' . get_string('noentityidpneednamespace', 'auth.saml'), 1);
+                    }
                 }
             }
             catch (Exception $e) {
-                $form->set_error('institutionidp', get_string('errorbadmetadata', 'auth.saml'));
+                $form->set_error('institutionidp', get_string('errorbadmetadata1', 'auth.saml', $e->getMessage()));
             }
         }
         else if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
@@ -1682,6 +1706,7 @@ EOF;
         if (empty($current)) {
             $current = array();
         }
+
         $entityid = null;
         if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
             if (isset($list[$values['institutionidpentityid']])) {
@@ -1691,7 +1716,7 @@ EOF;
         }
         if (!$entityid) {
             // grab the entityId from the metadata
-            list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+            list ($entityid, $idps, $errors) = self::get_idps($values['institutionidp']);
         }
 
         $changedxml = false;
