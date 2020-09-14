@@ -1933,5 +1933,29 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_notnull($table, $field);
     }
 
+    // Set collation for view table - description field and block_instance table - configdata field for Bug 1895259
+    if ($oldversion < 2020093000) {
+        if (is_mysql()) {
+            $columns = array(0 => array('table' => 'view',
+                                        'value' => 'description'),
+                             1 => array('table' => 'view',
+                                        'value' => 'instructions'),
+                             2 => array('table' => 'block_instance',
+                                        'value' => 'configdata'),
+                             3 => array('table' => 'import_entry_requests',
+                                        'value' => 'entrycontent')
+                            );
+            foreach ($columns as $column) {
+                $charset = get_field_sql("SELECT character_set_name FROM information_schema.columns
+                                          WHERE table_schema = '" . get_config('dbname') . "'
+                                          AND table_name = '" . get_config('dbprefix') . $column['table'] . "'
+                                          AND column_name = ?", array($column['value']));
+                if ($charset && !preg_match('/utf8mb4/', $charset)) {
+                    execute_sql('ALTER TABLE {' . $column['table'] . '} MODIFY ' . $column['value'] . ' text CHARSET utf8mb4');
+                }
+            }
+        }
+    }
+
     return $status;
 }
