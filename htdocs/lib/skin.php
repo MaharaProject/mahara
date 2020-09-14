@@ -231,22 +231,39 @@ class Skin {
         $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             $fordb->{$k} = $v;
-            if ($k == 'viewskin' && !empty($v)) {
-                $fordb->{$k} = serialize($v);
-            }
         }
         $fordb->mtime = db_format_timestamp(time());
-        if (isset($this->viewskin['body_background_image'])) {
-            $fordb->bodybgimg = $this->viewskin['body_background_image'];
+
+        try {
+            if (isset($this->viewskin['body_background_image']) && record_exists('artefact', 'id', $this->viewskin['body_background_image'])
+                && artefact_instance_from_id($this->viewskin['body_background_image'])) {
+                $fordb->bodybgimg = $this->viewskin['body_background_image'];
+            }
+            else {
+                $fordb->bodybgimg = null;
+                unset($fordb->viewskin['body_background_image']);
+            }
         }
-        else {
+        catch (ArtefactNotFoundException $e) {
             $fordb->bodybgimg = null;
+            unset($fordb->viewskin['body_background_image']);
         }
-        if (isset($this->viewskin['header_background_image'])) {
-            $fordb->headingbgimg = $this->viewskin['header_background_image'];
+        try {
+            if (isset($this->viewskin['header_background_image']) && record_exists('artefact', 'id', $this->viewskin['header_background_image'])
+            && artefact_instance_from_id($this->viewskin['header_background_image'])) {
+                $fordb->headingbgimg = $this->viewskin['header_background_image'];
+            }
+            else {
+                $fordb->headingbgimg = null;
+                unset($fordb->viewskin['header_background_image']);
+            }
         }
-        else {
+        catch (ArtefactNotFoundException $e) {
             $fordb->headingbgimg = null;
+            unset($fordb->viewskin['header_background_image']);
+        }
+        if (isset($fordb->viewskin) && !empty($fordb->viewskin )) {
+            $fordb->viewskin = serialize($fordb->viewskin);
         }
 
         db_begin();

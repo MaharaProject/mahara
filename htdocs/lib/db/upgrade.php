@@ -1696,6 +1696,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 }
                 $skinobj->set('viewskin', $viewskin);
                 $skinobj->commit();
+                set_time_limit(30);
             }
         }
     }
