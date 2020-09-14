@@ -10,12 +10,17 @@
  */
 
 define('INTERNAL', 1);
+define('JSON', 1);
+
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 safe_require('artefact', 'file');
-require_once(get_config('docroot') . '/lib/htmloutput.php');
+
+$data['error'] = false;
+$SESSION->set('unzipprogress', false);
 
 if (!$unzip = $SESSION->get('unzip')) {
-    redirect('/artefact/file/index.php');
+    $data['redirect'] = get_config('wwwroot') . 'artefact/file/index.php';
+    json_reply(false, array('data' => $data));
 }
 
 if (function_exists('apache_setenv')) {
@@ -23,9 +28,7 @@ if (function_exists('apache_setenv')) {
     apache_setenv('no-gzip', 1);
 }
 
-$stylesheets = array_reverse($THEME->get_url('style/style.css', true));
-print_extractprogress_head($stylesheets, $unzip['artefacts']);
-flush();
+$data['artefacts'] = $unzip['artefacts'];
 
 /**
  * Progress bar update
@@ -33,13 +36,13 @@ flush();
  * @param int $artefacts   How many artefacts have been created
  */
 function unzip_iframe_progress_handler($artefacts) {
-    global $unzip;
+    global $unzip, $SESSION;
     $percent = $artefacts / $unzip['artefacts'] * 100;
     $status = get_string('unzipprogress', 'artefact.file', $artefacts . '/' . $unzip['artefacts']);
+    $status = hsc($status);
+    $percent = intval($percent);
+    $SESSION->set('unzipprogress', array('percent' => $percent, 'status' => $status));
     set_time_limit(10);
-
-    print_iframe_progress_handler($percent, $status);
-    flush();
 }
 
 $file = artefact_instance_from_id($unzip['file']);
@@ -58,5 +61,9 @@ $message = get_string('createdtwothings', 'artefact.file',
     get_string('nfolders', 'artefact.file', $status['folderscreated']),
     get_string('nfiles', 'artefact.file', $status['filescreated'])
 );
+$data['finished'] = true;
+$data['progress'] = array('percent' => 100, 'status' => $message);
+$data['next'] = $next;
 
-print_extractprogress_footer($message, $next);
+$SESSION->set('unzipprogress', 'done');
+json_reply(false, array('data' => $data));

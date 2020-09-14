@@ -185,7 +185,7 @@ function export_submit(Pieform $form, $values) {
         }
         export_add_to_queue($objectarray, null, $USER, $values['what']);
         $SESSION->add_ok_msg(get_string('addedleap2atoexportqueue' . $values['what'], 'export'));
-        redirect('/export/index.php');
+        redirect(get_config('wwwroot') . 'export/index.php');
     }
     else {
         $exportdata = array(
@@ -194,6 +194,7 @@ function export_submit(Pieform $form, $values) {
             'includefeedback' => $values['includefeedback'],
         );
         $SESSION->set('exportdata', $exportdata);
+        $SESSION->set('exportprogress', false);
 
         $smarty = smarty();
         $smarty->assign('heading', '');

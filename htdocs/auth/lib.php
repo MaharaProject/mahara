@@ -12,7 +12,6 @@
 defined('INTERNAL') || die();
 
 require(get_config('docroot') . 'auth/user.php');
-require_once(get_config('docroot') . '/lib/htmloutput.php');
 
 /**
  * Unknown user exception

@@ -11,9 +11,9 @@
 
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
-require_once(get_config('docroot') . '/lib/htmloutput.php');
 require_once(get_config('docroot') . 'export/lib.php');
 
+$SESSION->set('exportprogress', false);
 // Download the export file if it's been generated
 $downloadfile = param_variable('file', null);
 if ($downloadfile) {
@@ -31,22 +31,21 @@ if (function_exists('apache_setenv')) {
 }
 
 if (!$exportdata = $SESSION->get('exportdata')) {
-    redirect('/export/index.php');
+    $data['redirect'] = get_config('wwwroot') . 'export/index.php';
+    json_reply(false, array('data' => $data));
 }
+
 $SESSION->set('exportdata', '');
 
-$stylesheets = array_reverse($THEME->get_url('style/style.css', true));
-print_export_head($stylesheets);
-flush();
-
 /**
- * Outputs enough HTML to make a pretty error message in the iframe
+ * Returns error message to the page via ajax
  *
  * @param string $message The message to display to the user
  */
 function export_iframe_die($message, $link=null) {
-    print_export_iframe_die($message, $link);
-    exit;
+    $data['message'] = $message;
+    $data['redirect'] = $link;
+    json_reply(false, array('data' => $data));
 }
 
 /**
@@ -57,16 +56,17 @@ function export_iframe_die($message, $link=null) {
  * @param string $status A human-readable string describing the current step
  */
 function export_iframe_progress_handler($percent, $status) {
-    print_iframe_progress_handler($percent, $status);
-    flush();
+    global $SESSION;
+    $status = hsc($status);
+    $percent = intval($percent);
+    $SESSION->set('exportprogress', array('percent' => $percent, 'status' => $status));
+    set_time_limit(10);
 }
-
 
 // Bail if we don't have enough data to do an export
 if (!isset($exportdata['what'])
     || !isset($exportdata['views'])) {
     export_iframe_die(get_string('unabletogenerateexport', 'export'));
-    exit;
 }
 
 $exportplugins = plugins_installed('export');
@@ -97,14 +97,14 @@ $exporter->includefeedback = $exportdata['includefeedback'];
 // so we can check that we have enough disk space for it
 $space = ($exporter->is_diskspace_available());
 if (!$space) {
-    export_iframe_die(get_string('exportfiletoobig', 'mahara'), get_config('wwwroot') . 'view/index.php');
+    export_iframe_die(get_string('exportfiletoobig', 'mahara'), get_config('wwwroot') . 'export/index.php');
 }
 
 try {
     $zipfile = $exporter->export();
 }
 catch (SystemException $e) {
-    throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
+    export_iframe_die('Failed to zip the export file: ' . $e->getMessage(), get_config('wwwroot') . 'export/index.php');
 }
 
 // Store the filename in the session, and redirect the iframe to it to trigger
@@ -122,4 +122,10 @@ else {
     $SESSION->clear('messages');
     $strexport   = get_string('exportgeneratedwitherrors', 'export');
 }
-print_export_footer($strexport, $continueurl, $continueurljs, $result, get_config('wwwroot') . 'export/download.php?file=' . $filepath);
+
+$data['finished'] = true;
+$data['progress'] = array('percent' => 100, 'status' => $strexport);
+$data['serve_file'] = get_config('wwwroot') . 'export/download.php?file=' . $filepath;
+
+$SESSION->set('exportprogress', 'done');
+json_reply(false, array('data' => $data));
