@@ -302,6 +302,23 @@ class Institution {
             $user = get_record('usr', 'id', $user);
         }
 
+        // comes from 'No institution', we need to set the auth instance in usr table
+        $userobj = new User();
+        $userobj->find_by_id($user->id);
+        $institutions = $userobj->get('institutions');
+        if (empty($institutions)) {
+            $oldauthmethod = get_field('auth_instance', 'authname', 'id', $userobj->get('authinstance'));
+            // Return auth methods with the most relevant one first
+            if ($authinstances = get_records_sql_array(
+                "SELECT * FROM {auth_instance}
+                 WHERE institution = ? AND active = 1
+                 ORDER BY CASE WHEN authname = ? THEN 0 ELSE 1 END, priority",
+                array($this->name, $oldauthmethod))) {
+                $user->authinstance = $authinstances[0]->id;
+                update_record('usr', array('id' => $user->id, 'authinstance' => $user->authinstance));
+            }
+        }
+
         $lang = get_account_preference($user->id, 'lang');
         if ($lang == 'default') {
             // The user does not have a preset lang preference so we will use the institution if it has one.

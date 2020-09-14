@@ -189,24 +189,33 @@ $externalauthjs = array();
 
 // Get a list of the user's institutions
 $user_insts = $user->institutions;
-
 // Confirm that the auth method is valid.
-$valid_auth = false;
-foreach ($user_insts as $inst) {
-    if (record_exists('auth_instance', 'id', $user->authinstance , 'institution', $inst->institution)) {
-        $valid_auth = true;
+if ($user_insts) {
+    $valid_auth = false;
+    $institutionnames = array();
+    foreach ($user_insts as $inst) {
+        if (record_exists('auth_instance', 'id', $user->authinstance , 'institution', $inst->institution)) {
+            $valid_auth = true;
+        }
+        $institutionnames[] = $inst->institution;
     }
+
+    // If their auth method doesn't work for any of their insts, change it to internal.
     if (!$valid_auth) {
-        // If their auth method doesn't work for any of their insts, change it to internal.
-        $internal = get_field('auth_instance', 'id', 'authname', 'internal', 'institution', $inst->institution);
-        if (!$internal) {
-            // Institution has no internal auth instance. Create one.
+        // get all internal auth instances from institution the user belongs to
+        $select = 'authname = \'internal\' AND institution IN (' . join(',', array_fill(0, count($institutionnames), '?')) . ')';
+        if ($authinternal = get_records_select_array('auth_instance', $select, $institutionnames, '', 'id', '', '1')) {
+            $internal = $authinternal[0]->id;
+        }
+        else {
+            // There is no institution that has an internal auth instance. Create one.
+            $institution = array_keys($user_insts)[0];
             $todb = new stdClass();
             $todb->instancename = 'internal';
             $todb->authname = 'internal';
             $todb->active = 1;
-            $todb->institution = $inst->institution;
-            $max = get_field('auth_instance', 'MAX(priority)', 'institution', $inst->institution);
+            $todb->institution = $institution;
+            $max = get_field('auth_instance', 'MAX(priority)', 'institution', $institution);
             $todb->priority = $max ? $max + 1 : 0;
             $internal = insert_record('auth_instance', $todb, 'id', true);
         }
@@ -215,15 +224,14 @@ foreach ($user_insts as $inst) {
         $user->commit();
     }
 }
-
-$authinstances = auth_get_auth_instances();
-// If the user has no institution, their inst is mahara
-if (!$user_insts) {
+else {
+    // If the user has no institution, their inst is mahara
     $mahara = new stdClass();
     $mahara->institution = "mahara";
     $user_insts[] = $mahara;
 }
 
+$authinstances = auth_get_auth_instances();
 // Now add the valid auth methods for institutions the user is in to the page.
 foreach ($authinstances as $authinstance) {
     foreach ($user_insts as $inst) {
