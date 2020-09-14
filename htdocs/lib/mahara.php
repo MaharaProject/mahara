@@ -174,7 +174,8 @@ function get_dwoo_dir() {
 function ensure_install_sanity() {
     // Must must must be a UTF8 database!
     if (!db_is_utf8()) {
-        throw new ConfigSanityException(get_string('dbnotutf8', 'error'));
+        $dbnotutf = (is_mysql() ? 'dbnotutf8mb4' : 'dbnotutf8');
+        throw new ConfigSanityException(get_string($dbnotutf, 'error'));
     }
     if (is_postgres() && !postgres_create_language('plpgsql')) {
         throw new ConfigSanityException(get_string('plpgsqlnotavailable', 'error'));

@@ -76,8 +76,9 @@ function db_is_utf8() {
         throw new SQLException('Database connection is not available ');
     }
     if (is_mysql()) {
+        // For mysql check for utf8mb4, Bug: #1895259
         $result = $db->_Execute("SHOW VARIABLES LIKE 'character_set_database'");
-        return preg_match('/^utf8/', $result->fields['Value']);
+        return preg_match('/^utf8mb4/', $result->fields['Value']);
     }
     if (is_postgres()) {
         $result = $db->_Execute("SHOW SERVER_ENCODING");
@@ -1748,7 +1749,7 @@ function configure_dbconnection() {
 
     if (is_mysql()) {
         $db->_Execute("SET SQL_MODE='PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE'");
-        $db->_Execute("SET CHARACTER SET utf8mb4");
+        $db->_Execute("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
         $db->_Execute("SET SQL_BIG_SELECTS=1");
     }
 

@@ -53,6 +53,7 @@ $string['upgradeinprogress'] = 'An upgrade began at %s and did not complete. <a 
 $string['Plugin'] = 'Plugin';
 $string['jsrequiredforupgrade'] = 'You must enable JavaScript to perform an install or upgrade.';
 $string['dbnotutf8warning'] = 'You are not using a UTF-8 database. Mahara stores all data as UTF-8 internally. You may still attempt this upgrade, but it is recommended that you convert your database to UTF-8.';
+$string['dbnotutf8mb4warning'] = 'You are not using a utf8mb4 Character Set (4-Byte UTF-8 Unicode Encoding) database. Mahara stores all data as utf8mb4 internally. You may still attempt this upgrade, but it is recommended that you convert your database to utf8mb4.';
 $string['dbcollationmismatch'] = 'A column of your database is using a collation that is not the same as the database default. Please ensure all columns use the same collation as the database.';
 $string['maharainstalled'] = 'Mahara is already installed.';
 $string['cliadminpassword1'] = 'The password for the administration account';
