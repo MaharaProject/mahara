@@ -241,12 +241,18 @@ class PluginModuleLti extends PluginModule {
     // @return array of fields not needed with key the field name
     public static function disable_webservice_fields() {
         $fields = array (
-            'application_uri' => 1,
             'callback_uri' => 1
         );
         return $fields;
     }
 
+    // Update $new_app array to set / unset things not needed by this plugin
+    // @return Updated $new_app array
+    public static function add_application($new_app) {
+        $new_app['application_uri'] = '';
+        $new_app['callback_uri'] = null;
+        return $new_app;
+    }
 
     /**
      * Form for submitting collections/pages for lti assessessment

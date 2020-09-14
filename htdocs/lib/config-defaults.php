@@ -861,3 +861,9 @@ $cfg->saml_log_attributes = false;
  * This is useful if the server or a downstream program sets this header already
  */
 //$cfg->hstsoverride = true;
+
+/**
+ * Allow emails sent to people that are using external authentication to contain authid parameter
+ * so that on following the link the person gets redirected to login at their external site first if needed
+ */
+//$cfg->emailexternalredirect = true;

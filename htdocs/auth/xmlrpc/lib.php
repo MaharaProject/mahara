@@ -1044,6 +1044,8 @@ function localurl_to_jumpurl($url) {
             $localpart .= $urlparts['path'];
         }
         if (isset($urlparts['query'])) {
+            // We don't need the authid redirect as we are already making the mnet redirect
+            $urlparts['query'] = preg_replace('/(\?|\&)authid=\d+/', '', $urlparts['query']);
             $localpart .= '?'.$urlparts['query'];
         }
         if (isset($urlparts['fragment'])) {

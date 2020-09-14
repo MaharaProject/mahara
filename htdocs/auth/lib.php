@@ -536,6 +536,51 @@ function auth_setup () {
             return;
         }
 
+        // If the user needs to login via an institution specific external login
+        if (get_config('emailexternalredirect') && $authid = param_integer('authid', null)) {
+            if ($authid && $authid > 0 && $authinstance = get_record('auth_instance', 'id', $authid)) {
+                $query = $_SERVER['QUERY_STRING'];
+                $authinstanceconfig = get_records_array('auth_instance_config', 'instance', $authid);
+                if (is_array($authinstanceconfig)) {
+                    foreach ($authinstanceconfig as $record) {
+                        $authinstance->config[$record->field] = $record->value;
+                    }
+                }
+                parse_str($query, $out);
+                unset($out['authid']);
+                $wantsurl = $_SERVER['PHP_SELF'] . '?' . http_build_query($out);
+                if ($authinstance->authname == 'saml' && !empty($authinstance->config['institutionidpentityid'])) {
+                    // Have a SAML login
+                    $url = get_config('wwwroot') . 'auth/saml/index.php?idpentityid=' . $authinstance->config['institutionidpentityid'] . '&wantsurl=' . $wantsurl;
+                    redirect($url);
+                }
+                else if ($authinstance->authname == 'xmlrpc' && !empty($authinstance->config['wwwroot']) && !empty($authinstance->config['theyssoin'])) {
+                    // Have an XMLRPC login
+                    // this should be handled via htdocs/lib/user.php email_user() already with the email link been changed to a jump link
+                    // but in case it wasn't we handle it here
+                    $host = $authinstance->config['wwwroot'];
+                    if (!preg_match('/\/$/', $host)) {
+                        $host = $host . '/';
+                    }
+                    $url = $host . 'auth/mnet/jump.php?hostwwwroot=' . get_config('wwwroot') . '&wantsurl=' . $wantsurl;
+                    redirect($url);
+                }
+                else if ($authinstance->authname == 'webservice') {
+                    // Check if there is an LTI instance to use
+                    if ($host = get_field_sql("SELECT application_uri FROM {oauth_server_registry} osr
+                                               JOIN {external_services} es ON es.id = osr.externalserviceid
+                                               WHERE es.shortname = 'maharalti'
+                                               AND osr.institution = ?
+                                               AND (osr.application_uri != 'http://example.com' and osr.application_uri != '') LIMIT 1", array($authinstance->institution))) {
+
+                        if (!empty($host)) {
+                            redirect($host);
+                        }
+                    }
+                }
+            }
+        }
+
         // No session and a json request
         if (defined('JSON')) {
             json_reply('global', get_string('nosessionreload'), 1);
