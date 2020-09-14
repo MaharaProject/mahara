@@ -10,11 +10,14 @@
     }
 
     function removeConnection(id) {
-        sendjsonrequest('{{$WWWROOT}}webservice/admin/addconnection.php', {'i': '{{$institution}}', 'id': id, 'delete': 1}, 'GET', function (data) {
-            if (data.rc == 'succeeded') {
-                location.reload();
-            }
-        });
+        var r = confirm(get_string('deleteconnection', 'auth.webservice'));
+        if (r == true) {
+            sendjsonrequest('{{$WWWROOT}}webservice/admin/addconnection.php', {'i': '{{$institution}}', 'id': id, 'delete': 1}, 'GET', function (data) {
+                if (data.rc == 'succeeded') {
+                    location.reload();
+                }
+            });
+        }
         return false;
     }
 
