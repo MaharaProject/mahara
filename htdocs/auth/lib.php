@@ -547,6 +547,7 @@ function auth_setup () {
                 }
                 parse_str($query, $out);
                 unset($out['authid']);
+                unset($out['login']);
                 $wantsurl = $_SERVER['PHP_SELF'] . '?' . http_build_query($out);
                 if ($authinstance->authname == 'saml' && !empty($authinstance->config['institutionidpentityid'])) {
                     // Have a SAML login
