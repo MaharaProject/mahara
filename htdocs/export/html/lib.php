@@ -927,7 +927,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
     protected function copy_static_files() {
         global $THEME, $SESSION;
         require_once('file.php');
-        $staticdir = $this->get('exportdir') . '/' . $this->get('rootdir') . '/static/';
+        $staticdir = $this->get('exportdir') . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
         $themestaticdirs = $THEME->get_path('', true);
 
@@ -937,7 +937,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
             foreach ($statics as $static) {
                 $themedir = $staticdir . 'theme/' . $theme . '/static/' . $static;
                 if (is_readable($dir . $static)) {
-                    $directoriestocopy[$dir . '/' . $static] = $themedir;
+                    $directoriestocopy[$dir . $static] = $themedir;
                     if (!check_dir_exists($themedir)) {
                         throw new SystemException("Could not create theme directory for theme $theme");
                     }
@@ -949,7 +949,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
             foreach ($statics as $static) {
                 $themedir = $staticdir . 'theme/' . $theme . '/static/export/' . $static;
                 if (is_readable($dir . $static)) {
-                    $directoriestocopy[$dir . '/' . $static] = $themedir;
+                    $directoriestocopy[$dir . $static] = $themedir;
                     if (!check_dir_exists($themedir)) {
                         throw new SystemException("Could not create theme directory for theme $theme");
                     }
