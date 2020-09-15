@@ -644,12 +644,10 @@ class Collection {
                 'description'  => get_string('coverimagedescription', 'view'),
                 'folder'       => $folder,
                 'highlight'    => $highlight,
-                'accept'       => 'image/jpg,image/png',
+                'accept'       => 'image/*',
                 'institution'  => $this->institution,
                 'group'        => $this->group,
-        //         // 'browse'       => $browse,
                 'page'         => '',
-        //         // 'browsehelp'   => 'browsemyfiles',
                 'filters'      => array(
                      'artefacttype' => array('image'),
                 ),
