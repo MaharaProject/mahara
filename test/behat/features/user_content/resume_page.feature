@@ -20,8 +20,8 @@ Background:
 
     And the following "educationhistory" exist:
     | user  | startdate  | enddate    | institution        | institutionaddress    | qualtype              | qualname                        | qualdescription                                                                                 | attachment |
-    | UserA | 1 Jan 2009 | 2 Dec 2010 | University of Life | 2/103 Industrial Lane | Masters of Arts       | North American Cultural Studies | This qualification is a 4.5-year degree that ends in writing a Master's thesis.                 | Image2.png |
     | UserA | 1 Jan 2009 | 2 Dec 2010 | University College | 23a O'Dell Boulevard  | Masters of Philosophy | Machine Learning - Creation 2.1 | This qualification is a 4 to 6 year degree that ends in an alternate (self-contained) universe. | Image2.png |
+    | UserA | 1 Jan 2009 | 2 Dec 2010 | University of Life | 2/103 Industrial Lane | Masters of Arts       | North American Cultural Studies | This qualification is a 4.5-year degree that ends in writing a Master's thesis.                 | Image2.png |
 
     And the following "employmenthistory" exist:
     | user  | startdate  | enddate     | employer    | employeraddress | jobtitle     | attachment | positiondescription |
