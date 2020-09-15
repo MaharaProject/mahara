@@ -34,7 +34,7 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
     }
 
     public static function get_categories() {
-        return array('general' => 16500);
+        return array('general');
     }
 
     public static function get_viewtypes() {
@@ -141,9 +141,10 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
         return true;
     }
 
-    public static function postinst($prevversion) {
-        if ($prevversion == 0) {
-            // do we need any post install stuff?
+    public static function postinst($fromversion) {
+        if ($fromversion == 0) {
+            // Have install disabled by default
+            set_field('blocktype_installed', 'active', 0, 'name', 'courseinfo');
         }
     }
 
