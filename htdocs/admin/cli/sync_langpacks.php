@@ -13,8 +13,8 @@ define('INTERNAL', 1);
 define('CLI', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . 'auth/lib.php');
-require(get_config('libroot') . 'cli.php');
-require(get_config('libroot') . 'file.php');
+require_once(get_config('libroot') . 'cli.php');
+require_once(get_config('libroot') . 'file.php');
 
 $cli = get_cli();
 
