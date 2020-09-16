@@ -318,7 +318,7 @@ $elements['viewcontent'] = array(
                 'title' => get_string('blockheaderfontfamily', 'skin'),
                 'defaultvalue' => (!empty($viewskin['view_block_header_font']) ? $viewskin['view_block_header_font'] : ''),
                 'width' => 144,
-                'options' => $fontoptions
+                'options' => $headerfontoptions
             ),
             'view_block_header_font_color' => array(
                 'type' => 'color',

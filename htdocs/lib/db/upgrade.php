@@ -1907,5 +1907,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020091600) {
+        log_debug('Install new Maroon theme fonts');
+        require_once(get_config('libroot') . 'skin.php');
+        install_skins_default();
+    }
+
     return $status;
 }
