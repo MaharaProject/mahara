@@ -2436,16 +2436,14 @@ abstract class Plugin implements IPlugin {
             if (!empty($c->token)) {
                 $authtype = 'token';
                 if ($c->useheader) {
-                    $auth['header'] = (empty($c->header) ? 'Authorization' : $c->header . ": " . $c->token);
+                    $auth['header'] = (!empty($c->header) ? $c->header : '');
+                }
+                if (strpos($c->token, '=')) {
+                    list($k, $v) = explode('=', $c->token);
+                    $auth[$k] = $v;
                 }
                 else {
-                    if (strpos($c->token, '=')) {
-                        list($k, $v) = explode('=', $c->token);
-                        $auth[$k] = $v;
-                    }
-                    else {
-                        $auth['wstoken'] = $c->token;
-                    }
+                    $auth['wstoken'] = $c->token;
                 }
             }
             else if (!empty($c->username) && !empty($c->password) ) {
