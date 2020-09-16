@@ -45,7 +45,7 @@ $sp = 'default-sp';
 PluginAuthSaml::init_simplesamlphp();
 
 // Check the SimpleSAMLphp config is compatible
-$saml_config = SimpleSAML_Configuration::getInstance();
+$saml_config = SimpleSAML\Configuration::getInstance();
 $session_handler = $saml_config->getString('session.handler', false);
 $store_type = $saml_config->getString('store.type', false);
 if ($store_type == 'phpsession' || $session_handler == 'phpsession' || (empty($store_type) && empty($session_handler))) {
@@ -60,7 +60,7 @@ if (param_variable("logout", false)) {
 }
 
 // what is the session like?
-$saml_session = SimpleSAML_Session::getSession();
+$saml_session = SimpleSAML\Session::getSession();
 $valid_saml_session = $saml_session ? $saml_session->isValid($sp) : false;
 
 // figure out what the returnto URL should be
@@ -118,7 +118,7 @@ if (($USER->is_logged_in() && $migratecheck) || !$as->isAuthenticated()) {
 }
 
 // reinitialise config to pickup idp entityID
-SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+SimpleSAML\Configuration::init(get_config('docroot') . 'auth/saml/config');
 $as = new SimpleSAML\Auth\Simple('default-sp');
 if ($migratecheck) {
     $as->login(array('ReturnTo' => get_config('wwwroot') . "auth/saml/index.php", 'KeepPost' => FALSE));

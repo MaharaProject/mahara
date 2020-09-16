@@ -43,7 +43,7 @@ $string['errornovalidsessionhandler'] = 'The SimpleSAMLphp session handler is mi
 $string['errornomemcache'] = 'Memcache is misconfigured for auth/saml or a Memcache server is currently unavailable.';
 $string['errornomemcache7php'] = 'Memcache is misconfigured for auth/saml or a Memcache server is currently unavailable.';
 $string['errorbadconfig'] = 'The SimpleSAMLPHP config directory %s is incorrect.';
-$string['errorbadmetadata'] = 'Badly formed SAML metadata. Ensure XML contains one valid Identity Provider.';
+$string['errorbadmetadata1'] = 'Badly formed SAML metadata. The following problems detected: %s';
 $string['errorbadinstitutioncombo'] = 'There is already an existing authentication instance with this institution attribute and institution value combination.';
 $string['errormissingmetadata'] = 'You have chosen to add new Identity Provider metadata but none is supplied.';
 $string['errormissinguserattributes1'] = 'You seem to be authenticated, but we did not receive the required user attributes. Please check that your Identity Provider releases the first name, surname, and email fields for SSO to %s or inform the administrator.';
@@ -125,6 +125,7 @@ $string['newkeycreated'] = 'New key / certificate created';
 $string['deleteoldkeytext'] = 'Delete old certificate';
 $string['oldkeydeleted'] = 'Old key / certificate deleted';
 $string['keyrollfailed'] = 'Failed to remove old key / certificate';
+$string['missingnamespace'] = 'The XML expects the namespace "%s" to be defined in EntityDescriptor tag';
 
 // SSO labels
 // The SSO buttons will be labelled with the display name of your institution
@@ -135,6 +136,7 @@ $string['ssolabelfor'] = '%s login';
 // For 'testinstitution' it would be: $string['logintestinstitution'] = 'Special label';
 
 $string['noentityidpfound'] = 'No Identity Provider ID found';
+$string['noentityidpneednamespace'] = 'Does your XML EntityDescriptor tag require "xmlns=" to be defined?';
 $string['novalidauthinstanceprovided'] = 'Your selection is not possible. Please select a different institution.';
 $string['identityprovider'] = 'Identity Provider';
 $string['selectmigrateto'] = 'Select institution to move to...';

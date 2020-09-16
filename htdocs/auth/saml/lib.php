@@ -908,7 +908,7 @@ class PluginAuthSaml extends PluginAuth {
         }
         else {
             require(get_config('docroot') .'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
-            $config = SimpleSAML_Configuration::getInstance();
+            $config = SimpleSAML\Configuration::getInstance();
 
             //simplesaml version we install with 'make ssphp'
             $libversion = get_config_plugin('auth', 'saml', 'version');
@@ -1177,10 +1177,29 @@ class PluginAuthSaml extends PluginAuth {
         require_once(get_config('docroot') . 'auth/saml/extlib/simplesamlphp/vendor/autoload.php');
         require_once(get_config('docroot') . 'auth/saml/extlib/_autoload.php');
 
-        SimpleSAML_Configuration::init(get_config('docroot') . 'auth/saml/config');
+        SimpleSAML\Configuration::init(get_config('docroot') . 'auth/saml/config');
     }
 
     public static function get_idps($xml) {
+        if (!preg_match('/\<\?xml.*?\?\>/', $xml)) {
+            $xml = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' . $xml;
+        }
+        // find the namespaces that the xml markup expects
+        $errors = '';
+        if (preg_match_all('/\<\/?(\w+):.*?\>/', $xml, $nsexpected)) {
+            $nsexpected = array_unique($nsexpected[1]);
+            // check that the namespaces are declared
+            if (preg_match_all('/xmlns\:(.*?)=/', $xml, $nsused)) {
+                $nsused = array_unique($nsused[1]);
+                $nsexpected = array_diff($nsexpected, $nsused);
+            }
+            foreach ($nsexpected as $expected) {
+                $errors .= get_string('missingnamespace', 'auth.saml', $expected) . ". ";
+            }
+        }
+        if (!empty($errors)) {
+            return array(null, null, $errors);
+        }
         $xml = new SimpleXMLElement($xml);
         $xml->registerXPathNamespace('md',   'urn:oasis:names:tc:SAML:2.0:metadata');
         $xml->registerXPathNamespace('mdui', 'urn:oasis:names:tc:SAML:metadata:ui');
@@ -1190,7 +1209,7 @@ class PluginAuthSaml extends PluginAuth {
         if ($idps && isset($idps[0])) {
             $entityid = (string)$idps[0]->attributes('', true)->entityID[0];
         }
-        return array($entityid, $idps);
+        return array($entityid, $idps, $errors);
     }
 
     public static function get_raw_disco_list() {
@@ -1267,7 +1286,7 @@ class PluginAuthSaml extends PluginAuth {
                     unlink($idpfile);
                 }
                 else {
-                    list ($entityid, $idps) = self::get_idps($rawxml);
+                    list ($entityid, $idps, $errors) = self::get_idps($rawxml);
                     if ($entityid) {
                         self::$default_config['institutionidp'] = $rawxml;
                     }
@@ -1275,6 +1294,11 @@ class PluginAuthSaml extends PluginAuth {
                         // bad metadata - get rid of it
                         unlink($idpfile);
                     }
+                }
+            }
+            else if ($list = PluginAuthSaml::get_disco_list()) {
+                if (isset($list[self::$default_config['institutionidpentityid']])) {
+                    $entityid = self::$default_config['institutionidpentityid'];
                 }
             }
         }
@@ -1581,13 +1605,23 @@ EOF;
 
         if (!empty($values['institutionidp'])) {
             try {
-                list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+                list ($entityid, $idps, $errors) = self::get_idps($values['institutionidp']);
                 if (!$entityid) {
-                    throw new Exception("Could not find entityId", 1);
+                    if (!empty($errors)) {
+                        throw new Exception($errors, 1);
+                    }
+                    else {
+                        throw new Exception(get_string('noentityidpfound', 'auth.saml') . '. ' . get_string('noentityidpneednamespace', 'auth.saml'), 1);
+                    }
                 }
             }
             catch (Exception $e) {
-                $form->set_error('institutionidp', get_string('errorbadmetadata', 'auth.saml'));
+                $form->set_error('institutionidp', get_string('errorbadmetadata1', 'auth.saml', $e->getMessage()));
+            }
+        }
+        else if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
+            if (!isset($list[$values['institutionidpentityid']])) {
+                $form->set_error('institutionidpentityid', get_string('errormissingmetadata', 'auth.saml'));
             }
         }
         else {
@@ -1673,8 +1707,17 @@ EOF;
             $current = array();
         }
 
-        // grab the entityId from the metadata
-        list ($entityid, $idps) = self::get_idps($values['institutionidp']);
+        $entityid = null;
+        if (!empty($values['institutionidpentityid']) && $list = PluginAuthSaml::get_disco_list()) {
+            if (isset($list[$values['institutionidpentityid']])) {
+                // we have xml/php info for this IdP
+                $entityid = $values['institutionidpentityid'];
+            }
+        }
+        if (!$entityid) {
+            // grab the entityId from the metadata
+            list ($entityid, $idps, $errors) = self::get_idps($values['institutionidp']);
+        }
 
         $changedxml = false;
         if ($values['institutionidpentityid'] != 'new') {
@@ -1778,7 +1821,7 @@ EOF;
         }
 
         // save the institution config
-        if ($changedxml) {
+        if ($changedxml && !empty($values['institutionidp'])) {
             $idpfile = AuthSaml::prepare_metadata_path($values['institutionidpentityid']);
             file_put_contents($idpfile, $values['institutionidp']);
         }
@@ -1879,8 +1922,8 @@ if ($discofileexists && class_exists('SimpleSAML\XHTML\IdPDisco')) {
             assert('is_string($instance)');
 
             // initialize standard classes
-            $this->config = SimpleSAML_Configuration::getInstance();
-            $this->metadata = SimpleSAML_Metadata_MetaDataStorageHandler::getMetadataHandler();
+            $this->config = SimpleSAML\Configuration::getInstance();
+            $this->metadata = SimpleSAML\Metadata\MetaDataStorageHandler::getMetadataHandler();
             $this->instance = $instance;
             $this->metadataSets = $metadataSets;
             $this->isPassive = false;
@@ -1964,8 +2007,8 @@ class Metarefresh {
             //Include autoloader and setup config dir correctly
             PluginAuthSaml::init_simplesamlphp();
 
-            $config = SimpleSAML_Configuration::getInstance();
-            $mconfig = SimpleSAML_Configuration::getOptionalConfig('config-metarefresh.php');
+            $config = SimpleSAML\Configuration::getInstance();
+            $mconfig = SimpleSAML\Configuration::getOptionalConfig('config-metarefresh.php');
 
             $sets = $mconfig->getConfigList('sets', array());
 
@@ -1988,7 +2031,7 @@ class Metarefresh {
                 $outputDir = $config->resolvePath($outputDir);
                 $outputFormat = $set->getValueValidate('outputFormat', array('flatfile', 'serialize'), 'flatfile');
 
-                $oldMetadataSrc = SimpleSAML_Metadata_MetaDataStorageSource::getSource(array(
+                $oldMetadataSrc = SimpleSAML\Metadata\MetaDataStorageSource::getSource(array(
                     'type' => $outputFormat,
                     'directory' => $outputDir,
                 ));
@@ -2058,7 +2101,7 @@ class Metarefresh {
                 }
 
                 if ($set->hasValue('arp')) {
-                    $arpconfig = SimpleSAML_Configuration::loadFromArray($set->getValue('arp'));
+                    $arpconfig = SimpleSAML\Configuration::loadFromArray($set->getValue('arp'));
                     $metaloader->writeARPfile($arpconfig);
                 }
             }
