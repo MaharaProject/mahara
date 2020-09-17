@@ -659,7 +659,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
                 </h4>
                 <span class="text-small text-midtone"></span>
                 <div class="groupuserdate text-small">
-                    <a href="" class="text-link">Admin User (admin)</a>
+                    <a href="" class="text-link">Admin Account (admin)</a>
                     <span class="postedon text-midtone"> -
                         {str tag=Created} 31 March 2016 </span>
                 </div>
@@ -670,7 +670,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
                 </h4>
                 <span class="text-small text-midtone"></span>
                 <div class="groupuserdate text-small">
-                    <a href="" class="text-link">Admin User (admin)</a>
+                    <a href="" class="text-link">Admin Account (admin)</a>
                     <span class="postedon text-midtone"> -
                         {str tag=Updated} 31 March 2016 </span>
                 </div>

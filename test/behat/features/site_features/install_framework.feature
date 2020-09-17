@@ -65,7 +65,7 @@ Scenario: Installing framework module and activating for an institution
  And I choose "Pages and collections" in "Create" from main menu
  And I click the card "Collection admin_01"
  And I should see "You are on page 1/9"
- And I should see "by Admin User (admin)"
+ And I should see "by Admin Account (admin)"
  And I press "Next" in the "matrix table" property
  Then I should see "Page admin_06"
  And I press "Prev" in the "matrix table" property

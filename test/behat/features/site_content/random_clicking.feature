@@ -8,7 +8,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Log in as an Admin user
     Given I log in as "admin" with password "Kupuh1pa!"
     # Verifying log in was successful
-    And I should see "Admin User"
+    And I should see "Admin Account"
     # Checking Content Menu
     And I click on "Show main menu"
     And I choose "Profile" from account menu
@@ -33,4 +33,4 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     # Checking Homepage
     And I click on "Show main menu"
     And I follow "Dashboard"
-    And I should see "Admin User"
+    And I should see "Admin Account"

@@ -48,7 +48,7 @@ Scenario: Create accounts and search for them (Bug 897586)
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_03" for "editaccess_views"
     And I select "Person" from "accesslist[0][searchtype]"
-    And I select "Admin User" from select2 nested search box in row number "1"
+    And I select "Admin Account" from select2 nested search box in row number "1"
     And I press "Save"
     # Verifying that the page has been shared
     And I should see "Access rules were updated for 1 page."

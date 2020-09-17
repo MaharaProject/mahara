@@ -45,7 +45,7 @@ Scenario: Set the custom landing page
     And I expand the section "Site settings"
     # Check if we can use a page as landing page
     And I clear value "General discussion (GroupX)" from select2 field "siteoptions_homepageredirecturl"
-    When I fill in select2 input "siteoptions_homepageredirecturl" with "Page admin_01" and select "Page admin_01 (Admin User)"
+    When I fill in select2 input "siteoptions_homepageredirecturl" with "Page admin_01" and select "Page admin_01 (Admin Account)"
     And I press "Update site options"
     And I log out
 

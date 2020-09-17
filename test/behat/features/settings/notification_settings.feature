@@ -39,7 +39,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I select "Inbox" from "Objectionable content in forum"
     And I select "None" from "Objectionable content in forum"
     And I press "Update site options"
-    # Log out as "Admin User"
+    # Log out as "Admin Account"
     And I log out
     # Logging in as user1
     Then I log in as "UserA" with password "Kupuh1pa!"

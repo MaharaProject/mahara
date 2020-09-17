@@ -837,7 +837,7 @@ function core_install_lastcoredata_defaults() {
     $user->passwordchange = 1;
     $user->admin = 1;
     $user->firstname = 'Admin';
-    $user->lastname = 'User';
+    $user->lastname = 'Account';
     $user->email = 'admin@example.org';
     $user->quota = get_config_plugin('artefact', 'file', 'defaultquota');
     $user->ctime = db_format_timestamp(time());
