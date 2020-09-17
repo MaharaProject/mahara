@@ -1,171 +1,88 @@
-$logged-in-height: 200px;
-$logged-in-height-mobile: 125px;
-
-
 .dashboard-widget-container {
     text-align: center;
 
     .thumbnail-widget {
         display: inline-block;
         vertical-align: top;
-        margin-top: 0;
-        margin-right: 20px;
-        border-radius: 50%;
+        margin-right: $spacing-xl;
+        border-radius: $dashboard-widget-border-radius;
         text-align: center;
-        width: $logged-in-height;
         padding: 0;
         float: none;
+        width: 15rem; // 240px;
+        height: 15rem; // 240px;
 
         @include media-breakpoint-down(md) {
-            width: auto;
-            display: block;
-            margin-right: 0;
+            width: 9rem; // 144px;
+            height: 9rem; // 144px;
+            margin-right: $spacing-base;
         }
 
         &.last {
             margin-right: 0;
+            @include media-breakpoint-down(md) {
+                margin-right: 0;
+            }
         }
 
         .widget-heading {
             padding: 0;
-            border-radius: 50%;
-            height: $logged-in-height;
-            width: $logged-in-height;
-            border-top: 0;
+            border-radius: $dashboard-widget-border-radius;
+            background-color: $dashboard-widget-bg;
+            width: 15rem; // 240px;
+            height: 15rem; // 240px;
 
             @include media-breakpoint-down(md) {
-                height: $logged-in-height-mobile;
-                width: $logged-in-height-mobile;
-                display: inline-block;
+                width: 9rem; // 144px;
+                height: 9rem; // 144px;
             }
 
             .circle-bg {
-                padding-top: 10px;
+                padding-top: $spacing-xl;
                 margin-right: 0;
+                margin-bottom: 0;
                 float: none;
-                background-color: transparent;
+                background-color: $dashboard-widget-circle-bg;
                 width: auto;
                 height: auto;
 
-                @include media-breakpoint-down(md) {
-                    margin-top: 5px;
-                }
-
                 .icon {
                     color: $dashboard-widget-cirlce-icon-color;
-                    font-size: 72px;
+                    font-size: 4.5rem; // 72px;
+                    line-height: 1.6;
 
                     @include media-breakpoint-down(md) {
-                        padding-top: 0;
-                        font-size: 60px;
+                        font-size: 2.5rem; // 40px;
                     }
                 }
             }
 
             h2 {
                 text-align: center;
+                margin: 0;
+                color: $dashboard-widget-title-color;
 
                 @include media-breakpoint-down(md) {
-                    font-size: 18px;
-                    margin-top: 0;
+                    font-size: 1.125rem; // 18px;
                 }
             }
 
             p {
-                margin: 0 16px;
-                font-size: 13px;
+                font-size: 0.8125rem; // 13px;
                 text-align: center;
+                margin: $spacing-sm $spacing-xxl;
+                color: $dashboard-widget-title-color;
 
                 @include media-breakpoint-down(md) {
                     display: none;
                 }
             }
         }
-
-
-        .widget-detail {
-            padding: 0 10px;
-            vertical-align: middle;
-            display: block;
-            border: 0;
-
-            @include media-breakpoint-down(md) {
-                width: 180px;
-                display: inline-block;
-                vertical-align: inherit;
-            }
-
-            p {
-                margin-top: 10px;
-
-                @include media-breakpoint-down(md) {
-                    font-size: 12px;
-                    padding: 0;
-                    margin-top: 0;
-                }
+        &:hover,
+        &:focus {
+            .widget-heading {
+                background: $dashboard-widget-hover-bg;
             }
         }
-
-        &.logged-in {
-            height: $logged-in-height;
-
-            @include media-breakpoint-down(md) {
-                height: $logged-in-height-mobile;
-                width: $logged-in-height-mobile;
-                display: inline-block;
-                margin: 0 5px 10px 5px;
-             }
-
-            .widget-detail {
-                margin-top: -$logged-in-height * 2;
-                vertical-align: middle;
-                display: block;
-                background-color: $gray-700;
-                height: $logged-in-height;
-                width: $logged-in-height;
-                border-radius: 50%;
-
-                @include media-breakpoint-down(md) {
-                    margin-top: -$logged-in-height-mobile * 2;
-                    height: $logged-in-height-mobile;
-                    width: $logged-in-height-mobile;
-                    padding: 0;
-                    border: 0;
-                }
-
-                p {
-                    margin-top: 0;
-                    display: table-cell;
-                    vertical-align: middle;
-                    height: $logged-in-height;
-
-                    @include media-breakpoint-down(md) {
-                        height: $logged-in-height-mobile;
-                        font-size: 11px;
-                        padding-top: 20px;
-                        padding-left: 10px;
-                        padding-right: 10px;
-                        display: block;
-                        color: $dashboard-widget-title-color;
-                    }
-                }
-            }
-
-            &:hover {
-                .widget-heading {
-                    @include media-breakpoint-down(md) {
-                        background: $dashboard-widget-bg;
-                    }
-                }
-                .widget-detail {
-                    margin-top: -$logged-in-height;
-
-                    @include media-breakpoint-down(md) {
-                        margin-top: -$logged-in-height-mobile;
-                    }
-                }
-            }
-        }
-
     }
 }

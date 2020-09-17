@@ -1,7 +1,7 @@
 {if $rows}
 <div class="text-right">
     <a class="btn btn-secondary" href="{$WWWROOT}artefact/internal/socialprofile.php">
-        <span class="icon icon-lg icon-plus left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=newsocialprofile section=artefact.internal}
     </a>
 </div>
@@ -42,12 +42,12 @@
             <td class="control-buttons">
                 <div class="btn-group">
                     <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-secondary btn-sm">
-                        <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='edit'}</span>
                     </a>
                     {if $candelete}
                     <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-secondary btn-sm">
-                        <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete'}</span>
                     </a>
                     {/if}
@@ -61,7 +61,7 @@
 </div>
 {else}
 <p class="no-results">
-    <a href="{$WWWROOT}artefact/internal/socialprofile.php">
+    <a class="btn btn-secondary" href="{$WWWROOT}artefact/internal/socialprofile.php">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=newsocialprofile section=artefact.internal}
     </a>

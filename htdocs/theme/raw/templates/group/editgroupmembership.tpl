@@ -5,7 +5,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">{str tag=editmembershipforuser section=group arg1=display_name($userid)}</h4>
+                <h1 class="modal-title">{str tag=editmembershipforuser section=group arg1=display_name($userid)}</h1>
             </div>
             <div class="modal-body">
             {if !$data}
@@ -14,7 +14,7 @@
                 {foreach from=$data key=addtype item=groups}
                 <div class="editgroup-container">
                 {if $groups}
-                    <h4 class="heading">{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h4>
+                    <h2 class="heading">{if $addtype == 'add'}{str tag=addmembers section=group}{else}{str tag=invite section=group}{/if}</h2>
                     <div class="checkboxes form-group last {if count($groups) > 6}column-list{/if}">
                         {foreach from=$groups item=group}
                             <div class="form-check group-invite">

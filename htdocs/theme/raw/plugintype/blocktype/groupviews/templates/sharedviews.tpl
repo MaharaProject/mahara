@@ -1,8 +1,8 @@
 {foreach from=$items item=view}
     <li class="list-group-item flush">
-        <h5 class="list-group-item-heading text-inline">
+        <h4 class="list-group-item-heading text-inline">
             <a href="{$view.fullurl}">{$view.title}</a>
-        </h5>
+        </h4>
         <br>
         {if $view.sharedby}
         <span class="owner inner-link text-small text-midtone">

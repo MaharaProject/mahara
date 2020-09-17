@@ -830,7 +830,7 @@ var FileBrowser = (function($) {
             var newdescription =  row.find('td.filedescription').first();
             if (self.selecteddata[id]) {
                 var hiddeninput = $('#' + self.id + '_selected\\[' + id + '\\]');
-                var legend2update = hiddeninput.closest('fieldset').find('legend h4 span.file-name');
+                var legend2update = hiddeninput.closest('fieldset').find('legend span.file-name');
                 if (legend2update.length) {
                     legend2update.html(' - ' + newtitle.html());
                 }
@@ -911,7 +911,7 @@ var FileBrowser = (function($) {
                                         'id': 'editcomposite_filebrowser_unselect_' + id,
                                         'title': get_string('remove')});
             remove.append(
-                $('<span>', {'class': 'icon icon-times icon-lg text-danger left'}),
+                $('<span>', {'class': 'icon icon-times text-danger left'}),
                 $('<span>', { 'text': get_string('remove')})
             );
             remove.on('click', self.unselect);
@@ -1015,7 +1015,7 @@ var FileBrowser = (function($) {
           else {
               var hiddeninput = r.find('input.d-none').first();
               if (hiddeninput.length) {
-                  var legend2update = hiddeninput.closest('fieldset').find('legend h4 span.file-name');
+                  var legend2update = hiddeninput.closest('fieldset').find('legend span.file-name');
                   if (legend2update.length) {
                       legend2update.html('');
                   }

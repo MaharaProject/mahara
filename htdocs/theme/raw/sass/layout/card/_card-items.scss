@@ -1,8 +1,8 @@
 
 .card-items {
     margin-left: -3%; //take away left margin added again by .card
-    margin-bottom: 100px; //buffer
-    margin-top: 30px;
+    margin-bottom: 6.25rem; // 100px; //buffer
+    margin-top: $spacing-xxl;
     &.card-items-no-margin {
         margin-bottom: 0;
     }
@@ -10,7 +10,6 @@
         width: 30.3%;
         float:left;
         margin-left:3%;
-        margin-bottom: 35px;
         @include media-breakpoint-down(md) {
             width: 50 - 3%;
         }
@@ -20,7 +19,7 @@
         &.double {
             width: 30.3% * 2 + 3%; //double width card
             @include media-breakpoint-down(sm) {
-                margin-top: 50px;
+                margin-top: $spacing-xxxl;
                 width: 100% - 3;
             }
         }

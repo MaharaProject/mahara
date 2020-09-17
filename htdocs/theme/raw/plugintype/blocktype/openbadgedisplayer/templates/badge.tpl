@@ -3,7 +3,7 @@
 <div class="badge-template badge-container">
     <img class="badge-image" src="" />
     <div class="openbadge-details">
-        <h3>{{str tag=issuerdetails section=$sec}}</h3>
+        <h2>{{str tag=issuerdetails section=$sec}}</h2>
         <table>
             <tbody>
                 <tr class="issuer-name"><td>{{str tag=name section=$sec}}</td><td class="value"></td></tr>
@@ -12,7 +12,7 @@
             </tbody>
         </table>
 
-        <h3>{{str tag=badgedetails section=$sec}}</h3>
+        <h2>{{str tag=badgedetails section=$sec}}</h2>
         <table>
             <tbody>
                 <tr class="badge-name"><td>{{str tag=name section=$sec}}</td><td class="value"></td></tr>
@@ -21,7 +21,7 @@
             </tbody>
         </table>
 
-        <h3>{{str tag=issuancedetails section=$sec}}</h3>
+        <h2>{{str tag=issuancedetails section=$sec}}</h2>
         <table>
             <tbody>
                 <tr class="issuance-evidence"><td>{{str tag=evidence section=$sec}}</td><td class="value"></td></tr>

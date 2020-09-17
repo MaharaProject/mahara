@@ -7,9 +7,10 @@
     .site-message.alert {
         margin-bottom: 0;
         border-radius: 0;
-        padding: 6px 1.25rem;
+        padding: 0.375rem $spacing-xl; // ~ 6px 20px
         border: 0;
-        min-height: 33px;
+        max-height: $site-message-height;
+        overflow-x: hidden;
 
         // take away default alert icon so it can be aligned with different break points
         &:before {
@@ -19,10 +20,9 @@
         .container:before {
             @include fonttype(solid);
             position: relative;
-            top: 1px;
-            font-size: $font-size-base * 1.285;
-            line-height: .75em;
-            padding-right: 5px;
+            font-size: $font-size-base * 1.25;
+            line-height: 1.5;
+            padding-right: $spacing-sm;
         }
         &.alert-success .container:before {
             content: fa-content($fa-var-check);
@@ -46,9 +46,9 @@
     }
 
     ~ .header {
-        top: 33px;    //for one message
+        top: $site-message-height;    //for one message
         + .main-nav {
-            margin-top: 32px;    //for one message
+            margin-top: $site-message-height;    //for one message
         }
     }
 }
@@ -57,7 +57,7 @@
 //adjust header and fixed elements for sitemessages
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
-        top: 33px * $i;
+        top: $site-message-height * $i;
 
         @include media-breakpoint-down(sm) {
             top: 0;
@@ -66,20 +66,20 @@
         ~ .container {
             .toolbar-affix.affix {
                 @include media-breakpoint-up(md) {
-                    margin-top: $navbar-height + ($i * 33px);
+                    margin-top: $navbar-height + ($i * $site-message-height);
                 }
             }
         }
 
         + .main-content {
             @include media-breakpoint-up(md) {
-                margin-top: $navbar-height + ($i * 33px);
+                margin-top: $navbar-height + ($i * $site-message-height);
             }
         }
 
         ~ .pageheader {
             @include media-breakpoint-up(md) {
-                margin-top: $navbar-height + ($i * 33px);
+                margin-top: $navbar-height + ($i * $site-message-height);
             }
         }
     }

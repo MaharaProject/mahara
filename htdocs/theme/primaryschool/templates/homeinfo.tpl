@@ -7,7 +7,7 @@
         {else}
         <span class="logged-out thumbnail-widget first">
         {/if}
-            <div id="home-info-create" class="widget">
+            <div id="home-info-create" class="widget home-info-box">
             <span class="puzzle">
             </span>
                 <div class="widget-heading">
@@ -16,9 +16,6 @@
                     </h2>
                     <div class="pict"><img src="{theme_url filename='images/dash-create.png'}" alt="Engage"></div>
                     <p>{str tag=createsubtitle}</p>
-                </div>
-                <div class="widget-detail">
-                    <p>{str tag=createdetail}</p>
                 </div>
             </div>
         {if $USER->is_logged_in()}
@@ -32,7 +29,7 @@
         {else}
         <span class="logged-out thumbnail-widget">
         {/if}
-            <div id="home-info-share" class="widget">
+            <div id="home-info-share" class="widget home-info-box">
             <span class="puzzle">
             </span>
                 <div class="widget-heading">
@@ -41,9 +38,6 @@
                     </h2>
                     <div class="pict"><img src="{theme_url filename='images/dash-share.png'}" alt="Engage"></div>
                     <p>{str tag=sharesubtitle}</p>
-                </div>
-                <div class="widget-detail">
-                    <p>{str tag=sharedetail}</p>
                 </div>
             </div>
         {if $USER->is_logged_in()}
@@ -57,7 +51,7 @@
         {else}
         <span class="logged-out thumbnail-widget last">
         {/if}
-            <div id="home-info-engage" class="widget">
+            <div id="home-info-engage" class="widget home-info-box">
             <span class="puzzle">
             </span>
                 <div class="widget-heading">
@@ -66,9 +60,6 @@
                     </h2>
                     <div class="pict"><img src="{theme_url filename='images/dash-engage.png'}" alt="Engage"></div>
                     <p>{str tag=engagesubtitle}</p>
-                </div>
-                <div class="widget-detail">
-                    <p>{str tag=engagedetail}</p>
                 </div>
             </div>
         {if $USER->is_logged_in()}

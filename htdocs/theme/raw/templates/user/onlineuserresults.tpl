@@ -6,12 +6,12 @@
             <div class="user-icon user-icon-40 float-left">
                 <a href="{profile_url($user)}"><img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}"></a>
             </div>
-            <h3 class="list-group-item-heading">
+            <h2 class="list-group-item-heading">
               <a href="{profile_url($user)}">{$user->display_name}</a>
-            </h3>
+            </h2>
             {if $user->institutions}
             <div class="memberof detail text-small">
-                <span class="icon icon-lg text-default icon-university left" role="presentation" aria-hidden="true"></span>
+                <span class="icon text-default icon-university left" role="presentation" aria-hidden="true"></span>
                 {$user->institutions|safe}
             </div>
             {/if}

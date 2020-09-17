@@ -3,10 +3,10 @@
 <div class="row">
 <div class="col-md-3 login-card">
 	<div class="card">
-	    <h3 class="card-header">
+	    <h2 class="card-header">
 	        {str tag="login"}
 	        <span class="float-right">{contextualhelp plugintype='core' pluginname='core' section='loginbox'}</span>
-	    </h3>
+	    </h2>
 	    <div class="card-body">
 	        <noscript><p>{str tag="javascriptnotenabled"}</p></noscript>
 	        {dynamic}{$messages.loginbox|safe}{/dynamic}

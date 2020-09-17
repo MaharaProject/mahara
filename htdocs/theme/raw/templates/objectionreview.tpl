@@ -6,7 +6,7 @@
                         <span class="times">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title blockinstance-header text-inline objection-review-title" id="objection-review-label">{str tag="objectionreview"}</h4>
+                    <h1 class="modal-title blockinstance-header text-inline objection-review-title" id="objection-review-label">{str tag="objectionreview"}</h1>
                 </div>
 
                 <div class="modal-body">

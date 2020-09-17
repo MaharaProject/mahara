@@ -15,7 +15,9 @@ $arrow-link-background-color:               $white !default;
 // color for the secondary title in sections (cf. groups)
 $section-heading-color:                     #999 !default;
 
-$dashboard-widget-bg:                       #ececec !default;
+$dashboard-widget-border-radius:            $border-radius !default;
+$dashboard-widget-bg:                       $body-bg !default;
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: 80%) !default;
 $dashboard-widget-title-color:              #333333 !default;
 $dashboard-widget-circle-bg:                $theme-primary-color !default;
 $dashboard-widget-cirlce-icon-color:        $white !default;
@@ -42,10 +44,11 @@ $site-footer-color:                         $link-color !default;
 $site-footer-hover-color:                   $link-hover-color !default;
 $site-footer-hover-bg:                      #eee !default;
 
-// LEGACY BOOTSTRAP 3 VARIABLES
+// Site messages
+$site-message-height:                       (0.375rem + 0.375rem + $font-size-base) * $line-height-base; // (padding-top + padding-bottom + font-size) * line-height
 
 // Site header
-$navbar-height:                             60px !default;
+$navbar-height:                             3.75rem !default; // 60px, must be in rem for site messages calculation to work
 $navbar-default-bg:                         $white !default;
 $navbar-default-border:                     scale-color($navbar-default-bg, $lightness: -6.5%) !default;
 
@@ -58,6 +61,8 @@ $navbar-toggle-active-color:                $link-color !default;
 $navbar-toggle-active-bg:                   #F1F1F1 !default;
 
 // Navbar menu
+$navbar-default-padding-y:                  0.625rem !default; // 10px
+$navbar-default-padding-x:                  0.9375rem !default; // 15px
 $navbar-default-link-border:                scale-color($navbar-default-bg, $lightness: -6.5%) !default;
 $navbar-default-link-color:                 $link-color !default;
 $navbar-default-link-hover-color:           $link-hover-color !default;
@@ -82,9 +87,8 @@ $navbar-inverse-toggle-hover-bg:            $navbar-inverse-bg !default;
 $navbar-inverse-toggle-active-color:        $navbar-inverse-link-active-color !default;
 $navbar-inverse-toggle-active-bg:           $navbar-inverse-bg !default;
 
-
 //Fonts
-$line-height-computed:                      $font-size-base * $line-height-base !default; // ~20px
+$line-height-computed:                      $font-size-base * $line-height-base !default; // ~24px
 $text-shadow:                               $white !default;
 
 // Form states
@@ -101,7 +105,7 @@ $state-warning-bg:                          scale-color($warning, $lightness: 85
 $state-warning-border:                      scale-color($warning, $lightness: 50%) !default;
 
 $state-danger-text:                         scale-color($danger, $lightness: -30%) !default;
-$state-danger-bg:                           scale-color($danger, $lightness: 70%) !default;
+$state-danger-bg:                           scale-color($danger, $lightness: 90%) !default;
 $state-danger-border:                       scale-color($danger, $lightness: 50%) !default;
 
 $state-submitted-text:                      $theme-text-color !default;
@@ -134,16 +138,12 @@ $card-secondary-border-width:               2px !default;
 // Tables
 $cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
 
-// Pagination
-$pagination-padding-y-xs:                   0.0625rem !default;
-$pagination-padding-x-xs:                   0.4375rem !default;
-
 // Popovers
 $popover-fallback-border-color:             #ccc !default;
 
 // Modals
-$modal-header-color:                        $white !default;
-$modal-header-padding:                      0.125rem !default;
+$modal-header-bg:                           $gray-100 !default;
+$modal-header-color:                        #333333 !default;
 
 // List groups
 $list-group-border:                         #ddd !default;
@@ -177,3 +177,12 @@ $form-bg:                                   scale-color($gray-100, $lightness: 3
 // Page heading border-bottom
 $h1heading-border-color:                    rgba($black, .125) !default;
 $h1heading-border-width:                    1px !default;
+
+// Common spaces between elements (margins and paddings)
+$spacing-xs:                                0.1875rem !default; // 3px
+$spacing-sm:                                0.3125rem !default; // 5px
+$spacing-base:                              0.625rem !default; // 10px
+$spacing-lg:                                0.9375rem !default; // 15px
+$spacing-xl:                                1.25rem !default; // 20px
+$spacing-xxl:                               1.875rem !default; // 30px
+$spacing-xxxl:                              3.125rem !default; // 50px

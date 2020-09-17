@@ -1,5 +1,5 @@
 <div class="alert alert-default">
-    {if $header}<h3>{$header}</h3>{/if}
+    {if $header}<h2>{$header}</h2>{/if}
     <p>{$notice|safe}</p>
 </div>
 <table class="table fullwidth table-padded">
@@ -13,9 +13,9 @@
         {foreach from=$statuslist item=item}
         <tr>
             <td>
-                <h3 class="title">
+                <h2 class="title">
                     {$item.name}
-                </h3>
+                </h2>
             </td>
             <td>
                 {if $item.status}

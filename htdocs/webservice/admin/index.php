@@ -166,12 +166,12 @@ function webservice_admin_main_form() {
             'elements' =>  array(
                 'webservice_requester_enabled_label' =>  array(
                     'type' => 'html',
-                    'value' => '<h4>' . get_string('webservice_requester_enabled_label', 'auth.webservice') . '</h4>',
+                    'value' => '<h3 class="title">' . get_string('webservice_requester_enabled_label', 'auth.webservice') . '</h3>',
                 ),
                 'webservice_requester_enabled_fieldset' => webservice_requester_enabled_form(),
                 'webservice_provider_enabled_label' =>  array(
                     'type' => 'html',
-                    'value' => '<h4>' . get_string('webservice_provider_enabled_label', 'auth.webservice') . '</h4>',
+                    'value' => '<h3 class="title">' . get_string('webservice_provider_enabled_label', 'auth.webservice') . '</h3>',
                 ),
                 'webservice_provider_enabled_fieldset' => webservice_provider_enabled_form(),
                 'protos_help' =>  array(

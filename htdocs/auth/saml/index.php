@@ -496,7 +496,7 @@ function auth_saml_loginlink_screen($remoteuser, $currentuser) {
         'pluginname'     => 'saml',
         'elements'       => array(
                     'linklogins' => array(
-                        'value' => '<div><b>' . get_string('linkaccounts', 'auth.saml', $remoteuser, $currentuser) . '</b></div><br/>'
+                        'value' => '<div><strong>' . get_string('linkaccounts', 'auth.saml', $remoteuser, $currentuser) . '</strong></div><br/>'
                     ),
                     'submit' => array(
                         'type'  => 'submitcancel',

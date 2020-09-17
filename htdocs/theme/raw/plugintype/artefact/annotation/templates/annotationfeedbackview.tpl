@@ -22,10 +22,10 @@
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
-                    <h4 class="modal-title float-left">
-                        <span class="icon icon-lg icon-comments left" role="presentation" aria-hidden="true"></span>
+                    <h1 class="modal-title float-left">
+                        <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                         {str tag=Annotationfeedback section=artefact.annotation} - {$annotationtitle}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body flush">
                     {$annotationfeedback->tablerows|safe}
@@ -42,10 +42,10 @@
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
-                    <h4 class="modal-title">
-                        <span class="icon icon-lg icon-annotation" role="presentation" aria-hidden="true"></span>
+                    <h1 class="modal-title">
+                        <span class="icon icon-annotation" role="presentation" aria-hidden="true"></span>
                         {str tag=placeannotationfeedback section=artefact.annotation}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     {if $allowfeedback && !$editing}

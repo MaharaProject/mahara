@@ -1,8 +1,4 @@
 .header {
-    top: 0;
-    @include media-breakpoint-up(md) {
-        top: 30px;
-    }
 
     .logo-area,
     .logo,
@@ -13,7 +9,7 @@
     }
 
     .logo {
-        padding: 6px 6px 6px 0;
+        padding: 0.375rem 0.375rem 0.375rem 0; // 6px 6px 6px 0
         display: inline-block;
         height: $navbar-height;
 
@@ -27,8 +23,8 @@
     }
 
     .logoxs {
-        margin: 6px 0px 6px 0;
-        height: 48px;
+        margin: 0.375rem 0; // 6px 0;
+        height: 3rem; // 48px
         @include media-breakpoint-up(md) {
           display: none;
         }
@@ -47,12 +43,6 @@
 
     .admin-title {
         @extend .sr-only;
-        @include media-breakpoint-up(md) {
-            position: static;
-            width: auto;
-            height: auto;
-            margin: 18px 10px 5px 0;
-        }
     }
 
     .navbar-main.navbar {

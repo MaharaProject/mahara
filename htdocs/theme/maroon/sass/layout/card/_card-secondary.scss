@@ -1,12 +1,12 @@
 // cards
 .card.card-secondary {
     > .card-header, .card-header-nested {
-          font-weight: 900;
+          // font-weight: 900;
           color: $theme-accent-color;
 
           &.secondary-link {
             font-family: $font-family-base;
-            font-weight: 700;
+            // font-weight: 700;
           }
     }
 }

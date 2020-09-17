@@ -29,10 +29,6 @@
     line-height: 34px;
 }
 
-.form-group .select2-container .select2-selection .select2-search input[type=search] {
-    width: 100% !important;
-}
-
 .select2-container--default {
     .select2-selection--multiple {
         border: $input-border-width solid $input-border-color;
@@ -120,4 +116,9 @@
 
 .select2-container.select2-container--default.select2-container--open {
     z-index: 2001;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: $input-height;
+    width: 1.75rem;
 }

@@ -341,7 +341,7 @@
   background-color: $black;
   position: relative;
   padding: 0;
-  font-size: $font-size-base * 0.715;
+  font-size: $font-size-base * 0.75;
   line-height: 1;
   font-weight: normal;
   font-style: normal;
@@ -456,15 +456,15 @@ body.vjs-full-window {
 }
 
 .vjs-no-js {
-  padding: 20px;
+  padding: $spacing-xl;
   color: $white;
   background-color: $black;
-  font-size: $font-size-base * 1.285;
+  font-size: $font-size-base * 1.25;
   font-family: $font-family-base;
   text-align: center;
   width: 300px;
   height: 150px;
-  margin: 0px auto;
+  margin: 0 auto;
 }
 
 .vjs-no-js a,
@@ -479,8 +479,8 @@ body.vjs-full-window {
   width: 3em;
   display: block;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: $spacing-base;
+  left: $spacing-base;
   padding: 0;
   cursor: pointer;
   opacity: 1;
@@ -555,9 +555,9 @@ body.vjs-full-window {
 }
 
 .vjs-modal-dialog .vjs-modal-dialog-content {
-  font-size: 1.2em;
-  line-height: 1.5;
-  padding: 20px 24px;
+  font-size: $font-size-lg;
+  line-height: $line-height-base;
+  padding: $spacing-xl 1.5rem; // 20px 24px;
   z-index: 1;
 }
 
@@ -592,9 +592,9 @@ body.vjs-full-window {
 .vjs-menu li {
   list-style: none;
   margin: 0;
-  padding: 0.2em 0;
-  line-height: 1.4em;
-  font-size: 1.2em;
+  padding: $spacing-xs 0;
+  line-height: $line-height-base;
+  font-size: $font-size-lg;
   text-align: center;
   text-transform: lowercase;
 }
@@ -837,7 +837,7 @@ body.vjs-full-window {
 }
 
 .video-js .vjs-progress-control .vjs-progress-holder {
-  margin: 0 10px;
+  margin: 0 $spacing-base;
 }
 
 .video-js .vjs-progress-control:hover .vjs-progress-holder {
@@ -886,7 +886,7 @@ body.vjs-full-window {
   float: right;
   font-family: $font-family-base;
   font-size: 1em;
-  padding: 6px 8px 8px 8px;
+  padding: 0.375rem 0.5rem 0.5rem 0.5rem; // 6px 8px 8px 8px;
   pointer-events: none;
   position: absolute;
   top: -3.4em;
@@ -1337,14 +1337,14 @@ video::-webkit-media-text-track-display {
   position: absolute;
   top: 50%;
   left: 50%;
-  margin: -25px 0 0 -25px;
+  margin: -1.5625rem 0 0 -1.5625rem; // -25px 0 0 -25px;
   opacity: 0.85;
   text-align: left;
   border: 6px solid rgba(43, 51, 63, 0.7);
   box-sizing: border-box;
   background-clip: padding-box;
-  width: 50px;
-  height: 50px;
+  width: 3.125rem; // 50px;
+  height: 3.125rem; // 50px;
   border-radius: 50%;
   visibility: hidden;
 }
@@ -1360,7 +1360,7 @@ video::-webkit-media-text-track-display {
 .vjs-loading-spinner:after {
   content: "";
   position: absolute;
-  margin: -6px;
+  margin: -0.375rem; // -6px;
   box-sizing: inherit;
   width: inherit;
   height: inherit;
@@ -1559,11 +1559,11 @@ video::-webkit-media-text-track-display {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr;
-    padding: 20px 24px 0px 24px;
+    padding: $spacing-xl 1.5rem 0 1.5rem; // 20px 24px 0px 24px;
   }
 
   .vjs-track-settings-controls .vjs-default-button {
-    margin-bottom: 20px;
+    margin-bottom: $spacing-xl;
   }
 
   .vjs-text-track-settings .vjs-track-settings-controls {
@@ -1582,8 +1582,8 @@ video::-webkit-media-text-track-display {
 }
 
 .vjs-text-track-settings fieldset {
-  margin: 5px;
-  padding: 3px;
+  margin: $spacing-sm;
+  padding: $spacing-xs;
   border: none;
 }
 
@@ -1597,7 +1597,7 @@ video::-webkit-media-text-track-display {
 
 .vjs-text-track-settings legend {
   color: $white;
-  margin: 0 0 5px 0;
+  margin: 0 0 $spacing-sm 0;
 }
 
 .vjs-text-track-settings .vjs-label {
@@ -1605,7 +1605,7 @@ video::-webkit-media-text-track-display {
   clip: rect(1px 1px 1px 1px);
   clip: rect(1px, 1px, 1px, 1px);
   display: block;
-  margin: 0 0 5px 0;
+  margin: 0 0 $spacing-sm 0;
   padding: 0;
   border: 0;
   height: 1px;

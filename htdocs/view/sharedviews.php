@@ -120,7 +120,7 @@ $searchform = pieform(array(
                'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-primary input-group-append no-label button',
+                    'class' => 'btn-secondary input-group-append no-label button',
                     'value' => get_string('search'),
                 )
             ),

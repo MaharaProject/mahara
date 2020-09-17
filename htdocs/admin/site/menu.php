@@ -87,10 +87,10 @@ jQuery(function($) {
       var type = eval(item.type);
       var linkedto = $('<a>', {'href':item.linkedto, 'text': item.linktext});
       var edit = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title':{$getstring['edit']}})
-        .append($('<span>', {'class':'icon icon-lg icon-pencil-alt', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['edit']}}));
+        .append($('<span>', {'class':'icon icon-pencil-alt', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['edit']}}));
       edit.on('click', function () { edititem(item); });
       var del = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title': {$getstring['delete']}})
-      .append($('<span>', {'class':'icon icon-lg icon-trash-alt text-danger', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['delete']}}));
+      .append($('<span>', {'class':'icon icon-trash-alt text-danger', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['delete']}}));
       del.on('click', function() { delitem(item.id); });
       var buttonGroup = $('<span>', {'class':'btn-group'}).append(edit, del);
 
@@ -117,8 +117,8 @@ jQuery(function($) {
 
       // Either a save, a cancel button, or both.
       var savecancel = [];
-      var save = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title': {$getstring['update']}})
-        .append($('<span>', {'class':'icon icon-plus icon-lg', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['update']}}));
+      var save = $('<button>', {'type':'button','class':'button btn btn-secondary','title': {$getstring['update']}})
+        .append($('<span>', {'class':'icon icon-plus', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['update']}}));
       save.on('click', function () { saveitem(item.id); });
 
       // The link field will be a text box or a select in the case of an admin file.

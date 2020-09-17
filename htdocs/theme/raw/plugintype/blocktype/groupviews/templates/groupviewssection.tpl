@@ -1,9 +1,9 @@
 {foreach from=$items item=view}
     <li class="list-group-item flush">
-        <h5 class="list-group-item-heading text-inline">
+        <h4 class="list-group-item-heading text-inline">
             <a href="{$view.fullurl}">{$view.displaytitle}</a>
             {if $view.collid}(<span class="text-small text-midtone">{str tag=nviews section=view arg1=$view.numpages})</span>{/if}
-        </h5>
+        </h4>
         <br />
         <span class="postedon text-small text-midtone">
             {if $view.mtime == $view.ctime}

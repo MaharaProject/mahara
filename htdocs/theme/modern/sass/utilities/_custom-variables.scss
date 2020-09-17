@@ -13,8 +13,12 @@ $section-heading-color:                     #999;
 $admin-title-color:                         $white;
 $admin-title-bg:                            $theme-primary-color;
 
-$dashboard-widget-bg:                       scale-color(#f9f9f9, $lightness: -2%);
-$dashboard-widget-color:                    $theme-primary-color;
+$dashboard-widget-border-radius:            10px;
+$dashboard-widget-bg:                       $body-bg;
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: 80%);
+$dashboard-widget-title-color:              #333333;
+$dashboard-widget-circle-bg:                $theme-primary-color;
+$dashboard-widget-cirlce-icon-color:        $white;
 
 $help-icon-color:                           scale-color(#22C49C, $lightness: -5%);
 $rss-icon-color:                            #FE6500;

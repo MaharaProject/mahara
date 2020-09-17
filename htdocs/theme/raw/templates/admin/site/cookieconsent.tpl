@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-md-8">
               <div class="card">
-                 <h3 class="card-header">
+                 <h2 class="card-header">
                     {str tag=directive2009136 section=cookieconsent}
-                 </h3>
+                 </h2>
 
                 <div class="card-body">
                     <p class="lead">{$introtext1|safe}</p>
@@ -18,10 +18,10 @@
         </div>
         <div class="col-md-4">
               <div class="card last">
-                <h3 class="card-header">
+                <h2 class="card-header">
                     <span class="icon-globe icon left" role="presentation" aria-hidden="true"></span>
                     {str tag=readfulltext1 section=cookieconsent}
-                </h3>
+                </h2>
                 <div class="card-body" id="cookietext">
 
                     <p>{str tag=directive2009136 section=cookieconsent}</p>

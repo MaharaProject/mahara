@@ -32,7 +32,7 @@ select {
 }
 
 .password-progress {
-    margin-top: 8px;
+    margin-top: 0.5rem; // 8px;
     margin-bottom: 0;
     padding: 0 !important;
 
@@ -43,15 +43,16 @@ select {
 
 label,
 .pseudolabel {
-    // .col-form-label is adding too much padding to <label> commenting out
-    // @extend .col-form-label;
     max-width: 100%;
-    padding-right: 10px;
+    padding-right: $spacing-base;
     font-weight: $font-weight-normal;
+    line-height: $line-height-base;
+    margin-bottom: 0;
+
     .form-condensed & {
-        min-width: 100px;
+        min-width: 6.25rem; //100px;
         &.pseudolabel {
-            min-width: 265px;
+            min-width: 16.5625rem; // 265px;
         }
     }
     &.input-inline {
@@ -78,7 +79,7 @@ label,
     }
 
     @include media-breakpoint-up(md) {
-        min-width: 265px;
+        min-width: 16.5625rem; // 265px;
     }
 
     .with-label-widthauto & {
@@ -88,18 +89,14 @@ label,
 
 .pseudolabel {
     vertical-align: top;
-    padding-right: 10px;
+    padding-right: $spacing-base;
     display: inline-block;
-}
-
-.checkbox .with-label {
-    padding-left: 17px;
 }
 
 .stacked-label {
     display: inline-block;
     @include media-breakpoint-up(md) {
-        width:200px;
+        width: 12.5rem; // 200px;
     }
 }
 
@@ -141,21 +138,26 @@ label,
     }
 }
 
-// BS3 code - begin
+input[type="radio"],
+input[type="checkbox"] {
+  margin: $spacing-sm 0 0 0;
+  line-height: $line-height-base;
+}
+
 .radio,
 .checkbox {
   position: relative;
   display: block;
-  margin-top: 10px;
+  margin-top: $spacing-base;
   input.checkboxes,
   input.radio {
       z-index: 3;
   }
 
-  label {
+  label,
+  .with-label {
     min-height: $line-height-computed; // Ensure the input doesn't jump when there is no text
-    padding-left: 20px;
-    margin-bottom: 0;
+    padding-left: $spacing-xl;
     font-weight: $font-weight-normal;
     cursor: pointer;
   }
@@ -166,37 +168,28 @@ label,
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"] {
   position: absolute;
-  margin-left: -20px;
-  margin-top: 4px \9;
 }
-
-input[type="radio"],
-input[type="checkbox"] {
-  margin: 4px 0 0;
-  line-height: normal;
-}
-// BS3 code - end
 
 .radio-aligned {
     display: inline-block;
 }
 .no-radio {
-    margin-left: 16px;
+    margin-left: $spacing-xl;
 }
 
 // for multiselect buttons
 .select-col {
-    width : 100px;
+    width : 6.25rem; // 100px;
 }
 
 .align-with-input {
     display: inline-block;
     margin-left: 0;
     @include media-breakpoint-up(md) {
-        margin-left: 265px;
+        margin-left: 16.5625rem; // 265px;
     }
     &.file {
-        margin-top: -30px;
+        margin-top: -$spacing-xxl;
     }
     .option-alt & {
         margin: 0;
@@ -213,11 +206,11 @@ input[type="checkbox"] {
 }
 
 textarea {
-    resize: none;
-}
+  resize: none;
 
-textarea.resizable {
-    resize: vertical;
+  &.resizable {
+      resize: vertical;
+  }
 }
 
 .form-inline {
@@ -236,7 +229,7 @@ textarea.resizable {
 
         input.checkbox {
             width: auto;
-            margin-top: -6px;
+            margin-top: -0.375rem; // -6px;
         }
     }
     @include media-breakpoint-down(md) {
@@ -281,10 +274,10 @@ textarea.resizable {
 .hasDatepickerwrapper input[type="text"],
 .hasDatepickerwrapperacl input[type="text"] {
     position: relative;
-    padding-right: 28px;
+    padding-right: 1.75rem; // 28px;
 }
 .hasDatepicker {
-    padding-right: 20px;
+    padding-right: $spacing-xl;
 }
 .hasDatepickerwrapper:after {
     @include fonttype(regular);
@@ -292,7 +285,8 @@ textarea.resizable {
     font-size: $font-size-lg;
     color: scale-color($theme-text-color, $lightness: 25%);
     position:relative;
-    right: 25px;
+    right: 1.5625rem; // 25px;
+    top: 0.0625rem; // 1px;
     pointer-events: none;
     cursor: text;
 }
@@ -300,10 +294,10 @@ textarea.resizable {
     @include fonttype(regular);
     content: fa-content($fa-var-calendar-alt);
     color: scale-color($theme-text-color, $lightness: 25%);
-    right: 10px;
+    right: $spacing-base;
     position: absolute;
-    font-size: $font-size-base * 1.14285;
-    top: 5px;
+    font-size: $font-size-lg;
+    top: $spacing-sm;
 }
 .date-picker {
     position: relative;
@@ -329,7 +323,7 @@ textarea.resizable {
         &.small-progress span {
             display: block;
             left: 100%;
-            padding-left: 5px;
+            padding-left: $spacing-sm;
             position: absolute;
             color: $gray-700;
         }
@@ -337,7 +331,7 @@ textarea.resizable {
             color: $progress-bar-color;
             text-decoration: underline;
             display: inline-block;
-            margin-top: 8px;
+            margin-top: 0.5rem; // 8px;
         }
     }
 }
@@ -345,11 +339,10 @@ textarea.resizable {
 .progress-iframe-outer,
 #progress-iframe { // json progress bars, e.g. portfolio export, artefact extract
     border: $border-width solid $border-color;
-    height: 57px;
+    height: 2.5rem; // 40px;
     width: 100%;
-    max-width: 650px;
-    margin: 20px 0;
-    padding: 7px;
+    max-width: 40.625rem; // 650px;
+    margin: $spacing-xl 0;
 }
 
 .progress-iframe-outer {
@@ -381,10 +374,10 @@ input:disabled[type="text"] {
 // Add space when there are 2 selects next to each other
 .select {
     + .select {
-        margin-left: 5px;
+        margin-left: $spacing-sm;
     }
     + .submit:not(.input-group-append) {
-        margin-left: 5px;
+        margin-left: $spacing-sm;
     }
 }
 
@@ -394,14 +387,14 @@ input:disabled[type="text"] {
     max-width: 85% !important;
     display: inline-block;
     @include media-breakpoint-up(md) {
-        width: 420px !important;
+        width: 26.25rem !important; // 420px !important;
     }
     @include media-breakpoint-up(xl) {
-        width: 500px !important;
+        width: 31.25rem !important; // 500px !important;
     }
     &.select2-dropdown-open {
         .select2-choices {
-            border-radius: $border-radius $border-radius 0 0;
+            border-radius: $input-border-radius $input-border-radius 0 0;
         }
     }
     .select2-choices {
@@ -420,7 +413,7 @@ input:disabled[type="text"] {
 .form-group.checkboxes .group-invite input[type="checkbox"] {
     float: left;
     top: 0;
-    margin-right: 5px;
+    margin-right: $spacing-sm;
 }
 
 input[type="file"],

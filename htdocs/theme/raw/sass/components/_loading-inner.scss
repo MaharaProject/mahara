@@ -1,20 +1,20 @@
 .loading-inner {
-    margin: 20px 10px 5px 0;
+    margin: $spacing-lg $spacing-base $spacing-sm 0;
     color: $navbar-toggle-color;
 }
 .loading-message {
-    margin-left: 5px;
+    margin-left: $spacing-sm;
 
     @include media-breakpoint-down(md) {
         display: none;
     }
 }
 .applying-box {
-    font-size: 1.2em;
-    left: calc(50% - 150px);
+    font-size: $font-size-lg;
+    left: calc(50% - 9.375rem); // calc(50% - 150px)
     top: 50%;
-    width: 300px;
+    width: 18.75rem; // 300px;
     position: absolute;
     text-align: center;
-    padding: 10px 0;
+    padding: $spacing-base 0;
 }

@@ -12,13 +12,12 @@
                     <div class="circle-bg">
                         <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
                     </div>
-                    <h2 class="title">
-                        {str tag=create}
-                    </h2>
-                    <p>{str tag=createsubtitle}</p>
-                </div>
-                <div class="widget-detail">
-                    <p>{str tag=createdetail}</p>
+                    <div class="widget-content">
+                        <h2 class="title">
+                            {str tag=create}
+                        </h2>
+                        <p>{str tag=createsubtitle}</p>
+                    </div>
                 </div>
             </div>
         {if $USER->is_logged_in()}
@@ -37,13 +36,12 @@
                     <div class="circle-bg">
                         <span class="icon icon-unlock" role="presentation" aria-hidden="true"></span>
                     </div>
-                    <h2 class="title">
-                        {str tag=share}
-                    </h2>
-                    <p>{str tag=sharesubtitle}</p>
-                </div>
-                <div class="widget-detail">
-                    <p>{str tag=sharedetail}</p>
+                    <div class="widget-content">
+                        <h2 class="title">
+                            {str tag=share}
+                        </h2>
+                        <p>{str tag=sharesubtitle}</p>
+                    </div>
                 </div>
         </div>
         {if $USER->is_logged_in()}
@@ -62,13 +60,12 @@
                     <div class="circle-bg">
                         <span class="icon icon-users" role="presentation" aria-hidden="true"></span>
                     </div>
-                    <h2 class="title">
-                        {str tag=engage}
-                    </h2>
-                    <p>{str tag=engagesubtitle}</p>
-                </div>
-                <div class="widget-detail">
-                    <p>{str tag=engagedetail}</p>
+                    <div class="widget-content">
+                        <h2 class="title">
+                            {str tag=engage}
+                        </h2>
+                        <p>{str tag=engagesubtitle}</p>
+                    </div>
                 </div>
             </div>
         {if $USER->is_logged_in()}

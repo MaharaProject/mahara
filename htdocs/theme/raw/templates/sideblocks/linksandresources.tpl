@@ -1,8 +1,8 @@
 {if $sbdata}
 <div class="card">
-    <h3 class="card-header">
+    <h2 class="card-header">
         {str tag="linksandresources"}
-    </h3>
+    </h2>
     <ul class="list-group">
     {foreach from=$sbdata item=item}
         <li class="list-group-item">

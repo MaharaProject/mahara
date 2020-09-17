@@ -8,14 +8,14 @@
             <img src="{profile_icon_url user=$message->from maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
           </div>
           <div class="memberdetail">
-            <h3 class="title">
+            <h2 class="title">
         {if $message->from == $user->id}
               <a href="{profile_url($user)}">{$user|display_name}</a>
         {else}
               <a href="{profile_url($USER)}">{$USER|display_name}</a>
         {/if}
               <span class="postedon">{$message->ctime|strtotime|format_date}</span>
-            </h3>
+            </h2>
             <div class="detail messagebody">{$message->message}</div>
           </div>
         </div>

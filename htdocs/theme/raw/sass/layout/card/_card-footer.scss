@@ -2,6 +2,10 @@ a.card-footer {
     text-align:center;
     color: $link-color;
     display: block;
+    .icon {
+        color: $link-color;
+        line-height: $line-height-base;
+    }
     &:hover {
         color: $link-hover-color;
         background: scale-color($card-footer-bg, $lightness: 20%);
@@ -10,11 +14,8 @@ a.card-footer {
             color: $theme-text-midtone-color;
         }
         .icon.float-right { //only apply link color to right aligned icons
-            color: $link-color;
+            color: $link-hover-color;
         }
-    }
-    .icon.float-right {
-        margin-top: 3px;
     }
 }
 
@@ -70,7 +71,10 @@ a.card-footer {
 }
 
 .fieldset-body .card-footer {
-    margin: 20px -15px -10px;
+    margin-top: $spacing-xl;
+    margin-right: -$spacing-lg;
+    margin-bottom: -$spacing-base;
+    margin-left: -$spacing-lg;
 }
 
 .blockinstance .blockinstance-content .card-footer {

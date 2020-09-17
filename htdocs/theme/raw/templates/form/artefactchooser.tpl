@@ -13,13 +13,13 @@
             <input type="text" class="text form-control" id="artefactchooser-searchfield" name="search" value="{$.request.search}" tabindex="42">
             <input type="hidden" name="s" value="1">
             <span class="input-group-append">
-                <button class="submit btn btn-primary" type="submit" id="artefactchooser-searchsubmit" name="action_acsearch_id_{$blockinstance}" tabindex="42">
+                <button class="submit btn btn-secondary" type="submit" id="artefactchooser-searchsubmit" name="action_acsearch_id_{$blockinstance}" tabindex="42">
                     {str tag=search}
                 </button>
             </span>
         </div>
 
-        <div id="{$datatable}" class="artefactchooser-data list-group list-group-lite">
+        <div id="{$datatable}" class="artefactchooser-data list-group list-group-lite list-group-top-border">
             {if !$artefacts}
             <span class="noartefacts lead">
                 {str tag=noartefactstochoosefrom section=view}

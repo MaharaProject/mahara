@@ -113,7 +113,7 @@ $elements['searchwithin'] = array(
 
 $elements['searchfield'] = array(
     'type' => 'submit',
-    'class' => 'btn-primary no-label',
+    'class' => 'btn-secondary no-label',
     'value' => get_string('search')
 );
 

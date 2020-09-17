@@ -1,25 +1,23 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow compoanent variables
-$arrow-color:                   $theme-primary-color;
-$arrow-bar-bg:                  scale-color($theme-primary-color, $lightness: -25%);
-$arrow-text-color:              $white;
-$arrow-link-color:              $white;
-$arrow-link-hover-color:        $theme-primary-color;
-$arrow-link-active-color:       $theme-text-color;
-$arrow-link-background-color:   $white;
+$arrow-color:                               $theme-primary-color;
+$arrow-bar-bg:                              scale-color($theme-primary-color, $lightness: -25%);
+$arrow-text-color:                          $white;
+$arrow-link-color:                          $white;
+$arrow-link-hover-color:                    $theme-primary-color;
+$arrow-link-active-color:                   $theme-text-color;
+$arrow-link-background-color:               $white;
 
-// color for the secondary title in sections (cf. groups)
+$dashboard-widget-border-radius:            50%;
 $dashboard-widget-bg:                       scale-color($theme-secondary-color, $lightness: 90%);
+$dashboard-widget-hover-bg:                 scale-color($theme-primary-color, $lightness: 80%);
 $dashboard-widget-title-color:              $theme-text-color;
 $dashboard-widget-circle-bg:                transparent;
 $dashboard-widget-cirlce-icon-color:        $theme-secondary-color;
 
 // Pages and collections page header
-$pageheader-bg:                 scale-color($theme-primary-color, $lightness: 95%);
-
-
-// Legacy from Bootstrap 3
+$pageheader-bg:                             scale-color($theme-primary-color, $lightness: 95%);
 
 // Header navbar
 $navbar-default-bg:                         $theme-primary-color;

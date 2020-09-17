@@ -68,7 +68,7 @@ $optionform = pieform(array(
     'elements'   => array(
         'membership' => array(
             'type'         => 'html',
-            'value'        => '<h4>' . get_string('Membership', 'group') . '</h4>',
+            'value'        => '<h2>' . get_string('Membership', 'group') . '</h2>',
         ),
         'open' => array(
             'type'         => 'switchbox',
@@ -111,7 +111,7 @@ $optionform = pieform(array(
         ),
         'pages' => array(
             'type'         => 'html',
-            'value'        => '<h4>' . get_string('content') . '</h4>',
+            'value'        => '<h2>' . get_string('content') . '</h2>',
         ),
         'editroles' => array(
             'type'         => 'select',
@@ -135,7 +135,7 @@ $optionform = pieform(array(
         ),
         'visibility' => array(
             'type'         => 'html',
-            'value'        => '<h4>' . get_string('Visibility') . '</h4>',
+            'value'        => '<h2>' . get_string('Visibility') . '</h2>',
         ),
         'public' => array(
             'type'         => 'switchbox',
@@ -172,7 +172,7 @@ $optionform = pieform(array(
         ),
         'editability' => array(
             'type'        => 'html',
-            'value'       => '<h4>' . get_string('editability', 'group') . '</h4>',
+            'value'       => '<h2>' . get_string('editability', 'group') . '</h2>',
         ),
         'editwindowstart' => array(
             'type'        => 'calendar',
@@ -202,7 +202,7 @@ $optionform = pieform(array(
         ),
         'general' => array(
             'type'         => 'html',
-            'value'        => '<h4>' . get_string('general') . '</h4>',
+            'value'        => '<h2>' . get_string('general') . '</h2>',
         ),
         'category' => array(
             'type'         => 'select',
@@ -241,7 +241,7 @@ $optionform = pieform(array(
         ),
         'defaultresetheader' => array(
             'type'         => 'html',
-            'value'        => '<h4>' . get_string('defaultreset', 'admin') . '</h4>',
+            'value'        => '<h2>' . get_string('defaultreset', 'admin') . '</h2>',
         ),
         'defaultreset' => array(
             'type'         => 'switchbox',

@@ -118,7 +118,7 @@ if ($iframesources) {
                         'type'         => 'button',
                         'class'        => 'btn-secondary btn-sm',
                         'usebuttontag' => true,
-                        'value'          => '<span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                        'value'          => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
 
                         'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                     ),
@@ -270,7 +270,6 @@ $js = <<<EOF
 jQuery(function($) {
     $('.url-open-editform').on("click", function(e) {
         e.preventDefault();
-        $('#' + this.id).addClass('collapse-indicator');
         $('#' + this.id).toggleClass('open');
         $('#' + this.id).toggleClass('closed');
         $('#' + this.id + '-form').toggleClass('js-hidden');

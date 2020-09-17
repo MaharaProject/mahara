@@ -154,7 +154,7 @@
                                     <ul class="list-group">
                                         {% for step in scenario.steps %}
                                             <li class="list-group-item alert alert-{% if step.isPassed %}success{% elseif step.isSkipped %}info{% elseif step.isPending %}warning{% else %}danger{% endif %}">
-                                                <b>{{ step.keyword }}</b> {{ step.text }}
+                                                <strong>{{ step.keyword }}</strong> {{ step.text }}
                                                 {% if printStepArgs is not null %}
                                                     {% for argument in step.arguments %}
                                                         <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">{{ argument | nl2br }}</p>
@@ -173,7 +173,7 @@
                                                 {% endif %}
                                             </li>
                                             {#<div class="bs-callout bs-callout-{% if step.passed %}success{% else %}danger{% endif %}" id="callout-collapse-accessibility">#}
-                                            {#<b>{{ step.keyword }}</b> {{ step.text }}#}
+                                            {#<strong>{{ step.keyword }}</strong> {{ step.text }}#}
                                             {#</div>#}
                                         {% endfor %}
                                     </ul>

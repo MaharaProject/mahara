@@ -43,7 +43,7 @@
 // use to override relative positioning on bootstrap cols
 .col-static {
     position: relative;
-    min-height: 165px;
+    min-height: 10.3125rem; // 165px;
     > [class^="col-"] {
         position: static;
     }

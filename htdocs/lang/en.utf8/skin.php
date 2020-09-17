@@ -181,7 +181,7 @@ $string['manageskins'] = 'Manage skins';
 /* SKINS - SITE FONTS */
 $string['sitefontsmenu'] = 'Fonts';
 $string['sitefonts'] = 'Fonts';
-$string['sitefontsdescription'] = '<p>The following fonts have been installed on your site for use in skins.</p>';
+$string['sitefontsdescription'] = 'The following fonts have been installed on your site for use in skins.';
 $string['installfontinstructions'] = '<p>
 Add fonts, which allow font embedding into web pages, via the CSS @font-face rule. Remember that not all authors / foundries allow this.
 </p>

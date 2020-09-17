@@ -8,9 +8,9 @@
  * This file is distributed under the same terms as Mahara itself
  */
 #blocktype_externalfeed_feed .feedlogoimage {
-    margin: 10px 0;
+    margin: $spacing-base 0;
 }
 #blocktype_externalfeed_feed .feedlogoimage img {
-    max-width: 144px;
-    max-height: 400px;
+    max-width: 9rem; // 144px;
+    max-height: 25rem; // 400px;
 }

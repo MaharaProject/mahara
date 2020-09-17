@@ -1,14 +1,14 @@
 {if $record->deleted}
-    <h3 class="title list-group-item-heading text-inline">
+    <h2 class="title list-group-item-heading text-inline">
         <span class="icon icon-file left text-midtone" role="presentation" aria-hidden="true"></span>
         {$record->title}
-    </h3>
+    </h2>
     <span class="artefacttype text-midtone">({str tag=deleted section=search.elasticsearch})</span>
 {else}
-    <h3 class="title list-group-item-heading text-inline">
+    <h2 class="title list-group-item-heading text-inline">
         <span class="icon icon-file left" role="presentation" aria-hidden="true"></span>
         <a href="{$WWWROOT}view/view.php?id={$record->id}">{$record->title}</a>
-    </h3>
+    </h2>
     <span class="artefacttype text-midtone">({str tag=page section=search.elasticsearch})</span>
     {if $record->createdbyname}
       <div class="createdby text-small">

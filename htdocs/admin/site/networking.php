@@ -56,7 +56,7 @@ $networkingform = pieform(
                 'type'         => 'html',
                 'title'        => get_string('publickey','admin'),
                 'description'  => get_string('publickeydescription2', 'admin', 365),
-                'value'        => '<pre style="font-size: 0.7em; white-space: pre;">'.$openssl->certificate.'</pre>'
+                'value'        => '<pre style="font-size: 0.75rem; white-space: pre;">'.$openssl->certificate.'</pre>'
             ),
             'sha1fingerprint' => array(
                 'type'         => 'html',
@@ -105,7 +105,7 @@ $networkingform = pieform(
                         'name' => 'submit', // must be called submit so we can access it's value
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'content' => '<span class="icon icon-sync-alt icon-lg left text-danger" role="presentation" aria-hidden="true"></span> '. get_string('deletekey', 'admin'),
+                        'content' => '<span class="icon icon-sync-alt left text-danger" role="presentation" aria-hidden="true"></span> '. get_string('deletekey', 'admin'),
                         'value' => 'deletekey'
                     )
                 )

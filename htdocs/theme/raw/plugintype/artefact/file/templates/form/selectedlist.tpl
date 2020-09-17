@@ -1,4 +1,4 @@
-<p id="{$prefix}_empty_selectlist" class="{if $selectedlist}d-none{/if} lead">
+<p id="{$prefix}_empty_selectlist" class="{if $selectedlist}d-none{/if} lead text-inline">
     {if !$selectfolders}
     {str tag=nofilesfound section=artefact.file}
     {/if}
@@ -24,14 +24,14 @@
                     </a>
                 {/if}
                 {if $file->description}
-                    <div class="file-description text-small">
+                    <div class="file-description text-small text-midtone">
                         {$file->description|truncate:60|clean_html|safe}
                     </div>
                 {/if}
             </td>
-            <td class="text-right s">
+            <td class="text-right text-small">
                 <button id="{$prefix}_unselect_{$file->id}" name="{$prefix}_unselect[{$file->id}]" class="btn btn-secondary btn-sm text-small button submit unselect" title="{str tag=remove}" type="button">
-                    <span class="icon icon-times icon-lg text-danger left" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-times text-danger left" role="presentation" aria-hidden="true"></span>
                     <span>{str tag=remove}</span>
                 </button>
                  <input type="hidden" class="d-none" id="{$prefix}_selected[{$file->id}]" name="{$prefix}_selected[{$file->id}]" value="{$file->id}">

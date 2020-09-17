@@ -16,13 +16,9 @@
     border: 0;
     background: transparent;
     &.collapsible {
+        @include clearfix;
+        display: block;
         legend {
-            @include clearfix;
-            clear: both;
-            display: block;
-        }
-        legend h4,
-        h4 {
             float:left;
             clear:both;
             background: none;
@@ -30,7 +26,7 @@
             a.collapsed {
                 padding-left:0;
                 border: 0;
-                font-size: $font-size-base * 0.85715;
+                font-size: $font-size-sm;
                 background: none;
                 color: $link-color;
             }

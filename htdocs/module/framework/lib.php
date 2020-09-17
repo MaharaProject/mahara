@@ -1127,7 +1127,7 @@ class Framework {
             ),
             'statusestitle' => array(
                 'type'  => 'html',
-                'value' => "<h4>" . get_string('displaystatusestitle','module.framework') . "</h4>" .
+                'value' => '<h2 class="title">' . get_string('displaystatusestitle','module.framework') . '</h2>' .
                            "<p>" . get_string('displaystatusestitledetail','module.framework') . "</p>",
             ),
             'readyforassesment_container' => array(
@@ -1136,8 +1136,8 @@ class Framework {
                 'elements' => array(
                     'label' => array(
                         'type'=> 'html',
-                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_BEGUN] . '</span>' .
-                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_BEGUN)['begun']['classes'] . '"></span></div>',
+                        'value' => '<div class="pseudolabel"><span>' . $choices[Framework::EVIDENCE_BEGUN] . '</span>' .
+                                   '<div class="statusheader text-inline"><span class="' . $this->get_state_array(Framework::EVIDENCE_BEGUN)['begun']['classes'] . '"></span></div></div>',
                     ),
                     'readyforassesment_field_enabled' => array(
                         'type'  => 'switchbox',
@@ -1153,8 +1153,8 @@ class Framework {
                 'elements' => array(
                     'label' => array(
                         'type'=> 'html',
-                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_INCOMPLETE] . '</span>' .
-                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_INCOMPLETE)['incomplete']['classes'] . '"></span></div>',
+                        'value' => '<div class="pseudolabel"><span>' . $choices[Framework::EVIDENCE_INCOMPLETE] . '</span>' .
+                                   '<div class="statusheader text-inline"><span class="' . $this->get_state_array(Framework::EVIDENCE_INCOMPLETE)['incomplete']['classes'] . '"></span></div></div>',
                     ),
                     'dontmatch_field_enabled' => array(
                         'type'  => 'switchbox',
@@ -1170,8 +1170,8 @@ class Framework {
                 'elements' => array(
                     'label' => array(
                         'type'=> 'html',
-                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_PARTIALCOMPLETE] . '</span>' .
-                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_PARTIALCOMPLETE)['partialcomplete']['classes'] . '"></span></div>',
+                        'value' => '<div class="pseudolabel"><span>' . $choices[Framework::EVIDENCE_PARTIALCOMPLETE] . '</span>' .
+                                   '<div class="statusheader text-inline"><span class="' . $this->get_state_array(Framework::EVIDENCE_PARTIALCOMPLETE)['partialcomplete']['classes'] . '"></span></div></div>',
                     ),
                     'partiallycomplete_field_enabled' => array(
                         'type'  => 'switchbox',
@@ -1187,8 +1187,8 @@ class Framework {
                 'elements' => array(
                     'label' => array(
                         'type'=> 'html',
-                        'value' => '<div class="pseudolabel statusheader"><span>' . $choices[Framework::EVIDENCE_COMPLETED] . '</span>' .
-                                   '<span class="' . $this->get_state_array(Framework::EVIDENCE_COMPLETED)['completed']['classes'] . '"></span></div>',
+                        'value' => '<div class="pseudolabel"><span>' . $choices[Framework::EVIDENCE_COMPLETED] . '</span>' .
+                                   '<div class="statusheader text-inline"><span class="' . $this->get_state_array(Framework::EVIDENCE_COMPLETED)['completed']['classes'] . '"></span></div></div>',
                     ),
                     'completed_field_enabled' => array(
                         'type'  => 'switchbox',

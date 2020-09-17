@@ -9,9 +9,9 @@
         {foreach from=$instances item=item}
         <tr>
             <td>
-                <h3 class="title">
+                <h2 class="title">
                     <a href="{$WWWROOT}admin/users/institutions.php?i={$item->name}">{$item->displayname}</a>
-                </h3>
+                </h2>
             </td>
             <td>
                 {if $item->numusers}

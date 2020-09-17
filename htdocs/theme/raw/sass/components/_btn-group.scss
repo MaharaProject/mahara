@@ -13,7 +13,7 @@
     &:last-of-type {
         .btn {
             @include border-right-radius($btn-border-radius);
-            border-right-width: $border-width;
+            border-right-width: $btn-border-width;
         }
     }
     ~ .form-as-button {
@@ -28,7 +28,7 @@
     div.first {
         .btn {
             display: inline-block;
-            border-bottom-right-radius: 0;
+            border-bottom-right-radius: $btn-border-radius;
             border-top-right-radius: 0;
         }
     }
@@ -36,16 +36,12 @@
         display: inline-block;
         margin: 0;
         padding: 0;
-        .action-list-copy & {
-            margin-left: -4px;
-        }
+
         .btn {
             border-left: 0;
             display: inline-block;
-            border-bottom-left-radius: 0;
-            border-top-left-radius: 0;
-            border-top-right-radius: $btn-border-radius !important;
-            border-bottom-right-radius: $btn-border-radius !important;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: $btn-border-radius;
         }
     }
 }
@@ -65,7 +61,7 @@
     &.btn,
     .btn {
         border-right-width: $btn-border-width !important; // Overriding standard styling above
-        padding-top: 3px !important; // Override standard btn padding
+        padding-top: $spacing-xs !important; // 3px Override standard btn padding
     }
     &:only-of-type .btn {
         border-radius: $btn-border-radius;
@@ -83,7 +79,7 @@
 
 // If there are not-button siblings of group button elements
 .btn-group > .no-delete-btn {
-    margin-right: 32px;
+    margin-right: 1.625rem; // 26px;
 }
 
 .btn-group > .btn.btn-group-first {
@@ -104,7 +100,7 @@
 }
 .btn-group > .btn-group-last:not(.btn-group-first) {
     display: inline-block;
-    margin-left: -4px;
+    margin-left: -0.25rem; // -4px;
     .btn {
         border-top-left-radius: 0 !important;
         border-bottom-left-radius: 0 !important;
@@ -113,7 +109,7 @@
 
 .btn-group > .btn-group-first.btn-group-last {
     display: inline-block;
-    margin-left: -4px;
+    margin-left: -0.25rem; // -4px;
     &.webservices {
         margin-left: 0;
     }
@@ -147,14 +143,14 @@ fieldset.btn-group {
     font-size: 0;
 }
 
-.extensions h2 .btn-group-top {
-    margin-top: -11px;
+.extensions .card-header .btn-group-top {
+    margin-top: -$spacing-base;
     margin-bottom: 0;
 }
 
 // annotation modal
 .feedback.modal {
     .btn-group-top.comment-item-buttons {
-        margin-top: -13px;
+        margin-top: -0.8125rem; // -13px;
     }
 }

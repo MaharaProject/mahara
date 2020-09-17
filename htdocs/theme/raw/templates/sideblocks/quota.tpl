@@ -1,11 +1,11 @@
 {loadquota}
 <div class="card">
-    <h3 class="card-header">
+    <h2 class="card-header">
         {str tag="quota"}
         <span class="float-right">
         {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
         </span>
-    </h3>
+    </h2>
     <div class="card-body">
         <p id="quota_message">
             {$QUOTA_MESSAGE|safe}

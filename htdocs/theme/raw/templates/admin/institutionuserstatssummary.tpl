@@ -1,4 +1,4 @@
-<h4>{str tag=youraverageuser section=admin}</h4>
+<h3>{str tag=youraverageuser section=admin}</h3>
 <ul class="list-group list-group-lite unstyled">
     <li class="list-group-item">{$data.strmaxfriends|safe}</li>
     <li class="list-group-item">{$data.strmaxviews|safe}</li>
@@ -6,7 +6,7 @@
     <li class="list-group-item">{$data.strmaxquotaused|safe}</li>
 </ul>
 {if $data}
-    <h4>{str tag=usersbytype section=statistics}</h4>
+    <h3>{str tag=usersbytype section=statistics}</h3>
     <div class="card-body">
         <canvas class="graphcanvas" id="sitestatsusersgraph" width="300" height="200"></canvas>
         <script>

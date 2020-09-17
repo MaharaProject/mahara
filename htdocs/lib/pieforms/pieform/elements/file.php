@@ -48,7 +48,7 @@ function pieform_element_file(Pieform $form, $element) {/*{{{*/
         $maxfilesize = get_max_upload_size(false);
     }
     $maxuploadsize = display_size($maxfilesize);
-    $result .= '<br><span class="file-description">(' . get_string('maxuploadsize', 'artefact.file') . ' ' . $maxuploadsize . ')</span></div>';
+    $result .= '<br><span class="file-description text-small text-midtone">(' . get_string('maxuploadsize', 'artefact.file') . ' ' . $maxuploadsize . ')</span></div>';
     return $result;
 }/*}}}*/
 

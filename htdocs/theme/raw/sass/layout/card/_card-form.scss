@@ -1,6 +1,6 @@
 .card-form {
     background-color: scale-color($card-bg, $lightness: -1.18);
     border-bottom: $card-border-width solid $card-border-color;
-    padding: 15px 15px 0 15px;
-    margin-bottom: 20px;
+    padding: $spacing-lg $spacing-lg 0 $spacing-lg;
+    margin-bottom: $spacing-xl;
 }

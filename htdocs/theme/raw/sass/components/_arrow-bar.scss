@@ -1,15 +1,13 @@
 .arrow-bar {
     border-radius: $border-radius;
     overflow: hidden;
-    margin-bottom: 2rem;
-    line-height: 46px;
+    margin-bottom: $spacing-xl;
     display: block;
     width: 100%;
     background-color: $arrow-bar-bg;
 
     .right-text,
     .arrow {
-      padding: 5px 15px;
       position: relative;
       display: block;
     }
@@ -19,21 +17,22 @@
         background-color: $arrow-color;
         width: auto;
         &:after {
-            border-bottom: 29px solid transparent;
-            border-left: 14px solid $arrow-color;
-            border-top: 30px solid transparent;
+            border-bottom: 1.75rem solid transparent;
+            border-left: 0.75rem solid $arrow-color;
+            border-top: 1.75rem solid transparent;
             content: "";
-            height: 40px;
+            height: 2.5rem;
             position: absolute;
-            right: -40px;
-            top: -2px;
-            width: 40px;
+            right: -2.5rem;
+            top: 0;
+            width: 2.5rem;
         }
         .text {
             @include ellipsis(true);
             display: block;
             color: $arrow-text-color;
             font-weight: $font-weight-bold;
+            padding: 1rem;
         }
     }
 
@@ -44,14 +43,15 @@
 }
 
 .nav-inpage {
+    padding: 0 1rem;
+
     &.nav > li {
         > a, button {
             @include transition-duration(0.3s);
             border-radius: $border-radius;
-            padding: 0 8px;
-            line-height: 2em;
-            margin-top: 9px;
-            margin-bottom: 9px;
+            padding: .5rem .5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
             display: block;
             color: $arrow-link-color;
             &:hover,
@@ -72,7 +72,7 @@
             }
         }
         + li {
-            margin-left: 2px;
+            margin-left: 0.125rem; // 2px;
         }
     }
 }

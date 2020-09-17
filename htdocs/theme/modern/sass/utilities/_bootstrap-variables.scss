@@ -50,13 +50,6 @@ $dropdown-link-disabled-color:              $gray-300;
 
 $dropdown-header-color:                     $gray-300;
 
-// Navbar
-$nav-link-padding-y:                        0.9375rem;
-$nav-link-padding-x:                        0.625rem;
-
-// Navs
-$navbar-padding-x:                          floor(($grid-gutter-width / 2));
-
 // Pagination
 $pagination-hover-bg:                       $gray-100;
 $pagination-hover-border-color:             #ddd;
@@ -65,19 +58,10 @@ $pagination-disabled-color:                 $gray-300;
 $pagination-disabled-border-color:          #ddd;
 
 // Jumbotron
-$jumbotron-padding:                         30px;
 $jumbotron-bg:                              $gray-100;
 
-// Badges
-$badge-border-radius:                       10px;
-
 // Modals
-$modal-inner-padding:                       15px;
-
 $modal-header-border-color:                 #e5e5e5;
-$modal-header-padding:                      15px;
-
-$modal-lg:                                  900px;
 
 // List group
 $list-group-border-color:                   #ddd;
@@ -86,8 +70,5 @@ $list-group-border-color:                   #ddd;
 $thumbnail-bg:                              $body-bg;
 
 // Breadcrumbs
-$breadcrumb-padding-y:                      8px;
-$breadcrumb-padding-x:                      15px;
-
 $breadcrumb-bg:                             #f5f5f5;
 $breadcrumb-active-color:                   $gray-300;

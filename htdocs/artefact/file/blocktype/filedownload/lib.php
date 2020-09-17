@@ -116,7 +116,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                 'collapsible'  => true,
                 'collapsed'    => true,
                 'legend'       => get_string('Files', 'blocktype.file/filedownload'),
-                'class'        => 'last with-formgroup',
+                'class'        => 'first last with-formgroup',
                 'elements'     => array(
                     'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactids'])) ? $configdata['artefactids'] : null)
                 )

@@ -1,9 +1,9 @@
 <tr id="{$prefix}_edit_row"{if !$fileinfo} class="text-regular d-none editrow no-hover"{/if}>
     <td colspan="{$colspan}" class="fileedittablewrap form-condensed">
         <div class="fileedittable">
-            <h4 id="{$prefix}_edit_heading" class="edit-heading">
+            <h3 id="{$prefix}_edit_heading" class="edit-heading">
                 {if $fileinfo && $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}
-            </h4>
+            </h3>
             <div class="form-group requiredmarkerdesc">{str tag='requiredfields' section='pieforms' arg1='*'}</div>
             <div id="{$prefix}_rotator" class="form-group image-rotator">
                 <span class="image-rotator-inner">
@@ -93,8 +93,8 @@
         </div>
         <div>
             <div class="submitcancel form-group">
-                <input type="submit" class="submit submitcancel btn-primary" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
-                <input type="submit" class="submitcancel cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
+                <input type="submit" class="submit submitcancel btn btn-primary" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
+                <input type="submit" class="btn submitcancel cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </div>
             <div>
                 <div id="{$prefix}_edit_messages">

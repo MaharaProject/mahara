@@ -9,7 +9,7 @@
             </div>
 
             <div class="form-group input-group-append">
-                <button class="query-button btn btn-primary" type="submit">{str tag="Search" section="view"}</button>
+                <button class="query-button btn btn-secondary" type="submit">{str tag="Search" section="view"}</button>
             </div>
         </fieldset>
     </div>

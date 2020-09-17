@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <div class="fl">
-<h3>{$subheading}</h3>
+<h2>{$subheading}</h2>
 <p>{$message}</p>
 {$form|safe}
 </div>

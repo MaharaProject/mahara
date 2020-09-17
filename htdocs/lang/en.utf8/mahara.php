@@ -1291,13 +1291,10 @@ $string['missingparent'] = 'Theme "%s" has missing parent theme "%s".';
 $string['Hide2'] = 'Hide information box';
 $string['create'] = 'Create';
 $string['createsubtitle'] = 'Develop your portfolio';
-$string['createdetail'] = 'Create your electronic portfolio in a flexible personal learning environment';
 $string['share'] = 'Share';
 $string['sharesubtitle'] = 'Control your privacy';
-$string['sharedetail'] = 'Share your achievements and development in a space you control';
 $string['engage'] = 'Engage';
 $string['engagesubtitle'] = 'Find people and join groups';
-$string['engagedetail'] = 'Engage with other people in discussion forums and collaborate with them in groups';
 $string['howtodisable'] = 'You have hidden the information box. You can control its visibility in <a
 href="%s">Settings</a>.';
 

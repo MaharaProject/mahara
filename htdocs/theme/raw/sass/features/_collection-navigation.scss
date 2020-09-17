@@ -1,21 +1,21 @@
 .collection-nav {
     padding: 0;
-    margin-top: 20px;
-    margin-bottom: 70px;
+    margin-top: $spacing-lg;
+    margin-bottom: 4.375rem; // 70px;
     position: relative;
 
     @include media-breakpoint-down(md) {
-      margin-bottom: 50px;
+      margin-bottom: 3.125rem; // 50px;
     }
 
     h2 {
         font-weight: $font-weight-bold;
         font-size: $font-size-base;
         margin-top: 0;
-        padding-bottom: 10px;
+        padding-bottom: $spacing-base;
 
         @include media-breakpoint-up(lg) {
-          margin-right: 300px;
+          margin-right: 18.75rem; // 300px;
           margin-bottom: 0;
           border-bottom: $border-width solid $border-color;
         }
@@ -29,12 +29,12 @@
       @include media-breakpoint-up(lg) {
         position: absolute;
         right: 0px;
-        bottom: -1px;
+        bottom: -0.0625rem; // -1px;
       }
     }
     nav.custom-dropdown {
         margin: 0 auto;
         display: inline-block;
-        min-width: 200px;
+        min-width: 12.5rem; // 200px;
     }
 }

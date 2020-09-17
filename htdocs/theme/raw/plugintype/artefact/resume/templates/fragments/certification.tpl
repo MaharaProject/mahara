@@ -1,10 +1,10 @@
 {if $controls}
 <div class="card">
     {if !$hidetitle}
-    <h3 class="resumeh3 card-header">
+    <h2 class="resumeh3 card-header">
         {str tag='certification' section='artefact.resume'}
         {contextualhelp plugintype='artefact' pluginname='resume' section='addcertification'}
-    </h3>
+    </h2>
     {/if}
 
     <table id="certificationlist{$suffix}" class="tablerenderer resumefour resumecomposite fullwidth table">
@@ -60,16 +60,16 @@
     <div class="list-group-item flush-collapsible">
 
         {if $row->description || $row->attachments}
-            <h5 class="list-group-item-heading">
+            <h4 class="list-group-item-heading">
                 <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
                     {$row->title}
                     <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>
-            </h5>
+            </h4>
         {else}
-            <h5 class="list-group-item-heading">
+            <h4 class="list-group-item-heading">
                 {$row->title}
-            </h5>
+            </h4>
         {/if}
         <span class="text-small text-muted">
             {$row->date}
@@ -104,35 +104,39 @@
                         displayiconsonly = true}
                     <li class="list-group-item">
                     {if !$editing}
-                        <a class="modal_link text-small" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
-                    {/if}
+                        <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
                         {if $item->iconpath}
                             <img class="file-icon" src="{$item->iconpath}" alt="">
                         {else}
                             <span class="icon icon-{$item->artefacttype} left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
-                    {if !$editing}
                         </a>
+                    {else}
+                        <span class="file-icon-link">
+                        {if $item->iconpath}
+                            <img class="file-icon" src="{$item->iconpath}" alt="">
+                        {else}
+                            <span class="icon icon-{$item->artefacttype} left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                        {/if}
+                        </span>
                     {/if}
                         <span class="title">
                         {if !$editing}
-                            <a class="modal_link text-small" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
-                                {$item->title}
-                            </a>
-                        {else}
+                            <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
+                        {/if}
                             <span class="text-small">{$item->title}</span>
+                        {if !$editing}
+                            </a>
                         {/if}
                         </span>
-
                         <a href="{$item->downloadpath}" class="download-link">
-                            <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}</span>
                             <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>
-                        {if $item->description}
-                            <div class="file-description text-small">
-                                {$item->description|clean_html|safe}
-                            </div>
-                        {/if}
+                    {if $item->description}
+                        <div class="file-description text-small text-midtone">
+                            {$item->description|clean_html|safe}
+                        </div>
+                    {/if}
                     </li>
                     {/foreach}
                 </ul>

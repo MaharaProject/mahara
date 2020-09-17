@@ -34,15 +34,15 @@
                             {if !$collection->submitinfo && $canedit}
                                 <div class="btn-top-right btn-group btn-group-top">
                                     <a href="{$WWWROOT}collection/views.php?id={$collection->id}" title="{str tag=manageviews section=collection}" class="btn btn-secondary btn-sm">
-                                        <span class="icon icon-list icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-list text-default" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$collection->name)|escape:html|safe}</span>
                                     </a>
                                     <a href="{$WWWROOT}collection/edit.php?id={$collection->id}" title="{str tag=edittitleanddescription section=view}" class="btn btn-secondary btn-sm">
-                                        <span class="icon icon-pencil-alt icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str(tag=editspecific arg1=$collection->name)|escape:html|safe}</span>
                                     </a>
                                     <a href="{$WWWROOT}collection/delete.php?id={$collection->id}" title="{str tag=deletecollection section=collection}" class="btn btn-secondary btn-sm">
-                                        <span class="icon icon-trash-alt icon-lg text-danger" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str(tag=deletespecific arg1=$collection->name)|escape:html|safe}</span>
                                     </a>
                                 </div>

@@ -5,13 +5,13 @@ $width-sm: 90%;
 //tinymce modal
 .blockinstance-as-modal {
     background: $white;
-    padding: 20px;
+    padding: $spacing-xl;
     border: $modal-header-border-width solid $modal-header-border-color;
 }
 
 
 .modal-loading {
-    margin-top: 100px;
+    margin-top: 6.25rem; // 100px;
     text-align: center;
     width: 100%;
     overflow: hidden;
@@ -42,25 +42,25 @@ $width-sm: 90%;
         max-height: 100%;
     }
     .modal-body {
-        @include border-bottom-radius($border-radius);
+        @include border-bottom-radius($modal-content-border-radius);
         overflow-y: auto;
         overflow-x: hidden;
         &.flush {
             padding: 0;
         }
         .list-group.flush {
-            margin: -15px;
+            margin: -$list-group-item-padding-x;
         }
         .matrix {
             .list-group {
-                margin: 0 -15px;
+                margin: 0 -$list-group-item-padding-x;
             }
         }
         &.blockinstance-content {
             padding: $modal-inner-padding;
         }
         .file-icon-render-in-modal {
-            margin-left: 10px;
+            margin-left: $spacing-base;
         }
     }
     .modal-dialog {
@@ -75,12 +75,13 @@ $width-sm: 90%;
 }
 
 .modal-content {
-    border-radius: $border-radius;
-    h5 {
-        margin: 0;
+    border-radius: $modal-content-border-radius;
+    border: 0;
+    h2.title {
+        margin-top: 0;
     }
     .btn.submit {
-        margin-top: 15px;
+        margin-top: $spacing-lg;
         &.unselect {
             margin-top: 0;
         }
@@ -90,32 +91,45 @@ $width-sm: 90%;
             margin-top: 0;
         }
     }
+    h2, h3, h4 {
+      font-size: $h4-font-size;
+    }
 }
 
 .modal-header,
 .mce-panel .mce-window-head {
-    background: $card-header-bg;
-    padding: 10px 15px;
-    h4, .mce-title {
-        font-family: $font-family-base;
-        font-weight: $font-weight-light;
-        font-size: $font-size-base * 1.14285;
+    background: $modal-header-bg;
+    padding: $modal-header-padding-y $modal-header-padding-x;
+    border-radius: $card-inner-border-radius $card-inner-border-radius 0 0;
+    .mce-title,
+    .modal-title {
+      color: $modal-header-color;
+      margin: 0;
+      padding: 0 !important;
+      font-size: $h4-font-size;
+      font-family: $headings-font-family;
+      font-weight: $headings-font-weight;
+      border-bottom: 0;
     }
     .close,
     .mce-close {
         order: 1;
-        opacity: 1;
         padding: 0;
         margin: 0;
+        color: $modal-header-color;
+        opacity: 0.8;
+        line-height: 1.5;
+
         &:hover,
         &:focus {
+            opacity: 1;
             .times {
                 opacity: 1;
             }
         }
         .times {
             opacity: 0.8;
-            font-size: $font-size-base * 1.785;
+            line-height: 1.5;
         }
     }
 }
@@ -163,31 +177,36 @@ $width-sm: 90%;
     }
 
     .modal-header {
-        background:  theme-color("primary");
+        background: $modal-header-bg;
         padding: $modal-header-padding-y $modal-header-padding-x;
         color: $modal-header-color;
         border-radius: 0;
-         h4, a {
-            color: $modal-header-color;
+        .modal-title, a {
+          margin: 0;
+          padding: 0;
+          font-size: $h4-font-size;
+          font-family: $headings-font-family;
+          font-weight: $headings-font-weight;
         }
         &.modal-section {
-            margin: 0 0 10px 0;
+            margin: 0 0 $spacing-base 0;
         }
         .close {
            @include box-shadow(-2px 0 2px rgba(0,0,0,0.3));
-            border-radius: $border-radius 0 0 $border-radius;
+            border-radius: $modal-content-border-radius 0 0 $modal-content-border-radius;
             opacity: 1;
             position: absolute;
-            top: 1px;
-            left: -28px;
-            padding: $modal-header-padding-y 7px;
-            background: $modal-header-color;
+            top: 0px;
+            left: -2.1875rem; // 35px
+            padding: $modal-header-padding-y $modal-header-padding-x;
+            background: $modal-header-bg;
             border: 0;
             .times {
-                color: $theme-text-midtone-color;
-                opacity:0.4;
+                color: $modal-header-color;
+                opacity: 0.4;
             }
             &:hover,
+            &:focus,
             &:active {
                 outline: none;
                 opacity: 1;
@@ -195,10 +214,6 @@ $width-sm: 90%;
                     opacity:0.8;
                 }
             }
-            &:focus {
-                outline: medium solid $input-focus-border-color;
-            }
-
         }
     }
     .modal-content {
@@ -212,12 +227,8 @@ $width-sm: 90%;
 
 .modal .tags {
     input {
-        max-width:250px;
+        max-width: 15.625rem; // 250px;
     }
-}
-
-.modal-title {
-    margin-top: 0;
 }
 
 .modal-segment-heading {
@@ -228,11 +239,11 @@ $width-sm: 90%;
 #configureauthinstance-modal {
     .modal-body textarea.under-label,
     .modal-body .under-label-help.wysiwyg .tox-tinymce {
-        width: calc(100% - 30px) !important;
+        width: calc(100% - 1.875rem) !important; // calc(100% - 30px)
     }
     .modal-body .form-group.text {
         label {
-            max-width: calc(50% - 30px);
+            max-width: calc(50% - 1.875rem); // calc(50% - 30px)
         }
         input[type="text"] {
             max-width: 50%;
@@ -240,7 +251,7 @@ $width-sm: 90%;
     }
     .modal-body .form-group.password {
         label {
-            max-width: calc(50% - 30px);
+            max-width: calc(50% - 1.875rem); // calc(50% - 30px)
         }
         input[type="password"] {
             max-width: 50%;

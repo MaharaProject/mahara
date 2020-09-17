@@ -22,7 +22,7 @@
         </fieldset>
     </div>
     <div class="no-label text-inline form-group">
-        <button id="query-button" class="btn-search btn btn-primary " type="submit">
+        <button id="query-button" class="btn-search btn btn-secondary " type="submit">
         {str tag='Search' section='admin'}
         </button>
     </div>
@@ -31,7 +31,7 @@
         <label class="sr-only" for="query">{str tag='Search' section='admin'}: </label>
         <input placeholder="{str tag='Search' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
         <div class="input-group-append button">
-            <button id="query-button" class="btn-search btn btn-primary " type="submit">
+            <button id="query-button" class="btn-search btn btn-secondary " type="submit">
             {str tag='Search' section='admin'}
             </button>
         </div>
@@ -40,15 +40,13 @@
     <div class="advanced as-link link-expand-right form-group collapsible-group">
         <fieldset class="pieform-fieldset advanced last as-link link-expand-right collapsible">
             <legend>
-                <h4>
-                    <a href="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
-                        {str tag='moreoptions' section='view'}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
-                    </a>
-                </h4>
+                <a href="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
+                    {str tag='moreoptions' section='view'}
+                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                </a>
             </legend>
             <div id="initials" class="initials collapse{if $search->f || $search->l} show{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
-                <h3 class="filter-result-heading" tabindex="0">{str tag="filterresultsby"}</h3>
+                <h2 class="filter-result-heading" tabindex="0">{str tag="filterresultsby"}</h2>
                 <div class="row">
                     <div id="firstnamelist" class="col-md-4 userserach-filter">
                         <span class="pseudolabel" id="firstname">{str tag="firstname"}:</span>

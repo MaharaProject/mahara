@@ -1,11 +1,11 @@
-.collapsible legend h4,
-.collapsible legend h3,
+.collapsible legend,
 .card-header {
     background-color: $card-header-bg;
     position: relative;
     display: block;
     font-family: $font-family-base;
     font-weight: $font-weight-light;
+
     p {
         margin: 0;
     }
@@ -13,10 +13,7 @@
     &.has-link,
     &.profile-block {
         padding: 0;
-        h4 {
-            padding: 0;
-            margin: 0;
-        }
+        margin: 0;
         a:not(.secondary-link) {
             border-width: 0;
             &.user-icon {
@@ -33,24 +30,23 @@
     a:not(.secondary-link) {
         display: block;
         color: inherit;
-        padding: 10px 15px;
+        padding: $card-spacer-y $card-spacer-x;
         border: $card-border-width solid $card-border-color;
         border-bottom: 0;
-        font-size: $font-size-base * 1.14285;
+        font-size: $font-size-base * 1.25; // 20px
         .card-secondary > & {
-            padding: 10px 8px;
+            padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
             border-width: 0;
         }
 
         &.collapsed {
             background-color: $card-header-bg;
-            color: $theme-text-color;
-            padding: 10px 15px;
+            padding: $card-spacer-y $card-spacer-x;
             &.outer-link {
                 background: none;
             }
             .card-secondary > & {
-                padding: 10px 8px;
+                padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
             }
         }
         &:hover, &:focus {
@@ -71,17 +67,8 @@
     }
 }
 
-
-.card-small .card-header {
-    font-size: $font-size-sm;
-    padding-right:40px;
-    h4 {
-        font-size: $font-size-sm;
-    }
-}
-
 .card-header .btn-link {
-    &:hover{
+    &:hover {
         .icon {
             color: $link-color;
         }
@@ -91,14 +78,17 @@
 h2,
 h3 {
     &.card-header {
-        font-size: $font-size-base * 1.14285;
+        font-size: $font-size-base * 1.25; // 20px
         margin: 0;
     }
 }
 
 .card {
     > .card-header {
-        font-size: $font-size-base * 1.14285;
+        font-size: $font-size-base * 1.25; // 20px
+        .icon {
+          line-height: $headings-line-height;
+        }
     }
     &.collapsible:not(.card-secondary) {
         .card-header {
@@ -117,8 +107,15 @@ h3 {
         }
         &.has-attachment {
             .card-header {
+                font-weight: $font-weight-normal;
                 a {
                     border-width: 0;
+                    line-height: 1;
+
+                    .icon-paperclip,
+                    .collapse-indicator {
+                        line-height: 1;
+                    }
                 }
             }
         }

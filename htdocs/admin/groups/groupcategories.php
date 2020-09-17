@@ -102,7 +102,7 @@ jQuery(function($) {
         'title':{$getstring['edit']},
         'alt':{$getstring['editspecific']}.replace('%s', item.name)
       });
-      edit.append($('<span>', {'class':'icon icon-pencil-alt icon-lg', 'role':'presentation'}));
+      edit.append($('<span>', {'class':'icon icon-pencil-alt', 'role':'presentation'}));
       edit.append($('<span class="sr-only">' + {$getstring['editspecific']}.replace('%s', item.name) + '</span>'));
 
       edit.on('click', function (e) { e.preventDefault(); edititem(item); });
@@ -115,7 +115,7 @@ jQuery(function($) {
         'title':{$getstring['delete']},
         'alt':{$getstring['deletespecific']}.replace('%s', item.name)
       });
-      del.append($('<span>', {'class':'icon icon-trash-alt text-danger icon-lg', 'role':'presentation'}));
+      del.append($('<span>', {'class':'icon icon-trash-alt text-danger', 'role':'presentation'}));
       del.append($('<span class="sr-only">' + {$getstring['deletespecific']}.replace('%s', item.name) + '</span>'));
 
       del.on('click', function (e) { e.preventDefault(); delitem(item.id); });
@@ -142,7 +142,7 @@ jQuery(function($) {
 
       // Either a save, a cancel button, or both.
       var savecancel = [];
-      var save = $('<input>', {'type':'button','class':'button btn btn-sm btn-secondary'});
+      var save = $('<input>', {'type':'button','class':'button btn btn-secondary'});
       save.on('click', function () { saveitem(item.id); });
 
       var rowtype = 'add';

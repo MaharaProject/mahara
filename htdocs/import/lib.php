@@ -170,7 +170,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
      *
      * @param int               $id the queue record (if there is one, else pass 0)
      * @param ImporterTransport $transport the transporter object to use
-     * @param stdclass          $record the queue data (this <b>must</b> be passed when no id is given
+     * @param stdclass          $record the queue data (this <strong>must</strong> be passed when no id is given
      *
      * @return PluginImport
      */
@@ -190,7 +190,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     /**
      * Whether imports are allowed immediately or if they must be queued
      * eg if the server is under load or whatever
-     * @todo not implemented yet, but <b>use this anyway</b>
+     * @todo not implemented yet, but <strong>use this anyway</strong>
      *
      * @return boolean
      */

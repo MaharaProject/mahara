@@ -1,13 +1,13 @@
 .tab-content {
-    padding-top: 20px;
+    padding-top: $spacing-xl;
     .admin-edit-users & {
-        padding: 20px 0 15px 0;
+        padding: $spacing-xl 0 $spacing-lg 0;
     }
 }
 
 .admin {
     .tab-content {
-        padding: 10px;
+        padding: $spacing-base;
         background-color: $card-bg;
         .card-secondary {
             border: none;

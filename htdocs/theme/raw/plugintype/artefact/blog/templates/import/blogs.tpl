@@ -5,14 +5,14 @@
     <div class="list-group-item">
         <div id="entryblog-{$blog.id}" class="row">
             <div class="col-md-8">
-                <h3 class="title list-group-item-heading">
+                <h2 class="title list-group-item-heading">
                 {if $blog.description}<a class="blogtitle" href="" id="{$blog.id}">{/if}
                 {$blog.title|str_shorten_text:80:true}
                 {if $blog.description}</a>{/if}
-                </h3>
+                </h2>
                 <div id="{$blog.id}_desc" class="detail d-none">{$blog.description|clean_html|safe}</div>
                 {if $blog.tags}
-                <div class="tags">
+                <div class="tags text-small text-midtone">
                     <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$blog.tags}
                 </div>
                 {/if}
@@ -50,7 +50,7 @@
             <div id="posttitle_{$post.id}" class="{if $post.published} published{else} draft{/if} list-group-item">
                 <div class="row">
                     <div class="col-md-8">
-                        <h4 class="title list-group-item-heading text-inline">
+                        <h3 class="title list-group-item-heading text-inline">
                             {if $post.description}
                             <a class="posttitle" href="" id="{$post.id}">
                                 {$post.title|str_shorten_text:80:true}
@@ -58,7 +58,7 @@
                             {else}
                                 {$post.title|str_shorten_text:80:true}
                             {/if}
-                        </h4>
+                        </h3>
                         <span id="poststatus{$post.id}" class="poststatus text-small text-midtone">
                             {if $post.published}
                                 ({str tag=published section=artefact.blog})
@@ -66,10 +66,10 @@
                                 ({str tag=draft section=artefact.blog})
                             {/if}
                         </span>
-                        <div id="{$post.id}_desc" class="detail d-none text-small">
+                        <div id="{$post.id}_desc" class="detail d-none text-small text-midtone">
                             {$post.description|clean_html|safe}
                         </div>
-                        <p id="postdetails_{$post.id}" class="postdetails text-small">
+                        <p id="postdetails_{$post.id}" class="postdetails text-small text-midtone">
                             {str tag=postedon section=artefact.blog} {$post.ctime}
                         </p>
                         {if $post.files}

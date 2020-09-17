@@ -5,7 +5,7 @@
     margin-bottom: 0;
     border-radius: 0;
     .card-header {
-        padding: 10px 8px;
+        padding: $card-spacer-y ($card-spacer-x / 2);
         a {
             border-radius: 0;
         }
@@ -17,7 +17,7 @@
         border-radius: 0;
         &.has-attachment {
           border-radius: $card-border-radius;
-          margin-top: 10px;
+          margin-top: $spacing-base;
           margin-bottom: 0;
         }
     }
@@ -37,8 +37,13 @@
                     }
                 }
             }
-            legend h4 {
-                border-bottom: $card-border-width solid $card-border-color;
+            legend {
+                a {
+                    border-bottom: $card-border-width solid $card-border-color;
+                    &.collapsed {
+                        @include border-bottom-radius($card-border-radius);
+                    }
+                }
             }
 
             .fieldset-body {
@@ -46,7 +51,8 @@
                 @include border-bottom-radius($card-border-radius);
             }
         }
-        &.first .card-header a {
+        &.first .card-header a,
+        &.first legend a {
             @include border-top-radius($card-border-radius);
         }
 
@@ -58,14 +64,13 @@
 
         .type-icon {
             display:inline-block;
-            width: 32px;
-            padding: 0 30px;
+            width: 2rem; // 32px;
+            padding: 0 $spacing-xxl;
         }
 
         &.has-attachment .card-header,
         .collapsible-group & .card-header,
-        legend h4,
-        legend h3  {
+        legend {
             margin: 0;
             font-size: $font-size-lg;
             padding: 0;
@@ -76,9 +81,16 @@
             }
         }
 
+        // cancel for filelist
+        .filelist-wrapper .card-header {
+            padding: $card-spacer-y $card-spacer-x;
+            margin-top: $spacing-base;
+            margin-bottom: 0;
+        }
+
         .fieldset-body {
             border: $card-border-width solid $card-border-color;
-            padding: 10px 15px;
+            padding: $card-spacer-y $card-spacer-x;
             background: $card-bg;
             margin-bottom: -$card-border-width; //remove double border
             .jstabs & {
@@ -89,10 +101,10 @@
             .form-group {
                 margin: 0;
                 position: relative;
-                padding: 20px 0;
+                padding: $spacing-xl 0;
                 border-bottom: $list-group-border-width solid $list-group-border-color;
                 &.alert {
-                    padding: 10px 50px;
+                    padding: $spacing-base $spacing-xxxl;
                 }
                 &:last-child,
                 &.last {
@@ -100,7 +112,10 @@
                 }
             }
             &.with-formgroup {
-                margin-top: 15px;
+                margin-top: $spacing-lg;
+            }
+            td .form-group {
+              padding: 0;
             }
         }
         .html {
@@ -112,21 +127,20 @@
             legend {
                 width: auto;
                 border: none;
-                h4 {
-                    a {
-                        padding: 5px 5px 5px 0 !important;
-                        border: 0;
-                        background-color: $card-bg !important;
-                        color: $link-color;
-                        font-size: $font-size-base !important;
-                        font-weight: $font-weight-normal !important;
-                        &:hover,
-                        &:focus {
-                            text-decoration: underline !important;
-                        }
-                        span {
-                            margin: 5px 0 0 5px;
-                        }
+
+                a {
+                    padding: $spacing-sm $spacing-sm $spacing-sm 0 !important;
+                    border: 0;
+                    background-color: $card-bg !important;
+                    color: $link-color;
+                    font-size: $font-size-base !important;
+                    font-weight: $font-weight-normal !important;
+                    &:hover,
+                    &:focus {
+                        text-decoration: underline !important;
+                    }
+                    span {
+                        margin: $spacing-sm 0 0 $spacing-sm;
                     }
                 }
             }
@@ -135,7 +149,7 @@
 
     &.as-link {
        @include card-as-link();
-       &.link-expand-right legend h4 {
+       &.link-expand-right legend {
            border-bottom: 0;
        }
     }
@@ -143,11 +157,20 @@
 
 .link-expand-right.form-group {
     position: static;
+    margin: $spacing-xl 0;
+
+    .link-expand-right {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
     legend {
         position:absolute;
-        top: 5px;
-        right: 20px;
+        top: 0;
+        right: 0;
         width: auto;
+        font-weight: $font-weight-normal;
+
         @include media-breakpoint-down(sm) {
             position: static;
             text-align: right;
@@ -169,7 +192,7 @@
         }
     }
 
-    &.card-primary{
+    &.card-primary {
         .card-header a {
             font-weight: $font-weight-bold;
         }
@@ -177,11 +200,11 @@
 
     &.notification {
         .card-footer {
-            margin-bottom: 20px;
+            margin-bottom: $spacing-xl;
         }
         .no-footer {
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            padding-bottom: $spacing-base;
+            margin-bottom: $spacing-xl;
         }
     }
 
@@ -206,7 +229,7 @@
     &.has-attachment {
         border-radius: $card-border-radius;
         border-width: $card-border-width;
-        margin-top: 10px;
+        margin-top: $spacing-base;
     }
 }
 

@@ -2,11 +2,11 @@
 
 <div class="btn-top-right btn-group btn-group-top">
     <a href="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}" class="btn btn-secondary button" type="submit">
-        <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=createskin section=skin}
     </a>
     <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
-        <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="moreoptions"}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -58,7 +58,7 @@
             <div class="skin-controls card-footer">
                 {if $skin.editable}
                 <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='editthisskin' section='skin'}" {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if} class="btn btn-secondary btn-sm">
-                    <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=editspecific arg1=$skin.title}
                     </span>
@@ -68,14 +68,14 @@
 
                 {if $skin.removable}
                 <a href="{$WWWROOT}skin/export.php?id={$skin.id}" title="{str tag='exportthisskin' section='skin'}" class="btn btn-secondary btn-sm">
-                    <span class="icon icon-download icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=exportspecific section=skin arg1=$skin.title}
                     </span>
                 </a>
 
                 <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-secondary btn-sm">
-                    <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=deletespecific arg1=$skin.title}
                     </span>
@@ -86,7 +86,7 @@
                     {if $skin.type == 'public' && $skin.owner != $user}
                         {if !$skin.favorite}
                         <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-regular icon-heart icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-regular icon-heart" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
                             </span>
@@ -94,7 +94,7 @@
 
                         {else}
                         <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" title="{str tag='removefromfavorites' section='skin'}" class="btn btn-secondary btn-sm">
-                            <span class="icon icon-heart icon-lg" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-heart" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                             {str tag=removefromfavoritesspecific section=skin arg1=$skin.title}
                             </span>
@@ -114,9 +114,9 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
 
-                        <h4 class="modal-title" id="skin-info">
+                        <h1 class="modal-title" id="skin-info">
                             {str tag=metatitle section=skin}
-                        </h4>
+                        </h1>
                     </div>
                     <div class="modal-body">
                         <p class="metatitle">
@@ -133,7 +133,7 @@
 
                         <p class="metadescription">
                             <strong>{str tag=description section=skin}:</strong>
-                            <br>{$skin.metadata.description}
+                            {$skin.metadata.description}
                         </p>
 
                         <p class="metacreationdate">

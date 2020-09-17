@@ -3,7 +3,7 @@
 <div class="pageactions" id="toolbar-buttons">
     <div class="btn-group-vertical in-editor">
         <a class="btn btn-secondary editviews" href="{$viewurl}" title="{str tag=displayview section=view}">
-            <span class="icon icon-lg icon-tv" aria-hidden="true" role="presentation"></span>
+            <span class="icon icon-tv" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=displayview section=view}</span>
         </a>
     </div>

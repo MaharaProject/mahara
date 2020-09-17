@@ -30,8 +30,8 @@ $menu-styles: (
             border-color: transparent;
             &:before {
                 @include fonttype(solid);
-                padding-right: 5px;
-                font-size: 19px;
+                padding-right: $spacing-sm;
+                font-size: 1.1875rem; // 19px;
                 color: $white;
             }
             &:focus,

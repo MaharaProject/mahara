@@ -2,13 +2,13 @@
   Gridstack layout CSS
 */
 .grid-stack {
-    margin-left: -10px;
-    margin-right: -10px;
+    margin-left: -$spacing-base;
+    margin-right: -$spacing-base;
 
     // but pages that haven't been converted need to have to reverted background
     > .clearfix {
-      margin-left: 10px;
-      margin-right: 10px;
+      margin-left: $spacing-base;
+      margin-right: $spacing-base;
     }
 }
 
@@ -31,7 +31,7 @@
     &.draft {
         background-color: $state-warning-bg !important;
         > div.blockinstructions fieldset.pieform-fieldset {
-            legend h4 a.linkinstructions,
+            legend a.linkinstructions,
             div.fieldset-body {
               background-color: $state-warning-bg !important;
               color: $theme-text-color;
@@ -40,6 +40,6 @@
     }
 }
 
-.blockinstructions legend h4 a {
+.blockinstructions legend a {
    outline: 0;
 }

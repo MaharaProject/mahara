@@ -120,7 +120,7 @@ function objectionSuccess(form, data) {
     }
     // Update the objection menu link to be message sent one
     if (jQuery('#objection_link').length && typeof data.objection_cancelled == 'undefined') {
-        jQuery('#objection_link').parent().html('<span class="nolink"><span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>' + get_string_ajax('objectionablematerialreported', 'mahara') + '</span>');
+        jQuery('#objection_link').parent().html('<span class="nolink"><span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>' + get_string_ajax('objectionablematerialreported', 'mahara') + '</span>');
     }
 }
 
@@ -247,7 +247,7 @@ function open_modal(e) {
     }
 
     sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
-        block.find('h4').text(data.title);
+        block.find('.modal-title').text(data.title);
         $('.blockinstance-content').html(data.html);
 
         set_up_modal_events();
@@ -283,7 +283,7 @@ function delete_comment_from_modal_submit(form, data) {
     }
     tinymce.EditorManager.execCommand('mceRemoveEditor',true, $('#configureblock').find('textarea.wysiwyg').attr('id'));
     sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
-        $('#configureblock').find('h4').text(data.title);
+        $('#configureblock').find('.modal-title').text(data.title);
         $('.blockinstance-content').html(data.html);
         set_up_modal_events();
 

@@ -1,120 +1,85 @@
 .dashboard-widget-container {
-    overflow: visible;
+    text-align: center;
 
     .thumbnail-widget {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: $spacing-xl;
+        border-radius: $dashboard-widget-border-radius;
         text-align: center;
-        background-color: $dashboard-widget-bg;
+        padding: 0;
+        float: none;
+        width: 15rem; // 240px;
+        height: 15rem; // 240px;
 
-        @include media-breakpoint-up(md) {
-            padding: 0;
-            width: 32%;
-            margin-left: 2%;
-            height: 223px;
-            border-radius: 50%;
-            &.first {
-                margin-left: 0;
+        @include media-breakpoint-down(md) {
+            width: 9rem; // 144px;
+            height: 9rem; // 144px;
+            margin-right: $spacing-base;
+        }
+
+        &.last {
+            margin-right: 0;
+            @include media-breakpoint-down(md) {
+                margin-right: 0;
             }
         }
-        @include media-breakpoint-up(xl) {
-            height: 271px;
-        }
 
-        &:hover {
+        &:hover,
+        &:focus {
             background-color: scale-color($theme-secondary-color, $lightness: 70%);
             transition: all 0.2s ease 0s;
         }
 
         .widget-heading {
-            border-top: 0;
-            padding: 0 10px;
-            height: auto;
-            background: transparent;
+            padding: 0;
+            border-radius: $dashboard-widget-border-radius;
+            width: 15rem; // 240px;
+            height: 15rem; // 240px;
 
-            @include media-breakpoint-between(md, lg) {
-                height: auto;
-            }
-
-            @include media-breakpoint-up(md) {
-                margin-top: 20px;
-            }
-            @include media-breakpoint-up(xl) {
-                margin-top: 40px;
+            @include media-breakpoint-down(md) {
+                width: 9rem; // 144px;
+                height: 9rem; // 144px;
             }
 
             .circle-bg {
+                padding-top: $spacing-xl;
+                margin-right: 0;
+                margin-bottom: 0;
                 float: none;
-                display: inline-block;
+                background-color: transparent;
                 width: auto;
                 height: auto;
 
                 .icon {
                     color: $dashboard-widget-cirlce-icon-color;
-                    @include media-breakpoint-up(xl) {
-                        font-size: 36px
+                    font-size: 4.5rem; // 72px;
+                    line-height: 1.6;
+
+                    @include media-breakpoint-down(md) {
+                        font-size: 2.5rem; // 40px;
                     }
                 }
             }
 
             h2 {
-                font-weight: 500;
-                display: inline-block;
-                color: $dashboard-widget-title-color;
-                @include media-breakpoint-up(xl) {
-                    font-size: 36px;
+                text-align: center;
+                margin: 0;
+
+                @include media-breakpoint-down(md) {
+                    font-size: 1.125rem; // 18px;
                 }
             }
-            p {
-                font-size: 16px;
-                font-family: $font-family-serif;
-                color: $gray-500;
-                display: block;
-                @include media-breakpoint-up(xl) {
-                    font-size: 20px
-                }
-            }
-        }
-        .widget-detail {
-            opacity: 1;
-            margin-top: 0;
-            border: 0;
-            height: auto;
-            background: transparent;
 
             p {
-              font-size: 13px;
-              color: $gray-700;
-            }
-        }
+                font-size: 0.8125rem; // 13px;
+                text-align: center;
+                margin: 0 $spacing-xxl;
 
-        &.logged-in {
-            .widget-detail {
-                opacity: 1;
-                margin-top: 0;
-                @include media-breakpoint-between(md, lg) {
-                    margin-top: 0;
-                }
-                @include media-breakpoint-up(xl) {
-                    padding-left: 30px;
-                    padding-right: 30px;
-                }
-                @include media-breakpoint-down(sm) {
-                    margin-top: 0;
-                    border: 0;
-                    background: transparent;
-                }
-                p {
-                  font-size: 13px;
-                  color: $gray-700;
-                }
-            }
-            &:hover {
-                .widget-detail {
-                    opacity: 1;
-                    margin-top: 0;
-                    background: transparent;
+                @include media-breakpoint-down(md) {
+                    display: none;
                 }
             }
         }
-
     }
 }

@@ -1,6 +1,6 @@
 {include file="header.tpl"}
 <a title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-secondary" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
-    <span class="icon icon-edit icon-regular icon-lg left" role="presentation" aria-hidden="true"></span>
+    <span class="icon icon-edit icon-regular left" role="presentation" aria-hidden="true"></span>
     {str section='module.multirecipientnotification' tag='composemessage'}
 </a>
 <div id="notifications-page-header"/></div>
@@ -15,19 +15,16 @@
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
             </label>
 
-            <button type="button" class="btn btn-secondary" data-toggle="dropdown" aria-expanded="false">
-                {str section='admin' tag='bulkactions'}
-            </button>
             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="icon icon-caret-down"></span>
+                {str section='admin' tag='bulkactions'}  <span class="icon icon-caret-down right"></span>
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
-                <button class="btn btn-link btn-link-danger" data-action="deleteselected">
+                <button class="btn btn-link btn-link-danger text-left" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
 
-                <a href="#delete_all_notifications_submit" class="btn btn-link btn-link-danger" data-triggersubmit="delete_all_notifications_submit">
+                <a href="#delete_all_notifications_submit" class="btn btn-link btn-link-danger text-left" data-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>

@@ -3,9 +3,9 @@
     {$optionform|safe}
 </div>
 <div class="card">
-    <h3 class="card-header">{str tag=addcategories section=admin}</h3>
+    <h2 class="card-header">{str tag=addcategories section=admin}</h2>
     <div class="card-body">
-        <p class="lead text-small description">{str tag=groupcategoriespagedescription section=admin}</p>
+        <p class="lead description">{str tag=groupcategoriespagedescription section=admin}</p>
         <div id="editmenus">
             <div id="menuitemlist"></div>
         </div>

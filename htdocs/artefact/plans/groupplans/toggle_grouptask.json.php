@@ -64,12 +64,12 @@ try {
         $buttons = '';
         if ($taskview) {
             $buttons .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $taskview . '" class="btn btn-secondary btn-sm btn-view" title="' . get_string('showassignedview', 'artefact.plans') . '">
-                             <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                             <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                          </a>';
         }
         if ($outcomeurl) {
             $buttons .= '<a href="' . $outcomeurl . '" class="btn btn-secondary btn-sm btn-outcome" title="' . get_string('editassignedoutcome', 'artefact.plans') . '">
-                             <span class="icon icon-file icon-lg" role="presentation" aria-hidden="true"></span>
+                             <span class="icon icon-file" role="presentation" aria-hidden="true"></span>
                          </a>';
         }
         $userTask->delete();
@@ -88,18 +88,18 @@ try {
             $buttons = '';
             if ($taskview) {
                 $buttons .= '<a href="' . get_config('wwwroot') . 'view/view.php?id=' . $taskview . '" class="btn btn-secondary btn-sm btn-view" title="' . get_string('showassignedview', 'artefact.plans') . '">
-                                 <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                                 <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                              </a>';
             }
             if ($outcomeurl) {
                 $buttons .= '<a href="' . $outcomeurl . '" class="btn btn-secondary btn-sm btn-outcome" title="' . get_string('editassignedoutcome', 'artefact.plans') . '">
-                                 <span class="icon icon-file icon-lg" role="presentation" aria-hidden="true"></span>
+                                 <span class="icon icon-file" role="presentation" aria-hidden="true"></span>
                              </a>';
             }
             $outcomesubmissionurl = PlansTools::createSubmissionUrlForCompletedTaskWithOutcome($newUserTask, $rootGroupPlan->get('id'));
             if ($outcomesubmissionurl) {
                 $buttons .= '<a href="' . $outcomesubmissionurl . '" title="' . get_string('submitassignedoutcome', 'artefact.plans') . '" class="btn btn-secondary btn-sm">
-                                 <span class="icon icon-file-upload icon-lg" role="presentation" aria-hidden="true"></span>
+                                 <span class="icon icon-file-upload" role="presentation" aria-hidden="true"></span>
                                  <span class="sr-only">' . get_string('submitassignedoutcome', 'artefact.plans') . '</span>
                              </a>';
             }

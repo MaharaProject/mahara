@@ -4,7 +4,7 @@
 .form-inline  {
     // if one item in an input group has a label, push others down
     .no-label {
-        margin-top: 17px;
+        margin-top: 1.5rem; // 24px;
     }
 }
 
@@ -41,7 +41,7 @@
         ~ .form-group {
             .form-control {
                 @include border-left-radius(0);
-                margin-left: -1px;
+                margin-left: -$border-width;
                 @include media-breakpoint-up(sm) {
                     border-left:0;
                 }
@@ -61,20 +61,11 @@
     }
     label {
         display: block;
+        line-height: 1.5;
     }
     // if one item in an input group has a label, push others down
     .no-label {
-        margin-top: 5px;
-        // For screen size smaller than xs
-        @media (min-width: 321px) {
-            margin-top: 10.5px;
-        }
-        @include media-breakpoint-up(md) {
-            margin-top: 10.5px;
-        }
-        @include media-breakpoint-down(xs) {
-            margin-top: 14.5px;
-        }
+        margin-top: 0.75rem; // 12px
     }
 
     .form-group,
@@ -85,11 +76,11 @@
     }
 
     .input-group-prepend {
-        padding: 9px 14px;
+        padding: 0.5625rem 0.875rem; // 9px 14px;
         text-align: center;
         background-color: $input-bg;
         border: $input-border-width solid $input-border-color;
-        border-radius: $border-radius-sm;
+        border-radius: $input-border-radius-sm;
         border-bottom-right-radius: 0;
         border-top-right-radius: 0;
         border-right: 0;

@@ -508,7 +508,7 @@
                 }
             });
 
-            addblockdialog.find('h4.modal-title').text(get_string('addnewblock', 'view', element.text()));
+            addblockdialog.find('.modal-title').text(get_string('addnewblock', 'view', element.text()));
             addblockdialog.find('.block-inner').removeClass('d-none');
 
             addblockdialog.find('.deletebutton').trigger("focus");

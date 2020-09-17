@@ -50,7 +50,7 @@
                             <td>
                                 <div class="btn-group">
                                     <a href="{$link}&activetab=privacy&versionid={$content->id}" title="{str tag=viewversion section='admin' arg1='$content->version'}" class="btn btn-secondary btn-sm">
-                                        <span class="icon icon-regular icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-regular icon-eye" role="presentation" aria-hidden="true"></span>
                                     </a>
                                 </div>
                             </td>
@@ -94,7 +94,7 @@
                             <td>
                                 <div class="btn-group">
                                     <a href="{$link}&activetab=termsandconditions&versionid={$content->id}" title="{str tag=viewversion section='admin' arg1='$content->version'}" class="btn btn-secondary btn-sm">
-                                        <span class="icon icon-regular icon-eye icon-lg" role="presentation" aria-hidden="true"></span>
+                                        <span class="icon icon-regular icon-eye" role="presentation" aria-hidden="true"></span>
                                     </a>
                                 </div>
                             </td>

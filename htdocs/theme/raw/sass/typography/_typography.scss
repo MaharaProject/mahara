@@ -1,82 +1,60 @@
 // Basic type related customisation
-
-
 body, p {
     font-weight: $font-weight-normal;
 }
 
 h1 {
     @extend .page-header;
-    padding-bottom: $line-height-computed * 0.4525;
-    margin-bottom: 20px;
+    padding-bottom: $line-height-computed * 0.5;
+    margin-bottom: $spacing-xl;
     border-bottom: $h1heading-border-width solid $h1heading-border-color;
     @include media-breakpoint-down(md) {
       border-bottom: 0;
-    }
-}
-
-#notifications-page-header {
-    @extend .page-header;
-    clear: both;
-    padding-bottom: $line-height-computed * 0.4525;
-    margin-bottom: 20px;
-    border-bottom: $h1heading-border-width solid $h1heading-border-color;
-    @include media-breakpoint-down(md) {
-      border-bottom: 0;
+      font-size: $h2-font-size; // making it smaller for mobile
     }
 }
 
 // Add padding if there is no navigation
 .header + .container {
+    h1 {
+      padding-top: $line-height-computed * 0.5;
+    }
     .card-body h1 {
         padding-top: 0;
-    }
-    > h1 {
-        padding-top: 10px;
     }
 }
 
 // Page or collections page header title
 .pageheader {
-    padding-bottom: $line-height-computed * 0.4525;
-    margin-bottom: 20px;
-    margin-top:0;
+    margin-top: 0;
+    margin-bottom: $spacing-xl;
     h1 {
-        margin: 40px 0 20px 0;
+        margin: $spacing-xl 0;
         padding: 0;
         border-bottom: 0;
-        font-size: $font-size-base * 2.5715;
-        @include media-breakpoint-down(md) {
-            font-size: $font-size-base * 2.1425;
-            margin-top: 20px;
-        }
     }
 }
 
 .page-header {
-    ~ .with-heading {
-        @include media-breakpoint-up(md) {
-            margin-top: -16px;
-        }
-    }
     ~ form.with-heading,
     ~ form .with-heading,
     ~ .form.with-heading {
         @include border-bottom-radius($border-radius);
         background-color: $form-bg;
-        padding: 20px 10px 10px 10px;
-        margin-top: -20px;
+        padding: $spacing-xl $spacing-base $spacing-base $spacing-base; // 20px 10px 10px 10px;
+        margin-top: -$spacing-xl; // -20px (from H1 margin)
+        margin-bottom: $spacing-lg;
 
         @include media-breakpoint-down(md) {
-            padding: 10px;
-            margin-top: 5px;
+            padding: $spacing-xl;
+            margin-top: $spacing-sm; // 5px;
         }
 
         &.invite-friend,
         &#addmember {
             @include border-radius(0);
             padding: 0;
-            margin-top: 10px;
+            margin-top: $spacing-base;
             background: none;
 
             .input-group-append {
@@ -86,7 +64,7 @@ h1 {
 
         ~ form.with-heading {
             padding-top: 0;
-            margin-top: -1px;
+            margin-top: -$h1heading-border-width;
             max-width: 100%;
         }
         .form-group {
@@ -96,13 +74,13 @@ h1 {
         }
     }
     ~ div.with-heading {
-        padding-bottom: 10px;
-        margin-bottom: 10px;
+        padding-bottom: $spacing-base;
+        margin-bottom: $spacing-base;
         @include media-breakpoint-down(sm) {
             border-bottom: $h1heading-border-width solid $h1heading-border-color;
         }
         a {
-            margin-right: 5px;
+            margin-right: $spacing-sm;
         }
         .tags a {
             margin-right: 0;
@@ -113,7 +91,7 @@ h1 {
 h2, h3, h4, h5, legend {
     &.card-header {
         margin: 0;
-        font-size: $font-size-base * 1.14285;
+        font-size: $font-size-lg;
     }
     &.no-margin {
         margin: 0;
@@ -124,7 +102,17 @@ h2, h3, h4, h5, legend {
     color: $section-heading-color;
 }
 
-strong i {
+strong {
+    font-weight: $font-weight-bold;
+}
+
+em {
+    font-weight: $font-weight-normal;
+    font-style: italic;
+}
+
+strong i,
+strong em {
     font-style: normal; // #tasteful
 }
 
@@ -144,7 +132,7 @@ a {
 
 .list-unstyled:not(.list-group) {
     li {
-        padding-bottom: 5px;
+        padding-bottom: $spacing-sm;
     }
 }
 
@@ -160,16 +148,9 @@ a {
 // Styles for links at the bottom of blocktype
 // ie. add comment link and artefact detail link
 .link-blocktype {
-    .col-width-100 &,
-    .col-width-50 & {
-        padding: 5px 8px;
-        @include media-breakpoint-up(md) {
-            padding: 5px 20px;
-        }
-    }
     font-size: $font-size-sm;
-    margin: 10px 0;
-    padding: 5px 7px;
+    margin: $spacing-base 0 0 0;
+    padding: $input-btn-padding-y $input-btn-padding-x;
     display: inline-block;
     &:hover,
     &:focus {
@@ -177,10 +158,7 @@ a {
         text-decoration: none;
     }
     .icon {
-        display: none;
-        @include media-breakpoint-up(sm) {
-            display: inline-block;
-        }
+        display: inline-block;
     }
     &.js-peerassessment-modal {
         float: none;
@@ -191,17 +169,16 @@ img {
     max-width: 100%;
     height: auto;
     &.artefact-img {
-        margin-right: 10px;
+        margin-right: $spacing-base;
     }
 }
 
 .file-icon {
-    margin-right: 5px;
-    margin-left: 5px;
-    vertical-align: top;
+    margin-right: $spacing-sm;
+    margin-left: $spacing-sm;
 
     &.icon {
-        width: 24px;
+        width: 1.5rem; // 24px
     }
 }
 
@@ -216,20 +193,31 @@ ul {
         list-style-type: none;
     }
 
-    // People page
+    // People and fonts page
     &.user-action-list {
-        margin-top: 5px;
+        margin-top: $spacing-sm;
         margin-bottom: 0;
+        li {
+          .icon.left {
+            width: 1.875em;
+            font-size: 1.25em;
+            text-align: center;
+          }
+          .btn .icon.left {
+            width: auto;
+          }
+          &.acceptdenyfriendbtns {
+            margin-bottom: $spacing-base;
+          }
+        }
     }
 }
 
 blockquote {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    &.small {
-        font-size: $font-size-base;
-    }
-    .text-small &{
+    margin-top: $spacing-xl;
+    margin-bottom: $spacing-xl;
+    &.small,
+    .text-small & {
         font-size: $font-size-base;
     }
 }
@@ -238,18 +226,13 @@ blockquote {
 .lead p {
     font-size: $lead-font-size;
     font-weight: $lead-font-weight;
-    line-height: 1.4;
-    margin-bottom: 15px;
+    margin-bottom: $spacing-lg;
 
     &.text-small {
         font-size: $font-size-sm;
     }
     &.link {
         margin-bottom: 0;
-    }
-
-    &.view-description {
-        margin-top: 1em;
     }
 }
 
@@ -259,16 +242,14 @@ label.lead {
 
 .content-text,
 .postcontent {
-    margin: 10px 0;
+    margin: $spacing-base 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 }
 
-.metadata {
-    font-family: $font-family-base;
-    font-size: $font-size-sm;
-    font-weight: $font-weight-normal;
-    color: $theme-text-midtone-color;
-}
-
+.metadata,
 .postedon {
     font-family: $font-family-base;
     font-size: $font-size-sm;
@@ -277,19 +258,19 @@ label.lead {
 }
 
 .license {
-    margin: 10px 0;
+    margin: $spacing-base 0;
     .license-icon {
-        padding-right: 10px;
+        padding-right: $spacing-base;
     }
 }
 
 .licenseicon {
-    padding: 0 10px 5px 0;
+    padding: 0 $spacing-base $spacing-sm 0;
 }
 
 pre {
-    padding: 10px;
-    margin: 0 0 10.5px;
+    padding: $spacing-base;
+    margin: 0 0 $spacing-base;
     word-break: break-all;
     word-wrap: break-word;
     background-color: $pre-bg;
@@ -300,7 +281,7 @@ pre {
     }
     span.wsdescription {
         color: $info;
-        padding-right: 10px;
+        padding-right: $spacing-base;
 
         .wsrequired {
             font-weight: $font-weight-bold;
@@ -316,11 +297,11 @@ pre {
 }
 
 .h2, .h3, h2, h3 {
-    margin-top: 21px;
+    margin-top: $spacing-xl;
 }
 
 .h4, .h5, .h6, h4, h5, h6 {
-    margin-top: 10.5px;
+    margin-top: $spacing-base;
 }
 
 /* headings in html entered by user neutralised */
@@ -332,8 +313,7 @@ pre {
 .note-name div,
 .view-description,
 .forum-post .postedits,
-.mce-content-body,
-.exportable-artefact-container {
+.mce-content-body {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
     font-weight: $font-weight-bold;
@@ -353,7 +333,7 @@ pre {
   h1 {
     border-bottom: 0;
     padding: 0;
-    margin-bottom: 10px;
+    margin-bottom: $spacing-base;
   }
 }
 
@@ -366,37 +346,47 @@ pre {
 
 // Add margin to TinyMCE blocks
 body#tinymce {
-    margin: 8px;
+    margin: $spacing-base;
 }
 
 //font list list group item title
 #fontlist h2.title {
   margin-top: 0;
+  font-size: $h4-font-size; // 24px
 }
 
 // group views block heading titles
 .bt-groupviews,
 .bt-groupviews-editor {
     .title {
-        margin-top: 2em;
-        font-size: $h6-font-size;
+        margin-top: $spacing-xl;
+        font-size: $h5-font-size;
     }
 }
 
 // Group listing user status on right
 .groupuserstatus {
     clear: both;
+    padding: $spacing-base 0 0 0;
+
     @include media-breakpoint-up(md) {
         text-align: right;
-        padding: 8px 0;
     }
 }
 
 // view artefact
 .viewartefact {
-  font-weight: $font-weight-light;
+  color: $theme-text-midtone-color;
 }
 
 .artefacttype {
   font-family: $font-family-base;
+}
+
+.no-margin-top {
+  margin-top: 0;
+}
+
+small, .small {
+  font-size: $font-size-sm;
 }

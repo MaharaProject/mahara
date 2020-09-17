@@ -2,7 +2,7 @@
 
 {if $tags}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-secondary" href="{$WWWROOT}tags.php"><span class="icon icon-lg icon-tag left" role="presentation" aria-hidden="true"></span>{str tag=mytags}</a>
+        <a class="btn btn-secondary" href="{$WWWROOT}tags.php"><span class="icon icon-tag left" role="presentation" aria-hidden="true"></span>{str tag=mytags}</a>
     </div>
     <h2>{str tag=selectatagtoedit}:</h2>
     <div class="mytags">

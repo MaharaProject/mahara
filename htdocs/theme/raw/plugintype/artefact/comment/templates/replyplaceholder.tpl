@@ -1,6 +1,6 @@
 <div class="commentreplyview feedbacktable">
     <div class="d-none replyto" id="comment_reply_parent">
-        <h4>{str tag="replyto" section="artefact.comment"}</h4>
+        <h3>{str tag="replyto" section="artefact.comment"}</h3>
     </div>
 </div>
 <div class="d-none add_feedback_form_forcepublic_message add_feedback_form_privacy_message">

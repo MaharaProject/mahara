@@ -1,7 +1,7 @@
 <div class="card card-default">
-    <h3 class="card-header">
+    <h2 class="card-header">
         {$sbdata.title}
-    </h3>
+    </h2>
     {if $sbdata.data}
     <ul class="list-group">
         {foreach from=$sbdata.data item=item}

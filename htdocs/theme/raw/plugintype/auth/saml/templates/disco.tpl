@@ -3,7 +3,7 @@
 <p class="lead">{str tag=selectidp section=auth.saml}</p>
 {/if}
 <div id="idps" class="table-responsive">
-    <h3 id="idpsheading">{str tag="IdPSelection" section=auth.saml}</h3>
+    <h2 id="idpsheading">{str tag="IdPSelection" section=auth.saml}</h2>
     {if $idps}
     <div class="table-responsive">
     <table id="searchidps" class="table table-striped listing">

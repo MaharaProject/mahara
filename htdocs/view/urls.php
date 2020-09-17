@@ -46,7 +46,7 @@ $newform = array(
             'usebuttontag' => true,
             'class'       => 'btn-secondary',
             'elementtitle' => get_string('generatesecreturl', 'view', hsc($title)),
-            'value'       =>  '<span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span> ' .get_string('newsecreturl', 'view'),
+            'value'       =>  '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span> ' .get_string('newsecreturl', 'view'),
         ),
     ),
 );
@@ -140,7 +140,7 @@ for ($i = 0; $i < count($records); $i++) {
                     'class'        => 'btn-secondary btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
-                    'value'        => '<span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                    'value'        => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
                 ),
             ),
         )),
@@ -279,7 +279,6 @@ $js .= <<<EOF
 jQuery(function($) {
     $('.url-open-editform').on("click", function(e) {
         e.preventDefault();
-        $('#' + this.id).addClass('collapse-indicator');
         $('#' + this.id).toggleClass('open');
         $('#' + this.id).toggleClass('closed');
         $('#' + this.id + '-form').toggleClass('js-hidden');

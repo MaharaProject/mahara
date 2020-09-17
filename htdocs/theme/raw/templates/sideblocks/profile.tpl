@@ -1,10 +1,10 @@
 <div class="card">
-        <h3 class="card-header profile-block">
+        <h2 class="card-header profile-block">
             <a href="{$sbdata.url}" class="username">{$sbdata.myname}</a>
             <a href="{$sbdata.profileiconurl}" title="{str tag="editprofileicon" section="artefact.file"}" class="user-icon user-icon-60">
                 <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag="editprofileicon" section="artefact.file"}">
             </a>
-        </h3>
+        </h2>
     <div class="list-group">
         {if $sbdata.mnetloggedinfrom}
             <div class="list-group-item list-group-item-profile-notification">
@@ -73,7 +73,7 @@
     {if $USERMASQUERADING}
         <div id="changeuser" class="card-footer">
             <a href="{$becomeyoulink}">
-                <span class="icon icon-lg left icon-undo" role="presentation" aria-hidden="true"></span>
+                <span class="icon left icon-undo" role="presentation" aria-hidden="true"></span>
                 <span>{$becomeyouagain}</span>
             </a>
         </div>

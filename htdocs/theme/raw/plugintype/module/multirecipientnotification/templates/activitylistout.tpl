@@ -1,7 +1,7 @@
 <div class="collapsible-group">
 {foreach from=$data item=item name='notification'}
     <div class="card collapsible notification collapsible-group {if $dwoo.foreach.notification.first}first{/if} {if $dwoo.foreach.notification.last}last{/if}">
-        <h4 class="card-header">
+        <h3 class="card-header">
             <label class="card-control">
                 {if $item->table === 'module_multirecipient_notification'}
                 <span class="control">
@@ -59,7 +59,7 @@
                     <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                  </span>
             </a>
-        </h4>
+        </h3>
         <div id="notification-{$item->id}" class="collapse">
             {if $item->message}
             <div class="card-body {if !($item->canreplyall)} no-footer{/if}">
@@ -75,7 +75,7 @@
                                 {$tousr['display']|truncate:$maxnamestrlength}
                                 </span>
                             {if ($tousr['link'])}</a>{/if}
-                            {/foreach}
+                            , {/foreach}
                         </span>
                         {else}
                         <span>
@@ -85,6 +85,7 @@
                                 {$tousr['display']|truncate:$maxnamestrlength}
                                 </span>
                             {if $tousr['link']}</a>{/if}
+                            ,
                         </span>
                         {/if}
                 </p>

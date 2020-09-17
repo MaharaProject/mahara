@@ -4,7 +4,7 @@ table.progresscompletion {
         text-align: center;
         vertical-align: middle;
         display: block;
-        font-size: $font-size-base * 1.215;
+        font-size: $font-size-base * 1.25;
         &.completed {
           color: $progresscompletion-verified-color;
         }

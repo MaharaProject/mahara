@@ -9,12 +9,10 @@
         {if $prevkey !== $k}
             <fieldset id="fs_{$dwoo.foreach.data.index}" class="pieform-fieldset collapsible {if $dwoo.foreach.data.last} last{/if}">
                 <legend>
-                    <h4>
-                        <a id="link_{$dwoo.foreach.data.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}" data-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}">
-                            {$k}
-                            <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
-                        </a>
-                    </h4>
+                    <a id="link_{$dwoo.foreach.data.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}" data-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}">
+                        {$k}
+                        <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
+                    </a>
                 </legend>
                 <div id="behatfield-{$dwoo.foreach.data.index}" class="fieldset-body collapse list-group">
         {/if}

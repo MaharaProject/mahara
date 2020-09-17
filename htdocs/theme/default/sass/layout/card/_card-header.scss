@@ -1,5 +1,4 @@
-.collapsible legend h4,
-.collapsible legend h3,
+.collapsible legend,
 .card-header {
     a:not(.secondary-link) {
         color: $link-color;
@@ -19,6 +18,7 @@
 
     .help a .icon {
         color: $white;
+        font-size: 1.25rem; // 20px
     }
 
     a {

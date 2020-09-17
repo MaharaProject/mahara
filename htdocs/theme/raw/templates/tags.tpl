@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {if $tags}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-secondary" href="{$WWWROOT}edittags.php"><span class="icon icon-lg icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
+        <a class="btn btn-secondary" href="{$WWWROOT}edittags.php"><span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=edittags}</a>
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}

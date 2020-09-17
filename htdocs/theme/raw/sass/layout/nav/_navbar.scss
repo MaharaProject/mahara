@@ -4,7 +4,7 @@
 // Login link and language form
 .topright-menu {
     float: right;
-    padding-top: 10px;
+    padding-top: $spacing-base;
 
     li {
         display: inline-block;
@@ -13,10 +13,10 @@
 
     .login-link a {
         display: inline-block;
-        margin: 0 15px;
-        padding: 7px 15px;
+        margin: 0 $spacing-lg;
+        padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
         color: $navbar-toggle-color;
-        border-radius: $border-radius;
+        border-radius: $btn-border-radius;
         font-weight: $font-weight-bold;
 
         &:focus,
@@ -30,7 +30,7 @@
 
 // Header search form
 .navbar-form.navbar-collapse {
-    padding: 15px 0;
+    padding: $spacing-lg 0;
     margin-bottom: 0;
     border: 0;
     height: 65px;
@@ -40,9 +40,9 @@
         display: block;
         max-width: none;
         visibility: visible;
-        top: 13px;
-        right: 240px;
-        margin: 0 30px 0 0;
+        top: 0.8125rem; // 13px;
+        right: 15rem; // 240px;
+        margin: 0 $spacing-xxl 0 0;
         padding: 0;
         box-shadow: none;
         height: auto !important;
@@ -50,11 +50,11 @@
 
     .header-search-form {
         input[type=text] {
-            width: calc(100% - 75px);
+            width: calc(100% - 4.6875rem); // calc(100% - 75px)
             float: left;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
-            margin-left: 15px;
+            margin-left: $spacing-lg;
             @include media-breakpoint-up(md) {
                 width: auto;
                 margin-left: 0;
@@ -78,13 +78,13 @@
 .loggedout .navbar-form.navbar-collapse {
     @include media-breakpoint-up(md) {
         right: 0;
-        margin-right: 15px;
+        margin-right: $spacing-lg;
 
         &.with-langform {
-            right: 270px;
+            right: 16.875rem; // 270px;
         }
         &.with-langform-login {
-            right: 370px;
+            right: 23.125rem; // 370px;
         }
     }
 }
@@ -115,19 +115,20 @@
 
     .navbar-messages-count {
       position: absolute;
-      top: -3px;
-      right: 5px;
+      top: 0.125rem; // 2px;
+      right: 0.125rem;
       background-color: $navbar-messages-count-bg;
-      border-radius: $border-radius;
-      padding: 0 3px;
+      border-radius: $border-radius-sm;
+      padding: 0.125rem;
       color: $navbar-messages-count-color;
-      font-size: $font-size-sm;
+      font-size: $font-size-base * 0.75;
+      line-height: 1;
     }
 }
 
 // Header language toggle
 .navbar-toggle.lang-toggle {
     span.icon-language {
-        font-size: 1.5em;
+        font-size: $font-size-base * 1.5;
     }
 }

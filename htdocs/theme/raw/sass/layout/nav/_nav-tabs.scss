@@ -4,13 +4,13 @@
     border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
     &.nav {
         li > a {
-            margin-right: 2px;
+            margin-right: 0.125rem; // 2px;
             display: block;
             font-weight: $font-weight-light;
             border: 0;
             border-bottom: 3px solid transparent;
             padding: $nav-link-padding-y $nav-link-padding-x;
-            font-size: $font-size-base * 1.0714;
+            font-size: $font-size-lg;
             text-decoration: none;
             border-radius: $nav-tabs-border-radius;
 

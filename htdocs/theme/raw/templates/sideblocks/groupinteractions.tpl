@@ -1,5 +1,5 @@
 <div class="card">
-    <h3 class="card-header">{str tag="groupinteractions" section="group"}</h3>
+    <h2 class="card-header">{str tag="groupinteractions" section="group"}</h2>
 
     {if $sbdata}
         <ul class="list-group">

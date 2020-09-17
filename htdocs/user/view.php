@@ -262,7 +262,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                             'submit' => array(
                                 'type'  => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-primary input-group-append',
+                                'class' => 'btn-secondary input-group-append',
                                 'value' => '<span class="icon icon-paper-plane left" role="presentation" aria-hidden="true"></span>' . get_string('sendinvitation', 'group'),
                             )
                         )
@@ -303,7 +303,7 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
                             'submit' => array(
                                 'type'  => 'button',
                                 'usebuttontag' => true,
-                                'class' => 'btn-primary input-group-append',
+                                'class' => 'btn-secondary input-group-append',
                                 'value' => '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>' . get_string('add'),
                             )
                         )

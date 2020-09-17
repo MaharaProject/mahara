@@ -1,22 +1,24 @@
 // Custom component variables (non-bootstrap components)
 
 //Arrow compoanent variables
-$arrow-color:                   scale-color($theme-secondary-color, $lightness: -25%);
-$arrow-bar-bg:                  $theme-secondary-color;
-$arrow-text-color:              $white;
-$arrow-link-color:              $theme-primary-color;
-$arrow-link-hover-color:        $theme-primary-color;
-$arrow-link-active-color:       $theme-text-color;
-$arrow-link-background-color:   $white;
+$arrow-color:                               scale-color($theme-secondary-color, $lightness: -25%);
+$arrow-bar-bg:                              $theme-secondary-color;
+$arrow-text-color:                          $white;
+$arrow-link-color:                          $theme-primary-color;
+$arrow-link-hover-color:                    $theme-primary-color;
+$arrow-link-active-color:                   $theme-text-color;
+$arrow-link-background-color:               $white;
 
 // color for the secondary title in sections (cf. groups)
+$dashboard-widget-border-radius:            0;
 $dashboard-widget-bg:                       $theme-secondary-color;
+$dashboard-widget-hover-bg:                 scale-color($theme-secondary-color, $lightness: 50%);
 $dashboard-widget-title-color:              scale-color($theme-secondary-color, $lightness: -65%);
 $dashboard-widget-circle-bg:                scale-color($theme-secondary-color, $lightness: 30%);
 $dashboard-widget-cirlce-icon-color:        scale-color($theme-secondary-color, $lightness: -35%);
 
 // Pages and collections page header
-$pageheader-bg:                 scale-color($theme-accent-color-two, $lightness: 90%);
+$pageheader-bg:                             scale-color($theme-accent-color-two, $lightness: 90%);
 
 // Site footer background colors
 $site-footer-bg:                            $gray-900;
@@ -25,7 +27,7 @@ $site-footer-hover-color:                   $white;
 $site-footer-hover-bg:                      scale-color($site-footer-bg, $lightness: 10%);
 
 // Header navbar
-$navbar-height:                             72px;
+$navbar-height:                             4.5rem; // 72px;
 $navbar-default-bg:                         $theme-primary-color;
 $navbar-default-border:                     scale-color($navbar-default-bg, $lightness: 5%);
 
@@ -62,6 +64,7 @@ $navbar-inverse-toggle-hover-bg:            scale-color($theme-secondary-color, 
 $navbar-inverse-toggle-active-color:        $black;
 $navbar-inverse-toggle-active-bg:           scale-color($theme-secondary-color, $lightness: 90%);
 
+// Buttons + Forms
 $btn-primary-color:                         $white;
 $btn-primary-bg:                            scale-color($theme-secondary-color, $lightness: -35%);
 $btn-primary-border:                        scale-color($theme-secondary-color, $lightness: -35%);

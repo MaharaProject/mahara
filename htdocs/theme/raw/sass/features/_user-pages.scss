@@ -19,7 +19,7 @@
     }
 
     .card-body ul:not(.list-unstyled):not(.unstyled):not(.select2-selection__rendered) {
-        padding-left: 40px;
+        padding-left: 2.5rem; // 40px;
     }
 
     pre {
@@ -33,9 +33,10 @@
     h1 {
         border-bottom: 0 none;
         padding: 0;
+        margin-bottom: $spacing-base;
     }
 
-    h4.feedtitle {
+    h3.feedtitle {
         font-size: $h2-font-size;
     }
 
@@ -47,7 +48,7 @@
     // Add styling for tinymce or external feed created elements
 
     .feedcontent .wp-smiley {
-        width: 18px;
+        width: 1.125rem; // 18px;
     }
 
     .feedcontent h1,

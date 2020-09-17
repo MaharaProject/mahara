@@ -10,37 +10,24 @@
 // Variables
 // --------------------------------------------------
 
-$link-color:                scale-color($theme-secondary-color, $lightness: -45%);
-$link-hover-color:          scale-color($theme-secondary-color, $lightness: -40%);
+$component-active-color:            $white;
+$component-active-bg:               scale-color($theme-secondary-color, $lightness: -35%);
 
-$font-size-base:                            1rem; // ~16px
-$font-size-lg:                              $font-size-base * 1.25; // 20px
-$font-size-sm:                              $font-size-base * 0.875; // 14px
+$link-color:                        scale-color($theme-secondary-color, $lightness: -45%);
+$link-hover-color:                  scale-color($theme-secondary-color, $lightness: -40%);
 
-$font-weight-bolder:                        900;
+$font-family-serif:                 'Alegreya', 'Roboto Slab', Georgia, "Times New Roman", Times, serif;
+$font-family-sans-serif:            'Alegreya Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-base:                  $font-family-sans-serif;
 
-$h1-font-size:                              $font-size-base * 2.25; // ~36px
-$h2-font-size:                              $font-size-base * 2; // ~32px
-$h3-font-size:                              $font-size-base * 1.75; // ~28px
-$h4-font-size:                              $font-size-base * 1.5; // ~24px
-$h5-font-size:                              $font-size-base * 1.25; // ~20px
-$h6-font-size:                              $font-size-base; // ~16px
-
-$font-family-serif:         'Alegreya', 'Roboto Slab', Georgia, "Times New Roman", Times, serif;
-$font-family-sans-serif:    'Alegreya Sans', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-$font-family-base:          $font-family-sans-serif;
-
-$headings-font-family:      $font-family-serif;
-$headings-font-weight:      $font-weight-bold;
-$headings-color:            $theme-primary-color;
-
-$component-active-color:    $white;
-$component-active-bg:       scale-color($theme-secondary-color, $lightness: -35%);
-
-$card-border-radius:        0;
-$card-inner-border-radius:  0;
-
-$progress-bar-bg:           scale-color($theme-secondary-color, $lightness: -35%);
+$headings-font-family:              $font-family-serif;
+$headings-font-weight:              700;
+$headings-color:                    $theme-primary-color;
 
 $nav-tabs-link-hover-border-color:  $theme-secondary-color;
 $nav-tabs-link-active-border-color: $theme-secondary-color;
+
+$card-border-radius:                0;
+$card-inner-border-radius:          0;
+
+$progress-bar-bg:                   scale-color($theme-secondary-color, $lightness: -35%);

@@ -7,11 +7,11 @@
             float: none !important;
             text-align: center;
             display: block;
-            margin-top: 1em;
+            margin-top: $spacing-base;
         }
 
         .icon-stack {
-            font-size: $font-size-base * 0.715;
+            font-size: $font-size-sm;
         }
         .nav-link {
             color: $site-footer-color;
@@ -31,26 +31,26 @@
     }
     .footer-inner {
         @extend .clearfix;
-        padding-top: 15px;
-        padding-bottom: 30px;
+        padding-top: $spacing-lg;
+        padding-bottom: $spacing-xxl;
         .mahara-logo {
-            margin-right: 20px;
+            margin-right: $spacing-xl;
             @include media-breakpoint-down(sm) {
                 float: none !important;
                 text-align: center;
             }
         }
         .mahara-version {
-            padding-top: 10px;
+            padding-top: 0.5rem; // 8px;
             @include media-breakpoint-down(sm) {
                 float: none !important;
                 text-align: center;
-                padding-top: 20px;
+                padding-top: $spacing-xl;
             }
         }
         .site-performace {
             clear: both;
-            padding-top: 10px;
+            padding-top: $spacing-base;
         }
     }
     &.upgrade-footer {
@@ -60,7 +60,7 @@
             }
         }
         .release-info {
-            margin: 10px 0;
+            margin: $spacing-base 0;
             @include media-breakpoint-up(md) {
                 float: right;
             }
@@ -69,7 +69,7 @@
 }
 
 .mahara-logo a {
-    height: 37px;
+    height: 2.3125rem; // 37px;
     display: inline-block;
     .mahara-footer-logo {
         height: 100%;

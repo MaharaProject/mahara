@@ -2,11 +2,11 @@
     {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
         <a id="addview-button" class="btn btn-secondary" href="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}">
-            <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=add}
         </a>
         <a id="copyview-button" class="btn btn-secondary" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
-            <span class="icon icon-regular icon-copy icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=copy}
         </a>
     </div>
@@ -38,10 +38,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
-                        <span class="icon icon-lg icon-plus"></span>
+                    <h1 class="modal-title">
+                        <span class="icon icon-plus"></span>
                         {str tag=confirmaddtitle section=view}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <p>{str tag=confirmadddesc section=view}</p>

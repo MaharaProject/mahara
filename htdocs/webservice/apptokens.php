@@ -143,7 +143,7 @@ if (!empty($dbservices)) {
             );
             // Name of the client program that generated the token
             if ($service->clientname) {
-                $client = "<b>{$service->clientname}</b>";
+                $client = "<strong>{$service->clientname}</strong>";
             }
             else {
                 $client = get_string('tokenclientunknown', 'auth.webservice');
@@ -229,7 +229,7 @@ if (!empty($dbservices)) {
                                                 'type'  => 'button',
                                                 'usebuttontag' => true,
                                                 'class' => 'btn-secondary btn-sm',
-                                                'value' => '<span class="icon icon-trash-alt icon-lg text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
+                                                'value' => '<span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>' . get_string('delete'),
                                                 'elementtitle' => get_string('deletespecific', 'mahara', $service->id),
                                             ),
                                     ),

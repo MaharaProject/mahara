@@ -6,6 +6,7 @@
             font-size: $font-size-base;
             font-family: $font-family-base;
             font-weight: $font-weight-normal;
+            margin-left: 0;
         }
     }
 
@@ -13,10 +14,7 @@
     .viewfooter &,
     .modal-docked.active & {
         .comment-content {
-          padding-left: 43px;
-          p {
-            margin: .5rem 0 0 0;
-          }
+          padding-left: 2.875rem; // 46px;
         }
 
         @include media-breakpoint-up(lg) {
@@ -28,6 +26,11 @@
                     @include card-as-link();
                     width: 100%;
                     margin-top: 0;
+                }
+                .card-header,
+                .card-header a,
+                .list-group-item {
+                    background-color: transparent;
                 }
                 .collapsed {
                     font-size: $font-size-base;
@@ -44,7 +47,7 @@
                 }
                 .attachmessage {
                     display: block;
-                    margin: 10px 0;
+                    margin: $spacing-base 0;
                 }
             }
         }
@@ -78,11 +81,8 @@
             margin-left: auto;
             margin-right: 0;
             .user-icon {
-                max-width: 50px;
+                max-width: 3.125rem; // 50px;
                 display: block;
-            }
-            h5 {
-                margin-top: 3px;
             }
         }
     }

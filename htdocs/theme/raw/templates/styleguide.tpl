@@ -27,7 +27,7 @@ display the rendered example, and unrendered example code, for each one.)
 This button has padding on the right of the icon due to the plus class.
 ```
 <button class="btn-secondary button btn">
-    <span class="icon icon-plus icon-lg left" role="presentation"></span>
+    <span class="icon icon-plus left" role="presentation"></span>
     {str tag=add section=mahara}
 </button>
 ```
@@ -38,7 +38,7 @@ This button has padding on the right of the icon due to the plus class.
 This button is used for adding items to a list or table, e.g. URLs and users.
 ```
 <button class="btn-secondary btn-sm btn">
-    <span class="icon icon-plus icon-lg" role="presentation"></span>
+    <span class="icon icon-plus" role="presentation"></span>
 </button>
 ```
 </section>
@@ -85,10 +85,10 @@ This pair of buttons is used for editing or deleting a block item on a page.
       <span class="blockinstance-controls">
           <span class="float-right btn-group btn-group-top">
               <button class="configurebutton btn btn-inverse btn-sm">
-                  <span class="icon icon-cog icon-lg"></span>
+                  <span class="icon icon-cog"></span>
               </button>
               <button class="deletebutton btn btn-inverse btn-sm">
-                  <span class="icon icon-trash-alt text-danger icon-lg"></span>
+                  <span class="icon icon-trash-alt text-danger"></span>
               </button>
           </span>
       </span>
@@ -126,7 +126,7 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
         </a>
     </div>
     <div class="col-md-4">
-        <h4>Context</h4>
+        <h3>Context</h3>
     </div>
 </div>
 ```
@@ -148,7 +148,7 @@ This type of button is normally used in lists. An example can be found when you 
 Switchboxes are used for Yes/No, On/Off or other true/false type fields. They are used in place of regular check boxes.
 ```
 <div class="form-switch ">
-    <div class="switch " style="width:61px">
+    <div class="switch " style="width:68px">
         <input type="checkbox" class="switchbox" name="dropdownmenu" tabindex="0">
         <label class="switch-label" for="siteoptions_dropdownmenu" aria-hidden="true">
             <span class="switch-inner"></span>
@@ -167,7 +167,7 @@ This button is used to show there are more options available. An example can be 
 ```
 <div class="btn-group" style="margin-left: 200px;">
     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
-        <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=moreoptions}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-right" role="menu">
@@ -179,7 +179,7 @@ This button is used to show there are more options available. An example can be 
         </li>
         <li class="dropdown-item">
             <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                 {str tag=reportobjectionablematerial}
             </a>
         </li>
@@ -500,9 +500,9 @@ This style of tabs is used for third-level navigation in areas where each page w
 A basic card.
 ```
 <div class="card">
-    <h3 class="card-header has-link">
+    <h2 class="card-header has-link">
         <a href="#">Basic card</a>
-    </h3>
+    </h2>
     <div class="tagblock card-body">
         <a title="1 item" href="#" class="tag">Mahara</a>
         <a title="1 item" href="#" class="tag">{str tag=myportfolio}</a>
@@ -533,16 +533,16 @@ A delete card.
 ### Side card
 A side card is used in the sideblock area, e.g. on the dashboard for "Online users".
 ```
-<div class="col-md-3 sidebar">
+<div class="col-lg-3 sidebar">
     <div class="card">
-        <h3 class="card-header">
+        <h2 class="card-header">
             Side card
             <br>
             <span  class="text-small text-midtone">({str tag=description})</span>
-        </h3>
+        </h2>
         <ul class="list-group">
-            <li class="list-group-item list-unstyled list-group-item-link">
-                <a>
+            <li class="list-unstyled list-group-item-link list-group-item">
+                <a class="online-user">
                     Side card link
                 </a>
             </li>
@@ -560,15 +560,13 @@ A side card is used in the sideblock area, e.g. on the dashboard for "Online use
 ### Side card (no footer)
 A side card without a footer. An examples is the "Tags" sideblock on the dashboard.
 ```
-<div class="col-md-3 sidebar">
-    <div id="sb-tags">
-        <div class="card">
-            <h3 class="card-header has-link">
-                <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
-            </h3>
-            <div class="tagblock card-body">
-                <div class="no-results-small text-small">Lorem ipsum</div>
-            </div>
+<div class="col-lg-3 sidebar">
+    <div class="card">
+        <h2 class="card-header has-link">
+            <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
+        </h2>
+        <div class="tagblock card-body">
+            <div class="no-results-small text-small">Lorem ipsum</div>
         </div>
     </div>
 </div>
@@ -582,17 +580,84 @@ A dropdown card.
 <div class="last form-group collapsible-group">
     <fieldset class="pieform-fieldset last collapsible">
         <legend>
-            <h4>
-                <a href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                    Drop-down
-                    <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
-                </a>
-            </h4>
+            <a href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                Drop-down
+                <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+            </a>
         </legend>
-        <div class="fieldset-body collapse " id="dropdown">
+        <div class="fieldset-body collapse" id="dropdown">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
         </div>
 </fieldset>
+</div>
+```
+</section>
+
+<section data-markdown data-category="cards">
+### Attachment card
+A attachment card.
+```
+<div class="has-attachment card collapsible">
+    <div class="card-header">
+        <a class="text-left collapsed" aria-expanded="false" href="#attachment" data-toggle="collapse">
+            <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
+            <span class="text-small">Attachments</span>
+            <span class="metadata">(2)</span>
+            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+        </a>
+    </div>
+    <div id="attachment" class="collapse">
+        <ul class="list-unstyled list-group">
+            <li class="list-group-item">
+                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                </a>
+                <span class="title">
+                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                      <span class="text-small">File name 1</span>
+                    </a>
+                </span>
+                <a href="#">
+                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                </a>
+                <div class="file-description text-small text-midtone">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+                </div>
+            </li>
+            <li class="list-group-item">
+                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                </a>
+                <span class="title">
+                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                      <span class="text-small">File name 2</span>
+                    </a>
+                </span>
+                <a href="#">
+                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                </a>
+                <div class="file-description text-small text-midtone">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+                </div>
+            </li>
+            <li class="list-group-item">
+                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                </a>
+                <span class="title">
+                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                      <span class="text-small">File name 3</span>
+                    </a>
+                </span>
+                <a href="#">
+                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                </a>
+                <div class="file-description text-small text-midtone">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
 ```
 </section>
@@ -602,11 +667,11 @@ A dropdown card.
 This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
 <div class="bt-inbox card card-secondary clearfix collapsible">
-    <h3 class="title card-header js-heading">
+    <h2 class="title card-header js-heading">
         <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
         <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
-    </h3>
+    </h2>
     <div class="block collapse show" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
             <div class="has-attachment card collapsible list-group-item">
@@ -650,13 +715,13 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
 ```
 <div class="bt-newviews card clearfix">
-    <h3 class="title card-header js-heading">Block</h3>
+    <h2 class="title card-header js-heading">Block</h2>
     <div class="block">
         <div class="list-group">
             <div class="list-group-item">
-                <h4 class="list-group-item-heading text-inline">
+                <h3 class="list-group-item-heading text-inline">
                     <a href="">Page 1</a>
-                </h4>
+                </h3>
                 <span class="text-small text-midtone"></span>
                 <div class="groupuserdate text-small">
                     <a href="" class="text-link">Admin User (admin)</a>
@@ -665,9 +730,9 @@ This is the general layout of blocks. An example of this being used is the 'Late
                 </div>
             </div>
             <div class="list-group-item">
-                <h4 class="list-group-item-heading text-inline">
+                <h3 class="list-group-item-heading text-inline">
                     <a href="">Page 2</a>
-                </h4>
+                </h3>
                 <span class="text-small text-midtone"></span>
                 <div class="groupuserdate text-small">
                     <a href="" class="text-link">Admin User (admin)</a>
@@ -722,9 +787,9 @@ This card is used to show a page.
 ```
 <div class="card-quarter card-view">
     <div class="card">
-        <h3 class="card-header has-link">
+        <h2 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Dashboard page</a>
-        </h3>
+        </h2>
         <div class="card-body">
             <div class="detail">
                 <div class="detail">Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.</div>
@@ -772,9 +837,9 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
 ```
 <div class="card-quarter card-view">
     <div class="card card bg-warning">
-        <h3 class="card-header has-link">
+        <h2 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
-        </h3>
+        </h2>
         <div class="card-body">
             <div class="detail">
                 <div class="detail">Lorem ipsum</div>
@@ -844,11 +909,11 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
 ```
 <div class="card-quarter card-collection">
     <div class="card">
-        <h3 class="card-header has-link">
+        <h2 class="card-header has-link">
             <a class="title-link title" href="" title="collection uno">
             collection
             </a>
-        </h3>
+        </h2>
         <div class="card-body">
             <div class="detail"></div>
         </div>
@@ -989,7 +1054,7 @@ A slide-out modal. This is used to show a block's configuration for example.
                   <span class="times">×</span>
                   <span class="sr-only">{str tag=Close}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header text-inline modal-docks-title">Modal heading</h4>
+                <h1 class="modal-title blockinstance-header text-inline modal-docks-title">Modal heading</h1>
             </div>
             <div class="modal-body">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pretium, magna in tempor accumsan, augue lacus pretium urna, fringilla malesuada orci eros iaculis dui. Donec blandit urna sed condimentum ullamcorper. Vestibulum commodo hendrerit suscipit. Etiam eget fermentum risus. Etiam faucibus elit at tortor molestie rutrum at nec ex. Mauris id elit sed neque rhoncus iaculis. Maecenas id dui turpis.
@@ -1014,10 +1079,10 @@ A fold down modal. This is typially used to report objectionable content.
                 <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title">
+                <h1 class="modal-title">
                     <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                     Report objectionable material
-                </h4>
+                </h1>
             </div>
             <div class="modal-body">
                 <form class="pieform" name="objection_form" method="post" id="objection_form">
@@ -1061,9 +1126,9 @@ This is a normal table, e.g. found in a forum.
     <tbody>
         <tr>
             <td>
-                <h3 class="title">
+                <h2 class="title">
                     <a href="">Item 1</a>
-                </h3>
+                </h2>
                 <div class="forumpath text-small text-midtone">
                     Some description information <a href="" class="topicforum  text-midtone">Description link</a>
                 </div>
@@ -1105,10 +1170,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
-                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
+                        <span class="icon icon-cog"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash-alt text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
+                        <span class="icon icon-trash-alt text-danger"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
                     </a>
                 </div>
             </td>
@@ -1122,10 +1187,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
-                        <span class="icon icon-cog icon-lg"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
+                        <span class="icon icon-cog"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash-alt text-danger icon-lg"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
+                        <span class="icon icon-trash-alt text-danger"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
                     </a>
                 </div>
             </td>
@@ -1212,11 +1277,11 @@ The profile picture size that is used on side cards. The example is the profile 
 <div class="col-md-3 sidebar">
     <div id="sb-profile" class="sideblock-1 user-card">
         <div class="card">
-            <h3 class="card-header profile-block">
+            <h2 class="card-header profile-block">
                 <a href="" class="username">Side card</a> <a href="" title="{str tag=editprofileicon section=artefact.file}" class="user-icon user-icon-60">
                     <img src="{profile_icon_url user=$sbdata.id maxheight=60 maxwidth=60}" alt="{str tag=editprofileicon section=artefact.file}">
                 </a>
-            </h3>
+            </h2>
             <div class="list-group"></div>
         </div>
     </div>
@@ -1277,7 +1342,7 @@ Used as the sub subheading of a page.
 ### card header
 Used as the heading of a block or card.
 ```
-<h3 class="title card-header">card header</h3>
+<h2 class="title card-header">card header</h2>
 ```
 </section>
 
@@ -1301,7 +1366,7 @@ Used as bold or strong text.
 ### Italic text
 Used as italic or strong text.
 ```
-<i>Italic text</i>
+<em>Italic text</em>
 ```
 </section>
 
@@ -1319,7 +1384,7 @@ Used as a description for an item. Note: the div is only there to apply the form
 ### Add user
 As seen on the "Add user" page in the administration area.
 ```
-<i class="icon icon-user-plus" role="presentation"></i>
+<div class="icon icon-user-plus" role="presentation"></div>
 ```
 </section>
 
@@ -1327,7 +1392,7 @@ As seen on the "Add user" page in the administration area.
 ### Annotation
 As used for the Annotations" block.
 ```
-<i class="icon icon-annotation" role="presentation"></i>
+<div class="icon icon-annotation" role="presentation"></div>
 ```
 </section>
 
@@ -1335,7 +1400,7 @@ As used for the Annotations" block.
 ### Angle double left
 Shows that a card can be expanded or collapsed to the left.
 ```
-<i class="icon icon-angle-double-left" role="presentation"></i>
+<div class="icon icon-angle-double-left" role="presentation"></div>
 ```
 </section>
 
@@ -1343,7 +1408,7 @@ Shows that a card can be expanded or collapsed to the left.
 ### Angle double right
 Shows that a card can be expanded or collapsed to the right.
 ```
-<i class="icon icon-angle-double-right" role="presentation"></i>
+<div class="icon icon-angle-double-right" role="presentation"></div>
 ```
 </section>
 
@@ -1351,7 +1416,7 @@ Shows that a card can be expanded or collapsed to the right.
 ### Area chart
 As seen on the "Statistics" page in the administration area.
 ```
-<i class="icon icon-chart-pie" role="presentation"></i>
+<div class="icon icon-chart-pie" role="presentation"></div>
 ```
 </section>
 
@@ -1359,7 +1424,7 @@ As seen on the "Statistics" page in the administration area.
 ### Arrow circle right
 Usually shows moving to a next step.
 ```
-<i class="icon icon-arrow-circle-right" role="presentation"></i>
+<div class="icon icon-arrow-circle-right" role="presentation"></div>
 ```
 </section>
 
@@ -1367,7 +1432,7 @@ Usually shows moving to a next step.
 ### Arrow right
 Arrow pointing right. This usually means "next step".
 ```
-<i class="icon icon-arrow-right" role="presentation"></i>
+<div class="icon icon-arrow-right" role="presentation"></div>
 ```
 </section>
 
@@ -1375,7 +1440,7 @@ Arrow pointing right. This usually means "next step".
 ### Arrows
 Shows that an object can be dragged and dropped.
 ```
-<i class="icon icon-arrows-alt" role="presentation"></i>
+<div class="icon icon-arrows-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1383,7 +1448,7 @@ Shows that an object can be dragged and dropped.
 ### Ban
 Used to signify banning a user.
 ```
-<i class="icon icon-ban" role="presentation"></i>
+<div class="icon icon-ban" role="presentation"></div>
 ```
 </section>
 
@@ -1391,7 +1456,7 @@ Used to signify banning a user.
 ### Bars
 Used on menu buttons.
 ```
-<i class="icon icon-bars" role="presentation"></i>
+<div class="icon icon-bars" role="presentation"></div>
 ```
 </section>
 
@@ -1399,7 +1464,7 @@ Used on menu buttons.
 ### Birthday cake
 Shows the date something was created, for example a group.
 ```
-<i class="icon icon-birthday-cake" role="presentation"></i>
+<div class="icon icon-birthday-cake" role="presentation"></div>
 ```
 </section>
 
@@ -1407,7 +1472,7 @@ Shows the date something was created, for example a group.
 ### Book
 As used on the "Journals" page.
 ```
-<i class="icon icon-book" role="presentation"></i>
+<div class="icon icon-book" role="presentation"></div>
 ```
 </section>
 
@@ -1415,7 +1480,7 @@ As used on the "Journals" page.
 ### Calendar
 Usually used on buttons to signify a pop-up date selctor.
 ```
-<i class="icon icon-regular icon-calendar-alt" role="presentation"></i>
+<div class="icon icon-regular icon-calendar-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1423,7 +1488,7 @@ Usually used on buttons to signify a pop-up date selctor.
 ### Caret down
 Used to show a drop-down menu or used on columns where sorting is possible.
 ```
-<i class="icon icon-caret-down" role="presentation"></i>
+<div class="icon icon-caret-down" role="presentation"></div>
 ```
 </section>
 
@@ -1431,7 +1496,7 @@ Used to show a drop-down menu or used on columns where sorting is possible.
 ### Check
 Used to signify a successful action.
 ```
-<i class="icon icon-check" role="presentation"></i>
+<div class="icon icon-check" role="presentation"></div>
 ```
 </section>
 
@@ -1439,7 +1504,7 @@ Used to signify a successful action.
 ### Circle check
 Used to signify SmartEvidence has been assessed as completed.
 ```
-<i class="icon icon-check-circle completed" role="presentation"></i>
+<div class="icon icon-check-circle completed" role="presentation"></div>
 ```
 </section>
 
@@ -1447,7 +1512,7 @@ Used to signify SmartEvidence has been assessed as completed.
 ### Circle cross
 Used to signify either removable columns on view or SmartEvidence item has been assessed as incomplete.
 ```
-<i class="icon icon-times-circle incomplete" role="presentation"></i>
+<div class="icon icon-times-circle incomplete" role="presentation"></div>
 ```
 </section>
 
@@ -1455,7 +1520,7 @@ Used to signify either removable columns on view or SmartEvidence item has been 
 ### Circle half open
 Used to signify SmartEvidence item has been assessed as partially complete.
 ```
-<i class="icon icon-adjust partial" role="presentation"></i>
+<div class="icon icon-adjust partial" role="presentation"></div>
 ```
 </section>
 
@@ -1463,7 +1528,7 @@ Used to signify SmartEvidence item has been assessed as partially complete.
 ### Circle open
 Used to signify SmartEvidence has begun on the SmartEvidence martix table.
 ```
-<i class="icon icon-regular icon-circle begun" role="presentation"></i>
+<div class="icon icon-regular icon-circle begun" role="presentation"></div>
 ```
 </section>
 
@@ -1471,7 +1536,7 @@ Used to signify SmartEvidence has begun on the SmartEvidence martix table.
 ### Circle closed
 Used to signify SmartEvidence can bel placed on the SmartEvidence martix table.
 ```
-<i class="icon icon-circle dot" role="presentation"></i>
+<div class="icon icon-circle dot" role="presentation"></div>
 ```
 </section>
 
@@ -1479,7 +1544,7 @@ Used to signify SmartEvidence can bel placed on the SmartEvidence martix table.
 ### Code
 Used to show the HTML block.
 ```
-<i class="icon icon-code" role="presentation"></i>
+<div class="icon icon-code" role="presentation"></div>
 ```
 </section>
 
@@ -1487,7 +1552,7 @@ Used to show the HTML block.
 ### Cog
 Used on "Settings" buttons.
 ```
-<i class="icon icon-cog" role="presentation"></i>
+<div class="icon icon-cog" role="presentation"></div>
 ```
 </section>
 
@@ -1495,7 +1560,7 @@ Used on "Settings" buttons.
 ### Cogs
 As seen on the configuration screen for blocks.
 ```
-<i class="icon icon-cogs" role="presentation"></i>
+<div class="icon icon-cogs" role="presentation"></div>
 ```
 </section>
 
@@ -1503,7 +1568,7 @@ As seen on the configuration screen for blocks.
 ### Columns
 Used on the Edit layout" button.
 ```
-<i class="icon icon-columns" role="presentation"></i>
+<div class="icon icon-columns" role="presentation"></div>
 ```
 </section>
 
@@ -1511,7 +1576,7 @@ Used on the Edit layout" button.
 ### Comments
 Used to show comments and used for the "Recent forum posts" block.
 ```
-<i class="icon icon-comments" role="presentation"></i>
+<div class="icon icon-comments" role="presentation"></div>
 ```
 </section>
 
@@ -1519,7 +1584,7 @@ Used to show comments and used for the "Recent forum posts" block.
 ### Copy to clipboard
 As used on the secret URLs page.
 ```
-<i class="icon icon-regular icon-copy" role="presentation"></i>
+<div class="icon icon-regular icon-copy" role="presentation"></div>
 ```
 </section>
 
@@ -1527,7 +1592,7 @@ As used on the secret URLs page.
 ### Cross
 Used as "Delete" button. The class "text-danger" makes the icon red. Note: The trash icon should be used instead in the future.
 ```
-<i class="icon icon-times text-danger" role="presentation"></i>
+<div class="icon icon-times text-danger" role="presentation"></div>
 ```
 </section>
 
@@ -1535,7 +1600,7 @@ Used as "Delete" button. The class "text-danger" makes the icon red. Note: The t
 ### Down
 Arrow pointing down usually signifies collapsible elements.
 ```
-<i class="icon icon-chevron-down" role="presentation"></i>
+<div class="icon icon-chevron-down" role="presentation"></div>
 ```
 </section>
 
@@ -1543,7 +1608,7 @@ Arrow pointing down usually signifies collapsible elements.
 ### Download
 Used to signify downloadable content.
 ```
-<i class="icon icon-download" role="presentation"></i>
+<div class="icon icon-download" role="presentation"></div>
 ```
 </section>
 
@@ -1551,7 +1616,7 @@ Used to signify downloadable content.
 ### Ellipsis
 Shows there are more options available.
 ```
-<i class="icon icon-ellipsis-h" role="presentation"></i>
+<div class="icon icon-ellipsis-h" role="presentation"></div>
 ```
 </section>
 
@@ -1559,7 +1624,7 @@ Shows there are more options available.
 ### Envelope
 Used as "Inbox" icon.
 ```
-<i class="icon icon-envelope" role="presentation"></i>
+<div class="icon icon-envelope" role="presentation"></div>
 ```
 </section>
 
@@ -1567,7 +1632,7 @@ Used as "Inbox" icon.
 ### Exchange
 As seen on the "Networking" page.
 ```
-<i class="icon icon-exchange-alt" role="presentation"></i>
+<div class="icon icon-exchange-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1575,7 +1640,7 @@ As seen on the "Networking" page.
 ### Exclamation triangle
 Used to signify an unsuccessful action or a warning.
 ```
-<i class="icon icon-exclamation-triangle" role="presentation"></i>
+<div class="icon icon-exclamation-triangle" role="presentation"></div>
 ```
 </section>
 
@@ -1583,7 +1648,7 @@ Used to signify an unsuccessful action or a warning.
 ### Extensions
 As used on the "Extensions" pages in the administration area.
 ```
-<i class="icon icon-puzzle-piece" role="presentation"></i>
+<div class="icon icon-puzzle-piece" role="presentation"></div>
 ```
 </section>
 
@@ -1591,7 +1656,7 @@ As used on the "Extensions" pages in the administration area.
 ### File download
 Used for the "File(s) to download" block.
 ```
-<i class="icon icon-filedownload" role="presentation"></i>
+<div class="icon icon-filedownload" role="presentation"></div>
 ```
 </section>
 
@@ -1599,7 +1664,7 @@ Used for the "File(s) to download" block.
 ### File image
 As seen on the "Site files" page in the administration area.
 ```
-<i class="icon icon-regular icon-file-image" role="presentation"></i>
+<div class="icon icon-regular icon-file-image" role="presentation"></div>
 ```
 </section>
 
@@ -1607,11 +1672,11 @@ As seen on the "Site files" page in the administration area.
 ### File text
 As seen on the "User pages" page.
 ```
-<i class="icon icon-regular icon-file-alt" role="presentation"></i>
+<div class="icon icon-regular icon-file-alt" role="presentation"></div>
 ```
 As seen on the "Site pages" page.
 ```
-<i class="icon icon-file-alt" role="presentation"></i>
+<div class="icon icon-file-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1619,7 +1684,7 @@ As seen on the "Site pages" page.
 ### Filter
 Used to signify filtering items.
 ```
-<i class="icon icon-filter" role="presentation"></i>
+<div class="icon icon-filter" role="presentation"></div>
 ```
 </section>
 
@@ -1627,7 +1692,7 @@ Used to signify filtering items.
 ### Flag
 Used to signify flagging objectionable content.
 ```
-<i class="icon icon-flag" role="presentation"></i>
+<div class="icon icon-flag" role="presentation"></div>
 ```
 </section>
 
@@ -1635,7 +1700,7 @@ Used to signify flagging objectionable content.
 ### Folder
 Used on the folder block.
 ```
-<i class="icon icon-folder" role="presentation"></i>
+<div class="icon icon-folder" role="presentation"></div>
 ```
 </section>
 
@@ -1643,7 +1708,7 @@ Used on the folder block.
 ### Folder open
 Used to signify a folder of items.
 ```
-<i class="icon icon-folder-open" role="presentation"></i>
+<div class="icon icon-folder-open" role="presentation"></div>
 ```
 </section>
 
@@ -1651,7 +1716,7 @@ Used to signify a folder of items.
 ### Globe
 Shows the secret URL button.
 ```
-<i class="icon icon-globe" role="presentation"></i>
+<div class="icon icon-globe" role="presentation"></div>
 ```
 </section>
 
@@ -1659,7 +1724,7 @@ Shows the secret URL button.
 ### Group
 As used for the "Group portfolios" block.
 ```
-<i class="icon icon-users" role="presentation"></i>
+<div class="icon icon-users" role="presentation"></div>
 ```
 </section>
 
@@ -1667,7 +1732,7 @@ As used for the "Group portfolios" block.
 ### Heart
 Shows that something has been favourited.
 ```
-<i class="icon icon-heart" role="presentation"></i>
+<div class="icon icon-heart" role="presentation"></div>
 ```
 </section>
 
@@ -1675,7 +1740,7 @@ Shows that something has been favourited.
 ### Heart hollow
 Shows something can be favourited.
 ```
-<i class="icon icon-regular icon-heart" role="presentation"></i>
+<div class="icon icon-regular icon-heart" role="presentation"></div>
 ```
 </section>
 
@@ -1683,7 +1748,7 @@ Shows something can be favourited.
 ### Help
 Used as a help icon.
 ```
-<i class="icon icon-info-circle" role="presentation"></i>
+<div class="icon icon-info-circle" role="presentation"></div>
 ```
 </section>
 
@@ -1691,7 +1756,7 @@ Used as a help icon.
 ### Image
 Used for the "Image" block.
 ```
-<i class="icon icon-regular icon-image" role="presentation"></i>
+<div class="icon icon-regular icon-image" role="presentation"></div>
 ```
 </section>
 
@@ -1699,7 +1764,7 @@ Used for the "Image" block.
 ### Inbox
 Used in the third navigation level in "Notifications".
 ```
-<i class="icon icon-inbox" role="presentation"></i>
+<div class="icon icon-inbox" role="presentation"></div>
 ```
 </section>
 
@@ -1707,7 +1772,7 @@ Used in the third navigation level in "Notifications".
 ### Internal media
 Used for the "Embedded media" block.
 ```
-<i class="icon icon-internalmedia" role="presentation"></i>
+<div class="icon icon-internalmedia" role="presentation"></div>
 ```
 </section>
 
@@ -1715,7 +1780,7 @@ Used for the "Embedded media" block.
 ### Key
 As seen on the "Share" page in the site administration area.
 ```
-<i class="icon icon-key" role="presentation"></i>
+<div class="icon icon-key" role="presentation"></div>
 ```
 </section>
 
@@ -1723,7 +1788,7 @@ As seen on the "Share" page in the site administration area.
 ### Legal
 As used on the "Licences" page in the administration area.
 ```
-<i class="icon icon-gavel" role="presentation"></i>
+<div class="icon icon-gavel" role="presentation"></div>
 ```
 </section>
 
@@ -1731,7 +1796,7 @@ As used on the "Licences" page in the administration area.
 ### Level up
 Used in the file browser to signify going up to the parent folder.
 ```
-<i class="icon icon-level-up-alt" role="presentation"></i>
+<div class="icon icon-level-up-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1739,7 +1804,7 @@ Used in the file browser to signify going up to the parent folder.
 ### Lock
 Used as a security icon, for example on the "Shared by me" page.
 ```
-<i class="icon icon-lock" role="presentation"></i>
+<div class="icon icon-lock" role="presentation"></div>
 ```
 </section>
 
@@ -1747,7 +1812,7 @@ Used as a security icon, for example on the "Shared by me" page.
 ### Long arrow down
 Long arrow pointing down. It is used for sorting items vertically.
 ```
-<i class="icon icon-long-arrow-alt-down" role="presentation"></i>
+<div class="icon icon-long-arrow-alt-down" role="presentation"></div>
 ```
 </section>
 
@@ -1755,7 +1820,7 @@ Long arrow pointing down. It is used for sorting items vertically.
 ### Long arrow left
 Long arrow pointing left. It is used for sorting items horizontally.
 ```
-<i class="icon icon-long-arrow-alt-left" role="presentation"></i>
+<div class="icon icon-long-arrow-alt-left" role="presentation"></div>
 ```
 </section>
 
@@ -1763,7 +1828,7 @@ Long arrow pointing left. It is used for sorting items horizontally.
 ### Long arrow right
 Long arrow pointing right. It is used for sorting items horizontally.
 ```
-<i class="icon icon-long-arrow-alt-right" role="presentation"></i>
+<div class="icon icon-long-arrow-alt-right" role="presentation"></div>
 ```
 </section>
 
@@ -1771,7 +1836,7 @@ Long arrow pointing right. It is used for sorting items horizontally.
 ### Long arrow up
 Long arrow pointing up. It is used for sorting items vertically.
 ```
-<i class="icon icon-long-arrow-alt-up" role="presentation"></i>
+<div class="icon icon-long-arrow-alt-up" role="presentation"></div>
 ```
 </section>
 
@@ -1779,7 +1844,7 @@ Long arrow pointing up. It is used for sorting items vertically.
 ### Media
 Used for the "Media" category in the content chooser.
 ```
-<i class="icon icon-fileimagevideo" role="presentation"></i>
+<div class="icon icon-fileimagevideo" role="presentation"></div>
 ```
 </section>
 
@@ -1787,7 +1852,7 @@ Used for the "Media" category in the content chooser.
 ### Navigation
 Used for the "Navigation" block.
 ```
-<i class="icon icon-navigation" role="presentation"></i>
+<div class="icon icon-navigation" role="presentation"></div>
 ```
 </section>
 
@@ -1795,7 +1860,7 @@ Used for the "Navigation" block.
 ### Next
 Arrow pointing right usually signifies collapsible elements.
 ```
-<i class="icon icon-chevron-right" role="presentation"></i>
+<div class="icon icon-chevron-right" role="presentation"></div>
 ```
 </section>
 
@@ -1803,7 +1868,7 @@ Arrow pointing right usually signifies collapsible elements.
 ### Outbox
 Used in the third navigation level in "Notifications".
 ```
-<i class="icon icon-paper-plane" role="presentation"></i>
+<div class="icon icon-paper-plane" role="presentation"></div>
 ```
 </section>
 
@@ -1811,7 +1876,7 @@ Used in the third navigation level in "Notifications".
 ### Paint brush
 Used to signify themes and styling.
 ```
-<i class="icon icon-paint-brush" role="presentation"></i>
+<div class="icon icon-paint-brush" role="presentation"></div>
 ```
 </section>
 
@@ -1819,7 +1884,7 @@ Used to signify themes and styling.
 ### Paperclip
 Used to show attachments.
 ```
-<i class="icon icon-paperclip" role="presentation"></i>
+<div class="icon icon-paperclip" role="presentation"></div>
 ```
 </section>
 
@@ -1827,7 +1892,7 @@ Used to show attachments.
 ### PDF
 Used for the "PDF" block.
 ```
-<i class="icon icon-pdf" role="presentation"></i>
+<div class="icon icon-pdf" role="presentation"></div>
 ```
 </section>
 
@@ -1835,7 +1900,7 @@ Used for the "PDF" block.
 ### Pencil
 Used on "Edit" buttons.
 ```
-<i class="icon icon-pencil-alt" role="presentation"></i>
+<div class="icon icon-pencil-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1843,7 +1908,7 @@ Used on "Edit" buttons.
 ### Plug
 Used to show webservices 'connection manager' connections.
 ```
-<i class="icon icon-plug" role="presentation"></i>
+<div class="icon icon-plug" role="presentation"></div>
 ```
 </section>
 
@@ -1851,7 +1916,7 @@ Used to show webservices 'connection manager' connections.
 ### Plus
 Used on "Add new" buttons. The class "text-success" makes the icon green.
 ```
-<i class="icon icon-plus text-success" role="presentation"></i>
+<div class="icon icon-plus text-success" role="presentation"></div>
 ```
 </section>
 
@@ -1859,7 +1924,7 @@ Used on "Add new" buttons. The class "text-success" makes the icon green.
 ### Plus circle
 Used to show adding something new. Usually a new table row.
 ```
-<i class="icon icon-plus-circle" role="presentation"></i>
+<div class="icon icon-plus-circle" role="presentation"></div>
 ```
 </section>
 
@@ -1867,7 +1932,7 @@ Used to show adding something new. Usually a new table row.
 ### Previous
 Arrow pointing left usually signifies collapsible elements.
 ```
-<i class="icon icon-chevron-left" role="presentation"></i>
+<div class="icon icon-chevron-left" role="presentation"></div>
 ```
 </section>
 
@@ -1875,7 +1940,7 @@ Arrow pointing left usually signifies collapsible elements.
 ### Recent posts
 Used for the "Recent journal entries" block.
 ```
-<i class="icon icon-recentposts" role="presentation"></i>
+<div class="icon icon-recentposts" role="presentation"></div>
 ```
 </section>
 
@@ -1883,7 +1948,7 @@ Used for the "Recent journal entries" block.
 ### Refresh
 As seen on the button on the "Networking" page.
 ```
-<i class="icon icon-sync-alt" role="presentation"></i>
+<div class="icon icon-sync-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1891,7 +1956,7 @@ As seen on the button on the "Networking" page.
 ### Remove user
 Remove users.
 ```
-<i class="icon icon-user-times" role="presentation"></i>
+<div class="icon icon-user-times" role="presentation"></div>
 ```
 </section>
 
@@ -1899,7 +1964,7 @@ Remove users.
 ### Reply
 Used to show you can reply to something, usually comments or messages.
 ```
-<i class="icon icon-reply" role="presentation"></i>
+<div class="icon icon-reply" role="presentation"></div>
 ```
 </section>
 
@@ -1907,7 +1972,7 @@ Used to show you can reply to something, usually comments or messages.
 ### Reply all
 Used to show you can reply to multiple people.
 ```
-<i class="icon icon-reply-all" role="presentation"></i>
+<div class="icon icon-reply-all" role="presentation"></div>
 ```
 </section>
 
@@ -1915,7 +1980,7 @@ Used to show you can reply to multiple people.
 ### RSS
 Used to show external sources.
 ```
-<i class="icon icon-rss" role="presentation"></i>
+<div class="icon icon-rss" role="presentation"></div>
 ```
 </section>
 
@@ -1923,14 +1988,14 @@ Used to show external sources.
 ### Search
 Used to signify searchable items
 ```
-<i class="icon icon-search" role="presentation"></i>
+<div class="icon icon-search" role="presentation"></div>
 ```
 </section>
 <section data-markdown data-category="icons">
 ### Shield
 As used on the "Cookie consent" page in the administration area.
 ```
-<i class="icon icon-shield-alt" role="presentation"></i>
+<div class="icon icon-shield-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1938,7 +2003,7 @@ As used on the "Cookie consent" page in the administration area.
 ### Sign in
 Used to show the sign in button.
 ```
-<i class="icon icon-sign-in-alt" role="presentation"></i>
+<div class="icon icon-sign-in-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1946,7 +2011,7 @@ Used to show the sign in button.
 ### Sign out
 Used to show the sign out button.
 ```
-<i class="icon icon-sign-out-alt" role="presentation"></i>
+<div class="icon icon-sign-out-alt" role="presentation"></div>
 ```
 </section>
 
@@ -1954,7 +2019,7 @@ Used to show the sign out button.
 ### Spinner
 Used to signify loading. The class "icon-pulse" makes it spin.
 ```
-<i class="icon icon-spinner icon-pulse" role="presentation"></i>
+<div class="icon icon-spinner icon-pulse" role="presentation"></div>
 ```
 </section>
 
@@ -1962,7 +2027,7 @@ Used to signify loading. The class "icon-pulse" makes it spin.
 ### Square
 Used as an un-checked check box, for example on an uncompleted task of a plan.
 ```
-<i class="icon icon-regular icon-square" role="presentation"></i>
+<div class="icon icon-regular icon-square" role="presentation"></div>
 ```
 </section>
 
@@ -1970,7 +2035,7 @@ Used as an un-checked check box, for example on an uncompleted task of a plan.
 ### Square checked
 Used as a checked check box, for example on complete tasks of a plan.
 ```
-<i class="icon icon-regular icon-check-square role="presentation"></i>
+<div class="icon icon-regular icon-check-square" role="presentation"></div>
 ```
 </section>
 
@@ -1978,7 +2043,7 @@ Used as a checked check box, for example on complete tasks of a plan.
 ### Star
 As used on the "Register site" page in the administration area.
 ```
-<i class="icon icon-star" role="presentation"></i>
+<div class="icon icon-star" role="presentation"></div>
 ```
 </section>
 
@@ -1986,7 +2051,7 @@ As used on the "Register site" page in the administration area.
 ### Table
 Shows you can export statistics.
 ```
-<i class="icon icon-table" role="presentation"></i>
+<div class="icon icon-table" role="presentation"></div>
 ```
 </section>
 
@@ -1994,7 +2059,7 @@ Shows you can export statistics.
 ### Tagged posts
 Used for the "Tagged journal entries" block.
 ```
-<i class="icon icon-taggedposts" role="presentation"></i>
+<div class="icon icon-taggedposts" role="presentation"></div>
 ```
 </section>
 
@@ -2002,7 +2067,7 @@ Used for the "Tagged journal entries" block.
 ### Tags
 Used to show tags.
 ```
-<i class="icon icon-tags" role="presentation"></i>
+<div class="icon icon-tags" role="presentation"></div>
 ```
 </section>
 
@@ -2010,7 +2075,7 @@ Used to show tags.
 ### Text
 Used for the "Text" block.
 ```
-<i class="icon icon-text" role="presentation"></i>
+<div class="icon icon-text" role="presentation"></div>
 ```
 </section>
 
@@ -2018,7 +2083,7 @@ Used for the "Text" block.
 ### Trash
 Used on buttons to signify deleting an item. The class "text-danger" makes the icon red.
 ```
-<i class="icon icon-trash-alt text-danger" role="presentation"></i>
+<div class="icon icon-trash-alt text-danger" role="presentation"></div>
 ```
 </section>
 
@@ -2026,7 +2091,7 @@ Used on buttons to signify deleting an item. The class "text-danger" makes the i
 ### Undo
 Used to show something can be undone or refreshed.
 ```
-<i class="icon icon-undo" role="presentation"></i>
+<div class="icon icon-undo" role="presentation"></div>
 ```
 </section>
 
@@ -2034,7 +2099,7 @@ Used to show something can be undone or refreshed.
 ### University
 Used on the "Administer institutions" page in the administration area.
 ```
-<i class="icon icon-university" role="presentation"></i>
+<div class="icon icon-university" role="presentation"></div>
 ```
 </section>
 
@@ -2042,7 +2107,7 @@ Used on the "Administer institutions" page in the administration area.
 ### Unlock
 
 ```
-<i class="icon icon-unlock" role="presentation"></i>
+<div class="icon icon-unlock" role="presentation"></div>
 ```
 </section>
 
@@ -2050,7 +2115,7 @@ Used on the "Administer institutions" page in the administration area.
 ### Up
 Arrow pointing up usually signifies collapsible elements.
 ```
-<i class="icon icon-chevron-up" role="presentation"></i>
+<div class="icon icon-chevron-up" role="presentation"></div>
 ```
 </section>
 
@@ -2058,7 +2123,7 @@ Arrow pointing up usually signifies collapsible elements.
 ### User
 As seen on the "User search" page in the administration area.
 ```
-<i class="icon icon-user" role="presentation"></i>
+<div class="icon icon-user" role="presentation"></div>
 ```
 </section>
 
@@ -2066,7 +2131,7 @@ As seen on the "User search" page in the administration area.
 ### User secret
 Used to show you can log in as another user.
 ```
-<i class="icon icon-user-secret" role="presentation"></i>
+<div class="icon icon-user-secret" role="presentation"></div>
 ```
 </section>
 
@@ -2074,7 +2139,7 @@ Used to show you can log in as another user.
 ### Wrench
 Used as icon for a system notification.
 ```
-<i class="icon icon-wrench" role="presentation"></i>
+<div class="icon icon-wrench" role="presentation"></div>
 ```
 </section>
 
@@ -2112,7 +2177,7 @@ Used as icon for a system notification.
         // add copy button
         var codeElem = $j(elem).find('code');
         codeElem.attr('id', 'code-block-' + i);
-        codeElem.before('<button class="copy" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><i class="icon icon-regular icon-copy"></i></button>');
+        codeElem.before('<button class="copy" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><div class="icon icon-regular icon-copy"></div></button>');
 
         // add the category to the sections index
         var category = $j(elem).data('category');

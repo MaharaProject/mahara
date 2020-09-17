@@ -17,12 +17,10 @@
             <div id="viewinstructions" class="last form-group collapsible-group small-group">
             <fieldset  class="pieform-fieldset collapsible collapsible-small">
                 <legend>
-                    <h4>
-                        <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
-                            {str tag='instructions' section='view'}
-                            <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
-                        </a>
-                    </h4>
+                    <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
+                        {str tag='instructions' section='view'}
+                        <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+                    </a>
                 </legend>
                 <div class="fieldset-body collapse viewinstructions {if !$instructionscollapsed} show {/if}" id="viewinstructions-dropdown">
                     {$instructions|clean_html|safe}
@@ -65,7 +63,7 @@
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h4>
+                <h1 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h1>
             </div>
             <div class="modal-body blockinstance-content">
                 <div class="block-inner">{$addform|safe}</div>
@@ -82,7 +80,7 @@
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
-                <h4 class="modal-title blockinstance-header text-inline"></h4>
+                <h1 class="modal-title blockinstance-header text-inline"></h1>
                 <span class="icon icon-cogs icon-2x float-right" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">

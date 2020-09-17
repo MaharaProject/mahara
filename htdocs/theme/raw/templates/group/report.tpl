@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-<h3>{str tag=viewscollectionssharedtogroup section=view}</h3>
+<h2>{str tag=viewscollectionssharedtogroup section=view}</h2>
 {if $sharedviews.count == '0'}
 <p class="no-results">
     {str tag=noviewssharedwithgroupyet section=group}
@@ -34,7 +34,7 @@
     {/if}
 {/if}
 
-<h3>{str tag=groupviews section=view}</h3>
+<h2>{str tag=groupviews section=view}</h2>
 {if $groupviews.count == '0'}
 <p class="no-results">
      {str tag=grouphasntcreatedanyviewsyet section=group}

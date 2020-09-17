@@ -1,8 +1,8 @@
 {if $sbdata.data || $sbdata.preview || $sbdata.count > 1}
 <div class="card">
-    <h3 class="card-header">
+    <h2 class="card-header">
         {if $sbdata.preview}{str tag="profilecompletenesspreview"}{else}{str tag="profilecompleteness"}{/if}
-    </h3>
+    </h2>
     <div class="card-body">
         {if $sbdata.count > 1}
         <form class="pieform" name="progresssidebarselect" method="post" action="" id="progresssidebarselect">

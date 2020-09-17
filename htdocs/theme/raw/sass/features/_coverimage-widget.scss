@@ -1,7 +1,8 @@
-$coverimage-height: 133px;
+$coverimage-height: 7.75rem; // 124px;
 
 // cover image card
-.card-view .card-body.coverimage, .card-collection .card-body.coverimage {
+.card-view .card-body.coverimage,
+.card-collection .card-body.coverimage {
     overflow: hidden;
     padding: 0;
 
@@ -19,13 +20,17 @@ $coverimage-height: 133px;
         position: relative;
         display: inline-block;
         z-index: 2;
-        background-color: rgba(255, 255, 255, 0.85);
+        background-color: rgba(255, 255, 255, 1);
         height: $coverimage-height;
         vertical-align: top;
         width:100%;
 
         p {
-            padding: 5px;
+            padding: $card-spacer-y $card-spacer-x;
+            height: $coverimage-height;
+            margin: 0;
+            overflow-y: auto;
+            font-size: $font-size-sm;
         }
     }
 

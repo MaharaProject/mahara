@@ -44,9 +44,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
+                    <h1 class="modal-title">
                         {str tag=signoffpagetitle section=blocktype.peerassessment/signoff}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <p id="signoff-on" class="hidden">{str tag=signoffpageundodesc section=blocktype.peerassessment/signoff}</p>
@@ -65,9 +65,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
+                    <h1 class="modal-title">
                         {str tag=verifypagetitle section=blocktype.peerassessment/signoff}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <p>{str tag=verifypagedesc section=blocktype.peerassessment/signoff}</p>
@@ -87,10 +87,10 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
                         <span aria-hidden="true">×</span>
                     </button>
-                    <h4 class="modal-title">
-                        <span class="icon icon-lg icon-check-circle left" role="presentation" aria-hidden="true"></span>
+                    <h1 class="modal-title">
+                        <span class="icon icon-check-circle left" role="presentation" aria-hidden="true"></span>
                         {str tag=signoffdetails section=blocktype.peerassessment/signoff}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <p id="signoff-info"></p>

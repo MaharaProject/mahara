@@ -8,7 +8,7 @@
                 <th>{str tag=blockTitle section=artefact.internal}</th>
                 <th>{str tag=containedin section=artefact.internal}</th>
                 <th>
-                    <span class="icon icon-lg icon-paperclip" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-paperclip" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=Attachments section=artefact.resume}
                     </span>

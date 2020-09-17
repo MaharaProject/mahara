@@ -30,7 +30,7 @@
                           <input type="hidden" name="i" value="{$institution->name}">
                           {if $webserviceconnections}
                               <a class="btn-secondary btn-sm button btn btn-group-first" href="{$WWWROOT}webservice/admin/connections.php?i={$institution->name}">
-                                  <span class="icon icon-plug icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                                  <span class="icon icon-plug text-default" role="presentation" aria-hidden="true"></span>
                                   <span class="sr-only">
                                       {str(tag=connectspecific arg1=$institution->displayname)|escape:html|safe}
                                   </span>
@@ -40,7 +40,7 @@
                             {if !($siteadmin && !$institution->members && $institution->name != 'mahara')} no-delete-btn btn-group-last{/if}
                             {if !$webserviceconnections} btn-group-first {/if}"
                             alt="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
-                                 <span class="icon icon-cog icon-lg text-default" role="presentation" aria-hidden="true"></span>
+                                 <span class="icon icon-cog text-default" role="presentation" aria-hidden="true"></span>
                                  <span class="sr-only">
                                      {str tag="edit"}
                                  </span>
@@ -48,7 +48,7 @@
                          {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
                             <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last" alt="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
 
-                                <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
+                                <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">
                                     {str tag="delete"}
                                 </span>

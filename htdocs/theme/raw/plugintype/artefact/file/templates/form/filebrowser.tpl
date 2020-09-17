@@ -17,8 +17,8 @@
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
         {if !$config.noselect}
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#{$prefix}_upload_browse">
-            <span class="icon icon-paperclip icon-lg left" role="presentation" aria-hidden="true"></span>
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#{$prefix}_upload_browse">
+            <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
             {str tag=addafile section=artefact.file}
         </button>
         {/if}
@@ -54,7 +54,7 @@
         {/if}
 
         {if $config.upload}
-        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake{else} card fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} d-none{/if}">
+        <div id="{$prefix}_upload_container" class="clearfix {if $config.selectone || $config.selectmodal} card-fake card{else} card fileupload {/if} {if ($tabs && !$tabs.upload) || $uploaddisabled} d-none{/if}">
             {* config.uploadagreement: disable the file chooser unless the agreement is checked *}
             {* config.simpleupload: the form only contains a file chooser *}
             {* config.submitbutton: add submit button even if js is enabled & don't start uploading as soon as a file is chosen *}
@@ -66,9 +66,9 @@
             <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1"/>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
             <div id="{$prefix}_upload_messages"></div>
-            <h2 class="title">{str tag='uploadfile' section='artefact.file'}</h2>
+            <h2 class="card-header">{str tag='uploadfile' section='artefact.file'}</h2>
 
-            <div class="row">
+            <div class="row card-body">
                 {if $config.uploadagreement || $licenseform}
                 <div class="fileupload-container col-md-6">
                     {if $config.uploadagreement}
@@ -97,7 +97,7 @@
                     {/if}
 
                     <div class="uploadform userfile">
-                        <label class="lead" for="{$prefix}_userfile">
+                        <label for="{$prefix}_userfile">
                             {str tag='File' section='artefact.file'}
                         </label>
 
@@ -105,7 +105,7 @@
                             <input type="file" class="file" {$accepts|safe} {if $capturedevice} capture{/if} id="{$prefix}_userfile" name="userfile[]" multiple />
                         </span>
 
-                        <span id="{$prefix}_userfile_maxuploadsize" class="file-description">
+                        <span id="{$prefix}_userfile_maxuploadsize" class="text-small text-midtone">
                             ({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})
                         </span>
 
@@ -176,9 +176,9 @@
         {/if}
 
         <div class="filelist-wrapper card card-secondary">
-            <h3 id="{$prefix}_foldernav" class="card-header">
+            <h2 id="{$prefix}_foldernav" class="card-header">
             {include file="artefact:file:form/folderpath.tpl" path=$path querybase=$querybase owner=$tabs.owner ownerid=$tabs.ownerid}
-            </h3>
+            </h2>
 
             <div id="{$prefix}_filelist_container">
                 {include file="artefact:file:form/filelist.tpl" prefix=$prefix filelist=$filelist folderdownload=$folderdownload folderparams=$folderparams editable=$config.edit selectable=$config.select highlight=$highlight edit=$edit querybase=$querybase groupinfo=$groupinfo owner=$tabs.owner ownerid=$tabs.ownerid selectfolders=$config.selectfolders showtags=$config.showtags editmeta=$config.editmeta colspan=$colspan}

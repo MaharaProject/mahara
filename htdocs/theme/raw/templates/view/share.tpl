@@ -6,7 +6,7 @@
 {else}
     {if $accesslists.views && $accesslists.collections}
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" aria-hidden="true" class="active">
+            <li role="presentation" aria-hidden="true">
                 <a href="#collection-tab" class="active" aria-controls="home" aria-selected="true" role="tab" data-toggle="tab" title="{str tag=collectionaccessrules section=collection}">
                     {str tag=Collections section=collection}
                 </a>
@@ -20,7 +20,7 @@
         <div class="tab-content">
     {/if}
     {if $accesslists.collections}
-        <div id="collection-tab" class="card card-secondary card{if $accesslists.views} tab-pane active{/if}">
+        <div id="collection-tab" class="{if $accesslists.views}tab-pane{/if} active">
             {if !$accesslists.views}<h2 class="card-header">{str tag=Collections section=collection}</h2>{/if}
             <table class="fullwidth accesslists table">
                 <thead>
@@ -42,7 +42,7 @@
     {/if}
 
     {if $accesslists.views}
-    <div id="pages-tab" class="card card-secondary{if $accesslists.collections} tab-pane{/if}">
+    <div id="pages-tab" class="{if $accesslists.collections}tab-pane{/if}">
         {if !$accesslists.collections}<h2 class="card-header">{str tag=Views section=view}</h2>{/if}
         <table class="fullwidth accesslists table">
             <thead>

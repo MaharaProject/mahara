@@ -2,7 +2,7 @@
 {if $canedit}
     <div class="btn-group btn-group-top">
         <a class="btn btn-secondary" href="{$newPlanLink}">
-            <span class="icon icon-plus icon-lg left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str section="artefact.plans" tag="newplan"}</a>
     </div>
 {/if}

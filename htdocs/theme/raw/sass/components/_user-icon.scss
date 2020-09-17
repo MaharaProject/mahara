@@ -1,7 +1,7 @@
 .user-icon {
-    border-radius: $border-radius;
-    background-color: $card-bg;
-    padding: 3px;
+    border-radius: $thumbnail-border-radius;
+    background-color: $thumbnail-bg;
+    padding: $thumbnail-padding;
     display: table;
     border: $thumbnail-border-width solid $thumbnail-border-color;
     overflow: hidden;
@@ -10,61 +10,65 @@
 
     &.left {
         position:absolute;
-        left: 5px;
-        top: 5px;
+        left: $spacing-sm;
+        top: $spacing-sm;
         display: block;
         z-index: 5;
 
         &.small-icon {
-            width: 35px;
-            height: 35px;
+            width: 2.1875rem; // 35px;
+            height: 2.1875rem; // 35px;
         }
     }
 
-    .list-group-item &, &.small-icon {
-        padding: 3px;
-    }
     .list-group-item & {
         float: left;
-        margin-top: -3px;
-        margin-right: 5px;
+        margin-right: $spacing-base;
     }
     img {
         margin: 0;
         opacity: 0.9;
         position: relative;
-        width: 20px;
-        height: 20px;
+        width: 1.25rem; // 20px;
+        height: 1.25rem; // 20px;
         object-fit: cover;
         border-radius: 0;
     }
     p {
-        margin-top: 3px;
+        // margin-top: 3px;
         margin-bottom: 0;
     }
 
     .page-header & {
-        margin: -20px 10px;
+      margin-top: -0.25rem; // -4px
+      margin-right: $spacing-base;
+      margin-bottom: 0;
+      margin-left: 0;
+    }
+
+    .label & {
+        display: inline-block;
+    }
+
+    // Gap between user icon and user name
+    .user-icon-name & {
+        margin-right: $spacing-base;
     }
 }
 
-.label .user-icon {
-    display: inline-block;
-}
-
 .with-user-icon {
-    padding-left: 53px;
+    padding-left: 3.3125rem; // 53px;
 }
 
 .card-header {
     a.has-user-icon , a.has-user-icon.collapsed {
-        padding-left:65px; //make room for user image
+        padding-left: 4.0625rem; // 65px; //make room for user image
     }
 }
 
 .card-body {
     .with-user-icon-lg {
-        padding-right: 67px;
+        padding-right: 4.1875rem; // 67px;
     }
 }
 
@@ -72,7 +76,7 @@ a.user-icon, a .user-icon {
     &:hover,
     &:focus {
         opacity:1;
-        background-color: scale-color($thumbnail-border-color, $lightness: 75%);
+        background-color: $thumbnail-bg;
 
         img {
             opacity: 1;
@@ -87,73 +91,63 @@ a.user-icon, a .user-icon {
 }
 
 .item.user-icon img {
-    margin-bottom: 5px;
-}
-
-.profileheader {
-    h1 {
-        .user-icon {
-            margin: -10px 10px 0 0;
-        }
-    }
+    margin-bottom: $spacing-sm;
 }
 
 // User icon sizes
 .user-icon-20 {
-    line-height: 1;
     img {
-        width: 20px;
-        height: 20px;
+        width: 1.25rem; // 20px;
+        height: 1.25rem; // 20px;
     }
 }
-.user-icon-25 {
+.user-icon-25 { // used in header
     img {
-        width: 25px;
-        height: 25px;
+        width: 1.5625rem; // 25px;
+        height: 1.5625rem; // 25px;
     }
 }
 .user-icon-30 {
     img {
-        width: 30px;
-        height: 30px;
+        width: 1.875rem; // 30px;
+        height: 1.875rem; // 30px;
     }
 }
 .user-icon-40 {
     img {
-        width: 40px;
-        height: 40px;
+        width: 2.5rem; // 40px;
+        height: 2.5rem; // 40px;
     }
 }
 .user-icon-50 {
-    line-height: 1;
     img {
-        width: 50px;
-        height: 50px;
+        width: 3.125rem; // 50px;
+        height: 3.125rem; // 50px;
     }
 }
 .user-icon-60 {
     img {
-        width: 60px;
-        height: 60px;
+        width: 3.75rem; // 60px;
+        height: 3.75rem; // 60px;
     }
 }
 .user-icon-100 {
     img {
-        width: 100px;
-        height: 100px;
+        width: 6.25rem; // 100px;
+        height: 6.25rem; // 100px;
     }
 }
 .user-icon-inline {
     display: inline-block;
     vertical-align: middle;
-    margin-right: 3px;
+    margin-right: 0.125rem; // 2px
 }
 
 // Profile pictures page user icons cell
 .profileiconcell {
     img {
-        width: 100px;
-        height: 100px;
+        width: 6.25rem; // 100px;
+        height: 6.25rem; // 100px;
         object-fit: cover;
     }
 }
@@ -161,35 +155,19 @@ a.user-icon, a .user-icon {
 // Thumbnail grid user icons spacing
 .user-thumbnails {
     .user-icon {
-        margin: 0 10px 10px 0;
-        border-radius: $border-radius;
-        img {
-            border-radius: 0;
-        }
-    }
-}
-
-// Profile info block user icon
-.bt-profileinfo,
-.bt-profileinfo-editor {
-    .user-icon {
-        img {
-            width: 80px;
-            height: 80px;
+        margin-right: $spacing-base;
+        margin-bottom: $spacing-base;
+        padding: 0.25rem; // 4px
+        max-width: 6.875rem; // 110px
+        .member-name {
+          line-height: $line-height-base;
         }
     }
 }
 
 // Select-2 user list user icons
 .select2-user-icon {
-    width: 40px;
-    height: 40px;
+    width: 2.5rem; // 40px;
+    height: 2.5rem; // 40px;
     object-fit: cover;
-}
-
-// Gap between user icon and user name
-.user-icon-name {
-    .user-icon {
-        margin-right: 10px;
-    }
 }

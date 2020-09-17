@@ -5,20 +5,18 @@
         {if is_array($profilegroup.fields) && count($profilegroup.fields)}
         <fieldset id="{$profilegroup.id}_fs" class="pieform-fieldset collapsible {if $dwoo.foreach.profilegroups.last} last{/if}">
             <legend>
-                <h4>
-                    <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
-                        {$profilegroup.legend}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
-                    </a>
-                </h4>
+                <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
+                    {$profilegroup.legend}
+                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                </a>
             </legend>
             <div id="profilefield-{$profilegroup.id}" class="collapse list-group">
                 {foreach from=$profilegroup.fields key=fieldname item=fieldvalues}
                 {if is_array($fieldvalues) && count($fieldvalues)}
                 <div id="profile-{$profilegroup.id}" class="fieldset-body">
-                    <h5 class="profilefield list-group-item-heading">
+                    <h4 class="profilefield list-group-item-heading">
                         {str tag=$fieldname section=artefact.internal}
-                    </h5>
+                    </h4>
                     {foreach from=$fieldvalues item=fieldvalue}
                         <div id="profilefield_{$fieldvalue.id}" class="row">
                             <div class="col-md-8">

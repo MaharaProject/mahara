@@ -1,9 +1,12 @@
-
+.collapsible legend,
+.card-header {
+    font-weight: 700;
+}
 .card {
     .card-header:before {
         @include fonttype(solid);
         color: $theme-secondary-color;
-        padding-right: 5px;
+        padding-right: $spacing-sm;
         vertical-align: top;
     }
     // custom icons to some blocks, they do not appear on the edit page

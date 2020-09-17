@@ -185,7 +185,7 @@ if ($membership && ( !isset($allowunsubscribe) || $allowunsubscribe == 1)) {
                 'type' => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-secondary',
-                'value' => $forum->subscribed ? '<span class="icon icon-lg icon-times left text-danger" role="presentation" aria-hidden="true"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="icon icon-lg icon-star left" role="presentation" aria-hidden="true"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
+                'value' => $forum->subscribed ? '<span class="icon icon-times left text-danger" role="presentation" aria-hidden="true"></span> ' . get_string('unsubscribefromforum', 'interaction.forum') : '<span class="icon icon-star left" role="presentation" aria-hidden="true"></span> ' .  get_string('subscribetoforum', 'interaction.forum'),
                 'help' => false
             ),
             'forum' => array(

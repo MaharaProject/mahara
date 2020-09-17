@@ -5,20 +5,18 @@
         {if is_array($resumegroup.fields) && count($resumegroup.fields)}
         <fieldset id="{$resumegroup.id}_fs" class="pieform-fieldset collapsible">
             <legend>
-                <h4>
-                    <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
-                        {$resumegroup.legend}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
-                    </a>
-                </h4>
+                <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
+                    {$resumegroup.legend}
+                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                </a>
             </legend>
             <div id="resumefield-{$resumegroup.id}" class="collapse list-group">
                 {foreach from=$resumegroup.fields key=fieldname item=fieldvalues}
                 {if is_array($fieldvalues) && count($fieldvalues)}
                 <div id="resume-{$resumegroup.id}" class="list-group-item">
-                    <h5 class="resumefield" class="list-group-item-heading">
+                    <h4 class="resumefield" class="list-group-item-heading">
                         {$fieldname}
-                    </h5>
+                    </h4>
                     <div class="list-group list-group-lite">
                     {foreach from=$fieldvalues item=fieldvalue}
                         <div class="list-group-item">

@@ -161,6 +161,7 @@ function create_settings_pieform() {
     if ($canedittitle) {
         $formelements['basic'] = array(
             'type'        => 'fieldset',
+            'class'       => 'first',
             'collapsible' => true,
             'collapsed'   => false,
             'legend'      => get_string('basics', 'view'),

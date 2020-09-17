@@ -110,7 +110,7 @@ $string['sitefontsdesc'] = 'Upload and manage fonts that everyone can use in ski
 $string['sitelicenses'] = 'Licenses';
 $string['sitelicensesadd'] = 'Add license';
 $string['sitelicensesdesc']     = 'Configure the list of licenses that people can use on their content';
-$string['sitelicensesdisablednote1']     = '<b>Note</b>: License metadata is currently disabled. You will need to enable it in the "Site settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people will be able to specify licenses.';
+$string['sitelicensesdisablednote1']     = '<strong>Note</strong>: License metadata is currently disabled. You will need to enable it in the "Site settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people will be able to specify licenses.';
 $string['sitelicensesedit'] = 'Edit license';
 $string['sitefilesdescription'] = 'Upload and administer files that can be put in the "Links and resources" menu and in site pages';
 $string['siteskins'] = 'Site skins';
@@ -720,7 +720,7 @@ $string['uploadcsvpagedescription7'] = '<p>Here you can create new accounts by u
 
 <pre>username,password,email,firstname,lastname,studentid</pre>
 
-<p>This row must include the following fields when you create <i>new</i> accounts:</p>
+<p>This row must include the following fields when you create <em>new</em> accounts:</p>
 <ul class="fieldslist">
 <li>username</li>
 <li>firstname</li>
@@ -1209,7 +1209,7 @@ $string['bulkexport'] = 'Export accounts';
 $string['bulkexportempty'] = 'Nothing suitable to export. Please double-check the list of usernames.';
 $string['bulkexportinstitution'] = 'The institution from which all members should be exported';
 $string['bulkexporttitle1'] = 'Bulk export accounts';
-$string['bulkexportdescription1'] = 'Choose an export format and then either choose the institution to export <b>or</b> specify a list of usernames.';
+$string['bulkexportdescription1'] = 'Choose an export format and then either choose the institution to export <strong>or</strong> specify a list of usernames.';
 $string['bulkexportusernames'] = 'Usernames to export';
 $string['bulkexportusernamesdescription'] = 'A list of the accounts (one username per line) to be exported along with their data.';
 $string['couldnotexportusers'] = 'The following account(s) could not be exported: %s';
@@ -1342,7 +1342,7 @@ $string['masquerader'] = 'Masquerading administrator';
 $string['masqueradee'] = 'Person';
 $string['nomasquerades'] = 'No administrator has masqueraded yet as somebody else since the logging of masquerading sessions has been turned on.';
 $string['loginaslog'] = 'Masquerading sessions';
-$string['masqueradingnotloggedwarning'] = '<b>Note</b>: Logging of masquerading sessions is currently disabled. In order to see data in this table, the site administrator needs to turn it on in "Logging settings" under "<a href="%sadmin/site/options.php">Configure site</a>".';
+$string['masqueradingnotloggedwarning'] = '<strong>Note</strong>: Logging of masquerading sessions is currently disabled. In order to see data in this table, the site administrator needs to turn it on in "Logging settings" under "<a href="%sadmin/site/options.php">Configure site</a>".';
 $string['masqueradenotificationsubject'] = 'An administrator logged in as you';
 $string['masqueradenotificationnoreason'] = 'The administrator %s logged into your account on %s.';
 $string['masqueradenotificationreason'] = 'The administrator %s logged into your account on %s. The reason was: %s';
@@ -1352,7 +1352,7 @@ $string['progressbar'] = 'Profile completion';
 $string['showprogressbar'] = 'Show profile completion';
 $string['progressbarsaved'] = 'Progress bar saved successfully.';
 $string['showprogressbardescription2'] = 'In a sidebar, display a progress bar with tips about what to complete in the profile. This can be disabled in the account preferences.';
-$string['progressbardisablednote2'] = '<b>Note</b>: Profile completion is currently disabled. You will need to enable it in the "Side block settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people can track their progress towards completing their profile.';
+$string['progressbardisablednote2'] = '<strong>Note</strong>: Profile completion is currently disabled. You will need to enable it in the "Side block settings" section of "<a href="%sadmin/site/options.php">Configure site</a>" before people can track their progress towards completing their profile.';
 $string['profilecompletiondesc'] = 'If profile completion is enabled, select content that counts towards a completed profile';
 $string['profilecompletenessdesc1'] = 'The profile completion allows people to have a visual indicator in the sidebar showing them how complete their profile already is. You can choose the artefacts that will count towards the profile completion. All other artefacts can be used, but do not factor into the completion count.';
 $string['profilecompletenesspreview'] = 'You can preview what the profile completion looks like in the "Profile completion preview" side block.';

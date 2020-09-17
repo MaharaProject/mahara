@@ -40,7 +40,7 @@
             <div class="forum-post-btns text-right">
                 {if !$chronological && ($moderator || ($membership && !$closed)) && $ineditwindow}
                     {if !$moderator && !$post->approved }
-                        <i>{str tag="awaitingapproval" section=interaction.forum}</i>
+                        <em>{str tag="awaitingapproval" section=interaction.forum}</em>
                     {else}
                         <a href="{$WWWROOT}interaction/forum/editpost.php?parent={$post->id}" class="link-blocktype">
                             <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>

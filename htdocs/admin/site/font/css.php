@@ -22,22 +22,13 @@ if (!get_config('skins')) {
 
 // We use the font title as the "family" name for the font
 $family = param_variable('family', false);
+$stylesheet = '';
 if (!empty($family)) {
-    $stylesheet = '';
     $fonts = explode('|', $family);
     foreach ($fonts as $font) {
         $fontname = get_field('skin_fonts', 'name', 'title', $font);
         $stylesheet .= Skin::get_css_font_face_from_font_name($fontname) . "\n";
     }
-}
-else {
-
-    $stylesheet = <<< EOF
-#preview {
-    margin: 10px 0;
-}
-
-EOF;
 }
 
 header('Content-type: text/css');

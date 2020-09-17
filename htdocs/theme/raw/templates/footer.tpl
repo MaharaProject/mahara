@@ -5,13 +5,13 @@
             </main>
 
             {if $SIDEBARS && $SIDEBLOCKS.right}
-            <div class="col-lg-3 sidebar">
+            <div class="col-xl-3 sidebar">
                     {include file="sidebar.tpl" blocks=$SIDEBLOCKS.right}
             </div>
             {/if}
 
             {if $SIDEBARS && $SIDEBLOCKS.left}
-            <div class="col-lg-3 order-md-1 sidebar">
+            <div class="col-xl-3 order-lg-1 sidebar">
                             {include file="sidebar.tpl" blocks=$SIDEBLOCKS.left}
             </div>
             {/if}

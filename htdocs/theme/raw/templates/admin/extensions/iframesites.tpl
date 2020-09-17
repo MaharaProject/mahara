@@ -27,7 +27,6 @@
 
             <a id="edit-{$item.id}" class="url-open-editform btn btn-secondary btn-sm float-left closed" title="{str tag=edit}" href="">
               <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-              <span class="icon icon-chevron-down icon-sm" role="presentation" aria-hidden="true"></span>
               <span class="sr-only">{str(tag=editspecific arg1=$item.name)|escape:html|safe}</span>
             </a>
             {$item.deleteform|safe}

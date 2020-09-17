@@ -4,50 +4,47 @@
     .pagelist {
         .select-pages {
             float: right;
-            margin: -10px 0 0 0;
-            padding-top: 8px;
             a {
-                padding: 1px 7px;
+                padding: $btn-padding-y-sm $btn-padding-x-sm;
             }
         }
         .add-pages {
-            margin: 5px;
+            margin: $spacing-sm;
         }
         .error.ui-draggable {
-            padding: 10px 15px;
+            padding: $spacing-base $spacing-lg;
             color: $state-danger-text;
         }
     }
 
     .collection-pages .list-group .highlight {
-        padding: 20px;
+        padding: $spacing-xl;
     }
 
     .list-group-item {
 
         .text-link {
             display: block;
-            padding-left: 60px;
-            padding-right: 30px;
+            padding-left: 3.75rem; // 60px;
+            padding-right: $spacing-xxl;
         }
         .order-sort-control {
             float: left;
             border: 0;
-            padding: 1px 7px;
         }
         .single-arrow-up {
-            padding-right: 32px;
+            padding-right: 2rem; // 32px;
         }
         .single-arrow-down {
-            padding-left: 32px;
+            padding-left: 2rem; // 32px;
             .icon-long-arrow-alt-down {
-                padding-left: 3px !important;
+                padding-left: $spacing-xs !important;
             }
         }
         form[name^="removeview"] {
             position: absolute;
-            top: 7px;
-            right: 7px;
+            top: $list-group-item-padding-y - ($btn-padding-y-sm / 2);
+            right: $list-group-item-padding-x - ($btn-padding-x-sm / 2);
         }
     }
 }

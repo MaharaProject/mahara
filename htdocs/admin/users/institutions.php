@@ -224,7 +224,7 @@ if ($institution || $add) {
                 ),
                 'submit' => array(
                     'type' => 'submitcancel',
-                    'subclass' => array('btn-secondary'),
+                    'subclass' => array('btn-danger'),
                     'value' => array(get_string('yes'), get_string('no'))
                 )
             )
@@ -741,7 +741,7 @@ else {
                     'submit' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-primary input-group-append',
+                        'class' => 'btn-secondary input-group-append',
                         'value' => get_string('search'),
                     )
                 ),
@@ -1291,7 +1291,7 @@ if ($institution && $institution != 'mahara') {
                         'type'        => 'button',
                         'usebuttontag' => true,
                         'class'       => 'btn-secondary',
-                        'value'       => '<span class="icon icon-lg text-danger icon-ban left" role="presentation" aria-hidden="true"></span>' . get_string('suspendinstitution','admin'),
+                        'value'       => '<span class="icon text-danger icon-ban left" role="presentation" aria-hidden="true"></span>' . get_string('suspendinstitution','admin'),
                     ),
                 )
             );
@@ -1313,7 +1313,7 @@ if ($institution && $institution != 'mahara') {
                         'type'        => 'button',
                         'usebuttontag' => true,
                         'class'       => 'btn-secondary',
-                        'value'       => '<span class="icon icon-lg text-success icon-check left" role="presentation" aria-hidden="true"></span>' . get_string('unsuspendinstitution','admin'),
+                        'value'       => '<span class="icon text-success icon-check left" role="presentation" aria-hidden="true"></span>' . get_string('unsuspendinstitution','admin'),
                     ),
                 )
             );

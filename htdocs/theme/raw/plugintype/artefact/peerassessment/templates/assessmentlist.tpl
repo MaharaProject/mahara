@@ -10,7 +10,7 @@
                     <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h5 class="pull-left list-group-item-heading">
+            <h4 class="pull-left list-group-item-heading">
                 {if $item->author && !$item->author->deleted}
                 <a href="{$item->author->profileurl}">
                 <span>{$item->author|display_name}</span>
@@ -28,7 +28,7 @@
                     <p class="metadata">[{str tag=Updated}: {$item->updated}]</p>
                 {/if}
                 </span>
-            </h5>
+            </h4>
             <!-- The "assessment-item-buttons" class is used as an identifier by Javascript -->
             <div class="btn-group float-right assessment-item-buttons">
                 {if $item->editlink}

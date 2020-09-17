@@ -2,16 +2,13 @@
 .nav-toggle-area {
     position: relative;
     .user-icon {
-        padding: 0;
         position: absolute;
-        margin: 4px 0 4px 7px;
+        margin: 0.25rem 0 0 0.4375rem; // 4px 0 0 7px
         z-index: 3;
-        left: 135px;
+        left: 8.4375rem; // 135px;
         display: block;
-        width: 27px;
-        height: 27px;
         @include media-breakpoint-up(md) {
-            left: 90px;
+            left: 5.625rem; // 90px;
         }
         &:hover,
         &:focus {
@@ -24,14 +21,13 @@
 .navbar-toggle {
     display: block;
     margin: 0;
-    border-radius: $border-radius;
-    min-width: 43px;
+    border-radius: $navbar-toggler-border-radius;
+    min-width: 2.625rem; // 42px;
     color: $navbar-toggle-color;
-    padding: 7px 10px;
+    padding: $navbar-toggler-padding-y $navbar-toggler-padding-x;
     background-color: $navbar-toggle-bg;
     position: relative;
     float: right;
-    background-image: none;
     border: 0;
     cursor: pointer;
 
@@ -60,7 +56,7 @@
     }
 
     &.user-toggle {
-        padding-left: 40px;
+        padding-left: 2.5rem; // 40px;
         color: $navbar-toggle-color;
         background-color: $navbar-toggle-bg;
 
@@ -81,10 +77,10 @@
         border-radius: 0;
         border: 0;
         position: absolute;
-        right: 10px;
-        top: 5px;
-        height: 37px;
-        width:42px;
+        right: $spacing-base; // 10px
+        top: 0.4375rem; // 7px
+        height: 2.375rem; // 38px;
+        width: 2.625rem; // 42px;
         margin: 0;
         transition-duration: 0.3s;
         cursor: pointer;

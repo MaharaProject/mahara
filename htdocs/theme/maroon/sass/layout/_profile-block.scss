@@ -67,3 +67,16 @@
     }
   }
 }
+
+.sidebar {
+  a.card-footer {
+    .icon {
+      color: $theme-accent-color;
+    }
+    &:hover {
+      .icon.float-right {
+        color: $theme-accent-color;
+      }
+    }
+  }
+}

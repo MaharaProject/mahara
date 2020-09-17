@@ -4,9 +4,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button id="close-button" type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">
+                    <h1 class="modal-title">
                         {str tag=refuseprivacy section=admin}
-                    </h4>
+                    </h1>
                 </div>
                 <div class="modal-body">
                     <p><strong>{str tag=privacyrefusaldetails section=admin}</strong></p>

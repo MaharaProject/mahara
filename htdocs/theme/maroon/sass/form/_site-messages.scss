@@ -1,3 +1,5 @@
+$site-message-height: (0.375rem + 0.375rem + $font-size-base) * $line-height-base; // (padding-top + padding-bottom + font-size) * line-height
+
 .site-messages {
     position: absolute;
 }
@@ -5,7 +7,7 @@
 //adjust header and fixed elements for sitemessages
 @for $i from 1 through 5 {
     .header.message-count-#{$i} {
-        top: $i * 36px;
+        top: $site-message-height * $i;
 
         @include media-breakpoint-down(sm) {
             top: 0;
@@ -14,20 +16,20 @@
         ~ .container {
             .toolbar-affix.affix {
                 @include media-breakpoint-up(md) {
-                    margin-top: $i * 36px;
+                    margin-top: $site-message-height * $i;
                 }
             }
         }
 
         + .main-content {
             @include media-breakpoint-up(md) {
-                margin-top: $i * 36px;
+                margin-top: $site-message-height * $i;
             }
         }
 
         ~ .pageheader {
             @include media-breakpoint-up(md) {
-                margin-top: $i * 36px;
+                margin-top: $site-message-height * $i;
             }
         }
     }

@@ -8,7 +8,7 @@
                 <a href="{profile_url($r)}"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}"></a>
             </div>
 
-            <h4 class="list-group-item-heading">
+            <h3 class="list-group-item-heading">
                 <a href="{profile_url($r)}">{$r.name}</a>
                 {if $r.role}
                 <span class="grouprole text-small text-midtone"> -
@@ -20,7 +20,7 @@
                     {/if}
                 </span>
                 {/if}
-            </h4>
+            </h3>
 
             {if $r.role}
                 {if $r.introduction}

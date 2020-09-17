@@ -12,13 +12,13 @@ $columns: 8; //up to 8
 }
 
 .column-content {
-    min-height: 50px;
+    min-height: 3.125rem; // 50px;
     word-wrap: break-word;
 }
 
 .col-row,
 .row-content {
-    padding-bottom: 50px;
+    padding-bottom: 3.125rem; // 50px;
 
     .column .post,
     .column-layout .post {
@@ -35,7 +35,7 @@ $columns: 8; //up to 8
     vertical-align: top;
     float: left;
     margin: 0;
-    padding: 0 0.9% 10px 0.9%;
+    padding: 0 0.9% $spacing-base 0.9%;
     max-width: 98%;
     position: relative;
     &:first-child {
@@ -47,7 +47,7 @@ $columns: 8; //up to 8
     }
 
     @include media-breakpoint-down(md) {
-        padding: 0 0 10px 0;
+        padding: 0 0 $spacing-base 0;
         &:first-child {
             max-width: 100%;
         }

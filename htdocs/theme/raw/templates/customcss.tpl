@@ -1,12 +1,84 @@
 {* this template powers the css that is stored in the database for the configurable theme *}
+
+a,
+a:hover,
+a.hover,
+.collapsible legend a:not(.secondary-link),
+.card-header a:not(.secondary-link),
+.collapsible legend a:not(.secondary-link).collapsed,
+.card-header a:not(.secondary-link).collapsed,
+.skin .skin-footer,
+.tags a,
+.tags a.tag,
+.jtline .events a,
+.jtline .events a:hover,
+.form-group.submitcancel .cancel,
+.form-group.multisubmit .cancel,
+.form-group.submitcancel .cancel:hover,
+.form-group.multisubmit .cancel:hover,
+.form-group.submitcancel .cancel:focus,
+.form-group.multisubmit .cancel:focus,
+.pieform-fieldset.collapsible.collapsible-small legend a,
+.card.collapsible.collapsible-small legend a,
+.card-control .content-expanded,
+a.card-control:hover,
+a.card-control:hover span,
+a.card-footer,
+a.card-footer .icon,
+a.card-footer .icon:hover,
+a.card-footer .icon:hover .icon.float-right,
+.collapsible legend .secondary-link,
+.card-header .secondary-link,
+.card-header .btn-link:hover .icon,
+.btn-link,
+.btn-link:hover,
+.btn-link.hover,
+.text-link,
+.outer-link + .list-group-item-heading,
+.card-as-link.collapsible legend a,
+.card-as-link.collapsible legend a.collapsed,
+.table-hover > tbody > tr:hover .filename,
+.table-hover > tbody > tr .file-download-link:hover,
+.page-link,
+.page-link:hover,
+.nav-inpage.nav > li button,
+.nav-inpage.nav > li > a,
+.card.as-link.collapsible legend a,
+.card.as-link.collapsible legend a.collapsed,
+.pieform-fieldset.as-link.collapsible legend a,
+.pieform-fieldset.as-link.collapsible legend a.collapsed,
+.list-group a.text-link,
+.text-link,
+a.card-footer:not([href]):not([tabindex]),
+a.card-footer:hover,
+.btn-draggable a.card-footer:hover .btn-group-vertical > .float-right.btn,
+.list-group.ui-sortable a.card-footer:hover .float-right.ui-draggable-dragging,
+a.card-footer:hover .btn-draggable .btn-group-vertical > .float-right.btn,
+a.card-footer:hover .float-right.modal-loading, a.card-footer:hover .icon.float-right, 
+a.card-footer:hover .list-group.ui-sortable .float-right.ui-draggable-dragging {
+    color: {$data.link};
+}
+.mytags .tagfreq.badge {
+    border-color: {$data.link};
+}
+.jtline .events a:hover {
+    outline-color: {$data.link};
+}
+a.hover,
+a:hover,
+a.focus,
+a:focus {
+    text-decoration-color: {$data.link};
+}
+
 .navbar-default {
     background-color: {$data.background};
     border-color: {$data.background};
 }
-
 .navbar-default .navbar-toggle:not(.collapsed) {
     background-color: transparent;
 }
+.loading-inner,
 .navbar-toggle .icon {
     color: {$data.backgroundfg};
 }
@@ -52,13 +124,11 @@
 }
 
 .navbar-main .navbar-nav > li.active > a {
-    font-weight: bold;
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
 .navbar-main .navbar-nav > li.active > a:focus,
 .navbar-main .navbar-nav > li.active > a:hover {
-    font-weight: bold;
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
@@ -82,7 +152,6 @@
 .navbar-main .child-nav > li > a {
     color: {$data.navfg};
     background-color: {$data.navbg};
-    font-size: 13px;
 }
 
 .navbar-main .child-nav > li > a:hover,
@@ -111,83 +180,12 @@
     background-color: #F1F1F1;
 }
 
-
-.modal-docked .modal-header,
-.modal-header {
-    background: {$data.background};
-    color: {$data.backgroundfg};
-}
-
-.dashboard-widget-container .circle-bg,
-.dashboard-widget-container .logged-in .widget-detail {
-    background-color: #666;
-}
-
-.dashboard-widget-container .widget-heading {
-    border-top-color: {$data.headings};
-}
-
-.dashboard-widget-container .thumbnail-widget .widget-heading {
-    border-top-color: {$data.headings};
-}
-
-.dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg {
-    background-color: {$data.headings};
-}
-
-.dashboard-widget-container .widget-detail {
-    background-color: {$data.headings} !important;
-}
-
-.dashboard-widget-container .logged-in .widget-heading p,
-a.card-footer:hover .icon.float-right,
-.modal-docked .modal-header .close:hover .times,
-.modal-docked .modal-header .close:focus .times {
-    color: #767676;
-}
-
-@media (max-width: 767px) {
-    .dashboard-widget-container .logged-in .widget-detail p,
-    .dashboard-widget-container .logged-in:hover .widget-detail p {
-        color: {$data.backgroundfg};
-    }
-}
-
 .header.navbar,
 .header.navbar-default .navbar-text,
 .header.navbar-default .navbar-nav > li > a,
-.dashboard-widget-container .logged-in .widget-detail,
-.modal-docked .modal-header,
-.modal-header,
-.modal-docked .modal-header a,
-.modal-docked .modal-header h4,
-.close,
-.modal-header .close:focus .times,
-.modal-header .close:hover .times,
 .search-toggle {
     color: {$data.backgroundfg};
 }
-.close {
-    text-shadow: none;
-}
-
-
-h1,
-h2,
-h3,
-h4,
-.title a {
-   color: {$data.headings};
-}
-.modal-header h1,
-.modal-header h2,
-.modal-header h3,
-.modal-header h4,
-.modal-header h5,
-.modal-header h6 {
-    color: {$data.backgroundfg};
-}
-
 
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:focus,
@@ -199,34 +197,14 @@ h4,
 }
 
 
-a,
-a:visited,
-a:link,
-a:active,
-a:hover,
-a:focus,
-.list-group-item-link a:hover,
-.form-group.submitcancel .cancel,
-.form-group.submitcancel .cancel:hover,
-.list-group a.text-link,
-.text-link,
-.list-group-item-heading a:hover,
-.list-group-item-heading a:hover .metadata,
-.arrow-bar .nav-inpage.nav > li > a,
-.arrow-bar .nav-inpage.nav > li > button,
-.nav-inpage.nav > li.active > a:focus,
-.nav-inpage.nav > li.active > a:hover,
-.nav-inpage.nav > li.active > button:focus,
-.nav-inpage.nav > li.active > button:hover,
-.list-group a.text-success,
-.outer-link+.list-group-item-heading,
-.tags a,
-.tags a.tag {
-    color: {$data.link};
+.btn-link-danger,
+.btn-link-danger:link {
+    color: #a94442;
 }
 
-a:focus, a:hover {
-  text-decoration-color: {$data.link};
+.btn-link-danger:hover,
+.btn-link-danger:focus {
+  color: #983d3b;
 }
 
 .btn-secondary, a.btn-secondary {
@@ -237,7 +215,7 @@ a:focus, a:hover {
 a.btn-primary {
     background-color: {$data.background};
     color: {$data.backgroundfg};
-    border-color: {$data.backgroundfg};
+    border-color: {$data.background};
 }
 .btn-primary.active,
 .btn-primary.focus,
@@ -255,10 +233,6 @@ a.btn-primary {
     /* 1px alpha channel white to lighten by 25% */
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhMnva5W6gAAAA1JREFUCNdj+P//vz0ACTsDPd3TBh4AAAAASUVORK5CYII=') {$data.background};
     border-color: {$data.background};
-}
-
-a.admin-site {
-    color: {$data.backgroundfg};
 }
 
 .arrow-bar {
@@ -297,6 +271,7 @@ a.admin-site {
     background-color: {$data.background};
     color: {$data.backgroundfg};
 }
+
 /* this is for the timeline */
 .jtline .filling-line {
     background-color: {$data.background};
@@ -324,22 +299,15 @@ a.admin-site {
     color: {$data.backgroundfg};
 }
 
-.card.collapsible.collapsible-small legend h4 a,
-.pieform-fieldset.collapsible.collapsible-small legend h4 a {
-    color: {$data.link};
-}
-
-.form-group.multisubmit .cancel,
-.form-group.submitcancel .cancel {
-    color: {$data.link};
-}
 
 .page-item.active .page-link {
     background-color: {$data.background};
     border-color: {$data.background};
 }
 
-.footer .footer-nav .nav-link {
+.footer .footer-nav .nav-link,
+.footer .footer-nav .nav-link:focus,
+.footer .footer-nav .nav-link:hover {
     color: {$data.link};
 }
 
@@ -354,5 +322,25 @@ a.admin-site {
 
 .dropdown-item.active a,
 .dropdown-item:active a {
-    color: #fff;
+    color: {$data.backgroundfg};
+}
+
+.dropdown-menu > li:active > a {
+    background-color: {$data.background};
+    color: {$data.backgroundfg};
+}
+
+.dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg {
+    background-color: {$data.background};
+}
+.dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg .icon {
+    color: {$data.backgroundfg};
+}
+.dashboard-widget-container .thumbnail-widget:focus .widget-heading,
+.dashboard-widget-container .thumbnail-widget:hover .widget-heading {
+    background-color: #F1F1F1;
+}
+
+.block-header a {
+    color: #FFFFFF;
 }

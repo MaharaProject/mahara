@@ -16,7 +16,7 @@
 {if $requestedform}
 <div class="view-container">
     <h2>{str tag=Requests}</h2>
-    <p class="lead">{str tag="institutionmembershiprequestsdescription"}</p>
+    <p>{str tag="institutionmembershiprequestsdescription"}</p>
     {$requestedform|safe}
 </div>
 {/if}
@@ -24,18 +24,17 @@
 {if $invitedform}
 <div class="view-container">
     <h2>{str tag=Invitations}</h2>
-    <p class="lead">{str tag="institutionmembershipinvitedescription"}</p>
+    <p>{str tag="institutionmembershipinvitedescription"}</p>
     {$invitedform|safe}
 </div>
 {/if}
-    
+
 {if $joinform}
 <div class="view-container">
     <h2>{str tag="requestmembershipofaninstitution"}</h2>
-    <p class="lead">{str tag="institutionmembershipjoindescription"}</p>
+    <p>{str tag="institutionmembershipjoindescription"}</p>
     {$joinform|safe}
 </div>
 {/if}
 
 {include file="footer.tpl"}
-

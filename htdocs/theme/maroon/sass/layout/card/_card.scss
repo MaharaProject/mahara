@@ -12,7 +12,7 @@
         }
 
         .card-header {
-          font-weight: $font-weight-bold;
+          // font-weight: $font-weight-bold;
           background: none;
         }
 
@@ -28,10 +28,6 @@
           }
         }
     }
-}
-
-.card-header, .collapsible legend h3, .collapsible legend h4 {
-  font-weight: $font-weight-bold;
 }
 
 .card-half.card,

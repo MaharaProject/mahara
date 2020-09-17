@@ -160,7 +160,7 @@ $elements = array();
 
 $elements['membership'] = array(
     'type'         => 'html',
-    'value'        => '<h4>' . get_string('Membership', 'group') . '</h4>',
+    'value'        => '<h3>' . get_string('Membership', 'group') . '</h3>',
 );
 
 $elements['open'] = array(
@@ -244,7 +244,7 @@ $elements['suggestfriends'] = array(
 
 $elements['pages'] = array(
     'type'         => 'html',
-    'value'        => '<h4>' . get_string('content') . '</h4>',
+    'value'        => '<h3>' . get_string('content') . '</h3>',
 );
 
 $elements['editroles'] = array(
@@ -297,7 +297,7 @@ $ignorepublic = !$publicallowed || (isset($publicparam) && $publicparam === 0);
 if ($cancreatecontrolled || !$ignorepublic) {
     $elements['visibility'] = array(
         'type'         => 'html',
-        'value'        => '<h4>' .get_string('Visibility') . '</h4>',
+        'value'        => '<h3>' .get_string('Visibility') . '</h3>',
     );
 }
 
@@ -357,7 +357,7 @@ $elements['groupparticipationreports'] = array(
 
 $elements['editability'] = array(
     'type'         => 'html',
-    'value'        => '<h4>' . get_string('editability', 'group') . '</h4>',
+    'value'        => '<h3>' . get_string('editability', 'group') . '</h3>',
 );
 
 $currentdate = getdate();
@@ -392,7 +392,7 @@ $elements['editwindowend'] = array (
 
 $elements['general'] = array(
     'type'         => 'html',
-    'value'        => '<h4>' . get_string('general') . '</h4>',
+    'value'        => '<h3>' . get_string('general') . '</h3>',
 );
 
 if (get_config('allowgroupcategories')

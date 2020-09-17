@@ -6,36 +6,34 @@
         margin:0;
     }
     table {
-        font-size: $font-size-sm;
+        font-size: $font-size-base;
         margin-bottom: 0;
     }
     small {
-        margin-top:5px;
-        line-height: 1.5em;
+        line-height: $line-height-base;
         color: $theme-text-midtone-color;
         display: block;
     }
 
     .list-group-item small {
         @extend .text-midtone;
-        font-size: $font-size-base * 0.85715;
     }
 
     dl {
         dt {
-            font-weight:normal;
+            font-weight: $font-weight-normal;
             clear: both;
-            margin-right:10px;
+            margin-right: $spacing-base
         }
         dd, dt {
-            display:inline-block;
-            float:left;
+            display: inline-block;
+            float: left;
         }
 
         dd {
             color: $theme-text-midtone-color;
-            line-height: 1.5em;
-            font-size: $font-size-base * 0.85715;
+            line-height: $line-height-base;
+            font-size: $font-size-sm;
         }
     }
     .nav-pills {
@@ -46,14 +44,11 @@
             border-bottom: 0;
         }
     }
-    //don't want border around the message
-    &.wallpost {
-    }
 
     .has-attachment {
         border-radius: $card-border-radius;
         border-width: $card-border-width;
-        margin-top: 10px;
+        margin-top: $spacing-base;
         margin-bottom: 0;
     }
     .activegrouplabels {
@@ -76,15 +71,15 @@
 .login-externallink {
     display: inline-block;
     a.btn {
-        margin: 0 5px 5px 0;
+        margin: 0 $spacing-sm $spacing-sm 0;
     }
 }
 
 .login-related-links {
   .register-link{
-    padding-right: 2px;
+    padding-right: 0.125rem; // 2px;
   }
   .forgotpass-link {
-    padding-left: 5px;
+    padding-left: $spacing-sm;
   }
 }

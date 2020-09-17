@@ -11,7 +11,7 @@
             </label>
 
             <a class="collapsed" href="#notification-{$item->table}-{$item->id}" data-id="{$item->id}" data-list="{$item->table}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->table}-{$item->id}">
-                <span class="details-group">
+                <h2 class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
                         <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
@@ -44,7 +44,7 @@
                         {$item->subject|str_shorten_html:50:true|safe}
                     </span>
 
-                    <span class="metadata">
+                    <span class="text-small">
                         <span class="sr-only">
                             {str section='module.multirecipientnotification 'tag='fromuser'}:
                         </span>
@@ -66,7 +66,7 @@
                         </span>
                     </span>
                     <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
-                </span>
+                </h2>
             </a>
         </div>
         <div id="notification-{$item->table}-{$item->id}" class="collapse">
