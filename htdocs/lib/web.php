@@ -379,6 +379,7 @@ $samepage = get_string('samepage', 'mahara');
 tinyMCE.init({
     {$tinymceconfig}
     schema: 'html4',
+    block_formats: 'Paragraph=p; Heading 1=h4; Heading 2=h5; Heading 3=h6; Preformatted=pre',
     extended_valid_elements:
         "object[width|height|classid|codebase]"
         + ",param[name|value]"
