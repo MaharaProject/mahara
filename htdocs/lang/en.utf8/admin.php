@@ -143,11 +143,13 @@ $string['uploadcsvdesc'] = 'Upload a CSV file containing details for new account
 $string['uploadgroupcsv'] = 'Add groups by CSV';
 $string['uploadgroupmemberscsv'] = 'Update group members by CSV';
 $string['usersearch'] = 'People search';
+$string['searchforaperson'] = 'Search for a person';
 $string['usersearchdescription1'] = 'Search all people and perform administrative actions on their accounts';
 $string['peoplesearchinstructions'] = 'You can search for people by entering their name or email address into the search box. Click "Advanced options" to see options to narrow your search.';
 $string['emailaddresshidden'] = 'Email address hidden';
 $string['inactive'] = 'Account not active';
 $string['inactivefor1'] = '"%s" is currently not an active account';
+$string['noadminspecified'] = 'There must be at least one current administrator';
 
 $string['administergroups'] = 'Administer groups';
 $string['administergroupsdesc'] = 'Manage groups, their administrators, and space available';
