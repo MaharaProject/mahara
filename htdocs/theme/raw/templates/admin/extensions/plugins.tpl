@@ -52,7 +52,7 @@
                         <div class="btn-group btn-group-top">
                         {if $data.info}
                             <a class="btn btn-secondary float-left btn-group-item info-item" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
-                                 <span class="icon icon-info icon-lg" role="presentation" aria-hidden="true"></span>
+                                 <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </a>
                         {/if}

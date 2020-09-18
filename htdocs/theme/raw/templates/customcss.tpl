@@ -54,7 +54,7 @@ a.card-footer:hover,
 .btn-draggable a.card-footer:hover .btn-group-vertical > .float-right.btn,
 .list-group.ui-sortable a.card-footer:hover .float-right.ui-draggable-dragging,
 a.card-footer:hover .btn-draggable .btn-group-vertical > .float-right.btn,
-a.card-footer:hover .float-right.modal-loading, a.card-footer:hover .icon.float-right, 
+a.card-footer:hover .float-right.modal-loading, a.card-footer:hover .icon.float-right,
 a.card-footer:hover .list-group.ui-sortable .float-right.ui-draggable-dragging {
     color: {$data.link};
 }
@@ -69,6 +69,23 @@ a:hover,
 a.focus,
 a:focus {
     text-decoration-color: {$data.link};
+}
+a.focus,
+a:focus,
+.btn.focus,
+.btn:focus,
+a[data-toggle="collapse"]:focus,
+tr[data-toggle="collapse"]:focus,
+.dropdown .picker select.form-control:focus,
+.dropdown .picker select:focus,
+.pieform .picker select.form-control:focus,
+.pieform .picker select:focus,
+button:focus {
+    outline-color: {$data.link};
+}
+
+.card-header a:not(.secondary-link).btn-group-item {
+    color: #333;
 }
 
 .navbar-default {
@@ -119,8 +136,8 @@ a:focus {
 }
 .navbar-main .navbar-nav > li > a:hover,
 .navbar-main .navbar-nav > li > a:focus {
-    color: {$data.navfg};
-    background-color: {$data.navbg};
+    color: #333;
+    background-color: #F1F1F1;
 }
 
 .navbar-main .navbar-nav > li.active > a {
@@ -213,9 +230,9 @@ a:focus {
 
 .btn-primary,
 a.btn-primary {
-    background-color: {$data.background};
-    color: {$data.backgroundfg};
-    border-color: {$data.background};
+    background-color: #575757;
+    color: #FFF;
+    border-color: #575757;
 }
 .btn-primary.active,
 .btn-primary.focus,
@@ -232,7 +249,7 @@ a.btn-primary {
 .btn-primary[disabled] {
     /* 1px alpha channel white to lighten by 25% */
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhMnva5W6gAAAA1JREFUCNdj+P//vz0ACTsDPd3TBh4AAAAASUVORK5CYII=') {$data.background};
-    border-color: {$data.background};
+    border-color: #575757;
 }
 
 .arrow-bar {
@@ -268,8 +285,8 @@ a.btn-primary {
 }
 
 .custom-dropdown > ul > li > span {
-    background-color: {$data.background};
-    color: {$data.backgroundfg};
+  color: #333;
+  background-color: #e0e0e0;
 }
 
 /* this is for the timeline */
@@ -295,14 +312,15 @@ a.btn-primary {
 }
 
 .progress-bar {
-    background-color: {$data.background};
-    color: {$data.backgroundfg};
+    color: #333;
+    background-color: #e0e0e0;
 }
 
 
 .page-item.active .page-link {
-    background-color: {$data.background};
-    border-color: {$data.background};
+    color: #333;
+    background-color: #e0e0e0;
+    border-color: #e0e0e0;
 }
 
 .footer .footer-nav .nav-link,
@@ -317,17 +335,17 @@ a.btn-primary {
 
 .dropdown-item.active,
 .dropdown-item:active {
-    background-color: {$data.background};
+    background-color: #e0e0e0;
 }
 
 .dropdown-item.active a,
 .dropdown-item:active a {
-    color: {$data.backgroundfg};
+    color: #333;
 }
 
 .dropdown-menu > li:active > a {
-    background-color: {$data.background};
-    color: {$data.backgroundfg};
+    background-color: #e0e0e0;
+    color: #333;
 }
 
 .dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg {
