@@ -9,7 +9,7 @@
         top: $navbar-height + ($i * $site-message-height);
         border-style: solid;
         border-color: transparent;
-        border-width: 2vh 50vw;
+        border-width: 2.5vh 50vw;
         border-top-color: $theme-primary-color;
         border-left-color: $theme-primary-color;
         background: $body-bg;
@@ -41,10 +41,9 @@
         top: 0;
         border-style: solid;
         border-color: transparent;
-        border-width: 2vh 50vw;
+        border-width: 2.5vh 50vw;
         border-top-color: $theme-primary-color;
         border-left-color: $theme-primary-color;
-        // background: $pageheader-bg;
   }
   .pageheader::after {
     content: "";
@@ -53,10 +52,9 @@
     bottom: 0;
     border-style: solid;
     border-color: transparent;
-    border-width: 2vh 50vw;
+    border-width: 2.5vh 50vw;
     border-bottom-color: $body-bg;
     border-left-color: $body-bg;
-    // background: $body-bg;
   }
 }
 
