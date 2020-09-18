@@ -4,15 +4,17 @@ Feature: Move posts between forums within groups
     As an admin create a group with a forum
     So I can create different posts and move them around
 
+Background:
+    And the following "groups" exist:
+    | name             | owner | grouptype | editroles |
+    | Testing Group 1  | admin | standard    | all       |
+
 Scenario: Moving pages within a group (Bug 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating a group
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Create group"
-    And I set the following fields to these values:
-        | Group name    | Testing Group 1   |
-    And I press "Save group"
+    And I follow "Testing Group 1"
     # Creating a forum
     And I follow "Forums (tab)"
     And I follow "New forum"

@@ -8,14 +8,14 @@ Background:
 Given the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+And the following "groups" exist:
+    | name    | owner | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | public |
+    | Turtles | admin | standard | ON | ON | all | ON | ON | UserA | 1 |
 
 Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Create group"
-    And I set the following fields to these values:
-    | Group name | Turtles |
-    When I press "Save group"
+    And I follow "Turtles"
     And I follow "Forums"
     And I follow "General discussion"
     And I follow "Edit forum"
@@ -51,10 +51,7 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
 # Person joins group and unsubscribes from Freshwater turtles forum
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I select "All groups" from "filter"
-    And I press "Search"
-    And I wait "1" seconds
-    And I press "Join this group"
+    And I follow "Turtles"
     And I follow "Forums (tab)"
     And I should see "Unsubscribe" in the "General discussion" row
     And I should see "Unsubscribe" in the "Freshwater turtles" row

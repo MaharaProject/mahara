@@ -18,6 +18,10 @@ Background:
     | UserD | Kupuh1pa! | UserD@example.org | Dave | UserD | insttwo | internal | member |
     | UserE | Kupuh1pa! | UserE@example.org | Earl | UserE | insttwo | internal | member |
 
+    And the following "groups" exist:
+    | name          | owner | grouptype | editroles |
+    | The Avengers  | admin | standard  | all       |
+
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     When I click on "Send friend request" in "Bob UserB" row
@@ -62,10 +66,6 @@ Background:
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Create group"
-    And I set the following fields to these values:
-    | Group name | The Avengers |
-    And I press "Save group"
     And I follow "Edit \"The Avengers\" Settings"
     # Checking all the switches can all be changed
     And I set the following fields to these values:

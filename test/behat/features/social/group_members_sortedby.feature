@@ -9,18 +9,12 @@ Background:
     | username  | password  | email | firstname | lastname  | institution   | authname  |role   |
     | UserA   | Kupuh1pa!   | UserA@example.org   | Angela   | User | mahara    | internal  | member    |
     | UserB   | Kupuh1pa!   | UserB@example.org   | Bob   | User | mahara    | internal  | member    |
+ 
+    And the following "groups" exist:
+    | name             | owner | grouptype | editroles |
+    | Testing Group 1  | admin | course    | all       |
 
 Scenario: Creating a group and adding members to it (Bug 1426983)
-    # Log in as "Admin" user
-    Given I log in as "admin" with password "Kupuh1pa!"
-    # Creating Testing group 1
-    And I choose "Groups" in "Engage" from main menu
-    And I follow "Create group"
-    And I fill in "Group name" with "Testing Group 1"
-    And I select "Course: Member, Tutor, Admin" from "Roles"
-    And I press "Save group"
-    # Log out as "Admin user"
-    And I log out
     # Log in as user 1
     And I log in as "UserA" with password "Kupuh1pa!"
     # Joining Testing group 1
