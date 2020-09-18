@@ -24,7 +24,7 @@ body > .main-content > .row {
 h1#viewh1 {
     color:  {$view_text_heading_color};
 }
-.collection-nav h2 {
+.collection-title {
     color:  {$view_text_heading_color};
     border-bottom: 1px solid {$view_text_heading_color};
 }

@@ -376,6 +376,11 @@ input:disabled[type="text"] {
     + .select {
         margin-left: $spacing-sm;
     }
+    &.form-group {
+        + .select.form-group {
+          margin-left: 0;
+        }
+    }
     + .submit:not(.input-group-append) {
         margin-left: $spacing-sm;
     }

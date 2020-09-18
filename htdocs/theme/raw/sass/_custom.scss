@@ -514,7 +514,7 @@ div.toolbarhtml {
 }
 
 // shared view filter in smaller screens too close to top element
-@include media-breakpoint-down(lg) {
+@include media-breakpoint-down(md) {
   #search_inputgroupsort_container {
     margin-top: $spacing-base;
   }

@@ -2,13 +2,6 @@
     clear: both;
     margin-top: $spacing-xl;
 
-    .remove-widgets {
-        font-size: $font-size-sm;
-    }
-    .hide-info {
-        clear: both;
-    }
-
     .thumbnail-widget {
         position: relative;
         display: block;
@@ -18,6 +11,7 @@
             float:left;
             width: 10 / 3 * 10%;
             padding-left: 2%;
+            margin-bottom: $spacing-xxxl;
             &.first {
                 padding-left: 0;
             }
@@ -77,9 +71,10 @@
         }
     }
 }
-
 .dashboard-editable {
-    margin-top: $spacing-xl;
+    margin-top: $spacing-xxl;
+    clear: both;
+
     @include media-breakpoint-up(lg) {
       border-top: $h1heading-border-width solid $h1heading-border-color;
     }

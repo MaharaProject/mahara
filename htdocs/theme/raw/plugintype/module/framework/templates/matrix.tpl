@@ -82,7 +82,7 @@
                   </span>
                 </a>
                 <div class="matrixtooltip popover d-none">
-                    <h2 class="popover-title">{$standard->name}</h2>
+                    <h1 class="popover-title">{$standard->name}</h1>
                     <div class="popover-content">
                         {$standard->description|clean_html|safe}
                     </div>
@@ -100,7 +100,7 @@
                     <span class="matrixindent">{$option->shortname}</span>
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
-                        <h2 class="popover-title">{$option->name}</h2>
+                        <h1 class="popover-title">{$option->name}</h1>
                         <div class="popover-content">
                             {$option->description|clean_html|safe}
                         </div>
@@ -116,7 +116,7 @@
                     <span class="matrixindent">{$option->shortname}</span>
                     <span class="sr-only">{str tag="showelementdetails" section="module.framework"}</span>
                     <div class="matrixtooltip popover d-none">
-                        <h2 class="popover-title">{$option->name}</h2>
+                        <h1 class="popover-title">{$option->name}</h1>
                         <div class="popover-content">
                             {$option->description|clean_html|safe}
                         </div>

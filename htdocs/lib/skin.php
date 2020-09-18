@@ -778,7 +778,7 @@ class Skin {
 
     /**
      * Gets font sizes for heading, sub-heading and normal text from given relative size (as in CSS).
-     * Relative size can be one of following: xx-small, x-small, small, medium, large, x-large or xx-large
+     * Relative size can be one of following: small, medium, large, x-large or xx-large
      * The font size of a page header is not affected by user chosen font size
      *
      * @param string $font_size
@@ -786,12 +786,6 @@ class Skin {
      */
     private static function get_font_sizes($font_size) {
         switch ($font_size) {
-            case 'xx-small':
-                return array(9, 5, 3);
-                break;
-            case 'x-small':
-                return array(9, 6, 4);
-                break;
             case 'small':
                 return array(9, 7, 5);
                 break;
@@ -808,7 +802,7 @@ class Skin {
                 return array(9, 14, 12);
                 break;
             default:
-                return array(9, 7, 5);
+                return array(9, 8, 6);
                 break;
         }
     }

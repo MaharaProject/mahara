@@ -346,11 +346,9 @@ $elements['viewcontent'] = array(
             'view_text_font_size' => array(
                     'type' => 'select',
                     'title' => get_string('fontsize', 'skin'),
-                    'defaultvalue' => (!empty($viewskin['view_text_font_size']) ? $viewskin['view_text_font_size'] : 'small'),
+                    'defaultvalue' => (!empty($viewskin['view_text_font_size']) ? $viewskin['view_text_font_size'] : 'medium'),
                     'width' => 144,
                     'options' => array(
-                            'xx-small' => array('value' => get_string('fontsizesmallest', 'skin'), 'style' => 'font-size: xx-small;'),
-                            'x-small' => array('value' => get_string('fontsizesmaller', 'skin'), 'style' => 'font-size: x-small;'),
                             'small' => array('value' => get_string('fontsizesmall', 'skin'), 'style' => 'font-size: small;'),
                             'medium' => array('value' => get_string('fontsizemedium', 'skin'), 'style' => 'font-size: medium;'),
                             'large' => array('value' => get_string('fontsizelarge', 'skin'), 'style' => 'font-size: large;'),

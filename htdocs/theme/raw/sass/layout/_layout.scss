@@ -45,6 +45,7 @@ body {
     .lead {
         background-color: $gray-100;
         padding: $alert-padding-y $alert-padding-x;
+        font-weight: $font-weight-base;
     }
 
     // in editor remove margin-top and border-top as no form
