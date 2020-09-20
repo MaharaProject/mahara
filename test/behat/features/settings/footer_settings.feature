@@ -25,7 +25,7 @@ Given the following "users" exist:
   And I switch to the main window
 
   Scenario: Admin changes settings which are visible to user
-  #log in as a admin user
+  #log in as admin account
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "Menus" in "Configure site" from administration menu
   And I disable the following switches:

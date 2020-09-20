@@ -49,11 +49,11 @@ Scenario: Sending messages between people and admin (Bug 1426983)
    And I choose "People search" in "People" from administration menu
    And I follow "Bob"
    And I follow "Log in as UserB"
-   And I follow "Admin User"
+   And I follow "Admin Account"
    And I follow "Request friendship"
    And I fill in "Would you like to be my friend?" for "Message"
    And I press "Request friendship"
-   And I follow "Become Admin User again"
+   And I follow "Become Admin Account again"
    And I am on homepage
    # In my inbox block I'll see "New friend request"
    And I choose inbox
@@ -71,4 +71,4 @@ Scenario: Sending messages between people and admin (Bug 1426983)
    And I follow "More..."
    And I should not see "Not Found"
    And I should see "Remove from friends"
-   And I should see "Admin User's wall"
+   And I should see "Admin Account's wall"

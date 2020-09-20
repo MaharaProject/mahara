@@ -100,5 +100,5 @@ Scenario: Creating a Journal entry
  When I follow "Drag to add a new block" in the "blocktype sidebar" property
  And I press "Add"
  And I click on blocktype "Recent journal entries"
- And I check "Admin User's Journal"
+ And I check "Admin Account's Journal"
  And I press "Save"

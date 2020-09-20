@@ -103,5 +103,5 @@ Scenario: UserA sends friend requests to UserB, UserC, User E
     And I choose "People" in "Engage" from main menu
     When I select "Everyone" from "Filter"
     And I press "Search"
-    Then I should see "This person does not want any new friends." in the "Admin User" row
+    Then I should see "This person does not want any new friends." in the "Admin Account" row
     And I click on "Send friend request" in "Dave UserD" row

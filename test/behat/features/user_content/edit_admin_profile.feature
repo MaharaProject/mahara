@@ -55,7 +55,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | First name   | Admin  |
     | Last name | User  |
     | Student ID ||
-    |  Display name   | Admin User|
+    |  Display name   | Admin Account|
     And I press "Save profile"
     # Verifing settings saved
     And I should see "Profile saved successfully"
@@ -77,4 +77,4 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I should see "Profile saved successfully"
     # Verifying changes has been made navigating to dashboard page to checked
     And I choose "Dashboard" from main menu
-    And I should see "Admin User"
+    And I should see "Admin Account"
