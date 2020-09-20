@@ -857,7 +857,7 @@ $string['sendmessage'] = 'Send message';
 $string['spamtrap'] = 'Spam trap';
 $string['formerror'] = 'There was an error processing your submission. Please try again.';
 $string['formerroremail'] = 'Contact us at %s if you continue to have problems.';
-$string['blacklisteddomaininurl'] = 'A URL in this field contains the blacklisted domain %s.';
+$string['denylisteddomaininurl'] = 'A URL in this field contains the deny listed domain %s.';
 $string['newuserscantpostlinksorimages1'] = 'Sorry, anonymous or newly registered people aren\'t allowed to post links. Please reword your post to remove any links or URLs and try again.';
 
 $string['notinstallable'] = 'Not installable';

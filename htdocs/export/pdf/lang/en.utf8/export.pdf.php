@@ -11,10 +11,10 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'PDF files of pages / collections';
+$string['title'] = 'PDF files of pages and collections';
 $string['description'] = 'This creates a zipped file containing PDFs of your portfolios. You cannot import this again, but it is readable in a standard PDF viewer.';
-$string['needspdfconfig'] = 'Requires config.php setting "usepdfexport" to be true.';
-$string['needschromeheadless'] = 'Experimental export option that utilises Headless Chrome to Print PDFs. Install the latest version of the Chrome or Chromium browser on the server to use this plugin.';
+$string['needspdfconfig'] = 'Requires the config.php setting "usepdfexport" to be true.';
+$string['needschromeheadless'] = 'Experimental export option that utilises Headless Chrome to print PDFs. Install the latest version of the Chrome or Chromium browser on the server to use this plugin.';
 $string['needschromeheadlessphp'] = 'Requires "chrome-php". You can install this via "make pdfexport"';
 $string['needspdfcombiner'] = 'Requires either "pdfunite" or "ghostscript" to be able to combine pdfs. You can install "pdfunite" via "apt-get install poppler-utils".';
-$string['exportpdfdisabled'] = 'PDF export dependencies missing so PDF export disabled. For more information see <a href="%s">Plugin administration</a>.';
+$string['exportpdfdisabled'] = 'PDF export dependencies are missing. PDF export is disabled. For more information see <a href="%s">\'Plugin administration\'</a>.';

@@ -244,7 +244,7 @@ $editform = pieform($editform);
 
 function editpost_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
-        $form->set_error('body', get_string('blacklisteddomaininurl', 'mahara', $baddomain));
+        $form->set_error('body', get_string('denylisteddomaininurl', 'mahara', $baddomain));
     }
     $result = probation_validate_content($values['body']);
     if ($result !== true) {

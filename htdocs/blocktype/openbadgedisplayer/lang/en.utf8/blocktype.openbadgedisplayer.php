@@ -53,13 +53,13 @@ $string['criteria'] = 'Criteria';
 
 $string['nbadges'] = array('1 badge', '%s badges');
 
-$string['nobackpack'] = 'No Backpack found.<br> Please add your <a href="%s">Backpack</a> email address to your <a href="%s">profile</a>.';
+$string['nobackpack'] = 'No backpack found.<br> Please add your <a href="%s">backpack</a> email address to your <a href="%s">profile</a>.';
 
 $string['nobadgegroups'] = 'No public badge collections / badges found.';
 $string['nobadgesselectone'] = 'No badges selected';
 $string['nobackpackidin1'] = 'Your email %s is not found in the service %s.';
 
-$string['nobadgegroupsin1'] = 'No public badge collections / badges found in the service %s for email %s.';
+$string['nobadgegroupsin1'] = 'No public badge collections or badges found in the service %s for email %s.';
 
 $string['confighelp'] = 'Select the badge collections to show in this block.<br/>Visit the following services to manage your collections and badges:<br/>%s';
 
@@ -72,7 +72,7 @@ $string['title_badgr'] = 'Badgr Backpack';
 
 $string['fetchingbadges'] = 'Fetching entries. This may take a while.';
 
-$string['missingbadgesources'] = 'Missing sources setting. Please add it to your config.php file, e.g.<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.openbadges.org/"}\'';
+$string['missingbadgesources'] = 'Missing sources setting. Please add it to your config.php file, e.g.<br><br>$cfg->openbadgedisplayer_source = \'{"backpack":"https://backpack.provider.org"}\'';
 
 $string['selectall'] = 'Select all';
 $string['selectnone'] = 'Select none';

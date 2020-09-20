@@ -348,9 +348,9 @@ $cfg->leapovermnetloglevel = 0;
 
 /**
  * @global string $cfg->remoteavatarbaseurl base URL of avatar server (with the trailing slash)
- * This should normally be set to http://www.gravatar.com/avatar/
+ * This should normally be set to https://www.gravatar.com/avatar/
  */
-//$cfg->remoteavatarbaseurl = 'http://www.gravatar.com/avatar/';
+//$cfg->remoteavatarbaseurl = 'https://www.gravatar.com/avatar/';
 
 /**
  * Options for width/height of wysiwyg editor in block configuration

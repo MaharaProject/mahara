@@ -36,14 +36,14 @@ $string['errorbadssphpspentityid'] = 'Invalid Service Provider entityId';
 $string['errorextrarequiredfield'] = 'This field is required when "We auto-create accounts" is enabled.';
 $string['errorretryexceeded'] = 'Maximum number of retries exceeded (%s): There is a problem with the identity service';
 $string['errnosamluser'] = 'No account found';
-$string['errorssphpsetup'] = 'SAML is not set up correctly. You Need to run "make ssphp" from the commandline first.';
+$string['errorssphpsetup'] = 'SAML is not set up correctly. You need to run "make ssphp" from the commandline first.';
 $string['errorbadlib'] = 'The SimpleSAMLPHP library\'s "autoloader" file was not found at %s.<br>Make sure you install SimpleSAMLphp via "make ssphp" and the file is readable.';
 $string['errorupdatelib'] = 'Your current SimpleSAMLPHP library version is out of date. You need to run "make cleanssphp && make ssphp".';
 $string['errornovalidsessionhandler'] = 'The SimpleSAMLphp session handler is misconfigured or the server is currently unavailable.';
 $string['errornomemcache'] = 'Memcache is misconfigured for auth/saml or a Memcache server is currently unavailable.';
 $string['errornomemcache7php'] = 'Memcache is misconfigured for auth/saml or a Memcache server is currently unavailable.';
 $string['errorbadconfig'] = 'The SimpleSAMLPHP config directory %s is incorrect.';
-$string['errorbadmetadata1'] = 'Badly formed SAML metadata. The following problems detected: %s';
+$string['errorbadmetadata1'] = 'Badly formed SAML metadata. The following problems were detected: %s';
 $string['errorbadinstitutioncombo'] = 'There is already an existing authentication instance with this institution attribute and institution value combination.';
 $string['errormissingmetadata'] = 'You have chosen to add new Identity Provider metadata but none is supplied.';
 $string['errormissinguserattributes1'] = 'You seem to be authenticated, but we did not receive the required user attributes. Please check that your Identity Provider releases the first name, surname, and email fields for SSO to %s or inform the administrator.';
@@ -81,7 +81,7 @@ $string['obsoletesamlplugin'] = 'The auth/saml plugin needs to be reconfigured. 
 $string['obsoletesamlinstance'] = 'The SAML authentication instance <a href="%s">%s</a> for institution "%s" needs updating.';
 $string['reallyreallysure1'] = "You are trying to save the Service Provider metadata for Mahara. This cannot be undone. Existing SAML logins will not work until you have reshared your new metadata with all Identity Providers.";
 $string['reset'] = 'Reset metadata';
-$string['resetmetadata'] = 'Reset the certificates for Mahara\'s metadata. This cannot be undone and you will have to reshare your metadata with the Identity Provider.';
+$string['resetmetadata'] = 'Reset the certificates for Mahara\'s metadata. This cannot be undone, and you will have to reshare your metadata with the Identity Provider.';
 $string['samlconfig'] = 'SAML configuration';
 $string['samlfieldforemail'] = 'SSO field for email';
 $string['samlfieldforfirstname'] = 'SSO field for first name';
@@ -100,7 +100,7 @@ $string['populaterolestoallsaml'] = 'Copy roles to all SAML instances';
 $string['populaterolestoallsamldescription'] = "If this switch is enabled, the values for all the 'Role' fields are copied to all other SAML authentication instances that use the same Identity Provider on submission of this form. This field then resets to 'No'.";
 $string['samlfieldforautogroups'] = "Role mapping for 'Auto group administration'";
 $string['samlfieldforautogroupsall'] = 'Auto group administration of all groups on the site';
-$string['samlfieldforautogroupsalldescription'] = "If enabled, the persons that have the 'Auto group administration' role will be added as a group administrator to all groups on the entire site. Otherwise, they are only added as a group administrator to groups within their institution.";
+$string['samlfieldforautogroupsalldescription'] = "If enabled, the person that has the 'Auto group administration' role will be added as a group administrator to all groups on the entire site. Otherwise, they are only added as a group administrator to groups within their institution.";
 $string['samlfieldauthloginmsg'] = 'Wrong login message';
 $string['spentityid'] = "Service Provider entityId";
 $string['title'] = 'SAML';
@@ -119,7 +119,7 @@ $string['sigalgo'] = 'Signature algorithm';
 $string['keypass'] = 'Private key passphrase';
 $string['keypassdesc'] = 'Passphrase to protect the private key';
 $string['newkeypass'] = 'New private key passphrase';
-$string['newkeypassdesc'] = 'Passphrase to protect the new private key if you want it to be different to current one';
+$string['newkeypassdesc'] = 'Passphrase to protect the new private key if you want it to be different to the current one';
 $string['createnewkeytext'] = 'Create new key / certificate';
 $string['newkeycreated'] = 'New key / certificate created';
 $string['deleteoldkeytext'] = 'Delete old certificate';
@@ -130,7 +130,7 @@ $string['missingnamespace'] = 'The XML expects the namespace "%s" to be defined 
 // SSO labels
 // The SSO buttons will be labelled with the display name of your institution
 $string['ssolabelfor'] = '%s login';
-// If you want to have a custom label, you can either add them here
+// If you want to have custom labels, you can either add them here
 // or create a htdocs/local/lang/en.utf8/auth.saml.php file and add them there.
 // They need to have the key 'login' + shortname of institution, e.g.
 // For 'testinstitution' it would be: $string['logintestinstitution'] = 'Special label';

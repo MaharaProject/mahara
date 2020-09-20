@@ -100,7 +100,7 @@ Scenario: Create people by csv (Bug 1426983)
   And I choose "People search" in "People" from administration menu
   # Check that we can delete an account after upload (Bug #1558864)
   And I follow "user0005"
-  And I follow "Suspend or delete this person"
+  And I follow "Suspend or delete this account"
   And I scroll to the id "delete"
   And I press and confirm "Delete account"
   And I should see "Account deleted successfully"

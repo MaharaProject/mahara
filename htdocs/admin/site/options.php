@@ -644,7 +644,7 @@ $siteoptionform = array(
                 ),
                 'spamhaus' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('spamhaus1', 'admin'),
+                    'title'        => get_string('spamhaus2', 'admin'),
                     'description'  => get_string('spamhausdescription1', 'admin'),
                     'defaultvalue' => get_config('spamhaus'),
                     'help'         => true,
@@ -652,7 +652,7 @@ $siteoptionform = array(
                 ),
                 'surbl' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('surbl1', 'admin'),
+                    'title'        => get_string('surbl2', 'admin'),
                     'description'  => get_string('surbldescription1', 'admin'),
                     'defaultvalue' => get_config('surbl'),
                     'help'         => true,
