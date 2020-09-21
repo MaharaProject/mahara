@@ -1,6 +1,6 @@
 <?php
 /*
- @version   v5.20.16  12-Jan-2020
+ @version   v5.20.18  28-Jun-2020
  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
  @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -669,9 +669,9 @@ class ADODB_postgres64 extends ADOConnection{
 		while ($row = $rs->FetchRow()) {
 			$columns = array();
 			foreach (explode(' ', $row[2]) as $col) {
-				if (isset($col_names[$col])) {
-					$columns[] = $col_names[$col];
-				}
+				 if (isset($col_names[$col])) {
+					 $columns[] = $col_names[$col];
+				 }
 			}
 
 			$indexes[$row[0]] = array(

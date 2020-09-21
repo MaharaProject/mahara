@@ -1,6 +1,6 @@
 <?php
 /*
-@version   v5.20.16  12-Jan-2020
+@version   v5.20.18  28-Jun-2020
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -12,7 +12,7 @@
   and non-transactional table types. You can use this as a drop-in replacement for both
   the mysql and mysqlt drivers. As of ADOdb Version 5.20.0, all other native MySQL drivers
   are deprecated
-  
+
   Requires mysql client. Works on Windows and Unix.
 
 21 October 2003: MySQLi extension implementation by Arjen de Rijke (a.de.rijke@xs4all.nl)
@@ -579,10 +579,10 @@ class ADODB_mysqli extends ADOConnection {
 
 		if ($ADODB_FETCH_MODE == ADODB_FETCH_ASSOC || $this->fetchMode == ADODB_FETCH_ASSOC) $associative = true;
 
-		if ( !empty($owner) ) {
-			$table = "$owner.$table";
-		}
-		$a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE `%s`', $table));
+	    if ( !empty($owner) ) {
+	       $table = "$owner.$table";
+	    }
+	    $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE `%s`', $table));
 		if ($associative) {
 			$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
 		} else $create_sql = $a_create_table[1];
