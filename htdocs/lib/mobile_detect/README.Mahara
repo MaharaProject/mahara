@@ -2,7 +2,7 @@ Mobile_Detect in Mahara
 ======================
 
 Website: http://mobiledetect.net/
-Version: 2.8.33
+Version: 2.8.34
 
 This library is used by isMobile and isTablet, to detect Mobile devices.
 
