@@ -195,18 +195,25 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
     public static function instance_config_save($values, BlockInstance $instance) {
         $ownerid = $instance->get_view()->get('owner');
         if ($ownerid) {
-            $username = get_field_sql("SELECT email FROM {artefact_internal_profile_email} WHERE owner = ? AND principal = ?", array($ownerid, 1)); // Check on primary email address
-            $owner = new stdClass();
-            $owner->id = $ownerid;
-            $configdata['username'] = $username;
-            if ($connections = Plugin::get_webservice_connections($owner, 'fetch_userid')) {
-                foreach ($connections as $connection) {
-                    $result = call_static_method($connection->connection->class, 'fetch_userid', $connection, $owner, $configdata);
-                    $values['userid'] = $result;
+            $values['userid'] = self::fetch_external_userid($ownerid);
+        }
+        return $values;
+    }
+
+    public static function fetch_external_userid($ownerid) {
+        $username = get_field_sql("SELECT email FROM {artefact_internal_profile_email} WHERE owner = ? AND principal = ?", array($ownerid, 1)); // Check on primary email address
+        $owner = new stdClass();
+        $owner->id = $ownerid;
+        $configdata['username'] = $username;
+        if ($connections = Plugin::get_webservice_connections($owner, 'fetch_userid')) {
+            foreach ($connections as $connection) {
+                $result = call_static_method($connection->connection->class, 'fetch_userid', $connection, $owner, $configdata);
+                if (!empty($result)) {
+                    return $result;
                 }
             }
         }
-        return $values;
+        return null;
     }
 
     public static function has_config_info() {
@@ -220,6 +227,22 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
 
     public static function default_copy_type() {
         return 'shallow';
+    }
+
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
+        if ($view->get('owner') !== null) {
+            $externalid = self::fetch_external_userid($view->get('owner'));
+            if ($externalid) {
+                $configdata['userid'] = $externalid;
+            }
+            else {
+                unset($configdata['userid']);
+            }
+        }
+        else {
+            unset($configdata['userid']);
+        }
+        return $configdata;
     }
 
     public static function get_data($configdata, $offset=0, $limit=10) {
