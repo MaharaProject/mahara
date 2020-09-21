@@ -112,6 +112,7 @@ $string['emptyoauthkey'] = 'Consumer key must be supplied for OAuth1.x';
 $string['emptyoauthsecret'] = 'Secret must be supplied for OAuth1.x';
 $string['consumer'] = 'Consumer key';
 $string['secret'] = 'Secret';
+$string['deleteconnection'] = 'Delete connection object?';
 
 // core webservices strings start here
 $string['control_webservices'] = 'Switch web services on or off: ';

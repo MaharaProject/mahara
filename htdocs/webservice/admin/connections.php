@@ -235,7 +235,7 @@ $institutionselector = pieform(array(
 // render the page
 $form = webservice_client_connections($institution);
 
-$smarty = smarty();
+$smarty = smarty(array(), array(), array('auth.webservice' => array('auth.webservice' => 'deleteconnection')));
 setpageicon($smarty, 'icon-project-diagram');
 safe_require('auth', 'webservice');
 $smarty->assign('INLINEJAVASCRIPT', $js);

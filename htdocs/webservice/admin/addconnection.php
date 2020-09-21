@@ -67,12 +67,13 @@ if ($delete) {
     catch (UserException $e) {
         json_reply(true, $e->getMessage());
     }
-
-    if (!delete_records('client_connections_institution', 'id', $connectionid)) {
-        $rc = 'failed';
-    }
-    else {
+    try {
+        delete_records('client_connections_config', 'connection', $connectionid);
+        delete_records('client_connections_institution', 'id', $connectionid);
         $rc = 'succeeded';
+    }
+    catch (SQLException $e) {
+        $rc = 'failed';
     }
     json_reply($rc == 'failed', array('rc' => $rc));
     exit();
