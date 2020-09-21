@@ -769,8 +769,10 @@ function get_module_from_serverid($serverid) {
             JOIN {external_services} es
                 ON es.id = osr.externalserviceid
             WHERE osr.id = ? ', array($serverid));
-    if (substr_count($consumer->component, '/') > 0) {
-        return explode("/", $consumer->component);
+    if ($consumer) {
+        if (substr_count($consumer->component, '/') > 0) {
+            return explode("/", $consumer->component);
+        }
     }
     return array('auth', 'webservice');
 }
