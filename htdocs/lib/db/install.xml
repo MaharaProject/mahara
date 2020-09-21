@@ -1287,7 +1287,7 @@
         </TABLE>
         <TABLE NAME="client_connections_institution">
             <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"/>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="plugintype" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  COMMENT="Plugin type eg: notification"/>
                 <FIELD NAME="pluginname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  COMMENT="Plugin type eg: log"/>

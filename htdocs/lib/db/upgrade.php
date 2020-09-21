@@ -1858,6 +1858,18 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2020063000) {
         log_debug('create client_connections_config table to hold extra configuration information');
+        $table = new XMLDBTable('client_connections_institution');
+        if (table_exists($table)) {
+            $field = new XMLDBField('id');
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            change_field_unsigned($table, $field);
+            if (!is_mysql()) {
+                log_debug('Adding primary key index back after editing id column');
+                $key = new XMLDBKey('primary');
+                $key->setAttributes(XMLDB_KEY_PRIMARY, array('id'));
+                add_key($table, $key);
+            }
+        }
         $table = new XMLDBTable('client_connections_config');
         if (!table_exists($table)) {
             $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
