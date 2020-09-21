@@ -20,7 +20,7 @@ $string['introtext'] = 'Introduction text';
 $string['useintroductioninstead'] = 'You can use your introduction profile field instead by enabling that and leaving this field blank';
 $string['dontshowprofileicon'] = "Don't show a profile picture";
 $string['dontshowemail'] = "Don't show email address";
-$string['uploadaprofileicon'] = "You have no profile pictures. <a href=\"%sartefact/file/profileicons.php\">Upload one</a>.";
+$string['uploadaprofileicon'] = "You don't have any profile pictures. <a href=\"%sartefact/file/profileicons.php\">Upload one</a>.";
 $string['noprofilesselectone'] = "No profile items selected";
 $string['dontshowsocialprofiles'] = "Don't show social media accounts";
 $string['showsocialprofiles'] = "Show selected social media accounts";

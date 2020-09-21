@@ -84,7 +84,7 @@ $string['youmaynotregisterwithouttandc'] = 'You may not register unless you agre
 
 
 $string['pluginconnections'] = 'Connection objects';
-$string['nodefinedconnections'] = 'There are no webservice connections defined in any plugin. Please define a connection first.';
+$string['nodefinedconnections'] = 'There are no web service connections defined in any plugin. Please define a connection first.';
 $string['instancelistempty'] = 'No connection objects for this institution.';
 
 $string['addconnection'] = 'Add client connection';
@@ -251,7 +251,7 @@ $string['executed'] = 'Function call executed';
 $string['invaliduserpass'] = 'Invalid web services username / web services password supplied for "%s"';
 $string['invalidtoken'] = 'Invalid web services token supplied';
 $string['iterationtitle'] = '%s iteration: %s';
-$string['unabletoruntestclient'] = 'Web service test client needs to be run under https in production mode or have $cfg->productionmode = false in your config.php';
+$string['unabletoruntestclient'] = 'Web service test client needs to be run under https in production mode or have "$cfg->productionmode = false" in your config.php';
 
 //oauth server registry
 $string['accesstokens'] = 'OAuth access tokens';
@@ -281,7 +281,7 @@ $string['oauth_instructions'] = 'If you wish to grant access to this application
 $string['setauthinstancefailed'] = 'Setting the "Web services" authentication for institution "%s" failed. Please try adding it via Administration -> Institutions -> Settings page.';
 $string['needtosetowner'] = 'Need to set an owner for this service';
 
-// running webservices messages
+// running web services messages
 $string['accesstofunctionnotallowed'] = 'Access to the function %s() is not allowed. Please check if a service containing the function is enabled. In the service settings: If the service is restricted, check that the user is listed. Still in the service settings check for IP restriction or if the service requires a capability.';
 $string['accessexception'] = 'Access control exception';
 $string['accessnotallowed'] = 'Access to web service not allowed';
@@ -429,7 +429,7 @@ $string['membersinvalidaction'] = 'invalid action "%s" for user "%s" on group "%
 $string['passwordmustbechangedviawebsite'] = 'You need to change your password. Please log in via a web browser in order to update your password.';
 $string['featuredisabled'] = 'This web services feature is not enabled. Please contact your site administrator for more information.';
 $string['institutionunknown'] = '- unknown -';
-$string['unabletodeleteadmin'] = 'Unable to delete user with ID "%s" as they are an admin';
+$string['unabletodeleteadmin'] = 'Unable to delete account with ID "%s" as it is an administrator account';
 $string['notuserblog'] = 'The journal is not owned by "%s"';
 $string['oneof'] = 'One of';
 

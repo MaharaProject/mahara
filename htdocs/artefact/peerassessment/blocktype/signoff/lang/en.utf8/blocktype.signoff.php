@@ -22,7 +22,7 @@ $string['verifydesc'] = 'Decide whether a moderator needs to verify this page as
 $string['signedoff'] = 'Signed off';
 $string['verified'] = 'Verified';
 
-$string['signoffpagetitle'] = 'Sign off page';
+$string['signoffpagetitle'] = 'Sign-off page';
 $string['signoffpagedesc'] = 'Select "Yes" to sign off this page and indicate that you have met all requirements. Select "No" to abort.';
 $string['signoffpageundodesc'] = 'If you select "Yes", you will remove the signed off status. That will also remove the verification if that had been part of the assessment work flow. Select "No" to abort.';
 $string['signoffpageconfirm'] = 'Confirm this action?';

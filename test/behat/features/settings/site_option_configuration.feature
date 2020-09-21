@@ -32,8 +32,8 @@ Scenario: Turning the switches on and off on the "Site options" page (Bug 143156
 | People allowed multiple institutions | 0 |
 | Auto-suspend expired institutions | 1 |
 | Virus checking | 1 |
-| Spamhaus URL blacklist | 1 |
-| SURBL URL blacklist | 1 |
+| Spamhaus URL deny list | 1 |
+| SURBL URL deny list | 1 |
 | Disable external resources in HTML | 1 |
 | reCAPTCHA on account registration / contact us forms | 1 |
 | Allow public portfolios | 0 |

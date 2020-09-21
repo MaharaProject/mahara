@@ -80,7 +80,7 @@ EOF;
 $string['maildisableddescription'] = 'Sending of email to your account has been disabled. You may <a href="%s">re-enable your email</a> from the account preferences page.';
 
 $string['deleteaccountuser']  = 'Delete account of %s';
-$string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your pages will no longer be visible to other people. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
+$string['deleteaccountdescription']  = 'If you delete your account, all your content will be deleted permanently. You cannot get it back. Your profile information and your portfolios will no longer be visible to other people. The content of any forum posts you have written will still be visible, but your name will no longer be displayed.';
 $string['sendnotificationdescription']  = 'A notification will be sent to an administrator, who needs to approve the deletion of your account. If you request to delete your account, all your personal content will be deleted permanently. That means any files you uploaded, journal entries you wrote, and pages and collections you created will be deleted. You cannot get any of that back. If you uploaded files to groups, created journal entries and portfolios, and contributed to forums there, they will stay on the site, but your name will no longer be displayed.';
 $string['pendingdeletionsince'] = 'Account pending deletion since %s';
 $string['pendingdeletionadminemailsubject'] = "Account deletion request on %s";

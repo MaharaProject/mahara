@@ -55,7 +55,7 @@ Scenario: Export collections in bulk as PDF
   And I choose "Plugin administration" in "Extensions" from administration menu
   Then I should see "Experimental export option that utilises Headless Chrome to Print PDFs"
   And I should see "Requires \"chrome-php\""
-  And I should see "Requires config.php setting \"usepdfexport\" to be true"
+  And I should see "Requires the config.php setting \"usepdfexport\" to be true"
 
 Scenario: Institution One admin locks First name, Last name fields
     I want to lock fields

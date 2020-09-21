@@ -74,8 +74,8 @@ $string['tasks'] = 'tasks';
 $string['Grouptasks'] = 'Group tasks';
 $string['taskdeletedsuccessfully'] = 'Task deleted successfully.';
 $string['tasksavedsuccessfully'] = 'Task saved successfully.';
-$string['selectionstatechangedpagereload'] = 'The selection state changed in the meantime. Reload this page to show the current state.';
-$string['completedstatechangedpagereload'] = 'The completion state changed in the meantime. Reload this page to show the current state.';
+$string['selectionstatechangedpagereload'] = 'The selection status changed in the meantime. Reload this page to show the current status.';
+$string['completedstatechangedpagereload'] = 'The completion status changed in the meantime. Reload this page to show the current status.';
 $string['noselectiontask'] = 'This is not an assignment task.';
 $string['ownerfieldsnotset'] = 'The owner fields are not set.';
 $string['unsupportedportfoliotype'] = 'This is an unsupported portfolio type.';
@@ -157,7 +157,7 @@ $string['emailfooter'] = 'This is an auto-generated notification from %s.';
 
 $string['youhaveremindertasksmessagetext'] = "Hello %s,
 
-We would like to remind you to complete the following plan tasks.
+We would like to remind you to complete the following plan tasks:
 
 %s
 

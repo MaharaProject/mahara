@@ -851,7 +851,7 @@ function institution_validate(Pieform $form, $values) {
         else {
             $ratio = $width / $height;
             if ($ratio != 1) {
-                $form->set_error('logoxs', get_string('profileiconxsnotsquare', 'artefact.file'));
+                $form->set_error('logoxs', get_string('logoxsnotsquare', 'artefact.file'));
             }
         }
     }

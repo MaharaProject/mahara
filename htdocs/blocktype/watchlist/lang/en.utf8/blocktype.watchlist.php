@@ -26,12 +26,12 @@ $string['list.follower'] = 'Activities of my friends';
 $string['additionalfilters'] = 'Additional filters and settings';
 
 $string['filterby'] = 'Filter by time';
-$string['filterbydesc'] = 'Select the time period from which you want to display activities.';
+$string['filterbydesc'] = 'Select the time period for which you want to display activities.';
 $string['filterby.week'] = 'Last week';
 $string['filterby.month'] = 'Last month';
-$string['filterby.2months'] = 'Last 2 months';
-$string['filterby.quarter'] = 'Last 3 months';
-$string['filterby.half'] = 'Last 6 months';
+$string['filterby.2months'] = 'Last two months';
+$string['filterby.quarter'] = 'Last three months';
+$string['filterby.half'] = 'Last six months';
 $string['filterby.year'] = 'Last year';
 $string['filterby.login'] = 'Since last login';
 

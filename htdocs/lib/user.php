@@ -3146,10 +3146,7 @@ function remote_avatar($email, $size, $notfound) {
         return $notfound;
     }
 
-    $baseurl = 'http://www.gravatar.com/avatar/';
-    if (is_https() === true) {
-        $baseurl = 'https://secure.gravatar.com/avatar/';
-    }
+    $baseurl = 'https://www.gravatar.com/avatar/';
     if (get_config('remoteavatarbaseurl')) {
         $baseurl = get_config('remoteavatarbaseurl');
     }
