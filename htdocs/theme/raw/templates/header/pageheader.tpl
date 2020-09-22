@@ -38,6 +38,7 @@
                         <h1 id="viewh1" class="page-header">
                             {if $title}
                                 <span class="subsection-heading">{$title|safe}</span>
+                                {if $collectiontitle}<span class="sr-only">{str tag=pageincollectiontitle section=collection arg1=$collectiontitle|safe}</span>{/if}
                             {else}
                                 <span class="section-heading">{$maintitle|safe}</span>
                             {/if}
