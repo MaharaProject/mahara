@@ -791,6 +791,18 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
                 }
             }
         }
+
+        $smtpallowselfsigned = get_config('smtpallowselfsigned');
+        $smtpverifypeer = get_config('smtpverifypeer');
+        if ($smtpallowselfsigned || ! $smtpverifypeer) {
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => $smtpverifypeer,
+                    'verify_peer_name' => $smtpverifypeer,
+                    'allow_self_signed' => $smtpallowselfsigned
+                )
+            );
+        }
     }
 
     if (get_config('bounces_handle') && !empty($userto->id) && empty($maildisabled)) {
