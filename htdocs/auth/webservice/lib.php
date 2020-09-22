@@ -204,4 +204,52 @@ class PluginAuthWebservice extends PluginAuth {
             }
         }
     }
+
+    public static function get_oauth_service_config_options($serverid) {
+        // Check if any of the service's functions have 'hasconfig' set to true
+        $elements = array();
+        $configservices = get_records_sql_array('SELECT ef.component FROM {oauth_server_registry} r
+                                                 JOIN {external_services_functions} esf ON r.externalserviceid = esf.externalserviceid
+                                                 JOIN {external_functions} ef ON ef.name = esf.functionname
+                                                 WHERE r.id = ?
+                                                 AND ef.hasconfig = ?', array($serverid, 1));
+        if ($configservices) {
+            foreach ($configservices as $cf) {
+                if ($cf->component !== 'webservice') {
+                    list($moduletype, $module) = explode("/", $cf->component);
+                    if (safe_require_plugin($moduletype, $module)) {
+                        $classname = generate_class_name($moduletype, $module);
+                        if (is_callable(array($classname, 'get_oauth_service_config_options'))) {
+                            $config = call_static_method($classname, 'get_oauth_service_config_options', $serverid);
+                            $elements = array_merge($elements, $config);
+                        }
+                    }
+                }
+            }
+        }
+        return $elements;
+    }
+
+    public static function save_oauth_service_config_options($serverid, $values) {
+        // Check if any of the service's functions have 'hasconfig' set to true
+        $configservices = get_records_sql_array('SELECT ef.component FROM {oauth_server_registry} r
+                                                 JOIN {external_services_functions} esf ON r.externalserviceid = esf.externalserviceid
+                                                 JOIN {external_functions} ef ON ef.name = esf.functionname
+                                                 WHERE r.id = ?
+                                                 AND ef.hasconfig = ?', array($serverid, 1));
+        if ($configservices) {
+            foreach ($configservices as $cf) {
+                if ($cf->component !== 'webservice') {
+                    list($moduletype, $module) = explode("/", $cf->component);
+                    if (safe_require_plugin($moduletype, $module)) {
+                        $classname = generate_class_name($moduletype, $module);
+                        if (is_callable(array($classname, 'save_oauth_service_config_options'))) {
+                            call_static_method($classname, 'save_oauth_service_config_options', $serverid, $values);
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
