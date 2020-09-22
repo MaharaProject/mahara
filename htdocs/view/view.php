@@ -585,6 +585,7 @@ if ($collection) {
             $smarty->assign('collection', $viewnav);
         }
     }
+    $smarty->assign('collectiontitle', $collection->get('name'));
 }
 
 if (!empty($blocktype_toolbar['toolbarhtml'])) {

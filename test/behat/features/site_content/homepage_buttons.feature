@@ -14,10 +14,11 @@ Scenario: Checking navigation of the big homepage buttons
  And I am on homepage
  And I click on "Find people and join groups"
  Then I should see "Groups" in the "h1 heading" property
+ And I choose "Preferences" in "Settings" from account menu
+ And I disable the switch "Dashboard information"
+ And I press "Save"
  And I am on homepage
- And I click on "Hide information box"
- Then I should see "You have hidden the information box."
- And I should not see "Find people and join groups"
+ Then I should not see "Find people and join groups"
  And I choose "Preferences" in "Settings" from account menu
  And I enable the switch "Dashboard information"
  And I press "Save"

@@ -18,7 +18,7 @@
             <div class="groupsdetails text-small">
                 {if $group->editwindow}
                 <div class="groupeditable">
-                    {str tag=editable section=group}:
+                    <strong>{str tag=editable section=group}:</strong>
                     {$group->editwindow}
                 </div>
                 {/if}
@@ -36,7 +36,7 @@
                 {if $group->membercount}
                     <div class="membernumber">
                         <a href="{$WWWROOT}group/members.php?id={$group->id}" class="inner-link">
-                            {str tag=Members section=group}: {$group->membercount}
+                            <strong>{str tag=Members section=group}:</strong> {$group->membercount}
                         </a>
                     </div>
                 {/if}

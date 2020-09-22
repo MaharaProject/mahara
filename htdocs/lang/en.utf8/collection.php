@@ -131,6 +131,7 @@ $string['nextpage'] = 'Next page';
 $string['prevpage'] = 'Previous page';
 $string['viewingpage'] = 'You are on page ';
 $string['navtopage'] = 'Navigate to page:';
+$string['pageincollectiontitle'] = 'This page is part of the collection \'%s\'.';
 
 // progress completion page
 $string['overallcompletion'] = 'Overall completion of sign-off and verification';

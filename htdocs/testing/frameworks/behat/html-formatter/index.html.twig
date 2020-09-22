@@ -129,11 +129,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-8 details panel-group" role="tablist" aria-multiselectable="true">
+                    <div class="col-sm-8 details card-group" role="tablist" aria-multiselectable="true">
                         {% for scenario in feature.scenarios %}
-                            <div class="panel panel-default {% if scenario.isPassed %}passed{% else %}failed{% endif %}">
-                                <div class="panel-heading" role="tab">
-                                    <h4 class="panel-title">
+                            <div class="card card-default {% if scenario.isPassed %}passed{% else %}failed{% endif %}">
+                                <div class="card-header" role="tab">
+                                    <h3 class="card-title">
                                         <a data-toggle="collapse" data-parent="#accordion"
                                            href="#scenario-{{ feature.id }}-{{ scenario.id }}"
                                            aria-expanded="true"
@@ -146,9 +146,9 @@
                                                 <span class="badge">{{ tag }}</span>
                                             {% endfor %}
                                         </div>
-                                    </h4>
+                                    </h3>
                                 </div>
-                                <div id="scenario-{{ feature.id }}-{{ scenario.id }}" class="panel-collapse collapse in"
+                                <div id="scenario-{{ feature.id }}-{{ scenario.id }}" class="card-collapse collapse in"
                                      role="tabpanel"
                                      aria-labelledby="headingOne">
                                     <ul class="list-group">

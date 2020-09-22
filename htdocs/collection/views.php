@@ -148,10 +148,10 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
     );
 
     $elements['submit'] = array(
-        'class' => 'btn-primary float-right add-pages',
+        'class' => 'btn-secondary float-right add-pages',
         'type' => 'button',
         'usebuttontag' => true,
-        'value' => '<span class="icon icon-arrow-right left" role="presentation" aria-hidden="true"></span>' . get_string('addviews','collection'),
+        'value' => '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>' . get_string('addviews','collection'),
         'goto' => get_config('wwwroot') . 'collection/views.php?id='.$id,
     );
 

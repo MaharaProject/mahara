@@ -76,11 +76,13 @@
         left: auto;
         top: auto;
         .popover-title {
-            font-size: $font-size-sm;
+            font-size: $h6-font-size;
+            font-weight: $headings-font-weight;
+            line-height: $headings-line-height;
             margin: 0;
             padding: $popover-header-padding-y $popover-header-padding-x;
             background-color: $popover-header-bg;
-            border-bottom: $popover-border-width solid $popover-border-color;
+            border-bottom: $popover-border-width solid scale-color($popover-header-bg, $lightness: -5%);
             border-radius: $popover-border-radius $popover-border-radius 0 0;
         }
         .popover-content {
@@ -88,6 +90,9 @@
             ol,
             ul {
                 padding-left: $spacing-lg;
+            }
+            h2, h3, h4, h5 {
+              font-size: $h6-font-size;
             }
         }
     }

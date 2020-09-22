@@ -60,6 +60,10 @@
 
     .form-group {
         padding: 0;
+        &.color {
+            border-bottom: 0;
+            padding-bottom: $spacing-lg;
+        }
     }
     &.nojs-hidden-block {
         .js & {

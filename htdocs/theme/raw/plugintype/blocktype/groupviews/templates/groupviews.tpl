@@ -51,7 +51,7 @@
         {/if}
     {else}
         <div class="list-group list-group-top-border grouppages">
-            <span class="list-group-item flush lead text-small">{str tag=nosharedviewsyet section=view}</span>
+            <span class="list-group-item flush">{str tag=nosharedviewsyet section=view}</span>
         </div>
     {/if}
 {/if}
@@ -82,7 +82,7 @@
         {/if}
     {else}
         <div class="list-group list-group-top-border grouppages">
-            <div class="list-group-item flush lead text-small">{str tag=nosharedcollectionsyet section=collection}</div>
+            <div class="list-group-item flush">{str tag=nosharedcollectionsyet section=collection}</div>
         </div>
     {/if}
 {/if}
@@ -110,7 +110,7 @@
         {/if}
     {else}
         <div class="list-group list-group-top-border grouppages">
-            <div class="list-group-item flush lead text-small">{str tag=nosubmittedviewscollectionsyet section=view}</span>
+            <div class="list-group-item flush">{str tag=nosubmittedviewscollectionsyet section=view}</span>
         </div>
     {/if}
 {/if}

@@ -1,6 +1,6 @@
 <div id="collectionnavwrap" class="collection-nav">
 
-    {if $maintitle}<h2>{$maintitle|safe}</h2>{/if}
+    {if $maintitle}<div class="collection-title">{$maintitle|safe}</div>{/if}
 
     {* should the collection description go here? might need a read more concertina to prevent it being too long *}
 

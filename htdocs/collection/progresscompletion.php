@@ -84,6 +84,7 @@ if ($collection) {
         array_unshift($viewnav, $collection->collection_nav_progresscompletion_option());
         $smarty->assign('collection', $viewnav);
     }
+    $smarty->assign('collectiontitle', $collection->get('name'));
 }
 
 $smarty->assign('progresscompletion', true);
