@@ -8,7 +8,7 @@ web application that allows users to record and share evidence of lifelong learn
 For more information about Mahara and ePortfolios, see the Mahara user manual's
 introduction chapter:
 
- * https://manual.mahara.org/en/20.10/intro/introduction.html#what-is-mahara
+ * https://manual.mahara.org/en/21.04/intro/introduction.html#what-is-mahara
 
 # SUPPORT
 
@@ -35,7 +35,7 @@ The following is a check list of the steps you need to take. Please refer to the
 
 # UPGRADING
 
-Mahara 20.10 supports direct upgrades from previous Mahara versions 18.04.0 and later.
+Mahara 21.04 supports direct upgrades from previous Mahara versions 18.04.0 and later.
 
 If you are upgrading from an earlier version you will need to upgrade
 in either two or three steps:
@@ -72,7 +72,7 @@ scripts. See:
 
 # SYSTEM REQUIREMENTS
 
-Here are the system requirements needed to run Mahara 20.10.
+Here are the system requirements needed to run Mahara 21.04.
 
 ### OS
 
@@ -137,7 +137,7 @@ three most recent versions that are officially supported by Microsoft.
 You can still use Mahara on older browsers, but may not have all functionality
 available.
 
-For Mahara 20.10, the supported browser versions are:
+For Mahara 21.04, the supported browser versions are:
  * Firefox - 75.0
  * Chrome - 81.0
  * Safari - 13.1
