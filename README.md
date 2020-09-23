@@ -35,7 +35,7 @@ The following is a check list of the steps you need to take. Please refer to the
 
 # UPGRADING
 
-Mahara 20.10 supports direct upgrades from previous Mahara versions 18.04.0 and later.
+Mahara 20.10 supports direct upgrades from previous Mahara versions 18.10.0 and later.
 
 If you are upgrading from an earlier version you will need to upgrade
 in either two or three steps:
