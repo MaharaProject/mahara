@@ -11,6 +11,13 @@
 // Import your theme based variables (colors, fonts, padding, etc)
 @import "utilities/theme-variables"; // Import our theme variables
 @import "../../raw/sass/utilities/bootstrap-variables";
+@import "../../raw/sass/utilities/custom-variables";
+
+/** If your parent theme is a subtheme for example, Modern, Default, Primaryschool
+* Please include this line. If you are compiling SCSS with gulp, you'll need to
+* restart it.*/
+// @import "../../<your parent theme name>/sass/utilities/bootstrap-variables";
+// @import "../../<your parent theme name>/sass/utilities/custom-variables";
 
 //@import "utilities/bootstrap-variables"; // Set up your own bootstrap variables (note you need to make a copy of this file from the parent theme first)
 //@import "utilities/custom-variables"; // Set up your own custom variables  (note you need to make a copy of this file from raw first)
@@ -23,10 +30,9 @@
 */
 // @import "utilities/index";
 
-// If your parent theme is a subtheme for example, Modern, Default, Primaryschool
-// Please include these lines. If you are compiling SCSS with gulp, you'll need to
-// restart it.
-// @import "../../<your parent theme name>/sass/utilities/custom-variables";
+/** If your parent theme is a subtheme for example, Modern, Default, Primaryschool
+* Please include these lines. If you are compiling SCSS with gulp, you'll need to
+* restart it.*/
 // @import "../../<your parent theme name>/sass/utilities/index";
 // @import "../../<your parent theme name>/sass/custom";
 
