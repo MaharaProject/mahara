@@ -209,6 +209,28 @@ $cfg->sendemail = true;
 // $cfg->smtpsecure = '';
 
 /**
+ * @global bool $cfg->smtpverifypeer indicates if peer verification is required
+ * when sending email to an external mail host. Normally this setting should be
+ * true, but it may be necessary to set to false if the external mail server
+ * has a certificate with a common name that does not match the server name.
+ *
+ * This setting should only be changed if you both require it and understand
+ * the potential security implications.
+ */
+$cfg->smtpverifypeer = true;
+
+/**
+ * @global bool $cfg->smtpallowselfsigned indicates if accepting a self signed
+ * certificate is allowed when sending mail to an external mail host. Normally
+ * this setting should be false, but the external mail host must be used and it
+ * has a self signed cert this will allow that.
+ *
+ * This setting should only be changed if you both require it and understand
+ * the potential security implications.
+ */
+$cfg->smtpallowselfsigned = false;
+
+/**
  * Variable Envelope Return Path Handling
  * @global bool $cfg->bounces_handle If you want mahara to keep track of email addresses which generate a
  * bounce, set bounces_handle to true.
