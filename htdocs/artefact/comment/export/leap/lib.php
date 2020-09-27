@@ -78,4 +78,8 @@ class LeapExportElementComment extends LeapExportElement {
         return array();
     }
 
+    public function get_entry_author() {
+        return get_string('importedfeedback', 'artefact.comment');
+    }
+
 }
