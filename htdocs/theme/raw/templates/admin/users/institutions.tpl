@@ -18,9 +18,9 @@
     </div>
 </div>
 {elseif $institution_form}
-<div class="card view-container">
+<div class="card view-container{if $suspended} bg-warning{/if}">
     {if $suspended}
-    <h2 class="title card-header bg-warning">{$suspended}</h2>
+    <h2 class="title card-header">{$suspended}</h2>
         {if !$USER->get('admin')}
         <div class="card-body">
             <div class="detail">
