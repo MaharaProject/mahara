@@ -238,8 +238,11 @@ function open_modal(e) {
     var block = $('#configureblock');
 
     var params = {
-        'viewid': viewid,
-        'artefactid': $(e.target).closest('a').data('artefactid'),
+        'viewid': viewid
+    }
+
+    if ($(e.target).closest('a').data('artefactid')) {
+        params['artefactid'] = $(e.target).closest('a').data('artefactid');
     }
 
     if ($(e.target).closest('a').data('blockid') != null) {
