@@ -84,7 +84,7 @@ else {
     $html .= $rendered['html'];
 
     // Get any existing comments for display
-    if ($artefact->get('allowcomments')) {
+    if (isset($artefact) && $artefact->get('allowcomments')) {
         $commentoptions = ArtefactTypeComment::get_comment_options();
         $commentoptions->view = $view;
         $commentoptions->artefact = $artefact;
@@ -115,7 +115,7 @@ else {
         $html .= $smarty->fetch('blocktype:comment:comment.tpl');
     }
 
-    if ($artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))) {
+    if (isset($artefact) && $artefact->get('allowcomments') && ( $USER->is_logged_in() || (!$USER->is_logged_in() && get_config('anonymouscomments')))) {
         $tmpview = new View($viewid);
         $commenttype = $tmpview->user_comments_allowed($USER);
         $moderate = !$USER->is_logged_in() || (isset($commenttype) && $commenttype === 'private');
