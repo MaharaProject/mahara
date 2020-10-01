@@ -50,6 +50,7 @@ $string['commentsubmittedmoderatedanon'] = 'Comment submitted, awaiting moderati
 $string['commentsubmittedprivateanon'] = 'Private comment submitted';
 $string['forcepubliccomment'] = 'Public';
 $string['forceprivatecomment'] = 'Private: This reply will only be visible to you and the author of the preceeding comment.';
+$string['importedfeedback'] = 'Imported feedback';
 $string['lastcomment'] = 'Last comment';
 $string['makecommentpublic'] = 'Make comment public';
 $string['makepublicnotallowed'] = 'You are not allowed to make this comment public';

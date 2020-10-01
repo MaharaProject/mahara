@@ -129,12 +129,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         else {
             $description = ArtefactTypeComment::remove_comments_classes($description);
         }
-        if (isset($entry->author->name) && strlen($entry->author->name)) {
-            $authorname = (string)$entry->author->name;
-        }
-        else {
-            $author = $importer->get('usr');
-        }
+        $authorname = get_string('importedfeedback', 'artefact.comment');
 
         return array(
             'owner'   => $importer->get('usr'),
@@ -146,7 +141,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
                 'mtime'       => (string)$entry->updated,
                 'private'     => (int)PluginImportLeap::is_correct_category_scheme($entry, $importer, 'audience', 'Private'),
                 'authorname'  => isset($authorname) ? $authorname : null,
-                'author'      => isset($author) ? $author : null,
+                'author'      => null,
                 'tags'        => PluginImportLeap::get_entry_tags($entry),
             ),
         );
@@ -171,7 +166,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
 
         $comment = new ArtefactTypeComment();
         $comment->set('title', $content['title']);
-        $comment->set('description', $content['title']);
+        $comment->set('description', $content['description']);
         if ($content['ctime']) {
             $comment->set('ctime', $content['ctime']);
         }
