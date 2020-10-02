@@ -181,6 +181,7 @@ $width-sm: 90%;
         padding: $modal-header-padding-y $modal-header-padding-x;
         color: $modal-header-color;
         border-radius: 0;
+        display: block;
         .modal-title, a {
           margin: 0;
           padding: 0;
