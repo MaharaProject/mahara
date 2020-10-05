@@ -147,8 +147,14 @@ function initJs() {
     });
 
     $(window).on('timelineviewresizeblocks', function() {
+        var options = {
+            verticalMargin: 5,
+            cellHeight: 10,
+            disableDrag : true,
+            disableResize: true,
+        };
         var grid = $('.lineli.selected .grid-stack');
-        grid = grid.gridstack();
+        grid = grid.gridstack(options);
         updateBlockSizes(grid);
     });
 
