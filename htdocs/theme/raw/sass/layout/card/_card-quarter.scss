@@ -225,17 +225,16 @@
 }
 
 .card-option {
-    width: 50%;
-    float: left;
-    padding-left: $spacing-lg;
-    padding-right: $spacing-lg;
-    margin-bottom: $spacing-xxl;
-    height: 4.5rem; // 72px;
+    width: 47%;
+    display: inline-block;
+    margin-right: $spacing-sm;
+    margin-bottom: $spacing-lg;
     @include media-breakpoint-up(md) {
-        width: 25%;
+        width: 23%;
     }
     .card.placeholder {
         padding: $spacing-base;
+        margin-bottom: 0;
         cursor: pointer;
         width: 100%;
         div {
