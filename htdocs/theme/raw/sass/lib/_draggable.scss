@@ -93,11 +93,6 @@
     padding-right: 0;
 }
 
-// Droppable area background indicator
-.block-drop-on {
-    background: scale-color($card-bg, $lightness: -5.25%);
-}
-
 .drag-handle,
 .ui-draggable {
   cursor: move;
