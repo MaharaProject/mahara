@@ -40,7 +40,7 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
             // include the comments profile icons
             if ($artefact->get('artefacttype') == 'comment') {
                 $author = $artefact->get('author');
-                if ($profileicon = get_field('usr', 'profileicon', 'id', $author)) {
+                if ($author && $profileicon = get_field('usr', 'profileicon', 'id', $author)) {
                     $profileiconartefact = new ArtefactTypeProfileIcon($profileicon);
                     $this->artefactdata[$profileicon] = $profileiconartefact;
                 }
