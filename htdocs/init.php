@@ -326,7 +326,6 @@ if (!get_config('productionmode')) {
     $CFG->log_info_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
     $CFG->log_warn_targets    = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
     $CFG->log_environ_targets = LOG_TARGET_SCREEN | LOG_TARGET_ERRORLOG;
-    $CFG->developermode       = DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
     $CFG->perftofoot          = true;
     $CFG->nocache             = true;
     if ($CFG->log_backtrace_print_args === null) {
