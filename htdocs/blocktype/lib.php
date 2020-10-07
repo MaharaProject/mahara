@@ -1293,10 +1293,8 @@ class BlockInstance {
         if ( $title) {
             if (isset($configdata['retractable']) && $configdata['retractable']) {
                 $smarty->assign('retractable', true);
-                if (defined('JSON') || $jsreply) {
-                    $jssmarty = smarty_core();
-                    $jssmarty->assign('id', $this->get('id'));
-                    $js .= $jssmarty->fetch('view/retractablejs.tpl');
+                if (isset($configdata['retractedonload']) && $configdata['retractedonload']) {
+                    $smarty->assign('retractedonload', true);
                 }
             }
         }
