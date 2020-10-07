@@ -64,18 +64,6 @@
             });
             var newblock = temp.find('div.blockinstance');
 
-            $('.blockinstance-header', newblock).on("mousedown", function() {
-                    $('.js-col-row .column-content').each(function() {
-                        $(this).addClass('block-drop-on', 100);
-                    });
-                });
-
-            $('.blockinstance-header', newblock).on("mouseup", function() {
-                $('.js-col-row .column-content').each(function() {
-                    $(this).removeClass('block-drop-on', 500);
-                });
-            });
-
             swapNodes(oldblock.get()[0], newblock.get()[0]); // using DOM objects, not jQuery objects so we needn't worry about IDs
 
             var embedjs = data.data.javascript;
