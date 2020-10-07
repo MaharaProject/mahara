@@ -27,6 +27,18 @@
     background-color: transparent;
     color: $white;
   }
+  .card-body a,
+  a.card-body,
+  .list-group-item-profile-notification,
+  .sidebar-item-heading,
+  .text-midtone {
+    color: $white;
+
+    &:hover,
+    &:focus {
+      text-decoration-color: $white;
+    }
+  }
   .list-group-item-heading {
     font-size: $font-size-base;
   }
