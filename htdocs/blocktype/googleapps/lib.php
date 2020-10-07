@@ -325,7 +325,8 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
                 'url'   =>  function ($m) {
                                 $zoomlevel = min(max($m[4], 3), 21);
                                 $height = 188 * pow(2, (21 - $zoomlevel));
-                                return "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d${height}!2d${m[3]}!3d${m[2]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s${m[5]}%3A${m[6]}!2s${m[1]}!5e0";
+                                $httpstr = is_https() ? 'https' : 'http';
+                                return $httpstr . "://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d${height}!2d${m[3]}!3d${m[2]}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s${m[5]}%3A${m[6]}!2s${m[1]}!5e0";
                             },
                 'type'  => 'iframe',
             ),
@@ -344,19 +345,19 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
             // www.google.com/maps/embed URLs - these must be https.
             array(
                 'match' => '#.*www.google.com[^/]*/maps/embed\?([a-zA-Z0-9\.\,\;\_\-\&\%\=\+\!/]+).*#',
-                'url'   => 'https://www.google.com/maps/embed?$1',
+                'url'   => $httpstr . '://www.google.com/maps/embed?$1',
                 'type'  => 'iframe',
             ),
             // www.google.com/maps/@ URLs.
             array(
                 'match' => '#.*www.google.com.*?/\@([a-zA-Z0-9\.\-]+)\,([a-zA-Z0-9\.\-]+)\,([0-9]+).*#',
-                'url'   => 'https://maps.google.com/maps?ll=$1,$2&z=$3&output=embed',
+                'url'   => $httpstr . '://maps.google.com/maps?ll=$1,$2&z=$3&output=embed',
                 'type'  => 'iframe',
             ),
             // books.google.com - Google Books
             array(
                 'match' => '#.*books.google.[^/]*/books.*id=([a-zA-Z0-9\_\-\&\%\=]+).*#',
-                'url'   => 'http://books.google.com/books?id=$1',
+                'url'   => $httpstr . '://books.google.com/books?id=$1',
                 'type'  => 'iframe',
             ),
             // If everything else fails, match if it is a valid link to a file... and than show that file with Google Docs Viewer
