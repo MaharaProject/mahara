@@ -292,7 +292,7 @@ class PluginExportHtml extends PluginExport {
         // zip everything up
         $this->notify_progress_callback(90, get_string('creatingzipfile', 'export'));
         try {
-            create_zip_archive($this->exportdir, $this->zipfile, array($this->rootdir));
+            create_zip_archive($this->exportdir, $this->zipfile, array($this->rootdir, $this->infodir));
         }
         catch (SystemException $e) {
             throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
@@ -1387,8 +1387,14 @@ class HtmlExportOutputFilter {
             $distance = 3;
         }
         else {
-            // we are not in a view, could be blog post attachement or Notes attachement
-            $distance = 4;
+            // matches[3] matches on last item in link string. If that is not the view variable then we need to double check if 'view=' exists in original string
+            if (preg_match('/(?:&amp;|&|%26)(view=[0-9])/', $matches[0])) {
+                $distance = 3;
+            }
+            else {
+                // we are not in a view, could be blog post attachement or Notes attachement
+                $distance = 4;
+            }
         }
         $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path($distance, $this->exporter->get('filedir'));
         return $this->get_export_path_for_file($artefact, $options, $filterpath);

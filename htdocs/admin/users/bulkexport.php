@@ -111,7 +111,7 @@ function create_zipfile($listing, $files) {
 }
 
 function bulkexport_submit(Pieform $form, $values) {
-    global $SESSION, $pdfrun;
+    global $SESSION, $pdfrun, $exporter;
 
     $usernames = array();
 
@@ -184,14 +184,12 @@ function bulkexport_submit(Pieform $form, $values) {
         }
 
         try {
-            $exporter->export(true);
-            $zipfile = $exporter->export_compress();
+            $zipfile = $exporter->export(true);
         }
         catch (Exception $e) {
             $exporterrors[] = $username;
             continue;
         }
-
         $listing[] = array($username, $zipfile);
         $files[] = $exporter->get('exportdir') . $zipfile;
         $exportcount++;
@@ -201,7 +199,7 @@ function bulkexport_submit(Pieform $form, $values) {
         set_progress_done('bulkexport', array('message', get_string('bulkexportempty', 'admin')));
     }
 
-    log_info("Exported $exportcount users to $zipfile");
+    log_info("Exported $exportcount account(s) to $zipfile");
     if (!empty($exporterrors)) {
         $SESSION->add_error_msg(get_string('couldnotexportusers', 'admin', implode(', ', $exporterrors)));
     }

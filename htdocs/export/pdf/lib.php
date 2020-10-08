@@ -138,13 +138,26 @@ class PluginExportPdf extends PluginExportHtml {
      * Note: If running pdf export and html export together then this should be run first
      */
     public function export($createarchive=false) {
-        parent::export($createarchive);
+        parent::export(false);
         $this->pdf_view_export_data();
-        return array(
-            'exportdir' => $this->exportdir,
-            'zipfile' => $this->zipfile,
-            'dirs' => array($this->pdfdir, $this->infodir),
-        );
+        if (!$createarchive) {
+            return array(
+                'exportdir' => $this->exportdir,
+                'zipfile' => $this->zipfile,
+                'dirs' => array($this->pdfdir, $this->infodir),
+            );
+        }
+
+        // zip everything up
+        $this->notify_progress_callback(90, get_string('creatingzipfile', 'export'));
+        try {
+            create_zip_archive($this->exportdir, $this->zipfile, array($this->pdfdir, $this->infodir));
+        }
+        catch (SystemException $e) {
+            throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
+        }
+        $this->notify_progress_callback(100, get_string('Done', 'export'));
+        return $this->zipfile;
     }
 
     /**
