@@ -945,12 +945,14 @@ function create_zip_archive($exportdir, $filename, $files) {
             if (count($files) == 0) {
                 $archive->addEmptyDir($dir);
             }
-            foreach($files as $file) {
-                if (is_file($exportdir . $dir . $file)) {
-                    $archive->addFile($exportdir . $dir . $file, $dir . $file);
-                }
-                else {
-                    $directories[] = $dir . $file . '/';
+            else {
+                foreach($files as $file) {
+                    if (is_file($exportdir . $dir . $file)) {
+                        $archive->addFile($exportdir . $dir . $file, $dir . $file);
+                    }
+                    else {
+                        $directories[] = $dir . $file . '/';
+                    }
                 }
             }
         }
