@@ -104,7 +104,7 @@ else {
         $submitstr = array(get_string('save'), get_string('cancel'));
         $confirm = null;
     }
-    $class = '';
+    $class = 'btn-primary';
     $subclass = array('btn-primary');
 }
 $elements['submitform'] = array(
