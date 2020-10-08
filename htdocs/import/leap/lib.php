@@ -1768,10 +1768,11 @@ class PluginImportLeap extends PluginImport {
         }
 
         $artefacts = $this->get_artefactids_imported_by_entryid($hrefsrc);
-        if (is_null($artefacts) || count($artefacts) != 1) {
+        $countartefacts = is_null($artefacts) ? 0 : count($artefacts);
+        if (is_null($artefacts) || $countartefacts != 1) {
             // This can happen if a Leap2A xml file is uploaded that refers to
             // files that (naturally) weren't uploaded with it.
-            log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$hrefsrc} but seems to have gotten " . count($artefacts));
+            log_debug("Warning: fixref was expecting one artefact to have been imported by entry {$hrefsrc} but seems to have gotten " . $countartefacts);
             return $hrefsrc;
         }
         return $basepath . 'artefact/file/download.php?file=' . $artefacts[0];
