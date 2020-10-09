@@ -81,8 +81,49 @@
 
 .footer {
   @include angle(before, true);
+  &:before {
+    top: -2.25rem;
+  }
 }
 
 .pageheader {
-  @include angle(both, true);
+  overflow: hidden;
+  display: inline-block;
+  content: "";
+  height: 100%;
+  margin-bottom: -4.75rem;
+}
+.pageheader-wrap {
+  transform: rotate(1.5deg);
+  overflow: hidden;
+  width: 110%;
+  left: -5%;
+  top: -1.5rem;
+  position: relative;
+
+  &::before {
+    width: 110%;
+    content: "";
+    display: inline-block;
+    height: 110%;
+    transform: rotate(-1.5deg);
+    position: absolute;
+    top: 0;
+    z-index: -1;
+  }
+}
+
+.pageheader-content {
+    transform: rotate(-1.5deg);
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+    @include media-breakpoint-down(sm) {
+        .row {
+          margin-left: 5%;
+        }
+    }
+}
+
+.last-updated {
+  margin-bottom: 3rem;
 }
