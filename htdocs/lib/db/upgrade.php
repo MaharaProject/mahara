@@ -1957,5 +1957,34 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092104) {
+        $table = new XMLDBTable('export_queue');
+        if (table_exists($table)) {
+            $field = new XMLDBField('externalname');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+                add_field($table, $field);
+            }
+            $field = new XMLDBField('externalurl');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_TEXT, 'big');
+                add_field($table, $field);
+            }
+        }
+        $table = new XMLDBTable('archived_submissions');
+        if (table_exists($table)) {
+            $field = new XMLDBField('externalname');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+                add_field($table, $field);
+            }
+            $field = new XMLDBField('externalurl');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_TEXT, 'big');
+                add_field($table, $field);
+            }
+        }
+    }
+
     return $status;
 }

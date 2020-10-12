@@ -574,6 +574,8 @@ function export_add_to_queue($object, $external = null, $submitter = null, $type
     $queue->ctime = db_format_timestamp(time());
     if ($external) {
         $queue->externalid = $external->id;
+        $queue->externalname = $external->name;
+        $queue->externalurl = $external->url;
     }
     db_begin();
     $queueid = insert_record('export_queue', $queue, 'id', true);
@@ -777,6 +779,8 @@ function export_process_queue($id = false) {
                                                                              'group' => $submitted->submittedgroup,
                                                                              'externalhost' => $externalhost,
                                                                              'externalid' => $row->externalid,
+                                                                             'externalname' => $row->externalname,
+                                                                             'externalurl' => $row->externalurl,
                                                                              ));
             if (!$inserted) {
                 $errors[] = get_string('archivedsubmissionfailed', 'export');
