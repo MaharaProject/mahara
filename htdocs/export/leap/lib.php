@@ -69,8 +69,8 @@ class PluginExportLeap extends PluginExport {
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
-    public function __construct(User $user, $views, $artefacts, $progresshandler=null) {
-        parent::__construct($user, $views, $artefacts, $progresshandler);
+    public function __construct(User $user, $views, $artefacts, $progresshandler=null, $loop=1, $looptotal=1) {
+        parent::__construct($user, $views, $artefacts, $progresshandler, $loop, $looptotal);
         $this->smarty = smarty_core();
         $this->exporttype = 'leap';
 

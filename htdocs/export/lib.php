@@ -188,6 +188,13 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     protected $exporttime;
 
     /**
+     * The fraction to adjust the progress oputput percentage based on which iteration
+     * of a loop we are in. Useful for the bulk export
+     */
+    protected $loop;
+    protected $looptotal;
+
+    /**
      * Callback to notify when progress is made
      */
     private $progresscallback = null;
@@ -214,8 +221,11 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      *                             - int - artefact ids
      *                             - stdclass objects - db rows
      *                             - ArtefactType subclasses
+     * @param string $progresscallback  The function to call with current state of progress
+     * @param integer $loop             Which loop of bulk export we are on
+     * @param integer $looptotal        Total number of loops to do
      */
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1) {
         if (!is_null($progresscallback)) {
             if (is_callable($progresscallback)) {
                 $this->progresscallback = $progresscallback;
@@ -224,6 +234,9 @@ abstract class PluginExport extends Plugin implements IPluginExport {
                 throw new SystemException("The specified progress callback isn't callable");
             }
         }
+        $this->loop = $loop;
+        $this->looptotal = $looptotal;
+
         $this->notify_progress_callback(0, 'Starting');
 
         $this->exporttime = time();
@@ -425,6 +438,12 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      */
     protected function notify_progress_callback($percent, $status) {
         if ($this->progresscallback) {
+            if ($this->looptotal > 1) {
+                // Take the percentage point if it was only one loop and work out start percentage and add to percentage
+                // eg if the progress percent returned was 70% but we are in loop 2 of 3 then real percentage is
+                // within 33% - 66% of overall progress so we translate here, eg 57%
+                $percent = ceil(intval(intval($percent) * (1 / $this->looptotal)) + (100 - ((100 / $this->looptotal) * ($this->looptotal - ($this->loop - 1)))));
+            }
             call_user_func_array($this->progresscallback, array(
                 $percent, $status
             ));

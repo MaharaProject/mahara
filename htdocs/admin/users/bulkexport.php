@@ -109,6 +109,13 @@ function create_zipfile($listing, $files) {
 
     return $exportdir . $filename;
 }
+function export_bulk_progress_handler($percent, $status) {
+    global $SESSION;
+    $status = hsc($status);
+    $percent = intval($percent);
+    set_progress_info('bulkexport', $percent, 100, get_string('validating', 'admin'));
+    set_time_limit(10);
+}
 
 function bulkexport_submit(Pieform $form, $values) {
     global $SESSION, $pdfrun, $exporter;
@@ -149,10 +156,6 @@ function bulkexport_submit(Pieform $form, $values) {
     $num_users = count($usernames);
 
     foreach ($usernames as $username) {
-        if (!($exportcount % 5)) {
-            set_progress_info('bulkexport', $exportcount, $num_users, get_string('validating', 'admin'));
-        }
-
         $user = new User();
         try {
             $user->find_by_username($username);
@@ -162,7 +165,7 @@ function bulkexport_submit(Pieform $form, $values) {
         }
 
         if ($exporttype == 'html') {
-            $exporter = new PluginExportHtml($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+            $exporter = new PluginExportHtml($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_bulk_progress_handler', $exportcount+1, $num_users);
         }
         else if ($exporttype == 'pdf') {
             if ($exportcount === 0 && $num_users === 1) {
@@ -177,10 +180,10 @@ function bulkexport_submit(Pieform $form, $values) {
             else {
                 $pdfrun = 'multi';
             }
-            $exporter = new PluginExportPdf($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+            $exporter = new PluginExportPdf($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_bulk_progress_handler', $exportcount+1, $num_users);
         }
         else {
-            $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS);
+            $exporter = new PluginExportLeap($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_bulk_progress_handler', $exportcount+1, $num_users);
         }
 
         try {

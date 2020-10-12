@@ -91,7 +91,6 @@ class webservice_rest_server extends webservice_base_server {
             OAuthStore::instance('Mahara');
             $this->oauth_server = new OAuthServer();
             $headers = OAuthRequestLogger::getAllHeaders();
-
             // try 2 Legged
             if (OAuthRequestVerifier::requestIsSigned()) {
                 try {
