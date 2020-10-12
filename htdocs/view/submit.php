@@ -74,7 +74,7 @@ function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $view, $collection, $group;
 
     if (!empty($collection)) {
-        $collection->submit($group, $USER);
+        $collection->submit($group, null, $USER->get('id'));
         $SESSION->add_ok_msg(get_string('collectionsubmitted', 'view'));
     }
     else if (!empty($view)) {
