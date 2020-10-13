@@ -200,8 +200,6 @@ class ArtefactTypeResume extends ArtefactType {
      * Overrides the default commit to make sure that any 'entireresume' blocks
      * in views the user have know about this artefact - but only if necessary.
      * Goals and skills are not in the entireresume block
-     *
-     * @param boolean $updateresumeblocks Whether to update any resume blockinstances
      */
     public function commit() {
         parent::commit();
