@@ -678,8 +678,8 @@ function is_memcache_configured() {
             $server_stats = $memcached->getStats();
             if ($server_stats[$host . ':' . $port] <= 0) {
                 $server_version = $memcached->getVersion();
-                if (empty($server_version[$host . ':' . $port])) {
-                    $is_configured = false;
+                if (!empty($server_version[$host . ':' . $port])) {
+                    $is_configured = true;
                 }
             }
             else if ($server_stats[$host . ':' . $port]['pid'] > 0) {
