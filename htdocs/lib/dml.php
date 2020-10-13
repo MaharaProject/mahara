@@ -1318,9 +1318,12 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
  * @param array $dataobject A data object with values for one or more fields in the record (to be inserted or updated)
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
+ * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ *                        WARN_MULTIPLE means log a warning message if multiple records found
+ *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @throws SQLException
  */
-function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=false, $returnpk=false) {
+function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=false, $returnpk=false,  $strictness=WARN_MULTIPLE) {
     $columns = (array)$whereobject;
     $where = array();
     $values = array();
@@ -1345,7 +1348,7 @@ function ensure_record_exists($table, $whereobject, $dataobject, $primarykey=fal
     }
 
     db_begin();
-    if ($exists = get_record_select($table, $where, $values)) {
+    if ($exists = get_record_select($table, $where, $values, '*' , $strictness)) {
         if ($returnpk) {
             $toreturn = $exists->{$primarykey};
         }
