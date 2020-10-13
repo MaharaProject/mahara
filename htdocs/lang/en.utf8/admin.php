@@ -1267,6 +1267,8 @@ $string['userreports'] = 'People reports';
 $string['userreportsdescription'] = 'View or download information about the accounts you selected on the search page.';
 $string['unabletodeleteself1'] = 'You are not allowed to delete yourself.';
 $string['unabletodeletealladmins1'] = 'You are not allowed to delete all site administrators.';
+$string['unabletosuspendself'] = 'You are not allowed to suspend yourself.';
+$string['unabletosuspendalladmins'] = 'You are not allowed to suspend all site administrators.';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
