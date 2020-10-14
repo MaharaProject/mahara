@@ -93,8 +93,8 @@
         </div>
         <div>
             <div class="submitcancel form-group">
-                <input type="submit" class="submit submitcancel btn-primary" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
-                <input type="submit" class="submitcancel cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
+                <input type="submit" class="submit submitcancel btn btn-primary" name="{$prefix}_update[{$fileinfo->id}]" id="{$prefix}_edit_artefact" value="{str tag=savechanges section=artefact.file}" />
+                <input type="submit" class="btn submitcancel cancel" name="{$prefix}_canceledit" id="{$prefix}_edit_cancel" value="{str tag=cancel}" />
             </div>
             <div>
                 <div id="{$prefix}_edit_messages">
