@@ -136,20 +136,6 @@ $cfg->log_backtrace_print_args = null;
 $cfg->error_reporting = E_ALL & ~E_STRICT;
 
 /**
- * @global int|bool $cfg->developermode Developer mode
- * When set, the following things (among others) will happen:
- *
- * * 'debug.css' will be included on each page. You can edit this file to add
- *   debugging CSS at your discretion
- * * the unpacked version of MochiKit will be used
- *
- * These options are a performance hit otherwise, enable when you are
- * developing for Mahara
- */
-$cfg->developermode = false;
-// $cfg->developermode = DEVMODE_DEBUGCSS | DEVMODE_UNPACKEDJS;
-
-/**
  * @global bool $cfg->sendemail Whether to send e-mail. If set to false, Mahara will not send any e-mail at
  * all. This is useful for when setting up development versions of Mahara where
  * you don't want to accidentally send email to users from this particular

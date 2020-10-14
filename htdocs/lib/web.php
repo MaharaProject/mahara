@@ -71,10 +71,6 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
         }
     }
 
-    if (get_config('developermode') & DEVMODE_DEBUGCSS) {
-        $stylesheets[] = get_config('wwwroot') . 'theme/debug.css';
-    }
-
     // look for extra stylesheets
     if (isset($extraconfig['stylesheets']) && is_array($extraconfig['stylesheets'])) {
         foreach ($extraconfig['stylesheets'] as $extrasheet) {
