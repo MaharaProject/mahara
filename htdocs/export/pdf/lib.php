@@ -159,6 +159,7 @@ class PluginExportPdf extends PluginExportHtml {
         $progressend   = 95;
         $i = 0;
         $viewcount = count($this->views);
+        ob_start();
         if (system('command -v dpkg')) { // Ubuntu
             $command = 'dpkg -l';
         }
@@ -298,5 +299,6 @@ class PluginExportPdf extends PluginExportHtml {
             $file = array_pop($path);
             rename($view, $pdfdirectory . '/' . $file);
         }
+        ob_end_clean();
     }
 }
