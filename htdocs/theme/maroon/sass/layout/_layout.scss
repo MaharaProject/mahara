@@ -6,3 +6,10 @@ body .main-content {
 .tag-results .btn-top-right {
     margin-top: -2.5625rem; // -41px;
 }
+
+.pageheader {
+    background-color: transparent;
+}
+.pageheader-wrap {
+    background-color: $pageheader-bg;
+}
