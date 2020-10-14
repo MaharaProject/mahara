@@ -110,6 +110,7 @@ $width-sm: 90%;
       font-family: $headings-font-family;
       font-weight: $headings-font-weight;
       border-bottom: 0;
+      max-width: calc(100% - 4rem);
     }
     .close,
     .mce-close {
@@ -188,6 +189,9 @@ $width-sm: 90%;
           font-size: $h4-font-size;
           font-family: $headings-font-family;
           font-weight: $headings-font-weight;
+          &.float-left {
+            width: calc(100% - 45px); // The cog icon plus 5px space
+          }
         }
         &.modal-section {
             margin: 0 0 $spacing-base 0;
