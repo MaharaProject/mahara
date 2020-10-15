@@ -598,7 +598,8 @@ class PluginSearchInternal extends PluginSearch {
                         $firstcols = 'e.id AS eid, a.group,
                           (SELECT name FROM {group} WHERE id = a.group) AS submittedto,
                           (SELECT case WHEN a.externalid IS NOT NULL THEN a.externalid ELSE CAST(e.id AS ' . $casttype . ') END) AS specialid,
-                          (SELECT case WHEN a.externalhost IS NOT NULL THEN a.externalhost ELSE null END) AS externalhost,
+                          (SELECT case WHEN a.externalname IS NOT NULL THEN a.externalname ELSE null END) AS externalname,
+                          (SELECT case WHEN a.externalurl IS NOT NULL THEN a.externalurl ELSE null END) AS externalhost,
                           e.filetitle, e.filename, e.filepath, ' . db_format_tsfield('e.ctime', 'archivectime') . ', ' . $firstcols;
                         $join .= 'JOIN {export_archive} e ON e.usr = u.id ';
                         $join .= 'JOIN {archived_submissions} a ON a.archiveid = e.id ';

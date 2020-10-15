@@ -103,10 +103,13 @@ class PluginModuleAssessmentreport extends PluginModule {
         $item = ($data['eventfor'] == "collection" ? new Collection($data['id']) : new View($data['id']));
         if (!empty($data['groupname'])) {
             $group = get_record('group', 'name', $data['groupname']);
+            $host = $group->name;
         }
         else {
             $group = false;
+            $host = (!empty($data['externalhost'])) ? $data['externalhost'] : '';
         }
+
         $historyobj = (object) array(
             'userid'        => $item ? $item->get('owner') : null,
             'event'         => $data['eventfor'],
@@ -122,7 +125,12 @@ class PluginModuleAssessmentreport extends PluginModule {
             $type = get_string('collection', 'collection');
         }
         $subject = get_string('subject', 'module.assessmentreport', $type);
-        $message = get_string('message', 'module.assessmentreport', $type, $data['name'], $data['groupname'], format_date(strtotime("now"), 'strftimedatetimesuffix'));
+        if ($group) {
+            $message = get_string('message', 'module.assessmentreport', $type, $data['name'], $host, format_date(strtotime("now"), 'strftimedatetimesuffix'));
+        }
+        else {
+            $message = get_string('messageexternal', 'module.assessmentreport', $type, $data['name'], $host, format_date(strtotime("now"), 'strftimedatetimesuffix'));
+        }
 
         activity_occurred(
             'maharamessage',

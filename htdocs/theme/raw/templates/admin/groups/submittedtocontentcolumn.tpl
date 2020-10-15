@@ -3,5 +3,11 @@
         {$r.submittedto}
     {if !$r.groupdeleted}</a>{/if}
 {elseif $r.externalhost}
-    {$r.externalhost}
+    <a href="{$r.externalhost}">
+    {if $r.externalname}
+        {$r.externalname}
+    {else}
+        {$r.externalhost}
+    {/if}
+    </a>
 {/if}

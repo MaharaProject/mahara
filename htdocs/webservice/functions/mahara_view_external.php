@@ -68,11 +68,11 @@ class mahara_view_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'query'           => new external_value(PARAM_RAW, 'View query filter to apply', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, 'Mahara ID of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'query'           => new external_value(PARAM_RAW, 'Portfolio query filter to apply', VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -370,13 +370,13 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the assessment submitter', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'viewid'          => new external_value(PARAM_INTEGER, 'View ID', VALUE_REQUIRED),
-                            'iscollection'    => new external_value(PARAM_BOOL, 'Is a Collection', VALUE_OPTIONAL),
-                            'lock'            => new external_value(PARAM_BOOL, 'Lock the object', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_INTEGER, 'Mahara ID of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'viewid'          => new external_value(PARAM_INTEGER, 'Mahara ID of the page or collection that was submitted.', VALUE_REQUIRED),
+                            'iscollection'    => new external_value(PARAM_BOOL, 'Does this Mahara ID represent a collection?', VALUE_OPTIONAL),
+                            'lock'            => new external_value(PARAM_BOOL, 'Shall the submission be locked from editing?', VALUE_OPTIONAL),
                             'apilevel'        => new external_value(PARAM_RAW, 'API level requested'),
                             'wwwroot'         => new external_value(PARAM_RAW, 'Client URN to distinguish remote lockers', VALUE_REQUIRED),
                             )
@@ -602,15 +602,17 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the person releasing submission', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'viewid'          => new external_value(PARAM_INTEGER, 'View ID', VALUE_REQUIRED),
-                            'iscollection'    => new external_value(PARAM_BOOL, 'Is a Collection', VALUE_OPTIONAL),
-                            'viewoutcomes'    => new external_value(PARAM_RAW, 'View outcomes', VALUE_OPTIONAL),
-                            'archiveonrelease' => new external_value(PARAM_BOOL, 'Archive on release of submission', VALUE_OPTIONAL),
-                            'externalid'      => new external_value(PARAM_RAW, 'External ID the archive relates to', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_INTEGER, 'ID of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, 'Username of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, 'Email address of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'viewid'          => new external_value(PARAM_INTEGER, 'Mahara ID of the page or collection that was submitted.', VALUE_REQUIRED),
+                            'iscollection'    => new external_value(PARAM_BOOL, 'Does this Mahara ID represent a collection?', VALUE_OPTIONAL),
+                            'viewoutcomes'    => new external_value(PARAM_RAW, 'Outcomes associated with this portfolio', VALUE_OPTIONAL),
+                            'archiveonrelease' => new external_value(PARAM_BOOL, 'Do you want to archive this submitted portfolio when it is released?', VALUE_OPTIONAL),
+                            'externalid'      => new external_value(PARAM_RAW, 'External ID to which the submission relates.', VALUE_OPTIONAL),
+                            'externalname'    => new external_value(PARAM_RAW, 'External name to which the submission relates.', VALUE_OPTIONAL),
+                            'externalfullurl' => new external_value(PARAM_RAW, 'Full URL path of the site where the submissions was made.', VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -661,6 +663,8 @@ class mahara_view_external extends external_api {
             $teacher->find_by_id($userid);
             $external = new stdClass();
             $external->id = $v['externalid'];
+            $external->name = $v['externalname'];
+            $external->url = $v['externalfullurl'];
             if (isset($v['iscollection']) && $v['iscollection']) {
                 require_once('collection.php');
                 $collection = new Collection($v['viewid']);
