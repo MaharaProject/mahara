@@ -283,6 +283,21 @@ function changeauth_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, array('message' => $message));
 }
 
+function suspend_validate(Pieform $form, $values) {
+    global $userids, $USER;
+
+    // Not allowed to suspend yourself
+    if (is_array($userids) && in_array($USER->get('id'), $userids)) {
+        $form->set_error(null, get_string('unabletosuspendself', 'admin'));
+    }
+    // Not allowed to suspend all site admins
+    $siteadmins = count_records_sql("SELECT COUNT(\"admin\") FROM {usr}
+                           WHERE id NOT IN (" . join(',', array_map('db_quote', $userids)) . ") AND \"admin\" = 1", array());
+    if (!$siteadmins) {
+        $form->set_error(null, get_string('unabletosuspendalladmins', 'admin'));
+    }
+}
+
 function suspend_submit(Pieform $form, $values) {
     global $users, $SESSION;
 
