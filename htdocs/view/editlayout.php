@@ -382,8 +382,8 @@ function get_advanced_elements() {
     }
     $elements['lockblocks'] = array(
         'type'         => 'switchbox',
-        'title'        => get_string('lockblocks', 'view'),
-        'description'  => !empty($view->get('institution')) ? get_string('lockblocksdescriptioninstitution', 'view') : get_string('lockblocksdescription1', 'view'),
+        'title'        => get_string('lockblocks1', 'view'),
+        'description'  => !empty($view->get('institution')) ? get_string('lockblocksdescriptioninstitution1', 'view') : get_string('lockblocksdescription2', 'view'),
         'defaultvalue' => $view->get('lockblocks'),
     );
     if (!($group || $institution)) {
