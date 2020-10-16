@@ -427,3 +427,7 @@ input[type="radio"] {
     outline: medium solid $input-focus-border-color;
   }
 }
+
+.exportable-artefact-container .checkbox .with-label a.viewlink {
+    display: block;
+}
