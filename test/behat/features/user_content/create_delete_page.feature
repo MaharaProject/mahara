@@ -23,11 +23,11 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I fill in the following:
     | Page title       | Test view         |
     | Page description | First description |
-    # Open the 'Advanced' accordion and check for the instructions field and 'Lock blocks' toggle
+    # Open the 'Advanced' accordion and check for the instructions field and 'Prevent removing of blocks' toggle
     # (Bug 1891265)
     When I follow "Advanced"
     Then I should see "Instructions"
-    And I should see "Lock blocks"
+    And I should see "Prevent removing of blocks"
     # (Bug 1891265 end)
     And I press "Save"
     # Editing the pages
