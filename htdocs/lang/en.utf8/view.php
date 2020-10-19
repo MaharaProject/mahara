@@ -506,9 +506,9 @@ $string['addcontent'] = 'Add Content';
 $string['theme'] = 'Theme';
 $string['choosethemedesc'] = 'Choose a theme for the page.';
 
-$string['lockblocks'] = "Lock blocks";
-$string['lockblocksdescription1'] = "You can lock the blocks on the page and prevent them from being removed when you edit the page. You can remove the lock at any time to remove blocks if needed.";
-$string['lockblocksdescriptioninstitution'] = "Lock the blocks on the page and prevent them from being removed when people copy the page into their personal or group portfolio area. You can still remove blocks while you are editing this site or institution page.";
+$string['lockblocks1'] = "Prevent removing of blocks";
+$string['lockblocksdescription2'] = "You can prevent that blocks are removed when you edit the page. You can still change the location and size of the blocks. You can change this setting at any time to remove blocks if needed.";
+$string['lockblocksdescriptioninstitution1'] = "You can prevent that blocks are removed when people copy the page into their personal or group portfolio area. This setting does not affect your editing of this site or institution page.";
 $string['instructions'] = 'Instructions';
 $string['advanced']     = 'Advanced';
 
