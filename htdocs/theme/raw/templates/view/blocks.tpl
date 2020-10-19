@@ -80,7 +80,7 @@
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
-                <h1 class="modal-title blockinstance-header text-inline"></h1>
+                <h1 class="modal-title blockinstance-header text-inline float-left"></h1>
                 <span class="icon icon-cogs icon-2x float-right" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">
