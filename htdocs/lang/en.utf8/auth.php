@@ -45,7 +45,7 @@ $string['application'] = 'Application';
 $string['cantretrievekey'] = 'An error occurred while retrieving the public key from the remote server.<br>Please ensure that the Application and WWW root fields are correct and that networking is enabled on the remote host.';
 $string['ssodirection'] = 'SSO direction';
 $string['active'] = 'Active';
-
+$string['errorunabletologin'] = 'You are unable to login';
 $string['errorcertificateinvalidwwwroot'] = 'This certificate claims to be for %s, but you are trying to use it for %s.';
 $string['errorcouldnotgeneratenewsslkey'] = 'Could not generate a new SSL key. Are you sure that both openssl and the PHP module for openssl are installed on this machine?';
 $string['errnoauthinstances']   = 'We do not seem to have any authentication plugin instances configured for the host at %s.';

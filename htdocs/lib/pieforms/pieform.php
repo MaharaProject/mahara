@@ -236,6 +236,10 @@ class Pieform {/*{{{*/
             $this->data['replycallback'] = $this->name . '_reply';
         }
 
+        if (!$this->data['errorcallback']) {
+            $this->data['errorcallback'] = $this->name . '_error';
+        }
+
         $this->data['configdirs'] = array_map(
             function($a) { return substr($a, -1) == "/" ? substr($a, 0, -1) : $a; },
             (array) $this->data['configdirs']);
