@@ -705,6 +705,7 @@ $string['groupcsvfiledescription'] = 'The file containing groups to add';
 $string['groupmemberscsvfiledescription'] = 'The file containing group members to update';
 $string['csverroremptyfile'] = 'The CSV file is empty.';
 $string['invalidfilename'] = 'The file "%s" does not exist.';
+$string['invalidfilenameformatforcsv'] = 'The file format for "%s" is not valid. Please upload a valid comma-separated values (.csv) file';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or you have more fields than your header row specifies.';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line.';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine).';

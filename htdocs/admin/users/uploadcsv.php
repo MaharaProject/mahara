@@ -188,6 +188,13 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
     }
 
+    require_once('uploadmanager.php');
+    $um = new upload_manager('file');
+    if ($error = $um->preprocess_file(array('csv'))) {
+        $form->set_error('file', $error);
+        return;
+    }
+
     require_once('csvfile.php');
 
     $authinstance = (int) $values['authinstance'];
