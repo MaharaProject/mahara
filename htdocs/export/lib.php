@@ -225,7 +225,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      * @param integer $loop             Which loop of bulk export we are on
      * @param integer $looptotal        Total number of loops to do
      */
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime) {
         if (!is_null($progresscallback)) {
             if (is_callable($progresscallback)) {
                 $this->progresscallback = $progresscallback;
@@ -239,7 +239,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
 
         $this->notify_progress_callback(0, 'Starting');
 
-        $this->exporttime = time();
+        $this->exporttime = $exporttime ? $exporttime : time();
         $this->user = $user;
 
         $userid = $this->user->get('id');
@@ -995,19 +995,20 @@ class PluginExportAll extends PluginExport {
     protected $exportdir;
     protected $zipfile;
 
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
         safe_require('export', 'html');
         safe_require('export', 'leap');
-        $this->htmlexporter = new PluginExportHtml($user, $views, $artefacts, $progresscallback);
-        $this->leapexporter = new PluginExportLeap($user, $views, $artefacts, $progresscallback);
+        $exporttime = time();
+        $this->htmlexporter = new PluginExportHtml($user, $views, $artefacts, $progresscallback, 1, 1, $exporttime);
+        $this->leapexporter = new PluginExportLeap($user, $views, $artefacts, $progresscallback, 1, 1, $exporttime);
         $this->pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
         if ($this->pdfactive) {
             safe_require('export', 'pdf');
-            $this->pdfexporter = new PluginExportPdf($user, $views, $artefacts, $progresscallback);
+            $this->pdfexporter = new PluginExportPdf($user, $views, $artefacts, $progresscallback, 1, 1, $exporttime);
         }
         $this->exportdir = $this->htmlexporter->get('exportdir');
         $this->zipfile = 'mahara-export-user'
-        . $user->get('id') . '-' . date('Y-m-d_H-i', time()) . '.zip';
+        . $user->get('id') . '-' . date('Y-m-d_H-i', $exporttime) . '.zip';
     }
 
     public function is_diskspace_available() {

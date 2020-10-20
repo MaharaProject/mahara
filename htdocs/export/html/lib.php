@@ -68,9 +68,9 @@ class PluginExportHtml extends PluginExport {
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
         global $THEME;
-        parent::__construct($user, $views, $artefacts, $progresscallback, $loop, $looptotal);
+        parent::__construct($user, $views, $artefacts, $progresscallback, $loop, $looptotal, $exporttime);
         $this->rootdir = 'HTML';
         $this->exporttype = 'html';
 
