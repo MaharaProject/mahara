@@ -50,9 +50,9 @@ class PluginExportPdf extends PluginExportHtml {
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $exporttime=null) {
         global $THEME;
-        parent::__construct($user, $views, $artefacts, $progresscallback);
+        parent::__construct($user, $views, $artefacts, $progresscallback, $exporttime);
         $this->exporttype = 'pdf';
 
         $this->zipfile = 'mahara-export-pdf-user'
