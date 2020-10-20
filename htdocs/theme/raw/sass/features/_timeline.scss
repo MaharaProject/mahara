@@ -24,7 +24,7 @@ Main Components
   position: relative;
   height: 5rem; // 80px;
   width: 100%;
-  max-width: calc($grid-breakpoints(xxl) - $spacing-xxxl);
+  max-width: calc(#{map-get($grid-breakpoints, "xxl")} - #{$spacing-xxxl});
   margin: 0 auto;
   border-bottom: $border-width solid $border-color;
 }

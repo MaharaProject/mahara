@@ -204,7 +204,7 @@
             content: "";
             display: block;
             height: 12.5rem; // 200px;
-            width: calc(100% - $spacing-xxl);
+            width: calc(100% - #{$spacing-xxl});
             margin: $spacing-lg;
             position: absolute;
             border-radius: $card-border-radius;
