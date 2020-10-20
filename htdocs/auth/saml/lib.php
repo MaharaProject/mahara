@@ -541,7 +541,8 @@ class PluginAuthSaml extends PluginAuth {
         'active'                 => 1,
         'avatar'                 => '',
         'authloginmsg'           => '',
-        'metarefresh_metadata_url'         => '',
+        'metarefresh_metadata_url'       => '',
+        'metarefresh_metadata_signature' => '',
     );
 
     public static function get_cron() {
@@ -1343,6 +1344,7 @@ jQuery(function($) {
             $('#auth_config_institutionidp').val('');
             // clear the entity url box
             $('#auth_config_metarefresh_metadata_url').val('');
+            $('#auth_config_metarefresh_metadata_signature').val('');
             update_idp_label(false);
         }
         else {
@@ -1351,6 +1353,7 @@ jQuery(function($) {
                 if (!data.error) {
                     $('#auth_config_institutionidp').val(data.data.metadata);
                     $('#auth_config_metarefresh_metadata_url').val(data.data.metarefresh_metadata_url);
+                    $('#auth_config_metarefresh_metadata_signature').val(data.data.metarefresh_metadata_signature);
                 }
             });
             update_idp_label(idp);
@@ -1403,6 +1406,15 @@ EOF;
                     'required' => false,
                 ),
                 'defaultvalue' => self::$default_config['metarefresh_metadata_url'],
+                'help'  => true,
+            ),
+            'metarefresh_metadata_signature' => array(
+                'type'  => 'text',
+                'title' => get_string('metarefresh_metadata_signature', 'auth.saml'),
+                'rules' => array(
+                    'required' => false,
+                ),
+                'defaultvalue' => self::$default_config['metarefresh_metadata_signature'],
                 'help'  => true,
             ),
             'institutionidp' => array(
@@ -1780,6 +1792,7 @@ EOF;
             'avatar' => $values['avatar'],
             'authloginmsg' => $values['authloginmsg'],
             'metarefresh_metadata_url' => $values['metarefresh_metadata_url'],
+            'metarefresh_metadata_signature' => $values['metarefresh_metadata_signature'],
         );
 
         $auth_children = false;
@@ -1963,21 +1976,29 @@ class Metarefresh {
         $finalarr = array();
         $sites = get_records_menu('auth_instance_config', 'field', 'institutionidpentityid', '', 'instance, value');
         $urls = get_records_array('auth_instance_config', 'field', 'metarefresh_metadata_url', '', 'field, value, instance');
+        $fingerprints = get_records_array('auth_instance_config', 'field', 'metarefresh_metadata_signature', '', 'field, value, instance');
         if ( ( !$sites || count($sites) <= 0 ) || ( !$urls || count($urls) <= 0 ) ) {
             if ($viajson === false) {
                 log_warn("Could not get any valid urls for metadata refresh url list", false, false);
             }
             return array();//could not get any valid urls to fetch metadata from
         }
+
         if ($urls) {
             foreach ($urls as $url) {
                 if (isset($url->value) && !empty($url->value)) {
                     if (isset($sites[$url->instance])) {
-                        $finalarr[$sites[$url->instance]] = $url->value;
+                        $finalarr[$sites[$url->instance]]['src'] = $url->value;
+                        foreach ($fingerprints as $fingerprint) {
+                            if (isset($fingerprint->instance) && $fingerprint->instance == $url->instance && isset($fingerprint->value) && !empty($fingerprint->value)) {
+                                $finalarr[$sites[$url->instance]]['validateFingerprint'] = $fingerprint->value;
+                            }
+                        }
                     }
                 }
             }
         }
+
         return $finalarr;
     }
 
@@ -1986,13 +2007,22 @@ class Metarefresh {
      */
     public static function get_metadata_url($idp, $viajson=false) {
         $sources = self::get_metadata_urls($viajson);
-        if (isset($sources[$idp])) {
-            return $sources[$idp];
+        if (isset($sources[$idp]) && isset($sources[$idp]['src'])) {
+            return $sources[$idp]['src'];
         }
         return '';
     }
 
-
+    /*
+     * Given an IDP entity id, find the source fingerprint for it
+     */
+    public static function get_metadata_fingerprint($idp, $viajson=false) {
+        $sources = self::get_metadata_urls($viajson);
+        if (isset($sources[$idp]) && isset($sources[$idp]['validateFingerprint'])) {
+            return $sources[$idp]['validateFingerprint'];
+        }
+        return '';
+    }
 
     /**
     * Hook to try a metarefresh using the metarefresh module in simplesaml from mahara
@@ -2007,6 +2037,7 @@ class Metarefresh {
             //Include autoloader and setup config dir correctly
             PluginAuthSaml::init_simplesamlphp();
 
+            \SimpleSAML\Logger::setCaptureLog(true);
             $config = SimpleSAML\Configuration::getInstance();
             $mconfig = SimpleSAML\Configuration::getOptionalConfig('config-metarefresh.php');
 
@@ -2089,7 +2120,7 @@ class Metarefresh {
                 }
 
                 // Write state information back to disk
-                $metaloader->writeState();
+                @$metaloader->writeState();
 
                 switch ($outputFormat) {
                     case 'flatfile':
@@ -2105,12 +2136,34 @@ class Metarefresh {
                     $metaloader->writeARPfile($arpconfig);
                 }
             }
-            return true;//we were able to update successfully
-
+            if ($logging_output = SimpleSAML\Logger::getCapturedLog()) {
+                $fingerprint_fail_string = 'could not verify signature using fingerprint';
+                $fails = array_filter($logging_output, function($el) use ($fingerprint_fail_string) {
+                    return (strpos($el, $fingerprint_fail_string) !== false);
+                });
+                if ($fails) {
+                    $message = "Unable to verify fingerprint for the following:\n" . implode("\n", $fails);
+                    throw new Exception($message);
+                }
+            }
+            return true; // We were able to update successfully
         }
         catch (Exception $e) {
             SimpleSAML\Logger::info('Mahara [metarefresh]: Error during metadata refresh ' . $e->getMessage());
-            return false;//fetch failed
+            require_once('activity.php');
+            // Find the site admins
+            $admins = get_site_admins();
+            $adminids = array();
+            foreach ($admins as $admin) {
+                $lang = get_user_language($admin->id);
+                // Send a notification about the metadata refresh fail
+                $message = new stdClass();
+                $message->users = array($admin->id);
+                $message->subject = get_string_from_language($lang, 'metadatarefreshfailed_subject', 'auth.saml');
+                $message->message = get_string_from_language($lang, 'metadatarefreshfailed_body', 'auth.saml', $e->getMessage());
+                activity_occurred('maharamessage', $message);
+            }
+            return false; // Fetch failed
         }
     }
 }

@@ -59,6 +59,12 @@ $string['idpentityupdatedduplicates'] = array(
     1 => "Updated the Identity Provider metadata for this and %s other SAML instances."
 );
 $string['metarefresh_metadata_url'] = 'Metadata URL for auto-refresh';
+$string['metarefresh_metadata_signature'] = 'Metadata validate signature';
+$string['metadatarefreshfailed_subject'] = 'Metadata auto-refresh failed';
+$string['metadatarefreshfailed_body'] = 'The auto-refresh of the SAML metadata was not able to complete.
+Check the cron logs for full information about the failure. Error response may appear below:
+
+%s';
 $string['idpprovider'] = 'Provider';
 $string['idptable'] = 'Installed Identity Providers';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
