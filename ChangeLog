@@ -1,3 +1,191 @@
+20.10.0 (2020-10-22)
+- Bug 1829108: Changing the display name of the site shouldn't break the SAML private key pass
+- Bug 1867822: Tidy up the artefact attachments_from_id_list() function
+- Bug 1875154: PDF export not mentioned on export page when it's available
+- Bug 1876625: Date picker not working for Admin -> People when selecting a date to filter users
+- Bug 1876810: More of the count(): Parameter must be an array or an object that implements Countable
+- Bug 1877001: Skins not showing after upgrade
+- Bug 1877497: Skins not exporting / importing header image
+- Bug 1879410: Add a text block in Dashboard page using TestingDataGenerator.php
+- Bug 1880803: errors when copying a page after editing column widths manually
+- Bug 1882103: Wrong redirect when creating Pages when Mahara is in a subdir
+- Bug 1883043: collection pages unvailable as link options in tinyMCE
+- Bug 1883612: Copying a page containing draft text block(s) causes the hidden content to become visible
+- Bug 1883805: Keyboard Focus indicator needs more distinct styling
+- Bug 1884346: function cron_check_for_updates takes too long to run
+- Bug 1885231: Class 'Institution' not found when viewing another user's profile page
+- Bug 1885784: Need to update site options submit function to use alias
+- Bug 1885957: Mahara throws 'Badly formated SAML' error even though the metadata is valid
+- Bug 1886593: usr.active not changed when unexpiring a user from admin/user/edit.php screen
+- Bug 1886883: SmartEvidence framework editor saving to DB errors
+- Bug 1887450: Block header buttons need better labels when Editing Pages
+- Bug 1888163: Security issue: File / folder name not being escaped correctly in filebrowser
+- Bug 1888769: Correct link to Badrg in 'Open Badges' block
+- Bug 1889340: Adding indexes to tag table to speed things up
+- Bug 1889341: upgrade jquery 3.4.1 to 3.5.1
+- Bug 1889485: Security Upgrade SimpleSAML 1.18.4 to 1.18.7
+- Bug 1890238: Text block 'Quick edit' retract and double bar display issues
+- Bug 1890349: SAML auth update user issues
+- Bug 1890363: Upgrade: Dropzone 5.5.0 to 5.7.0
+- Bug 1890369: Upgrade: HTML Purifier 4.12.0 to 4.13.0
+- Bug 1890371: Upgrade: JSColor 2.0.5 to 2.3.3
+- Bug 1891575: LTI only giving access to the first page of a submitted collection
+- Bug 1891844: ajax loaded blocks not resizing properly
+- Bug 1891941: Correct inbox notifications for collection access
+- Bug 1892104: Block config needs to mention what type of block it is
+- Bug 1892105: Cover image file not copied for institution collection
+- Bug 1892256: Undefined variable: duplicates error when updating SAML metadata in SAML instance
+- Bug 1892437: Stop loading login form everytime a page is loaded
+- Bug 1892655: need to escape mysql keyword 'row' in gridstacklayout.js
+- Bug 1892664: Share access with account holders outside of institution is producing a warning
+- Bug 1892790: Google Apps Block unable to parse URL to google drive folder
+- Bug 1893291: Undefined property: stdClass::$constraint_name error for MySql 8
+- Bug 1895213: Only have H4-H6 available in TinyMCE
+- Bug 1895476: Changing some SAML functions calls to be namespaced
+- Bug 1895485: Adding login email link for webservice auth instance
+- Bug 1895617: export html check for directory readability needs to match directory used
+- Bug 1895901: Getting PHP Fatal error: Cannot redeclare serve_file() when using sync_langpacks
+- Bug 1896351: Language string review for Mahara 20.10
+- Bug 1896352: Error when adding LTI connection: 'component' not available
+- Bug 1896413: Mention activity for archiving from the web services Moodle assignment submission plugin
+- Bug 1896547: Allow custom webservice to access / save management config
+- Bug 1896549: Add screen reader only text to point to collection title
+- Bug 1896703: Changes to subtheme starter to inherit parent theme styles properly again
+- Bug 1897641: 2010RC1: maroon theme for profile sideblock poor contrast
+- Bug 1897660: Timeline: page block display has far too much whitespace after first blocks
+- Bug 1897829: 20.10RC1: Choosing details in image gallery opens a blank modal
+- Bug 1898652: Bulk export not working correctly when doing PDF export
+- Bug 1749308: Collection navigation triggering swiperight event on mouse click
+- Bug 1824386: Inappropriate comparison for DB versions
+- Bug 1835681: Check if we still need the config parameter "developermode"
+- Bug 1841571: usersearch doesn´t work with multibyte-characters on SolarisOS
+- Bug 1844444: Remove superfluous <td> in résumé section
+- Bug 1850749: Stripping prefix from table name should only happen at start of string
+- Bug 1860943: Behat: update copy_note_content.feature
+- Bug 1862839: Behat: Page template become unavailable after changing settings
+- Bug 1871280: Allow grouproles to be reset for account holders when roles updated via webservices
+- Bug 1874341: Profile icon image not being exported in html/pdf export
+- Bug 1874530: extracting a zipped file's contents not working correctly
+- Bug 1875785: External links in Mahara no longer open in external tab/window by default
+- Bug 1875973: Mahara: Site information block needs link to download updated
+- Bug 1875995: Front-end changes for Mahara 20.10
+- Bug 1877906: MariaDB error when creating secret URL
+- Bug 1879847: String missing for allow public views in Reports
+- Bug 1881978: The artefact_plans_plan and artefact_plans_task tables should not have auto increment on artefact column
+- Bug 1882870: Button obscuring text on Install Fonts page
+- Bug 1883031: The cancel link (button) on forms has an odd style once clicked
+- Bug 1883179: Profile Completion has incorrect instructions
+- Bug 1883471: reduce block margin on gridstack
+- Bug 1883800: Report configuration modal content truncated on small screen
+- Bug 1883803: Missing Help Text Icon: admin/site/menu.php
+- Bug 1883987: Help Icon for authentication plugin not aligned properly
+- Bug 1885046: Theme colour contrast fails for <code> tag
+- Bug 1885460: improve the way we fetch platform.js
+- Bug 1885982: behat headless doesn't work with chrome 80
+- Bug 1886100: quota bar failing colour contrast
+- Bug 1886371: Migrate Institution is producing a warning message
+- Bug 1886596: Behat testing data generator throws null on openbadgedisplayer
+- Bug 1886614: SmartEvidence framework editor file refactor
+- Bug 1886749: Behat additional config
+- Bug 1887317: LoadXML error when upgrading from 18.10 to 20.04
+- Bug 1889020: Behat failing tests when trying to add blocks on pages
+- Bug 1889490: wcag2.1 compliance: text must be able to resize to 200%
+- Bug 1889505: Behat: create import_export_skins feature
+- Bug 1890213: Upgrade: ADODB 5.20.16 to 5.20.18
+- Bug 1890214: SE framework editor re-creating DB records when not needed
+- Bug 1890362: Upgrade: Clipboard.js 2.0.4 to 2.0.6
+- Bug 1890364: skins: need to remove background/header image if artefact is not there anymore
+- Bug 1890378: Upgrade: Marked 0.7.0 to 1.1.1
+- Bug 1890504: Upgrade: Mobile detect 2.8.33 to 2.8.34
+- Bug 1890971: Behat: Check 'Shared by me' defaults to correct page
+- Bug 1891237: Language string broken in institution stats overview page
+- Bug 1891265: Behat: Check Page->Advanced has an instrution field
+- Bug 1891266: Behat: Confirm correct dashboard elements are present
+- Bug 1891425: Reset configurable theme to default causing warning and loss of styles
+- Bug 1891426: Behat: Move quota checks to notification_quota.feature
+- Bug 1891554: Code to generate charjs bar graph is not correct
+- Bug 1891570: Bar graph of blocktype counts to only show active blocks
+- Bug 1891939: Instituion static page edit not disabled
+- Bug 1891940: Correct time stamp in submission notification
+- Bug 1891949: sign off block height on gridstack
+- Bug 1892103: Cover image file selector defaults to png
+- Bug 1892426: Help icon text missing in certain file browser modals
+- Bug 1892948: CSS Advanced options in Skin not allowing position tag
+- Bug 1892950: Behat: Rename create_and_delete_menu_item.feature
+- Bug 1893159: Dashboard widgets are not receiving customisable theme styling
+- Bug 1893605: Fix problem with sign-off and verification when portfolio is submitted
+- Bug 1893607: Admin reports that list pages should only have links if admin can view page
+- Bug 1893890: html export complains popper.js is missing
+- Bug 1893891: html export not saving correct filepath for Journal attachment file
+- Bug 1894026: exports: js files are fetched from the wrong dir in configurable theme
+- Bug 1894614: Change lang string for the search for staff and admins
+- Bug 1894756: Client connections setting headers incorrectly
+- Bug 1895208: Behat: Add some waiting time in résumé test
+- Bug 1895259: Unable to see emoji on page description and text content
+- Bug 1895593: Deleting client connection broken
+- Bug 1895594: Copying a page with a courseinfo block needs to remove the userid config value
+- Bug 1895735: Have course info block not active on install
+- Bug 1895884: Change default 'Admin User' to 'Admin Account'
+- Bug 1896346: Behat: replacing group creation with background step
+- Bug 1896554: Cannot send email via SMTP server with self signed certificate
+- Bug 1897199: importing comments: wrong name to display and content
+- Bug 1897670: 2010RC1: Skins in maroon theme
+- Bug 1897676: Entire resume block - debug information displayed
+- Bug 1897831: Pixel bump in diagonal maroon theme line at certain screen heights
+- Bug 1897981: Leap2A import shows Countable error
+- Bug 1897985: Google book block not displaying content
+- Bug 1898003: 1 page collection export preview producing warning
+- Bug 1898123: iOS-Safari tablet - long block detail modal title overlaps block content
+- Bug 1898124: iOS-Safari tablet - Add block - content types icons sometimes overlap
+- Bug 1898478: Retractable option not available any more in 'Edit' mode
+- Bug 1898654: Importing then exporting page with comments cause problems
+- Bug 1898762: Regression memcached servers
+- Bug 1899120: Incorrect button classes on submitcancel buttons 20.04
+- Bug 1899571: The only site admin can suspend the account by oneself
+- Bug 1900205: Rename 'lock blocks' to 'Prevent removing of blocks'
+- Bug 1767933: Behat copies html styling regardless of whether the option for an html report is passed in
+- Bug 1860418: Help file missing on Site options > Time Zone
+- Bug 1875958: 'My groups' sidebar can get very long if you are in lots of groups
+- Bug 1880771: When adjusting group membership via the Engage -> People page the modal doesn't close on submit
+- Bug 1882463: Leap2a import section heading 'plan' should be capitalised
+- Bug 1883829: Behat: extend create_and_delete_menu_item feature
+- Bug 1884466: The delete_inactive_users cli script can timeout
+- Bug 1884473: Resume js error when saving without attachment
+- Bug 1886104: fixing dataroot temp file cleanup
+- Bug 1888743: clean up references to old menu structure
+- Bug 1889693: Incorrect tooltip on page for quick edit
+- Bug 1891955: Behat: rename versioning.feature->timeline.feature
+- Bug 1896552: Adding a closing parenthesis to "Display remote avatars" help file.
+- Bug 1898643: remove references to class used in old layout
+- Bug 922911: "Collections" email notification
+- Bug 1528118: Preview collections on Export screen
+- Bug 1845053: Increase base font size, update heading levels, use rem, and increase width
+- Bug 1856824: Ability to change old embedded urls into correct ones if the site changes domain name
+- Bug 1857382: Remove WYSIWYG options for page description
+- Bug 1857931: Turn text block into "Quick edit" block
+- Bug 1857933: Portfolio completion progress page
+- Bug 1857936: Lock page and artefact instructions
+- Bug 1860380: Add monitoring module to keep a track of fails like cron / elasticsearch / ldap
+- Bug 1863511: Course completion block to show external data about course completions
+- Bug 1867203: Allow email links for recipients that need to login externally to redirect accordingly
+- Bug 1873709: Allow webservice wsdoc.php page to be public
+- Bug 1875492: Add 'start' and 'end' date options to the default group page settings
+- Bug 1875750: Allow override of the HSTS setting if being set downstream
+- Bug 1876177: Allow mahara cli interface to accept multiple values for same flag
+- Bug 1876185: Allow redis function without needing sentinel
+- Bug 1881677: Give 3 options if new group name not unique
+- Bug 1882461: Improve the user experience for Moodle/Mahara assign integration
+- Bug 1884658: Changing password when first logging in via SSO when internal login also available
+- Bug 1886880: behat check dependencies performance
+- Bug 1889480: Adding new Maroon theme
+- Bug 1891850: Allow webservice mahara_submission_release_submitted_view to also do archiving on submission release
+- Bug 1892106: Allow webservices external apps to show configuration options based on functions it contains
+- Bug 1892254: Only SAML auth instance for metadata not active but can still see metadata choice on IdP discovery page
+- Bug 1892449: Behat: Improving resume_page.feature by loading resume information in the background
+- Bug 1892794: Allow local custom profile fields also be accessible via webservices
+- Bug 1895201: Make Mahara available via Docker
+- Bug 1895477: Allowing chosing existing SAML option without needing to supply XML
+
 20.10rc2 (2020-10-15)
 
 20.10rc1 (2020-09-23)
