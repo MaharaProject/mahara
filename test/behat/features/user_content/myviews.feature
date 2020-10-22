@@ -21,7 +21,7 @@ Scenario: Testing that views & collections are collated properly in the "My port
     Given I log in as "UserA" with password "Kupuh1pa!"
     # I should see collections & individual pages
     And I scroll to the id "column-container"
-    And I should see "Collection UserA_01" in the "My portfolios" property
-    And I should see "(2 pages)" in the "My portfolios" property
-    And I should see "Page UserA_03" in the "My portfolios" property
-    Then I should not see "Page UserA_01" in the "My portfolios" property
+    And I should see "Collection UserA_01" in the "My portfolios" "Blocks" property
+    And I should see "(2 pages)" in the "My portfolios" "Blocks" property
+    And I should see "Page UserA_03" in the "My portfolios" "Blocks" property
+    Then I should not see "Page UserA_01" in the "My portfolios" "Blocks" property

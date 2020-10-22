@@ -632,7 +632,7 @@ EOD;
         $newinstitution->maxuseraccounts = !empty($record['maxuseraccounts']) ? intval($record['maxuseraccounts']) : null;
         $newinstitution->expiry = !empty($record['expiry']) ? db_format_timestamp($record['expiry']) : null;
 
-        $newinstitution->allowinstitutionpublicviews  = (isset($record['allowinstitutionpublicviews']) && $record['allowinstitutionpublicviews']) ? 1 : 0;
+        $newinstitution->allowinstitutionpublicviews = isset($record['allowinstitutionpublicviews']) ? intval($record['allowinstitutionpublicviews']) : 1;
 
         // Save the changes to the DB
         $newinstitution->commit();

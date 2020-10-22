@@ -28,26 +28,26 @@ Scenario: User view members page, verify user list displayed and sorted by selec
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I go to group "GroupA"
     And I follow "Members"
-    Then I should see "Admin first" in the "[name='sortoption']" element
+    Then I should see "Admin first" in the "Sorted by dropdown" "Groups" property
     And the "sorted by:" select box should contain "Admin first"
-    And I should see "Admin Account" in the "#membersearchresults .list-group-item:nth-of-type(1) .list-group-item-heading" "css_element"
-    And I should see "Iria User" in the "#membersearchresults .list-group-item:nth-of-type(2) .list-group-item-heading" "css_element"
-    And I should see "Julius User" in the "#membersearchresults .list-group-item:nth-of-type(3) .list-group-item-heading" "css_element"
-    And I should see "Angela User" in the "#membersearchresults .list-group-item:nth-of-type(4) .list-group-item-heading" "css_element"
-    And I should see "Dmitri User" in the "#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading" "css_element"
+    And I should see "Admin Account" in the "Search results heading row 1" "Groups" property
+    And I should see "Iria User" in the "Search results heading row 2" "Groups" property
+    And I should see "Julius User" in the "Search results heading row 3" "Groups" property
+    And I should see "Angela User" in the "Search results heading row 4" "Groups" property
+    And I should see "Dmitri User" in the "Search results heading row 6" "Groups" property
     When I select "Name Z to A" from "sorted by:"
     And I press "Search"
-    Then I should see "Kristina User" in the "#membersearchresults .list-group-item:nth-of-type(1) .list-group-item-heading" "css_element"
-    And I should see "Julius User" in the "#membersearchresults .list-group-item:nth-of-type(2) .list-group-item-heading" "css_element"
-    And I should see "Iria User" in the "#membersearchresults .list-group-item:nth-of-type(3) .list-group-item-heading" "css_element"
-    And I should see "Hugo User" in the "#membersearchresults .list-group-item:nth-of-type(4) .list-group-item-heading" "css_element"
-    And I should see "Fergus User" in the "#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading" "css_element"
+    Then I should see "Kristina User" in the "Search results heading row 1" "Groups" property
+    And I should see "Julius User" in the "Search results heading row 2" "Groups" property
+    And I should see "Iria User" in the "Search results heading row 3" "Groups" property
+    And I should see "Hugo User" in the "Search results heading row 4" "Groups" property
+    And I should see "Fergus User" in the "Search results heading row 6" "Groups" property
 
 Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
-    And I follow "2" in the "Find people results" property
+    And I follow "2" in the "Find people results" "People" property
     And I click on "Edit group membership" in "Liam User" row
     # allow the modal to open
     And I wait "1" seconds

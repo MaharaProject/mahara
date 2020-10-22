@@ -87,5 +87,6 @@ Scenario: Viewing account details statistics
     And I should see "42%" in the "Angela" row
     And I should see "57%" in the "Bob" row
     And I should see "68%" in the "Cecilia" row
+    #sort descending by clicking the column header
     When I click on "Quota used"
-    Then I should see "68%" in the "tr.r0" "css_element"
+    Then I should see "68%" in the "Account details row 1" "Report" property

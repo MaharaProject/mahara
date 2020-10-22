@@ -63,7 +63,7 @@ Scenario: Creating a Journal entry
  # Adding journal entry to group 'GroupA'
  When I choose "Groups" in "Engage" from main menu
  And I follow "GroupA"
- And I follow "Journals" in the "Arrow-bar nav" property
+ And I follow "Journals" in the "Arrow-bar nav" "Nav" property
  # Confirm page contains text "There are no journals in this group" (Bug 1017785)
  Then I should see "There are no journals in this group."
  # Confirm page contains link "Add one" that links to Create new Journal page. (Bug 1017785)
@@ -83,7 +83,7 @@ Scenario: Creating a Journal entry
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page admin_01"
  And I follow "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Tagged journal entries"
  And I set the field "Block title" to "Tagged journal entries"
@@ -97,7 +97,7 @@ Scenario: Creating a Journal entry
  And I wait "1" seconds
  And I clear value "one" from select2 field "instconf_tagselect"
  And I press "Save"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Recent journal entries"
  And I check "Admin Account's Journal"

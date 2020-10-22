@@ -25,10 +25,10 @@ Background: Setting up test data for people and portfolio pages
     And I choose "Plugin administration" in "Extensions" from administration menu
     And I press "activate_blocktype_annotation_submit"
     # confirm Smart evidence is also enabled
-    And I should see "Hide" in the "smartevidence" property
+    And I should see "Hide" in the "Smartevidence" "Smartevidence" property
     # Make sure we have a matrix config form
     And I choose "SmartEvidence" in "Extensions" from administration menu
-    And I follow "Import" in the "Arrow-bar nav" property
+    And I follow "Import" in the "Arrow-bar nav" "Nav" property
     And I attach the file "example.matrix" to "Matrix file"
     And I press "Upload matrix"
     # Check that we have new framework
@@ -135,6 +135,6 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I should see "Mahara member placing feedback"
     And I should see "Make public"
     # Mahara member should see edit and delete for their own annotation feedback comment
-    And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[4]/div[1]/div" "xpath_element"
+    And I should see "Edit" in the "Feedback annotation row 4" "Smartevidence" property
     # verify that someone cannot delete other people's annotations.
-    And I should not see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div" "xpath_element"
+    And I should not see "Edit" in the "Feedback annotation row 2" "Smartevidence" property

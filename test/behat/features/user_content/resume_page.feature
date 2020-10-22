@@ -110,7 +110,7 @@ Scenario: Editing Education and Employment info
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Profile page" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "My entire résumé"
     And I set the field "Block title" to "My entire résumé"
@@ -204,7 +204,7 @@ Scenario: Adding Goals and Skills
     And I set the field "Description" to "Become a certified diver"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -213,7 +213,7 @@ Scenario: Adding Goals and Skills
     | Description | Become tenured professor |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -222,7 +222,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_personalskill"
@@ -231,7 +231,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_academicskill"
@@ -240,7 +240,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_workskill"
@@ -249,7 +249,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
 
@@ -265,13 +265,13 @@ Scenario: Adding interests
     And I should see "Saved successfully"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "One résumé field"
     And I select the radio "Interests"
     And I press "Save"
     And I display the page
-    And I should see "clarinet" in the "Resume field block" property
+    And I should see "clarinet" in the "Resume field block" "Blocks" property
 
 Scenario: Adding license info
     Given I log in as "UserA" with password "Kupuh1pa!"

@@ -28,10 +28,10 @@ Background:
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
     And I log in as "UserB" with password "Kupuh1pa!"
-    Then I should see "Page UserA_01" in the "Latest changes I can view" property
-    And I should see "Collection UserA_01" in the "Latest changes I can view" property
+    Then I should see "Page UserA_01" in the "Latest changes I can view" "Blocks" property
+    And I should see "Collection UserA_01" in the "Latest changes I can view" "Blocks" property
     # I shouldn't see the pages I didn't share
-    And I should not see "Page UserA_02" in the "Latest changes I can view" property
-    And I should not see "Collection UserA_02" in the "Latest changes I can view" property
+    And I should not see "Page UserA_02" in the "Latest changes I can view" "Blocks" property
+    And I should not see "Collection UserA_02" in the "Latest changes I can view" "Blocks" property
     # I shouldn't see the individual pages in a collection
-    And I should not see "Page UserA_03" in the "Latest changes I can view" property
+    And I should not see "Page UserA_03" in the "Latest changes I can view" "Blocks" property

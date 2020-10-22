@@ -20,7 +20,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
 
 # 1. Create an original Page1 note1 with content on Page1
   And I follow "Edit"
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
   And I set the following fields to these values:
@@ -29,7 +29,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I press "Save"
 
 # 2.1 Create a second Page1 note2 with content COPIED from note1 and edited
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
   And I follow "Use content from another note"
@@ -38,7 +38,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I click on "Make a copy"
   And I should not see "If you edit the text of this block, it will also be changed in 1 other block(s) where it appears. Make a copy"
 # 2.2 Check tinymce editor is displayed
-  And I should see "Paragraph" in the "Tinymce editor menu" property
+  And I should see "Paragraph" in the "Tinymce editor menu" "Tinymce" property
   And I should see "Note page1 block1 original title"
   And I should see "This is page1 block1 original content"
 
@@ -55,7 +55,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I follow "Page UserA_02"
 # 5. Create a Page2 note1 with the (original, unedited) Page1 note1 content
   And I follow "Edit"
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
   And I follow "Use content from another note"
@@ -68,7 +68,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I should see "This is page1 block1 original content" in the block "Note page2 block1 using original note content title"
 
 # 6. Create a Page2 note2 with the Page1 note1 content, edit the content of ALL Page1 note1s then CANCEL the changes
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
   And I follow "Use content from another note"
@@ -84,7 +84,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I should see "This is page1 block1 original content" in the block "Note page2 block1 using original note content title"
 
 # 7. Create a Page2 note2 with the Page1 note1 content, edit & Save the content of ALL Page1 note1s (ie Page1 note1, Page2 note1 and this one, Page 2 note2)
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
   And I follow "Use content from another note"

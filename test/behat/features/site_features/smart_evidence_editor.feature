@@ -11,7 +11,7 @@ Background:
 Scenario: Site administrator uploads and edits a SmartEvidence framework matrix
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "SmartEvidence" in "Extensions" from administration menu
-    And I follow "Import" in the "Arrow-bar nav" property
+    And I follow "Import" in the "Arrow-bar nav" "Nav" property
     And I attach the file "example.matrix" to "Matrix file"
     And I press "Upload matrix"
     # Check that we have new framework
@@ -20,7 +20,7 @@ Scenario: Site administrator uploads and edits a SmartEvidence framework matrix
     And I disable the switch "Active framework"
     And I press "Save"
     Then I should see "Settings saved"
-    When I follow "Editor" in the "Arrow-bar nav" property
+    When I follow "Editor" in the "Arrow-bar nav" "Nav" property
     Then I should see "The current form contents are valid and ok to submit"
     When I select "Title of your framework" from "Edit saved framework"
     And I wait "1" seconds
@@ -44,6 +44,6 @@ Scenario: Site administrator uploads and edits a SmartEvidence framework matrix
     And the SE field "root.standardelements.1.name" should contain "1.2 - Sub level of the standard"
     And I scroll to the top
     And I press "Save"
-    And I follow "Management" in the "Arrow-bar nav" property
+    And I follow "Management" in the "Arrow-bar nav" "Nav" property
     Then I should see "Fish"
     Then I should see "Institution One"

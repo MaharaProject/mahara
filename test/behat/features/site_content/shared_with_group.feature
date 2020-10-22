@@ -79,7 +79,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I follow "GroupA"
     # the formats "strftimedate" and "j F Y" both resolve to dd Month YYYY, which is wanted here.
     And I wait "1" seconds
-    And I should see the date "today" in the "#sharedcollectionlist" element with the format "d F Y"
+    And I should see the date "today" in the "Collections shared with this group" "Groups" property with the format "d F Y"
 
     # Edit access for Collection 01
     And I choose "Shared by me" in "Share" from main menu

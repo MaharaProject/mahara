@@ -61,19 +61,19 @@ Background:
    # Adding a tag to page 1
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_01" card menu
-   And I follow "Settings" in the "#toolbar-buttons" "css_element"
+   And I follow "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Adding a tag to page 2
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_02" card menu
-   And I follow "Settings" in the "#toolbar-buttons" "css_element"
+   And I follow "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "#orange" and select "#orange"
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Note with a tag
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
    And I press "Add"
    And I click on blocktype "Note"
    # create a note block with a Unique name (Note Block 3304)
@@ -83,7 +83,7 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Text block with a tag
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
    And I press "Add"
    And I click on blocktype "Text"
    # create a text block with a Unique name (Text Block 101)
@@ -93,14 +93,14 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a resume field with a tag
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
    And I press "Add"
    And I click on blocktype "One résumé field"
    And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
    And I press "Save"
    # Creating an external video block with a tag
    # need to do this one last as the loading of video effects takes focus away from the add block modal
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
    And I press "Add"
    And I click on blocktype "External media"
    And I fill in "URL or embed code" with "https://www.youtube.com/embed/VeS1iqQ6VIc"
@@ -108,15 +108,15 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    And I choose "Pages and collections" in "Create" from main menu
-   Then I follow "Tags" in the "#sb-tags" "css_element"
+   Then I follow "Tags" in the "Tags block" "Blocks" property
    # Verifying tags are saved
-   And I should see "blue" in the "#results_container" element
-   And I should see "@black" in the "#results_container" element
-   And I should see "#orange" in the "#results_container" element
-   And I should see "&red" in the "#results_container" element
-   And I should see "ébrown" in the "#results_container" element
-   And I should see "ègreen" in the "#results_container" element
-   And I should see "êyellow" in the "#results_container" element
+   And I should see "blue" in the "Search results for all tags" "Tags" property
+   And I should see "@black" in the "Search results for all tags" "Tags" property
+   And I should see "#orange" in the "Search results for all tags" "Tags" property
+   And I should see "&red" in the "Search results for all tags" "Tags" property
+   And I should see "ébrown" in the "Search results for all tags" "Tags" property
+   And I should see "ègreen" in the "Search results for all tags" "Tags" property
+   And I should see "êyellow" in the "Search results for all tags" "Tags" property
    # Check the repeated tags
    And I follow "blue"
    And I should see "Journal one"
@@ -129,7 +129,7 @@ Background:
    # Check tags can be deleted from a page - Bug 1715491
    Given I follow "Page UserA_02"
    And I follow "Edit"
-   And I click on "Settings" in the "Toolbar buttons" property
+   And I click on "Settings" in the "Toolbar buttons" "Nav" property
    And I clear value "#orange (1)" from select2 field "settings_tags"
    And I press "Save"
    And I display the page
@@ -149,11 +149,11 @@ Background:
    When I press "Save"
    Then I should see "Tagged journal entries"
    And I should see "Plans"
-   When I follow "Settings" in the "Toolbar buttons" property
+   When I follow "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_createtags" with "@black" and select "@black"
    And I press "Save"
    Then I should see "Note Block 3304"
-   When I follow "Settings" in the "Toolbar buttons" property
+   When I follow "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
    And I press "Save"
 

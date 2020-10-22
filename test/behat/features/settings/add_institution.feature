@@ -48,4 +48,4 @@ Scenario: Creating an institution (selenium test)
     And I click on "Delete" in "Institution One" row
     And I press "Yes"
     Then I should see "Institution deleted successfully"
-    And I should not see "Tags" in the "Institutions sub-menu" property
+    And I should not see "Tags" in the "Submenu" "Institutions" property

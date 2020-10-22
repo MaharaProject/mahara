@@ -20,7 +20,7 @@ Scenario: Admin user sets country to be mandatory
     When I choose "Plugin administration" in "Extensions" from administration menu
     And I click on "Configuration for artefact internal"
     # And I check "Country"
-    And I click on the "Country mandatory field" property
+    And I click on the "Country mandatory field" "Profile" property
     And I press "Save"
     And I log out
     # click submit and verify user is logged in with no error messages

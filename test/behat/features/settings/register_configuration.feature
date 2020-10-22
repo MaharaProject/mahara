@@ -29,7 +29,7 @@ Scenario: Registering as a new student and checking switch can flick back and fo
     And I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pending registrations" in "Institutions" from administration menu
     Then I should see "EXPIRES "
-    And I should see the date "+2 weeks" in the "tbody tr td:nth-of-type(3)" element with the format "d F Y"
+    And I should see the date "+2 weeks" in the "Expires column" "Institutions" property with the format "d F Y"
     When I follow "Approve"
     And I press "Approve"
     Then I should see "Approval sent, waiting for person to complete the registration process."

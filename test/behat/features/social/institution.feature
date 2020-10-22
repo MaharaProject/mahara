@@ -34,7 +34,7 @@ Feature: Mahara account permissions in institutions
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
     And I follow "Edit"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I follow "Share" in the "Toolbar buttons" "Nav" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
     And I choose "People search" in "People" from administration menu
@@ -48,7 +48,7 @@ Feature: Mahara account permissions in institutions
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
     And I follow "Edit"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I follow "Share" in the "Toolbar buttons" "Nav" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should contain "Institution Two"
     And I log out

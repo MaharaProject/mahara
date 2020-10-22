@@ -25,7 +25,7 @@ And the following "pages" exist:
     And I press "activate_blocktype_annotation_submit"
     # Make sure we have a matrix config form
     And I choose "SmartEvidence" in "Extensions" from administration menu
-    And I follow "Import" in the "Arrow-bar nav" property
+    And I follow "Import" in the "Arrow-bar nav" "Nav" property
     And I attach the file "example.matrix" to "Matrix file"
     And I press "Upload matrix"
     # Enable Institutions to allow SmartEvidence
@@ -109,5 +109,5 @@ Scenario: SmartEvidence interaction by member / staff
     And I should see "Assessment: Doesn't meet the standard"
     And I should see "Mahara member placing feedback"
     # verify that user cannot delete Other user's annotations.
-    And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[3]/div[1]/div" "xpath_element"
-    And I should not see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div" "xpath_element"
+    And I should see "Edit" in the "Feedback annotation row 3" "Smartevidence" property
+    And I should not see "Edit" in the "Feedback annotation row 2" "Smartevidence" property

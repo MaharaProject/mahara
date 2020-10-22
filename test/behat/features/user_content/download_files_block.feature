@@ -17,21 +17,21 @@ Scenario: Add Files to download block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "File(s) to download"
-    And I expand "Files" node in the "#instconf_artefactfieldset_container" "css_element"
+    And I expand "Files" node in the "File download modal" "Modal" property
 
     And I attach the file "mahara_about.pdf" to "File"
     And I attach the file "Image1.jpg" to "File"
     And I press "Save"
     And I display the page
     # we don't want to actually download, so need to specify the inner link, not the download link
-    And I click on "mahara_about.pdf" in the "File download heading 1" property
+    And I click on "mahara_about.pdf" in the "File download heading 1" "Files" property
     Then I should see "PDF document"
     And I should see "Download"
     And I close the dialog
-    And I click on "Image1.jpg" in the "File download heading 2" property
+    And I click on "Image1.jpg" in the "File download heading 2" "Files" property
     Then I should see "JPEG Image"
     And I should see "Download"
 

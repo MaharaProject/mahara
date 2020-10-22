@@ -64,7 +64,7 @@ Scenario: Add comments block to page
     And I click on "Edit" in "Page UserA_01" card menu
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Comments"
     Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."
@@ -87,8 +87,8 @@ Scenario: Comments update the page's mtime
     And I press "Comment"
     And I choose "Dashboard" from main menu
     And I scroll to the base of id "column-container"
-    Then I should see "Page UserA_01" in the ".bt-newviews" element
-    And I should not see "Page UserA_02" in the ".bt-newviews" element
+    Then I should see "Page UserA_01" in the "Latest changes I can view" "Blocks" property
+    And I should not see "Page UserA_02" in the "Latest changes I can view" "Blocks" property
 
     # Private comment updates page last updated
     And I go to portfolio page "Page UserA_02"
@@ -98,5 +98,5 @@ Scenario: Comments update the page's mtime
     And I choose "Dashboard" from main menu
     And I scroll to the id "column-container"
     And I wait "1" seconds
-    Then I should see "Page UserA_02" in the ".bt-newviews" element
-    And I should not see "Page UserA_01" in the ".bt-newviews" element
+    Then I should see "Page UserA_02" in the "Latest changes I can view" "Blocks" property
+    And I should not see "Page UserA_01" in the "Latest changes I can view" "Blocks" property

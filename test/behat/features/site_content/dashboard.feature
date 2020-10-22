@@ -12,13 +12,13 @@ Scenario: Check default blocks are displayed
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Check the big button navigation
     And I click on "Develop your portfolio"
-    Then I should see "Pages and collections" in the "h1 heading" property
+    Then I should see "Pages and collections" in the "H1 heading" "Common" property
     And I am on homepage
     And I click on "Control your privacy"
-    Then I should see "Share" in the "h1 heading" property
+    Then I should see "Share" in the "H1 heading" "Common" property
     And I am on homepage
     And I click on "Find people and join groups"
-    Then I should see "Groups" in the "h1 heading" property
+    Then I should see "Groups" in the "H1 heading" "Common" property
     And I choose "Preferences" in "Settings" from account menu
     And I disable the switch "Dashboard information"
     And I press "Save"
@@ -42,18 +42,13 @@ Scenario: Check default blocks are displayed
     When I click on "Edit dashboard"
     # Confirm that the blocks each contain a "Remove block" option and
     # except My portfolios each contains a "Configure block" option.
-    #Latest changes I can view
-    #We check configure below
-    Then the ".bt-newviews-editor" element should contain "Remove block"
-    #My portfolios
-    And the ".bt-myviews-editor" element should not contain "Configure block"
-    And the ".bt-myviews-editor" element should contain "Remove block"
-    #Inbox
-    And the ".bt-inbox-editor" element should contain "Configure block"
+    Then "Remove block" should be in the "Latest changes I can view" "Blocks" property
+    And "Configure block" should not be in the "My portfolios" "Blocks" property
+    And "Remove block" should be in the "My portfolios" "Blocks" property
+    And "Configure block" should be in the "Inbox" "Blocks" property
     # We test remove for "Topics I am following", which is a second instance of "Inbox", so we can ignore the rest.
-    #Watched pages
-    And the ".bt-watchlist-editor" element should contain "Configure block"
-    And the ".bt-watchlist-editor" element should contain "Remove block"
+    And "Configure block" should be in the "Watched pages" "Blocks" property
+    And "Remove block" should be in the "Watched pages" "Blocks" property
 
     When I configure the block "Latest changes I can view"
     And I click on "Set a block title"
@@ -61,7 +56,7 @@ Scenario: Check default blocks are displayed
     And I press "Save"
     And I delete the block "Topics I am following"
     # Check that a different block can be added
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Text"
     And I set the field "Block title" to "Favourite quote"

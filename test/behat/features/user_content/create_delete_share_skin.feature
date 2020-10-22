@@ -48,12 +48,12 @@ Background:
      #Apply the skin to a page
      Given I choose "Pages and collections" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
-     And I follow "Settings" in the "Toolbar buttons" property
+     And I follow "Settings" in the "Toolbar buttons" "Nav" property
      And I follow "Skin"
      And I scroll to the base of id "settings_skin_open"
      Then I select the skin "A fabulous new skin" from "userskins"
      And I wait "1" seconds
-     And I should see "A fabulous new skin" in the ".col-md-3" "css_element"
+     And I should see "A fabulous new skin" in the "Current skin" "Misc" property
      And I press "Save"
      And I click on "Display page"
      #Delete the skin
@@ -65,7 +65,7 @@ Background:
      #Check the deleted skin has been removed from the page
      Given I choose "Pages and collections" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
-     And I follow "Settings" in the "Toolbar buttons" property
+     And I follow "Settings" in the "Toolbar buttons" "Nav" property
      And I follow "Skin"
      And I should not see "A fabulous new skin"
 
@@ -97,13 +97,13 @@ Scenario: Create a private skin and check its visibility
     And I follow "Add to favourites"
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserB_01" card menu
-    And I follow "Settings" in the "Toolbar buttons" property
+    And I follow "Settings" in the "Toolbar buttons" "Nav" property
     And I follow "Skin"
     And I scroll to the base of id "settings_skin_container"
     # Apply a a skin saved to favourite skins
     And I follow "Favourite skins"
     Then I select the skin "A fabulous public skin" from "userskins"
     And I wait "1" seconds
-    And I should see "A fabulous public skin" in the ".col-md-3" "css_element"
+    And I should see "A fabulous public skin" in the "Current skin" "Misc" property
     And I press "Save"
     And I click on "Display page"

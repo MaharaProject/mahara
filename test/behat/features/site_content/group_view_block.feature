@@ -108,7 +108,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I choose "Shared by me" in "Share" from main menu
     And I follow "Collections"
     And I click on "Edit access" in "Collection UserA_01" row
-    And I should not see "Collection UserA_02" in the "Collections text-box" property
+    And I should not see "Collection UserA_02" in the "Collections text-box" "Views" property
     And I set the select2 value "Collection UserA_01, Collection UserA_02, Collection UserA_03, Collection UserA_04, Collection UserA_05, Collection UserA_06" for "editaccess_collections"
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
@@ -132,33 +132,33 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Cecilia"
     And I should see "GroupA"
     And I scroll to the base of id "groups"
-    And I follow "GroupA" in the "My groups box" property
+    And I follow "GroupA" in the "My groups box" "Groups" property
     # Group portfolios
-    And I should see "Page GroupA_05" in the "Group portfolios" property
-    And I should not see "Page GroupA_06" in the "Group portfolios" property
+    And I should see "Page GroupA_05" in the "Group portfolios" "Groups" property
+    And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     #And I follow "Next page" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
-    And I should see "Page GroupA_08" in the "Group portfolios" property
-    And I should not see "Page GroupA_05" in the "Group portfolios" property
+    And I should see "Page GroupA_08" in the "Group portfolios" "Groups" property
+    And I should not see "Page GroupA_05" in the "Group portfolios" "Groups" property
     # Shared pages
-    And I should see "Page UserA_01" in the "Pages shared with this group" property
-    And I should see "Page UserA_05" in the "Pages shared with this group" property
-    And I should not see "Page UserB_01" in the "Pages shared with this group" property
+    And I should see "Page UserA_01" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserA_05" in the "Pages shared with this group" "Groups" property
+    And I should not see "Page UserB_01" in the "Pages shared with this group" "Groups" property
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
     And I jump to page "2" of the list "sharedviews_pagination"
-    And I should see "Page UserB_05" in the "Pages shared with this group" property
-    And I should not see "Page UserA_05" in the "Pages shared with this group" property
+    And I should see "Page UserB_05" in the "Pages shared with this group" "Groups" property
+    And I should not see "Page UserA_05" in the "Pages shared with this group" "Groups" property
     #And I follow "3" in the "div#sharedviews_pagination" "css_element"
     And I jump to page "3" of the list "sharedviews_pagination"
-    And I should see "Page UserB_06" in the "Pages shared with this group" property
-    And I should not see "Page UserB_01" in the "Pages shared with this group" property
+    And I should see "Page UserB_06" in the "Pages shared with this group" "Groups" property
+    And I should not see "Page UserB_01" in the "Pages shared with this group" "Groups" property
     # Shared collections
-    And I should see "Collection UserA_05" in the "Collections shared with this group" property
-    And I should not see "Collection UserA_06" in the "Collections shared with this group" property
+    And I should see "Collection UserA_05" in the "Collections shared with this group" "Groups" property
+    And I should not see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
     #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
     And I jump to page "2" of the list "sharedcollections_pagination"
-    And I should see "Collection UserA_06" in the "Collections shared with this group" property
-    And I should not see "Collection UserA_05" in the "Collections shared with this group" property
+    And I should see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
+    And I should not see "Collection UserA_05" in the "Collections shared with this group" "Groups" property
     And I log out
     # Check that we can see submitted pages before editing/saving the configuration for group pages block
     Given I log in as "UserB" with password "Kupuh1pa!"
@@ -192,7 +192,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Update the group page "Page GroupA_06"
     And I follow "Pages and collections (tab)"
     And I click on "Edit" in "Page GroupA_06" card menu
-    And I follow "Settings" in the "Toolbar buttons" property
+    And I follow "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I press "Save"
@@ -205,14 +205,14 @@ These list must take into account the sort option chosen in the block config (Bu
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the base of id "findgroups"
     And I follow "GroupA"
-    And I should see "Page GroupA_06" in the "Group portfolios" property
+    And I should see "Page GroupA_06" in the "Group portfolios" "Groups" property
     #And I follow "Next" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
-    And I should not see "Page GroupA_06" in the "Group portfolios" property
+    And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     # Update the shared page "Page UserA_01"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I follow "Settings" in the "Toolbar buttons" property
+    And I follow "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I press "Save"
@@ -221,10 +221,10 @@ These list must take into account the sort option chosen in the block config (Bu
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the base of id "findgroups"
     And I follow "GroupA"
-    And I should see "Page UserA_01" in the "Pages shared with this group" property
+    And I should see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
     And I jump to page "2" of the list "sharedviews_pagination"
-    And I should not see "Page UserA_01" in the "Pages shared with this group" property
+    And I should not see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     # Update the shared collection "Collection UserA_06"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Collection UserA_06" card menu
@@ -235,10 +235,10 @@ These list must take into account the sort option chosen in the block config (Bu
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the base of id "findgroups"
     And I follow "GroupA"
-    And I should see "Collection UserA_06" in the "Collections shared with this group" property
+    And I should see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
     #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
     And I jump to page "2" of the list "sharedcollections_pagination"
-    And I should not see "Collection UserA_06" in the "Collections shared with this group" property
+    And I should not see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
     # Submit some pages and collections to the group "GroupA"
     And I select "Page UserA_01" from "group_view_submission_form_1_options"
     And I press "Submit"
@@ -259,13 +259,13 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Submit"
     And I press "Yes"
     # Check the list of submitted pages/collections
-    And I should see "Page UserA_03" in the "Submissions to this group" property
-    And I should see "Collection UserA_03" in the "Submissions to this group" property
-    And I should not see "Page UserB_01" in the "Submissions to this group" property
+    And I should see "Page UserA_03" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserA_03" in the "Submissions to this group" "Groups" property
+    And I should not see "Page UserB_01" in the "Submissions to this group" "Groups" property
     #And I follow "2" in the "div#allsubmitted_pagination" "css_element"
     And I jump to page "2" of the list "allsubmitted_pagination"
-    And I should see "Page UserA_01" in the "Submissions to this group" property
-    And I should not see "Page UserA_02" in the "Submissions to this group" property
+    And I should see "Page UserA_01" in the "Submissions to this group" "Groups" property
+    And I should not see "Page UserA_02" in the "Submissions to this group" "Groups" property
     And I log out
     # Check pages and collections are shown in correct section
     # Share and submit pages and collections
@@ -315,26 +315,26 @@ These list must take into account the sort option chosen in the block config (Bu
     # Verifying log in was successful
     And I should see "Angela"
     And I follow "GroupD"
-    And I should not see "Page UserC_03" in the "Pages shared with this group" property
-    And I should see "Page UserC_03" in the "Submissions to this group" property
-    And I should see "Collection UserC_01" in the "Collections shared with this group" property
-    And I should not see "Collection UserC_03" in the "Collections shared with this group" property
-    And I should see "Collection UserC_04" in the "Collections shared with this group" property
-    And I should see "Collection UserC_03" in the "Submissions to this group" property
+    And I should not see "Page UserC_03" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_03" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserC_01" in the "Collections shared with this group" "Groups" property
+    And I should not see "Collection UserC_03" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_04" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_03" in the "Submissions to this group" "Groups" property
     And I log out
     Given I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupD"
     And I follow "GroupD"
-    And I should see "Page UserC_01" in the "Pages shared with this group" property
-    And I should not see "Page UserC_02" in the "Pages shared with this group" property
-    And I should see "Page UserC_03" in the "Pages shared with this group" property
-    And I should see "Page UserC_04" in the "Pages shared with this group" property
-    And I should see "Collection UserC_01" in the "Collections shared with this group" property
-    And I should not see "Collection UserC_02" in the "Collections shared with this group" property
-    And I should see "Collection UserC_03" in the "Collections shared with this group" property
-    And I should see "Collection UserC_04" in the "Collections shared with this group" property
+    And I should see "Page UserC_01" in the "Pages shared with this group" "Groups" property
+    And I should not see "Page UserC_02" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_03" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_04" in the "Pages shared with this group" "Groups" property
+    And I should see "Collection UserC_01" in the "Collections shared with this group" "Groups" property
+    And I should not see "Collection UserC_02" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_03" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_04" in the "Collections shared with this group" "Groups" property
     And I log out
     # Share and submit pages and collections - for course group "GroupC"
     # Log in as a normal user
@@ -392,15 +392,15 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Bob"
     And I should see "GroupC"
     And I follow "GroupC"
-    And I should see "Page UserC_09" in the "Pages shared with this group" property
-    And I should not see "Page UserC_10" in the "Pages shared with this group" property
-    And I should not see "Page UserC_11" in the "Pages shared with this group" property
-    And I should see "Page UserC_12" in the "Pages shared with this group" property
-    And I should see "Page UserC_10" in the "Submissions to this group" property
-    And I should see "Page UserC_11" in the "Submissions to this group" property
-    And I should see "Collection UserC_05" in the "Collections shared with this group" property
-    And I should not see "Collection UserC_06" in the "Collections shared with this group" property
-    And I should not see "Collection UserC_07" in the "Collections shared with this group" property
-    And I should see "Collection UserC_08" in the "Collections shared with this group" property
-    And I should see "Collection UserC_06" in the "Submissions to this group" property
-    And I should see "Collection UserC_07" in the "Submissions to this group" property
+    And I should see "Page UserC_09" in the "Pages shared with this group" "Groups" property
+    And I should not see "Page UserC_10" in the "Pages shared with this group" "Groups" property
+    And I should not see "Page UserC_11" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_12" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_10" in the "Submissions to this group" "Groups" property
+    And I should see "Page UserC_11" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserC_05" in the "Collections shared with this group" "Groups" property
+    And I should not see "Collection UserC_06" in the "Collections shared with this group" "Groups" property
+    And I should not see "Collection UserC_07" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_08" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_06" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserC_07" in the "Submissions to this group" "Groups" property

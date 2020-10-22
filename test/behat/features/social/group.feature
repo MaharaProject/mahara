@@ -37,8 +37,8 @@ Scenario: Verify group member can set a personal label on the group
     And I press "Save"
     Then I should see "My group labels: Aardvarks, Animals" in the "GroupC" row
     And I follow "Dogs"
-    Then I should see "GroupB" in the "#findgroups" "css_element"
-    And I should not see "GroupA" in the "#findgroups" "css_element"
+    Then I should see "GroupB" in the "Groups results" "Groups" property
+    And I should not see "GroupA" in the "Groups results" "Groups" property
 
 Scenario: Join a group
     Given I log in as "UserE" with password "Kupuh1pa!"
