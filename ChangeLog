@@ -1,3 +1,21 @@
+19.04.7 (2020-10-22)
+- Bug 1886593: usr.active not changed when unexpiring a user from admin/user/edit.php screen
+- Bug 1887450: Block header buttons need better labels when Editing Pages
+- Bug 1888769: Correct link to Badrg in 'Open Badges' block
+- Bug 1889340: Adding indexes to tag table to speed things up
+- Bug 1889341: upgrade jquery 3.4.1 to 3.5.1
+- Bug 1892256: Undefined variable: duplicates error when updating SAML metadata in SAML instance
+- Bug 1892660: lti error when upgrading from 19.04 to 20.04
+- Bug 1892790: Google Apps Block unable to parse URL to google drive folder
+- Bug 1893291: Undefined property: stdClass::$constraint_name error for MySql 8
+- Bug 1895901: Getting PHP Fatal error: Cannot redeclare serve_file() when using sync_langpacks
+- Bug 1883803: Missing Help Text Icon: admin/site/menu.php
+- Bug 1883987: Help Icon for authentication plugin not aligned properly
+- Bug 1885982: behat headless doesn't work with chrome 80
+- Bug 1891237: Language string broken in institution stats overview page
+- Bug 1893159: Dashboard widgets are not receiving customisable theme styling
+- Bug 1888743: clean up references to old menu structure
+
 19.04.6 (2020-08-04)
 - Bug 1876625: Date picker not working for Admin -> People when selecting a date to filter users
 - Bug 1879410: Add a text block in Dashboard page using TestingDataGenerator.php
