@@ -1,3 +1,37 @@
+20.04.2 (2020-10-22)
+- Bug 1886593: usr.active not changed when unexpiring a user from admin/user/edit.php screen
+- Bug 1887450: Block header buttons need better labels when Editing Pages
+- Bug 1888769: Correct link to Badrg in 'Open Badges' block
+- Bug 1889340: Adding indexes to tag table to speed things up
+- Bug 1889341: upgrade jquery 3.4.1 to 3.5.1
+- Bug 1890349: SAML auth update user issues
+- Bug 1891844: ajax loaded blocks not resizing properly
+- Bug 1892105: Cover image file not copied for institution collection
+- Bug 1892256: Undefined variable: duplicates error when updating SAML metadata in SAML instance
+- Bug 1892655: need to escape mysql keyword 'row' in gridstacklayout.js
+- Bug 1892660: lti error when upgrading from 19.04 to 20.04
+- Bug 1892664: Share access with account holders outside of institution is producing a warning
+- Bug 1892790: Google Apps Block unable to parse URL to google drive folder
+- Bug 1893142: block header dissapearing when block is collapsed
+- Bug 1893291: Undefined property: stdClass::$constraint_name error for MySql 8
+- Bug 1895476: Changing some SAML functions calls to be namespaced
+- Bug 1895617: export html check for directory readability needs to match directory used
+- Bug 1895901: Getting PHP Fatal error: Cannot redeclare serve_file() when using sync_langpacks
+- Bug 1898955: Add collection process missing button styles
+- Bug 1850749: Stripping prefix from table name should only happen at start of string
+- Bug 1883803: Missing Help Text Icon: admin/site/menu.php
+- Bug 1883987: Help Icon for authentication plugin not aligned properly
+- Bug 1885982: behat headless doesn't work with chrome 80
+- Bug 1891237: Language string broken in institution stats overview page
+- Bug 1891939: Instituion static page edit not disabled
+- Bug 1891949: sign off block height on gridstack
+- Bug 1893159: Dashboard widgets are not receiving customisable theme styling
+- Bug 1898478: Retractable option not available any more in 'Edit' mode
+- Bug 1898762: Regression memcached servers
+- Bug 1899120: Incorrect button classes on submitcancel buttons 20.04
+- Bug 1888743: clean up references to old menu structure
+- Bug 1898643: remove references to class used in old layout
+
 20.04.1 (2020-08-04)
 - Bug 1888163:  Security issue: File / folder name not being escaped correctly in filebrowser
 - Bug 1889485:  Security Upgrade SimpleSAML 1.18.4 to 1.18.7
