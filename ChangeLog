@@ -1,3 +1,30 @@
+19.10.5 (2020-10-22)
+- 1886593 	usr.active not changed when unexpiring a user from admin/user/edit.php screen
+- 1887450 	Block header buttons need better labels when Editing Pages
+- 1888769 	Correct link to Badrg in 'Open Badges' block
+- 1889340 	Adding indexes to tag table to speed things up
+- 1889341 	upgrade jquery 3.4.1 to 3.5.1
+- 1891844 	ajax loaded blocks not resizing properly
+- 1892256 	Undefined variable: duplicates error when updating SAML metadata in SAML instance
+- 1892655 	need to escape mysql keyword 'row' in gridstacklayout.js
+- 1892660 	lti error when upgrading from 19.04 to 20.04
+- 1892790 	Google Apps Block unable to parse URL to google drive folder
+- 1893142 	block header dissapearing when block is collapsed
+- 1893291 	Undefined property: stdClass::$constraint_name error for MySql 8
+- 1895476 	Changing some SAML functions calls to be namespaced
+- 1895901 	Getting PHP Fatal error: Cannot redeclare serve_file() when using sync_langpacks
+- 1883803 	Missing Help Text Icon: admin/site/menu.php
+- 1883987 	Help Icon for authentication plugin not aligned properly
+- 1885982 	behat headless doesn't work with chrome 80
+- 1891237 	Language string broken in institution stats overview page
+- 1891939 	Instituion static page edit not disabled
+- 1891949 	sign off block height on gridstack
+- 1893159 	Dashboard widgets are not receiving customisable theme styling
+- 1898478 	Retractable option not available any more in 'Edit' mode
+- 1898762 	Regression memcached servers
+- 1888743 	clean up references to old menu structure
+- 1898643 	remove references to class used in old layout#
+
 19.10.4 (2020-08-04)
 - 1888163 	Security issue: File / folder name not being escaped correctly in filebrowser 		High 	  	Confirmed
 - 1889485 	Security Upgrade SimpleSAML 1.18.4 to 1.18.7 		High 	  	In Progress
