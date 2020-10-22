@@ -261,6 +261,12 @@ a.btn-primary {
 .arrow-bar .arrow:after {
     border-left-color: #DBDBDB;
 }
+.nav-inpage.nav > li.active > a,
+.nav-inpage.nav > li.active > button {
+    border: 1px solid #DBDBDB;
+    background-color: #FFFFFF;
+    color: #333;
+}
 
 .admin .arrow-bar {
     background-color: #f9f9f9;
