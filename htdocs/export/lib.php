@@ -224,8 +224,9 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      * @param string $progresscallback  The function to call with current state of progress
      * @param integer $loop             Which loop of bulk export we are on
      * @param integer $looptotal        Total number of loops to do
+     * @param integer $exporttime       Timestamp to use for export path
      */
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
         if (!is_null($progresscallback)) {
             if (is_callable($progresscallback)) {
                 $this->progresscallback = $progresscallback;
