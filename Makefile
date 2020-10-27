@@ -44,7 +44,7 @@ ifdef composer
 	@echo "Composer already installed..."
 else
 	@echo "Installing Composer..."
-	@curl -sS https://getcomposer.org/installer | php -- --install-dir=external
+	@curl -sS https://getcomposer.org/installer | php -- --install-dir=external --version=1.10.16
 endif
 
 initcomposer: installcomposer
