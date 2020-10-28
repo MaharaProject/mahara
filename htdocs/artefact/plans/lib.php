@@ -1412,7 +1412,12 @@ class ArtefactTypeTask extends ArtefactType {
         }
 
         if ($values['completiondate']) {
-            if ($values['completiondate'] < $now->getTimestamp()) {
+            // Check if the completion date is in the future. To allow setting today's date as the completion date
+            // we need to check the posted date with current time
+            $currenttime = $now->format('H:i:s');
+            $completionday = date('Y-m-d', $values['completiondate']);
+            $completiondate = strtotime($completionday . ' ' . $currenttime);
+            if ($completiondate < $now->getTimestamp()) {
                 $form->set_error('completiondate', get_string('completiondatemustbeinfuture', 'artefact.plans'));
             }
         }
@@ -1515,8 +1520,10 @@ class ArtefactTypeTask extends ArtefactType {
     public static function get_tasks(ArtefactTypePlan $plan, $offset = 0, $limit = 10, $tasks = null) {
         require_once('tools/PlansTools.php');
 
-        $datenow = time(); // time now to use for formatting tasks by completion
-
+        $d = new DateTime(); // time now to use for formatting tasks by completion
+        $datenow = $d->getTimestamp();
+        $d->setTime(0, 0, 0);
+        $datebegin = $d->getTimestamp();
         $sql = "SELECT a.id, at.artefact AS task, " .
                     db_format_tsfield('startdate') . ", " .
                     db_format_tsfield('completiondate') . ", " .
@@ -1542,14 +1549,14 @@ class ArtefactTypeTask extends ArtefactType {
         if (!empty($results)) {
             foreach ($results as $result) {
                 if (!empty($result->completiondate)) {
-
                     // if record hasn't been completed and reminder time span is active mark it as time critical
                     if (!$result->completed && $result->reminder && ($result->completiondate - $result->reminder) < $datenow) {
                         $result->istimecritical = true;
                     }
 
                     // if record hasn't been completed and completiondate has passed mark as such for display
-                    if ($result->completiondate < $datenow && !$result->completed) {
+                    // we want to allow today's date to still be able to be completed
+                    if ($result->completiondate < $datebegin && !$result->completed) {
                         $result->completed = -1;
                     }
                     $result->completiondate = format_date($result->completiondate, 'strftimedateshort');
