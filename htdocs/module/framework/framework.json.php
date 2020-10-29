@@ -49,9 +49,12 @@ else {
 $fw_to_edit = param_variable('fw_id', null);
 unset($form_data['fw_id']);
 
-if ($form_data['institution'] != 'all') {
+if ($form_data['institution'] != get_string('all', 'module.framework')) {
     $institutionname = get_field('institution', 'name', 'displayname', $form_data['institution']);
     $form_data['institution'] = $institutionname;
+}
+else {
+    $form_data['institution'] = 'all';
 }
 
  //change $selfassess from true/false string to true/false.
