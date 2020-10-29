@@ -1704,6 +1704,7 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2020013011) {
         $custom_themes = get_records_sql_array("SELECT name FROM {institution} WHERE theme = ?", array('custom'));
         if ($custom_themes) {
+            log_debug('Setting update flag for custom themes');
             // set_config_institution requires the Institution class.
             require_once(get_config('docroot') . 'lib/institution.php');
             foreach ($custom_themes as $inst) {
