@@ -42,6 +42,10 @@ function get_framework($table, $select, $se_depth=0) {
             $displayname = get_field('institution', 'displayname', 'name', $fw_data->institution);
             $fw_data->institution = $displayname;
         }
+        else {
+            $fw_data->institution = get_string('all', 'module.framework');
+        }
+
         $data['title'] = $fw_data;
     }
     if (isset($fw_data->id)) {
