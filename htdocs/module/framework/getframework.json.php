@@ -46,6 +46,10 @@ function get_smartevidence_framework($id) {
     if ($fw_data->institution != 'all') {
         $fw_data->institution = get_field('institution', 'displayname', 'name', $fw_data->institution);
     }
+    else {
+        $fw_data->institution = get_string('all', 'module.framework');
+    }
+
     $data['info'] = $fw_data;
 
     $data['evidencestatuses'] = get_records_array('framework_evidence_statuses', 'framework', $id);
