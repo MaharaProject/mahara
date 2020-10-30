@@ -2254,4 +2254,19 @@ JS;
             throw new ExpectationException('The display button with title ' . $textliteral . ' in row ' . $rowname . ' was found', $this->getSession());
         }
     }
+
+    /**
+     * This works for Selenium and other real browsers that support screenshots.
+     *
+     * @Then show me a screenshot named :shot
+     */
+    public function show_me_a_screenshot($shot) {
+        global $CFG;
+        $image_data = $this->getSession()->getDriver()->getScreenshot();
+        $file_and_path = $CFG->behat_dataroot . '/behat/html_results/screenshots/custom/' . $shot . '.png';
+        if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/custom/')) {
+            mkdir($CFG->behat_dataroot . '/behat/html_results/screenshots/custom/', $CFG->directorypermissions, true);
+        }
+        file_put_contents($file_and_path, $image_data);
+    }
 }

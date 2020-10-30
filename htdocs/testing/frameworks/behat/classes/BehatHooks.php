@@ -298,10 +298,12 @@ class BehatHooks extends BehatBase {
 
         if (!$scope->getTestResult()->isPassed()) {
             // create filename string
-
-            $featureFolder = preg_replace('/\W/', '', $scope->getFeature()->getTitle());
+            preg_match('|test/behat/features/(.*)\.feature|', $scope->getFeature()->getFile(), $matches);
+            $featureFolder = preg_replace('/\W/', '', preg_replace('/\//', '__', $matches[1]));
             $scenarioName = $this->currentScenario->getTitle();
-            $fileName = preg_replace('/\W/', '', $scenarioName) . '.png';
+            $scenarioLine = $scope->getStep()->getLine();
+
+            $fileName = preg_replace('/\W/', '', $scope->getStep()->getText()) . '_line' . $scenarioLine . '.png';
 
             // create screenshots directory if it doesn't exist
             if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder)) {
