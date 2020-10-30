@@ -311,7 +311,14 @@ class BehatHooks extends BehatBase {
             }
 
             // For Selenium2 Driver you can use:
-            file_put_contents($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder . '/' . $fileName, $this->getSession()->getDriver()->getScreenshot());
+            $screenshotfile = $CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder . '/' . $fileName;
+            $out = file_put_contents($screenshotfile, $this->getSession()->getDriver()->getScreenshot());
+
+            if (!empty($CFG->behat_view_screenshots) && $out !== false && $eog = exec('apt-cache policy eog | grep Installed')) { // Ubuntu
+                if (!preg_match('/Installed\: \(none\)/', $eog)) {
+                    exec('eog ' . $screenshotfile . " > /dev/null 2>/dev/null &");
+                }
+            }
         }
     }
 

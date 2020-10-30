@@ -229,7 +229,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Collection UserA_06" card menu
     And I fill in "Collection description" with "Collection 06 (updated)"
-    And I scroll to the id "edit_submitform"
+    And I scroll to the base of id "edit_submitform"
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups" in "Engage" from main menu

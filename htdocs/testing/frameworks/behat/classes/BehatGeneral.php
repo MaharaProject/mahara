@@ -2267,6 +2267,11 @@ JS;
         if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/custom/')) {
             mkdir($CFG->behat_dataroot . '/behat/html_results/screenshots/custom/', $CFG->directorypermissions, true);
         }
-        file_put_contents($file_and_path, $image_data);
+        $out = file_put_contents($file_and_path, $image_data);
+        if (!empty($CFG->behat_view_screenshots) && $out !== false && $eog = exec('apt-cache policy eog | grep Installed')) { // Ubuntu
+            if (!preg_match('/Installed\: \(none\)/', $eog)) {
+                exec('eog ' . $file_and_path . " > /dev/null 2>/dev/null &");
+            }
+        }
     }
 }
