@@ -1702,6 +1702,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2020050800) {
+        log_debug('Moving page description to a text block on the top of the page');
         require_once(get_config('docroot') . 'lib/view.php');
         require_once(get_config('docroot') . 'blocktype/lib.php');
         $sql = "SELECT id FROM {view} v
@@ -1886,6 +1887,7 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2020083100) {
         $custom_themes = get_records_sql_array("SELECT name FROM {institution} WHERE theme = ?", array('custom'));
         if ($custom_themes) {
+            log_debug('Setting update flag for custom themes');
             // set_config_institution requires the Institution class.
             require_once(get_config('docroot') . 'lib/institution.php');
             foreach ($custom_themes as $inst) {
@@ -1936,6 +1938,7 @@ function xmldb_core_upgrade($oldversion=0) {
     // Set collation for view table - description field and block_instance table - configdata field for Bug 1895259
     if ($oldversion < 2020092103) {
         if (is_mysql()) {
+            log_debug('Fix certain fields to have correct collation');
             $columns = array(0 => array('table' => 'view',
                                         'value' => 'description'),
                              1 => array('table' => 'view',
@@ -1958,6 +1961,7 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2020092104) {
+        log_debug('Add new fields to export_queue and archived submissions tables');
         $table = new XMLDBTable('export_queue');
         if (table_exists($table)) {
             $field = new XMLDBField('externalname');
