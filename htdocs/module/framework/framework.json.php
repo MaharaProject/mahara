@@ -105,8 +105,11 @@ function format_input_framework() {
         }
     }, ARRAY_FILTER_USE_KEY);
 
-    if ($form_data->institution != 'all') {
+    if ($form_data->institution != get_string('all', 'module.framework')) {
         $form_data->institution = get_field('institution', 'name', 'displayname', $form_data->institution);
+    }
+    else {
+        $form_data->institution = 'all';
     }
 
     $form_data->selfassess = ($form_data->selfassess === "true" ? true : false);
