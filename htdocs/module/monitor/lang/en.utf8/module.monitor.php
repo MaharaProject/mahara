@@ -18,11 +18,11 @@ $string['monitor'] = 'Monitor';
 $string['monitoringchecks'] = 'Monitoring checks';
 $string['cronlockhours'] = 'Cron lock hours';
 $string['cronlockhoursdescription'] = 'The maximum number of hours a cron process should run.';
-$string['hourstoconsiderelasticsearchrecordold'] = 'Hours to consider elasticsearch queue old';
-$string['hourstoconsiderelasticsearchrecordolddescription'] = 'Number of hours that elasticsearch record can remain unprocessed before drawing attention to it';
+$string['hourstoconsiderelasticsearchrecordold'] = 'Hours when Elasticsearch queue old';
+$string['hourstoconsiderelasticsearchrecordolddescription'] = 'The number of hours that an Elasticsearch record can remain unprocessed before drawing attention to it.';
 $string['monitormodulenotactive'] = 'The monitor plugin is not active. Please go to the "Administration menu" → "Extensions" → "Plugin administration" page to install or activate the plugin.';
-$string['allowedips'] = 'Allowed IPs';
-$string['allowedipsdescription'] = 'Enter safe IP addresses, one per line, for the monitor to respond to. If left blank then the monitor will be restricted by $cfg->urlsecret if that is set.';
+$string['allowedips'] = 'Allowed IP addresses';
+$string['allowedipsdescription'] = 'Enter trusted IP addresses, one per line, for the monitor to respond to. If left blank, then the monitor will be restricted by $cfg->urlsecret if that is set.';
 $string['accessdeniednotvalidip'] = 'Your IP "%s" is not in the allowed IP list and you will be blocked from checking the monitor.';
 
 // cron processes check
@@ -31,12 +31,12 @@ $string['croncheckhelp'] = 'Identify which cron processes are long running:
 croncheck.php [options] mahara_path
 
 Options:
--h, --help          Print out this help
+-h, --help          Print this help
 
 Example:
 sudo -u www-data /usr/bin/php croncheck.php /var/www/mymaharaproject
 ';
-$string['okmessagedisabled'] = 'If set then no OK message will be displayed.';
+$string['okmessagedisabled'] = 'If set, no OK message will be displayed.';
 $string['checkingcronprocesses'] = 'Checking cron processes';
 $string['checkingcronprocessessucceed'] = 'OK: There are no long running cron processes for %s.';
 $string['checkingcronprocessesfail'] = array(
@@ -59,24 +59,24 @@ $string['exportresultscsv'] = 'Export results in CSV format';
 $string['queuestatus'] = 'Queue status';
 $string['failedqueuesize'] = 'Number of failed records for more than 1 hour';
 $string['queuehasolditems'] = array(
-    'Unprocessed items in elasticsearch queue older than %s hour',
-    'Unprocessed items in elasticsearch queue older than %s hours'
+    'Unprocessed items in the Elasticsearch queue older than %s hour',
+    'Unprocessed items in the Elasticsearch queue older than %s hours'
 );
 $string['unprocessedqueuesize'] = 'Total number of unprocessed records';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['checkingelasticsearcholdunprocesessedfail'] = array(
-    'CRITICAL: There are unprocessed records in Elasticsearch queue older than %s hour',
-    'CRITICAL: There are unprocessed records in Elasticsearch queue older than %s hours',
+    'CRITICAL: There are unprocessed records in the Elasticsearch queue older than %s hour.',
+    'CRITICAL: There are unprocessed records in the Elasticsearch queue older than %s hours.',
 );
-$string['checkingelasticsearchfailedrecords'] = 'CRITICAL: There are failed records in Elasticsearch queue older than 1 hour';
-$string['checkingelasticsearchsucceed'] = 'OK: There are no unprocessed or failed records in Elasticsearch queue';
-$string['elasticsearchcheckhelp'] = 'Check elasticsearch processing queue:
+$string['checkingelasticsearchfailedrecords'] = 'CRITICAL: There are failed records in the Elasticsearch queue older than 1 hour.';
+$string['checkingelasticsearchsucceed'] = 'OK: There are no unprocessed or failed records in the Elasticsearch queue.';
+$string['elasticsearchcheckhelp'] = 'Check the Elasticsearch processing queue:
 
 elasticsearchcheck.php [options] mahara_path
 
 Options:
--h, --help          Print out this help
+-h, --help          Print this help
 
 Example:
 sudo -u www-data /usr/bin/php elasticsearchcheck.php /var/www/mymaharaproject
@@ -90,7 +90,7 @@ $string['ldapcheckhelp'] = 'Identify which LDAP instances are not working:
 ldaplookupcheck.php [options] mahara_path
 
 Options:
--h, --help          Print out this help
+-h, --help          Print this help
 
 Example:
 sudo -u www-data /usr/bin/php ldaplookupcheck.php /var/www/mymaharaproject
@@ -109,25 +109,25 @@ $string['statussuccess'] = 'Ok';
 $string['statusfail'] = 'Failed';
 
 // LDAP suspended users
-$string['ldapsuspendedusers'] = 'LDAP suspended users';
-$string['ldapsuspendeduserstabletitle'] = 'Percentage of LDAP users suspended by LDAP user sync since midnight';
-$string['ldapsuspendeduserspercentage'] = 'LDAP suspended users percentage';
-$string['ldapsuspendeduserspercentagedescription'] = 'The maximum percentage of users suspended by the LDAP user sync since midnight before flagging it as an issue.';
+$string['ldapsuspendedusers'] = 'LDAP suspended accounts';
+$string['ldapsuspendeduserstabletitle'] = 'Percentage of LDAP accounts suspended by the LDAP account sync since midnight';
+$string['ldapsuspendeduserspercentage'] = 'LDAP suspended accounts percentage';
+$string['ldapsuspendeduserspercentagedescription'] = 'The maximum percentage of accounts suspended by the LDAP account sync since midnight before flagging it as an issue.';
 $string['item'] = 'Item';
 $string['status'] = 'Status';
 $string['details'] = 'Details';
-$string['ldapsuspendeduserscheckhelp'] = 'Check for large volumes of LDAP users getting suspended in the LDAP user sync process
+$string['ldapsuspendeduserscheckhelp'] = 'Check for large volumes of LDAP accounts getting suspended in the LDAP account sync process
 
 ldapsuspendeduserscheck.php [options] mahara_path
 
 Options:
--h, --help          Print out this help
+-h, --help          Print this help
 
 Example:
 sudo -u www-data /usr/bin/php ldapsuspendeduserscheck.php /var/www/mymaharaproject
 ';
-$string['checkingldapsuspendedusersssucceed'] = 'OK: There are no LDAP instances for %s that have surpassed the suspended users warning threshold.';
+$string['checkingldapsuspendedusersssucceed'] = 'OK: There are no LDAP instances for %s that have surpassed the suspended accounts warning threshold.';
 $string['checkingldapsuspendedusersfail'] = array(
-    'CRITICAL: There is %s LDAP instance for %s that has surpassed the suspended users warning threshold: %s',
-    'CRITICAL: There are %s LDAP instances for %s that have surpassed the suspended users warning threshold: %s',
+    'CRITICAL: There is %s LDAP instance for %s that has surpassed the suspended accounts warning threshold: %s',
+    'CRITICAL: There are %s LDAP instances for %s that have surpassed the suspended accounts warning threshold: %s',
 );
