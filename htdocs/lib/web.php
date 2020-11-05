@@ -5026,21 +5026,23 @@ function is_valid_url($url) {
     return true;
 }
 
-function account_institution_get_menu_tabs() {
+function account_institution_get_menu_tabs($migrate=true) {
     $menu = array(
         'institutions' => array(
             'path' => 'settings/institutions',
             'url' => 'account/institutions.php',
             'title' => get_string('currentinstitutionmembership'),
             'weight' => 10,
-        ),
-        'migrateinstitution' => array(
+        )
+    );
+    if ($migrate) {
+        $menu['migrateinstitution'] = array(
             'path' => 'settings/institutions',
             'url' => 'account/migrateinstitution.php',
             'title' => get_string('selfmigration'),
             'weight' => 20,
-        ),
-    );
+        );
+    }
 
     if (defined('SECTION_PAGE')) {
         $key = SECTION_PAGE;

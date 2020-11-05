@@ -7,12 +7,12 @@
     {$memberform|safe}
 </div>
 {/if}
-
+{if $migrateallowed}
 <div class="view-container">
     <h2>{str tag=selfmigrate}</h2>
     {str tag=migrateinstitutionpagelink section=mahara arg1=$migrateurl arg2=$sitename}
 </div>
-
+{/if}
 {if $requestedform}
 <div class="view-container">
     <h2>{str tag=Requests}</h2>

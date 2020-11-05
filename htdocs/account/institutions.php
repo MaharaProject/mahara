@@ -227,13 +227,21 @@ function requestmembership_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'account/institutions.php');
 }
 
+try {
+    $migrateallowed = auth_configure_session_handlers("saml");
+}
+catch (ConfigSanityException $e) {
+    $migrateallowed = false;
+}
+
 $smarty = smarty();
 setpageicon($smarty, 'icon-university');
+$smarty->assign('migrateallowed', $migrateallowed);
 $smarty->assign('memberform', $memberform);
 $smarty->assign('requestedform', $requestedform);
 $smarty->assign('invitedform', $invitedform);
 $smarty->assign('joinform', $joinform);
 $smarty->assign('migrateurl', get_config('wwwroot') . 'account/migrateinstitution.php');
 $smarty->assign('sitename', get_config('sitename'));
-$smarty->assign('SUBPAGENAV', account_institution_get_menu_tabs());
+$smarty->assign('SUBPAGENAV', account_institution_get_menu_tabs($migrateallowed));
 $smarty->display('account/institutions.tpl');
