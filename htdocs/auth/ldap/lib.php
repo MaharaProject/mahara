@@ -1353,10 +1353,11 @@ class AuthLdap extends Auth {
                         var_dump($todb);
                     }
                     //check for used email
-                    if (
+                    if (!empty($todb->email) && (
                             ($d1 = get_record('usr', 'email', $todb->email))
                             ||
                             ($d2 = get_record('artefact_internal_profile_email', 'email', $todb->email))
+                        )
                     ) {
                         if (empty($d1)) {
                             $d1 = get_record('usr', 'id', $d2->owner);
@@ -1366,6 +1367,10 @@ class AuthLdap extends Auth {
                             var_dump($d1);
                         }
                         log_warn(get_string('emailalreadytaken', 'auth.internal') .' '. $d1->username . ' '.$todb->email);
+                        $nberrors ++;
+                    }
+                    else if (empty($todb->email)) {
+                        log_warn(get_string('emailmissing', 'auth.ldap') . ' ' . $ldapusername);
                         $nberrors ++;
                     }
                     else {

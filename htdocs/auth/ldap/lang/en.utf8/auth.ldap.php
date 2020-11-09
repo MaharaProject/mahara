@@ -16,6 +16,7 @@ $string['ldapconfig'] = 'LDAP configuration';
 $string['description'] = 'Authenticate against an LDAP server';
 $string['notusable'] = 'Please install the PHP LDAP extension';
 
+$string['emailmissing'] = 'The email address is missing.';
 $string['attributename'] = 'Name of the LDAP attribute used to sync groups based on its values (required and must respect case)';
 $string['cannotdeleteandsuspend']= 'Cannot specify -d and -s at the same time.';
 $string['cli_info_sync_groups']='This command line PHP script will attempt to synchronize an institution list of groups with an LDAP directory.
