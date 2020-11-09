@@ -181,13 +181,14 @@ class upload_manager {
             $destination = substr($destination, strlen($dataroot)+1);
         }
 
-        if ($destination{strlen($destination)-1} == '/') { // strip off a trailing / if we have one
+        if ($destination[strlen($destination)-1] == '/') { // strip off a trailing / if we have one
             $destination = substr($destination, 0, -1);
         }
 
         if (empty($destination)) {
             $destination = $dataroot;
-        } else {
+        }
+        else {
             $destination = $dataroot . '/' . $destination;
         }
 
