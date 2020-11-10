@@ -27,7 +27,6 @@ require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 safe_require('artefact', 'blog');
 
 global $WEBSERVICE_OAUTH_USER;
-
 /**
 * Class container for core Mahara user related API calls
 */
@@ -47,10 +46,10 @@ class mahara_blog_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the blog owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('blogownerid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('blogownerusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, get_string('blogownerremusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, get_string('blogowneremail', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             )
                         )
                     )
@@ -226,60 +225,60 @@ class mahara_blog_external extends external_api {
         return new external_multiple_structure(
                 new external_single_structure(
                     array(
-                    'id'          => new external_value(PARAM_NUMBER, 'ID of the user'),
-                    'username'    => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-                    'firstname'   => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-                    'lastname'    => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-                    'email'       => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
-                    'auth'        => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                    'studentid'   => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
-                    'institution' => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
+                    'id'          => new external_value(PARAM_NUMBER, get_string('blogownerid', WEBSERVICE_LANG)),
+                    'username'    => new external_value(PARAM_RAW, get_string('blogownerusername', WEBSERVICE_LANG)),
+                    'firstname'   => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG)),
+                    'lastname'    => new external_value(PARAM_NOTAGS, get_string('lastname', WEBSERVICE_LANG)),
+                    'email'       => new external_value(PARAM_TEXT, get_string('blogowneremail', WEBSERVICE_LANG)),
+                    'auth'        => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+                    'studentid'   => new external_value(PARAM_RAW, get_string('studentidinst', WEBSERVICE_LANG)),
+                    'institution' => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG)),
                     'blogs'       => new external_single_structure(
                                         array(
-                                            'count' => new external_value(PARAM_NUMBER, 'Blog count'),
-                                            'ids'   => new external_value(PARAM_RAW, 'ids for blogs'),
+                                            'count' => new external_value(PARAM_NUMBER, get_string('blogscount', WEBSERVICE_LANG)),
+                                            'ids'   => new external_value(PARAM_RAW, get_string('blogsids', WEBSERVICE_LANG)),
                                             'data'  =>
                                         new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                    'id'              => new external_value(PARAM_NUMBER, 'Blog ID'),
-                                                    'title'           => new external_value(PARAM_RAW, 'Blog title'),
-                                                    'description'     => new external_value(PARAM_RAW, 'Blog description'),
-                                                    'postcount'       => new external_value(PARAM_INTEGER, 'Blogpost count'),
-                                                    'mtime'           => new external_value(PARAM_RAW, 'Blog modification time'),
-                                                    'ctime'           => new external_value(PARAM_RAW, 'Blog creation time'),
-                                                    'locked'          => new external_value(PARAM_BOOL, 'Locked'),
-                                                    'owner'           => new external_value(PARAM_INTEGER, 'Blog owner'),
-                                                    'author'          => new external_value(PARAM_INTEGER, 'Blog author'),
-                                                    'allowcomments'   => new external_value(PARAM_BOOL, 'Allow comments'),
-                                                    'approvecomments' => new external_value(PARAM_BOOL, 'Approve comments'),
+                                                    'id'              => new external_value(PARAM_NUMBER, get_string('blogid', WEBSERVICE_LANG)),
+                                                    'title'           => new external_value(PARAM_RAW, get_string('blogtitle', WEBSERVICE_LANG)),
+                                                    'description'     => new external_value(PARAM_RAW, get_string('blogdesc', WEBSERVICE_LANG)),
+                                                    'postcount'       => new external_value(PARAM_INTEGER, get_string('blogpostcount', WEBSERVICE_LANG)),
+                                                    'mtime'           => new external_value(PARAM_RAW, get_string('blogmodtime', WEBSERVICE_LANG)),
+                                                    'ctime'           => new external_value(PARAM_RAW, get_string('blogcreatetime', WEBSERVICE_LANG)),
+                                                    'locked'          => new external_value(PARAM_BOOL, get_string('locked', WEBSERVICE_LANG)),
+                                                    'owner'           => new external_value(PARAM_INTEGER, get_string('blogowner', WEBSERVICE_LANG)),
+                                                    'author'          => new external_value(PARAM_INTEGER, get_string('blogauthor', WEBSERVICE_LANG)),
+                                                    'allowcomments'   => new external_value(PARAM_BOOL, get_string('allowcomments', WEBSERVICE_LANG)),
+                                                    'approvecomments' => new external_value(PARAM_BOOL, get_string('approvecomments', WEBSERVICE_LANG)),
                                                 ),
-                                            'A Blog')
+                                                get_string('blog', WEBSERVICE_LANG))
                                          ),
                         'blogposts'   => new external_single_structure(
                                         array(
-                                            'count' => new external_value(PARAM_NUMBER, 'Blogpost count'),
-                                            'ids'   => new external_value(PARAM_RAW, 'ids for blogposts'),
+                                            'count' => new external_value(PARAM_NUMBER, get_string('blogpostcount', WEBSERVICE_LANG)),
+                                            'ids'   => new external_value(PARAM_RAW, get_string('blogpostsids', WEBSERVICE_LANG)),
                                             'data' =>
                                         new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                    'id'              => new external_value(PARAM_NUMBER, 'Blogpost ID'),
-                                                    'title'           => new external_value(PARAM_RAW, 'Blogpost title'),
-                                                    'description'     => new external_value(PARAM_RAW, 'Blogpost description'),
-                                                    'mtime'           => new external_value(PARAM_RAW, 'Blogpost modification time'),
-                                                    'ctime'           => new external_value(PARAM_RAW, 'Blogpost creation time'),
-                                                    'locked'          => new external_value(PARAM_BOOL, 'Locked'),
-                                                    'owner'           => new external_value(PARAM_INTEGER, 'Blogpost owner'),
-                                                    'author'          => new external_value(PARAM_INTEGER, 'Blogpost author'),
-                                                    'allowcomments'   => new external_value(PARAM_BOOL, 'Allow comments'),
-                                                    'approvecomments' => new external_value(PARAM_BOOL, 'Approve comments'),
-                                                    'blogid'          => new external_value(PARAM_INTEGER, 'Parent blog'),
+                                                    'id'              => new external_value(PARAM_NUMBER, get_string('blogpostid', WEBSERVICE_LANG)),
+                                                    'title'           => new external_value(PARAM_RAW, get_string('blogposttitle', WEBSERVICE_LANG)),
+                                                    'description'     => new external_value(PARAM_RAW, get_string('blogpostdesc', WEBSERVICE_LANG)),
+                                                    'mtime'           => new external_value(PARAM_RAW, get_string('blogpostmodtime', WEBSERVICE_LANG)),
+                                                    'ctime'           => new external_value(PARAM_RAW, get_string('blogpostcreatetime', WEBSERVICE_LANG)),
+                                                    'locked'          => new external_value(PARAM_BOOL, get_string('locked', WEBSERVICE_LANG)),
+                                                    'owner'           => new external_value(PARAM_INTEGER, get_string('blogpostowner', WEBSERVICE_LANG)),
+                                                    'author'          => new external_value(PARAM_INTEGER, get_string('blogpostauthor', WEBSERVICE_LANG)),
+                                                    'allowcomments'   => new external_value(PARAM_BOOL, get_string('allowcomments', WEBSERVICE_LANG)),
+                                                    'approvecomments' => new external_value(PARAM_BOOL, get_string('approvecomments', WEBSERVICE_LANG)),
+                                                    'blogid'          => new external_value(PARAM_INTEGER, get_string('blogofparent', WEBSERVICE_LANG)),
                                                 ),
-                                            'A Blogpost')
+                                                get_string('blogpost', WEBSERVICE_LANG))
                                         ),
-                                     ), 'Blogposts')
-                                 ), 'Blogs'),
+                                     ), get_string('blogposts', WEBSERVICE_LANG))
+                                 ), get_string('blogs', WEBSERVICE_LANG)),
                     )
                 )
         );
@@ -298,17 +297,17 @@ class mahara_blog_external extends external_api {
             'blogposts' => new external_multiple_structure(
                              new external_single_structure(
                                array(
-                                   'owner'           => new external_value(PARAM_INTEGER, 'Journal owner'),
-                                   'blogid'          => new external_value(PARAM_INTEGER, 'Parent journal'),
-                                   'title'           => new external_value(PARAM_RAW, 'Journal entry name'),
-                                   'description'     => new external_value(PARAM_NOTAGS, 'Journal entry description'),
-                                   'draft'           => new external_value(PARAM_BOOL, 'Journal entry in draft mode', VALUE_DEFAULT, '0'),
-                                   'allowcomments'   => new external_value(PARAM_BOOL, 'Allow comments', VALUE_DEFAULT, '1'),
+                                   'owner'           => new external_value(PARAM_INTEGER, get_string('blogowner', WEBSERVICE_LANG)),
+                                   'blogid'          => new external_value(PARAM_INTEGER, get_string('blogofparent', WEBSERVICE_LANG)),
+                                   'title'           => new external_value(PARAM_RAW, get_string('blogposttitle', WEBSERVICE_LANG)),
+                                   'description'     => new external_value(PARAM_NOTAGS, get_string('blogpostdesc', WEBSERVICE_LANG)),
+                                   'draft'           => new external_value(PARAM_BOOL, get_string('blogpostdraft', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                                   'allowcomments'   => new external_value(PARAM_BOOL, get_string('allowcomments', WEBSERVICE_LANG), VALUE_DEFAULT, '1'),
                                    'tags'            => new external_multiple_structure(
                                                           new external_single_structure(
                                                             array(
-                                                                'tag' => new external_value(PARAM_ALPHANUMEXT, 'Tag', VALUE_OPTIONAL),
-                                                                 ), 'Tags')
+                                                                'tag' => new external_value(PARAM_ALPHANUMEXT, get_string('tag', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                 ), get_string('tags', WEBSERVICE_LANG))
                                                         ),
                                    )
                             )
@@ -384,8 +383,8 @@ class mahara_blog_external extends external_api {
         return new external_multiple_structure(
                    new external_single_structure(
                        array(
-                           'id'       => new external_value(PARAM_INT, 'Journal entry id'),
-                           'title'    => new external_value(PARAM_RAW, 'Journal entry name'),
+                           'id'       => new external_value(PARAM_INT, get_string('blogpostid', WEBSERVICE_LANG)),
+                           'title'    => new external_value(PARAM_RAW, get_string('blogposttitle', WEBSERVICE_LANG)),
                        )
                    )
         );

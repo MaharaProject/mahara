@@ -91,31 +91,31 @@ class mahara_user_external extends external_api {
     public static function autologin_redirect_parameters() {
        return new external_function_parameters(
                         array(
-                            'context_id'        => new external_value(PARAM_RAW, 'LTI context_id', VALUE_OPTIONAL),
-                            'context_label'        => new external_value(PARAM_RAW, 'LTI context_label', VALUE_OPTIONAL),
-                            'context_title'        => new external_value(PARAM_RAW, 'LTI context_title', VALUE_OPTIONAL),
-                            'context_type'        => new external_value(PARAM_RAW, 'LTI context_type', VALUE_OPTIONAL),
-                            'ext_lms'        => new external_value(PARAM_RAW, 'LTI ext_lms', VALUE_OPTIONAL),
-                            'ext_user_username'        => new external_value(PARAM_RAW, 'LTI ext_user_username', VALUE_OPTIONAL),
-                            'launch_presentation_locale'        => new external_value(PARAM_RAW, 'LTI launch_presentation_locale', VALUE_OPTIONAL),
-                            'launch_presentation_return_url'        => new external_value(PARAM_RAW, 'LTI launch_presentation_return_url', VALUE_OPTIONAL),
-                            'lis_person_contact_email_primary'        => new external_value(PARAM_RAW, 'LTI lis_person_contact_email_primary', VALUE_OPTIONAL),
-                            'lis_person_name_family'        => new external_value(PARAM_RAW, 'LTI lis_person_name_family', VALUE_OPTIONAL),
-                            'lis_person_name_full'        => new external_value(PARAM_RAW, 'LTI lis_person_name_full', VALUE_OPTIONAL),
-                            'lis_person_name_given'        => new external_value(PARAM_RAW, 'LTI lis_person_name_given', VALUE_OPTIONAL),
-                            'lis_person_sourcedid'        => new external_value(PARAM_RAW, 'LTI lis_person_sourcedid', VALUE_OPTIONAL),
-                            'lti_message_type'        => new external_value(PARAM_RAW, 'LTI lti_message_type', VALUE_OPTIONAL),
-                            'lti_version'        => new external_value(PARAM_RAW, 'LTI lti_version', VALUE_OPTIONAL),
-                            'resource_link_description'        => new external_value(PARAM_RAW, 'LTI resource_link_description', VALUE_OPTIONAL),
-                            'resource_link_id'        => new external_value(PARAM_RAW, 'LTI resource_link_id', VALUE_OPTIONAL),
-                            'resource_link_title'        => new external_value(PARAM_RAW, 'LTI resource_link_title', VALUE_OPTIONAL),
-                            'roles'        => new external_value(PARAM_RAW, 'LTI roles', VALUE_OPTIONAL),
-                            'tool_consumer_info_product_family_code'        => new external_value(PARAM_RAW, 'LTI tool_consumer_info_product_family_code', VALUE_OPTIONAL),
-                            'tool_consumer_info_version'        => new external_value(PARAM_RAW, 'LTI tool_consumer_info_version', VALUE_OPTIONAL),
-                            'tool_consumer_instance_guid'        => new external_value(PARAM_RAW, 'LTI tool_consumer_instance_guid', VALUE_OPTIONAL),
-                            'tool_consumer_instance_name'        => new external_value(PARAM_RAW, 'LTI tool_consumer_instance_name', VALUE_OPTIONAL),
-                            'user_id'        => new external_value(PARAM_RAW, 'LTI user_id', VALUE_OPTIONAL),
-                            )
+                            'context_id'        => new external_value(PARAM_RAW, get_string('context_id', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'context_label'        => new external_value(PARAM_RAW,  get_string('context_label', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'context_title'        => new external_value(PARAM_RAW, get_string('context_title', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'context_type'        => new external_value(PARAM_RAW, get_string('context_type', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'ext_lms'        => new external_value(PARAM_RAW, get_string('ext_lms', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'ext_user_username'        => new external_value(PARAM_RAW, get_string('ext_user_username', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'launch_presentation_locale'        => new external_value(PARAM_RAW, get_string('launch_presentation_locale', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'launch_presentation_return_url'        => new external_value(PARAM_RAW, get_string('launch_presentation_return_url', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lis_person_contact_email_primary'        => new external_value(PARAM_RAW, get_string('lis_person_contact_email_primary', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lis_person_name_family'        => new external_value(PARAM_RAW, get_string('lis_person_name_family', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lis_person_name_full'        => new external_value(PARAM_RAW, get_string('lis_person_name_full', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lis_person_name_given'        => new external_value(PARAM_RAW, get_string('lis_person_name_given', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lis_person_sourcedid'        => new external_value(PARAM_RAW, get_string('lis_person_sourcedid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lti_message_type'        => new external_value(PARAM_RAW, get_string('lti_message_type', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lti_version'        => new external_value(PARAM_RAW, get_string('lti_version', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'resource_link_description'        => new external_value(PARAM_RAW, get_string('resource_link_description', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'resource_link_id'        => new external_value(PARAM_RAW, get_string('resource_link_id', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'resource_link_title'        => new external_value(PARAM_RAW, get_string('resource_link_title', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'roles'        => new external_value(PARAM_RAW, get_string('roles', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'tool_consumer_info_product_family_code' => new external_value(PARAM_RAW, get_string('tool_consumer_info_product_family_code', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'tool_consumer_info_version'        => new external_value(PARAM_RAW, get_string('tool_consumer_info_version', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'tool_consumer_instance_guid'        => new external_value(PARAM_RAW, get_string('tool_consumer_instance_guid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'tool_consumer_instance_name'        => new external_value(PARAM_RAW, get_string('tool_consumer_instance_name', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'user_id'        => new external_value(PARAM_RAW, get_string('user_id', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                        )
             );
     }
 
@@ -212,33 +212,33 @@ class mahara_user_external extends external_api {
     public static function create_users_parameters() {
 
         $options = array(
-            'username'        => new external_value(PARAM_RAW, 'Between 3 and 30 characters long. Letters, numbers and most standard symbols are allowed'),
-            'password'        => new external_value(PARAM_RAW, 'Must be at least 6 characters long. Must be different from the username'),
-            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-            'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address'),
-            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution', VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED),
-            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc', VALUE_DEFAULT, 'internal', NULL_NOT_ALLOWED),
-            'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
-            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_DEFAULT, '0'),
-            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_DEFAULT, ''),
-            'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_DEFAULT, ''),
-            'preferredname'   => new external_value(PARAM_TEXT, 'User preferred name', VALUE_OPTIONAL),
-            'address'         => new external_value(PARAM_RAW, 'Street address of the user', VALUE_OPTIONAL),
-            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
-            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
-            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
-            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
-            'businessnumber'  => new external_value(PARAM_RAW, 'Business phone number', VALUE_OPTIONAL),
-            'mobilenumber'    => new external_value(PARAM_RAW, 'Mobile phone number', VALUE_OPTIONAL),
-            'faxnumber'       => new external_value(PARAM_RAW, 'Fax number', VALUE_OPTIONAL),
-            'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
-            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
-            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
-            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
-            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile needs both the type and url entered', VALUE_OPTIONAL),
-            'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
-            'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
+            'username'        => new external_value(PARAM_RAW, get_string('usernamevalid', WEBSERVICE_LANG)),
+            'password'        => new external_value(PARAM_RAW,get_string('passwordvalid', WEBSERVICE_LANG) ),
+            'firstname'       => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG)),
+            'lastname'        => new external_value(PARAM_NOTAGS,get_string('lastname', WEBSERVICE_LANG) ),
+            'email'           => new external_value(PARAM_EMAIL, get_string('emailvalid', WEBSERVICE_LANG)),
+            'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG), VALUE_DEFAULT, get_string('mahara', WEBSERVICE_LANG), NULL_NOT_ALLOWED),
+            'auth'            => new external_value(PARAM_SAFEDIR,get_string('authplugins', WEBSERVICE_LANG) , VALUE_DEFAULT, get_string('internal', WEBSERVICE_LANG), NULL_NOT_ALLOWED),
+            'quota'           => new external_value(PARAM_INTEGER, get_string('storagequota', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'forcepasswordchange' => new external_value(PARAM_BOOL,get_string('forcepasswordchange', WEBSERVICE_LANG) , VALUE_DEFAULT, '0'),
+            'studentid'       => new external_value(PARAM_RAW, get_string('studentid', WEBSERVICE_LANG), VALUE_DEFAULT, ''),
+            'remoteuser'      => new external_value(PARAM_RAW, get_string('remoteuserid', WEBSERVICE_LANG), VALUE_DEFAULT, ''),
+            'preferredname'   => new external_value(PARAM_TEXT, get_string('preferredname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'address'         => new external_value(PARAM_RAW, get_string('streetaddress', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'town'            => new external_value(PARAM_NOTAGS, get_string('town', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'city'            => new external_value(PARAM_NOTAGS, get_string('city', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'country'         => new external_value(PARAM_ALPHA, get_string('country', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'homenumber'      => new external_value(PARAM_RAW,get_string('homenumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'businessnumber'  => new external_value(PARAM_RAW,get_string('businessnumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'mobilenumber'    => new external_value(PARAM_RAW, get_string('mobilenumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'faxnumber'       => new external_value(PARAM_RAW, get_string('faxnumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'introduction'    => new external_value(PARAM_RAW, get_string('introduction', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'officialwebsite' => new external_value(PARAM_RAW, get_string('officialwebsite', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'personalwebsite' => new external_value(PARAM_RAW, get_string('personalwebsite', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'blogaddress'     => new external_value(PARAM_RAW,get_string('blogaddress', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'socialprofile'   => new external_value(PARAM_RAW, get_string('socialprofilevalid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'occupation'      => new external_value(PARAM_TEXT,get_string('occupation', WEBSERVICE_LANG) , VALUE_OPTIONAL),
+            'industry'        => new external_value(PARAM_TEXT, get_string('industry', WEBSERVICE_LANG), VALUE_OPTIONAL),
         );
         $localoptions = self::get_local_options();
         if (is_array($localoptions)) {
@@ -372,8 +372,8 @@ class mahara_user_external extends external_api {
         return new external_multiple_structure(
             new external_single_structure(
                 array(
-                    'id'       => new external_value(PARAM_INT, 'user id'),
-                    'username' => new external_value(PARAM_RAW, 'user name'),
+                    'id'       => new external_value(PARAM_INT, get_string('userid', WEBSERVICE_LANG)),
+                    'username' => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG)),
                 )
             )
         );
@@ -391,8 +391,8 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user to delete', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the user to delete', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('deleteuserid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('deleteusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             )
                         )
                     )
@@ -466,34 +466,34 @@ class mahara_user_external extends external_api {
     public static function update_users_parameters() {
 
         $options = array(
-            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-            'password'        => new external_value(PARAM_RAW, 'Plain text password consisting of any characters', VALUE_OPTIONAL),
-            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user', VALUE_OPTIONAL),
-            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user', VALUE_OPTIONAL),
-            'email'           => new external_value(PARAM_EMAIL, 'A valid and unique email address', VALUE_OPTIONAL),
-            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution', VALUE_OPTIONAL),
-            'auth'            => new external_value(PARAM_TEXT, 'Auth plugins include manual, ldap, imap, etc', VALUE_OPTIONAL),
-            'quota'           => new external_value(PARAM_INTEGER, 'Option storage quota', VALUE_OPTIONAL),
-            'forcepasswordchange' => new external_value(PARAM_BOOL, 'Forcing password change on first login', VALUE_OPTIONAL),
-            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number for the student', VALUE_OPTIONAL),
-            'remoteuser'      => new external_value(PARAM_RAW, 'Remote user Id', VALUE_OPTIONAL),
-            'preferredname'   => new external_value(PARAM_TEXT, 'Userpreferred name', VALUE_OPTIONAL),
-            'address'         => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
-            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user', VALUE_OPTIONAL),
-            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user', VALUE_OPTIONAL),
-            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as NZ', VALUE_OPTIONAL),
-            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number', VALUE_OPTIONAL),
-            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number', VALUE_OPTIONAL),
-            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number', VALUE_OPTIONAL),
-            'faxnumber'       => new external_value(PARAM_RAW, 'fax number', VALUE_OPTIONAL),
-            'introduction'    => new external_value(PARAM_RAW, 'Introduction text', VALUE_OPTIONAL),
-            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website', VALUE_OPTIONAL),
-            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website', VALUE_OPTIONAL),
-            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address', VALUE_OPTIONAL),
-            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile', VALUE_OPTIONAL),
-            'occupation'      => new external_value(PARAM_TEXT, 'Occupation', VALUE_OPTIONAL),
-            'industry'        => new external_value(PARAM_TEXT, 'Industry', VALUE_OPTIONAL),
+            'id'              => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+            'username'        => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+            'password'        => new external_value(PARAM_RAW, get_string('plaintxtpassword', WEBSERVICE_LANG) , VALUE_OPTIONAL),
+            'firstname'       => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'lastname'        => new external_value(PARAM_NOTAGS, get_string('lastname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'email'           => new external_value(PARAM_EMAIL, get_string('emailvalid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'institution'     => new external_value(PARAM_TEXT, get_string('institutiont', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'auth'            => new external_value(PARAM_TEXT, get_string('authplugins', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'quota'           => new external_value(PARAM_INTEGER, get_string('storagequota', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'forcepasswordchange' => new external_value(PARAM_BOOL, get_string('forcepasswordchange', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'studentid'       => new external_value(PARAM_RAW, get_string('studentid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'remoteuser'      => new external_value(PARAM_RAW, get_string('remoteuserid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'preferredname'   => new external_value(PARAM_TEXT, get_string('preferredname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'address'         => new external_value(PARAM_RAW, get_string('address', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'town'            => new external_value(PARAM_NOTAGS, get_string('town', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'city'            => new external_value(PARAM_NOTAGS, get_string('city', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'country'         => new external_value(PARAM_ALPHA, get_string('country', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'homenumber'      => new external_value(PARAM_RAW, get_string('homenumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'businessnumber'  => new external_value(PARAM_RAW, get_string('businessnumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'mobilenumber'    => new external_value(PARAM_RAW, get_string('mobilenumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'faxnumber'       => new external_value(PARAM_RAW, get_string('faxnumber', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'introduction'    => new external_value(PARAM_RAW, get_string('introduction', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'officialwebsite' => new external_value(PARAM_RAW, get_string('officialwebsite', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'personalwebsite' => new external_value(PARAM_RAW, get_string('personalwebsite', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'blogaddress'     => new external_value(PARAM_RAW, get_string('blogaddress', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'socialprofile'   => new external_value(PARAM_RAW, get_string('socialprofile', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'occupation'      => new external_value(PARAM_TEXT, get_string('occupation', WEBSERVICE_LANG), VALUE_OPTIONAL),
+            'industry'        => new external_value(PARAM_TEXT, get_string('industry', WEBSERVICE_LANG), VALUE_OPTIONAL),
         );
         $localoptions = self::get_local_options();
         if (is_array($localoptions)) {
@@ -631,10 +631,10 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the user', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, get_string('remoteuser', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, get_string('emailaddress', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             )
                         )
                     )
@@ -811,36 +811,36 @@ class mahara_user_external extends external_api {
     public static function get_users_by_id_returns() {
 
         $options = array(
-            'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-            'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
-            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
-            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
-            'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
-            'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
-            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
-            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
-            'address'         => new external_value(PARAM_RAW, 'Introduction text'),
-            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
-            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
-            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
-            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
-            'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
-            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
-            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
-            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
-            'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
-            'industry'        => new external_value(PARAM_TEXT, 'Industry'),
+            'id'              => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG)),
+            'username'        => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG)),
+            'firstname'       => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG)),
+            'lastname'        => new external_value(PARAM_NOTAGS, get_string('lastname', WEBSERVICE_LANG)),
+            'email'           => new external_value(PARAM_TEXT, get_string('emailaddress', WEBSERVICE_LANG)),
+            'auth'            => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+            'studentid'       => new external_value(PARAM_RAW, get_string('studentidinst', WEBSERVICE_LANG)),
+            'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG)),
+            'preferredname'   => new external_value(PARAM_RAW, get_string('preferredname', WEBSERVICE_LANG)),
+            'introduction'    => new external_value(PARAM_RAW, get_string('introduction', WEBSERVICE_LANG)),
+            'country'         => new external_value(PARAM_ALPHA, get_string('country', WEBSERVICE_LANG)),
+            'city'            => new external_value(PARAM_NOTAGS, get_string('city', WEBSERVICE_LANG)),
+            'address'         => new external_value(PARAM_RAW, get_string('address', WEBSERVICE_LANG)),
+            'town'            => new external_value(PARAM_NOTAGS, get_string('town', WEBSERVICE_LANG)),
+            'homenumber'      => new external_value(PARAM_RAW, get_string('homenumber', WEBSERVICE_LANG)),
+            'businessnumber'  => new external_value(PARAM_RAW, get_string('businessnumber', WEBSERVICE_LANG)),
+            'mobilenumber'    => new external_value(PARAM_RAW, get_string('mobilenumber', WEBSERVICE_LANG)),
+            'faxnumber'       => new external_value(PARAM_RAW, get_string('faxnumber', WEBSERVICE_LANG)),
+            'officialwebsite' => new external_value(PARAM_RAW, get_string('officialwebsite', WEBSERVICE_LANG)),
+            'personalwebsite' => new external_value(PARAM_RAW, get_string('personalwebsite', WEBSERVICE_LANG)),
+            'blogaddress'     => new external_value(PARAM_RAW, get_string('blogaddress', WEBSERVICE_LANG)),
+            'socialprofile'   => new external_value(PARAM_RAW, get_string('socialprofile', WEBSERVICE_LANG)),
+            'occupation'      => new external_value(PARAM_TEXT, get_string('occupation', WEBSERVICE_LANG)),
+            'industry'        => new external_value(PARAM_TEXT, get_string('industry', WEBSERVICE_LANG)),
             'auths'           => new external_multiple_structure(
                                     new external_single_structure(
                                         array(
-                                            'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                                            'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
-                                        ), 'Connected Remote Users')
+                                            'auth'       => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+                                            'remoteuser' => new external_value(PARAM_RAW, get_string('remoteusername', WEBSERVICE_LANG)),
+                                        ), get_string('remoteusersconnected', WEBSERVICE_LANG))
                                  ),
         );
         $localoptions = self::get_local_options();
@@ -861,9 +861,9 @@ class mahara_user_external extends external_api {
     public static function get_users_parameters() {
         return new external_function_parameters(
             array(
-                'offset'       => new external_value(PARAM_INTEGER, 'Offset of the results', VALUE_DEFAULT, '0'),
-                'limit'        => new external_value(PARAM_INTEGER, 'Limit of the results', VALUE_DEFAULT, '9999999'),
-                'sortdir'      => new external_value(PARAM_TEXT, 'Order user id. Either "asc" or "desc"', VALUE_DEFAULT, 'asc'),
+                'offset'       => new external_value(PARAM_INTEGER, get_string('userresultsoffset', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                'limit'        => new external_value(PARAM_INTEGER, get_string('userresultslimit', WEBSERVICE_LANG), VALUE_DEFAULT, '9999999'),
+                'sortdir'      => new external_value(PARAM_TEXT, get_string('useridsort', WEBSERVICE_LANG), VALUE_DEFAULT, 'asc'),
             )
         );
     }
@@ -893,9 +893,9 @@ class mahara_user_external extends external_api {
         $users = self::get_users_by_id_returns();
         return new external_single_structure(
             array(
-                'limit' => new external_value(PARAM_INTEGER, 'Limit of the results', VALUE_DEFAULT, '10'),
-                'offset' => new external_value(PARAM_INTEGER, 'Offset of the results', VALUE_DEFAULT, '10'),
-                'totalcount' => new external_value(PARAM_INTEGER, 'Total count of the results', VALUE_OPTIONAL),
+                'limit' => new external_value(PARAM_INTEGER, get_string('userresultslimit', WEBSERVICE_LANG), VALUE_DEFAULT, '10'),
+                'offset' => new external_value(PARAM_INTEGER, get_string('userresultsoffset', WEBSERVICE_LANG), VALUE_DEFAULT, '10'),
+                'totalcount' => new external_value(PARAM_INTEGER, get_string('userstotalcount', WEBSERVICE_LANG), VALUE_OPTIONAL),
                 'users' => $users,
             )
         );
@@ -991,36 +991,36 @@ class mahara_user_external extends external_api {
      */
     public static function get_my_user_returns() {
         $options = array(
-            'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-            'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-            'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-            'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
-            'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-            'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
-            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
-            'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
-            'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
-            'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
-            'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
-            'address'         => new external_value(PARAM_RAW, 'Introduction text'),
-            'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
-            'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
-            'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
-            'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
-            'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
-            'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
-            'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
-            'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-            'socialprofile'   => new external_value(PARAM_RAW, 'Social profile'),
-            'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
-            'industry'        => new external_value(PARAM_TEXT, 'Industry'),
+            'id'              => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG)),
+            'username'        => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG)),
+            'firstname'       => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG)),
+            'lastname'        => new external_value(PARAM_NOTAGS, get_string('lastname', WEBSERVICE_LANG)),
+            'email'           => new external_value(PARAM_TEXT, get_string('emailaddress', WEBSERVICE_LANG)),
+            'auth'            => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+            'studentid'       => new external_value(PARAM_RAW, get_string('studentid', WEBSERVICE_LANG)),
+            'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG)),
+            'preferredname'   => new external_value(PARAM_RAW, get_string('preferredname', WEBSERVICE_LANG)),
+            'introduction'    => new external_value(PARAM_RAW, get_string('introduction', WEBSERVICE_LANG)),
+            'country'         => new external_value(PARAM_ALPHA, get_string('country', WEBSERVICE_LANG)),
+            'city'            => new external_value(PARAM_NOTAGS, get_string('city', WEBSERVICE_LANG)),
+            'address'         => new external_value(PARAM_RAW, get_string('address', WEBSERVICE_LANG)),
+            'town'            => new external_value(PARAM_NOTAGS, get_string('town', WEBSERVICE_LANG)),
+            'homenumber'      => new external_value(PARAM_RAW, get_string('homenumber', WEBSERVICE_LANG)),
+            'businessnumber'  => new external_value(PARAM_RAW, get_string('businessnumber', WEBSERVICE_LANG)),
+            'mobilenumber'    => new external_value(PARAM_RAW, get_string('mobilenumber', WEBSERVICE_LANG)),
+            'faxnumber'       => new external_value(PARAM_RAW, get_string('faxnumber', WEBSERVICE_LANG)),
+            'officialwebsite' => new external_value(PARAM_RAW, get_string('officialwebsite', WEBSERVICE_LANG)),
+            'personalwebsite' => new external_value(PARAM_RAW, get_string('personalwebsite', WEBSERVICE_LANG)),
+            'blogaddress'     => new external_value(PARAM_RAW, get_string('blogaddress', WEBSERVICE_LANG)),
+            'socialprofile'   => new external_value(PARAM_RAW, get_string('socialprofile', WEBSERVICE_LANG)),
+            'occupation'      => new external_value(PARAM_TEXT, get_string('occupation', WEBSERVICE_LANG)),
+            'industry'        => new external_value(PARAM_TEXT, get_string('industry', WEBSERVICE_LANG)),
             'auths'           => new external_multiple_structure(
                                      new external_single_structure(
                                          array(
-                                             'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                                             'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
-                                         ), 'Connected Remote Users')
+                                            'auth'       => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+                                            'remoteuser' => new external_value(PARAM_RAW, get_string('remoteusername', WEBSERVICE_LANG)),
+                                         ), get_string('remoteusersconnected', WEBSERVICE_LANG))
                                  ),
         );
         $localoptions = self::get_local_options();
@@ -1057,7 +1057,7 @@ class mahara_user_external extends external_api {
      * @return external_description
      */
     public static function get_context_returns() {
-        return new external_value(PARAM_TEXT, 'The INSTITUTION context of the authenticated user');
+        return new external_value(PARAM_TEXT, get_string('userinstitutioncontext', WEBSERVICE_LANG));
     }
 
     /**
@@ -1106,21 +1106,21 @@ class mahara_user_external extends external_api {
     public static function get_extended_context_returns() {
         return new external_single_structure(
                 array(
-                    'institution'     => new external_value(PARAM_TEXT, 'The INSTITUTION context of the authenticated user'),
-                    'institutionname' => new external_value(PARAM_TEXT, 'The INSTITUTION FULLNAME context of the authenticated user'),
-                    'sitename'        => new external_value(PARAM_RAW, 'Site name', VALUE_OPTIONAL),
-                    'siteurl'         => new external_value(PARAM_RAW, 'Site URL', VALUE_OPTIONAL),
-                    'userid'          => new external_value(PARAM_NUMBER, 'ID of the authenticated user', VALUE_OPTIONAL),
-                    'username'        => new external_value(PARAM_RAW, 'Username of the authenticated user', VALUE_OPTIONAL),
-                    'firstname'       => new external_value(PARAM_TEXT, 'Firstname of the authenticated user', VALUE_OPTIONAL),
-                    'lastname'        => new external_value(PARAM_TEXT, 'Last of the authenticated user', VALUE_OPTIONAL),
-                    'fullname'        => new external_value(PARAM_TEXT, 'Fullname of the authenticated user', VALUE_OPTIONAL),
+                    'institution'     => new external_value(PARAM_TEXT, get_string('institutioncontextauthuser', WEBSERVICE_LANG)),
+                    'institutionname' => new external_value(PARAM_TEXT, get_string('institutionnameauthuser', WEBSERVICE_LANG)),
+                    'sitename'        => new external_value(PARAM_RAW, get_string('sitename', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'siteurl'         => new external_value(PARAM_RAW, get_string('siteurl', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'userid'          => new external_value(PARAM_NUMBER, get_string('authuserid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'username'        => new external_value(PARAM_RAW, get_string('authuserusername', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'firstname'       => new external_value(PARAM_TEXT, get_string('authuserfirstname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'lastname'        => new external_value(PARAM_TEXT, get_string('authuserlastname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'fullname'        => new external_value(PARAM_TEXT, get_string('authuserfullname', WEBSERVICE_LANG), VALUE_OPTIONAL),
                     'functions'       => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                            'function' => new external_value(PARAM_RAW, 'functon name', VALUE_OPTIONAL),
-                                                            'wsdoc'    => new external_value(PARAM_RAW, 'function documentation URI', VALUE_OPTIONAL),
-                                                        ), 'Available functions')
+                                                            'function' => new external_value(PARAM_RAW, get_string('functionname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                            'wsdoc'    => new external_value(PARAM_RAW, get_string('functiondocuri', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                        ), get_string('availfunctions', WEBSERVICE_LANG))
                                                 ),
                     )
             );
@@ -1140,16 +1140,16 @@ class mahara_user_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'shortname'       => new external_value(PARAM_SAFEDIR, 'Favourites shorname', VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED, null, NULL_ALLOWED, 'id'),
-                            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution', VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('favsownerid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('favsownerusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'shortname'       => new external_value(PARAM_SAFEDIR, get_string('favshortname', WEBSERVICE_LANG), VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED, null, NULL_ALLOWED, 'id'),
+                            'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG), VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED), //TODO: change 'mahara'?
                             'favourites'      => new external_multiple_structure(
                                                             new external_single_structure(
                                                                 array(
-                                                                    'id'       => new external_value(PARAM_NUMBER, 'favourite user Id', VALUE_OPTIONAL),
-                                                                    'username' => new external_value(PARAM_RAW, 'favourite username', VALUE_OPTIONAL),
-                                                                ), 'User favourites')
+                                                                    'id'       => new external_value(PARAM_NUMBER, get_string('favuserid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                    'username' => new external_value(PARAM_RAW, get_string('favusername', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                ), get_string('userfavs', WEBSERVICE_LANG))
                                                         ),
                             )
                     )
@@ -1233,9 +1233,9 @@ class mahara_user_external extends external_api {
                 'users'=> new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'shortname' => new external_value(PARAM_SAFEDIR, 'Favourites shorname', VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED),
-                            'userid'    => new external_value(PARAM_INT, 'user id', VALUE_OPTIONAL),
-                            'username'  => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL),
+                            'shortname' => new external_value(PARAM_SAFEDIR, get_string('favshortname', WEBSERVICE_LANG), VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED),
+                            'userid'    => new external_value(PARAM_INT, get_string('userid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'username'  => new external_value(PARAM_RAW, get_string('favsownerusername', WEBSERVICE_LANG), VALUE_OPTIONAL),
                         )
                     )
                 )
@@ -1300,16 +1300,16 @@ class mahara_user_external extends external_api {
         return new external_multiple_structure(
                 new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner'),
-                            'shortname'       => new external_value(PARAM_SAFEDIR, 'Favourites shorname'),
-                            'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('favsownerid', WEBSERVICE_LANG)),
+                            'username'        => new external_value(PARAM_RAW, get_string('favsownerusername', WEBSERVICE_LANG)),
+                            'shortname'       => new external_value(PARAM_SAFEDIR, get_string('favshortname', WEBSERVICE_LANG)),
+                            'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG)),
                             'favourites'      => new external_multiple_structure(
                                                             new external_single_structure(
                                                                 array(
-                                                                    'id'       => new external_value(PARAM_NUMBER, 'favourite user Id', VALUE_OPTIONAL),
-                                                                    'username' => new external_value(PARAM_RAW, 'favourite username', VALUE_OPTIONAL),
-                                                                ), 'User favourites')
+                                                                    'id'       => new external_value(PARAM_NUMBER, get_string('favuserid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                    'username' => new external_value(PARAM_RAW, get_string('favusername', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                ), get_string('userfavs', WEBSERVICE_LANG))
                                                         ),
                                                 )
                 )
@@ -1325,7 +1325,7 @@ class mahara_user_external extends external_api {
     public static function get_all_favourites_parameters() {
         return new external_function_parameters(
             array(
-                'shortname' => new external_value(PARAM_SAFEDIR, 'Favourites shorname', VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED),
+                'shortname' => new external_value(PARAM_SAFEDIR, get_string('favshortname', WEBSERVICE_LANG), VALUE_DEFAULT, get_string('favourites', WEBSERVICE_LANG), NULL_NOT_ALLOWED),
                 )
         );
     }
