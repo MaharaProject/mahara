@@ -1226,7 +1226,7 @@ EOD;
                     $configdata['artefactids'][] = self::process_attachment($file, $ownertype, $ownerid);
                 }
             }
-            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
+            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle') {
 
                 //imageselection options are 0,1,2 in the table
                 if ($key == 'imagesel') {

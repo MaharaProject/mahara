@@ -34,29 +34,8 @@ $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 $string['gallerysettings'] = 'Gallery settings';
 $string['usefancybox'] = 'Use Fancybox 3';
 $string['usefancyboxdesc'] = 'Use Fancybox 3 in your gallery. When you click on images in your gallery, they will open in an overlay on the current page.';
-$string['photoframe'] = 'Use photo frame';
-$string['photoframedesc2'] = 'Show a frame around the thumbnail of each photo in the gallery.';
 $string['previewwidth'] = 'Maximum photo width';
 $string['previewwidthdesc'] = 'Set the maximum width to which the photos will be resized when viewed with Slimbox 2.';
-
-// Flickr
-$string['flickrsettings'] = 'Flickr settings';
-$string['flickrapikey'] = 'Flickr API key';
-$string['flickrapikeydesc'] = 'To show photo sets from Flickr, you\'ll need a valid Flickr API key. <a href="https://www.flickr.com/services/api/keys/apply/">Apply for your key online</a>.';
-$string['flickrsets'] = 'Flickr sets';
-
-// Photobucket
-$string['pbsettings'] = 'Photobucket settings';
-$string['pbapikey'] = 'Photobucket API key';
-$string['pbapikeydesc'] = 'To show photo albums from Photobucket, you\'ll need a valid API key and API private key.<br>Go to the <a href="http://developer.photobucket.com/">Photobucket developer website</a>, agree to the terms of service, sign up, and get the API keys.';
-$string['pbapiprivatekey'] = 'Photobucket API private key';
-$string['photobucketphotosandalbums'] = 'Photobucket user photos and albums';
-
-$string['picasaalbums'] = 'Picasa albums';
-
-$string['windowslivephotoalbums'] = 'Windows Live photo gallery albums';
-
-$string['externalnotsupported'] = 'The external URL you provided is not supported';
 
 // Fancybox 3
 $string['CLOSE'] = "Close";

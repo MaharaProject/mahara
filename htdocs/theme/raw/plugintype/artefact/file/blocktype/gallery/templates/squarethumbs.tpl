@@ -2,7 +2,7 @@
     {foreach from=$images item=image}
         <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;height:{$image.squaredimensions}px;"{/if} class="thumb">
             <a data-fancybox="{$image.fancybox}" href="{$image.link}" title="{$image.title}" data-caption="{$image.title}">
-                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{if $image.width}{$image.width}{else}{$width}{/if}" height="{if $image.height}{$image.height}{else}{$width}{/if}" {if $frame}class="frame mx-auto d-block"{/if}/>
+                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{$width}" height="{$width}"/>
             </a>
         {if $showdescription && $image.title}
         <p class="text-small title">

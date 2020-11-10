@@ -239,9 +239,9 @@ Background:
     And the following "blocks" exist:
     # Page One B
     | title                | type           | page          |retractable | data |
-    | Gallery - style 1    | gallery        | Page One B    | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
-    | Gallery - style 2    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
-    | Gallery - style 3    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image3.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
+    | Gallery - style 1    | gallery        | Page One B    | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes |
+    | Gallery - style 2    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=yes;imagestyle=2 |
+    | Gallery - style 3    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image3.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3 |
     | Folder               | folder         | Page One B    | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
     | Some HTML            | html           | Page One B    | yes        | attachment=test_html.html |
     | Profile Information  | profileinfo    | Page One B    | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image3.png |
