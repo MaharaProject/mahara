@@ -267,11 +267,11 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
                 $data->courselength = floatval($course['courselength']) > 0 ? $course['courselength'] : '-';
                 $data->hours = floatval($course['courselength']);
                 $data->category = $course['coursecategory'];
-                $data->cpdhours_display = floatval($course['cpdhours']) > 0 ? $course['cpdhours'] : '-';
-                $data->cpdhours = floatval($course['cpdhours']);
+                $data->cpdhours_display = !empty($course['cpdhours']) && floatval($course['cpdhours']) > 0 ? $course['cpdhours'] : '-';
+                $data->cpdhours = !empty($course['cpdhours']) ? floatval($course['cpdhours']) : 0;
                 $data->type = $course['coursetype'];
                 $data->historical = $course['historical'];
-                $data->organisation = $course['courseorganisation'];
+                $data->organisation = !empty($course['courseorganisation']) ? $course['courseorganisation'] : '-';
                 $data->id = $course['courseid'];
                 $data->uniqueid = $data->id . '_' . $data->rawdate;
                 $results[] = $data;
