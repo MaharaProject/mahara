@@ -117,8 +117,10 @@ var infochosen;
 jQuery(function($) {
     $('.info-item').on("click", function(e) {
         e.preventDefault();
-        console.log('here?');
         infochosen = e.target;
+        if (!$(infochosen).is('A')) {
+            infochosen = $(infochosen).closest('A')[0].outerHTML;
+        }
         $("#infomodal").modal("show");
     });
     $("#infomodal").on('show.bs.modal', function (e) {
