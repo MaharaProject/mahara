@@ -7536,6 +7536,112 @@
       });
     };
 
+    var DefaultStyleFormats = [
+      {
+        title: 'Headings',
+        items: [
+          {
+            title: 'Heading 1',
+            format: 'h4'
+          },
+          {
+            title: 'Heading 2',
+            format: 'h5'
+          },
+          {
+            title: 'Heading 3',
+            format: 'h6'
+          }
+        ]
+      },
+      {
+        title: 'Inline',
+        items: [
+          {
+            title: 'Bold',
+            icon: 'bold',
+            format: 'bold'
+          },
+          {
+            title: 'Italic',
+            icon: 'italic',
+            format: 'italic'
+          },
+          {
+            title: 'Underline',
+            icon: 'underline',
+            format: 'underline'
+          },
+          {
+            title: 'Strikethrough',
+            icon: 'strikethrough',
+            format: 'strikethrough'
+          },
+          {
+            title: 'Superscript',
+            icon: 'superscript',
+            format: 'superscript'
+          },
+          {
+            title: 'Subscript',
+            icon: 'subscript',
+            format: 'subscript'
+          },
+          {
+            title: 'Code',
+            icon: 'code',
+            format: 'code'
+          }
+        ]
+      },
+      {
+        title: 'Blocks',
+        items: [
+          {
+            title: 'Paragraph',
+            format: 'p'
+          },
+          {
+            title: 'Blockquote',
+            format: 'blockquote'
+          },
+          {
+            title: 'Div',
+            format: 'div'
+          },
+          {
+            title: 'Pre',
+            format: 'pre'
+          }
+        ]
+      },
+      {
+        title: 'Alignment',
+        items: [
+          {
+            title: 'Left',
+            icon: 'alignleft',
+            format: 'alignleft'
+          },
+          {
+            title: 'Center',
+            icon: 'aligncenter',
+            format: 'aligncenter'
+          },
+          {
+            title: 'Right',
+            icon: 'alignright',
+            format: 'alignright'
+          },
+          {
+            title: 'Justify',
+            icon: 'alignjustify',
+            format: 'alignjustify'
+          }
+        ]
+      }
+    ];
+
     var isRecursive = function (component, originator, target) {
       return eq(originator, component.element) && !eq(originator, target);
     };
