@@ -279,6 +279,7 @@ $string['oauth_access'] = 'This application will have access to your users\' det
 $string['oauth_instructions'] = 'If you wish to grant access to this application, then click "Authorise application access". If you do not want to grant access, press "Cancel".';
 $string['setauthinstancefailed'] = 'Setting the "Web services" authentication for institution "%s" failed. Please try adding it via Administration -> Institutions -> Settings page.';
 $string['needtosetowner'] = 'Need to set an owner for this service';
+$string['confirmdeleteexternalapp'] = 'Are you sure you want to delete this external app?';
 
 // running webservices messages
 $string['accesstofunctionnotallowed'] = 'Access to the function %s() is not allowed. Please check if a service containing the function is enabled. In the service settings: If the service is restricted, check that the user is listed. Still in the service settings check for IP restriction or if the service requires a capability.';
