@@ -203,7 +203,17 @@ class BehatGeneral extends BehatBase {
      * @When /^I accept the confirm popup$/
      */
     public function i_accept_confirm_popup() {
-        $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+        $i = 0;
+        while ($i < 5) {
+            try {
+                $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+                break;
+            }
+            catch (NoAlertOpenError $e) {
+                sleep(1);
+                $i++;
+            }
+        }
     }
 
     /**
@@ -583,6 +593,7 @@ EOF;
         list($selector, $locator) = $this->transform_selector('link_or_button', $link_or_button);
         $elementnode = $this->find($selector, $locator, false, $rownode);
         $this->ensure_node_is_visible($elementnode);
+        $this->i_accept_confirm_popup();
         $this->avoidStaleClick($selector, $locator, $rownode);
     }
 
