@@ -68,7 +68,7 @@ switch ($type) {
             ";
             $peoplein = get_records_sql_assoc($sql, array($USER->get('id')));
             if ($peoplein) {
-                array_keys($peoplein);
+                $peoplein = array_keys($peoplein);
             }
             else {
                 $peoplein = array();
