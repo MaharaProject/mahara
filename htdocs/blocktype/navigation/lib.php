@@ -159,21 +159,29 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                         if ($needsblock) {
                             // need to add new navigation block
                             $otherview = new View($vid);
-                            $bi = new BlockInstance(0,
-                                array(
-                                    'blocktype'  => 'navigation',
-                                    'title'      => $values['title'],
-                                    'positionx'  => 0,
-                                    'positiony'  => 0,
-                                    'width'      => 4,
-                                    'height'     => 3,
-                                    'configdata' => array(
-                                        'collection' => $values['collection'],
-                                        'retractable' => $values['retractable'],
-                                        'retractedonload' => $values['retractedonload'],
-                                    ),
-                                )
+                            $bidata = array(
+                                'blocktype'  => 'navigation',
+                                'title'      => $values['title'],
+                                'configdata' => array(
+                                    'collection' => $values['collection'],
+                                    'retractable' => $values['retractable'],
+                                    'retractedonload' => $values['retractedonload'],
+                                ),
                             );
+                            if ($otherview->uses_new_layout()) {
+                                // Save block with dimensions
+                                $bidata['positionx'] = 0;
+                                $bidata['positiony'] = 0;
+                                $bidata['width'] = 4;
+                                $bidata['height'] = 3;
+                            }
+                            else {
+                                // Save block in old layout
+                                $bidata['row'] = 1;
+                                $bidata['column'] = 1;
+                                $bidata['order'] = get_field_sql("SELECT MAX(bi.order) + 1 FROM {block_instance} bi WHERE bi.view = ?", array($vid));
+                            }
+                            $bi = new BlockInstance(0, $bidata);
                             $otherview->addblockinstance($bi);
                         }
                     }
