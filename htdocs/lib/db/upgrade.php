@@ -1618,5 +1618,42 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2019093024) {
+        log_debug('Adjust navigation block on collection pages in old format');
+        // Find all the pages that have a navigation block on them and the navigation block is saved with information in
+        // the block_instance_dimension table that also have other blocks on the page that don't have information in the
+        // block_inatance_dimension table - indicating that the navigation block was saved wrong and needs fixing up
+        if ($records = get_records_sql_array("SELECT abi.view, (
+                                                  SELECT COUNT(*) FROM {block_instance} bbi WHERE bbi.view = abi.view
+                                              ) AS block_count,
+                                              COUNT(abid.block) AS block_dimension_count
+                                              FROM {block_instance_dimension} abid
+                                              JOIN {block_instance} abi ON abi.id = abid.block
+                                              WHERE abi.view IN (
+                                                  SELECT bi.view FROM {block_instance} bi
+                                                  JOIN {block_instance_dimension} bid ON bid.block = bi.id
+                                                  WHERE bi.blocktype = 'navigation'
+                                              )
+                                              GROUP BY abi.view HAVING COUNT(abid.block) = 1
+                                              AND (
+                                                   SELECT COUNT(*) FROM {block_instance} bbi WHERE bbi.view = abi.view
+                                              ) > 1")) {
+            foreach ($records as $record) {
+                // Now find the block id that needs fixing
+                $blockid = get_field_sql("SELECT b.block FROM {block_instance_dimension} b
+                                          WHERE b.block IN (
+                                              SELECT id FROM {block_instance} WHERE view = ?
+                                          )", array($record->view));
+                // Update it with old layout info
+                $order = get_field_sql("SELECT MAX(bi.order) + 1 FROM {block_instance} bi WHERE bi.view = ?", array($record->view));
+                execute_sql("UPDATE {block_instance}
+                             SET \"row\" = ?, \"column\" = ?, \"order\" = ?
+                             WHERE id = ?", array(1, 1, $order, $blockid));
+                // Remove the new dimension info
+                execute_sql("DELETE FROM {block_instance_dimension} WHERE block = ?", array($blockid));
+            }
+        }
+    }
+
     return $status;
 }
