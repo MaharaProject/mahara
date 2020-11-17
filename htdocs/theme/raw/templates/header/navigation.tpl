@@ -1,5 +1,4 @@
 {if $MAINNAV}
-
 <nav>
   <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabcard">
     <ul id="nav" class="nav navbar-nav">
@@ -189,9 +188,4 @@
     </ul>
   </div>
 </nav>
-{/if}
-{if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-<div class="navbar-form collapse navbar-collapse{if $languageform} with-langform{if !$LOGGEDIN && !$SHOWLOGINBLOCK && !$LOGINPAGE}-login{/if}{/if}">
-    {header_search_form}
-</div>
 {/if}
