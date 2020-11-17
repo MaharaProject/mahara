@@ -57,12 +57,11 @@ $string['element.expiry.years.lowercase'] = array(
     1 => '%s years'
 );
 
-$string['element.expiry.days'] = 'Days';
-$string['element.expiry.weeks'] = 'Weeks';
-$string['element.expiry.months'] = 'Months';
-$string['element.expiry.years'] = 'Years';
-$string['element.expiry.noenddate'] = 'No end date';
-$string['element.expiry.noenddate.lowercase'] = 'no end date';
+$string['element.expiry.days'] = 'days';
+$string['element.expiry.weeks'] = 'weeks';
+$string['element.expiry.months'] = 'months';
+$string['element.expiry.years'] = 'years';
+$string['element.expiry.noenddate'] = 'no end date';
 
 $string['element.files.addattachment'] = 'Add attachment';
 

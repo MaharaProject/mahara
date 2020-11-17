@@ -53,6 +53,6 @@ Scenario: Setting default account lifetime
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I expand all fieldsets
- And I select "Weeks" from "siteoptions_defaultaccountlifetime_units"
+ And I select "weeks" from "siteoptions_defaultaccountlifetime_units"
  And I fill in "10" for "siteoptions_defaultaccountlifetime"
  And I press "Update site options"
