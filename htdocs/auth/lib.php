@@ -848,16 +848,18 @@ function auth_plugins_call_pre_loginpage_hook() {
     $instances = auth_get_auth_instances();
 
     foreach ($instances as $instance) {
-        $auth = AuthFactory::create($instance->id);
-        if ($auth === false) {
-            continue;
-        }
-        if (!method_exists($auth, $methodname)) {
-            continue;
-        }
-        $auth->$methodname();
-        if ($USER->is_logged_in()) {
-            return true;
+        if ($instance->active) {
+            $auth = AuthFactory::create($instance->id);
+            if ($auth === false) {
+                continue;
+            }
+            if (!method_exists($auth, $methodname)) {
+                continue;
+            }
+            $auth->$methodname();
+            if ($USER->is_logged_in()) {
+                return true;
+            }
         }
     }
 
