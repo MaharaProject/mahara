@@ -553,6 +553,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'type' => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-secondary btn-sm',
+                                'confirm' => get_string('confirmdeleteexternalapp', 'auth.webservice'),
                                 'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('deletespecific', 'mahara', $consumer->application_title).'</span>',
                                 'elementtitle' => get_string('deletespecific', 'mahara', $consumer->application_title),
                             ),
