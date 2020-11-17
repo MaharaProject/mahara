@@ -803,7 +803,10 @@ EOF;
         else {
             $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
         }
-        $smarty->assign('LANGCHOICES', get_languages());
+        $displaylangs = get_languages();
+        if (count($displaylangs) > 1) {
+            $smarty->assign('LANGCHOICES', get_languages());
+        }
         $smarty->assign('LANGCURRENT', current_language());
     }
     else {

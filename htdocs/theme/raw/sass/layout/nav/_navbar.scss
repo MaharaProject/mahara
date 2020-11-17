@@ -36,19 +36,24 @@
     height: 65px;
     overflow: visible;
     @include media-breakpoint-up(md) {
-        position: absolute;
-        display: block;
+        position: relative;
+        display: inline-block;
         max-width: none;
         visibility: visible;
-        top: 0.8125rem; // 13px;
-        right: 15rem; // 240px;
-        margin: 0 $spacing-xxl 0 0;
+        top: auto;
+        right: auto;
+        margin: 0.8125rem $spacing-xl 0 0; // 13px 20px 0 0;
         padding: 0;
         box-shadow: none;
         height: auto !important;
+        float: right;
+        clear: none;
     }
 
     .header-search-form {
+        @include media-breakpoint-down(md) {
+            width: 100%;
+        }
         input[type=text] {
             width: calc(100% - 4.6875rem); // calc(100% - 75px)
             float: left;
@@ -70,21 +75,6 @@
             @include media-breakpoint-up(md) {
                 float: right;
             }
-        }
-    }
-}
-// Allowing the public search to sit in right place
-// when lang selector exists or not
-.loggedout .navbar-form.navbar-collapse {
-    @include media-breakpoint-up(md) {
-        right: 0;
-        margin-right: $spacing-lg;
-
-        &.with-langform {
-            right: 16.875rem; // 270px;
-        }
-        &.with-langform-login {
-            right: 23.125rem; // 370px;
         }
     }
 }
