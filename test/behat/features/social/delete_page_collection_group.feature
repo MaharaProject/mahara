@@ -41,6 +41,7 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     Then I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage" in "Collection UserA_01" card menu
     And I click on "Remove" in "Page UserA_01" row
+    And I go to homepage
     And I log out
 
     # Log in as UserB
