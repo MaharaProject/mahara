@@ -1,0 +1,12 @@
+
+php-jwt
+=======
+
+Website: https://github.com/fproject/php-jwt
+Version: 5.0.0
+
+This library is used to handle jason web tokens needed for OAuth2
+
+Changes:
+
+None
