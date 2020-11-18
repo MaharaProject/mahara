@@ -35,7 +35,8 @@
         padding-bottom: $spacing-lg;
     }
     .card-control {
-        padding-top: 1rem; // 16px;
+        padding-top: $spacing-lg + 0.125rem;
+        padding-bottom: $spacing-lg;
         + a[data-toggle="collapse"] {
             padding-left: 4rem; // 64px
             padding-right: 2rem; // 32px
@@ -47,11 +48,11 @@
         margin: 0;
         font-size: $font-size-lg;
         font-family: $font-family-base;
-        line-height: 1;
 
         > .icon:not(.collapse-indicator) {
             position: absolute;
             left: -3.5rem; // -56px;
+            top: 0.125rem; // 2px;
         }
         .collapse-indicator {
             position: absolute;
