@@ -446,6 +446,9 @@ div.toolbarhtml {
 .releaseviewform {
     position: relative;
     top: $spacing-lg;
+    div {
+        padding-right: 5px !important;
+    }
 }
 
 #pendinglist {

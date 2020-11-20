@@ -1,0 +1,9 @@
+/* Custom css to go here to override what is supplied in the following files
+- htdocs/module/submissions/js/piertables.css
+- htdocs/module/submissions/vendor/DataTables/datatables.min.css
+*/
+
+/* Display comment fields correctly */
+table.dataTable.nowrap td .pt-feedback {
+  white-space: normal !important;
+}

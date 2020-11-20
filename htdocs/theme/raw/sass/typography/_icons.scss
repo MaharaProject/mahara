@@ -253,6 +253,13 @@
     content: fa-content($fa-var-award);
 }
 
+.icon-remove:before {
+    content: fa-content($fa-var-times);
+}
+.icon-refresh:before {
+    content: fa-content($fa-var-sync);
+}
+
 .icon-on-hover {
 
     ~ .icon-action {

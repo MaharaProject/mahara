@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="module/submissions/db" VERSION="20190722"
+       COMMENT="XMLDB file for submissions module Mahara tables"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="module_submissions">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true"/>
+                <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="ownertype" TYPE="char" LENGTH="20" NOTNULL="true"/>
+                <FIELD NAME="ownerid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="portfolioelementtype" TYPE="char" LENGTH="20" NOTNULL="true"/>
+                <FIELD NAME="portfolioelementid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="portfolioelementtitle" TYPE="text" NOTNULL="true"/>
+                <FIELD NAME="submissiondate" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="status" TYPE="int" LENGTH="2" NOTNULL="true"/>
+                <FIELD NAME="taskid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="tasktitle" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="exportarchiveid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="groupix" UNIQUE="false" FIELDS="groupid"/>
+                <INDEX NAME="ownertypeownerix" UNIQUE="false" FIELDS="ownertype,ownerid"/>
+                <INDEX NAME="taskix" UNIQUE="false" FIELDS="taskid"/>
+                <INDEX NAME="exportarchiveix" UNIQUE="true" FIELDS="exportarchiveid"/>
+            </INDEXES>
+        </TABLE>
+
+        <TABLE NAME="module_submissions_evaluation">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true"/>
+                <FIELD NAME="submissionid" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="evaluatorid" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="evaluationdate" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="feedback" TYPE="text" NOTNULL="false"/>
+                <FIELD NAME="rating" TYPE="int" LENGTH="2" NOTNULL="false"/>
+                <FIELD NAME="success" TYPE="int" LENGTH="1" NOTNULL="false"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+                <KEY NAME="submissionfk" TYPE="foreign" FIELDS="submissionid" REFTABLE="module_submissions" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="evaluatorix" UNIQUE="false" FIELDS="evaluatorid"/>
+            </INDEXES>
+        </TABLE>
+    </TABLES>
+</XMLDB>

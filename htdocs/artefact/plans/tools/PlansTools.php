@@ -580,6 +580,29 @@ class PlansTools {
     }
 
     /**
+     * @param \View|\Collection $portfolioElement
+     * @return ArtefactTypeTask|false
+     * @throws \ArtefactNotFoundException
+     * @throws \SQLException
+     * @throws \SystemException
+     */
+    public static function findCorrespondingGroupTaskByPortfolioElement($portfolioElement) {
+
+        $portfolioElementType = strtolower(get_class($portfolioElement));
+
+        $sql = 'SELECT gt.artefact AS id FROM {artefact_plans_task} AS pt
+                    INNER JOIN {artefact_plans_task} gt ON gt.artefact = pt.rootgrouptask
+                    WHERE pt.outcometype = ? AND pt.outcome = ?';
+
+        $result = get_record_sql($sql, [$portfolioElementType, $portfolioElement->get('id')]);
+
+        if ($result) {
+            return new ArtefactTypeTask($result->id);
+        }
+        return false;
+    }
+
+    /**
      * @param int $viewId
      * @return bool
      * @throws \SQLException
