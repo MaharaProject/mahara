@@ -1,7 +1,7 @@
 
 <p>{str tag=emailheader section=notification.email arg1=$sitename}</p>
 ------------------------------------------------------------------------
-<p>You have been given access to the following:</p>
+<p><p>{str section='collection' tag='youhavebeengivenaccess'}:</p></p>
 {foreach from=$accessitems item=item}
 {if count($accessitems) == 1}
 <a href={$item.url}>{$item.name|clean_html|safe}</a>

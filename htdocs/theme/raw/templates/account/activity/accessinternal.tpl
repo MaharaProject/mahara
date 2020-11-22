@@ -1,4 +1,4 @@
-<p>You have been given access to the following:</p>
+<p>{str section='collection' tag='youhavebeengivenaccess'}:</p>
 {foreach from=$accessitems item=item}
 {if count($accessitems) == 1}
 {$item.name|clean_html|safe}
