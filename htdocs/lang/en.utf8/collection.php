@@ -141,3 +141,6 @@ $string['needssignedoff'] = 'Needs to be signed off';
 $string['verified'] = 'Verified';
 $string['needsverified'] = 'Needs to be verified';
 $string['verification'] = 'Verification';
+
+// access notifications
+$string['youhavebeengivenaccess'] = "You have been given access to the following";
