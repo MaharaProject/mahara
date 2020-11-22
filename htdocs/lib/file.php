@@ -60,6 +60,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
 
     if ($mimetype == 'text/html'
         || $mimetype == 'text/xml'
+        || $mimetype == 'application/json'
         || $mimetype == 'application/xml'
         || $mimetype == 'application/xhtml+xml'
         || $mimetype == 'image/svg+xml') {

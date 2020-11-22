@@ -58,6 +58,27 @@ function framework_config_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
 }
 
+/**
+ * Export framework on main page
+ *
+ * @params Pieform $form
+ * @params array $values
+ */
+function framework_export_submit(Pieform $form, $values) {
+    global $USER;
+
+    $values['framework'] = intval($values['framework']);
+    $f = new Framework($values['framework']);
+    $json = $f->to_json();
+    $tmpdir = get_config('dataroot') . 'temp';
+    if (!check_dir_exists($tmpdir) || !is_writable($tmpdir)) {
+        throw new SystemException(get_string('cli_tmpdir_notwritable', 'admin', $tmpdir));
+    }
+    $filename = 'framework_' . $values['framework'] . '_' . time() . '.matrix';
+    $USER->set_download_file($json, $filename, 'application/json');
+    redirect(get_config('wwwroot') . 'download.php');
+}
+
 function import_matrix_file_section() {
     //show Browse for matrix file form.
     define('SUBSECTIONHEADING', get_string('upload'));
@@ -256,13 +277,33 @@ function management_section() {
                     'name' => 'framework_config_' . $framework->id,
                     'successcallback' => 'framework_config_submit',
                     'renderer' => 'div',
-                    'class' => (empty($framework_collections_count) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
+                    'class' => 'btn-group-first',
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
                             'value'        => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
+                        ),
+                        'framework'  => array(
+                            'type'         => 'hidden',
+                            'value'        => $framework->id,
+                        )
+                    ),
+                )
+            );
+            $framework->export = pieform(
+                array(
+                    'name' => 'framework_export_' . $framework->id,
+                    'successcallback' => 'framework_export_submit',
+                    'renderer' => 'div',
+                    'class' => (empty($framework_collections_count) ? 'btn-group' : 'btn-group-last'),
+                    'elements' => array(
+                        'submit' => array(
+                            'type'         => 'button',
+                            'class'        => 'btn-secondary btn-sm button',
+                            'usebuttontag' => true,
+                            'value'        => '<span class="icon icon-download" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('Download', 'admin') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',
