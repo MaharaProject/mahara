@@ -784,7 +784,7 @@ abstract class ActivityType {
             $userdata->url = $user->url;
         }
         if (empty($user->lang) || $user->lang == 'default') {
-            $user->lang = get_config('lang');
+            $user->lang = get_user_language($user->id);
         }
         if (empty($user->method)) {
             // If method is not set then either the user has selected 'none' or their setting has not been set (so use default).
