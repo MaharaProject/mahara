@@ -3217,22 +3217,22 @@ function auth_register_submit(Pieform $form, $values) {
             }
 
             require_once(get_config('libroot') . 'pieforms/pieform/elements/expiry.php');
-            $expirytime = pieform_element_expiry_get_expiry_from_seconds(get_config('defaultregistrationexpirylifetime'));
-            if ($expirytime == null) {
-                $expirystring = get_config('defaultregistrationexpirylifetime') . ' ' . get_string('seconds', 'performance');
-            }
-            else if ($expirytime['units'] == 'noenddate') {
-                $expirystring = get_string('element.expiry.noenddate', 'pieforms');
-            }
-            else {
-                $expirystring = get_string('element.expiry.' . $expirytime['units'] . '.lowercase', 'pieforms', $expirytime['number'], $expirytime['number']);
-            }
             // email each admin
             // @TODO Respect the notification preferences of the admins.
             foreach ($admins as $admin) {
                 $adminuser = new User();
                 $adminuser->find_by_id($admin);
                 $ownerlang = get_user_language($adminuser->get('id'));
+                $expirytime = pieform_element_expiry_get_expiry_from_seconds(get_config('defaultregistrationexpirylifetime'));
+                if ($expirytime == null) {
+                    $expirystring = get_config('defaultregistrationexpirylifetime') . ' ' . get_string_from_language($ownerlang, 'seconds', 'performance');
+                }
+                else if ($expirytime['units'] == 'noenddate') {
+                    $expirystring = get_string_from_language($ownerlang, 'element.expiry.noenddate', 'pieforms');
+                }
+                else {
+                    $expirystring = get_string_from_language($ownerlang, 'element.expiry.' . $expirytime['units'] . '.lowercase', 'pieforms', $expirytime['number'], $expirytime['number']);
+                }
                 email_user($adminuser, null,
                     get_string_from_language($ownerlang, 'pendingregistrationadminemailsubject', 'auth.internal', $institution->displayname, get_config('sitename')),
                     get_string_from_language($ownerlang, 'pendingregistrationadminemailtext', 'auth.internal',
