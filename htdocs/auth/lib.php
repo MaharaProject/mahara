@@ -3222,7 +3222,7 @@ function auth_register_submit(Pieform $form, $values) {
                 $expirystring = get_config('defaultregistrationexpirylifetime') . ' ' . get_string('seconds', 'performance');
             }
             else if ($expirytime['units'] == 'noenddate') {
-                $expirystring = get_string('element.expiry.noenddate.lowercase', 'pieforms');
+                $expirystring = get_string('element.expiry.noenddate', 'pieforms');
             }
             else {
                 $expirystring = get_string('element.expiry.' . $expirytime['units'] . '.lowercase', 'pieforms', $expirytime['number'], $expirytime['number']);
