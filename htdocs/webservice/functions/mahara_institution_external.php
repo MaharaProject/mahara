@@ -28,7 +28,6 @@ require_once(get_config('docroot') . 'lib/institution.php');
 require_once(get_config('docroot') . 'lib/searchlib.php');
 
 global $WEBSERVICE_OAUTH_USER;
-
 /**
  * Class container for core Mahara institution related API calls
  */
@@ -75,12 +74,12 @@ class mahara_institution_external extends external_api {
     public static function add_members_parameters() {
         return new external_function_parameters(
                     array(
-                            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+                            'institution'     => new external_value(PARAM_TEXT,  get_string('institution', WEBSERVICE_LANG)),
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'id'              => new external_value(PARAM_NUMBER,  get_string('favsownerid', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW,  get_string('favsownerusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                                 )
                                                             )
                                                         )
@@ -153,12 +152,12 @@ class mahara_institution_external extends external_api {
     public static function invite_members_parameters() {
         return new external_function_parameters(
                 array(
-                        'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+                        'institution'     => new external_value(PARAM_TEXT,  get_string('institution', WEBSERVICE_LANG )),
                         'users'           => new external_multiple_structure(
                                                 new external_single_structure(
                                                     array(
-                                                            'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                            'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                            'id'              => new external_value(PARAM_NUMBER,  get_string('favsownerid', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                            'username'        => new external_value(PARAM_RAW,  get_string('favsownerusername', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                         )
                                                     )
                                                 )
@@ -232,12 +231,12 @@ class mahara_institution_external extends external_api {
     public static function remove_members_parameters() {
         return new external_function_parameters(
                     array(
-                            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+                            'institution'     => new external_value(PARAM_TEXT,  get_string('institution', WEBSERVICE_LANG )),
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'id'              => new external_value(PARAM_NUMBER,  get_string('favsownerid', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW,  get_string('favsownerusername', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                             )
                                                         )
                                                     )
@@ -305,12 +304,12 @@ class mahara_institution_external extends external_api {
     public static function decline_members_parameters() {
         return new external_function_parameters(
                     array(
-                            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+                            'institution'     => new external_value(PARAM_TEXT,  get_string('institution', WEBSERVICE_LANG )),
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'id'              => new external_value(PARAM_NUMBER,  get_string('favsownerid', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW,  get_string('favsownerusername', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                             )
                                                         )
                                                     )
@@ -379,7 +378,7 @@ class mahara_institution_external extends external_api {
 
         return new external_function_parameters(
                     array(
-                            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+                            'institution'     => new external_value(PARAM_TEXT,  get_string('institution', WEBSERVICE_LANG )),
                     )
                 );
     }
@@ -426,8 +425,8 @@ class mahara_institution_external extends external_api {
         return new external_multiple_structure(
                     new external_single_structure(
                     array(
-                            'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-                            'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG)),
+                            'username'        => new external_value(PARAM_RAW,  get_string('username', WEBSERVICE_LANG)),
                         )
                     )
                 );
@@ -443,7 +442,7 @@ class mahara_institution_external extends external_api {
 
         return new external_function_parameters(
             array(
-                  'institution'     => new external_value(PARAM_TEXT, 'Mahara institution'),
+                  'institution'     => new external_value(PARAM_TEXT,  get_string('institution', WEBSERVICE_LANG )),
             )
         );
     }
@@ -501,8 +500,8 @@ class mahara_institution_external extends external_api {
         return new external_multiple_structure(
                     new external_single_structure(
                         array(
-                                'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-                                'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
+                                'id'              => new external_value(PARAM_NUMBER,  get_string('userid', WEBSERVICE_LANG )),
+                                'username'        => new external_value(PARAM_RAW,  get_string('username', WEBSERVICE_LANG )),
                             )
                         )
                     );

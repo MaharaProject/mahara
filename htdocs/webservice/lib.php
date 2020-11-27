@@ -69,7 +69,8 @@ define('GETREMOTEADDR_SKIP_HTTP_CLIENT_IP', '1');
 /** Get remote addr constant */
 define('GETREMOTEADDR_SKIP_HTTP_X_FORWARDED_FOR', '2');
 
-
+/** Webservice language file */
+define('WEBSERVICE_LANG', 'webservices');
 /**
  * What debugging state is Web Services in
  *
