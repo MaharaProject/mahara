@@ -850,7 +850,7 @@
      * modal closes.
      */
     function showMediaPlayers() {
-        if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
+        if (tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
             tinyMCE.execCommand('mceRemoveEditor', false, tinyMCE.activeEditor.id);
         }
         if (config.mathjax && MathJax !== undefined) {
