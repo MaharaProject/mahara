@@ -34,7 +34,7 @@ $form = pieform(array(
         'fontinstructions' => array(
             'type' => 'html',
             'title' => '',
-            'value' => get_string('installfontinstructions', 'skin'),
+            'value' => get_string('installfontinstructions1', 'skin'),
         ),
         'fonttitle' => array(
             'type' => 'text',
@@ -323,7 +323,7 @@ function addfontform_submit(Pieform $form, $values) {
         (object) array(
             'name' => $foldername,
             'title' => $values['fonttitle'],
-            'licence' => $values['fontfilelicence']['name'],
+            'licence' => ($values['fontfilelicence']['name'] ? $values['fontfilelicence']['name'] : ''),
             'notice' => $values['fontnotice'],
             'previewfont' => $values['fontfileTTF']['name'],
             'variants' => serialize(array($font_variant => $variantdata)),
