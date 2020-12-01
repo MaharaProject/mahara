@@ -1,7 +1,6 @@
 {if $noassessment && $editing}
     <p class="editor-description">{$noassessment}</p>
 {else}
-<div class="card-body">
     {if $allowfeedback}
         <a id="add_assessment_feedback_link" class="js-peerassessment-modal feedback link-blocktype" href="#" data-toggle="modal-docked" data-target="#assessment_feedbackform_{$blockid}" data-blockid="{$blockid}">
             <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
@@ -15,7 +14,6 @@
             </div>
         {/if}
     {/if}
-</div>
 {/if}
 {if !$editing}
     {* Do not change the id because it is used by paginator.js *}
