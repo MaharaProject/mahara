@@ -427,6 +427,11 @@ div.toolbarhtml {
         background-color: $accent-bg !important;
     }
 }
+.peerinstructions {
+    div.fieldset-body {
+        margin-bottom: $spacing-base !important;
+    }
+}
 .viewinstruction-export {
     border: $card-border-width solid $card-border-color;
     padding: $card-spacer-y $card-spacer-x;
