@@ -1206,11 +1206,12 @@ jQuery(function($) {
         });
     });
 
-    // Returns focus back to the menu button when the menu is closed
-    $('nav .navbar-collapse').on('hide.bs.collapse', function(e) {
-        if (!$(e.target).hasClass('child-nav collapse show')) {
-            var id = $(this).attr('id');
-            $('button[aria-controls=' + id + ']').focus();
+    // Return focus to the menu button on pressing esc on nav
+    $('nav .navbar-collapse').on('keyup', function(e) {
+        if (e.keyCode == 27) {
+            var parent = $(this);
+            var id = $(parent).attr('id');
+            $('button[aria-controls="' + id + '"]').focus();
         }
     });
 });
