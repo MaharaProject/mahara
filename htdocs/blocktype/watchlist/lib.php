@@ -186,6 +186,40 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
         return true;
     }
 
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $elements = array();
+        $elements['watchlistnotification'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('watchlistnotification', 'blocktype.watchlist'),
+            'elements' => array(
+                'watchlistnotification_delay' => array(
+                    'title'        => get_string('watchlistdelaytitle', 'blocktype.watchlist'),
+                    'type'         => 'text',
+                    'defaultvalue' => get_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay'),
+                    'rules' => array( 'integer' => true, 'minvalue' => 0 ),
+                    'description' => get_string('watchlistdelaydescription', 'blocktype.watchlist'),
+                )
+            ),
+        );
+        return array(
+            'elements' => $elements,
+        );
+    }
+
+    public static function save_config_options(Pieform $form, $values) {
+        set_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay', (int)$values['watchlistnotification_delay']);
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay', 20);
+        }
+    }
+
     public static function get_instance_config_javascript(BlockInstance $instance) {
         return array('js/configform.js');
     }
