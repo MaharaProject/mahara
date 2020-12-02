@@ -63,10 +63,15 @@ function import_matrix_file_section() {
     define('SUBSECTIONHEADING', get_string('upload'));
     $active_tab = 'import';
     $form = upload_matrix_form();
+    $helplink = get_manual_help_link_array(array('configextensions','frameworks','uploadmatrix'));
+    $manuallink = $helplink['prefix'] .'/'.  $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
+    $branchname = $helplink['version'] . "_STABLE";
     $smarty = smarty();
     setpageicon($smarty, 'icon-th');
     $smarty->assign('wwwroot', get_config('wwwroot'));
     $smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
+    $smarty->assign('branchname', $branchname);
+    $smarty->assign('manuallink', $manuallink);
     $smarty->assign('form', $form);
     $smarty->display('module:framework:uploadframework.tpl');
     exit;
