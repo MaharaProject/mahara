@@ -550,8 +550,8 @@ abstract class TestingUtil {
         foreach ($characters as $c1) {
             foreach ($characters as $c2) {
                 foreach ($characters as $c3) {
-                    $content = scandir("$sessionpath/$c1/$c2/$c3");
-                    if (count($content) > 2) {
+                    $content = @scandir("$sessionpath/$c1/$c2/$c3");
+                    if (is_array($content) && count($content) > 2) {
                         foreach($content as $file) {
                             if (!in_array($file, $ignore)) {
                                 unlink("$sessionpath/$c1/$c2/$c3/$file");
