@@ -30,10 +30,11 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
 
     public static function get_instance_javascript(BlockInstance $bi) {
         $blockid = $bi->get('id');
+        $viewid = $bi->get('view');
         return array(
             array(
                 'file'   => 'js/taggedposts.js',
-                'initjs' => "addNewTaggedPostShortcut($blockid);",
+                'initjs' => "addNewTaggedPostShortcut($blockid, $viewid);",
             )
         );
     }
