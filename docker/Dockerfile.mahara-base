@@ -29,5 +29,3 @@ RUN mkdir -p /mahara/data && \
     chmod 777 /mahara/data
 
 VOLUME /mahara/data
-
-ENTRYPOINT ["/bin/bash"]

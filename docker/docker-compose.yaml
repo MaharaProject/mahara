@@ -103,10 +103,7 @@ services:
 volumes:
   mahara-db:
     external: true
-    name: ${MAHARA_DB_VOLUME:-mahara-db}
   mahara-data:
     external: true
-    name: ${MAHARA_DATA_VOLUME:-mahara-data}
   mahara-elastic:
     external: true
-    name: ${MAHARA_ELASTIC_VOLUME:-mahara-elastic}

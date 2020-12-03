@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  mahara:
+    tty: true
+    volumes:
+      - ../htdocs:/mahara/htdocs
+  db:
+    tty: true
+    stdin_open: true
+    ports:
+      - "127.0.0.1:5432:5432"
+
+volumes:
+  mahara-db:
+    external: false
+  mahara-data:
+    external: false
+  mahara-elastic:
+    external: false

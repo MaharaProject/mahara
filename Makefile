@@ -20,6 +20,7 @@ all: css
 
 production = true
 css:
+	$(info Rebuilding CSS on host)
 ifeq (, $(shell which npm))
 	$(error ERROR: Can't find the "npm" executable. Try "sudo apt-get install npm")
 endif
@@ -40,6 +41,20 @@ clean-css:
 
 help:
 	@echo "Run 'make' to do "build" Mahara (currently only CSS)"
+	@echo "Run 'make new-dev-environment' if this is your first checkout"
+	@echo "   This will run the 'docker-image', 'css' and 'up' targets"
+	@echo "Run 'make up' to bring the docker instance back up if it was shut down"
+	@echo "Run 'make down' to shut down the docker instance"
+	@echo ""
+	@echo "Reviews repository management targets"
+	@echo "====================================="
+	@echo "   This is for the https://reviews.mahara.org code review system"
+	@echo "Run 'make minaccept' to run the quick pre-commit tests"
+	@echo "Run 'make push' to push your changes to the reviews repository"
+	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
+	@echo ""
+	@echo "Helper targets"
+	@echo "=============="
 	@echo "Run 'make initcomposer' to install Composer and phpunit"
 	@echo "Run 'make phpunit' to execute phpunit tests"
 	@echo "Run 'make install' runs the Mahara install script"
@@ -47,9 +62,6 @@ help:
 	@echo "Run 'make ssphp' to install SimpleSAMLphp"
 	@echo "Run 'make cleanssphp' to remove SimpleSAMLphp"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
-	@echo "Run 'make minaccept' to run the quick pre-commit tests"
-	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
-	@echo "Run 'make push' to push your changes to the repo"
 	@echo "Run 'make docker-image' to build a Mahara docker image"
 	@echo "Run 'make docker-builder' builds the docker builder image required for docker-build"
 
@@ -189,6 +201,7 @@ security: minaccept
 
 # Builds Mahara server docker image
 docker-image:
+	$(info Preparing images)
 	docker build --pull --file docker/Dockerfile.mahara-base \
 	  --build-arg BASE_VERSION=$(DOCKER_UBUNTU_VERSION) \
 		--tag mahara-base:$(DOCKER_UBUNTU_VERSION) .
@@ -208,3 +221,17 @@ docker-builder:
 	  --build-arg BASE_IMAGE=mahara-base:$(DOCKER_UBUNTU_VERSION) \
 		--build-arg IMAGE_UID=$(shell id -u) --build-arg IMAGE_GID=$(shell id -g) \
 		--tag mahara-builder .
+
+new-dev-environment:
+	$(info Building a new Docker based development environment)
+	$(MAKE) docker-image
+	$(MAKE) css
+	$(MAKE) up
+
+up:
+	$(info Bringing up docker containers)
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml up
+
+down:
+	$(info Bringing up docker containers)
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml down
