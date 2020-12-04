@@ -266,6 +266,9 @@ function addfontform_submit(Pieform $form, $values) {
                     }
                 }
             }
+            if (isset($values['fontfileTXT']['name'])) {
+                $values['fontfilelicence']['name'] = $values['fontfileTXT']['name'];
+            }
         }
     }
 
