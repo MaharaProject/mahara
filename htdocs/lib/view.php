@@ -2697,7 +2697,9 @@ class View {
                 );
                 foreach($instancejs as $jsfile) {
                   if (is_array($jsfile) && isset($jsfile['file'])) {
-                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
+                    if (!empty($jsfile['file'])) {
+                      $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
+                    }
                     if (isset($jsfile['initjs'])) {
                       $initjavascripts[] = $jsfile['initjs'];
                     }
@@ -2707,8 +2709,8 @@ class View {
                       }
                     }
                   }
-                  else if (is_string($jsfile)) {
-                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
+                  else if (is_string($jsfile) && !empty($jstring)) {
+                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);
                   }
                 }
                 // Check to see if we need to include the block Ajax file.

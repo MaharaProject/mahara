@@ -73,8 +73,10 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             ),
             array(
                 'file' => '',
-                'initjs' => "$('#slideshow{$blockid}').on('slid.bs.carousel', function () {
-                    $(window).trigger('colresize');
+                'initjs' => "$(function() {
+                    $('#slideshow{$blockid}').on('slid.bs.carousel', function () {
+                        $(window).trigger('colresize');
+                    });
                 });"
             )
         );
