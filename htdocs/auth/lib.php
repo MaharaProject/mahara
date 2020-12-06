@@ -2009,6 +2009,15 @@ function login_validate(Pieform $form, $values) {
 }
 
 /**
+ * Called when the login form fails.
+ *
+ * @param object $form   The Pieform form object
+ */
+function login_error(Pieform $form) {
+    $form->set_property('errormessage', get_string('errorunabletologin', 'auth'));
+}
+
+/**
  * Called when the login form is submitted. Validates the user and password, and
  * if they are valid, starts a new session for the user.
  *
@@ -2157,7 +2166,9 @@ function login_submit(Pieform $form, $values) {
             return;
         }
     }
-
+    catch (AccessTotallyDeniedException $e) {
+        throw new AccessTotallyDeniedException($e->getMessage());
+    }
     // Do redirect on login to avoid browser back button exploit
     // We need to strip the path from domain set in $wwwroot from the path we are trying
     // to get to.
