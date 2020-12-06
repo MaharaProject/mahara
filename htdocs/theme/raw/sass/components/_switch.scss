@@ -154,3 +154,8 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         }
     }
 }
+
+// Plan tasks in table form switches wrong width
+.planscontrols .form-switch .state-label {
+  width: auto;
+}
