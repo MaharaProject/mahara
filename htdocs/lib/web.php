@@ -802,9 +802,17 @@ EOF;
         else {
             $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
         }
-        $displaylangs = get_languages();
-        if (count($displaylangs) > 1) {
-            $smarty->assign('LANGCHOICES', get_languages());
+        $installedlangs = get_languages();
+        if (count($installedlangs) > 1) {
+            $acceptedlang = get_accept_lang();
+            $honouracceptlangs = array();
+            foreach (array_reverse($installedlangs) as $key => $value) {
+                if ($key !== $acceptedlang) {
+                    $honouracceptlangs[$key] = $value;
+                }
+            }
+            $honouracceptlangs[$acceptedlang] = $installedlangs[$acceptedlang];
+            $smarty->assign('LANGCHOICES', array_reverse($honouracceptlangs));
         }
         $smarty->assign('LANGCURRENT', current_language());
     }
@@ -4708,7 +4716,7 @@ function language_select_form() {
                             'submitonchange' => true,
                             'class' => 'submitonchange',
                             'options' => $languages,
-                            'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
+                            'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : get_accept_lang(),
                             'rules' => array('required' => true),
                         ),
                         'changelang' => array(

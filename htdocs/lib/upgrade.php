@@ -633,7 +633,7 @@ function core_postinst() {
     // Set default search plugin
     set_config('searchplugin', 'internal');
 
-    set_config('lang', 'en.utf8');
+    set_config('lang', get_accept_lang());
     set_config('installation_key', get_random_key());
     set_config('installation_time', $now);
     set_config('stats_installation_time', $now);
