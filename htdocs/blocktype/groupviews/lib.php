@@ -172,7 +172,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         if (!$editing && isset($data['group_view_submission_form'])) {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
         }
-        // Get members who have no submitted work - only show to those allowed to see submitted work
+        // Get regular group members who have no submitted work - only show to those allowed to see submitted work
         if ($USER->is_logged_in() && !empty($configdata['showsubmitted']) && group_user_can_assess_submitted_views($groupid, $USER->get('id')) && isset($data['nosubmissions'])) {
             $nosubmissions = $data['nosubmissions'];
             $pagination = array(
@@ -437,7 +437,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     }
 
     /**
-     * Return list of members that have not submitted any pages/collections to the group
+     * Return list of regular group members that have not submitted any pages/collections to the group
      *
      * @param integer $groupid The group to check
      *
@@ -445,7 +445,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
      */
     public static function find_members_without_submissions($groupid) {
         if ($nosubmissions = get_records_sql_array("SELECT u.id FROM {usr} u JOIN {group_member} gm ON gm.member = u.id
-                                                    WHERE gm.group = ? AND u.deleted = 0 AND gm.member NOT IN (
+                                                    WHERE gm.group = ? AND u.deleted = 0 AND gm.role = 'member' AND gm.member NOT IN (
                                                         SELECT DISTINCT m.member FROM {group} g
                                                         JOIN {group_member} m ON m.group = g.id
                                                         JOIN {view} v ON v.owner = m.member
