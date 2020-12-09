@@ -151,6 +151,7 @@ $manual_link_map = array(
     "configextensions|cleanurls" => "administration/extensions.html#clean-urls",
     "configextensions|filters" => "administration/extensions.html#html-filters",
     "configextensions|frameworks" => "administration/smartevidence.html#smartevidence-admin",
+    "configextensions|frameworks|uploadmatrix" => "administration/smartevidence_import.html",
     "configextensions|frameworks|frameworkmanager" => "administration/smartevidence.html#smartevidence-admin", // Need to point to new place once created
     "configextensions|iframesites" => "administration/extensions.html#allowed-iframe-sources",
     "configextensions|pluginadmin|plugins" => "administration/extensions.html",

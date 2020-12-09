@@ -50,7 +50,7 @@ $string['partialcomplete'] = 'Partially meets the standard';
 $string['completed'] = 'Meets the standard';
 $string['usedincollections'] = 'Used in collections';
 $string['selfassess'] = 'Self-assess';
-$string['uploadframeworkdesc1'] = 'Upload a JSON encoded .matrix file. See the <a href="https://git.mahara.org/mahara/mahara/blob/16.10_STABLE/test/behat/upload_files/example.matrix">Mahara git repository</a> for an example of the markup and the <a href="https://manual.mahara.org/en/16.10/administration/smartevidence.html#create-a-framework-file">Mahara manual</a> for an explanation of the individual components.';
+$string['uploadframeworkdesc2'] = 'Upload a JSON encoded .matrix file. See the <a href="https://git.mahara.org/mahara/mahara/-/blob/%s/test/behat/upload_files/example.matrix">Mahara git repository</a> for an example of the markup and the <a href="%s">Mahara manual</a> for an explanation of the individual components.';
 $string['savematrix'] = 'Upload matrix';
 $string['frameworkmissing'] = 'Framework not found';
 $string['activeframework'] = 'Active framework';
