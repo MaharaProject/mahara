@@ -556,6 +556,22 @@ class ArtefactTypeProfile extends ArtefactType {
         return array_merge($m, $alwaysm);
     }
 
+    public static function get_all_comment_fields() {
+        return array (
+            'notes' => 'text'
+        );
+    }
+
+    public static function get_comment_fields() {
+        $out = array();
+        if ($info = get_config_plugin('artefact', 'internal', 'allowcomments')) {
+            foreach (explode(',', $info) as $item) {
+                $out[$item] = 1;
+            }
+        }
+        return $out;
+    }
+
     public static function get_adminusersearch_fields() {
         $m = array();
         $all = self::get_all_fields();
@@ -697,6 +713,16 @@ class ArtefactTypeProfile extends ArtefactType {
             );
         }
 
+        $allallowcomments = self::get_all_comment_fields();
+        $allcomments = self::get_comment_fields();
+        foreach (array_keys($allallowcomments) as $field) {
+            $allcomments[$field] = array(
+                'title'        => get_string($field, 'artefact.internal'),
+                'value'        => $field,
+                'defaultvalue' => isset($allcomments[$field]),
+            );
+        }
+
         $form = array(
             'elements'   => array(
                 'mandatory' =>  array(
@@ -729,6 +755,15 @@ class ArtefactTypeProfile extends ArtefactType {
                     'options'      => $allmandatory, // Only the keys are used by validateoptions
                     'rules'        => array('validateoptions' => true),
                 ),
+                'allowcomments'    => array(
+                    'title'        => get_string('artefactdefaultpermissions', 'artefact.comment'),
+                    'description'  => get_string('artefactdefaultpermissionsdescription', 'artefact.comment'),
+                    'help'         => true,
+                    'class'        => 'stacked',
+                    'type'         => 'checkboxes',
+                    'elements'     => $allcomments,
+                    'options'      => $allallowcomments, // Only the keys are used by validateoptions
+                ),
             ),
         );
 
@@ -742,6 +777,13 @@ class ArtefactTypeProfile extends ArtefactType {
         set_config_plugin('artefact', 'internal', 'profilepublic', join(',', $searchable));
         $adminusersearch = array_merge(array_keys(self::get_always_adminusersearchable_fields()), $values['adminusersearch']);
         set_config_plugin('artefact', 'internal', 'profileadminusersearch', join(',', $adminusersearch));
+        set_config_plugin('artefact', 'internal', 'allowcomments', join(',', $values['allowcomments']));
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('artfact', 'internal', 'allowcomments', '1');
+        }
     }
 
     public static function get_links($id) {
