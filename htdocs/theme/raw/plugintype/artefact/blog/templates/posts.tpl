@@ -43,24 +43,17 @@
         </div>
         <div id="postdetails_{$post->id}" class="postdetails postdate text-small text-midtone">
             <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
-            <strong>
-                {str tag=postedon section=artefact.blog}:
-            </strong>
-            {$post->ctime}
+            {str tag=postedon section=artefact.blog}: {$post->ctime}
             {if $post->lastupdated}
                 <br>
                 <span class="icon icon-regular icon-calendar-alt left" role="presentation" aria-hidden="true"></span>
-                <strong>
-                    {str tag=updatedon section=artefact.blog}:
-                </strong>
-                {$post->lastupdated}
+                {str tag=updatedon section=artefact.blog}: {$post->lastupdated}
             {/if}
 
             {if $post->tags}
             <p id="posttags_{$post->id}" class="tags">
                 <span class="icon icon-tags left" role="presentation" aria-hidden="true"></span>
-                <strong>{str tag=tags}:</strong>
-                {list_tags owner=$post->author tags=$post->tags}
+                {str tag=tags}: {list_tags owner=$post->author tags=$post->tags}
             </p>
             {/if}
         </div>

@@ -5,7 +5,7 @@
         </h4>
         <br>
         {if $view.sharedby}
-        <span class="owner inner-link text-small text-midtone">
+        <span class="owner text-small text-midtone">
             {if $view.group}
                 <a href="{$view.groupdata->homeurl}" class="text-small">
                      {$view.sharedby}
@@ -53,10 +53,7 @@
 
         {if $view.tags}
             <div class="tags text-small">
-                <strong>{str tag=tags}:</strong>
-                <span>
-                    {list_tags owner=$view.owner tags=$view.tags}
-                </span>
+              {str tag=tags}: list_tags owner=$view.owner tags=$view.tags}
             </div>
         {/if}
     </li>

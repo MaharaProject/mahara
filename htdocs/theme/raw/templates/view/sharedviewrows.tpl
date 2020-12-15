@@ -24,7 +24,7 @@
           </div>
         {/if}
         <div class="detail text-small">{$view.description|str_shorten_html:70:true|strip_tags|safe}</div>
-        {if $view.tags}<div class="tags text-small"><strong>{str tag=tags}:</strong> {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
+        {if $view.tags}<div class="tags text-small">{str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}</div>{/if}
       </td>
       <td class="text-center">{$view.commentcount}</td>
       <td class="lastcomment">

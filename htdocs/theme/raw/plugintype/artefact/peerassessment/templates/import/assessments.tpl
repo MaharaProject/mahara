@@ -13,7 +13,7 @@
                 </div>
                 {if $peerassessment.tags}
                 <div class="tags">
-                    <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$peerassessment.tags}
+                    {str tag=tags}: {list_tags owner=0 tags=$peerassessment.tags}
                 </div>
                 {/if}
                 {if $peerassessment.duplicateditem}

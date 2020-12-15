@@ -6,7 +6,8 @@
     border-color: $btn-secondary-border;
     box-shadow: none;
     &:hover,
-    &:focus {
+    &:focus,
+    &:active {
         color: $btn-secondary-color;
         background-color: scale-color($btn-secondary-bg, $lightness: -10%);
         border-color: scale-color($btn-secondary-border, $lightness: -10%);
@@ -16,7 +17,8 @@
         border-color: $btn-disabled-border;
         background: $btn-disabled-bg;
         &:hover,
-        &:focus {
+        &:focus,
+        &:active {
             color: $btn-disabled-color;
             border-color: $btn-disabled-border;
             background: $btn-disabled-bg;
@@ -30,7 +32,8 @@
     border-color: $btn-primary-border;
     box-shadow: none;
     &:hover,
-    &:focus {
+    &:focus,
+    &:active {
         color: $btn-primary-color;
         background-color: scale-color($btn-primary-bg, $lightness: -10%);
         border-color: scale-color($btn-primary-border, $lightness: -10%);
@@ -40,7 +43,8 @@
         background-color: $btn-primary-bg;
         border-color: $btn-primary-border;
         &:hover,
-        &:focus {
+        &:focus,
+        &:active {
             color: $btn-primary-color;
             background-color: scale-color($btn-primary-bg, $lightness: -10%);
             border-color: scale-color($btn-primary-border, $lightness: -10%);
@@ -48,15 +52,15 @@
     }
 }
 
-.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+.show>.btn-primary.dropdown-toggle {
     color: inherit;
-    border-color: $btn-secondary-border;
+    border-color: $btn-primary-border;
     box-shadow: none;
 }
 
-.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
-    color: $theme-text-color;
-    background-color: scale-color($btn-secondary-bg, $lightness: -15%);
+.show>.btn-secondary.dropdown-toggle {
+    color: $btn-secondary-color;
+    background-color: $btn-secondary-bg;
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 

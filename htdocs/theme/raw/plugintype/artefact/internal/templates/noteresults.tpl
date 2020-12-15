@@ -54,7 +54,7 @@
                     </div>
                     {if $n->tags}
                     <div class="tags text-small">
-                        <strong>{str tag=tags}</strong>: {list_tags tags=$n->tags owner=$n->owner}
+                        {str tag=tags}: {list_tags tags=$n->tags owner=$n->owner}
                     </div>
                     {/if}
                 </td>

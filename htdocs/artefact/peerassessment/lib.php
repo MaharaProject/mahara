@@ -792,7 +792,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'renderer'          => 'oneline',
             'plugintype'        => 'artefact',
             'pluginname'        => 'peerassessment',
-            'class'             => 'form-as-button pull-left assessbtn last',
+            'class'             => 'form-as-button float-left assessbtn last',
             'jsform'            => true,
             'successcallback'   => 'delete_assessment_submit',
             'jssuccesscallback' => 'modifyPeerassessmentSuccess',
