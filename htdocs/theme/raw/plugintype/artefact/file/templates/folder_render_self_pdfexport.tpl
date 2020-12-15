@@ -8,8 +8,7 @@
 {/if}
 {if $tags}
     <div class="tags">
-        <strong>{str tag=tags}</strong>:
-        {list_tags owner=$owner tags=$tags view=$viewid}
+        {str tag=tags}: {list_tags owner=$owner tags=$tags view=$viewid}
     </div>
 {/if}
 {if $description || $tags}
@@ -26,7 +25,7 @@
         <ul class="list-group">
             {foreach from=$children item=child}
             <li class="filedownload-item list-group-item">
-                <a class="inner-link file-icon-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
+                <a class="file-icon-link" href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
                 {if $child->iconsrc}
                     <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                 {else}
@@ -34,7 +33,7 @@
                 {/if}
                 </a>
                 <h3 class="title list-group-item-heading text-inline">
-                    <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" class="inner-link" title="{$child->hovertitle}">
+                    <a href="{$WWWROOT}artefact/artefact.php?artefact={$child->id}&amp;view={$viewid}" title="{$child->hovertitle}">
                         {$child->title}
                     </a>
                     <span class="filedate metadata">

@@ -29,7 +29,7 @@
         </div>
         <!-- TAGS -->
         {if is_array($record->tags) && count($record->tags) > 0}
-        <div class="tags text-small"><strong>{str tag=tags section=search.elasticsearch}:</strong>
+        <div class="tags text-small">{str tag=tags section=search.elasticsearch}:
             {foreach from=$record->tags item=tag name=tags}
                 <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
             {/foreach}

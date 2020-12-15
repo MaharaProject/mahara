@@ -29,11 +29,11 @@
             <div class="plantasktitle">{$task->title}</div>
         </td>
 
-        <td class="completiondate text-small">{$task->completiondate}</td>
+        <td class="completiondate">{$task->completiondate}</td>
 
-        <td class="plantaskdescription text-small">
+        <td class="plantaskdescription">
             {$task->description|clean_html|safe}
-            {if $task->tags}<span class="text-small text-midtone"><strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags}</span>{/if}
+            {if $task->tags}<span class="text-small text-midtone">{str tag=tags}: {list_tags owner=$task->owner tags=$task->tags}</span>{/if}
         </td>
 
         <td class="planscontrols text-right">

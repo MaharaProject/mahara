@@ -57,7 +57,7 @@
 
                                 {if $alltags}
                                 <div class="tags">
-                                    <strong>{str tag=tags}:</strong>
+                                    {str tag=tags}:
                                     {list_tags owner=$owner tags=$alltags view=$viewid}
                                     {if $moretags}
                                         <a href="#" class="moretags">

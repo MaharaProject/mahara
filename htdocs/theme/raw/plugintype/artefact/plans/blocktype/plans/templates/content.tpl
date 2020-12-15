@@ -31,7 +31,7 @@
         {/if}
         {if $plan.tags}
             <p class="text-midtone tags">
-                <strong>{str tag=tags}:</strong> {list_tags owner=$plan.owner tags=$plan.tags view=$plan.view}
+                {str tag=tags}: {list_tags owner=$plan.owner tags=$plan.tags view=$plan.view}
             </p>
         {/if}
         {if count($plans) > 1 || $plan.description || $plan.tags}

@@ -1,5 +1,7 @@
 .profile-block.card-header {
     padding:0;
+    min-height: 5.375rem;
+
     a.username {
         padding: $spacing-base 5.625rem $spacing-base $spacing-lg; // 10px 90px 10px 15px;
         display: block;

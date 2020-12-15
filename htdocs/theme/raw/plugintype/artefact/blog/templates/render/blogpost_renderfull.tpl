@@ -23,8 +23,7 @@
     {if $artefacttags}
         <div class="tags text-small text-midtone">
             <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
-            <strong>{str tag=tags}:</strong>
-            {list_tags owner=$artefactowner tags=$artefacttags view=$artefactview}
+            {str tag=tags}: {list_tags owner=$artefactowner tags=$artefacttags view=$artefactview}
         </div>
     {/if}
 
