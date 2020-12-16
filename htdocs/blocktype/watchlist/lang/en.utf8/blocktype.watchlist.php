@@ -39,3 +39,8 @@ $string['orderby'] = 'Order by';
 $string['orderbydesc'] = 'Select to show pages in reverse chronological order or by page owner.';
 $string['orderby.activity'] = 'Reverse chronological order';
 $string['orderby.owner'] = 'Page owner';
+
+$string['watchlistnotification'] = 'Watchlist notification';
+$string['watchlistdelaytitle'] = 'Watchlist notification delay';
+$string['watchlistdelaydescription'] = 'The delay in minutes between sending emails regarding watchlist changes.';
+
