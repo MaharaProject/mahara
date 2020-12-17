@@ -115,6 +115,12 @@ class PluginArtefactInternal extends PluginArtefact {
         return get_field('artefact_installed', 'active', 'name', 'internal');
     }
 
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            set_config_plugin('artefact', 'internal', 'allowcomments', '1');
+        }
+    }
+
     public static function right_nav_menu_items() {
         return array(
             'profile' => array(
@@ -778,12 +784,6 @@ class ArtefactTypeProfile extends ArtefactType {
         $adminusersearch = array_merge(array_keys(self::get_always_adminusersearchable_fields()), $values['adminusersearch']);
         set_config_plugin('artefact', 'internal', 'profileadminusersearch', join(',', $adminusersearch));
         set_config_plugin('artefact', 'internal', 'allowcomments', join(',', $values['allowcomments']));
-    }
-
-    public static function postinst($prevversion) {
-        if ($prevversion == 0) {
-            set_config_plugin('artfact', 'internal', 'allowcomments', '1');
-        }
     }
 
     public static function get_links($id) {

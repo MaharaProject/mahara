@@ -12,5 +12,5 @@
 defined('INTERNAL') || die();
 
 $config = new stdClass();
-$config->version = 2014092500;
-$config->release = '1.3.0';
+$config->version = 2020121800;
+$config->release = '1.3.1';
