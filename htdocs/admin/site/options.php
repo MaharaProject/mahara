@@ -188,11 +188,11 @@ $siteoptionform = array(
                     'disabled'     => in_array('licensemetadata', $OVERRIDDEN),
                 ),
                 'licenseallowcustom' => array(
-                'type'         => 'switchbox',
-                'title'        => get_string('licenseallowcustom1', 'admin'),
-                'description'  => get_string('licenseallowcustomdescription', 'admin'),
-                'defaultvalue' => get_config('licenseallowcustom'),
-                'disabled'     => in_array('licenseallowcustom', $OVERRIDDEN),
+                    'type'         => 'switchbox',
+                    'title'        => get_string('licenseallowcustom1', 'admin'),
+                    'description'  => get_string('licenseallowcustomdescription', 'admin'),
+                    'defaultvalue' => get_config('licenseallowcustom'),
+                    'disabled'     => in_array('licenseallowcustom', $OVERRIDDEN),
                 ),
                 'mathjax' => array(
                     'type'         => 'switchbox',
