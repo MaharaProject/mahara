@@ -227,22 +227,6 @@ function create_settings_pieform() {
 function get_basic_elements() {
     global $view, $urlallowed, $group, $institution, $USER;
 
-    $formatstring = '%s (%s)';
-    $ownerformatoptions = array(
-        FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
-        FORMAT_NAME_LASTNAME => sprintf($formatstring, get_string('lastname'), $USER->get('lastname')),
-        FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
-    );
-
-    $displayname = display_name($USER);
-    if ($displayname !== '') {
-        $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
-    }
-    $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
-    if ($studentid !== '') {
-        $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
-    }
-
     $createtagsoptions = array();
     $typecast = is_postgres() ? '::varchar' : '';
     if ($selecttags = get_records_sql_array("
