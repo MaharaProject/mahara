@@ -117,7 +117,7 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('artefact', 'internal', 'allowcomments', '1');
+            set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
         }
     }
 

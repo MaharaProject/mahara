@@ -24,7 +24,7 @@ function xmldb_artefact_internal_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2020121800) {
-        set_config_plugin('artefact', 'internal', 'allowcomments', '1');
+        set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
     }
 
     return $status;

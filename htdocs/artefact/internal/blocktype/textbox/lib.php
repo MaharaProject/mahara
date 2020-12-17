@@ -384,7 +384,10 @@ EOF;
         }
 
         // get the default value for allowing comments on Notes
-        $allowcomments = (bool)get_config_plugin('artefact', 'internal', 'allowcomments');
+        if ($allowcomments = get_config_plugin('artefact', 'internal', 'allowcomments')) {
+            $allowcomments = explode(',', $allowcomments);
+            $allowcomments = in_array('notes', $allowcomments);
+        }
 
         $elements = array(
             // Add a message whenever this text appears in some other block
