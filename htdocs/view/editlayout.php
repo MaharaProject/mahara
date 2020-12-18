@@ -225,7 +225,7 @@ function create_settings_pieform() {
 }
 
 function get_basic_elements() {
-    global $view, $urlallowed, $group, $institution, $USER;
+    global $view, $urlallowed, $group, $institution, $USER, $new;
 
     $createtagsoptions = array();
     $typecast = is_postgres() ? '::varchar' : '';
@@ -252,6 +252,7 @@ function get_basic_elements() {
             'title'        => get_string('title','view'),
             'defaultvalue' => $view->get('title'),
             'rules'        => array( 'required' => true ),
+            'autoselect'   => $new,
         ),
         'description' => array(
             'type'         => 'textarea',

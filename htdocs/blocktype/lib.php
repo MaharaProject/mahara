@@ -1547,7 +1547,8 @@ class BlockInstance {
                 'defaultvalue' => $title,
                 'rules' => array('maxlength' => 255),
                 'hidewhenempty' => $hasdefault,
-                'expandtext'    => get_string('setblocktitle'),
+                'expandtext' => get_string('setblocktitle'),
+                'autoselect' => true,
             );
         }
         $elements = array_merge(
