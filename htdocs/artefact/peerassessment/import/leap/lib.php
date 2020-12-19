@@ -33,6 +33,8 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
      */
     private static $tempview = null;
     private static $savetempview = false;
+    private static $tempblock = null;
+    private static $savetempblock = false;
 
     public static function create_temporary_view($user) {
         $time = db_format_timestamp(time());
@@ -48,6 +50,15 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
         return self::$tempview = insert_record('view', $viewdata, 'id', true);
     }
 
+    public static function create_temporary_block() {
+        $blockdata = (object) array(
+            'blocktype'  => 'peerassessment',
+            'title'      => '--',
+            'configdata' => serialize(array('instructions' => '', 'retractable' => 0, 'retractedonload' => 0)),
+            'view'       => self::$tempview,
+        );
+        return self::$tempblock = insert_record('block_instance', $blockdata, 'id', true);
+    }
     /**
      * Delete the temporary view
      */
@@ -58,6 +69,9 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
                 set_field('view', 'title', $title, 'id', self::$tempview);
             }
             else {
+                if (!self::$savetempblock) {
+                    delete_records('block_instance', 'id', self::$tempblock);
+                }
                 delete_records('view', 'id', self::$tempview);
             }
         }
@@ -68,7 +82,6 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
 
         if (PluginImportLeap::is_rdf_type($entry, $importer, 'entry')
             && $entry->xpath('mahara:artefactplugin[@mahara:type="peerassessment"]')) {
-
             // Annotation may not have anything reflecting on it.
             $strategies[] = array(
                 'strategy' => self::STRATEGY_IMPORT_AS_PEERASSESSMENT,
@@ -174,8 +187,10 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
 
                 if (empty(self::$tempview)) {
                     self::create_temporary_view($config['owner']);
+                    self::create_temporary_block();
                 }
                 $assessment->set('view', self::$tempview);
+                $assessment->set('block', self::$tempblock);
                 $assessment->set('tags', $content['tags']);
                 $assessment->commit();
                 $artefactmapping = array();
@@ -201,11 +216,39 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
         $importid = $importer->get('importertransport')->get('importid');
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, 'peerassessment'))) {
             foreach ($entry_requests as $entry_request) {
+                $entry = $importer->get_entry_by_id($entry_request->entryid);
+                $config = self::get_peerassessment_entry_data($entry, $importer, array());
+                $content = $config['content'];
 
-                // Note, once the view is created, we'll need to come back to this peer assessment
-                // and populate the artefact_peerassessment.view column.
+                $assessment = new ArtefactTypePeerassessment();
+                $assessment->set('title', $content['title']);
+                $assessment->set('description', $content['description']);
+                if ($content['ctime']) {
+                    $assessment->set('ctime', $content['ctime']);
+                }
+                if ($content['mtime']) {
+                    $assessment->set('mtime', $content['mtime']);
+                }
+                $assessment->set('owner', $config['owner']);
+                $assessment->set('allowcomments', (isset($config['allowcomments']) ? $config['allowcomments'] : true));
 
-                $assessmentid = self::create_artefact_from_request($importer, $entry_request);
+                if ($content['authorname']) {
+                    $assessment->set('authorname', $content['authorname']);
+                }
+                else {
+                    $assessment->set('author', $content['author']);
+                }
+
+                if (empty(self::$tempview)) {
+                    self::create_temporary_view($config['owner']);
+                    self::create_temporary_block();
+                }
+                $assessment->set('view', self::$tempview);
+                $assessment->set('block', self::$tempblock);
+                $assessment->set('tags', $content['tags']);
+                $assessment->commit();
+
+                $importer->add_artefactmapping($entry_request->entryid, $assessment->get('id'));
             }
         }
     }
@@ -250,11 +293,20 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
                 if ($viewid = $importer->get_viewid_imported_by_entryid($view_entry_request)) {
                     // Set the view on the peerassessment.
                     $peerassessment->set('view', $viewid);
+                    $blockid = get_field('block_instance', 'id', 'blocktype', 'peerassessment', 'view', $viewid);
+                    if ($blockid) {
+                        $peerassessment->set('block', $blockid);
+                    }
+                    else {
+                        self::$savetempblock = true;
+                        set_field('block_instance', 'view', $viewid, 'id', self::$tempblock);
+                    }
                     $peerassessment->commit();
                 }
                 else {
                     // Nothing to link this peerassessment to, so leave it in the temporary view.
                     self::$savetempview = true;
+                    self::$savetempblock = true;
                 }
             }
         }
@@ -275,11 +327,19 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
         $view_entry_request = self::get_referent_entryid($entry, $importer);
         if ($viewid = $importer->get_viewid_imported_by_entryid($view_entry_request)) {
             $peerassessment->set('view', $viewid);
+            $blockid = get_field('block_instance', 'id', 'blocktype', 'peerassessment', 'view', $viewid);
+            if ($blockid) {
+                $peerassessment->set('block', $blockid);
+            }
+            else {
+                self::$savetempblock = true;
+            }
             $peerassessment->commit();
         }
         else {
             // Nothing to link this peerassessment to, so leave it in the temporary view.
             self::$savetempview = true;
+            self::$savetempblock = true;
         }
     }
 

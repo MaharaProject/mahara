@@ -8,7 +8,7 @@
         <FIELDS>
             <FIELD NAME="assessment" TYPE="int" LENGTH="10" NOTNULL="true"/>
             <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true"/>
-            <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true"/>
+            <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="false"/>
             <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true"/>
             <FIELD NAME="private" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" UNSIGNED="true"/>
         </FIELDS>

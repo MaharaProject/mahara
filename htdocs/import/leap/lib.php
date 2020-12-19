@@ -311,7 +311,7 @@ class PluginImportLeap extends PluginImport {
      */
     public function call_import_method_plugins($method) {
         $installedplugins = array_map(function($a) { return $a->name; }, plugins_installed('artefact'));
-        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation', 'comment');
+        $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation', 'comment', 'peerassessment');
         foreach ($orderedimportplugins as $plugin) {
             if (!in_array($plugin, $installedplugins)) {
                 continue;
@@ -1016,10 +1016,10 @@ class PluginImportLeap extends PluginImport {
                 case self::STRATEGY_IMPORT_AS_COLLECTION:
                     require_once('collection.php');
                     $collectiondata = unserialize($entry_request->entrycontent);
-
                     if (isset($collectiondata['coverimage']) && !empty($collectiondata['coverimage'])) {
                         $collectiondata['coverimage'] = $this->artefactids[$collectiondata['coverimage']][0];
                     }
+
                     $collection = new Collection(0, $collectiondata);
                     $collection->commit();
                     $this->collectionids[$entry_request->entryid] = $collection->get('id');
@@ -1282,7 +1282,7 @@ class PluginImportLeap extends PluginImport {
 
                 $rowscolssql = '';
                 for ($i=0; $i<count($columnids); $i++) {
-                    $rowscolssql .= '(row = ' . ($i+1) . ' AND columns = ' . $columnids[$i+1] . ')';
+                    $rowscolssql .= '("row" = ' . ($i + 1) . ' AND columns = ' . $columnids[$i + 1] . ')';
                     if ($i != (count($columnids)-1)) {
                         $rowscolssql .= ' OR ';
                     }

@@ -2027,5 +2027,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020121700) {
+        log_debug('Remove not null restriction for "usr" field in "artefact_peer_assessment"');
+        $table = new XMLDBTable('artefact_peer_assessment');
+        $field = new XMLDBField('usr');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, false);
+        change_field_notnull($table, $field);
+    }
     return $status;
 }
