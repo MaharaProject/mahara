@@ -991,7 +991,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return array(
             'name'         => 'filebrowser',
             'type'         => 'filebrowser',
-            'title'        => get_string('file', 'artefact.file'),
+            'title'        => get_string('File', 'artefact.file'),
             'folder'       => (int) param_variable('folder', 0),
             'highlight'    => null,
             'browse'       => true,
@@ -1402,7 +1402,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $filetype = get_string($this->get('oldextension'), 'artefact.file');
         if (substr($filetype, 0, 2) == '[[') {
-            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
+            $filetype = $this->get('oldextension') . ' ' . get_string('File', 'artefact.file');
         }
 
         $uploadedby = null;
@@ -2564,7 +2564,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public static function get_title_progressbar() {
-        return get_string('image','artefact.file');
+        return get_string('Image','artefact.file');
     }
 
     public static function is_metaartefact() {
@@ -3312,7 +3312,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
     }
 
     public static function get_title_progressbar() {
-        return get_string('video','artefact.file');
+        return get_string('videofile','artefact.file');
     }
 
     public static function is_metaartefact() {

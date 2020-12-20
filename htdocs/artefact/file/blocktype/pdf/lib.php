@@ -168,7 +168,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
                 'type'         => 'fieldset',
                 'collapsible'  => true,
                 'collapsed'    => true,
-                'legend'       => get_string('file', 'artefact.file'),
+                'legend'       => get_string('File', 'artefact.file'),
                 'class'        => 'last select-file with-formgroup',
                 'elements'     => array(
                     'pdfwarning' => array(
@@ -192,7 +192,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
 
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
-        $element['title'] = get_string('file', 'artefact.file');
+        $element['title'] = get_string('File', 'artefact.file');
         $element['name'] = 'artefactid';
         $element['accept'] = 'application/pdf';
         $element['config']['selectone'] = true;
@@ -208,7 +208,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('file', 'artefact.file'),
+            'title' => get_string('File', 'artefact.file'),
             'defaultvalue' => $default,
             'blocktype' => 'html',
             'limit' => 10,
