@@ -1192,6 +1192,7 @@ class Collection {
         View::_db_release($viewids, $this->owner, $this->submittedgroup);
         db_commit();
 
+        $releaseuser = optional_userobj($releaseuser);
         handle_event('releasesubmission', array('releaseuser' => $releaseuser,
                                                 'id' => $this->get('id'),
                                                 'hostname' => $this->submittedhost,
@@ -1202,7 +1203,6 @@ class Collection {
         // (though I'm not sure why)
         // if the method is called in an upgrade and we dont have a release user
         if (!defined('INSTALLER') && $this->submittedgroup) {
-            $releaseuser = optional_userobj($releaseuser);
             $releaseuserdisplay = display_name($releaseuser, $this->owner);
             $releaseuserid = ($releaseuser instanceof User) ? $releaseuser->get('id') : $releaseuser->id;
             $submitinfo = $this->submitted_to();
