@@ -419,7 +419,6 @@ function editaccess_validate(Pieform $form, $values) {
         'institution' => get_string('institution'),
     );
 
-    $loggedinaccess = false;
     if ($values['accesslist']) {
         $dateformat = get_string('strftimedatetimeshort');
         foreach ($values['accesslist'] as &$item) {
@@ -434,10 +433,6 @@ function editaccess_validate(Pieform $form, $values) {
                 $SESSION->add_error_msg(get_string('datetimeformatguide1', 'mahara', pieform_element_calendar_human_readable_dateformat()));
                 $form->set_error('accesslist', '');
                 break;
-            }
-
-            if ($item['type'] == 'loggedin' && empty($item['startdate']) && empty($item['stopdate'])) {
-                $loggedinaccess = true;
             }
 
             $now = time();
