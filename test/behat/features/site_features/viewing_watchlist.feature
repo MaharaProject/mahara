@@ -31,4 +31,4 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  # Check we can see watched page and not an un-watched page
  And I am on homepage
  Then I should not see "Page UserA_02"
- And I should see "Page UserA_01" in the "Watched pages" property
+ And I should see "Page UserA_01" in the "Watched pages" "Blocks" property

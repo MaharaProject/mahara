@@ -221,19 +221,14 @@ class BehatNavigation extends BehatBase {
     /**
      * Expands the selected node that matches the text which is located inside the second element.
      *
-     * @Given /^I expand "(?P<element_string>(?:[^"]|\\")*)" node in the "(?P<element_container_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
-     * @Given I expand :element node in the :property property
-     * @param string $element we look for
-     * @param string $nodeelement Element we look in
-     * @param string $nodeselectortype The type of selector where we look in
-     * @param string $property we look for
+     * @Given I expand :element node in the :property :location property
      */
-    public function i_expand_node_in_the($element = null, $nodeelement = null, $nodeselectortype = null, $property = null) {
+    public function i_expand_node_in_the($element, $property, $location=null) {
         if (!$this->running_javascript()) {
             return true;
         }
         if ($property) {
-          $css_locator = get_property($property);
+          $css_locator = get_property($property, $location);
           if (!$css_locator) {
                    throw new ExpectationException('"A property called $property was not found in the properties.php file. Check that file or try passing a css locator directly"',
                    $this->getSession());

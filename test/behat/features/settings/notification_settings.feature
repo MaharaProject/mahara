@@ -88,17 +88,17 @@ Scenario: Admin logs in and checks notification settings (Bug 1388682)
     And I choose "Site options" in "Configure site" from administration menu
     And I click on "Notification settings"
     #see the notification settings in alphabetical order.
-    And "Comment" "text" should appear before "Contact us" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Contact us" "text" should appear before "Feedback on annotations" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Feedback on annotations" "text" should appear before "Group message" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Group message" "text" should appear before "Institution message" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Institution message" "text" should appear before "Message from other people" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Message from other people" "text" should appear before "New forum post" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "New forum post" "text" should appear before "New page access" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "New page access" "text" should appear before "Objectionable content" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Objectionable content" "text" should appear before "Objectionable content in forum" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Objectionable content in forum" "text" should appear before "Repeat virus upload" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Repeat virus upload" "text" should appear before "System message" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "System message" "text" should appear before "Virus flag release" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Virus flag release" "text" should appear before "Wall post" "text" within "#siteoptions_notificationsettings_open" "css_element"
-    And "Wall post" "text" should appear before "Watchlist" "text" within "#siteoptions_notificationsettings_open" "css_element"
+    And "Comment" "text" should appear before "Contact us" "text" within the "Notification settings" "Siteoptions" property
+    And "Contact us" "text" should appear before "Feedback on annotations" "text" within the "Notification settings" "Siteoptions" property
+    And "Feedback on annotations" "text" should appear before "Group message" "text" within the "Notification settings" "Siteoptions" property
+    And "Group message" "text" should appear before "Institution message" "text" within the "Notification settings" "Siteoptions" property
+    And "Institution message" "text" should appear before "Message from other people" "text" within the "Notification settings" "Siteoptions" property
+    And "Message from other people" "text" should appear before "New forum post" "text" within the "Notification settings" "Siteoptions" property
+    And "New forum post" "text" should appear before "New page access" "text" within the "Notification settings" "Siteoptions" property
+    And "New page access" "text" should appear before "Objectionable content" "text" within the "Notification settings" "Siteoptions" property
+    And "Objectionable content" "text" should appear before "Objectionable content in forum" "text" within the "Notification settings" "Siteoptions" property
+    And "Objectionable content in forum" "text" should appear before "Repeat virus upload" "text" within the "Notification settings" "Siteoptions" property
+    And "Repeat virus upload" "text" should appear before "System message" "text" within the "Notification settings" "Siteoptions" property
+    And "System message" "text" should appear before "Virus flag release" "text" within the "Notification settings" "Siteoptions" property
+    And "Virus flag release" "text" should appear before "Wall post" "text" within the "Notification settings" "Siteoptions" property
+    And "Wall post" "text" should appear before "Watchlist" "text" within the "Notification settings" "Siteoptions" property

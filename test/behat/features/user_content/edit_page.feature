@@ -18,7 +18,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I follow "Edit"
 
  # Checking if we can add a block
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -26,7 +26,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block content | <p>Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed ...</p> |
  And I press "Save"
  Then I should see "Buck Mulligan"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -34,7 +34,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block content | <p>Robert Cohn was once middleweight boxing champion of Princeton. Do not think that I am very much impressed by that as a boxing title, but it meant a lot to Cohn...</p> |
  And I press "Save"
  Then I should see "Robert Cohn"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -67,7 +67,7 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking we can add a block, make config changes, then delete the block
  # without it causing 'unsaved changes' popup when navigating away
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -87,7 +87,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I follow "Profile page"
  And I scroll to the base of id "viewh1"
  And I follow "Edit"
- And I follow "Settings" in the "Toolbar buttons" property
+ And I follow "Settings" in the "Toolbar buttons" "Nav" property
  And I should not see "Basics"
  And I should see "Skin"
  And I press "Save"
@@ -96,7 +96,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  # Dashboard page
  And I choose "Dashboard" from main menu
  And I follow "Edit dashboard"
- And I follow "Settings" in the "Toolbar buttons" property
+ And I follow "Settings" in the "Toolbar buttons" "Nav" property
  And I should not see "Basics"
  And I should see "Skin"
  And I press "Save"

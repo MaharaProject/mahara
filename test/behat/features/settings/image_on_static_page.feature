@@ -25,7 +25,7 @@ Scenario: Admin user can add an image to the "Logged -out home" static page and 
     And I press "Save changes"
     And I choose "Dashboard" from main menu
     # check that the image uploaded is the image being seen on the page
-    And I should see an "img[alt='Image2.png']" element
+    Then I should see image 'Image2.png' on the page
 
 Scenario: Admin user can add an image to the "Home (Dashboard)" static page and see it displayed
     Given I log in as "UserA" with password "Kupuh1pa!"
@@ -44,4 +44,4 @@ Scenario: Admin user can add an image to the "Home (Dashboard)" static page and 
     And I log out
     And I am on homepage
     # check that the image uploaded is the image being seen on the page
-    And I should see an "img[alt='Image2.png']" element
+    Then I should see image 'Image2.png' on the page

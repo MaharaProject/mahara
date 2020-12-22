@@ -27,7 +27,7 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I follow "Introduction"
     # Checking messages
     And I choose inbox
-    And I follow "Inbox" in the "Arrow-bar nav" property
+    And I follow "Inbox" in the "Arrow-bar nav" "Nav" property
     And I follow "Sent"
     And I follow "Compose"
     # Checking Homepage

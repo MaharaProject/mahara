@@ -27,7 +27,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   # Add a block to the page
   When I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page admin_02" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Text"
   And I set the field "Block title" to "Text Block 1"

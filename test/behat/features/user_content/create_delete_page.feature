@@ -17,7 +17,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # This is the test for manually creating a page
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
-    And I should see "Pages and collections" in the "h1 heading" property
+    And I should see "Pages and collections" in the "H1 heading" "Common" property
     And I follow "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
@@ -31,7 +31,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # (Bug 1891265 end)
     And I press "Save"
     # Editing the pages
-    And I follow "Settings" in the "Toolbar buttons" property
+    And I follow "Settings" in the "Toolbar buttons" "Nav" property
     #Change the Page title
     And I fill in the following:
     | Page title       | This is the edited page title |
@@ -39,38 +39,38 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I press "Save"
     # Adding media block
     # confirm h1 page title displayed
-    And I should see "This is the edited page title" in the "h1 heading" property
-    # confirm settings, edit and share buttons displayed
-    And I should see "Settings" in the ".editlayout .btn-title" element
-    And I should see "Display page" in the ".displaycontent .btn-title" element
-    And I should see "Share" in the ".editshare .btn-title" element
-    And I should see "Return to pages and collections" in the ".returntolocation .btn-title" element
+    And I should see "This is the edited page title" in the "H1 heading" "Common" property
+    # confirm settings, edit and share buttons have correct text titles
+    And I should see "Settings" in the "Settings button" "Views" property
+    And I should see "Display page" in the "Display page button" "Views" property
+    And I should see "Share" in the "Share button" "Views" property
+    And I should see "Return to pages and collections" in the "Return button" "Views" property
     # Adding media block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "File(s) to download"
     And I press "Save"
     # Adding Journal block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Recent journal entries"
     And I press "Save"
     # Adding profile info block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Profile information"
     And I press "Save"
     # Adding external media block - but remove it instead
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "External media"
     And I press "Remove"
 
     And I display the page
     # Show last updated date and time when seeing a portfolio page (Bug 1634591)
-    And I should see "Updated on" in the ".text-right" element
+    And I should see "Updated on" in the "Last updated" "Views" property
     # actual date format displayed is 31 May 2018, 13:29
-    And I should see the date "today" in the ".text-right" element with the format "d F Y"
+    And I should see the date "today" in the "Last updated" "Views" property with the format "d F Y"
     # Verifying the page title and description changed
     Then I should see "This is the edited page title"
     And I should see "This is the edited description"

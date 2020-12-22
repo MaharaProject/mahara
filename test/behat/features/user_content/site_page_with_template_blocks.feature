@@ -19,25 +19,25 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I should not see "Manage access"
     # Check there is no access to "Share" on each of the four edit template pages BUG - # 1824767
     When I follow "Dashboard template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=2"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Group homepage template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=3"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Profile template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=1"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Page template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=4"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
@@ -51,7 +51,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I should see "Share"
 
     # Add a Profile information block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Profile information"
     And I set the following fields to these values:
@@ -65,7 +65,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I press "Save"
     And I wait "1" seconds
     And I should see "Postal address"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I follow "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "General" in shared with select2 box
     And I expand "Advanced options" node
     And I enable the switch "Allow copying"

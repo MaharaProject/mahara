@@ -40,7 +40,7 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Going to Groups and setting it to sort by
     And I choose "Groups" in "Engage" from main menu
     And I follow "Testing Group 1"
-    And I follow "Members" in the "Arrow-bar nav" property
+    And I follow "Members" in the "Arrow-bar nav" "Nav" property
     # Verifying they are out of order first
     And "Angela User (UserA)" "link" should appear before "Bob User (UserB)" "link"
     And I select "Name Z to A" from "sorted by:"

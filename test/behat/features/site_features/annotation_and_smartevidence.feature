@@ -21,7 +21,7 @@ Scenario: Accessing annotation block
  # Navigating to admin block to turn it on
  And I choose "Plugin administration" in "Extensions" from administration menu
  And I press "activate_blocktype_annotation_submit"
- And I should see "Hide" in the "smartevidence" property
+ And I should see "Hide" in the "Smartevidence" "Smartevidence" property
  And I choose "Settings" in "Institutions" from administration menu
  And I press "Edit"
  And I enable the switch "Allow SmartEvidence"
@@ -29,7 +29,7 @@ Scenario: Accessing annotation block
 
  # Make sure we have a matrix config form
  And I choose "SmartEvidence" in "Extensions" from administration menu
- And I follow "Import" in the "Arrow-bar nav" property
+ And I follow "Import" in the "Arrow-bar nav" "Nav" property
  And I attach the file "example.matrix" to "Matrix file"
  And I press "Upload matrix"
 

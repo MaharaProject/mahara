@@ -56,7 +56,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # this could be expanded to check the other folder block options
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Folder"
     And I expand "Folders" node

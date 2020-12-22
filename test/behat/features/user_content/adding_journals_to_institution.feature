@@ -114,14 +114,14 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     And I choose "Pages and collections" in "Configure site" from administration menu
     And I click on "Edit" in "Page mahara_01" card menu
     # Adding journal block to the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Journal"
     And I select the radio "Site journal 1"
     And I select "Others will get their own copy of your journal" from "Block copy permission"
     And I press "Save"
     And I scroll to the id "main-nav"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I follow "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I follow "Advanced options"
     And I set the following fields to these values:

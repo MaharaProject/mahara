@@ -17,7 +17,7 @@ Scenario: Embed and play mp4
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I follow "Media"
@@ -27,13 +27,13 @@ Scenario: Embed and play mp4
   And I press "Play Video"
   # check remaining time is displayed
   And I wait "3" seconds
-  And I should see "0:00" in the "Videojs time remaining" property
+  And I should see "0:00" in the "Videojs time remaining" "Misc" property
 
 Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I follow "Media"
@@ -58,7 +58,7 @@ Scenario: Change settings and embed 3gp
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I follow "Media"
@@ -72,7 +72,7 @@ Scenario: Embed unsupported file type
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I follow "Media"

@@ -29,7 +29,7 @@ Scenario: Admin to add a person (Bug 1703721)
   And I press "General account options"
   And I set the following fields to these values:
   | Multiple journals | 1 |
-  And I press "×" in the "Options dialog" property
+  And I press "×" in the "Options dialog" "Modal" property
   And I press "Create account"
   Then I should see "New account created successfully"
   And I expand "Institution settings - Institution One" node
@@ -45,8 +45,8 @@ Scenario: Admin to add a person (Bug 1703721)
   And I wait "1" seconds
   And I should see "Administrator of Institution One"
   And I click on "Show administration menu"
-  And I should see "Groups" in the "Administration menu" property
-  And I should not see "Extensions" in the "Administration menu" property
+  And I should see "Groups" in the "Administration menu" "Nav" property
+  And I should not see "Extensions" in the "Administration menu" "Nav" property
   # Checking  multiple journals
   And I choose "Journals" in "Create" from main menu
   And I should see "Create journal"
@@ -56,8 +56,8 @@ Scenario: Admin to add a person (Bug 1703721)
   # Login as staff member
   Given I log in as "StaffA" with password "Kupuh1pa!"
   And I click on "Show administration menu"
-  And I should see "Reports" in the "Administration menu" property
-  And I should not see "Groups" in the "Administration menu" property
+  And I should see "Reports" in the "Administration menu" "Nav" property
+  And I should not see "Groups" in the "Administration menu" "Nav" property
   # Site admin role already tested in menu_navigation.feature file
 
 Scenario: Create people by csv (Bug 1426983)

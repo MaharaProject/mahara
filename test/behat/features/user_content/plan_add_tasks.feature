@@ -21,7 +21,7 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     #  add plan block to page
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page admin_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Plans"
     And I set the field "Block title" to ""
@@ -132,7 +132,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     # Add the plan to a page
     When I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page admin_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Plans"
     And I set the following fields to these values:
@@ -154,7 +154,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     And I should see "Plan task"
     And I should see "Task12"
     And I should not see "Task6"
-    When I click on the "Show more tags" property
+    When I click on the "Show more tags" "Tags" property
     Then I should see "Task6"
     And I scroll to the base of id "feedback_pagination"
     When I follow "Next page"

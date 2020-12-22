@@ -25,12 +25,12 @@ Scenario:
   # Creating folder 1
   Given I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Image gallery"
   And I set the field "Block title" to "Image gallery"
   And I select the radio "Image selection: Display all images from a folder including images uploaded later"
-  And I click on the "Select" property
+  And I click on the "Select" "Files" property
   And I select the radio "Style: Thumbnails (square)"
   And I press "Save"
   And I display the page

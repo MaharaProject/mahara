@@ -55,7 +55,7 @@ Background:
     And I go to portfolio page "Page UserA_00"
     And I click on "Edit"
     # Author adds sign off block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
@@ -66,7 +66,7 @@ Background:
     And I go to portfolio page "Page UserA_01"
     And I click on "Edit"
     # Author adds sign off block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
@@ -78,7 +78,7 @@ Background:
     Given I go to portfolio page "Page UserA_03"
     And I click on "Edit"
     # Author adds sign off block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
@@ -128,7 +128,7 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     And I click on "Update page sign-off"
-    And I click on "Yes" in the "Signoff page" property
+    And I click on "Yes" in the "Signoff page" "Peerassessment" property
     Then I should see "Sign-off status updated"
     And I log out
 
@@ -143,7 +143,7 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     And I go to portfolio page "Page UserA_00"
     And I should see "UserB second assessment - published"
     And I click on "Update page verification"
-    And I click on "Yes" in the "Verify page" property
+    And I click on "Yes" in the "Verify page" "Peerassessment" property
     Then I should see "Verification status updated"
     And I log out
 

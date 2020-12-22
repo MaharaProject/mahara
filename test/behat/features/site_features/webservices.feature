@@ -58,7 +58,7 @@ Scenario: As administrator I can
     Then I should not see "Public key expires"
     And I press "Save"
     # Verify token was made and Test the token
-    And I should see "Edit" in the "#webservices_token_pseudofieldset" element
+    And I should see "Edit" in the "Manage service access tokens" "Webservices" property
     And I choose "Test client" in "Web services" from administration menu
     Then I should see "This is the interactive test client facility for web services."
     # Verify Text on Web service test client | Web services configuration page with and without a protocol
@@ -79,7 +79,7 @@ Scenario: As administrator I can
     And I enable the switch "Manual token generation"
     And I press "Save"
     When I choose "Connected apps" in "Settings" from account menu
-    And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
+    And I follow "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
     And I click on "Generate"
     Then I should see "Manually created"
     When I press "Delete \"Manually created\""
@@ -99,7 +99,7 @@ Scenario: As administrator I can
     And I go to "webservice/admin/index.php"
     Then I should see "You are forbidden from accessing the administration section."
     When I choose "Connected apps" in "Settings" from account menu
-    And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
+    And I follow "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
     And I click on "Generate"
     Then I should see "Manually created"
     When I press "Delete \"Manually created\""
