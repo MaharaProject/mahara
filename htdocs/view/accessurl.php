@@ -114,7 +114,7 @@ $form['elements']['more'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('allowcomments','artefact.comment'),
             'description'  => get_string('allowcommentsonview1','view'),
-            'defaultvalue' => $view->get('allowcomments'),
+            'defaultvalue' => $allowcomments,
         ),
         'approvecomments' => array(
             'type'         => 'switchbox',

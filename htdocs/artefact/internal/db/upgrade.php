@@ -23,5 +23,9 @@ function xmldb_artefact_internal_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {blocktype_installed} WHERE name='contactinfo'");
     }
 
+    if ($oldversion < 2020121800) {
+        set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
+    }
+
     return $status;
 }

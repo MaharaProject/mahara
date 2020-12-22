@@ -600,6 +600,8 @@ class View {
             $data->urlid = self::new_urlid($data->urlid, $data);
         }
 
+        $data->allowcomments = (int)get_field('config', 'value', 'field', 'allowcommentsbydefault');
+
         $view = new View(0, $data);
         $view->commit();
 

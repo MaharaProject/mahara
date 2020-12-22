@@ -158,6 +158,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('masqueradingnotified'),
                     'disabled'     => in_array('masqueradingnotified', $OVERRIDDEN),
                 ),
+                'allowcommentsbydefault' => array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('allowcommentsbydefault', 'admin'),
+                    'description'  => get_string('allowcommentsbydefaultdescription', 'admin'),
+                    'defaultvalue' => get_config('allowcommentsbydefault') ? get_config('allowcommentsbydefault') : false,
+                    'disabled'     => in_array('allowcommentsbydefault', $OVERRIDDEN),
+                ),
                 'anonymouscomments' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('anonymouscomments', 'admin'),
@@ -180,7 +187,7 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('licensemetadata', $OVERRIDDEN),
                 ),
-                    'licenseallowcustom' => array(
+                'licenseallowcustom' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('licenseallowcustom1', 'admin'),
                     'description'  => get_string('licenseallowcustomdescription', 'admin'),
@@ -888,7 +895,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'institutionstrictprivacy', 'homepageredirect', 'homepageredirecturl',
         'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'timezone', 'userscanchooseviewthemes', 'internalnotificationexpire',
-        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'anonymouscomments', 'passwordpolicy',
+        'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'allowcommentsbydefault', 'anonymouscomments', 'passwordpolicy',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'hstsoverride', 'loggedinprofileviewaccess', 'disableexternalresources',
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',

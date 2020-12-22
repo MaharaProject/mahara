@@ -230,3 +230,6 @@ $string['profiledeletedsuccessfully'] = 'Social media account deleted successful
 $string['profilesavedsuccessfully'] = 'Social media account saved successfully';
 $string['socialprofilerequired'] = 'At least one social media account is required.';
 $string['duplicateurl'] = 'This social media account username or URL is a duplicate of one you\'ve already entered.';
+
+// Allow comments
+$string['notes'] = 'Notes';
