@@ -96,6 +96,11 @@ if ($file = param_integer('file', 0)) {
     $highlight = array($file);
 }
 
+$goto = get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog;
+// check if we came from new entry shortcut of a blog block
+if (param_exists('shortcutnewentryviewid')) {
+    $goto = get_config('wwwroot') . 'view/blocks.php?id=' . param_integer('shortcutnewentryviewid');
+}
 
 $form = pieform(array(
     'name'               => 'editpost',
@@ -188,7 +193,7 @@ $form = pieform(array(
             'type' => 'submitcancel',
             'subclass' => array('btn-primary'),
             'value' => array(get_string('savepost', 'artefact.blog'), get_string('cancel')),
-            'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
+            'goto' => $goto,
         )
     )
 ));
@@ -222,7 +227,7 @@ $smarty->display('artefact:blog:editpost.tpl');
  * blog list.
  */
 function editpost_cancel_submit() {
-    global $blog;
+    global $blog, $goto;
     $blogobj = new ArtefactTypeBlog($blog);
     if ($blogobj->get('institution')) {
         redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog . '&institution=' . $blogobj->get('institution'));
@@ -231,12 +236,12 @@ function editpost_cancel_submit() {
         redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog . '&group=' . $blogobj->get('group'));
     }
     else {
-        redirect(get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog);
+        redirect($goto);
     }
 }
 
 function editpost_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $blogpost, $blog;
+    global $USER, $SESSION, $blogpost, $blog, $goto;
 
     require_once('embeddedimage.php');
     db_begin();
@@ -279,7 +284,8 @@ function editpost_submit(Pieform $form, $values) {
     $result = array(
         'error'   => false,
         'message' => get_string('blogpostsaved', 'artefact.blog'),
-        'goto'    => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blog,
+        'goto'    => $goto
+
     );
     if ($form->submitted_by_js()) {
         // Redirect back to the blog page from within the iframe
