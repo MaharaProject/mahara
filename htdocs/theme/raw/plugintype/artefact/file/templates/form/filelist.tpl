@@ -73,14 +73,14 @@
             </td>
             <td class="filename">
                 {if $file->artefacttype == 'folder'}
-                    <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="inner-link changefolder">
+                    <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder">
                         <span class="sr-only">{str tag=folder section=artefact.file}:</span>
                         <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
                     </a>
                 {elseif !$publishable}
                     <span class="display-title">{$displaytitle}</span>
                 {else}
-                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link inner-link {if $file->artefacttype == 'image' || $file->artefacttype == 'profileicon'}img-modal-preview{/if}">
+                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link {if $file->artefacttype == 'image' || $file->artefacttype == 'profileicon'}img-modal-preview{/if}">
                         <span class="display-title">{$displaytitle}</span>
                     </a>
                 {/if}

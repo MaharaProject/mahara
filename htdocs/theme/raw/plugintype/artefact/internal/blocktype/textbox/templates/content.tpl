@@ -3,7 +3,7 @@
 
     {if $artefact->get('tags')}
     <div class="tags">
-        <strong>{str tag=tags}:</strong> {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
+        {str tag=tags}: {list_tags owner=$artefact->get('owner') tags=$artefact->get('tags')}
     </div>
     {/if}
 </div>

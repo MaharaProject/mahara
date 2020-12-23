@@ -42,8 +42,7 @@
             {/if}
             {if $plan->tags}
             <div class="tags text-small">
-                <strong>{str tag=tags}</strong>:
-                {list_tags tags=$plan->tags owner=$plan->owner}
+                {str tag=tags}: {list_tags tags=$plan->tags owner=$plan->owner}
             </div>
             {/if}
         </div>

@@ -2428,7 +2428,7 @@ function friendscontrol_submit(Pieform $form, $values) {
 
 function acceptfriend_form($friendid, $modalmode='') {
     $value = ($modalmode == 'modal' ? get_string('approverequest', 'group') : '<span class="icon icon-check text-success left" role="presentation" aria-hidden="true"></span>' . get_string('approve', 'group'));
-    $elementclass = $modalmode == 'modal' ? 'form-as-button' : 'form-as-button pull-left';
+    $elementclass = $modalmode == 'modal' ? 'form-as-button' : 'form-as-button float-left';
     $class = $modalmode == 'modal' ? 'link-unstyled' : 'default btn-secondary btn-sm first';
 
     return pieform(array(

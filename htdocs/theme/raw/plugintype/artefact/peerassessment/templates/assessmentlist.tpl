@@ -3,14 +3,14 @@
 {foreach from=$data item=item}
     <div id="assessment{$item->id}" class="comment-item list-group-item {cycle name=rows values='r0,r1'} {if $item->attachments}has-attachment{/if} {if $item->private}draft{/if}">
         <div class="usericon-heading">
-            <span class="user-icon pull-left" role="presentation" aria-hidden="true">
+            <span class="user-icon float-left" role="presentation" aria-hidden="true">
                 {if $item->author && !$item->author->deleted}
                     <img src="{profile_icon_url user=$item->author maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>
                 {else}
                     <img src="{profile_icon_url user=null maxheight=40 maxwidth=40}" valign="middle" alt="{str tag=profileimagetextanonymous}"/>
                 {/if}
             </span>
-            <h4 class="pull-left list-group-item-heading">
+            <h4 class="float-left list-group-item-heading">
                 {if $item->author && !$item->author->deleted}
                 <a href="{$item->author->profileurl}">
                 <span>{$item->author|display_name}</span>

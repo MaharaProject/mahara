@@ -19,7 +19,7 @@
 
         {if $item.tags}
         <div class="tags">
-            <strong>{str tag=tags}:</strong> {list_tags owner=$view.owner tags=$view.tags}
+            {str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}
         </div>
         {/if}
     </div>

@@ -10,8 +10,7 @@
 <div id="planswrap" class="plan-wrapper view-container">
 {if $tags}
     <div class="tags">
-        <strong>{str tag=tags}:</strong>
-        {list_tags owner=$owner tags=$tags}
+        {str tag=tags}: {list_tags owner=$owner tags=$tags}
     </div>
 {/if}
 {if !$tasks.data}

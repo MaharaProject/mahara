@@ -14,7 +14,7 @@
                 <span class="grouprole text-small text-midtone"> -
                     {$results.roles[$r.role]->display}
                     {if $caneditroles && $r.canchangerole}
-                    <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="inner-link text-link">
+                    <a href="{$WWWROOT}group/changerole.php?group={$group}&amp;user={$r.id}" class="text-link">
                         [{str tag=changerole section=group}]
                     </a>
                     {/if}
@@ -25,7 +25,7 @@
             {if $r.role}
                 {if $r.introduction}
                     <div class="detail text-small text-midtone">
-                        <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$r.id}"
+                        <a class="text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$r.id}"
                            href="#userintro{$r.id}" role="button" aria-expanded="false"
                            aria-controls="userintro{$r.id}">
                            <span class="icon icon-chevron-down collapse-indicator text-inline" role="presentation" aria-hidden="true"></span>

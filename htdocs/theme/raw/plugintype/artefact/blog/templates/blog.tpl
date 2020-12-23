@@ -19,11 +19,11 @@
     {/if}
     {if $tags}
         <p class="text-midtone tags">
-            <strong>{str tag=tags}:</strong> {list_tags owner=$owner tags=$tags view=$view}
+            {str tag=tags}: {list_tags owner=$owner tags=$tags view=$view}
         </p>
     {/if}
     {if $description || $tags}
-        </div>
+    </div>
     {/if}
 
     {if $posts.tablerows}

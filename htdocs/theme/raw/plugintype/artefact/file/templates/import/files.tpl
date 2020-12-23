@@ -16,7 +16,7 @@
                 </div>
                 {if $file.tags}
                 <div class="tags">
-                    <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$file.tags}
+                    {str tag=tags}: {list_tags owner=0 tags=$file.tags}
                 </div>
                 {/if}
             </div>

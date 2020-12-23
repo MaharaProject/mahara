@@ -8,7 +8,7 @@
                 {if $view.sharedby}
                     <div class="groupuserdate text-small">
                     {if $view.group && $loggedin}
-                    <a class="inner-link" href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
+                    <a href="{group_homepage_url($view.groupdata)}">{$view.sharedby}</a>
                     {elseif $view.owner && $loggedin}
                         {if $view.anonymous}
                             {if $view.staff_or_admin}
@@ -18,7 +18,7 @@
                             {assign var='author' value=get_string('anonymoususer')}
                             {include file=author.tpl}
                         {else}
-                            <a class="inner-link" href="{profile_url($view.user)}">{$view.sharedby}</a>
+                            <a href="{profile_url($view.user)}">{$view.sharedby}</a>
                         {/if}
                     {else}
                         {$view.sharedby}

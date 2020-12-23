@@ -38,7 +38,7 @@
                 <span class="sr-only">{str tag=Details section=artefact.file}</span>
             </a>
             {else}
-                <span class="inner-link">{$file.title}</span>
+                <span>{$file.title}</span>
             {/if}
             </h3>
 
