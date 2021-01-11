@@ -320,7 +320,7 @@ function process_changes($changes) {
                 safe_require('auth', 'internal');
                 $temp_password = AuthInternal::get_temp_password();
                 $new_user = new stdClass();
-                $new_user->authinstance = 1;
+                $new_user->authinstance = PCNZ_AUTHINSTANCE;
                 $new_user->username     = $person['personalinfo']->id;
                 $new_user->firstname    = $person['personalinfo']->firstname;
                 $new_user->lastname     = $person['personalinfo']->surname;
