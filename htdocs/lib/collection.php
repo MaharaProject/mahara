@@ -162,6 +162,7 @@ class Collection {
             delete_records('lti_assessment_submission', 'collectionid', $this->id);
         }
         delete_records('existingcopy', 'collection', $this->id);
+        delete_records('collection_template', 'collection', $this->id);
         delete_records('collection', 'id', $this->id);
         // Delete any submission history
         delete_records('module_assessmentreport_history', 'event', 'collection', 'itemid', $this->id);
@@ -327,6 +328,7 @@ class Collection {
      *                        collection.
      * @param int $checkaccess Whether to check that the user can see the collection before copying it
      * @param boolean $titlefromtemplate  Title of new collection or view will be exactly copied from the template
+     * @param boolean $trackoriginal  Connect this copy to the original template it was copied from
      *
      * @return array A list consisting of the new collection, the template collection and
      *               information about the copy - i.e. how many blocks and
@@ -334,7 +336,7 @@ class Collection {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
+    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, $trackoriginal=false) {
         require_once(get_config('libroot') . 'view.php');
         global $SESSION;
 
@@ -383,6 +385,9 @@ class Collection {
 
         $data->progresscompletion = $colltemplate->get('progresscompletion');
         $collection = self::save($data);
+        if ($trackoriginal) {
+            $collection->track_template($templateid);
+        }
 
         $numcopied = array('pages' => 0, 'blocks' => 0, 'artefacts' => 0);
 
@@ -1739,6 +1744,19 @@ class Collection {
         if ($numberofactions == 0) return false;
         return array(round(($numberofcompletedactions/$numberofactions)*100), $numberofactions);
     }
+
+    public function track_template($id) {
+        if (!get_field('collection', 'id', 'id', $id)) {
+            throw new CollectionNotFoundException("Collection with id $id not found");
+        }
+        if (!$trackingid = get_field('collection_template', 'id', 'originaltemplate', $id, 'collection', $this->id)) {
+            $data = new stdClass();
+            $data->collection = $this->id;
+            $data->originaltemplate = $id;
+            $trackingid = insert_record('collection_template', $data, 'id', true);
+        }
+        return $trackingid;
+    }
 }
 
 class CollectionSubmissionException extends UserException {
@@ -1757,4 +1775,21 @@ class CollectionSubmissionException extends UserException {
             )
         );
     }
+}
+
+/**
+ * Find the collection that is the current active template for autocopy
+ *
+ * @param $institution The internal name for the institution. Defaults to site.
+ *
+ * @return the Collection object for the active autocopy template or null
+ */
+function get_active_collection_template($institution='mahara') {
+    /* Once we have the WR 349175 point 3.5 done
+    if ($collectionid = get_field('collection', 'id', 'autocopytemplate', 1, 'institution', $institution)) {
+        $collection = new Collection($collectionid);
+        return $collection;
+    }
+    */
+    return false;
 }

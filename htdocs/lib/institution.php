@@ -360,7 +360,10 @@ class Institution {
         $userobj->find_by_id($user->id);
         $userobj->copy_institution_views_collections_to_new_member($this->name);
         require_once('activity.php');
-        activity_occurred('maharamessage', $message);
+        if (empty($user->newuser)) {
+            // Only send the message if user is not being created at the same time
+            activity_occurred('maharamessage', $message);
+        }
         handle_event('updateuser', $userinst->usr);
 
         // Give institution members access to user's profile page

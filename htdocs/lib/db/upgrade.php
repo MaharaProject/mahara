@@ -2027,5 +2027,19 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092109) {
+        log_debug('Add the "collection_template" table to map copied collection to their original template');
+        $table = new XMLDBTable('collection_template');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addFieldInfo('originaltemplate', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+            $table->addKeyInfo('templatefk', XMLDB_KEY_FOREIGN, array('originaltemplate'), 'collection', array('id'));
+            create_table($table);
+        }
+    }
+
     return $status;
 }
