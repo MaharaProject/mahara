@@ -294,6 +294,10 @@ abstract class Auth {
         return true;
     }
 
+    public function get_temp_password() {
+        return null;
+    }
+
     /**
      * Called when a user is being logged in, after the main authentication routines.
      *

@@ -488,6 +488,7 @@ class Collection {
      *                        collection.
      * @param int $checkaccess Whether to check that the user can see the collection before copying it
      * @param boolean $titlefromtemplate  Title of new collection or view will be exactly copied from the template
+     * @param boolean $trackoriginal  Connect this copy to the original template it was copied from
      *
      * @return array A list consisting of the new collection, the template collection and
      *               information about the copy - i.e. how many blocks and
@@ -495,7 +496,7 @@ class Collection {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false) {
+    public static function create_from_template($collectiondata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, $trackoriginal=false) {
         require_once(get_config('libroot') . 'view.php');
         global $SESSION;
 
@@ -560,6 +561,9 @@ class Collection {
         $data->autocopytemplate = 0;
         $data->template = 0;
         $collection = self::save($data);
+        if ($trackoriginal) {
+            $collection->track_template($templateid);
+        }
 
         $numcopied = array('pages' => 0, 'blocks' => 0, 'artefacts' => 0);
 
