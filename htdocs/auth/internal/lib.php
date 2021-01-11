@@ -69,6 +69,30 @@ class AuthInternal extends Auth {
     public static function can_use_registration_captcha() {
         return true;
     }
+    /**
+     * Generate a valid password that can be used as a temp password
+     * which can be sent out by create_user()
+     */
+    public function get_temp_password() {
+        list($minlength, $format) = get_password_policy(true);
+        $pool = array_merge(
+            range('A', 'Z'),
+            range('a', 'z')
+        );
+        if ($format == 'uln') {
+            $pool = array_merge($pool, range(0, 9));
+        }
+        else if ($format == 'ulns') {
+            $pool = array_merge($pool, range(0, 9), range('!', '?'));
+        }
+        $password = get_random_key($minlength, $pool);
+        if (self::is_password_valid($password)) {
+            return $password;
+        }
+        else {
+            return self::get_temp_password();
+        }
+    }
 
     /**
      * For internal authentication, passwords can contain a range of letters,

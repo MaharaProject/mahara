@@ -224,7 +224,7 @@ function get_user_language($userid) {
  * @returns array of fields => values
  */
 function expected_account_preferences() {
-    return array('friendscontrol' => 'auth',
+    $core = array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,
                  'licensedefault' => '',
                  'messages'       => 'allow',
@@ -250,7 +250,13 @@ function expected_account_preferences() {
                  'showlayouttranslatewarning' => 1,
                  'accessibilityprofile' => false,
                  'grouplabels' => '',
-                 );
+    );
+
+    if (function_exists('local_expected_account_preferences')) {
+        $local = local_expected_account_preferences();
+        $core = array_merge($core, $local);
+    }
+    return $core;
 }
 
 function general_account_prefs_form_elements($prefs) {
@@ -2646,9 +2652,10 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
         }
         else if (get_config('defaultaccountlifetime')) {
             // we need to set the user expiry to the site default one
-            $user->expiry = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d'), date('Y')) + (int)get_config('defaultaccountlifetime'));
+            $user->expiry = date('Y-m-d', mktime(0, 0, 0, date('m'), date('d'), date('Y')) + (int)get_config('defaultaccountlifetime'));
         }
         $user->id = insert_record('usr', $user, 'id', true);
+        $user->newuser = true;
     }
 
     if (isset($user->email) && $user->email != '') {

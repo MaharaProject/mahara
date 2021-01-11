@@ -6,5 +6,5 @@
 defined('INTERNAL') || die();
 
 $config = new stdClass();
-$config->version = 0;
-$config->release = '0.0.0';
+$config->version = 2020120901;
+$config->release = '0.0.2';

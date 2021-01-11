@@ -1059,6 +1059,18 @@
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"  />
             </KEYS>
         </TABLE>
+        <TABLE NAME="collection_template">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="originaltemplate" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id" />
+                <KEY NAME="templatefk" TYPE="foreign" FIELDS="originaltemplate" REFTABLE="collection" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
         <TABLE NAME="existingcopy">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />

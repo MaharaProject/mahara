@@ -6331,7 +6331,7 @@ class View {
 
     public function display_author() {
         $view = null;
-
+        $apcinfo = '';
         if (!empty($this->owner)) {
             $userobj = new User();
             $userobj->find_by_id($this->owner);
@@ -6341,6 +6341,7 @@ class View {
             if (!$view || !can_view_view($view)) {
                 return null;
             }
+            $apcinfo = get_account_preference($this->owner, 'apcstatusactive') ? get_string('apcperiod', 'view', date('j F Y', strtotime(get_account_preference($this->owner, 'apcstatusdate')))) : '';
         }
         else if (!empty($this->group)) {
             $view = group_get_homepage_view($this->group);
@@ -6362,7 +6363,7 @@ class View {
 
         $ownername = hsc($this->formatted_owner());
         $ownerlink = hsc($this->owner_link());
-        return get_string('viewauthor', 'view', $ownerlink, $ownername);
+        return get_string('viewauthor', 'view', $ownerlink, $ownername) . '<br>' . $apcinfo;
     }
 
     public function display_title_editing() {
