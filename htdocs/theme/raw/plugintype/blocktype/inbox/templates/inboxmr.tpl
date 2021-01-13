@@ -62,6 +62,8 @@
     </div>
     {/if}
     <script>
-    jQuery(document).trigger('pageupdated');
+    jQuery(function() {
+        jQuery(document).trigger('pageupdated');
+    });
     </script>
 {/if}
