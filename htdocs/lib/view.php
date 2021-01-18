@@ -6330,8 +6330,15 @@ class View {
     }
 
     public function display_author() {
+        if (file_exists(get_config('docroot') . 'local/lib.php')) {
+            include_once(get_config('docroot') . 'local/lib.php');
+            if (function_exists('local_display_author')) {
+                return local_display_author($this);
+            }
+        }
+
         $view = null;
-        $apcinfo = '';
+
         if (!empty($this->owner)) {
             $userobj = new User();
             $userobj->find_by_id($this->owner);
@@ -6341,7 +6348,6 @@ class View {
             if (!$view || !can_view_view($view)) {
                 return null;
             }
-            $apcinfo = get_account_preference($this->owner, 'apcstatusactive') ? get_string('apcperiod', 'view', date('j F Y', strtotime(get_account_preference($this->owner, 'apcstatusdate')))) : '';
         }
         else if (!empty($this->group)) {
             $view = group_get_homepage_view($this->group);
@@ -6363,7 +6369,7 @@ class View {
 
         $ownername = hsc($this->formatted_owner());
         $ownerlink = hsc($this->owner_link());
-        return get_string('viewauthor', 'view', $ownerlink, $ownername) . '<br>' . $apcinfo;
+        return get_string('viewauthor', 'view', $ownerlink, $ownername);
     }
 
     public function display_title_editing() {
