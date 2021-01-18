@@ -118,6 +118,9 @@ class BehatAdmin extends BehatBase {
                 throw new SystemException("Can not set the option \"$setting\" to \"$settings[$setting]\"");
             }
         }
+        if (isset($settings['skins'])) {
+            set_config_institution('mahara', 'skins', (bool)$settings['skins']);
+        }
         if (isset($settings['lang']) && $oldlanguage != $settings['lang']) {
             safe_require('artefact', 'file');
             ArtefactTypeFolder::change_public_folder_name($oldlanguage, $settings['lang']);
