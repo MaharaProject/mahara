@@ -7,12 +7,14 @@
             font-family: $font-family-base;
             font-weight: $font-weight-normal;
             margin-left: 0;
+            margin-bottom: $spacing-base;
         }
     }
 
     .col-width-100 .bt-comment &,
     .viewfooter &,
-    .modal-docked.active & {
+    .modal-docked.active &,
+    .bt-peerassessment & {
         .comment-content {
           padding-left: 2.875rem; // 46px;
         }
