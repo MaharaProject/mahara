@@ -785,6 +785,11 @@ jQuery(function($) {
 });
 EOF;
 
+$accesslistmaximum = 0;
+if ($view->get('type') == 'portfolio' && $view->get('owner')) {
+    $accesslistmaximum = intval(get_config('accesslistmaximum'));
+}
+
 $smarty = smarty(
     array('js/clipboard/clipboard.min.js'),
     array(),
@@ -814,4 +819,5 @@ $smarty->assign('newform', $newform);
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('title', $returnto['title']);
+$smarty->assign('accesslistmaximum', $accesslistmaximum);
 $smarty->display('view/accessurl.tpl');
