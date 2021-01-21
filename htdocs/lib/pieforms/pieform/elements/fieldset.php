@@ -113,6 +113,14 @@ function pieform_element_fieldset(Pieform $form, $element) {
         $fieldset .= _render_elements_as_multicolumn($form, $element);
     }
     else {
+        if (!empty($element['comment'])) {
+            $fieldset .= '<p';
+            if (isset($element['class'])) {
+                $fieldset .= ' class="' . Pieform::hsc($element['class']) . ' description"';
+            }
+            $fieldset .= '>' . Pieform::hsc($element['comment']);
+            $fieldset .= "</p>\n";
+        }
         foreach ($element['elements'] as $subname => $subelement) {
 
             if ($subelement['type'] == 'hidden') {
