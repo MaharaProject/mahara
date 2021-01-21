@@ -323,7 +323,7 @@ function get_advanced_elements() {
 
     $displayname = display_name($USER);
     if ($displayname !== '') {
-        $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
+        $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferrednamedisplay'), $displayname);
     }
     $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
     if ($studentid !== '') {

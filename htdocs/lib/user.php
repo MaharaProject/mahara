@@ -1183,6 +1183,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
         return display_default_name($user);
     }
 
+    $showstudentid = !empty(get_config('showstudentid'));
     $nousernames = get_config('nousernames');
     $userto = get_user_for_display($userto);
     $user   = get_user_for_display($user);
@@ -1193,9 +1194,17 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     if (empty($user->preferredname)) {
         $firstlast = full_name($user);
         if ($addusername) {
+            if ($showstudentid && !empty($user->studentid)) {
+                return $firstlast . ' (' . $user->studentid . ' - ' . display_username($user) . ')';
+            }
             return $firstlast . ' (' . display_username($user) . ')';
         }
-        return $firstlast;
+        else if ($showstudentid && !empty($user->studentid)) {
+            return $firstlast . ' (' . $user->studentid . ')';
+        }
+        else {
+            return $firstlast;
+        }
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
@@ -1226,12 +1235,24 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     if ($addrealname) {
         $firstlast = full_name($user);
         if ($addusername) {
+            if ($showstudentid && !empty($user->studentid)) {
+                return $user->preferredname . ' (' . $user->studentid . ' - ' . $firstlast . ' - ' . display_username($user) . ')';
+            }
             return $user->preferredname . ' (' . $firstlast . ' - ' . display_username($user) . ')';
+        }
+        if ($showstudentid && !empty($user->studentid)) {
+            return $user->preferredname . ' (' . $user->studentid . ' - ' . $firstlast . ')';
         }
         return $user->preferredname . ' (' . $firstlast . ')';
     }
     if ($addusername) {
+        if ($showstudentid && !empty($user->studentid)) {
+            return  $user->preferredname . ' (' . $user->studentid . ' - ' . display_username($user) . ')';
+        }
         return $user->preferredname . ' (' . display_username($user) . ')';
+    }
+    if ($showstudentid && !empty($user->studentid)) {
+        return $user->preferredname . ' (' . $user->studentid . ')';
     }
     return $user->preferredname;
 }
@@ -1305,6 +1326,9 @@ function get_user_for_display($user=null) {
         }
         $user->admin = $user->admin || $USER->is_institutional_admin();
         $user->staff = $user->staff || $USER->is_institutional_staff();
+        // return here and don't add/fetch from cache as we are
+        // overriding the admin / staff properties
+        return $user;
     }
     else if ($user instanceof User) {
         $userObj = $user;

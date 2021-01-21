@@ -528,6 +528,7 @@ $string['sessiontimedoutpublic'] = 'Your session has timed out. You may <a href=
 $string['sessiontimedoutreload'] = 'Your session has timed out. Reload the page to log in again.';
 $string['username'] = 'Username';
 $string['preferredname'] = 'Display name';
+$string['preferrednamedisplay'] = 'Displayed name';
 $string['usernamedescription'] = ' ';
 $string['usernamehelp'] = 'The username you have been given to access this system.';
 $string['youaremasqueradingas'] = 'You are masquerading as %s.';
