@@ -318,6 +318,13 @@ $siteoptionform = array(
                     'defaultvalue' => get_config('nousernames'),
                     'disabled'     => in_array('nousernames', $OVERRIDDEN),
                 ),
+                'showstudentid' => array(
+                    'type'         => 'switchbox',
+                    'title'        => get_string('showstudentid', 'admin'),
+                    'description'  => get_string('showstudentiddescription1', 'admin'),
+                    'defaultvalue' => get_config('showstudentid'),
+                    'disabled'     => in_array('showstudentid', $OVERRIDDEN),
+                ),
                 'allowanonymouspages' => array(
                   'type'         => 'switchbox',
                   'title'        => get_string('allowanonymouspages', 'admin'),
@@ -893,7 +900,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'defaultaccountlifetimeupdate', 'allowpublicviews', 'allowpublicprofiles', 'allowanonymouspages', 'generatesitemap',
          'mathjax', 'institutionexpirynotification', 'institutionautosuspend', 'requireregistrationconfirm',
         'institutionstrictprivacy', 'homepageredirect', 'homepageredirecturl',
-        'showselfsearchsideblock', 'nousernames', 'searchplugin', 'showtagssideblock',
+        'showselfsearchsideblock', 'nousernames', 'showstudentid', 'searchplugin', 'showtagssideblock',
         'tagssideblockmaxtags', 'country', 'timezone', 'userscanchooseviewthemes', 'internalnotificationexpire',
         'remoteavatars', 'userscanhiderealnames', 'antispam', 'spamhaus', 'surbl', 'allowcommentsbydefault', 'anonymouscomments', 'passwordpolicy',
         'recaptchaonregisterform', 'recaptchapublickey', 'recaptchaprivatekey', 'hstsoverride', 'loggedinprofileviewaccess', 'disableexternalresources',
