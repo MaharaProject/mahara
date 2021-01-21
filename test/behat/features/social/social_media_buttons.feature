@@ -14,6 +14,10 @@ And the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page UserA_01 | Page 01 | user | UserA |
 
+And the following "blocks" exist:
+     | title                     | type     | page                   | retractable | updateonly | data                                                |
+     | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
 Scenario: Creating and accessing social media buttons (Bug 1448948)
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Profile" from account menu
@@ -58,6 +62,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I press "Save"
  And I should see "Access rules were updated for 1 page"
  And I log out
+
  # Logging in as UserB to try see the buttons
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I follow "Page UserA_01"

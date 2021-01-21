@@ -24,6 +24,9 @@ Background:
       | title | accesstype |
       | Page UserA_01 | public |
       | Collection UserA_01 | public |
+    And the following "blocks" exist:
+      | title                     | type     | page                   | retractable | updateonly | data                                                |
+      | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)

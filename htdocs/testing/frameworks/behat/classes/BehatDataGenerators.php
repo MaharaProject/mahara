@@ -128,7 +128,8 @@ class BehatDataGenerators extends BehatBase {
                 'type'             => 'text',
                 'data'             => 'text',
                 'page'             => 'text',
-                'retractable'      => 'text'
+                'retractable'      => 'text',
+                'updateonly'       => 'bool',
             ),
             'required' => array('title', 'type', 'page')
         ),

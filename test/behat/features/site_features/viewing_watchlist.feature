@@ -18,6 +18,10 @@ And the following "permissions" exist:
     | title | accesstype |
     | Page UserA_01 | public |
 
+And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Latest changes I can view | newviews | Dashboard page: admin  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Given I log in as "admin" with password "Kupuh1pa!"
  When I am on homepage

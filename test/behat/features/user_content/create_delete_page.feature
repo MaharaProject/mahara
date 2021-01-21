@@ -9,6 +9,10 @@ Background:
     | username | password  | email             | firstname | lastname | institution | authname | role   |
     | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User     | mahara      | internal | member |
 
+    And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Latest changes I can view | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
 Scenario: Creating a page with content in it (Bug 1426983)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
@@ -92,6 +96,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I select "Public" from "General" in shared with select2 box
     And I press "Save"
     And I log out
+
     # Log in as UserA and copy the page
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I wait "1" seconds

@@ -14,6 +14,11 @@ Background: Setting up test data for people and portfolio pages
     | Page UserA_02 | Page 02 | user | UserA |
     | Page UserA_03 | Page 02 | user | UserA |
 
+   And the following "blocks" exist:
+     | title                     | type     | page                   | retractable | updateonly | data                                                |
+     | Latest changes I can view | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
     # Background step required
     # And the site has been made ready for smart evidence - Admin set up site ready for Smartevidence
     # annotations = enabled
