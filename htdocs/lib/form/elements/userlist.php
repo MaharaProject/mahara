@@ -20,6 +20,8 @@ defined('INTERNAL') || die();
  * @return string           The HTML for the element
  */
 function pieform_element_userlist(Pieform $form, $element) {
+    global $USER;
+
     $smarty = smarty_core();
 
     $smarty->left_delimiter = '{{';
@@ -33,10 +35,9 @@ function pieform_element_userlist(Pieform $form, $element) {
 
     if (is_array($value) && count($value)) {
         $orderby = (isset($element['searchparams']['orderby']) && $element['searchparams']['orderby'] == 'lastname') ? 'lastname,firstname,id' : 'firstname,lastname,id';
-        $members = get_records_select_assoc('usr','id IN (' . join(',',array_map('intval', $value)) . ')', null, $orderby, 'id,username,firstname,lastname,preferredname,staff');
-
+        $members = get_records_select_assoc('usr','id IN (' . join(',',array_map('intval', $value)) . ')', null, $orderby, 'id,username,firstname,lastname,preferredname,staff,studentid');
         foreach($members as &$member) {
-            $member->displayname = display_name($member);
+            $member->displayname = display_name($member, $USER, false, false, true);
             if (!empty($element['allowuserrules']) && !empty($element['group'])) {
                 global $USER;
                 $institution = get_field('group', 'institution', 'id', $element['group']);

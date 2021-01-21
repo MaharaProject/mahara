@@ -86,6 +86,8 @@ function search_all($query_string, $limit, $offset = 0, $data = array(), $type =
  */
 
 function get_institutional_admin_search_results($search, $limit) {
+    global $USER;
+
     $institution = new stdClass();
     $institution->name = $search->institution;
     foreach (array('member', 'requested', 'invitedby', 'lastinstitution') as $p) {
@@ -94,10 +96,7 @@ function get_institutional_admin_search_results($search, $limit) {
     $results = institutional_admin_user_search($search->query, $institution, $limit);
     if ($results['count']) {
         foreach ($results['data'] as &$r) {
-            $r['name'] = $r['firstname'] . ' ' . $r['lastname'] . ' (' . $r['username'] . ')';
-            if (!empty($r['studentid'])) {
-                $r['name'] .= ' (' . $r['studentid'] . ')';
-            }
+            $r['name'] = display_name($r['id'], $USER, false, false, true);
         }
     }
     return $results;
