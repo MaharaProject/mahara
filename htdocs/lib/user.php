@@ -2950,7 +2950,13 @@ function install_system_dashboard_view() {
             'positionx' => 0,
             'positiony' => 0,
             'config' => array(
-                'limit' => 5,
+                'limit'       => 5,
+                'user'        => 1,
+                'group'       => 1,
+                'friend'      => 1,
+                'institution' => 0,
+                'loggedin'    => 0,
+                'public'      => 0,
             ),
         ),
         array(
