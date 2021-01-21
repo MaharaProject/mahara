@@ -2950,10 +2950,10 @@ function install_system_dashboard_view() {
             'positionx' => 0,
             'positiony' => 0,
             'config' => array(
-                'limit'       => 5,
+                'limit'       => 50, // PCNZ customisation WR 349190
                 'user'        => 1,
-                'group'       => 1,
-                'friend'      => 1,
+                'group'       => 0, // PCNZ customisation WR 349190
+                'friend'      => 0, // PCNZ customisation WR 349190
                 'institution' => 0,
                 'loggedin'    => 0,
                 'public'      => 0,

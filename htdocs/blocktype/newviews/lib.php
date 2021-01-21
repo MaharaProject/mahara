@@ -79,12 +79,12 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
             'type' => 'text',
             'title' => get_string('viewstoshow1', 'blocktype.newviews'),
             'description' => get_string('viewstoshowdescription', 'blocktype.newviews'),
-            'defaultvalue' => (isset($configdata['limit'])) ? intval($configdata['limit']) : 5,
+            'defaultvalue' => (isset($configdata['limit'])) ? intval($configdata['limit']) : 50, // PCNZ Customisation WR 349190
             'size' => 3,
             'minvalue' => 1,
             'maxvalue' => 100,
         );
-        $sharedefaults = array('user', 'group', 'friend');
+        $sharedefaults = array('user'); // PCNZ Customisation WR 349190
         $shareoptions = array(
             'user'        => get_string('Me', 'view'),
             'friend'      => get_string('friends', 'view'),
