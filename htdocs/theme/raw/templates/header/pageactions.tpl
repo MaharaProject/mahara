@@ -32,7 +32,7 @@
             {if $copyurl}{strip}
                 <li class="dropdown-item">
                     {if $downloadurl}
-                        <a id="downloadview-button" title="{str tag=copythisview section=view}" href="{$downloadurl}">
+                        <a id="downloadview-button" title="{str tag=copythisportfolio section=view}" href="{$downloadurl}">
                     {else}
                         <a id="copyview-button{if $headertype == "progresscompletion"}-progress{/if}" title="{str tag=copythisportfolio section=view}" href="{$copyurl}">
                     {/if}
@@ -42,6 +42,15 @@
                 </li>
             {/strip}{/if}
 
+            {if $usercaneditview}
+                <li class="dropdown-item">
+                    <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">
+                        <span class="icon {if $viewlocked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">{str tag=manageaccess section=view}</span>
+                    </a>
+                </li>
+           {/if}
+
             <li class="dropdown-item">
                 <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
                     <span class="icon icon-print left" role="presentation" aria-hidden="true"></span>
@@ -49,6 +58,7 @@
                     <span class="sr-only">{str tag=print section=view}</span>
                 </a>
             </li>
+
             {if $LOGGEDIN}
                 {if !$userisowner}
                     {if !($headertype == "matrix" || $headertype == "progresscompletion")}
@@ -66,16 +76,18 @@
                     {/if}
                     {if !($headertype == "matrix")}
                     <li class="dropdown-item">
-                        {if $objector}
-                            <span class="nolink">
-                                <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                                <span class="link-text">{str tag=objectionablematerialreported}</span>
-                            </span>
-                        {else}
-                            <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                                <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                                <span class="link-text">{str tag=reportobjectionablematerial}</span>
-                            </a>
+                        {if !($headertype == "matrix" || $headertype == "progresscompletion")}
+                            {if $objector}
+                                <span class="nolink">
+                                    <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                                    <span class="link-text">{str tag=objectionablematerialreported}</span>
+                                </span>
+                            {else}
+                                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                                    <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                                    <span class="link-text">{str tag=reportobjectionablematerial}</span>
+                                </a>
+                            {/if}
                         {/if}
                     </li>
                     {/if}
@@ -104,7 +116,7 @@
                     </a>
                 </li>
                 {/if}
-                {if $userisowner || $canremove}
+                {if ($userisowner || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion")}
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
@@ -123,7 +135,7 @@
                   </a>
                 </li>
             {/if}
-            {if $userisowner}
+            {if $userisowner && !($headertype == "matrix" || $headertype == "progresscompletion") }
                 <li class="dropdown-item">
                   <a href="{$createversionurl}">
                       <span class="icon icon-save left" role="presentation" aria-hidden="true"></span>

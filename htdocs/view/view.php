@@ -631,8 +631,10 @@ if ($view->is_anonymous()) {
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
 if ($can_edit) {
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid);
+    $smarty->assign('usercaneditview', TRUE);
 }
 if ($can_copy) {
     $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));

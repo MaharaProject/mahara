@@ -4431,6 +4431,27 @@ class View {
     }
 
     /**
+     * SmartEvidence and progess completion pages do not have an id.
+     * When downloading or copying a special page, apply to collection.
+     *
+     * @return array copy      to get copy url
+     *               download  to get a download url
+     */
+    public function get_special_views_copy_urls() {
+        global $USER;
+        $resulturls = array();
+        if ($this->get_collection() && $this->is_copyable()) {
+            $cid = $this->get_collection()->get('id');
+            $resulturls['copyurl'] = get_config('wwwroot') . 'view/copy.php?id=' . $this->id . '&collection=' . $cid;
+            if (!$USER->is_logged_in() && $this->owner) {
+                // if no user is loggedin and the personal profile is public, the Copy button should download the portfolio
+                $resulturls['downloadurl'] = get_config('wwwroot') . 'view/download.php?id=' . $this->id .  '&collection=' . $cid;
+            }
+        }
+        return $resulturls;
+    }
+
+    /**
      * Get all views visible to a user.  Complicated because a view v
      * is visible to a user u at time t if any of the following are
      * true:
