@@ -205,6 +205,7 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('maintitle', hsc($collection->get('name')));
 $smarty->assign('collectionid', $collection->get('id'));
 $smarty->assign('owner', $owner);
+$smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 $smarty->assign('PAGEHEADING', null);
 $smarty->assign('name', $framework->get('name'));
 $smarty->assign('description', $framework->get('description'));
@@ -218,7 +219,23 @@ $smarty->assign('canaddannotation', Framework::can_annotate_view($view->get('id'
 $smarty->assign('standardscount', $standards['count']);
 $smarty->assign('framework', $collection->get('framework'));
 $smarty->assign('views', $views['views']);
+$smarty->assign('viewlocked', $view->get('locked'));
 $smarty->assign('viewcount', $views['count']);
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $view->get('id') . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
+
+// Get the first view from the collection
+$firstview = $views['views'][0];
+$view = new View($firstview->id);
+$submittedgroup = (int)$view->get('submittedgroup');
+$can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+$urls = $view->get_special_views_copy_urls();
+if (array_key_exists('copyurl', $urls)) {
+    $smarty->assign('copyurl', $urls['copyurl'] );
+}
+if (array_key_exists('downloadurl', $urls)) {
+    $smarty->assign('downloadurl', $urls['downloadurl']);
+}
+$smarty->assign('usercaneditview', $can_edit);
 if ($view->is_anonymous()) {
     $smarty->assign('PAGEAUTHOR', get_string('anonymoususer'));
     $smarty->assign('author', get_string('anonymoususer'));

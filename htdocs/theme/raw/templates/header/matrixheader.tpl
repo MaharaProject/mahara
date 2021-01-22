@@ -20,4 +20,5 @@
             </div>
         </div>
     </div>
+    {include file="header/pageactions.tpl"}
 </div>

@@ -1,7 +1,7 @@
 <div class="pageactions">
     <div class="btn-group-vertical">
 
-        {if !$peerroleonly}
+        {if !$peerroleonly && !($headertype == "matrix" || $headertype == "progresscompletion")}
         {* Assess button that will show/ hide comments and details in block-comments-details-header.tpl *}
         <button id="details-btn" type="button" class="btn btn-secondary" title="{str tag=detailslinkalt section=view}">
             <span class="icon icon-search-plus left" role="presentation" aria-hidden="true" ></span>
@@ -32,15 +32,24 @@
             {if $copyurl}{strip}
                 <li class="dropdown-item">
                     {if $downloadurl}
-                        <a id="downloadview-button" title="{str tag=copythisview section=view}" href="{$downloadurl}">
+                        <a id="downloadview-button" title="{str tag=copythisportfolio section=view}" href="{$downloadurl}">
                     {else}
-                        <a id="copyview-button" title="{str tag=copythisview section=view}" href="{$copyurl}">
+                        <a id="copyview-button" title="{str tag=copythisportfolio section=view}" href="{$copyurl}">
                     {/if}
                     <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
                     {str tag=copy section=mahara}
                     </a>
                 </li>
             {/strip}{/if}
+
+            {if $usercaneditview}
+                <li class="dropdown-item">
+                    <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">
+                        <span class="icon {if $viewlocked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">{str tag=manageaccess section=view}</span>
+                    </a>
+                </li>
+           {/if}
 
             <li class="dropdown-item">
                 <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
@@ -49,30 +58,35 @@
                     <span class="sr-only">{str tag=print section=view}</span>
                 </a>
             </li>
+
             {if $LOGGEDIN}
                 {if !$userisowner}
-                <li class="dropdown-item">
-                    <a id="toggle_watchlist_link" class="watchlist" href="">
+                    {if !($headertype == "matrix" || $headertype == "progresscompletion")}
+                    <li class="dropdown-item">
+                        <a id="toggle_watchlist_link" class="watchlist" href="">
                         {if $viewbeingwatched}
-                        <span class="icon icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span>
-                        <span class="link-text">{str tag=removefromwatchlist section=view}</span>
-                        {else}
-                        <span class="icon icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
-                        <span class="link-text">{str tag=addtowatchlist section=view}</span>
-                       {/if}
-                    </a>
-                </li>
-                <li class="dropdown-item">
-                    {if $objector}
-                        <span class="nolink">
-                            <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                            <span class="link-text">{str tag=objectionablematerialreported}</span>
-                        </span>
-                    {else}
-                        <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
-                            <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
-                            <span class="link-text">{str tag=reportobjectionablematerial}</span>
+                            <span class="icon icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">{str tag=removefromwatchlist section=view}</span>
+                            {else}
+                            <span class="icon icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">{str tag=addtowatchlist section=view}</span>
+                        {/if}
                         </a>
+                    </li>
+                {/if}
+                <li class="dropdown-item">
+                    {if !($headertype == "matrix" || $headertype == "progresscompletion")}
+                        {if $objector}
+                            <span class="nolink">
+                                <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                                <span class="link-text">{str tag=objectionablematerialreported}</span>
+                            </span>
+                        {else}
+                            <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                                <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                                <span class="link-text">{str tag=reportobjectionablematerial}</span>
+                            </a>
+                        {/if}
                     {/if}
                 </li>
                 {/if}
@@ -84,7 +98,7 @@
                     </a>
                 </li>
                 {/if}
-                {if $userisowner || $canremove}
+                {if ($userisowner || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion")}
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
@@ -103,7 +117,7 @@
                   </a>
                 </li>
             {/if}
-            {if $userisowner}
+            {if $userisowner && !($headertype == "matrix" || $headertype == "progresscompletion") }
                 <li class="dropdown-item">
                   <a href="{$createversionurl}">
                       <span class="icon icon-save left" role="presentation" aria-hidden="true"></span>

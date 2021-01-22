@@ -113,6 +113,21 @@ foreach ($views['views'] as &$view) {
     $view->verified = ArtefactTypePeerassessment::is_verified($viewobj);
 }
 
+// TODO: Later on we will change which $view object will be set instead of taking the first view
+$viewobj = new View($firstview->id); // Need to call this as $viewobj to avoid clash with $view in foreach loop above
+$submittedgroup = (int)$viewobj->get('submittedgroup');
+$can_edit = $USER->can_edit_view($viewobj) && !$submittedgroup && !$viewobj->is_submitted();
+$urls = $viewobj->get_special_views_copy_urls();
+if (array_key_exists('copyurl', $urls)) {
+    $smarty->assign('copyurl', $urls['copyurl'] );
+}
+if (array_key_exists('downloadurl', $urls)) {
+    $smarty->assign('downloadurl', $urls['downloadurl']);
+}
+$owner = $collection->get('owner');
+$smarty->assign('usercaneditview', $can_edit);
+$smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $viewobj->get('id') . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
 $smarty->assign('views', $views['views']);
-
+$smarty->assign('viewlocked', $viewobj->get('locked'));
 $smarty->display('collection/progresscompletion.tpl');
