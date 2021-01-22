@@ -37,7 +37,7 @@ function pieform_element_userlist(Pieform $form, $element) {
         $orderby = (isset($element['searchparams']['orderby']) && $element['searchparams']['orderby'] == 'lastname') ? 'lastname,firstname,id' : 'firstname,lastname,id';
         $members = get_records_select_assoc('usr','id IN (' . join(',',array_map('intval', $value)) . ')', null, $orderby, 'id,username,firstname,lastname,preferredname,staff,studentid');
         foreach($members as &$member) {
-            $member->displayname = display_name($member, $USER, false, false, true);
+            $member->displayname = display_name($member, null, false, false, true);
             if (!empty($element['allowuserrules']) && !empty($element['group'])) {
                 global $USER;
                 $institution = get_field('group', 'institution', 'id', $element['group']);

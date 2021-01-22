@@ -611,7 +611,7 @@ class ArtefactTypeProfile extends ArtefactType {
     public static function get_always_mandatory_fields() {
         return array(
             'firstname' => 'text',
-            'lastname'  => 'text',
+            // 'lastname'  => 'text', PCNZ customisation WR 349171
             'email'     => 'emaillist',
         );
     }

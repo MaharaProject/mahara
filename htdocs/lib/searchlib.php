@@ -96,7 +96,7 @@ function get_institutional_admin_search_results($search, $limit) {
     $results = institutional_admin_user_search($search->query, $institution, $limit);
     if ($results['count']) {
         foreach ($results['data'] as &$r) {
-            $r['name'] = display_name($r['id'], $USER, false, false, true);
+            $r['name'] = display_name($r['id'], null, false, false, true);
         }
     }
     return $results;
