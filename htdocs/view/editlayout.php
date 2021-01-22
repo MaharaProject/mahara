@@ -317,7 +317,7 @@ function get_basic_elements() {
 }
 
 function get_advanced_elements() {
-    global $view, $urlallowed, $group, $institution, $USER, $cleanurlbase;
+    global $view, $urlallowed, $group, $institution, $USER, $cleanurlbase, $OVERRIDDEN;
 
     $formatstring = '%s (%s)';
     $ownerformatoptions = array(
@@ -398,6 +398,8 @@ function get_advanced_elements() {
             'options'      => $ownerformatoptions,
             'defaultvalue' => $default,
             'rules'        => array('required' => true),
+            'disabled' => in_array('ownerformat', $OVERRIDDEN),
+            'class'        => 'd-none', // PCNZ Customisation: WR 349171
         );
     }
     if (get_config('allowanonymouspages')) {

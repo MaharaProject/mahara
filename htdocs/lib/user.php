@@ -1181,7 +1181,7 @@ function check_imap_for_bounces() {
  * @returns string name to display
  */
 function display_name($user, $userto=null, $nameonly=false, $realname=false, $username=false) {
-
+    // PCNZ Customisation WR 349171 --- throughout this function
     global $USER;
     static $tutorcache  = array();
 
@@ -1193,8 +1193,9 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     $nousernames = get_config('nousernames');
     $userto = get_user_for_display($userto);
     $user   = get_user_for_display($user);
+    $lastname = $user->lastname; // PCNZ Customisation WR 349171
 
-    $addusername = ($username && empty($nousernames)) || !empty($userto->admin) || !empty($userto->staff);
+    $addusername = false; // PCNZ Customisation WR 349171
 
     // if they don't have a preferred name set, just return here
     if (empty($user->preferredname)) {
@@ -1214,7 +1215,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     }
     else if ($user->id == $userto->id) {
         // If viewing our own name, show it how we like it
-        return $user->preferredname;
+        return $user->preferredname . ' ' . $lastname; // PCNZ Customisation WR 349171
     }
 
     // Preferred name is set
@@ -1253,14 +1254,14 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
     }
     if ($addusername) {
         if ($showstudentid && !empty($user->studentid)) {
-            return  $user->preferredname . ' (' . $user->studentid . ' - ' . display_username($user) . ')';
+            return  $user->preferredname . ' ' . $lastname . ' (' . $user->studentid . ' - ' . display_username($user) . ')';
         }
-        return $user->preferredname . ' (' . display_username($user) . ')';
+        return $user->preferredname . ' ' . $lastname . ' (' . display_username($user) . ')';
     }
     if ($showstudentid && !empty($user->studentid)) {
-        return $user->preferredname . ' (' . $user->studentid . ')';
+        return $user->preferredname . ' ' . $lastname . ' (' . $user->studentid . ')' ;
     }
-    return $user->preferredname;
+    return $user->preferredname . ' ' . $lastname;
 }
 
 /**
