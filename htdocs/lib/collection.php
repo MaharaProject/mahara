@@ -403,8 +403,11 @@ class Collection {
             );
             list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate, $artefactcopies);
             // Check to see if we need to re-map any framework evidence
-            if (!empty($data->framework) && $userid == $data->owner && count_records('framework_evidence', 'view', $v->view)) {
-                $evidenceviews[$v->view] = $view->get('id');
+            // and if a personal collection will be copied as another personal collection (copying to groups/institutions/site porttfolios will have no owner field)
+            if (!empty($data->owner)) {
+                if (!empty($data->framework) && $userid == $data->owner && count_records('framework_evidence', 'view', $v->view)) {
+                    $evidenceviews[$v->view] = $view->get('id');
+                }
             }
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->clear('messages');
