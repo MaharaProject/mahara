@@ -160,7 +160,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return $element;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 

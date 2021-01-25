@@ -166,7 +166,7 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         return ArtefactTypeFileBase::artefactchooser_get_file_data($artefact);
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 }

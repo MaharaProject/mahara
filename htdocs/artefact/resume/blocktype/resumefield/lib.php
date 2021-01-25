@@ -191,7 +191,7 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         return $configdata;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

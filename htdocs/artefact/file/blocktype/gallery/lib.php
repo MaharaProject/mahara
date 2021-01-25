@@ -916,7 +916,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
     public static function artefactchooser_element($default=null) {
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
