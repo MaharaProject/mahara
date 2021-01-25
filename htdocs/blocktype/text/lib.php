@@ -185,7 +185,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         EmbeddedImage::delete_embedded_images('instructions', $instance->get('id'));
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
