@@ -1,7 +1,7 @@
 {foreach from=$tasks.data item=task}
-    <div class="task-item list-group-item{if $task->completed == -1} plan_incomplete list-group-item-danger{/if}">
+    <div class="task-item list-group-item{if $task->completed == -1} plan_incomplete{/if}">
         {if $editing}
-        <div class="float-right btn-group">
+        <div class="float-right btn-group btn-group-top">
             <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
             <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
         </div>
@@ -21,7 +21,7 @@
                 {if $task->description || $task->tags}
                 <a class="{if !$options.pdfexport}collapsed{/if}" href="#expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-toggle="collapse" aria-expanded="{if !$options.pdfexport}true{else}false{/if}" aria-controls="expand-task-{$task->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
                 {/if}
-                    <h4 class="list-group-item-heading {if $task->completed == -1}text-danger{else}text-default{/if}">{$task->title}</h4>
+                    <h4 class="list-group-item-heading text-default">{$task->title}</h4>
                 {if $task->description || $task->tags}
                     <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </a>

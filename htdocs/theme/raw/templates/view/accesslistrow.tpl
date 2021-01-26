@@ -1,7 +1,7 @@
-<td {if $item.pending}class="bg-danger"{/if}>
+<td>
     <a href="{$item.url}">{$item.name}</a>
 </td>
-<td class="accesslist{if $item.pending} bg-danger{/if}">
+<td class="accesslist">
 {if $item.pending}<div class="detail text-danger"><strong>{str tag="pending" section="view"}</strong></div>{/if}
 {if $item.access}<div class="detail">{$item.access}</div>{/if}
 {if $item.accessgroups}
@@ -33,7 +33,7 @@
 {if $item.template}<div class="detail">{str tag=thisviewmaybecopied section=view}</div>{/if}
 </td>
 {if $item.pending}
-<td colspan="2" class="bg-danger"></td>
+<td colspan="2"></td>
 {else}
 <td class="al-edit text-center tiny table-active">
     <a href="{$WWWROOT}view/access.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" title="{str tag=editaccess section=view}" class="text-default">
