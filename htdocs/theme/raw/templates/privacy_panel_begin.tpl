@@ -16,19 +16,23 @@
                 {else}
                     href="#dropdown{$privacy->id}"
                 {/if}
-                data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                data-toggle="collapse" aria-expanded="false" aria-controls="dropdown">
                     {$privacytitle}
                     <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
                 </a>
             </legend>
             <div class="fieldset-body collapse {if (!($privacy->agreed && $ignoreagreevalue) || $ignoreformswitch)}show{/if}"
               {if $institutionprivacy}
-                  id="dropdowninstprivacy">
+                  id="dropdowninstprivacy"
               {elseif $institutionterms}
-                  id="dropdowninstterms">
+                  id="dropdowninstterms"
               {else}
-                  id="dropdown{$privacy->id}">
-              {/if}
+                  id="dropdown{$privacy->id}"
+              {/if}>
+
+                {if $privacytime}
+                    <span class="text-midtone text-small">{str tag='lastupdated' section='admin'} {$privacytime} </span>
+                {/if}
                 {if $institutionprivacy}
                     <div id ="instprivacytext" class="insttext"></div>
                 {elseif $institutionterms}
@@ -36,8 +40,5 @@
                 {else}
                     {$privacy->content|safe}
                 {/if}
-                  {if $privacytime}
-                      <span class="text-midtone text-small">{str tag='lastupdated' section='admin'} {$privacytime} </span>
-                  {/if}
             </div>
             <div class="fieldset-body consentbutton collapse {if (!($privacy->agreed && $ignoreagreevalue) || $ignoreformswitch)}show{/if}">

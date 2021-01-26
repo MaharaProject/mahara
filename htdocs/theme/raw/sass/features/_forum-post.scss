@@ -32,10 +32,16 @@
     .form-group.submit {
         padding: 0 0 $spacing-base 0;
     }
+    .form-group {
+        padding: 0 0 $spacing-base 0;
+        color: $theme-text-color;
+    }
     // Overriding normal hover and focus
     // background colour as the collapsible
     // is inside alert box
-    .collapsible a {
+    .collapsible legend a:not(.secondary-link) {
+        font-size: 1rem;
+        color: $theme-text-color;
         &:focus,
         &:hover {
             background: scale-color($card-bg, $lightness: -1.40%) !important;

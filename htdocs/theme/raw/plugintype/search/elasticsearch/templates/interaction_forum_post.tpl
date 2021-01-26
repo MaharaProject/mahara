@@ -12,7 +12,7 @@
         </a>
     </h2>
     <span class="artefacttype text-midtone">({str tag=forumpost section=search.elasticsearch})</span>
-    <div class="source"><strong>{str tag='forum' section='search.elasticsearch'}:</strong> {$record->forumname} ({$record->groupname})</div>
-    <div class="poster"><strong>{str tag='forumpostedbylabel' section='search.elasticsearch'}:</strong> {str tag=forumpostedby section=search.elasticsearch arg1='$record->authorlink|safe' arg2='$record->ctime'}</div>
+    <div class="source">{str tag='forum' section='search.elasticsearch'}: {$record->forumname} ({$record->groupname})</div>
+    <div class="poster">{str tag='forumpostedbylabel' section='search.elasticsearch'}: {str tag=forumpostedby section=search.elasticsearch arg1='$record->authorlink|safe' arg2='$record->ctime'}</div>
     <div class="detail">{$record->body|str_shorten_html:140:true:false|safe}</div>
 {/if}

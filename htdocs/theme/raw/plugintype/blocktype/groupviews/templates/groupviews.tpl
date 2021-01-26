@@ -1,7 +1,7 @@
 
 {if $groupviews}
     {if $groupviews.count > 0}
-        <ul id="groupviewlist" class="list-group allgroup-pages grouppages">
+        <ul id="groupviewlist" class="list-group allgroup-pages grouppages list-group-top-border">
             {$groupviews.tablerows|safe}
         </ul>
 

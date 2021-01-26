@@ -1,4 +1,8 @@
 // Modifications and extra use cases for bootstrap  buttons
+.btn-sm {
+    font-size: $font-size-sm;
+    padding: $btn-padding-y-sm $btn-padding-x-sm;
+}
 
 .btn-secondary {
     color: $btn-secondary-color;
@@ -48,15 +52,15 @@
     }
 }
 
-.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
     color: inherit;
-    border-color: $btn-secondary-border;
+    border-color: $btn-primary-border;
     box-shadow: none;
 }
 
-.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle {
-    color: $theme-text-color;
-    background-color: scale-color($btn-secondary-bg, $lightness: -15%);
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show > .btn-secondary.dropdown-toggle {
+    color: $btn-secondary-color;
+    background-color: $btn-secondary-bg;
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 
@@ -152,24 +156,32 @@ p ~ div > .btn-group-top,
 .nav-tabs +  div.btn-group-top {
     margin-top: -1.25rem; // -20px;
     margin-left: -100%;
+
     @include media-breakpoint-down(md) {
         margin: 0 0 $spacing-base 0;
         width: 100%;
         float: none;
-        .btn-group .btn,
-        .form-as-button,
-        .btn {
+    }
+
+    .btn-group .btn,
+    .form-as-button,
+    .btn {
+        border-top: 0;
+        @include media-breakpoint-down(md) {
             margin-bottom: $spacing-xs;
             margin-left: $btn-border-width;
             margin-right: $btn-border-width;
             width: 100%;
-            border-top: $btn-border-width solid $btn-secondary-border;
             border-right-width: $btn-border-width;
             border-radius: $btn-border-radius !important;
-            .btn {
-                margin-bottom: 0;
-            }
+            border-top: $btn-border-width solid $btn-secondary-border;
         }
+        .btn {
+            margin-bottom: 0;
+        }
+    }
+
+    @include media-breakpoint-down(md) {
         .form-as-button:first-child:not(.last) {
             .btn {
                 border-right-width: $btn-border-width;
@@ -185,7 +197,6 @@ p ~ div > .btn-group-top,
         float: right;
         .btn {
             @include border-top-radius(0);
-            border-top: 0;
         }
         .btn-group-top {
             margin: 0;
@@ -207,69 +218,17 @@ td.btn-group {
 .card-header {
     .btn-group-top {
         @include clearfix;
-        @include media-breakpoint-up(md) {
-            margin-top: -0.75rem; // -12px;
-            text-align: right;
-            float: right;
-        }
+        margin-top: -0.8125rem; // -13px;
+        text-align: right;
+        float: right;
+
         @include media-breakpoint-down(md) {
-            margin-top: -0.8125rem; // -13px;
-            text-align: right;
-            float: right;
+            margin-top: 0;
         }
-        .btn {
-            font-size: $font-size-sm;
-            border: $btn-border-width solid $btn-secondary-border;
-            padding: $btn-padding-y-sm $btn-padding-x-sm;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-top: 0;
-        }
+
         .btn-top-right {
             margin: 0; // negate nested margin
         }
-    }
-    // Groups page has something different
-    .btn-action-list {
-        .btn-group-top {
-            text-align: left;
-            float: none;
-            display: inline-flex;
-            @include media-breakpoint-up(sm) {
-                text-align: right;
-                float: right;
-            }
-            @include media-breakpoint-down(md) {
-                margin-top: -0.75rem; // -12px;
-            }
-            @include media-breakpoint-down(sm) {
-                margin-top: $spacing-sm;
-                float: none;
-            }
-            .btn {
-                @include media-breakpoint-down(sm) {
-                    border-top: $btn-border-width solid $btn-secondary-border;
-                    &:first-child {
-                      border-top-left-radius: $btn-border-radius;
-                    }
-                    &:last-child {
-                      border-top-right-radius: $btn-border-radius;
-                    }
-                }
-            }
-        }
-    }
-    &.wall {
-      .btn-group-top {
-        @include media-breakpoint-down(md) {
-            margin-top: -0.75rem; // -12px;
-        }
-      }
-    }
-    &.plan-list-group {
-      .btn-group-top {
-        margin-top: -0.8125rem; // -13px;
-      }
     }
 }
 // Edit page configure buttons
@@ -447,13 +406,6 @@ td.btn-group {
     }
 }
 
-.btn-sm,
-.btn-group .btn.btn-sm {
-    font-size: $font-size-sm;
-    border: $btn-border-width solid $btn-secondary-border;
-    padding: $btn-padding-y-sm $btn-padding-x-sm;
-}
-
 .card.first .card-header {
     a.btn-sm {
         border-radius: $btn-border-radius-sm;
@@ -621,17 +573,6 @@ a[type="submit"],
 .form-inline .admin-user-search .form-group.no-label {
   vertical-align: text-bottom;
   top: -$spacing-sm;
-}
-
-// comments block btn-group-top alignment
-@include media-breakpoint-up(lg) {
-  .feedbacktable .list-group {
-    .btn-group-top {
-      .delete-comment {
-        margin-top: -$btn-border-width;
-      }
-    }
-  }
 }
 
 // order sorting arrows
