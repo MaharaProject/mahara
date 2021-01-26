@@ -1053,7 +1053,7 @@ class ArtefactTypeComment extends ArtefactType {
                 'submit'   => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-link btn-sm',
+                    'class' => 'btn-secondary btn-sm',
                     'name'  => 'make_public_submit',
                     'value' => '<span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>' . get_string('makecommentpublic', 'artefact.comment'),
                 ),

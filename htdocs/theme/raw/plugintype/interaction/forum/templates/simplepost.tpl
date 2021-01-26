@@ -3,7 +3,7 @@
 </a>
 {/if}
 
-    <div class="media forum-post {if !$post->approved} alert-warning {/if}">
+    <div class="media forum-post">
         <div class="forumpostleft media-left text-small">
             {if $deleteduser}
                 <span class="user-icon user-icon-40"><img src="{profile_icon_url user=null maxwidth=40 maxheight=40}" valign="middle" alt="{str tag=profileimagetextanonymous}" class="media-object"></span>
