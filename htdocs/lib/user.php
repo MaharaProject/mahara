@@ -436,6 +436,7 @@ function general_account_prefs_form_elements($prefs) {
             'title'        => get_string('hiderealname', 'account'),
             'description'  => get_string('hiderealnamedescription', 'account'),
             'defaultvalue' => $prefs->hiderealname,
+            'disabled'     => true,
         );
     }
     if (get_config('homepageinfo')) {
@@ -2741,6 +2742,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
 
     // Set account preferences
     if (!empty($accountprefs)) {
+        $accountprefs = array_merge($accountprefs, array('hiderealname' => 1));
         $expectedprefs = expected_account_preferences();
         foreach ($expectedprefs as $eprefkey => $epref) {
             if (isset($accountprefs[$eprefkey]) && $accountprefs[$eprefkey] != $epref) {
