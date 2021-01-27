@@ -566,10 +566,10 @@ function buildContextualHelpBox(content) {
                 '<span class="sr-only">' + get_string('closehelp') + '</span>' +
             '</a>' +
         '</div>' +
-        '<div id="helpstop">' + content +  '</div>'
+        '<div class="helpstop">' + content +  '</div>'
     );
 
-    jQuery('#helpstop').on("click", function(e) {
+    jQuery('.helpstop').on("click", function(e) {
         if (e.target.nodeName != "A") {
             e.preventDefault();
             e.stopPropagation();
