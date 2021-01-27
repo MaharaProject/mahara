@@ -51,9 +51,11 @@ Scenario: SmartEvidence interaction by member / staff
     When I follow "Next: Edit access"
     Then I click on "Return to pages and collections"
 
-    # Mahara member makes page visible to public
+    # PCNZ customisation WR349184
     And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
-    And I select "Public" from "accesslist[0][searchtype]"
+    And I select "Person" from "accesslist[0][searchtype]"
+    And I select "Bob User" from select2 nested search box in row number "1"
+    ## End customisation
     And I click on "Save"
     # Mahara member must make comment on competencies before it can be accessed by admin/staff
     When I follow "Smart Evidence Collection 1"

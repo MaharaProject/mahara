@@ -160,8 +160,12 @@ Background:
    When I choose "Shared by me" in "Share" from main menu
    And I click on "Edit access" in "Page UserA_01" row
    And I set the select2 value "Page UserA_01, Page UserA_02, Create portfolio via tags feature" for "editaccess_views"
-   And I select "Public" from "accesslist[0][searchtype]"
-   And I press "editaccess_submit"
+   # PCNZ customisation WR349184
+   And I select "Person" from "accesslist[0][searchtype]"
+   And I select "Albert User" from select2 nested search box in row number "1"
+   ## End customisation
+   And I press "Save"
+   #And I press "editaccess_submit"
    And I log out
 
    Given I log in as "UserB" with password "Kupuh1pa!"

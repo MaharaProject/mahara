@@ -26,7 +26,9 @@ Scenario: Create accounts and search for them (Bug 897586)
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Page UserA_01" row
     And I set the select2 value "Page UserA_01, Page UserA_02" for "editaccess_views"
-    And I select "Public" from "accesslist[0][searchtype]"
+    # PCNZ customisation WR349184
+    #And I select "Public" from "accesslist[0][searchtype]"
+    ##
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
@@ -39,7 +41,9 @@ Scenario: Create accounts and search for them (Bug 897586)
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_01, Page UserB_02" for "editaccess_views"
-    And I select "Public" from "accesslist[0][searchtype]"
+    # PCNZ customisation WR349184
+    #And I select "Public" from "accesslist[0][searchtype]"
+    ##
     And I press "Save"
     # Verifying that both of the pages have been shared
     And I should see "Access rules were updated for 2 pages."
@@ -62,14 +66,14 @@ Scenario: Create accounts and search for them (Bug 897586)
     And I check "Public"
     And I press "search_submit"
     # Verifying I can see an Angela's page
-    Then I should see "Page UserA_01"
+    #Then I should see "Page UserA_01"
     # Verifying I can see some of Bob's pages
     # Entering Bob name in the search box
     And I fill in the following:
     | Search: | Bob |
     And I check "Public"
     And I press "search_submit"
-    And I should see "Page UserB_02"
+    #And I should see "Page UserB_02"
     And I should see "Page UserB_03"
     # Verifying I cannot see Bob's page not shared
     And I should not see "Page UserB_04"

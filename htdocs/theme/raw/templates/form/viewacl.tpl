@@ -12,12 +12,18 @@
             <tr class="accesslist-head th-has-shared">
                 <th></th>
                 <th>{{str tag=sharedwith section=view}}</th>
+                {{* Customisation for Pharmacy Council WR349184 *}}
+                {{if $show_date_opt}}
                 <th class="text-center">{{str tag=From}}</th>
                 <th class="text-center">{{str tag=To}}</th>
-                {{if  $viewtype !== "profile" }}
-                <th class="text-center commentcolumn"><div class="th-shared-wrap"><span class="th-shared-heading">{{str tag=comments section=view}}</span> <span class="th-shared-title">{{str tag=allow section=view}}</span></div></th>
-                <th class="text-center commentcolumn"><span class="sr-only">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
                 {{/if}}
+                {{if $show_comments_checkboxes}}
+                    {{if  $viewtype !== "profile" }}
+                    <th class="text-center commentcolumn"><div class="th-shared-wrap"><span class="th-shared-heading">{{str tag=comments section=view}}</span> <span class="th-shared-title">{{str tag=allow section=view}}</span></div></th>
+                    <th class="text-center commentcolumn"><span class="sr-only">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
+                    {{/if}}
+                {{/if}}
+                {{* End customisation *}}
             </tr>
         </thead>
         <tbody id ="accesslistitems" data-id="accesslistitems">
@@ -51,23 +57,30 @@
                 <select id="type-{%=o.id%}" name="accesslist[{%=o.id%}][searchtype]" class="js-share-type form-control input-small select" {% if (o.presets.locked) { %}disabled{% } %}>
                     <option data-type="" {% if (!o.presets.type) { %}selected{% } %} value="">{%={{jstr tag=sharewith section=view}}%}</option>
 
+                    {{* Customisation for Pharmacy Council WR349184 *}}
                     <optgroup label="{%={{jstr tag=searchfor section=view}}%}">
-                        <option data-search-option="true" id="friend" value="friend"{% if (o.presets.type == "friend") { %} selected{% } %}>{{str tag=friend section=view}}</option>
-                        <option data-search-option="true" id="group" value="group"{% if (o.presets.type == "group") { %} selected{% } %}>{{str tag=group section=view}}</option>
+                        {% if ({{$show_friend_opt}}) { %}<option data-search-option="true" id="friend" value="friend"{% if (o.presets.type == "friend") { %} selected{% } %}>{{str tag=friend section=view}}</option>{% } %}
+                        {% if ({{$show_group_opt}}) { %}<option data-search-option="true" id="group" value="group"{% if (o.presets.type == "group") { %} selected{% } %}>{{str tag=group section=view}}</option>{% } %}
                         <option data-search-option="true" id="user" value="user"{% if (o.presets.type == "user") { %} selected{% } %}>{{str tag=user section=view}}</option>
                     </optgroup>
 
+                    {% if ({{$show_general_label}}) { %}
                     <optgroup label="{%={{jstr tag=general section=view}}%}" id="potentialpresetitemssharewith">
                         {% for (var i=0; i<o.shareoptions.general.length; i++) { %}
                             <option value="{%=o.shareoptions.general[i].id%}"{% if (o.presets.type == o.shareoptions.general[i].id) { %} selected{% } %} {% if (o.shareoptions.general[i].locked) { %} disabled{% } %}>{%=o.shareoptions.general[i].name%}</option>
                         {% } %}
                     </optgroup>
+                    {% } %}
 
+                    {% if ({{$show_institutions_label}}) { %}
                     <optgroup label="{%={{jstr tag=institutions section=view}}%}" id="potentialpresetitemsinstitutions">
                         {% for (var i=0; i<o.shareoptions.institutions.length; i++) { %}
                             <option data-type="institution" value="{%=o.shareoptions.institutions[i].id%}"{% if (o.presets.id == o.shareoptions.institutions[i].id && o.presets.type == 'institution') { %} selected{% } %}>{%=o.shareoptions.institutions[i].name%}</option>
                         {% } %}
                     </optgroup>
+                    {% } %}
+
+                    {% if ({{$show_group_label}}) { %}
                     <optgroup label="{%={{jstr tag=groups section=view}}%}" id="potentialpresetitemsgroups">
                         {% for (var i=0; i<o.shareoptions.myGroups.length; i++) { %}
                             <option data-type="group" value="{%=o.shareoptions.myGroups[i].id%}"{% if (o.presets.id == o.shareoptions.myGroups[i].id && o.presets.type == 'group') { %} selected{% } %}>
@@ -75,6 +88,9 @@
                             </option>
                         {% } %}
                     </optgroup>
+                    {% } %}
+                    {{* End customisations *}}
+
                 </select>
             </span>
             {% if(o.presets.empty) { %}<p class="table-help-text">{%={{jstr tag=whosharewith section=view}}%}</p>{% } %}
@@ -95,28 +111,34 @@
             </span>
         </div>
     </td>
-    <td class="text-center js-date short" data-name='from'>
-        <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
-            <div class="hasDatepickerwrapperacl">
-                <input type="text" id="accesslist{%=o.id%}_startdate" name="accesslist[{%=o.id%}][startdate]" class="form-control float-left datetimepicker-input" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %} data-toggle="datetimepicker" data-target="#accesslist{%=o.id%}_startdate" autocomplete="off">
+    {{* Customisation for Pharmacy Council WR349184 *}}
+    {% if ({{$show_date_opt}}) { %}
+        <td class="text-center js-date short" data-name='from'>
+            <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
+                <div class="hasDatepickerwrapperacl">
+                    <input type="text" id="accesslist{%=o.id%}_startdate" name="accesslist[{%=o.id%}][startdate]" class="form-control float-left datetimepicker-input" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" aria-label="{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %} data-toggle="datetimepicker" data-target="#accesslist{%=o.id%}_startdate" autocomplete="off">
+                </div>
             </div>
-        </div>
-    </td>
-    <td class="text-center js-date short" data-name='to'>
-        <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
-            <div class="hasDatepickerwrapperacl">
-                <input type="text" id="accesslist{%=o.id%}_stopdate" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-left datetimepicker-input" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %} data-toggle="datetimepicker" data-target="#accesslist{%=o.id%}_stopdate" autocomplete="off">
-            </div>
-        </div>
-    </td>
-    {% if (o.viewtype !== "profile") { %}
-        <td class="text-center tiny commentcolumn">
-            <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox form-check js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}" type="checkbox" {% if (o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
         </td>
-        <td class="text-center tiny commentcolumn">
-            <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox form-check js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}" type="checkbox" {% if (o.presets.approvecomments == "1" && o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+        <td class="text-center js-date short" data-name='to'>
+            <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
+                <div class="hasDatepickerwrapperacl">
+                    <input type="text" id="accesslist{%=o.id%}_stopdate" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-left datetimepicker-input" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %} data-toggle="datetimepicker" data-target="#accesslist{%=o.id%}_stopdate" autocomplete="off">
+                </div>
+            </div>
         </td>
     {% } %}
+    {% if ({{$show_comments_checkboxes}}) { %}
+        {% if (o.viewtype !== "profile") { %}
+            <td class="text-center tiny commentcolumn">
+                <input value="1" name="accesslist[{%=o.id%}][allowcomments]" class="allow-comments-checkbox form-check js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}" type="checkbox" {% if (o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %} {% if (o.presets.locked) { %}disabled{% } %}>
+            </td>
+            <td class="text-center tiny commentcolumn">
+                <input value="1" name="accesslist[{%=o.id%}][approvecomments]" class="moderate-comments-checkbox form-check js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}" type="checkbox" {% if (o.presets.approvecomments == "1" && o.presets.allowcomments == "1") { %}checked{% } else { %}{% } %}  {% if (o.presets.locked) { %}disabled{% } %}>
+            </td>
+        {% } %}
+    {% } %}
+    {{* End customisation *}}
 
 </tr>
 </script>

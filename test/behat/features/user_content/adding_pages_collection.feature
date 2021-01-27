@@ -56,9 +56,11 @@ Scenario: Creating a collection AND adding pages
     And I should see "Page title"
     And I follow "Collections"
     # Continue initial test
-    And I follow "Edit access"
-    And I select "Registered people" from "accesslist[0][searchtype]"
-    And I press "Save"
+    # PCNZ customisation WR349184
+    #And I follow "Edit access"
+    #And I select "Registered people" from "accesslist[0][searchtype]"
+    #And I press "Save"
+    ## End customisation
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Add"
     And I click on "Page" in the dialog
