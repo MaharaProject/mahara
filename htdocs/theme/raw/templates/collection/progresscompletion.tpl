@@ -19,11 +19,16 @@
     <tr class="table-pager">
         <th>{str tag="view"}</th>
         <th class="userrole">{str tag="signoff" section="blocktype.peerassessment/signoff"}</th>
-        <th class="userrole">{str tag="verification" section="collection"}</th>
+        {if $showVerification}<th class="userrole">{str tag="verification" section="collection"}</th>{/if}
     </tr>
     {foreach from=$views item=view}
     <tr data-view="{$view->id}">
-        <td><div><a href="{$view->fullurl}">{$view->displaytitle}</a></div></td>
+        <td class="progresstitle">
+            <div>
+                <a href="{$view->fullurl}">{$view->displaytitle}</a>
+                {if $view->description}<span id="pagetitlehelp_{$view->id}" class="icon icon-info-circle iconhelp" data-title="{hsc($view->displaytitle)}" data-content="{hsc($view->description)}"></span>{/if}
+            </div>
+        </td>
         <td>
         {if $view->owneraction}
             <a class="{$view->owneraction}" href="#" data-view="{$view->id}" data-signedoff="{$view->signedoff}">
@@ -33,15 +38,17 @@
             <span title="{$view->ownertitle}" class="{$view->ownericonclass}"></span>
         {/if}
         </td>
-        <td>
-        {if $view->manageraction}
-            <a class="{$view->manageraction}" href="#" data-view="{$view->id}" data-verified="{$view->verified}">
+        {if $showVerification}
+            <td>
+            {if $view->manageraction}
+                <a class="{$view->manageraction}" href="#" data-view="{$view->id}" data-verified="{$view->verified}">
+                    <span title="{$view->managertitle}" class="{$view->managericonclass}"></span>
+                </a>
+            {else}
                 <span title="{$view->managertitle}" class="{$view->managericonclass}"></span>
-            </a>
-        {else}
-            <span title="{$view->managertitle}" class="{$view->managericonclass}"></span>
+            {/if}
+            </td>
         {/if}
-        </td>
     </tr>
     {/foreach}
 </table>
@@ -96,6 +103,35 @@ $(function() {
     needssignedoff_title = "{str tag='needssignedoff' section='collection'}",
     signedoff_title = "{str tag='signedoff' section='collection'}";
     totalactions = "{$totalactions}";
+
+    $('[id^="pagetitlehelp_"]').on('click', function () {
+        if (contextualHelpContainer == null) {
+            contextualHelpContainer = jQuery(
+                '<div style="position: absolute" class="contextualHelp d-none" role="dialog">' +
+                    '<span class="icon icon-spinner icon-pulse"></span>' +
+                '</div>'
+            );
+        }
+
+        contextualHelpSelected = true;
+
+        $(this).parent().append(contextualHelpContainer);
+        contextualHelpLink = $(this);
+        title = $(this).attr('data-title');
+        content = '<h1>' + title + '</h1>' + '<p>' + $(this).attr('data-content') + '</p>';
+        var position = contextualHelpPosition($(this));
+        contextualHelpContainer.offset(position);
+        contextualHelpContainer.removeClass('d-none');
+        buildContextualHelpBox(content);
+        $('.help-dismiss').off('click');
+        $('.help-dismiss').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            contextualHelpContainer.addClass('d-none');
+        });
+    });
+
+
 
     // click 'No' button on modals
     $("#signoff-back-button, #verify-back-button").on('click', function() {
