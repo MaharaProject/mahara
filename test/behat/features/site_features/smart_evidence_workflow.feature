@@ -63,11 +63,11 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     When I follow "Next: Edit access"
     Then I should see "Edit access"
 
-    # Mahara member makes to page visible to public
-    And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
-    And I select "Public" from "accesslist[0][searchtype]"
-    And I click on "Save"
+    # PCNZ customisation WR349184
+    And I select "Person" from "accesslist[0][searchtype]"
+    And I select "Bob User" from select2 nested search box in row number "1"
+    And I press "Save"
+    ## End customisation
     # Verify author is on correct page
     And I should see "Smart Evidence Collection 1"
 

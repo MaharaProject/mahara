@@ -54,8 +54,11 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I press "Save"
  And I go to "/view/share.php"
  And I click on "Edit access" in "Page UserA_01" row
- And I select "Public" from "accesslist[0][searchtype]"
+ # PCNZ customisation WR349184
+ And I select "Person" from "accesslist[0][searchtype]"
+ And I select "Bob User" from select2 nested search box in row number "1"
  And I press "Save"
+ ## End customisation
  And I should see "Access rules were updated for 1 page"
  And I log out
  # Logging in as UserB to try see the buttons

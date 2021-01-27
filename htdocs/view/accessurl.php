@@ -102,10 +102,14 @@ if ($view->get('type') == 'profile') {
 }
 
 $allowcomments = $view->get('allowcomments');
+/** Customisations for pharmacy council WR349184 **/
+// Restrict content for when sharing personal portfolios
+$showcontent = ($view->get('type') == 'portfolio' && $view->get('owner')) ? 0 : 1;
+/* End customisation */
 
 $form['elements']['more'] = array(
     'type' => 'fieldset',
-    'class' => $view->get('type') == 'profile' ? ' d-none' : 'last with-heading',
+    'class' => $view->get('type') == 'profile' || !$showcontent ? ' d-none' : 'last with-heading',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
@@ -814,10 +818,20 @@ $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('displaylink', $displaylink);
 $smarty->assign('allownew', $allownew);
 $smarty->assign('onprobation', $onprobation);
-$smarty->assign('newform', $newform);
+// $smarty->assign('newform', $newform); // Customisation for Pharmacy Council WR349184
 // end
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('title', $returnto['title']);
 $smarty->assign('accesslistmaximum', $accesslistmaximum);
+// Customisation for Pharmacy Council WR349184
+$smarty->assign('showcontent', $showcontent);
+// Public portfolios will be switched off from the start, this is for safety in case
+// it's switched on accidentally.
+$smarty->assign('has_secret_url', false);
+if (record_exists_select("view_access", " view = ? AND token IS NOT NULL AND token !=''", array($view->get('id')))) {
+    $smarty->assign('has_secret_url', true);
+}
+// End customisation
+
 $smarty->display('view/accessurl.tpl');

@@ -66,8 +66,11 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I go to portfolio page "Page UserA_01"
  And I follow "Edit"
  And I follow "Share" in the "Toolbar buttons" property
- And I select "Public" from "accesslist[0][searchtype]"
+ # PCNZ customisation WR349184
+ And I select "Person" from "accesslist[0][searchtype]"
+ And I select "Britta Briggs" from select2 nested search box in row number "1"
  And I press "Save"
+ ## End customisation
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
  And I go to portfolio page "Page UserA_01"

@@ -8,7 +8,6 @@
     {if $collectionid}
         <label>{str tag=pagepartofcollection section=view arg1=$collectiontitle}</label>
     {/if}
-    <h2>{str tag=secreturls section=view}</h2>
 
     <!-- Url -->
     {if $newform != null}
@@ -17,15 +16,15 @@
     </div>
     {/if}
 
+    {* Customisation for Pharmacy Council WR349184 *}
     {if !$allownew}
-    <div class="alert alert-info">
         {if $onprobation}
+        <div class="alert alert-info">
             {str tag=publicaccessnotallowedforprobation section=view}
-        {else}
-            {str tag=publicaccessnotallowed section=view}
+        </div>
         {/if}
-    </div>
     {/if}
+    {* End customisation *}
 
     {if $accesslistmaximum}
     <div class="alert alert-info">
@@ -33,11 +32,13 @@
     </div>
     {/if}
 
-    {if $editurls}
+    {* Customisation for Pharmacy Council WR349184 *}
+    {if $editurls && $showcontent}
     <div class="card">
         <h2 class="card-header">
             {str tag=secreturls section=view}
         </h2>
+    {* End customisation *}
 
         <div class="secreturls list-group">
             {foreach from=$editurls item=item name=urls}

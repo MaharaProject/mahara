@@ -211,6 +211,28 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $userroles = View::get_user_access_roles();
     $grouproles = get_group_access_roles();
 
+    /** Customisations for pharmacy council WR 349184 **/
+    // Restrict content for when sharing personal portfolios
+    $viewid = $form->get_property('viewid');
+    $view = new View($viewid);
+    $showcontent = ($view->get('type') == 'portfolio' && $view->get('owner')) ? 0 : 1;
+    $smarty->assign('showcontent', $showcontent);
+    $smarty->assign('show_date_opt', $showcontent);
+    $smarty->assign('show_friend_opt', $showcontent);
+    $smarty->assign('show_group_opt', $showcontent);
+    $smarty->assign('show_general_label', $showcontent);
+    $smarty->assign('show_institutions_label', $showcontent);
+    $smarty->assign('show_group_label', $showcontent);
+    $smarty->assign('show_comments_checkboxes', 0);
+
+    if (!$showcontent) {
+        $mygroups = array();
+        $myinstitutions = array();
+        $allowedpresets = array();
+    }
+    /* End customisations */
+
+
     $smarty->assign('datepickeroptions', $datepickeroptionstr);
     $smarty->assign('datepickertooltips', json_encode($tooltips));
     $smarty->assign('viewtype', $element['viewtype']);

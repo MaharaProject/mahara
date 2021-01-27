@@ -172,9 +172,14 @@ if ($view->get('type') == 'profile') {
 
 $allowcomments = $view->get('allowcomments');
 
+/** Customisations for pharmacy council WR349184 **/
+// Restrict content for when sharing personal portfolios
+$showcontent = ($view->get('type') == 'portfolio' && $view->get('owner')) ? 0 : 1;
+/* End customisation */
+
 $form['elements']['more'] = array(
     'type' => 'fieldset',
-    'class' => $view->get('type') == 'profile' ? ' d-none' : 'last form-condensed as-link link-expand-right with-heading',
+    'class' => ($view->get('type') == 'profile') || !$showcontent ? ' d-none' : 'last form-condensed as-link link-expand-right with-heading',
     'collapsible' => true,
     'collapsed' => true,
     'legend' => get_string('moreoptions', 'view'),
