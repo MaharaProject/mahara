@@ -632,6 +632,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
 
             if ($item->private) {
                 $item->pubmessage = get_string('thisassessmentisprivate', 'artefact.peerassessment');
+                $item->pubstatus = get_string('draft', 'view');
             }
 
             if (isset($data->showcomment) && $data->showcomment == $item->id) {
@@ -772,7 +773,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'classes' => array('draftsubmit' => 'btn-secondary',
                                'submit' => 'btn-secondary',
                                'cancel' => 'btn-secondary submitcancel'),
-            'value' => array('draftsubmit' => get_string('draft', 'blocktype.peerassessment/peerassessment'),
+            'value' => array('draftsubmit' => get_string('savedraft', 'blocktype.peerassessment/peerassessment'),
                              'submit' => get_string('publish', 'blocktype.peerassessment/peerassessment'),
                              'cancel' => get_string('cancel'))
         );
