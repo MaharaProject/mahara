@@ -50,6 +50,12 @@
         border-width: $card-border-width;
         margin-top: $spacing-base;
         margin-bottom: 0;
+
+        // unless it just indicates that the card has attachments like in comments
+        &.comment-item {
+            margin-top: 0;
+            border-radius: 0;
+        }
     }
     .activegrouplabels {
         padding: $card-spacer-y $card-spacer-x;
@@ -66,12 +72,17 @@
     border-width: 0;
 }
 
-
 // Login card
 .login-externallink {
     display: inline-block;
+
     a.btn {
         margin: 0 $spacing-sm $spacing-sm 0;
+        white-space: nowrap;
+
+        span {
+            color: $btn-primary-color;
+        }
     }
 }
 

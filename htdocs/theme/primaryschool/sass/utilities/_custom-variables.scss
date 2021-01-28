@@ -93,3 +93,6 @@ $btn-success-border:             scale-color($theme-primary-color, $lightness: -
 // Collapse/expand indicator
 $collapse-indicator-color:                  scale-color($theme-primary-color, $lightness: 10%);
 $collapse-indicator-hover-color:            $theme-primary-color;
+
+// User icon border radius
+$user-icon-border-radius:                   50%;

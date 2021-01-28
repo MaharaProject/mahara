@@ -10,7 +10,7 @@
 {if $count > 0}
     <div class="card view-container">
         <h2 id="searchresultsheading" class="card-header">{str tag=Results}</h2>
-        <div id="friendslist" class="list-group list-group-with-user-icon-left">
+        <div id="friendslist" class="peoplelistinfo list-group">
             {$results.tablerows|safe}
         </div>
     </div>

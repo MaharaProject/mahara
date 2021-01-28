@@ -51,13 +51,13 @@
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.info}
-                            <a class="btn btn-secondary float-left btn-group-item info-item" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
+                            <a class="btn btn-secondary btn-sm float-left btn-group-item info-item" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
                                  <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </a>
                         {/if}
                         {if $data.config}
-                            <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
+                            <a class="btn btn-secondary btn-sm float-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </a>

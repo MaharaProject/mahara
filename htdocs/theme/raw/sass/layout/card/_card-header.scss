@@ -32,8 +32,6 @@
         color: inherit;
         padding: $card-spacer-y $card-spacer-x;
         border: $card-border-width solid $card-border-color;
-        border-bottom: 0;
-        font-size: $font-size-base * 1.25; // 20px
         .card-secondary > & {
             padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
             border-width: 0;

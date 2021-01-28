@@ -71,6 +71,15 @@
     }
 }
 
+// when block has no block title it needs the top border for lists
+.card-secondary .no-heading {
+    .list-group {
+        .list-group-item {
+            border-top-width: $list-group-border-width;
+        }
+    }
+}
+
 .list-group-item-heading {
     margin-top: 0;
     font-size: $h4-font-size; // 24px
@@ -99,8 +108,15 @@
 .list-group-item.draft,
 .list-group-item-warning {
     background-color: $state-warning-bg;
-    .list-group-item-heading {
-        color: $state-warning-text;
+    color: $state-warning-text;
+    
+    // links but not .btn links
+    a:not(.btn) {
+        color: $state-warning-link;
+        &:hover,
+        &:focus {
+          text-decoration-color: $state-warning-link;
+        }
     }
 }
 .list-group-item-danger {
@@ -200,6 +216,18 @@
         }
         .list-group-item-heading + .btn {
             margin-top: $spacing-base; // 10px
+        }
+    }
+
+    &.editrow {
+        border-top: 0;
+    }
+
+    // in search/tag results, the right column needs a slight gap when stacking
+    @include media-breakpoint-down(md) {
+        .col-md-4,
+        .col-md-5 {
+            margin-top: $spacing-base;
         }
     }
 }
@@ -383,6 +411,7 @@
           max-width: calc(100% - (2.25rem * 2));
           display: inline-block;
           margin-right: 0;
+          word-wrap: anywhere;
       }
       .icon-download {
         position: relative;
@@ -394,12 +423,11 @@
     }
 }
 
-// comments attachment list flush needs padding
-@include media-breakpoint-down(md) {
-    .list-group-item.flush {
-        padding: $list-group-item-padding-y $list-group-item-padding-x;
-    }
+// overrides comments attachments
+.comment-item .has-attachment .list-group .list-group-item .title {
+    max-width: 100%;
 }
+
 
 // Resume entire block
 .resume-content {
@@ -437,35 +465,21 @@
     }
 }
 
-// lists with .user-icon-40 on the left like onlineuser/groupmembers
-.list-group-with-user-icon-left {
-    .list-group-item {
-        .list-group-item-heading {
-            margin-bottom: 0;
-        }
-        .detail {
-            margin-left: 3.5rem; // 56px
-            .collapse-indicator {
-                margin-right: $spacing-xs;
-            }
-        }
+// lists with list-group-item-heading that doesn't need margin botton like peoplelistinfo
+.peoplelistinfo {
+    .list-group-item-heading {
+        margin-bottom: 0;
     }
 }
 
-// lists with .user-icon-30 on the left like comments/wall
-.usericon-heading {
-    ~ .detail,
-    ~ .wallpost-text,
-    ~ .content-text,
-    ~ .has-attachment {
-        margin-left: 2.875rem; // 46px
-    }
-    .list-group-item-heading {
-        margin-left: 2.875rem; // 46px
-        &.text-inline {
-          margin-left: 0;
-        }
-    }
+
+// content in lists with a usericon needs to be pushed in to align, default is usericon-30
+.push-left-for-usericon {
+    margin-left: 1.875rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2) + $spacing-base;
+}
+// for a 60px usericon like on People page
+.push-left-for-usericon-60 {
+    margin-left: 3.75rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2) + $spacing-base;
 }
 
 // Blog post details

@@ -72,6 +72,9 @@ h1 {
                 max-width: 100%;
             }
         }
+        .btn-secondary {
+            border-radius: $btn-border-radius-sm;
+        }
     }
     ~ div.with-heading {
         padding-bottom: $spacing-base;
@@ -160,7 +163,8 @@ a {
     .icon {
         display: inline-block;
     }
-    &.js-peerassessment-modal {
+    &.js-peerassessment-modal,
+    &.js-add-comment-modal {
         margin: $spacing-base 0;
     }
 }
@@ -169,7 +173,10 @@ img {
     max-width: 100%;
     height: auto;
     &.artefact-img {
-        margin-right: $spacing-base;
+        line-height: 1;
+        max-width: 1.875rem; // 30px;
+        max-height: 1.875rem; // 30px;
+        margin-right: $spacing-sm;
     }
 }
 
@@ -364,11 +371,9 @@ body#tinymce {
     }
 }
 
-// Group listing user status on right
+// Group listing user status on right but not on group home page
 .groupuserstatus {
-    clear: both;
-    padding: $spacing-base 0 0 0;
-
+    margin-bottom: $spacing-base;
     @include media-breakpoint-up(md) {
         text-align: right;
     }
@@ -380,7 +385,8 @@ body#tinymce {
 }
 
 .artefacttype {
-  font-family: $font-family-base;
+    font-family: $font-family-base;
+    font-weight: $font-weight-base;
 }
 
 .no-margin-top {
@@ -389,4 +395,9 @@ body#tinymce {
 
 small, .small {
   font-size: $font-size-sm;
+}
+
+.font-base {
+    font-family: $font-family-base;
+    font-weight: $font-weight-base;
 }

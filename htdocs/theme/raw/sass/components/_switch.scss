@@ -42,7 +42,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
     }
 
     .switch-label {
-        border-radius: $border-radius;
+        border-radius: $input-border-radius;
         display: block;
         overflow: hidden;
         cursor: pointer;
@@ -84,6 +84,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
             content: '';
             background-color: $btn-secondary-bg;
             border: $btn-border-width solid $btn-secondary-border;
+            border-radius: $input-border-radius;
             display: block;
             float: left;
             width: 50%;

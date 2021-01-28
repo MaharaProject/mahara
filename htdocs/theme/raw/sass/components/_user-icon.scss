@@ -1,5 +1,5 @@
 .user-icon {
-    border-radius: $thumbnail-border-radius;
+    border-radius: $user-icon-border-radius;
     background-color: $thumbnail-bg;
     padding: $thumbnail-padding;
     display: table;
@@ -32,10 +32,9 @@
         width: 1.25rem; // 20px;
         height: 1.25rem; // 20px;
         object-fit: cover;
-        border-radius: 0;
+        border-radius: $user-icon-border-radius;
     }
     p {
-        // margin-top: 3px;
         margin-bottom: 0;
     }
 
@@ -108,12 +107,14 @@ a.user-icon, a .user-icon {
     }
 }
 .user-icon-30 {
+    width: 1.875rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2);
     img {
         width: 1.875rem; // 30px;
         height: 1.875rem; // 30px;
     }
 }
 .user-icon-40 {
+    width: 2.5rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2);
     img {
         width: 2.5rem; // 40px;
         height: 2.5rem; // 40px;
@@ -149,6 +150,7 @@ a.user-icon, a .user-icon {
         width: 6.25rem; // 100px;
         height: 6.25rem; // 100px;
         object-fit: cover;
+        border-radius: $user-icon-border-radius;
     }
 }
 
@@ -159,6 +161,12 @@ a.user-icon, a .user-icon {
         margin-bottom: $spacing-base;
         padding: 0.25rem; // 4px
         max-width: 6.875rem; // 110px
+        border-radius: $thumbnail-border-radius;
+
+        img {
+            border-radius: $user-icon-border-radius;
+        }
+
         .member-name {
           line-height: $line-height-base;
         }
@@ -170,4 +178,5 @@ a.user-icon, a .user-icon {
     width: 2.5rem; // 40px;
     height: 2.5rem; // 40px;
     object-fit: cover;
+    border-radius: $user-icon-border-radius;
 }

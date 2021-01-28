@@ -7,26 +7,20 @@
             font-family: $font-family-base;
             font-weight: $font-weight-normal;
             margin-left: 0;
-            margin-bottom: $spacing-base;
         }
     }
 
-    .col-width-100 .bt-comment &,
-    .viewfooter &,
-    .modal-docked.active &,
-    .bt-peerassessment & {
-        .comment-content,
-        .comment-privacy {
-          padding-left: 2.875rem; // 46px;
-        }
-        .comment-privacy .btn.btn-link {
-            width: auto;
-        }
+    .comment-privacy .btn.btn-link {
+        width: auto;
+        border: $btn-border-width solid $btn-secondary-border;
+    }
 
-        @include media-breakpoint-up(lg) {
-
+    // when comments is in page footer the attachments are on the right for desktop
+    @include media-breakpoint-up(md) {
+        .viewfooter & {
             .comment-attachment {
                 border-left: $list-group-border-width solid $list-group-border-color;
+                margin-left: 0;
 
                 .card {
                     @include card-as-link();
@@ -58,19 +52,17 @@
             }
         }
     }
-    // Set opacity and visibility comment attachment inside modal docked
+
+    // when comment block is on page instead of page footer, or in a modal, the attachments need to appear under comment rather than to the right side
+    .bt-comment &,
     .modal-docked & {
-        @include media-breakpoint-up(lg) {
-            .comment-attachment {
-                .collapse {
-                    transition: opacity 0s 0.2s;
-                    opacity: 0;
-                    display: block;
-                    visibility: hidden;
-                }
-            }
+        .col-md-8,
+        .col-md-4 {
+            max-width: 100%;
+            flex: 0 1 auto;
         }
     }
+    
     .collapse & {
         &:first-child {
             // To override card listgroup no top border on first-child
@@ -97,5 +89,19 @@
     .commentreplyview & {
         border-top-width: $list-group-border-width;
         width: 100%;
+    }
+}
+
+// peer assessment when owner is viewing and doesn't have the add peer assessment button on top needs a border-top for its first list-group-item
+.bt-peerassessment {
+    .list-group.list-group-top-border .list-group-item:first-child {
+        border-top: 0;
+    }
+    .feedback {
+        ~ .feedbacktable {
+            .list-group.list-group-top-border .comment-item.list-group-item:first-child {
+                border-top: $list-group-border-width solid $list-group-border-color;
+            }
+        }
     }
 }

@@ -1293,7 +1293,7 @@ function group_get_join_form($name, $groupid) {
         'elements' => array(
             'btngroup' => array(
                 'type'  => 'fieldset',
-                'class' => 'group-request btn-top-right btn-group btn-group-top',
+                'class' => 'group-request',
                 'elements'     => array(
                     'join' => array(
                         'type' => 'button',
@@ -1323,7 +1323,7 @@ function group_get_accept_form($name, $groupid) {
        'elements' => array(
            'btngroup' => array(
                 'type'  => 'fieldset',
-                'class' => 'group-request btn-top-right btn-group btn-group-top',
+                'class' => 'group-request',
                 'elements'     => array(
                     'accept' => array(
                         'type'  => 'button',

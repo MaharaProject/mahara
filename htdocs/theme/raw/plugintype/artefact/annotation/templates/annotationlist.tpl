@@ -1,52 +1,58 @@
 {foreach from=$data item=item}
-<li class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-warning{/if} list-group-item">
-    <div class="usericon-heading">
-        <span class="user-icon user-icon-30 small-icon float-left" role="presentation" aria-hidden="true">
+<div class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-private{/if} list-group-item comment-item">
+    <div class="flex-row">
+        <div class="usericon-heading flex-title flex-row">
+            <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
             {if $item->author}
                 <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
             {else}
                 <img src="{profile_icon_url user=null maxheight=30 maxwidth=30}" alt="{str tag=profileimagetextanonymous}">
             {/if}
-        </span>
-        <h2 class="list-group-item-heading text-inline">
-            {if $item->author}
-            <a href="{$item->author->profileurl}">
-            {/if}
-                <span>{$item->author|display_name}</span>
-            {if $item->author}
-            </a>
-            {/if}
-
-            <br />
-
-            <span class="postedon text-small">
-            {$item->date}
-            {if $item->updated}
-                [{str tag=Updated}: {$item->updated}]
-            {/if}
             </span>
-        </h2>
-        <div class="btn-group btn-group-top comment-item-buttons">
-            {if $item->canedit}
-            <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-secondary btn-sm">
-                <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=edit}</span>
-            </a>
-            {/if}
-            {if $item->deleteform}
-                {$item->deleteform|safe}
-            {/if}
+            <div class="flex-title">
+                <h2 class="list-group-item-heading text-inline">
+                    {if $item->author}
+                    <a href="{$item->author->profileurl}">
+                    {/if}
+                        <span>{$item->author|display_name}</span>
+                    {if $item->author}
+                    </a>
+                    {/if}
+
+                    <br />
+
+                    <span class="postedon text-small detail">
+                    {$item->date}
+                    {if $item->updated}
+                        <p class="metadata">[{str tag=Updated}: {$item->updated}]</p>
+                    {/if}
+                    </span>
+                </h2>
+            </div>
+            <div class="flex-controls">
+                <div class="btn-group btn-group-top comment-item-buttons">
+                    {if $item->canedit}
+                    <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-secondary btn-sm">
+                        <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
+                        <span class="sr-only">{str tag=edit}</span>
+                    </a>
+                    {/if}
+                    {if $item->deleteform}
+                        {$item->deleteform|safe}
+                    {/if}
+                </div>
+            </div>
         </div>
     </div>
 
+
+    <div class="content-text push-left-for-usericon">
     {if $item->deletedmessage}
-        <div class="metadata content-text">
+        <span class="metadata">
             {$item->deletedmessage}
-        </div>
+        </span>
     {else}
-        <div class="content-text">
-            {$item->description|clean_html|safe}
-        </div>
+        {$item->description|clean_html|safe}
 
         {if $item->attachmessage}
         <div class="attachmessage">
@@ -54,7 +60,8 @@
         </div>
         {/if}
 
-        <div class="metadata">
+        {if $item->makepublicform || $item->makepublicrequested || $item->pubmessage}
+        <div class="comment-privacy metadata">
             {if $item->pubmessage}
             <em class="privatemessage">
                 {$item->pubmessage}
@@ -69,6 +76,8 @@
             <span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>
             {/if}
         </div>
+        {/if}
     {/if}
-</li>
+    </div>
+</div>
 {/foreach}

@@ -60,6 +60,7 @@
         float: left;
         z-index: 1;
         background: rgba($white, 0.8);
+        border-radius: $input-border-radius;
         &:before {
             @include fonttype(solid);
             content: fa-content($fa-var-caret-down);

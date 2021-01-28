@@ -105,3 +105,12 @@
 .ui-sortable {
     list-style-type: none;
 }
+
+// edit page drag new block to page, the button should not inherit btn border radius 
+footer.editcontent {
+    + .ui-draggable-dragging {
+        .btn-primary {
+            border-radius: 0;
+        }
+    }
+}

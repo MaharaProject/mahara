@@ -34,7 +34,7 @@
         </h2>
         {/if}
 
-        <div id="membersearchresults" class="list-group list-group-with-user-icon-left">
+        <div id="membersearchresults" class="list-group">
             {$results|safe}
         </div>
     </div>

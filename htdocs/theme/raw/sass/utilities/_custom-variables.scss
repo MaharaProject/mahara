@@ -92,25 +92,30 @@ $line-height-computed:                      $font-size-base * $line-height-base 
 $text-shadow:                               $white !default;
 
 // Form states
-$state-success-text:                        scale-color($success, $lightness: -30%) !default;
+$state-success-text:                        scale-color($success, $lightness: -50%) !default;
 $state-success-bg:                          scale-color($success, $lightness: 70%) !default;
 $state-success-border:                      scale-color($success, $lightness: 50%) !default;
+$state-success-link:                        scale-color($success, $lightness: -30%) !default;
 
-$state-info-text:                           scale-color($info, $lightness: -30%) !default;
+$state-info-text:                           scale-color($info, $lightness: -50%) !default;
 $state-info-bg:                             scale-color($info, $lightness: 70%) !default;
 $state-info-border:                         scale-color($info, $lightness: 50%) !default;
+$state-info-link:                           scale-color($info, $lightness: -30%) !default;
 
-$state-warning-text:                        scale-color($warning, $lightness: -40%) !default;
+$state-warning-text:                        scale-color($warning, $lightness: -60%) !default;
 $state-warning-bg:                          scale-color($warning, $lightness: 85%) !default;
 $state-warning-border:                      scale-color($warning, $lightness: 50%) !default;
+$state-warning-link:                        scale-color($warning, $lightness: -40%) !default;
 
-$state-danger-text:                         scale-color($danger, $lightness: -30%) !default;
+$state-danger-text:                         scale-color($danger, $lightness: -50%) !default;
 $state-danger-bg:                           scale-color($danger, $lightness: 90%) !default;
 $state-danger-border:                       scale-color($danger, $lightness: 50%) !default;
+$state-danger-link:                         scale-color($danger, $lightness: -30%) !default;
 
 $state-submitted-text:                      $theme-text-color !default;
 $state-submitted-bg:                        scale-color($yellow, $lightness: 90%) !default;
 $state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
+$state-submitted-link:                      scale-color($yellow, $lightness: -30%) !default;
 
 // Buttons + Forms
 $btn-font-family:                           $font-family-base !default;
@@ -186,3 +191,6 @@ $spacing-lg:                                0.9375rem !default; // 15px
 $spacing-xl:                                1.25rem !default; // 20px
 $spacing-xxl:                               1.875rem !default; // 30px
 $spacing-xxxl:                              3.125rem !default; // 50px
+
+// User icon border radius
+$user-icon-border-radius:                   $thumbnail-border-radius !default;

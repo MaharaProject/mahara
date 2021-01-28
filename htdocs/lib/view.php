@@ -7601,8 +7601,8 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         $form['elements']['submitcollection'] = array(
             'type'  => 'button',
             'usebuttontag' => true,
-            'class' => 'btn-secondary btn-sm btn-group-item',
-            'value' => get_string('copycollection', 'collection'),
+            'class' => 'btn-secondary btn-sm btn-group-item text-inline',
+            'value' => '<span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>' . get_string('copycollection', 'collection'),
         );
     }
     if ($template !== null) {
@@ -7610,7 +7610,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'type'  => 'hidden',
             'value' => $template,
         );
-        $form['elements']['submit']['value'] = get_string('copyview', 'view');
+        $form['elements']['submit']['value'] = '<span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>' . get_string('copyview', 'view');
         $form['elements']['submit']['class'] = 'btn-secondary btn-sm btn-group-item text-inline';
         $form['name'] .= $template;
     }

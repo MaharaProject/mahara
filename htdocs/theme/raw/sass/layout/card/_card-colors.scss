@@ -85,12 +85,12 @@
         }
         .card-footer {
             background-color: scale-color($state-warning-bg, $lightness: 70%);
-            color: $state-warning-text;
+            color: $state-warning-link;
             &:hover,
             &:focus {
                 background-color: scale-color($state-warning-bg, $lightness: 80%);
                 .icon {
-                    color: $state-warning-text;
+                    color: $state-warning-link;
                 }
             }
             .icon {
@@ -106,6 +106,13 @@
         .card-header a,
         .card-body:not(.no-footer) {
             border-bottom-width:0;
+        }
+        a:not(.btn) {
+            color: $state-warning-link;
+            &:hover,
+            &:focus {
+              text-decoration-color: $state-warning-link;
+            }
         }
     }
 

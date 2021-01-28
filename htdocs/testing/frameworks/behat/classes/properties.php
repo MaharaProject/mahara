@@ -260,10 +260,10 @@ define('SMARTEVIDENCE', array(
     'Annotation' => '#activate_blocktype_annotation',
     'Smartevidence' => '#activate_module_framework',
     'Matrix table' => '#tablematrix',
-    //edit annotation modal
-    'Feedback annotation row 2' => "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div",
-    'Feedback annotation row 3' => "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[3]/div[1]/div",
-    'Feedback annotation row 4' => "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[4]/div[1]/div",
+    // Edit buttons on rows in the annotation modal.
+    'Feedback annotation row 2' => "div[id^=annotation_feedbacktable] div.list-group-item:nth-child(2) div.comment-item-buttons",
+    'Feedback annotation row 3' => "div[id^=annotation_feedbacktable] div.list-group-item:nth-child(3) div.comment-item-buttons",
+    'Feedback annotation row 4' => "div[id^=annotation_feedbacktable] div.list-group-item:nth-child(4) div.comment-item-buttons",
 ));
 
 define('TAGS', array(

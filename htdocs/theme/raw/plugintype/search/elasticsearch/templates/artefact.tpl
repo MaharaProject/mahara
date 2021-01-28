@@ -1,6 +1,6 @@
 {if ($secfacetterm == "Image" || $record->artefacttype == 'profileicon') && $record->thumb}
-    <img src="{$record->thumb}" alt="" class="artefact-img">
-    <h2 class="title list-group-item-heading text-inline">
+    <h2 class="list-group-item-heading text-inline">
+        <img src="{$record->thumb}" alt="" class="artefact-img">
         {if $record->link}
             <a href="{$WWWROOT}{$record->link}">
                 {$record->title|str_shorten_html:50:true|safe}
@@ -8,10 +8,9 @@
         {else}
             {$record->title|str_shorten_html:50:true|safe}
         {/if}
-    </h2>
 {elseif $record->artefacttype == 'socialprofile'}
-    <img src="{$record->icon}" alt="{$record->note}">
     <h2 class="title list-group-item-heading text-inline">
+        <img src="{$record->icon}" alt="{$record->note}" class="artefact-img">
         {if $record->link}
             <a href="{$record->link}">
                 {$record->title|str_shorten_html:50:true|safe}
@@ -19,7 +18,6 @@
         {else}
             {$record->title|str_shorten_html:50:true|safe}
         {/if}
-    </h2>
 {else}
     <h2 class="title list-group-item-heading text-inline">
         <span class="icon icon-{$record->artefacttype} left {if $record->deleted}text-midtone{/if}" role="presentation" aria-hidden="true"></span>
@@ -30,32 +28,32 @@
         {else}
             {$record->title|str_shorten_html:50:true|safe}
         {/if}
-    </h2>
 {/if}
-<span class="artefacttype text-midtone">
-    {if $secfacetterm == "Journalentry"}
-        ({str tag=blogpost section=search.elasticsearch})
-    {elseif $secfacetterm == "Forumpost"}
-        ({str tag=forumpost section=search.elasticsearch})
-    {elseif $secfacetterm == "Resume"}
-        ({str tag=resume section=search.elasticsearch})
-    {elseif $secfacetterm == "Wallpost"}
-        ({str tag=wallpost section=search.elasticsearch})
-    {else}
-        ({$secfacetterm})
-    {/if}
-    {if $record->deleted}
-        ({str tag=deleted section=search.elasticsearch})
-    {/if}
-</span>
+        <span class="artefacttype text-midtone text-regular">
+            {if $secfacetterm == "Journalentry"}
+                ({str tag=blogpost section=search.elasticsearch})
+            {elseif $secfacetterm == "Forumpost"}
+                ({str tag=forumpost section=search.elasticsearch})
+            {elseif $secfacetterm == "Resume"}
+                ({str tag=resume section=search.elasticsearch})
+            {elseif $secfacetterm == "Wallpost"}
+                ({str tag=wallpost section=search.elasticsearch})
+            {else}
+                ({$secfacetterm})
+            {/if}
+            {if $record->deleted}
+                ({str tag=deleted section=search.elasticsearch})
+            {/if}
+        </span>
+    </h2>
 <div class="row">
     <div class="col-md-7">
         {if $record->createdbyname}
-        <div class="createdby text-small">
+        <div class="createdby">
             {str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}
         </div>
         {/if}
-        <div class="detail text-small">
+        <div class="detail">
             {if $record->highlight}
                 {$record->highlight|safe}
             {else}
@@ -74,8 +72,8 @@
     <!-- RESUMEITEMS -->
     <div class="col-md-5">
         {if is_array($record->resumeitems) && count($record->resumeitems) > 0}
-        <div class="text-small">{str tag=contains section=search.elasticsearch}:</div>
-        <ul class="list-group list-unstyled text-small">
+        <span>{str tag=contains section=search.elasticsearch}:</span>
+        <ul class="list-group list-unstyled">
         {foreach from=$record->resumeitems key=rid item=resume}
             {if $resume->title}<li>{$resume->title}</li>{/if}
             {if $resume->jobtitle}<li>{$resume->jobtitle}</li>{/if}
@@ -86,19 +84,19 @@
 
         <!-- VIEWS -->
         {if is_array($record->views) && count($record->views) > 0}
-        <div class="usedon text-small">
+        <div class="usedon">
             {if count($record->views) > 1}
                 {str tag=usedonpages section=search.elasticsearch}:
             {else}
                 {str tag=usedonpage section=search.elasticsearch}:
             {/if}
-            <ul class="list-group list-unstyled text-small">
+            <ul class="list-group list-unstyled">
             {foreach from=$record->views key=id item=view}
                 <li>
                     <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
                     <!-- Profile artefact can only be displayed in views -->
                     {if $secfacetterm != "Profile"}
-                    <span class="viewartefact text-small">[
+                    <span class="viewartefact">[
                         <a href="{$WWWROOT}view/view.php?id={$id}&modal=1&artefact={$record->id}">
                         {str tag=viewartefact}
                         {if $secfacetterm == "Journalentry"}

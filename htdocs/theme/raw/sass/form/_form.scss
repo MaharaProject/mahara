@@ -243,7 +243,7 @@ textarea {
             width: 100%;
         }
     }
-    &.form-inline-align-bottom .form-group{
+    &.form-inline-align-bottom .form-group {
         vertical-align: bottom;
         align-self: flex-end;
     }
@@ -254,6 +254,11 @@ textarea {
         .form-group:not(.submit) {
             width: 60%;
         }
+    }
+
+    // buttons that follow an input in the same line need to inherit the same border radius as input
+    .btn-secondary {
+        border-radius: $input-border-radius-sm;
     }
 }
 
@@ -267,6 +272,7 @@ textarea {
     box-shadow: none;
     border: none;
     background-color: transparent;
+    border-radius: 0;
 }
 
 .form-control:disabled {
@@ -277,6 +283,7 @@ textarea {
     vertical-align: top;
 }
 
+// date picker
 .hasDatepickerwrapper input[type="text"],
 .hasDatepickerwrapperacl input[type="text"] {
     position: relative;
@@ -436,4 +443,40 @@ input[type="radio"] {
 
 .exportable-artefact-container .checkbox .with-label a.viewlink {
     display: block;
+}
+
+// reset the select look to match select2
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url('../../raw/images/caret-down-solid.svg');
+  background-repeat: no-repeat;
+  background-position: right .7em top 50%;
+  background-size: .5em auto;
+  padding-right: 1.5rem !important; // to allow for arrow
+}
+.lrfieldlists select {
+    background-image: none;
+    padding-right: $input-btn-padding-x !important;
+}
+
+// checkbox group invites in modal wrapping to next line
+.form-check.group-invite {
+    white-space: nowrap;
+}
+
+//sidebar search
+input#sidebar-search {
+    border-top-left-radius: $input-border-radius;
+    border-bottom-left-radius: $input-border-radius;
+}
+.with-heading.searchform #search_query {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    ~ .btn-secondary {
+        border-top-right-radius: $input-border-radius;
+        border-bottom-right-radius: $input-border-radius;
+    }
 }

@@ -128,7 +128,7 @@
             </select>
             {/if}
             <span class="primary submit form-group">
-                <button type="submit" name="updatetopics" class="btn btn-primary">
+                <button type="submit" name="updatetopics" class="btn btn-secondary">
                     {str tag="updateselectedtopics" section="interaction.forum"}
                 </button>
             </span>

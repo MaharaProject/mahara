@@ -29,8 +29,16 @@ a.label.label-default,
     }
 }
 
-.notification-parent .bulk-actions label.btn-secondary {
-    padding-bottom: $spacing-xs;
+.notification-parent .bulk-actions {
+  label.btn-secondary {
+      padding-bottom: $spacing-xs;
+      border-top-left-radius: $input-border-radius;
+      border-bottom-left-radius: $input-border-radius;
+  }
+  .dropdown-toggle {
+      border-top-right-radius: $input-border-radius;
+      border-bottom-right-radius: $input-border-radius;
+  }
 }
 
 .forassessment label {

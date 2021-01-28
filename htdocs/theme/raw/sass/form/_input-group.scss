@@ -8,6 +8,13 @@
     }
 }
 
+.input-group-append .btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: $input-border-radius;
+    border-bottom-right-radius: $input-border-radius;
+}
+
 .pieform .input-group {
     max-width:100%;
 
@@ -18,6 +25,12 @@
         display: inline-block;
         height: $input-height;
         width: auto;
+        &.button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-right-radius: $input-border-radius;
+            border-bottom-right-radius: $input-border-radius;
+        }
       }
     }
     .pieform-fieldset > .form-group {
@@ -25,9 +38,15 @@
         padding: 0;
         box-shadow: none;
         float: left;
+        .picker {
+            border-top-left-radius: $input-border-radius;
+            border-bottom-left-radius: $input-border-radius;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
         .form-control {
-            border-top-left-radius: $border-radius;
-            border-bottom-left-radius: $border-radius;
+            border-top-left-radius: $input-border-radius;
+            border-bottom-left-radius: $input-border-radius;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             &.submitonchange {
@@ -80,7 +99,7 @@
         text-align: center;
         background-color: $input-bg;
         border: $input-border-width solid $input-border-color;
-        border-radius: $input-border-radius-sm;
+        border-radius: $input-border-radius;
         border-bottom-right-radius: 0;
         border-top-right-radius: 0;
         border-right: 0;
@@ -98,8 +117,14 @@
     }
 }
 
-
 // Fixes the buttons overlapping the input
 button.input-group-append {
     margin-left: 0;
+}
+
+
+// Group member search option select
+form#search .sortoption .picker {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }

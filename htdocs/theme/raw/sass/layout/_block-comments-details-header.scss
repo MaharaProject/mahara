@@ -7,7 +7,7 @@
      background-color: $theme-block-header-bg-color;
      padding: $btn-padding-y $btn-padding-x;
      border: 0;
-     font-size: $font-size-sm;
+     font-size: $btn-font-size-sm;
 
      &:hover,
      &:focus {
@@ -37,6 +37,8 @@
         border: 0;
         background-color: $theme-block-header-bg-color;
         color: $theme-block-header-color;
+        border-bottom-left-radius: $btn-border-radius-sm;
+        border-bottom-right-radius: $btn-border-radius-sm;
 
         &:hover,
         &:focus {
@@ -127,7 +129,7 @@
       background-color: $theme-block-header-bg-color;
       color: $theme-block-header-color;
       border: 0;
-      padding: $input-btn-padding-y $input-btn-padding-x;
+      padding: $btn-padding-y $btn-padding-x;
 
       &:hover,
       &:focus {

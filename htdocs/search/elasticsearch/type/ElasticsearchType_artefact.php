@@ -403,10 +403,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         if ($record->artefacttype == 'image' || $record->artefacttype == 'profileicon') {
             if (isset ( $record->width ) && isset ( $record->height ) && intval ( $record->width ) > 0 && intval ( $record->height ) > 0) {
                 if ($record->width > $record->height) {
-                    $size = '80x' . intval ( $record->height * 80 / $record->width );
+                    $size = '30x' . intval ( $record->height * 30 / $record->width );
                 }
                 else {
-                    $size = intval ( $record->width * 80 / $record->height ) . 'x80';
+                    $size = intval ( $record->width * 30 / $record->height ) . 'x30';
                 }
             }
             $vars = array (

@@ -163,7 +163,7 @@ if (!$newlayout) {
 $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
 $smarty->assign('cancopy', group_can_create_groups());
-$smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
+$smarty->assign('SUBPAGETOP', 'group/groupuseractions.tpl');
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());

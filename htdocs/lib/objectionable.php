@@ -171,7 +171,7 @@ function notrude_form() {
             ),
             'submitbuttons' => array(
                 'type' => 'fieldset',
-                'class' => 'btn-group last',
+                'class' => 'last',
                 'elements' => array (
                     'review' => array(
                         'class' => 'btn-secondary text-inline',

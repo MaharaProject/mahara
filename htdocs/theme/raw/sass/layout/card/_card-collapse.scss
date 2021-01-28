@@ -92,6 +92,7 @@
             border: $card-border-width solid $card-border-color;
             padding: $card-spacer-y $card-spacer-x;
             background: $card-bg;
+            margin-top: -$card-border-width; //remove double border
             margin-bottom: -$card-border-width; //remove double border
             .jstabs & {
                 border: 0;

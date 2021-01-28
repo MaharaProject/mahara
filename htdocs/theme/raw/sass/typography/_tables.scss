@@ -108,9 +108,6 @@ td.tiny {
             .pieform {
                 display: inline-block;
             }
-            .btn-sm {
-                padding: 0.125rem 0.4375rem; // 2px 7px;
-            }
             // Allows space for when you also have a unzip button in the control button butn-group
             &.includes-unzip {
                 width: 6.875rem; // 110px;

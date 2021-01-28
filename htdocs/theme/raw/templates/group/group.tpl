@@ -1,15 +1,21 @@
 <div id="grouplist_{$group->id}" class="list-group-item {if $group->membershiptype == 'invite' || $group->membershiptype == 'request' || $group->requests} list-group-item-warning{/if}">
-    <div class="row">
-        <div class="col-md-8">
+    <div class="flex-row">
+        <div class="flex-title">
             <h2 class="list-group-item-heading text-inline">
                 <a href="{$group->homeurl}">{$group->name}</a>
+                {if $group->settingsdescription}
+                <span class="font-base text-midtone text-regular">
+                    - {$group->settingsdescription}
+                </span>
+                {/if}
             </h2>
-            {if $group->settingsdescription}
-            <span class="text-midtone">
-                - {$group->settingsdescription}
-            </span>
-            {/if}
-
+        </div>
+        <div class="flex-controls">
+            {include file="group/groupuseractions.tpl" group=$group}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
             {if $group->description}
             <p class="groupdesc">
                 {$group->description|str_shorten_html:100:true:true:false|safe}
@@ -65,8 +71,7 @@
                 {/if}
             </div>
         </div>
-
-        <div class="col-md-4">
+        <div class="group-user-status col-md-4">
             {include file="group/groupuserstatus.tpl" group=$group}
         </div>
     </div>

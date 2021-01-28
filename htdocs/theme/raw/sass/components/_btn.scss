@@ -1,7 +1,59 @@
 // Modifications and extra use cases for bootstrap  buttons
-.btn-sm {
-    font-size: $font-size-sm;
-    padding: $btn-padding-y-sm $btn-padding-x-sm;
+.btn {
+    vertical-align: baseline; // to align with submit buttons with cancels
+
+    &.focus,
+    &:focus {
+        outline: medium solid $input-focus-border-color;
+    }
+
+    &.text-left {
+        text-align: left;
+    }
+
+    &.text-right {
+        text-align: right;
+    }
+
+    &.checkbox input.checkbox {
+        width: auto;
+        display: inline-block;
+        float: right;
+    }
+
+    &.btn-link {
+        display: block;
+        width: 100%;
+        &:hover,
+        &:focus {
+            background: $dropdown-link-hover-bg;
+            text-decoration: none;
+        }
+    }
+
+    input {
+        margin-top: 0;
+    }
+
+    label {
+        min-width: 0;
+    }
+
+    // with chevron
+    .icon-chevron-down {
+        opacity: 0.5;
+    }
+    &:hover {
+        .icon-chevron-down {
+            opacity: 1;
+        }
+    }
+
+    &:disabled {
+        .icon {
+            opacity:0.3;
+        }
+    }
 }
 
 .btn-secondary {
@@ -68,28 +120,6 @@
     box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
 }
 
-.btn.text-left {
-    text-align:left;
-}
-
-.btn.text-right {
-    text-align:right;
-}
-
-.btn label {
-    min-width: 0;
-}
-
-.btn.btn-link {
-    display: block;
-    width: 100%;
-    &:hover,
-    &:focus {
-      background: $dropdown-link-hover-bg;
-      text-decoration: none;
-    }
-}
-
 .btn-link-danger {
     color: theme-color("danger");
     &:hover,
@@ -112,23 +142,7 @@
     }
 }
 
-.btn {
-    vertical-align: baseline;
-
-    input {
-        margin-top: 0;
-    }
-    &.checkbox input.checkbox {
-        width: auto;
-        display: inline-block;
-        float: right;
-    }
-    &.focus,
-    &:focus {
-        outline: medium solid $input-focus-border-color;
-    }
-}
-
+// like the Compose button on Inbox page
 h1 + div > .btn-top-left,
 .page-header + div.btn-top-left {
     float: none;
@@ -148,141 +162,9 @@ h1 + div > .btn-top-left,
     }
 }
 
-h1 ~ div > .btn-group-top,
-h2 ~ div > .btn-group-top,
-h3 ~ div > .btn-group-top,
-h4 ~ div > .btn-group-top,
-h5 ~ div > .btn-group-top,
-h6 ~ div > .btn-group-top,
-p ~ div > .btn-group-top,
-.page-header ~ div.btn-group-top,
-.page-header + .btn-action-list .btn-group-top,
-.nav-tabs +  div.btn-group-top {
-    margin-top: -1.25rem; // -20px;
-    margin-left: -100%;
-
-    @include media-breakpoint-down(md) {
-        margin: 0 0 $spacing-base 0;
-        width: 100%;
-        float: none;
-    }
-
-    .btn-group .btn,
-    .form-as-button,
-    .btn {
-        border-top: 0;
-        @include media-breakpoint-down(md) {
-            margin-bottom: $spacing-xs;
-            margin-left: $btn-border-width;
-            margin-right: $btn-border-width;
-            width: 100%;
-            border-right-width: $btn-border-width;
-            border-radius: $btn-border-radius !important;
-            border-top: $btn-border-width solid $btn-secondary-border;
-        }
-        .btn {
-            margin-bottom: 0;
-        }
-    }
-
-    @include media-breakpoint-down(md) {
-        .form-as-button:first-child:not(.last) {
-            .btn {
-                border-right-width: $btn-border-width;
-            }
-        }
-    }
-}
-
-.btn-group-top {
-    position: relative;
-    z-index: 4;
-    @include media-breakpoint-up(md) {
-        float: right;
-        .btn {
-            @include border-top-radius(0);
-        }
-        .btn-group-top {
-            margin: 0;
-        }
-    }
-}
-
-.nav-tabs +  div.btn-group-top{
-    margin-top: 0;
-}
-
-td.btn-group {
-    min-width: 18.75rem; // 300px;
-}
-
-// Often the same template is used to render buttons at the top of the page and
-// in a list group. cf. groups table/groups
-.list-group,
-.card-header {
-    .btn-group-top {
-        @include clearfix;
-        margin-top: -0.8125rem; // -13px;
-        text-align: right;
-        float: right;
-
-        @include media-breakpoint-down(md) {
-            margin-top: 0;
-        }
-
-        .btn-top-right {
-            margin: 0; // negate nested margin
-        }
-    }
-}
-// Edit page configure buttons
-.card-secondary .card-header .blockinstance-controls .btn-group-top {
-    position: absolute;
-    top: 0.6875rem; // 11px;
-    right: $spacing-base;
-    margin-top: 0px;
-    .btn {
-        border-radius: $btn-border-radius;
-        border-color: transparent;
-        background: scale-color($btn-secondary-bg, $lightness: 20%);
-        &:hover,
-        &:focus {
-            background: $btn-secondary-bg;
-        }
-        &:first-child {
-            border-radius: $btn-border-radius 0 0 $btn-border-radius;
-        }
-        &:last-child {
-            border-radius: 0 $btn-border-radius $btn-border-radius 0;
-        }
-        .icon:before {
-          font-size: 1.25em;
-        }
-    }
-}
-
 .card-footer {
     &.force-pointer {
         cursor: pointer;
-    }
-}
-
-// Page editor column + and - controls
-.btn-header {
-    width:100%;
-
-    &.btn-two .btn {
-        width: 25%;
-        &:first-child {
-            width:75%
-        }
-    }
-    &.btn-three .btn {
-        width: 50%;
-        &:first-child,
-        &:last-child {
-            width:25%;
-        }
     }
 }
 
@@ -324,24 +206,7 @@ td.btn-group {
 
 // Hack to fix the inline script tags that keep getting in places they don't belong
 .btn-group .form-as-button.last + script + .btn {
-    margin-left: -0.0625rem; // -1px;
-}
-
-.btn {
-    .icon-chevron-down {
-        opacity: 0.5;
-    }
-    &:hover {
-        .icon-chevron-down {
-            opacity: 1;
-        }
-    }
-}
-
-.btn:disabled {
-    .icon {
-        opacity:0.3;
-    }
+    margin-left: -$btn-border-width;
 }
 
 .collapsible-group + .button {
@@ -352,22 +217,15 @@ td.btn-group {
     margin-bottom: $spacing-base;
 }
 
-// edit page btn-group
-.btn-toolbar .btn-title {
-    padding-left: $spacing-sm;
-    @include media-breakpoint-between(sm, md) {
-        @include sr-only;
+#rownew {
+    // For groupcategories.php
+    .add {
+        vertical-align: bottom;
     }
-}
-
-// For groupcategories.php
-#rownew .add {
-    vertical-align: bottom;
-}
-
-// For site menu
-#rownew td .radio {
-    margin-top: 0;
+    // for menus
+    .btn-secondary {
+        border-radius: $btn-border-radius-sm;
+    }
 }
 
 .reportsettings .btn.filter {
@@ -397,7 +255,6 @@ td.btn-group {
         }
     }
 }
-
 .modal-tinymce {
     .pieform {
         button.submit {
@@ -443,6 +300,8 @@ td.btn-group {
     }
 
     .btn-group-vertical .btn {
+        border-radius: $btn-border-radius-sm;
+
         &:last-child {
             border-bottom-right-radius: 0;
         }
@@ -456,9 +315,6 @@ td.btn-group {
         &.addaction {
             border-top-left-radius: 0;
             margin-top: -0.0625rem; // -1px;
-        }
-        .icon {
-          font-size: 1.33em;
         }
     }
 }
@@ -484,7 +340,7 @@ td.btn-group {
     }
 }
 
-// Admin
+// Admin close site button
 #close_site_submit {
     &.btn {
         border-color: $danger;
@@ -546,8 +402,8 @@ a[type="submit"],
 }
 
 .json-editor-btn-add {
-    border-top-right-radius: $border-radius !important;
-    border-bottom-right-radius: $border-radius !important;
+    border-top-right-radius: $btn-border-radius !important;
+    border-bottom-right-radius: $btn-border-radius !important;
 }
 
 .assessment-item-buttons {
@@ -558,12 +414,6 @@ a[type="submit"],
     }
 }
 
-.btn-search.btn.btn-primary.admin-groups.button.btn {
-    margin-left: -0.8125rem; // -13px;
-    margin-top: 0.125rem; // 2px;
-    vertical-align: text-top;
-}
-
 .connections button {
     margin-top: $spacing-base;
 }
@@ -571,10 +421,10 @@ a[type="submit"],
 // left/right vertical buttons
 .lrbuttons .btn-group-vertical {
   > .btn:not(:last-child):not(.dropdown-toggle).rightarrow {
-    border-top-right-radius: $btn-border-radius;
+    border-top-right-radius: $btn-border-radius-sm;
   }
   > .btn:not(:first-child).leftarrow {
-    border-bottom-left-radius: $btn-border-radius;
+    border-bottom-left-radius: $btn-border-radius-sm;
     margin-left: 0;
   }
 }

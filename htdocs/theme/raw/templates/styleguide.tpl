@@ -81,7 +81,8 @@ This pair of buttons is used for deleting or editing an item.
 This pair of buttons is used for editing or deleting a block item on a page.
 ```
 <div class="blockinstance card card-secondary clearfix">
-    <div class="card-header">
+    <h2 class="card-header">
+      <span class="blockinstance-header">Context</span>
       <span class="blockinstance-controls">
           <span class="float-right btn-group btn-group-top">
               <button class="configurebutton btn btn-inverse btn-sm">
@@ -92,7 +93,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
               </button>
           </span>
       </span>
-    </div>
+    </h2>
 </div>
 ```
 </section>
@@ -101,7 +102,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
 ### Button group
 A group of buttons.
 ```
-<div class=" btn-group">
+<div class="btn-group">
     <a href="#" class="btn btn-secondary">
         Button group
     </a>
@@ -127,6 +128,35 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
     </div>
     <div class="col-md-4">
         <h3>Context</h3>
+    </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="buttons">
+### Button group top in list group
+A group of buttons aligned at the top within a list-group-item. Note: This utilises flex so titles can wrap properly with the buttons in the same position
+```
+<div class="list-group list-group-top-border">
+    <div class="list-group-item">
+        <div class="flex-row">
+            <div class="flex-title">
+                <h4 class="list-group-item-heading text-inline">List group item heading</h4>
+            </div>
+            <div class="flex-controls">
+                <span class="btn-group btn-group-top">
+                    <button class="btn btn-secondary btn-sm">
+                        <span class="icon icon-cog"></span>
+                    </button>
+                    <button class="deletebutton btn btn-secondary btn-sm">
+                        <span class="icon icon-trash-alt text-danger"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="detail text-small">
+            <p>Context</p>
+        </div>
     </div>
 </div>
 ```

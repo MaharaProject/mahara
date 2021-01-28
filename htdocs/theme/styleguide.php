@@ -93,10 +93,6 @@ $inlinecss = <<<EOT
     p ~ div > .btn-group-top {
         margin-top: 0;
     }
-    .blockinstance .card-header {
-        border-bottom: 2px solid #ddd;
-        height: 45px;
-    }
 }
 </style>
 EOT;

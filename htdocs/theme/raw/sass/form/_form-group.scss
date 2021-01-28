@@ -195,6 +195,10 @@
         padding: 0;
     }
 
+    &.collapsible-group {
+        margin-bottom: -$card-border-width;
+    }
+
     &.with-padding {
         .form-group {
             padding: $spacing-xl 0;
