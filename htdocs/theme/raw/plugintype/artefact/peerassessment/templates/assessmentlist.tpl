@@ -48,6 +48,11 @@
                 {/if}
             </div>
         </div>
+        {if  $item->private}
+            <div class="comment-privacy metadata">
+              <em class="privatemessage"> {$item->pubstatus} </em>
+            </div>
+        {/if}
     </div>
 {/foreach}
 </div>
