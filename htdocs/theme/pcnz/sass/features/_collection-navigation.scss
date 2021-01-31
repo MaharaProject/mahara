@@ -1,0 +1,10 @@
+.collection-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+}
+
+.collection-nav .collection-title {
+    @include media-breakpoint-up(lg) {
+        border-bottom: 2px solid $theme-text-color;
+    }
+}

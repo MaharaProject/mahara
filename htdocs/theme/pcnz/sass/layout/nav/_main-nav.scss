@@ -1,0 +1,35 @@
+.navbar-main {
+    .nav-toggle-area {
+        padding: 3.5rem 0 0.75rem 0; // 56px 0 12px 0;
+
+        @include media-breakpoint-down(sm) {
+            float: right;
+            padding: 2.5rem 0 0 0; // 40px 0 0 0;
+        }
+        @media (max-width: 500px) {
+            float: left;
+            padding: 0.8125rem 0 0.75rem 0; // 13px 0 0 0;
+        }
+    }
+
+    body.loggedout & {
+        .nav-toggle-area {
+            @include media-breakpoint-down(sm) {
+                float: right;
+                padding: 2.5rem 0 0 0; // 40px 0 0 0;
+            }
+            @media (max-width: 500px) {
+                float: right;
+                padding: 2.5rem 0 0 0; // 40px 0 0 0;
+            }
+        }
+    }
+}
+
+.navbar-main .navbar-nav > li > a {
+    text-decoration: none;
+}
+
+.navbar-main .child-nav li > a {
+    text-decoration: none;
+}

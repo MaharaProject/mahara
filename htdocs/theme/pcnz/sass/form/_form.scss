@@ -1,0 +1,64 @@
+.select2-container--default .select2-selection--single {
+    border-radius: 1.25rem;
+}
+
+.form-switch .switch-label {
+    border-radius: 1.25rem;
+}
+.form-switch .switch-inner::after, .form-switch .switch-inner::before {
+    border-radius: 1.25rem;
+}
+
+ .bootstrap-datetimepicker-widget.dropdown-menu {
+    width: 15.5rem;
+ }
+
+.pieform .input-group .pieform-fieldset > .form-group .form-control,
+.pieform .input-group .pieform-fieldset > .form-group input[type="password"],
+.pieform .input-group .pieform-fieldset > .form-group input[type="text"],
+.pieform .input-group .pieform-fieldset > .form-group select,
+.pieform .input-group .pieform-fieldset > .form-group textarea {
+    border-top-left-radius: 1.25rem;
+    border-bottom-left-radius: 1.25rem;
+}
+
+.form-inline .btn#search_submit {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.btn-group-top #subscribe_forum_submit {
+    border-radius: $border-radius-sm;
+}
+
+.with-heading {
+    .btn {
+        border-radius: $border-radius-sm;
+    }
+    .dropdown-group .dropdown-connect {
+        border-radius: $border-radius-sm;
+    }
+    .dropdown .picker,
+    .pieform .picker {
+        border-radius: $border-radius-sm;
+    }
+    .form-control, input[type="password"], input[type="text"], select, textarea {
+        border-radius: $border-radius-sm;
+    }
+    &.pieform .input-group .pieform-fieldset > .form-group .form-control,
+    &.pieform .input-group .pieform-fieldset > .form-group input[type="password"],
+    &.pieform .input-group .pieform-fieldset > .form-group input[type="text"],
+    &.pieform .input-group .pieform-fieldset > .form-group select,
+    &.pieform .input-group .pieform-fieldset > .form-group textarea {
+        border-radius: $border-radius-sm;
+    }
+}
+
+.form-inline select,
+.pieform .input-group .pieform-fieldset > .form-group select {
+    border-radius: $border-radius-sm;
+}
+
+.pagination-sm .page-link {
+    text-decoration: none;
+}

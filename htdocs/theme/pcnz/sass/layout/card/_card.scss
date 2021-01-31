@@ -1,0 +1,84 @@
+.sidebar {
+    .card {
+        border: 0;
+        background-color: $theme-gray-color-two;
+
+        .card-header {
+            background-color: transparent;
+            border-bottom: 0;
+            font-weight: $font-weight-bolder;
+            a {
+                text-decoration: underline;
+            }
+        }
+        .list-group-item {
+            background-color: transparent;
+        }
+        .card-footer {
+            background-color: transparent;
+
+            &:focus,
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .sideblock-1 {
+        .card {
+            background-color: $theme-gray-color;
+        }
+    }
+}
+
+.card {
+    .card-header {
+        border-radius: 0;
+    }
+    .card-footer {
+        border-radius: 0;
+    }
+}
+
+.card-header {
+    font-weight: $font-weight-bolder;
+}
+.collapsible legend {
+    font-weight: $font-weight-normal;
+}
+
+#sb-loginbox {
+    .card {
+        background-color: $theme-primary-color;
+
+        span.help .icon {
+            color: $white;
+        }
+
+        .form-group.requiredmarkerdesc {
+            color: $theme-text-color;
+        }
+
+        .btn-primary {
+            background-color: $theme-text-color;
+            color: $white;
+            border: 0;
+            &:hover,
+            &:focus {
+                background-color: $black;
+                color: $white;
+                border: 0;
+            }
+        }
+        
+        .btn-secondary {
+            background-color: $theme-accent-color;
+            border: 0;
+            &:hover,
+            &:focus {
+                background-color: $white;
+                border: 0;
+            }
+        }
+    }
+}

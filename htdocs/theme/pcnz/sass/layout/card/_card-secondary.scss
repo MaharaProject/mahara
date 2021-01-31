@@ -1,0 +1,38 @@
+.view-container,
+.grouphomepage {
+    .card.card-secondary {
+        padding-bottom: $spacing-xxl;
+
+        .card-header {
+            border-top: 3px solid $theme-secondary-color;
+            padding-top: $spacing-xxl;
+            padding-bottom: $spacing-xxl;
+            border-radius: 0;
+        }
+    }
+
+    body.home & {
+        .card.card-secondary {
+            .card-header {
+                border-top: 3px solid $theme-primary-color;
+            }
+        }
+    }
+}
+
+.grouphomepage {
+    margin-top: 4rem;
+}
+
+
+.inboxblock .subject {
+    text-decoration: underline;
+}
+
+.card.card-secondary.blockinstance .card-header {
+    background-color: transparent;
+}
+
+.card-secondary .card-header .blockinstance-controls .btn-group-top {
+    top: 1.6875rem;
+}

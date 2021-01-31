@@ -1,0 +1,92 @@
+// Custom component variables (non-bootstrap components)
+
+//Arrow compoanent variables
+$arrow-color:                               $theme-primary-color;
+$arrow-bar-bg:                              $theme-accent-color;
+$arrow-text-color:                          $theme-text-color;
+$arrow-link-color:                          $theme-text-color;
+$arrow-link-hover-color:                    $theme-text-color;
+$arrow-link-active-color:                   $theme-text-color;
+$arrow-link-background-color:               $white;
+
+$dashboard-widget-border-radius:            0;
+$dashboard-widget-bg:                       $theme-secondary-color;
+$dashboard-widget-hover-bg:                 scale-color($theme-secondary-color, $lightness: 20%);
+$dashboard-widget-title-color:              $theme-text-color;
+$dashboard-widget-circle-bg:                transparent;
+$dashboard-widget-cirlce-icon-color:        $theme-text-color;
+
+$help-icon-color:                           scale-color($theme-secondary-color, $lightness: -20%);
+
+// Pages and collections page header
+$pageheader-bg:                             $theme-secondary-color;
+
+// Site footer background colors
+$site-footer-bg:                            $theme-accent-color;
+$site-footer-hover-bg:                      transparent;
+
+// Site header
+$navbar-height:                             9.375rem; // 150px, must be in rem for site messages calculation to work
+$navbar-default-bg:                         $white;
+$navbar-default-border:                     $white;
+
+// Navbar toggle
+$navbar-toggle-color:                       $theme-text-color;
+$navbar-toggle-bg:                          transparent;
+$navbar-toggle-hover-color:                 $theme-text-color;
+$navbar-toggle-hover-bg:                    $theme-accent-color;
+$navbar-toggle-active-color:                $theme-text-color;
+$navbar-toggle-active-bg:                   $theme-accent-color;
+
+// Navbar menu
+$navbar-default-link-border:                scale-color($theme-accent-color, $lightness: -10%);
+$navbar-default-link-color:                 $theme-text-color;
+$navbar-default-link-hover-color:           $theme-text-color;
+$navbar-default-link-bg:                    $theme-accent-color;
+$navbar-default-link-hover-bg:              scale-color($theme-accent-color, $lightness: 10%);
+$navbar-default-active-color:               $theme-text-color;
+$navbar-default-active-bg:                  $theme-primary-color;
+
+// Navbar menus children
+$navbar-inverse-bg:                         $theme-gray-color-three;
+$navbar-inverse-link-color:                 $theme-text-color;
+$navbar-inverse-link-hover-color:           $theme-text-color;
+$navbar-inverse-link-hover-bg:              $theme-gray-color;
+$navbar-inverse-link-active-color:          $theme-text-color;
+$navbar-inverse-link-active-bg:             $theme-gray-color;
+
+// Navbar menu children toggles
+$navbar-inverse-toggle-color:               $theme-text-color;
+$navbar-inverse-toggle-bg:                  transparent;
+$navbar-inverse-toggle-hover-color:         $theme-text-color;
+$navbar-inverse-toggle-hover-bg:            $theme-gray-color-three;
+$navbar-inverse-toggle-active-color:        $theme-text-color;
+$navbar-inverse-toggle-active-bg:           $theme-gray-color-three;
+
+// Cards
+$card-border-color:                         $theme-gray-color-three;
+$card-header-bg:                            $theme-gray-color-two;
+$card-footer-bg:                            $theme-gray-color-three;
+
+$card-secondary-border-color:               $theme-gray-color-three;
+$card-secondary-border-width:               0;
+
+// Buttons + Forms
+$btn-primary-color:                         $theme-text-color;
+$btn-primary-bg:                            $white;
+$btn-primary-border:                        $theme-primary-color;
+
+// Modals
+$modal-header-bg:                           $theme-accent-color-two;
+$modal-header-color:                        $theme-text-color;
+
+// Header inbox message count background color
+$navbar-messages-count-color:               $theme-text-color;
+$navbar-messages-count-bg:                  $theme-primary-color;
+
+// Block headers for comments and details links
+$theme-block-header-active-color:           $theme-text-color;
+
+// Page heading border-bottom
+$h1heading-border-color:                    $theme-text-color;
+$h1heading-border-width:                    3px;
