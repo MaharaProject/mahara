@@ -577,6 +577,32 @@ function userdetails_statistics_headers($extra, $urllink) {
               'link' => format_goto($urllink . '&sort=probation', $extra, array('sort'), 'probation'),
               'disabled' => empty(get_config('probationenabled'))
         ),
+        // Customisation WR349192 PCNZ
+        array(
+              'id' => 'registrationnumber',
+              'name' => get_string('registrationnumber', 'admin'),
+              'class' => format_class($extra, 'registrationnumber'),
+              'link' => format_goto($urllink . '&sort=registrationnumber', $extra, array('sort'), 'registrationnumber'),
+              'helplink' => get_help_icon('core', 'reports', 'accountdetails', 'registrationnumber'),
+              'required' => true,
+        ),
+        array(
+              'id' => 'registrationstatus',
+              'name' => get_string('registrationstatus', 'admin'),
+              'class' => format_class($extra, 'registrationstatus'),
+              'link' => format_goto($urllink . '&sort=registrationstatus', $extra, array('sort'), 'registrationstatus'),
+              'helplink' => get_help_icon('core', 'reports', 'accountdetails', 'registrationstatus'),
+              'required' => true,
+        ),
+        array(
+              'id' => 'apcstartdate',
+              'name' => get_string('apcstartdate', 'admin'),
+              'class' => format_class($extra, 'apcstartdate'),
+              'link' => format_goto($urllink . '&sort=apcstartdate', $extra, array('sort'), 'apcstartdate'),
+              'helplink' => get_help_icon('core', 'reports', 'accountdetails', 'apcstartdate'),
+              'required' => true,
+        ),
+        // End customisation
     );
 }
 
@@ -661,8 +687,17 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         case "quotapercent":
         case "studentid":
         case "probation":
+        // Customisation WR 349192 PCNZ
+        case "registrationstatus":
             $orderby = " " . $sorttype . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
             break;
+        case "apcstartdate":
+            $orderby = " " . "apc_startdate" . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            break;
+        case "registrationnumber":
+            $orderby = " " . "studentid" . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", CONCAT (u.firstname, ' ', u.lastname)";
+            break;
+        // End customisation
         case "lastname":
             $orderby = " u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
@@ -671,15 +706,21 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
             $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
     }
 
+    // Customisation WR 349192 PCNZ
+    $customsql = "
+    (SELECT value FROM {usr_account_preference} uap WHERE u.id = uap.usr AND uap.field = 'apcstatusactive') AS registrationstatus,
+    (SELECT value FROM {usr_account_preference} uap WHERE u.id = uap.usr AND uap.field = 'apcstatusdate') AS apc_startdate ";
+
     $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
             u.lastlogin, u.email, u.studentid, u.ctime,
             (SELECT remoteusername FROM {auth_remote_user} aru WHERE aru.localusr = u.id LIMIT 1) AS remotename,
-            ((u.quotaused * 1.0)/ u.quota) AS quotapercent, u.quota, u.quotaused, u.probation
-            " . $fromsql . $wheresql . "
+            ((u.quotaused * 1.0)/ u.quota) AS quotapercent, u.quota, u.quotaused, u.probation,
+            " . $customsql . $fromsql . $wheresql . "
             ORDER BY " . $orderby;
     if (empty($extra['csvdownload'])) {
         $sql .= " LIMIT $limit OFFSET $offset";
     }
+    // End customisation
     $data = get_records_sql_array($sql, $where);
     $daterange = array_map(function ($obj) { return $obj->ctime; }, $data);
     $result['settings']['start'] = ($start) ? $start : min($daterange);
@@ -693,12 +734,26 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         // Map statistics page column headers to CSV column headers to allow for easier user update CSV import
         $item->preferredname = $item->displayname;
         $item->remoteuser = $item->remotename;
+        // Customisation WR 349192 PCNZ
+        $item->registrationnumber = $item->studentid;
+        $item->apc_startdate = format_date(strtotime($item->apc_startdate), 'strftimedate');
+        switch ($item->registrationstatus) {
+            case 1:
+                $item->registrationstatus = get_string('registeredcurrent', 'admin');
+                break;
+            case 0:
+                $item->registrationstatus = get_string('registeredinactive', 'admin');
+                break;
+            default:
+                break;
+        }
     }
     if (!empty($extra['csvdownload'])) {
-        $csvfields = array('firstname', 'lastname', 'email', 'studentid',
-                           'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin', 'probation');
+        $csvfields = array('firstname', 'lastname', 'email', 'registrationnumber',
+                           'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin', 'probation', 'registrationstatus', 'apc_startdate');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
     }
+        // End customisation
     $result['csv'] = true;
     $columnkeys = array();
     foreach ($extra['columns'] as $column) {

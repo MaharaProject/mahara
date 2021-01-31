@@ -5032,7 +5032,7 @@ function generate_csv($data, $csvfields, $csvheaders = array()) {
         }
         $u = array();
         foreach ($csvfields as $f) {
-            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
+            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : '')); // Customisation WR 349192 PCNZ
         }
         $csv .= '"' . join('","', $u) . '"' . "\n";
     }
