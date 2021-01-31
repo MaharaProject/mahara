@@ -1244,14 +1244,14 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
         $firstlast = full_name($user);
         if ($addusername) {
             if ($showstudentid && !empty($user->studentid)) {
-                return $user->preferredname . ' (' . $user->studentid . ' - ' . $firstlast . ' - ' . display_username($user) . ')';
+                return $user->preferredname . ' ' . $lastname . ' (' . $user->studentid . ' - ' . $firstlast . ' - ' . display_username($user) . ')';
             }
-            return $user->preferredname . ' (' . $firstlast . ' - ' . display_username($user) . ')';
+            return $user->preferredname . ' ' . $lastname . ' (' . $firstlast . ' - ' . display_username($user) . ')';
         }
         if ($showstudentid && !empty($user->studentid)) {
-            return $user->preferredname . ' (' . $user->studentid . ' - ' . $firstlast . ')';
+            return $user->preferredname . ' ' . $lastname . ' (' . $user->studentid . ' - ' . $firstlast . ')';
         }
-        return $user->preferredname . ' (' . $firstlast . ')';
+        return $user->preferredname . ' ' . $lastname . ' (' . $firstlast . ')';
     }
     if ($addusername) {
         if ($showstudentid && !empty($user->studentid)) {
@@ -1271,7 +1271,7 @@ function display_name($user, $userto=null, $nameonly=false, $realname=false, $us
  */
 function display_default_name($user) {
     $user = get_user_for_display($user);
-    return empty($user->preferredname) ? full_name($user) : $user->preferredname;
+    return empty($user->preferredname) ? full_name($user) : $user->preferredname . ' ' . $user->lastname;
 }
 
 
