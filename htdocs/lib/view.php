@@ -1618,12 +1618,20 @@ class View {
         return true;
     }
 
-    public static function  get_user_access_roles() {
+    public static function  get_user_access_roles($ownertype=null) {
         $roles = get_records_array('usr_access_roles');
         $data =  array();
-        foreach ($roles as $r) {
-            $data[] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));
+        // Customisation for WR 349183 PCNZ
+        if ($ownertype == 'owner') {
+            $data[] = array('name' => 'verifier', 'display' => get_string('verifier', 'view'));
         }
+        else {
+            foreach ($roles as $r) {
+                $data[] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));
+            }
+        }
+        //
+
         return $data;
     }
 

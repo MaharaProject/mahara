@@ -36,11 +36,14 @@
 </script>
 
 <script type="text/x-tmpl" id="roles-template">
-    <option value="" selected>{%=o.defaultText%}</option>
+// Customisation for WR 349183 PCNZ
+{% if(o.defaultText) { %}<option value="" selected>{%=o.defaultText%}</option>{% } %}
     {% for (var i=0; i<o.roles.length; i++) { %}
-         <option value="{%=o.roles[i].name%}">{%=o.roles[i].display%}</option>
+         <option value="{%=o.roles[i].name%}" {% if (o.selectedName == o.roles[i].name) { %}selected{% } %}>{%=o.roles[i].display%}</option>
     {% } %}
+//
 </script>
+
 
 <script type="text/x-tmpl" id="row-template">
 <tr id="row-{%=o.id%}" data-id="{%=o.id%}">
@@ -102,7 +105,7 @@
             <span class="picker input-short{% if (!(o.presets.type == 'group' || o.presets.type == 'user')) { %} d-none {% } %}">
                 <select data-roles="grouproles" name="accesslist[{%=o.id%}][role]" class="form-control input-small select">
                     {% if (o.presets.type == 'group' || o.presets.type == 'user') { %}
-                        <option value="" >{%=o.defaultText%}</option>
+                        {% if (o.presets.type == 'group'){ %}<option value="" >{%=o.defaultText%}</option>{% } %}
                         {% for (var i=0; i<o.roles.length; i++) { %}
                              <option value="{%=o.roles[i].name%}" {% if (o.presets.role == o.roles[i].name) { %} selected {% } %}>{%=o.roles[i].display%}</option>
                         {% } %}
@@ -145,7 +148,10 @@
 
 <script>
 var count = 0;
-var accesslistmaximum = {{$accesslistmaximum}}
+var accesslistmaximum = {{$accesslistmaximum}};
+ // Customisation for WR 349183 PCNZ
+var autoverifier = {{$autoverifierrole}};
+//
 
 jQuery(function($) {
 "use strict";
@@ -278,6 +284,7 @@ jQuery(function($) {
                             'showtitlein': showtitlein,
                             'showtitleout': showtitleout,
                             'page': params.page || 0,
+                            'viewid': {{$viewid}}, // Customisation for WR 349183 PCNZ
                             'sesskey': config.sesskey
                         };
                     },
@@ -420,16 +427,21 @@ jQuery(function($) {
                     }
                 }
             }
+            // Customisation for WR 349183 PCNZ
+            if (autoverifier) {
+                defaultText = null;
+            }
             data = {
                 id: id,
                 shareoptions: shareoptions,
                 presets: presets,
                 viewtype: viewtype,
-                roles: roles,
-                defaultText: defaultText,
+                roles: roles
             };
+            // Customisation for WR 349183 PCNZ
 
             $('#accesslistitems').append(tmpl("row-template", data));
+
 
             attachEventListeners(id);
         }
@@ -567,11 +579,17 @@ jQuery(function($) {
             }
             else {
                 var defaultText = {{jstr tag=nospecialrole section=view}};
+                // Customisation for WR 349183 PCNZ
+                if (autoverifier) {
+                    defaultText = null;
+                }
                 data = {
                     id: id,
+                    selectedName: 'verifier', // Customisation for WR 349183 PCNZ
+                    roles: roles,
                     defaultText: defaultText,
-                    roles: roles
                 };
+                // Customisation for WR 349183 PCNZ
             }
             select.html(tmpl("roles-template", data));
             select.prop('disabled', false).parent().removeClass('d-none');
