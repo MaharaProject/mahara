@@ -1373,7 +1373,12 @@ function install_skins_default() {
         'light'       => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
         'lightitalic' => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
         '300'         => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
+        '300italic'   => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
+        '600'         => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
+        '600italic'   => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'italic'),
         '700'         => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
+        '800'         => array('variant' => 'bold', 'font-weight' => 'bolder', 'font-style' => 'normal'),
+        '800italic'   => array('variant' => 'bold', 'font-weight' => 'bolder', 'font-style' => 'italic'),
         '900'         => array('variant' => 'bold', 'font-weight' => 'bolder', 'font-style' => 'normal'),
     );
     // The basic regular/bold/italic/bolditalic combo
@@ -1779,6 +1784,31 @@ function install_skins_default() {
             'fonttype' => 't_maroon',
             'onlyheading' => 0,
             'fontstack' => '\'Alegreya Sans\'',
+            'genericfont' => 'sans-serif'
+        )
+    );
+    // PCNZ customisation
+    $montserratvariants = array();
+    foreach (array('300', '300italic', '600', '600italic', '800', '800italic', 'italic', 'regular') as $option) {
+        $montserratvariants[$option] = $fv[$option];
+        foreach ($filetypes as $type) {
+            $montserratvariants[$option][$type] = 'montserrat-v15-latin-ext_latin-' . $option . '.' . strtolower($type);
+        }
+    }
+    ensure_record_exists('skin_fonts',
+        (object) array(
+            'name' => 'Montserrat',
+            'title' => 'Montserrat'
+        ),
+        (object) array(
+            'name' => 'Montserrat',
+            'title' => 'Montserrat',
+            'licence' => 'OFL.txt',
+            'previewfont' => 'montserrat-v15-latin-ext_latin-regular.ttf',
+            'variants' => serialize($montserratvariants),
+            'fonttype' => 't_pcnz',
+            'onlyheading' => 0,
+            'fontstack' => '\'Montserrat\'',
             'genericfont' => 'sans-serif'
         )
     );
