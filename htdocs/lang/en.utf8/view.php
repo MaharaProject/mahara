@@ -144,6 +144,7 @@ $string['nospecialrole'] = 'No special role';
 $string['peer'] = 'Peer';
 $string['manager'] = 'Manager';
 $string['peermanager'] = 'Peer and manager';
+$string['verifier'] = 'Verifier';
 
 // secret url
 $string['token'] = 'Secret URL';

@@ -250,11 +250,22 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('userroles', json_encode($userroles));
     $smarty->assign('grouproles', json_encode($grouproles));
     $view = new View($form->get_property('viewid'));
+    $autoverifier = 0; // Customisation for WR 349183 PCNZ
     $accesslistmaximum = 0;
     if ($view->get('type') == 'portfolio' && $view->get('owner')) {
         $accesslistmaximum = intval(get_config('accesslistmaximum'));
+        // Customisation for WR 349183 PCNZ
+        $autoverifier = 1;
+        $userroles = View::get_user_access_roles('owner');
+        $smarty->assign('userroles', json_encode($userroles));
+        $smarty->assign('personalportfolio', 1);
+        //
     }
     $smarty->assign('accesslistmaximum', $accesslistmaximum);
+    // Customisation for WR 349183 PCNZ
+    $smarty->assign('autoverifierrole', $autoverifier);
+    $smarty->assign('viewid', $form->get_property('viewid'));
+    //
     return $smarty->fetch('form/viewacl.tpl');
 }
 

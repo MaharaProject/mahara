@@ -23,6 +23,17 @@ $query  = param_variable('query', '');
 $page = param_integer('page');
 $showtitlein = param_boolean('showtitlein', false); // label for people in users' institutions
 $showtitleout = param_boolean('showtitleout', false); // label for people not in users' institutions
+ // Customisation for WR 349183 PCNZ
+$viewid = param_integer('viewid');
+$personalportfolio = false;
+if ($viewid) {
+    require_once(get_config('libroot') . 'view.php');
+    $view = new View($viewid);
+    if ($view->get('type') == 'portfolio' && $view->get('owner')) {
+        $personalportfolio = true;
+    }
+}
+//
 $limit  = 10;
 if ($page < 1) {
     $page = 1;
@@ -129,11 +140,11 @@ switch ($type) {
             }
         }
 
-        $roles = get_records_array('usr_access_roles');
-        $data['roles'] =  array();
-        foreach ($roles as $r) {
-            $data['roles'][] = array('name' => $r->role, 'display' => get_string($r->role, 'view'));
-        }
+        require_once(get_config('libroot') . 'view.php');
+        // Customisation for WR 349183 PCNZ
+        $roles = $personalportfolio ? View::get_user_access_roles('owner') : View::get_user_access_roles();
+        //
+        $data['roles'] = $roles;
         break;
     case 'group':
         require_once('group.php');
