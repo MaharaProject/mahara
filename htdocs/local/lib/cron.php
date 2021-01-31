@@ -10,7 +10,11 @@
  */
 
 defined('INTERNAL') || die();
-define('PCNZ_AUTHINSTANCE', 1);
+$pcnz_auth = get_field('auth_instance', 'id', 'institution', 'pcnz', 'priority', 0);
+if ($pcnz_auth === false) {
+    throw new ConfigException('Unable to find the PCNZ auth instance value');
+}
+define('PCNZ_AUTHINSTANCE', $pcnz_auth);
 define('PCNZ_REMOTEURL', get_config('registerapi_url'));
 
 define('PCNZ_NOTREGISTERED', 1); // The 'Not yet registered' value
