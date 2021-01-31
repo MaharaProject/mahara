@@ -11,5 +11,10 @@
     {if $columns.quotapercent}<td>{$item->quotapercent_format}% <span class="text-small text-midtone">({$item->quotaused_format}/{$item->quota_format})</span></td>{/if}
     {if $columns.lastlogin}<td>{$item->lastlogin}</td>{/if}
     {if $columns.probation}<td>{$item->probation}</td>{/if}
+    {* Customisation WR349192 PCNZ *}
+    {if $columns.registrationnumber}<td>{$item->registrationnumber}</td>{/if}
+    {if $columns.registrationstatus}<td>{$item->registrationstatus}</td>{/if}
+    {if $columns.apcstartdate}<td>{$item->apc_startdate}</td>{/if}
+    {* End customisation *}
   </tr>
 {/foreach}
