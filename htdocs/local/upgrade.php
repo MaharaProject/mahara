@@ -24,4 +24,22 @@ function xmldb_local_upgrade($oldversion=0) {
         $e->name = 'apcstatuschange';
         insert_record('event_type', $e);
     }
+
+    if ($oldversion < 2021012602) {
+        log_debug('Configure hiderealname account setting');
+        if ($userids = get_records_sql_array("SELECT * from {usr} WHERE deleted != 1 AND id != 0")) {
+            foreach ($userids as $user) {
+                $whereobject = array(
+                    'usr' => $user->id,
+                    'field' => 'hiderealname',
+                );
+                $dataobject = array(
+                    'usr' => $user->id,
+                    'field' => 'hiderealname',
+                    'value' => 1,
+                );
+                ensure_record_exists('usr_account_preference', (object)$whereobject, (object)$dataobject);
+            }
+        }
+    }
 }
