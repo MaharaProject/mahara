@@ -262,6 +262,7 @@ $string['fonttype.t_ocean'] = 'Theme font: Ocean';
 $string['fonttype.t_modern'] = 'Theme font: Modern';
 $string['fonttype.t_primaryschool'] = 'Theme font: Primary school';
 $string['fonttype.t_maroon'] = 'Theme font: Maroon';
+$string['fonttype.t_pcnz'] = 'Theme font: PCNZ';
 
 // For examples of pangrams, see: http://en.wikipedia.org/wiki/List_of_pangrams
 $string['preview'] = 'Preview';

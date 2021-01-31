@@ -42,4 +42,10 @@ function xmldb_local_upgrade($oldversion=0) {
             }
         }
     }
+
+    if ($oldversion < 2021012603) {
+        log_debug('Install new Montserrat theme fonts');
+        require_once(get_config('libroot') . 'skin.php');
+        install_skins_default();
+    }
 }
