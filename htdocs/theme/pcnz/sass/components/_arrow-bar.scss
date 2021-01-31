@@ -1,0 +1,12 @@
+.arrow-bar {
+    border-radius: 0;
+}
+
+.nav-inpage {
+    &.nav > li {
+        > a, button {
+            border-radius: 1.25rem;
+            text-decoration: none;
+        }
+    }
+}

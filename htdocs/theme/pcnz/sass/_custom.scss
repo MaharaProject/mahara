@@ -1,0 +1,46 @@
+// home logged out
+body.loggedouthome {
+  .container {
+      margin-left: 0;
+      margin-right: 0;
+      max-width: 100%;
+  }
+  .container.main-content  {
+      background-color: $theme-accent-color;
+
+      .main {
+          background-image: url('../../pcnz/images/dashboard-pict.jpeg');
+          background-size: cover;
+          padding-top: 600px;
+          @include media-breakpoint-down(lg) {
+              padding-top: 300px;
+          }
+          @include media-breakpoint-down(sm) {
+              padding-top: 150px;
+          }
+
+          h1 {
+              background-color: $white;
+              padding: $spacing-base $spacing-lg;
+              border-bottom: 0;
+              margin: 0;
+              display: inline-block;
+          }
+
+          p {
+              background-color: $white;
+              padding: $spacing-base $spacing-lg;
+              margin: 0;
+          }
+      }
+      .sidebar {
+          background-color: $theme-primary-color;
+      }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+    .dashboard-editable {
+        border-top: 1px solid $border-color;
+    }
+}

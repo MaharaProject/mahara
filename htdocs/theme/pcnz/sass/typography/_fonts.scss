@@ -1,0 +1,35 @@
+$font-path: '../../pcnz/fonts';
+
+$light: 300, normal;
+$lightitalic: 300, italic;
+$regular: normal, normal;
+$italic: normal, italic;
+$semibold: 600, normal;
+$semibolditalic: 600, italic;
+$extrabold: 800, normal;
+$extrabolditalic: 800, italic;
+
+$montserrat: (
+    montserrat-v15-latin-ext_latin-300: $light,
+    montserrat-v15-latin-ext_latin-300italic: $lightitalic,
+    montserrat-v15-latin-ext_latin-regular: $regular,
+    montserrat-v15-latin-ext_latin-italic: $italic,
+    montserrat-v15-latin-ext_latin-600: $semibold,
+    montserrat-v15-latin-ext_latin-600italic: $semibolditalic,
+    montserrat-v15-latin-ext_latin-800: $extrabold,
+    montserrat-v15-latin-ext_latin-800italic: $extrabolditalic
+);
+
+@each $fontname, $style in $montserrat {
+    @font-face {
+        font-family: 'Montserrat';
+        src: url('#{$font-path}/montserrat/#{$fontname}.eot');
+        src: url('#{$font-path}/montserrat/#{$fontname}.eot?#iefix') format('embedded-opentype'),
+             url('#{$font-path}/montserrat/#{$fontname}.woff2') format('woff2'),
+             url('#{$font-path}/montserrat/#{$fontname}.svg##{$fontname}') format('svg'),
+             url('#{$font-path}/montserrat/#{$fontname}.ttf') format('truetype'),
+             url('#{$font-path}/montserrat/#{$fontname}.woff') format('woff');
+        font-weight: nth($style, 1);
+        font-style:  nth($style, 2);
+    }
+}

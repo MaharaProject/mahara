@@ -1,0 +1,54 @@
+/// Bootstrap variables
+//
+// These are bootstrap variables that you can customize. There are more variables
+// that you can add to this file to customize. To see what variables you can add,
+// look at file: 'htdocs/theme/raw/sass/lib/bootstrap4/_variables.scss'
+
+// Do not add non bootstrap variables here, put them in custom-variables.scss instead
+
+//
+// Variables
+// --------------------------------------------------
+
+// Links
+$link-color:                                $theme-text-color;
+$link-decoration:                           underline;
+$link-hover-color:                          $theme-text-color;
+$link-hover-decoration:                     underline;
+
+// Typography
+$font-family-sans-serif:                    'Montserrat', 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif:                         $font-family-sans-serif;
+$font-family-base:                          $font-family-sans-serif;
+
+$font-weight-bold:                          600;
+$font-weight-bolder:                        800;
+
+
+$headings-font-family:                      $font-family-sans-serif;
+$headings-font-weight:                      $font-weight-bolder;
+$headings-color:                            $theme-text-color;
+
+$component-active-color:                    $theme-text-color;
+$component-active-bg:                       $theme-primary-color;
+
+
+// Buttons
+$btn-border-radius:                         1.25rem;
+$btn-border-radius-lg:                      1.5rem;
+
+$input-border-radius:                       1.25rem;
+$input-border-radius-lg:                    1.5rem;
+
+$custom-select-border-radius:               1.25rem;
+
+
+// Pagination
+$pagination-color:                          $theme-text-color;
+$pagination-hover-color:                    $theme-text-color;
+$pagination-hover-bg:                       $theme-accent-color;
+$pagination-active-color:                   $theme-text-color;
+
+
+// Cards
+$card-border-radius:                        0;

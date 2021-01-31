@@ -1,0 +1,136 @@
+h1 ~ div > .btn-group-top,
+h2 ~ div > .btn-group-top,
+h3 ~ div > .btn-group-top,
+h4 ~ div > .btn-group-top,
+h5 ~ div > .btn-group-top,
+h6 ~ div > .btn-group-top,
+p ~ div > .btn-group-top,
+.page-header ~ div.btn-group-top,
+.page-header + .btn-action-list .btn-group-top,
+.nav-tabs +  div.btn-group-top {
+    @include media-breakpoint-down(md) {
+        .btn-group .btn,
+        .form-as-button,
+        .btn {
+            border-radius: $border-radius-sm !important;
+        }
+    }
+}
+
+// Often the same template is used to render buttons at the top of the page and
+// in a list group. cf. groups table/groups
+.list-group,
+.card-header {
+    // Groups page has something different
+    .btn-action-list {
+        .btn-group-top {
+            .btn {
+                @include media-breakpoint-down(sm) {
+                    &:first-child {
+                      border-top-left-radius: $border-radius-sm;
+                    }
+                    &:last-child {
+                      border-top-right-radius: $border-radius-sm;
+                    }
+                }
+            }
+        }
+    }
+}
+// Edit page configure buttons
+.card-secondary .card-header .blockinstance-controls .btn-group-top {
+    .btn {
+        border-radius: $border-radius-sm;
+        &:first-child {
+            border-radius: $border-radius-sm 0 0 $border-radius-sm;
+        }
+        &:last-child {
+            border-radius: 0 $border-radius-sm $border-radius-sm 0;
+        }
+    }
+}
+
+// left/right vertical buttons
+.lrbuttons .btn-group-vertical {
+  > .btn:not(:last-child):not(.dropdown-toggle).rightarrow {
+    border-top-right-radius: $border-radius-sm;
+  }
+  > .btn:not(:first-child).leftarrow {
+    border-bottom-left-radius: $border-radius-sm;
+    margin-left: 0;
+  }
+}
+
+.form-group-inline .input-group-append.btn {
+    border-radius: $border-radius-sm;
+}
+
+.card-collection .card-footer .dropdown-toggle,
+.card-view .card-footer .dropdown-toggle {
+    border-radius: $border-radius-sm;
+}
+
+.btn-group-top .btn {
+    border-radius: $border-radius-sm;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.btn-group-vertical .btn {
+    border-radius: $border-radius-sm;
+}
+
+.btn-primary {
+    font-weight: $font-weight-bold;
+}
+
+.btn {
+    text-decoration: none;
+}
+
+.form-group.multisubmit .cancel,
+.form-group.submitcancel .cancel {
+    text-decoration: underline;
+}
+
+.btn-group .form-as-button div.first .btn {
+    border-bottom-right-radius: $border-radius-sm;
+}
+.btn-group .form-as-button .section-import div.card.collapsible:last-child .btn,
+.btn-group .form-as-button .section-import div.pieform-fieldset.collapsible:last-child .btn,
+.btn-group .form-as-button div.last .btn,
+.section-import .btn-group .form-as-button div.card.collapsible:last-child .btn,
+.section-import .btn-group .form-as-button div.pieform-fieldset.collapsible:last-child .btn {
+    border-bottom-right-radius: $border-radius-sm;
+}
+
+.btn-primary {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+.content-toolbar .btn-primary {
+    background-color: $theme-primary-color;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.ui-draggable-dragging .btn-primary {
+    border-radius: $border-radius-sm;
+}
+
+.btn-group-item:only-of-type .btn,
+.group-item:only-of-type .btn {
+    border-radius: $border-radius-sm;
+}
+
+input#upload_file {
+    border-radius: $border-radius-sm;
+}
+
+.grouppage-form {
+    float: right;
+    .btn-group-top .form-as-button:only-of-type .btn {
+        border-bottom-right-radius: $border-radius-sm !important;
+    }
+}
