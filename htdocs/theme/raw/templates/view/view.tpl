@@ -2,11 +2,6 @@
 {include file='modal-details.tpl'}
 
 <input type="hidden" id="viewid" name="id" value="{$viewid}">
-{if $viewdescription}
-<div id="view-description" class="view-description {if $toolbarhtml}with-toolbar{/if}">
-    {$viewdescription|clean_html|safe}
-</div>
-{/if}
 {if $viewinstructions}
     <div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
     <fieldset  class="pieform-fieldset collapsible collapsible-small">
