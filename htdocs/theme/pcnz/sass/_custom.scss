@@ -11,7 +11,7 @@ body.loggedouthome {
       .main {
           background-image: url('../../pcnz/images/dashboard-pict.jpeg');
           background-size: cover;
-          padding-top: 600px;
+          padding-top: 400px;
           @include media-breakpoint-down(lg) {
               padding-top: 300px;
           }
@@ -19,12 +19,20 @@ body.loggedouthome {
               padding-top: 150px;
           }
 
-          h1 {
+          h1, h2, h3, h4, h5, h6 {
               background-color: $white;
               padding: $spacing-base $spacing-lg;
               border-bottom: 0;
               margin: 0;
               display: inline-block;
+          }
+          h4 {
+              font-size: 2.5rem;
+          }
+
+          ul, ol {
+              background-color: $white;
+              margin: 0;
           }
 
           p {
