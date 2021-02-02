@@ -331,6 +331,7 @@ if ($institution || $add) {
         ),
         'displayname' => array(
             'type' => 'text',
+            'autofocus' => true,
             'title' => get_string('institutionname', 'admin'),
             'defaultvalue' => $data->displayname,
             'rules' => array(
