@@ -680,7 +680,6 @@ if ($showmnetlink) {
     }
 }
 
-$smarty->assign('viewdescription', $view->get('description'), $view->get('id'));
 $smarty->assign('viewinstructions',  ArtefactTypeFolder::append_view_url($view->get('instructions'), $view->get('id')));
 $smarty->assign('newlayout', $newlayout);
 if ($newlayout) {
