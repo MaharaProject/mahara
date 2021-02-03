@@ -79,6 +79,8 @@ services:
       - MAHARA_ELASTICSEARCH_IGNORE_SSL
       - MAHARA_ELASTICSEARCH_REQUEST_LIMIT
       - MAHARA_ELASTICSEARCH_REDO_LIMIT
+      - MAHARA_SMTP_HOSTS
+      - MAHARA_SMTP_PORT
     ports:
       # The Mahara docker image only supports http on port 80. If https is
       # required (strongly recommended) This can be achieved by an intermediary
