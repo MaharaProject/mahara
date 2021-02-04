@@ -4,9 +4,6 @@
     <form method="post" action="{$WWWROOT}admin/site/font/install.php" class="btn-group">
         <input class="submit btn btn-secondary" type="submit" value="{str tag=installfont section=skin}">
     </form>
-    <form method="post" action="{$WWWROOT}admin/site/font/installgwf.php" class="btn-group">
-        <input class="submit btn btn-secondary" type="submit" value="{str tag=installgwfont section=skin}">
-    </form>
 </div>
 {$form|safe}
 <p class="lead">{str tag=sitefontsdescription section=skin}</p>
