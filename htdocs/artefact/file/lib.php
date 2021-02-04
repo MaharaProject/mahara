@@ -1722,7 +1722,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 'defaultagreement' => array(
                     'type'         => 'html',
                     'title'        => get_string('defaultagreement', 'artefact.file'),
-                    'value'        => get_string('uploadcopyrightdefaultcontent', 'install'),
+                    'value'        => '<div>' . get_string('uploadcopyrightdefaultcontent', 'install') .'</div>',
                 ),
                 'usecustomagreement' => array(
                     'title'        => get_string('usecustomagreement', 'artefact.file'),
