@@ -15,7 +15,7 @@
             </span>
         </div>
     </div>
-    <a class="btn btnshortcut feedback card-footer mtl {if (count($blogs) != 1)} d-none{/if}">
+    <a class="btn btnshortcut feedback card-footer force-pointer mtl {if (count($blogs) != 1)} d-none{/if}">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag='shortcutnewentry' section='artefact.blog'}
     </a>

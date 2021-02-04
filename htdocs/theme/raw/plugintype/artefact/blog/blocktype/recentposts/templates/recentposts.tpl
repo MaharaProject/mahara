@@ -1,6 +1,6 @@
 {if ($editing)}
     {if (count($blogs) == 1)}
-        <a class="card-footer {if (count($blogs) != 1)} d-none{/if}">
+        <a class="card-footer force-pointer {if (count($blogs) != 1)} d-none{/if}">
             <span id="blog_{$blogs[0]->id}" class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str tag='shortcutnewentry' section='artefact.blog'}
         </a>
