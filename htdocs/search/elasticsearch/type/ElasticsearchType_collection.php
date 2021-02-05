@@ -147,7 +147,8 @@ class ElasticsearchType_collection extends ElasticsearchType {
         $sql = 'SELECT c.id, c.name, c.ctime, c.description, cv.view AS viewid, c.owner
         FROM {collection} c
         LEFT OUTER JOIN {collection_view} cv ON cv.collection = c.id
-        WHERE id = ? ORDER BY cv.displayorder asc LIMIT 1;';
+        WHERE c.id = ?
+        ORDER BY cv.displayorder asc LIMIT 1;';
 
         $record = get_record_sql ( $sql, array (
                 $id
@@ -177,10 +178,11 @@ class ElasticsearchType_collection extends ElasticsearchType {
         $sql = 'SELECT v.id, v.title
         FROM {view} v
         LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
-        WHERE cv.collection = ?';
+        WHERE cv.collection = ?
+        AND v.type != ?';
 
         $views = recordset_to_array ( get_recordset_sql ( $sql, array (
-                $id
+                $id, 'progress'
         ) ) );
         if ($views) {
             $record_views = array ();
@@ -212,10 +214,12 @@ class ElasticsearchType_collection extends ElasticsearchType {
                 SELECT vac.view AS view_id, vac.accesstype, vac.group, vac.role, vac.usr, vac.institution
                 FROM {view_access} vac
                 INNER JOIN {collection_view} vcol ON vac.view = vcol.view
+                INNER JOIN {view} v ON v.id = vcol.view
                 WHERE   vcol.collection = ?
+                AND v.type != ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
                 AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)', array (
-                $id
+                $id, 'progress'
         ) );
 
         return $records;

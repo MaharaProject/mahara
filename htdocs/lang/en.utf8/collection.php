@@ -141,6 +141,8 @@ $string['needssignedoff'] = 'Needs to be signed off';
 $string['verified'] = 'Verified';
 $string['needsverified'] = 'Needs to be verified';
 $string['verification'] = 'Verification';
+$string['progresspage'] = 'Portfolio completion';
+$string['progresspagedescription'] = 'Set up the default layout for the portfolio completion page for a collection.';
 
 // access notifications
 $string['youhavebeengivenaccess'] = "You have been given access to the following";

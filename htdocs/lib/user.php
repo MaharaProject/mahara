@@ -2947,6 +2947,34 @@ function install_system_profile_view() {
 }
 
 /**
+ * This function installs the site's default progress view
+ *
+ * @throws SystemException if the system progress view is already installed
+ */
+function install_system_progress_view() {
+    require_once(get_config('libroot') . 'view.php');
+    $viewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'progress');
+    if ($viewid) {
+        throw new SystemException('A system progress view already seems to be installed');
+    }
+    require_once(get_config('docroot') . 'blocktype/lib.php');
+    $view = View::create(array(
+        'type'        => 'progress',
+        'institution' => 'mahara',
+        'template'    => View::SITE_TEMPLATE,
+        'numrows'     => 1,
+        'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
+        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'title'       => get_string('progresspage', 'collection'),
+        'description' => get_string('progresspagedescription'),
+    ), 0);
+    $view->set_access(array(array(
+        'type' => 'loggedin'
+    )));
+    return $view->get('id');
+}
+
+/**
  * This function installs the site's default dashboard view
  *
  * @throws SystemException if the system dashboard view is already installed

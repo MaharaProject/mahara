@@ -114,7 +114,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
                 0, // $offset
                 true, // $extra
                 null, // $sort
-                array('portfolio'), // $types
+                array('portfolio','progress'), // $types
                 null, // $collection
                 null, // $accesstypes
                 null, // $tag

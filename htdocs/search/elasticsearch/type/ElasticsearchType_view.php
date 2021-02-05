@@ -128,6 +128,9 @@ class ElasticsearchType_view extends ElasticsearchType {
         if (! $record) {
             return false;
         }
+        if ($record->type == 'progress') {
+            return false;
+        }
 
         $tags = get_column ( 'tag', 'tag', 'resourcetype', 'view', 'resourceid', $id );
         if ($tags != false) {
@@ -177,10 +180,12 @@ class ElasticsearchType_view extends ElasticsearchType {
         $records = get_records_sql_array ( '
                 SELECT va.view AS view_id, va.accesstype, va.group, va.role, va.usr, va.institution
                 FROM {view_access} va
+                JOIN {view} v ON v.id = va.view
                 WHERE va.view = ?
-                    AND (startdate IS NULL OR startdate < current_timestamp)
-                    AND (stopdate IS NULL OR stopdate > current_timestamp)', array (
-                $viewid
+                AND v.type != ?
+                    AND (va.startdate IS NULL OR va.startdate < current_timestamp)
+                    AND (va.stopdate IS NULL OR va.stopdate > current_timestamp)', array (
+                $viewid, 'progress'
         ) );
 
         if (is_isolated() && get_field('view', 'type', 'id', $viewid) == 'profile') {

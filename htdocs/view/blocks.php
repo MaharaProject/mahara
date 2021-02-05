@@ -22,6 +22,7 @@ require_once(get_config('libroot') . 'gridstacklayout.php');
 $id = param_integer('id', 0); // if 0, we're editing our profile.
 $profile = param_boolean('profile');
 $dashboard = param_boolean('dashboard');
+$progresspage = param_boolean('progress');
 
 if (empty($id)) {
     if (!empty($profile)) {
@@ -49,6 +50,16 @@ if (!$USER->can_edit_view($view)) {
 if ($view->is_submitted()) {
     $submittedto = $view->submitted_to();
     throw new AccessDeniedException(get_string('canteditsubmitted', 'view', $submittedto['name']));
+}
+$collectionid = false;
+if ($collection = $view->get('collection')) {
+    $collectionid = $collection->get('id');
+    // If the collection is locked or view copied from template, and the viewtype is 'progress' we disallow editing
+    $pageistemplate = $view->get_original_template();
+    if ($view->get('owner') && (($view->get('type') == 'progress' && $pageistemplate) || $collection->get('lock'))) {
+        $errorstr = $view->get('type') == 'progress' ? 'canteditprogress' : 'canteditcollectionlocked';
+        throw new AccessDeniedException(get_string($errorstr, 'view'));
+    }
 }
 
 $group = $view->get('group');
@@ -85,6 +96,11 @@ else if ($view->get('type') == 'dashboard') {
     $dashboard = true;
     $title = get_string('usersdashboard', 'mahara', display_name($view->get('owner'), null, true));
     define('TITLE', $title );
+}
+else if ($view->get('type') == 'progress') {
+    $progresspage = true;
+    $title = get_string('progresspage', 'collection');
+    define('TITLE', $title);
 }
 else if ($view->get('type') == 'grouphomepage') {
     $title = get_string('Grouphomepage', 'view');
@@ -343,6 +359,7 @@ $smarty->assign('formurl', get_config('wwwroot') . 'view/blocks.php');
 $smarty->assign('category', $category);
 $smarty->assign('profile', $profile);
 $smarty->assign('dashboard', $dashboard);
+$smarty->assign('progresspage', $progresspage);
 if (get_config('blockeditormaxwidth')) {
     $inlinejs .= 'config.blockeditormaxwidth = true;';
 }
@@ -363,10 +380,6 @@ if (isset($groupurl)) {
 $smarty->assign('institution', $institution);
 
 $smarty->assign('viewid', $view->get('id'));
-$collectionid = false;
-if ($collection = $view->get('collection')) {
-    $collectionid = $collection->get('id');
-}
 $smarty->assign('collectionid', $collectionid);
 
 $smarty->assign('issiteview', isset($institution) && ($institution == 'mahara'));
@@ -377,6 +390,9 @@ $smarty->assign('instructions', $view->get('instructions'));
 $smarty->assign('instructionscollapsed', $view->get('instructionscollapsed'));
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
+if ($view->get('type') == 'progress') {
+    $smarty->assign('collectionurl', 'collection/progresscompletion.php?id=' . $collectionid);
+}
 $smarty->assign('viewurl', $view->get_url());
 $smarty->assign('title', $returnto['title']);
 $smarty->assign('accessible', $view->get('accessibleview'));
