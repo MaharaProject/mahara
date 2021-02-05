@@ -46,6 +46,15 @@
     {/foreach}
 </table>
 
+{* the progress editable page *}
+<div id="view" class="progresspage view-container">
+    <div id="bottom-pane">
+        <div id="column-container">
+            <div class="grid-stack"></div>
+        </div>
+    </div>
+</div>
+
 {* signoff modal form *}
 <div tabindex="0" class="modal fade" id="signoff-confirm-form">
     <div class="modal-dialog">
@@ -87,6 +96,67 @@
         </div>
     </div>
 </div>
+{* Objectionable modal form *}
+{if $LOGGEDIN}
+    <div class="modal fade" id="report-form">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title">
+                        <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=reportobjectionablematerial}
+                    </h1>
+                </div>
+                <div class="modal-body">
+                    {$objectionform|safe}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+{if $userisowner}
+    <div class="modal fade" id="review-form">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title">
+                        <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=objectionreview}
+                    </h1>
+                </div>
+                <div class="modal-body">
+                    {$reviewform|safe}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
+{if $stillrudeform}
+    {include file=objectionreview.tpl}
+{/if}
+
+{* undo verification modal *}
+{if $undoverificationform}
+    <div class="modal fade" id="undoverification-form">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title">
+                        <span class="icon icon-trash-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=undoverificationformtitle section=collection}
+                    </h1>
+                </div>
+                <div class="modal-body">
+                    <div class="description">{str tag=undoverificationdescription section=collection}</div>
+                    {$undoverificationform|safe}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 
 <script type="application/javascript">
 $(function() {

@@ -143,6 +143,29 @@ $string['needssignedoff'] = 'Needs to be signed off';
 $string['verified'] = 'Verified';
 $string['needsverified'] = 'Needs to be verified';
 $string['verification'] = 'Verification';
+$string['progresspage'] = 'Portfolio completion';
+$string['progresspagedescription'] = 'Set up the default layout for the portfolio completion page for a collection.';
 
-// access notifications
+// Access notifications
 $string['youhavebeengivenaccess'] = "You have been given access to the following";
+
+// Statement block reset information
+$string['undoverification'] = 'Reset statement';
+$string['undoverificationformtitle'] = 'Reset statement';
+$string['undoverificationdescription'] = 'Select one of your statements that you want to reset. By continuing, whomever is allowed to reset your statement will be notified. The approval will be removed once they action the request, and you can approve it again.';
+$string['reasonforundo'] = 'Reason for resetting the statement:';
+$string['notifyappointed'] = 'Request reset';
+$string['undoreportsent'] = 'Reset request sent.';
+$string['undoreportnotsent'] = 'Reset request not sent. There is nobody to whom to send the request. Please contact the administrator.';
+$string['verifiedbyme'] = 'My statements';
+$string['verifiedbymedescription'] = 'Choose a statement to reset. Then provide in a reason for this change.';
+$string['undoreportsubject'] = 'Request to reset portfolio statement';
+$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been approved. However, the approver, %s, wishes to reset it.
+
+They gave the following reason:
+
+%s';
+
+$string['accessdeniedundo'] = 'The statement has already been reset. You do not have access to the portfolio any longer.';
+$string['undonesubject'] = 'Portfolio statement reset request actioned';
+$string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who made the statement.';

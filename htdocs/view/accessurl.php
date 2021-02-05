@@ -471,10 +471,13 @@ function accessurl_submit(Pieform $form, $values) {
 
     $toupdate = array();
     if ($collection = $view->get_collection()) {
-      $views = isset($collection->views()['views']) ? $collection->views()['views'] : null;
-      foreach ($views as $v) {
-          $toupdate[] = $v->view;
-      }
+        $views = isset($collection->views()['views']) ? $collection->views()['views'] : null;
+        if ($cpid = $collection->has_progresscompletion()) {
+            $toupdate = array_merge($toupdate, array($cpid));
+        }
+        foreach ($views as $v) {
+            $toupdate[] = $v->view;
+        }
     }
     else {
         $toupdate[] = $view->get('id');

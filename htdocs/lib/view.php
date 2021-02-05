@@ -562,8 +562,9 @@ class View {
                 }
             }
 
-            // Users can only have one view of each non-portfolio type
-            if (isset($viewdata['type']) && $viewdata['type'] != 'portfolio' && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
+            // Users can only have one view of each view type except 'portfolio' and 'progress'
+            $multipletypes = array('portfolio', 'progress');
+            if (isset($viewdata['type']) && !in_array($viewdata['type'], $multipletypes) && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
                 $viewdata['type'] = 'portfolio';
             }
         }
@@ -988,6 +989,7 @@ class View {
         delete_records('view_instructions_lock', 'view', $this->id);
         // Remove institution lock references to this view if it's a template.
         set_field('view_instructions_lock', 'originaltemplate', null, 'originaltemplate', $this->id);
+        delete_records('blocktype_verification_undo', 'view', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
             $eventdata['collection'] = $collection->get('id');
@@ -3841,10 +3843,10 @@ class View {
             v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid, v.coverimage';
         $collselect = '
             UNION
-            SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0) as id,
+            SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0 ORDER BY view LIMIT 1) as id,
             null AS vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
             c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null AS vvisits,
-                   (SELECT COUNT(*) FROM {collection_view} cv WHERE cv.collection = c.id) AS numviews, c.id AS collid, c.coverimage';
+                   (SELECT COUNT(*) FROM {collection_view} cv JOIN {view} v ON v.id = cv.view WHERE cv.collection = c.id AND v.type != \'progress\') AS numviews, c.id AS collid, c.coverimage';
         $emptycollselect = '
             UNION
             SELECT null as id, null as vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
@@ -3865,11 +3867,11 @@ class View {
         $collwhere = '
             WHERE cv.collection IS NOT NULL AND v.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
             AND v.id IN (
-              SELECT view FROM {collection_view} WHERE collection = c.id
+              SELECT cv2.view FROM {collection_view} cv2 JOIN {view} v2 ON v2.id = cv2.view WHERE cv2.collection = c.id AND v2.type != \'progress\'
             )';
         $emptycollwhere = '
             WHERE c.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
-            AND NOT EXISTS (SELECT * FROM {collection_view} cv WHERE c.id = cv.collection)';
+            AND NOT EXISTS (SELECT cv2.view FROM {collection_view} cv2 JOIN {view} v2 ON v2.id = cv2.view WHERE cv2.collection = c.id AND v2.type != \'progress\')';
 
         // We use institution='mahara' and template=2 for the default site template
         if (isset($institution) && $institution === 'mahara') {
@@ -4530,7 +4532,7 @@ class View {
 
         if ($copyableby) {
             $where .= '
-                AND (v.template = 1 OR (v.' . self::owner_sql($copyableby) . '))';
+                AND ((v.template = 1 OR (v.' . self::owner_sql($copyableby) . ')) AND v.type != \'progress\')';
         }
 
         $like = db_ilike();
@@ -4947,7 +4949,7 @@ class View {
 
         $result = self::view_search(
             $query, null, null, null, $limit, $offset,
-            true, $sort, array('portfolio'), false, $accesstypes, $tag,
+            true, $sort, array('portfolio', 'progress'), false, $accesstypes, $tag,
             null, $userid, true
         );
 
@@ -6806,10 +6808,12 @@ class View {
 
 
     // Returns a boolean if access is pending/suspended or not
-    public static function access_override_pending($v) {
+    public static function access_override_pending($v, $collection=false) {
+        if ($collection) {
+            return is_collection_suspended($collection);
+        }
         return is_view_suspended($v['id']);
     }
-
 
     /**
      * Get all views & collections for a (user,group), grouped
@@ -6845,7 +6849,7 @@ class View {
             $view = current($c['views']);
             $viewindex[$view['id']] = array('type' => 'collections', 'id' => $c['id']);
             $c['access']  = self::access_override_description($view);
-            $c['pending'] = self::access_override_pending($view);
+            $c['pending'] = self::access_override_pending($view, $c['id']);
             $c['viewid']  = $view['id'];
         }
         foreach ($data['views'] as &$v) {

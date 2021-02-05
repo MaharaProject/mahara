@@ -140,6 +140,7 @@ class BehatDataGenerators extends BehatBase {
                 'ownertype'        => 'text',
                 'ownername'        => 'text',
                 'pages'            => 'text',
+                'lock'             => 'bool',
             ),
             'required' => array('title', 'ownertype', 'ownername')
         ),
