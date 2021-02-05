@@ -1,0 +1,45 @@
+.verification-statement {
+    padding: $spacing-base;
+    h2 {
+        font-size: $font-size-base * 1.5;
+        margin-top: 0;
+    }
+    &.primary-statement {
+        background-color: scale-color($warning, $lightness: 85%); 
+    }
+    .verificationicon {
+        &.icon {
+            text-align: center;
+            vertical-align: middle;
+            display: block;
+            font-size: $font-size-base * 1.25;
+            &.completed {
+                color: $progresscompletion-verified-color;
+            }
+            &.action {
+                color: $progresscompletion-notverified-color;
+            }
+            &.dot.disabled {
+                color: scale-color($gray-300, $lightness: 28%);
+                cursor: $cursor-disabled;
+                // Override dot icon with minus icon
+                &:before {
+                    content: "\f068";
+                }
+            }
+            a {
+                cursor: pointer;
+            }
+        }
+    }
+    &.primary-statement {
+        .verificationicon.icon {
+            font-size: $font-size-base * 1.75;
+        }
+    }
+    .verifiedon {
+        margin-top: 0.5em;
+        color: $theme-text-midtone-color;
+        font-size: $font-size-sm;
+    }
+}

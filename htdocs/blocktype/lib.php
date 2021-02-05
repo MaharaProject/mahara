@@ -328,6 +328,14 @@ EOF;
      * For example: My Views, My Groups, My Friends, Wall
      */
     public static function override_instance_title(BlockInstance $instance) {
+        return false;
+    }
+
+    /**
+     * Allow title field to be required on block configuration form.
+     */
+    public static function title_mandatory(BlockInstance $instance) {
+        return false;
     }
 
     public static function get_viewtypes() {
@@ -870,6 +878,7 @@ class BlockInstance {
     private $temp = array();
     private $tags = array();
     private $inedit = false;
+    private $ineditconfig = false;
     private $positionx;
     private $positiony;
     private $width;
@@ -1136,7 +1145,7 @@ class BlockInstance {
         $this->set('title', $title);
 
         $this->commit();
-
+        $this->set('ineditconfig', false);
         try {
             if ($form->get_property('quickedit')) {
                 $rendered = array('html' => $this->render_viewing());
@@ -1146,6 +1155,7 @@ class BlockInstance {
             }
         }
         catch (HTMLPurifier_Exception $e) {
+            $this->set('ineditconfig', true);
             $message = get_string('blockconfigurationrenderingerror', 'view') . ' ' . $e->getMessage();
             $form->reply(PIEFORM_ERR, array('message' => $message));
         }
@@ -1180,7 +1190,8 @@ class BlockInstance {
 
     public function get_title() {
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        if ($override = call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+        $override = call_static_method($blocktypeclass, 'override_instance_title', $this);
+        if ($override !== false) {
             return $override;
         }
         if ($title = $this->get('title') and $title != '') {
@@ -1532,8 +1543,14 @@ class BlockInstance {
         $configdata = $this->get('configdata');
         $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
         $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
+        $this->ineditconfig = true;
+        $overridetitle = call_static_method($blocktypeclass, 'override_instance_title', $this);
+        $titlerules = array('maxlength' => 255);
+        if (call_static_method($blocktypeclass, 'title_mandatory', $this)) {
+            $titlerules = array_merge($titlerules, array('required' => true));
+        }
 
-        if (call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+        if (!empty($overridetitle)) {
             $titleelement = array(
                 'type' => 'hidden',
                 'value' => $title,
@@ -1545,7 +1562,7 @@ class BlockInstance {
                 'title' => get_string('blocktitle', 'view'),
                 'description' => $hasdefault ? get_string('defaulttitledescription', 'blocktype.' . blocktype_name_to_namespaced($this->get('blocktype'))) : null,
                 'defaultvalue' => $title,
-                'rules' => array('maxlength' => 255),
+                'rules' => $titlerules,
                 'hidewhenempty' => $hasdefault,
                 'expandtext'    => get_string('setblocktitle'),
             );
@@ -1715,7 +1732,7 @@ class BlockInstance {
         $configdata = $this->get('configdata');
         $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
         $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
-
+        $this->ineditconfig = true;
         if (call_static_method($blocktypeclass, 'override_instance_title', $this)) {
             $titleelement = array(
                 'type' => 'hidden',

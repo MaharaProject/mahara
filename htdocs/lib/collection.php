@@ -31,6 +31,7 @@ class Collection {
     private $framework;
     private $coverimage;
     private $progresscompletion;
+    private $lock;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -155,7 +156,12 @@ class Collection {
                 }
             }
         }
-
+        // delete the progress page as it can't exist outside a collection
+        if ($pid = $this->has_progresscompletion()) {
+            require_once(get_config('libroot') . 'view.php');
+            $view = new View($pid);
+            $view->delete();
+        }
         delete_records('collection_view','collection',$this->id);
         delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->id);
         if (is_plugin_active('lti', 'module')) {
@@ -384,6 +390,7 @@ class Collection {
         $data->submittedstatus = 0;
 
         $data->progresscompletion = $colltemplate->get('progresscompletion');
+        $data->lock = $colltemplate->get('lock');
         $collection = self::save($data);
         if ($trackoriginal) {
             $collection->track_template($templateid);
@@ -484,6 +491,21 @@ class Collection {
                     $newevidence->mtime = $evidence->mtime;
                     insert_record('framework_evidence', $newevidence);
                 }
+            }
+        }
+        if ($colltemplate->has_progresscompletion()) {
+            $values['type'] = 'progress';
+            list($view, $template, $copystatus) = View::create_from_template($values, $colltemplate->has_progresscompletion(), $userid, false, false, $artefactcopies);
+            // update any existing pages sortorder
+            execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($collection->id));
+            // add progress page as first page of collection
+            $cv = array();
+            $cv['view'] = $view->get('id');
+            $cv['collection'] = $collection->id;
+            $cv['displayorder'] = 0;
+            insert_record('collection_view', (object)$cv);
+            if (!empty($collection->views())) {
+                $collection->add_views(array($view->get('id')));
             }
         }
 
@@ -695,7 +717,6 @@ class Collection {
             );
         }
 
-
         // populate the fields with the existing values if any
         if (!empty($this->id)) {
             foreach ($elements as $k => $element) {
@@ -748,6 +769,7 @@ class Collection {
             $sql = "SELECT v.id, cv.*, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid
                 FROM {collection_view} cv JOIN {view} v ON cv.view = v.id
                 WHERE cv.collection = ?
+                AND v.type != 'progress'
                 ORDER BY cv.displayorder, v.title, v.ctime ASC";
 
             $result = get_records_sql_assoc($sql, array($this->get('id')));
@@ -956,20 +978,78 @@ class Collection {
      * - The collection can have progress completion enabled
      * - It has progress completion enabled
      * - It has views in the collection
+     * - It has the progress view type
      *
-     * @return boolean
+     * @return id of page or false
      */
-    public function has_progresscompletion() {
+    public function has_progresscompletion($checkpage=true) {
         if (!$this->can_have_progresscompletion()) {
             return false;
         }
         if (!$this->progresscompletion) {
             return false;
         }
-        if (!$this->views()) {
-            return false;
+        if ($checkpage) {
+            if (!$this->views()) {
+                return false;
+            }
+
+            $progressview = get_field_sql(
+                "SELECT v.id
+                 FROM {collection_view} cv
+                 JOIN {view} v ON v.id = cv.view
+                 WHERE cv.collection = ?
+                 AND v.type = ?", array($this->id, 'progress'));
+            return !empty($progressview) ? $progressview : false;
         }
         return true;
+    }
+
+    /**
+     * Add a progress page to the progresscompletion collection
+     * If the collection already has a progress page then nothing happens
+     */
+    public function add_progresscompletion_view() {
+        if ($this->has_progresscompletion(false) && !$this->has_progresscompletion(true)) {
+            // We can add a progress page as it is allowed a
+            // progress page but doesn't already have one.
+            // Add the progress page to the collection
+            require_once(get_config('libroot') . 'view.php');
+            $viewdata = array(
+                'type'        => 'progress',
+                'title'       => get_string('progresspage', 'collection'),
+            );
+            if (!empty($this->group)) {
+                $viewdata['group'] = $this->group;
+                $author = 0;
+            }
+            else if (!empty($this->institution)) {
+                $viewdata['institution'] = $this->institution;
+                require_once(get_config('libroot') . 'institution.php');
+                $institution = new Institution($this->institution);
+                $admins = $institution->institution_and_site_admins();
+                $author = $admins[0];
+            }
+            else {
+                $viewdata['owner'] = $this->owner;
+                $author = $this->owner;
+            }
+            $systemprogressviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'progress');
+            $artefactcopies = array();
+            list($view) = View::create_from_template($viewdata, $systemprogressviewid, $author, false, false, $artefactcopies);
+
+            // update any existing pages sortorder
+            execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($this->id));
+            // add progress page as first page of collection
+            $cv = array();
+            $cv['view'] = $view->get('id');
+            $cv['collection'] = $this->id;
+            $cv['displayorder'] = 0;
+            insert_record('collection_view', (object)$cv);
+            if (!empty($this->views())) {
+                $this->add_views(array($view->get('id')));
+            }
+        }
     }
 
     /**

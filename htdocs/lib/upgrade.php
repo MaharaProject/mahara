@@ -814,6 +814,7 @@ function core_install_lastcoredata_defaults() {
     install_system_grouphomepage_view();
     require_once('view.php');
     install_system_portfolio_view();
+    install_system_progress_view();
 
     require_once('license.php');
     install_licenses_default();
@@ -863,7 +864,7 @@ function core_install_lastcoredata_defaults() {
     // Setting user access roles for content block access
     $table = new XMLDBTable('usr_access_roles');
 
-    $roles = array('peer' => 0, 'manager' => 1, 'peermanager' => 1);
+    $roles = array('peer' => 0, 'manager' => 1, 'peermanager' => 1, 'verifier' => 1);
     foreach ($roles as $role => $state) {
         $obj = new stdClass();
         $obj->role              = $role;
@@ -1061,7 +1062,7 @@ function core_install_firstcoredata_defaults() {
         insert_record('cron', $cron);
     }
 
-    $viewtypes = array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    $viewtypes = array('dashboard', 'portfolio', 'profile', 'grouphomepage', 'progress');
     foreach ($viewtypes as $vt) {
         insert_record('view_type', (object)array(
             'type' => $vt,

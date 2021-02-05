@@ -559,6 +559,10 @@ function editaccess_submit(Pieform $form, $values) {
             if (!isset($collections[$cid])) {
                 throw new UserException(get_string('editaccessinvalidviewset', 'view'));
             }
+            $collection = new Collection($cid);
+            if ($cpid = $collection->has_progresscompletion()) {
+                $toupdate = array_merge($toupdate, array($cpid));
+            }
             $toupdate = array_merge($toupdate, array_keys($collections[$cid]['views']));
         }
     }

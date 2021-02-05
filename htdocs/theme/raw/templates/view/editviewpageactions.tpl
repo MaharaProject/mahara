@@ -14,13 +14,13 @@
     {/if}
     {if $selected == 'content'}
         {if $viewurl}
-            <a id='displaypagebtn' class="btn btn-secondary editviews displaycontent" href="{$WWWROOT}view/view.php?id={$viewid}" title="{str tag=displayview section=view}">
+            <a id='displaypagebtn' class="btn btn-secondary editviews displaycontent" href="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}" title="{str tag=displayview section=view}">
                 <span class="icon icon-tv" aria-hidden="true" role="presentation"></span>
                 <span class="btn-title sr-only">{str tag=displayview section=view}</span>
             </a>
         {/if}
     {else}
-        <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}view/blocks.php?id={$viewid}" title="{str tag=editcontent1 section=view}">
+        <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}" title="{str tag=editcontent1 section=view}">
             <span class="icon icon-pencil-alt" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=editcontent1 section=view}</span>
         </a>

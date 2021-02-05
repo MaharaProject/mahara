@@ -53,6 +53,15 @@
     {/foreach}
 </table>
 
+{* the progress editable page *}
+<div id="view" class="progresspage view-container">
+    <div id="bottom-pane">
+        <div id="column-container">
+            <div class="grid-stack"></div>
+        </div>
+    </div>
+</div>
+
 {* signoff modal form *}
 <div tabindex="0" class="modal fade" id="signoff-confirm-form">
     <div class="modal-dialog">

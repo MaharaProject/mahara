@@ -22,10 +22,14 @@ $collectionid = param_integer('id');
 
 $collection = new Collection($collectionid);
 
-$javascript = array('js/collection-navigation.js',
-'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
-'tinymce',
-'js/jquery/jquery-ui/js/jquery-ui.min.js');
+$javascript = array(
+    'js/collection-navigation.js',
+    'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
+    'tinymce',
+    'js/jquery/jquery-ui/js/jquery-ui.min.js',
+    'js/lodash/lodash.js',
+    'js/gridstack/gridstack.js',
+    'js/gridlayout.js');
 
 $views = $collection->get('views');
 
@@ -36,8 +40,29 @@ $view = new View($firstview->id);
 if (!can_view_view($view->get('id'))) {
     throw new AccessDeniedException();
 }
-if (!$collection->has_progresscompletion()) {
+if (!$pid = $collection->has_progresscompletion()) {
     throw new AccessDeniedException();
+}
+else {
+    $pview = new View($pid);
+    $blocks = $pview->get_blocks();
+    $blocks = json_encode($blocks);
+    $blocksjs = <<<EOF
+$(function () {
+    var options = {
+        verticalMargin: 5,
+        cellHeight: 10,
+        disableDrag : true,
+        disableResize: true,
+    };
+    var grid = $('.grid-stack');
+    grid.gridstack(options);
+    grid = $('.grid-stack').data('gridstack');
+    // should add the blocks one by one
+    var blocks = {$blocks};
+    loadGrid(grid, blocks);
+});
+EOF;
 }
 
 // Set up theme
@@ -62,6 +87,7 @@ $smarty = smarty(
 $smarty->assign('PAGETITLE', get_string('portfoliocompletion', 'collection'));
 $smarty->assign('maintitle', $collection->get('name'));
 $smarty->assign('name', get_string('portfoliocompletion', 'collection'));
+$smarty->assign('INLINEJAVASCRIPT', $blocksjs);
 
 if ($view->is_anonymous()) {
     $smarty->assign('author', get_string('anonymoususer'));
@@ -136,4 +162,11 @@ $smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . 
 $smarty->assign('showVerification', $showVerification);
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewlocked', $viewobj->get('locked'));
+// Is progres page editable?
+$pageistemplate = $pview->get_original_template();
+if ($can_edit && !$collection->get('lock')) {
+    if (($pview->get('owner') && !$pageistemplate) || !$pview->get('owner')) {
+        $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $collection->has_progresscompletion());
+    }
+}
 $smarty->display('collection/progresscompletion.tpl');

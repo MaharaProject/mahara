@@ -2041,5 +2041,65 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092110) {
+        log_debug('Adding verifier role');
+        $roles = array('verifier' => 1);
+        foreach ($roles as $role => $state) {
+            $obj = new stdClass();
+            $obj->role              = $role;
+            $obj->see_block_content = $state;
+            insert_record('usr_access_roles', $obj);
+        }
+    }
+
+    if ($oldversion < 2020092111) {
+        log_debug('Add "lock" column to collection');
+        $table = new XMLDBTable('collection');
+        $field = new XMLDBField('lock');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+    }
+
+    if ($oldversion < 2020092112) {
+        log_debug('Add "progress" page type');
+        ensure_record_exists('view_type',
+            (object)array('type' => 'progress'),
+            (object)array('type' => 'progress')
+        );
+        if ($data = check_upgrades('blocktype.verification')) {
+            upgrade_plugin($data);
+            install_blocktype_extras();
+        }
+        // Create default progress template
+        set_field('usr', 'admin', 1, 'username', 'root');
+        install_system_progress_view();
+        set_field('usr', 'admin', 0, 'username', 'root');
+        // Make sure any existing progress collections now get the 'progress' page
+        if ($collections = get_records_sql_array("SELECT c.id FROM {collection} c
+                                                  WHERE c.progresscompletion = 1
+                                                  AND NOT EXISTS (
+                                                      SELECT v.id FROM {collection_view} cv
+                                                      JOIN {view} v ON v.id = cv.view
+                                                      WHERE v.type = 'progress'
+                                                      AND cv.collection = c.id
+                                                  )")) {
+            require_once(get_config('libroot') . 'collection.php');
+            $count = 0;
+            $limit = 500;
+            $total = count($collections);
+            foreach ($collections as $collection) {
+                $c = new Collection($collection->id);
+                $c->add_progresscompletion_view();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }

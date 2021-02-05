@@ -82,6 +82,10 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
             'extra' => array('viewid' => $view->get('id'),
                              'blockid' => $instance->get('id')),
         ));
+        if (empty($pagination['javascript'])) {
+            // no pagination but we still need to wire the options
+            $pagination['javascript'] = "window['wire_blockoptions']();";
+        }
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('types', $types);
