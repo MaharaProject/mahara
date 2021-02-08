@@ -13,7 +13,7 @@ defined('INTERNAL') || die();
 
 $string['autoconfiguredesc'] = 'Automatically enable settings and configurations needed for the mobile apps API.';
 $string['autoconfiguretitle'] = 'Auto-configure mobile apps API';
-$string['configstep'] = 'Conguration item';
+$string['configstep'] = 'Configuration item';
 $string['configstepstatus'] = 'Status';
 $string['manualtokensdesc'] = 'people can generate web service access tokens manually in order to copy and paste them into an app. Normally, an app should be able to generate the tokens automatically. However, some authentication plugins may not allow for that.';
 $string['manualtokenstitle'] = 'Manual token generation';
