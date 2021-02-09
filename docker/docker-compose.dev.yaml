@@ -1,20 +1,15 @@
-version: '3.4'
+version: '3.5'
 services:
-  mahara:
+
+  web:
+    container_name: ${COMPOSE_PROJECT_NAME}-mahara-web
     tty: true
     volumes:
       - ../htdocs:/mahara/htdocs
   db:
+    container_name: ${COMPOSE_PROJECT_NAME}-mahara-db
     tty: true
     stdin_open: true
-    ports:
-      - "127.0.0.1:5432:5432"
-  mail:
-    image: mailhog/mailhog
-    tty: true
-    ports:
-      - 1025:1025
-      - 8025:8025
 
 volumes:
   mahara-db:

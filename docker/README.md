@@ -22,7 +22,7 @@ Note for the installation steps below: If you work for a company that works
 with Docker, you may wish to check your internal documentation first, as there
 may be some special instructions for you to follow instead.
 
-To install and configure Docker on a recent Ubuntu desktop:
+To install and configure Docker on a recent Ubuntu desktop (Ubuntu 18.04 Bionic or later):
 
 ```
   sudo apt install docker.io
@@ -34,8 +34,8 @@ To install and configure Docker on a recent Ubuntu desktop:
 
 Rerun the Docker test above to confirm.
 
-Note: You shouldn't need to run Docker with sudo. Attempting to run some of the
-commands in this README with sudo are likely to cause errors.
+Note: You shouldn't need to run Docker with 'sudo'. Attempting to run some of the
+commands in this README with 'sudo' are likely to cause errors.
 
 ## Preliminary setup of the Docker environment
 
@@ -57,14 +57,9 @@ For example, for both local development and running phpunit or Behat tests, you
 can use an environment variables file to house all necessary config settings
 instead of putting them into config.php itself. You may not wish to do so for a
 production environment though when you have multiple Mahara instances running
-on a single server. To link the config.php file to the environment variables
-file, run:
+on a single server. 
 
-```
-  cd htdocs
-  ln -s config-environment.php config.php
-  cd ..
-```
+The develpment setup specified below allows for this approach automatically by using the config specified in ./htdocs/config-environment.php by default.  
 
 Note: Instead of putting values into config-environment.php, you can set up a .envrc
 file to contain your custom variables as that will not be pushed to the repository
@@ -73,7 +68,62 @@ when you commit changes. It is excluded in .gitignore.
 **For development purposes, we recommend that you will set up a .envrc file. Therefore, the
 following instructions will assume that.**
 
-### Get all necessary files for running Mahara within Docker
+## Using Docker for development purposes
+
+We are going to use Docker compose to start a new developer environment.
+
+If this is your first time using this Docker approach you will need to run
+`make docker-image` to build the Mahara Docker images.
+
+### Starting a new development environment
+
+**Note**: Add Gerrit so you can `make push` later if you want to [contribute your changes](https://wiki.mahara.org/wiki/Developer_Area/Contributing_Code) to the Mahara project.
+
+* Run the command `make up` to start your Mahara Docker environment. This configures your environment automatically.
+* Open the URL that you see on screen. It starts with http://localhost:6142/. Mahara is available in a subdirectory, and the name of it is the name of the folder of your repository. If you installed Mahara in the folder 'mahara', then the URL is http://localhost:6142/mahara. If you installed it in the folder '20.10', the URL is http://localhost:6142/20.10.
+
+Useful commands:
+
+* List running containers: `docker ps`
+* View logs for a container: `docker logs <container name>`
+* Run cli commands inside a contaner `make docker-bash`
+
+**Note**: Site-specific containers are prefixed with the name of the directory of your site, followed by 'mahara', e.g. 'mahara-mahara' or '20.10-mahara' for repositories in the directories 'mahara' and '20.10' respectively. Shared containers are prefixed 'shared-mahara'.
+
+
+### Shutting down the development environment
+
+From the site directory in your terminal, type `make down`. That will shut down all containers unique to this site, i.e. shared containers are not shut down, e.g. if you run multiple Docker images in parallel.
+
+If you type `docker ps` again, you will see the shared containers that are not shut down by `make down`. All shared containers for the Mahara project are prefixed 'shared-mahara'. At the moment, the only two shared containers are mailhog and nginx. If these are the only two remaining ones, you can shut them down with `make shared-down`.
+
+### Mail setup for development
+
+Mail is delivered to a local mail server called [Mailhog](https://github.com/mailhog/MailHog).
+
+This server is shared between all your development sites.
+
+**This mail server within Docker will not forward any email to a real mail server.** Instead, it will keep all mail output and present it at:
+
+http://localhost:8025
+
+That means that you do not have to configure the config.php variable 'sendallemailto' because mails will not be sent to any address.
+
+### Deleting a Database or Sitedata for a site
+
+During development you may wish to delete the database and or sitedata in order to start again from a fresh instance.
+First you should shut down your site.
+`make down`
+Then you can delete the "volume" which contains the database and or sitedata. 
+First we list the volumes:
+`docker volume ls`
+On this list you will see a list of volumes names.
+You will see a volume with the name <Foldername>_mahara-db and <Foldername>_mahara-data.
+You can then use the command `docker volume rm <foldername>_mahara-db` in order to remove the database or `docker volume rm <foldername>_mahara-data` to remove the sitedata.  
+
+When you run `make up` new volumes will be created automatically to replace the removed ones providing you with a fresh instance.
+
+### Running automated tests inside containers 
 
 Mahara has a mahara-builder Docker image that can be used to build and test
 Mahara. This image can be built and updated with:
@@ -95,12 +145,14 @@ Mahara. To use this image to execute `make` targets run:
   ./docker/make.sh css
 ```
 
-### Additional commands for running automated tests
+### Running automated tests
 
 The following is not necessary for a standard developer testing setup.
 
 The running of phpunit and Behat tests via Docker is in the beginning stages, and there are
 changes that need to be made to get them to run fully.
+
+Please note these are not part of the developer environment specified above, and we intend to integrate these into that developer environment in the future.
 
 ```
   ./docker/make.sh phpunit
@@ -132,64 +184,7 @@ To access the database with psql run:
   docker/test-db.sh -n docker_default psql
 ```
 
-## Using Docker for development purposes
-
-We are going to use Docker compose to start a developer environment.
-
-The following command will create the neccesary networks, volumes, and images and then start them.
-
-The compose file `docker/docker-compose.dev.yaml` will also mount the local htdocs directory inside
-the container so that you can edit the code outside of the container, i.e. in your regular directory,
-and the changes will appear in the container.
-
-```bash
-# From the Mahara root.
-make new-dev-environment
-```
-This Makefile target calls `make docker-image` to build the Mahara Docker images, `make css` to ensure the CSS is compiled on the host directories, and `make up` to start the `docker-compose` instance with the `docker-compose.yaml` and `docker-compose.dev.yaml` config files.
-
-You can shut down the containers in the terminal window by pressing Ctrl-c in most terminals.
-
-The `make new-dev-environment` command only needs to be used once.  After this `make up` will bring the instance back should you shut it down.
-
-The `make new-dev-environment/up` commands will remain in the foreground and display a *lot* of logs.
-
-In a new shell, you can run commands inside a container:
-```bash
-docker ps
-docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml \
-  run <CONTAINER NAME GOES HERE> /bin/bash
-# Please note: By default, the code and data directories are inside /mahara/htdocs and /mahara/data directories.
-
-# For example, to run a Mahara command inside a container, you can run:
-docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml \
-  run --user="www-data" mahara php /mahara/htdocs/admin/cli/clear_caches.php
-```
-Checking out older versions:
-
-If you need to check out an older version than the one you are currently developing on, you will
-get errors as the volumes are persistent between runs.
-
-Your options are to either create a new database inside the Postgres volume and update:
-```
-psql -h 0.0.0.0 -U mahara
-# The password can be found in your .envrc file.
-mahara=# \c postgres
-mahara=# ALTER DATABASE mahara RENAME to old_db;
-mahara=# CREATE DATABASE mahara WITH OWNER mahara;
-```
-Or delete the volume entirely because you don't care about the test data you were using earlier:
-```
-docker volume rm mahara-db
-```
-Docker compose will regenerate the mahara-db volume for you when you run it again.
 
 ## Using the Mahara Docker image
 
-The Mahara Docker image could be used to create a real Mahara instance. The
-`docker-compose.yaml` file could be customised for this or to see what
-environment variables are required.
-
-Note: A separate DB server (container) is also required.
-
-Before you use your Mahara Docker image on a production instance, please test it thoroughly.
+The Mahara Docker image is **provided for development purposes only** at this stage. If you would like to use it in production, please be aware that you will need to change the Docker compose files and make configuration changes, e.g. passwords, email configuration, caching.

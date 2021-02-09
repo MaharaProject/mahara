@@ -9,6 +9,20 @@ DOCKER_UBUNTU_VERSION = bionic
 TEST_ADMIN_PASSWD = Kupuh1pa!
 TEST_ADMIN_EMAIL  = user@example.org
 
+# Export these so they are available in the docker-compose calls later.
+export COMPOSE_PROJECT_NAME = $(shell basename $$(pwd))
+export MAHARA_DB_HOST = ${COMPOSE_PROJECT_NAME}-mahara-db
+export MAHARA_REDIS_SERVER = ${COMPOSE_PROJECT_NAME}-mahara-redis
+export MAHARA_DOCKER_PORT = 6142
+export MAHARA_WWW_ROOT = http://localhost:${MAHARA_DOCKER_PORT}/${COMPOSE_PROJECT_NAME}
+export MAHARA_ELASTICSEARCH_HOST = ${COMPOSE_PROJECT_NAME}-mahara-elastic
+
+CCRED=$(shell echo "\033[0;31m")
+CCYELLOW=$(shell echo "\033[0;33m")
+CCLIGHTGREEN=$(shell echo "\033[0;92m")
+CCMAGENTA=$(shell echo "\033[0;95m")
+CCEND=$(shell echo "\033[0m")
+
 # Make expects targets to create a file that matches the target name
 # unless the target is phony.
 # Refer to: https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
@@ -222,16 +236,45 @@ docker-builder:
 		--build-arg IMAGE_UID=$(shell id -u) --build-arg IMAGE_GID=$(shell id -g) \
 		--tag mahara-builder .
 
-new-dev-environment:
-	$(info Building a new Docker based development environment)
-	$(MAKE) docker-image
-	$(MAKE) css
-	$(MAKE) up
+#Connects to the database created by docker compose for this environment
+dev-db-connect:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run db psql -h ${COMPOSE_PROJECT_NAME}-mahara-db -U mahara
 
+# Brings up a new development instance.
 up:
-	$(info Bringing up docker containers)
-	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml up
+ifeq (,$(wildcard ./htdocs/config.php))
+	cp ./htdocs/config-environment.php ./htdocs/config.php
+endif
+	$(MAKE) shared-up
+	$(MAKE) dev-up
+	$(MAKE) css
 
+# Take down a single development instance. See `make shared-down`.
 down:
-	$(info Bringing up docker containers)
+	$(info Shutting down site containers.)
 	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml down
+
+# Spins up the shared containers. Has a static project name so that only one
+# instance of these containers are created.
+shared-up:
+	$(info Starting shared containers.)
+	$(shell export COMPOSE_PROJECT_NAME=shared-mahara && docker-compose -f docker/docker-compose.shared.yaml up -d)
+
+# @TODO: This will error out if there are any containers connected to
+# mahara-net. We should check with `docker network inspect mahara-net` to see
+# how many containers are connected. If more than 2 (mail/nginx) then do not
+# shutdown.
+shared-down:
+	$(info Shutting down shared containers.)
+	$(shell export COMPOSE_PROJECT_NAME=shared-mahara && docker-compose -f docker/docker-compose.shared.yaml down)
+
+docker-bash:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run web /bin/bash
+
+# Brings up a new development instance, that assumes the presense of shared
+# mailhog and nginx containers.
+dev-up:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml up -d
+	$(info Your site will be available at ${MAHARA_WWW_ROOT}/)
+	$(info You can view logs of the container you are interested in with the `docker logs <container-name>` command.)
+	$(info The `docker ps` will give you a list of running containers.)
