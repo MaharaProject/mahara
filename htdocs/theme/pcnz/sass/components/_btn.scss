@@ -103,6 +103,10 @@ p ~ div > .btn-group-top,
 .section-import .btn-group .form-as-button div.pieform-fieldset.collapsible:last-child .btn {
     border-bottom-right-radius: $border-radius-sm;
 }
+.btn-group .form-as-button:last-of-type .btn {
+    border-top-right-radius: $border-radius-sm;
+    border-bottom-right-radius: $border-radius-sm;
+}
 
 .btn-primary {
     padding-left: 2.5rem;
@@ -133,4 +137,12 @@ input#upload_file {
     .btn-group-top .form-as-button:only-of-type .btn {
         border-bottom-right-radius: $border-radius-sm !important;
     }
+}
+
+//html editor buttons reset
+.tox-dialog.mahara-dialog .tox-button,
+.tox-dialog.mahara-dialog .tox-button.tox-button--secondary {
+    color: $theme-text-color;
+    background-color: $white;
+    border-color: $theme-primary-color;
 }

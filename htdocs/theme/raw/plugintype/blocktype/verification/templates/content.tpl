@@ -36,7 +36,7 @@
         {/if}
     {/if}
     {if $data.addcomment && $canverify}
-        {if $inedit}<div class="descrption">{/if}
+        {if $inedit}<div class="description">{/if}
         {$commentform|safe}
         {if $inedit}</div>{/if}
     {/if}

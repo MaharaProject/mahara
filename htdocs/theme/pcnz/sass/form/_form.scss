@@ -62,3 +62,7 @@
 .pagination-sm .page-link {
     text-decoration: none;
 }
+
+.form-control.file {
+    border-radius: $border-radius-sm;
+}
