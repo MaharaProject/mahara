@@ -43,7 +43,7 @@
             <div class="btn-group btn-group-top comment-item-buttons">
                 {if !$onview}
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-secondary btn-group-item form-as-button float-left">
+                    <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-secondary btn-sm btn-group-item form-as-button float-left">
                         <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag=edit}</span>
                     </a>
@@ -53,7 +53,7 @@
                     {$item->deleteform|safe}
                 {/if}
                 {if $item->canreply}
-                <button class="btn btn-secondary float-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}" {if $blockid}data-blockid="{$blockid}"{/if}>
+                <button class="btn btn-secondary btn-sm float-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}" {if $blockid}data-blockid="{$blockid}"{/if}>
                     <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=reply section=artefact.comment}</span>
                 </button>
@@ -78,9 +78,9 @@
                 </div>
 
                 {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
-                <div class="metadata">
+                <div class="comment-privacy metadata">
                     {if $item->pubmessage}
-                    <em class="privatemessage"> {$item->pubmessage} </em> -
+                    <em class="privatemessage"> {$item->pubmessage} </em>
                     {/if}
 
                     {if $item->makepublicform}
@@ -111,13 +111,13 @@
                             {foreach $item->attachments item=a name=attachments}
                             <li class="list-group-item">
                                 <span class="title">
-                                    <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}">
+                                    <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}"  title="{$a->attachtitle}">
                                         <span class="text-small">{$a->attachtitle}</span>
                                     </a>
-                                    <span class="text-midtone text-small"> [{$a->attachsize}]</span>
                                 </span>
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}" class="download-link">
-                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>
+                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}"></span>
+                                    <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}</span>
                                 </a>
                             </li>
                             {/foreach}

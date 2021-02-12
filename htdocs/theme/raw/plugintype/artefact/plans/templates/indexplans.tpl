@@ -15,10 +15,10 @@
         <div class="list-group-item{$templateBackgroundClass}">
             <h2 class="list-group-item-heading text-inline">
                 <a href="{$WWWROOT}artefact/plans/plan/view.php?{$groupurlquery}id={$plan->id}">{$plan->title}</a>
-                {if $plan->template}
-                    <div class="text-tiny">{$templatetext}</div>
-                {/if}
             </h2>
+            {if $plan->template}
+                <span class="text-midtone"> - {$templatetext}</span>
+            {/if}
             <div class="btn-top-right btn-group btn-group-top">
                 {if $canedit}
                     <a href="{$WWWROOT}artefact/plans/plan/edit.php?{$groupurlquery}id={$plan->id}" title="{str(tag=editspecific arg1=$plan->title)|escape:html|safe}" class="btn btn-secondary btn-sm">

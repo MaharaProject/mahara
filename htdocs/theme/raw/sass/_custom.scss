@@ -95,6 +95,7 @@
     .loggedindate-container {
         margin-top: $spacing-base;
         max-width: 250px;
+        white-space: nowrap;
     }
     .duplicateemail-filter {
         margin-top: $spacing-base;
@@ -373,6 +374,10 @@
 // Used to remove the second border around the legal information
 #agreetoprivacy .card {
     border: 0;
+
+    p {
+      margin: $spacing-base 0 0 0;
+    }
 }
 
 .image-rotator {

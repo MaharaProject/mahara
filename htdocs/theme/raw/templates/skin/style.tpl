@@ -83,13 +83,11 @@ h1#viewh1 {
 .user-page-content h1,
 .user-page-content h2,
 .user-page-content h3,
-.user-page-content .card-body h3,
 .user-page-content h4,
 .user-page-content h5,
-.user-page-content h6,
-.user-page-content .list-group-item-heading,
-h1#viewh1 {
-    font-family: {$view_heading_font_family|safe};
+.user-page-content h6 {
+    font-family: {$view_text_font_family|safe};
+    color: {$view_text_font_color};
 }
 
 
@@ -119,16 +117,14 @@ h1#viewh1 {
 .user-page-content .card {
     background-color: transparent; /* take away default white card bg */
 }
-.user-page-content h1,
-.user-page-content h2,
-.user-page-content h3,
-.user-page-content h4,
-.user-page-content h5,
-.user-page-content h6,
 .user-page-content .text-midtone,
 .user-page-content .metadata,
-.user-page-content .postedon {
+.user-page-content .postedon,
+.user-page-content .text-muted {
     color: {$view_text_font_color};
+}
+.user-page-content .text-muted {
+    color: {$view_text_font_color} !important;
 }
 a[data-toggle="collapse"] .collapse-indicator,
 tr[data-toggle="collapse"] .collapse-indicator,

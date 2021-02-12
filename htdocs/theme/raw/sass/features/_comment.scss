@@ -12,9 +12,14 @@
 
     .col-width-100 .bt-comment &,
     .viewfooter &,
-    .modal-docked.active & {
-        .comment-content {
+    .modal-docked.active &,
+    .bt-peerassessment & {
+        .comment-content,
+        .comment-privacy {
           padding-left: 2.875rem; // 46px;
+        }
+        .comment-privacy .btn.btn-link {
+            width: auto;
         }
 
         @include media-breakpoint-up(lg) {
