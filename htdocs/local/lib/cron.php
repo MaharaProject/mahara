@@ -76,6 +76,7 @@ function get_changes($token) {
     }
     $auditlog_endpoint = PCNZ_REMOTEURL . 'api/RegisterAuditLogs';
     $practicingstatus_endpoint = PCNZ_REMOTEURL . 'api/PractitionerPracticingStatuses';
+    $certificate_endpoint = PCNZ_REMOTEURL . 'api/PracticingCertificates';
     $people = array();
     $lastrun = date(PCNZ_DATEFORMAT, strtotime(PCNZ_INTERVALCHECK, time())); // Check to the nearest hour as the : for minutes can't be handled
     // Fetch any personal details that have changed since last run
@@ -194,6 +195,33 @@ function get_changes($token) {
                 }
                 else {
                     // should just be an inactive person so we shouldn't do anything with this
+                }
+            }
+        }
+    }
+    // Fetch any APC certificates that have been issued since last run
+    $certificate_data = json_encode(
+        array(
+            "where" => array(
+                "dateupdated" => array(
+                    "gt" => $lastrun
+                )
+            )
+        )
+    );
+    $certificate_endpoint = $certificate_endpoint . '?filter=' . $certificate_data . '&access_token=' . $token;
+    $certificaterequest = array(
+        CURLOPT_URL        => $certificate_endpoint,
+        CURLOPT_HTTPGET    => 1,
+        CURLOPT_HTTPHEADER => array('Accept:application/json'),
+    );
+    $certificateinfo = mahara_http_request($certificaterequest);
+    if (isset($certificateinfo->data) && !empty($certificateinfo->data)) {
+        $data = json_decode($certificateinfo->data);
+        if ($data) {
+            foreach ($data as $person) {
+                if ($person->personid) {
+                    $people[$person->personid]['personalinfo'] = get_person($token, $person->personid);
                 }
             }
         }
