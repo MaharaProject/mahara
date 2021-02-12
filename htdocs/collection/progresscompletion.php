@@ -17,6 +17,7 @@ define('SECTION_PAGE', 'progress');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('collection.php');
+require_once(get_config('libroot') . 'objectionable.php');
 
 $collectionid = param_integer('id');
 
@@ -26,6 +27,7 @@ $javascript = array(
     'js/collection-navigation.js',
     'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
     'tinymce',
+    'viewmenu',
     'js/jquery/jquery-ui/js/jquery-ui.min.js',
     'js/lodash/lodash.js',
     'js/gridstack/gridstack.js',
@@ -72,6 +74,20 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
 }
 $headers[] = '<meta name="robots" content="noindex">';
 
+$objectionform = false;
+if ($USER->is_logged_in()) {
+    $objectionform = pieform(objection_form());
+    $reviewform = pieform(review_form($pview->get('id')));
+    if ($notrudeform = notrude_form()) {
+        $notrudeform = pieform($notrudeform);
+    }
+    // For admin to review objection claim, add comment
+    // about objectionable content and possibly remove access
+    if ($stillrudeform = stillrude_form()) {
+        $stillrudeform = pieform($stillrudeform);
+    }
+}
+
 $smarty = smarty(
     $javascript,
     $headers,
@@ -88,6 +104,19 @@ $smarty->assign('PAGETITLE', get_string('portfoliocompletion', 'collection'));
 $smarty->assign('maintitle', $collection->get('name'));
 $smarty->assign('name', get_string('portfoliocompletion', 'collection'));
 $smarty->assign('INLINEJAVASCRIPT', $blocksjs);
+if (isset($objectionform)) {
+    $smarty->assign('objectionform', $objectionform);
+    if ($USER->is_logged_in()) {
+        $smarty->assign('notrudeform', $notrudeform);
+        $smarty->assign('stillrudeform', $stillrudeform);
+    }
+    $smarty->assign('objectedpage', $pview->is_objectionable());
+    $smarty->assign('objector', $pview->is_objectionable($USER->get('id')));
+    $smarty->assign('objectionreplied', $pview->is_objectionable(null, true));
+}
+if (isset($reviewform)) {
+    $smarty->assign('reviewform', $reviewform);
+}
 
 if ($view->is_anonymous()) {
     $smarty->assign('author', get_string('anonymoususer'));

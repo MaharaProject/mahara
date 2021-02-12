@@ -3438,6 +3438,24 @@ function _get_views_trim_list(&$list, &$users, $limit, &$results) {
 }
 
 /**
+ * Given a collection id will return whether any view in collection is suspended or not
+ *
+ * @param string $id    Collection ID
+ *
+ * @returns boolean  Whether the specified collection is suspended or not.
+ */
+function is_collection_suspended($id) {
+    if ($views = get_column('collection_view', 'view', 'collection', $id)) {
+        foreach ($views as $view) {
+            $viewsuspended = is_view_suspended($view);
+            if ($viewsuspended) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+/**
  * Given a view id will return wether this view is suspended or not.
  *
  * @param mixed $view           viewid or View to check

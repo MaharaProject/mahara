@@ -34,7 +34,7 @@
                     {if $downloadurl}
                         <a id="downloadview-button" title="{str tag=copythisportfolio section=view}" href="{$downloadurl}">
                     {else}
-                        <a id="copyview-button" title="{str tag=copythisportfolio section=view}" href="{$copyurl}">
+                        <a id="copyview-button{if $headertype == "progresscompletion"}-progress{/if}" title="{str tag=copythisportfolio section=view}" href="{$copyurl}">
                     {/if}
                     <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
                     {str tag=copy section=mahara}
@@ -75,7 +75,7 @@
                     </li>
                 {/if}
                 <li class="dropdown-item">
-                    {if !($headertype == "matrix" || $headertype == "progresscompletion")}
+                    {if !($headertype == "matrix")}
                         {if $objector}
                             <span class="nolink">
                                 <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
