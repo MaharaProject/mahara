@@ -3881,6 +3881,24 @@ function clean_html($text, $xhtml=false) {
     $config->set('Attr.EnableID', true);
     $config->set('Attr.IDPrefix', 'user_');
 
+    /**
+     * Uncomment the following lines to allow further CSS property options
+     * to be valid. To see which will become valid see the file
+     * htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     * This should be replicated in clean_css() for stylesheets as well.
+     */
+    // $config->set('CSS.AllowTricky', true);
+
+    // Add extra CSS3 classes.
+    $config->set('CSS.Proprietary', true);
+    /// And remove the opacity parameters we just included.
+    $config->set('CSS.ForbiddenProperties', [
+        '-moz-opacity',
+        '-khtml-opacity',
+        'filter',
+        'opacity',
+    ]);
+
     // Allow base64 images via the 'data' option
     // need to set all the allowed schemes for this to work
     $config->set('URI.AllowedSchemes', array('http' => true,
@@ -3996,11 +4014,21 @@ function clean_css($input_css, $preserve_css=false) {
     $config->set('CSS.AllowImportant', true);
     $config->set('CSS.Trusted', true);
     /**
-     * Uncomment the following lines to allow further CSS property options to be valid.
-     * To see which will become valid see the file htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     * Uncomment the following lines to allow further CSS property options
+     * to be valid. To see which will become valid see the file
+     * htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     * This should be replicated in clean_html() for inline css as well.
      */
     // $config->set('CSS.AllowTricky', true);
-    // $config->set('CSS.Proprietary', true);
+
+    // Add extra CSS3 classes.
+    $config->set('CSS.Proprietary', true);
+    // And remove the opacity parameters we just included.
+    $config->set('CSS.ForbiddenProperties', [
+        '-moz-opacity',
+        '-khtml-opacity',
+        'filter',
+    ]);
 
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
