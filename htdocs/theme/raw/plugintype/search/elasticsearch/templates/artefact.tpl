@@ -1,4 +1,3 @@
-<div class="row">
 {if ($secfacetterm == "Image" || $record->artefacttype == 'profileicon') && $record->thumb}
     <img src="{$record->thumb}" alt="" class="artefact-img">
     <h2 class="title list-group-item-heading text-inline">
@@ -33,22 +32,23 @@
         {/if}
     </h2>
 {/if}
-    <span class="artefacttype text-midtone">
-        {if $secfacetterm == "Journalentry"}
-            ({str tag=blogpost section=search.elasticsearch})
-        {elseif $secfacetterm == "Forumpost"}
-            ({str tag=forumpost section=search.elasticsearch})
-        {elseif $secfacetterm == "Resume"}
-            ({str tag=resume section=search.elasticsearch})
-        {elseif $secfacetterm == "Wallpost"}
-            ({str tag=wallpost section=search.elasticsearch})
-        {else}
-            ({$secfacetterm})
-        {/if}
-        {if $record->deleted}
-            ({str tag=deleted section=search.elasticsearch})
-        {/if}
-    </span>
+<span class="artefacttype text-midtone">
+    {if $secfacetterm == "Journalentry"}
+        ({str tag=blogpost section=search.elasticsearch})
+    {elseif $secfacetterm == "Forumpost"}
+        ({str tag=forumpost section=search.elasticsearch})
+    {elseif $secfacetterm == "Resume"}
+        ({str tag=resume section=search.elasticsearch})
+    {elseif $secfacetterm == "Wallpost"}
+        ({str tag=wallpost section=search.elasticsearch})
+    {else}
+        ({$secfacetterm})
+    {/if}
+    {if $record->deleted}
+        ({str tag=deleted section=search.elasticsearch})
+    {/if}
+</span>
+<div class="row">
     <div class="col-md-7">
         {if $record->createdbyname}
         <div class="createdby text-small">
@@ -74,7 +74,7 @@
     <!-- RESUMEITEMS -->
     <div class="col-md-5">
         {if is_array($record->resumeitems) && count($record->resumeitems) > 0}
-        <strong class="text-small">{str tag=contains section=search.elasticsearch}:</strong>
+        <div class="text-small">{str tag=contains section=search.elasticsearch}:</div>
         <ul class="list-group list-unstyled text-small">
         {foreach from=$record->resumeitems key=rid item=resume}
             {if $resume->title}<li>{$resume->title}</li>{/if}
@@ -88,9 +88,9 @@
         {if is_array($record->views) && count($record->views) > 0}
         <div class="usedon text-small">
             {if count($record->views) > 1}
-                <strong>{str tag=usedonpages section=search.elasticsearch}:</strong>
+                {str tag=usedonpages section=search.elasticsearch}:
             {else}
-                <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
+                {str tag=usedonpage section=search.elasticsearch}:
             {/if}
             <ul class="list-group list-unstyled text-small">
             {foreach from=$record->views key=id item=view}

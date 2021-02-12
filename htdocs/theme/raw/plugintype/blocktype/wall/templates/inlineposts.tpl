@@ -14,12 +14,12 @@
                     {if $wallpost->deletable}
                     <div class="btn-group btn-group-top comment-item-buttons">
                         {* {if $ownwall}
-                            <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}" class="btn btn-secondary btn-group-item form-as-button float-left">
+                            <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}" class="btn btn-secondary btn-sm btn-group-item form-as-button float-left">
                                 <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str tag='reply' section='blocktype.wall'}</span>
                             </a>
                         {/if}*}
-                        <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="btn btn-secondary btn-group-item form-as-button float-left">
+                        <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="btn btn-secondary btn-sm btn-group-item form-as-button float-left">
                             <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
                         </a>

@@ -20,7 +20,7 @@
         </div>
         {if $record->groupadmins}
         <div class="groupadmin text-small">
-            <strong>{str tag=groupadmins section=group}:</strong>
+            {str tag=groupadmins section=group}:
             {foreach name=admins from=$record->groupadmins item=user}
                 <a href="{profile_url($user)}">{$user|display_name}</a>
                 {if !$.foreach.admins.last}, {/if}

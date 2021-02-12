@@ -57,7 +57,7 @@
         <div class="metadata">
             {if $item->pubmessage}
             <em class="privatemessage">
-                {$item->pubmessage} -
+                {$item->pubmessage}
             </em>
             {/if}
 
