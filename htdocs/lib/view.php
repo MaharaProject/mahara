@@ -6841,10 +6841,12 @@ class View {
 
 
     // Returns a boolean if access is pending/suspended or not
-    public static function access_override_pending($v) {
+    public static function access_override_pending($v, $collection=false) {
+        if ($collection) {
+            return is_collection_suspended($collection);
+        }
         return is_view_suspended($v['id']);
     }
-
 
     /**
      * Get all views & collections for a (user,group), grouped
@@ -6880,7 +6882,7 @@ class View {
             $view = current($c['views']);
             $viewindex[$view['id']] = array('type' => 'collections', 'id' => $c['id']);
             $c['access']  = self::access_override_description($view);
-            $c['pending'] = self::access_override_pending($view);
+            $c['pending'] = self::access_override_pending($view, $c['id']);
             $c['viewid']  = $view['id'];
         }
         foreach ($data['views'] as &$v) {

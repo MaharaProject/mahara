@@ -49,12 +49,15 @@ function objection_form() {
 }
 
 function objection_form_submit(Pieform $form, $values) {
-    global $USER, $view, $artefact;
+    global $USER, $view, $pview, $artefact;
 
     if (!$USER->is_logged_in()) {
         throw new AccessDeniedException();
     }
-
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
     require_once('activity.php');
 
     db_begin();
@@ -104,7 +107,12 @@ function objection_form_submit(Pieform $form, $values) {
 }
 
 function objection_form_cancel_submit(Pieform $form) {
-    global $view;
+    global $view, $pview;
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
+
     $form->reply(PIEFORM_OK, array(
             'goto' => $view->get_url(),
             'objection_cancelled' => true,
@@ -119,7 +127,12 @@ function objection_form_cancel_submit(Pieform $form) {
  * @returns array Form elements.
  */
 function notrude_form() {
-    global $USER, $view, $artefact;
+    global $USER, $view, $pview, $artefact;
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
+
     $owner = $view->get('owner');
     if (!
         (
@@ -183,11 +196,15 @@ function notrude_form() {
 }
 
 function notrude_form_submit(Pieform $form, $values) {
-    global $view, $artefact, $USER;
+    global $view, $pview, $artefact, $USER;
 
     require_once('activity.php');
 
     db_begin();
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
 
     $objection = new stdClass();
     if ($artefact) {
@@ -252,7 +269,12 @@ function notrude_form_submit(Pieform $form, $values) {
  * @returns array Form elements.
  */
 function stillrude_form() {
-    global $USER, $view, $artefact;
+    global $USER, $view, $pview, $artefact;
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
+
     $owner = $view->get('owner');
     if (!
         (
@@ -314,9 +336,13 @@ function stillrude_form() {
 }
 
 function stillrude_form_submit(Pieform $form, $values) {
-    global $view, $artefact, $USER;
+    global $view, $pview, $artefact, $USER;
 
     require_once('activity.php');
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
 
     db_begin();
     $review = !empty($values['adminreply']) ? $values['adminreply'] : $values['report'];
@@ -438,7 +464,11 @@ function review_form($viewid = null) {
 }
 
 function review_form_submit(Pieform $form, $values) {
-    global $USER, $view;
+    global $USER, $view, $pview;
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
 
     if (!$USER->is_logged_in() &&
         $USER->get('id') === $view->get_owner_object()->get('owner')) {
@@ -493,7 +523,12 @@ function review_form_submit(Pieform $form, $values) {
 }
 
 function review_form_cancel_submit(Pieform $form) {
-    global $view;
+    global $view, $pview;
+    if ($pview) {
+        // $pview = the progress page view
+        $view = $pview;
+    }
+
     $form->reply(PIEFORM_OK, array(
             'goto' => $view->get_url(),
         )
