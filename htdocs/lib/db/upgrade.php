@@ -2135,5 +2135,18 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021042200) {
+        log_debug('Add new activity type for sending view access revocation notifications');
+        execute_sql("INSERT INTO {activity_type}
+         (name, admin, delay, allownonemethod, defaultmethod)
+         VALUES('viewaccessrevoke', 0, 0, 0, 'email') ");
+    }
+
+    if ($oldversion < 2021042201) {
+        log_debug('Adding removeviewaccess event type');
+        $event = (object) array( "name" => "removeviewaccess");
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 }

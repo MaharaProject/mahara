@@ -497,6 +497,7 @@ $string['entersearchquery'] = 'Enter search query';
 $string['allow'] = 'Allow';
 $string['comments'] = 'Comments';
 $string['moderate'] = 'Moderate';
+$string['review'] = 'Review';
 
 // Group reports
 $string['sharedby'] = 'Shared by';
