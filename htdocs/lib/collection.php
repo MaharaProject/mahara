@@ -1800,9 +1800,9 @@ class Collection {
      * @return integer total of actions
      */
     public function get_signed_off_and_verified_percentage() {
-        $numberofpages = $this->views['count'];
+        $views = $this->views();
+        $numberofpages = !empty($views['count']) ? $views['count'] : 0;
         if ($numberofpages == 0) return false;
-
         safe_require('artefact', 'peerassessment');
         $numberofcompletedactions = 0;
         $numberofactions = 0;

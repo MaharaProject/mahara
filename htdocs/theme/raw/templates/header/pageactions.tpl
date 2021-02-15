@@ -90,6 +90,14 @@
                     {/if}
                 </li>
                 {/if}
+                {if $revokeaccessform}
+                    <li class="dropdown-item">
+                        <a id="revokeaccesslink" href="#" data-toggle="modal" data-target="#revokemyaccess-form">
+                            <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">{str tag=removeaccess}</span>
+                        </a>
+                    </li>
+                {/if}
                 {if $userisowner && $objectedpage}
                 <li class="dropdown-item">
                     <a id="review_link" href="#" data-toggle="modal" data-target="#review-form">

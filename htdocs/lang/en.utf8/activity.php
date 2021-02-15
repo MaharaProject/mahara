@@ -16,6 +16,7 @@ $string['typeusermessage'] = 'Message from other people';
 $string['typefeedback'] = 'Comment';
 $string['typewatchlist'] = 'Watchlist';
 $string['typeviewaccess'] = 'New page access';
+$string['typeviewaccessrevoke'] = 'Revoked page access';
 $string['typecontactus'] = 'Contact us';
 $string['typeobjectionable'] = 'Objectionable content';
 $string['typevirusrepeat'] = 'Repeat virus upload';

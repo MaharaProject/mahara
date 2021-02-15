@@ -20,6 +20,7 @@ require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'objectionable.php');
+require_once(get_config('libroot'). 'revokemyaccess.php');
 require_once('institution.php');
 require_once('group.php');
 safe_require('artefact', 'comment');
@@ -302,7 +303,11 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
     $addfeedbackform = pieform(ArtefactTypeComment::add_comment_form($defaultprivate, $moderate));
 }
 $objectionform = false;
+$revokeaccessform = false;
 if ($USER->is_logged_in()) {
+    if (record_exists('view_access', 'view', $view->get('id'), 'usr', $USER->get('id'))) {
+        $revokeaccessform = pieform(revokemyaccess_form($view->get('id')));
+    }
     $objectionform = pieform(objection_form());
     $reviewform = pieform(review_form($view->get('id')));
     if ($notrudeform = notrude_form()) {
@@ -702,6 +707,9 @@ if (isset($objectionform)) {
     $smarty->assign('objectedpage', $view->is_objectionable());
     $smarty->assign('objector', $view->is_objectionable($USER->get('id')));
     $smarty->assign('objectionreplied', $view->is_objectionable(null, true));
+}
+if (isset($revokeaccessform)) {
+    $smarty->assign('revokeaccessform', $revokeaccessform);
 }
 if (isset($reviewform)) {
     $smarty->assign('reviewform', $reviewform);
