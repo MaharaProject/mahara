@@ -955,6 +955,7 @@ function core_install_firstcoredata_defaults() {
         'addsubmission',
         'releasesubmission',
         'updateviewaccess',
+        'removeviewaccess',
         'sharedcommenttogroup'
     );
 
@@ -1008,6 +1009,7 @@ function core_install_firstcoredata_defaults() {
         array('virusrelease',       1, 1, 1, 'email'),
         array('institutionmessage', 0, 0, 1, 'email'),
         array('groupmessage',       0, 1, 1, 'email'),
+        array('viewaccessrevoke',   0, 0, 0, 'email')
     );
 
     foreach ($activitytypes as $at) {

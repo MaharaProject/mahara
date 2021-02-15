@@ -590,3 +590,10 @@ div.toolbarhtml {
 #editmenus td.edit .btn-group {
     margin-top: $line-height-base * 1rem;
 }
+
+#sharedviewlist .icon {
+    font-size: 1.25rem; // 20px
+    &.icon-minus {
+        color: scale-color($gray-300, $lightness: 28%);
+    }
+}
