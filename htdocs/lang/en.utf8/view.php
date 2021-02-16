@@ -576,3 +576,5 @@ $string['copylockeddescription'] = 'This is a template copy. Change this setting
 
 $string['canteditcollectionlocked'] = 'Unable to edit the portfolio page because the collection is locked.';
 $string['canteditprogress'] = 'Unable to edit the portfolio completion page because the collection is locked or the page was copied from a template.';
+
+$string['accessdeniedaccesss'] = 'You are not allowed to change the access permissions any more.';

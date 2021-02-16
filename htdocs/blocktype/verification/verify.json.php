@@ -42,11 +42,7 @@ if ($config['verified']) {
         $verifiedon = get_string('verifiedon', 'blocktype.verification', format_date($config['verifieddate']));
     }
     if (!empty($config['lockportfolio'])) {
-        // Lock the collection
-        if ($view->get_collection()) {
-            $collectionid = $view->get_collection()->get('id');
-            execute_sql("UPDATE {collection} SET lock = 1 WHERE id = ?", array($collectionid));
-        }
+        $view->get_collection()->lock_collection();
     }
     if (!empty($config['notification'])) {
         // Send notification to page owner
@@ -113,6 +109,10 @@ else {
     }
 
     $verifiedon = '';
+    // check if is the last verified locking statement block
+    if (PluginBlocktypeVerification::is_last_locking_block($block)) {
+        $view->get_collection()->unlock_collection();
+    }
 }
 
 $block->set('configdata', $config);

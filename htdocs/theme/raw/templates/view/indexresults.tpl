@@ -128,7 +128,7 @@
                                     <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                {if $view.collid && !$view.submittedto && !$noedit}
+                                {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
                                     <li class="dropdown-item">
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
                                             <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
@@ -137,7 +137,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked)}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
                                     <li class="dropdown-item">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
@@ -150,7 +150,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked)}
+                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
                                     <li class="dropdown-item">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
