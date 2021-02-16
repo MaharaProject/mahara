@@ -134,3 +134,4 @@ $string['noentityidpfound'] = 'No Identity Provider ID found';
 $string['novalidauthinstanceprovided'] = 'Your selection is not possible. Please select a different institution.';
 $string['identityprovider'] = 'Identity Provider';
 $string['selectmigrateto'] = 'Select institution to move to...';
+$string['samlneedtoremovephar'] = 'Unable to remove %s file. Please delete the file and then run "make ssphp" again.';
