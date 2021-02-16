@@ -336,11 +336,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         $view = new View($form->get_property('viewid'));
 
         if ($record->private != 1 && !empty($configdata['lockportfolio'])) {
-            // Lock the collection
-            if ($view->get_collection()) {
-                $collectionid = $view->get_collection()->get('id');
-                execute_sql("UPDATE {collection} SET lock = 1 WHERE id = ?", array($collectionid));
-            }
+            $view->get_collection()->lock_collection();
         }
 
         if ($record->private != 1 && !empty($configdata['notification'])) {
@@ -367,7 +363,12 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
                 'urltext' => $view->get('title'),
             ));
         }
-
+        if (empty($newtext)) {
+            // check if is the last verified locking statement block
+            if (PluginBlocktypeVerification::is_last_locking_block($instance)) {
+                $view->get_collection()->unlock_collection();
+            }
+        }
         $form->reply(PIEFORM_OK, array(
             'message'  => get_string('addcommentsuccess' . ($record->private ? 'draft' : ''), 'blocktype.verification', $instance->get('title')),
             'comments' => $commentdata,
@@ -589,5 +590,35 @@ EOF;
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();
+    }
+
+    /**
+     * Checks if is the last verified locking statement block
+     */
+    public static function is_last_locking_block(BlockInstance $instance) {
+        $viewid = $instance->get_view()->get('id');
+
+        $sql = "SELECT bi.id, bi.configdata, text FROM {block_instance} bi
+        LEFT JOIN {blocktype_verification_comment} bvc
+        ON bi.id = bvc.instance
+        WHERE bi.blocktype = 'verification'
+        AND bi.view = ? AND bi.id != ?";
+        $verblocks = get_records_sql_assoc($sql, array($viewid, $instance->get('id')));
+        $unlockcollection = true;
+        foreach ($verblocks as $b) {
+            $verblock = new BlockInstance($b->id);
+            $config = $verblock->get('configdata');
+            if ($config['lockportfolio'] == 1 && empty($config['addcomment']) && isset($config['verified']) && $config['verified']) {
+                $unlockcollection = false;
+                break;
+            }
+            if ($config['lockportfolio'] == 1 && $config['addcomment'] == 1) {
+                if ($b->text) {
+                    $unlockcollection = false;
+                }
+                break;
+            }
+        }
+        return $unlockcollection;
     }
 }

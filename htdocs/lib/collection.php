@@ -1837,6 +1837,32 @@ class Collection {
         }
         return $trackingid;
     }
+
+    public function lock_collection() {
+        // Lock the collection
+        $collectionid = $this->get('id');
+        execute_sql("UPDATE {collection} SET lock = 1 WHERE id = ?", array($collectionid));
+        // lock all views in that collection
+        $sql = "UPDATE {view} SET locked = 1
+            WHERE id IN (
+                SELECT view FROM {collection_view}
+                WHERE collection = ?
+            )";
+        execute_sql($sql, array($collectionid));
+    }
+
+    public function unlock_collection() {
+        // Lock the collection
+        $collectionid = $this->get('id');
+        execute_sql("UPDATE {collection} SET lock = 0 WHERE id = ?", array($collectionid));
+        // lock all views in that collection
+        $sql = "UPDATE {view} SET locked = 0
+            WHERE id IN (
+                SELECT view FROM {collection_view}
+                WHERE collection = ?
+            )";
+        execute_sql($sql, array($collectionid));
+    }
 }
 
 class CollectionSubmissionException extends UserException {
