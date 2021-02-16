@@ -1,3 +1,8 @@
-a.signoff_action {
+a.signoff_action,
+a.unsignoff_action {
     text-decoration: none;
+}
+
+.progress-bar {
+    color: $theme-text-color;
 }
