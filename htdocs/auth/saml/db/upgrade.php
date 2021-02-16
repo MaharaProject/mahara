@@ -54,8 +54,15 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
         set_config_plugin('auth', 'saml', 'version', '1.18.4');
     }
     if ($oldversion < 2020030101) {
-         set_config_plugin('auth', 'saml', 'version', '1.18.7');
+        set_config_plugin('auth', 'saml', 'version', '1.18.7');
     }
-
+    if ($oldversion < 2021021700) {
+        set_config_plugin('auth', 'saml', 'version', '1.19.0');
+        // delete the external/composer.phar so on next make ssphp it will download composer v2
+        if (file_exists(get_config('docroot') . '../external/composer.phar') && !@unlink(get_config('docroot') . '../external/composer.phar')) {
+            $extroot = preg_replace('/\/htdocs/', '', get_config('docroot'));
+            log_warn(get_string('samlneedtoremovephar', 'auth.saml', $extroot . 'external/composer.phar'), true, false);
+        }
+    }
     return $status;
 }

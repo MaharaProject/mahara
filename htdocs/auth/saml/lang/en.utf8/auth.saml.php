@@ -107,3 +107,4 @@ $string['newkeycreated'] = 'New key / certificate created';
 $string['deleteoldkeytext'] = 'Delete old certificate';
 $string['oldkeydeleted'] = 'Old key / certificate deleted';
 $string['keyrollfailed'] = 'Failed to remove old key / certificate';
+$string['samlneedtoremovephar'] = 'Unable to remove %s file. Please delete the file and then run "make ssphp" again.';
