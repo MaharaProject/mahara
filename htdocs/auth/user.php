@@ -1340,6 +1340,9 @@ class User {
     public function can_edit_view($v) {
         $owner = $v->get('owner');
         if ($owner > 0 && $owner == $this->get('id')) {
+            if (($col = $v->get_collection()) && $col->get('lock') && $v->get('locked')) {
+                return false;
+            }
             return true;
         }
         $institution = $v->get('institution');

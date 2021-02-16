@@ -3057,6 +3057,10 @@ function can_view_view($view, $user_id=null) {
         return false;
     }
 
+    // if the owner want to view the page, allow it
+    if ($view->get('owner') == $USER->get('id')) {
+        return true;
+    }
     if ($user_id && $user->can_edit_view($view)) {
         return true;
     }

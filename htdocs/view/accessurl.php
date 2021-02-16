@@ -54,7 +54,7 @@ $institution = $view->get('institution');
 View::set_nav($group, $institution, true);
 
 if (!$USER->can_edit_view($view)) {
-    throw new AccessDeniedException();
+    throw new AccessDeniedException(get_string('accessdeniedaccesss', 'view'));
 }
 if ($group && !group_within_edit_window($group)) {
     throw new AccessDeniedException();

@@ -3845,17 +3845,17 @@ class View {
 
         $select = '
             SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
-            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid, v.coverimage';
+            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage';
         $collselect = '
             UNION
             SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0 ORDER BY view LIMIT 1) as id,
             null AS vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
             c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null AS vvisits,
-                   (SELECT COUNT(*) FROM {collection_view} cv JOIN {view} v ON v.id = cv.view WHERE cv.collection = c.id AND v.type != \'progress\') AS numviews, c.id AS collid, c.coverimage';
+                   (SELECT COUNT(*) FROM {collection_view} cv JOIN {view} v ON v.id = cv.view WHERE cv.collection = c.id AND v.type != \'progress\') AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage';
         $emptycollselect = '
             UNION
             SELECT null as id, null as vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
-            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, c.id AS collid, c.coverimage';
+            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage';
 
         $from = '
             FROM {view} v
