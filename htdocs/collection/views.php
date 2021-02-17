@@ -218,6 +218,20 @@ function addviews_submit(Pieform $form, $values) {
     $collectiondifferent = false;
     $different = false;
     $differentarray = array();
+
+    // if the collection has been set to be auto copy and it doesnt have any views yet,
+    // make sure the new views are shared with the institution
+    $institution = $collection->get('institution');
+    if (isset($institution) && $institution && empty($viewids) && $collection->get('autocopytemplate')) {
+        $time = db_format_timestamp(time());
+        ensure_record_exists(
+            'view_access',
+            (object) array('view' => $chosen[0], 'institution' => $institution),
+            (object) array('view' => $chosen[0], 'institution' => $institution, 'ctime' => $time),
+            'id'
+        );
+    }
+    
     foreach ($chosen as $viewid) {
         $view = new View($viewid);
         $viewaccess = $view->get_access();
@@ -248,6 +262,10 @@ function addviews_submit(Pieform $form, $values) {
         }
     }
     $count = $collection->add_views($values);
+    if ($collection->get('template')) {
+        // added views should be set to template too
+        $collection->set_views_as_template();
+    }
     // Check if the collection has a secret url token for any of the existing views
     $hassecreturl = false;
     $views_all = array_merge($differentarray, $viewids);

@@ -32,6 +32,8 @@ class Collection {
     private $coverimage;
     private $progresscompletion;
     private $lock;
+    private $autocopytemplate;
+    private $template;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -391,6 +393,8 @@ class Collection {
 
         $data->progresscompletion = $colltemplate->get('progresscompletion');
         $data->lock = $colltemplate->get('lock');
+        $data->autocopytemplate = 0;
+        $data->template = 0;
         $collection = self::save($data);
         if ($trackoriginal) {
             $collection->track_template($templateid);
@@ -713,6 +717,20 @@ class Collection {
                 'type'  => 'switchbox',
                 'title' => get_string('progresscompletion', 'admin'),
                 'description' => get_string('progresscompletiondesc', 'collection'),
+                'defaultvalue' => 0,
+            );
+        }
+        if (isset($this->institution) && $this->institution) {
+            $elements['template'] = array(
+                'type'  => 'switchbox',
+                'title' => get_string('template', 'collection'),
+                'description' => get_string('templatedesc', 'collection'),
+                'defaultvalue' => 0,
+            );
+            $elements['autocopytemplate'] = array(
+                'type'  => 'switchbox',
+                'title' => get_string('autocopytemplate', 'collection'),
+                'description' => get_string('autocopytemplatedesc', 'collection'),
                 'defaultvalue' => 0,
             );
         }
@@ -1838,6 +1856,80 @@ class Collection {
         return $trackingid;
     }
 
+    /**
+     * Given an institution name we set this collection to be the auto copy template for the institution
+     * If setting to autocopy and there is another collection with the auto copy template set
+     * to true, then we call unset_active_collection_template on that one
+     */
+    public function set_active_collection_template($institution) {
+        $collectionid = $this->get('id');
+        $oldtemplate = get_field('collection', 'id', 'autocopytemplate', 1, 'institution', $institution);
+        // if the collection is already the auto copy, then do nothing
+        if ($collectionid && $oldtemplate != $collectionid) {
+            // remove the auto copy setting from the old collection
+            if ($oldtemplate) {
+                $this->unset_active_collection_template($oldtemplate, $institution, true);
+            }
+
+            // set new collection to be auto copy template
+            set_field('collection', 'autocopytemplate', 1, 'id', $collectionid);
+            // share collection with the institution
+            $viewids = get_column('collection_view', 'view', 'collection', $collectionid);
+            if ($viewids) {
+                $time = db_format_timestamp(time());
+                foreach ($viewids as $vid) {
+                    $newwhere = (object) array(
+                        'view'       => $vid,
+                        'institution' => $institution,
+                    );
+                    $newaccess = clone $newwhere;
+                    $newaccess->ctime = $time;
+                    ensure_record_exists('view_access', $newwhere, $newaccess, 'id');
+                }
+            }
+        }
+    }
+
+    /**
+     * Given an institution name and a collection id
+     * We set that collection to be auto copy false
+     * and remove the sharing permission to the institution specified
+     */
+    public function unset_active_collection_template($id, $institution, $keeptemplate) {
+        set_field('collection', 'autocopytemplate', 0, 'id', $id);
+        // remove sharing permissions with institution for the collection
+        $viewids = get_column('collection_view', 'view', 'collection', $id);
+        if ($viewids) {
+            foreach ($viewids as $vid) {
+                delete_records('view_access', 'view', $vid, 'institution', $institution);
+                set_field('view', 'copynewuser', 0, 'id', $vid);
+                set_field('view', 'template', 0, 'id', $vid);
+                if (!$keeptemplate) {
+                    set_field('view', 'locktemplate', 0, 'id', $vid);
+                }
+            }
+        }
+    }
+
+    public function set_views_as_template($autocopy=null) {
+        $viewids = get_column('collection_view', 'view', 'collection', $this->get('id'));
+        if ($viewids) {
+            foreach($viewids as $vid) {
+                set_field('view', 'locktemplate', 1, 'id', $vid);
+                set_field('view', 'lockblocks', 1, 'id', $vid);
+                set_field('view', 'copynewuser', 1, 'id', $vid);
+                if (!is_null($autocopy)) {
+                    if ($autocopy) {
+                        set_field('view', 'template', 1, 'id', $vid);
+                    }
+                    else {
+                        set_field('view', 'template', 0, 'id', $vid);
+                    }
+                }
+            }
+        }
+    }
+
     public function lock_collection() {
         // Lock the collection
         $collectionid = $this->get('id');
@@ -1891,11 +1983,10 @@ class CollectionSubmissionException extends UserException {
  * @return the Collection object for the active autocopy template or null
  */
 function get_active_collection_template($institution='mahara') {
-    /* Once we have the WR 349175 point 3.5 done
     if ($collectionid = get_field('collection', 'id', 'autocopytemplate', 1, 'institution', $institution)) {
         $collection = new Collection($collectionid);
         return $collection;
     }
-    */
     return false;
 }
+

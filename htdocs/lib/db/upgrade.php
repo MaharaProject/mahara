@@ -2114,5 +2114,23 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2020092115) {
+        $table = new XMLDBTable('collection');
+        if (table_exists($table)) {
+            log_debug('Adding autocopytemplate column to collection table');
+            $field = new XMLDBField('autocopytemplate');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+            }
+            log_debug('Adding template column to collection table');
+            $field = new XMLDBField('template');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+            }
+        }
+    }
+
     return $status;
 }

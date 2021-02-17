@@ -20,7 +20,7 @@
             </a>
         {/if}
     {else}
-        <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}" title="{str tag=editcontent1 section=view}">
+        <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/blocks.php?id={$viewid}{/if}" title="{str tag=editcontent1 section=view}">
             <span class="icon icon-pencil-alt" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=editcontent1 section=view}</span>
         </a>
