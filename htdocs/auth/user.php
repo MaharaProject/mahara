@@ -1659,11 +1659,18 @@ class User {
                 }
             }
             else {
+                $titlefromtemplate = false;
+                $trackoriginal = false;
+                $c = new Collection($collections[$tid]->id);
+                if ($c->get('autocopytemplate')) {
+                    $titlefromtemplate = true;
+                    $trackoriginal = true;
+                }
                 // Copy full collection
                 Collection::create_from_template(array(
                     'owner' => $this->get('id'),
                     'title' => $collections[$tid]->name,
-                ), $tid, $this->get('id'), $checkviewaccess);
+                ), $tid, $this->get('id'), $checkviewaccess, $titlefromtemplate, $trackoriginal);
             }
         }
         db_commit();

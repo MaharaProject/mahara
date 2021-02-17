@@ -2044,6 +2044,8 @@ EOD;
         $data->navigation = 1;
         $data->submittedstatus = 0;
         $data->progresscompletion = 0;
+        $data->autocopytemplate = 0;
+        $data->template = 0;
         $collection = new Collection(0, $data);
         $collection->commit();
 

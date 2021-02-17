@@ -45,6 +45,20 @@ if (!empty($direction)) {
     // items dragged from the 'add to collection' list. (currently handles only one at a time)
     $diff = array_diff($direction_array['row'], $viewids);
     if (!empty($diff)) {
+
+        // if the collection has been set to be auto copy and it doesnt have any views yet,
+        // make sure the new views are shared with the institution
+        $institution = $collection->get('institution');
+        if (isset($institution) && $institution && empty($viewids) && $collection->get('autocopytemplate')) {
+            $time = db_format_timestamp(time());
+            ensure_record_exists(
+                'view_access',
+                (object) array('view' => $diff[0], 'institution' => $institution),
+                (object) array('view' => $diff[0], 'institution' => $institution, 'ctime' => $time),
+                'id'
+            );
+        }
+
         // turn it into an array understood by $collection->add_views()
         $addviews = array();
         $newviewid = false;
@@ -53,6 +67,7 @@ if (!empty($direction)) {
             // We need to check that the id's are allowed to be added to the collection
             // by checking if the user can edit the view.
             $view = new View($v);
+
             $viewowner = $view->get('owner');
             $viewgroup = $view->get('group');
             $viewaccess = $view->get_access();
@@ -68,6 +83,10 @@ if (!empty($direction)) {
         }
         if (!empty($addviews)) {
             $collection->add_views($addviews);
+            if ($collection->get('template')) {
+                // added views should be set to template too
+                $collection->set_views_as_template();
+            }
             // New view permissions
             $collectiondifferent = false;
             $different = false;
