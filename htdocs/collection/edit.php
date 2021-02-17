@@ -128,6 +128,51 @@ $form = pieform(array(
     'elements' => $elements,
 ));
 
+$autocopyjs = '';
+if (isset($institutionname)) {
+    $updatingautocopytemplatewarning = null;
+    // check if there's another collection set up as institution auto copy template
+    $oldtemplate = get_active_collection_template($institutionname);
+    if ($oldtemplate && $oldtemplate->get('id') != $collection->get('id')) {
+        $updatingautocopytemplatewarning = get_string(
+            'updatingautocopytemplatewarning',
+            'collection',
+            institution_display_name($institutionname),
+            $oldtemplate->get('name')
+        );
+    }
+    $onlyactivetemplatewarning = get_string('onlyactivetemplatewarning', 'collection');
+
+    $autocopyjs = <<<EOF
+jQuery(function($) {
+    $('#edit_autocopytemplate').on('click', function() {
+        // show modal
+        var value = $('#edit input[name=autocopytemplate]:checked').val();
+        if (value == 'on') {
+            $("#set-confirm-form").modal('show');
+        }
+        else {
+            $("#unset-confirm-form").modal('show');
+        }
+    });
+    $('#set-cancel-button').on('click', function() {
+        $("#set-confirm-form").modal('hide');
+        $('#edit input[name=autocopytemplate]').prop('checked', false);
+    });
+    $('#set-yes-button').on('click', function() {
+        $("#set-confirm-form").modal('hide');
+    });
+    $('#unset-cancel-button').on('click', function() {
+        $("#unset-confirm-form").modal('hide');
+        $('#edit input[name=autocopytemplate]').prop('checked', true);
+    });
+    $('#unset-yes-button').on('click', function() {
+        $("#unset-confirm-form").modal('hide');
+    });
+});
+EOF;
+}
+
 $inlinejs = <<<EOF
 function edit_callback(form, data) {
     edit_coverimage.callback(form, data);
@@ -138,8 +183,13 @@ $smarty = smarty();
 setpageicon($smarty, 'icon-folder-open');
 
 $smarty->assign('headingclass', 'page-header');
-$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs . $autocopyjs);
 $smarty->assign('form', $form);
+if (isset($institutionname)) {
+    $smarty->assign('institutionname', $institutionname);
+    $smarty->assign('updatingautocopytemplatewarning', $updatingautocopytemplatewarning);
+    $smarty->assign('onlyactivetemplatewarning', $onlyactivetemplatewarning);
+}
 $smarty->display('collection/edit.tpl');
 
 function collectionedit_validate(Pieform $form, $values) {
@@ -164,13 +214,22 @@ function collectionedit_validate(Pieform $form, $values) {
 }
 
 function collectionedit_submit(Pieform $form, $values) {
-    global $SESSION, $new, $copy, $urlparams, $USER;
+    global $SESSION, $new, $copy, $urlparams, $institutionname, $collection, $USER;
     $values['navigation'] = (int) $values['navigation'];
     if (isset($values['progresscompletion'])) {
         $values['progresscompletion'] = (int) $values['progresscompletion'];
     }
     if (isset($values['lock'])) {
         $values['lock'] = (int) $values['lock'];
+    }
+    if (isset($values['template'])) {
+        $values['template'] = (int) $values['template'];
+    }
+    if (isset($values['autocopytemplate'])) {
+        // need to deal with this after we have a collection id
+        $autocopytemplate = (int)$values['autocopytemplate'];
+        unset($values['autocopytemplate']);
+        $values['template'] = $autocopytemplate ? 1 : $values['template'];
     }
     if (empty($values['framework'])) {
         $values['framework'] = null;
@@ -197,7 +256,22 @@ function collectionedit_submit(Pieform $form, $values) {
             }
         }
     }
-
+    if (!empty($values['template'])) {
+        if (isset($autocopytemplate)) {
+            $collection->set_views_as_template($autocopytemplate);
+        }
+        else {
+            $collection->set_views_as_template(null);
+        }
+    }
+    if (isset($autocopytemplate)) {
+        if ($autocopytemplate) {
+            $collection->set_active_collection_template($institutionname);
+        }
+        else {
+            $collection->unset_active_collection_template($collection->get('id'), $institutionname, !empty($values['template']));
+        }
+    }
     $result = array(
         'error'   => false,
         'message' => get_string('collectionsaved', 'collection'),

@@ -443,6 +443,7 @@ function get_advanced_elements() {
           'title'        => get_string('locktemplate','view'),
           'description'  => get_string('locktemplatedescription','view'),
           'defaultvalue' => $view->get('locktemplate'),
+          'disabled'     => !$view->can_edit_template(),
         );
     }
     else {
