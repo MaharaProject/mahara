@@ -792,9 +792,16 @@ $deleteform = pieform(array(
 
 function edituser_delete_validate(Pieform $form, $values) {
     global $USER, $SESSION;
-    if (!$USER->get('admin')) {
+    $user = new User;
+    $user->find_by_id($values['id']);
+    if (!$USER->is_admin_for_user($user)) {
         $form->set_error('submit', get_string('deletefailed', 'admin'));
         $SESSION->add_error_msg(get_string('deletefailed', 'admin'));
+    }
+    // Don't let an admin delete themseleves if they are the last one.
+    if ($values['id'] === $USER->get('id') && $USER->get('admin') && (count_records('usr', 'admin', 1, 'deleted', 0) == 1)) {
+        $form->set_error('submit', get_string('deletefailedonlyadmin', 'admin'));
+        $SESSION->add_error_msg(get_string('deletefailedonlyadmin', 'admin'));
     }
     // Check to see if there are any pending archives in the export_queue for this user.
     // We can't delete them if there are.
@@ -806,10 +813,8 @@ function edituser_delete_validate(Pieform $form, $values) {
 
 function edituser_delete_submit(Pieform $form, $values) {
     global $SESSION, $USER;
-    if ($USER->get('admin')) {
-        delete_user($values['id']);
-        $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
-    }
+    delete_user($values['id']);
+    $SESSION->add_ok_msg(get_string('userdeletedsuccessfully', 'admin'));
     redirect('/admin/users/search.php');
 }
 
@@ -1066,7 +1071,7 @@ $smarty->assign('siteform', $siteform);
 $smarty->assign('institutions', count($allinstitutions));
 $smarty->assign('institutionform', $institutionform);
 
-$smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));
+$smarty->assign('loginas', $USER->is_admin_for_user($user));
 $smarty->assign('PAGEHEADING', display_name($user));
 $smarty->assign('SUBSECTIONHEADING', TITLE);
 setpageicon($smarty, 'icon-user-cog');
@@ -1075,8 +1080,8 @@ setpageicon($smarty, 'icon-user-cog');
 # the current user; or if they are the current user, they're not the only
 # admin
 if ($id != $USER->get('id') || count_records('usr', 'admin', 1, 'deleted', 0) > 1) {
-    $smarty->assign('suspendable', ($USER->get('admin') || !$user->get('admin') && !$user->get('staff')));
-    $smarty->assign('deletable', $USER->get('admin'));
+    $adminforuser = $USER->is_admin_for_user($user);
+    $smarty->assign('suspendable', $adminforuser);
+    $smarty->assign('deletable', $adminforuser);
 }
-
 $smarty->display('admin/users/edit.tpl');
