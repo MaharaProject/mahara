@@ -78,9 +78,10 @@ class ElasticsearchType_usr extends ElasticsearchType {
         parent::__construct ( $data );
     }
     public static function getRecordById($type, $id, $map = null) {
+    //PCNZ customization: Lastname is always visible in name searches.
         $sql = 'SELECT u.id, u.username, u.preferredname, ap.value AS hidenamepref,
         CASE ap.value WHEN \'1\' THEN NULL ELSE u.firstname END AS firstname,
-        CASE ap.value WHEN \'1\' THEN NULL ELSE u.lastname END AS lastname,
+        u.lastname AS lastname,
         u.active, u.deleted, u.email, u.ctime
         FROM {usr} u
         LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
