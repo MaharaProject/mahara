@@ -285,11 +285,11 @@ class PluginSearchInternal extends PluginSearch {
         $querydata = self::split_query_string(mb_strtolower(trim($query_string)));
         $hidenameallowed = get_config('userscanhiderealnames') ? 'TRUE' : 'FALSE';
         $searchusernamesallowed = $USER->get('admin') || $USER->get('staff') || !get_config('nousernames') ? 'TRUE' : 'FALSE';
-
-        $termsql = "$matches->preferredname
+        //PCNZ Customization for always visible lastname.
+        $termsql = "$matches->preferredname OR $matches->lastname
                     OR (
                         ($usralias.preferredname IS NULL OR $usralias.preferredname = '' OR NOT $hidenameallowed OR $usrprefalias.value != '1' OR $usrprefalias.value IS NULL)
-                        AND ($matches->firstname OR $matches->lastname)
+                        AND ($matches->firstname)
                     )
                     OR ($searchusernamesallowed AND $matches->username)";
 
