@@ -281,6 +281,20 @@ function get_person($token, $id) {
 }
 
 /**
+ * Set the practitioner status for a person
+ */
+function set_active_status($userid, $status) {
+    if ($status == PCNZ_REGISTEREDCURRENT || $status == PCNZ_REGISTEREDINACTIVE) {
+        set_account_preference($userid, 'registerstatus', $status);
+    }
+    else {
+        // We shouldn't get here but just in case suspend the user
+        set_account_preference($userid, 'registerstatus', $status);
+        suspend_user($userid, '', 0); // suspend as cron
+    }
+}
+
+/**
  * Set the current APC status for a person
  */
 function set_apc_status($userid, $personalinfo) {
@@ -342,13 +356,15 @@ function process_changes($changes) {
                 }
             }
             set_apc_status($user->get('id'), $person['personalinfo']);
+            set_active_status($user->get('id'), $person['personalinfo']->practitioner->practicingstatusid);
             log_debug('Updating user with internal ID: ' . $user->get('id') . ' and external ID: ' . $user->get('username') . ' done');
         }
         catch (Exception $e) {
             log_debug($e->getMessage());
             $oldapcstatus = false;
-            // Create new user if they have the status 'Registered current'
-            if ($person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT) {
+            // Create new user if they have the status 'Registered current' or 'Registered inactive'
+            if ($person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT ||
+                    $person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDINACTIVE) {
                 safe_require('auth', 'internal');
                 $temp_password = AuthInternal::get_temp_password();
                 $new_user = new stdClass();
@@ -389,6 +405,7 @@ function process_changes($changes) {
                     }
                 }
                 set_apc_status($user->get('id'), $person['personalinfo']);
+                set_active_status($user->get('id'), $person['personalinfo']->practitioner->practicingstatusid);
                 log_debug('Creating user with internal ID: ' . $user->get('id') . ' and external ID: ' . $user->get('username') . ' done');
             }
             else {
