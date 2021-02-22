@@ -5,6 +5,7 @@ function local_expected_account_preferences() {
         'apcstatusactive' => false,
         'apcstatusdate' => null,
         'apcstatusdateend' => null,
+        'registerstatus' => 0,
     );
 }
 
@@ -16,6 +17,7 @@ function local_display_author($viewinstance) {
     $view = null;
     $apcinfo = '';
     if (!empty($viewinstance->get('owner'))) {
+        require_once(get_config('docroot') . 'local/lib/cron.php');
         $userobj = new User();
         $userobj->find_by_id($viewinstance->get('owner'));
         $view = $userobj->get_profile_view();
@@ -24,7 +26,14 @@ function local_display_author($viewinstance) {
         if (!$view || !can_view_view($view)) {
             return null;
         }
-        $apcinfo = get_account_preference($viewinstance->get('owner'), 'apcstatusactive') ? get_string('apcperiod', 'view', date('j F Y', strtotime(get_account_preference($viewinstance->get('owner'), 'apcstatusdate')))) : '';
+        $registerstatus = get_account_preference($viewinstance->get('owner'), 'registerstatus');
+        $apcinfo = '';
+        if ($registerstatus == PCNZ_REGISTEREDCURRENT) {
+            $apcinfo = get_account_preference($viewinstance->get('owner'), 'apcstatusactive') ? get_string('apcperiod', 'view', date('j F Y', strtotime(get_account_preference($viewinstance->get('owner'), 'apcstatusdate')))) : '';
+        }
+        else if ($registerstatus == PCNZ_REGISTEREDINACTIVE) {
+            $apcinfo = get_string('registerinactive', 'view');
+        }
     }
 
     $ownername = hsc($viewinstance->formatted_owner());
