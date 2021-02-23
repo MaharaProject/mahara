@@ -26,7 +26,20 @@ function loadGridTranslate(grid, blocks) {
         var blockContent = $('<div id="block_' + block.id + '"><div class="grid-stack-item-content">'
             + block.content +
             '</div></div>');
-        el = grid.addWidget(
+
+        let options = {
+            x: block.positionx,
+            y: block.positiony,
+            width: block.width,
+            height: block.height,
+            autoPosition: null,
+            minWidth: null,
+            maxWidth: null,
+            minHeight: null,
+            maxHeight: null,
+            id: block.id
+        }
+        var el = grid.addWidget(
               blockContent,
               block.positionx,
               block.positiony,
@@ -262,14 +275,22 @@ function updateBlockSizes(grid) {
 }
 
 function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, minWidth, minHeight) {
-   el = grid.addWidget(
+    let options = {
+        x: dimensions.positionx,
+        y: dimensions.positiony,
+        width: dimensions.width,
+        height: dimensions.height,
+        autoPosition: null,
+        minWidth: minWidth,
+        maxWidth: null,
+        minHeight: minHeight,
+        maxHeight: null,
+        id: blockId
+    }
+
+   let el = grid.addWidget(
          blockContent,
-         dimensions.positionx,
-         dimensions.positiony,
-         dimensions.width,
-         dimensions.height,
-         null, minWidth, null, minHeight, null,
-         blockId
+         options
    );
 
     $(el).addClass(blocktypeclass);
