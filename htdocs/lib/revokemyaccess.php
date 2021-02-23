@@ -109,33 +109,9 @@ function revokemyaccess_form_submit(Pieform $form, $values) {
         delete_records_select('view_access', 'view = ? AND usr = ?', array($values['viewid'], $USER->id));
     }
     if ($owner) {
-        $data = new stdClass();
-        $data->viewid  = $values['viewid'];
-        if ($message) {
-            $data->message = $message;
-        }
-        else {
-            $data->message = false;
-        }
-        $data->fromid = $USER->get('id');
-        $data->toid = $owner->get('id');
-        activity_occurred('viewaccessrevoke', $data);
+        revokemyaccess_activity_occurred_handler($values['viewid'], $USER->get('id'), $owner->get('id'), $message);
     }
-    $eventtitle = hsc($viewobj->get('title'));
-    $eventid = $viewobj->get('id');
-    $eventfor = 'view';
-    if ($viewobj->get('collection')) {
-        $eventtitle = hsc($viewobj->get('collection')->get('name'));
-        $eventid = $viewobj->get('collection')->get('id');
-        $eventfor = 'collection';
-    }
-    handle_event('removeviewaccess', array(
-        'id' => $eventid,
-        'eventfor' => $eventfor,
-        'reason'  => $message,
-        'portfoliotitle' => $eventtitle,
-        )
-    );
+    revokemyaccess_event_handler($viewid, $message);
 
     $form->reply(
         PIEFORM_OK,
