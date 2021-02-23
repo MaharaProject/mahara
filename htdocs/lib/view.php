@@ -1286,6 +1286,7 @@ class View {
         require_once('institution.php');
 
         $beforeusers = activity_get_viewaccess_users($this->get('id'));
+        $beforeusrids = get_column_sql('SELECT usr FROM {view_access} WHERE view = ? AND usr IS NOT NULL', array($this->id));
 
         $select = 'view = ? AND visible = 1 AND token IS NULL';
         $beforerules = get_records_select_array('view_access', $select, array($this->id));
@@ -1442,6 +1443,22 @@ class View {
         }
 
         activity_occurred('viewaccess', $data);
+
+        $newaccessusers = array_map(function($n) {
+            if (array_key_exists('id', $n)) {
+                return $n['id'];
+            }
+        }, $accessdata);
+        // send messages to those in the old list who are not in the new list
+        $revokedusers = array_diff($beforeusrids, $newaccessusers);
+        // for only 1:1 sharing relationships usr to usr
+        if (!empty($revokedusers) && $this->get('owner')) {
+            require_once(get_config('docroot') . 'lib/revokemyaccess.php');
+            foreach ($revokedusers as $id) {
+                revokemyaccess_activity_occurred_handler($this->get('id'), $this->get('owner'), $id);
+                revokemyaccess_event_handler($this->get('id'),  get_string('revokedbyowner', 'collection'));
+            }
+        }
 
         db_commit();
         return $accessdata_added;
