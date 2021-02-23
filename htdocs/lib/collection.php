@@ -307,7 +307,6 @@ class Collection {
         }
         delete_records('existingcopy', 'collection', $this->id);
         delete_records('collection_template', 'collection', $this->id);
-        delete_records('collection_template', 'originaltemplate', $this->id);
         delete_records('view_copy_queue', 'collection', $this->id);
         delete_records('collection', 'id', $this->id);
         // Delete any submission history

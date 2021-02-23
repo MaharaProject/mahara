@@ -2037,7 +2037,7 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_notnull($table, $field);
     }
 
-    if ($oldversion < 2021021700) {
+    if ($oldversion < 2021021701) {
         log_debug('Change the constraint on view_instruction_lock.originaltemplate field');
         $table = new XMLDBTable('view_instructions_lock');
         $field = new XMLDBField('originaltemplate');
@@ -2180,6 +2180,39 @@ function xmldb_core_upgrade($oldversion=0) {
         $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('ownertype', 'ownerid'));
         if (!index_exists($table, $index)) {
             add_index($table, $index);
+        }
+    }
+
+    if ($oldversion < 2021042302) {
+        log_debug('Creating table view_copy_queue');
+        $table = new XMLDBTable('view_copy_queue');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10);
+            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('status', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+            $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+
+            $table->addIndexInfo('statusix', XMLDB_INDEX_NOTUNIQUE, array('status'));
+
+            create_table($table);
+        }
+
+        if (!get_record('cron', 'callfunction', 'portfolio_auto_copy')) {
+            log_debug('Create cron job to process portfolio copies');
+            $cron = new stdClass();
+            $cron->callfunction = 'portfolio_auto_copy';
+            $cron->minute       = '*';
+            $cron->hour         = '*';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
         }
     }
 
