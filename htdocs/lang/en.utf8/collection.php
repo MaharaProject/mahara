@@ -155,10 +155,13 @@ $string['sharedviewverifiedunchecked'] = '%s by %s is unverified';
 $string['sharedviewverifiedchecked'] = '%s by %s is verified';
 // access notifications
 $string['userhasremovedaccesssubject'] = '%s has removed their access to "%s"';
+$string['ownerhasremovedaccesssubject'] = '%s has removed your access to "%s"';
+$string['revokedbyowner'] = 'Owner has revoked access';
 $string['youhavebeengivenaccess'] = "You have been given access to the following";
 $string['userhasremovedaccess'] = '%s does not have access to the portfolio "%s" any more.';
 $string['userrevokereason'] = "They gave the following reason:";
 $string['removemyaccess'] = "Remove my access";
+$string['ownerhasremovedaccess'] = '%s revoked your access to their portfolio "%s".';
 $string['completionpercentage'] = "Completion";
 // Revoke my access modal
 $string['revokemyaccessformtitle'] = "Remove portfolio access";

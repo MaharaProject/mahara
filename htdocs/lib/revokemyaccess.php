@@ -102,33 +102,9 @@ function revokemyaccess_form_submit(Pieform $form, $values) {
         delete_records_select('view_access', 'view = ? AND usr = ?', array($values['viewid'], $USER->id));
     }
     if ($owner) {
-        $data = new stdClass();
-        $data->viewid  = $values['viewid'];
-        if ($message) {
-            $data->message = $message;
-        }
-        else {
-            $data->message = false;
-        }
-        $data->fromid = $USER->get('id');
-        $data->toid = $owner->get('id');
-        activity_occurred('viewaccessrevoke', $data);
+        revokemyaccess_activity_occurred_handler($values['viewid'], $USER->get('id'), $owner->get('id'), $message);
     }
-    $eventtitle = hsc($viewobj->get('title'));
-    $eventid = $viewobj->get('id');
-    $eventfor = 'view';
-    if ($viewobj->get('collection')) {
-        $eventtitle = hsc($viewobj->get('collection')->get('name'));
-        $eventid = $viewobj->get('collection')->get('id');
-        $eventfor = 'collection';
-    }
-    handle_event('removeviewaccess', array(
-        'id' => $eventid,
-        'eventfor' => $eventfor,
-        'reason'  => $message,
-        'portfoliotitle' => $eventtitle,
-        )
-    );
+    revokemyaccess_event_handler($viewid, $message);
 
     $form->reply(
         PIEFORM_OK,
@@ -153,4 +129,45 @@ function revokemyaccess_form_cancel_submit(Pieform $form) {
             'revokationcanceled' => true,
         ));
     }
+}
+
+/**
+ * Log revocation event for event subscription
+ */
+function revokemyaccess_event_handler($viewid, $message='') {
+    global $USER;
+    $viewobj = new View($viewid);
+    if(!$viewobj) {
+        throw new ViewNotFoundException(get_string('viewnotfound', 'error', $viewid));
+    }
+    $portfolioid = $viewobj->get('collection') ? $viewobj->get('collection')->get('id') : $viewobj->get('id');
+    $eventfor = $viewobj->get('collection') ? 'collection' : 'view';
+    $portfoliotitle = $viewobj->get('collection') ? $viewobj->get('collection')->get('name') : $viewobj->get('title');
+    $removertype = $USER->id === $viewobj->get('owner') ? 'owner' : 'accessor';
+    $removerid = $USER->id;
+    handle_event('removeviewaccess', array(
+        'id' => $portfolioid,
+        'eventfor' => $eventfor,
+        'reason'  => $message,
+        'portfoliotitle' => hsc($portfoliotitle),
+        'removedby' => $removertype,
+        'removedid' => $removerid,
+    ));
+}
+
+/**
+ * Send email/notification of event to appropriate user on revocation
+ */
+function revokemyaccess_activity_occurred_handler($viewid, $fromusrid, $tousrid, $message=null) {
+    $data = new stdClass();
+    $data->viewid  = $viewid;
+    if ($message) {
+        $data->message = $message;
+    }
+    else {
+        $data->message = false;
+    }
+    $data->fromid = $fromusrid;
+    $data->toid = $tousrid;
+    activity_occurred('viewaccessrevoke', $data);
 }

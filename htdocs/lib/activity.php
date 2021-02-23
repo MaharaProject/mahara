@@ -1662,6 +1662,7 @@ class ActivityTypeViewAccessRevoke extends ActivityType {
         $smarty->assign('fullname', $fullname);
         $smarty->assign('sitename', $sitename);
         $smarty->assign('prefurl', $prefurl);
+        $smarty->assign('revokedbyowner',  $this->is_revoked_by_owner());
         $messagebody = $smarty->fetch($template);
         return $messagebody;
     }
@@ -1679,13 +1680,33 @@ class ActivityTypeViewAccessRevoke extends ActivityType {
     }
 
     public function get_subject($user) {
-        $subject = get_string('userhasremovedaccesssubject', 'collection',
-            display_name($this->originuser, $user), hsc($this->viewtitle));
+        // revoked by owner
+        if ($this->is_revoked_by_owner()) {
+            $subject = get_string(
+                'ownerhasremovedaccesssubject',
+                'collection',
+                display_name($this->originuser, $user),
+                hsc($this->viewtitle)
+            );
+        } else {
+             // self revoked by other/verifier
+            $subject = get_string(
+                'userhasremovedaccesssubject',
+                'collection',
+                display_name($this->originuser, $user),
+                hsc($this->viewtitle)
+            );
+        }
         return $subject;
     }
 
     public function get_required_parameters() {
         return array('viewid', 'message', 'fromid', 'toid');
+    }
+
+    function is_revoked_by_owner() {
+        $portfolioowner = $this->viewinfo->get('owner');
+        return $portfolioowner === $this->originuser->id;
     }
 }
 
