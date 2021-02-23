@@ -1020,6 +1020,7 @@ class View {
 
         handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
+        delete_records('view_copy_queue', 'view', $this->id);
         if (is_plugin_active('lti', 'module')) {
             delete_records('lti_assessment_submission', 'viewid', $this->id);
         }

@@ -2132,5 +2132,38 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092116) {
+        log_debug('Creating table view_copy_queue');
+        $table = new XMLDBTable('view_copy_queue');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10);
+            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $table->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('status', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+            $table->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+            $table->addKeyInfo('usrfk', XMLDB_KEY_FOREIGN, array('usr'), 'usr', array('id'));
+
+            $table->addIndexInfo('statusix', XMLDB_INDEX_NOTUNIQUE, array('status'));
+
+            create_table($table);
+        }
+
+        if (!get_record('cron', 'callfunction', 'portfolio_auto_copy')) {
+            log_debug('Create cron job to process portfolio copies');
+            $cron = new stdClass();
+            $cron->callfunction = 'portfolio_auto_copy';
+            $cron->minute       = '*';
+            $cron->hour         = '*';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+    }
+
     return $status;
 }

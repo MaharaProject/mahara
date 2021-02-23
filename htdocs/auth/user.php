@@ -1714,6 +1714,9 @@ class User {
         if (empty($institution)) {
             return;
         }
+        // Dont copy now but add to copy queue.
+        // But dont do it for site templates so new user can have them immediately
+        $time = db_format_timestamp(time());
         // Get list of available views which are not in collections
         $templateviewids = get_column_sql("
             SELECT v.id
@@ -1722,7 +1725,16 @@ class User {
             WHERE cv.view IS NULL
                 AND v.institution = ?
                 AND v.copynewuser = 1", array($institution));
-        $this->copy_views($templateviewids, false);
+
+        foreach ($templateviewids as $view) {
+            $copyentry = (object) array (
+                'view'   => $view,
+                'usr'    => $this->get('id'),
+                'ctime'  => $time,
+                'status' => 0,
+            );
+            insert_record('view_copy_queue', $copyentry);
+        }
 
         // Get list of available collections
         $templatecollectionids = get_column_sql("
@@ -1732,7 +1744,16 @@ class User {
             INNER JOIN {collection} c ON cv.collection = c.id
             WHERE v.copynewuser = 1
                 AND v.institution = ?", array($institution));
-        $this->copy_collections($templatecollectionids, false);
+
+        foreach ($templatecollectionids as $collection) {
+            $copyentry = (object) array (
+                'collection' => $collection,
+                'usr'        => $this->get('id'),
+                'ctime'      => $time,
+                'status'     => 0,
+            );
+            insert_record('view_copy_queue', $copyentry);
+        }
     }
 
     /**
