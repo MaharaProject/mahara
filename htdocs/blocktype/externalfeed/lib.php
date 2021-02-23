@@ -81,8 +81,9 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
             }
 
             // only keep the number of entries the user asked for
-            if (count($data->content) && !empty($data->content) && is_array($data->content)) {
-                $chunks = array_chunk($data->content, isset($configdata['count']) ? $configdata['count'] : 10);
+            $count = !empty($configdata['count']) ? (int)$configdata['count'] : 10;
+            if (!empty($data->content) && is_array($data->content) && count($data->content) > $count) {
+                $chunks = array_chunk($data->content, $count);
                 $data->content = $chunks[0];
 
                 foreach ($data->content as &$c) {
