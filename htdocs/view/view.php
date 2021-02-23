@@ -513,6 +513,28 @@ jQuery(window).on('blocksloaded', {}, function() {
     $('.feedbacktable.modal-docked form').each(function() {
         initTinyMCE($(this).prop('id'));
     });
+
+    // Allow the drag disabled blocks to still allow one to touch / scroll the page in mobile when
+    // putting one's finger on those blocks
+    $('.ui-draggable-disabled').on('touchstart', function(e) {
+        var touchdown = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+        var touchstartpos = touchdown.pageY;
+        var touchlastpos = touchdown.pageY;
+        $('.ui-draggable-disabled').off('touchmove');
+        $('.ui-draggable-disabled').on('touchmove', function(e) {
+            var touch = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
+            var elm = $(this).offset();
+            var ychange = touch.pageY - touchlastpos;
+            if (ychange > 0) {
+                touchstartpos -= 40;
+            }
+            else {
+                touchstartpos += 40;
+            }
+            $('html,body').stop();
+            $('html,body').animate({scrollTop: touchstartpos}, 'smooth');
+        });
+    });
 });
 
 function activateModalLinks() {
