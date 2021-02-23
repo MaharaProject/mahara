@@ -325,6 +325,23 @@ function set_apc_status($userid, $personalinfo) {
 }
 
 /**
+ * Add the auto copy template collection to the queue
+ * We only want one entry so we check if it's already queued up
+ */
+function collection_add_to_queue($userid, $templateid) {
+    if (!record_exists('view_copy_queue', 'usr', $userid, 'collection', $templateid)) {
+        $time = db_format_timestamp(time());
+        $copyentry = (object) array (
+            'collection' => $templateid,
+            'usr'        => $userid,
+            'ctime'      => $time,
+            'status'     => 0,
+        );
+        insert_record('view_copy_queue', $copyentry);
+    }
+}
+
+/**
  * Create or update a user
  */
 function process_changes($changes) {
@@ -351,7 +368,7 @@ function process_changes($changes) {
                     if ($template && !record_exists_sql("SELECT collection FROM {collection_template} ct
                                             JOIN {collection} c ON c.id = ct.collection
                                             WHERE c.owner = ? AND ct.originaltemplate = ?", array($user->get('id'), $template->get('id')))) {
-                        Collection::create_from_template(array('owner' => $user->get('id')), $template->get('id'), $user->get('id'), false, true, true);
+                        collection_add_to_queue($user->get('id'), $template->get('id'));
                     }
                 }
             }
@@ -401,7 +418,8 @@ function process_changes($changes) {
                     // Need to copy the active collection to the user
                     $template = get_active_collection_template($institution);
                     if ($template) {
-                        Collection::create_from_template(array('owner' => $user->get('id')), $template->get('id'), $user->get('id'), false, true, true);
+                        // add this info to the queue
+                        collection_add_to_queue($user->get('id'), $template->get('id'));
                     }
                 }
                 set_apc_status($user->get('id'), $person['personalinfo']);

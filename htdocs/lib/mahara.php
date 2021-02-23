@@ -4854,6 +4854,62 @@ function cron_email_reset_rebounce() {
     }
 }
 
+function portfolio_auto_copy() {
+    // change this limit later when we know the number
+    $limit = 1000;
+    $sql = "SELECT * FROM {view_copy_queue} ORDER BY id LIMIT " . $limit;
+    $entries = get_records_sql_assoc($sql);
+
+    if ($entries) {
+        $user = new User();
+        foreach ($entries as $id => $entry) {
+            $error = false;
+            try {
+                $user->find_by_id($entry->usr);
+                if ($user->get('deleted')) {
+                    throw new UserNotFoundException();
+                }
+                if (isset($entry->view)) {
+                    $copied = $user->copy_views(array($entry->view), false);
+                }
+                else if (isset($entry->collection)) {
+                    // auto copy templates are tracked in a different table, check if this collection is one
+                    require_once(get_config('libroot') . 'collection.php');
+                    $collection = new Collection($entry->collection);
+                    if (!$collection->get('autocopytemplate')) {
+                        $copied = $user->copy_collections(array($entry->collection), false);
+                    }
+                    else {
+                        $copied = Collection::create_from_template(
+                            array('owner' => $user->get('id')),
+                            $collection->get('id'),
+                            $user->get('id'),
+                            false, true, true);
+                    }
+                }
+                else {
+                    $error = true;
+                }
+
+                if (is_array($copied) && !empty($copied)) {
+                    delete_records('view_copy_queue', 'id', $id);
+                }
+                else {
+                    $error = true;
+                }
+            }
+            catch(Exception $e) {
+                $error = true;
+            }
+
+            if ($error) {
+                $entry->status = $entry->status + 1;
+                update_record('view_copy_queue', $entry);
+            }
+        }
+    }
+}
+
 function build_portfolio_search_html(&$data) {
     global $THEME;
     $artefacttypes = get_records_assoc('artefact_installed_type');

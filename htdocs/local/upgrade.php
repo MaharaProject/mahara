@@ -11,8 +11,8 @@ function xmldb_local_upgrade($oldversion=0) {
         log_debug('Add local cron job for checking and updating users from register');
         $cron = new stdClass();
         $cron->callfunction = 'local_pcnz_sync_users';
-        $cron->minute       = '*';
-        $cron->hour         = '*';
+        $cron->minute       = '0';
+        $cron->hour         = '07,19';
         $cron->day          = '*';
         $cron->month        = '*';
         $cron->dayofweek    = '*';

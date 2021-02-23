@@ -1683,6 +1683,8 @@ function delete_user($userid) {
     delete_records('group_member_request', 'member', $userid);
     delete_records('group_member_invite', 'member', $userid);
 
+    delete_records('view_copy_queue', 'usr', $userid);
+
     // Remove any friend relationships the user is in
     execute_sql('DELETE FROM {usr_friend}
         WHERE usr1 = ?

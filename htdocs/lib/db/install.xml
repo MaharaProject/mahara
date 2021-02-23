@@ -1518,5 +1518,24 @@
                 <KEY NAME="ccifk" TYPE="foreign" FIELDS="connection" REFTABLE="client_connections_institution" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="view_copy_queue">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="collection" TYPE="int" LENGTH="10" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="view_copy_queuepk" TYPE="primary" FIELDS="id" />
+                <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id"/>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
+                <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id"/>
+            </KEYS>
+            <INDEXES>
+                <INDEX NAME="statusix" UNIQUE="false" FIELDS="status"/>
+            </INDEXES>
+        </TABLE>
     </TABLES>
 </XMLDB>
