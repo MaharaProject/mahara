@@ -2,17 +2,12 @@ Video.js - HTML5 Video Player
 =============================
 
 Website: http://videojs.com/
-Version: 7.6.5
+Version: 7.11.4
 
 This html5 video player is used by the Mahara internal media blocktype.
 The distribution is downloaded from the latest release (https://github.com/videojs/video.js/releases).
 
 Modifications
- - Remove unneccessary files:
-    ./alt/*
-    ./examples/*
-    ./video-js.min.css
-    ./video.cjs.js
-    ./video.es.js
- - Move video-js.css into raw theme (htdocs/theme/raw/sass/plugin/blocktype/_internalmedia.scss)
- - Added custom style ".vjs-audio" to htdocs/theme/raw/sass/plugin/blocktype/_internalmedia.scss to make the play button on audio players fit inside the controls
+- keep only /font, /lang, video.js, video.min.js, and video-js.css
+- Move video-js.css into raw theme (htdocs/theme/raw/sass/plugin/blocktype/_internalmedia.scss)
+- Added custom style ".vjs-audio" to htdocs/theme/raw/sass/plugin/blocktype/_internalmedia.scss to make the play button on audio players fit inside the controls
