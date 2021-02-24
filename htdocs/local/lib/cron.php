@@ -105,8 +105,7 @@ function get_changes($token) {
                                 )
                             )
                         )
-                    )
-/*                  ),
+                    ),
                     array(
                         "and" => array(
                             array(
@@ -116,7 +115,7 @@ function get_changes($token) {
                                 )
                             )
                         )
-                    ) */
+                    )
                 )
             )
         )
@@ -132,7 +131,7 @@ function get_changes($token) {
         $data = json_decode($auditloginfo->data);
         if ($data) {
             foreach ($data as $person) {
-                if ($person->changeableType == 'Person') {
+                if ($person->changeableType == 'Person' || $person->changeableType == 'Practitioner') {
                     $people[$person->changeableId]['personalinfo'] = get_person($token, $person->changeableId);
                 }
             }
