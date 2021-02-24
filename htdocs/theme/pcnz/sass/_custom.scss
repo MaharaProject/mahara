@@ -9,7 +9,7 @@ body.loggedouthome {
       background-color: $theme-accent-color;
 
       .main {
-          background-image: url('../../pcnz/images/dashboard-pict.jpeg');
+          background-image: url('../../pcnz/images/dashboard-pict.jpg');
           background-size: cover;
           padding-top: 400px;
           @include media-breakpoint-down(lg) {
