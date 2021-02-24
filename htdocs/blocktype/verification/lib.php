@@ -159,10 +159,28 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         $titlevisible = !$istemplate;
         $contentvisible = !$istemplate;
         if (!empty($configdata['availabilitydate']) && $configdata['availabilitydate'] > time()) {
-            $canverify = false;
-            $titlevisible = true;
+            $titlevisible = false;
             $contentvisible = false;
-            $dwoo->assign('availabilitydatemessage', get_string('availabilitydatemessage', 'blocktype.verification', format_date($configdata['availabilitydate'], 'strftimedate')));
+            //Editible logic taken from  view/view.php
+            $submittedgroup = (int)$instance->get_view()->get('submittedgroup');
+            $can_edit = $USER->can_edit_view($instance->get_view()) && !$submittedgroup &&  !$instance->get_view()->is_submitted();
+            if ($instance->get_view()->get_collection()) {
+                $pageistemplate = $instance->get_view()->get_original_template();
+                $can_edit = $can_edit && $USER->can_edit_collection($instance->get_view()->get_collection());
+                //Logic taken from progresscompletion page.
+                if (($instance->get_view()->get('owner') && !$pageistemplate) || !$instance->get_view()->get('owner')) {
+                    $can_edit = $can_edit && true;
+                }
+                else {
+                    $can_edit =  false;
+                }
+            }
+            if ( $can_edit || $canverify) {
+                $dwoo->assign('availabilitydatemessage', get_string('availabilitydatemessage', 'blocktype.verification', format_date($configdata['availabilitydate'], 'strftimedate')));
+                $titlevisible = true;
+                $contentvisible = true;
+            }
+            $canverify = false;
         }
         if (!empty($configdata['verified'])) {
             $verified = true;
@@ -373,7 +391,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             'message'  => get_string('addcommentsuccess' . ($record->private ? 'draft' : ''), 'blocktype.verification', $instance->get('title')),
             'comments' => $commentdata,
             'commentlist' => $renderedcomments,
-            'type'     => $type,                                       
+            'type'     => $type,
             'block'    => $instanceid,
             'goto'     => $view->get_url(),
         ));
