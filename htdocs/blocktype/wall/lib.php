@@ -69,7 +69,7 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
         return $returnstr . $smarty->fetch('blocktype:wall:inlineposts.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 

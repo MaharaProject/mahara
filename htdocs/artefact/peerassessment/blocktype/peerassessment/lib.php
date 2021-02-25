@@ -97,7 +97,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         return $html;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

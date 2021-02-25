@@ -192,7 +192,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         return $dwoo->fetch('blocktype:groupviews:groupviews.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

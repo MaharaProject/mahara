@@ -168,7 +168,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         return $return ? $return : false;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

@@ -143,7 +143,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:myfriends:myfriends.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 

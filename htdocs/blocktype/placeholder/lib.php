@@ -46,7 +46,7 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:placeholder:body.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
