@@ -287,9 +287,11 @@ function set_active_status($userid, $status) {
         set_account_preference($userid, 'registerstatus', $status);
     }
     else {
-        // We shouldn't get here but just in case suspend the user
+        // If we get here we should suspend the user
         set_account_preference($userid, 'registerstatus', $status);
-        suspend_user($userid, '', 0); // suspend as cron
+        if (!get_field('usr', 'suspendedctime', 'id', $userid)) {
+            suspend_user($userid, '', 0); // suspend as cron
+        }
     }
 }
 
