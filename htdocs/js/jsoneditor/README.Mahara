@@ -76,4 +76,4 @@ lines to the JSONEditor.defaults.translate function:
       }
 
 * Customized alert message in  askConfirmation function
-js/jsoneditor/src/dist/jsoneditor.js line 4028
+js/jsoneditor/src/dist/jsoneditor.js line 4028 (b8d26c1fe073b7dc4c0f9f7c8ea8489308b879b8)

@@ -3610,7 +3610,9 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
 
       // Edit JSON Button
-      this.editjson_button = this.getButton('JSON','edit','Edit JSON');
+      // this.editjson_button = this.getButton('JSON','edit','Edit JSON'); // original
+      // Mahara specific change - make translatable - or add ability to change title on button.
+      this.editjson_button = this.getButton('','edit', this.translate('button_edit'));
       this.editjson_button.classList.add('json-editor-btntype-editjson');
       this.editjson_button.addEventListener('click',function(e) {
         e.preventDefault();
@@ -3672,7 +3674,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     this.disable();
 
     this.editjson_holder.style.display = '';
-    this.editjson_button.disabled = false;
+    this.editjson_button.disabled = false; // Mahara customisation - edit json button
     this.editing_json = true;
   },
   hideEditJSON: function() {
@@ -4085,7 +4087,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
 JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
   askConfirmation: function() {
     if (this.jsoneditor.options.prompt_before_delete === true) {
-      if (confirm("Are you sure you want to remove this node?") === false) {
+      if (confirm(this.translate('remove_element_message')) === false) {
         return false;
       }
     }
@@ -8758,7 +8760,7 @@ JSONEditor.defaults.themes.bootstrap4 = JSONEditor.AbstractTheme.extend({
   },
   getFormInputDescription: function(text) {
     var el = document.createElement("p");
-    el.classList.add('form-text');
+    el.classList.add('form-text', 'description'); // Mahara customisation
     el.innerHTML = text;
     return el;
   },
@@ -10485,6 +10487,7 @@ JSONEditor.defaults.templates["default"] = function() {
           r = replacements[i];
           ret = ret.replace(r.s, r.r(vars));
         }
+        ret = ret.replace(/undefined\./gi, ''); // Mahara customisation
         return ret;
       };
     }
@@ -10603,6 +10606,10 @@ JSONEditor.defaults.translate = function(key, variables) {
   if(variables) {
     for(var i=0; i<variables.length; i++) {
       string = string.replace(new RegExp('\\{\\{'+i+'}}','g'),variables[i]);
+      // Mahara specific change - change button text to lc except first char.
+      string = string.toLowerCase();
+      string = string.charAt(0).toUpperCase() + string.slice(1);
+      // Mahara change end ---
     }
   }
   
@@ -10781,6 +10788,18 @@ JSONEditor.defaults.languages.en = {
     * @variable This key takes one variable: The title of object to add
     */
   button_add_row_title: "Add {{0}}",
+  // Mahara customisation start ---
+  /**
+    * Title on Edit JSON buttons
+    *
+    * TODO: enable copy/paste of json into the form directly.
+    * The current functionality overwrites the form customisations and
+    * creates a new form, so we're keeping the upload page for now.
+    *
+    * @see commit I6c6d5642290d558dac436572061bd73ce436067f
+    */
+  button_edit : "Edit raw",
+  // Mahara customisation end ---
   /**
     * Title on Move Down buttons
     */
@@ -10813,7 +10832,11 @@ JSONEditor.defaults.languages.en = {
   /**
     * Title on Flatpickr clear buttons
     */
-  flatpickr_clear_button: "Clear"
+  flatpickr_clear_button: "Clear",
+  /**
+    * Message to display when deleting a standard element
+    */
+  remove_element_message: "Are you sure you want to remove this node?"
 };
 
 // Miscellaneous Plugin Settings
