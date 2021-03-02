@@ -23,7 +23,7 @@ class WebServiceInstitutionTest extends WebServiceTestBase {
     *
     * @see TestBase::setUp()
     */
-    public function setUp() {
+    public function setUp(): void {
         // default current user to admin
         parent::setUp();
 

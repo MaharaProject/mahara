@@ -22,7 +22,7 @@ class LibmaharaTest extends MaharaUnitTest {
     /**
      * shared setUp method.
      */
-    public function setUp() {
+    public function setUp(): void {
         // To test get_mahara_install_subdirectory() we'll need to change $CFG->wwwroot.
         // Record its original value so we can change it back when we're done.
         $this->realwwwroot = get_config('wwwroot');
@@ -342,7 +342,7 @@ class LibmaharaTest extends MaharaUnitTest {
         }
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         set_config('wwwroot', $this->realwwwroot);
         parent::tearDown();
     }

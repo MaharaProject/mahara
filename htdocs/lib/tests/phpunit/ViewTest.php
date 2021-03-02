@@ -44,7 +44,7 @@ class ViewTest extends MaharaUnitTest {
      * require a test user, and
      * create a view to test with
      */
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         $this->testuserid = $this->create_test_user();
         // set the owner of the view to the test user we created
@@ -60,7 +60,7 @@ class ViewTest extends MaharaUnitTest {
      * make sure what got created makes sense
      */
     public function testViewCreating() {
-        $this->assertInternalType('int', (int) $this->viewid);
+        $this->assertNotNull($this->viewid);
         $this->assertGreaterThan(0, $this->viewid);
 
         // now get it again and make sure it matches
@@ -167,7 +167,7 @@ class ViewTest extends MaharaUnitTest {
      * just delete the test view we made
      * and call the parent method
      */
-    public function tearDown() {
+    public function tearDown(): void {
         $this->view->delete();
         parent::tearDown();
     }
