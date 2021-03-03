@@ -4880,11 +4880,17 @@ function portfolio_auto_copy() {
                         $copied = $user->copy_collections(array($entry->collection), false);
                     }
                     else {
-                        $copied = Collection::create_from_template(
-                            array('owner' => $user->get('id')),
-                            $collection->get('id'),
-                            $user->get('id'),
-                            false, true, true);
+                        // PCNZ customisation - only copy the autocopy template if the person is Registered, current
+                        if (get_account_preference($user->get('id'), 'registerstatus') == 2) { // the value for PCNZ_REGISTEREDCURRENT
+                            $copied = Collection::create_from_template(
+                                array('owner' => $user->get('id')),
+                                $collection->get('id'),
+                                $user->get('id'),
+                                false, true, true);
+                        }
+                        else {
+                            $copied = array('ignore'); // to trigger the deletion of the queued item
+                        }
                     }
                 }
                 else {

@@ -25,6 +25,7 @@ define('PCNZ_REMOVED', 9); // The 'Removed' value
 define('PCNZ_STRUCKOFF', 10); // The 'Struck off' value
 define('PCNZ_REMOVING', 11); // The 'Removal request' value
 
+define('PCNZ_ROLLOVER', "040116"); // The month + day + hour for yearly rollover, eg 040116 = the 1st of April at 4pm
 define('PCNZ_INTERVALCHECK', '-1 day'); // The number of 'whatever' in the past to fetch data for
                                           // - should be changed after testing to the interval period
                                           // of the cron, eg '-1 day'
@@ -63,6 +64,49 @@ function local_pcnz_sync_users() {
         log_debug('Have ' . count($changes) . ' changes');
         if (!empty($changes)) {
             process_changes($changes);
+        }
+    }
+    
+    // If there's any problem and the rollover process can't run,
+    // it will keep trying for an hour or until it's successful
+    if (date("m") . date("d") . date("H") === PCNZ_ROLLOVER) {
+        $nextyear = date("Y") + 1;
+        $nextyearlyrun = $nextyear . date("m") . date("d") . date("H");
+
+        // check we have a value in config table
+        if (get_config('auto_create_annual_portfolio_nextyearlyrun') != $nextyearlyrun) {
+            if ($templates = get_records_assoc('collection', 'autocopytemplate', 1, '', 'id, institution')) {
+                foreach ($templates as $template) {
+                    // get all users that do not have the template or are queued to have the template
+                    if ($users = get_column_sql("
+                        SELECT ui.usr FROM {usr_institution} ui
+                        LEFT JOIN {usr_account_preference} uap ON uap.usr = ui.usr
+                        WHERE ui.institution = ?
+                        AND ui.usr NOT IN (
+                            SELECT c.owner FROM {collection} c
+                            JOIN {collection_template} ct
+                            ON c.id = ct.collection
+                            WHERE ct.originaltemplate = ?
+                        )
+                        AND ui.usr NOT IN (
+                            SELECT usr FROM {view_copy_queue} WHERE collection = ?
+                        )
+                        AND (uap.field = 'registerstatus' AND uap.value = ?)",
+                        array($template->institution, $template->id, $template->id, PCNZ_REGISTEREDCURRENT))
+                    ) {
+                        foreach ($users as $user) {
+                            $copyentry = (object) array (
+                                'collection' => $template->id,
+                                'usr'        => $user,
+                                'ctime'      => db_format_timestamp(time()),
+                                'status'     => 0,
+                            );
+                            insert_record('view_copy_queue', $copyentry);
+                        }
+                    }
+                }
+            }
+            set_config('auto_create_annual_portfolio_nextyearlyrun', $nextyearlyrun);
         }
     }
 }
