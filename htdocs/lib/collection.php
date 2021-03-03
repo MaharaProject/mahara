@@ -519,10 +519,13 @@ class Collection {
             // update any existing pages sortorder
             execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($collection->id));
             // add progress page as first page of collection
+            $id_of_oldfirstview = $collection->first_view()->get('id');
             $cv = array();
             $cv['view'] = $view->get('id');
             $cv['collection'] = $collection->id;
             $cv['displayorder'] = 0;
+            $sql = "DELETE FROM {activity_queue} WHERE type = 4 AND data LIKE ? ";
+            execute_sql($sql,  array('%"view";%"' . $id_of_oldfirstview . '"%'));
             insert_record('collection_view', (object)$cv);
             if (!empty($collection->views())) {
                 $collection->add_views(array($view->get('id')));
@@ -1239,7 +1242,7 @@ class Collection {
             }
         }
 
-        $viewids = get_column('collection_view', 'view', 'collection', $this->id);
+        $viewids = get_column_sql("SELECT view FROM {collection_view} WHERE collection = ? ORDER BY displayorder", array($this->id));
 
         // Set the most permissive access records on all views
         View::combine_access($viewids, true);
