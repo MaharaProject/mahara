@@ -360,7 +360,22 @@ class Collection {
 
         $data = new stdClass();
         // Set a default name if one wasn't set in $collectiondata
-        if ($titlefromtemplate) {
+        // PCNZ customisation WR 349175 begin
+        if ($colltemplate->get('template')) {
+            $user = new User();
+            if (isset($collectiondata['owner'])) {
+                $user->find_by_id($collectiondata['owner']);
+            }
+            else {
+                $user->find_by_id($userid);
+            }
+
+            $username = display_name($user, null, true);
+            $data->name = $username . ' ' . $colltemplate->get('name');
+
+        }
+        // PCNZ customisation WR 349175 end
+        else if ($titlefromtemplate) {
             $data->name = $colltemplate->get('name');
         }
         else if (!isset($collectiondata['name'])) {
