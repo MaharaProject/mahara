@@ -1563,12 +1563,11 @@ class ActivityTypeViewAccess extends ActivityType {
         // Customisation for WR 349183 PCNZ
         require_once(get_config('libroot') . 'view.php');
         $view = new View($this->view);
-        if ($view->get('type') == 'portfolio' && $view->get('owner')) {
+        if ((($view->get('type') == 'portfolio') || ($view->get('type') == 'progress')) && $view->get('owner')) {
            $this->ownername ? $smarty->assign('pharmacistname', $this->ownername) : $smarty->assign('pharmacistname', get_string('apharmacist', 'accessvierfier'));
            return $smarty->fetch('account/activity/accessverifier' . $type . '.tpl');
            // End customisations
         }
-
         $messagebody = $smarty->fetch($template);
 
         return $messagebody;
