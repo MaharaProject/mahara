@@ -335,8 +335,15 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     }
     $remoteuserrelationship = $relationship;
 }
+//PCNZ Customization, allow staff to login as users in institution.
+$stafflogin = $USER->is_staff_for_user($user) && !$userobj->get('staff');
+//Staff can't privilage escalate through an administrator.
+$stafflogin =  $stafflogin && !$userobj->is_admin_for_user($USER);
+//Or an institiutional administrator.
+$stafflogin = $stafflogin && !$userobj->is_institutional_admin();
+//Users can still log into other institutional staffmembers.
 
-if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
+if ($userid != $USER->get('id') && ($USER->is_admin_for_user($user) || $stafflogin ) && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', display_username($user));
 } else {
     $loginas = null;
