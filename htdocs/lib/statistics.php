@@ -708,7 +708,8 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
 
     // Customisation WR 349192 PCNZ
     $customsql = "
-    (SELECT value FROM {usr_account_preference} uap WHERE u.id = uap.usr AND uap.field = 'apcstatusactive') AS registrationstatus,
+    (SELECT value FROM {usr_account_preference} uap WHERE u.id = uap.usr AND uap.field = 'registerstatus') AS registrationstatus,
+    (SELECT value FROM {usr_account_preference} uap WHERE u.id = uap.usr AND uap.field = 'apcstatusactive') AS apc_status,
     (SELECT value FROM {usr_account_preference} uap WHERE u.id = uap.usr AND uap.field = 'apcstatusdate') AS apc_startdate ";
 
     $sql = "SELECT u.id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
@@ -738,14 +739,25 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         $item->registrationnumber = $item->studentid;
         $item->apc_startdate = format_date(strtotime($item->apc_startdate), 'strftimedate');
         switch ($item->registrationstatus) {
-            case 1:
+            case 2:
+                // PCNZ_REGISTEREDCURRENT
                 $item->registrationstatus = get_string('registeredcurrent', 'admin');
                 break;
-            case 0:
+            case 3:
+                // PCNZ_REGISTEREDINACTIVE
                 $item->registrationstatus = get_string('registeredinactive', 'admin');
                 break;
-            default:
+            case 1:
+            case 4:
+            case 9:
+            case 10:
+            case 11:
+                // All other statuses will be treated as suspended in Mahara
+                // As they've gone from registered to not registered
+                $item->registrationstatus = get_string('registeredsuspended', 'admin');
                 break;
+            default:
+                // Internal account
         }
     }
     if (!empty($extra['csvdownload'])) {
