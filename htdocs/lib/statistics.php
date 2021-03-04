@@ -686,7 +686,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
 
     foreach ($data as $item) {
         $item->profileurl = profile_url($item->id);
-        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : ' ';
+        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : '';
         $item->quotapercent_format = round($item->quotapercent * 100);
         $item->quota_format = display_size($item->quota);
         $item->quotaused_format = !empty($item->quotaused) ? display_size($item->quotaused) : 0;
@@ -697,6 +697,12 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'email', 'studentid',
                            'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin', 'probation');
+        // Make the lastlogin a data friendly value.
+        for ($i = 0; $i < count($data); $i++) {
+            if (!empty($data[$i]->lastlogin)) {
+                $data[$i]->lastlogin = format_date(strtotime($data[$i]->lastlogin), 'strftimew3cdatetime');
+            }
+        }
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
