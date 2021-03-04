@@ -633,7 +633,7 @@ function export_add_to_queue($object, $external = null, $submitter = null, $type
  * @param string $id  Specify which row of export_queue table you want to run - could be used for debugging purposes
  */
 function export_process_queue($id = false) {
-
+    global $exporter;
     $where = 'starttime IS NULL';
     $values = array();
     if ($id) {
