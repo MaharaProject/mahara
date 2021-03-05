@@ -593,6 +593,7 @@ $string['oneormorelinksarebad']              = 'One or more of the links here ar
 $string['confirmdeletemenuitem'] = 'Do you really want to delete this item?';
 $string['deletingmenuitem']    = 'Deleting item';
 $string['deletefailed']        = 'Failed deleting item';
+$string['deletefailedonlyadmin'] = 'You cannot delete this account. It is the only site administrator account.';
 $string['externallink']        = 'External link';
 $string['editlinksandresources'] = 'Edit links and resources';
 $string['linkedto']            = 'Linked to';

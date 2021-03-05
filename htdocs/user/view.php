@@ -336,7 +336,8 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $remoteuserrelationship = $relationship;
 }
 
-if ($userid != $USER->get('id') && $USER->is_admin_for_user($user) && is_null($USER->get('parentuser'))) {
+$adminforuser = $USER->is_admin_for_user($user);
+if ($userid != $USER->get('id') && $adminforuser && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', display_username($user));
 } else {
     $loginas = null;
@@ -390,6 +391,7 @@ if ($remoteuserrelationship) {
     $smarty->assign('relationship', $relationship);
 }
 
+$smarty->assign('adminforuser', $adminforuser);
 $smarty->assign('loginas', $loginas);
 
 $smarty->assign('INLINEJAVASCRIPT', $blocksjs . $inlinejs);
