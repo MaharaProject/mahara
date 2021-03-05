@@ -477,7 +477,7 @@ function process_changes($changes) {
         }
         // Do post create / update stuff
         $userid = $user->get('id');
-        if ($suspendeduserid = get_field('usr', 'id', 'username', $userid)) {
+        if ($suspendeduserid = get_field_sql("SELECT id FROM {usr} WHERE username = ? AND suspendedctime IS NOT NULL", array($userid))) {
             unsuspend_user($suspendeduserid); // un-suspend user
         }
     }
