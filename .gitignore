@@ -43,3 +43,5 @@ htdocs/auth/saml/sp/resources
 htdocs/lib/chrome-php
 package-lock.json
 *\:Zone.Identifier\:\$DATA
+.phpdoc
+/docs
