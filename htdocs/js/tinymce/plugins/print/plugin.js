@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.0.13 (2019-08-06)
+ * Version: 5.7.0 (2021-02-10)
  */
 (function () {
     'use strict';
@@ -15,14 +15,13 @@
 
     var register = function (editor) {
       editor.addCommand('mcePrint', function () {
-        if (global$1.ie && global$1.ie <= 11) {
+        if (global$1.browser.isIE()) {
           editor.getDoc().execCommand('print', false, null);
         } else {
           editor.getWin().print();
         }
       });
     };
-    var Commands = { register: register };
 
     var register$1 = function (editor) {
       editor.ui.registry.addButton('print', {
@@ -40,12 +39,11 @@
         }
       });
     };
-    var Buttons = { register: register$1 };
 
     function Plugin () {
       global.add('print', function (editor) {
-        Commands.register(editor);
-        Buttons.register(editor);
+        register(editor);
+        register$1(editor);
         editor.addShortcut('Meta+P', '', 'mcePrint');
       });
     }

@@ -2,20 +2,22 @@ TinyMCE
 ========
 
 Website: https://www.tiny.cloud/
-Version: 5.0.13
+Version: 5.7.0
 
 Changes:
 
   * Added
-    -all of the language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
-    -plugins/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
-    This is from a previous version that still works. The new one tinymce 5.0 offers is a pay service.
-    -plugins/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
-    -plugins/tooltoggle - this is a custom plugin. Changed function
-    calls to fit with tinymce 5.0. (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
-    -plugins/spellchecker to use $CFG->spellcheckerengine
-    if that is enabled instead of default browser spellchecker.
-    (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
+    -new versions don't have lang files so keep all of the original language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
+    -add icons to icons.js inside icons/default
+    Custom plugins:
+      -/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
+         This is from a previous version that still works. The new one tinymce 5.0 offers is a pay service.
+      -/mathslate (originally added in commit 325cdfac3dfba40efbbad8cd306dcfb385674709)
+      -/tooltoggle - this is a custom plugin. Changed function
+         calls to fit with tinymce 5.0. (originally added in commit 2c490a70bfff677c0b95c0565d39162c8c9bc10d)
+      -/spellchecker to use $CFG->spellcheckerengine
+         if that is enabled instead of default browser spellchecker.
+         (original commit: a42e68b43e4a63db19569facae61898af1b86d3f)
     - changed the heading of help file for mathslate plugin
     - restrict heading levels on mobile for accessibility (original commit: 844604d96bcd095cd08235fc97b8f700f81aa55a)
 

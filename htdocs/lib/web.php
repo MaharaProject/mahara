@@ -347,6 +347,7 @@ EOF;
         theme: 'mobile',
         toolbar: ['undo', 'bold', 'italic', 'link', 'bullist', 'styleselect'],
     },
+    browser_spellcheck: true,
     contextmenu: false,
     plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
     skin: 'oxide',
