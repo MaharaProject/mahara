@@ -361,25 +361,42 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             // send notification to page owner
             $owner = $view->get('owner');
             require_once('activity.php');
-            activity_occurred('maharamessage', array(
+
+            if(empty($configdata['displayverifiername'])) {
+                $verifiersubjectstring = 'verifymessagesubjectnoname';
+                $verifiersubjectargs = array();
+                $verifiermessagestring = 'verifymessagenoname';
+                $verifiermessageargs = array(format_date(strtotime($record->postdate)), html2text($configdata['text']) . ' ' . html2text($newtext));
+            }
+            else {
+                $verifiersubjectstring = 'verifymessagesubject';
+                $verifiersubjectargs = array(display_name($USER));
+                $verifiermessagestring = 'verifymessage';
+                $verifiermessageargs = array(display_name($USER), format_date(strtotime($record->postdate)), html2text($configdata['text']) . ' ' . html2text($newtext));
+            }
+
+            $message = array(
                 'users'   => array($owner),
                 'subject' => '',
                 'message' => '',
                 'strings' => (object) array(
                     'subject' => (object) array(
-                        'key'     => 'verifymessagesubject',
+                        'key'     => $verifiersubjectstring,
                         'section' => 'blocktype.verification',
-                        'args'    => array(display_name($USER)),
+                        'args' => $verifiersubjectargs
                     ),
                     'message' => (object) array(
-                        'key'     => 'verifymessage',
+                        'key'     => $verifiermessagestring,
                         'section' => 'blocktype.verification',
-                        'args'    => array(display_name($USER), format_date(strtotime($record->postdate)), html2text($configdata['text']) . ' ' . html2text($newtext)),
+                        'args'    => $verifiermessageargs,
                     ),
                 ),
                 'url'     => $view->get_url(true),
                 'urltext' => $view->get('title'),
-            ));
+            );
+
+            activity_occurred('maharamessage', $message);
+
         }
 
         if ($record->private != 1) {
