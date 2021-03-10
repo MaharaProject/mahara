@@ -956,7 +956,8 @@ function core_install_firstcoredata_defaults() {
         'releasesubmission',
         'updateviewaccess',
         'removeviewaccess',
-        'sharedcommenttogroup'
+        'sharedcommenttogroup',
+        'verifiedprogress',
     );
 
     foreach ($eventtypes as $et) {

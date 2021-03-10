@@ -381,6 +381,21 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
                 'urltext' => $view->get('title'),
             ));
         }
+
+        if ($record->private != 1) {
+            $record->verified = 1;
+            if (isset($configdata['primary'])) {
+                $record->primary = (bool)$configdata['primary'];
+            }
+            handle_event('verifiedprogress', array(
+                'id' => $instanceid,
+                'eventfor' => 'block',
+                'block'  => $record,
+                'parenttype' => 'collection',
+                'parentid' => $view->get_collection()->get('id'),
+            ));
+        }
+
         if (empty($newtext)) {
             // check if is the last verified locking statement block
             if (PluginBlocktypeVerification::is_last_locking_block($instance)) {

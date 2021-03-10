@@ -2165,5 +2165,11 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092117) {
+        log_debug('Adding verifiedprogress event type');
+        $event = (object) array( "name" => "verifiedprogress");
+        ensure_record_exists('event_type', $event, $event);
+    }
+
     return $status;
 }
