@@ -9,7 +9,14 @@
     <span class="sr-only">{str tag=inactivefor1 section=admin arg1=$r.username}</span>
 {/if}
 {if $canedituser}
-  <a href="{$WWWROOT}admin/users/edit.php?id={$r.id}">{$r.username}</a>
+{* PCNZ customisation WR 349169 *}
+{if $r.registeredstatus == 3}
+{* Registered status, inactive *}
+<span class="icon icon-user-minus" title="{str tag=registeredstatusinactive section=admin}"></span>
+<span class="sr-only">{str tag=registeredstatusinactivefor section=admin arg1=$r.username}</span>
+{/if}
+{* End of customisation *}
+  <a href="{$WWWROOT}admin/users/edit.php?id={$r.id}"> {$r.username}</a>
 {else}
   {$r.username}
 {/if}
