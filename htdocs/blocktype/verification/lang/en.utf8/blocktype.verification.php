@@ -82,6 +82,9 @@ $string['addcommentsuccess'] = 'Adding comment to "%s" was successful.';
 $string['addcommentsuccessdraft'] = 'Adding draft comment to "%s" was successful.';
 
 // notification
+$string['verifymessagesubjectnoname'] = 'A statement has been left on your portfolio:';
+$string['verifymessagenoname'] = 'The following statement has been left on %s:
+%s';
 $string['verifymessagesubject'] = '%s has left a statement on your portfolio';
 $string['verifymessage'] = '%s has left the following statement on %s:
 %s';

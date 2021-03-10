@@ -48,25 +48,40 @@ if ($config['verified']) {
         // send notification to page owner
         $owner = $view->get('owner');
         require_once('activity.php');
-        activity_occurred('maharamessage', array(
+        //Check if verfier name needs to be anonomized.
+        if(empty($config['displayverifiername'])) {
+            $verifiersubjectstring = 'verifymessagesubjectnoname';
+            $verifiersubjectargs = array();
+            $verifiermessagestring = 'verifymessagenoname';
+            $verifiermessageargs = array(format_date($config['verifieddate']), html2text($config['text']));
+        }
+        else {
+            $verifiersubjectstring = 'verifymessagesubject';
+            $verifiersubjectargs = array(display_name($USER));
+            $verifiermessagestring = 'verifymessage';
+            $verifiermessageargs = array(display_name($USER), format_date($config['verifieddate']), html2text($config['text']));
+        }
+
+        $message = array(
             'users'   => array($owner),
             'subject' => '',
             'message' => '',
             'strings' => (object) array(
                 'subject' => (object) array(
-                    'key'     => 'verifymessagesubject',
+                    'key'     => $verifiersubjectstring,
                     'section' => 'blocktype.verification',
-                    'args'    => array(display_name($USER)),
+                    'args'    => $verifiersubjectargs,
                 ),
                 'message' => (object) array(
-                    'key'     => 'verifymessage',
+                    'key'     => $verifiermessagestring,
                     'section' => 'blocktype.verification',
-                    'args'    => array(display_name($USER), format_date($config['verifieddate']), html2text($config['text'])),
+                    'args'    => $verifiermessageargs,
                 ),
             ),
             'url'     => $view->get_url(true),
             'urltext' => $view->get('title'),
-        ));
+        );
+        activity_occurred('maharamessage', $message);
     }
     handle_event('verifiedprogress', array(
         'id' => $blockid,
