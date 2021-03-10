@@ -68,7 +68,7 @@ function revokemyaccess_form($viewid = null) {
 
 function revokemyaccess_form_submit(Pieform $form, $values) {
     global $USER;
-    $message = hsc($values['message']);
+    $message = $values['message'];
     require_once('activity.php');
     require_once('view.php');
     if (!$USER->is_logged_in()) {
@@ -148,7 +148,7 @@ function revokemyaccess_event_handler($viewid, $message='') {
     handle_event('removeviewaccess', array(
         'id' => $portfolioid,
         'eventfor' => $eventfor,
-        'reason'  => $message,
+        'reason'  => hsc($message),
         'portfoliotitle' => hsc($portfoliotitle),
         'removedby' => $removertype,
         'removedid' => $removerid,
