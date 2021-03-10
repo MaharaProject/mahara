@@ -68,6 +68,13 @@ if ($config['verified']) {
             'urltext' => $view->get('title'),
         ));
     }
+    handle_event('verifiedprogress', array(
+        'id' => $blockid,
+        'eventfor' => 'block',
+        'block'  => $config,
+        'parenttype' => 'collection',
+        'parentid' => $view->get_collection()->get('id'),
+    ));
 }
 else {
     unset($config['verifieddate']);
