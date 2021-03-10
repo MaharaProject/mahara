@@ -331,7 +331,30 @@ class module_lti_launch extends external_api {
         // Redirect if the resource_link_id is a link to a view or collection
         $matches = [];
         if (preg_match('/\/view\/view\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
-            $SESSION->set('lti.canviewview', $matches[1]);
+            if ($collection_views = get_column_sql('
+                SELECT view FROM {collection_view}
+                WHERE collection = (
+                    SELECT collection FROM {collection_view}
+                    WHERE view = ?
+                )', array($matches[1]))) {
+                // all pages in the collection are allowed
+                $SESSION->set('lti.canviewview', $collection_views);
+            }
+            else {
+                $SESSION->set('lti.canviewview', array($matches[1]));
+            }
+            redirect($params['resource_link_id']);
+        }
+        else if (preg_match('/^\/collection\/progresscompletion\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
+            $collectionid = (int)$matches[1];
+            require_once('collection.php');
+            $collection = new Collection($collectionid);
+            $views = $collection->get('views');
+            $canview = array();
+            foreach ($views['views'] as $view) {
+                $canview[] = $view->id;
+            }
+            $SESSION->set('lti.canviewview', $canview);
             redirect($params['resource_link_id']);
         }
         else {
