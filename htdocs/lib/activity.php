@@ -1656,8 +1656,8 @@ class ActivityTypeViewAccessRevoke extends ActivityType {
         $fullname = display_name($this->originuser, $user);
         $smarty = smarty_core();
         $smarty->assign('url', (get_config('emailexternalredirect') ? append_email_institution($user, $this->url) : $this->url));
-        $smarty->assign('viewtitle', hsc($this->viewtitle));
-        $smarty->assign('message', hsc($this->message));
+        $smarty->assign('viewtitle', htmlspecialchars_decode($this->viewtitle)); //The htmlspecialcharacters encoding of the title and the message is done in the template.
+        $smarty->assign('message', $this->message);
         $smarty->assign('fullname', $fullname);
         $smarty->assign('sitename', $sitename);
         $smarty->assign('prefurl', $prefurl);
@@ -1675,7 +1675,7 @@ class ActivityTypeViewAccessRevoke extends ActivityType {
     }
 
     public function get_htmlmessage($user) {
-        return $this->_getmessage($user, 'account/activity/accessrevokeemail.tpl');
+        return $this->_getmessage($user, 'account/activity/accessrevokeemailhtml.tpl');
     }
 
     public function get_subject($user) {
