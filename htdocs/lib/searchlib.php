@@ -454,6 +454,14 @@ function build_admin_user_search_results($search, $offset, $limit) {
 
     $results = get_admin_user_search_results($search, $offset, $limit);
 
+    // PCNZ customisation WR 349169
+    if ($results['data']) {
+        foreach($results['data'] as &$person) {
+            $person['registeredstatus'] = get_account_preference($person['id'], 'registerstatus');
+        }
+    }
+    // End of customisation
+
     $pagination = build_pagination(array(
             'id' => 'admin_usersearch_pagination',
             'class' => 'center',
