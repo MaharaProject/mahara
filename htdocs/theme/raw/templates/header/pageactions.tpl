@@ -73,9 +73,9 @@
                         {/if}
                         </a>
                     </li>
-                {/if}
-                <li class="dropdown-item">
+                    {/if}
                     {if !($headertype == "matrix")}
+                    <li class="dropdown-item">                    
                         {if $objector}
                             <span class="nolink">
                                 <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
@@ -87,8 +87,16 @@
                                 <span class="link-text">{str tag=reportobjectionablematerial}</span>
                             </a>
                         {/if}
+                    </li>
                     {/if}
-                </li>
+                {/if}
+                {if $undoverificationform}
+                    <li class="dropdown-item">
+                        <a id="undoverificationlink" href="#" data-toggle="modal" data-target="#undoverification-form">
+                            <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">{str tag=undoverification section=collection}</span>
+                        </a>
+                    </li>
                 {/if}
                 {if $revokeaccessform}
                     <li class="dropdown-item">

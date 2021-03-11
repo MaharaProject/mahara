@@ -35,7 +35,7 @@
             <div class="verifiedon">{$verifiedon|safe}</div>
         {/if}
     {/if}
-    {if $data.addcomment && $canverify}
+    {if $data.addcomment && ($canverify || $canunverify)}
         {if $inedit}<div class="description">{/if}
         {$commentform|safe}
         {if $inedit}</div>{/if}
@@ -128,6 +128,8 @@ $(function() {
                     $('#verification-{$blockid} .verifiedon').addClass('hidden');
                 }
             }
+            // PCNZ customisation: Reload page so we can see the reset statement link/form
+            location.reload();
             $("#verification-{$blockid}-confirm-form").modal('hide');
         });
     });

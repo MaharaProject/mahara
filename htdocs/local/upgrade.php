@@ -48,4 +48,16 @@ function xmldb_local_upgrade($oldversion=0) {
         require_once(get_config('libroot') . 'skin.php');
         install_skins_default();
     }
+
+    if ($oldversion < 2021021900) {
+        log_debug('Add the "pcnz_verification_undo" table');
+        $table = new XMLDBTable('pcnz_verification_undo');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('block', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('reporter', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            create_table($table);
+        }
+    }
 }
