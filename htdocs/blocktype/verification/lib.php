@@ -325,32 +325,72 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             'postdate' => db_format_timestamp(time()),
             'text'     => clean_html($values['comment']),
         );
-        if (!empty($values['postid'])) {
+        $newid = false;
+        $resetverification = false;
+        if (empty(clean_html($values['comment'])) && !empty($values['postid'])) {
+            // we have an empty comment record so delete it
+            delete_records('blocktype_verification_comment', 'id', $values['postid']);
+            // PCNZ customisation
+            $resetverification = true;
+        }
+        else if (!empty($values['postid'])) {
             $record->id = $values['postid'];
+            $oldfrom = get_field('blocktype_verification_comment', 'from', 'id', $record->id);
+            if ($oldfrom != $record->from && param_integer('undo', false)) {
+                $record->from = $oldfrom;
+            }
             update_record('blocktype_verification_comment', $record, 'id');
             $newid = $record->id;
+            // PCNZ customisation
+            if ($record->private === 1) {
+                $resetverification = true;
+            }
         }
-        else {
+        else if (!empty(clean_html($values['comment']))) {
             $newid = insert_record('blocktype_verification_comment', $record, 'id', true);
         }
 
-        require_once('embeddedimage.php');
-        $newtext = EmbeddedImage::prepare_embedded_images($values['comment'], 'verification_comment', $newid);
-        // If there is an embedded image, update the src so users can have visibility
-        if ($values['comment'] != $newtext) {
-            $updatedcomment = new stdClass();
-            $updatedcomment->id = $newid;
-            $updatedcomment->text = $newtext;
-            update_record('blocktype_verification_comment', $updatedcomment, 'id');
+        // PCNZ Customisation
+        if ($resetverification && $undo = get_record_sql("SELECT * FROM {pcnz_verification_undo} WHERE block = ? LIMIT 1", array($instanceid))) {
+            $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $instance->get_view()->get_collection()->get('id');
+            $users = array($instance->get_view()->get('owner'), $undo->reporter);
+            $message = (object) array(
+                'users' => $users,
+                'subject' => get_string('undonesubject', 'collection'),
+                'message' => get_string('undonemessage', 'collection', display_name($USER), $instance->get('title'), $instance->get_view()->get_collection()->get('name')),
+                'url'     => get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $instance->get_view()->get_collection()->get('id'),
+                'urltext' => $instance->get_view()->get_collection()->get('name'),
+            );
+            activity_occurred('maharamessage', $message);
+            delete_records('pcnz_verification_undo', 'block', $instanceid);
+        }
+        // END PCNZ
+
+        if ($newid) {
+            require_once('embeddedimage.php');
+            $newtext = EmbeddedImage::prepare_embedded_images($values['comment'], 'verification_comment', $newid);
+            // If there is an embedded image, update the src so users can have visibility
+            if ($values['comment'] != $newtext) {
+                $updatedcomment = new stdClass();
+                $updatedcomment->id = $newid;
+                $updatedcomment->text = $newtext;
+                update_record('blocktype_verification_comment', $updatedcomment, 'id');
+            }
         }
 
         list($commentdata, $type) = self::get_verification_comment($instance);
-        $smarty = smarty_core();
-        $smarty->assign('comments', array($commentdata));
-        if (!empty($configdata['displayverifiername'])) {
-            $smarty->assign('displayverifier', true);
+        if (!empty($commentdata)) {
+            $smarty = smarty_core();
+            $smarty->assign('comments', array($commentdata));
+            if (!empty($configdata['displayverifiername'])) {
+                $smarty->assign('displayverifier', true);
+            }
+            $renderedcomments = $smarty->fetch('blocktype:verification:commentlist.tpl');
         }
-        $renderedcomments = $smarty->fetch('blocktype:verification:commentlist.tpl');
+        else {
+            $renderedcomments = '';
+        }
+
         $view = new View($form->get_property('viewid'));
 
         if ($record->private != 1 && !empty($configdata['lockportfolio'])) {
@@ -391,8 +431,8 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
                         'args'    => $verifiermessageargs,
                     ),
                 ),
-                'url'     => $view->get_url(true),
-                'urltext' => $view->get('title'),
+                'url'     => get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $view->get_collection()->get('id'),
+                'urltext' => $view->get_collection()->get('name'),
             );
 
             activity_occurred('maharamessage', $message);
@@ -437,7 +477,7 @@ function verification_comment_success_{$id}(form, data) {
         handle_cancel_{$id}({$id}, data.comments.text);
     }
     else {
-        $('#addcomment_' + data.comments.instance).html(data.commentlist);
+        location.reload(); // PCNZ customisation: Reload page so we can see the reset statement link/form
     }
     $(window).trigger('colresize');
 }

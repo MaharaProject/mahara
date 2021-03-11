@@ -181,3 +181,22 @@ $string['verifiednotavailabledate'] = 'Statement for the portfolio "%s" by %s ca
 $string['verificationtobedone'] = 'Complete statement for the portfolio "%s" by %s';
 $string['verificationdone'] = 'Completed statement for the portfolio "%s" by %s';
 $string['removeaccess'] = 'Remove my access from the portfolio "%s" by %s';
+
+// Statement block reset information
+$string['undoverification'] = 'Reset statement';
+$string['undoverificationformtitle'] = 'Reset statement';
+$string['undoverificationdescription'] = 'Select one of your statements that you want to reset. By continuing, whomever is allowed to reset your statement will be notified. The approval will be removed once they action the request, and you can approve it again.';
+$string['reasonforundo'] = 'Reason for resetting the statement:';
+$string['notifyappointed'] = 'Portfolio approval was reset';
+$string['undoreportsent'] = 'Reset request sent.';
+$string['undoreportnotsent'] = 'Reset request not sent. There is nobody to whom to send the request. Please contact the administrator.';
+$string['verifiedbyme'] = 'My statements';
+$string['verifiedbymedescription'] = 'Choose a statement to reset. Then provide in a reason for this change.';
+$string['undoreportsubject'] = 'Request to reset portfolio statement';
+$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been approved. However, the approver, %s, wishes to reset it.
+
+They gave the following reason:
+
+%s';
+
+$string['accessdeniedundo'] = 'The statement has already been reset. You do not have access to the portfolio any longer.';
