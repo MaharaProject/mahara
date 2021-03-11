@@ -62,6 +62,12 @@ if ($group && !group_within_edit_window($group)) {
 if ($view->get('template') == View::SITE_TEMPLATE) {
     throw new AccessDeniedException();
 }
+if ($collection && $collection->has_progresscompletion() && $vblockids = $collection->has_progress_verified()) {
+    $pview = new View($collection->has_progresscompletion());
+    if (!empty($vblockids) && $pview->get('owner') == $USER->get('id')) {
+        throw new AccessDeniedException(get_string('cantchangeaccessafterverification', 'view'));
+    }
+}
 
 $form = array(
     'name' => 'accessurl',

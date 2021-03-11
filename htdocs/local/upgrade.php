@@ -60,4 +60,19 @@ function xmldb_local_upgrade($oldversion=0) {
             create_table($table);
         }
     }
+
+    if ($oldversion < 2021022300) {
+        log_debug('Add columns to the "collection_template" table to track old registration status');
+        $table = new XMLDBTable('collection_template');
+        $field = new XMLDBField('registrationstatus');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_CHAR, 255);
+            add_field($table, $field);
+        }
+        $field = new XMLDBField('rolloverdate');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+            add_field($table, $field);
+        }
+    }
 }

@@ -59,6 +59,62 @@ function local_pcnz_sync_users() {
         $tokeninfo = json_decode($tokeninfo->data);
         $token = $tokeninfo->id;
     }
+
+    $nextyear = date("Y") + 1;
+    $nextyearlyrun = $nextyear . date("m") . date("d") . date("H");
+    // Rollover part that unlocks the previous years files
+    if (date("m") . date("d") . date("H") === PCNZ_ROLLOVER) {
+        if (get_config('auto_create_annual_portfolio_nextyearlyrun') != $nextyearlyrun) {
+            $lastyearlyrun = db_format_timestamp(strtotime('-1 year -1 hour')); // We go back a year and an hour in case previous locked were not exactly 1 year ago
+            // We unlock the previous batch of collections
+            execute_sql("UPDATE {collection} SET lock = 0
+                         WHERE id IN (
+                             SELECT ct.collection FROM {collection_template} ct
+                             JOIN {collection} c ON c.id = ct.collection
+                             WHERE ct.rolloverdate < ?
+                             AND c.lock = 1
+                         )", array($lastyearlyrun));
+            // Need to set the current apc information to the collection
+            if ($cids = get_column_sql("SELECT ct.collection
+                                        FROM {collection_template} ct
+                                        JOIN {collection} ot ON ot.id = ct.originaltemplate
+                                        JOIN {collection} c ON c.id = ct.collection
+                                        WHERE ot.autocopytemplate < 1
+                                        AND ct.registrationstatus IS NULL
+                                        ORDER BY ct.collection")) {
+                // Need to remove verifier from the copies of the old autocopy template
+                // These will be the ones with an original template that doesn't have autocopy anymore
+                // and no registrationstatus in collection_template
+                execute_sql("DELETE FROM {view_access} WHERE id IN (
+                                 SELECT va.id FROM {collection_template} ct
+                                 JOIN {collection} ot ON ot.id = ct.originaltemplate
+                                 JOIN {collection} c ON c.id = ct.collection
+                                 JOIN {collection_view} cv ON cv.collection = c.id
+                                 JOIN {view_access} va ON va.view = cv.view
+                                 WHERE ot.autocopytemplate < 1
+                                 AND ct.registrationstatus IS NULL
+                                 AND va.role = ?
+                                 ORDER BY ct.collection
+                             )", array('verifier'));
+                // Once that is done then we can update the collection_template table to set
+                // the registration status and lock this batch of collections
+                foreach ($cids as $id) {
+                    $status = local_get_collection_author($id);
+                    execute_sql("UPDATE {collection_template} SET registrationstatus = ?, rolloverdate = ? WHERE collection = ?", array($status, db_format_timestamp(time()), $id));
+                    execute_sql("UPDATE {collection} SET lock = ? WHERE id = ?", array(1, $id));
+                    handle_event('removeviewaccess', array(
+                        'id' => $id,
+                        'eventfor' => 'collection',
+                        'reason'  => get_string('rollovereventmessage', 'collection'),
+                        'portfoliotitle' => hsc(get_field('collection', 'name', 'id', $id)),
+                        'removedby' => 'system',
+                        'removedid' => 0,
+                    ));
+                }
+            }
+        }
+    }
+
     if ($token) {
         $changes = get_changes($token);
         log_debug('Have ' . count($changes) . ' changes');
@@ -66,13 +122,11 @@ function local_pcnz_sync_users() {
             process_changes($changes);
         }
     }
-    
+
+    // Rollover part that adds in the new files
     // If there's any problem and the rollover process can't run,
     // it will keep trying for an hour or until it's successful
     if (date("m") . date("d") . date("H") === PCNZ_ROLLOVER) {
-        $nextyear = date("Y") + 1;
-        $nextyearlyrun = $nextyear . date("m") . date("d") . date("H");
-
         // check we have a value in config table
         if (get_config('auto_create_annual_portfolio_nextyearlyrun') != $nextyearlyrun) {
             if ($templates = get_records_assoc('collection', 'autocopytemplate', 1, '', 'id, institution')) {

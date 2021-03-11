@@ -1009,6 +1009,51 @@ class Collection {
         }
         return true;
     }
+    /**
+     * Check to see if any verification blocks are verified - only to be used on personal collections
+     *
+     * @param  string  $userid Optionally check if the particular user has done the verification
+     * @return array   Verified blocks with block ids as keys
+     */
+    public function has_progress_verified($userid=null) {
+        if (!$pid = $this->has_progresscompletion()) {
+            return false;
+        }
+        require_once(get_config('libroot') . 'view.php');
+        $pview = new View($pid);
+        if (!$pview->get('owner')) {
+            return false;
+        }
+        if (!$vblocks = get_records_sql_array("SELECT * FROM {block_instance} WHERE blocktype = ? AND view = ?", array('verification', $pid))) {
+            return false;
+        }
+        $vblockids = array();
+        foreach ($vblocks as $vblock) {
+            $blockinstance = new BlockInstance($vblock->id);
+            $configdata = $blockinstance->get('configdata');
+            if ($userid) {
+                if (!empty($configdata['verified']) && $configdata['verifierid'] == $USER->get('id')) {
+                    $vblockids[$vblock->id] = 1;
+                }
+                if (!empty($configdata['addcomment'])) {
+                    if (record_exists('blocktype_verification_comment', 'instance', $vblock->id, 'from', $USER->get('id'))) {
+                        $vblockids[$vblock->id] = 1;
+                    }
+                }
+            }
+            else {
+                if (!empty($configdata['verified'])) {
+                    $vblockids[$vblock->id] = 1;
+                }
+                if (!empty($configdata['addcomment'])) {
+                    if (record_exists('blocktype_verification_comment', 'instance', $vblock->id)) {
+                        $vblockids[$vblock->id] = 1;
+                    }
+                }
+            }
+        }
+        return $vblockids;
+    }
 
     /**
      * Check that a collection has progress completion enable
