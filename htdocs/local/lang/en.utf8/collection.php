@@ -5,7 +5,7 @@ $string['overallcompletion'] = 'Overall completion of individual pages';
 $string['needssignedoff'] = 'Needs to be completed';
 $string['signedoff'] = 'Completed';
 $string['verifiednotavailable'] = 'You cannot verify portfolio "%s" by %s';
-
+$string['rollovereventmessage'] = 'Removed access via yearly rollover';
 // custom Pharmacy Council reset / undo verification lang strings
 $string['undoverificationdescription'] = 'Select one of your statements that you want to reset. By continuing, whomever is allowed to reset your statement will be notified. The verification will be removed once they action the request, and you can verify it again.';
 $string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been verified. However, the verifier, %s, wishes to reset it.
