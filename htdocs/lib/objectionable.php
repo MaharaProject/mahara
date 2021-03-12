@@ -1,5 +1,6 @@
 <?php
 /**
+ * The Objectionable form for handling objectionable content
  *
  * @package    mahara
  * @subpackage core
@@ -48,6 +49,12 @@ function objection_form() {
     return $form;
 }
 
+/**
+ * Handle objection pieform submission
+  *
+ * @param   Pieform $form   The objection pieform
+ * @param   array   $values The values passed in through the pieform
+ **/
 function objection_form_submit(Pieform $form, $values) {
     global $USER, $view, $pview, $artefact;
 
@@ -106,6 +113,11 @@ function objection_form_submit(Pieform $form, $values) {
     );
 }
 
+/**
+ *  Handle when objection pieform is cancelled
+ *
+ * @param Pieform   $form   The objection pieform
+ **/
 function objection_form_cancel_submit(Pieform $form) {
     global $view, $pview;
     if ($pview) {
@@ -195,6 +207,15 @@ function notrude_form() {
     );
 }
 
+/**
+ * Handles the submission of notrude pieform
+ *
+ * When the material is deemed not objectionable
+ * Update the record and notfify other admins
+ * @param   Object   $form  The notrude pieform
+ * @param   array   $values  The values passed through from the pieform
+ * @returns array Form elements.
+ */
 function notrude_form_submit(Pieform $form, $values) {
     global $view, $pview, $artefact, $USER;
 
@@ -335,6 +356,15 @@ function stillrude_form() {
     );
 }
 
+/**
+ * Handles the submission of stillrude pieform
+ *
+ * When the material is deemed still objectionable
+ * Update the record and notfify the view owner that content is still objectionable
+ * @param   Object   $form  The stillrude pieform
+ * @param   array   $values  The values passed through from the pieform
+ * @returns array Form elements.
+ */
 function stillrude_form_submit(Pieform $form, $values) {
     global $view, $pview, $artefact, $USER;
 
@@ -392,6 +422,7 @@ function stillrude_form_submit(Pieform $form, $values) {
 /**
  * Returns a form to review objectionable material.
  *
+ * @param   int $viewid The view id of the Objectionable view
  * @returns array Form elements.
  */
 function review_form($viewid = null) {
@@ -463,6 +494,14 @@ function review_form($viewid = null) {
     return $form;
 }
 
+/**
+ * Submit the review_form pieform
+ *
+ * Handles the submission of a form to review objectionable material.
+ *
+ * @param   Object   $form  The  review_form pieform
+ * @param   array   $values  The values passed through from the pieform
+ */
 function review_form_submit(Pieform $form, $values) {
     global $USER, $view, $pview;
     if ($pview) {
@@ -522,6 +561,11 @@ function review_form_submit(Pieform $form, $values) {
     );
 }
 
+/**
+ * Cancels the review_form pieform
+ *
+ * @param   Object   $form  The  review_form pieform
+ */
 function review_form_cancel_submit(Pieform $form) {
     global $view, $pview;
     if ($pview) {
