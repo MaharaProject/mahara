@@ -1,4 +1,15 @@
 <?php
+/**
+ *
+ * @package    mahara
+ * @subpackage local
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
+defined('INTERNAL') || die();
 
 // custom Pharmacy Council lang strings
 $string['overallcompletion'] = 'Overall completion of individual pages';
@@ -10,7 +21,7 @@ $string['rollovereventmessage'] = 'Removed access via yearly rollover';
 $string['undoverificationdescription'] = 'Select one of your statements that you want to reset. By continuing, whomever is allowed to reset your statement will be notified. The verification will be removed once they action the request, and you can verify it again.';
 $string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been verified. However, the verifier, %s, wishes to reset it.
 
-They gave the following reason:
+They added the following reason:
 
 %s';
 $string['ownerhasremovedaccess'] = '%s has unlinked you from their MyRecert portfolio "%s" as a verifier. The Pharmacy Council thanks you for being a verifier.';

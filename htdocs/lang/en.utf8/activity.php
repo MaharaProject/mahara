@@ -80,9 +80,9 @@ $string['newaccesssubject'] = array(
     0 => 'You have been given access to %s portfolio',
     1 => 'You have been given access to %s portfolios'
 );
-$string['newaccesssubjectname'] = array(
-    0 => 'You have been given access to %s portfolio by %s',
-    1 => 'You have been given access to %s portfolios by %s'
+$string['newaccesssubjectname1'] = array(
+    0 => '%2$s gave you access to %s portfolio',
+    1 => '%2$s gave you access to %s portfolios'
 );
 $string['newaccessubjectdefault'] = 'You have been given new access';
 $string['messageaccessfromto1'] = 'You have access between %s and %s.';

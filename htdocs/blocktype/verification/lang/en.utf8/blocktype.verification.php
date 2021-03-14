@@ -85,7 +85,7 @@ $string['addcommentsuccessdraft'] = 'Adding draft comment to "%s" was successful
 $string['verifymessagesubjectnoname'] = 'A statement has been left on your portfolio:';
 $string['verifymessagenoname'] = 'The following statement has been left on %s:
 %s';
-$string['verifymessagesubject'] = '%s has left a statement on your portfolio';
-$string['verifymessage'] = '%s has left the following statement on %s:
+$string['verifymessagesubject'] = '%s confirmed a statement on your portfolio';
+$string['verifymessage'] = '%s confirmed the following statement on %s:
 %s';
 $string['blockneedscollection'] = 'This blocktype needs to be put on the portfolio completion page in a collection to display correctly.';

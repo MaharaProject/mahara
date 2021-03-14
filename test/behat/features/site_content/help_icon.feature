@@ -57,7 +57,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   # Shared by me
   And I choose "Shared by me" in "Share" from main menu
   And I click on "Help"
-  Then I should see "When you have created portfolio pages and collections, you may wish to share them with others, e.g. to receive feedback on your work in form of comments."
+  Then I should see "You can share your portfolio with your verifier. Click the 'Edit access' icon, i.e. the padlock, and select a person to share your portfolio with. Save your selection."
   # Shared with me
   And I choose "Shared with me" in "Share" from main menu
   And I click on "Help"

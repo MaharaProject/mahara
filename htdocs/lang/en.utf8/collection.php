@@ -159,18 +159,18 @@ $string['ownerhasremovedaccesssubject'] = '%s has removed your access to "%s"';
 $string['revokedbyowner'] = 'Owner has revoked access';
 $string['youhavebeengivenaccess'] = "You have been given access to the following";
 $string['userhasremovedaccess'] = '%s does not have access to the portfolio "%s" any more.';
-$string['userrevokereason'] = "They gave the following reason:";
+$string['userrevokereason'] = "They added the following note:";
 $string['removemyaccess'] = "Remove my access";
 $string['ownerhasremovedaccess'] = '%s revoked your access to their portfolio "%s".';
 $string['completionpercentage'] = "Completion";
 // Revoke my access modal
 $string['revokemyaccessformtitle'] = "Remove portfolio access";
 $string['revokemyaccessdescription'] = "By continuing, you will remove your access to this entire portfolio. You will not be able to view it any more or engage with it. The owner of this portfolio will recieve a notification that you no longer have access.
-<br>You can add an additonal message.";
-$string['revokemyaccessreasontextbox'] ="Message";
+<br>You can add an additonal note.";
+$string['revokemyaccessreasontextbox'] ="Note";
 $string['removemyaccesssubmit'] = "Continue";
 $string['revokemyaccessconfirm'] = "You will lose access to: ";
-$string['revokemyaccessreason'] = "Message";
+$string['revokemyaccessreason'] = "Note";
 $string['revokemessagesent'] = "Access revoked";
 $string['removemyaccessiconaria'] = 'Remove my access to "%s" owned by %s';
 
