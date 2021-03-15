@@ -372,6 +372,7 @@ $string['blocktypecategorydesc.general'] = 'Click for general options';
 $string['blocktypecategorydesc.internal'] = 'Click for personal info options';
 $string['blocktypecategorydesc.blog'] = 'Click for journal options';
 
+$string['draft'] = 'Draft';
 $string['drafttextblockdescription'] = 'Save the block as draft if you don\'t want the text to be visible to anybody. Once the text is published, it can\'t be set to draft again.';
 
 $string['notitle'] = 'No title';
