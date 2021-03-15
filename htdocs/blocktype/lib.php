@@ -465,7 +465,7 @@ EOF;
      * this is specific to this TYPE of plugin and relates to whether individual instances
      * can be configured within a view
      */
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 
@@ -875,8 +875,17 @@ class BlockInstance {
     private $width;
     private $height;
 
+    /**
+     * Set to true if the block is being created.
+     * @var boolean $new
+     * */
+    private $new;
+
     public function __construct($id=0, $data=null) {
-         if (!empty($id)) {
+        if ($id == 0) {
+            $this->set_new();
+        }
+        if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('block_instance','id',$id)) {
                     // TODO: 1) doesn't need get string here if this is the
@@ -1270,7 +1279,7 @@ class BlockInstance {
         $smarty->assign('height', $this->get('height'));
 
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
+        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config', $this));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
         $smarty->assign('configtitle',  $configtitle);
         $smarty->assign('content', $content);
@@ -2397,6 +2406,27 @@ class BlockInstance {
         }
 
     }
+
+    /**
+     * Set the new state of this block instance.
+     */
+    public function set_new() {
+        $this->new = true;
+    }
+
+    /**
+     * Return the new state of this block instance.
+     *
+     * @return boolean
+     *   Return the current state of 'new' or false if not set.
+     */
+    public function is_new() {
+        if (!empty($this->new)) {
+            return $this->new;
+        }
+        return false;
+    }
+
 }
 
 function require_blocktype_plugins() {

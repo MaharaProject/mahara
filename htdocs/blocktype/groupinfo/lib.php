@@ -57,7 +57,7 @@ class PluginBlocktypeGroupInfo extends MaharaCoreBlocktype {
         return $dwoo->fetch('blocktype:groupinfo:groupinfo.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 

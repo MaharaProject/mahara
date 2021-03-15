@@ -158,7 +158,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
     }
 
     // My Plans blocktype only has 'title' option so next two functions return as normal
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

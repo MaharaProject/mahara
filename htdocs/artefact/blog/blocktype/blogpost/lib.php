@@ -96,7 +96,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         return $artefacts;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

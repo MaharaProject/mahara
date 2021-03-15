@@ -72,7 +72,7 @@ class PluginBlocktypeResumefield extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:resumefield:content.tpl');;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

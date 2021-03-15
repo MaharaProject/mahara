@@ -69,7 +69,7 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
         return new Collection($id);
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

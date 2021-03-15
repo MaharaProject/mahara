@@ -137,7 +137,7 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:courseinfo:courseinfo.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

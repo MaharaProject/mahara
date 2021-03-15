@@ -60,7 +60,7 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:html:html.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

@@ -68,7 +68,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return get_string('badurlerror', 'blocktype.googleapps', $url);
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

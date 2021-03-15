@@ -149,8 +149,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $html;
     }
 
-    public static function has_instance_config() {
-        return true;
+    /**
+     * Once created annotations should not be editable.
+     *
+     * @param BlockInstance $instance
+     *   With this being a static we need to pass this in.
+     *
+     * @return boolean
+     *   Return true/false based on if this is a new block.
+     */
+    public static function has_instance_config(BlockInstance $instance) {
+        return $instance->is_new();
     }
 
     public static function instance_config_form(BlockInstance $instance) {

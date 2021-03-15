@@ -60,7 +60,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:entireresume:content.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

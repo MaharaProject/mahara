@@ -2421,7 +2421,7 @@ class View {
             $result = array(
                 'display' => $display,
             );
-            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
+            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config', $bi)) {
                 $result['configure'] = $bi->render_editing(true, true);
             }
             return $result;
@@ -2549,7 +2549,7 @@ class View {
             // Return new block rendered in both configure mode and (editing) display mode
             $isnew = (bool)$values['new'];
             $result['display'] = $bi->render_editing(false, $isnew);
-            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
+            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config', $bi)) {
                 $result['configure'] = $bi->render_editing(true, $isnew);
             }
             else {
