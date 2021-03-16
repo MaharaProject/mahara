@@ -316,8 +316,8 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $mathslateplugin = !empty($mathslate) ? ',' . $mathslate : '';
                     $toolbar = array(
                         null,
-                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
-                        '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
+                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo | fullscreen"', // PCNZ customisation: WR 354882: Moved fullscreen button to top menu bar
+                        '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl"',
                         '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | table | removeformat pastetext | anchor | code"',
                     );
 
