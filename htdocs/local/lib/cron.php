@@ -65,7 +65,7 @@ function local_pcnz_sync_users() {
     // Rollover part that unlocks the previous years files
     if (date("m") . date("d") . date("H") === PCNZ_ROLLOVER) {
         if (get_config('auto_create_annual_portfolio_nextyearlyrun') != $nextyearlyrun) {
-            $lastyearlyrun = db_format_timestamp(strtotime('-1 year -1 hour')); // We go back a year and an hour in case previous locked were not exactly 1 year ago
+            $lastyearlyrun = db_format_timestamp(strtotime('-3 years -1 hour')); // We go back three years and an hour in case previous locked were not exactly three years ago
             // We unlock the previous batch of collections
             execute_sql("UPDATE {collection} SET lock = 0
                          WHERE id IN (
