@@ -1959,9 +1959,9 @@ EOD;
 
     /**
      * A fixture to set up collections of pages in bulk.
-     * Currently it only supports adding title / description,
-     * | title          | ownertype | ownername | description | pages             |
-     * | collection one | user      | UserA     | desc of col |Page One,Page Two  |
+     * Currently it only supports adding title, description and locking
+     * | title          | ownertype | ownername | lock  | description | pages             |
+     * | collection one | user      | UserA     | false | desc of col |Page One,Page Two  |
      * @param unknown $record
      * @throws SystemException if creating failed
      * @return int new collection id
@@ -2046,6 +2046,7 @@ EOD;
         $data->progresscompletion = 0;
         $data->autocopytemplate = 0;
         $data->template = 0;
+        $data->lock = !empty($record['lock']) ? 1 : 0;
         $collection = new Collection(0, $data);
         $collection->commit();
 
@@ -3038,4 +3039,4 @@ EOD;
           throw new SystemException("Invalid owner. The owner needs to be a username or group/institution display name");
       }
     }
-  }
+}
