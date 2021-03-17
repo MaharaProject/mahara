@@ -339,7 +339,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
         });
 EOF;
                     }
-
+  // PCNZ customisation for WR 354898: Do not show table toolbar.
                     if ($check[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
     theme: "silver",
@@ -353,6 +353,7 @@ EOF;
     toolbar1: {$toolbar[1]},
     toolbar2: {$toolbar[2]},
     toolbar3: {$toolbar[3]},
+    table_toolbar: '',
     menubar: false,
     fix_list_elements: true,
     image_advtab: true,
