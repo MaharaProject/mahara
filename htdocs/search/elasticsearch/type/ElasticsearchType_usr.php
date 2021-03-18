@@ -31,6 +31,10 @@ class ElasticsearchType_usr extends ElasticsearchType {
                     'type' => 'keyword',
                     'copy_to' => 'catch_all'
             ),
+            'studentid' => array (
+                    'type' => 'keyword',
+                    'copy_to' => 'catch_all'
+            ),
             'institutions' => array (
                     'type' => 'keyword',
                     'copy_to' => 'institution',
@@ -69,6 +73,7 @@ class ElasticsearchType_usr extends ElasticsearchType {
                 'firstname' => NULL,
                 'lastname' => NULL,
                 'preferredname' => NULL,
+                'studentid' => NULL,
                 'institutions' => NULL,
                 'access' => NULL,
                 'ctime' => NULL,
@@ -81,7 +86,7 @@ class ElasticsearchType_usr extends ElasticsearchType {
     //PCNZ customization: Lastname is always visible in name searches.
         $sql = 'SELECT u.id, u.username, u.preferredname, ap.value AS hidenamepref,
         CASE ap.value WHEN \'1\' THEN NULL ELSE u.firstname END AS firstname,
-        u.lastname AS lastname,
+        u.lastname AS lastname, u.studentid,
         u.active, u.deleted, u.email, u.ctime
         FROM {usr} u
         LEFT JOIN {usr_account_preference} ap ON (u.id = ap.usr AND ap.field = \'hiderealname\')
