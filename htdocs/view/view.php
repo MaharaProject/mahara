@@ -290,6 +290,7 @@ $javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js',
         'js/gridstack/gridstack.jQueryUI.js',
         'js/gridlayout.js',
         'js/views.js',
+        'tinymce',
     );
 $blocktype_js = $view->get_all_blocktype_javascript();
 $javascript = array_merge($javascript, $blocktype_js['jsfiles']);
