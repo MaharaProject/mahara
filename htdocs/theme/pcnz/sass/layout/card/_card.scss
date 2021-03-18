@@ -70,7 +70,7 @@
                 border: 0;
             }
         }
-        
+
         .btn-secondary {
             background-color: $theme-accent-color;
             border: 0;
@@ -79,6 +79,11 @@
                 background-color: $white;
                 border: 0;
             }
+        }
+
+        .errmsg,
+        .requiredmarker {
+            color: #431E19;
         }
     }
 }
