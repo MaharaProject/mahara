@@ -36,14 +36,14 @@ $string['notification'] = 'Notification to author';
 $string['notificationdescription'] = 'Send a notification to the portfolio author when the statement has been selected and / or a comment has been added.';
 $string['resetstatement'] = 'Reset statement';
 $string['resetstatementdescription'] = 'Select the role or roles that a person must have to reset the statement. If no role is selected, nobody can reset the statement.';
-$string['availabilitydatemessage'] = 'You cannot yet approve the statement or add a comment if that is allowed. This is possible after %s.';
+$string['availabilitydatemessage'] = 'You cannot confirm this statement yet. This is possible after %s.';
 
 $string['toverifyspecific'] = 'Review "%s"';
 $string['verifiedspecific'] = '"%s" is reviewed';
 
 $string['verificationmodaltitle'] = 'Review: %s';
 $string['verificationchecklist'] = '<p>After you have confirmed this statement, you cannot revert your decision.</p>';
-$string['verificationchecklistnames'] = '<p>After you have confirmed this statement, you cannot revert your decision. If you wish to do so, you will need to contact one of the following: %s.</p>';
+$string['verificationchecklistnames'] = '<p>After you have confirmed this statement, you cannot revert your decision. If you wish to do so, click the "More options" button and select "Reset statement". The following can action the reset: %s.</p>';
 $string['verificationchecklistlocking'] = '<p>After you have confirmed this statement,</p>
 <ul>
 <li>the portfolio author will not be able to make any changes to their portfolio.</li>
@@ -54,7 +54,7 @@ $string['verificationchecklistlockingnames'] = '<p>After you have confirmed this
 <ul>
 <li>the portfolio author will not be able to make any changes to their portfolio.</li>
 <li>the portfolio author cannot add another reviewer.</li>
-<li>you cannot revert your decision. If you wish to do so, you will need to contact one of the following: %s.</li>
+<li>you cannot revert your decision. If you wish to do so, click the "More options" button and select "Reset statement". The following can action the reset: %s.</li>
 </ul>';
 $string['unverify'] = 'If you continue, this review will be removed.';
 $string['verifiedon'] = 'Reviewed on %s';
@@ -85,7 +85,7 @@ $string['addcommentsuccessdraft'] = 'Adding draft comment to "%s" was successful
 $string['verifymessagesubjectnoname'] = 'A statement has been left on your portfolio:';
 $string['verifymessagenoname'] = 'The following statement has been left on %s:
 %s';
-$string['verifymessagesubject'] = '%s confirmed a statement on your portfolio';
-$string['verifymessage'] = '%s confirmed the following statement on %s:
+$string['verifymessagesubject'] = '%s has confirmed a statement on your portfolio';
+$string['verifymessage'] = '%s has confirmed the following statement on %s:
 %s';
 $string['blockneedscollection'] = 'This blocktype needs to be put on the portfolio completion page in a collection to display correctly.';

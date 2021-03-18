@@ -24,18 +24,11 @@ $string['toverifyspecific'] = 'Verify "%s"';
 $string['verifiedspecific'] = '"%s" is verified';
 $string['verificationmodaltitle'] = 'Complete: %s';
 $string['verificationchecklist'] = '<p>After you have confirmed this statement, you cannot revert your verification.</p>';
-$string['verificationchecklistnames'] = '<p>After you have confirmed this statement, you cannot revert your verification. If you wish to do so, you will need to contact one of the following: %s.</p>';
-$string['verificationchecklistlocking'] = '<p>After you have confirmed this statement,</p>
-<ul>
-<li>the portfolio author will not be able to make any changes to their portfolio.</li>
-<li>the portfolio author cannot add another verifier.</li>
-<li>you cannot revert your verification.</li>
-</ul>';
 $string['verificationchecklistlockingnames'] = '<p>After you have confirmed this statement,</p>
 <ul>
 <li>the portfolio author will not be able to make any changes to their portfolio.</li>
 <li>the portfolio author cannot add another verifier.</li>
-<li>you cannot revert your verification. If you wish to do so, you will need to contact one of the following: %s.</li>
+<li>you cannot revert your verification. If you wish to do so, click the "More options" button and select "Reset statement". The following can action the reset: %s.</li>
 </ul>';
 $string['unverify'] = 'If you continue, this verification will be removed.';
 $string['verifiedon'] = 'Verified on %s';
@@ -47,4 +40,3 @@ $string['addcommentchecklistlockingnames'] = 'After you have published this stat
 - the portfolio author will not be able to make any changes to their portfolio.
 - the portfolio author cannot add another verifier.
 - you cannot revert your statement. If you wish to do so, you will need to contact one of the following: %s.';
-$string['availabilitydatemessage'] = 'You cannot yet approve your verifier statement. This is possible after %s. You are welcome to review the portfolio already and talk to the pharmacist about it.';
