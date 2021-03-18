@@ -10,11 +10,11 @@ Background:
   | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
   Given the following "pages" exist:
-  | title | description | ownertype | ownername |
-  | Page UserA_01 | Page 01 | user | UserA |
-  | Page UserA_02 | Page 02 | user | UserA |
-  | Page UserA_03 | Page 03 | user | UserA |
-  | Page UserA_04 | Page 04 | user | UserA |
+  | title         | description         | ownertype | ownername | instructions                |
+  | Page UserA_01 | Page 01 description | user      | UserA     | The instructions for page 1 |
+  | Page UserA_02 | Page 02 description | user      | UserA     | The instructions for page 2 |
+  | Page UserA_03 | Page 03 description | user      | UserA     | The instructions for page 3 |
+  | Page UserA_04 | Page 04 description | user      | UserA     | The instructions for page 4 |
 
   And the following "collections" exist:
   | title | description | ownertype | ownername | pages |
@@ -42,5 +42,6 @@ Scenario:
   When I expand "Nav for collection B" node
   # test link works
   And I follow "Page UserA_04"
-  And I should see "Page 04"
+  And I expand "Instructions" node
+  Then I should see "Instructions for page 4"
   And I should see "You are on page 2/2"

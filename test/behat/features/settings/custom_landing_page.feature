@@ -51,7 +51,7 @@ Scenario: Set the custom landing page
 
     # Now see if we land on user page
     Given I log in as "UserA" with password "Kupuh1pa!"
-    Then I should see "This is the landing page"
+    Then I should not see "This is the landing page"
     And I log out
 
     Given I log in as "admin" with password "Kupuh1pa!"

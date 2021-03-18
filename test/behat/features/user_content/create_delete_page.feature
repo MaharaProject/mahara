@@ -6,8 +6,8 @@ Feature: Creating a page with stuff in it
 
 Background:
     Given the following "users" exist:
-    | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+    | username | password  | email             | firstname | lastname | institution | authname | role   |
+    | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User     | mahara      | internal | member |
 
 Scenario: Creating a page with content in it (Bug 1426983)
     # Log in as "Admin" user
@@ -73,7 +73,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see the date "today" in the ".text-right" element with the format "d F Y"
     # Verifying the page title and description changed
     Then I should see "This is the edited page title"
-    And I should see "This is the edited description"
+    And I should not see "This is the edited description"
     # Create a timeline version
     And I press "More options"
     And I follow "Save to timeline"
@@ -103,7 +103,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     | Page title | This is my page now |
     And I press "Save"
     And I follow "Display page"
-    And I should see "This is the edited description"
+    And I should not see "This is the edited description"
     And I log out
 
     # check page can be deleted (Bug 1755682)
