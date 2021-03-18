@@ -408,7 +408,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             $rs = get_recordset_sql('SELECT DISTINCT name AS artefacttype FROM {artefact_installed_type} ORDER BY name ASC');
             $artefacttypes = explode(',', get_config_plugin('search', 'elasticsearch', 'artefacttypes'));
             // the following artefacttypes are auto ticked because the info is already being indexed by the usr table
-            $artefacttypes_toexclude = array('firstname', 'lastname', 'preferredname', 'email');
+            $artefacttypes_toexclude = array('firstname', 'lastname', 'preferredname', 'email', 'studentid');
             $artefacttypes = array_merge($artefacttypes, $artefacttypes_toexclude);
             // to be valid, artefact types need a hierarchy
             $artefacttypesmap_array = self::elasticsearchartefacttypesmap_to_array();
@@ -2080,7 +2080,7 @@ class ElasticsearchIndexing {
                     'analyzer' => array(
                         'mahara_analyzer' => array(
                             'type' => 'custom',
-                            'tokenizer' => 'lowercase', // define token separators as any non-alphanumeric character
+                            'tokenizer' => 'standard', // define token separators as any non-alphanumeric character
                             'filter' => array('standard', 'stop', 'maharaSnowball'),
                             'char_filter' => array('maharaHtml'),
                         ),
