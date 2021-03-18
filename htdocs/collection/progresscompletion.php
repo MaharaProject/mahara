@@ -105,7 +105,7 @@ if ($USER->is_logged_in()) {
                 continue; // no one to undo the block
             }
             if (!empty($configdata['availabilitydate']) && $configdata['availabilitydate'] > time()) {
-                continue; // no currently verifiable
+                continue; // not currently verifiable
             }
             if (!empty($configdata['verified']) && $configdata['verifierid'] == $USER->get('id')) {
                 $vblockids[$vblock->id] = 1;

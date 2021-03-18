@@ -11,13 +11,11 @@
 
 defined('INTERNAL') || die();
 
-// custom Pharmacy Council lang strings
 $string['overallcompletion'] = 'Overall completion of individual pages';
 $string['needssignedoff'] = 'Needs to be completed';
 $string['signedoff'] = 'Completed';
 $string['verifiednotavailable'] = 'You cannot verify portfolio "%s" by %s';
 $string['rollovereventmessage'] = 'Removed access via yearly rollover';
-// custom Pharmacy Council reset / undo verification lang strings
 $string['undoverificationdescription'] = 'Select the statement that you want to reset. By continuing, whomever is allowed to reset the statement will be notified. The tick will be removed once they action the request, and you can verify it again.';
 $string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been verified. However, the verifier, %s, wishes to reset it.
 
