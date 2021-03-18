@@ -19,4 +19,4 @@ $string['registeredinactive'] = 'Registered, inactive';
 $string['registeredstatusinactive'] = 'Account status is \'Registered, inactive\'';
 $string['registeredstatusinactivefor'] = '%s has status \'Registered, inactive\'';
 $string['registeredsuspended'] = 'Suspended';
-$string['legal']              = 'Terms and conditions for MyRecert';
+$string['legal']              = 'Terms and conditions';

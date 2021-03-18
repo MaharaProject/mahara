@@ -18,12 +18,13 @@ $string['signedoff'] = 'Completed';
 $string['verifiednotavailable'] = 'You cannot verify portfolio "%s" by %s';
 $string['rollovereventmessage'] = 'Removed access via yearly rollover';
 // custom Pharmacy Council reset / undo verification lang strings
-$string['undoverificationdescription'] = 'Select one of your statements that you want to reset. By continuing, whomever is allowed to reset your statement will be notified. The verification will be removed once they action the request, and you can verify it again.';
+$string['undoverificationdescription'] = 'Select the statement that you want to reset. By continuing, whomever is allowed to reset the statement will be notified. The tick will be removed once they action the request, and you can verify it again.';
 $string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been verified. However, the verifier, %s, wishes to reset it.
 
 They added the following reason:
 
 %s';
+$string['ownerhasremovedaccesssubject'] = '%s has unlinked you from "%s"';
 $string['ownerhasremovedaccess'] = '%s has unlinked you from their MyRecert portfolio "%s" as a verifier. The Pharmacy Council thanks you for being a verifier.';
 $string['undonesubject'] = 'Portfolio statement reset request actioned';
 $string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who made the statement.';

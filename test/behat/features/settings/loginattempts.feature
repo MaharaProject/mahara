@@ -9,7 +9,7 @@ Background:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
   And I am on homepage
-  And I follow "Lost username / password"
+  And I follow "Lost password"
 
 Scenario: Too many bad password attempts
   # I should not see any error message on the first 5 attempts
@@ -37,20 +37,20 @@ Scenario: Too many bad password attempts
   And I log out
 
   And I am on homepage
-  And I follow "Lost username / password"
+  And I follow "Lost password"
 
 Scenario: Asking for a username reminder (Bug 1460911)
-  When I fill in "Email address or username" with "UserA@example.org"
+  When I fill in "Email address or registration number" with "UserA@example.org"
   And I press "Send request"
   Then I should see "You should receive an email shortly with a link that you can use to change the password for your account."
 
 Scenario: Asking for a password reset (Bug 1460911)
-  When I fill in "Email address or username" with "UserA"
+  When I fill in "Email address or registration number" with "UserA"
   And I press "Send request"
   Then I should see "You should receive an email shortly with a link that you can use to change the password for your account."
 
 Scenario: Trying a username or password that doesn't exist (Bug 1460911)
-  When I fill in "Email address or username" with "nosuchuser"
+  When I fill in "Email address or registration number" with "nosuchuser"
   And I press "Send request"
   Then I should see "If you do not receive an email, either the details you entered are incorrect or you normally use external authentication to access the site"
 
