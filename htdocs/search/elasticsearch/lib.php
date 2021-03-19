@@ -2081,7 +2081,7 @@ class ElasticsearchIndexing {
                         'mahara_analyzer' => array(
                             'type' => 'custom',
                             'tokenizer' => 'standard', // define token separators as any non-alphanumeric character
-                            'filter' => array('standard', 'stop', 'maharaSnowball'),
+                            'filter' => array('standard', 'lowercase', 'stop', 'maharaSnowball'),
                             'char_filter' => array('maharaHtml'),
                         ),
                         'whitespace_analyzer' => array(
