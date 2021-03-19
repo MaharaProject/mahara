@@ -127,8 +127,8 @@ Background:
 
     And the following "collections" exist:
     # Available fields: title*, description, ownertype*, ownername*, pages
-    | title          | ownertype | ownername | description | pages             |
-    | collection one | user      | UserA     | desc of col |Page One A, Page Two A  |
+    | title          | ownertype | ownername | lock  | description | pages                   |
+    | collection one | user      | UserA     | false |desc of col  | Page One A, Page Two A  |
 
 
     And the following "journals" exist:
