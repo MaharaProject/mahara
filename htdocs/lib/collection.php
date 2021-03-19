@@ -132,7 +132,7 @@ class Collection {
      * Deletes a Collection
      *
      */
-    public function delete() {
+    public function delete($deleteviews = false) {
         $viewids = get_column('collection_view', 'view', 'collection', $this->id);
         db_begin();
 
@@ -170,6 +170,14 @@ class Collection {
         // @todo: add user message to whatever calls this.
         if ($viewids) {
             delete_records_select('view_access', 'view IN (' . join(',', $viewids) . ') AND token IS NOT NULL');
+        }
+        // Delete the views that were in the collection if required
+        if ($deleteviews) {
+            require_once('view.php');
+            foreach ($viewids as $viewid) {
+                $view = new View($viewid);
+                $view->delete();
+            }
         }
         $data = array('id' => $this->id,
                       'name' => $this->name,

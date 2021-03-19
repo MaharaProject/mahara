@@ -99,6 +99,19 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
             );
         }
     }
+    // Select one by default if needed
+    if ($collid = param_integer('collection', null)) {
+        $elements['what']['defaultvalue'] = 'collections';
+        if (isset($elements['collection_' . $collid])) {
+            $elements['collection_' . $collid]['defaultvalue'] = true;
+        }
+    }
+    else if ($viewid = param_integer('view', null)) {
+        $elements['what']['defaultvalue'] = 'views';
+        if (isset($elements['view_' . $viewid])) {
+            $elements['view_' . $viewid]['defaultvalue'] = true;
+        }
+    }
 }
 else {
     $elements['what']['disabled'] = true;
