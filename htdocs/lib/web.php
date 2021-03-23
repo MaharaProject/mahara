@@ -1891,8 +1891,11 @@ function param_imagesize($name) {
  *
  */
 function param_array($name) {
-    if (!empty($_POST[$name])) {
+    if (isset($_POST[$name])) {
         return fix_utf8($_POST[$name]);
+    }
+    else if (isset($_GET[$name])) {
+        return fix_utf8($_GET[$name]);
     }
     else {
         if (func_num_args() >= 2) {

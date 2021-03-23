@@ -2171,5 +2171,25 @@ function xmldb_core_upgrade($oldversion=0) {
         ensure_record_exists('event_type', $event, $event);
     }
 
+    if ($oldversion < 2020092118) {
+        log_debug('Adding in some indexes for the "event_log" table');
+        $index = new XMLDBIndex('resourceix');
+        $table = new XMLDBTable('event_log');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('resourcetype', 'resourceid'));
+        if (!index_exists($table, $index)) {
+            add_index($table, $index);
+        }
+        $index = new XMLDBIndex('parentix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('parentresourcetype', 'parentresourceid'));
+        if (!index_exists($table, $index)) {
+            add_index($table, $index);
+        }
+        $index = new XMLDBIndex('ownerix');
+        $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('ownertype', 'ownerid'));
+        if (!index_exists($table, $index)) {
+            add_index($table, $index);
+        }
+    }
+
     return $status;
 }

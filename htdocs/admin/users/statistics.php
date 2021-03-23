@@ -100,7 +100,12 @@ $end = $end ? format_date(strtotime(str_replace('/', '-', $end)), 'strftimew3cda
 
 $activecolumns = $SESSION->get('columnsforstats');
 $activecolumns = !empty($activecolumns) ? $activecolumns : array();
-
+if (isset($_POST['subtype']) && $_POST['subtype'] == 'completionverification' && empty($_POST['portfoliofilter'])) {
+    // need to set empty post if nothing selected otherwise the url value is used
+    $_POST['portfoliofilter'] = array();
+}
+$portfoliofilter = param_array('portfoliofilter', array());
+$verifierfilter = param_alpha('verifierfilter', 'all');
 $extraparams = new stdClass();
 $extraparams->type = $type;
 $extraparams->subtype = $subtype;
@@ -112,10 +117,14 @@ $extraparams->extra = array('sort' => param_alphanumext('sort', ''),
                             'start' => $start,
                             'end' => $end,
                             'columns' => $activecolumns,
+                            'portfoliofilter' => $portfoliofilter,
+                            'verifierfilter' => $verifierfilter,
                       );
 
-$jsondatestart = !empty($start) ? "'" . $start ."'" : 'null';
+$jsondatestart = !empty($start) ? "'" . $start . "'" : 'null';
 $jsondateend = !empty($end) ? "'" . $end . "'" : 'null';
+$jsonportfoliofilter = !empty($portfoliofilter) ? "[" . implode(',', $portfoliofilter) . "]" : "[]";
+$jsonverifierfilter = !empty($verifierfilter) ? "'" . $verifierfilter . "'" : "'all'";
 $extrajson = json_encode($extraparams->extra);
 $wwwroot = get_config('wwwroot');
 
@@ -136,6 +145,8 @@ var opts = {'id':'statistics_table_container',
             'limit':{$extraparams->limit},
             'start':{$jsondatestart},
             'end':{$jsondateend},
+            'verifierfilter':{$jsonverifierfilter},
+            'portfoliofilter':{$jsonportfoliofilter},
            };
 
 function show_stats_config() {
@@ -146,14 +157,19 @@ function show_stats_config() {
             e.preventDefault();
             $("#modal-configs").modal("hide");
         });
-        // The institution selector can be a hidden field if only 1 choice
-        // So we need to make sure the field is a select field and not a hidden one
-        var instselect = $('#reportconfigform_institution');
-        if (instselect.is('select')) {
-            instselect.select2({
-                dropdownParent: $("#modal-configs"),
-                width: '100%'
-            });
+        // The select2 selectors need to be wired up after loading so we
+        // pass in the id's of those fields
+        // We also need to make sure the fields are a select field and not a hidden one
+        if (data.data.select2) {
+            for (var x in data.data.select2) {
+                var elem = $("#" + data.data.select2[x]);
+                if (elem.is('select')) {
+                    elem.select2({
+                        dropdownParent: $("#modal-configs"),
+                        width: '100%',
+                    });
+                }
+            }
         }
     });
 }
