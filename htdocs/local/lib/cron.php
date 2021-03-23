@@ -413,14 +413,18 @@ function set_apc_status($userid, $personalinfo) {
                          'apcstatusdate' => null,
                          'apcstatusdateend' => null);
     }
-    $logentry = (object) array(
-        'usr'      => $userid,
-        'realusr'  => $userid,
-        'event'    => 'apcstatuschange',
-        'data'     => json_encode($logdata),
-        'ctime'    => db_format_timestamp(time()),
-    );
-    insert_record('event_log', $logentry);
+    // Update the event log if the status is different to last recorded status
+    $oldstatus = get_field_sql("SELECT data FROM {event_log} WHERE event = ? AND usr = ? ORDER BY ctime DESC LIMIT 1", array('apcstatuschange', $userid));
+    if (!$oldstatus || ($oldstatus != json_encode($logdata))) {
+        $logentry = (object) array(
+            'usr'      => $userid,
+            'realusr'  => $userid,
+            'event'    => 'apcstatuschange',
+            'data'     => json_encode($logdata),
+            'ctime'    => db_format_timestamp(time()),
+        );
+        insert_record('event_log', $logentry);
+    }
 }
 
 /**

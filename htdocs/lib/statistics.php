@@ -1722,6 +1722,424 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     return $result;
 }
 
+function completionverification_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'firstname',
+              'name' => get_string('firstname'),
+              'class' => format_class($extra, 'firstname'),
+              'link' => format_goto($urllink . '&sort=firstname', $extra, array('sort'), 'firstname')
+        ),
+        array(
+              'id' => 'lastname', 'required' => true,
+              'name' => get_string('lastname'),
+              'class' => format_class($extra, 'lastname'),
+              'link' => format_goto($urllink . '&sort=lastname', $extra, array('sort'), 'lastname')
+        ),
+        array(
+              'id' => 'displayname',
+              'name' => get_string('displayname'),
+              'class' => format_class($extra, 'displayname'),
+              'link' => format_goto($urllink . '&sort=displayname', $extra, array('sort'), 'displayname')
+        ),
+        array(
+              'id' => 'username',
+              'name' => get_string('username'),
+              'class' => format_class($extra, 'username'),
+              'link' => format_goto($urllink . '&sort=username', $extra, array('sort'), 'username')
+        ),
+        array(
+              'id' => 'registration_number', 'required' => true,
+              'name' => get_string('registrationnumber', 'statistics'),
+              'class' => format_class($extra, 'registration_number'),
+              'link' => format_goto($urllink . '&sort=registration_number', $extra, array('sort'), 'registration_number')
+        ),
+        array(
+              'id' => 'email',
+              'name' => get_string('email'),
+              'class' => format_class($extra, 'email'),
+              'link' => format_goto($urllink . '&sort=email', $extra, array('sort'), 'email')
+        ),
+        array(
+              'id' => 'apcstartdate',
+              'name' => get_string('apcstatusdate', 'statistics'),
+              'class' => format_class($extra, 'apcstartdate'),
+              'link' => format_goto($urllink . '&sort=apcstartdate', $extra, array('sort'), 'apcstartdate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'apcstartdate')
+        ),
+        array(
+              'id' => 'portfoliotitle',
+              'name' => get_string('portfoliotitle', 'statistics'),
+              'class' => format_class($extra, 'portfoliotitle'),
+              'link' => format_goto($urllink . '&sort=portfoliotitle', $extra, array('sort'), 'portfoliotitle'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'portfoliotitle')
+        ),
+        array(
+              'id' => 'portfoliocreationdate',
+              'name' => get_string('portfoliocreationdate', 'statistics'),
+              'class' => format_class($extra, 'portfoliocreationdate'),
+              'link' => format_goto($urllink . '&sort=portfoliocreationdate', $extra, array('sort'), 'portfoliocreationdate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'portfoliocreationdate')
+        ),
+        array(
+              'id' => 'templatetitle',
+              'name' => get_string('templatetitle', 'statistics'),
+              'class' => format_class($extra, 'templatetitle'),
+              'link' => format_goto($urllink . '&sort=templatetitle', $extra, array('sort'), 'templatetitle'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'templatetitle')
+        ),
+        array(
+              'id' => 'verifierfirstname',
+              'name' => get_string('verifierfirstname', 'statistics'),
+              'class' => format_class($extra, 'verifierfirstname'),
+              'link' => format_goto($urllink . '&sort=verifierfirstname', $extra, array('sort'), 'verifierfirstname')
+        ),
+        array(
+              'id' => 'verifierlastname',
+              'name' => get_string('verifierlastname', 'statistics'),
+              'class' => format_class($extra, 'verifierlastname'),
+              'link' => format_goto($urllink . '&sort=verifierlastname', $extra, array('sort'), 'verifierlastname')
+        ),
+        array(
+              'id' => 'verifierdisplayname',
+              'name' => get_string('verifierdisplayname', 'statistics'),
+              'class' => format_class($extra, 'verifierdisplayname'),
+              'link' => format_goto($urllink . '&sort=verifierdisplayname', $extra, array('sort'), 'verifierdisplayname')
+        ),
+        array(
+              'id' => 'verifierusername',
+              'name' => get_string('verifierusername', 'statistics'),
+              'class' => format_class($extra, 'verifierusername', 'statistics'),
+              'link' => format_goto($urllink . '&sort=verifierusername', $extra, array('sort'), 'verifierusername')
+        ),
+        array(
+              'id' => 'verifierstudentid',
+              'name' => get_string('verifierregistrationnumber', 'statistics'),
+              'class' => format_class($extra, 'verifierstudentid'),
+              'link' => format_goto($urllink . '&sort=verifierstudentid', $extra, array('sort'), 'verifierstudentid')
+        ),
+        array(
+              'id' => 'verifieremail',
+              'name' => get_string('verifieremail', 'statistics'),
+              'class' => format_class($extra, 'verifieremail'),
+              // 'link' => format_goto($urllink . '&sort=verifieremail', $extra, array('sort'), 'verifieremail')
+        ),
+        array(
+              'id' => 'accessfromdate',
+              'name' => get_string('accessfromdate', 'statistics'),
+              'class' => format_class($extra, 'accessfromdate'),
+              'link' => format_goto($urllink . '&sort=accessfromdate', $extra, array('sort'), 'accessfromdate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'accessgranteddate')
+        ),
+        array(
+              'id' => 'accessrevokedbyauthordate',
+              'name' => get_string('accessrevokedbyauthordate', 'statistics'),
+              'class' => format_class($extra, 'accessrevokedbyauthordate'),
+              'link' => format_goto($urllink . '&sort=accessrevokedbyauthordate', $extra, array('sort'), 'accessrevokedbyauthordate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'revokedbyauthor')
+        ),
+        array(
+              'id' => 'accessrevokedbyaccessordate',
+              'name' => get_string('accessrevokedbyaccessordate', 'statistics'),
+              'class' => format_class($extra, 'accessrevokedbyaccessordate'),
+              'link' => format_goto($urllink . '&sort=accessrevokedbyaccessordate', $extra, array('sort'), 'accessrevokedbyaccessordate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'revokedbyverifier')
+        ),
+        array(
+              'id' => 'accessrevokedbysystemdate',
+              'name' => get_string('accessrevokedbysystemdate', 'statistics'),
+              'class' => format_class($extra, 'accessrevokedbysystemdate'),
+              'link' => format_goto($urllink . '&sort=accessrevokedbysystemdate', $extra, array('sort'), 'accessrevokedbysystemdate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'revokedbysystem')
+        ),
+        array(
+              'id' => 'verifiedprimarystatmentdate',
+              'name' => get_string('dateverified', 'statistics'),
+              'class' => format_class($extra, 'verifiedprimarystatmentdate'),
+              'link' => format_goto($urllink . '&sort=verifiedprimarystatmentdate', $extra, array('sort'), 'verifiedprimarystatmentdate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'dateverified')
+        ),
+        array(
+              'id' => 'completionpercentage',
+              'name' => get_string('completionpercentage', 'statistics'),
+              'class' => format_class($extra, 'completionpercentage'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'completionpercentage')
+        ),
+    );
+}
+
+function completionverification_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=completionverification';
+    $data['tableheadings'] = completionverification_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    $data['table'] = completionverification_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function completionverification_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
+    $users = $SESSION->get('usersforstats');
+
+    $fromsql = " FROM {usr} u";
+    $wheresql = " WHERE u.deleted = 0 AND u.id != 0 AND v.type = 'progress' ";
+    $where = array();
+    if ($institution && !$extra['portfoliofilter']) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = u.id AND ui.institution = ?) ";
+        $where[] = $institution;
+    }
+    if ($users) {
+        $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case "username":
+            $orderby = " u.username " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "email":
+            $orderby = " u.email " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "registration_number":
+            $orderby = " u.studentid::int " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "displayname":
+            $orderby = " u.preferredname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "verifierfirstname":
+            $orderby = " verifierfirstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "verifierlastname":
+            $orderby = " verifierlastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "verifierusername":
+            $orderby = " verifierusername " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "verifierstudentid":
+            $orderby = " verifierstudentid " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "verifierdisplayname":
+            $orderby = " verifierdisplayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "apcstatusdate":
+            $orderby = " apcstatusdate " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "portfoliotitle":
+            $orderby = " c.name " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "templatetitle":
+            $orderby = " templatetitle " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "lastname":
+            $orderby = " u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "firstname":
+        default:
+            $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+    }
+
+    $joinsql = " JOIN {collection} c ON (c.owner = u.id)
+            JOIN {collection_view} cv ON (cv.collection = c.id)
+            JOIN {view} v ON (v.id = cv.view AND cv.displayorder = 0)
+            LEFT JOIN {event_log} el ON (cv.view = el.parentresourceid AND el.parentresourcetype = 'view' AND el.event = 'updateviewaccess')
+            CROSS JOIN json_to_record(el.data::json) AS x(rules text)
+            CROSS JOIN json_to_record(x.rules::json) AS y(usr int, role text)
+            LEFT JOIN {collection_template} ct ON (ct.collection = cv.collection)
+    ";
+
+    if (isset($extra['verifierfilter']) && !empty($extra['verifierfilter'])) {
+        $configdatasql = ",
+         (SELECT el2.ctime AS verifieddate
+         FROM {event_log} el2, json_to_record(el2.data::json)
+         AS z(block text), json_to_record(z.block::json)
+         AS w(verified int, " . '"primary"' . " boolean)
+         WHERE el2.parentresourceid = c.id
+         AND el2.parentresourcetype = 'collection'
+         AND el2.event = 'verifiedprogress'
+         AND w.verified = 1
+         AND w.primary IS TRUE
+         ORDER BY el2.ctime LIMIT 1) ";
+
+        if ($extra['verifierfilter'] == 'none') {
+            $wheresql .= " AND NOT EXISTS (SELECT data FROM {event_log} WHERE cv.view = parentresourceid AND parentresourcetype = 'view' AND event = 'updateviewaccess' AND y.role = 'verifier') ";
+            $configdatasql = '';
+        }
+        else if ($extra['verifierfilter'] == 'current') {
+            $wheresql .= " AND (el.resourcetype = 'user' AND y.role = 'verifier') ";
+        }
+    }
+
+    $customsql = "
+    (SELECT z.apcstatusdate AS apcstartdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(apcstatusdate timestamp) WHERE el2.usr = u.id ORDER BY el2.ctime LIMIT 1),
+    el.ctime AS accessfromdate,
+    (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
+    (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1),
+    (SELECT el2.ctime AS accessrevokedbysystemdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.event = 'removeviewaccess' AND z.removedby = 'system') ORDER BY el2.ctime LIMIT 1) ";
+
+    if (!empty($configdatasql)) {
+        $customsql .= $configdatasql;
+    }
+
+    if (isset($extra['portfoliofilter']) && !empty($extra['portfoliofilter'])) {
+        $wheresql .= ' AND ct.originaltemplate IN (' . join(',', array_map('db_quote', $extra['portfoliofilter'])) . ')';
+    }
+    else if ($institution) {
+        $joinsql .= " LEFT JOIN {collection} oc ON oc.id = ct.originaltemplate AND oc.institution = ?";
+        $where[] = $institution;
+    }
+
+    if ($start) {
+        $wheresql .= " AND c.ctime >= DATE(?) AND c.ctime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+
+    $verifiersql = " y.role, ";
+    $sql ="SELECT u.id AS user_id, u.firstname, u.lastname, u.username, u.preferredname AS displayname, y.usr AS verifierid,
+            (SELECT username FROM {usr} WHERE id = y.usr) AS verifierusername,
+            (SELECT firstname FROM {usr} WHERE id = y.usr) AS verifierfirstname,
+            (SELECT lastname FROM {usr} WHERE id = y.usr) AS verifierlastname,
+            (SELECT studentid FROM {usr} WHERE id = y.usr) AS verifierstudentid,
+            (SELECT preferredname FROM {usr} WHERE id = y.usr) AS verifierdisplayname,
+        u.email, u.studentid AS registration_number, " . $verifiersql . "
+        c.id as collection_id, c.name, c.ctime AS collection_ctime, ct.originaltemplate,  (SELECT name FROM {collection} WHERE id = ct.originaltemplate) AS templatetitle,
+        " . $customsql .
+        $fromsql . $joinsql . $wheresql;
+
+    $sql .= " ORDER BY " . $orderby;
+
+    if (empty($extra['csvdownload'])) {
+        $sql .= " LIMIT $limit OFFSET $offset";
+    }
+
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $joinsql .  $wheresql, $where);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    if ($count < 1) {
+        return $result;
+    }
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
+    $data = !empty($where) ? get_records_sql_array($sql, $where) : get_records_sql_array($sql);
+    if ($data) {
+        foreach ($data as $item) {
+            if ($item->user_id) {
+                $item->profileurl = profile_url($item->user_id);
+            }
+            $item->verifierprofileurl = '#';
+            $item->verifieremail = '';
+            if (isset($item->verifierid) && !empty($item->verifierid)) {
+                if (get_field('usr', 'deleted', 'id', $item->verifierid) > 0) {
+                    $item->verifierusername = get_string('deleted');
+                    $item->verifierfirstname = '-';
+                    $item->verifierlastname = '-';
+                    $item->verifieremail = '-';
+                }
+                else {
+                    $item->verifierprofileurl = profile_url($item->verifierid);
+                    $item->verifieremail = get_field('usr', 'email', 'id', $item->verifierid);
+                }
+            }
+            $item->apcstartdate = $item->apcstartdate ? format_date(strtotime($item->apcstartdate), 'strftimedateshort') : '';
+            $item->portfoliotitle = $item->name;
+            $item->portfoliocreationdate = format_date(strtotime($item->collection_ctime), 'strftimedateshort');
+            $item->templatetitleurl = $item->originaltemplate ? 'collection/progresscompletion.php?id=' . $item->originaltemplate : '';
+            $item->verifiedprimarystatmentdate = isset($item->verifieddate) && $item->verifieddate ?  format_date(strtotime($item->verifieddate), 'strftimedateshort') : '';
+            $item->accessfromdate = $item->accessfromdate ? format_date(strtotime($item->accessfromdate), 'strftimedateshort') : '';
+            $item->accessrevokedbyaccessordate = $item->accessrevokedbyaccessordate ? format_date(strtotime($item->accessrevokedbyaccessordate), 'strftimedateshort') : '';
+            $item->accessrevokedbyauthordate = $item->accessrevokedbyauthordate ? format_date(strtotime($item->accessrevokedbyauthordate), 'strftimedateshort') : '';
+            $item->accessrevokedbysystemdate = $item->accessrevokedbysystemdate ? format_date(strtotime($item->accessrevokedbysystemdate), 'strftimedateshort') : '';
+            require_once('collection.php');
+            $collection = new Collection($item->collection_id);
+            $collection->get('views');
+            if ($item->completionpercentage = $collection->get_signed_off_and_verified_percentage()) {
+                $item->completionpercentage = $item->completionpercentage[0]; //first number in array returned
+            }
+            else {
+                $item->completionpercentage = '0';
+            }
+        }
+    }
+
+    if (!empty($extra['csvdownload'])) {
+        $csvfields = array('firstname', 'lastname', 'displayname', 'username', 'registration_number', 'email',
+                            'apcstartdate', 'portfoliotitle',  'portfoliocreationdate', 'templatetitle', 'verifierfirstname',
+                            'verifierlastname', 'verifierdisplayname', 'verifierusername', 'verifierstudentid', 'verifieremail',
+                            'accessrevokedbyauthordate', 'accessrevokedbyaccessordate', 'accessrevokedbysystemdate',
+                            'verifiedprimarystatmentdate', 'completionpercentage');
+        // Format all dates so that they are sortable in the CSV file
+        for ($i = 0; $i < count($data); $i++) {
+            if (!empty($data[$i]->apcstartdate)) {
+                $data[$i]->apcstartdate = format_date(strtotime($data[$i]->apcstartdate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->portfoliocreationdate)) {
+                $data[$i]->portfoliocreationdate = format_date(strtotime($data[$i]->portfoliocreationdate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->verifiedprimarystatmentdate)) {
+                $data[$i]->verifiedprimarystatmentdate = format_date(strtotime($data[$i]->verifiedprimarystatmentdate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->accessfromdate)) {
+                $data[$i]->accessfromdate = format_date(strtotime($data[$i]->accessfromdate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->accessrevokedbyaccessordate)) {
+                $data[$i]->accessrevokedbyaccessordate = format_date(strtotime($data[$i]->accessrevokedbyaccessordate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->accessrevokedbyauthordate)) {
+                $data[$i]->accessrevokedbyauthordate = format_date(strtotime($data[$i]->accessrevokedbyauthordate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->accessrevokedbysystemdate)) {
+                $data[$i]->accessrevokedbysystemdate = format_date(strtotime($data[$i]->accessrevokedbysystemdate), 'strftimew3cdatetime');
+            }
+        }
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+    }
+
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+
+    $result['tablerows'] = $smarty->fetch('admin/users/completionverificationstats.tpl');
+
+    return $result;
+}
+
 function users_statistics_headers($extra, $urllink) {
     return array(
         array('id' => 'rownum', 'name' => '#'),
@@ -4420,6 +4838,9 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
+            else if ($subtype == 'completionverification') {
+                $data = completionverification_statistics($extra->limit, $extra->offset, $extra->extra, null);
+            }
             else {
                 $data = user_statistics($extra->limit, $extra->offset, $extra->extra);
             }
@@ -4480,6 +4901,9 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
+            else if ($subtype == 'completionverification') {
+                $data = completionverification_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
             else {
                 $data = institution_user_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
             }
@@ -4487,6 +4911,36 @@ function display_statistics($institution, $type, $extra = null) {
     }
 
     return array($allowedtypes, $data);
+}
+
+function get_portfolio_filters($institution) {
+    global $SESSION;
+
+    $portfoliofilteroptions = array();
+    $records = array();
+    $sql = "SELECT c2.name, c2.institution AS parent, ct.originaltemplate
+            FROM {collection} c1
+            JOIN {collection_template} ct ON ct.collection = c1.id
+            JOIN {collection} c2 ON c2.id = ct.originaltemplate
+            ";
+
+    if ($institution == 'all') {
+        // find all institutions
+        $wheresql = ' WHERE c2.institution IS NOT NULL';
+        $records = get_records_sql_array($sql . $wheresql);
+    }
+    else {
+        $wheresql = ' WHERE c2.institution = ?';
+        $records = get_records_sql_array($sql . $wheresql, array($institution));
+    }
+
+    if ($records) {
+        foreach ($records as $template) {
+            $portfoliofilteroptions[$template->originaltemplate] = $template->name;
+        }
+    }
+
+    return $portfoliofilteroptions;
 }
 
 /**
@@ -4499,7 +4953,7 @@ function display_statistics($institution, $type, $extra = null) {
  * @return $form        A pieform structured form array
  */
 function report_config_form($extra, $institutionelement) {
-    global $USER;
+    global $USER, $SESSION;
 
     $type = isset($extra->type) ? $extra->type : null;
     $subtype = isset($extra->subtype) ? $extra->subtype : $type;
@@ -4573,6 +5027,46 @@ function report_config_form($extra, $institutionelement) {
         ),
     );
 
+    $verifierfilteroptions = array(
+        'all' => 'Show all',
+        'current' => 'Show authors with current verifiers',
+        'none' => 'Show authors without a current verifier',
+    );
+
+    if ($extra->subtype == 'completionverification') {
+        $portfoliofilteroptions = get_portfolio_filters($extra->institution);
+        if ($portfoliofilteroptions) {
+            $form['elements']['portfoliofilter'] = array(
+                'type' => 'select',
+                'isSelect2' => true,
+                'title' => get_string('portfoliofilter', 'statistics'),
+                'description' => get_string('portfoliofilterdescription', 'statistics'),
+                'multiple' => true,
+                'collapseifoneoption' => false,
+                'options' => $portfoliofilteroptions,
+                'defaultvalue' => !empty($extra->extra) && isset($extra->extra['portfoliofilter']) ? $extra->extra['portfoliofilter'] : null,
+            );
+            if ($portfolios = $SESSION->get('portfoliofilter')) {
+                $form['elements']['portfoliofilter']['defaultvalue'] = $portfolios;
+            }
+        }
+    }
+
+    if ($extra->subtype == 'completionverification') {
+        $form['elements']['verifierfilter'] = array(
+            'type' => 'select',
+            'isSelect2' => true,
+            'title' => get_string('portfolioverifierfilter', 'statistics'),
+            'description' => get_string('portfolioveriferfilterdescription', 'statistics'),
+            'multiple' => false,
+            'options' => $verifierfilteroptions,
+            'defaultvalue' => !empty($extra->extra) && !empty($extra->extra['verifierfilter']) ? $extra->extra['verifierfilter'] : 'all',
+        );
+        if ($verifiers = $SESSION->get('verifierfilter')) {
+            $form['elements']['verifierfilter']['defaultvalue'] = $verifiers;
+        }
+    }
+
     $data = array();
     $function = $subtype . '_statistics_headers';
     if (function_exists($function)) {
@@ -4612,7 +5106,7 @@ function report_config_form($extra, $institutionelement) {
 }
 
 function format_goto($url, $data, $ignore=array(), $currentsort=null) {
-    static $allowed_keys = array('id', 'start', 'end', 'users', 'sort', 'sortdesc');
+    static $allowed_keys = array('id', 'start', 'end', 'users', 'sort', 'sortdesc', 'portfoliofilter', 'verifierfilter');
 
     if (strpos($url, '?') === false) {
         $firstjoin = '?';
@@ -4641,10 +5135,10 @@ function format_goto($url, $data, $ignore=array(), $currentsort=null) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
                         if ($count < 1) {
-                            $url .= $firstjoin . hsc($key) . '=' . hsc($v);
+                            $url .= $firstjoin . hsc($key) . '[]=' . hsc($v);
                         }
                         else {
-                            $url .= '&' . hsc($key) . '=' . hsc($v);
+                            $url .= '&' . hsc($key) . '[]=' . hsc($v);
                         }
                         $count++;
                     }
@@ -4715,6 +5209,12 @@ function reportconfigform_submit(Pieform $form, $values) {
         $activeheadings = get_active_columns($data, $extra);
         $SESSION->set('columnsforstats', array_keys($activeheadings));
     }
+    if (isset($values['portfoliofilter'])) {
+        $SESSION->set('portfoliofilter', $values['portfoliofilter']);
+    }
+    if (isset($values['verifierfilter'])) {
+        $SESSION->set('verifierfilter', $values['verifierfilter']);
+    }
 
     $form->reply(PIEFORM_OK, array(
         'message' => get_string('applyingfilters', 'statistics'),
@@ -4754,6 +5254,7 @@ function get_report_types($institution = null) {
         'users_masquerading' => get_string('reportmasquerading', 'statistics'),
         'users_userdetails' => get_string('reportuserdetails', 'statistics'),
         'users_useragreement' => get_string('reportuseragreement', 'statistics'),
+        'users_completionverification' => get_string('reportcompletionverification', 'statistics'),
     );
     if (get_config('eventlogenhancedsearch')) {
         $advancedoptions = array(
