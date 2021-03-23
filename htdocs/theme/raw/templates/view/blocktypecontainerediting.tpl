@@ -20,7 +20,7 @@
                 {/if}
                 {if $configurable && !$configure}
                 <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
-                    <span class="icon icon-cog" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
+                    <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
                     <span class="sr-only">{$strconfigtitletext}</span>
                 </button>
                 {/if}

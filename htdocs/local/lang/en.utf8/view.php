@@ -24,3 +24,5 @@ $string['shareallwithmaximum'] = array(
 );
 
 $string['sharedwith'] = 'Search for someone to share your portfolio with';
+
+$string['configureblock2'] = 'Edit block';
