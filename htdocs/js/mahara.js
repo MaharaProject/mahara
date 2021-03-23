@@ -1093,7 +1093,19 @@ function parseQueryString(encodedString, useArrays) {
             if (!name) {
                 continue;
             }
-            o[decode(name)] = decode(pair.join("="));
+            else if (name.match(/\[\]/)) {
+            // When returning a URL str with both arrays and non-arrays
+                var arr = o[name];
+                if (!(arr instanceof Array)) {
+                    arr = [];
+                    name.replace(/\[\]/, '');
+                    o[name] = arr;
+                }
+                arr.push(decode(pair.join("=")));
+            }
+            else {
+                o[decode(name)] = decode(pair.join("="));
+            }
         }
     }
     return o;

@@ -45,6 +45,8 @@ $extradata->columns = $activecolumns;
 
 $type = param_alpha('type', 'users');
 $subtype = param_alpha('subtype', $type);
+$portfoliofilter = param_array('portfoliofilter', array());
+$verifierfilter = param_alpha('verifierfilter', 'all');
 $extraparams = new stdClass();
 $extraparams->type = $type;
 $extraparams->subtype = $subtype;
@@ -55,6 +57,8 @@ $extraparams->sortdesc = isset($extradata->sortdesc) ? true : false;
 $extraparams->start = $start;
 $extraparams->end = $end;
 $extraparams->field = isset($extradata->field) ? $extradata->field : (($institution == 'all') ? 'count_usr' : 'count_members');
+$extradata->portfoliofilter = $portfoliofilter;
+$extradata->verifierfilter = $verifierfilter;
 $extraparams->extra = (array)$extradata;
 
 list($subpages, $subpagedata) = display_statistics($institution, $type, $extraparams);
