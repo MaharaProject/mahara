@@ -428,7 +428,7 @@ class View {
             throw new SystemException("View::create_from_template: This template has been deleted");
         }
 
-        if ($checkaccess && !$template->get('template') && !$user->can_edit_view($template)) {
+        if ($checkaccess && !$template->get('template') && !$user->can_copy_view($template)) {
             throw new SystemException("View::create_from_template: Attempting to create a View from another View that is not marked as a template");
         }
         else if ($checkaccess && !can_view_view($templateid, $userid)) {

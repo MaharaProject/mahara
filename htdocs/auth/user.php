@@ -1337,9 +1337,16 @@ class User {
         return $a->role_has_permission($role, 'republish');
     }
 
-    public function can_edit_view($v) {
+    public function can_copy_view($v) {
+        return $this->can_edit_view($v, true);
+    }
+
+    public function can_edit_view($v, $onlycopy = false) {
         $owner = $v->get('owner');
         if ($owner > 0 && $owner == $this->get('id')) {
+            if (!$onlycopy && ($col = $v->get_collection()) && $col->get('lock') && $v->get('locked')) {
+                return false;
+            }
             return true;
         }
         $institution = $v->get('institution');
