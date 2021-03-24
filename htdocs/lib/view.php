@@ -4115,6 +4115,14 @@ class View {
                     if ($collobj->has_progresscompletion()) {
                         $data['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
                     }
+                    // PCNZ customisation WR 349179: 3.9 - Stop people from editing old unlocked
+                    // progress collections that were copied from an autocopy template parent
+                    if (get_field_sql("SELECT ct.rolloverdate
+                                       FROM {collection} c
+                                       JOIN {collection_template} ct ON ct.collection = c.id
+                                       WHERE rolloverdate < ? AND c.id = ?", array(db_format_timestamp(strtotime('-1 year -1 hour')), $data['collid']))) {
+                        $data['collnoedit'] = true;
+                    }
                 }
 
                 $data['removable'] = self::can_remove_viewtype($data['type']);

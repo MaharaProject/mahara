@@ -218,6 +218,9 @@ foreach ($views['views'] as &$view) {
 $viewobj = new View($firstview->id); // Need to call this as $viewobj to avoid clash with $view in foreach loop above
 $submittedgroup = (int)$viewobj->get('submittedgroup');
 $can_edit = $USER->can_edit_view($viewobj) && !$submittedgroup && !$viewobj->is_submitted();
+if ($viewobj->get_collection()) {
+    $can_edit = $can_edit && $USER->can_edit_collection($viewobj->get_collection());
+}
 $urls = $viewobj->get_special_views_copy_urls();
 if (array_key_exists('copyurl', $urls)) {
     $smarty->assign('copyurl', $urls['copyurl'] );

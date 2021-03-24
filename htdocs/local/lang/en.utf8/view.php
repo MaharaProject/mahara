@@ -14,6 +14,7 @@ defined('INTERNAL') || die();
 $string['apcperiod'] = 'Registered, current as at %s';
 $string['registerinactive'] = 'Registered, inactive';
 $string['cantchangeaccessafterverification'] = 'You cannot change the access for this portfolio after verification has been done.';
+$string['cantchangeaccesscollectionlocked'] = 'You cannot change the access for this portfolio as it is locked.';
 $string['sharewithmaximum'] = array(
     'You can share your portfolio with one verifier. If your circumstances change at a later time you can cease sharing with your existing verifier and re-share your portfolio with another verifier. As a courtesy, please  tell your existing verifier of your intention to make this change and ensure your new verifier has agreed.',
     'You can share your portfolio with up to %d people or groups of people. If your circumstances change at a later time you can cease sharing with your existing verifier and re-share your portfolio with another verifier. As a courtesy, please  tell your existing verifier of your intention to make this change and ensure your new verifier has agreed.'

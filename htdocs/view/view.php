@@ -157,6 +157,14 @@ if ($commented_on_blockid) {
 define('TITLE', $view->get('title'));
 
 $collection = $view->get('collection');
+$ownercandelete = true;
+if ($collection && $collection->has_progresscompletion()) {
+    // PCNZ customization  - If the collection is an autotemplate copy and that copy is locked we don't want the author to delete pages
+    if ($collection->get('lock')) {
+        $ownercandelete = false;
+    }
+}
+
 // Do we need to redirect to the progress completion or matrix page on first visit via token access?
 if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has_progresscompletion()) {
     redirect($collection->get_progresscompletion_url($collection, true));
@@ -725,7 +733,7 @@ if ($titletext !== $title) {
 }
 
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
-
+$smarty->assign('ownercandelete', $ownercandelete);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->display('view/view.tpl');
 
