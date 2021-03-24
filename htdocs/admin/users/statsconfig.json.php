@@ -97,6 +97,9 @@ if ($subtype == 'completionverification') {
     $select2fields[] = 'reportconfigform_portfoliofilter';
     $select2fields[] = 'reportconfigform_verifierfilter';
 }
+else if ($subtype == 'verifiersummary') {
+    $select2fields[] = 'reportconfigform_portfoliofilter';
+}
 if (!empty($institutionelement['options']) && count($institutionelement['options']) > 1) {
     $select2fields[] = 'reportconfigform_institution';
 }

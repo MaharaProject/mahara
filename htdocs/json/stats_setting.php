@@ -22,5 +22,8 @@ $setting = param_alphanum('setting');
 if (isset($_SESSION['usersforstats']) && $setting == 'removeuserfilter') {
     $SESSION->set('usersforstats', null);
 }
+if (isset($_SESSION['portfoliofilter']) && $setting == 'removeportfoliofilter') {
+    $SESSION->set('portfoliofilter', null);
+}
 
 json_reply(false, array('data' => 'success'));
