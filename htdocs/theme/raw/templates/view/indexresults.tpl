@@ -137,7 +137,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !$view.collnoedit}
                                     <li class="dropdown-item">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">

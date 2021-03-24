@@ -62,6 +62,9 @@ if ($collection && $collection->has_progresscompletion() && $vblockids = $collec
         throw new AccessDeniedException(get_string('cantchangeaccessafterverification', 'view'));
     }
 }
+if ($collection && !$USER->can_edit_collection($collection)) {
+    throw new AccessDeniedException(get_string('cantchangeaccesscollectionlocked', 'view'));
+}
 
 $form = array(
     'name' => 'editaccess',

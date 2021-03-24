@@ -114,7 +114,7 @@
                     </a>
                 </li>
                 {/if}
-                {if ($userisowner || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion")}
+                {if (($userisowner && $ownercandelete) || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion")}
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
