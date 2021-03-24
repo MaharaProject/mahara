@@ -100,7 +100,7 @@ $end = $end ? format_date(strtotime(str_replace('/', '-', $end)), 'strftimew3cda
 
 $activecolumns = $SESSION->get('columnsforstats');
 $activecolumns = !empty($activecolumns) ? $activecolumns : array();
-if (isset($_POST['subtype']) && $_POST['subtype'] == 'completionverification' && empty($_POST['portfoliofilter'])) {
+if (isset($_POST['subtype']) && ($_POST['subtype'] == 'completionverification' || $_POST['subtype'] == 'verifiersummary')  && empty($_POST['portfoliofilter'])) {
     // need to set empty post if nothing selected otherwise the url value is used
     $_POST['portfoliofilter'] = array();
 }
@@ -242,7 +242,13 @@ jQuery(function ($) {
         var filteroptid = filteropt.prop('id');
         sendjsonrequest(config['wwwroot'] + 'json/stats_setting.php', {'setting':filteroptid}, 'POST', function(data) {
             filteropt.parent().hide();
-            $('#statistics_table th a').first().trigger('click');
+            // if in tabular mode we can sort a column to update the table otherwise relead the page
+            if ($('#statistics_table th a').length) {
+                $('#statistics_table th a').first().trigger('click');
+            }
+            else {
+                location.reload();
+            }
         });
     });
 

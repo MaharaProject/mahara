@@ -266,7 +266,78 @@ function institution_data_current($institution) {
     return $data;
 }
 
+function institution_data_verifier_current($institution) {
+    $current = institution_data_current($institution);
+
+    // How many portfolios are currently for the current rollover year
+    $data['verifierportfolios'] = count_records_sql("SELECT COUNT(*) FROM {collection_template} ct
+                                                     JOIN {collection} c ON c.id = ct.collection
+                                                     WHERE ct.rolloverdate IS NULL
+                                                     AND c.owner IN (" . $current['memberssql'] . ")", $current['memberssqlparams']);
+
+    // How many of those collections currently have a verifier assigned
+    $data['verifierportfolios-verifier-count'] = count_records_sql("SELECT COUNT(*) FROM {collection_template} ct
+                                                                    JOIN {collection} c ON c.id = ct.collection
+                                                                    JOIN {collection_view} cv ON cv.collection = c.id
+                                                                    JOIN {view} v ON v.id = cv.view
+                                                                    JOIN {view_access} va ON va.view = v.id
+                                                                    WHERE ct.rolloverdate IS NULL
+                                                                    AND c.owner IN (" . $current['memberssql'] . ")
+                                                                    AND v.type = 'progress' AND va.role = 'verifier'", $current['memberssqlparams']);
+
+    // How many portfolios each verifier has
+    $portfoliosperverifier = get_records_sql_array("SELECT va.usr, ct.originaltemplate, COUNT(*) FROM {collection_template} ct
+                                                    JOIN {collection} c ON c.id = ct.collection
+                                                    JOIN {collection_view} cv ON cv.collection = c.id
+                                                    JOIN {view} v ON v.id = cv.view
+                                                    JOIN {view_access} va ON va.view = v.id
+                                                    WHERE ct.rolloverdate IS NULL
+                                                    AND c.owner IN (" . $current['memberssql'] . ")
+                                                    AND v.type = 'progress' AND va.role = 'verifier'
+                                                    GROUP BY va.usr, ct.originaltemplate
+                                                    ORDER BY COUNT(*)", $current['memberssqlparams']);
+
+    // How many people have a copy of which template
+    $ownerspertemplate = get_records_sql_array("SELECT COUNT (ct.originaltemplate), ct.originaltemplate
+                                                FROM {collection_template} ct
+                                                JOIN {collection} c on c.id = ct.collection
+                                                WHERE ct.rolloverdate is NULL
+                                                AND c.owner IN (" . $current['memberssql'] . ")
+                                                GROUP BY ct.originaltemplate", $current['memberssqlparams']);
+    if ($ownerspertemplate) {
+        foreach($ownerspertemplate as $item) {
+            $data['owners-per-template_' . $item->originaltemplate] = $item->count;
+        }
+    }
+
+    if ($portfoliosperverifier) {
+        foreach ($portfoliosperverifier as $value) {
+            if (!isset($data['verifierportfolios-verifier-count_' . $value->originaltemplate])) {
+                $data['verifierportfolios-verifier-count_' . $value->originaltemplate] = 0;
+            }
+            // template count total
+            if ($value->count > 0) {
+                $data['verifierportfolios-verifier-count_' . $value->originaltemplate] += $value->count;
+                if ($value->count < 10) {
+                    if (!isset($data['verifierportfolios-verifier-load-' . $value->count . '_' . $value->originaltemplate])) {
+                        $data['verifierportfolios-verifier-load-' . $value->count . '_' . $value->originaltemplate] = 0;
+                    }
+                    $data['verifierportfolios-verifier-load-' . $value->count . '_' . $value->originaltemplate] += 1;
+                }
+                else {
+                    if (!isset($data['verifierportfolios-verifier-load-10' . '_' . $value->originaltemplate ])) {
+                        $data['verifierportfolios-verifier-load-10' . '_' . $value->originaltemplate ] = 0;
+                    }
+                    $data['verifierportfolios-verifier-load-10' . '_' . $value->originaltemplate ] += 1;
+                }
+            }
+        }
+    }
+    return $data;
+}
+
 function institution_statistics($institution, $full=false) {
+    global $SESSION;
     $data = array();
 
     if ($full) {
@@ -480,9 +551,64 @@ function institution_statistics($institution, $full=false) {
         $smarty->assign('institution', $data['name']);
         $smarty->assign('viewcount', $data['views']);
         $data['viewsinfo'] = $smarty->fetch('admin/institutionviewstatssummary.tpl');
+
+        // Verifier for institution graph
+        $verifierinfo = institution_data_verifier_current($institution);
+        $smarty = smarty_core();
+        $smarty->assign('viewcount', $verifierinfo['verifierportfolios']);
+        $smarty->assign('institution', $institution);
+        $smarty->assign('verifiertotal', $verifierinfo['verifierportfolios-verifier-count']);
+        if ($portfolios = $SESSION->get('portfoliofilter')) {
+            $btnstr = ' <button class="btn btn-secondary filter" id="removeportfoliofilter" title="' . get_string('removefilter', 'statistics') . '">
+                            <span class="times">×</span>
+                            <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
+                        </button>';
+            $smarty->assign('verifierportfolios', get_string('countportfolios', 'admin', count($portfolios)) . $btnstr);
+        }
+        $data['verifierinfo'] = $smarty->fetch('admin/institutionverifierstatssummary.tpl');
     }
 
     return($data);
+}
+
+function institution_verifier_graph_render($type = null, $extradata) {
+    global $SESSION;
+
+    $data['graph'] = ($type) ? $type : 'pie';
+    $verifierinfo = institution_data_verifier_current($extradata->institution);
+    $dataarray = array('unallocated' => 0,
+                       'allocated' => 0);
+    if ($portfolios = $SESSION->get('portfoliofilter')) {
+        $subdataarray = array();
+        foreach ($verifierinfo as $vi => $v) {
+            if (preg_match('/\_(\d+)$/', $vi, $match)) {
+                if ($match[1] && in_array($match[1], $portfolios) && $template = get_field('collection', 'name', 'id', $match[1])) {
+                    $subdataarray[$match[1]]['unallocated'] = count_records('collection_template', 'originaltemplate', $match[1]) - (int)$verifierinfo['verifierportfolios-verifier-count_' . $match[1]];
+                    $subdataarray[$match[1]]['allocated'] = $verifierinfo['verifierportfolios-verifier-count_' . $match[1]];
+                }
+            }
+        }
+        // Now we have totals per template we need to aggregate them
+        foreach ($subdataarray as $sk => $sv) {
+            $dataarray['unallocated'] += $sv['unallocated'];
+            $dataarray['allocated'] += $sv['allocated'];
+        }
+    }
+    else {
+        $dataarray['unallocated'] = (int)$verifierinfo['verifierportfolios'] - (int)$verifierinfo['verifierportfolios-verifier-count'];
+        $dataarray['allocated'] = (int)$verifierinfo['verifierportfolios-verifier-count'];
+    }
+
+    $data['graph_function_name'] = 'institution_verifier_type_graph';
+    $data['title'] = get_string('verifierload', 'admin');
+    $data['labels'] = array(get_string('unallocated', 'admin'), get_string('allocated', 'admin'));
+    $data['data'] = $dataarray;
+    if (!empty($dataarray)) {
+        require_once(get_config('libroot') . 'graph.php');
+        $graphdata = get_circular_graph_json($data, null, true);
+        $data['jsondata'] = json_encode($graphdata[0]);
+    }
+    return $data;
 }
 
 function get_heading_html($heading) {
@@ -495,7 +621,7 @@ function get_active_columns(&$data, $extra) {
     $activeheadings = array();
     foreach ($data['tableheadings'] as $key => $heading) {
         $data['tableheadings'][$key]['selected'] = in_array($heading['id'], $extra['columns']);
-        // make sure the required ones are always selected
+        // Make sure the required ones are always selected
         if (!empty($data['tableheadings'][$key]['required'])) {
             $data['tableheadings'][$key]['selected'] = true;
         }
@@ -2329,6 +2455,293 @@ function user_stats_table($limit, $offset, $extra) {
     $smarty->assign('columns', $columnkeys);
     $smarty->assign('offset', $offset);
     $result['tablerows'] = $smarty->fetch('admin/userstats.tpl');
+
+    return $result;
+}
+
+function verifiersummary_statistics_headers($extra, $urllink) {
+    return array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+              'id' => 'date', 'required' => true,
+              'name' => get_string('date'),
+              'class' => format_class($extra, 'date'),
+              'link' => format_goto($urllink . '&sort=date', $extra, array('sort'), 'date')
+        ),
+        array(
+              'id' => 'one',
+              'name' => get_string('one', 'statistics'),
+              'class' => format_class($extra, 'one'),
+              'link' => format_goto($urllink . '&sort=one', $extra, array('sort'), 'one')
+        ),
+        array(
+              'id' => 'two',
+              'name' => get_string('two', 'statistics'),
+              'class' => format_class($extra, 'two'),
+              'link' => format_goto($urllink . '&sort=two', $extra, array('sort'), 'two')
+        ),
+        array(
+              'id' => 'three',
+              'name' => get_string('three', 'statistics'),
+              'class' => format_class($extra, 'three'),
+              'link' => format_goto($urllink . '&sort=three', $extra, array('sort'), 'three')
+        ),
+        array(
+              'id' => 'four',
+              'name' => get_string('four', 'statistics'),
+              'class' => format_class($extra, 'four'),
+              'link' => format_goto($urllink . '&sort=four', $extra, array('sort'), 'four')
+        ),
+        array(
+              'id' => 'five',
+              'name' => get_string('five', 'statistics'),
+              'class' => format_class($extra, 'five'),
+              'link' => format_goto($urllink . '&sort=five', $extra, array('sort'), 'five')
+        ),
+        array(
+              'id' => 'six',
+              'name' => get_string('six', 'statistics'),
+              'class' => format_class($extra, 'six'),
+              'link' => format_goto($urllink . '&sort=six', $extra, array('sort'), 'six')
+        ),
+        array(
+              'id' => 'seven',
+              'name' => get_string('seven', 'statistics'),
+              'class' => format_class($extra, 'seven'),
+              'link' => format_goto($urllink . '&sort=seven', $extra, array('sort'), 'seven')
+        ),
+        array(
+              'id' => 'eight',
+              'name' => get_string('eight', 'statistics'),
+              'class' => format_class($extra, 'eight'),
+              'link' => format_goto($urllink . '&sort=eight', $extra, array('sort'), 'eight')
+        ),
+        array(
+              'id' => 'nine',
+              'name' => get_string('nine', 'statistics'),
+              'class' => format_class($extra, 'nine'),
+              'link' => format_goto($urllink . '&sort=nine', $extra, array('sort'), 'nine')
+        ),
+        array(
+              'id' => 'tenormore',
+              'name' => get_string('tenormore', 'statistics'),
+              'class' => format_class($extra, 'tenormore'),
+              'link' => format_goto($urllink . '&sort=tenormore', $extra, array('sort'), 'tenormore')
+        ),
+    );
+}
+
+function verifiersummary_statistics($limit, $offset, $extra, $institution = null) {
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=verifiersummary';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+    $data['tableheadings'] = verifiersummary_statistics_headers($extra, $urllink);
+
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+    $data['table'] = verifiersummary_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+function adjust_verifier_values($record, $column_number) {
+    $mapping = db_quote('verifierportfolios-verifier-load-' . $column_number . '_' . $record);
+    return $mapping;
+}
+
+function verifiersummary_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER;
+
+    if (strtotime('1 April') > time()) {
+        $april = date('Y-m-d', strtotime('1 April', strtotime('-1 year')));
+    }
+    else {
+        $april = date('Y-m-d', strtotime('1 April'));
+    }
+    $start = !empty($extra['start']) ? $extra['start'] : $april;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
+
+    $from = strtotime($start);
+    if (date('w', $from) > 1) {
+        $from = strtotime( $start . ' next Monday');
+    }
+    $to = strtotime($end);
+    if (date('w', $to) > 1) {
+        $to = strtotime( $end . ' last Monday');
+    }
+    $daterange = array();
+    while ($from < $to) {
+        $daterange[date("Y_W", $from)] = date('Y-m-d', $from);
+        $from = $from + (7 * 24 * 60 * 60); // Break down the range by weeks
+    }
+    $daterange[date("Y_W", $to)] = date('Y-m-d', $to);
+
+    $ordersql = " ORDER BY ";
+    if (!empty($extra['sort'])) {
+        if ($extra['sort'] != 'date') {
+            $types = array('one' => 1, 'two' => 2, 'three' => 3, 'four' => 4,
+                           'five' => 5, 'six' => 6, 'seven' => 7, 'eight' => 8,
+                           'nine' => 9, 'tenormore' => 10);
+            $ordersql .= " count_" . $types[$extra['sort']] . " " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", ";
+        }
+        $ordersql .= " ctime " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC');
+    }
+    else {
+        $ordersql .= " ctime ASC";
+    }
+
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    $day = is_postgres() ? "to_date(ctime::text, 'YYYY-MM-DD')" : 'DATE(ctime)';
+    $iday = is_postgres() ? "to_date(i.ctime::text, 'YYYY-MM-DD')" : 'DATE(i.ctime)';
+    $wheresql = " WHERE type LIKE 'verifierportfolios-verifier-count'";
+    $instsql = '';
+
+
+
+    if ($institution) {
+        if ($institution != 'all') {
+            $instsql .= " AND institution IN (" . join(',', array_map('db_quote', array($institution))) . ")";
+        }
+    }
+    if (isset($extra['portfoliofilter']) && !empty($extra['portfoliofilter'])) {
+        $portfoliofilter = $extra['portfoliofilter'];
+        $typesql = ' AND type IN ( ';
+        $endtypesql = ' ) ';
+        $typesql1 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 1))) . $endtypesql;
+        $typesql2 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 2))) . $endtypesql;
+        $typesql3 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 3))) . $endtypesql;
+        $typesql4 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 4))) . $endtypesql;
+        $typesql5 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 5))) . $endtypesql;
+        $typesql6 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 6))) . $endtypesql;
+        $typesql7 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 7))) . $endtypesql;
+        $typesql8 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 8))) . $endtypesql;
+        $typesql9 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 9))) . $endtypesql;
+        $typesql10 = $typesql . join(',', array_map('adjust_verifier_values', $portfoliofilter, array_fill(0, count($portfoliofilter), 10))) . $endtypesql;
+    }
+    else {
+        $typesql = ' AND type LIKE ';
+        $typesql1 = $typesql . " 'verifierportfolios-verifier-load-1%'";
+        $typesql2 = $typesql . " 'verifierportfolios-verifier-load-2%'";
+        $typesql3 = $typesql . " 'verifierportfolios-verifier-load-3%'";
+        $typesql4 = $typesql . " 'verifierportfolios-verifier-load-4%'";
+        $typesql5 = $typesql . " 'verifierportfolios-verifier-load-5%'";
+        $typesql6 = $typesql . " 'verifierportfolios-verifier-load-6%'";
+        $typesql7 = $typesql . " 'verifierportfolios-verifier-load-7%'";
+        $typesql8 = $typesql . " 'verifierportfolios-verifier-load-8%'";
+        $typesql9 = $typesql . " 'verifierportfolios-verifier-load-9%'";
+        $typesql10 = $typesql . " 'verifierportfolios-verifier-load-10%'";
+    }
+    $customsql = "SELECT \"value\" AS count, ctime, $day AS date,
+                  (SELECT SUM (value::int) AS count_1 FROM {institution_data} WHERE ($day = $iday) $typesql1 $instsql),
+                  (SELECT SUM (value::int) AS count_2 FROM {institution_data} WHERE ($day = $iday) $typesql2 $instsql),
+                  (SELECT SUM (value::int) AS count_3 FROM {institution_data} WHERE ($day = $iday) $typesql3 $instsql),
+                  (SELECT SUM (value::int) AS count_4 FROM {institution_data} WHERE ($day = $iday) $typesql4 $instsql),
+                  (SELECT SUM (value::int) AS count_5 FROM {institution_data} WHERE ($day = $iday) $typesql5 $instsql),
+                  (SELECT SUM (value::int) AS count_6 FROM {institution_data} WHERE ($day = $iday) $typesql6 $instsql),
+                  (SELECT SUM (value::int) AS count_7 FROM {institution_data} WHERE ($day = $iday) $typesql7 $instsql),
+                  (SELECT SUM (value::int) AS count_8 FROM {institution_data} WHERE ($day = $iday) $typesql8 $instsql),
+                  (SELECT SUM (value::int) AS count_9 FROM {institution_data} WHERE ($day = $iday) $typesql9 $instsql),
+                  (SELECT SUM (value::int) AS count_10 FROM {institution_data} WHERE ($day = $iday) $typesql10 $instsql)
+                  FROM {institution_data} i" . $wheresql . "
+                  AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")" . $ordersql;
+    $records = get_records_sql_array($customsql);
+    $count = count($daterange);
+
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => get_config('wwwroot') . 'admin/users/statistics.php?type=verifiersummary',
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    if ($count < 1) {
+        return $result;
+    }
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    // if sorting by date
+    if ($sorttype == 'date' && !empty($extra['sortdesc'])) {
+        $daterange = array_reverse($daterange);
+    }
+
+    $rawdata = array();
+    if ($records) {
+        foreach ($records as $record) {
+            $obj = new stdClass();
+            $obj->date = $record->date;
+            $obj->one = isset($record->count_1) && !empty($record->count_1) ? $record->count_1 : '';
+            $obj->two = isset($record->count_2) && !empty($record->count_2) ? $record->count_2 : '';
+            $obj->three = isset($record->count_3) && !empty($record->count_2) ? $record->count_3 : '';
+            $obj->four = isset($record->count_4) && !empty($record->count_2) ? $record->count_4 : '';
+            $obj->five = isset($record->count_5) && !empty($record->count_2) ? $record->count_5 : '';
+            $obj->six = isset($record->count_6) && !empty($record->count_2) ? $record->count_6 : '';
+            $obj->seven = isset($record->count_7) && !empty($record->count_2) ? $record->count_7 : '';
+            $obj->eight = isset($record->count_8) && !empty($record->count_2) ? $record->count_8 : '';
+            $obj->nine = isset($record->count_9) && !empty($record->count_2) ? $record->count_9 : '';
+            $obj->tenormore = isset($record->count_10) && !empty($record->count_2) ? $record->count_10 : '';
+            $rawdata[$record->date] = $obj;
+        }
+    }
+
+    // Now do the limit / offset for pagination
+    if (empty($extra['csvdownload'])) {
+        $data = array_slice($rawdata, $offset, $limit, true);
+    }
+    else {
+        $data = $rawdata;
+        $csvfields = array('date', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'tenormore');
+        $csvheaders = array('date' => get_string('date', 'statistics'),
+                            'one' => get_string('one', 'statistics'),
+                            'two' => get_string('two', 'statistics'),
+                            'three' =>  get_string('three', 'statistics'),
+                            'four' =>  get_string('four', 'statistics'),
+                            'five' =>  get_string('five', 'statistics'),
+                            'six' =>  get_string('six', 'statistics'),
+                            'seven' =>  get_string('seven', 'statistics'),
+                            'eight' =>  get_string('eight', 'statistics'),
+                            'nine' =>  get_string('nine', 'statistics'),
+                            'tenormore' =>  get_string('tenormore', 'statistics'));
+        for ($i = 0; $i < count($data); $i++) {
+            if (!empty($data[$i]->date)) {
+                $data[$i]->date = format_date(strtotime($data[$i]->date), 'strftimew3cdatetime');
+            }
+        }
+        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'verifiersummarystatistics.csv', 'text/csv');
+    }
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+
+    $result['tablerows'] = $smarty->fetch('admin/users/verifiersummarystats.tpl');
 
     return $result;
 }
@@ -4838,8 +5251,14 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
+
+            else if ($subtype == 'verifiersummary') {
+                $data = verifiersummary_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+
             else if ($subtype == 'completionverification') {
                 $data = completionverification_statistics($extra->limit, $extra->offset, $extra->extra, null);
+
             }
             else {
                 $data = user_statistics($extra->limit, $extra->offset, $extra->extra);
@@ -4901,8 +5320,14 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
+
+            else if ($subtype == 'verifiersummary') {
+                $data = verifiersummary_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+
             else if ($subtype == 'completionverification') {
                 $data = completionverification_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+
             }
             else {
                 $data = institution_user_statistics($extra->limit, $extra->offset, $institutiondata, $extra->extra);
@@ -5033,7 +5458,7 @@ function report_config_form($extra, $institutionelement) {
         'none' => 'Show authors without a current verifier',
     );
 
-    if ($extra->subtype == 'completionverification') {
+    if ($extra->subtype == 'completionverification' || $extra->subtype == 'verifiersummary') {
         $portfoliofilteroptions = get_portfolio_filters($extra->institution);
         if ($portfoliofilteroptions) {
             $form['elements']['portfoliofilter'] = array(
@@ -5254,7 +5679,11 @@ function get_report_types($institution = null) {
         'users_masquerading' => get_string('reportmasquerading', 'statistics'),
         'users_userdetails' => get_string('reportuserdetails', 'statistics'),
         'users_useragreement' => get_string('reportuseragreement', 'statistics'),
+
+        'users_verifiersummary' => get_string('reportverifiersummary', 'statistics'),
+
         'users_completionverification' => get_string('reportcompletionverification', 'statistics'),
+
     );
     if (get_config('eventlogenhancedsearch')) {
         $advancedoptions = array(

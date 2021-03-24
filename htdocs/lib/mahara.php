@@ -4752,6 +4752,15 @@ function cron_institution_data_weekly() {
             'value'       => $current['views'],
         ));
 
+        foreach($verifierinfo = institution_data_verifier_current($institution) as $key => $value) {
+            insert_record('institution_data', (object) array(
+                'ctime'       => $time,
+                'institution' => $institution,
+                'type'        => $key,
+                'value'       => $value,
+            ));
+        }
+
         $current['name'] = $institution;
     }
 }

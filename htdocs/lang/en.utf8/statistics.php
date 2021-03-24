@@ -281,6 +281,25 @@ $string['reportdesccollaboration'] = '<ul>
 <li>Number of portfolios shared with friends</li>
 </ul>';
 
+$string['reportverifiersummary'] = 'Verifier summary';
+$string['reportdescverifiersummary'] = '<ul>
+<li>Date for time period per week</li>
+<li>Columns representing the number of verifiers per portfolio, i.e. a value of "3" in the "One" column represents three verifiers with access to one portfolio each.</li>
+</ul>';
+$string['date'] = 'Date';
+$string['one'] = 'One';
+$string['two'] = 'Two';
+$string['three'] = 'Three';
+$string['four'] = 'Four';
+$string['five'] = 'Five';
+$string['six'] = 'Six';
+$string['seven'] = 'Seven';
+$string['eight'] = 'Eight';
+$string['nine'] = 'Nine';
+$string['tenormore'] = 'Ten +';
+$string['verifiersummarydate'] = 'w.c. %s';
+$string['verifierinfo'] = 'Verifier Information';
+
 $string['reportmasquerading'] = 'Masquerading sessions';
 $string['reportdescmasquerading'] = '<ul>
 <li>Name and username</li>
@@ -436,6 +455,7 @@ $string['reportdesclogins'] = '<ul>
 <p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
 
 $string['userscollaborationreports'] = 'Collaboration';
+$string['usersverifiersummaryreports'] = 'Verifier summary';
 $string['userspageactivityreports'] = 'Page activity';
 $string['usersmasqueradingreports'] = 'Masquerading sessions';
 $string['usersaccesslistreports'] = 'Portfolio access';
@@ -500,7 +520,6 @@ $string['assessmentmarker'] = 'Released by';
 $string['assessmentreleaseddate'] = 'Release date';
 
 // Completion and verification report
-
 $string['registrationnumber'] = 'Registration number';
 $string['apcstatusdate'] = 'APC start date';
 $string['portfoliotitle'] = 'Portfolio';
