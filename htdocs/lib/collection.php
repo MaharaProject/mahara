@@ -408,7 +408,8 @@ class Collection {
         $data->submittedstatus = 0;
 
         $data->progresscompletion = $colltemplate->get('progresscompletion');
-        $data->lock = $colltemplate->get('lock');
+        // If owner is copying a collection they own then the copy is made unlocked
+        $data->lock = (isset($data->owner) && $data->owner == $colltemplate->owner) ? 0 : $colltemplate->get('lock');
         $data->autocopytemplate = 0;
         $data->template = 0;
         $collection = self::save($data);
@@ -516,6 +517,9 @@ class Collection {
         if ($colltemplate->has_progresscompletion()) {
             $values['type'] = 'progress';
             list($view, $template, $copystatus) = View::create_from_template($values, $colltemplate->has_progresscompletion(), $userid, false, false, $artefactcopies);
+            $numcopied['blocks'] += $copystatus['blocks'];
+            $numcopied['artefacts'] += $copystatus['artefacts'];
+
             // update any existing pages sortorder
             execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($collection->id));
             // add progress page as first page of collection

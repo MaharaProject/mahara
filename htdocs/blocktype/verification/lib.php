@@ -669,7 +669,15 @@ EOF;
     }
 
     public static function default_copy_type() {
-        return 'shallow';
+        return 'fullinclself';
+    }
+
+    public static function rewrite_blockinstance_config(View $view, $configdata) {
+        // Reset the verifying
+        unset($configdata['verified']);
+        unset($configdata['verifieddate']);
+        unset($configdata['verifierid']);
+        return $configdata;
     }
 
     /**
