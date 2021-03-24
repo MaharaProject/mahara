@@ -41,18 +41,18 @@ Scenario: Check default blocks are displayed
 
     When I click on "Edit dashboard"
     # Confirm that the blocks each contain a "Remove block" option and
-    # except My portfolios each contains a "Configure block" option.
+    # except My portfolios each contains a "Edit block" option.
     #Latest changes I can view
     #We check configure below
     Then the ".bt-newviews-editor" element should contain "Remove block"
     #My portfolios
-    And the ".bt-myviews-editor" element should not contain "Configure block"
+    And the ".bt-myviews-editor" element should not contain "Edit block"
     And the ".bt-myviews-editor" element should contain "Remove block"
     #Inbox
-    And the ".bt-inbox-editor" element should contain "Configure block"
+    And the ".bt-inbox-editor" element should contain "Edit block"
     # We test remove for "Topics I am following", which is a second instance of "Inbox", so we can ignore the rest.
     #Watched pages
-    And the ".bt-watchlist-editor" element should contain "Configure block"
+    And the ".bt-watchlist-editor" element should contain "Edit block"
     And the ".bt-watchlist-editor" element should contain "Remove block"
 
     When I configure the block "Latest changes I can view"

@@ -22,7 +22,7 @@ $string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been ve
 They added the following reason:
 
 %s';
-$string['ownerhasremovedaccesssubject'] = '%s has unlinked you from "%s"';
+$string['ownerhasremovedaccesssubject'] = '%s has unlinked you from their MyRecert portfolio "%s"';
 $string['ownerhasremovedaccess'] = '%s has unlinked you from their MyRecert portfolio "%s" as a verifier. The Pharmacy Council thanks you for being a verifier.';
 $string['undonesubject'] = 'Portfolio statement reset request actioned';
 $string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who made the statement.';
