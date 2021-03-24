@@ -68,7 +68,7 @@ $string['legal']              = 'Terms and conditions';
 $string['createsubtitle'] = 'Add material to your portfolio';
 
 $string['howto'] = 'How to';
-$string['howtosubtitle'] = 'Get a helping hand';
+$string['howtosubtitle'] = 'Find guidance and instructions';
 
 $string['memberofinstitutions'] = 'Registrant, %s';
 $string['youareamemberof'] = 'You are a registrant in %s.';
