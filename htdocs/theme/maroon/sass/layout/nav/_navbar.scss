@@ -16,7 +16,9 @@
 }
 
 .navbar-form.navbar-collapse {
-  top: 1.0625rem; // 17px;
+  @include media-breakpoint-up(md) {
+    margin-top: 1.0625rem; // 17px;
+  }
 }
 
 // Header messagebox form

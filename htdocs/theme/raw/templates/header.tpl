@@ -90,13 +90,15 @@
                         </button>
                     {/if}
                     {if $LOGGEDIN}
-                        <a href="{profile_url($USER)}" class="user-icon user-icon-25" title='{str tag="profilepage"}'>
-                            <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}" alt="{str tag=profileimagefor section=artefact.internal arg1=display_name($USER->get('id'))}">
-                        </a>
-                        <button class="user-toggle navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="main-nav-user" title='{str tag="usermenu1"}'>
-                            <span class="sr-only">{str tag="showusermenu1"}</span>
-                            <span class="icon icon-chevron-down collapsed"></span>
-                        </button>
+                        <div class="user-icon-wrap-toggle navbar-toggle">
+                            <a href="{profile_url($USER)}" class="user-icon user-icon-25" title='{str tag="profilepage"}'>
+                                <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}" alt="{str tag=profileimagefor section=artefact.internal arg1=display_name($USER->get('id'))}">
+                            </a>
+                            <button class="user-toggle" type="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="main-nav-user" title='{str tag="usermenu1"}'>
+                                <span class="sr-only">{str tag="showusermenu1"}</span>
+                                <span class="icon icon-chevron-down collapsed"></span>
+                            </button>
+                        </div>
                     {/if}
                     {if $MESSAGEBOX}
                         {foreach from=$MESSAGEBOX item=item}
@@ -117,7 +119,6 @@
                             <span class="icon icon-language icon-lg" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
-                    <!-- HIDE WHEN ON DESKTOP -->
                     {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
                     <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="usf">
                         <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
@@ -125,8 +126,15 @@
                     </button>
                     {/if}
                 </div>
+                {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
+                <div class="navbar-form collapse navbar-collapse{if $languageform} with-langform{if !$LOGGEDIN && !$SHOWLOGINBLOCK && !$LOGINPAGE}-login{/if}{/if}">
+                    {header_search_form}
+                </div>
+                {/if}
                 {include file="header/navigation.tpl"}
+                {if $LANGCHOICES}
                 {include file="header/language.tpl"}
+                {/if}
             </div>
         </div>
     </header>
