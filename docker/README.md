@@ -1,101 +1,110 @@
 # Mahara Docker
 
-This directory contains tools for running Mahara in Docker.
+This directory contains tools for installing Mahara using Docker.
 
 Docker is a great way to try out Mahara without having the hassle of installing
 dependencies yourself.
 
-The instructions have been tested on Ubuntu.
+The instructions have been tested on Ubuntu 20.04. If you use an older version of Ubuntu, a different flavour of Linux, or use your Docker setup on another operating system, some instructions may not work the same way.
 
-## Docker quick start
+The commands here assume to be run in a terminal.
 
-Test if you have Docker:
+## Set up Docker
 
+You can get the most recent version of Docker from the official Docker website
+at: https://docs.docker.com/get-docker
+
+Please follow the generic Docker instructions there to make it possible to run without 'sudo'.
+
+Once you have done that, run:
 ```
   docker run ubuntu echo "Yes, I have Docker."
 ```
 
-If you have Docker, and it is set up, the last line of the output will have
-"Yes, I have Docker.". You can skip the rest of this section.
+If you have Docker configured, the last line of the output will state:
+"Yes, I have Docker."
 
-Note for the installation steps below: If you work for a company that works
-with Docker, you may wish to check your internal documentation first, as there
-may be some special instructions for you to follow instead.
+In order to use the Docker compose files, install Docker compose. You can find
+installation instructions at https://docs.docker.com/compose/install
 
-To install and configure Docker on a recent Ubuntu desktop (Ubuntu 18.04 Bionic or later):
 
-```
-  sudo apt install docker.io
-  # Add yourself to the Docker group
-  sudo usermod -aG docker $USER
-  newgrp docker
+Test that Docker compose is working:
 
 ```
+docker-compose --version
+```
 
-Rerun the Docker test above to confirm.
+The version output should be greater than 1.17.
 
-Note: You shouldn't need to run Docker with 'sudo'. Attempting to run some of the
-commands in this README with 'sudo' are likely to cause errors.
-
-## Preliminary setup of the Docker environment
-
-Note that the following scripts and Docker commands can read a lot of config
+The following scripts and Docker commands can read a lot of config
 variables from the environment.
 
-If there are settings that you always want to make, having them set as
-environment variables may make your life easier. For example:
-
-```
-  export MAHARA_DOCKER_PORT=8081
-```
-Will make the `mahara` Docker container publish its http port to http://localhost:8081
+If there are settings that you always want to make, set them as environment
+variables. For example, `export MAHARA_DOCKER_PORT=6142` will set the http
+port of the `mahara` Docker container to http://localhost:6142
 
 Using a tool such as [Direnv](https://direnv.net/) can make this even easier
 because you can define the variables persistently.
 
-For example, for both local development and running phpunit or Behat tests, you
-can use an environment variables file to house all necessary config settings
+For example, for both local development and running PHPUnit or Behat tests, you
+can use an environment variables file to store all necessary config settings
 instead of putting them into config.php itself. You may not wish to do so for a
 production environment though when you have multiple Mahara instances running
-on a single server. 
+on a single server.
 
-The develpment setup specified below allows for this approach automatically by using the config specified in ./htdocs/config-environment.php by default.  
+The development setup specified below allows for this approach automatically by using the config specified in `./htdocs/config-environment.php` by default.  
 
-Note: Instead of putting values into config-environment.php, you can set up a .envrc
-file to contain your custom variables as that will not be pushed to the repository
-when you commit changes. It is excluded in .gitignore.
+**Note**: Instead of putting values into `config-environment.php`, you can set
+up a local .envrc file to contain your custom variables as that will not be
+added to the repository when you commit changes, allowing you to keep passwords
+more secure, for example. It is excluded in `.gitignore`.
 
-**For development purposes, we recommend that you will set up a .envrc file. Therefore, the
-following instructions will assume that.**
+## Work with the Mahara Docker images
 
-## Using Docker for development purposes
+Download the Mahara codebase to use the Docker images. If you work with Git, we recommend you do that via `git clone`:
 
-We are going to use Docker compose to start a new developer environment.
+* From the official Mahara repository: `git clone https://git.mahara.org/mahara/mahara.git`
+* From GitHub: `git clone https://github.com/MaharaProject/mahara.git`
 
-If this is your first time using this Docker approach you will need to run
-`make docker-image` to build the Mahara Docker images.
+There is no Docker image available on Docker Hub, but you build your own image.
 
-### Starting a new development environment
+The Mahara Docker image contains the dependencies required for building and
+testing Mahara, including generating CSS, PHPUnit and Behat tests.
+
+### Start up a new development environment
+
+**For development purposes, we recommend that you set up a `.envrc` file.
+Therefore, the following instructions will assume that you have one.**
+
+If this is your first time running Mahara with Docker, you will need to run
+`make docker-image` to build the Mahara Docker image. This will create a Docker
+image with Apache, PHP, other dependencies, and of course Mahara.
 
 **Note**: Add Gerrit so you can `make push` later if you want to [contribute your changes](https://wiki.mahara.org/wiki/Developer_Area/Contributing_Code) to the Mahara project.
 
 * Run the command `make up` to start your Mahara Docker environment. This configures your environment automatically.
 * Open the URL that you see on screen. It starts with http://localhost:6142/. Mahara is available in a subdirectory, and the name of it is the name of the folder of your repository. If you installed Mahara in the folder 'mahara', then the URL is http://localhost:6142/mahara. If you installed it in the folder '20.10', the URL is http://localhost:6142/20.10.
 
+Because the code is not part of the Docker image but is available on your computer, the CSS needs to be built outside of Docker. Follow the ['Set up npm and gulp' instructions](https://wiki.mahara.org/index.php/Developer_Area/Developer_Environment) on the Mahara wiki to set that up. Then run `make css` to build the CSS.
+
 Useful commands:
 
 * List running containers: `docker ps`
 * View logs for a container: `docker logs <container name>`
-* Run cli commands inside a contaner `make docker-bash`
+* Run cli commands inside a container: `make docker-bash`
 
 **Note**: Site-specific containers are prefixed with the name of the directory of your site, followed by 'mahara', e.g. 'mahara-mahara' or '20.10-mahara' for repositories in the directories 'mahara' and '20.10' respectively. Shared containers are prefixed 'shared-mahara'.
 
-
-### Shutting down the development environment
+### Shut down the development environment
 
 From the site directory in your terminal, type `make down`. That will shut down all containers unique to this site, i.e. shared containers are not shut down, e.g. if you run multiple Docker images in parallel.
 
-If you type `docker ps` again, you will see the shared containers that are not shut down by `make down`. All shared containers for the Mahara project are prefixed 'shared-mahara'. At the moment, the only two shared containers are mailhog and nginx. If these are the only two remaining ones, you can shut them down with `make shared-down`.
+If you type `docker ps` again, you will see the shared containers that are not shut down by `make down`. All shared containers for the Mahara project are prefixed 'shared-mahara'. At the moment, the only two shared containers are `mailhog` and `nginx`. If these are the only two remaining ones, you can shut them down with `make shared-down`.
+
+### Refresh the image
+
+We recommend you refresh your Mahara Docker image periodically (every week or
+two) to refresh the image with any security patches from its base image, which includes the operating system: `make docker-image`
 
 ### Mail setup for development
 
@@ -103,88 +112,62 @@ Mail is delivered to a local mail server called [Mailhog](https://github.com/mai
 
 This server is shared between all your development sites.
 
-**This mail server within Docker will not forward any email to a real mail server.** Instead, it will keep all mail output and present it at:
-
+**This mail server within Docker will not forward any email to a real mail
+server.** Instead, it will keep all mail output and present it at
 http://localhost:8025
 
 That means that you do not have to configure the config.php variable 'sendallemailto' because mails will not be sent to any address.
 
-### Deleting a Database or Sitedata for a site
+### Delete a database or sitedata volume for a site
 
 During development you may wish to delete the database and or sitedata in order to start again from a fresh instance.
-First you should shut down your site.
-`make down`
-Then you can delete the "volume" which contains the database and or sitedata. 
-First we list the volumes:
-`docker volume ls`
-On this list you will see a list of volumes names.
-You will see a volume with the name <Foldername>_mahara-db and <Foldername>_mahara-data.
-You can then use the command `docker volume rm <foldername>_mahara-db` in order to remove the database or `docker volume rm <foldername>_mahara-data` to remove the sitedata.  
 
-When you run `make up` new volumes will be created automatically to replace the removed ones providing you with a fresh instance.
+1. Shut down your site: `make down`.
+1. List the volumes: `docker volume ls`. You see a list of volume names, including volumes with the names <Foldername>_mahara-db and <Foldername>_mahara-data.
+1. Delete the database volume with `docker volume rm <foldername>_mahara-db` or delete the sitedata volume with `docker volume rm <foldername>_mahara-data`.
 
-### Running automated tests inside containers 
+When you run `make up`, new volumes will be created automatically to replace the removed ones providing you with a fresh instance.
 
-Mahara has a mahara-builder Docker image that can be used to build and test
-Mahara. This image can be built and updated with:
+### Database refresh and restore commands
 
-```
-  # This command should be run periodically (every week or two) to freshen up
-  # the image with any security patches from its base image
-  make docker-builder
-  # Ensure gulp is available then run...
-  make css
-```
+These commands are for wiping an existing database and restoring a database from a backup file:
 
-This image contains the dependencies required for building and testing
-Mahara. To use this image to execute `make` targets run:
+* `make docker-database-refresh`: Deletes the current database and creates an empty one.
+* `dbpath="/example/database/path.pg" make docker-database-restore`: Restores a database from a database file that you specified in the path. Your previous database will be deleted.
 
-```
-  ./docker/make.sh <target>
-  e.g
-  ./docker/make.sh css
-```
+### Run automated tests
 
-### Running automated tests
+To run PHPUnit and Behat tests, a different image is required. You can get it by running `make docker-builder`.
 
-The following is not necessary for a standard developer testing setup.
+**Note**: Running PHPUnit and Behat tests via Docker is in the beginning stages
+and not everything may work. We keep the instructions in here though.
 
-The running of phpunit and Behat tests via Docker is in the beginning stages, and there are
-changes that need to be made to get them to run fully.
+The base command to generate tests (and CSS) is:
 
-Please note these are not part of the developer environment specified above, and we intend to integrate these into that developer environment in the future.
+`./docker/make.sh <target>`
 
-```
-  ./docker/make.sh phpunit
-  ./docker/make.sh behat
+Available `make` commands are:
+
+* `./docker/make.sh css` to generate css
+* `./docker/make.sh phpunit` to run PHPUnit tests
+* `./docker/make.sh behat` to run the Behat test suite.
+* `./docker/make.sh -e BEHAT_TESTS=change_account_settings.feature behat`
+to run only the specified test feature file
+* `./docker/make.sh -e BEHAT_MODE=rundebug -e BEHAT_TESTS=change_account_settings.feature behat`
+to run only the specified test feature file, watching the browser execute the test.
+
+The Mahara wiki contains more information on [Behat testing](https://wiki.mahara.org/wiki/Testing_Area/Behat_Testing).
   # To run only some test features
-  ./docker/make.sh -e BEHAT_TESTS=change_account_settings.feature behat
-  # To run some tests with browser head
-  ./docker/make.sh -e BEHAT_MODE=rundebug -e BEHAT_TESTS=change_account_settings.feature behat
-```
 
-These targets also need a DB. You can start and stop a test Docker database
-with these commands:
+The PHPUnit and Behat 'targets' need a database. You can start and stop a test
+Docker database with these commands:
 
-```
-  docker/test-db.sh start
+1. `docker/test-db.sh start` to start a test database
+1. Run your tests.
+1. `docker/test-db.sh stop` to stop a test database
 
-  # Run you tests while the DB is running
+To access the database with psql, run `docker/test-db.sh psql`.
 
-  docker/test-db.sh stop
-```
-
-To access the database with psql run:
-
-```
-  docker/test-db.sh psql
-
-  # To access the DB used in the docker-compose setup later on you need
-  # to change the docker network being used.
-  docker/test-db.sh -n docker_default psql
-```
-
-
-## Using the Mahara Docker image
+## Mahara Docker in production?
 
 The Mahara Docker image is **provided for development purposes only** at this stage. If you would like to use it in production, please be aware that you will need to change the Docker compose files and make configuration changes, e.g. passwords, email configuration, caching.

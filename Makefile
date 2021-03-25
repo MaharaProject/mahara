@@ -237,9 +237,28 @@ docker-builder:
 		--tag mahara-builder .
 
 #Connects to the database created by docker compose for this environment
-dev-db-connect:
+docker-db-connect:
 	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run db psql -h ${COMPOSE_PROJECT_NAME}-mahara-db -U mahara
 
+docker-db-drop:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --rm db /bin/bash -c "PGPASSWORD=\$$POSTGRES_PASSWORD dropdb -h ${COMPOSE_PROJECT_NAME}-mahara-db -U \$$POSTGRES_USER  \$$POSTGRES_DB"
+
+docker-db-create:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --rm db /bin/bash -c "PGPASSWORD=\$$POSTGRES_PASSWORD createdb -h ${COMPOSE_PROJECT_NAME}-mahara-db -U \$$POSTGRES_USER  \$$POSTGRES_DB"
+
+docker-db-refresh:
+	$(MAKE) docker-db-drop
+	$(MAKE) docker-db-create
+
+docker-db-restore:
+ifdef dbpath
+	$(MAKE) docker-db-refresh
+	@echo 'dbpath is defined'
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --rm  -v $(dbpath):/tmp/dump.pgdump \
+	       	db /bin/bash -c	"PGPASSWORD=\$$POSTGRES_PASSWORD pg_restore -O -h ${COMPOSE_PROJECT_NAME}-mahara-db -U \$$POSTGRES_USER -d \$$POSTGRES_DB /tmp/dump.pgdump"
+else
+	@echo 'Usage :$$ dbpath="/path/to/dbdump" make docker-db-restore'
+endif
 # Brings up a new development instance.
 up:
 ifeq (,$(wildcard ./htdocs/config.php))
@@ -269,7 +288,7 @@ shared-down:
 	$(shell export COMPOSE_PROJECT_NAME=shared-mahara && docker-compose -f docker/docker-compose.shared.yaml down)
 
 docker-bash:
-	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run web /bin/bash
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --user=www-data web /bin/bash
 
 # Brings up a new development instance, that assumes the presense of shared
 # mailhog and nginx containers.
