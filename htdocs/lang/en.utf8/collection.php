@@ -44,7 +44,9 @@ $string['collectionaccess'] = 'Collection access';
 $string['collectionaccessrules'] = 'Collection access rules';
 $string['collectionaccesseditedsuccessfully'] = 'Collection access saved successfully';
 $string['collectioneditaccess'] = 'You are editing access for %d pages in this collection.';
-$string['collectionconfirmdelete'] = 'Pages in this collection will not be deleted. Are you sure you wish to delete this collection?';
+$string['collectionconfirmdelete1'] = '<p>Do you really want to delete this collection? It will also delete all pages within this collection. If you only want to delete individual pages, abort this action and delete the pages in question themselves.</p>
+<p>Please consider creating a backup by <a href="%sexport/index.php?collection=%s">exporting</a> your portfolio before you delete anything.</p>
+<p><strong>Note:</strong> If you decide to delete this collection, all your files and journal entries that you linked in the pages will still be available. However, any text blocks and comments placed on the pages will be deleted along with the pages.</p>';
 $string['collectioncreatedsuccessfully'] = 'Collection created successfully.';
 $string['collectioncreatedsuccessfullyshare'] = 'Your collection has been created successfully. Share your collection with others using the access links below.';
 $string['collectiondeleted'] = 'Collection deleted successfully.';

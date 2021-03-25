@@ -81,13 +81,13 @@ $form = pieform(array(
 $smarty = smarty();
 setpageicon($smarty, 'icon-folder-open');
 $smarty->assign('subheading', get_string('deletespecifiedcollection', 'collection', $collection->get('name')));
-$smarty->assign('message', get_string('collectionconfirmdelete', 'collection'));
+$smarty->assign('message', get_string('collectionconfirmdelete1', 'collection', get_config('wwwroot'), $id));
 $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
 function deletecollection_submit(Pieform $form, $values) {
     global $SESSION, $collection, $baseurl;
-    $collection->delete();
+    $collection->delete(true);
     $SESSION->add_ok_msg(get_string('collectiondeleted', 'collection'));
     redirect($baseurl);
 }
