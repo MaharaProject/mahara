@@ -166,6 +166,8 @@ if ($records = get_records_sql_array($selectsql . $joinsql . $wheresql, $values)
             if ($cleanusers) {
                 try {
                     $DB_IGNORE_SQL_EXCEPTIONS = true;
+                    // Delete the event logs for user on full cleanup
+                    delete_records('event_log', 'usr', $record->id);
                     delete_records('usr', 'id', $record->id);
                     $DB_IGNORE_SQL_EXCEPTIONS = false;
                 }
