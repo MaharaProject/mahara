@@ -22,12 +22,14 @@ Visit %s to get started!
 Regards, the %s site administrator';
 $string['accountcreatedchangepasswordtext'] = 'Dear %s,
 
-A new account has been created for you on the Pharmacy Council %s site. The site is used for recording your annual recertification requirements. Your details are as follows:
+A new account has been created for you on the Pharmacy Council %s site. The site is used for recording your annual recertification requirements. Your personal recertification portfolio will be available in your account by the end of the day.
+
+Your details are as follows:
 
 Username: %s
 Password: %s
 
-Once you log in for the first time, you will be asked to change your password.
+When you log in for the first time, you will be asked to change your password.
 
 Visit %s to get started!
 
@@ -47,14 +49,16 @@ $string['accountcreatedhtml'] = '<p>Dear %s</p>
 ';
 $string['accountcreatedchangepasswordhtml'] = '<p>Dear %s</p>
 
-<p>A new account has been created for you on the Pharmacy Council <a href="%s">%s</a> site. The site is used for recording your annual recertification requirements. Your details are as follows:</p>
+<p>A new account has been created for you on the Pharmacy Council <a href="%s">%s</a> site. The site is used for recording your annual recertification requirements. Your personal recertification portfolio will be available in your account by the end of the day.</p>
+
+<p>Your details are as follows:</p>
 
 <ul>
     <li><strong>Username:</strong> %s</li>
     <li><strong>Password:</strong> %s</li>
 </ul>
 
-<p>Once you log in for the first time, you will be asked to change your password.</p>
+<p>When you log in for the first time, you will be asked to change your password.</p>
 
 <p>Visit <a href="%s">%s</a> to get started!</p>
 
