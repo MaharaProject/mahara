@@ -27,8 +27,15 @@ function revokemyaccess_form($viewid = null) {
             'required' => false
         )
     );
-    if($viewid) {
-        $title = get_field('view', 'title', 'id', $viewid);
+    if ($viewid) {
+        require_once('view.php');
+        $view = new View($viewid);
+        if ($view->get_collection()) {
+            $title = $view->get_collection()->get('name');
+        }
+        else {
+            $title = $view->get('title');
+        }
         $form['elements']['viewid'] = array(
             'type' => 'hidden',
             'value' => $viewid,
@@ -123,7 +130,17 @@ function revokemyaccess_form_cancel_submit(Pieform $form) {
         ));
     }
     else {
-        $goto =  get_config('wwwroot') . 'view/view.php?id=' . $form->get_element('viewid')['value'];
+        $viewid = $form->get_element('viewid')['value'];
+        require_once('view.php');
+        $view = new View($viewid);
+        $goto = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+        if ($view->get_collection()) {
+            $pid = $view->get_collection()->has_progresscompletion();
+            if ($pid && $pid == $viewid) {
+                $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $view->get_collection()->get('id');
+            }
+        }
+
         $form->reply(PIEFORM_OK, array(
             'goto' => $goto,
             'revokationcanceled' => true,
