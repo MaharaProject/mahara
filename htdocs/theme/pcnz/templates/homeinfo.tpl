@@ -27,7 +27,7 @@
         {/if}
 
         {if $USER->is_logged_in()}
-        <a href="{$url.share}" class="logged-in thumbnail-widget">
+        <a href="https://myrecert.pharmacycouncil.org.nz/view/view.php?id=17" target="_blank" class="logged-in thumbnail-widget">
         {else}
         <div class="logged-out thumbnail-widget">
         {/if}
