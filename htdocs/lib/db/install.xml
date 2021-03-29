@@ -1502,13 +1502,12 @@
         <TABLE NAME="view_instructions_lock">
             <FIELDS>
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true"/>
-                <FIELD NAME="originaltemplate" TYPE="int" LENGTH="10" NOTNULL="true"/>
+                <FIELD NAME="originaltemplate" TYPE="int" LENGTH="10" NOTNULL="false"/>
                 <FIELD NAME="locked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="view" />
                 <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id"/>
-                <KEY NAME="templatefk" TYPE="foreign" FIELDS="originaltemplate" REFTABLE="view" REFFIELDS="id"/>
             </KEYS>
         </TABLE>
         <TABLE NAME="client_connections_config">

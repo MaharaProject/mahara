@@ -2196,5 +2196,19 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {cron} SET minute = '0',hour='0',dayofweek='1' WHERE callfunction = 'cron_institution_data_weekly'");
     }
 
+    if ($oldversion < 2020092120) {
+        log_debug('Change the constraint on view_instruction_lock.originaltemplate field');
+        $table = new XMLDBTable('view_instructions_lock');
+        $field = new XMLDBField('originaltemplate');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
+        change_field_notnull($table, $field);
+
+        $key = new XMLDBKEY('templatefk');
+        $key->setAttributes(XMLDB_KEY_FOREIGN, array('originaltemplate'), 'view', array('id'));
+        if (db_key_exists($table, $key)) {
+            drop_key($table, $key);
+        }
+    }
+
     return $status;
 }
