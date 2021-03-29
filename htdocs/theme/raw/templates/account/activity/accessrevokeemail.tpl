@@ -1,15 +1,18 @@
-<p>{str tag=emailheader section=notification.email arg1=$sitename}</p>
+{str tag=emailheader section=notification.email arg1=$sitename}
+
 ------------------------------------------------------------------------
-<p>
-{str section='collection' tag='userhasremovedaccess' arg1=$fullname arg2=$viewtitle|safe}
-</p>
-{if $message}
-<p>
-{str section='collection' tag='userrevokereason'}
+
 {strip}
-{$message}
+{if ($revokedbyowner)}
+{str section='collection' tag='ownerhasremovedaccess' arg1=$fullname arg2=$viewtitle|safe}
+{else}
+{str section='collection' tag='userhasremovedaccess' arg1=$fullname arg2=$viewtitle|safe}
+{/if}
 {/strip}
-</p>
+{if $message}
+{str section='collection' tag='userrevokereason'}
+
+{$message|safe}
 {/if}
 ------------------------------------------------------------------------
-<p>{str tag=emailfooter section=notification.email arg1=$sitename, arg2=$prefurl|clean_html|safe}</p>
+{str tag=emailfooter section=notification.email arg1=$sitename, arg2=$prefurl|clean_html|safe}

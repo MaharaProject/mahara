@@ -28,7 +28,14 @@ function revokemyaccess_form($viewid = null) {
         )
     );
     if ($viewid) {
-        $title = get_field('view', 'title', 'id', $viewid);
+        require_once('view.php');
+        $view = new View($viewid);
+        if ($view->get_collection()) {
+            $title = $view->get_collection()->get('name');
+        }
+        else {
+            $title = $view->get('title');
+        }
         $form['elements']['viewid'] = array(
             'type' => 'hidden',
             'value' => $viewid,
@@ -68,7 +75,7 @@ function revokemyaccess_form($viewid = null) {
 
 function revokemyaccess_form_submit(Pieform $form, $values) {
     global $USER;
-    $message = hsc($values['message']);
+    $message = $values['message'];
     require_once('activity.php');
     require_once('view.php');
     if (!$USER->is_logged_in()) {
@@ -147,10 +154,61 @@ function revokemyaccess_form_cancel_submit(Pieform $form) {
         ));
     }
     else {
-        $goto =  get_config('wwwroot') . 'view/view.php?id=' . $form->get_element('viewid')['value'];
+        $viewid = $form->get_element('viewid')['value'];
+        require_once('view.php');
+        $view = new View($viewid);
+        $goto = get_config('wwwroot') . 'view/view.php?id=' . $viewid;
+        if ($view->get_collection()) {
+            $pid = $view->get_collection()->has_progresscompletion();
+            if ($pid && $pid == $viewid) {
+                $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $view->get_collection()->get('id');
+            }
+        }
+
         $form->reply(PIEFORM_OK, array(
             'goto' => $goto,
             'revokationcanceled' => true,
         ));
     }
+}
+
+/**
+ * Log revocation event for event subscription
+ */
+function revokemyaccess_event_handler($viewid, $message='') {
+    global $USER;
+    $viewobj = new View($viewid);
+    if (!$viewobj) {
+        throw new ViewNotFoundException(get_string('viewnotfound', 'error', $viewid));
+    }
+    $portfolioid = $viewobj->get('collection') ? $viewobj->get('collection')->get('id') : $viewobj->get('id');
+    $eventfor = $viewobj->get('collection') ? 'collection' : 'view';
+    $portfoliotitle = $viewobj->get('collection') ? $viewobj->get('collection')->get('name') : $viewobj->get('title');
+    $removertype = $USER->id === $viewobj->get('owner') ? 'owner' : 'accessor';
+    $removerid = $USER->id;
+    handle_event('removeviewaccess', array(
+        'id' => $portfolioid,
+        'eventfor' => $eventfor,
+        'reason'  => hsc($message),
+        'portfoliotitle' => hsc($portfoliotitle),
+        'removedby' => $removertype,
+        'removedid' => $removerid,
+    ));
+}
+
+/**
+ * Send email/notification of event to appropriate user on revocation
+ */
+function revokemyaccess_activity_occurred_handler($viewid, $fromusrid, $tousrid, $message=null) {
+    $data = new stdClass();
+    $data->viewid  = $viewid;
+    if ($message) {
+        $data->message = $message;
+    }
+    else {
+        $data->message = false;
+    }
+    $data->fromid = $fromusrid;
+    $data->toid = $tousrid;
+    activity_occurred('viewaccessrevoke', $data);
 }
