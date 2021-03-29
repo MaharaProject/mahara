@@ -69,7 +69,7 @@ if ($collection) {
                 $goto = 'admin/site/views.php';
             }
             else {
-                $goto .= 'view/institutionviews.php?institution=' . $institution;
+                $goto = 'view/institutionviews.php?institution=' . $institution;
             }
         }
     }
