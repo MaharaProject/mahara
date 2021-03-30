@@ -8,7 +8,7 @@
         {if $collectionnote}<p class="lead">{$collectionnote|clean_html|safe}</p>{/if}
         {if $landingpagenote}<p class="lead">{$landingpagenote}</p>{/if}
         <p>{if $view->get('owner')}
-        {str tag="deleteviewconfirmbackup" section="view" arg1=$WWWROOT}
+        {str tag="deleteviewconfirmbackup1" section="view" arg1=$WWWROOT arg2=$view->get('id')}
         {/if}</p>
         <p>{str tag="deleteviewconfirmnote3" section="view"}</p>
         {$form|safe}

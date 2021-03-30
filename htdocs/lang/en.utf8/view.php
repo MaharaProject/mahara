@@ -240,7 +240,7 @@ $string['cantsubmittogroup'] = 'You cannot submit to this group.';
 $string['cantdeleteview'] = 'You cannot delete this page.';
 $string['deletespecifiedview'] = 'Delete page "%s"';
 $string['deleteviewconfirm1'] = 'Do you really want to delete this page? It cannot be undone.';
-$string['deleteviewconfirmbackup'] = 'Please consider creating a backup of this page by <a href="%sexport/">exporting</a> it.';
+$string['deleteviewconfirmbackup1'] = 'Please consider creating a backup of this page by <a href="%sexport/index.php?view=%s">exporting</a> it.';
 $string['deleteviewconfirmnote3'] = '<strong>Note:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any comments placed on this page will be deleted.';
 $string['deleteviewconfirmnote2'] = 'This page is a part of the collection <a href="%s">"%s"</a>.';
 
