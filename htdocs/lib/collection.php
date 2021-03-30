@@ -135,7 +135,7 @@ class Collection {
      * Deletes a Collection
      *
      */
-    public function delete() {
+    public function delete($deleteviews = false) {
         $viewids = get_column('collection_view', 'view', 'collection', $this->id);
         db_begin();
 
@@ -158,14 +158,13 @@ class Collection {
                 }
             }
         }
-
         // Delete the progress page as it can't exist outside a collection
         // We can't use has_progresscompletion() check when the collection is empty of normal pages
         // So we just check directly in database
-        if ($pid = get_field_sql("SELECT cv.view FROM {collection_view} cv
-                                  JOIN {view} v ON v.id = cv.view
-                                  WHERE v.id IN (" . join(',', array_fill(0, count($viewids), '?')) . ")
-                                  AND v.type = 'progress'", $viewids)) {
+        if (!$deleteviews && $pid = get_field_sql("SELECT cv.view FROM {collection_view} cv
+                                                   JOIN {view} v ON v.id = cv.view
+                                                   WHERE v.id IN (" . join(',', array_fill(0, count($viewids), '?')) . ")
+                                                   AND v.type = 'progress'", $viewids)) {
             require_once(get_config('libroot') . 'view.php');
             $view = new View($pid);
             $view->delete();
@@ -187,6 +186,14 @@ class Collection {
         // @todo: add user message to whatever calls this.
         if ($viewids) {
             delete_records_select('view_access', 'view IN (' . join(',', $viewids) . ') AND token IS NOT NULL');
+        }
+        // Delete the views that were in the collection if required
+        if ($deleteviews) {
+            require_once('view.php');
+            foreach ($viewids as $viewid) {
+                $view = new View($viewid);
+                $view->delete();
+            }
         }
         $data = array('id' => $this->id,
                       'name' => $this->name,
