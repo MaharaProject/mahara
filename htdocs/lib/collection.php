@@ -1393,6 +1393,12 @@ class Collection {
         if (is_array($direction)) {
             // we already have new sort order
             $neworder = $direction;
+            if ($pid = $this->has_progresscompletion()) {
+                if (!in_array($pid, $neworder)) {
+                    // we need to add the progress page to be displayorder = 0
+                    array_unshift($neworder, $pid);
+                }
+            }
         }
         else {
             $ids = get_column_sql('
