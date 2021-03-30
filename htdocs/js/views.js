@@ -891,18 +891,20 @@
                 cancelbutton.off();
                 rewriteCancelButton(cancelbutton, blockinstanceId);
             }
-        } else {
-
+        }
+        else {
             deletebutton.on('click', function(e) {
-                e.stopPropagation();
-                e.preventDefault();
+                if ((formchangemanager.checkDirtyChanges() && confirm(get_string('confirmcloseblockinstance'))) || !formchangemanager.checkDirtyChanges()) {
+                    e.stopPropagation();
+                    e.preventDefault();
 
-                hideDock();
-                showMediaPlayers();
+                    hideDock();
+                    showMediaPlayers();
 
-                setTimeout(function() {
-                    oldblock.find('.configurebutton').trigger("focus");
-                }, 1);
+                    setTimeout(function() {
+                        oldblock.find('.configurebutton').trigger("focus");
+                    }, 1);
+                }
             });
         }
 
