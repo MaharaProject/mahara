@@ -703,18 +703,20 @@ EOF;
         AND bi.view = ? AND bi.id != ?";
         $verblocks = get_records_sql_assoc($sql, array($viewid, $instance->get('id')));
         $unlockcollection = true;
-        foreach ($verblocks as $b) {
-            $verblock = new BlockInstance($b->id);
-            $config = $verblock->get('configdata');
-            if ($config['lockportfolio'] == 1 && empty($config['addcomment']) && isset($config['verified']) && $config['verified']) {
-                $unlockcollection = false;
-                break;
-            }
-            if ($config['lockportfolio'] == 1 && $config['addcomment'] == 1) {
-                if ($b->text) {
+        if ($verblocks) {
+            foreach ($verblocks as $b) {
+                $verblock = new BlockInstance($b->id);
+                $config = $verblock->get('configdata');
+                if ($config['lockportfolio'] == 1 && empty($config['addcomment']) && isset($config['verified']) && $config['verified']) {
                     $unlockcollection = false;
+                    break;
                 }
-                break;
+                if ($config['lockportfolio'] == 1 && $config['addcomment'] == 1) {
+                    if ($b->text) {
+                        $unlockcollection = false;
+                    }
+                    break;
+                }
             }
         }
         return $unlockcollection;
