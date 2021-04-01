@@ -162,12 +162,12 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
 
     /**
      * Find and update duplicates of imported data about the feed author.
-     * TODO: Refactor this to combine it with import_author_data()
      *
-     * @param PluginImportLeap $importer The importer
+     * @todo  Refactor this to combine it with import_author_data().
+     * @param PluginImportLeap $importer The importer.
      * @param string $persondataid       The ID of the person entry corresponding
-     *                                   to the author, if there is one
-     * @return updated DB table 'import_authordata_requests'
+     *                                   to the author, if there is one.
+     * @return void
      */
     public static function add_import_entry_request_author_data(PluginImportLeap $importer, $persondataid) {
 
@@ -218,6 +218,9 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 throw new ImportException($importer, 'TODO: get_string: <author> must include <name> - http://wiki.cetis.ac.uk/2009-03/Leap2A_relationships#Author');
             }
 
+            // Record the source tag that persondata comes from.
+            // @see self::render_import_entry_requests().
+            $persondata_source = 'author';
             $name = (string)$author->name;
             if (false !== strpos($name, ' ')) {
                 list($firstname, $lastname) = explode(' ', $name, 2);
@@ -226,6 +229,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                     'type'    => 'firstname',
                     'content' => array(
                         'title'       => trim($firstname),
+                        'source'      => $persondata_source,
                     ),
                 ));
                 PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), $persondataid, self::STRATEGY_IMPORT_AS_PROFILE_FIELD, 'internal', array(
@@ -233,6 +237,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                     'type'    => 'lastname',
                     'content' => array(
                         'title'       => trim($lastname),
+                        'source'      => $persondata_source,
                     ),
                 ));
             }
@@ -550,6 +555,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 'type'    => self::$persondatafields[$field]['mahara_fieldname'],
                 'content' => array(
                     'title'       => (string)$item,
+                    'source'      => 'persondata',
                 ),
             ));
             return;
@@ -1122,6 +1128,10 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         $institutions = empty($USER->get('institutions')) ? array('mahara') : array_keys($USER->get('institutions'));
         // Get import entry requests for Mahara profile fields
         $profilegroups = array();
+        // We are walking over $profilefields which will mean the "profile"
+        // fields (firstname, etc) are first on the list. We can reliably
+        // set $persondata_source for reference in the later groups.
+        $persondata_source = 'unknown';
         foreach ($profilefields as $gr_key => $group) {
             $profilegroup = array();
             $profilegroup['id'] = $gr_key;
@@ -1132,7 +1142,17 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                     foreach ($iers as $ier) {
                         $profilefieldvalue = unserialize($ier->entrycontent);
                         $profilefieldvalue['id'] = $ier->id;
-                        $profilefieldvalue['decision'] = $ier->decision;
+                        if (!empty($profilefieldvalue['source']) && $profilefieldvalue['source'] == 'author') {
+                            // The field value has come from the author tag in
+                            // the XML, not the personaldata tags. Force us to
+                            // default to Ignore.
+                            $profilefieldvalue['decision'] = PluginImport::DECISION_IGNORE;
+                            // For reference later in the process.
+                            $persondata_source = $profilefieldvalue['source'];
+                        }
+                        else {
+                            $profilefieldvalue['decision'] = $ier->decision;
+                        }
                         $classname = generate_artefact_class_name($f);
                         $profilefieldvalue['html'] = $classname::render_import_entry_request($profilefieldvalue);
                         if (is_string($ier->duplicateditemids)) {
@@ -1172,6 +1192,9 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                                 $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = false;
                                 $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = true;
                                 $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = true;
+                                if ($persondata_source == 'author') {
+                                    $profilefieldvalue['decision'] = PluginImport::DECISION_IGNORE;
+                                }
                             }
                             else {
                                 $is_singular = call_static_method(generate_artefact_class_name($ier->entrytype), 'is_singular');
