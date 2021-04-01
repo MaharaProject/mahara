@@ -264,6 +264,9 @@ up:
 ifeq (,$(wildcard ./htdocs/config.php))
 	cp ./htdocs/config-environment.php ./htdocs/config.php
 endif
+ifeq (,$(wildcard ./docker/.env))
+	cp ./docker/.env-dist ./docker/.env
+endif
 	$(MAKE) shared-up
 	$(MAKE) dev-up
 	$(MAKE) css

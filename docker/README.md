@@ -34,7 +34,7 @@ Test that Docker compose is working:
 docker-compose --version
 ```
 
-The version output should be greater than 1.17.
+The version output should be greater than 1.28.
 
 The following scripts and Docker commands can read a lot of config
 variables from the environment.
@@ -73,8 +73,12 @@ testing Mahara, including generating CSS, PHPUnit and Behat tests.
 
 ### Start up a new development environment
 
-**For development purposes, we recommend that you set up a `.envrc` file.
-Therefore, the following instructions will assume that you have one.**
+In order to allow Docker to have access to and set various Mahara environment variables, a "docker/.env" file is used to set Mahara specific variables.
+By default this is copied from `docker/.env-dist` when using `make up` if it does not already exist.
+
+Provide values for two variables:
+* MAHARA_URL_SECRET: Set a string as the cron requires it to work correctly.
+* MAHARA_PASSWORD_SALT_MAIN: Set a string.
 
 If this is your first time running Mahara with Docker, you will need to run
 `make docker-image` to build the Mahara Docker image. This will create a Docker
