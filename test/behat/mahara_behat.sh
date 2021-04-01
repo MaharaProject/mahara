@@ -82,9 +82,6 @@ function cleanup {
     else
         exit 255
     fi
-
-    echo "Disable behat test environment"
-    php htdocs/testing/frameworks/behat/cli/util.php -d
 }
 
 # Check we are not running as root for some weird reason

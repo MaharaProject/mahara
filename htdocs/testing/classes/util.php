@@ -683,6 +683,8 @@ abstract class TestingUtil {
      */
     public static function drop_database($displayprogress = false) {
         global $CFG;
+        error_log("\n");
+        error_log("Uninstalling site database...");
         // Drop triggers
         try {
             db_drop_trigger('update_unread_insert', 'notification_internal_activity');
@@ -745,7 +747,7 @@ abstract class TestingUtil {
                 $pluginpath = 'artefact' . DIRECTORY_SEPARATOR . $bits[0] . DIRECTORY_SEPARATOR . 'blocktype' . DIRECTORY_SEPARATOR . $bits[1];
             }
 
-            log_info("Uninstalling $plugintype.$pluginname");
+            // log_info("Uninstalling $plugintype.$pluginname");
             $location = get_config('docroot') . $pluginpath . DIRECTORY_SEPARATOR . 'db';
             if (is_readable($location . DIRECTORY_SEPARATOR . 'install.xml')) {
                 if ($plugintype == 'auth' && $pluginname == 'webservice') {
@@ -787,7 +789,7 @@ abstract class TestingUtil {
         if (is_mysql()) {
             execute_sql('SET foreign_key_checks = 0');
         }
-        log_info('Uninstalling core');
+        // log_info('Uninstalling core');
         uninstall_from_xmldb_file(get_config('docroot') . 'lib'.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.xml');
         if (is_mysql()) {
             execute_sql('SET foreign_key_checks = 1');
@@ -795,6 +797,7 @@ abstract class TestingUtil {
         // Reset info so we install rather than update if calling install_site straight after
         $CFG->installed = false;
         $CFG->version = 0;
+        error_log("Done");
     }
 
     /**
