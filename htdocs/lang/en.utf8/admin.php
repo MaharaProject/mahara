@@ -1278,6 +1278,8 @@ $string['verifierpercentage'] = 'Percentage of portfolios allocated to a verifie
 $string['countportfolios'] = '%s template portfolios selected';
 $string['allocated'] = 'Allocated';
 $string['unallocated'] = 'Unallocated';
+$string['currentverifiersovertime'] = 'Current verifiers over time';
+$string['currentverifiers'] = 'Current verifiers';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

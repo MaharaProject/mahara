@@ -17,6 +17,7 @@ function allowed_graph_functions() {
     return array(
         'institution_view_type_graph_render',
         'institution_verifier_graph_render',
+        'institution_current_verifiers_graph_render',
         'institution_verifier_load_graph_render',
         'institution_user_type_graph',
         'graph_institution_data_weekly',
@@ -135,6 +136,7 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
         json_reply(false, array('data' => $data));
     }
     $data['colours'] = get_graph_colours($data, $colours);
+
     $graphdata = array();
     $x = 0;
     $graphdata['labels'] = $data['labels'];
@@ -147,7 +149,9 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
         $dataobj['borderWidth'] = 1.5;
         $dataobj['pointStyle'] = 'circle';
         $dataobj['pointRadius'] = 1.5;
-
+        if (!empty($data['yaxis']) && !empty($data['yaxis'][$x])) {
+            $dataobj['yAxisID'] = $data['yaxis'][$x];
+        }
         $graphdata['datasets'][] = $dataobj;
         $x = empty($data['colours'][$x+1]) ? 0 : $x + 1;
     }
