@@ -1270,6 +1270,13 @@ $string['unabletodeleteself1'] = 'You are not allowed to delete yourself.';
 $string['unabletodeletealladmins1'] = 'You are not allowed to delete all site administrators.';
 $string['unabletosuspendself'] = 'You are not allowed to suspend yourself.';
 $string['unabletosuspendalladmins'] = 'You are not allowed to suspend all site administrators.';
+$string['verifierload'] = 'Percentage of portfolios by reviewer load';
+$string['verifierpercentage'] = 'Percentage of portfolios allocated to a reviewer';
+$string['countportfolios'] = '%s template portfolios selected';
+$string['allocated'] = 'Allocated';
+$string['unallocated'] = 'Unallocated';
+$string['currentverifiersovertime'] = 'Current reviewers over time';
+$string['currentverifiers'] = 'Current reviewers';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';

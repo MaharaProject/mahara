@@ -152,6 +152,18 @@ $string['verification'] = 'Verification';
 $string['progresspage'] = 'Portfolio completion';
 $string['progresspagedescription'] = 'Set up the default layout for the portfolio completion page for a collection.';
 
+$string['progressportfolios'] = 'Portfolio count';
+$string['progressverifiers'] = 'Reviewer percentage';
+
+//Verification checkbox sr-only text
+$string['sharedviewverifiedunchecked'] = '%s by %s is not reviewed';
+$string['sharedviewverifiedchecked'] = '%s by %s has been reviewed';
+// access notifications
+$string['userhasremovedaccesssubject'] = '%s has removed their access to "%s"';
+$string['ownerhasremovedaccesssubject'] = '%s has removed your access to "%s"';
+$string['revokedbyowner'] = 'Owner has revoked access';
+$string['youhavebeengivenaccess'] = "You have been given access to the following";
+
 // Statement block reset information
 $string['undoverification'] = 'Reset statement';
 $string['undoverificationformtitle'] = 'Reset statement';
