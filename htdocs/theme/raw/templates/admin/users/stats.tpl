@@ -94,6 +94,12 @@
     {$institutiondata.verifierinfo|safe}
 </div>
 {/if}
+{if $institutiondata.verifierloadinfo}
+<div class="statinfoblock col-lg-4 col-md-6">
+    <h2 class="card-header">{str tag="verifierloadinfo" section=statistics}</h2>
+    {$institutiondata.verifierloadinfo|safe}
+</div>
+{/if}
 {if $institutiondata.groupinfo}
 <div class="statinfoblock col-lg-4 col-md-6">
     <h2 class="card-header">{str tag="groupinfo" section=statistics}</h2>

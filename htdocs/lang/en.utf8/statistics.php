@@ -298,7 +298,8 @@ $string['eight'] = 'Eight';
 $string['nine'] = 'Nine';
 $string['tenormore'] = 'Ten +';
 $string['verifiersummarydate'] = 'w.c. %s';
-$string['verifierinfo'] = 'Verifier Information';
+$string['verifierinfo'] = 'Verifier allocation';
+$string['verifierloadinfo'] = 'Verifier allocation load';
 
 $string['reportmasquerading'] = 'Masquerading sessions';
 $string['reportdescmasquerading'] = '<ul>
