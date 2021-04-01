@@ -232,7 +232,18 @@ $string['reportdesccompletionverification'] = '<ul>
 <li>Date on which the verifier confirmed the primary statement on the portfolio</li>
 <li>Date on which the verifier removed their access to the portfolio</li>
 <li>Date when the verifier\'s access to the portfolio was removed by the system</li>
-<li>The Percentage of completions per portfolio per individual</li>';
+<li>The Percentage of completions per portfolio per individual</li>
+</ul>';
+
+$string['reportportfolioswithverifiers'] = 'Portfolios with verifiers';
+$string['reportdescportfolioswithverifiers'] = '<ul>
+<li>Date of the week commencing for time period</li>
+<li>Total number of portfolios with verifiers</li>
+<li>Total number of portfolios without verifiers</li>
+</ul>';
+$string['withverifier'] = 'With verifiers';
+$string['withoutverifier'] = 'Without verifiers';
+$string['currentverifiersinfo'] = 'Current verifiers';
 
 $string['reportdescusers'] = '<ul>
 <li>Date</li>
@@ -464,6 +475,7 @@ $string['usersuseractivityreports'] = 'Account activity';
 $string['usersuserdetailsreports'] = 'Account details';
 $string['usersuseragreementreports'] = 'Legal consent';
 $string['userscompletionverificationreports'] = 'Completion and verification';
+$string['usersportfolioswithverifiersreports'] = 'Portfolios with verifiers';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';
@@ -494,7 +506,7 @@ $string['actions'] = 'Actions';
 $string['lastaction'] = 'Last action';
 $string['lastactiontime'] = 'Last action time';
 $string['removefilter'] = 'Remove filter';
-$string['collaborationdate'] = 'w.c. %s';
+$string['weekstartdate'] = 'w.c. %s';
 $string['needadvancedanalytics'] = 'Advanced analytics need to be enabled for this report. Please see the "Logging settings" under "Configure site" for more information.';
 $string['Overview'] = 'Overview';
 $string['weeklytrend'] = 'Growth trend';

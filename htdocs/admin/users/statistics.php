@@ -100,7 +100,7 @@ $end = $end ? format_date(strtotime(str_replace('/', '-', $end)), 'strftimew3cda
 
 $activecolumns = $SESSION->get('columnsforstats');
 $activecolumns = !empty($activecolumns) ? $activecolumns : array();
-if (isset($_POST['subtype']) && ($_POST['subtype'] == 'completionverification' || $_POST['subtype'] == 'verifiersummary')  && empty($_POST['portfoliofilter'])) {
+if (isset($_POST['subtype']) && ($_POST['subtype'] == 'completionverification' || $_POST['subtype'] == 'verifiersummary' || $_POST['subtype'] == 'portfolioswithverifiers')  && empty($_POST['portfoliofilter'])) {
     // need to set empty post if nothing selected otherwise the url value is used
     $_POST['portfoliofilter'] = array();
 }
