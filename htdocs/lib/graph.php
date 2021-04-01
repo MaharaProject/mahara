@@ -17,6 +17,7 @@ function allowed_graph_functions() {
     return array(
         'institution_view_type_graph_render',
         'institution_verifier_graph_render',
+        'institution_verifier_load_graph_render',
         'institution_user_type_graph',
         'graph_institution_data_weekly',
         'user_institution_graph',

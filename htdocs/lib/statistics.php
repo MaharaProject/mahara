@@ -555,7 +555,6 @@ function institution_statistics($institution, $full=false) {
         // Verifier for institution graph
         $verifierinfo = institution_data_verifier_current($institution);
         $smarty = smarty_core();
-        $smarty->assign('viewcount', $verifierinfo['verifierportfolios']);
         $smarty->assign('institution', $institution);
         $smarty->assign('verifiertotal', $verifierinfo['verifierportfolios-verifier-count']);
         if ($portfolios = $SESSION->get('portfoliofilter')) {
@@ -566,6 +565,19 @@ function institution_statistics($institution, $full=false) {
             $smarty->assign('verifierportfolios', get_string('countportfolios', 'admin', count($portfolios)) . $btnstr);
         }
         $data['verifierinfo'] = $smarty->fetch('admin/institutionverifierstatssummary.tpl');
+
+        // Verifier load for institution graph
+        $smarty = smarty_core();
+        $smarty->assign('institution', $institution);
+        $smarty->assign('verifiertotal', $verifierinfo['verifierportfolios-verifier-count']);
+        if ($portfolios = $SESSION->get('portfoliofilter')) {
+            $btnstr = ' <button class="btn btn-secondary filter" id="removeportfoliofilter" title="' . get_string('removefilter', 'statistics') . '">
+                            <span class="times">×</span>
+                            <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
+                        </button>';
+            $smarty->assign('verifierportfolios', get_string('countportfolios', 'admin', count($portfolios)) . $btnstr);
+        }
+        $data['verifierloadinfo'] = $smarty->fetch('admin/institutionverifierloadsummary.tpl');
     }
 
     return($data);
@@ -600,8 +612,73 @@ function institution_verifier_graph_render($type = null, $extradata) {
     }
 
     $data['graph_function_name'] = 'institution_verifier_type_graph';
-    $data['title'] = get_string('verifierload', 'admin');
+    $data['title'] = get_string('verifierpercentage', 'admin');
     $data['labels'] = array(get_string('unallocated', 'admin'), get_string('allocated', 'admin'));
+    $data['data'] = $dataarray;
+    if (!empty($dataarray)) {
+        require_once(get_config('libroot') . 'graph.php');
+        $graphdata = get_circular_graph_json($data, null, true);
+        $data['jsondata'] = json_encode($graphdata[0]);
+    }
+    return $data;
+}
+
+function institution_verifier_load_graph_render($type = null, $extradata) {
+    global $SESSION;
+
+    $data['graph'] = ($type) ? $type : 'pie';
+    $verifierinfo = institution_data_verifier_current($extradata->institution);
+    $dataarray = array(1 => 0,
+                       2 => 0,
+                       3 => 0,
+                       4 => 0,
+                       5 => 0,
+                       6 => 0,
+                       7 => 0,
+                       8 => 0,
+                       9 => 0,
+                       10 => 0);
+
+    if ($portfolios = $SESSION->get('portfoliofilter')) {
+        $subdataarray = array();
+        foreach ($portfolios as $portfolio) {
+            for ($i = 1; $i <= 10; $i++) {
+                if (isset($verifierinfo['verifierportfolios-verifier-load-' . $i . '_' . $portfolio])) {
+                    $subdataarray[$portfolio][$i] = $verifierinfo['verifierportfolios-verifier-load-' . $i . '_' . $portfolio];
+                }
+            }
+        }
+        // Now we have totals per template we need to aggregate them
+        foreach ($subdataarray as $sk => $sv) {
+            for ($i = 1; $i <= 10; $i++) {
+                if (isset($sv[$i])) {
+                    $dataarray[$i] += $sv[$i];
+                }
+            }
+        }
+    }
+    else {
+        foreach ($verifierinfo as $ikey => $item) {
+            for ($i = 1; $i <= 10; $i++) {
+                if (preg_match('/^verifierportfolios-verifier-load-' . $i . '_/', $ikey)) {
+                    $dataarray[$i] += $item;
+                }
+            }
+        }
+    }
+
+    $data['graph_function_name'] = 'institution_verifier_load_type_graph';
+    $data['title'] = get_string('verifierload', 'admin');
+    $data['labels'] = array(get_string('one', 'statistics'),
+                            get_string('two', 'statistics'),
+                            get_string('three', 'statistics'),
+                            get_string('four', 'statistics'),
+                            get_string('five', 'statistics'),
+                            get_string('six', 'statistics'),
+                            get_string('seven', 'statistics'),
+                            get_string('eight', 'statistics'),
+                            get_string('nine', 'statistics'),
+                            get_string('tenormore', 'statistics'));
     $data['data'] = $dataarray;
     if (!empty($dataarray)) {
         require_once(get_config('libroot') . 'graph.php');
