@@ -1,5 +1,6 @@
 <?php
 /**
+ * Edit forum topic utils
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -228,6 +229,12 @@ if (isset($topic) && (!empty($topic->sent) || !user_can_edit_post($topic->poster
 
 $editform = pieform($editform);
 
+/**
+ * Validate a new topic to be added
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function addtopic_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
         $form->set_error('body', get_string('denylisteddomaininurl', 'mahara', $baddomain));
@@ -238,16 +245,22 @@ function addtopic_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Validate the modifications to a topic
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function edittopic_validate(Pieform $form, $values) {
-    if ($baddomain = get_first_blacklisted_domain($values['body'])) {
-        $form->set_error('body', get_string('denylisteddomaininurl', 'mahara', $baddomain));
-    }
-    $result = probation_validate_content($values['body']);
-    if ($result !== true) {
-        $form->set_error('body', get_string('newuserscantpostlinksorimages1'));
-    }
+    addtopic_validate($form, $values);
 }
 
+/**
+ * Check whether a post needs an approval
+ *
+ * @param  int $topicid
+ * @return bool
+ */
 function post_needs_approval($topicid) {
     $needsapproval = get_field_sql("SELECT c.value FROM {interaction_forum_instance_config} c
                               INNER JOIN {interaction_forum_topic} t
@@ -256,6 +269,13 @@ function post_needs_approval($topicid) {
 }
 
 
+/**
+ * Submit the addition of a new topic
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function addtopic_submit(Pieform $form, $values) {
     global $USER, $SESSION, $moderator;
     $forumid = param_integer('forum');
@@ -341,6 +361,12 @@ function addtopic_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Submit the edited changes of a topic
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ */
 function edittopic_submit(Pieform $form, $values) {
     global $SESSION, $USER, $topic;
     $topicid = param_integer('id');
@@ -409,6 +435,12 @@ function edittopic_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Add an attachment to the topic
+ *
+ * @param  int $attachmentid
+ * @return void
+ */
 function add_attachment($attachmentid) {
     global $forumid, $topic;
     $instance = new InteractionForumInstance($forumid);
@@ -417,6 +449,12 @@ function add_attachment($attachmentid) {
     }
 }
 
+/**
+ * Delete an attachment from the topic
+ *
+ * @param  int $attachmentid
+ * @return void
+ */
 function delete_note_attachment($attachmentid) {
     global $forumid, $topic;
     $instance = new InteractionForumInstance($forumid);

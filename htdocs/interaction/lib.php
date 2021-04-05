@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utilities for the interaction plugin
  *
  * @package    mahara
  * @subpackage interaction
@@ -16,13 +17,21 @@ defined('INTERNAL') || die();
  */
 interface IPluginInteraction {
     /**
-    * override this to add extra pieform elements to the edit instance form
-    */
+     * Override this to add extra pieform elements to the edit instance form
+     *
+     * @param  mixed $group
+     * @param  mixed $instance
+     * @return void
+     */
     public static function instance_config_form($group, $instance=null);
 
     /**
-    * override this to save any extra fields in the instance form.
-    */
+     * Override this to save any extra fields in the instance form.
+     *
+     * @param  mixed $instance
+     * @param  mixed $values
+     * @return void
+     */
     public static function instance_config_save($instance, $values);
 
     /*
@@ -156,6 +165,11 @@ abstract class PluginInteraction extends Plugin implements IPluginInteraction {
  * Helper interface to hold InteractionInstance's abstract static methods
  */
 interface IInteractionInstance {
+    /**
+     * Get name of plugin
+     *
+     * @return string
+     */
     public static function get_plugin();
 }
 
@@ -164,13 +178,34 @@ interface IInteractionInstance {
  */
 abstract class InteractionInstance implements IInteractionInstance {
 
+    /**
+     * Interaction id
+     */
     protected $id;
+    /**
+     * Interaction title
+     */
     protected $title;
+    /**
+     * Interaction description
+     */
     protected $description;
+    /**
+     * The group that owns this interaction.
+     */
     protected $group;
     protected $plugin; // I wanted to make this private but then get_object_vars doesn't include it.
+    /**
+     * Creation time
+     */
     protected $ctime;
+    /**
+     * The creator of an interaction
+     */
     protected $creator;
+    /**
+     * Whether the interaction instance has an update
+     */
     protected $dirty;
 
     public function __construct($id=0, $data=null) {
@@ -267,6 +302,13 @@ abstract class InteractionInstance implements IInteractionInstance {
     }
 }
 
+/**
+ * Sanity checking for if plugin exists
+ *
+ * @param  string $pluginname
+ * @return void
+ * @throws InstallationException
+ */
 function interaction_check_plugin_sanity($pluginname) {
 
     safe_require('interaction', $pluginname);
@@ -277,6 +319,12 @@ function interaction_check_plugin_sanity($pluginname) {
     }
 }
 
+/**
+ * Get interactioninstance from a given ID
+ *
+ * @param  int $id
+ * @throws  InteractionInstanceNotFoundException
+ */
 function interaction_instance_from_id($id) {
     if (!$interaction = get_record('interaction_instance', 'id', $id)) {
         throw new InteractionInstanceNotFoundException(get_string('interactioninstancenotfound', 'error', $id));
@@ -286,6 +334,13 @@ function interaction_instance_from_id($id) {
     return new $classname($id, $interaction);
 }
 
+/**
+ * Edit interaction validation form handler
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function edit_interaction_validation(Pieform $form, $values) {
     safe_require('interaction', $values['plugin']);
     if (is_callable(array(generate_class_name('interaction', $values['plugin'])), 'instance_config_validate')) {
@@ -293,6 +348,13 @@ function edit_interaction_validation(Pieform $form, $values) {
     }
 }
 
+/**
+ * Edit interaction submit form handler
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function edit_interaction_submit(Pieform $form, $values) {
     safe_require('interaction', $values['plugin']);
     $classname = generate_interaction_instance_class_name($values['plugin']);
@@ -316,6 +378,13 @@ function edit_interaction_submit(Pieform $form, $values) {
     }
 }
 
+/**
+ * Delete interaction submit form handler
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function delete_interaction_submit(Pieform $form, $values) {
 
     require_once(get_config('docroot') . 'interaction/lib.php');

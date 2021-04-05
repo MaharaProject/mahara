@@ -1,5 +1,6 @@
 <?php
 /**
+ * Lang file for interaction forum purposes
  *
  * @package    mahara
  * @subpackage interaction-forum

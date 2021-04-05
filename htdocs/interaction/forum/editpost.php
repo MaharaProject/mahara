@@ -1,5 +1,6 @@
 <?php
 /**
+ * Forum interaction plugin - helper for editing posts
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -244,6 +245,12 @@ if (isset($post) && (!empty($post->sent) || !user_can_edit_post($post->poster, $
 
 $editform = pieform($editform);
 
+/**
+ * Validate the edit-post form
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function editpost_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
         $form->set_error('body', get_string('denylisteddomaininurl', 'mahara', $baddomain));
@@ -254,6 +261,11 @@ function editpost_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Get the group ID from the given $postid
+ *
+ * @param  int $postid
+ */
 function get_groupid_from_postid($postid) {
     $groupid = get_field_sql("SELECT i.group FROM {interaction_instance} i
                               INNER JOIN {interaction_forum_topic} t ON i.id = t.forum
@@ -262,6 +274,12 @@ function get_groupid_from_postid($postid) {
     return $groupid;
 }
 
+/**
+ * Check if the reply needs an approval
+ *
+ * @param  int $topicid
+ * @return bool Whether the topic matching $topicid needs approval
+ */
 function reply_needs_approval($topicid) {
     $needsapproval = get_field_sql("SELECT c.value FROM {interaction_forum_instance_config} c
                               INNER JOIN {interaction_forum_topic} t
@@ -269,6 +287,12 @@ function reply_needs_approval($topicid) {
     return ($needsapproval == 'replies' || $needsapproval == 'postsandreplies');
 }
 
+/**
+ * Check if the current logged in user is a moderator for the matching topic
+ *
+ * @param  int $topicid The topic ID
+ * @return bool
+ */
 function is_logged_user_moderator($topicid) {
     global $USER;
     return (count_records_sql(
@@ -280,6 +304,12 @@ function is_logged_user_moderator($topicid) {
         array($topicid, $USER->get('id'))) != 0 );
 }
 
+/**
+ * Submit the form for editing a post
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function editpost_submit(Pieform $form, $values) {
     global $USER, $SESSION, $parent;
     require_once('embeddedimage.php');
@@ -325,6 +355,12 @@ function editpost_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Submit the form for adding a post
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function addpost_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     require_once('embeddedimage.php');
@@ -409,6 +445,11 @@ function addpost_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Add an attachment to the post
+ *
+ * @param  int $attachmentid ID of artefact to attach to post
+ */
 function add_attachment($attachmentid) {
     global $parent, $postid;
     $instance = new InteractionForumInstance($parent->forum);
@@ -417,6 +458,11 @@ function add_attachment($attachmentid) {
     }
 }
 
+/**
+ * Delete an attachment to the post
+ *
+ * @param  mixed $attachmentid ID of artefact to remove reference form post
+ */
 function delete_note_attachment($attachmentid) {
     global $parent, $postid;
     $instance = new InteractionForumInstance($parent->forum);

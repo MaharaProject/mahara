@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utils for unsubscribing from a forum
  *
  * @package    mahara
  * @subpackage interaction-forum

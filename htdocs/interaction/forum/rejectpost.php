@@ -1,5 +1,6 @@
 <?php
 /**
+ * Moderate forum posts and replies
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -94,12 +95,24 @@ $form = pieform(array(
     )
 ));
 
+/**
+ * Validate the form to reject a post
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function rejectpost_validate(Pieform $form, $values) {
     if (isset($values['message']) && strlen(trim($values['message'])) == 0) {
         $form->set_error('message', get_string('reasonempty', 'interaction.forum'));
     }
 }
 
+/**
+ * Submit the rejection of a post
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function rejectpost_submit(Pieform $form, $values) {
     global $SESSION, $USER, $postid;
 

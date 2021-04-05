@@ -1,5 +1,6 @@
 <?php
 /**
+ * Forum interaction plugin - helper for displaying the forums summary
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -341,8 +342,13 @@ $smarty->assign('INLINEJAVASCRIPT', $inlinejavascript);
 $smarty->display('interaction:forum:view.tpl');
 
 /**
+ * Set up topics
+ *
  * format body
  * format lastposttime
+ *
+ * @param  array|false $topics (reference) Array of objects
+ * @return void
  */
 function setup_topics(&$topics) {
     global $moderator;

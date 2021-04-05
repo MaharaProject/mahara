@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Version file for interaction forum
  *
  * @package    mahara
  * @subpackage interaction-forum
