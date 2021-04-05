@@ -986,6 +986,8 @@ class View {
         delete_records('view_versioning', 'view', $this->id);
         delete_records('existingcopy', 'view', $this->id);
         delete_records('view_instructions_lock', 'view', $this->id);
+        // Remove institution lock references to this view if it's a template.
+        set_field('view_instructions_lock', 'originaltemplate', null, 'originaltemplate', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
             $eventdata['collection'] = $collection->get('id');
