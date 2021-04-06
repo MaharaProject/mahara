@@ -163,7 +163,7 @@ try {
         $dbfriendlyname = 'PostgreSQL';
     }
     else if (is_mysql()) {
-        $okversion = '5.6';
+        $okversion = '5.7';
         $dbfriendlyname = 'MySQL';
     }
     if (version_compare($dbversion['version'], $okversion, '<')) {
