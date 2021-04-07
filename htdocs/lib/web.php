@@ -1445,7 +1445,10 @@ function jsstrings() {
                 'Details',
                 'commentsanddetails',
                 'commentremoved',
-          )
+            ),
+            'view' => array(
+                'confirmcloseblockinstance',
+            )
         )
     );
 }
