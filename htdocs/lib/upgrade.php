@@ -903,6 +903,7 @@ function core_install_firstcoredata_defaults() {
     set_config('dropdownmenu', 0);
     // Set this to a random starting number to make minor version slightly harder to detect
     set_config('cacheversion', rand(1000, 9999));
+    set_config('allowcommentsbydefault', 1);
 
     // install the applications
     $app = new stdClass();
