@@ -261,6 +261,12 @@ td.btn-group {
     }
 }
 
+.card-footer {
+    &.force-pointer {
+        cursor: pointer;
+    }
+}
+
 // Page editor column + and - controls
 .btn-header {
     width:100%;

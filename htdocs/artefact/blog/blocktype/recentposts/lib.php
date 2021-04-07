@@ -32,7 +32,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
         return array(
             array(
                 'file'   => 'js/recentposts.js',
-                'initjs' => "addNewPostShortcut($blockid, $viewid);",
+                'initjs' => "recentPostsAddNewPostShortcut($blockid, $viewid);",
             )
         );
     }
