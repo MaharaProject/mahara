@@ -1,5 +1,6 @@
 <?php
 /**
+ * The portfolio collection class
  *
  * @package    mahara
  * @subpackage core
@@ -11,31 +12,134 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Collection class for working with portfolio collection objects
+ */
 class Collection {
 
+    /**
+     * The unique ID of the collection
+     * @var integer
+     */
     private $id;
+
+    /**
+     * Name (title) of the collection
+     * @var string
+     */
     private $name;
+
+    /**
+     * Short description to mention what the collection is for
+     * @var string
+     */
     private $description;
+
+    /**
+     * The user id if the collection is owned by a person
+     * @var integer|null
+     */
     private $owner;
+
+    /**
+     * The group id if the collection is owned by a group
+     * @var integer|null
+     */
     private $group;
+
+    /**
+     * The institution name (short name) if the collection is owned by an institution
+     * @var string|null
+     */
     private $institution;
+
+    /**
+     * Unix timestamp of collection last modification
+     * @var integer
+     */
     private $mtime;
+
+    /**
+     * Unix timestamp of collection creation
+     * @var integer
+     */
     private $ctime;
+
+    /**
+     * Whether to show navigation bar or not
+     * @var boolean
+     */
     private $navigation;
+
+    /**
+     * The group ID if the collection is submitted to a group
+     * @var integer|null
+     */
     private $submittedgroup;
+
+    /**
+     * The host URL if the collection is submitted to an external host
+     * @var string|null
+     */
     private $submittedhost;
+
+    /**
+     * Unix timestamp of submission
+     * @var string|null
+     */
     private $submittedtime;
+
+    /**
+     * The current status of the collection in the submission process
+     * Where 0 = not submitted, 1 = submitted, 2 = pending submission release
+     * @var integer
+     */
     private $submittedstatus;
+
+    /**
+     * An array of view objects that are associated with this collection
+     * Initialise via $this->views();
+     * @var array
+     */
     private $views;
+
+    /**
+     * An array of tags that are associated with this collection
+     * Initialise via $this->get_tags();
+     * @var array
+     */
     private $tags;
+
+    /**
+     * ID of the framework used with this collection
+     * @var integer|null
+     */
     private $framework;
+
+    /**
+     * The artefact ID of the image being used as the cover image
+     * Initialise via $this->get_coverimage();
+     * @var integer|null
+     */
     private $coverimage;
+
+    /**
+     * Whether the collection needs to show a progress completion page
+     * @var boolean
+     */
     private $progresscompletion;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
     const PENDING_RELEASE = 2;
 
+    /**
+     * Collection constructor takes either an ID number or an array of data to initialise it with
+     *
+     * @param integer $id
+     * @param array $data
+     *
+     */
     public function __construct($id=0, $data=null) {
 
         if (!empty($id)) {
@@ -70,6 +174,11 @@ class Collection {
         }
     }
 
+    /**
+     * Helper method to return value of private variables
+     * @param string $field  Name of the property
+     * @return mixed Value of the property
+     */
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
@@ -86,6 +195,13 @@ class Collection {
         return $this->{$field};
     }
 
+    /**
+     * Helper method to set value of private variables
+     * @param string $field  Name of the property
+     * @param mixed $value   New value of the property
+     * @throws InvalidArgumentException  If the $field is not a property of the class
+     * @return true
+     */
     public function set($field, $value) {
         if (property_exists($this, $field)) {
             $this->{$field} = $value;
@@ -99,7 +215,7 @@ class Collection {
      * Helper function to create or update a Collection from the supplied data.
      *
      * @param array $data
-     * @return collection           The newly created/updated collection
+     * @return Collection           The newly created/updated collection object
      */
     public static function save($data) {
         if (array_key_exists('id', $data)) {
@@ -252,6 +368,12 @@ class Collection {
 
     /**
      * Generates a name for a newly created Collection
+     *
+     * Takes a supplied name and returns a unique one for this person/group/institution
+     *
+     * @param string $name  The supplied name
+     * @param object $ownerdata Object containing information on ownership
+     * @return string Unique name
      */
     private static function new_name($name, $ownerdata) {
         $extText = get_string('version.', 'mahara');
@@ -505,10 +627,11 @@ class Collection {
     /**
      * Returns a list of the current user, group, or institution collections
      *
-     * @param offset current page to display
-     * @param limit how many collections to display per page
-     * @param groupid current group ID
-     * @param institutionname current institution name
+     * @param integer $offset current page to display
+     * @param integer $limit how many collections to display per page
+     * @param integer $owner current person ID
+     * @param integer $groupid current group ID
+     * @param string  $institutionname current institution name
      * @return array (count: integer, data: array, offset: integer, limit: integer)
      */
     public static function get_mycollections_data($offset=0, $limit=10, $owner=null, $groupid=null, $institutionname=null) {
@@ -560,6 +683,10 @@ class Collection {
         return $result;
     }
 
+    /**
+     * Add any submission info to the array of collections
+     * @param array &$data modified parameter array of collections
+     */
     private static function add_submission_info(&$data) {
         global $CFG;
         require_once($CFG->docroot . 'lib/group.php');
@@ -1068,6 +1195,9 @@ class Collection {
      * - each view can only belong to one collection
      * - locked/submitted views can't be added to collections
      *
+     * @param integer|null $owner The ID of the person
+     * @param integer|null $groupid The ID of the group
+     * @param string|null $institutionname The name of the institution
      * @return array $views
      */
     public static function available_views($owner=null, $groupid=null, $institutionname=null) {
@@ -1254,7 +1384,10 @@ class Collection {
     }
 
     /**
-     * after editing the collection, redirect back to the appropriate place
+     * After editing the collection, redirect back to the appropriate place
+     * @param boolean $new  Whether the collection has just been created
+     * @param boolean $copy Whether the collection is a copy
+     * @param array $urlparams An array of extra url params to set on the redirect
      */
     public function post_edit_redirect($new=false, $copy=false, $urlparams=null) {
         $redirecturl = post_edit_redirect_url($new, $copy, $urlparams);
@@ -1262,7 +1395,11 @@ class Collection {
     }
 
     /**
-     * returns the url that we need to redirect to sfter editing a collection
+     * Returns the url that we need to redirect to after editing a collection
+     * @param boolean $new  Whether the collection has just been created
+     * @param boolean $copy Whether the collection is a copy
+     * @param array $urlparams An array of extra url params to set on the redirect
+     * @return string  URL for redirection
      */
     public function post_edit_redirect_url($new=false, $copy=false, $urlparams=null) {
         $redirecturl = get_config('wwwroot');
@@ -1296,6 +1433,11 @@ class Collection {
         return $redirecturl;
     }
 
+    /**
+     * Fetch a collection based on the ID of a view it contains
+     * @param integer $viewid ID of a view
+     * @return Collection|false
+     */
     public static function search_by_view_id($viewid) {
         $record = get_record_sql('
             SELECT c.*
@@ -1335,6 +1477,7 @@ class Collection {
      *
      * @param bool $full return a full url
      * @param bool $useid ignore clean url settings and always return a url with an id in it
+     * @param View|null &$firstview Finds the first view of the collection
      *
      * @return string
      */
@@ -1485,6 +1628,10 @@ class Collection {
         }
     }
 
+    /**
+     * Quick way to find the view IDs of the collection
+     * @return array View IDs
+     */
     public function get_viewids() {
         $ids = array();
         $viewdata = $this->views();
@@ -1498,10 +1645,19 @@ class Collection {
         return $ids;
     }
 
+    /**
+     * Helper to check if collection is submitted
+     * @return integer|string
+     */
     public function is_submitted() {
         return $this->submittedgroup || $this->submittedhost;
     }
 
+    /**
+     * Helper to find where collection is submitted
+     * @throws SystemException  Collection is not submitted
+     * @return object  Database record object
+     */
     public function submitted_to() {
         if ($this->submittedgroup) {
             $record = get_record('group', 'id', $this->submittedgroup, null, null, null, null, 'id, name, urlid');
@@ -1522,8 +1678,10 @@ class Collection {
      * Submit this collection to a group or a remote host (but only one or the other!)
      * @param object $group
      * @param string $submittedhost
-     * @param int $owner The owner of the collection (if not just $USER)
-     * @throws SystemException
+     * @param integer $owner The owner of the collection (if not just $USER)
+     * @param boolean $sendnotification
+     * @throws CollectionSubmissionException
+     * @return void|false
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
@@ -1618,6 +1776,10 @@ class Collection {
         }
     }
 
+    /**
+     * Helper function to get ID of image artefact
+     * @return integer|null ID of image artefact
+     */
     public function get_coverimage() {
         if ($this->coverimage && get_field('artefact', 'id', 'id', $this->coverimage)) {
             return $this->coverimage;
@@ -1650,11 +1812,10 @@ class Collection {
 
     /**
      * Creates a new secret url for this collection
-     * @param int $collectionid
-     * @param false $visible
-     * @return object The view_access record for the first view's secret URL
+     * @param boolean $visible
+     * @return object|false The view_access record for the first view's secret URL
      */
-    public function new_token($visible=1) {
+    public function new_token($visible=true) {
         $viewids = $this->get_viewids();
         // It's not possible to add a secret key to a collection with no pages
         if (!$viewids) {
@@ -1752,13 +1913,25 @@ class Collection {
     }
 }
 
+/**
+ * CollectionSubmissionException - something has gone wrong submitting a collection.
+ * Generally these will be the fault with trying to submit an empty collection or one already submitted
+ */
 class CollectionSubmissionException extends UserException {
 
-    // For a CollectionSubmissionException, the error message is mandatory
+    /**
+     * For a CollectionSubmissionException, the error message is mandatory
+     *
+     * @param string $message
+     */
     public function __construct($message) {
         parent::__construct($message);
     }
 
+    /**
+     * Return the error strings for the exception
+     * @return array Title and message strings for exception
+     */
     public function strings() {
         return array_merge(
             parent::strings(),
