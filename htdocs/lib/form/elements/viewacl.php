@@ -227,6 +227,12 @@ function pieform_element_viewacl(Pieform $form, $element) {
     $smarty->assign('faves', json_encode($faves));
     $smarty->assign('userroles', json_encode($userroles));
     $smarty->assign('grouproles', json_encode($grouproles));
+    $view = new View($form->get_property('viewid'));
+    $accesslistmaximum = 0;
+    if ($view->get('type') == 'portfolio' && $view->get('owner')) {
+        $accesslistmaximum = intval(get_config('accesslistmaximum'));
+    }
+    $smarty->assign('accesslistmaximum', $accesslistmaximum);
     return $smarty->fetch('form/viewacl.tpl');
 }
 

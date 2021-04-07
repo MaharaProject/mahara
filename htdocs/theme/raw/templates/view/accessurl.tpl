@@ -27,6 +27,12 @@
     </div>
     {/if}
 
+    {if $accesslistmaximum}
+    <div class="alert alert-info">
+        {str tag=sharewithmaximum section=view arg1=$accesslistmaximum arg2=$accesslistmaximum}
+    </div>
+    {/if}
+
     {if $editurls}
     <div class="card">
         <h2 class="card-header">
