@@ -1,5 +1,6 @@
 <?php
 /**
+ * Activity classes for notification types
  *
  * @package    mahara
  * @subpackage core
@@ -99,7 +100,7 @@ function get_activity_type_classname($activitytype) {
 }
 
 /**
- * this function returns an array of users who subsribe to a particular activitytype
+ * This function returns an array of users who subscribe to a particular activitytype
  * including the notification method they are using to subscribe to it.
  *
  * @param int $activitytype the id of the activity type
@@ -107,6 +108,7 @@ function get_activity_type_classname($activitytype) {
  * @param array $userobjs an array of user objects to filterby
  * @param bool $adminonly whether to filter by admin flag
  * @param array $admininstitutions list of institution names to get admins for
+ * @param bool $includesuspendedusers whether to include suspended people in the results
  * @return array of users
  */
 function activity_get_users($activitytype, $userids=null, $userobjs=null, $adminonly=false,
@@ -161,8 +163,8 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
 
 
 /**
- * this function inserts a default set of activity preferences for a given user
- * id
+ * This function inserts a default set of activity preferences for a given user
+ * @param mixed $eventdata  List of event types and their settings
  */
 function activity_set_defaults($eventdata) {
     $user_id = is_object($eventdata) ? $eventdata->id : $eventdata['id'];
@@ -177,6 +179,10 @@ function activity_set_defaults($eventdata) {
     }
 }
 
+/**
+ * This function inserts the default set of administrator activity preferences for the given people
+ * @param array $userids  List of people's IDs
+ */
 function activity_add_admin_defaults($userids) {
     $activitytypes = get_records_array('activity_type', 'admin', 1);
 
@@ -193,7 +199,9 @@ function activity_add_admin_defaults($userids) {
     }
 }
 
-
+/**
+ * Process the queue of delayed activity notifications
+ */
 function activity_process_queue() {
 
     if ($toprocess = get_records_array('activity_queue')) {
@@ -235,15 +243,14 @@ function activity_process_queue() {
 }
 
 /**
- * event-listener is called when an artefact is changed or a block instance
- * is commited. Saves the view, the block instance, user and time into the
+ * The event-listener is called when an artefact is changed or a block instance
+ * is committed. Saves the view, the block instance, user and time into the
  * database
  *
  * @global User $USER
  * @param string $event
- * @param object $eventdata
  */
-function watchlist_record_changes($event){
+function watchlist_record_changes($event) {
     global $USER;
 
     // don't catch root's changes, especially not when installing...
@@ -319,10 +326,10 @@ function watchlist_record_changes($event){
 }
 
 /**
- * is triggered when a blockinstance is deleted. Deletes all watchlist_queue
+ * Is triggered when a blockinstance is deleted. Deletes all watchlist_queue
  * entries that refer to this blockinstance
  *
- * @param BlockInstance $blockinstance
+ * @param BlockInstance $block
  */
 function watchlist_block_deleted(BlockInstance $block) {
     global $USER;
@@ -478,6 +485,11 @@ function watchlist_process_notifications() {
     }
 }
 
+/**
+ * Get the people that have access to the view which the activity is related to
+ * @param integer $view  The view ID
+ * @return array The database array of people based on view access rules
+ */
 function activity_get_viewaccess_users($view) {
     require_once(get_config('docroot') . 'lib/group.php');
     $sql = "SELECT userlist.userid, usr.*, actpref.method, accpref.value AS lang,
@@ -565,6 +577,14 @@ function activity_get_viewaccess_user_dates($viewid, $userid) {
                  'maxdate' => null);
 }
 
+/**
+ * Find a valid activity type record
+ * @param mixed $activitytype  The type of activity we want to send the notification for
+ * @param string|null $plugintype Find the activity type by plugin type
+ * @param string|null $pluginname Find the activity type by plugin name
+ * @throws SystemException
+ * @return object A Database row object
+ */
 function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname=null) {
     if (is_object($activitytype)) {
         return $activitytype;
@@ -586,17 +606,6 @@ function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname
         throw new SystemException("Invalid activity type $activitytype");
     }
     return $at;
-}
-
-function generate_activity_class_name($name, $plugintype, $pluginname) {
-    if (!empty($plugintype)) {
-        safe_require($plugintype, $pluginname);
-        return 'ActivityType' .
-            ucfirst($plugintype) .
-            ucfirst($pluginname) .
-            ucfirst($name);
-    }
-    return 'ActivityType' . $name;
 }
 
 /**
@@ -640,6 +649,7 @@ abstract class ActivityType {
 
     /**
      * Who any notifications about this activity should appear to come from
+     * @var integer The ID of the person
      */
     protected $fromuser;
 
@@ -647,25 +657,105 @@ abstract class ActivityType {
      * When sending notifications, should the email of the person sending it be
      * hidden? (Almost always yes, will cause the email to appear to come from
      * the 'noreply' address)
+     * @var boolean
      */
     protected $hideemail = true;
 
+    /**
+     * The subject line of the message
+     * @var string
+     */
     protected $subject;
+
+    /**
+     * The body of the message
+     * @var string
+     */
     protected $message;
+
+    /**
+     * Language strings and parameters to build the subject / message with
+     * @var array
+     */
     protected $strings;
+
+    /**
+     * People to send the message to
+     * @var array
+     */
     protected $users = array();
+
+    /**
+     * A URL to display at the bottom of the message
+     * @var string
+     */
     protected $url;
+
+    /**
+     * Alternate text to display for the URL in HTML messages
+     * @var string
+     */
     protected $urltext;
+
+    /**
+     * The ID of the activity type
+     * @var integer
+     */
     protected $id;
+
+    /**
+     * The ID of the activity type
+     * @var integer
+     * @todo find out how it differs from $id
+     */
     protected $type;
+
+    /**
+     * The partial class name without the 'ActivityType' prefix, eg Usermessage
+     * @var string
+     */
     protected $activityname;
+
+    /**
+     * @var boolean Whether this is being called by the cron job
+     */
     protected $cron;
+
+    /**
+     * The last person to be notified for a particular queue item
+     * when the activity_queue cron emails in bulk
+     * @var integer
+     */
     protected $last_processed_userid;
+
+    /**
+     * The queue item currently being processed via cron
+     * @var integer
+     */
     protected $activity_queue_id;
+
+    /**
+     * Override the normal message process and instead allow seperate HTML and plaintext email messages
+     * @var boolean
+     */
     protected $overridemessagecontents;
+
+    /**
+     * The parent message of a threadded message reply
+     * @var integer
+     */
     protected $parent;
+
+    /**
+     * The default notification method to use when sending the message to a person
+     * @var string
+     */
     protected $defaultmethod;
 
+    /**
+     * Get the ID of the ActivityType from database
+     * @return integer
+     */
     public function get_id() {
         if (!isset($this->id)) {
             $tmp = activity_locate_typerecord($this->get_type());
@@ -674,6 +764,10 @@ abstract class ActivityType {
         return $this->id;
     }
 
+    /**
+     * Get the default method to send the notification
+     * @return string
+     */
     public function get_default_method() {
         if (!isset($this->defaultmethod)) {
             $tmp = activity_locate_typerecord($this->get_id());
@@ -682,19 +776,35 @@ abstract class ActivityType {
         return $this->defaultmethod;
     }
 
+    /**
+     * Get the partial class name without the 'ActivityType' prefix, eg Usermessage
+     * @return string
+     */
     public function get_type() {
         $prefix = 'ActivityType';
         return strtolower(substr(get_class($this), strlen($prefix)));
     }
 
+    /**
+     * Check to see if any people will receive a notification
+     * @return boolean
+     */
     public function any_users() {
         return (is_array($this->users) && count($this->users) > 0);
     }
 
+    /**
+     * Fetch the people to be notified
+     * @return array
+     */
     public function get_users() {
         return $this->users;
     }
 
+    /**
+     * Set supplied data to the class properties
+     * @param array $data  An associative array with keys matching properties of the class
+     */
     private function set_parameters($data) {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
@@ -703,6 +813,10 @@ abstract class ActivityType {
         }
     }
 
+    /**
+     * Checks that we have the required properties set before trying to send messages
+     * @throws ParamOutOfRangeException
+     */
     private function ensure_parameters() {
         foreach ($this->get_required_parameters() as $param) {
             if (!isset($this->{$param})) {
@@ -714,10 +828,21 @@ abstract class ActivityType {
         }
     }
 
+    /**
+     * Turn ActivityType object into a stdClass object
+     * @return object
+     */
     public function to_stdclass() {
        return (object)get_object_vars($this);
     }
 
+    /**
+     * Get translated string for the person
+     * This allows us to send email messages in the language the person prefers
+     * @param object $user  A database user object
+     * @param string $string The language string key
+     * @return string  The translated language string value
+     */
     public function get_string_for_user($user, $string) {
         if (empty($string) || empty($this->strings->{$string}->key)) {
             return;
@@ -733,7 +858,10 @@ abstract class ActivityType {
         return call_user_func_array('get_string_from_language', $args);
     }
 
-    // Optional string to use for the link text.
+    /**
+     * Optional string to use for the URL link text.
+     * @param array $stringdef
+     */
     public function add_urltext(array $stringdef) {
         $def = $stringdef;
         if (!is_object($this->strings)) {
@@ -742,6 +870,11 @@ abstract class ActivityType {
         $this->strings->urltext = (object) $def;
     }
 
+    /**
+     * Fetch the URL link text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_urltext($user) {
         if (empty($this->urltext)) {
             return $this->get_string_for_user($user, 'urltext');
@@ -749,6 +882,11 @@ abstract class ActivityType {
         return $this->urltext;
     }
 
+    /**
+     * Fetch the body message text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_message($user) {
         if (empty($this->message)) {
             return $this->get_string_for_user($user, 'message');
@@ -756,6 +894,11 @@ abstract class ActivityType {
         return $this->message;
     }
 
+    /**
+     * Fetch the subject line text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_subject($user) {
         if (empty($this->subject)) {
             return $this->get_string_for_user($user, 'subject');
@@ -775,6 +918,11 @@ abstract class ActivityType {
         return false;
     }
 
+    /**
+     * The process of sending an activity message to a person
+     * @param object $user  A database user object
+     * @return void
+     */
     public function notify_user($user) {
         $changes = new stdClass();
 
@@ -873,6 +1021,7 @@ abstract class ActivityType {
      * Note that, although this has batching properties built into it with USERCHUNK_SIZE,
      * it's also recommended to update a bulk ActivityType's constructor to limit the total
      * number of records pulled from the database.
+     * @return integer|void  Returns 0 for cron if successful
      */
     public function notify_users() {
         safe_require('notification', 'internal');
@@ -912,27 +1061,54 @@ abstract class ActivityType {
     }
 }
 
+/**
+ * Abstract class for the activity types only available to administrators
+ * When making new admin only activity types they should use this as parent class
+ */
 abstract class ActivityTypeAdmin extends ActivityType {
 
+    /**
+     * Activity class for sending messages to administators
+     *
+     * @param array $data The data needed to send the notification
+     * @param boolean $cron Indicates whether this is being called by the cron job
+     */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
         $this->users = activity_get_users($this->get_id(), null, null, true);
     }
 }
 
+/**
+ * Contactus class for the contact form activity
+ * This activity type is only available to administrators
+ */
 class ActivityTypeContactus extends ActivityTypeAdmin {
 
+    /**
+     * @var string Display name for the sender
+     */
     protected $fromname;
+
+    /**
+     * @var string Email address of the sender
+     */
     protected $fromemail;
+
+    /**
+     * @var boolean Whether to hide the email
+     */
     protected $hideemail = false;
 
     /**
+     * Activity class for sending the contact us form messages
      * @param array $data Parameters:
      *                    - message (string)
      *                    - subject (string) (optional)
      *                    - fromname (string)
      *                    - fromaddress (email address)
      *                    - fromuser (int) (if a logged in user)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -946,30 +1122,68 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
         }
     }
 
+    /**
+     * Fetch the subject line text
+     * @param object $user  A database user object
+     * @return string
+     */
     function get_subject($user) {
         return get_string_from_language($user->lang, 'newcontactus', 'activity');
     }
 
+    /**
+     * Fetch the body message text
+     * @param object $user  A database user object
+     * @return string
+     */
     function get_message($user) {
         return get_string_from_language($user->lang, 'newcontactusfrom', 'activity') . ' ' . $this->fromname
             . ' <' . $this->fromemail .'>' . (isset($this->subject) ? ': ' . $this->subject : '')
             . "\n\n" . $this->message;
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('message', 'fromname', 'fromemail');
     }
 }
 
+/**
+ * Objectionable class for the view objection form activity
+ * This activity type is only available to administrators
+ */
 class ActivityTypeObjectionable extends ActivityTypeAdmin {
 
+    /**
+     * @var integer View ID
+     */
     protected $view;
+
+    /**
+     * @var integer Arefact ID
+     */
     protected $artefact;
+
+    /**
+     * @var integer User ID of person reporting issue
+     */
     protected $reporter;
+
+    /**
+     * @var integer Unixtimestamp
+     */
+
     protected $ctime;
+    /**
+     * @var integer User Id ofperson resolving issue
+     */
     protected $review;
 
     /**
+     * Activity class to send objectionable messages
      * @param array $data Parameters:
      *                    - message (string)
      *                    - view (int)
@@ -977,6 +1191,7 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
      *                    - reporter (int)
      *                    - ctime (int) (optional)
      *                    - review (int) (optional)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -1035,6 +1250,12 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
     }
 
+    /**
+     * Fetch a Plain Text formatted message to send via email
+     * @param object $user  A database user object
+     * @todo This should be inherited from abstract class
+     * @return string
+     */
     public function get_emailmessage($user) {
         $reporterurl = profile_url($this->reporter);
         $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
@@ -1056,6 +1277,12 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
     }
 
+    /**
+     * Fetch an HTML formatted message to send via email
+     * @param object $user  A database user object
+     * @todo This should be inherited from abstract class
+     * @return string
+     */
     public function get_htmlmessage($user) {
         $viewtitle = hsc($this->view->get('title'));
         $reportername = hsc(display_default_name($this->reporter));
@@ -1082,54 +1309,112 @@ class ActivityTypeObjectionable extends ActivityTypeAdmin {
         }
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('message', 'view', 'reporter');
     }
 
 }
-
+/**
+ * VirusReport class for the uploading of files identified as potential viruses
+ * This activity type is only available to administrators
+ */
 class ActivityTypeVirusRepeat extends ActivityTypeAdmin {
 
+    /**
+     * @var string username
+     */
     protected $username;
+
+    /**
+     * @var string fullname
+     */
     protected $fullname;
+
+    /**
+     * @var integer user ID
+     */
     protected $userid;
 
+    /**
+     * Activity class for sending virus message to administators
+     *
+     * @param array $data The data needed to send the notification
+     * @param boolean $cron Indicates whether this is being called by the cron job
+     */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
     }
 
+    /**
+     * Fetch the subject line text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_subject($user) {
         $userstring = $this->username . ' (' . $this->fullname . ') (userid:' . $this->userid . ')' ;
         return get_string_from_language($user->lang, 'virusrepeatsubject', 'mahara', $userstring);
     }
 
+    /**
+     * Fetch the body message text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_message($user) {
         return get_string_from_language($user->lang, 'virusrepeatmessage');
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('username', 'fullname', 'userid');
     }
 }
 
+/**
+ * VirusRelease class for the notification about potential virus file being dealt with
+ * This activity type is only available to administrators
+ */
 class ActivityTypeVirusRelease extends ActivityTypeAdmin {
 
+    /**
+     * Activity class for sending virus message replies
+     *
+     * @param array $data The data needed to send the notification
+     * @param boolean $cron Indicates whether this is being called by the cron job
+     */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array();
     }
 }
 
+/**
+ * Maharamessage class for the generic sitewise messages that Mahara needs to send
+ * without needing their own activity type
+ */
 class ActivityTypeMaharamessage extends ActivityType {
 
     /**
+     * The generic message class used for most messages
      * @param array $data Parameters:
      *                    - subject (string)
      *                    - message (string)
      *                    - users (list of user ids)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -1137,18 +1422,46 @@ class ActivityTypeMaharamessage extends ActivityType {
         $this->users = activity_get_users($this->get_id(), $this->users, null, false, array(), $includesuspendedusers);
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('message', 'subject', 'users');
     }
 }
 
+/**
+ * Institutionmessage class for the institution specific messages that Mahara needs to send
+ */
 class ActivityTypeInstitutionmessage extends ActivityType {
 
+    /**
+     * @var string Type of messaage
+     */
     protected $messagetype;
+
+    /**
+     * @var string Institution
+     */
     protected $institution;
+
+    /**
+     * @var string username
+     */
     protected $username;
+
+    /**
+     * @var string display name
+     */
     protected $fullname;
 
+    /**
+     * Activity class for institution messages
+     *
+     * @param array $data The data needed to send the notification
+     * @param boolean $cron Indicates whether this is being called by the cron job
+     */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
         if ($this->messagetype == 'request') {
@@ -1156,13 +1469,20 @@ class ActivityTypeInstitutionmessage extends ActivityType {
             $this->users = activity_get_users($this->get_id(), null, null, null,
                                               array($this->institution->name));
             $this->add_urltext(array('key' => 'institutionmembers', 'section' => 'admin'));
-        } else if ($this->messagetype == 'invite') {
+        }
+        else if ($this->messagetype == 'invite') {
             $this->url = 'account/institutions.php';
             $this->users = activity_get_users($this->get_id(), $this->users);
             $this->add_urltext(array('key' => 'institutionmembership', 'section' => 'mahara'));
         }
     }
 
+    /**
+     * Fetch the language to send the message in
+     * If the user has no choice set then use the institution's language
+     *
+     * @param object $user  A database user object
+     */
     private function get_language($user) {
         $userlang = get_account_preference($user->id, 'lang');
         if ($userlang === 'default') {
@@ -1178,6 +1498,11 @@ class ActivityTypeInstitutionmessage extends ActivityType {
         }
     }
 
+    /**
+     * Fetch the subject line text based on message type
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_subject($user) {
         $lang = $this->get_language($user);
         if ($this->messagetype == 'request') {
@@ -1191,6 +1516,11 @@ class ActivityTypeInstitutionmessage extends ActivityType {
         }
     }
 
+    /**
+     * Fetch the body message text based on message type
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_message($user) {
         $lang = $this->get_language($user);
         if ($this->messagetype == 'request') {
@@ -1201,23 +1531,40 @@ class ActivityTypeInstitutionmessage extends ActivityType {
         }
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('messagetype', 'institution');
     }
 }
 
+/**
+ * Usermessage class for the person specific messages that Mahara needs to send
+ * Messages that are sent from one person to another
+ */
 class ActivityTypeUsermessage extends ActivityType {
 
+    /**
+     * @var integer ID of person receiving the email
+     */
     protected $userto;
+
+    /**
+     * @var integer ID of person receiving the email
+     */
     protected $userfrom;
 
     /**
+     * Activity class for messages direct to users
      * @param array $data Parameters:
      *                    - userto (int)
      *                    - userfrom (int)
      *                    - subject (string)
      *                    - message (string)
      *                    - parent (int)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -1231,6 +1578,11 @@ class ActivityTypeUsermessage extends ActivityType {
         ));
     }
 
+    /**
+     * Fetch the subject line text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_subject($user) {
         if (empty($this->subject)) {
             return get_string_from_language($user->lang, 'newusermessage', 'group',
@@ -1239,27 +1591,52 @@ class ActivityTypeUsermessage extends ActivityType {
         return $this->subject;
     }
 
+    /**
+     * Adjust the url for the message to use user/sendmessage.php to handle the reply
+     *
+     * @param integer $internalid ID of a notification_internal_activity row
+     * @return boolean true
+     */
     protected function update_url($internalid) {
         $this->url = 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid . '&returnto=inbox';
         return true;
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('message', 'userto', 'userfrom');
     }
 
 }
 
+/**
+ * Watchlist class for the messages sent relating to watching for changes in portfolios
+ */
 class ActivityTypeWatchlist extends ActivityType {
 
+    /**
+     * @var integer ID of the view
+     */
     protected $view;
 
+    /**
+     * @var string|null Formatted name of the view author
+     */
     protected $ownerinfo;
+
+    /**
+     * @var object View
+     */
     protected $viewinfo;
 
     /**
+     * Watchlist class for watchlist activity
      * @param array $data Parameters:
      *                    - view (int)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     public function __construct($data, $cron) {
         parent::__construct($data, $cron);
@@ -1318,33 +1695,62 @@ class ActivityTypeWatchlist extends ActivityType {
         $this->add_urltext(array('key' => 'View', 'section' => 'view'));
     }
 
+    /**
+     * Fetch the subject line text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_subject($user) {
         return get_string_from_language($user->lang, 'newwatchlistmessage', 'activity');
     }
 
+    /**
+     * Fetch the body message text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_message($user) {
         return get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
                                         $this->viewinfo->get('title'), $this->ownerinfo);
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('view');
     }
 }
 
 /**
- * extending ActivityTypeWatchlist to reuse the funcinality and structure
+ * Watchlistnotification class to deal with the settings of the watchlist block
+ * Extending ActivityTypeWatchlist to reuse the functionality and structure
  */
 class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
+
+    /**
+     * @var integer view ID
+     */
     protected $view;
+
+    /**
+     * @var array An array of block ids
+     */
     protected $blocktitles = array();
+
+    /**
+     * @var integer user ID
+     */
     protected $usr;
 
     /**
+     * Watchlist notifications class
      * @param array $data Parameters:
      *                    - view (int)
      *                    - blocktitles (array: int)
      *                    - usr (int)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     public function __construct($data, $cron) {
         parent::__construct($data, $cron);
@@ -1359,8 +1765,8 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
      * override function get_message to add information about the changed
      * blockinstances
      *
-     * @param type $user
-     * @return type
+     * @param object $user  A database user object
+     * @return string
      */
     public function get_message($user) {
         $message = get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
@@ -1386,18 +1792,43 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
     }
 }
 
+/**
+ * ViewAccess class for the messages sent relating to being granted access to portfolios
+ * This one only deals with new access and not the revocation of access
+ */
 class ActivityTypeViewAccess extends ActivityType {
 
+    /**
+     * @var integer view ID
+     */
     protected $view;
-    protected $oldusers; // this can be empty though
-    protected $views; // optional array of views by id being changed
-
-    private $title, $ownername;
 
     /**
+     * @var array containing ids of users that had access before the change - this can be empty though
+     */
+    protected $oldusers;
+
+    /**
+     * @var array containing ids of all the views being changed - optional
+     */
+    protected $views;
+
+    /**
+     * @var string title of the view
+     */
+    private $title;
+
+    /**
+     * @var string formatted name of the author
+     */
+    private $ownername;
+
+    /**
+     * The activity class for saving / updating view access
      * @param array $data Parameters:
      *                    - view (int)
      *                    - oldusers (array of user IDs)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -1448,6 +1879,11 @@ class ActivityTypeViewAccess extends ActivityType {
         $this->overridemessagecontents = true;
     }
 
+    /**
+     * Fetch the subject line text based on the number of portfolio titles
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_subject($user) {
         $subject = get_string('newaccessubjectdefault', 'activity');
         if ($titles = $this->get_view_titles_urls($user)) {
@@ -1471,6 +1907,12 @@ class ActivityTypeViewAccess extends ActivityType {
         return $subject;
     }
 
+    /**
+     * Fetch message based on the access rules
+     *
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_view_access_message($user) {
         $accessdates = activity_get_viewaccess_user_dates($this->view, $user->id);
         $accessdatemessage = '';
@@ -1491,6 +1933,12 @@ class ActivityTypeViewAccess extends ActivityType {
         return $accessdatemessage;
     }
 
+    /**
+     * Fetch the titles of all the views
+     *
+     * @param object $user  A database user object
+     * @return array|false A nested array of titles and urls
+     */
     public function get_view_titles_urls($user) {
         $items = array();
         if (!empty($this->views)) {
@@ -1525,6 +1973,13 @@ class ActivityTypeViewAccess extends ActivityType {
         return false;
     }
 
+    /**
+     * Internal function to get a formatted message based on template
+     *
+     * @param object $user  A database user object
+     * @param string $template Name of the .tpl file
+     * @return string Message body
+     */
     public function _getmessage($user, $template) {
         $accessitems = array();
         if ($items = $this->get_view_titles_urls($user)) {
@@ -1559,33 +2014,71 @@ class ActivityTypeViewAccess extends ActivityType {
         return $messagebody;
     }
 
+    /**
+     * Fetch the body message text
+     * @param object $user  A database user object
+     * @return string
+     */
     public function get_message($user) {
         return strip_tags($this->_getmessage($user, 'account/activity/accessinternal.tpl'));
     }
 
+    /**
+     * Fetch an Plain Text formatted message to send via email
+     * @param object $user  A database user object
+     * @todo This should be inherited from abstract class
+     * @return string
+     */
     public function get_emailmessage($user) {
         return strip_tags($this->_getmessage($user, 'account/activity/accessemail.tpl'));
     }
 
+    /**
+     * Fetch an HTML formatted message to send via email
+     * @param object $user  A database user object
+     * @todo This should be inherited from abstract class
+     * @return string
+     */
     public function get_htmlmessage($user) {
         return $this->_getmessage($user, 'account/activity/accessemail.tpl');
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('view', 'oldusers');
     }
 }
 
+/**
+ * GroupMessage class for the messages sent relating to groups and group roles
+ */
 class ActivityTypeGroupMessage extends ActivityType {
 
+    /**
+     * @var integer group ID
+     */
     protected $group;
+
+    /**
+     * @var array group roles
+     */
     protected $roles;
+
+    /**
+     * @var boolean Whether the group is deleted
+     */
     protected $deletedgroup;
 
     /**
+     * Activity for group messages
      * @param array $data Parameters:
      *                    - group (integer)
      *                    - roles (list of roles)
+     *                    - deletedgroup (boolean)
+     * @param boolean $cron Indicates whether this is being called by the cron job
      */
     public function __construct($data, $cron=false) {
         require_once('group.php');
@@ -1597,22 +2090,43 @@ class ActivityTypeGroupMessage extends ActivityType {
         }
     }
 
+    /**
+     * Get the minimum required data parameters for this activity type
+     * @return array
+     */
     public function get_required_parameters() {
         return array('group');
     }
 }
-
+/**
+ * Plugin abstract class for adding activity types via a plugin
+ * When making new activity types within your plugin they should use this as parent class
+ */
 abstract class ActivityTypePlugin extends ActivityType {
 
+    /**
+     * Fetch the plugin type, eg 'artefact'
+     */
     abstract public function get_plugintype();
 
+    /**
+     * Fetch the plugin name, eg 'comment'
+     */
     abstract public function get_pluginname();
 
+    /**
+     * Get the class name based on plugin type and name
+     * @return string
+     */
     public function get_type() {
         $prefix = 'ActivityType' . $this->get_plugintype() . $this->get_pluginname();
         return strtolower(substr(get_class($this), strlen($prefix)));
     }
 
+    /**
+     * Get the ID of the plugin type from database
+     * @return integer
+     */
     public function get_id() {
         if (!isset($this->id)) {
             $tmp = activity_locate_typerecord($this->get_type(), $this->get_plugintype(), $this->get_pluginname());
@@ -1622,14 +2136,19 @@ abstract class ActivityTypePlugin extends ActivityType {
     }
 }
 
-
+/**
+ * Format the notification so that it displays ok in both inbox and email
+ * @param string $message    The body message of the notification
+ * @param string|null $type  The message type
+ * @return string            The formatted message
+ */
 function format_notification_whitespace($message, $type=null) {
     $message = preg_replace('/<br( ?\/)?>/', '', $message);
     $message = preg_replace('/^(\s|&nbsp;|\xc2\xa0)*/', '', $message);
     // convert any htmlspecialchars back so we don't double escape as part of format_whitespace()
     $message = htmlspecialchars_decode($message);
     $message = format_whitespace($message);
-    // @todo: Sensibly distinguish html notifications, notifications where the full text
+    // @todo Sensibly distinguish html notifications, notifications where the full text
     // appears on another page and this is just an abbreviated preview, and text-only
     // notifications where the entire text must appear here because there's nowhere else
     // to see it.
@@ -1824,6 +2343,15 @@ function get_special_notifications($user, $activitytypes) {
     return $activitytypes;
 }
 
+/**
+ * Append the authentication method ID to the URL in the email
+ * if the authentication method for the person has external login
+ * so that they get redirected to the external login page if not
+ * currently logged into Mahara
+ * @param object $user A database object of a usr row
+ * @param string $url  A URL string to update
+ * @return string An updated URL
+ */
 function append_email_institution($user, $url) {
     if (!isset($user->id) || (isset($user->id) && empty($user->id))) {
         return $url;
