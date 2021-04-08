@@ -74,8 +74,8 @@
                         </a>
                     </li>
                     {/if}
-                    {if !($headertype == "matrix")}
-                    <li class="dropdown-item">                    
+                    {if !($headertype == "matrix") && !$sitepage}
+                    <li class="dropdown-item">
                         {if $objector}
                             <span class="nolink">
                                 <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>

@@ -732,6 +732,7 @@ if ($titletext !== $title) {
     $smarty->assign('title', $title);
 }
 
+$smarty->assign('sitepage', $view->get('institution'));
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 $smarty->assign('ownercandelete', $ownercandelete);
 $smarty->assign('viewid', $view->get('id'));
