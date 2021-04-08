@@ -235,6 +235,8 @@ $smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . 
 $smarty->assign('showVerification', $showVerification);
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewlocked', $viewobj->get('locked'));
+$smarty->assign('sitepage', $viewobj->get('institution'));
+
 // Is progres page editable?
 $pageistemplate = $pview->get_original_template();
 if ($can_edit && !$collection->get('lock')) {
