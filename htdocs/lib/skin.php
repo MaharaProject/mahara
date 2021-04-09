@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utilities to manage page skins
  *
  * @package    mahara
  * @subpackage core
@@ -12,6 +13,18 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Skin class for the creation and management of skins.
+ *
+ * Skins are a way to style a personal page. Allowing for
+ * coloured backgrounds, image headers, font customisations etc.
+ *
+ * This is enabled through `$cfg->skins = true` in the config.php.
+ * You can then find this option in *Main menu -> Create -> Skins*
+ * and set up your skins there.
+ * You apply a skin on a page's 'Settings' screen in the *Advanced options*
+ * panel.
+ */
 class Skin {
     /**
      * Constants that represent background repeat options
@@ -35,7 +48,7 @@ class Skin {
     const BACKGROUND_POS_RIGHT_BOTTOM = 9;
 
     /**
-     * Settings for dynamically creating a Preview image of Skin and thumbnail from that image...
+     * Settings for dynamically creating a preview image of skin and thumbnail from that image.
      * Image resolution: 1920x1080 (Full HD)
      * Thumbnail resolution: 240x135 (original image shrinked to 12.5%)
      */
@@ -49,17 +62,71 @@ class Skin {
      */
     const FONTNAME_FILTER_CHARACTERS = "#[^A-Za-z0-9]#";
 
+    /**
+     * A setting to tell the commit() and or __destruct() functions whether there is any changes to the object to actually commit to database
+     *
+     * @var mixed
+     */
     private $dirty;
+    /**
+     * Whether this skin is deleted
+     *
+     * @var bool
+     */
     private $deleted;
+    /**
+     * The ID of this skin
+     *
+     * @var int
+     */
     private $id;
+    /**
+     * The title of this skin
+     *
+     * @var string
+     */
     private $title;
+    /**
+     * The description of this skin
+     *
+     * @var string
+     */
     private $description;
+    /**
+     * The owner of this skin
+     *
+     * @var int The user ID
+     */
     private $owner;
+    /**
+     * The privacy type of this skin
+     *
+     * @var string
+     */
     private $type = 'private';
+    /**
+     * Time of last modification
+     *
+     * @var mixed
+     */
     private $mtime;
+    /**
+     * Time of creation
+     *
+     * @var mixed
+     */
     private $ctime;
 
+    /**
+     * Array holding styling details for this skin
+     *
+     * @var array
+     */
     private $viewskin;
+
+    /**
+     * The default styling details for a skin
+     */
     public static $defaultviewskin = array(
         'body_background_color' => '#FFFFFF',
         'body_background_image' => 0,
@@ -135,12 +202,12 @@ class Skin {
     }
 
     /**
-     * Creates a new Skin for the given user
+     * Creates a new skin for the given user
      *
      * @param array $skindata Data about the skin. You can pass in most fields
      *                        that appear in the skin table.
-     * @return Skin              The newly created Skin
-     * @throws SystemException if the Skin data is invalid - mostly this is due
+     * @return skin              The newly created skin
+     * @throws SystemException if the skin data is invalid - mostly this is due
      *                         to owner information being specified incorrectly.
      */
     public static function create($skindata) {
@@ -200,8 +267,8 @@ class Skin {
 
 
     /**
-     * Update one of the fields of this Skin. Also marks the skin as "dirty" so that $this->commit() will know
-     * to commit it
+     * Update one of the fields of this skin. This also marks the skin as "dirty" so that
+     * $this->commit() will know to commit it.
      * @param string $field
      * @param mixed $value
      * @throws InvalidArgumentException
@@ -222,7 +289,7 @@ class Skin {
 
 
     /**
-     * Commit changes in this Skin back into the skin table in the database
+     * Commit changes in this skin back into the skin table in the database
      */
     public function commit() {
         if (empty($this->dirty)) {
@@ -288,7 +355,7 @@ class Skin {
 
 
     /**
-     * Generates a title for a newly created Skin
+     * Generates a title for a newly created skin
      *
      * @param string $title
      * @param int $owner ID of the user who will own it
@@ -395,6 +462,11 @@ class Skin {
         return $site_skins;
     }
 
+    /**
+     * Get the default skin
+     *
+     * @return Object $defaultskin The skin for one with no customisations
+     */
     public static function get_default_skin() {
         $defaultskin = new stdClass();
         $defaultskin->id = 0;
@@ -548,7 +620,7 @@ class Skin {
 
 
     /**
-     * maps from CSS strings to integer constanst for background positioning
+     * maps from CSS strings to integer constants for background positioning
      * @param string $value
      * @return integer
      */
@@ -587,15 +659,17 @@ class Skin {
         }
     }
 
-
     /**
-     * Sources for font-family css stacks:
-     * - Common Fonts to All Versions of Windows & Mac Equivalents (Browser Safe) @ http://www.ampsoft.net/webdesign-l/WindowsMacFonts.html
-     * - Web Safe Font Cheat Sheet @ http://www.mightymeta.co.uk/blog
-     * - Popular Fonts with their Mac OSX, Windows and Linux Equivalents @ http://dustinbrewer.com/popular-fonts-with-their-mac-osx-windows-and-linux-equivalents
-     * - Linux Font Equivalents to Popular Web Typefaces @ http://notebook.andrewabogado.com/linux-font-equivalents-to-popular-web-typefaces
-     * - Complete Guide to Pre-Installed Fonts in Linux, Mac, and Windows @ http://www.apaddedcell.com/ ...
-     * - Better CSS Font Stacks @ http://unitinteractive.com/blog/2008/06/26/better-css-font-stacks/
+     * Get the CSS font family from the given front name
+     *
+     * e.g. via Google Web Font Helper https://google-webfonts-helper.herokuapp.com/ or
+     * Font Squirrel: https://www.fontsquirrel.com/tools/webfont-generator/
+     *
+     * @param  string $font Name of the font
+     * @param  mixed $type OPTIONAL - the usage type for for $font
+     *      e.g. 'heading', 'text'
+     * @return string The name of the font family matching the given arguments
+     *      or empty string if no matches found.
      */
     public static function get_css_font_family_from_font_name($font, $type='text') {
         if ($font === '') {
@@ -722,10 +796,12 @@ class Skin {
         }
     }
 
-
     /**
+     * Get path for a font file
+     *
      * Return the filesystem path to the file for a font (used in generating thumbnails)
-     * @param string $font The name of the font
+     * @param string $fontname The name of the font
+     * @param string $type OPTIONAL - The usage type for the $fontname
      * @return string|false The path to the font, or false if not found
      */
     public static function get_path_to_previewfile($fontname, $type='text') {
@@ -859,7 +935,23 @@ class Skin {
         return array('x' => $tilepositionx, 'y' => $tilepositiony);
     }
 
-    private static function imageheaderfill(&$dst_im, $src_fill, $zoom_fill, $align_fill=1, $header_width, $header_height, $xoffset = 0) {
+
+    /**
+     * Create an image resource for the header background for previews
+     *
+     * This is used for page skin previews.
+     * @see https://www.php.net/manual/en/function.imagecreatetruecolor.php
+     * @see generate_thumbnail()
+     *
+     * @param resource $dst_im (Reference) Image resource identifier. Use `imagecreatetruecolor()`
+     * @param mixed $src_fill Image resource identifier for header image
+     * @param float $zoom_fill Zoom factor
+     * @param int $header_width Width of the header
+     * @param int $header_height Height of the header
+     * @param mixed $align_fill OPTIONAL
+     * @param mixed $xoffset OPTIONAL
+     */
+    private static function imageheaderfill(&$dst_im, $src_fill, $zoom_fill, $header_width, $header_height, $align_fill=1, $xoffset = 0) {
         $layer = imagecreatetruecolor(imagesx($dst_im), imagesy($dst_im));
         // Turn off alpha blending and set alpha flag
         imagealphablending($layer, false);
@@ -875,12 +967,12 @@ class Skin {
 
     /**
      * Fill in the backgrounds in the thumbnail image
-     * @param resource $dst_im An ImageMagick resource
+     * @param resource (Reference) $dst_im An ImageMagick resource
      * @param resource $src_fill background image
      * @param int $zoom_fill zoom factor
      * @param int $repeat_fill background repeat
      * @param int $align_fill background positioning
-     * @reurn void The changes are made in-place to the $dst_im
+     * @return void The changes are made in-place to the $dst_im
      */
     private static function imagebackgroundfill(&$dst_im, $src_fill, $zoom_fill, $repeat_fill=0, $align_fill=1) {
         $layer = imagecreatetruecolor(imagesx($dst_im), imagesy($dst_im));
@@ -938,8 +1030,11 @@ class Skin {
     }
 
 
-     /**
-     * Generates thumbnail for Skin with given $id.
+    /**
+     * Generates thumbnail for skin with given $id.
+     *
+     * @param  mixed $id
+     * @throws SystemException
      */
     private static function generate_thumbnail($id) {
         global $THEME;
@@ -1054,7 +1149,7 @@ class Skin {
 
             $headerimage = imagescale($headerimage, Skin::PREVIEW_WIDTH);
             // Draw header image on the VIEW and BODY
-            self::imageheaderfill($img, $headerimage,  Skin::PREVIEW_THUMBNAIL_ZOOM*1.2, 1, $headerwidth, $headerheight + ($header_font_size * 2.6));
+            self::imageheaderfill($img, $headerimage,  Skin::PREVIEW_THUMBNAIL_ZOOM*1.2, $headerwidth, $headerheight + ($header_font_size * 2.6));
         }
 
         // Even though this text is only used in preview images, it's possible the site might want to change
@@ -1222,8 +1317,8 @@ class Skin {
     /**
      * Returns an array of theme's with their theme fonts.
      * Currently all themes have one font for both heading and text except for 'raw'
-     * @param type $type   Set the type of font, eg text vs heading
-     * @return array
+     * @param string $type   Set the type of font, eg text vs heading
+     * @return array of themes with their fonts
      */
     public static function get_all_theme_fonts($type='text') {
         $genericfont = ($type == 'text') ? 'sans-serif' : 'serif';
@@ -1299,6 +1394,7 @@ class Skin {
 
     /**
      * Returns the stylesheets needed to display this skin.
+     * @param  int|null $viewid The view ID to display the skin on
      * @return array one stylesheet per entry
      */
     public function get_stylesheets($viewid = null) {
