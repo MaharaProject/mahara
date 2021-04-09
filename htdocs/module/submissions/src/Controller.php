@@ -120,10 +120,12 @@ class Controller {
                     define('GROUP', $this->group->id);
                     define('MENUITEM', 'engage/index');
                     define('MENUITEM_SUBPAGE', 'groupsubmissions');
+                    define('SECTION_PAGE', 'groupindex');
                 }
                 else {
                     define('TITLE', get_string("Submissions", "module.submissions"));
                     define('MENUITEM', 'share/submissions');
+                    define('SECTION_PAGE', 'index');
                 }
                 break;
             case 'index.json':
@@ -162,8 +164,10 @@ class Controller {
      */
     private function displayIndex($options = [], $js = []) {
         $headers[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'js/DataTables/datatables.min.css">';
-        $headers[] = '<link rel="stylesheet" type="text/css" href="' . get_config('wwwroot') . 'module/submissions/js/piertables.css">';
-        $smarty = smarty($js, $headers);
+        $piertables_css = file_exists(get_config('wwwroot') . 'local/theme/piertables.css') ? get_config('wwwroot') . 'local/theme/piertables.css' : get_config('wwwroot') . 'module/submissions/js/piertables.css';
+        $headers[] = '<link rel="stylesheet" type="text/css" href="' . $piertables_css . '">';
+        $pagestrings = array('module.submissions' => array('quickfilter', 'quickfiltertooltip'));
+        $smarty = smarty($js, $headers, $pagestrings);
         setpageicon($smarty, 'icon-hand-holding');
         $smarty->assign('language', strstr(current_language(), '.', true));
         $smarty->assign('options', $options);
@@ -206,26 +210,31 @@ class Controller {
         $record->portfolioElementTitleHtml = SubmissionTools::createPortfolioElementTitleHtmlForTableBySubmissionRecord($record, $this->settings->showPortfolioButtons);
         $record->isEditable = (bool)$record->liveUserIsAssessor && (int)$record->status === Submission::StatusSubmitted;
         $record->isFixable = (bool)$record->liveUserIsAssessor && (int)$record->status === Submission::StatusIncomplete;
-
         if ($this->settings->showNameAsLastnameFirstname) {
             $record->ownerName = SubmissionTools::concatLastAndFirstName($record->ownerLastName, $record->ownerFirstName);
             $record->evaluatorName = ($record->evaluatorId ? SubmissionTools::concatLastAndFirstName($record->evaluatorLastName, $record->evaluatorFirstName) : null);
         }
         else {
-            $record->ownerName = SubmissionTools::concatFirstAndLastName($record->ownerFirstName, $record->ownerLastName);
-            $record->evaluatorName = ($record->evaluatorId ? SubmissionTools::concatFirstAndLastName($record->evaluatorFirstName, $record->evaluatorLastName) : null);
+            $record->ownerName = ($record->ownerId ? SubmissionTools::concatFirstAndLastName($record->ownerId, true) : null);
+            $record->evaluatorName = ($record->evaluatorId ? SubmissionTools::concatFirstAndLastName($record->evaluatorId) : null);
         }
         $record->userElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->ownerId, $record->ownerName, '', '');
+        if ($record->evaluatorId) {
+            $record->evaluatorElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->evaluatorId, $record->evaluatorName, '', '');
+        }
+        if ($record->groupId) {
+            $record->portfolioElementGroupHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'group/view.php?id=' . $record->groupId, $record->groupName, '', '');
+        }
+
+        // If submission has not been released yet and so the comment field in the evaluation table is empty, get last comment of currently set evaluator or live user
+        $comment = SubmissionRepository::findLatestEvaluatorComment($record->portfolioElementType, $record->portfolioElementId, $record->evaluatorId, $record->submissionDate);
+        if (!is_null($comment)) {
+            $record->feedback = $comment->get('description');
+            $record->rating = $comment->get('rating');
+        }
 
         // If submission is not released yet
         if ((bool)$record->liveUserIsAssessor && ((int)$record->status === Submission::StatusSubmitted || (int)$record->status === Submission::StatusReleasing)) {
-            // If submission has not been released yet and so the comment field in the evaluation table is empty, get last comment of currently set evaluator or live user
-            $comment = SubmissionRepository::findLatestEvaluatorComment($record->portfolioElementType, $record->portfolioElementId, $record->evaluatorId, $record->submissionDate);
-            if (!is_null($comment)) {
-                $record->feedback = $comment->get('description');
-                $record->rating = $comment->get('rating');
-            }
-
             // Because we now use the new Mahara collection preview functionality, we provide the portfolio view id(s)
             // in the row data to the frontend
             if ($record->portfolioElementType === 'collection') {
@@ -306,7 +315,7 @@ class Controller {
                         break;
                 }
                 $this->setRatingIconOptions($options);
-
+                $piertables_js = file_exists(get_config('wwwroot') . 'local/theme/piertables.js') ? get_config('wwwroot') . 'local/theme/piertables.js' : get_config('wwwroot') . 'module/submissions/js/piertables.js';
                 $js = [
                     'js/preview.js',
                     //'js/export.js',
@@ -315,7 +324,7 @@ class Controller {
                     'js/gridlayout.js',
                     'js/collection-navigation.js',
                     'js/DataTables/datatables.min.js',
-                    'module/submissions/js/piertables.js',
+                    $piertables_js,
                     'module/submissions/js/UrlFlashback.js'
                 ];
                 $this->displayIndex($options, $js);

@@ -207,11 +207,12 @@ class SubmissionTools {
 
         $users = get_records_sql_array($sql, [$USER->get('id')]);
 
-        foreach ($users as $user) {
-            $userArray[$user->id] = ($showNameAsLastnameFirstname ? self::concatLastAndFirstName($user->lastname, $user->firstname) : self::concatFirstAndLastName($user->firstname, $user->lastname));
+        if ($users) {
+            foreach ($users as $user) {
+                $userArray[$user->id] = ($showNameAsLastnameFirstname ? self::concatLastAndFirstName($user->id) : self::concatFirstAndLastName($user->id));
+            }
+            asort($userArray);
         }
-        asort($userArray);
-
         return $userArray;
     }
 
@@ -553,8 +554,12 @@ class SubmissionTools {
         return param_integer($name);
     }
 
-    public static function concatFirstAndLastName($firstName, $lastName) {
-        return $firstName . ' ' . $lastName;
+    public static function concatFirstAndLastName($id, $fullname=false) {
+        $user = get_user_for_display($id);
+        if ($fullname) {
+            return full_name($user);
+        }
+        return empty($user->preferredname) ? full_name($user) : $user->preferredname;
     }
 
     public static function concatLastAndFirstName($lastName, $firstName, $divider = ', ') {
@@ -574,8 +579,8 @@ class SubmissionTools {
      * @return string
      */
     public static function getUserNameAsFirstNameLastName(\User $user) {
-        return self::concatFirstAndLastName($user->get('firstname'), $user->get('lastname'));
-}
+        return self::concatFirstAndLastName($user->get('id'));
+    }
 
     /**
      * Gets the releaseUser as User class

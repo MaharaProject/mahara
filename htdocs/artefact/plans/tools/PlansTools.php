@@ -252,7 +252,8 @@ class PlansTools {
                                                                         'name' => get_string('targetgroupplancollectiontitleprefix', 'artefact.plans') . $targetGroupPlan->get('title'),
                                                                         'description' => get_string('taskviewsfortemplateplan', 'artefact.plans', $targetGroupPlan->get('title')),
                                                                         'navigation' => 1,
-                                                                        'submittedstatus' => 0
+                                                                        'submittedstatus' => 0,
+                                                                        'progresscompletion' => 0
                                                                     ]
                                                                 );
                     $targetTaskViewCollection->commit();

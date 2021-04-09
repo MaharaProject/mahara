@@ -2224,6 +2224,32 @@ class Collection {
             )";
         execute_sql($sql, array($collectionid));
     }
+
+    /**
+     * Get latest comment on a collection
+     *
+     * @param boolean $includedraft  Whether the latest comment can be a draft comment
+     *
+     * @return mixed|null comment object and view id
+     */
+    public function get_latest_comment($includedraft=false) {
+        $viewids = $this->get_viewids();
+        $sql = 'SELECT a.id, acc.onview FROM {artefact_comment_comment} acc
+                JOIN {artefact} a ON a.id = acc.artefact
+                WHERE acc.onview IN (' . join(',', array_fill(0, count($viewids), '?')) . ')';
+        if (!$includedraft) {
+            $sql .= ' AND acc.private != 1';
+        }
+        $sql .= ' ORDER BY a.mtime DESC
+                  LIMIT 1';
+        if ($viewids && $data = get_records_sql_array($sql, $viewids)) {
+            safe_require('artefact', 'comment');
+            $comment = new ArtefactTypeComment($data[0]->id);
+            $viewid = $data[0]->onview;
+            return array($comment, $viewid);
+        }
+        return null;
+    }
 }
 
 /**

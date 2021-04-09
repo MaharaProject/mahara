@@ -13,7 +13,5 @@ use Submissions\Controller;
 
 require('init.php');
 
-define('SECTION_PAGE', 'index');
-
 $indexController = new Controller();
 $indexController->handleRequest();

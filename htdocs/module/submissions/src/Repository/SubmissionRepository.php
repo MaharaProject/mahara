@@ -328,7 +328,8 @@ class SubmissionRepository {
                 require_once(get_config('libroot') . 'collection.php');
 
                 $collection = new \Collection($portfolioElementId);
-                $portfolioElementId = $collection->get_viewids()[0];
+                list ($comment, $viewid) = $collection->get_latest_comment(true);
+                $portfolioElementId = $viewid;
                 break;
             default:
                 throw new \SystemException(get_string('unsupportedportfoliotype'), 'module.submissions');
@@ -339,9 +340,9 @@ class SubmissionRepository {
         }
 
         $sql = 'SELECT id FROM {artefact} AS a INNER JOIN {artefact_comment_comment} AS acc ON acc.artefact = a.id ' .
-            'WHERE acc.onview = ? AND a.ctime > ? AND a.author = ? ORDER BY acc.threadedposition DESC';
+            'WHERE acc.onview = ? AND a.ctime > ? AND (a.author = ? OR a.owner = ?) ORDER BY acc.threadedposition DESC';
         $submissionDate = db_format_timestamp($submissionDate);
-        $commentIdsArray = get_records_sql_array($sql, [$portfolioElementId, $submissionDate, $evaluatorId]);
+        $commentIdsArray = get_records_sql_array($sql, [$portfolioElementId, $submissionDate, $evaluatorId, $evaluatorId]);
 
         if (!empty($commentIdsArray)) {
             safe_require('artefact', 'comment');

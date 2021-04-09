@@ -62,9 +62,15 @@ $(document).ready(function () {
 
         this.createEditSelectElement = function(rowData, editOptions) {
             let arrayValueText = [];
-
             if (editOptions.htmlInputElement.options.inputOptionsDataSourceIsRow) {
-                arrayValueText = rowData.editOptions[editOptions.name].arrayValueText;
+                if (!Array.isArray(rowData.editOptions[editOptions.name].arrayValueText)) {
+                    for (const [key, value] of Object.entries(rowData.editOptions[editOptions.name].arrayValueText)) {
+                        arrayValueText[key] = value;
+                    }
+                }
+                else {
+                    arrayValueText = rowData.editOptions[editOptions.name].arrayValueText;
+                }
             }
             else {
                 arrayValueText = editOptions.htmlInputElement.options.arrayValueText;
@@ -270,11 +276,12 @@ $(document).ready(function () {
             this.$tableElement.on('init.dt', function(e, settings, json) {
                 Me.dataTable.on('stateSaveParams.dt', function(e, settings, data) {
                     if (Me.options.quickFilter && $('#' + Me.$tableElement.prop('id') + '-filter').length > 0) {
+
                         let checkedSearchElements = [];
-                        $('.search-element input[type=radio]:checked').each(function(index, inputElement) {
+                        $('.search-category select').each(function(index, inputElement) {
                             checkedSearchElements.push({
                                 id: inputElement.parentNode.id,
-                                inputElementSearchValue: $(inputElement).next('input, select').val()
+                                inputElementSearchValue: $(inputElement).val()
                             });
                         });
                         data.quickFilter = {checkedSearchElements: checkedSearchElements};
@@ -355,8 +362,13 @@ $(document).ready(function () {
         }
 
         this.setAllOffButton = function() {
-            let quickfilterIsActive = ($('.category-filter-off').length - $('.category-filter-off:checked').length > 0);
-            $('#all-off-button').prop('disabled', !quickfilterIsActive).toggleClass('quickfilter-active', quickfilterIsActive);
+            let quickfilterIsActive = false;
+            $("div[id^='search-element-'] select").each(function() {
+                if ($(this).val() != '') {
+                    quickfilterIsActive = true;
+                }
+            });
+            $('#all-off-button').prop('disabled', !quickfilterIsActive).toggleClass('quickfilter-active', quickfilterIsActive).toggleClass('d-none', !quickfilterIsActive);
         };
 
         this.createSearchElement = function(name, title, checked, onClickFunction, inputClasses) {
@@ -381,9 +393,16 @@ $(document).ready(function () {
                     let val = $.fn.DataTable.util.escapeRegex(
                         $(this).val()
                     );
-                    column
-                        .search( val ? '^'+val+'$' : '', true, false )
-                        .draw();
+                    if ($(this).val() == '\^\$') {
+                        column
+                            .search( '^$', true )
+                            .draw();
+                    }
+                    else {
+                        column
+                            .search( val ? '^'+val+'$' : '', true, false )
+                            .draw();
+                    }
                 } );
 
             column.data().unique().sort().each(function(d, j) {
@@ -401,8 +420,8 @@ $(document).ready(function () {
         this.createQuickSearch = function() {
             let offTitle = this.options.quickFilter.offTitle;
             let filterElement = $('<div id="' + this.prop('id') + '-filter" class="filter"></div>');
-            let filterTitlebarElement = $('<div class="filter-titlebar">').html('<div class="icon icon-chevron-circle-up text-muted"></div> Quick Filter ');
-            let allOffButtonElement = $('<button type="button" id="all-off-button" class="btn btn-secondary btn-sm icon icon-filter"></button>').prop('disabled', true);
+            let filterTitlebarElement = $('<div class="filter-titlebar">').html('<div class="icon icon-chevron-circle-up text-muted"></div> ' + get_string('quickfilter', 'module.submissions') + ' ');
+            let allOffButtonElement = $('<button type="button" id="all-off-button" class="btn btn-secondary btn-sm icon icon-filter d-none" title="' + get_string('quickfiltertooltip', 'module.submissions') + '"></button>').prop('disabled', true);
             let categoryContainer = $('<div class="row small">');
 
             // We need this wrapper for running the animation which doesn't work directly on flexbox elements
@@ -423,26 +442,10 @@ $(document).ready(function () {
                 let categoryElement = $('<div class="search-category"></div>').html($('<div>').html($('<strong>').html(category.title)));
                 let radioElement = $('<div class="radio-group well">');
 
-                let radioOffElement = Me.createSearchElement(
-                    category.title,
-                    offTitle,
-                    true,
-                    function() {
-                    Me.dataTable.column(category.columnName + ':name').search('').draw();
-                    $(this).find('input:radio').prop('checked', true);
-                    Me.setAllOffButton();
-                    },
-                    'category-filter-off'
-                    ).appendTo(radioElement);
-
-                allOffButtonElement.on('click', function(e) {
-                    radioOffElement.trigger('click');
-                });
-
                 $.each(category.items, function(index, item) {
-                    let searchElement = Me.createSearchElement(category.title, item.title);
+                    item.title = item.title ? item.title : '';
+                    let searchElement = Me.createSearchElement(category.title, item.title, false, null, 'd-none');
                     let inputElement = null;
-
                     switch (true) {
                         case item.hasOwnProperty('doSearch'):
                             searchElement.on('click', function() {
@@ -451,10 +454,10 @@ $(document).ready(function () {
                             break;
                         case item.hasOwnProperty('getHtmlElement'):
                             inputElement = item.getHtmlElement(Me.dataTable).addClass('form-control form-control-sm');
-                            inputElement.appendTo(searchElement);
-                            searchElement.on('click', function() {
-                                inputElement.trigger('change');
+                            inputElement.on('click', function() {
+                                Me.setAllOffButton();
                             });
+                            inputElement.appendTo(searchElement);
                             break;
                         default:
                             inputElement = Me.createAutoQuickSearchItem(Me.dataTable.column(category.columnName + ':name'), offTitle).addClass('form-control form-control-sm');
@@ -464,10 +467,6 @@ $(document).ready(function () {
                             });
                     }
                     searchElement.appendTo(radioElement);
-                    searchElement.on('click', function() {
-                        $(this).find('input:radio').prop('checked', true);
-                        Me.setAllOffButton();
-                    });
                 });
                 radioElement.appendTo(categoryElement);
                 categoryElement.appendTo(categoryContainer);
@@ -475,6 +474,19 @@ $(document).ready(function () {
             categoryContainerWrapper.appendTo(filterElement);
             filterElement.prependTo($('div.toolbar'));
             $('div.dbut').detach().appendTo(categoryContainerWrapper);
+
+
+            allOffButtonElement.on('click', function(e) {
+                // Set the selects back to empty option
+                $("div[id^='search-element-'] select").each(function() {
+                    $(this).val('');
+                });
+                // Update table
+                Me.dataTable.columns().every(function () {
+                    this.search('').draw();
+                });
+                $(this).addClass('d-none');
+            });
         };
 
         Me.attachEditOptionsToColumns(options);

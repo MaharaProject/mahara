@@ -300,6 +300,44 @@ class PluginModuleSubmissions extends PluginModule {
             throw new \SystemException(get_string('submissionnotcreatedorupdated', 'module.submissions') . $e->getMessage());
         }
     }
+
+    /**
+     * Called post install and after every upgrade.
+     * @param string $prevversion the previously installed version of this module.
+     */
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            $configs = array(
+                array(
+                    'entry' => array(
+                        'plugin' => 'submissions',
+                        'field' =>  'shownameaslastnamefirstname'
+                    ),
+                    'value' => '0'
+                ),
+                array(
+                    'entry' => array(
+                        'plugin' => 'submissions',
+                        'field' =>  'showportfoliobuttons'
+                    ),
+                    'value' => '0'
+                ),
+                array(
+                    'entry' => array(
+                        'plugin' => 'submissions',
+                        'field' =>  'retentionperiod'
+                    ),
+                    'value' => '0'
+                ),
+            );
+
+            foreach ($configs as $config) {
+                ensure_record_exists('module_config', (object)$config['entry'], (object)array_merge($config['entry'], array('value' => $config['value'])));
+            }
+            // Clear the cache so that the new menu item appears
+            clear_menu_cache();
+        }
+    }
 }
 
 class SubmissionException extends UserException {

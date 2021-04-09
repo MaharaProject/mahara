@@ -64,16 +64,13 @@
             colReorder: true,      // Set to false due to Quickfilter issues on referring to wrong columns after reordering
             dom: '<"toolbar"<"dbut"B><"dt-buttons row col-auto"f>>t<"pagein"ipl>',
             buttons: [
-                'colvis',
                 {
-                    extend: 'copyHtml5',
-                    exportOptions: {
-                        columns: 'thead th:not(.noExport)',
-                        orthogonal: 'export'
-                    }
+                    extend: 'colvis',
+                    text: '{/literal}<span class="icon icon-cog" role="presentation" aria-hidden="true"></span> {str tag='colvislabel' section='module.submissions'}{literal}',
                 },
                 {
                     extend: 'pdfHtml5',
+                    text: '<span class="icon icon-file-pdf icon-regular" role="presentation" aria-hidden="true"></span> PDF',
                     exportOptions: {
                         columns: 'thead th:not(.noExport, .noPdfExport)',
                         orthogonal: 'export'
@@ -82,7 +79,8 @@
                     // pageSize: 'LEGAL'
                 },
                 {
-                    extend: 'excelHtml5',
+                    extend: 'csv',
+                    text: '<span class="icon icon-file-csv" role="presentation" aria-hidden="true"></span> CSV',
                     exportOptions: {
                         columns: 'thead th:not(.noExport)',
                         orthogonal: 'export'
@@ -176,6 +174,9 @@
                         name: 'groupName',
                         data: 'groupName',
                         responsivePriority: 1,
+                        render: function(data, type, row, meta) {
+                            return row.portfolioElementGroupHtml;
+                        }
                     },
                     {
                         name: 'role',
@@ -204,7 +205,7 @@
                     name: 'ownerPreferredName',
                     data: 'ownerPreferredName',
                     visible: false,
-                    responsivePriority: 1,
+                    responsivePriority: 1
                 },
                 {
                     name: 'portfolioTitle',
@@ -239,10 +240,10 @@
                     responsivePriority: 3,
                     render: function(data, type, row, meta) {
                         if (['filter','sort'].includes(type) || !(row.isEditable || row.isFixable)) {
-                            return data;
+                            return data ? row.evaluatorElementTitleHtml : data;
                         }
 
-                        let text = (data ? data : '{/literal}{str tag='unassignedselectboxitem' section='module.submissions'}{literal}');
+                        let text = (data ? row.evaluatorElementTitleHtml : '{/literal}{str tag='unassignedselectboxitem' section='module.submissions'}{literal}');
                         return '<button class="btn btn-sm btn-secondary">' + text + '</button>';
                     },
                     createdCell: function (td, cellData, rowData, row, col) {
@@ -258,11 +259,6 @@
                     className: 'none',
                     render: function(data, type, row, meta) {
 
-                        // Prevent submitter from seeing the feedback before release of the submission
-                        if (parseInt(row.liveUserIsAssessor) === 0 && parseInt(row.status) < 3) {
-                            return '';
-                        }
-
                         if (['sort', 'filter'].includes(type) || data === null) {
                             return data;
                         }
@@ -274,11 +270,6 @@
                     data: 'rating',
                     responsivePriority: 7,
                     render: function(data, type, row, meta) {
-
-                        // Prevent submitter from seeing the rating before release of the submission
-                        if (parseInt(row.liveUserIsAssessor) === 0 && parseInt(row.status) < 3) {
-                            return '';
-                        }
 
                         if (['filter', 'sort', 'export'].includes(type)) {
                             return data;
@@ -329,7 +320,7 @@
                         var tooltip = '';
                         switch (parseInt(data) || null) {
                             case null:
-                                classes += 'icon icon-question text-info';
+                                classes += 'icon icon-pencil-alt text';
                                 tooltip = '{/literal}{$tooltip.question}{literal}';
                                 break;
                             case 1:
@@ -386,7 +377,7 @@
                         let classes = 'release-button btn btn-sm ';
                         switch (parseInt(row.success) || null) {
                             case null:
-                                classes += 'btn-info';
+                                classes += 'btn-secondary';
                                 break;
                             case 1:
                                 classes += 'btn-warning';
@@ -470,7 +461,6 @@
                                 title: '{/literal}{str tag='Group' section='module.submissions'}{literal}',
                                 items: [
                                         {
-                                            title: '{/literal}{str tag='Select' section='module.submissions'}{literal}',
                                             getHtmlElement: function(dataTable) {
                                                 var select = $('<select><option value="">{/literal}{str tag='All' section='module.submissions'}{literal}</option></select>')
                                                     .on('change', function () {
@@ -486,20 +476,6 @@
                                                 });
                                                 return select;
                                             }
-                                        },
-                                        {
-                                            title: '{/literal}{str tag='Search' section='module.submissions'}{literal}',
-                                            getHtmlElement: function(dataTable) {
-                                                return $('<input type="search">')
-                                                    .on('keyup change', function () {
-                                                        var val = $.fn.DataTable.util.escapeRegex(
-                                                            $(this).val()
-                                                        );
-                                                        dataTable.column('groupName' + ':name')
-                                                            .search(val)
-                                                            .draw();
-                                                    });
-                                            }
                                         }
                                     ]
                             },
@@ -508,75 +484,36 @@
                                 title: '{/literal}{str tag='Role' section='module.submissions'}{literal}',
                                 items: [
                                     {
-                                        title: '{/literal}{str tag='assessor' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('role' + ':name')
-                                                .search('1', true)
-                                                .draw();
-                                        }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='submitter' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('role' + ':name')
-                                                .search('0', true)
-                                                .draw();
-                                        }
-                                    },
+                                            getHtmlElement: function(dataTable) {
+                                                var select = $('<select><option value="">{/literal}{str tag='All' section='module.submissions'}{literal}</option></select>')
+                                                    .on('change', function () {
+                                                        var val = $.fn.DataTable.util.escapeRegex(
+                                                            $(this).val()
+                                                        );
+                                                        dataTable.column('role' + ':name')
+                                                            .search( val ? '^'+val+'$' : '', true, false )
+                                                            .draw();
+                                                    });
+                                                    select.append('<option value="1">{/literal}{str tag='assessor' section='module.submissions'}{literal}</option>');
+                                                    select.append('<option value="0">{/literal}{str tag='submitter' section='module.submissions'}{literal}</option>');
+
+                                                return select;
+                                            }
+                                    }
                                 ]
                             },
                     {/literal}{/if}{literal}
-/*                        {
-                            columnName: 'ownerName',
-                            title: '{/literal}{str tag='Name' section='module.submissions'}{literal}',
-                            items: [
-                                    {
-                                        title: '{/literal}{str tag='Select' section='module.submissions'}{literal}',
-                                        getHtmlElement: function(dataTable) {
-                                            var select = $('<select><option value="">{/literal}{str tag='All' section='module.submissions'}{literal}</option></select>')
-                                                .on('change', function () {
-                                                    var val = $.fn.DataTable.util.escapeRegex(
-                                                        $(this).val()
-                                                    );
-                                                    dataTable.column('ownerName' + ':name')
-                                                        .search( val ? '^'+val+'$' : '', true, false )
-                                                        .draw();
-                                                });
-                                            dataTable.column('ownerName' + ':name').data().unique().sort().each( function ( d, j ) {
-                                                select.append('<option value="'+d+'">'+d+'</option>')
-                                            });
-                                            return select;
-                                        }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='Search' section='module.submissions'}{literal}',
-                                        getHtmlElement: function(dataTable) {
-                                            return $('<input type="search">')
-                                                .on('keyup change', function () {
-                                                    var val = $.fn.DataTable.util.escapeRegex(
-                                                        $(this).val()
-                                                    );
-                                                    dataTable.column('ownerName' + ':name')
-                                                        .search(val)
-                                                        .draw();
-                                                });
-                                        }
-                                    }
-                                ]
-                        }, */
                         {
                             columnName: 'taskTitle',
                             title: '{/literal}{str tag='Task' section='module.submissions'}{literal}',
                             items: [
                                     {
-                                        title: '{/literal}{str tag='Select' section='module.submissions'}{literal}',
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='MissingTask' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('taskTitle' + ':name')
-                                                .search('^$', true)
-                                                .draw()
+                                        getHtmlElement: function(dataTable) {
+                                           var select = submissionsTable.createAutoQuickSearchItem(dataTable.column('taskTitle' + ':name'), submissionsTable.options.quickFilter.offTitle);
+                                           {/literal}
+                                           select.append('<option value=\'^$\'>{str tag='MissingTask' section='module.submissions'}</option');
+                                           {literal}
+                                           return select;
                                         }
                                     }
                                 ]
@@ -586,24 +523,22 @@
                             title: '{/literal}{str tag='Evaluator' section='module.submissions'}{literal}',
                             items: [
                                     {
-                                        title: '{/literal}{str tag='Unassigned' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('evaluatorName' + ':name')
-                                                .search('^$', true)
-                                                .draw()
-                                        }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='Select' section='module.submissions'}{literal}',
                                         getHtmlElement: function(dataTable) {
                                             var select = $('<select><option value="">{/literal}{str tag='All' section='module.submissions'}{literal}</option></select>')
                                                 .on('change', function () {
                                                     var val = $.fn.DataTable.util.escapeRegex(
                                                         $(this).val()
                                                     );
-                                                    dataTable.column('evaluatorName' + ':name')
-                                                        .search( val ? '^'+val+'$' : '', true, false )
-                                                        .draw();
+                                                    if ($(this).val() == '\^\$') {
+                                                        dataTable.column('evaluatorName' + ':name')
+                                                            .search( '^$', true )
+                                                            .draw();
+                                                    }
+                                                    else {
+                                                        dataTable.column('evaluatorName' + ':name')
+                                                            .search( val ? '^'+val+'$' : '', true, false )
+                                                            .draw();
+                                                    }
                                                 });
 
                                             {/literal}
@@ -612,8 +547,8 @@
                                                         select.append('<option value="{$evaluatorname}">{$evaluatorname}</option');
                                                     {/if}
                                                 {/foreach}
+                                            select.append('<option value=\'^$\'>{str tag='Unassigned' section='module.submissions'}</option');
                                             {literal}
-
                                             return select;
                                         }
                                     }
@@ -623,22 +558,38 @@
                             columnName: 'feedback',
                             title: '{/literal}{str tag='Feedback' section='module.submissions'}{literal}',
                             items: [
-                                {
-                                    title: '{/literal}{str tag='Uncommented' section='module.submissions'}{literal}',
-                                    doSearch: function(dataTable) {
-                                        dataTable.column('feedback' + ':name')
-                                            .search('^$', true)
-                                            .draw()
+                                    {
+                                        getHtmlElement: function(dataTable) {
+                                            var select = $('<select><option value="">{/literal}{str tag='Off' section='module.submissions'}{literal}</option></select>')
+                                                .on('change', function () {
+                                                    var val = $.fn.DataTable.util.escapeRegex(
+                                                        $(this).val()
+                                                    );
+                                                    if ($(this).val() == '\^\$') {
+                                                        dataTable.column('feedback' + ':name')
+                                                            .search( '^$', true )
+                                                            .draw();
+                                                    }
+                                                    else if ($(this).val() == '\!\^\$') {
+                                                        dataTable.column('feedback' + ':name')
+                                                            .search( '^(?!\\s*$).+', true )
+                                                            .draw();
+                                                    }
+                                                    else {
+                                                        dataTable.column('feedback' + ':name')
+                                                            .search( '', true, false )
+                                                            .draw();
+                                                    }
+                                                });
+
+                                            {/literal}
+                                            select.append('<option value=\'^$\'>{str tag='Uncommented' section='module.submissions'}</option');
+                                            select.append('<option value=\'!^$\'>{str tag='Commented' section='module.submissions'}</option');
+                                            {literal}
+                                            return select;
+                                        }
                                     }
-                                },
-                                {
-                                    title: '{/literal}{str tag='Commented' section='module.submissions'}{literal}',
-                                    doSearch: function(dataTable) {
-                                        dataTable.column('feedback' + ':name')
-                                            .search('^(?!\\s*$).+', true)
-                                            .draw()
-                                    }
-                                }
+
                             ]
                         },
                         {
@@ -646,35 +597,35 @@
                             title: '{/literal}{str tag='Result' section='module.submissions'}{literal}',
                             items: [
                                     {
-                                        title: '{/literal}{str tag='Revision' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('success' + ':name')
-                                                .search('1')
-                                                .draw();
-                                        }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='Success' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('success' + ':name')
-                                                .search('3')
-                                                .draw();
-                                        }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='Fail' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('success' + ':name')
-                                                .search('2')
-                                                .draw();
-                                        }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='Pending' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('success' + ':name')
-                                                .search('^$', true)
-                                                .draw();
+                                        getHtmlElement: function(dataTable) {
+                                            var select = $('<select><option value="">{/literal}{str tag='Off' section='module.submissions'}{literal}</option></select>')
+                                                .on('change', function () {
+                                                    var val = $.fn.DataTable.util.escapeRegex(
+                                                        $(this).val()
+                                                    );
+                                                    if ($(this).val() == '\^\$') {
+                                                        dataTable.column('success' + ':name')
+                                                            .search( '^$', true )
+                                                            .draw();
+                                                    }
+                                                    else if (val) {
+                                                        dataTable.column('success' + ':name')
+                                                            .search( val )
+                                                            .draw();
+                                                    }
+                                                    else {
+                                                        dataTable.column('success' + ':name')
+                                                            .search( '', true, false )
+                                                            .draw();
+                                                    }
+                                                });
+                                            {/literal}
+                                            select.append('<option value="1">{str tag='Revision' section='module.submissions'}</option');
+                                            select.append('<option value="3">{str tag='Success' section='module.submissions'}</option');
+                                            select.append('<option value="2">{str tag='Fail' section='module.submissions'}</option');
+                                            select.append('<option value="^$">{str tag='Pending' section='module.submissions'}</option');
+                                            {literal}
+                                            return select;
                                         }
                                     }
                                 ]
@@ -684,21 +635,36 @@
                             title: '{/literal}{str tag='State' section='module.submissions'}{literal}',
                             items: [
                                     {
-                                        title: '{/literal}{str tag='Open' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('status' + ':name')
-                                                .search('(0|1|2)', true)
-                                                .draw();
+                                        getHtmlElement: function(dataTable) {
+                                            var select = $('<select><option value="">{/literal}{str tag='Off' section='module.submissions'}{literal}</option></select>')
+                                                .on('change', function () {
+                                                    var val = $.fn.DataTable.util.escapeRegex(
+                                                        $(this).val()
+                                                    );
+                                                    if (val == 'open') {
+                                                        dataTable.column('status' + ':name')
+                                                            .search( '0|1|2', true )
+                                                            .draw();
+                                                    }
+                                                    else if (val == 'completed') {
+                                                        dataTable.column('status' + ':name')
+                                                            .search( '3|4', true )
+                                                            .draw();
+                                                    }
+                                                    else {
+                                                        dataTable.column('status' + ':name')
+                                                            .search( '', true, false )
+                                                            .draw();
+                                                    }
+                                                });
+
+                                            {/literal}
+                                            select.append('<option value="open">{str tag='Open' section='module.submissions'}</option');
+                                            select.append('<option value="completed">{str tag='Completed' section='module.submissions'}</option');
+                                            {literal}
+                                            return select;
                                         }
-                                    },
-                                    {
-                                        title: '{/literal}{str tag='Completed' section='module.submissions'}{literal}',
-                                        doSearch: function(dataTable) {
-                                            dataTable.column('status' + ':name')
-                                                .search('(3|4)', true)
-                                                .draw();
-                                        }
-                                    },
+                                    }
                                 ]
                         },
                     ]
