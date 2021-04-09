@@ -1,5 +1,6 @@
 <?php
 /**
+ * List for country select fields
  *
  * @package    mahara
  * @subpackage lib
@@ -11,12 +12,18 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Country listing object
+ *
+ * This listing obtained by:
+ * ```perl -MLocale::Country -le 'print join("\n", sort map { country2code($_) . " => " . country2code($_, LOCALE_CODE_ALPHA_3) . ", // " . $_ } all_country_names())'```
+ * Hopefully it doesn't need updating too often :)
+ */
 class Country {
 
     /**
-     * This listing obtained by:
-     *  perl -MLocale::Country -le 'print join("\n", sort map { country2code($_) . " => " . country2code($_, LOCALE_CODE_ALPHA_3) . ", // " . $_ } all_country_names())'
-     * Hopefully it doesn't need updating too often :)
+     * Mapping containing the country name and the 2 and 3 character ISO codes
+     * @var array
      */
     private static $mapping = array(
         array(
@@ -1272,6 +1279,13 @@ class Country {
         ),
     );
 
+    /**
+     * Fetch two character country code based on three character code
+     *
+     * @param string $countrycode Three character ISO code
+     *
+     * @return string|null  Two character country code
+     */
     public static function iso3166_alpha3_to_iso3166_alpha2($countrycode) {
         $countrycode = strtolower($countrycode);
         foreach (self::$mapping as $countrydata) {
@@ -1283,7 +1297,13 @@ class Country {
     }
 
     /**
-     * This is really simplistic - the matches need lots of tweaking
+     * Fetch two character country code based on country name
+     *
+     * @todo This is really simplistic - the matches need lots of tweaking
+     *
+     * @param string $countryname The name of a country
+     *
+     * @return string|null  Two character country code
      */
     public static function countryname_to_iso3166_alpha2($countryname) {
         foreach (self::$mapping as $countrydata) {
@@ -1294,6 +1314,13 @@ class Country {
         return null;
     }
 
+    /**
+     * Fetch three character country code based on two character code
+     *
+     * @param string $countrycode Two character ISO code
+     *
+     * @return string|null  Three character country code
+     */
     public static function iso3166_1alpha2_to_iso3166_1alpha3($countrycode) {
         $countrycode = strtolower($countrycode);
         foreach (self::$mapping as $countrydata) {
@@ -1304,6 +1331,11 @@ class Country {
         return null;
     }
 
+    /**
+     * Fetch an array of all the two character country codes
+     *
+     * @return array
+     */
     public static function iso3166_alpha2() {
         $alpha2 = array();
         foreach (self::$mapping as $countrydata) {
