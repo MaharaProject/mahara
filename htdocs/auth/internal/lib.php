@@ -75,16 +75,18 @@ class AuthInternal extends Auth {
      */
     public function get_temp_password() {
         list($minlength, $format) = get_password_policy(true);
+        // Pool will avoid chars that can be confusing
         $pool = array_merge(
-            range('A', 'Z'),
-            range('a', 'z')
+            array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'),
+            array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'k', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
         );
         if ($format == 'uln') {
-            $pool = array_merge($pool, range(0, 9));
+            $pool = array_merge($pool, range(2, 9));
         }
         else if ($format == 'ulns') {
-            $pool = array_merge($pool, range(0, 9), range('!', '?'));
+            $pool = array_merge($pool, range(2, 9), array('$', '%', '@', '+', '?'));
         }
+
         $password = get_random_key($minlength, $pool);
         if (self::is_password_valid($password)) {
             return $password;

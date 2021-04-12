@@ -40,6 +40,9 @@ body.loggedouthome {
               padding: $spacing-base $spacing-lg;
               margin: 0;
           }
+          & .alert P {
+              background-color: inherit;
+          }
       }
       .sidebar {
           background-color: $theme-primary-color;

@@ -2007,7 +2007,7 @@ class AuthFactory {
 function login_validate(Pieform $form, $values) {
     if (isset($values['pieform_login'])) {  // only set by $form->build()
         if (empty($values['login_username']) || empty($values['login_password'])) {
-            $form->set_error(null, get_string('loginfailed'));
+            $form->set_error(null, get_string('loginfailedforgotpassword', 'mahara', get_config('wwwroot') . 'forgotpass.php'), false);
         }
     }
 }
@@ -2031,7 +2031,7 @@ function login_submit(Pieform $form, $values) {
         $authenticated = $USER->login($username, $password);
 
         if (empty($authenticated)) {
-            $SESSION->add_error_msg(get_string('loginfailed'));
+            $SESSION->add_error_msg(get_string('loginfailedforgotpassword', 'mahara', get_config('wwwroot') . 'forgotpass.php'), false);
             return;
         }
 
@@ -2147,7 +2147,7 @@ function login_submit(Pieform $form, $values) {
             }
 
             if (!$authenticated) {
-                $SESSION->add_error_msg(get_string('loginfailed'));
+                $SESSION->add_error_msg(get_string('loginfailedforgotpassword', 'mahara', get_config('wwwroot') . 'forgotpass.php'), false);
                 return;
             }
 
@@ -2157,7 +2157,7 @@ function login_submit(Pieform $form, $values) {
             // probably isn't their fault (e.g. ldap extension not available
             // when using ldap authentication)
             log_info($e->getMessage());
-            $SESSION->add_error_msg(get_string('loginfailed'));
+            $SESSION->add_error_msg(get_string('loginfailedforgotpassword', 'mahara', get_config('wwwroot') . 'forgotpass.php'), false);
             return;
         }
     }
