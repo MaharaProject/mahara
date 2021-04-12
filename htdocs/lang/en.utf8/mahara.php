@@ -501,6 +501,7 @@ $string['link'] = '<a href="%s">%s</a>';
 $string['loggedoutok'] = 'You have been logged out successfully';
 $string['login'] = 'Login';
 $string['loginfailed'] = 'You have not provided the correct credentials to log in. Please check your username and password are correct.';
+$string['loginfailedforgotpassword'] = '<p>You have not provided the correct credentials to log in. Please check your username and password are correct.</p><p>If your first-time password does not work, please <a href="%s">reset it</a>.</p>';
 $string['loginto'] = 'Log in to %s';
 $string['orloginvia'] = 'Or log in via:';
 $string['newpassword'] = 'New password';
