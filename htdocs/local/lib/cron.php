@@ -184,32 +184,36 @@ function get_changes($token) {
                 "createdat" => array(
                     "gt" => $lastrun
                 ),
-                "or" => array(
+                "and" => array(
                     array(
-                        "and" => array(
+                        "or" => array(
                             array(
-                                "changeableType" => "Person",
-                                "or" => array(
+                                "and" => array(
                                     array(
-                                        "fieldnames" => array(
-                                           "like" => "%name%"
-                                        )
-                                    ),
-                                    array(
-                                        "fieldnames" => array(
-                                            "like" => "%contactemailaddress%"
+                                        "changeableType" => "Person",
+                                        "or" => array(
+                                            array(
+                                                "fieldnames" => array(
+                                                   "like" => "%name%"
+                                                )
+                                            ),
+                                            array(
+                                                "fieldnames" => array(
+                                                    "like" => "%contactemailaddress%"
+                                                )
+                                            )
                                         )
                                     )
                                 )
-                            )
-                        )
-                    ),
-                    array(
-                        "and" => array(
+                            ),
                             array(
-                                "changeableType" => "Practitioner",
-                                "fieldnames" => array(
-                                    "like" => "%practicingstatusid%"
+                                "and" => array(
+                                    array(
+                                        "changeableType" => "Practitioner",
+                                        "fieldnames" => array(
+                                            "like" => "%practicingstatusid%"
+                                        )
+                                    )
                                 )
                             )
                         )
@@ -224,6 +228,7 @@ function get_changes($token) {
         CURLOPT_HTTPGET    => 1,
         CURLOPT_HTTPHEADER => array('Accept:application/json'),
     );
+    log_debug('... fetch auditlog info');
     $auditloginfo = mahara_http_request($auditlogrequest);
     if (isset($auditloginfo->data) && !empty($auditloginfo->data)) {
         $data = json_decode($auditloginfo->data);
@@ -252,6 +257,7 @@ function get_changes($token) {
         CURLOPT_HTTPGET    => 1,
         CURLOPT_HTTPHEADER => array('Accept:application/json'),
     );
+    log_debug('... fetch practicing info');
     $practicingstatusinfo = mahara_http_request($practicingstatusrequest);
     if (isset($practicingstatusinfo->data) && !empty($practicingstatusinfo->data)) {
         $data = json_decode($practicingstatusinfo->data);
@@ -312,6 +318,7 @@ function get_changes($token) {
         CURLOPT_HTTPGET    => 1,
         CURLOPT_HTTPHEADER => array('Accept:application/json'),
     );
+    log_debug('... fetch certificate info');
     $certificateinfo = mahara_http_request($certificaterequest);
     if (isset($certificateinfo->data) && !empty($certificateinfo->data)) {
         $data = json_decode($certificateinfo->data);
