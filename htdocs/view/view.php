@@ -467,17 +467,19 @@ jQuery(window).on('blocksloaded', {}, function() {
 
     var deletebutton = $('#configureblock').find('.deletebutton');
     deletebutton.on('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        var modal_textarea_id = null;
-        $('#configureblock').find('textarea.wysiwyg').each(function() {
-            modal_textarea_id = $(this).attr('id');
-            if (isTinyMceUsed()) {
-                //Remove any existing tinymce
-                tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
-            }
-        });
-        clear();
+        if ((formchangemanager.checkDirtyChanges() && confirm(get_string('confirmcloseblockinstance'))) || !formchangemanager.checkDirtyChanges()) {
+            e.stopPropagation();
+            e.preventDefault();
+            var modal_textarea_id = null;
+            $('#configureblock').find('textarea.wysiwyg').each(function() {
+                modal_textarea_id = $(this).attr('id');
+                if (isTinyMceUsed()) {
+                    //Remove any existing tinymce
+                    tinymce.EditorManager.execCommand('mceRemoveEditor', true, modal_textarea_id);
+                }
+            });
+            clear();
+        }
     });
 
     function clear() {
