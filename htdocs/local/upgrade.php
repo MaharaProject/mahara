@@ -75,4 +75,28 @@ function xmldb_local_upgrade($oldversion=0) {
             add_field($table, $field);
         }
     }
+
+    if ($oldversion < 2021040800) {
+        log_debug('Add the availability date to the primary verification blocks');
+        $sql = "SELECT id FROM {block_instance} WHERE blocktype = 'verification' AND configdata LIKE '%\"primary\";b:1;%'";
+        $records = get_records_sql_array($sql, array());
+        if ($records) {
+            $count = 0;
+            $limit = 150;
+            $total = count($records);
+            require_once(get_config('docroot').'blocktype/lib.php');
+            foreach ($records as $record) {
+                $bi = new BlockInstance($record->id);
+                $configdata = $bi->get('configdata');
+                $configdata['availabilitydate'] = 1638270000;
+                $bi->set('configdata', $configdata);
+                $bi->commit();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
 }
