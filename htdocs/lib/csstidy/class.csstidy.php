@@ -95,7 +95,7 @@ class csstidy {
 	/**
 	 * Saves the parsed CSS (raw)
 	 * @var array
-	 * @access private
+	 * @access public
 	 */
 	public $tokens = array();
 	/**
