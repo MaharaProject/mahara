@@ -1507,9 +1507,9 @@ $cfg->saml_log_attributes = false;
  *
  * The password to be from 8 to 20 (inclusive) characters. The complexity has to be one of
  * the following:
- *  - ul   : Upper and lowercase letters
- *  - uln  : Upper and lowercase letters, numbers
- *  - ulns : Upper and lowercase letters, numbers, symbols
+ *  - ul   : Upper and lower case letters
+ *  - uln  : Upper and lower case letters, numbers
+ *  - ulns : Upper and lower case letters, numbers, symbols
  *
  * @var string $cfg->passwordpolicy
  */

@@ -5791,10 +5791,10 @@ function get_password_policy_description($type = 'generic') {
         $description = get_string('passwordinvalidform1', 'auth.internal', $numbervalue, $formatdesc);
     }
     else if ($type == 'user') {
-        $description = get_string('yournewpassword1', 'mahara', $numbervalue, get_string('passworddescription.' . $formatvalue, 'mahara'));
+        $description = get_string('yournewpassword1', 'mahara', $numbervalue, get_string('passworddescription1.' . $formatvalue, 'mahara'));
     }
     else {
-        $description = get_string('passworddescriptionbase', 'mahara', $numbervalue) . ' ' . get_string('passworddescription.' . $formatvalue, 'mahara');
+        $description = get_string('passworddescriptionbase', 'mahara', $numbervalue) . ' ' . get_string('passworddescription1.' . $formatvalue, 'mahara');
     }
     return $description;
 }
