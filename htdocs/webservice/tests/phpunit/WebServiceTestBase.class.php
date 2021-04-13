@@ -76,7 +76,7 @@ class WebServiceTestBase extends MaharaUnitTest {
     /**
      * Setup test data
      */
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->markTestSkipped('cURL requests need to be mocked properly. Skipping for now.');
@@ -443,7 +443,7 @@ class WebServiceTestBase extends MaharaUnitTest {
     /**
      * clean out all the test data
      */
-    protected function tearDown() {
+    protected function tearDown(): void {
 
         // fix the connection - this gets lost because of the tests
         configure_dbconnection();
