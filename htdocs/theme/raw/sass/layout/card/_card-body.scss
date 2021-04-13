@@ -35,3 +35,20 @@
         padding: $spacing-lg 0 0 0;
     }
 }
+
+.sidebar {
+    .card {
+        .list-group .list-group-item-heading {
+            font-size: $font-size-base;
+            margin-bottom: ($list-group-item-padding-y / 2);
+        }
+    }
+    .progressbar {
+        .progress-container {
+            padding-top: 0;
+        }
+        .list-group {
+            margin-top: $spacing-lg;
+        }
+    }
+}
