@@ -2221,5 +2221,17 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {cron} SET minute = '0',hour='0',dayofweek='1' WHERE callfunction = 'cron_institution_data_weekly'");
     }
 
+    if ($oldversion < 2021042700) {
+        $table = new XMLDBTable('group');
+        if (table_exists($table)) {
+            log_debug('Adding "grouparchivereports" column to "group" table');
+            $field = new XMLDBField('grouparchivereports');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+            }
+        }
+    }
+
     return $status;
 }

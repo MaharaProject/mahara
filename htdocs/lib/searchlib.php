@@ -780,15 +780,20 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
     $wantedparams = array('query', 'sortby', 'sortdir', 'institution');
     $params = array();
+    $shortparams = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {
             continue;
         }
         if (!empty($v)) {
             $params[] = $k . '=' . $v;
+            if ($k != 'sortby' && $k != 'sortdir') {
+                 $shortparams[] = $k . '=' . $v;
+            }
         }
     }
     $searchurl = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $params) . '&limit=' . $limit;
+    $searchurlshort = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $shortparams) . '&limit=' . $limit;
 
     // Use get_admin_user_search_results() as it hooks into the same
     // funky stuff the user search box query does on user/search.php page.
@@ -861,7 +866,7 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
             'template' => 'admin/users/searchusernamecolumn.tpl',
         ),
         'filetitle' => array(
-            'name'     => get_string('filenameleap', 'admin'),
+            'name'     => get_string('filenameleaphtml', 'admin'),
             'sort'     => true,
             'template' => 'admin/groups/leap2acontentcolumn.tpl',
         ),
@@ -882,6 +887,7 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
     return array($html, $cols, $pagination, array(
         'url' => $searchurl,
+        'urlshort' => $searchurlshort,
         'sortby' => $search->sortby,
         'sortdir' => $search->sortdir
     ));

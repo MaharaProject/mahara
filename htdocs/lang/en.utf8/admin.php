@@ -270,6 +270,7 @@ $string['archivedsubmissionsdesc'] = 'Administer archived submissions';
 $string['submittedto'] = 'Submitted to';
 $string['ID'] = 'ID';
 $string['filenameleap'] = 'Leap2A file';
+$string['filenameleaphtml'] = 'Archive file';
 $string['archivedon'] = 'Archived on';
 $string['filemissing'] = '%s (file missing)';
 $string['filemissingdesc'] = 'File %s%s is missing from server';

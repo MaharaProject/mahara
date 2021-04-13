@@ -75,6 +75,7 @@ class mahara_group_external extends external_api {
                                         'hidemembers'     => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
                                         'hidemembersfrommembers' => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
                                         'groupparticipationreports' => new external_value(PARAM_BOOL, get_string('groupparticipationreports', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'grouparchivereports' => new external_value(PARAM_BOOL, get_string('grouparchivereports', WEBSERVICE_LANG), VALUE_DEFAULT),
                                         'members'         => new external_multiple_structure(
                                             new external_single_structure(
                                                                     array(
@@ -221,7 +222,7 @@ class mahara_group_external extends external_api {
 
             // check for the rest
             foreach (array('category', 'open', 'controlled', 'request', 'submitpages', 'editroles',
-                           'hidemembers', 'invitefriends', 'suggestfriends', 'hidden', 'quota', 'groupparticipationreports',
+                           'hidemembers', 'invitefriends', 'suggestfriends', 'hidden', 'quota', 'groupparticipationreports', 'grouparchivereports',
                            'hidemembersfrommembers', 'public', 'usersautoadded', 'viewnotify', 'feedbacknotify') as $attr) {
                 if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
                     $create[$attr] = $group[$attr];
@@ -382,6 +383,7 @@ class mahara_group_external extends external_api {
                                             'hidemembers'     => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
                                             'hidemembersfrommembers' => new external_value(PARAM_INT,get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
                                             'groupparticipationreports' => new external_value(PARAM_BOOL, get_string('groupparticipationreports', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'grouparchivereports' => new external_value(PARAM_BOOL, get_string('grouparchivereports', WEBSERVICE_LANG), VALUE_DEFAULT),
                                             'members'         => new external_multiple_structure(
                                                                     new external_single_structure(
                                                                         array(
@@ -530,7 +532,7 @@ class mahara_group_external extends external_api {
             foreach (array('name', 'description', 'grouptype', 'category', 'editroles',
                            'open', 'controlled', 'request', 'submitpages', 'quota',
                            'hidemembers', 'invitefriends', 'suggestfriends',
-                           'hidden', 'hidemembersfrommembers', 'groupparticipationreports',
+                           'hidden', 'hidemembersfrommembers', 'groupparticipationreports', 'grouparchivereports',
                            'usersautoadded', 'public', 'viewnotify', 'feedbacknotify') as $attr) {
                 if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
                     $newvalues->{$attr} = $group[$attr];
@@ -935,6 +937,7 @@ class mahara_group_external extends external_api {
                         'hidemembers'    => $dbgroup->hidemembers,
                         'hidemembersfrommembers' => $dbgroup->hidemembersfrommembers,
                         'groupparticipationreports' => $dbgroup->groupparticipationreports,
+                        'grouparchivereports' => $dbgroup->grouparchivereports,
                         'members'        => $members,
             );
         }
@@ -977,6 +980,7 @@ class mahara_group_external extends external_api {
                                 'hidemembers'     => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG)),
                                 'hidemembersfrommembers' => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG)),
                                 'groupparticipationreports' => new external_value(PARAM_BOOL, get_string('groupparticipationreports', WEBSERVICE_LANG)),
+                                'grouparchivereports' => new external_value(PARAM_BOOL, get_string('grouparchivereports', WEBSERVICE_LANG), VALUE_DEFAULT),
                                 'members'         => new external_multiple_structure(
                                                         new external_single_structure(
                                                             array(

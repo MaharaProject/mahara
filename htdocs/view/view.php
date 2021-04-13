@@ -201,7 +201,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
             $text = get_string('collectionsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
         }
     }
-    else if ($ltigradeform && $view->get('submittedtime')) {
+    else if (isset($ltigradeform) && $ltigradeform && $view->get('submittedtime')) {
         preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
         $lticoursename = hsc($matches[1]);
         $ltiassignmentname = hsc($matches[2]);

@@ -67,6 +67,7 @@ else {
         'editroles'      => 'all',
         'hidden'         => 0,
         'groupparticipationreports' => 0,
+        'grouparchivereports' => 0,
         'invitefriends'  => 0,
         'suggestfriends' => 0,
         'urlid'          => null,
@@ -271,6 +272,13 @@ if ($cancreatecontrolled) {
         'disabled'     => !$group_data->submittableto,
         'help'         => true,
     );
+    $elements['grouparchivereports'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('grouparchivereports', 'group'),
+        'description'  => get_string('grouparchivereportsdesc', 'group'),
+        'defaultvalue' => $group_data->grouparchivereports,
+        'disabled'     => !$group_data->submittableto,
+    );
 }
 else {
     $form['elements']['submittableto'] = array(
@@ -280,6 +288,10 @@ else {
     $form['elements']['allowarchives'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->allowarchives,
+    );
+    $form['elements']['grouparchivereports'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->grouparchivereports,
     );
 }
 
@@ -550,6 +562,7 @@ function editgroup_submit(Pieform $form, $values) {
         'hidemembers'    => (!empty($values['hidemembersfrommembers']) ? $values['hidemembersfrommembers'] : $values['hidemembers']),
         'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
         'groupparticipationreports' => intval($values['groupparticipationreports']),
+        'grouparchivereports' => intval($values['grouparchivereports']),
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
         'editwindowstart' => db_format_timestamp($values['editwindowstart']),
@@ -673,10 +686,13 @@ jQuery(function($) {
     $("#editgroup_submittableto").on("click", function() {
         if (this.checked) {
             $("#editgroup_allowarchives").prop("disabled", false);
+            $("#editgroup_grouparchivereports").prop("disabled", false);
         }
         else {
             $("#editgroup_allowarchives").prop("checked", false);
             $("#editgroup_allowarchives").prop("disabled", true);
+            $("#editgroup_grouparchivereports").prop("checked", false);
+            $("#editgroup_grouparchivereports").prop("disabled", true);
         }
     });
 });

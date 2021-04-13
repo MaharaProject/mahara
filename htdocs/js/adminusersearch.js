@@ -107,12 +107,14 @@ var UserSearch = (function($) {
       };
 
       this.rewriteQueryButton = function() {
-          $('#query-button').on("click", function() {
-              self.submitUserQuery();
+          $('#query-button').off("click");
+          $('#query-button').on("click", function(event) {
+              self.submitUserQuery(event);
           });
       };
 
-      this.submitUserQuery = function() {
+      this.submitUserQuery = function(e) {
+          e.preventDefault();
           pager.params.offset = 0;
           pager.params.query = $('#query').val();
           var institution = $('#institution');
@@ -120,7 +122,7 @@ var UserSearch = (function($) {
               pager.params.institution = institution.val();
           }
           var institution_requested = $('#institution_requested');
-          if (institution_requested) {
+          if (institution_requested.length) {
               pager.params.institution_requested = institution_requested.val();
           }
           pager.sendQuery();
@@ -128,9 +130,10 @@ var UserSearch = (function($) {
       };
 
       this.rewriteQueryField = function() {
+          $('#query').off('keypress');
           $('#query').on('keypress', function(event) {
               if (event.keyCode == 13) {
-                  self.submitUserQuery();
+                  self.submitUserQuery(event);
               }
           });
       };
@@ -199,13 +202,15 @@ var UserSearch = (function($) {
               pager.sendQuery();
               return false;
           });
-          input_loggedinform_loggedindate.off("change.datetimepicker");
-          input_loggedinform_loggedindate.on("change.datetimepicker", function(e) {
-              // Set handler directly so that calendar works
-              pager.params.offset = 0;
-              pager.params.loggedindate = $(this).val();
-              pager.sendQuery();
-          });
+          if ($('#loggedindate_container').length) {
+              input_loggedinform_loggedindate.off("change.datetimepicker");
+              input_loggedinform_loggedindate.on("change.datetimepicker", function(e) {
+                  // Set handler directly so that calendar works
+                  pager.params.offset = 0;
+                  pager.params.loggedindate = $(this).val();
+                  pager.sendQuery();
+              });
+          }
       };
 
       this.rewriteDuplicateEmailFilter = function() {

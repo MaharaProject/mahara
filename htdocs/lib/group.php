@@ -263,6 +263,27 @@ function group_role_can_access_report($group, $role) {
 }
 
 /**
+ * Returns whether a user is allowed to see the archived submissions to the group
+ *
+ * @param obj $group The group object
+ * @param str $role The role of the user
+ * @returns boolean
+ */
+function group_role_can_access_archives($group, $role) {
+    global $USER;
+
+    if (!$group->grouparchivereports) {
+        return false;
+    }
+
+    if (group_user_access($group->id) && $role == 'admin') {
+        return true;
+    }
+
+    return false;
+}
+
+/**
  * Returns whether a user is allowed to assess views that have been submitted
  * to the given group.
  *
@@ -369,6 +390,7 @@ function group_create($data) {
     $data['hidemembers'] = (isset($data['hidemembers'])) ? intval($data['hidemembers']) : 0;
     $data['hidemembersfrommembers'] = (isset($data['hidemembersfrommembers'])) ? intval($data['hidemembersfrommembers']) : 0;
     $data['groupparticipationreports'] = (isset($data['groupparticipationreports'])) ? intval($data['groupparticipationreports']) : 0;
+    $data['grouparchivereports'] = (isset($data['grouparchivereports'])) ? intval($data['grouparchivereports']) : 0;
     $data['usersautoadded'] = (isset($data['usersautoadded'])) ? intval($data['usersautoadded']) : 0;
 
     $data['quota'] = get_config_plugin('artefact', 'file', 'defaultgroupquota');
@@ -470,6 +492,7 @@ function group_create($data) {
             'hidemembers'    => $data['hidemembers'],
             'hidemembersfrommembers' => $data['hidemembersfrommembers'],
             'groupparticipationreports' => $data['groupparticipationreports'],
+            'grouparchivereports' => $data['grouparchivereports'],
             'invitefriends'  => $data['invitefriends'],
             'suggestfriends' => $data['suggestfriends'],
             'editwindowstart' => $data['editwindowstart'],
@@ -625,7 +648,7 @@ function group_update($new, $create=false) {
     $update_artefact_access = ($new->editroles != $old->editroles);
 
     foreach (array('id', 'grouptype', 'public', 'request', 'submittableto', 'allowarchives', 'editroles',
-        'hidden', 'hidemembers', 'hidemembersfrommembers', 'groupparticipationreports') as $f) {
+        'hidden', 'hidemembers', 'hidemembersfrommembers', 'groupparticipationreports', 'grouparchivereports') as $f) {
         if (!isset($new->$f)) {
             $new->$f = $old->$f;
         }
@@ -2142,6 +2165,15 @@ function group_get_menu_tabs() {
         );
     }
 
+    if (group_role_can_access_archives($group, $role)) {
+        $menu['archives'] = array(
+            'path' => 'groups/archives',
+            'url' => 'group/archives.php?group=' . $group->id,
+            'title' => get_string('archives', 'group'),
+            'weight' => 75,
+        );
+    }
+
     if (defined('MENUITEM_SUBPAGE') && isset($menu[MENUITEM_SUBPAGE])) {
         $menu[MENUITEM_SUBPAGE]['selected'] = true;
     }
@@ -2359,11 +2391,11 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
 
     $sql = '
         SELECT g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.hidemembers, g1.hidemembersfrommembers, g1.groupparticipationreports, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount,
+            g1.hidemembers, g1.hidemembersfrommembers, g1.groupparticipationreports, g1.grouparchivereports, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount,
             COUNT(gmr.member) AS requests, g1.editwindowstart, g1.editwindowend
         FROM (
             SELECT g.id, g.name, g.description, g.public, g.jointype, g.request, g.grouptype, g.submittableto,
-                g.hidemembers, g.hidemembersfrommembers, g.groupparticipationreports, g.urlid, t.membershiptype, t.reason, t.role,
+                g.hidemembers, g.hidemembersfrommembers, g.groupparticipationreports, g.grouparchivereports, g.urlid, t.membershiptype, t.reason, t.role,
                 COUNT(gm.member) AS membercount, g.editwindowstart, g.editwindowend
             FROM {group} g
             LEFT JOIN {group_member} gm ON (gm.group = g.id)' .
@@ -2375,7 +2407,7 @@ function group_get_associated_groups($userid, $filter='all', $limit=20, $offset=
         ) g1
         LEFT JOIN {group_member_request} gmr ON (gmr.group = g1.id)
         GROUP BY g1.id, g1.name, g1.description, g1.public, g1.jointype, g1.request, g1.grouptype, g1.submittableto,
-            g1.hidemembers, g1.hidemembersfrommembers, g1.groupparticipationreports, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount, g1.editwindowstart, g1.editwindowend
+            g1.hidemembers, g1.hidemembersfrommembers, g1.groupparticipationreports, g1.grouparchivereports, g1.urlid, g1.membershiptype, g1.reason, g1.role, g1.membercount, g1.editwindowstart, g1.editwindowend
         ORDER BY g1.name';
 
     $groups = get_records_sql_array($sql, $values, $offset, $limit);
@@ -3590,4 +3622,154 @@ function group_labels_for_group($request, $groupid=null, $limit=null, $offset=0)
         $output['data'] = $labels;
     }
     return $output;
+}
+
+/**
+ * Returns the search results for the archived submissions for the current group
+ *
+ * @param array  $search            The parameters we want to search against
+ * @param int    $offset            What result to start showing paginated results from
+ * @param int    $limit             How many results to show
+ *
+ * @return array  A data structure containing results
+ */
+function get_group_archived_submissions_results($search, $offset, $limit) {
+    $wheresql = '';
+    $where = array($search->group);
+    if (!empty($search->query)) {
+        $wheresql .= " AND (u.username = ? OR u.firstname = ? OR u.lastname = ?) ";
+        $where[] = $search->query;
+        $where[] = $search->query;
+        $where[] = $search->query;
+    }
+
+    $results = array('count' => 0,
+                     'data' => array());
+
+    if ($rawdata = get_records_sql_array("SELECT u.id, u.username, u.firstname, u.lastname, u.email, u.active,
+                                            e.id AS eid, e.filename, e.filetitle, e.filepath, e.ctime AS archivectime,
+                                            a.id AS specialid, a.group
+                                          FROM {usr} u
+                                          JOIN {export_archive} e ON e.usr = u.id
+                                          JOIN {archived_submissions} a ON a.archiveid = e.id
+                                          WHERE a.group = ? " . $wheresql . "
+                                          ORDER BY " . $search->sortby . " " . $search->sortdir, $where)) {
+        // Now that we have the users we need to do some last minute alterations
+        $results['count'] = count($rawdata);
+        foreach ($rawdata as &$item) {
+            $item = (array)$item;
+        }
+        $results['data'] = $rawdata;
+        foreach ($results['data'] as $key => $data) {
+            // alter the archivectime to be human readable
+            $results['data'][$key]['archivectime'] = format_date(strtotime($data['archivectime']));
+            // make sure the archive file is still on server at the path 'filepath' (not moved or deleted by server admin)
+            $results['data'][$key]['filemissing'] = (!file_exists($data['filepath'] . $data['filename'])) ? true : false;
+            $results['data'][$key]['groupdeleted'] = false;
+        }
+    }
+    return $results;
+}
+
+/**
+ * Returns the search results HTML / pagination for the archived submissions for the current group
+ *
+ * @param array  $search            The parameters we want to search against
+ * @param int    $offset            What result to start showing paginated results from
+ * @param int    $limit             How many results to show
+ *
+ * @return array  A data structure containing th HTML output for the results
+ */
+function build_group_archived_submissions_results($search, $offset, $limit) {
+    global $USER;
+
+    $wantedparams = array('group', 'query', 'sortby', 'sortdir', 'institution');
+    $params = array();
+    $shortparams = array();
+    foreach ($search as $k => $v) {
+        if (!in_array($k, $wantedparams)) {
+            continue;
+        }
+        if (!empty($v)) {
+            $params[] = $k . '=' . $v;
+            if ($k != 'sortby' && $k != 'sortdir') {
+                $shortparams[] = $k . '=' . $v;
+            }
+        }
+    }
+
+    $searchurl = get_config('wwwroot') . 'group/archives.php?' . join('&', $params) . '&limit=' . $limit;
+    $searchurlshort = get_config('wwwroot') . 'group/archives.php?' . join('&', $shortparams) . '&limit=' . $limit;
+
+    $results = get_group_archived_submissions_results($search, $offset, $limit);
+
+    $pagination = build_pagination(array(
+        'id' => 'group_archives_pagination',
+        'class' => 'center',
+        'url' => $searchurl,
+        'count' => $results['count'],
+        'setlimit' => true,
+        'limit' => $limit,
+        'jumplinks' => 8,
+        'numbersincludeprevnext' => 2,
+        'offset' => $offset,
+        'datatable' => 'searchresults',
+        'searchresultsheading' => 'resultsheading',
+        'jsonscript' => 'group/archives.json.php',
+    ));
+
+    $cols = array(
+        'specialid' => array(
+            'name'     => get_string('ID', 'admin'),
+            'sort'     => true,
+        ),
+        'icon' => array(
+            'template' => 'admin/users/searchiconcolumn.tpl',
+            'class'    => 'center',
+            'accessible' => get_string('profileicon'),
+        ),
+        'firstname' => array(
+            'name'     => get_string('firstname'),
+            'sort'     => true,
+            'template' => 'admin/users/searchfirstnamecolumn.tpl',
+        ),
+        'lastname' => array(
+            'name'     => get_string('lastname'),
+            'sort'     => true,
+            'template' => 'admin/users/searchlastnamecolumn.tpl',
+        ),
+        'preferredname' => array(
+            'name'     => get_string('displayname'),
+            'sort'     => true,
+        ),
+        'username' => array(
+            'name'     => get_string('username'),
+            'sort'     => true,
+            'template' => 'admin/users/searchusernamecolumn.tpl',
+        ),
+        'filetitle' => array(
+            'name'     => get_string('filenameleaphtml', 'admin'),
+            'sort'     => true,
+            'template' => 'admin/groups/leap2acontentcolumn.tpl',
+        ),
+        'archivectime' => array(
+            'name'     => get_string('archivedon', 'admin'),
+            'sort'     => true,
+        ),
+    );
+    $smarty = smarty_core();
+    $smarty->assign('results', $results);
+    $smarty->assign('USER', $USER);
+    $smarty->assign('limit', $limit);
+    $smarty->assign('limitoptions', array(10, 50, 100, 200, 500));
+    $smarty->assign('cols', $cols);
+    $smarty->assign('ncols', count($cols));
+    $html = $smarty->fetch('searchresulttable.tpl');
+
+    return array($html, $cols, $pagination, array(
+        'url' => $searchurl,
+        'urlshort' => $searchurlshort,
+        'sortby' => $search->sortby,
+        'sortdir' => $search->sortdir
+    ));
 }

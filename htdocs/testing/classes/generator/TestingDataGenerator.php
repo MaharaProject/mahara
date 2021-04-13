@@ -532,6 +532,7 @@ EOD;
                 'hidemembers'    => 0,
                 'hidemembersfrommembers' => 0,
                 'groupparticipationreports' => 0,
+                'grouparchivereports' => 0,
                 'urlid'          => null,
                 'editwindowstart' => isset($record['editwindowstart']) ? $record['editwindowstart'] : null,
                 'editwindowend'  => isset($record['editwindowend']) ? $record['editwindowend'] : null,

@@ -415,6 +415,13 @@ $string['extcommenters'] = "Non-members involved";
 $string['groupparticipationreports'] = "Participation report";
 $string['groupparticipationreportsdesc1'] = "Group administrators can access a report displaying all group and shared pages and who has commented on them.";
 
+// Group archives
+$string['archives'] = 'Archive';
+$string['grouparchivereportsheading'] = "Archive of submissions";
+$string['grouparchivereports'] = "Access archive of submissions";
+$string['grouparchivereportsdesc'] = "Group administrators can access archived submission files.";
+$string['grouparchivereportserror'] = 'You can only allow archive submission report if submissions are allowed.';
+
 $string['returntogroupportfolios'] = "Return to group pages and collections";
 $string['showintroduction'] = "Introduction";
 
