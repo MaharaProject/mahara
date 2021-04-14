@@ -24,6 +24,7 @@
                         <span id="progress_bar_percentage">{$sbdata.percent}%</span>
                     </div>
                 </div>
+                {if $sbdata.data > 0}
                 <div id="profile_completeness_tips" class="list-group">
                     <span class="d-none" id="progress_counting_total">{$sbdata.totalcounting}</span>
                     <span class="d-none" id="progress_completed_total">{$sbdata.totalcompleted}</span>
@@ -38,6 +39,7 @@
                         {/foreach}
                     </ul>
                 </div>
+                {/if}
             {else}
                 <div id="progress_bar_100" class="progress">
                     <div id="progress_bar_fill" class="progress-bar" role="progressbar" aria-valuemax="100" aria-valuemin="0" style="width: {$sbdata.percent}%;">

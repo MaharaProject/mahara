@@ -22,11 +22,6 @@
 
     + .list-group {
         min-height: 2.625rem; // 42px;
-
-        .list-group-item-heading {
-            font-size: $font-size-base;
-            margin-bottom: ($list-group-item-padding-y / 2);
-        }
     }
 }
 
