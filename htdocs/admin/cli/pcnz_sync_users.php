@@ -51,6 +51,12 @@ $options['registernumbers'] = (object) array(
         'examplevalue' => '1234',
         'multiple' => true,
 );
+$options['deleteinterns'] = (object) array(
+        'shortoptions' => array('x'),
+        'description' => 'Delete any interns that exist in Mahara',
+        'required' => false,
+        'defaultvalue' => false,
+);
 
 $settings = (object) array(
         'info' => 'The batch CLI script
@@ -69,8 +75,12 @@ $dryrun = $cli->get_cli_param_boolean('dryrun');
 $offset = $cli->get_cli_param('offset');
 $limit = $cli->get_cli_param('limit');
 $types = $cli->get_cli_param('type');
+$deleteinterns = $cli->get_cli_param_boolean('deleteinterns');
+
+$havetypes = false;
 if (!empty($types) && !is_array($types)) {
     $types = explode(',', $types);
+    $havetypes = true;
 }
 $regids = $cli->get_cli_param('registernumbers');
 if (!empty($regids) && !is_array($regids)) {
@@ -103,7 +113,12 @@ if (isset($tokeninfo->data) && !empty($tokeninfo->data)) {
     $token = $tokeninfo->id;
 }
 if ($token) {
-    $cli->cli_print('================== Fetching records for types ' . implode(',', $types) . ' ==================');
+    if ($havetypes) {
+        $cli->cli_print('================== Fetching records for types ' . implode(',', $types) . ' ==================');
+    }
+    else {
+        $cli->cli_print('================== Fetching records for people ' . implode(',', $regids) . ' ==================');
+    }
     if ($dryrun) {
         $cli->cli_print('Only a dry run');
     }
@@ -120,14 +135,37 @@ if ($token) {
         $newpeople = fetch_person_cli($token, $ids);
         $rawpeople = array_merge($rawpeople, $newpeople);
     }
+
     $count = 0;
     $people = array();
     $total = count($rawpeople);
+    $deletecount = $deletedcount = 0;
     foreach ($rawpeople as $person) {
-        if (!empty($regids)) {
+        $haspharmacist = false;
+        if (isset($person->practitioner) && isset($person->practitioner->scopesonpractice)) {
+            foreach ($person->practitioner->scopesonpractice as $scope) {
+                if ($scope->sopid == PCNZ_SCOPE_PHARMACIST) {
+                    $haspharmacist = true;
+                }
+            }
+            if (!$haspharmacist) {
+                if (!$dryrun && $deleteinterns && $uid = get_field('usr', 'id', 'username', $person->id)) {
+                    $cli->cli_print('Reg ID ' . $person->id . ' is an intern only so will delete them');
+                    delete_user($uid);
+                    $deletedcount++;
+                }
+                else {
+                    $cli->cli_print('Reg ID ' . $person->id . ' ...skipping as person is out of scope');
+                }
+                $deletecount++;
+                continue;
+            }
+        }
+
+        if (!$deleteinterns && !empty($regids)) {
             $people[$person->id]['personalinfo'] = $person;
         }
-        else if (isset($person->practitioner) && isset($person->practitioner->practicingstatusid) && in_array($person->practitioner->practicingstatusid, $types)) {
+        else if (!$deleteinterns && isset($person->practitioner) && isset($person->practitioner->practicingstatusid) && in_array($person->practitioner->practicingstatusid, $types)) {
             $people[$person->id]['personalinfo'] = $person;
         }
         $count++;
@@ -142,6 +180,12 @@ if ($token) {
         }
         else {
             process_changes($people);
+        }
+    }
+    else if ($deleteinterns) {
+        $cli->cli_print('A total of ' . $deletecount . ' intern accounts within the records  ' . $offset . ' to ' . ($offset + $limit));
+        if (!$dryrun) {
+            $cli->cli_print('... ' . $deletedcount . ' intern accounts deleted');
         }
     }
     else {
@@ -180,7 +224,9 @@ function fetch_person_cli($token, $ids) {
                     "nickname"
                 ),
                 "include" => array(
-                    array("relation" => "practitioner",
+                    array("practitioner" => array(
+                            "scopesonpractice" => true
+                        ),
                         "scope" => array(
                             "fields" => array(
                                 "practicingstatusid" => true
