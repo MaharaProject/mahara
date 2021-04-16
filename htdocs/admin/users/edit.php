@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('INSTITUTIONALADMIN', 1);
+define('INSTITUTIONALSTAFF', 1);
 define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('accountsettings', 'admin'));
@@ -19,7 +19,6 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'edit');
 require_once('activity.php');
 require_once(get_config('docroot') . 'lib/antispam.php');
-
 $id = param_integer('id');
 if ($id == 0) {
     // We shouldn't be editing / masquerading as 'root' user
@@ -29,12 +28,10 @@ if ($id == 0) {
 $user = new User;
 $user->find_by_id($id);
 $authobj = AuthFactory::create($user->authinstance);
-
-if (!$USER->is_admin_for_user($user)) {
+if (!$USER->is_staff_for_user($user)) {
     $SESSION->add_error_msg(get_string('youcannotadministerthisuser', 'admin'));
     redirect(profile_url($user));
 }
-
 if ($user->deleted) {
     $smarty = smarty();
     $smarty->assign('PAGEHEADING', display_name($user));
@@ -1066,7 +1063,19 @@ $smarty->assign('siteform', $siteform);
 $smarty->assign('institutions', count($allinstitutions));
 $smarty->assign('institutionform', $institutionform);
 
-$smarty->assign('loginas', $id != $USER->get('id') && is_null($USER->get('parentuser')));
+//PCNZ Customization, allow staff to login as users in institution.
+$stafflogin = $USER->is_staff_for_user($user) && !$user->get('staff');
+//Staff can't privilage escalate through an administrator.
+$stafflogin =  $stafflogin && !$user->is_admin_for_user($USER);
+//Or an institiutional administrator.
+$stafflogin = $stafflogin && !$user->is_institutional_admin();
+//Users can still log into other institutional staffmembers.
+if ($id != $USER->get('id') && ($USER->is_admin_for_user($user) || $stafflogin ) && is_null($USER->get('parentuser'))) {
+    $smarty->assign('loginas', true);
+}
+else {
+    $smarty->assign('loginas', false);
+}
 $smarty->assign('PAGEHEADING', display_name($user));
 $smarty->assign('SUBSECTIONHEADING', TITLE);
 setpageicon($smarty, 'icon-user-cog');
