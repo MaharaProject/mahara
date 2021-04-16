@@ -349,7 +349,7 @@ function undo_verification_form_submit(Pieform $form, $values) {
         if (isset($grouproles) && !empty($grouproles)) {
             foreach ($groups as $groupid) {
                 if (isset($grouproles[$type])) {
-                    $users = array_merge($users, get_column('group_member', 'group', $groupid, 'role', preg_replace('/^group/', '', $type)));
+                    $users = array_merge($users, get_column('group_member', 'member', 'group', $groupid, 'role', preg_replace('/^group/', '', $type)));
                 }
             }
         }
