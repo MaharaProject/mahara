@@ -348,6 +348,8 @@ if ($userid != $USER->get('id') && ($USER->is_admin_for_user($user) || $stafflog
 } else {
     $loginas = null;
 }
+$canedit = $USER->is_staff_for_user($userobj) ? true : false;
+
 // Set up skin, if the page has one
 $viewskin = $view->get('skin');
 $owner    = $view->get('owner');
@@ -398,6 +400,7 @@ if ($remoteuserrelationship) {
 }
 
 $smarty->assign('loginas', $loginas);
+$smarty->assign('canedit', $canedit);
 
 $smarty->assign('INLINEJAVASCRIPT', $blocksjs . $inlinejs);
 if ($userobj->get('admin') || $userobj->get('staff')) {

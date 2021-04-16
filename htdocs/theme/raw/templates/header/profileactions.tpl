@@ -12,7 +12,7 @@
                 <span class="sr-only">{$loginas}</span>
             </a>
 
-            {if $USER->get('admin')}
+            {if $canedit}
             <a href="{$WWWROOT}admin/users/edit.php?id={$USERID}" class="btn-edit btn btn-secondary" title="{str tag=accountsettings section=admin}">
                 <span class="icon-cogs icon left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=accountsettings section=admin}</span>
