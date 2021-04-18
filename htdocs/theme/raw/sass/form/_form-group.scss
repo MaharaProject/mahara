@@ -246,6 +246,9 @@
             width: 10.3125rem; // 165px;
         }
     }
+    .modal-docked &.calendar {
+        position: relative;
+    }
 
     &.submit {
         border-bottom: none;

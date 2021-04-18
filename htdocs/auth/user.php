@@ -1440,7 +1440,10 @@ class User {
      */
     public function can_edit_collection($c) {
         $owner = $c->get('owner');
-        if ($owner > 0 && $owner == $this->get('id')) {
+        if ($owner > 0 && $owner == $this->get('id') && !$c->get('lock')) {
+            return true;
+        }
+        if ($owner > 0 && $owner == $this->get('id') && $c->get('lock') && $this->get('admin')) {
             return true;
         }
         $institution = $c->get('institution');

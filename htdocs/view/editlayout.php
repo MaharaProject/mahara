@@ -75,6 +75,16 @@ if ($view->is_submitted()) {
     throw new AccessDeniedException(get_string('canteditsubmitted', 'view', $submittedto['name']));
 }
 
+if ($collection = $view->get('collection')) {
+    $collectionid = $collection->get('id');
+    // If the collection is locked or view copied from template, and the viewtype is 'progress' we disallow editing
+    $pageistemplate = $view->get_original_template();
+    if ($view->get('owner') && (($view->get('type') == 'progress' && $pageistemplate) || $collection->get('lock'))) {
+        $errorstr = $view->get('type') == 'progress' ? 'canteditprogress' : 'canteditcollectionlocked';
+        throw new AccessDeniedException(get_string($errorstr, 'view'));
+    }
+}
+
 $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();

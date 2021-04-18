@@ -3092,6 +3092,11 @@ function can_view_view($view, $user_id=null) {
         }
     }
 
+    // If the page has been marked "undo verification" then people that can action this should be able to view
+    if ($results = get_records_sql_array("SELECT * FROM {blocktype_verification_undo} WHERE view = ? AND usr = ?", array($view->get('id'), $user_id))) {
+        return true;
+    }
+
     // Grant temporary access if LTI signed request was made
     if ($ltiview = $SESSION->get('lti.canviewview')) {
         if ($view->get('id') == $ltiview) {
@@ -3437,6 +3442,24 @@ function _get_views_trim_list(&$list, &$users, $limit, &$results) {
     return false;
 }
 
+/**
+ * Given a collection id will return whether any view in collection is suspended or not
+ *
+ * @param string $id    Collection ID
+ *
+ * @returns boolean  Whether the specified collection is suspended or not.
+ */
+function is_collection_suspended($id) {
+    if ($views = get_column('collection_view', 'view', 'collection', $id)) {
+        foreach ($views as $view) {
+            $viewsuspended = is_view_suspended($view);
+            if ($viewsuspended) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 /**
  * Given a view id will return wether this view is suspended or not.
  *

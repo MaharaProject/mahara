@@ -1,0 +1,66 @@
+.verification-statement {
+    padding: $spacing-xxxl;
+    box-shadow: $box-shadow;
+    border: $border-width solid $border-color;
+    h2 {
+        font-size: $font-size-base * 1.5;
+        margin-top: 0;
+    }
+
+    p {
+        margin-right: 4rem;
+    }
+
+    .verificationicon {
+        &.icon {
+            text-align: center;
+            vertical-align: middle;
+            display: block;
+            font-size: 3rem;
+
+            &.completed,
+            &.icon-check-square {
+                color: $progresscompletion-verified-color;
+            }
+            &.action,
+            &.icon-square {
+                color: $theme-text-color;
+            }
+            &.dot.disabled {
+                color: $theme-text-midtone-color;
+                cursor: $cursor-disabled;
+                // Override dot icon with minus icon
+                &:before {
+                    content: "\f068";
+                }
+            }
+            a {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &.primary-statement {
+        background-color: scale-color($warning, $lightness: 85%);
+        border: 0;
+    }
+
+    .verifiedon {
+        margin-top: $spacing-base;
+        color: $theme-text-midtone-color;
+        font-size: $font-size-sm;
+    }
+
+    .commentlist {
+        border-top: $border-width solid $border-color;
+
+        p {
+            margin-top: $spacing-base;
+        }
+
+        i {
+            display: block;
+            margin-top: $spacing-base;
+        }
+    }
+}

@@ -352,6 +352,9 @@ if (!$view->is_public()) {
 }
 
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+if ($view->get_collection()) {
+    $can_edit = $can_edit && $USER->can_edit_collection($view->get_collection());
+}
 $can_copy = $view->is_copyable();
 
 $viewgroupform = false;

@@ -61,6 +61,7 @@ $string['viewname']               = 'Page name';
 $string['templatedashboard']      = 'Dashboard template';
 $string['templategrouphomepage']  = 'Group homepage template';
 $string['templateprofile']        = 'Profile template';
+$string['templateprogress']       = 'Portfolio completion template';
 $string['templateportfolio']      = 'Page template';
 $string['templateportfoliotitle']       = 'Untitled';
 $string['templateportfoliodescription1'] = 'Set up the default layout for the pages that are created. You can also add blocks. Please note that any content you add to the default page will appear on every page that is created after you made the change.';
@@ -142,8 +143,9 @@ $string['nospecialrole'] = 'No special role';
 $string['peer'] = 'Peer';
 $string['manager'] = 'Manager';
 $string['peermanager'] = 'Peer and manager';
+$string['verifier'] = 'Reviewer';
 
-// secret url
+// Secret url
 $string['token'] = 'Secret URL';
 $string['editsecreturlaccess'] = 'Edit secret URL access';
 $string['editsecreturlaccessfor'] = 'Edit secret URL access (ID %s)';
@@ -559,3 +561,6 @@ $string['linktooriginaltemplatedescriptiondeleted'] = 'This page is based on a t
 $string['deletedview'] = 'Page deleted';
 $string['copylocked'] = 'Copy locked';
 $string['copylockeddescription'] = 'This is a template copy. Change this setting to lock/unlock the instruction fields on this copy.';
+
+$string['canteditcollectionlocked'] = 'Unable to edit the portfolio page because the collection is locked.';
+$string['canteditprogress'] = 'Unable to edit the portfolio completion page because the collection is locked or the page was copied from a template.';

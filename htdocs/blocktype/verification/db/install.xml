@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20060926" COMMENT="XMLDB file for core Mahara tables"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="blocktype_verification_comment">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" SEQUENCE="true" NOTNULL="true" />
+                <FIELD NAME="instance" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="from" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="private" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" />
+                <FIELD NAME="postdate" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="text" TYPE="text" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+                <KEY NAME="instancefk" TYPE="foreign" FIELDS="instance" REFTABLE="block_instance" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="from" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="blocktype_verification_undo">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="reporter" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="reporterfk" TYPE="foreign" FIELDS="reporter" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+    </TABLES>
+</XMLDB>

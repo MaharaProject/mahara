@@ -164,16 +164,39 @@ function collectionedit_validate(Pieform $form, $values) {
 }
 
 function collectionedit_submit(Pieform $form, $values) {
-    global $SESSION, $new, $copy, $urlparams;
+    global $SESSION, $new, $copy, $urlparams, $USER;
     $values['navigation'] = (int) $values['navigation'];
     if (isset($values['progresscompletion'])) {
         $values['progresscompletion'] = (int) $values['progresscompletion'];
+    }
+    if (isset($values['lock'])) {
+        $values['lock'] = (int) $values['lock'];
     }
     if (empty($values['framework'])) {
         $values['framework'] = null;
     }
     $values['coverimage'] = (isset($values['coverimage']) ? $values['coverimage'] : null);
     $collection = Collection::save($values);
+
+    if (isset($values['progresscompletion'])) {
+        if ($values['progresscompletion']) {
+            // Switch is on
+            $collection->add_progresscompletion_view();
+        }
+        else {
+            // Switch is off
+            // Delete the progress page as it can't exist in a collection that is not progress completion
+            if ($progressview = get_field_sql("SELECT v.id
+                                               FROM {collection_view} cv
+                                               JOIN {view} v ON v.id = cv.view
+                                               WHERE cv.collection = ?
+                                               AND v.type = ?", array($collection->get('id'), 'progress'))) {
+                require_once(get_config('libroot') . 'view.php');
+                $view = new View($progressview);
+                $view->delete();
+            }
+        }
+    }
 
     $result = array(
         'error'   => false,
