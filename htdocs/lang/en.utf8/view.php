@@ -308,6 +308,7 @@ $string['err.removecolumn'] = 'Failed to delete column';
 $string['success.changetheme'] = 'Theme updated successfully';
 $string['err.changetheme'] = 'Could not update theme';
 
+$string['confirmcloseblockinstance'] = 'Are you sure you want to continue without saving your changes?';
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 $string['blockconfigurationrenderingerror'] = 'Configuration failed because the block could not be rendered.';
