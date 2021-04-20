@@ -62,7 +62,7 @@
             responsive: true,
             fixedHeader: true,      // To avoid colvis column assignment issues
             colReorder: true,      // Set to false due to Quickfilter issues on referring to wrong columns after reordering
-            dom: '<"toolbar"<"dbut"B><"dt-buttons row col-auto"f>>t<"pagein"ipl>',
+            dom: '<"dbut btn-top-right btn-group btn-group-top"B><"dt-buttons row col-auto"f><"toolbar">t<"pagein"ipl>',
             buttons: [
                 {
                     extend: 'colvis',
@@ -174,9 +174,6 @@
                         name: 'groupName',
                         data: 'groupName',
                         responsivePriority: 1,
-                        render: function(data, type, row, meta) {
-                            return row.portfolioElementGroupHtml;
-                        }
                     },
                     {
                         name: 'role',

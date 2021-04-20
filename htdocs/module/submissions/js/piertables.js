@@ -420,9 +420,9 @@ $(document).ready(function () {
         this.createQuickSearch = function() {
             let offTitle = this.options.quickFilter.offTitle;
             let filterElement = $('<div id="' + this.prop('id') + '-filter" class="filter"></div>');
-            let filterTitlebarElement = $('<div class="filter-titlebar">').html('<div class="icon icon-chevron-circle-up text-muted"></div> ' + get_string('quickfilter', 'module.submissions') + ' ');
-            let allOffButtonElement = $('<button type="button" id="all-off-button" class="btn btn-secondary btn-sm icon icon-filter d-none" title="' + get_string('quickfiltertooltip', 'module.submissions') + '"></button>').prop('disabled', true);
-            let categoryContainer = $('<div class="row small">');
+            let filterTitlebarElement = $('<div class="filter-titlebar">').html('<div class="icon icon-chevron-down"></div> ' + get_string('quickfilter', 'module.submissions') + ' ');
+            let allOffButtonElement = $('<button type="button" id="all-off-button" class="btn btn-secondary btn-sm icon icon-undo d-none" title="' + get_string('quickfiltertooltip', 'module.submissions') + '"></button>').prop('disabled', true);
+            let categoryContainer = $('<div class="row">');
 
             // We need this wrapper for running the animation which doesn't work directly on flexbox elements
             let categoryContainerWrapper = $('<div class="container" style="display: none;">');
@@ -434,12 +434,12 @@ $(document).ready(function () {
             filterTitlebarElement.on('click', function(e) {
                 if (e.target !== allOffButtonElement[0]) {
                     categoryContainerWrapper.slideToggle();
-                    filterTitlebarElement.find('.icon').toggleClass('icon-chevron-circle-up icon-chevron-circle-down');
+                    filterTitlebarElement.find('.icon').toggleClass('icon-chevron-up');
                 }
             });
 
             $.each(this.options.quickFilter.categories, function(index, category) {
-                let categoryElement = $('<div class="search-category"></div>').html($('<div>').html($('<strong>').html(category.title)));
+                let categoryElement = $('<div class="search-category"></div>').html($('<div>').html($('<label>').html(category.title)));
                 let radioElement = $('<div class="radio-group well">');
 
                 $.each(category.items, function(index, item) {
@@ -453,7 +453,7 @@ $(document).ready(function () {
                             });
                             break;
                         case item.hasOwnProperty('getHtmlElement'):
-                            inputElement = item.getHtmlElement(Me.dataTable).addClass('form-control form-control-sm');
+                            inputElement = item.getHtmlElement(Me.dataTable).addClass('form-control');
                             inputElement.on('click', function() {
                                 Me.setAllOffButton();
                             });
@@ -473,7 +473,6 @@ $(document).ready(function () {
             });
             categoryContainerWrapper.appendTo(filterElement);
             filterElement.prependTo($('div.toolbar'));
-            $('div.dbut').detach().appendTo(categoryContainerWrapper);
 
 
             allOffButtonElement.on('click', function(e) {
