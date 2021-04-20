@@ -871,6 +871,17 @@ $cfg->saml_log_attributes = false;
 //$cfg->emailexternalredirect = true;
 
 /**
+*  Restrict the number of access list rules (rows) when sharing personal portfolios to this number of rows.
+*  Note: This is an experimental feature. For the time being, setting this number to a low one, in particular
+*  a single digit number, is only recommended for new sites. When you do that on an existing site, the access
+*  permissions will not be changed and an existing portfolio shared with 30 people, will still be shared with these
+*  30 people even though the config value says '5'. The portfolio owner will not be able to remove access for
+*  anybody individually but the first row. When the form is saved, the change is applied and all other access
+*  rules but the first visible one are removed. It just needs that 'Save'
+*/
+//$cfg->accesslistmaximum = 100;
+
+/**
  * ===================================================================
  * Configuration values in Admin menu > Configure site > Site options
  * ===================================================================

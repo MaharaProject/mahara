@@ -210,7 +210,14 @@ $string['otherpeople'] = 'Other people';
 $string['addaccess'] = 'Add access for "%s"';
 $string['addaccessinstitution'] = 'Add access for institution "%s"';
 $string['addaccessgroup'] = 'Add access for group "%s"';
-
+$string['sharewithmaximum'] = array(
+    'You can share the portfolio with up to 1 person or group of people.',
+    'You can share the portfolio with up to %d people or groups of people.'
+);
+$string['shareallwithmaximum'] = array(
+    'You can share the selected portfolios with up to 1 person or group of people.',
+    'You can share the selected portfolios with up to %d people or groups of people.'
+);
 $string['submitconfirm'] = 'If you submit \'%s\' to %s for assessment, you will not be able to edit its contents until your tutor has finished marking it. Are you sure you want to submit now?';
 $string['viewsubmitted'] = 'Page submitted';
 $string['collectionsubmitted'] = 'Collection submitted';

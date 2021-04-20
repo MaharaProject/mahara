@@ -613,6 +613,11 @@ function editaccess_submit(Pieform $form, $values) {
     }
 }
 
+$accesslistmaximum = 0;
+if ($view->get('type') == 'portfolio' && $view->get('owner')) {
+    $accesslistmaximum = intval(get_config('accesslistmaximum'));
+}
+
 $form = pieform($form);
 
 $smarty = smarty(
@@ -630,4 +635,5 @@ $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
 $smarty->assign('group', $group);
 $smarty->assign('institution', $institution);
+$smarty->assign('accesslistmaximum', $accesslistmaximum);
 $smarty->display('view/access.tpl');

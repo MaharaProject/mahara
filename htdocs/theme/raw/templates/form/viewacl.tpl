@@ -123,6 +123,7 @@
 
 <script>
 var count = 0;
+var accesslistmaximum = {{$accesslistmaximum}}
 
 jQuery(function($) {
 "use strict";
@@ -353,6 +354,13 @@ jQuery(function($) {
         }
 
         function addNewRow(shareoptions, presets) {
+
+            // If we already reached the max allowed rules on personal portfolios
+            if (accesslistmaximum) {
+                if ($('#accesslistitems tr').length == accesslistmaximum) {
+                    return;
+                }
+            }
             if (presets === undefined) {
                 presets = {};
             }
@@ -365,7 +373,7 @@ jQuery(function($) {
                 defaultText,
                 grouproles;
 
-            if($('#accesslistitems tr').length > 0){
+            if ($('#accesslistitems tr').length > 0) {
                 lastrow = $('#accesslistitems tr:last-child');
                 id = parseInt(lastrow.attr('data-id'), 10) + 1;
             }
@@ -416,7 +424,15 @@ jQuery(function($) {
             $('[data-bind="remove-share"]').on('click', function(e) {
                 e.preventDefault();
                 if (!$(this).hasClass('icon-placeholder')) {
-                    clearRow(this);
+                    if (accesslistmaximum) {
+                        $(this).closest('tr').remove();
+                        if (!$('#accesslistitems').find('p.table-help-text:visible').length) {
+                            addNewRow(shareoptions, {empty: true});
+                        }
+                    }
+                    else {
+                        clearRow(this);
+                    }
                     formchangemanager.setFormStateById('{{$formname}}', FORM_CHANGED);
                 }
             });

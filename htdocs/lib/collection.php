@@ -1349,7 +1349,7 @@ class Collection {
             }
         }
 
-        $viewids = get_column('collection_view', 'view', 'collection', $this->id);
+        $viewids = get_column_sql("SELECT view FROM {collection_view} WHERE collection = ? ORDER BY displayorder", array($this->id));
 
         // Set the most permissive access records on all views
         View::combine_access($viewids, true);
