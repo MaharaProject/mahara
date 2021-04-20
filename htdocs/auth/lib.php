@@ -2242,7 +2242,8 @@ function ensure_user_account_is_active($user=null) {
     }
 
     // Check if the user's account has expired
-    if ($user->expiry > 0 && time() > $user->expiry) {
+    $expirycheck = preg_match('/\-/', $user->expiry) ? strtotime($user->expiry) : $user->expiry;
+    if ($expirycheck > 0 && time() > $expirycheck) {
         if ($dologout) {
             $user->logout();
         }
