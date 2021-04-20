@@ -6334,6 +6334,13 @@ class View {
     }
 
     public function display_author() {
+        if (file_exists(get_config('docroot') . 'local/lib.php')) {
+            include_once(get_config('docroot') . 'local/lib.php');
+            if (function_exists('local_display_author')) {
+                return local_display_author($this);
+            }
+        }
+
         $view = null;
 
         if (!empty($this->owner)) {
