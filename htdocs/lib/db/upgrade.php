@@ -2216,5 +2216,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021042600) {
+        log_debug('set cron_institution_data_weekly time');
+        execute_sql("UPDATE {cron} SET minute = '0',hour='0',dayofweek='1' WHERE callfunction = 'cron_institution_data_weekly'");
+    }
+
     return $status;
 }

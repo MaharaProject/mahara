@@ -334,7 +334,6 @@ function institution_data_verifier_current($institution) {
 
 function institution_statistics($institution, $full=false) {
     global $SESSION;
-
     $data = array();
 
     if ($full) {
@@ -762,7 +761,7 @@ function get_active_columns(&$data, $extra) {
     $activeheadings = array();
     foreach ($data['tableheadings'] as $key => $heading) {
         $data['tableheadings'][$key]['selected'] = in_array($heading['id'], $extra['columns']);
-        // make sure the required ones are always selected
+        // Make sure the required ones are always selected
         if (!empty($data['tableheadings'][$key]['required'])) {
             $data['tableheadings'][$key]['selected'] = true;
         }
@@ -5698,9 +5697,9 @@ function report_config_form($extra, $institutionelement) {
     );
 
     $verifierfilteroptions = array(
-        'all' => 'Show all',
-        'current' => 'Show authors with current verifiers',
-        'none' => 'Show authors without a current verifier',
+        'all' => get_string('verifieroptions_all', 'statistics'),
+        'current' => get_string('verifieroptions_current', 'statistics'),
+        'none' => get_string('verifieroptions_none', 'statistics'),
     );
 
     if ($extra->subtype == 'completionverification' || $extra->subtype == 'verifiersummary' || $extra->subtype == 'portfolioswithverifiers') {
