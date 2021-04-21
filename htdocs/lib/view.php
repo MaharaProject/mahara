@@ -7395,6 +7395,17 @@ class View {
     public function unlock_instructions_edit() {
         set_field('view_instructions_lock', 'locked', 0, 'view', $this->get('id'));
     }
+
+    /**
+     * Checks if the  edit template switch can be changed
+     */
+    public function can_edit_template() {
+        $collection = $this->get_collection();
+        if ($collection && $collection->get('template')) {
+            return false;
+        }
+        return true;
+    }
 }
 
 class ProgressAction {
