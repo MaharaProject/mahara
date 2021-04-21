@@ -290,17 +290,25 @@ class Collection {
             }
         }
         // Delete the progress page as it can't exist outside a collection
-        if ($pid = $this->has_progresscompletion()) {
+        // We can't use has_progresscompletion() check when the collection is empty of normal pages
+        // So we just check directly in database
+        if ($pid = get_field_sql("SELECT cv.view FROM {collection_view} cv
+                                  JOIN {view} v ON v.id = cv.view
+                                  WHERE v.id IN (" . join(',', array_fill(0, count($viewids), '?')) . ")
+                                  AND v.type = 'progress'", $viewids)) {
             require_once(get_config('libroot') . 'view.php');
             $view = new View($pid);
             $view->delete();
         }
-        delete_records('collection_view','collection',$this->id);
+        delete_records('collection_view','collection', $this->id);
         delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->id);
         if (is_plugin_active('lti', 'module')) {
             delete_records('lti_assessment_submission', 'collectionid', $this->id);
         }
         delete_records('existingcopy', 'collection', $this->id);
+        delete_records('collection_template', 'collection', $this->id);
+        delete_records('collection_template', 'originaltemplate', $this->id);
+        delete_records('view_copy_queue', 'collection', $this->id);
         delete_records('collection', 'id', $this->id);
         // Delete any submission history
         delete_records('module_assessmentreport_history', 'event', 'collection', 'itemid', $this->id);
