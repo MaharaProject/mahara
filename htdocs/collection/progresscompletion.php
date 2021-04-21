@@ -186,6 +186,7 @@ $smarty->assign('totalactions', $totalactions);
 
 
 // table
+$showVerification = false;
 foreach ($views['views'] as &$view) {
     $viewobj = new View($view->id);
     $owneraction = $viewobj->get_progress_action('owner');
@@ -200,6 +201,10 @@ foreach ($views['views'] as &$view) {
     $view->manageraction = $manageraction->get_action();
     $view->managertitle = $manageraction->get_title();
     $view->verified = ArtefactTypePeerassessment::is_verified($viewobj);
+    if (ArtefactTypePeerassessment::is_verify_enabled($viewobj)) {
+        $showVerification = true;
+    }
+    $view->description = $viewobj->get('description');
 }
 
 $viewobj = new View($firstview->id); // Need to call this as $viewobj to avoid clash with $view in foreach loop above
@@ -211,7 +216,7 @@ if ($viewobj->get_collection()) {
 $owner = $collection->get('owner');
 $smarty->assign('usercaneditview', $can_edit);
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
-
+$smarty->assign('showVerification', $showVerification);
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewlocked', $viewobj->get('locked'));
 // Is progress page editable?

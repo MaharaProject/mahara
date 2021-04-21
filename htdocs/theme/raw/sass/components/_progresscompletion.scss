@@ -23,6 +23,17 @@ table.progresscompletion {
             cursor: pointer;
         }
       }
+      &.progresstitle .icon {
+        display: inline;
+        color: $help-icon-color;
+        &.iconhelp:hover {
+          cursor: pointer;
+        }
+      }
+      &.progresstitle .help-dismiss .icon {
+        color: $modal-header-color;
+        font-size: $font-size-base;
+      }
     }
 
     .userrole {
