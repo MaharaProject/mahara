@@ -127,7 +127,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=objectionreview}
@@ -142,6 +142,26 @@
 {/if}
 {if $stillrudeform}
     {include file=objectionreview.tpl}
+{/if}
+{* revoke my access modal *}
+{if $revokeaccessform}
+    <div class="modal fade" id="revokemyaccess-form">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <h1 class="modal-title">
+                        <span class="icon icon-trash-flag text-danger left" role="presentation" aria-hidden="true"></span>
+                        {str tag=revokemyaccessformtitle section=collection}
+                    </h1>
+                </div>
+                <div class="modal-body">
+                    <div class="description">{str tag=revokemyaccessdescription section=collection}</div>
+                    {$revokeaccessform|safe}
+                </div>
+            </div>
+        </div>
+    </div>
 {/if}
 
 {* undo verification modal *}

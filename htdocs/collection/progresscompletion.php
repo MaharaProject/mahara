@@ -18,6 +18,7 @@ define('SECTION_PAGE', 'progress');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('collection.php');
 require_once(get_config('libroot') . 'objectionable.php');
+require_once(get_config('libroot'). 'revokemyaccess.php');
 
 $collectionid = param_integer('id');
 
@@ -78,8 +79,12 @@ if ($viewtheme && $THEME->basename != $viewtheme) {
 $headers[] = '<meta name="robots" content="noindex">';
 
 $objectionform = false;
+$revokeaccessform = false;
 $undoverificationform = false;
 if ($USER->is_logged_in()) {
+    if (record_exists('view_access', 'view', $pview->get('id'), 'usr', $USER->get('id'))) {
+        $revokeaccessform = pieform(revokemyaccess_form($pview->get('id')));
+    }
     $objectionform = pieform(objection_form());
     $reviewform = pieform(review_form($pview->get('id')));
     if ($notrudeform = notrude_form()) {
@@ -148,10 +153,12 @@ if (isset($objectionform)) {
 if (isset($undoverificationform)) {
     $smarty->assign('undoverificationform', $undoverificationform);
 }
+if (isset($revokeaccessform)) {
+    $smarty->assign('revokeaccessform', $revokeaccessform);
+}
 if (isset($reviewform)) {
     $smarty->assign('reviewform', $reviewform);
 }
-
 if ($view->is_anonymous()) {
     $smarty->assign('author', get_string('anonymoususer'));
     if ($view->is_staff_or_admin_for_page()) {

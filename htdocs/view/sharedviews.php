@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * @package    mahara
@@ -14,6 +15,7 @@ define('MENUITEM', 'share/sharedviews');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'revokemyaccess.php');
 define('TITLE', get_string('sharedwithme', 'view'));
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'view');
@@ -117,7 +119,7 @@ $searchform = pieform(array(
                     'options'      => $sortoptions,
                     'defaultvalue' => $sort,
                 ),
-               'submit' => array(
+                'submit' => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn-secondary input-group-append no-label button',
@@ -141,8 +143,82 @@ $searchform = pieform(array(
     )
 ));
 
-$data = View::shared_to_user($query, $tag, $limit, $offset, $sort, $sortdir,
-                             $share, $USER->get('id'));
+// Institions: find if any have progress compeletion enabled.
+// If no institution, institution is actually "mahara" and this is NOT stored in the usr_instition.
+$completionvisible = 0;
+$institutions = $USER->get('institutions');
+if (empty($USER->get('institutions'))) {
+    $institution = new Institution('mahara');
+    $completionvisible = $institution->progresscompletion;
+}
+else {
+    foreach ($institutions as $key => $institution) {
+        $institution = new Institution($institution->institution);
+        if ($completionvisible = $institution->progresscompletion) {
+            break;
+        }
+    }
+}
+$data = View::shared_to_user(
+    $query,
+    $tag,
+    $limit,
+    $offset,
+    $sort,
+    $sortdir,
+    $share,
+    $USER->get('id')
+);
+
+$canremoveownaccess = false;
+foreach ($data->data as $key => $item) {
+    if ($completionvisible) { // Do any of the institutions the user has access to have progresscompletion?
+        $ownername = $item['institution'] ? get_field('institution', 'displayname', 'name', $item['institution']) : '';
+        $ownername = $item['group'] ? get_field('group', 'name', 'id', $item['group']) : $ownername;
+        $ownername = $item['owner'] ? display_name($item['owner']) : $ownername;
+        $data->data[$key]['progresspercentage'] = '<span class="icon icon-minus" title="' . hsc(get_string('progressnotavailable', 'collection', $item['title'], $ownername)) . '"></span>';
+        $data->data[$key]['verification'] = '<span class="icon icon-minus" title="' . hsc(get_string('verifiednotavailable', 'collection', $item['title'], $ownername)) . '"></span>';
+        if ($item['collid'] != null) {
+            $collection = new Collection($item['collid']);
+            if ($collection->can_have_progresscompletion()) {
+                $progresspercentage = $collection->get_signed_off_and_verified_percentage();
+                if ($progresspercentage !== false) {
+                    $data->data[$key]['progresspercentage'] = $progresspercentage[0] . '%';
+                }
+            }
+            if ($item['owner'] && $progressid = $collection->has_progresscompletion()) {
+                $blockinstances = get_column('block_instance', 'id', 'view', $progressid, 'blocktype', 'verification');
+                if ($blockinstances) {
+                    $data->data[$key]['verification'] = 0;
+                    foreach ($blockinstances as $subkey => $blockid) {
+                        $blockinstance = new BlockInstance($blockid);
+                        $configdata = $blockinstance->get('configdata');
+                        if (!empty($configdata['primary'])) {
+                            if (!empty($configdata['availabilitydate']) && $configdata['availabilitydate'] > time()) {
+                                $data->data[$key]['verification'] = '<span class="icon icon-minus" title="' . hsc(get_string('verifiednotavailabledate', 'collection', $item['title'], $ownername, format_date($configdata['availabilitydate']))) . '"></span>';
+                                break;
+                            }
+                            if (!empty($configdata['verified'])) {
+                                $data->data[$key]['verification'] = 1;
+                                break;
+                            }
+                            if (!empty($configdata['addcomment'])) {
+                                if (record_exists('blocktype_verification_comment', 'instance', $blockid)) {
+                                    $data->data[$key]['verification'] = 1;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (get_field('view_access', 'id', 'view', $data->data[$key]['viewid'], 'usr', $USER->id)) {
+        $data->data[$key]['accessrevokable'] = true;
+        $canremoveownaccess = true;
+    }
+}
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
@@ -156,13 +232,37 @@ $pagination = build_pagination(array(
     'jumplinks' => 8,
     'numbersincludeprevnext' => 2,
 ));
+//Make sure the user knows what they are removing.
+$confirmationstr = '"' . get_string('revokemyaccessconfirm', 'collection') . '"';
 
+$removeformjs = <<<EOF
+    $('#revokemyaccess-form').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var viewid = button.data('viewid'); // Extract info from data-* attributes
+        var title = button.data('title');
+        var confirmationstr = $confirmationstr + title;
+        var modal = $(this);
+        $('#revokemyaccess-title').text(title);
+        $('#revokemyaccess_form_submit').attr('data-confirm', confirmationstr);
+        modal.find('[name=viewid]').val(viewid);
+    });
+EOF;
+
+$revokemyaccessform = pieform(revokemyaccess_form());
+$inlinejs = "jQuery(function() {" . $pagination['javascript'] . "});jQuery(function() {" . $removeformjs . "});";
 $smarty = smarty(array('paginator'));
+$percentagehelpicon = get_help_icon('core', 'view', 'sharedviews', 'completionpercentage');
+$verificationhelpicon = get_help_icon('core', 'view', 'sharedviews', 'verification');
 setpageicon($smarty, 'icon-share-alt-square');
 $smarty->assign('views', $data->data);
 $smarty->assign('searchform', $searchform);
+$smarty->assign('completionpercentagehelp', $percentagehelpicon);
+$smarty->assign('verificationhelp', $verificationhelpicon);
 $smarty->assign('pagination', $pagination['html']);
-$smarty->assign('INLINEJAVASCRIPT', 'jQuery(function() {' . $pagination['javascript'] . '});');
+$smarty->assign('completionvisible', $completionvisible);
+$smarty->assign('canremoveownaccess', $canremoveownaccess);
+$smarty->assign('revokemyaccessform', $revokemyaccessform);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->display('view/sharedviews.tpl');
 exit;
 
