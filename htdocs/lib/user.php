@@ -2651,6 +2651,7 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
             $user->expiry = date('Y-m-d',mktime(0, 0, 0, date('m'), date('d'), date('Y')) + (int)get_config('defaultaccountlifetime'));
         }
         $user->id = insert_record('usr', $user, 'id', true);
+        $user->newuser = true;
     }
 
     if (isset($user->email) && $user->email != '') {

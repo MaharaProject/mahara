@@ -85,7 +85,6 @@ Scenario: Create people by csv (Bug 1426983)
   And I fill in "Confirm password" with "dr@Gon123"
   And I press "Submit"
   And I should see "Your new password has been saved"
-  And I should see "Institution membership confirmation"
   And I choose "Profile" from account menu
   And the "Student ID" field should contain "64000005"
   And I follow "Contact information"
