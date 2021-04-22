@@ -307,6 +307,10 @@ function testclient_parameters_desc($fdesc, $name, $type='desc') {
         }
         return $result;
     }
+    else if (count($name) === 1 && isset($fdesc->parameters_desc->keys[$name[0]])) {
+        $result = $fdesc->parameters_desc->keys[$name[0]]->$type;
+        return $result;
+    }
     return null;
 }
 
