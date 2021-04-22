@@ -897,6 +897,7 @@ function core_install_firstcoredata_defaults() {
     set_config('showonlineuserssideblock', 1);
     set_config('footerlinks', serialize(array('legal', 'about', 'contactus', 'manualhelp')));
     set_config('nousernames', 0);
+    set_config('showstudentid', 0);
     set_config('onlineuserssideblockmaxusers', 10);
     set_config('loggedinprofileviewaccess', 1);
     set_config('dropdownmenu', 0);
