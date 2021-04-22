@@ -992,6 +992,27 @@ function fetch_graph_data(opts) {
                     }]
                 };
             }
+            if (json.data.yaxes == '2yaxes') {
+                config.options.scales = {
+                    "yAxes": [{
+                        "id": "y-axis-1",
+                        "type": "linear",
+                        "position": "left",
+                        "ticks": {
+                            "beginAtZero":true
+                        }
+                    },
+                    {
+                        "id": "y-axis-2",
+                        "type": "linear",
+                        "position": "right",
+                        "ticks": {
+                            "max": 100,
+                            "min": 0
+                        }
+                    }]
+                };
+            }
 
             chartobject = new Chart(canvascontext, config);
             document.getElementById(opts.id + 'legend').innerHTML = chartobject.generateLegend();

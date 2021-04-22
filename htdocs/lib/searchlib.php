@@ -580,7 +580,13 @@ function build_admin_user_search_results($search, $offset, $limit) {
             }
         }
     }
-
+    // PCNZ customisation WR 356027
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->is_staff_for_user((object)$result);
+        }
+    }
+    // End PCNZ customization
     $smarty = smarty_core();
     $smarty->assign('results', $results);
     $smarty->assign('institutions', $institutions);

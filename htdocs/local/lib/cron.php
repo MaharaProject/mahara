@@ -24,6 +24,7 @@ define('PCNZ_REGISTEREDSUSPENDED', 4); // The 'Suspended' value
 define('PCNZ_REMOVED', 9); // The 'Removed' value
 define('PCNZ_STRUCKOFF', 10); // The 'Struck off' value
 define('PCNZ_REMOVING', 11); // The 'Removal request' value
+define('PCNZ_SCOPE_PHARMACIST', 2); // The 'Pharmacist' scope that excludes interns
 
 define('PCNZ_ROLLOVER', "040116"); // The month + day + hour for yearly rollover, eg 040116 = the 1st of April at 4pm
 define('PCNZ_INTERVALCHECK', '-1 day'); // The number of 'whatever' in the past to fetch data for
@@ -235,7 +236,9 @@ function get_changes($token) {
         if ($data) {
             foreach ($data as $person) {
                 if ($person->changeableType == 'Person' || $person->changeableType == 'Practitioner') {
-                    $people[$person->changeableId]['personalinfo'] = get_person($token, $person->changeableId);
+                    if ($newperson = get_person($token, $person->changeableId)) {
+                        $people[$person->changeableId]['personalinfo'] = $newperson;
+                    }
                 }
             }
         }
@@ -293,8 +296,10 @@ function get_changes($token) {
                 }
                 else if ($person->practicingStatusId == PCNZ_REGISTEREDCURRENT ||
                          $person->practicingStatusId == PCNZ_REGISTEREDINACTIVE) {
-                    $people[$person->personid]['practisingstatus'][] = $person;
-                    $people[$person->personid]['personalinfo'] = get_person($token, $person->personid);
+                    if ($newperson = get_person($token, $person->personid)) {
+                        $people[$person->personid]['practisingstatus'][] = $person;
+                        $people[$person->personid]['personalinfo'] = $newperson;
+                    }
                 }
                 else {
                     // should just be an inactive person so we shouldn't do anything with this
@@ -325,7 +330,9 @@ function get_changes($token) {
         if ($data) {
             foreach ($data as $person) {
                 if ($person->personid) {
-                    $people[$person->personid]['personalinfo'] = get_person($token, $person->personid);
+                    if ($newperson = get_person($token, $person->personid)) {
+                        $people[$person->personid]['personalinfo'] = $newperson;
+                    }
                 }
             }
         }
@@ -359,7 +366,10 @@ function get_person($token, $id) {
                 "nickname"
             ),
             "include" => array(
-                array("relation" => "practitioner",
+                array(
+                    "practitioner" => array(
+                        "scopesonpractice" => true
+                    ),
                     "scope" => array(
                         "fields" => array(
                              "practicingstatusid" => true
@@ -379,7 +389,14 @@ function get_person($token, $id) {
     $personinfo = mahara_http_request($personrequest);
     if (isset($personinfo->data) && !empty($personinfo->data)) {
         $person = json_decode($personinfo->data);
-        return $person[0]; // As we are fetching one
+        $person = $person[0]; // As we are fetching one
+        if (isset($person->practitioner) && isset($person->practitioner->scopesonpractice)) {
+            foreach ($person->practitioner->scopesonpractice as $scope) {
+                if ($scope->sopid == PCNZ_SCOPE_PHARMACIST) {
+                    return $person;
+                }
+            }
+        }
     }
     return false;
 }

@@ -152,6 +152,9 @@ $string['verification'] = 'Verification';
 $string['progresspage'] = 'Portfolio completion';
 $string['progresspagedescription'] = 'Set up the default layout for the portfolio completion page for a collection.';
 
+$string['progressportfolios'] = 'Portfolio count';
+$string['progressverifiers'] = 'Verifier percentage';
+
 //Verification checkbox sr-only text
 $string['sharedviewverifiedunchecked'] = '%s by %s is unverified';
 $string['sharedviewverifiedchecked'] = '%s by %s is verified';
