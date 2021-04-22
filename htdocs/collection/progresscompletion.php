@@ -220,10 +220,18 @@ $can_edit = $USER->can_edit_view($viewobj) && !$submittedgroup && !$viewobj->is_
 if ($viewobj->get_collection()) {
     $can_edit = $can_edit && $USER->can_edit_collection($viewobj->get_collection());
 }
+$urls = $viewobj->get_special_views_copy_urls();
+if (array_key_exists('copyurl', $urls)) {
+    $smarty->assign('copyurl', $urls['copyurl'] );
+}
+if (array_key_exists('downloadurl', $urls)) {
+    $smarty->assign('downloadurl', $urls['downloadurl']);
+}
 $owner = $collection->get('owner');
 $smarty->assign('usercaneditview', $can_edit);
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 $smarty->assign('showVerification', $showVerification);
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $viewobj->get('id') . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewlocked', $viewobj->get('locked'));
 // Is progress page editable?
