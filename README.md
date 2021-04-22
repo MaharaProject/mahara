@@ -92,7 +92,7 @@ probably run in any web server with the proper PHP extensions.
 Mahara requires either Postgres or MySQL. It would require extensive
 modification to support other databases.
  * Postgres 9.4 or later
- * MySQL 5.6 or later
+ * MySQL 5.7 or later
  * MariaDB 10.1 or later
 
 Note: This version of Mahara has NOT been tested on Postgres 12+,
