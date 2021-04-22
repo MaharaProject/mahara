@@ -35,23 +35,31 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
         $nviews = isset($configdata['limit']) ? intval($configdata['limit']) : 5;
         $view = $instance->get_view();
-        $sort = array(array('column' => 'mtime', 'desc' => true));
-        $views = View::view_search(
-                null, // $query
-                null, // $ownerquery
-                null, // $ownedby
-                null, // $copyableby
-                $nviews, // $limit
-                0, // $offset
-                true, // $extra
-                $sort, // $sort
-                array('portfolio'), // $types
-                null, // $collection
-                null, // $accesstypes
-                null, // $tag
-                null, // $viewid
-                $view->get('owner'), // $excludeowner
-                true // $groupbycollection
+        $share = array();
+
+        if (!empty($configdata['institution']) && $USER->get('institutions')) {
+            $share['institution'] = 1;
+        }
+        if (!empty($configdata['public']) && get_config('allowpublicviews')) {
+            $share['public'] = 1;
+        }
+
+        $accesstypes = array('public', 'loggedin', 'friend', 'user', 'group', 'institution');
+        foreach ($configdata as $key => $value) {
+            if (in_array($key, $accesstypes)) {
+                $share[$key] = $value;
+            }
+        }
+
+        $views = View::shared_to_user(
+            null,
+            null,
+            $nviews,
+            0,
+            'mtime',
+            'desc',
+            array_keys($share, 1),
+            $view->get('owner')
         );
         $smarty = smarty_core();
         $smarty->assign('loggedin', $USER->is_logged_in());
@@ -64,8 +72,10 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
     }
 
     public static function instance_config_form(BlockInstance $instance) {
+        global $USER;
         $configdata = $instance->get('configdata');
-        return array('limit' => array(
+        $elements = array();
+        $elements['limit'] = array(
             'type' => 'text',
             'title' => get_string('viewstoshow1', 'blocktype.newviews'),
             'description' => get_string('viewstoshowdescription', 'blocktype.newviews'),
@@ -73,7 +83,41 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
             'size' => 3,
             'minvalue' => 1,
             'maxvalue' => 100,
-        ));
+        );
+        $sharedefaults = array('user', 'group', 'friend');
+        $shareoptions = array(
+            'user'        => get_string('Me', 'view'),
+            'friend'      => get_string('friends', 'view'),
+            'group'       => get_string('mygroups'),
+        );
+
+        if ($USER->get('institutions')) {
+            $shareoptions['institution'] = get_string('myinstitutions', 'group');
+        }
+        $shareoptions['loggedin'] = get_string('registeredusers', 'view');
+        if (get_config('allowpublicviews')) {
+            $shareoptions['public'] = get_string('public', 'view');
+        }
+
+        $elements['shareoptions'] = array(
+            'type'        => 'fieldset',
+            'legend'      => get_string('sharedwithellipsis', 'view'),
+            'comment' => get_string('sharedwithdescription', 'view'),
+            'elements'    => array(),
+            'collapsible' => true,
+            'collapsed'   => false,
+            'class'       => 'dropdown-group js-dropdown-group',
+        );
+
+        foreach ($shareoptions as $key => $value) {
+            $default = in_array($key, $sharedefaults) ? 1 : 0;
+            $elements['shareoptions']['elements'][$key] = array(
+                'type'         => 'switchbox',
+                'title'        => $shareoptions[$key],
+                'defaultvalue' => isset($configdata[$key]) ? $configdata[$key] : $default,
+            );
+        }
+        return $elements;
     }
 
     public static function default_copy_type() {

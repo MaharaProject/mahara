@@ -477,6 +477,8 @@ $string['pageaccessrules'] = 'Page access rules';
 
 // Shared views
 $string['sharedwithme'] = 'Shared with me';
+$string['sharedwithellipsis'] = 'Shared with...';
+$string['sharedwithdescription'] = 'Select which portfolios from other people you want to see in this block.';
 $string['titleanddescription'] = 'Title, description, tags';
 $string['titleanddescriptionnotags'] = 'Title, description';
 $string['titleanddescriptionandtagsandowner'] = 'Title, description, tags, owner';

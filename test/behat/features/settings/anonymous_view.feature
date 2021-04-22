@@ -11,6 +11,11 @@ Background:
     And the following "pages" exist:
       | title | description | ownertype | ownername |
       | Page UserA_01 | Page 01| user | UserA |
+    And the following "blocks" exist:
+     | title                     | type     | page                   | retractable | updateonly | data                                                |
+     | Latest changes I can view | newviews | Dashboard page: admin  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Latest changes I can view | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
 Scenario: Testing that views & collections are collated properly
     # Turn on anonymous pages

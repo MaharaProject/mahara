@@ -79,6 +79,8 @@ Scenario: Comments update the page's mtime
     And I follow "Edit dashboard"
     And I configure the block "Latest changes I can view"
     And I set the field "Maximum number of results to show" to "1"
+    And I enable the switch "Public"
+    And I enable the switch "Registered people"
     And I press "Save"
 
     # Public comment updates page last updated

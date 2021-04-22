@@ -19,6 +19,10 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
     | UserA | user | Entry two | This is journal entry two | | blog,two | 0 |
     | UserB | user | UserB entry | This is a journal entry for UserB | | blog,one | 0 |
 
+  And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
  Scenario: Create blogs
   Given I log in as "UserA" with password "Kupuh1pa!"
   # Add a taggedblogs block to a page

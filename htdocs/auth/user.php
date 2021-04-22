@@ -579,7 +579,7 @@ class User {
         return $view;
     }
 
-    protected function install_view($viewtype) {
+    public function install_view($viewtype) {
         $function = 'install_' . $viewtype . '_view';
         return $this->$function();
     }

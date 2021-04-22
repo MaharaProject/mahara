@@ -757,11 +757,16 @@ EOD;
 
         if (preg_match('/^Dashboard page\:/', $record['page'])) {
             list($record['page'], $ownername) = explode(":", $record['page']);
-            $ownerid = get_field('usr', 'id', 'username', $ownername);
-            $sql = "SELECT id FROM {view} WHERE type = 'dashboard' AND LOWER(TRIM(title)) = ? AND \"owner\" = ?";
-            $page = strtolower(trim($record['page']));
+            $ownerid = get_field('usr', 'id', 'username', trim($ownername));
+            $sql = "SELECT id FROM {view} WHERE type = 'dashboard' AND \"owner\" = ?";
+            if (!$viewid = get_field_sql($sql, array($ownerid))) {
+                $duser = new User();
+                $duser->find_by_id($ownerid);
+                $dview = $duser->install_view('dashboard');
+                $viewid = $dview->get('id');
+            }
             $view = trim($record['page']);
-            $viewid = $this->get_view_id_by_owner($view, $ownerid);
+            $page = strtolower(trim($record['page']));
         }
         else {
             $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
@@ -776,7 +781,7 @@ EOD;
         }
 
         if ($ownerid != null) {
-            $ids = get_records_sql_array($sql, array($page,$ownerid));
+            $ids = get_records_sql_array($sql, array($ownerid));
         }
         else {
             $ids = get_records_sql_array($sql, array($page));
@@ -822,14 +827,25 @@ EOD;
             $result = call_static_method($classname, $functionname, $sortedfields, $ownertype, $ownerid, $title, $view);
             $configdata = array_merge($configdata, (array)$result);
 
-            // make new block
-            $blockinstance = self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
-            //taggedposts blocktype - block instance needs to pre-exist
-            if ($functionname == 'generate_configdata_taggedposts') {
-                PluginBlocktypeTaggedposts::instance_config_save($configdata, $blockinstance);
+            if (isset($record['updateonly']) && $record['updateonly']) {
+                // If we only want to update an existing block
+                $blockid = get_field('block_instance', 'id', 'blocktype', $blocktype, 'view', $viewid);
+                safe_require('blocktype', $blocktype);
+                $blockinstance = new BlockInstance($blockid);
+                $blockinstance->set('configdata', $configdata);
+                $blockinstance->commit();
+                self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
             }
-            // setting tags to blocks
-            self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
+            else {
+                // make new block
+                $blockinstance = self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
+                //taggedposts blocktype - block instance needs to pre-exist
+                if ($functionname == 'generate_configdata_taggedposts') {
+                    PluginBlocktypeTaggedposts::instance_config_save($configdata, $blockinstance);
+                }
+                // setting tags to blocks
+                self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
+            }
         }
         else {
             throw new SystemException("The blocktype {$record['type']} is not supported yet.");
@@ -934,6 +950,26 @@ EOD;
                 );
             }
         }
+    }
+
+    /**
+     *
+     * generate configdata for blocktype: newviews aka latest portfolios I can view
+     *
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_newviews($sortedfields) {
+        $configdata = array();
+        foreach($sortedfields as $key => $value) {
+            if ($key == 'limit') {
+                $configdata[$key] = (int)$value;
+            }
+            else {
+                $configdata[$key] = (bool)$value;
+            }
+        }
+        return $configdata;
     }
 
     /**
