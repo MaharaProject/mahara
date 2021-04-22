@@ -383,6 +383,12 @@ EOF;
             $instance->commit();
         }
 
+        // Get the default value for allowing comments on Notes
+        if ($allowcomments = get_config_plugin('artefact', 'internal', 'allowcomments')) {
+            $allowcomments = explode(',', $allowcomments);
+            $allowcomments = in_array('notes', $allowcomments);
+        }
+
         $elements = array(
             // Add a message whenever this text appears in some other block
             'otherblocksmsg' => array(
@@ -449,7 +455,7 @@ EOF;
             'allowcomments' => array(
                 'type'         => 'switchbox',
                 'title'        => get_string('allowcomments', 'artefact.comment'),
-                'defaultvalue' => (!empty($artefact) ? $artefact->get('allowcomments') : 1),
+                'defaultvalue' => (!empty($artefact) ? $artefact->get('allowcomments') : $allowcomments),
             ),
             'tags' => array(
                 'type' => 'tags',
