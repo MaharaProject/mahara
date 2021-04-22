@@ -1657,11 +1657,18 @@ class View {
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
-        db_begin();
-        self::_db_pendingrelease(array($this->get('id')));
-        require_once(get_config('docroot') . 'export/lib.php');
-        add_submission_to_export_queue($this, $releaseuser, $externalid);
-        db_commit();
+        try {
+            db_begin();
+            self::_db_pendingrelease(array($this->get('id')));
+            PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            require_once(get_config('docroot') . 'export/lib.php');
+            add_submission_to_export_queue($this, $releaseuser, $externalid);
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
     }
 
     public function release($releaseuser=null) {
@@ -1671,7 +1678,16 @@ class View {
         }
         $releaseuser = optional_userobj($releaseuser);
 
-        self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+        try {
+            db_begin();
+            self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+            PluginModuleSubmissions::release_submission($this, $releaseuser);
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
 
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
@@ -6985,9 +7001,34 @@ class View {
             throw new SystemException('Attempting to submit a submitted view');
         }
 
+        if (is_plugin_active('plans', 'artefact') && !get_config_plugin('artefact', 'plans', 'allowselectiontaskportfoliosubmissionafterenddate')) {
+            safe_require('artefact', 'plans');
+            safe_require('artefact', 'plans/tools', 'PlansTools.php', 'require_once', true);
+
+            $groupTask = \artefact\plans\tools\PlansTools::findCorrespondingGroupTaskByPortfolioElement($this);
+
+            if ($groupTask) {
+                $completionDate = $groupTask->get('completiondate');
+                if ($completionDate && $completionDate - time() < 0) {
+                    throw new SubmissionException(get_string('submissionaftercompletiondate', 'artefact.plans'));
+                }
+            }
+        }
+
         $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
 
-        self::_db_submit(array($this->id), $group);
+        try {
+            db_begin();
+            self::_db_submit(array($this->id), $group);
+            if (is_plugin_active('submissions', 'module')) {
+                PluginModuleSubmissions::add_submission($this, $group);
+            }
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
         handle_event('addsubmission', array('id' => $this->id,
                                             'eventfor' => 'view',
                                             'name' => $this->title,

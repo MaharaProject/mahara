@@ -1690,17 +1690,23 @@ class Collection {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
         }
         $viewids = $this->get_viewids();
-        db_begin();
-        execute_sql("UPDATE {collection}
+        try {
+            db_begin();
+            execute_sql("UPDATE {collection}
                      SET submittedstatus = " . self::PENDING_RELEASE . "
                      WHERE id = ?",
-                     array($this->id)
-        );
-        View::_db_pendingrelease($viewids);
-        db_commit();
-
-        require_once(get_config('docroot') . 'export/lib.php');
-        add_submission_to_export_queue($this, $releaseuser, $externalid);
+                        array($this->id)
+            );
+            View::_db_pendingrelease($viewids);
+            PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            require_once(get_config('docroot') . 'export/lib.php');
+            add_submission_to_export_queue($this, $releaseuser, $externalid);
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -1721,18 +1727,25 @@ class Collection {
 
         $viewids = $this->get_viewids();
 
-        db_begin();
-        execute_sql('
+        try {
+            db_begin();
+            execute_sql('
             UPDATE {collection}
             SET submittedgroup = NULL,
                 submittedhost = NULL,
                 submittedtime = NULL,
                 submittedstatus = ' . self::UNSUBMITTED . '
             WHERE id = ?',
-            array($this->id)
-        );
-        View::_db_release($viewids, $this->owner, $this->submittedgroup);
-        db_commit();
+                        array($this->id)
+            );
+            View::_db_release($viewids, $this->owner, $this->submittedgroup);
+            PluginModuleSubmissions::release_submission($this, $releaseuser);
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
 
         $releaseuser = optional_userobj($releaseuser);
         handle_event('releasesubmission', array('releaseuser' => $releaseuser,
@@ -1870,21 +1883,29 @@ class Collection {
             $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
         }
 
-        db_begin();
-        View::_db_submit($viewids, $group, $submittedhost, $owner);
-        if ($group) {
-            $this->set('submittedgroup', $group->id);
-            $this->set('submittedhost', null);
+        try {
+            db_begin();
+            View::_db_submit($viewids, $group, $submittedhost, $owner);
+            if ($group) {
+                $this->set('submittedgroup', $group->id);
+                $this->set('submittedhost', null);
+            }
+            else {
+                $this->set('submittedgroup', null);
+                $this->set('submittedhost', $submittedhost);
+            }
+            $this->set('submittedtime', time());
+            $this->set('submittedstatus', self::SUBMITTED);
+            $this->commit();
+            if (is_plugin_active('submissions', 'module') && $group) {
+                PluginModuleSubmissions::add_submission($this, $group);
+            }
+            db_commit();
         }
-        else {
-            $this->set('submittedgroup', null);
-            $this->set('submittedhost', $submittedhost);
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
         }
-        $this->set('submittedtime', time());
-        $this->set('submittedstatus', self::SUBMITTED);
-        $this->commit();
-        db_commit();
-
         handle_event('addsubmission', array('id' => $this->id,
                                             'eventfor' => 'collection',
                                             'name' => $this->name,
@@ -2206,6 +2227,32 @@ class Collection {
                 WHERE collection = ?
             )";
         execute_sql($sql, array($collectionid));
+    }
+
+    /**
+     * Get latest comment on a collection
+     *
+     * @param boolean $includedraft  Whether the latest comment can be a draft comment
+     *
+     * @return mixed|null comment object and view id
+     */
+    public function get_latest_comment($includedraft=false) {
+        $viewids = $this->get_viewids();
+        $sql = 'SELECT a.id, acc.onview FROM {artefact_comment_comment} acc
+                JOIN {artefact} a ON a.id = acc.artefact
+                WHERE acc.onview IN (' . join(',', array_fill(0, count($viewids), '?')) . ')';
+        if (!$includedraft) {
+            $sql .= ' AND acc.private != 1';
+        }
+        $sql .= ' ORDER BY a.mtime DESC
+                  LIMIT 1';
+        if ($viewids && $data = get_records_sql_array($sql, $viewids)) {
+            safe_require('artefact', 'comment');
+            $comment = new ArtefactTypeComment($data[0]->id);
+            $viewid = $data[0]->onview;
+            return array($comment, $viewid);
+        }
+        return null;
     }
 }
 

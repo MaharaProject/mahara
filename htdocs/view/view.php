@@ -214,7 +214,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         $text = get_string('viewsubmittedtogroup1', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
     if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED && empty($ltigradeform)) {
-        $releaseform = pieform(array(
+        $pieformdata = array(
             'name'     => 'releaseview',
             'method'   => 'post',
             'class' => 'form-inline',
@@ -225,15 +225,34 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
                 'submittedview' => array(
                     'type'  => 'html',
                     'value' => $text,
-                ),
-                'submit' => array(
-                    'type'  => 'button',
-                    'usebuttontag' => true,
-                    'class' => 'btn-secondary float-right',
-                    'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
-                ),
+                )
             ),
-        ));
+        );
+
+        if (is_plugin_active('submissions', 'module')) {
+            list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
+
+            if (!empty($submission)) {
+                $pieformdata['elements']['selectsuccess'] = [
+                    'type' => 'select',
+                    'options' => [
+                        null => get_string('chooseresult', 'module.submissions'),
+                        1 => get_string('noresult', 'module.submissions'),
+                        2 => get_string('fail', 'module.submissions'),
+                        3 => get_string('success', 'module.submissions'),
+                    ],
+                    'defaultvalue' => $evaluation->get('success')
+                ];
+            }
+        }
+        $pieformdata['elements']['submit'] = array(
+            'type'  => 'button',
+            'usebuttontag' => true,
+            'class' => 'btn-secondary float-right',
+            'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
+        );
+
+        $releaseform = pieform($pieformdata);
     }
     else if ($ltigradeform) {
         $releaseform = $text;
@@ -251,8 +270,18 @@ else {
     $releaseform = '';
 }
 
-function releaseview_submit() {
+function releaseview_submit(Pieform $form, $values) {
     global $USER, $SESSION, $view, $collection, $submittedgroup, $releasecollection;
+
+    if (is_plugin_active('submissions', 'module')) {
+        /** @var \Submissions\Models\Submission $submission */
+        /** @var \Submissions\Models\Evaluation $evaluation */
+        list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
+        if ($submission && $evaluation->get('success') != $values['selectsuccess']) {
+            $evaluation->set('success', ($values['selectsuccess'] == null ? null : $values['selectsuccess']));
+            $evaluation->commit();
+        }
+    }
 
     if ($releasecollection) {
         if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
@@ -272,6 +301,12 @@ function releaseview_submit() {
         else {
             $view->release($USER);
             $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+        }
+    }
+    if (is_plugin_active('submissions', 'module')) {
+        $flashback = \Submissions\Tools\UrlFlashback::createInstanceFromEntry();
+        if ($flashback->isValid() && $submission && $flashback->getData()->selectedSubmission->submissionId === $submission->get('id')) {
+            redirect($flashback->flashbackUrl);
         }
     }
     if ($submittedgroup) {
