@@ -40,7 +40,17 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
         if (!record_exists('activity_queue', 'type', $delayed->type, 'data', $delayed->data)) {
-            insert_record('activity_queue', $delayed);
+            if ($delayed->type == 4 && isset($data->views[0]['collection_id'])) {
+                // try to ensure we don't end up with multiple notifications when sharing collections
+                $sql = 'SELECT * FROM {activity_queue} WHERE type = ? AND data like ';
+                $sql .= "'%" . '"collection_id"' . ";s:%" . '"' . $data->views[0]['collection_id'] . '"' . ";%'";
+                if (!record_exists_sql($sql, array($delayed->type))) {
+                    insert_record('activity_queue', $delayed);
+                }
+            }
+            else {
+                insert_record('activity_queue', $delayed);
+            }
         }
     }
     else {
