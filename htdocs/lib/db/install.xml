@@ -321,6 +321,11 @@
                 <KEY NAME="usrfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
                 <KEY NAME="realusrfk" TYPE="foreign" FIELDS="realusr" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
+            <INDEXES>
+                <INDEX NAME="resourceix" UNIQUE="false" FIELDS="resourcetype, resourceid"/>
+                <INDEX NAME="parentix" UNIQUE="false" FIELDS="parentresourcetype, parentresourceid"/>
+                <INDEX NAME="ownerix" UNIQUE="false" FIELDS="ownertype, ownerid"/>
+            </INDEXES>
         </TABLE>
         <TABLE NAME="activity_type">
             <FIELDS>

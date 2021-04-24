@@ -218,6 +218,21 @@ $string['reportdescaccesslist'] = '<ul>
 <li>Access list, i.e. who has permission to view the portfolio</li>
 </ul><p>Listed are portfolios that were created during the selected time period. Their current access permissions are shown.</p>';
 
+$string['reportcompletionverification'] = 'Completion and review';
+$string['reportdesccompletionverification'] = '<ul>
+<li>Personal information of the portfolio author</li>
+<li>Email address of portfolio author</li>
+<li>Portfolio title</li>
+<li>Portfolio creation date</li>
+<li>Template title with link to it</li>
+<li>Personal information of the reviewer</li>
+<li>Email address of the reviewer</li>
+<li>Date on which the reviewer received access to the portfolio</li>
+<li>Date on which the reviewer confirmed the primary statement on the portfolio</li>
+<li>Date on which the reviewer removed their access to the portfolio</li>
+<li>Date when the reviewer\'s access to the portfolio was removed by the system</li>
+<li>The Percentage of completions per portfolio per individual</li>';
+
 $string['reportdescusers'] = '<ul>
 <li>Date</li>
 <li>Number of people who logged in</li>
@@ -426,6 +441,7 @@ $string['usersaccesslistreports'] = 'Portfolio access';
 $string['usersuseractivityreports'] = 'Account activity';
 $string['usersuserdetailsreports'] = 'Account details';
 $string['usersuseragreementreports'] = 'Legal consent';
+$string['userscompletionverificationreports'] = 'Completion and review';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';
@@ -481,3 +497,25 @@ $string['assessmenttype'] = 'Submission type';
 $string['assessmensubmitted'] = 'Submission date';
 $string['assessmentmarker'] = 'Released by';
 $string['assessmentreleaseddate'] = 'Release date';
+
+// Completion and review report
+
+$string['registrationnumber'] = 'Student ID';
+$string['portfoliotitle'] = 'Portfolio';
+$string['portfoliocreationdate'] = 'Portfolio created';
+$string['templatetitle'] = 'Template';
+$string['verifierfirstname'] = 'Reviewer first name';
+$string['verifierlastname'] = 'Reviewer last name';
+$string['verifierdisplayname'] = 'Reviewer display name ';
+$string['verifierusername'] = 'Reviewer username';
+$string['verifierregistrationnumber'] = 'Reviewer student ID';
+$string['verifieremail'] = 'Reviewer email';
+$string['accessfromdate'] = 'Access granted';
+$string['accessrevokedbyauthordate'] = 'Access revoked by author';
+$string['accessrevokedbyaccessordate'] = 'Access revoked by reviewer';
+$string['dateverified'] = 'Reviewer confirmed primary statement';
+$string['completionpercentage'] = 'Completion percentage';
+$string['portfoliofilter'] = 'Filter by template';
+$string['portfoliofilterdescription'] = 'Filter the results to one or more portfolio templates';
+$string['portfolioverifierfilter'] = 'Reviewer assigned';
+$string['portfolioveriferfilterdescription'] = 'Filter the results based on whether they have a reviewer assigned or not';

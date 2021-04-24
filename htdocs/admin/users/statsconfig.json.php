@@ -41,7 +41,7 @@ if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
    $notallowed = true;
 }
 if (!$notallowed) {
-    // Get the institution selector to worl out what institutions they are allowed to see
+    // Get the institution selector to work out what institutions they are allowed to see
     $institutionelement = get_institution_selector(true, false, true, ($allstaffstats || $userstaffstats), ($USER->get('admin') || $USER->get('staff')));
 }
 if (empty($institutionelement) || $notallowed) {
@@ -92,4 +92,15 @@ $smarty->assign('reportinformation', $reportinfo);
 $html = $smarty->fetch('admin/users/statsconfig.tpl');
 
 $data['html'] = $html;
+$select2fields = array();
+if ($subtype == 'completionverification') {
+    $select2fields[] = 'reportconfigform_portfoliofilter';
+    $select2fields[] = 'reportconfigform_verifierfilter';
+}
+if (!empty($institutionelement['options']) && count($institutionelement['options']) > 1) {
+    $select2fields[] = 'reportconfigform_institution';
+}
+$data['select2'] = $select2fields;
+$data['institution'] = array($institution);
+
 json_reply(false, (object) array('message' => false, 'data' => $data));
