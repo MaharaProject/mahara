@@ -1,5 +1,5 @@
 {if $record->deleted}
-    <h2 class="title list-group-item-heading text-inline">
+    <h2 class="list-group-item-heading text-inline">
         <span class="icon icon-regular icon-comment-dots left" role="presentation" aria-hidden="true"></span>
         {$record->subject}
     </h2>
