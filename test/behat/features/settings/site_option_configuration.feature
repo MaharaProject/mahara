@@ -21,7 +21,6 @@ Scenario: Turning the switches on and off on the "Site options" page (Bug 143156
 | Anonymous comments | 0 |
 | Access reports for staff | 1 |
 | All reports for institution staff | 1 |
-| People can disable device detection | 1 |
 | Require reason for masquerading | 1 |
 | Notify people of masquerading | 1 |
 | Show profile completion | 1 |

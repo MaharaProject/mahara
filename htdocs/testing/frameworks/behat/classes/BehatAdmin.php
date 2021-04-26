@@ -54,7 +54,6 @@ class BehatAdmin extends BehatBase {
                 'loggedinprofileviewaccess',
                 'staffreports',
                 'staffstats',
-                'userscandisabledevicedetection',
                 'masqueradingreasonrequired',
                 'masqueradingnotified',
                 'showprogressbar',

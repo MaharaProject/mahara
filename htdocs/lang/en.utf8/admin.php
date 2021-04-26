@@ -1308,9 +1308,6 @@ $string['groupdelete'] = 'Delete';
 $string['managegroupquotadescription1'] = 'Use this form to change the group file quota for this group.';
 $string['managegroupdescription1'] = 'Use this form to promote and demote administrators for this group. If you remove a group administrator they will remain a group member.';
 
-$string['userscandisabledevicedetection'] = 'People can disable device detection';
-$string['userscandisabledevicedetectiondescription1'] = 'People will be allowed to disable mobile device detection when they are browsing this site.';
-
 // Admin user search logged in filter
 $string['loggedinfilter'] = 'Filter by login date:';
 $string['anyuser'] = 'Anybody';

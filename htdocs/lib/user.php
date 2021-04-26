@@ -240,7 +240,6 @@ function expected_account_preferences() {
                  'showprogressbar' => 1,
                  'theme' => '',
                  'resizeonuploaduserdefault' => 1,
-                 'devicedetection' => 1,
                  'licensedefault' => '',
                  'viewsperpage' => 20,
                  'itemsperpage' => 10,
@@ -461,15 +460,6 @@ function general_account_prefs_form_elements($prefs) {
             'title'        => get_string('resizeonuploaduserdefault1', 'account'),
             'description'  => get_string('resizeonuploaduserdefaultdescription2', 'account'),
             'defaultvalue' => $prefs->resizeonuploaduserdefault,
-        );
-    }
-
-    if (get_config('userscandisabledevicedetection')) {
-        $elements['devicedetection'] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('devicedetection', 'account'),
-            'description'  => get_string('devicedetectiondescription', 'account'),
-            'defaultvalue' => $prefs->devicedetection,
         );
     }
 

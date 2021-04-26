@@ -688,15 +688,13 @@ EOF;
     }
 
     // and/or disable drop-downs if a handheld device detected
-    $dropdownmenu = $SESSION->get('handheld_device') ? false : $dropdownmenu && get_config('dropdownmenuenabled');
+    $dropdownmenu = $dropdownmenu && get_config('dropdownmenuenabled');
 
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
         $javascript_array[] = $jsroot . 'dropdown-nav.js';
     }
 
-    $smarty->assign('MOBILE', $SESSION->get('mobile'));
-    $smarty->assign('HANDHELD_DEVICE', $SESSION->get('handheld_device'));
     if (defined('FILEBROWSERS') ||
         (defined('SECTION_PAGE') && SECTION_PAGE == 'blocks')) {
         // Need to add the headers for select2 here so filebrowser has correct language
@@ -2887,9 +2885,6 @@ function institutional_staff_nav() {
 function mahara_standard_nav() {
     global $SESSION;
 
-    $exportenabled = (plugins_installed('export') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
-    $importenabled = (plugins_installed('import') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
-
     $menu = array(
         'home' => array(
             'path' => 'home',
@@ -2947,15 +2942,13 @@ function mahara_standard_nav() {
             'path' => 'manage/export',
             'url' => 'export/index.php',
             'title' => get_string('Export', 'export'),
-            'weight' => 70,
-            'ignore' => !$exportenabled,
+            'weight' => 70
         ),
         'manage/import' => array(
             'path' => 'manage/import',
             'url' => 'import/index.php',
             'title' => get_string('Import', 'import'),
-            'weight' => 80,
-            'ignore' => !$importenabled,
+            'weight' => 80
         ),
         'manage' => array(
             'path' => 'manage',
@@ -2996,35 +2989,35 @@ function mahara_standard_nav() {
  * @return array
  */
 function main_nav($type = null) {
-    global $USER, $SESSION;
+    global $USER;
 
     $language = current_language();
     $cachemenu = false;
     // Get the first institution
     $institution = $USER->get_primary_institution();
-    $menutype = $SESSION->get('handheld_device') ? 'mob_' : '';
+    $menutype = '';
     if ($type == 'adminnav') {
         global $USER, $SESSION;
         if ($USER->get('admin')) {
-            $menutype .= 'admin_nav';
+            $menutype = 'admin_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = admin_nav();
             }
         }
         else if ($USER->get('staff')) {
-            $menutype .= 'staff_nav';
+            $menutype = 'staff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = staff_nav();
             }
         }
         else if ($USER->is_institutional_admin()) {
-            $menutype .= 'instadmin_nav';
+            $menutype = 'instadmin_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_admin_nav();
             }
         }
         else {
-            $menutype .= 'inststaff_nav';
+            $menutype = 'inststaff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_staff_nav();
             }
@@ -3032,7 +3025,7 @@ function main_nav($type = null) {
     }
     else {
         // Build the menu structure for the site
-        $menutype .= 'standard_nav';
+        $menutype = 'standard_nav';
         if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
             $menu = mahara_standard_nav();
         }
@@ -3043,7 +3036,6 @@ function main_nav($type = null) {
     }
     else {
         $menu = array_filter($menu, function($a) { return empty($a["ignore"]); });
-
         // enable plugins to augment the menu structure
         foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
             if ($plugins = plugins_installed($plugintype)) {

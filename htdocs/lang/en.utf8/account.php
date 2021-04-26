@@ -172,6 +172,4 @@ The %s Team</pre>";
 $string['resizeonuploaduserdefault1'] = 'Resize large images on upload';
 $string['resizeonuploaduserdefaultdescription2'] = '"Automatic resizing of images" is enabled by default. Images larger than the maximum dimensions will be resized when they are uploaded. You can disable this default setting for each image upload individually.';
 
-$string['devicedetection'] = 'Device detection';
-$string['devicedetectiondescription'] = 'Enable mobile device detection when browsing this site.';
 $string['noprivacystatementsaccepted'] = 'This account has not accepted any current privacy statements.';

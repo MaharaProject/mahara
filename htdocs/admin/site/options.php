@@ -326,13 +326,6 @@ $siteoptionform = array(
                   'help'         => true,
                   'disabled'     => in_array('allowanonymouspages', $OVERRIDDEN),
               ),
-                'userscandisabledevicedetection' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('userscandisabledevicedetection', 'admin'),
-                    'description'  => get_string('userscandisabledevicedetectiondescription1', 'admin'),
-                    'defaultvalue' => get_config('userscandisabledevicedetection'),
-                    'disabled'     => in_array('userscandisabledevicedetection', $OVERRIDDEN),
-                ),
                 'exporttoqueue' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('exporttoqueue', 'admin'),

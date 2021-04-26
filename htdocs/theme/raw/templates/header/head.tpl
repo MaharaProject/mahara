@@ -17,8 +17,6 @@
         'wwwroot': '{$WWWROOT}',
         'loggedin': {$USER->is_logged_in()|intval},
         'userid': {$USER->get('id')},
-        'mobile': {if $MOBILE}1{else}0{/if},
-        'handheld_device': {if $HANDHELD_DEVICE}1{else}0{/if},
         'cc_enabled': {$CC_ENABLED|intval},
         'mathjax': {ifconfig key=mathjax}1{else}0{/ifconfig},
         'select2_lang': '{if $select2_language}{$select2_language}{/if}',
