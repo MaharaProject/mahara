@@ -177,6 +177,7 @@ $string['stdescription'] = 'Generate access tokens and allocate users to service
 $string['username'] = 'User';
 $string['owner'] = 'Owner';
 $string['servicename'] = 'Service';
+$string['servicenamemissing'] = 'No services available. Please make sure there are web services enabled and active for this authentication type.';
 $string['generate'] = 'Generate token';
 $string['invalidtoken'] = 'Invalid token selected';
 $string['invalidtokennotsupplied'] = 'Invalid token selected or none supplied';
