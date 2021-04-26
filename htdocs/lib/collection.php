@@ -292,10 +292,10 @@ class Collection {
         // Delete the progress page as it can't exist outside a collection
         // We can't use has_progresscompletion() check when the collection is empty of normal pages
         // So we just check directly in database
-        if ($pid = get_field_sql("SELECT cv.view FROM {collection_view} cv
-                                  JOIN {view} v ON v.id = cv.view
-                                  WHERE v.id IN (" . join(',', array_fill(0, count($viewids), '?')) . ")
-                                  AND v.type = 'progress'", $viewids)) {
+        if (!$deleteviews && $viewids && $pid = get_field_sql("SELECT cv.view FROM {collection_view} cv
+                                                               JOIN {view} v ON v.id = cv.view
+                                                               WHERE v.id IN (" . join(',', array_fill(0, count($viewids), '?')) . ")
+                                                               AND v.type = 'progress'", $viewids)) {
             require_once(get_config('libroot') . 'view.php');
             $view = new View($pid);
             $view->delete();
