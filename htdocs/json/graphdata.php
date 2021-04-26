@@ -77,6 +77,7 @@ if (!defined('CRON')) {
             $data['datastr'] = json_encode($jsondata);
             $data['configstr'] = json_encode($data['configs']);
             $data['graphsafe'] = strtolower($data['graph']) == 'horizontalbar' ? 'horizontalBar' : strtolower($data['graph']);
+
             json_reply(false, array('data' => $data));
         }
 

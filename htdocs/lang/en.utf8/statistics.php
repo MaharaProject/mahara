@@ -231,7 +231,18 @@ $string['reportdesccompletionverification'] = '<ul>
 <li>Date on which the reviewer confirmed the primary statement on the portfolio</li>
 <li>Date on which the reviewer removed their access to the portfolio</li>
 <li>Date when the reviewer\'s access to the portfolio was removed by the system</li>
-<li>The Percentage of completions per portfolio per individual</li>';
+<li>The percentage of completions per portfolio per individual</li>
+</ul>';
+
+$string['reportportfolioswithverifiers'] = 'Portfolios with reviewers';
+$string['reportdescportfolioswithverifiers'] = '<ul>
+<li>Date of the week commencing for time period</li>
+<li>Total number of portfolios with reviewers</li>
+<li>Total number of portfolios without reviewers</li>
+</ul>';
+$string['withverifier'] = 'With reviewers';
+$string['withoutverifier'] = 'Without reviewers';
+$string['currentverifiersinfo'] = 'Current reviewers';
 
 $string['reportdescusers'] = '<ul>
 <li>Date</li>
@@ -279,6 +290,9 @@ $string['reportdesccollaboration'] = '<ul>
 <li>Number of portfolios shared via secret URLs</li>
 <li>Number of portfolios shared with friends</li>
 </ul>';
+
+$string['verifierinfo'] = 'Reviewer allocation';
+$string['verifierloadinfo'] = 'Reviewer allocation load';
 
 $string['reportmasquerading'] = 'Masquerading sessions';
 $string['reportdescmasquerading'] = '<ul>
@@ -442,6 +456,7 @@ $string['usersuseractivityreports'] = 'Account activity';
 $string['usersuserdetailsreports'] = 'Account details';
 $string['usersuseragreementreports'] = 'Legal consent';
 $string['userscompletionverificationreports'] = 'Completion and review';
+$string['usersportfolioswithverifiersreports'] = 'Portfolios with reviewers';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';
@@ -472,7 +487,7 @@ $string['actions'] = 'Actions';
 $string['lastaction'] = 'Last action';
 $string['lastactiontime'] = 'Last action time';
 $string['removefilter'] = 'Remove filter';
-$string['collaborationdate'] = 'w.c. %s';
+$string['weekstartdate'] = 'w.c. %s';
 $string['needadvancedanalytics'] = 'Advanced analytics need to be enabled for this report. Please see the "Logging settings" under "Configure site" for more information.';
 $string['Overview'] = 'Overview';
 $string['weeklytrend'] = 'Growth trend';

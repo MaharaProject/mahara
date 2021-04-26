@@ -471,7 +471,7 @@ $string['Portfolios'] = 'Portfolios';
 $string['Collection'] = 'Collection';
 $string['Grouphomepage'] = 'Group homepage';
 $string['grouphomepage'] = 'group homepage'; // for stats
-
+$string['progress'] = 'Portfolio completion'; // for stats
 $string['grouphomepagedescription'] = 'The group homepage contains the content that appears on the "About" tab for this group';
 $string['pageaccessrules'] = 'Page access rules';
 
