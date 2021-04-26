@@ -795,10 +795,24 @@ EOF;
      * should be able to see the block
      *
      * @param array user access role for the view
+     * @param BlockInstance $bi the block to display
      * @return boolean whether display the block content for the roles
      */
-    public static function display_for_roles($roles) {
-        return !(count($roles) == 1 && $roles[0] == 'peer');
+    public static function display_for_roles(BlockInstance $bi, $roles) {
+        if (!(count($roles) == 1 && $roles[0] == 'peer')) {
+            // logged in user not a peer role
+            return true;
+        }
+        else {
+            // a user with peer role only is accessing the view,
+            // the block will be visible depending on the settings
+            // of the institutions the owner belongs to
+            $view = $bi->get_view();
+            $ownerid = $view->get('owner');
+            $ownerobj = new User();
+            $ownerobj = $ownerobj->find_by_id($ownerid);
+            return $ownerobj->peers_allowed_content();
+        }
     }
 
     /**
@@ -1245,7 +1259,7 @@ class BlockInstance {
         else {
             try {
               $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
-              if (!call_static_method($blocktypeclass, 'display_for_roles', $user_roles)) {
+              if (!call_static_method($blocktypeclass, 'display_for_roles', $this, $user_roles)) {
                   $content = '';
                   $css = '';
                   $js = '';
@@ -1392,7 +1406,7 @@ class BlockInstance {
         $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
 
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        $displayforrole = call_static_method($classname, 'display_for_roles', $user_roles);
+        $displayforrole = call_static_method($classname, 'display_for_roles', $this, $user_roles);
         $checkview = $this->get_view();
         if ($checkview->get('owner') == NULL ||
             ($USER->is_admin_for_user($checkview->get('owner')) && $checkview->is_objectionable())) {

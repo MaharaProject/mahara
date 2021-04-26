@@ -1432,6 +1432,28 @@ class User {
        return (!empty($user_roles) && count($user_roles) == 1 && $user_roles[0] == 'peer');
     }
 
+
+    /**
+     * Checks if the user belongs to an institution that doesn't allow peers to see the block contents of a page
+     * @return boolean
+     */
+    public function peers_allowed_content() {
+        $institutions = $this->get('institutions');
+        if (empty($institutions)) {
+            return get_config_institution('mahara', 'allowpeersviewcontent');
+        }
+        else {
+            foreach($institutions as $i) {
+                // if any of the institutuons the user is member of has the 'allowpeersviewcontent' set to 'No'
+                // then the content of the page will not be displayed
+                if (empty(get_config_institution($i->institution, 'allowpeersviewcontent'))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Function to check current user can edit collection
      *

@@ -409,10 +409,14 @@ if ($owner && $owner == $USER->get('id')) {
         $ltisubmissionform = PluginModuleLti::submit_from_view_or_collection_form($view);
     }
 }
-
+if ($owner) {
+    $ownerobj = new User();
+    $ownerobj = $ownerobj->find_by_id($owner);
+}
 // Don't show page content to a user with peer role
 // if the view doesn't have a peer assessment block
-if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
+if (!($USER->has_peer_role_only($view) && $owner && !$ownerobj->peers_allowed_content())
+    || $view->has_peer_assessement_block()
     || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
     $peerhidden = false;
     if ($newlayout = $view->uses_new_layout()) {
