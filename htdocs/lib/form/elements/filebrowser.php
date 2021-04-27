@@ -71,11 +71,14 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $folder = null;
     }
     $path = pieform_element_filebrowser_get_path($folder);
+    $phpmaxuploadlimit = (integer)ini_get('max_file_uploads');
     $smarty->assign('folder', $folder);
     $smarty->assign('foldername', $path[0]->title);
     $smarty->assign('path', array_reverse($path));
     $smarty->assign('highlight', !empty($element['highlight'][0]) ? $element['highlight'][0] : -1);
     $smarty->assign('edit', !empty($element['edit']) ? $element['edit'] : -1);
+    $smarty->assign('maxfileuploadstext', get_string('maxfileuploads', 'artefact.file', $phpmaxuploadlimit ));
+
     if (isset($element['browse'])) {
         $smarty->assign('browse', (int) $element['browse']);
     }
@@ -143,6 +146,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
         $smarty->assign('phpmaxfilesize', get_max_upload_size(false));
+        $config['maxfileuploads'] = $phpmaxuploadlimit;
         if ($group) {
             $smarty->assign('uploaddisabled', !pieform_element_filebrowser_edit_group_folder($group, $folder));
         }

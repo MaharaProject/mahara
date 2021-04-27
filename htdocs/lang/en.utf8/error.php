@@ -162,6 +162,7 @@ $string['siteoutofsyncfor'] = 'This site has database information newer than %s 
 $string['updatesitetimezone'] = 'The time zone for the site now needs to be set via "Configure site" →  "Site options" →  "Site settings". Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
 $string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';
 
-$string['fileuploadtoobig'] = 'The file upload is too big as it is bigger than "%s"';
+$string['fileuploadtoobig'] = 'A file you are trying to upload is bigger than %s, the maximum file size you are allowed to upload.';
+$string['fileuploadtoomany'] = 'You are trying to upload too many files. You can upload up to %s.';
 $string['sideblockmenuclash'] = 'The sideblock name "%s" is already in use. Please choose a different one.';
 $string['isolatedinstitutionsremoverules'] = 'We have hidden %s access rules due to isolated institutions being in effect. The hidden rules will be removed once the form is saved.';

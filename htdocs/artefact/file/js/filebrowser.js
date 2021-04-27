@@ -112,6 +112,14 @@ var FileBrowser = (function($) {
             $('#' + self.id+'_upload_messages').append($('<div>', {'class':'alert alert-danger', 'text':get_string('youmustagreetothecopyrightnotice')}));
             return false;
         }
+
+        if ($('#' + self.id + '_userfile')[0].files.length > self.config.maxfileuploads) {
+            var errmsg = $('<div>', {'class':'alert alert-danger'});
+            errmsg.html(get_string_ajax('fileuploadtoomany', 'error', self.config.maxfileuploads));
+            $('#' + self.id+'_upload_messages').append(errmsg);
+            return false;
+        }
+
         if (!($('#' + self.id + '_userfile')[0].files[0].size < globalconfig.maxuploadsize)) {
             var errmsg = $('<div>', {'class':'alert alert-danger'});
             errmsg.html(get_string_ajax('fileuploadtoobig', 'error', globalconfig.maxuploadsizepretty));
@@ -1046,7 +1054,7 @@ var FileBrowser = (function($) {
             self.callback_feedback(data);  // add/update message
             if (data.maxuploadsize) {
                 // keep max upload size up to date
-                $('#' + self.id + '_userfile_maxuploadsize').text('(' + get_string('maxuploadsize') + ' ' + data.maxuploadsize + ')');
+                $('#' + self.id + '_userfile_maxuploadsize').text('(' + get_string('maxuploadsize', 'artefact.file', data.maxuploadsize) + ')');
             }
         }
         // Clear the create folder form
