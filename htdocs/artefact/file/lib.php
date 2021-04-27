@@ -180,6 +180,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'foldernamerequired',
                     'foldernotempty',
                     'maxuploadsize',
+                    'maxuploadsizeis',
                     'fileisfolder',
                     'nametoolong',
                     'namefieldisrequired',
