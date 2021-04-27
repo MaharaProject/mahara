@@ -18,6 +18,6 @@ $config = new stdClass();
 
 $config->version = 2021042700;
 $config->series = '21.10';
-$config->release = '21.10dev';
+$config->release = '21.10rc1';
 $config->minupgradefrom = 2017031605;
 $config->minupgraderelease = '18.10.0 (release tag 18.10.0_RELEASE)';
