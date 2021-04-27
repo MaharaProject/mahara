@@ -1,0 +1,20 @@
+version: '3.5'
+services:
+
+  web:
+    container_name: ${COMPOSE_PROJECT_NAME}-mahara-web
+    tty: true
+    volumes:
+      - ../htdocs:/mahara/htdocs
+  db:
+    container_name: ${COMPOSE_PROJECT_NAME}-mahara-db
+    tty: true
+    stdin_open: true
+
+volumes:
+  mahara-db:
+    external: false
+  mahara-data:
+    external: false
+  mahara-elastic:
+    external: false
