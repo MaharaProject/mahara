@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 // for these files: these files htdocs/webservice/functions/mahara_*_external.php
 
-$string['accesskey'] = 'Access Key';
+$string['accesskey'] = 'Access key';
 $string['aimscreenname'] = 'AIM screen name';
 $string['allowcomments'] = 'Allow comments';
 $string['apilevel'] = 'API Level';

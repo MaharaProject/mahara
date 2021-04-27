@@ -175,7 +175,7 @@ $string['undoreportnotsent'] = 'Reset request not sent. There is nobody to whom 
 $string['verifiedbyme'] = 'My statements';
 $string['verifiedbymedescription'] = 'Choose a statement to reset. Then provide in a reason for this change.';
 $string['undoreportsubject'] = 'Request to reset portfolio statement';
-$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been approved. However, the approver, %s, wishes to reset it.
+$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been confirmed. However, the reviewer, %s, wishes to reset it.
 
 They gave the following reason:
 
@@ -183,7 +183,7 @@ They gave the following reason:
 
 $string['accessdeniedundo'] = 'The statement has already been reset. You do not have access to the portfolio any longer.';
 $string['undonesubject'] = 'Portfolio statement reset request actioned';
-$string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who made the statement.';
+$string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who originally confirmed the statement.';
 //Portfolio review primary statement checkbox sr-only text
 $string['sharedviewverifiedunchecked'] = '%s by %s is not yet reviewed';
 $string['sharedviewverifiedchecked'] = '%s by %s is reviewed';
@@ -199,8 +199,8 @@ $string['ownerhasremovedaccess'] = '%s revoked your access to their portfolio "%
 $string['completionpercentage'] = "Completion";
 // Revoke my access modal
 $string['revokemyaccessformtitle'] = "Remove portfolio access";
-$string['revokemyaccessdescription'] = "By continuing, you will remove your access to this entire portfolio. You will not be able to view it any more or engage with it. The owner of this portfolio will recieve a notification that you no longer have access.
-<br>You can add an additonal message.";
+$string['revokemyaccessdescription'] = "By continuing, you will remove your access to this entire portfolio. You will not be able to view it any more or engage with it. The owner of this portfolio will receive a notification that you no longer have access.
+<br>You can add an additional message.";
 $string['revokemyaccessreasontextbox'] ="Message";
 $string['removemyaccesssubmit'] = "Continue";
 $string['revokemyaccessconfirm'] = "You will lose access to: ";
@@ -210,8 +210,8 @@ $string['removemyaccessiconaria'] = 'Remove my access to "%s" owned by %s';
 
 // Tool tips for the shared page
 $string['progressnotavailable'] = 'Progress completion for the portfolio "%s" by %s cannot yet be displayed';
-$string['verifiednotavailable'] = 'You cannot review the primary statement for the portfolio "%s" by %s';
-$string['verifiednotavailabledate'] = 'Statement for the portfolio "%s" by %s cannot be made before %s';
-$string['verificationtobedone'] = 'Complete statement for the portfolio "%s" by %s';
-$string['verificationdone'] = 'Completed statement for the portfolio "%s" by %s';
+$string['verifiednotavailable'] = 'You cannot confirm the primary statement for the portfolio "%s" by %s';
+$string['verifiednotavailabledate'] = 'Statement for the portfolio "%s" by %s cannot be confirmed before %s';
+$string['verificationtobedone'] = 'Confirm statement for the portfolio "%s" by %s';
+$string['verificationdone'] = 'Confirmed statement for the portfolio "%s" by %s';
 $string['removeaccess'] = 'Remove my access from the portfolio "%s" by %s';
