@@ -7,12 +7,12 @@ Feature: Delete groups
 Scenario: Creating groups and deleting them (Selenium)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
-    # Create a Friend invitation only group
+    # Create a Contact invitation only group
     And I choose "Groups" in "Engage" from main menu
     And I follow "Create group"
     And I fill in "Group name" with "Admin Test Group"
     And I disable the switch "Open"
-    And I enable the switch "Friend invitations"
+    And I enable the switch "Contact invitations"
     And I press "Save group"
     # Create Request only group
     And I choose "Groups" in "Engage" from main menu

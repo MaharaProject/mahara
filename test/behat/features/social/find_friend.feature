@@ -1,7 +1,7 @@
 @javascript @core @core_user @core_portfolio @friends
 Feature: Searching for users in the "People" page
     In order to search by name on the "People" page
-    So I can befriend them or send them messages
+    So I can contact them or send them messages
 
 Background:
     Given the following "institutions" exist:

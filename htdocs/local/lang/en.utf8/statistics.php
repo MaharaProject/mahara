@@ -26,3 +26,24 @@ $string['reportdescuserdetails'] = '<ul>
 <li>Registration status</li>
 <li>APC start date</li>
 </ul><p>People whose accounts were created during the selected time period are displayed.</p>';
+
+$string['blocktype_myfriends'] = 'Block: My contacts';
+$string['count_usr_friend'] = 'Number of contacts';
+$string['plugin_blocktype_myfriends_version'] = 'Block type plugin My contacts version';
+
+$string['reportdesccollaboration'] = '<ul>
+<li>Number of comments</li>
+<li>Number of annotation feedback</li>
+<li>Number of portfolios (pages or collections) shared with individuals</li>
+<li>Number of portfolios shared with groups</li>
+<li>Number of portfolios shared with an institution</li>
+<li>Number of portfolios shared with all registered people</li>
+<li>Number of portfolios shared publicly</li>
+<li>Number of portfolios shared via secret URLs</li>
+<li>Number of portfolios shared with contacts</li>
+</ul>';
+$string['addfriend'] = 'Add a contact';
+$string['removefriendrequest'] = 'Delete a contact request';
+$string['removefriend'] = 'Remove a contact';
+$string['addfriendrequest'] = 'Send a contact request';
+$string['friendshare'] = 'Contacts';

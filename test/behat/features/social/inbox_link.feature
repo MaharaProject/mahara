@@ -17,13 +17,13 @@ Given the following "users" exist:
 
 And the following "messages" exist:
      | emailtype | to | from | subject | messagebody | read | url | urltext |
-     | friendrequest | UserA | UserB | New friend request | Friend request from Bob | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | UserA | UserC | New friend request | Friend request from Cecilia | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | UserA | UserD | New friend request | Friend request from Dmitri | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | UserA | UserE | New friend request | Friend request from Evonne | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | UserA | UserF | New friend request | Friend request from Fergus | 1 | user/view.php?id=[from] | Requests |
-     | friendrequest | UserA | UserG | New friend request | Friend request from Gabi | 1 | user/view.php?id=[from] | Requests |
-     | friendaccept | UserG | UserA | Friend request accepted | Friend request accepted from Angela | 1 | user/view.php?id=[to] | |
+     | friendrequest | UserA | UserB | New contact request | Contact request from Bob | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserC | New contact request | Contact request from Cecilia | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserD | New contact request | Contact request from Dmitri | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserE | New contact request | Contact request from Evonne | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserF | New contact request | Contact request from Fergus | 1 | user/view.php?id=[from] | Requests |
+     | friendrequest | UserA | UserG | New contact request | Contact request from Gabi | 1 | user/view.php?id=[from] | Requests |
+     | friendaccept | UserG | UserA | Contact request accepted | Contact request accepted from Angela | 1 | user/view.php?id=[to] | |
 
 Scenario: Clicking on the Inbox link on the right menu (Bug 1427019)
    # Log in as users
