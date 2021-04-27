@@ -550,10 +550,13 @@ class PluginSearchElasticsearch extends PluginSearch {
             // Send the first batch of records to the elasticsearch server now, for instant gratification
             self::index_queued_items();
 
-            error_log("finished indexing queued items");
+            error_log("finished indexing first batch of queued items");
 
             // free the cron lock
             delete_records('config', 'field', '_cron_lock_search_elasticsearch_cron', 'value', $start);
+
+            // Fire off CLI to fast index the rest of the records
+            shell_exec('php ' . get_config('docroot') . 'admin/cli/fast_index.php > /dev/null 2>&1 &');
         }
         return true;
     }
@@ -627,9 +630,9 @@ class PluginSearchElasticsearch extends PluginSearch {
             set_config_plugin('search', 'elasticsearch', 'indexname', 'mahara');
             set_config_plugin('search', 'elasticsearch', 'analyzer', 'mahara_analyzer');
             set_config_plugin('search', 'elasticsearch', 'types', 'usr,interaction_instance,interaction_forum_post,group,view,artefact,block_instance,collection');
-            set_config_plugin('search', 'elasticsearch', 'cronlimit', '50000');
+            set_config_plugin('search', 'elasticsearch', 'cronlimit', '1500');
             set_config_plugin('search', 'elasticsearch', 'shards', 5);
-            set_config_plugin('search', 'elasticsearch', 'replicashards', 1);
+            set_config_plugin('search', 'elasticsearch', 'replicashards', 0);
             $elasticsearchartefacttypesmap = file_get_contents(__DIR__ . '/elasticsearchartefacttypesmap.txt');
             set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', $elasticsearchartefacttypesmap);
         }
