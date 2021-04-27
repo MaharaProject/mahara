@@ -42,18 +42,17 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $formid = $form->get_name();
     $prefix = $formid . '_' . $element['name'];
-
     if (!empty($element['tabs'])) {
         $tabdata = pieform_element_filebrowser_configure_tabs($element, $prefix);
         $smarty->assign('tabs', $tabdata);
-        if (!$group && $tabdata['owner'] == 'group') {
+        if (!$group && !empty($tabdata) && $tabdata['owner'] == 'group') {
             $group = $tabdata['ownerid'];
         }
         else if (!$institution) {
-            if ($tabdata['owner'] == 'institution') {
+            if (!empty($tabdata) && $tabdata['owner'] == 'institution') {
                 $institution = $tabdata['ownerid'];
             }
-            else if ($tabdata['owner'] == 'site') {
+            else if (!empty($tabdata) && $tabdata['owner'] == 'site') {
                 $institution = 'mahara';
             }
         }
