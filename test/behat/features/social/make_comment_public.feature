@@ -21,21 +21,18 @@ Background:
     | title | description | ownertype | ownername | pages |
     | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
 
-  # make following comments exist option?
+  And the following "permissions" exist:
+     | title | accesstype | accessname | allowcomments |
+     | Collection UserA_01 | user | UserB | 1 |
+     | Page UserA_03 | user | UserB | 1 |
 
-  Scenario:
-    Given I log in as "UserA" with password "Kupuh1pa!"
-    # what about making sharing a background step... permissions exist???
-    And I choose "Shared by me" in "Share" from main menu
-    And I follow "Collections"
-    And I click on "Edit access" in "Collection UserA_01" row
-    And I set the select2 value "Page UserA_03" for "editaccess_views"
-    And I select "Users" from "Search for..." in shared with select2 box
-    And I select "Bob User" from select2 nested search box in row number "1"
-    And I press "Save"
-    And I log out
+  # TODO: make "comments" exist as background option?
 
-    And I log in as "UserB" with password "Kupuh1pa!"
+  Scenario: Make private comments against a page and request some are made public
+  # Make 12 comments (NOT public) - comment display grouped into 10 by default.
+  # Make request for second comment to be made public.
+
+    Given I log in as "UserB" with password "Kupuh1pa!"
     And I scroll to the base of id 'bottom-pane'
     And I follow "Page UserA_03"
     And I fill in "This is comment 1" in editor "Comment"
@@ -81,7 +78,7 @@ Background:
     And I should see "A message has been sent to Angela User to request that the comment be made public."
     And I log out
 
-    # log in as page owner to authorise the comment to be public
+    # log in as page owner to authorise the above comments to be public, make some private/public comments against a collection
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Page UserA_03"
@@ -106,6 +103,7 @@ Background:
     And I click on "Make comment public" in the "This is comment 3" comment
     And I log out
 
+    # log in as authorised viewer and see only the public comments
     And I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
     And I follow "Collection UserA_01"
