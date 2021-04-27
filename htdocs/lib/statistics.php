@@ -2086,7 +2086,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     if ($users) {
         $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
     }
-
+    $intcast = is_postgres() ? '::int' : '';
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
     switch ($sorttype) {
         case "username":
@@ -2096,7 +2096,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
             $orderby = " u.email " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "registration_number":
-            $orderby = " u.studentid::int " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $orderby = " u.studentid" . $intcast . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "displayname":
             $orderby = " u.preferredname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
@@ -2129,42 +2129,61 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
         default:
             $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
     }
+    $crossjoin = is_mysql() ? '' : ' CROSS JOIN json_to_record(el.data::json) AS x(rules text)
+                                     CROSS JOIN json_to_record(x.rules::json) AS y(usr int, role text) ';
 
     $joinsql = " JOIN {collection} c ON (c.owner = u.id)
             JOIN {collection_view} cv ON (cv.collection = c.id)
             JOIN {view} v ON (v.id = cv.view AND cv.displayorder = 0)
             LEFT JOIN {event_log} el ON (cv.view = el.parentresourceid AND el.parentresourcetype = 'view' AND el.event = 'updateviewaccess')
-            CROSS JOIN json_to_record(el.data::json) AS x(rules text)
-            CROSS JOIN json_to_record(x.rules::json) AS y(usr int, role text)
+            " . $crossjoin . "
             LEFT JOIN {collection_template} ct ON (ct.collection = cv.collection)
     ";
 
     if (isset($extra['verifierfilter']) && !empty($extra['verifierfilter'])) {
-        $configdatasql = ",
-         (SELECT el2.ctime AS verifieddate
-         FROM {event_log} el2, json_to_record(el2.data::json)
-         AS z(block text), json_to_record(z.block::json)
-         AS w(verified int, " . '"primary"' . " boolean)
-         WHERE el2.parentresourceid = c.id
-         AND el2.parentresourcetype = 'collection'
-         AND el2.event = 'verifiedprogress'
-         AND w.verified = 1
-         AND w.primary IS TRUE
-         ORDER BY el2.ctime LIMIT 1) ";
-
+        if (is_mysql()) {
+            $configdatasql = ",
+             (SELECT el2.ctime AS verifieddate
+             FROM {event_log} el2
+             WHERE el2.parentresourceid = c.id
+             AND el2.parentresourcetype = 'collection'
+             AND el2.event = 'verifiedprogress'
+             AND el2.data->>'$.block.verified' = 1
+             AND el2.data->>'$.block.primary' IS TRUE
+             ORDER BY el2.ctime LIMIT 1) ";
+        }
+        else {
+            $configdatasql = ",
+             (SELECT el2.ctime AS verifieddate
+             FROM {event_log} el2, json_to_record(el2.data::json)
+             AS z(block text), json_to_record(z.block::json)
+             AS w(verified int, " . '"primary"' . " boolean)
+             WHERE el2.parentresourceid = c.id
+             AND el2.parentresourcetype = 'collection'
+             AND el2.event = 'verifiedprogress'
+             AND w.verified = 1
+             AND w.primary IS TRUE
+             ORDER BY el2.ctime LIMIT 1) ";
+        }
+        $rolekey = is_mysql() ? "el.data->>'$.rules.role'" : "y.role";
         if ($extra['verifierfilter'] == 'none') {
-            $wheresql .= " AND NOT EXISTS (SELECT data FROM {event_log} WHERE cv.view = parentresourceid AND parentresourcetype = 'view' AND event = 'updateviewaccess' AND y.role = 'verifier') ";
+            $wheresql .= " AND NOT EXISTS (SELECT data FROM {event_log} WHERE cv.view = parentresourceid AND parentresourcetype = 'view' AND event = 'updateviewaccess' AND " . $rolekey . " = 'verifier') ";
             $configdatasql = '';
         }
         else if ($extra['verifierfilter'] == 'current') {
-            $wheresql .= " AND (el.resourcetype = 'user' AND y.role = 'verifier') ";
+            $wheresql .= " AND (el.resourcetype = 'user' AND " . $rolekey . " = 'verifier') ";
         }
     }
-
-    $customsql = "
-    (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
-    (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1) ";
-
+    if (is_mysql()) {
+        $customsql = "
+        (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el.data->>'$.rules.usr' = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'accessor' ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyaccessordate,
+        (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'owner') ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyauthordate ";
+    }
+    else {
+        $customsql = "
+        (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
+        (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1) ";
+    }
     if (!empty($configdatasql)) {
         $customsql .= $configdatasql;
     }
@@ -2183,13 +2202,15 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
         $where[] = $end;
     }
 
-    $verifiersql = " y.role, ";
-    $sql ="SELECT u.id AS user_id, u.firstname, u.lastname, u.username, u.preferredname AS displayname, y.usr AS verifierid,
-            (SELECT username FROM {usr} WHERE id = y.usr) AS verifierusername,
-            (SELECT firstname FROM {usr} WHERE id = y.usr) AS verifierfirstname,
-            (SELECT lastname FROM {usr} WHERE id = y.usr) AS verifierlastname,
-            (SELECT studentid FROM {usr} WHERE id = y.usr) AS verifierstudentid,
-            (SELECT preferredname FROM {usr} WHERE id = y.usr) AS verifierdisplayname,
+    $verifiersql = is_mysql() ? " el.data->>'$.rules.role', " : " y.role, ";
+    $usrkey = is_mysql() ? "el.data->>'$.rules.usr'" : "y.usr";
+    $sql ="SELECT u.id AS user_id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
+           " . $usrkey . " AS verifierid,
+            (SELECT username FROM {usr} WHERE id = " . $usrkey . ") AS verifierusername,
+            (SELECT firstname FROM {usr} WHERE id = " . $usrkey . ") AS verifierfirstname,
+            (SELECT lastname FROM {usr} WHERE id = " . $usrkey . ") AS verifierlastname,
+            (SELECT studentid FROM {usr} WHERE id = " . $usrkey . ") AS verifierstudentid,
+            (SELECT preferredname FROM {usr} WHERE id = " . $usrkey . ") AS verifierdisplayname,
         u.email, u.studentid AS registration_number, " . $verifiersql . "
         c.id as collection_id, c.name, c.ctime AS collection_ctime, ct.originaltemplate,  (SELECT name FROM {collection} WHERE id = ct.originaltemplate) AS templatetitle,
         " . $customsql .
@@ -2420,9 +2441,10 @@ function portfolioswithverifiers_stats_table($limit, $offset, $extra, $instituti
         $typesql = " type LIKE 'owners-per-template_%' ";
         $verifiersportfoliosql = " type = 'verifierportfolios-verifier-count'";
     }
+    $intcast = is_postgres() ? '::int' : '';
     $sql = "SELECT $day AS date, institution,
-            (SELECT SUM (value::int) FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS hasverifier,
-            SUM(value::int) - (SELECT SUM (value::int) FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS noverifier
+            (SELECT SUM (value" . $intcast . ") FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS hasverifier,
+            SUM(value" . $intcast . ") - (SELECT SUM (value" . $intcast . ") FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS noverifier
             FROM {institution_data} i
             WHERE " . $typesql.
             " AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")"
@@ -2882,17 +2904,18 @@ function verifiersummary_stats_table($limit, $offset, $extra, $institution, $url
         $typesql9 = $typesql . " 'verifierportfolios-verifier-load-9%'";
         $typesql10 = $typesql . " 'verifierportfolios-verifier-load-10%'";
     }
+    $intcast = is_postgres() ? '::int' : '';
     $customsql = "SELECT \"value\" AS count, ctime, $day AS date,
-                  (SELECT SUM (value::int) AS count_1 FROM {institution_data} WHERE ($day = $iday) $typesql1 $instsql),
-                  (SELECT SUM (value::int) AS count_2 FROM {institution_data} WHERE ($day = $iday) $typesql2 $instsql),
-                  (SELECT SUM (value::int) AS count_3 FROM {institution_data} WHERE ($day = $iday) $typesql3 $instsql),
-                  (SELECT SUM (value::int) AS count_4 FROM {institution_data} WHERE ($day = $iday) $typesql4 $instsql),
-                  (SELECT SUM (value::int) AS count_5 FROM {institution_data} WHERE ($day = $iday) $typesql5 $instsql),
-                  (SELECT SUM (value::int) AS count_6 FROM {institution_data} WHERE ($day = $iday) $typesql6 $instsql),
-                  (SELECT SUM (value::int) AS count_7 FROM {institution_data} WHERE ($day = $iday) $typesql7 $instsql),
-                  (SELECT SUM (value::int) AS count_8 FROM {institution_data} WHERE ($day = $iday) $typesql8 $instsql),
-                  (SELECT SUM (value::int) AS count_9 FROM {institution_data} WHERE ($day = $iday) $typesql9 $instsql),
-                  (SELECT SUM (value::int) AS count_10 FROM {institution_data} WHERE ($day = $iday) $typesql10 $instsql)
+                  (SELECT SUM (value" . $intcast . ") AS count_1 FROM {institution_data} WHERE ($day = $iday) $typesql1 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_2 FROM {institution_data} WHERE ($day = $iday) $typesql2 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_3 FROM {institution_data} WHERE ($day = $iday) $typesql3 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_4 FROM {institution_data} WHERE ($day = $iday) $typesql4 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_5 FROM {institution_data} WHERE ($day = $iday) $typesql5 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_6 FROM {institution_data} WHERE ($day = $iday) $typesql6 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_7 FROM {institution_data} WHERE ($day = $iday) $typesql7 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_8 FROM {institution_data} WHERE ($day = $iday) $typesql8 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_9 FROM {institution_data} WHERE ($day = $iday) $typesql9 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_10 FROM {institution_data} WHERE ($day = $iday) $typesql10 $instsql)
                   FROM {institution_data} i" . $wheresql . "
                   AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")" . $ordersql;
 
