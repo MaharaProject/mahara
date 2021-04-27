@@ -242,7 +242,7 @@ jQuery(function ($) {
         var filteroptid = filteropt.prop('id');
         sendjsonrequest(config['wwwroot'] + 'json/stats_setting.php', {'setting':filteroptid}, 'POST', function(data) {
             filteropt.parent().hide();
-            // if in tabular mode we can sort a column to update the table otherwise relead the page
+            // if in tabular mode we can sort a column to update the table otherwise reload the page
             if ($('#statistics_table th a').length) {
                 $('#statistics_table th a').first().trigger('click');
             }
