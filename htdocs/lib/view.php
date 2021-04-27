@@ -3879,22 +3879,28 @@ class View {
             v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS collid, v.coverimage';
         $collselect = '
             UNION
-            SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0 ORDER BY view LIMIT 1) as id,
-            null AS vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
-            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null AS vvisits,
-                   (SELECT COUNT(*) FROM {collection_view} cv JOIN {view} v ON v.id = cv.view WHERE cv.collection = c.id AND v.type != \'progress\') AS numviews, c.id AS collid, c.coverimage';
+            SELECT cvid.view AS id, null AS vid, c.name as title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
+            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits,
+            numviews.numviews AS numviews, c.id AS collid, c.coverimage';
         $emptycollselect = '
             UNION
-            SELECT null as id, null as vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
-            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, c.id AS collid, c.coverimage';
+            SELECT null AS id, null AS vid, c.name AS title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
+            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, c.id AS collid, c.coverimage';
 
         $from = '
             FROM {view} v
-            LEFT OUTER JOIN {collection_view} cv on cv.view = v.id';
+            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id';
         $collfrom = '
             FROM {view} v
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
-            LEFT OUTER JOIN {collection} c ON cv.collection = c.id';
+            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
+            INNER JOIN {collection_view} cvid on cvid.collection = c.id AND cvid.displayorder = 0
+            INNER JOIN (SELECT COUNT(*) AS numviews, numcv.collection
+                        FROM {collection_view} numcv
+                        INNER JOIN {collection} numc ON numcv.collection = numc.id
+                        INNER JOIN {view} numv ON numv.id = numcv.view
+                        WHERE numv.type != \'progress\'
+                        GROUP BY numcv.collection) AS numviews ON numviews.collection = cv.collection';
         $emptycollfrom = '
             FROM {collection} c';
 
@@ -3940,7 +3946,7 @@ class View {
                     $from .= $mcfromstr;
                     $collfrom .= $mcfromstr;
                     $groupby = ' GROUP BY v.id';
-                    $collgroupby = ' GROUP BY c.id';
+                    $collgroupby = ' GROUP BY cvid.view, numviews.numviews, c.id';
                     $emptycollgroupby = ' GROUP BY c.id';
                     $order = 'commentcount DESC,';
                     break;
