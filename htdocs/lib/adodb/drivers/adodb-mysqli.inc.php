@@ -1,6 +1,6 @@
 <?php
 /*
-@version   v5.20.18  28-Jun-2020
+@version   v5.20.20  01-Feb-2021
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license.
@@ -12,7 +12,7 @@
   and non-transactional table types. You can use this as a drop-in replacement for both
   the mysql and mysqlt drivers. As of ADOdb Version 5.20.0, all other native MySQL drivers
   are deprecated
-
+  
   Requires mysql client. Works on Windows and Unix.
 
 21 October 2003: MySQLi extension implementation by Arjen de Rijke (a.de.rijke@xs4all.nl)
@@ -345,7 +345,7 @@ class ADODB_mysqli extends ADOConnection {
 		}
 
 		// get index details
-		$rs = $this->Execute(sprintf('SHOW INDEXES FROM `%s`',$table));
+		$rs = $this->Execute(sprintf('SHOW INDEXES FROM %s',$table));
 
 		// restore fetchmode
 		if (isset($savem)) {
@@ -579,10 +579,10 @@ class ADODB_mysqli extends ADOConnection {
 
 		if ($ADODB_FETCH_MODE == ADODB_FETCH_ASSOC || $this->fetchMode == ADODB_FETCH_ASSOC) $associative = true;
 
-	    if ( !empty($owner) ) {
-	       $table = "$owner.$table";
-	    }
-	    $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE `%s`', $table));
+		if ( !empty($owner) ) {
+			$table = "$owner.$table";
+		}
+		$a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE %s', $table));
 		if ($associative) {
 			$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
 		} else $create_sql = $a_create_table[1];
@@ -629,6 +629,19 @@ class ADODB_mysqli extends ADOConnection {
 		$ADODB_FETCH_MODE = ADODB_FETCH_NUM;
 		if ($this->fetchMode !== false)
 			$savem = $this->SetFetchMode(false);
+		/*
+		* Return assoc array where key is column name, value is column type
+        *    [1] => int unsigned
+		*/
+		
+		$SQL = "SELECT column_name, column_type 
+				  FROM information_schema.columns 
+				 WHERE table_schema='{$this->databaseName}' 
+				   AND table_name='$table'";
+		
+		$schemaArray = $this->getAssoc($SQL);
+		$schemaArray = array_change_key_case($schemaArray,CASE_LOWER);
+	
 		$rs = $this->Execute(sprintf($this->metaColumnsSQL,$table));
 		if (isset($savem)) $this->SetFetchMode($savem);
 		$ADODB_FETCH_MODE = $save;
@@ -640,6 +653,12 @@ class ADODB_mysqli extends ADOConnection {
 			$fld = new ADOFieldObject();
 			$fld->name = $rs->fields[0];
 			$type = $rs->fields[1];
+			
+			/*
+			* Type from information_schema returns
+			* the same format in V8 mysql as V5
+			*/
+			$type = $schemaArray[strtolower($fld->name)];
 
 			// split type into type(length):
 			$fld->scale = null;
@@ -660,6 +679,7 @@ class ADODB_mysqli extends ADOConnection {
 				$fld->type = $type;
 				$fld->max_length = -1;
 			}
+			
 			$fld->not_null = ($rs->fields[2] != 'YES');
 			$fld->primary_key = ($rs->fields[3] == 'PRI');
 			$fld->auto_increment = (strpos($rs->fields[5], 'auto_increment') !== false);
