@@ -17,7 +17,7 @@ $config = new stdClass();
 // For upgrades on stable branches, increment the version by one.  On master, use the date.
 
 $config->version = 2021042700;
-$config->series = '21.04';
-$config->release = '21.04dev';
+$config->series = '21.10';
+$config->release = '21.10dev';
 $config->minupgradefrom = 2017031605;
 $config->minupgraderelease = '18.10.0 (release tag 18.10.0_RELEASE)';
