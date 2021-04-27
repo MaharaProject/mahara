@@ -212,7 +212,7 @@ class mahara_user_external extends external_api {
     public static function create_users_parameters() {
 
         $options = array(
-            'username'        => new external_value(PARAM_RAW, get_string('usernamevalid', WEBSERVICE_LANG)),
+            'username'        => new external_value(PARAM_RAW, get_string('usernamevalid1', WEBSERVICE_LANG)),
             'password'        => new external_value(PARAM_RAW,get_string('passwordvalid', WEBSERVICE_LANG) ),
             'firstname'       => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG)),
             'lastname'        => new external_value(PARAM_NOTAGS,get_string('lastname', WEBSERVICE_LANG) ),
