@@ -1645,6 +1645,7 @@ class User {
         require_once(get_config('libroot') . 'collection.php');
 
         $collections = array();
+        $copystatus = array();
         $results = get_records_select_array('collection', 'id IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'id, name');
         if ($results) {
             foreach ($results as $result) {
@@ -1693,13 +1694,14 @@ class User {
                     $trackoriginal = true;
                 }
                 // Copy full collection
-                Collection::create_from_template(array(
+                list($newcollection, $template, $copystatus) = Collection::create_from_template(array(
                     'owner' => $this->get('id'),
                     'title' => $collections[$tid]->name,
                 ), $tid, $this->get('id'), $checkviewaccess, $titlefromtemplate, $trackoriginal);
             }
         }
         db_commit();
+        return $copystatus;
     }
 
     /**
