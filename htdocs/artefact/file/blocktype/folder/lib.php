@@ -38,6 +38,10 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 4000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
         if ($exporting != 'pdf') {
             return self::render_instance($instance, $editing, $versioning);

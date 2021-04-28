@@ -35,6 +35,10 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 5000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function get_instance_javascript(BlockInstance $instance) {
         $blockid = $instance->get('id');
         // The initjs for the fancybox will be applied to all galleries on the page
