@@ -155,7 +155,13 @@ if ($token) {
                     $deletedcount++;
                 }
                 else {
-                    $cli->cli_print('Reg ID ' . $person->id . ' ...skipping as person is out of scope');
+                    if ($deleteinterns && $uid = get_field('usr', 'id', 'username', $person->id)) {
+                        $cli->cli_print('Reg ID ' . $person->id . ' is an intern only so can delete them');
+                        $deletedcount++;
+                    }
+                    else {
+                        $cli->cli_print('Reg ID ' . $person->id . ' ...skipping as person is out of scope');
+                    }
                 }
                 $deletecount++;
                 continue;
@@ -183,9 +189,12 @@ if ($token) {
         }
     }
     else if ($deleteinterns) {
-        $cli->cli_print('A total of ' . $deletecount . ' intern accounts within the records  ' . $offset . ' to ' . ($offset + $limit));
+        $cli->cli_print('A total of ' . $deletecount . ' non-pharmacist accounts within the records  ' . $offset . ' to ' . ($offset + $limit));
         if (!$dryrun) {
             $cli->cli_print('... ' . $deletedcount . ' intern accounts deleted');
+        }
+        else {
+            $cli->cli_print('... ' . $deletedcount . ' intern accounts can be deleted');
         }
     }
     else {
