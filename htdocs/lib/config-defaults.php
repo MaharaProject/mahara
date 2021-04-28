@@ -1228,17 +1228,6 @@ $cfg->saml_log_attributes = false;
 //$cfg->allowanonymouspages = false;
 
 /**
- * Account settings :: People can disable device detection
- *
- * If set to 'true', account holders can disable mobile device detection in their
- * account settings. This allows them to be more flexible in what they can view
- * and do on a mobile device such as a smartphone or tablet.
- *
- * @var boolean $cfg->userscandisabledevicedetection
- */
-//$cfg->userscandisabledevicedetection = false;
-
-/**
  * Account settings :: Export to queue
  *
  * If set to 'true', the export queue will handle the exporting of personal
