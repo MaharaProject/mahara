@@ -893,8 +893,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'owngroupsonly', 'wysiwyg',
-        'staffreports', 'staffstats', 'userscandisabledevicedetection',
-        'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
+        'staffreports', 'staffstats', 'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'eventlogenhancedsearch', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
         'defaultreviewselfdeletion'
     );
