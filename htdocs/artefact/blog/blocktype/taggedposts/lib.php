@@ -28,6 +28,10 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         return array('blog' => 13000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function get_instance_javascript(BlockInstance $bi) {
         $blockid = $bi->get('id');
         $viewid = $bi->get('view');

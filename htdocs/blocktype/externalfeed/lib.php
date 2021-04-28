@@ -44,6 +44,11 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
     public static function get_categories() {
         return array('external' => 34000);
     }
+
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             if (is_postgres()) {
