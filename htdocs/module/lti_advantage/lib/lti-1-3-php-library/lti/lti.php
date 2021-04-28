@@ -29,7 +29,7 @@ spl_autoload_register(
 // check what this means
 // need to be this way so the cron and the browser can use oauth
 if (isset($_SERVER['REQUEST_SCHEME'])) {
-    define("TOOL_HOST", (getenv('HTTP_X_FORWARDED_FOR') ?: $_SERVER['REQUEST_SCHEME']) . '://' . $_SERVER['HTTP_HOST']);
+    define("TOOL_HOST", (getenv('HTTP_X_FORWARDED_PROTO') ?: $_SERVER['REQUEST_SCHEME']) . '://' . $_SERVER['HTTP_HOST']);
 }
 else {
     define("TOOL_HOST", get_config('wwwroot'));

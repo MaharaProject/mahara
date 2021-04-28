@@ -33,5 +33,6 @@ $functions = array(
         'methodname' => 'launch_advantage',
         'description' => "Launch an LTI advantage activity",
         'type' => 'write',
+        'hasconfig' => 1,
     ),
 );

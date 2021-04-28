@@ -4244,11 +4244,30 @@ class View {
         return $url;
     }
 
-    public static function views_by_owner($group=null, $institution=null) {
+    /**
+     * Return Views that belong to the current $USER.
+     *
+     * This is makes use of the information on the URL that pieform() would
+     * provide. It can also be called with $fetch_all set to true to return
+     * everything the owner has.  Accessing index 1 of the returned array gives
+     * you this data.
+     *
+     * @param string|null $group Limit to the group.
+     * @param string|null $institution Limit to the institution
+     * @param boolean $fetch_all Ignore $limit and return all results.
+     *
+     * @return array The $searchform, $data, $pagination information.
+     */
+    public static function views_by_owner($group=null, $institution=null, $fetch_all=false) {
         global $USER;
 
         // 'Show more' pagination configuration
-        $limit = param_integer('limit', 12);
+        if ($fetch_all) {
+            $limit = 0;
+        }
+        else {
+            $limit = param_integer('limit', 12);
+        }
         $offset = param_integer('offset', 0);
         // load default page order from user settings as default and overwrite, if changed
         $usersettingorderby = get_account_preference($USER->get('id'), 'orderpagesby');
@@ -7045,6 +7064,7 @@ class View {
             self::_db_submit(array($this->id), $group, $submittedhost, $owner);
             safe_require('module', 'submissions');
             if (PluginModuleSubmissions::is_active() && $group) {
+                // We have a Group.  Add the Submissions using the Submissions module as well.
                 PluginModuleSubmissions::add_submission($this, $group);
             }
             db_commit();
@@ -7053,6 +7073,7 @@ class View {
             db_rollback();
             throw $e;
         }
+
         handle_event('addsubmission', array('id' => $this->id,
                                             'eventfor' => 'view',
                                             'name' => $this->title,

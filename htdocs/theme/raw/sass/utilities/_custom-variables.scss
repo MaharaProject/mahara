@@ -197,3 +197,24 @@ $spacing-xxxl:                              3.125rem !default; // 50px
 
 // User icon border radius
 $user-icon-border-radius:                   $thumbnail-border-radius !default;
+
+// LTI Advantage Quicklinks Portfolio.
+$lti-advantage-ql-row-color:                       #494c4e !default;
+$lti-advantage-ql-row-border-top-color:            #cdd5dc !default;
+$lti-advantage-ql-row-hover-background:            scale-color($theme-primary-color, $lightness: 90%) !default;
+$lti-advantage-ql-row-hover-border-top-color:      scale-color($theme-primary-color, $lightness: 40%) !default;
+$lti-advantage-ql-wrapper-background:              rgba(0,0,0, 0.4) !default;
+$lti-advantage-ql-wrapper-background-fallback:     rgb(0,0,0) !default;
+$lti-advantage-ql-modal-title-background:          linear-gradient(to bottom, #f5f4f4 0%,#e7e7e7 100%) !default;
+$lti-advantage-ql-modal-title-border-bottom-color: #d7d7d7 !default;
+$lti-advantage-ql-modal-content-border-color:      #888 !default;
+$lti-advantage-ql-modal-content-background-color:  #fefefe !default;
+$lti-advantage-ql-modal-btnsrow-background-color:  #ffffff !default;
+$lti-advantage-ql-modal-btnsrow-border-color:      #d7d7d7 !default;
+$lti-advantage-ql-modal-btnsrow-box-shadow-color:  rgba(180, 180, 205, 0.8) !default;
+$lti-advantage-ql-btn-primary-color:               $btn-primary-color !default;
+$lti-advantage-ql-btn-primary-background-color:    $btn-primary-bg !default;
+$lti-advantage-ql-btn-primary-border-color:        $btn-primary-border !default;
+$lti-advantage-ql-btn-secondary-color:             $btn-secondary-color !default;
+$lti-advantage-ql-btn-secondary-background-color:  scale-color($btn-secondary-bg, $lightness: -10%) !default;
+$lti-advantage-ql-btn-secondary-border-color:      scale-color($btn-secondary-border, $lightness: -10%) !default;

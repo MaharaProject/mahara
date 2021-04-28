@@ -17,9 +17,6 @@ require_once('database.php');
 
 use \IMSGlobal\LTI;
 
-//$database = new LTI_Advantage_Database();
-//LTI\JWKS_Endpoint::from_issuer($database, 'https://mahara.d2l-partners.brightspace.com')->output_jwks();
-
 $keysetsdb = get_records_assoc('lti_advantage_key');
 $keys = array();
 foreach ($keysetsdb as $key) {

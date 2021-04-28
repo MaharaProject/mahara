@@ -29,7 +29,18 @@ $string['redirecturl'] = 'Redirect URLs';
 $string['openidconnectlogin'] = 'OpenID Connect login URL';
 $string['keyset'] = 'Keyset URL';
 $string['deployments'] = 'Deployments';
-$string['deploymentsdesc'] = '\'Basic launch\' and \'Names and Roles Provisioning Service\' deployment IDs';
+$string['deploymentsdesc'] = 'Deployment IDs from Brightspace';
 $string['issueralreadyinuse'] = 'Issuer is already set to another client connection';
 $string['deploymentidcannotbeempty'] = 'Both deployment ID fields cannot be empty';
 $string['deploymentidcannotbesame'] = 'Both deployment ID fields cannot be the same';
+$string['deploymentsbasiclaunchtitle'] = 'Basic Launch';
+$string['deploymentsnrpstitle'] = 'NRPS';
+$string['deploymentsdeeplinkportfoliolisttitle'] = 'Deep Link (portfolio list)';
+$string['deeplinkportfoliostitle'] = 'Portfolios';
+$string['deeplinknoportfolios'] = 'You have no portfolios.';
+
+# Modal language strings
+$string['confirmareyousure'] = 'Are you sure?';
+$string['confirmwarning'] = 'If you submit "%s" for assessment, you will not be able to edit its content until marking has finished. Are you sure you want to submit this portfolio now?';
+$string['confirmbtntxtconfirm'] = 'Confirm';
+$string['confirmbtntxtcancel'] = 'Cancel';

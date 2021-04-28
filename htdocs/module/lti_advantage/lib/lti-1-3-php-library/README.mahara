@@ -13,3 +13,5 @@ Changes:
 
 * Changed cookie creation function depending on php version
 commit: 0ade28235ea736d0724e4a233a760f07ccaa005b
+* Changed cache management to allow setting of the cache dir.
+commit: 245d6f057854f8b4a89bfd81a76d8dbfa4ce4d4b

@@ -126,10 +126,21 @@ class PluginModuleLti_advantage extends PluginModule {
                        'deployment1_id' => array(
                            'type'         => 'text',
                            'defaultvalue' => isset($deployments[0]) ? $deployments[0]->deployment_id : null,
+                           'title'        =>get_string('deploymentsbasiclaunchtitle', 'module.lti_advantage'),
                        ),
                        'deployment2_id' => array(
                            'type'         => 'text',
                            'defaultvalue' => isset($deployments[1]) ? $deployments[1]->deployment_id : null,
+                           'title'        =>get_string('deploymentsnrpstitle', 'module.lti_advantage'),
+                       ),
+                       'deployment3_id' => array(
+                           'type'         => 'text',
+                           'defaultvalue' => isset($deployments[2]) ? $deployments[2]->deployment_id : null,
+                           'title'        =>get_string('deploymentsdeeplinkportfoliolisttitle', 'module.lti_advantage'),
+                           'rules' => array(
+                               'required' => true,
+                           ),
+                           'legend'       => 'test',
                        ),
                     ),
                 ),
@@ -139,8 +150,13 @@ class PluginModuleLti_advantage extends PluginModule {
         return array();
     }
 
+    /**
+     * Webservice info fields.
+     *
+     * @return array
+     */
     public static function info_webservice_fields() {
-        $info_fields = null;
+        $info_fields = array();
         if (get_field('module_installed', 'active', 'name', 'lti_advantage')) {
             $info_fields = array(
                 'domain' => array(
@@ -515,6 +531,10 @@ class PluginModuleLti_advantage extends PluginModule {
                 $deployment->deployment_id = $values['deployment2_id'];
                 insert_record('lti_advantage_deployment', $deployment);
             }
+            if (isset($values['deployment3_id']) && !empty($values['deployment3_id'])) {
+                $deployment->deployment_id = $values['deployment3_id'];
+                insert_record('lti_advantage_deployment', $deployment);
+            }
         }
         else {
             $key = get_record('lti_advantage_key', 'key_set_id', $registration->key_set_id);
@@ -543,6 +563,10 @@ class PluginModuleLti_advantage extends PluginModule {
             }
             if (isset($values['deployment2_id']) && !empty($values['deployment2_id'])) {
                 $deployment->deployment_id = $values['deployment2_id'];
+                insert_record('lti_advantage_deployment', $deployment);
+            }
+            if (isset($values['deployment3_id']) && !empty($values['deployment3_id'])) {
+                $deployment->deployment_id = $values['deployment3_id'];
                 insert_record('lti_advantage_deployment', $deployment);
             }
         }
@@ -652,7 +676,6 @@ class PluginModuleLti_advantage extends PluginModule {
 
                 if (!in_array($institution, $institutions)) {
                    // $USER->logout();
-                    log_debug(get_string('institutiondenied', 'module.lti', institution_display_name($institution)));
                 }
             }
         }
@@ -719,8 +742,6 @@ class PluginModuleLti_advantage extends PluginModule {
             }
             update_user($user, $profilefields, $remoteuser);
         }
-
-        log_debug('userid: ' . $user->id);
 
         if ($updateremote) {
             $authremoteuser = new stdClass();

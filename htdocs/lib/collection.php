@@ -1705,9 +1705,13 @@ class Collection {
      *
      * @param object $releaseuser The user releasing the collection
      * @param string $externalid  An external ID that the archive relates to
+     * @param bool $checkhost Verify a record is in the host table
      */
-    public function pendingrelease($releaseuser=null, $externalid=null) {
-        $submitinfo = $this->submitted_to();
+    public function pendingrelease($releaseuser=null, $externalid=null, $checkhost=true) {
+        if ($checkhost) {
+            // While not used, the absence of a record willl throw an exception.
+            $submitinfo = $this->submitted_to();
+        }
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
         }

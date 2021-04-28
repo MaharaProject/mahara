@@ -1006,6 +1006,40 @@ function create_zip_archive($exportdir, $filename, $files) {
     }
 }
 
+/**
+ * Check if the view is in the export queue.
+ *
+ * @param int $viewid
+ *
+ * @return boolean True if the view is in the export queue.
+ */
+function is_view_in_export_queue($viewid) {
+    return is_content_in_export_queue('view', $viewid);
+}
+
+/**
+ * Check if the collection is in the export queue.
+ *
+ * @param int $collection_id
+ *
+ * @return boolean True if the collection is in the export queue.
+ */
+function is_collection_in_export_queue($collection_id) {
+    return is_content_in_export_queue('collection', $collection_id);
+}
+
+/**
+ * Check if a view or collection is in the export queue.
+ *
+ * @param string $thing
+ * @param int $id
+ *
+ * @return boolean True if the thing is in the export queue.
+ */
+function is_content_in_export_queue($thing, $id) {
+    return (bool) count_records('export_queue_items', $thing, $id);
+}
+
 class PluginExportAll extends PluginExport {
 
     protected $htmlexporter;

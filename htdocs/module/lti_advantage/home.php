@@ -13,15 +13,32 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 
 require_once('lib/lti-1-3-php-library/lti/lti.php');
-require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('database.php');
+
+require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(dirname(dirname(dirname(__FILE__))) . '/lib/institution.php');
 require_once('webservice/functions/module_lti_advantage_launch.php');
 
-$launch = LTI\LTI_Message_Launch::new(new LTI_Advantage_Database())
+$lti_db = new LTI_Advantage_Database();
+$lti_cache = new LTI\Cache();
+$lti_cache->set_cache_dir($CFG->dataroot . '/temp');
+
+$launch = LTI\LTI_Message_Launch::new($lti_db, $lti_cache)
     ->validate();
 
 $data = $launch->get_launch_data();
+
+// Check if we need to allow the page to work in an iframe.
+if (!empty($data['aud'])) {
+    // The 'aud' is the 'client_id' from the previous call.
+    $issuer = $lti_db->find_issuer_by_client_id($data['aud']);
+    $parts = parse_url($issuer);
+    if (!empty($parts['scheme']) && !empty($parts['host'])) {
+        $cspurl = $parts['scheme'] . '://' . $parts['host'];
+        $SESSION->set('csp-ancestor-exemption', $cspurl);
+        update_csp_headers($cspurl);
+    }
+}
 
 global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_SERVERID;
 $params = array();
@@ -48,30 +65,53 @@ $webservice = get_record_sql($sql, array($data['iss']));
 
 $WEBSERVICE_INSTITUTION = $webservice->institution;
 $WEBSERVICE_OAUTH_SERVERID = $webservice->id;
-
-$unit = $data['https://purl.imsglobal.org/spec/lti/claim/context'];
+if (empty($data['https://purl.imsglobal.org/spec/lti/claim/context'])) {
+    $unit = array(
+        'id' => '',
+        'label' => '',
+        'title' => '',
+        'type' => '',
+    );
+}
+else {
+  $unit = $data['https://purl.imsglobal.org/spec/lti/claim/context'];
+}
 $params['context_id'] = $unit['id'];
 $params['context_label'] = $unit['label'];
 $params['context_title'] = $unit['title'];
 $params['context_type'] = $unit['type'];
 
-$roles = '';
+$roles = array();
 if ($userroles = $data['https://purl.imsglobal.org/spec/lti/claim/roles']) {
     foreach($userroles as $role) {
-        $length = strlen('http://purl.imsglobal.org/vocab/lis/v2/membership#');
-        if (substr($role, 0, $length) == 'http://purl.imsglobal.org/vocab/lis/v2/membership#') {
-            $roles .= substr($role, $length) . ',';
+        $role_url = new mahara_url($role);
+        if (strpos($role_url->get_path(), 'vocab/lis/v2/membership') !== false) {
+            if ($role_url->get_anchor()) {
+                $roles[] = $role_url->get_anchor();
+            }
         }
     }
-    $roles = substr($roles, 0, strlen($roles) - 1);
+    $roles = implode(',', $roles);
 }
 $params['roles'] = $roles;
+
+if (!empty($cspurl)) {
+    $test_role = strtolower($params['roles']);
+    if (strpos($test_role, 'instructor') !== false || strpos($test_role, 'teachingassistant') !== false || strpos($test_role, 'administrator') !== false) {
+        $SESSION->set('lti.submittedhost', $cspurl);
+        $SESSION->set('user/staff', 1);
+    }
+}
 
 if ($launch->has_nrps()) {
     $namesroleservice = $data['https://purl.imsglobal.org/spec/lti-nrps/claim/namesroleservice'];
     $params['context_memberships_url'] = $namesroleservice['context_memberships_url'];
     $params['service_versions'] = json_encode($namesroleservice['service_versions']);
 
+}
+
+if ($launch->is_resource_launch() && key_exists('https://purl.imsglobal.org/spec/lti/claim/custom', $data)) {
+    $params['resource_launch'] = $data['https://purl.imsglobal.org/spec/lti/claim/custom'];
 }
 
 module_lti_advantage_launch::launch_advantage($params);
