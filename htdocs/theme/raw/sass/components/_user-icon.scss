@@ -108,15 +108,19 @@ a.user-icon, a .user-icon {
 }
 .user-icon-30 {
     width: 1.875rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2);
+    height: 1.875rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2);
     img {
         width: 1.875rem; // 30px;
+        max-width: 1.875rem; // 30px;
         height: 1.875rem; // 30px;
     }
 }
 .user-icon-40 {
     width: 2.5rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2);
+    height: 2.5rem + ($thumbnail-border-width * 2) + ($thumbnail-padding * 2);
     img {
         width: 2.5rem; // 40px;
+        max-width: 2.5rem; // 40px;
         height: 2.5rem; // 40px;
     }
 }
