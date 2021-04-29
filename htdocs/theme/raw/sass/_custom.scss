@@ -431,6 +431,10 @@ div.toolbarhtml {
     div.fieldset-body {
         background-color: $accent-bg !important;
     }
+    // move instructions down to avoid overlap with link
+    div.fieldset-body {
+        margin-top: 1px !important;
+    }
 }
 .peerinstructions {
     div.fieldset-body {
