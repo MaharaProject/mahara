@@ -1,5 +1,3 @@
-@TODO This is only a draft. Review before the final .0 release and update the information accordingly.
-
 # Mahara Readme
 
 Mahara is an open source ePortfolio system. An ePortfolio is a type of
@@ -8,16 +6,16 @@ web application that allows users to record and share evidence of lifelong learn
 For more information about Mahara and ePortfolios, see the Mahara user manual's
 introduction chapter:
 
- * https://manual.mahara.org/en/21.10/intro/introduction.html#what-is-mahara
+ * https://manual.mahara.org/en/21.04/intro/introduction.html
 
 # SUPPORT
 
 The best ways of obtaining support are:
 
- * https://manual.mahara.org - the Mahara online user manual
- * https://mahara.org/forums - the Mahara project community forums
- * https://wiki.mahara.org - the Mahara wiki
- * #mahara on freenode (IRC) - live chat with other users and developers
+ * https://manual.mahara.org - Mahara manual
+ * https://mahara.org/forums - Mahara project community forums
+ * https://wiki.mahara.org - Mahara wiki
+ * https://app.element.io/#/room/#mahara:matrix.org - Live chat with community members
 
 # INSTALLATION
 
@@ -35,7 +33,7 @@ The following is a check list of the steps you need to take. Please refer to the
 
 # UPGRADING
 
-Mahara 21.10 supports direct upgrades from previous Mahara versions 18.04.0 and later.
+Mahara 21.04 supports direct upgrades from previous Mahara versions 18.04.0 and later.
 
 If you are upgrading from an earlier version you will need to upgrade
 in either two or three steps:
@@ -58,7 +56,7 @@ then
 
 Note: Older versions of Mahara are not compatible with latest versions
 of PHP so you will need to do intermediate upgrade steps before
-updating your server's PHP
+updating your server's PHP.
 
 To upgrade an existing Mahara installation, follow the instructions here:
 
@@ -72,17 +70,17 @@ scripts. See:
 
 # SYSTEM REQUIREMENTS
 
-Here are the system requirements needed to run Mahara 21.10.
+Here are the system requirements needed to run Mahara 21.04.
 
 ### OS
 
-Mahara is only officially supported on Debian (8.0/"Jessie" LTS or later) and
-Ubuntu (16.04/"Xenial Xerus" LTS or later), however it will probably run in any
+Mahara is only officially supported on Debian (10.0/"Buster" LTS or later) and
+Ubuntu (18.04/"Bionic Beaver" LTS or later), however it will probably run in any
 OS with a suitable web server.
 
-Note: This version of Mahara has NOT been tested on Debian 10+ / Ubuntu 19.04+
+Note: This version of Mahara has NOT been tested on Debian 11+ / Ubuntu 20.10+
 
-### Web Server
+### Web server
 
 Mahara is only officially supported on Apache 2 or later, although it will
 probably run in any web server with the proper PHP extensions.
@@ -95,8 +93,8 @@ modification to support other databases.
  * MySQL 5.7 or later
  * MariaDB 10.1 or later
 
-Note: This version of Mahara has NOT been tested on Postgres 12+,
-MariaDB 10.3+ versions.
+Note: This version of Mahara has NOT been tested on Postgres 13+,
+MariaDB 10.6+ versions.
 
 ### PHP
 
@@ -126,23 +124,20 @@ The following PHP extensions are also required:
 Note: This version of Mahara has not been fully tested on all latest versions of PHP.
 Some aspects of Mahara may not function as expected
 
-### Web Browser
+### Web browser
 
 Mahara should be accessible in any modern web browser with Javascript support.
 However, it is only actively tested in the most recent versions of Firefox,
-Chrome (also for Android), Safari (also for iOS), and Opera. Microsoft browsers,
-i.e. Microsoft Edge, are supported to a maximum of the
-three most recent versions that are officially supported by Microsoft.
+Chrome (also for Android), Safari (also for iOS), and Microsoft Edge.
 
 You can still use Mahara on older browsers, but may not have all functionality
 available.
 
-For Mahara 21.10, the supported browser versions are:
- * Firefox - 75.0
- * Chrome - 81.0
- * Safari - 13.1
- * Opera - 67.0
- * MS Edge - 81.0
+For Mahara 21.04, the supported browser versions are:
+ * Firefox - 87.0
+ * Chrome - 90.0
+ * Safari - 14.0
+ * MS Edge - 90.0
  * Safari for iOS
  * Chrome for Android
 
@@ -150,13 +145,13 @@ For Mahara 21.10, the supported browser versions are:
 
 Mahara has been translated into many languages. You can get language packs from:
 
-* https://wiki.mahara.org/wiki/Language_Packs
+* https://langpacks.mahara.org
 
 
 ------------------
 # Copyright notice
 
-Copyright (C) 2006-2020 Catalyst IT and others; see:
+Copyright (C) 2006-2021 Catalyst IT and others; see:
 https://wiki.mahara.org/wiki/Contributors
 
 This program is free software: you can redistribute it and/or modify
