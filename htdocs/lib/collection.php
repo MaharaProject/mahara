@@ -1430,6 +1430,9 @@ class Collection {
         $this->mtime = db_format_timestamp(time());
         $this->commit();
         db_commit();
+        // Unset the current views and then reset it again
+        $this->set('views', null);
+        $this->views();
 
         return $count;
     }
