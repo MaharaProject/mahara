@@ -47,3 +47,7 @@
 .gridedit {
     min-height: 3rem;
 }
+
+.grid-stack.gridedit .ui-draggable-handle {
+    border: 1px dashed #d3d3d3;
+}
