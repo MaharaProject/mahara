@@ -5,8 +5,8 @@
 {foreach from=$profiles item=p}
     {if $p->link}<a href="{$p->link}" title="{$p->link}" class="btn btn-secondary btn-sm socialbtn">
         {if $showicon}
-            {if $p->faicon}
-            {$p->faicon|safe}
+            {if $p->icon}
+            {$p->icon|safe}
             {else}
             <img src="{$p->icon}" alt="{$p->link}" class="valign-top">
             {/if}
