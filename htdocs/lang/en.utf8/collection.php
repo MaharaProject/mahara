@@ -182,7 +182,7 @@ They gave the following reason:
 %s';
 
 $string['accessdeniedundo'] = 'The statement has already been reset. You do not have access to the portfolio any longer.';
-$string['undonesubject'] = 'Portfolio statement reset request actioned';
+$string['undonesubject'] = 'Review statement reset request was actioned';
 $string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who originally confirmed the statement.';
 //Portfolio review primary statement checkbox sr-only text
 $string['sharedviewverifiedunchecked'] = '%s by %s is not yet reviewed';

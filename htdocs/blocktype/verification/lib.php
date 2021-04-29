@@ -392,11 +392,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         $view = new View($form->get_property('viewid'));
 
         if ($record->private != 1 && !empty($configdata['lockportfolio'])) {
-            // Lock the collection
-            if ($view->get_collection()) {
-                $collectionid = $view->get_collection()->get('id');
-                execute_sql("UPDATE {collection} SET lock = 1 WHERE id = ?", array($collectionid));
-            }
+            $view->get_collection()->lock_collection();
         }
 
         if ($record->private != 1 && !empty($configdata['notification'])) {
@@ -455,7 +451,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             ));
         }
 
-        if (empty($newtext)) {
+        if (empty($newtext) || $record->private) {
             // check if is the last verified locking statement block
             if (PluginBlocktypeVerification::is_last_locking_block($instance)) {
                 $view->get_collection()->unlock_collection();
@@ -699,7 +695,7 @@ EOF;
     public static function is_last_locking_block(BlockInstance $instance) {
         $viewid = $instance->get_view()->get('id');
 
-        $sql = "SELECT bi.id, bi.configdata, text FROM {block_instance} bi
+        $sql = "SELECT bi.id, bi.configdata, bvc.text, bvc.private FROM {block_instance} bi
         LEFT JOIN {blocktype_verification_comment} bvc
         ON bi.id = bvc.instance
         WHERE bi.blocktype = 'verification'
@@ -715,7 +711,7 @@ EOF;
                     break;
                 }
                 if ($config['lockportfolio'] == 1 && $config['addcomment'] == 1) {
-                    if ($b->text) {
+                    if ($b->text && empty($b->private)) {
                         $unlockcollection = false;
                     }
                     break;

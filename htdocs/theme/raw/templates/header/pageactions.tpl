@@ -42,14 +42,14 @@
                 </li>
             {/strip}{/if}
 
-            {if $usercaneditview}
+            {if $usercaneditview || $userisowner}
                 <li class="dropdown-item">
                     <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">
                         <span class="icon {if $viewlocked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">{str tag=manageaccess section=view}</span>
                     </a>
                 </li>
-           {/if}
+            {/if}
 
             <li class="dropdown-item">
                 <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
