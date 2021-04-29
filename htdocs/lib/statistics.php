@@ -270,7 +270,7 @@ function institution_data_verifier_current($institution) {
     $current = institution_data_current($institution);
 
     // How many portfolios are there
-    $data['verifierportfolios'] = count_records_sql("SELECT COUNT(*) FROM {collection_template} ct
+    $data['verifierportfolios'] = count_records_sql("SELECT COUNT(*) AS count FROM {collection_template} ct
                                                      JOIN {collection} c ON c.id = ct.collection
                                                      WHERE c.owner IN (" . $current['memberssql'] . ")", $current['memberssqlparams']);
 
@@ -284,7 +284,7 @@ function institution_data_verifier_current($institution) {
                                                                     AND v.type = 'progress' AND va.role = 'verifier'", $current['memberssqlparams']);
 
     // How many portfolios each verifier has
-    $portfoliosperverifier = get_records_sql_array("SELECT va.usr, ct.originaltemplate, COUNT(*) FROM {collection_template} ct
+    $portfoliosperverifier = get_records_sql_array("SELECT va.usr, ct.originaltemplate, COUNT(*) AS count FROM {collection_template} ct
                                                     JOIN {collection} c ON c.id = ct.collection
                                                     JOIN {collection_view} cv ON cv.collection = c.id
                                                     JOIN {view} v ON v.id = cv.view
@@ -295,7 +295,7 @@ function institution_data_verifier_current($institution) {
                                                     ORDER BY COUNT(*)", $current['memberssqlparams']);
 
     // How many people have a copy of which template
-    $ownerspertemplate = get_records_sql_array("SELECT COUNT (ct.originaltemplate), ct.originaltemplate
+    $ownerspertemplate = get_records_sql_array("SELECT COUNT(ct.originaltemplate) AS count, ct.originaltemplate
                                                 FROM {collection_template} ct
                                                 JOIN {collection} c on c.id = ct.collection
                                                 WHERE c.owner IN (" . $current['memberssql'] . ")
