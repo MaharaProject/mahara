@@ -10,7 +10,7 @@
     <thead>
         <tr>
             <th class="icons"></th>
-            <th>{str tag='service' section='artefact.internal'}</th>
+            <th>{str tag='socialprofile' section='artefact.internal'}</th>
             <th>{str tag='profileurl' section='artefact.internal'}</th>
             {if $controls}<th class="control-buttons">
                 <span class="accessible-hidden sr-only">{str tag=edit}</span>
@@ -22,9 +22,9 @@
         <tr class="social-info">
             <td class="text-center">
                 {if $row->icon}
-                {$row->icon|safe}
+                    <img src="{$row->icon}" alt="{$row->description}">
                 {else}
-                <img src="{$row->icon}" alt="{$row->description}">
+                    {$row->faicon|safe}
                 {/if}
             </td>
             <td>

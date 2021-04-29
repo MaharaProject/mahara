@@ -1203,6 +1203,9 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
             case 'facebook':
                 $link = 'https://www.facebook.com/' . hsc($data);
                 break;
+            case 'tumblr':
+                $link = 'https://' . hsc($data) . '.tumblr.com';
+                break;
             case 'twitter':
                 // Strip an "@" sign if they put one on.
                 if (strlen($data) && $data[0] == '@') {
@@ -1263,19 +1266,19 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
 
             switch ($record->note) {
                 case 'facebook':
-                $record->icon = '<span class="icon icon-brand icon-lg icon-facebook-square" style="color: #4267B2"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-facebook-square" style="color: #4267B2"></span>';
                     break;
                 case 'tumblr':
-                    $record->icon = '<span class="icon icon-brand icon-lg icon-tumblr-square" style="color: #001935"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-tumblr-square" style="color: #001935"></span>';
                     break;
                 case 'twitter':
-                    $record->icon = '<span class="icon icon-brand icon-lg icon-twitter" style="color: #00ACED"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-twitter" style="color: #00ACED"></span>';
                     break;
                 case 'instagram':
-                    $record->icon = '<span class="icon icon-brand icon-lg icon-instagram" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); background-clip: text; color: transparent; line-height: 1"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-instagram" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); background-clip: text; color: transparent; line-height: 1"></span>';
                     break;
                 case 'pinterest':
-                    $record->icon = '<span class="icon icon-brand icon-lg icon-pinterest" style="color: #E80021"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-pinterest" style="color: #E80021"></span>';
                     break;
                 case 'icq':
                     $record->icon = favicon_display_url('www.icq.com');
@@ -1284,27 +1287,31 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
                     $record->icon = favicon_display_url('www.aim.com');
                     break;
                 case 'yahoo':
-                    $record->icon = '<span class="icon icon-brand icon-lg icon-yahoo" style="color: #4B06A3"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-yahoo" style="color: #4B06A3"></span>';
                     break;
                 case 'skype':
-                    $record->icon = '<span class="icon icon-brand icon-lg icon-skype" style="color: #3498D8"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-skype" style="color: #3498D8"></span>';
                     break;
                 case 'jabber':
                     // Since www.jabber.org favicon is not working...
                     $record->icon = favicon_display_url('planet.jabber.org');
                     break;
                 default:
-                    // We'll fall back to the "no favicon" default icon
-                    $record->icon = '<span class="icon icon-lg icon-globe-americas" style="color: #BFBFF2"></span>';
+                    // This condition is for 'Other' social networks not found in the dropdown
+                    // $record->title == $record->link, description = Name of social network
 
-                    // If they've supplied a URL, use its favicon
-                    if (filter_var($record->title, FILTER_VALIDATE_URL)) {
-                        $url = parse_url($record->title);
+                    // Check for valid URL to take the favicon to use as the icon
+                    if (filter_var($record->link, FILTER_VALIDATE_URL)) {
+                        $url = parse_url($record->link);
                         // Check if $url['host'] actually exists - just in case
                         // it was badly formatted.
                         if (isset($url['host'])) {
                             $record->icon = favicon_display_url($url['host']);
                         }
+                    }
+                    else {
+                         // We'll fall back to the "no favicon" default icon
+                    $record->faicon = '<span class="icon icon-lg icon-globe-americas" style="color: #BFBFF2"></span>';
                     }
             }
             $newdata[] = $record;
@@ -1365,7 +1372,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         $items = array(
             'socialprofile_profiletype' => array(
                 'type'        => 'select',
-                'title'       => get_string('profiletype', 'artefact.internal'),
+                'title'       => get_string('socialprofile', 'artefact.internal'),
                 'options'     => $socialnetworkoptions,
                 'allowother'  => true,
                 'width'        => 171,

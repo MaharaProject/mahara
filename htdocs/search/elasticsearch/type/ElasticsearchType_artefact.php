@@ -324,12 +324,16 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                             "\r"
             ), ' ', strip_tags ( $record->note ) );
             $socialprofile = new ArtefactTypeSocialprofile ( $record->id );
-            $icons = $socialprofile->get_profile_icons ( array (
-                            $record
-            ) );
-            if (! empty ( $icons )) {
+            $icons = $socialprofile->get_profile_icons(array($record));
+            if (!empty($icons)) {
                 $record->link = $icons [0]->link;
-                $record->icon = $icons [0]->icon;
+
+                if (isset($icons[0]->faicon)) {
+                    $record->faicon = $icons [0]->faicon;
+                }
+                else {
+                    $record->icon = $icons [0]->icon;
+                }
             }
             else {
                 // Instantiate the attribute used by the template.
