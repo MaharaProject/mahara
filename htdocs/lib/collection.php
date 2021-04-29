@@ -1695,7 +1695,7 @@ class Collection {
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
         }
-        $viewids = $this->get_viewids();
+        $viewids = $this->get_viewids(true);
         try {
             db_begin();
             execute_sql("UPDATE {collection}
@@ -1704,7 +1704,10 @@ class Collection {
                         array($this->id)
             );
             View::_db_pendingrelease($viewids);
-            PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active()) {
+                PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            }
             require_once(get_config('docroot') . 'export/lib.php');
             add_submission_to_export_queue($this, $releaseuser, $externalid);
             db_commit();
@@ -1731,7 +1734,7 @@ class Collection {
             throw new ParameterException("Collection with id " . $this->id . " has no owner");
         }
 
-        $viewids = $this->get_viewids();
+        $viewids = $this->get_viewids(true);
 
         try {
             db_begin();
@@ -1745,7 +1748,10 @@ class Collection {
                         array($this->id)
             );
             View::_db_release($viewids, $this->owner, $this->submittedgroup);
-            PluginModuleSubmissions::release_submission($this, $releaseuser);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active()) {
+                PluginModuleSubmissions::release_submission($this, $releaseuser);
+            }
             db_commit();
         }
         catch (Exception $e) {
@@ -1796,9 +1802,11 @@ class Collection {
 
     /**
      * Quick way to find the view IDs of the collection
+     *
+     * @param boolean $includeprogress  Whether the progress page id is returned as well
      * @return array View IDs
      */
-    public function get_viewids() {
+    public function get_viewids($includeprogress = false) {
         $ids = array();
         $viewdata = $this->views();
 
@@ -1806,6 +1814,10 @@ class Collection {
             foreach ($viewdata['views'] as $v) {
                 $ids[] = $v->id;
             }
+        }
+
+        if ($includeprogress && $this->has_progresscompletion()) {
+            $ids[] = $this->has_progresscompletion();
         }
 
         return $ids;
@@ -1860,7 +1872,7 @@ class Collection {
             return false;
         }
 
-        $viewids = $this->get_viewids();
+        $viewids = $this->get_viewids(true);
         if (!$viewids) {
             throw new CollectionSubmissionException(get_string('cantsubmitemptycollection', 'view'));
         }
