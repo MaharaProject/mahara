@@ -22,6 +22,10 @@ Background:
     | name          | owner | grouptype | editroles |
     | The Avengers  | admin | standard  | all       |
 
+    And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     When I click on "Send friend request" in "Bob UserB" row
