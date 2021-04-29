@@ -31,9 +31,9 @@ $string['groupmember'] = 'Group member';
 $string['availabilitydate'] = 'Availability date';
 $string['availabilitydatedescription'] = 'Select the date from when the statement shall be available. Before then, the reviewer will see an alert letting them know that they cannot perform the review until that date. That date is also mentioned in the access notification. If you don\'t add a date, the statement can be made at any point in time.';
 $string['lockportfolio'] = 'Lock portfolio';
-$string['lockportfoliodescription'] = 'Decide whether the portfolio shall be locked when the statement has been made. If there are multiple statements, the portfolio is locked when the first is made that allows locking. Statement comments (if selected) can still be made.';
+$string['lockportfoliodescription'] = 'Decide whether the portfolio shall be locked when the statement has been confirmed. If there are multiple statements, the portfolio is locked when the first one is confirmed that allows locking. Statement comments (if selected) can still be made.';
 $string['notification'] = 'Notification to author';
-$string['notificationdescription'] = 'Send a notification to the portfolio author when the statement has been selected and / or a comment has been added.';
+$string['notificationdescription'] = 'Send a notification to the portfolio author when the statement has been confirmed and / or a comment has been added.';
 $string['resetstatement'] = 'Reset statement';
 $string['resetstatementdescription'] = 'Select the role or roles that a person must have to reset the statement. If no role is selected, nobody can reset the statement.';
 $string['availabilitydatemessage'] = 'You cannot yet approve the statement or add a comment if that is allowed. This is possible after %s.';
@@ -82,7 +82,7 @@ $string['addcommentsuccess'] = 'Adding comment to "%s" was successful.';
 $string['addcommentsuccessdraft'] = 'Adding draft comment to "%s" was successful.';
 
 // notification
-$string['verifymessagesubjectnoname'] = 'A statement has been left on your portfolio:';
+$string['verifymessagesubjectnoname'] = 'A statement has been confirmed on your portfolio:';
 $string['verifymessagenoname'] = 'The following statement has been confirmed on %s:
 %s';
 $string['verifymessagesubject'] = '%s has confirmed a statement on your portfolio';
