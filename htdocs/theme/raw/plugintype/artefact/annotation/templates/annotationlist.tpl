@@ -2,13 +2,15 @@
 <div class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-private{/if} list-group-item comment-item">
     <div class="flex-row">
         <div class="usericon-heading flex-title flex-row">
-            <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
-            {if $item->author}
-                <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
-            {else}
-                <img src="{profile_icon_url user=null maxheight=30 maxwidth=30}" alt="{str tag=profileimagetextanonymous}">
-            {/if}
-            </span>
+            <div class="float-left">
+                <span class="user-icon user-icon-30" role="presentation" aria-hidden="true">
+                {if $item->author}
+                    <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
+                {else}
+                    <img src="{profile_icon_url user=null maxheight=30 maxwidth=30}" alt="{str tag=profileimagetextanonymous}">
+                {/if}
+                </span>
+            </div>
             <div class="flex-title">
                 <h2 class="list-group-item-heading text-inline">
                     {if $item->author}
