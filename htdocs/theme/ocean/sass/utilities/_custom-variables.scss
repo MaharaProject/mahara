@@ -27,16 +27,16 @@ $navbar-default-border:                     scale-color($navbar-default-bg, $lig
 $navbar-toggle-color:                       $white;
 $navbar-toggle-bg:                          transparent;
 $navbar-toggle-hover-color:                 $white;
-$navbar-toggle-hover-bg:                    scale-color($navbar-default-bg, $lightness: -5.5%);
+$navbar-toggle-hover-bg:                    scale-color($navbar-default-bg, $lightness: -10%);
 $navbar-toggle-active-color:                $white;
-$navbar-toggle-active-bg:                   scale-color($navbar-default-bg, $lightness: -5.5%);
+$navbar-toggle-active-bg:                   scale-color($navbar-default-bg, $lightness: -10%);
 
 // Navbar menu
 $navbar-default-link-border:                scale-color($navbar-default-bg, $lightness: 5%);
 $navbar-default-link-color:                 $white;
 $navbar-default-link-hover-color:           $white;
 $navbar-default-link-bg:                    $theme-primary-color;
-$navbar-default-link-hover-bg:              scale-color($navbar-default-bg, $lightness: -5.5%);
+$navbar-default-link-hover-bg:              scale-color($navbar-default-bg, $lightness: -10%);
 $navbar-default-active-color:               $white;
 $navbar-default-active-bg:                  scale-color($navbar-default-bg, $lightness: -15%);
 
@@ -44,9 +44,9 @@ $navbar-default-active-bg:                  scale-color($navbar-default-bg, $lig
 $navbar-inverse-bg:                         scale-color($theme-primary-color, $lightness: 90%);
 $navbar-inverse-link-color:                 $gray-700;
 $navbar-inverse-link-hover-color:           $gray-700;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -10%);
 $navbar-inverse-link-active-color:          $black;
-$navbar-inverse-link-active-bg:             scale-color($navbar-inverse-bg, $lightness: -2%);
+$navbar-inverse-link-active-bg:             scale-color($navbar-inverse-bg, $lightness: -10%);
 
 // Navbar menu children toggles
 $navbar-inverse-toggle-color:               $white;

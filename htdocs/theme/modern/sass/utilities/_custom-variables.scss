@@ -42,15 +42,15 @@ $navbar-default-link-border:                scale-color($navbar-default-bg, $lig
 $navbar-default-link-color:                 $white;
 $navbar-default-link-hover-color:           $navbar-default-link-color;
 $navbar-default-link-bg:                    $navbar-default-bg;
-$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: -3%);
+$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: -15%);
 $navbar-default-active-color:               $navbar-default-link-color;
-$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -3%);
+$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -15%);
 
 // Navbar menus children
 $navbar-inverse-bg:                         $theme-secondary-color;
 $navbar-inverse-link-color:                 $white;
 $navbar-inverse-link-hover-color:           $white;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -2%);
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -10%);
 $navbar-inverse-link-active-color:          $white;
 $navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
 
