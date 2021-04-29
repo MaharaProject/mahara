@@ -25,6 +25,10 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         return array('general' => 22000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     /**
      * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type

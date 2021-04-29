@@ -43,6 +43,10 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         return array('blog' => 11000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
 

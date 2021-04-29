@@ -25,6 +25,10 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 9000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function single_artefact_per_block() {
         return true;
     }

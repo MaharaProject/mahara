@@ -25,6 +25,10 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         return array('internal' => 26000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function get_css_icon_type($blockname) {
         return 'icon-regular';
     }
