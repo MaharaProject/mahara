@@ -95,6 +95,7 @@ h1#viewh1 {
 
 .user-page-content .block-header a {
     color: #FFFFFF;
+    text-decoration: none;
 }
 .user-page-content .card .card-header:not(.feedtitle) {
     font-weight: bold;
