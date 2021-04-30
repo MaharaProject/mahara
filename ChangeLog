@@ -1,2 +1,145 @@
+21.04.0 (2021-04-30)
+- Bug 1803101: Error importing Leap2A w/ peer assessment
+- Bug 1873118: Files doubling up in an export
+- Bug 1890357: Update Google Fonts installation information
+- Bug 1898502: Android tablet - TinyMCE editor allows all 6 heading sizes
+- Bug 1898650: Duplicate Collection View Displayorder
+- Bug 1900786: combined exports: timing issues causing leap2a to be put into wrong directory
+- Bug 1902146: SmartEvidence framework Institution "All" option cannot be saved in non-english
+- Bug 1902474: Copying an existing SmartEvidence causes the original to lose their standards
+- Bug 1902679: Add confirmation step for deleting an external app
+- Bug 1902966: Style issues with plans
+- Bug 1903205: Only show Account migrate link if migration is possible
+- Bug 1903478: View update of description breaks for pages owned by deleted group
+- Bug 1903620: Access list needs to retain the sorted list of people
+- Bug 1904061: Line height too small in inbox
+- Bug 1904352: Adding navigation block to a collection can cause loss of data
+- Bug 1904607: Profile icon not displayed correctly when there is no language toggle
+- Bug 1906383: Use of Image Gallery block means Copy page unavailable
+- Bug 1907719: Various theme fixes
+- Bug 1908837: Trying to get property of non-object in module/assessmentreport/lib.php
+- Bug 1908845: Removing the Admin Account from an institution is producing warning
+- Bug 1908858: View access sharing to institution needs some adjustment
+- Bug 1909034: Fix some styling issues in peer assessment
+- Bug 1912414: Style updates
+- Bug 1912685: Upgrade SimpleSAMLphp to 1.19.x
+- Bug 1913504: Issues with postgres 12 and adsrc column
+- Bug 1915352: Problem with view_instructions_lock when deleting a page
+- Bug 1915963: Institution admin doesn't see masquerading option on profile and suspension / deletion on account settings page
+- Bug 1915973: Update ADODB from 5.20.18 to 5.20.20
+- Bug 1915976: Upgrade Chart.js from 2.9.3 to 2.9.4
+- Bug 1915978: Upgrade CSS Tidy from v1.7.1 to v1.7.3
+- Bug 1915980: Upgrade Dropzone from v5.7.0 to v5.7.6
+- Bug 1915985: Upgrade Gridstack from v0.4.0 to v0.6.4
+- Bug 1915986: Upgrade Javascript Templates from v3.11.0 to v3.19.0
+- Bug 1915987: Upgrade jscolor from v2.3.3 to v2.4.5
+- Bug 1915988: Upgrade json editor from 1.3.0 to 1.3.5
+- Bug 1915989: Upgrade marked from v1.1.1 to v2.0.0
+- Bug 1915995: Upgrade PHPMailer from v6.1.5 to 6.2.0
+- Bug 1915997: Upgrade tinymce from v5.0.13 to v5.7.0
+- Bug 1915998: Upgrade videojs from v7.6.5 to v7.11.4
+- Bug 1916654: Links that point to the page editor page in the Mahara manual don't work any more
+- Bug 1918367: LTI accessing pages of collection when link is for progresscompletion.php page
+- Bug 1922706: Password reset link broken
+- Bug 1922838: Not returned to correct URL when deleting pages within institution collection
+- Bug 1922841: Can't copy personal locked portfolio
+- Bug 1926365: Unable to drag/drop a block on empty page
+- Bug 1926380: Device detection error
+- Bug 1926382: Portfolio locking - replace duplicate code with lock_collection
+- Bug 1926519: Restrict which blocks can be put onto the portfolio completion page
+- Bug 1926540: Creating a progress collection then adding a page causes two collections to show on index page
+- Bug 1926549: Portfolio with portfolio completion page can't be viewed when submitted to a group
+- Bug 1926550: Warning "Undefined variable stdClass::$count" on statistics.php for completion and review report
+- Bug 1269724: Updating journal within page exits to journal instead of returning to page
+- Bug 1539322: Remove mobile device detection
+- Bug 1730263: wrong default option for personal information when importing
+- Bug 1886727: Mahara links not directing to latest version 
+- Bug 1890973: Behat: 'Shared with me' pages displayed in order of most recent comments 
+- Bug 1895066: Draft peer assessment needs additional indicator besides colour
+- Bug 1897190: Behat: Tidy up and improve behat properties file 
+- Bug 1897484: Wrong error message for not being able to log in when institution is suspended
+- Bug 1899855: Update the webservices variables help text - currently hardcoded in english
+- Bug 1901436: Add custom theme inpage nav active link background constrast
+- Bug 1901645: Needing to temporarily fix composer to version 1 because of ssphp
+- Bug 1901780: layout of elasticsearch results is not consistent
+- Bug 1902331: Correct language strings in monitor plugin
+- Bug 1903469: Array and string offset access syntax with curly braces is deprecated
+- Bug 1903592: ldap sync users error when there is no email address for a user
+- Bug 1903616: course info lib needs to check for present cpd hours, course organisation values before displaying
+- Bug 1903618: Allow info button on plugins to work if clicking inner span
+- Bug 1903933: Drop-down icon of last item in main menu inconsistent in expanding sub menu
+- Bug 1904349: Count() error when testing behat in some circumstances
+- Bug 1904645: Maroon theme footer overlapping content above
+- Bug 1904946: Filebrowser - Uploading number of files exceeding limit gives never-ending spinner
+- Bug 1905086: Need to fix hardcoded strings in the view access messages
+- Bug 1905477: Need to use the get_user_language() function in activity to work out right language to send message in
+- Bug 1905624: Registration email to admin has mixed English and other language if admin wants messages in another language
+- Bug 1906596: Update developer docker options to use compose
+- Bug 1907000: recent/tagged journal entries block creates new entry on dragging
+- Bug 1907019: Installing a font via zip doesn't add the licence file correctly
+- Bug 1907718: Double up of code that doesn't do anything in editlayout
+- Bug 1909116: Unable to install MAHARA 20.10 on Mysql 5.6
+- Bug 1911358: Editing Dashboard produces a console error if inbox messages present
+- Bug 1911817: Account and group access roles for Edit access drop-down is populated by more than one source
+- Bug 1911822: Copying a portfolio with SmartEvidence into the group/institution/site level throws errors
+- Bug 1912166: When setting up an institution, put the focus on the first form field 'Institution name'
+- Bug 1914298: running make pdfexport in terminal produces error
+- Bug 1915961: Change date format in CSV export for 'Account details' report
+- Bug 1916833: Annotation can be updated on a page
+- Bug 1916997: Tidying up some phpdocs in library files
+- Bug 1918077: Make the 'Access denied' message more noticeable
+- Bug 1922514: Profile completion preview doesn't list tips
+- Bug 1922702: 'Quick edit' doesn't show TinyMCE
+- Bug 1922704: Fix heading styles in instructions
+- Bug 1922840: Find student ID and lowercase search for names in Elasticsearch
+- Bug 1922844: Fix button drop-down toggles
+- Bug 1923531: Make password instructions more explicit
+- Bug 1924942: Create user webservice description for username parameter is incorrect
+- Bug 1924949: Error when adding an image block to a site page
+- Bug 1926115: Webservices check that service exists when using test client
+- Bug 1926243: General language string review for Mahara 21.04
+- Bug 1926381: Small Mahara 21.04 styling fixes
+- Bug 1926384: Copy institution portfolio (queue not reducing)
+- Bug 1926407: Allow older skins not to break when they are applied to a page
+- Bug 1926529: Profile icon has a rectangular border around square icons
+- Bug 1926530: Elasticsearch producing warning: Undefined property: stdClass::$icon
+- Bug 1904949: Duplicate keys in the same file lang/en.utf8
+- Bug 1914651: Extra whitespace in the default Upload Agreement for File plugin
+- Bug 1926245: Verifier summary: tabular mode check typo
+- Bug 1100980: Change pieforms to allow for the same lang string non-capitalized
+- Bug 1424419: Delete all pages when a collection is deleted
+- Bug 1831415: Exclude group tutors and admins from showing under "Members without a submission to the group"
+- Bug 1862370: New submissions plugin
+- Bug 1866779: Move 'Watchlist notification delay' out of site options and into the plugin administration
+- Bug 1892428: Turn peer role into configurable role so it can see content
+- Bug 1902318: Better options when it comes to making screenshots in behat
+- Bug 1906708: The Mahara docker environment needs a sendmail program.
+- Bug 1908628: Allow block title to be autoselected for quicker editing
+- Bug 1912121: Add site config options to config-defaults that can be overridden by config.php
+- Bug 1913386: Don't display page description on page itself
+- Bug 1915366: Allow docker-compose to run multpile instances on one host
+- Bug 1915469: Making theming of buttons more efficient
+- Bug 1916974: Have docs directory for PHPDocumentor
+- Bug 1919273: Trigger off fast_index.php when reindexing the site with elasticsearch
+- Bug 1922624: Create a default option for comments on the 'Note' block and for pages
+- Bug 1922627: Granular options which portfolios to see in 'Latest changes I can view'
+- Bug 1922628: 'More options' button pages has 'Manage access' option
+- Bug 1922630: More useful information on the 'Portfolio completion' overview page
+- Bug 1922632: Restrict with how many people or groups of people you can share your portfolio
+- Bug 1922634: 'Portfolio review' block
+- Bug 1922635: Add portfolio completion information to 'Shared with me' page
+- Bug 1922680: Portfolio viewer removes themselves from a portfolio
+- Bug 1922683: Send notification when revoking access for a person
+- Bug 1922689: Report: Completion and review
+- Bug 1922692: Report: Reviewer summary
+- Bug 1922694: Report: Portfolios with reviewer
+- Bug 1922695: Remove the institution membership joining notification when account is created by the system
+- Bug 1922705: Show alert when closing block via 'Close' icon
+- Bug 1922834: Show student ID as part of the display name function
+- Bug 1922835: Create portfolio creation queue for institution templates
+- Bug 1922836: Make display of the name more flexible on a page
+- Bug 1922837: Create templates more efficiently on the institution and site level
+- Bug 1923676: Group administrator be allowed to see group submission archive for their group
+
 21.04rc1 (2021-04-27)
 
