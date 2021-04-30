@@ -64,5 +64,10 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
             log_warn(get_string('samlneedtoremovephar', 'auth.saml', $extroot . 'external/composer.phar'), true, false);
         }
     }
+
+    if ($oldversion < 2020030105) {
+        set_config_plugin('auth', 'saml', 'version', '1.19.1');
+    }
+
     return $status;
 }
