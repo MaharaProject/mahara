@@ -84,7 +84,7 @@ ifdef simplesamlphp
 	@echo "SimpleSAMLphp already exists - doing nothing"
 else
 	@echo "Pulling SimpleSAMLphp from download ..."
-	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.0/simplesamlphp-1.19.0.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
+	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.1/simplesamlphp-1.19.1.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
 	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp require predis/predis
 	@echo "Copying www/resources/* files to sp/resources/ ..."
 	@cp -R htdocs/auth/saml/extlib/simplesamlphp/www/resources/ htdocs/auth/saml/sp/
