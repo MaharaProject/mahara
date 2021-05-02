@@ -62,7 +62,7 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     And I should see "Industry"
     And I should see "Social media"
     And I should see "Join a group"
-    And I should see "Make a friend"
+    And I should see "Make a contact"
     # site admin enable 4 fields
     When I enable the switch "First name"
     And I enable the switch "Last name"

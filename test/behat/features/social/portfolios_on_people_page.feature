@@ -1,7 +1,7 @@
 @javascript @core
 Feature: Go to People page
     As a user
-    I want to see a list of my friends and pending requests and their portfolio if they exist
+    I want to see a list of my contacts and pending requests and their portfolio if they exist
 
 Background:
     Given the following "users" exist:
@@ -22,8 +22,8 @@ Background:
     | CollectionA | Angela's Collection    | user      | UserA      |PageA |
     | CollectionB | Benjamin's Collections | user      | UserB      |PageB |
 
-Scenario: Create friends and portfolios for each to see portfolios on People page
-    # Log in as a UserA and create portfolio and set sharing access to friends
+Scenario: Create contacts and portfolios for each to see portfolios on People page
+    # Log in as a UserA and create portfolio and set sharing access to contacts
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "CollectionA" card access menu
@@ -35,16 +35,16 @@ Scenario: Create friends and portfolios for each to see portfolios on People pag
     And I select "friends" from "General" in shared with select2 box
     And I press "Save"
 
-    # Let UserA add UserB as a friend
+    # Let UserA add UserB as a contact
     Then I choose "People" in "Engage" from main menu
-    And I click on "Send friend request" in "Benjamin Bobby" row
+    And I click on "Send contact request" in "Benjamin Bobby" row
     And I set the field "Message" to "Love me, love me, say you do!"
-    And I press "Request friendship"
+    And I press "Make a contact request"
     And I log out
 
-    # Log in as UserB, accept UserA's friend request
+    # Log in as UserB, accept UserA's contact request
     Then I log in as "UserB" with password "Kupuh1pa!"
-    And I follow "pending friend"
+    And I follow "pending contact"
     And I click on "Approve"
 
     # Change sharing permissions
@@ -60,13 +60,13 @@ Scenario: Create friends and portfolios for each to see portfolios on People pag
 
     # UserB should now be able to see UserA's Portfolio on the People page
     When I choose "People" in "Engage" from main menu
-    And I select "Friends" from "filter"
+    And I select "Contacts" from "filter"
     Then I should see "CollectionA, PageA single"
     Then I log out
 
-    # Log in as UserA (who is now friends with UserB), to see UserB's Portfolio on the People page
+    # Log in as UserA (who is now a contact with UserB), to see UserB's Portfolio on the People page
     Given I log in as "UserA" with password "Kupuh1pa!"
     And  I choose "People" in "Engage" from main menu
-    And I select "Friends" from "filter"
+    And I select "Contacts" from "filter"
     And I press "Search"
     Then I should see "CollectionB, PageB single"

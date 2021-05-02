@@ -30,17 +30,17 @@
     <div class="column-content">
         <div class="bt-profileinfo panel panel-secondary clearfix" id="user_blockinstance_79">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 About me
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_79_target">
         <div class="panel-body flush">
@@ -48,31 +48,31 @@
 
 
     <ul class="unstyled profile-info"><li><strong>First name:</strong> Alice</li>
-            
+
                                     <li><strong>Last name:</strong> User1</li>
-            
+
                                     <li><strong>Student ID:</strong> 500</li>
-            
-        
+
+
     </ul></div>
 
 
-        
+
     </div>
 </div>
 <div class="bt-myviews panel panel-secondary clearfix" id="user_blockinstance_78">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 My portfolios
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_78_target">
             <div class="list-group">
@@ -86,40 +86,40 @@
             <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25">Portfolio page Alice 1</a>
         </h4>
 
-        
-        
+
+
                 <div class="list-group-item-text text-small">
             Portfolio page Alice 1 description
         </div>
-        
 
-        
+
+
     </div>
 
 
         </div>
             <div id="user_myviews_page_container" class="hidden"><div id="user_myviews_pagination" class="pagination-wrapper center"><div class="lead text-small results pull-right">1 result</div></div></div>
-    
+
         </div>
 
 
 
-        
+
     </div>
 </div>
 <div class="bt-mygroups panel panel-secondary clearfix" id="user_blockinstance_77">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 My groups
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_77_target">
             <div class="panel-body">
@@ -128,7 +128,7 @@
 
 
 
-        
+
     </div>
 </div>
 
@@ -138,66 +138,66 @@
     <div class="column-content">
         <div class="bt-myfriends panel panel-secondary clearfix" id="user_blockinstance_76">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
-                My friends
-                
+                My contacts
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_76_target">
         <div class="friends panel-body">
             <div class="lead text-small text-center">
-            Try <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/user/find.php">searching for new friends</a> to grow your network.
+            Try <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/user/find.php">searching for new contacts</a> to grow your network.
         </div>
-    
+
 
 </div>
 
 
-        
+
     </div>
 </div>
 <div class="bt-wall panel panel-secondary clearfix" id="user_blockinstance_75">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 Wall
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_75_target">
         <div id="user_wall-wrap" class="panel-form"><p class="metadata">Maximum 1500 characters per post.</p><div>Post <span class="requiredmarker">*</span></div><div class="makeprivate checkbox form-group">Make your post private <div class="form-switch">
     <div class="switch">
-        
+
             <span class="switch-inner"></span>
             <span class="switch-indicator"></span>
             <span class="state-label on">Yes</span>
             <span class="state-label off">No</span>
-        
+
     </div>
     </div>
 </div><div class="form-group"></div></div><div id="user_wall" class="wall">
             <div class="lead text-small text-center">No wall posts to display</div>
-    
-    
+
+
 </div>
     <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/blocktype/wall/wall.php?id=75" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right"></span> View whole wall</a>
 
 
 
-        
+
     </div>
 </div>
 
@@ -263,17 +263,17 @@
     <div class="column-content">
         <div class="bt-newviews panel panel-secondary clearfix" id="user_blockinstance_105">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 Latest changes I can view
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_105_target">
         <div class="panel-body">
@@ -282,22 +282,22 @@
 
 
 
-        
+
     </div>
 </div>
 <div class="bt-myviews panel panel-secondary clearfix" id="user_blockinstance_106">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 My portfolios
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_106_target">
             <div class="list-group">
@@ -311,25 +311,25 @@
             <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25">Portfolio page Alice 1</a>
         </h4>
 
-        
-        
+
+
                 <div class="list-group-item-text text-small">
             Portfolio page Alice 1 description
         </div>
-        
 
-        
+
+
     </div>
 
 
         </div>
             <div id="user_myviews_page_container" class="hidden"><div id="user_myviews_pagination" class="pagination-wrapper center"><div class="lead text-small results pull-right">1 result</div></div></div>
-    
+
         </div>
 
 
 
-        
+
     </div>
 </div>
 
@@ -339,76 +339,76 @@
     <div class="column-content">
         <div class="bt-inbox panel panel-secondary clearfix" id="user_blockinstance_107">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 Inbox
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_107_target">
             <div id="user_inboxblock" class="inboxblock list-group">
                 <div class="has-attachment panel-default collapsible list-group-item">
                             <a class="collapsed link-block" href="#message_content_maharamessage_16">
                                             <span class="icon icon-wrench text-default left"></span>
-                    
+
                     <span class="sr-only"></span>
                     Institution membership confirmation
                     <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
                 </a>
-            
+
             <div class="collapse" id="user_message_content_maharamessage_16">
                                     <p class="content-text">You have been added as a member of Institution A.</p>
-                    
-                    
-                
+
+
+
             </div>
         </div>
                 <div class="has-attachment panel-default collapsible list-group-item">
                             <a class="collapsed link-block" href="#message_content_institutionmessage_1">
                                             <span class="icon icon-university text-default left"></span>
-                    
+
                     <span class="sr-only"></span>
                     You have been invited to join the institution...
                     <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
                 </a>
-            
+
             <div class="collapse" id="user_message_content_institutionmessage_1">
                                     <p class="content-text">You have been invited to join the institution Institution A. You can confirm your membership of this institution on your "Institution settings" page:</p>
                                         <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/account/institutions.php" class="text-small">
                         Institution membership <span class="icon icon-arrow-right mls icon-sm"></span>
                     </a>
-                    
-                    
-                
+
+
+
             </div>
         </div>
-        
+
     </div>
-    
+
     <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
-            
-        
+
+
     </div>
 </div>
 <div class="bt-inbox panel panel-secondary clearfix" id="user_blockinstance_108">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 Topics I am following
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_108_target">
             <div class="panel-body">
@@ -417,25 +417,25 @@
 
 
 
-        
+
                             <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
-            
-        
+
+
     </div>
 </div>
 <div class="bt-watchlist panel panel-secondary clearfix" id="user_blockinstance_109">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 Watched pages
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_109_target">
             <div class="panel-body">
@@ -444,7 +444,7 @@
 
 
 
-        
+
     </div>
 </div>
 
@@ -519,17 +519,17 @@
     <div class="column-content">
         <div class="bt-text panel panel-secondary clearfix" id="user_blockinstance_110">
             <h3 class="title panel-heading js-heading">
-            
+
 
             </h3><div class="collapse-inline">
                 Alice Text 1
-                
+
             </div>
 
-            
 
-        
-    
+
+
+
 
     <div class="block" id="user_blockinstance_110_target">
         <div class="textblock panel-body flush">
@@ -537,7 +537,7 @@
 </div>
 
 
-        
+
     </div>
 </div>
 
@@ -545,12 +545,12 @@
 </div>
 <div id="user_row_1_column_2" class="column-layout columns3 col-width-33" style="width:31%;">
     <div class="column-content">
-        
+
     </div>
 </div>
 <div id="user_row_1_column_3" class="column-layout columns3 last col-width-33" style="width:31%;">
     <div class="column-content">
-        
+
     </div>
 </div>
 

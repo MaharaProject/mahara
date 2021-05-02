@@ -1,11 +1,11 @@
 @javascript @core @core_user @core_portfolio @friends
-Feature: Friends feature functionality
+Feature: Contact feature functionality
     1. UserA finds people within and outside of their institution
         a. Verify page elements
             - Search field
             - Side blocks
-            - Results - User image, user name, institution member and action buttons (send friend request, send message)
-    2. UserA requests friendship - add message (make 4 friend requests)
+            - Results - User image, user name, institution member and action buttons (send contact request, send message)
+    2. UserA requests to be a contact - add message (make 4 contact requests)
 
 Background:
     Given the following "institutions" exist:
@@ -21,87 +21,87 @@ Background:
     | UserD | Kupuh1pa! | UserD@example.org  | Dave    | UserD | insttwo | internal | member |
     | UserE | Kupuh1pa! | UserE@example.org  | Earl    | UserE | insttwo | internal | member |
 
-Scenario: UserA sends friend requests to UserB, UserC, User E
+Scenario: UserA sends contact requests to UserB, UserC, User E
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     Then I should see "Bob UserB"
     And I should see "Cecilia UserC"
     And I should not see "Dave UserD"
-    When I click on "Send friend request" in "Bob UserB" row
-    Then I should see "Send Bob UserB a friendship request"
-    When I fill in "Would you like to be my friend?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Bob UserB"
-    When I click on "Send friend request" in "Cecilia UserC" row
-    Then I should see "Send Cecilia UserC a friendship request"
-    When I fill in "Would you like to be my friend Cecilia?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Cecilia UserC"
+    When I click on "Send contact request" in "Bob UserB" row
+    Then I should see "Send Bob UserB a contact request"
+    When I fill in "Would you like to be my contact?" for "Message"
+    And I press "Make contact request"
+    Then I should see "Sent a contact request to Bob UserB"
+    When I click on "Send contact request" in "Cecilia UserC" row
+    Then I should see "Send Cecilia UserC a contact request"
+    When I fill in "Would you like to be my contact Cecilia?" for "Message"
+    And I press "Make contact request"
+    Then I should see "Sent a contact request to Cecilia UserC"
     When I select "Everyone" from "Filter"
     And I press "Search"
-    And I click on "Send friend request" in "Dave UserD" row
-    Then I should see "Send Dave UserD a friendship request"
-    When I fill in "Would you like to be my friend Dave?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Dave UserD"
+    And I click on "Send contact request" in "Dave UserD" row
+    Then I should see "Send Dave UserD a contact request"
+    When I fill in "Would you like to be my contact Dave?" for "Message"
+    And I press "Make contact request"
+    Then I should see "Sent a contact request to Dave UserD"
 
-    # sending a friend request from a profile page
+    # sending a contact request from a profile page
     When I select "Everyone" from "Filter"
     And I press "Search"
     Then I should see "Earl UserE"
     When I follow "Earl UserE"
     Then I should see "Earl UserE"
     And I should see "Member of Institution Two"
-    When I click on "Request friendship"
-    Then I should see "Send Earl UserE a friendship request"
-    When I fill in "Would you like to be my friend Earl?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Earl UserE"
+    When I click on "Make contact request"
+    Then I should see "Send Earl UserE a contact request"
+    When I fill in "Would you like to be my contact Earl?" for "Message"
+    And I press "Make contact request"
+    Then I should see "Sent a contact request to Earl UserE"
     And I log out
 
-    # log in as Earl and view pending friend Requests and accept
+    # log in as Earl and view pending contact requests and accept
     Given I log in as "UserE" with password "Kupuh1pa!"
-    And I follow "pending friend"
+    And I follow "pending contact"
     Then I should see "Angela UserA (UserA)"
     And I should see the date "today" in the ".pendingfriend" element with the format "l, d F Y"
     And I should see "Member of Institution One"
     When I press "Approve"
-    Then I should see "Accepted friend request"
+    Then I should see "Accepted contact request"
     And I log out
 
-    # Admin sets friends control so "Nobody" may add them as a friend
+    # Admin sets contact control so "Nobody" may add them as a contact
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
-    And I select the radio "Nobody may add me as a friend"
+    And I select the radio "Nobody may add me as a contact"
     And press "Save"
-    Then I should see "Updated friends control"
+    Then I should see "Updated contact control"
     And I log out
 
-    # User B accepts the friendship request
+    # User B accepts the Contact request
     Given I log in as "UserB" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I follow "pending contact"
     Then I should see "Angela UserA (UserA)"
     And I should see the date "today" in the ".pendingfriend" element with the format "l, d F Y"
     And I should see "Member of Institution One"
     When I press "Approve"
-    Then I should see "Accepted friend request"
+    Then I should see "Accepted contact request"
     And I log out
     Given I log in as "UserC" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I follow "pending contact"
     Then I should see "Angela UserA (UserA)"
     And I should see the date "today" in the ".pendingfriend" element with the format "l, d F Y"
     And I should see "Member of Institution One"
     When I click on "Deny"
     Then I should see "Reason for rejecting request"
     When I fill in "I don't know who you are" for "Reason for rejecting request"
-    And I press "Deny friend request"
-    Then I should see "Rejected friend request"
+    And I press "Deny contact request"
+    Then I should see "Rejected contact request"
     Then I log out
 
-    # UserC logs in and tries to add UserA who has set their friends control to Nobody may add me as a friend
+    # UserC logs in and tries to add UserA who has set their contact control to Nobody may add me as a contact
     Given I log in as "UserE" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     When I select "Everyone" from "Filter"
     And I press "Search"
-    Then I should see "This person does not want any new friends." in the "Admin Account" row
-    And I click on "Send friend request" in "Dave UserD" row
+    Then I should see "This person does not want any new contacts." in the "Admin Account" row
+    And I click on "Send contact request" in "Dave UserD" row

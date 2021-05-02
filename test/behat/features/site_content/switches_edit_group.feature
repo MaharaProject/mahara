@@ -24,43 +24,43 @@ Background:
 
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
-    When I click on "Send friend request" in "Bob UserB" row
-    Then I should see "Send Bob UserB a friendship request"
-    When I fill in "Would you like to be my friend?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Bob UserB"
-    When I click on "Send friend request" in "Cecilia UserC" row
-    Then I should see "Send Cecilia UserC a friendship request"
-    When I fill in "Would you like to be my friend Cecilia?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Cecilia UserC"
+    When I click on "Send contact request" in "Bob UserB" row
+    Then I should see "Send Bob UserB a contact request"
+    When I fill in "Would you like to be my contact?" for "Message"
+    And I press "Request contact"
+    Then I should see "Sent a contact request to Bob UserB"
+    When I click on "Send contact request" in "Cecilia UserC" row
+    Then I should see "Send Cecilia UserC a contact request"
+    When I fill in "Would you like to be my contact Cecilia?" for "Message"
+    And I press "Request contact"
+    Then I should see "Sent a contact request to Cecilia UserC"
     When I select "Everyone" from "Filter"
     And I press "Search"
-    And I click on "Send friend request" in "Dave UserD" row
-    Then I should see "Send Dave UserD a friendship request"
-    When I fill in "Would you like to be my friend Dave?" for "Message"
-    And I press "Request friendship"
-    Then I should see "Sent a friendship request to Dave UserD"
+    And I click on "Send contact request" in "Dave UserD" row
+    Then I should see "Send Dave UserD a contact request"
+    When I fill in "Would you like to be my contact Dave?" for "Message"
+    And I press "Request contact"
+    Then I should see "Sent a contact request to Dave UserD"
     And I log out
 
-    # User B accepts the friendship request
+    # User B accepts the contact request
     Given I log in as "UserB" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I follow "pending contact"
     Then I should see "Angela UserA (UserA)"
     When I press "Approve"
-    Then I should see "Accepted friend request"
+    Then I should see "Accepted contact request"
     And I log out
     Given I log in as "UserC" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I follow "pending contact"
     Then I should see "Angela UserA (UserA)"
     When I press "Approve"
-    Then I should see "Accepted friend request"
+    Then I should see "Accepted contact request"
     And I log out
     Given I log in as "UserD" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I follow "pending contact"
     Then I should see "Angela UserA (UserA)"
     When I press "Approve"
-    Then I should see "Accepted friend request"
+    Then I should see "Accepted contact request"
     And I log out
 
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
@@ -72,7 +72,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Open | 0 |
     | Controlled | 1 |
     | Request | 1 |
-    | Friend invitations | 1 |
+    | Contact invitations | 1 |
     | Recommendations | 0 |
     | Allow submissions | 1 |
     | Allow archiving of submissions | 1 |
@@ -90,7 +90,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Open | 1 |
     | Controlled | 0 |
     | Request | 0 |
-    | Friend invitations | 0 |
+    | Contact invitations | 0 |
     | Recommendations | 0 |
     | Allow submissions | 0 |
     | Allow archiving of submissions | 0 |
@@ -100,11 +100,11 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Hide membership from members | 0 |
     | Participation report | 0 |
     | Auto-add people | 0 |
-    # Checking Friend Invitation and Recommendations can't both be on
-    And I enable the switch "Friend invitations"
+    # Checking Contact Invitation and Recommendations can't both be on
+    And I enable the switch "Contact invitations"
     And the "Recommendations" checkbox should not be checked
     And I enable the switch "Recommendations"
-    And the "Friend invitations" checkbox should not be checked
+    And the "Contact invitations" checkbox should not be checked
     And I press "Save group"
     And I log out
     # group user recommend group to another user
@@ -115,7 +115,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     And I wait "1" seconds
     When I click on "Join this group" in "The Avengers" row
     Then I should see "You are now a group member."
-    When I follow "Recommend to friends"
+    When I follow "Recommend to contacts"
     Then I should see "Bob UserB"
     And I should see "Cecilia UserC"
     And I should see "Dave UserD"
@@ -128,7 +128,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     And I press "Submit"
     Then I should see "3 recommendations sent"
     And I log out
-    # Friend logs in and should see notification to join group
+    # Contact logs in and should see notification to join group
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "2" seconds
     Then I should see "Angela UserA suggested you join a group"

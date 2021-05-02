@@ -11,7 +11,7 @@ Feature: Mahara people can change their account settings
     2) Person can change account preferences settings
     --- a. Person changes "Password" functionality
     --- b. Person changes "Username"
-    --- c. Person changes "Friends control" to "Nobody may add me as a friend"
+    --- c. Person changes "Contact control" to "Nobody may add me as a contact"
 
   Background:
    Given the following "users" exist:

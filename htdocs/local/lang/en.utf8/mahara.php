@@ -124,3 +124,7 @@ $string['Memberships'] = 'Registrations';
 
 $string['Help'] = 'Manual';
 $string['helpfor'] = 'Manual for "%s"';
+
+$string['pendingfriend'] = 'pending contact';
+$string['pendingfriends'] = 'pending contacts';
+$string['myfriends']          = 'My friends';
