@@ -2475,7 +2475,7 @@ function portfolioswithverifiers_stats_table($limit, $offset, $extra, $instituti
         $from = strtotime( $start . ' next Monday');
     }
     $to = strtotime($end);
-    if (date('w', $to) > !== 1) {
+    if (date('w', $to) !== 1) {
         $to = strtotime( $end . ' last Monday');
     }
     $daterange = array();
