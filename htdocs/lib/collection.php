@@ -1999,16 +1999,34 @@ class Collection {
         }
     }
 
-    public function set_views_as_template($autocopy=null) {
+    /**
+     * Set this collection's views to templates
+     *
+     * The $autocopy argument only needs to be used upon creation of a collection to set
+     * give the `autocopytemplate` field a value. When adding pages to a collection,
+     * this value is already set, hence we look here instead of at the argument.
+     *
+     * @param  mixed $autocopyupdate The autocopy value when creating/updating the collection setting
+     */
+    public function set_views_as_template($autocopyupdate=null) {
+        $autocopy = $autocopyupdate;
+
+        if (is_null($autocopy)) {
+            // previously set autocopytemplate - on creation/previous update of this collection
+            if ($this->get('autocopytemplate')) {
+                $autocopy = 1;
+            }
+        }
+
         $viewids = get_column('collection_view', 'view', 'collection', $this->get('id'));
         if ($viewids) {
             foreach($viewids as $vid) {
                 set_field('view', 'locktemplate', 1, 'id', $vid);
                 set_field('view', 'lockblocks', 1, 'id', $vid);
-                set_field('view', 'copynewuser', 1, 'id', $vid);
-                if (!is_null($autocopy)) {
+                if ($autocopy === 1) {
                     if ($autocopy) {
                         set_field('view', 'template', 1, 'id', $vid);
+                        set_field('view', 'copynewuser', 1, 'id', $vid);
                     }
                     else {
                         set_field('view', 'template', 0, 'id', $vid);
