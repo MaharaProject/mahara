@@ -1,3 +1,15 @@
+19.10.6 (2021-05-04)
+- 1902146 	SmartEvidence framework Institution "All" option cannot be saved in non-english
+- 1902679 	Add confirmation step for deleting an external app
+- 1904352 	Adding navigation block to a collection can cause loss of data
+- 1906383 	Use of Image Gallery block means Copy page unavailable
+- 1908837 	Trying to get property of non-object in module/assessmentreport/lib.php line 60
+- 1908858 	View access sharing to institution needs some adjustment 
+- 1912685 	Upgrade SimpleSAMLphp to 1.19.0 
+- 1913504 	Issues with postgres 12 and adsrc column 
+- 1901645 	Needing to temporarily fix composer to version 1 because of ssphp 
+- 1911358 	Editing Dashboard produces a console error if inbox messages present 
+
 19.10.5 (2020-10-22)
 - 1886593 	usr.active not changed when unexpiring a user from admin/user/edit.php screen
 - 1887450 	Block header buttons need better labels when Editing Pages
