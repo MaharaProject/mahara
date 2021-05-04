@@ -1,3 +1,21 @@
+20.04.3 (2021-05-04)
+- Bug 1900786 	combined exports: timing issues causing leap2a to be put into wrong directory
+- Bug 1902146 	SmartEvidence framework Institution "All" option cannot be saved in non-english
+- Bug 1902679 	Add confirmation step for deleting an external app
+- Bug 1903205 	Only show Account migrate link if migration is possible
+- Bug 1903620 	Access list needs to retain the sorted list of people
+- Bug 1904352 	Adding navigation block to a collection can cause loss of data
+- Bug 1906383 	Use of Image Gallery block means Copy page unavailable
+- Bug 1908837 	Trying to get property of non-object in module/assessmentreport/lib.php line 60
+- Bug 1908845 	Removing the Admin Account from an institution is producing warning
+- Bug 1908858 	View access sharing to institution needs some adjustment
+- Bug 1912685 	Upgrade SimpleSAMLphp to 1.19.0
+- Bug 1913504 	Issues with postgres 12 and adsrc column
+- Bug 1915995 	Upgrade PHPMailer from v6.1.5 to 6.2.0
+- Bug 1916654 	Links that point to the page editor page in the Mahara manual don't work any more
+- Bug 1901645 	Needing to temporarily fix composer to version 1 because of ssphp
+- Bug 1911358 	Editing Dashboard produces a console error if inbox messages present
+
 20.04.2 (2020-10-22)
 - Bug 1886593: usr.active not changed when unexpiring a user from admin/user/edit.php screen
 - Bug 1887450: Block header buttons need better labels when Editing Pages
