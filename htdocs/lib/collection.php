@@ -2023,7 +2023,7 @@ class Collection {
             foreach($viewids as $vid) {
                 set_field('view', 'locktemplate', 1, 'id', $vid);
                 set_field('view', 'lockblocks', 1, 'id', $vid);
-                if ($autocopy === 1) {
+                if ($autocopy == 1) {
                     if ($autocopy) {
                         set_field('view', 'template', 1, 'id', $vid);
                         set_field('view', 'copynewuser', 1, 'id', $vid);

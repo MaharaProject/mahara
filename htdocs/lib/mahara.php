@@ -4873,6 +4873,7 @@ function portfolio_auto_copy() {
     // change this limit later when we know the number
     $limit = 1000;
     $sql = "SELECT * FROM {view_copy_queue} ORDER BY id LIMIT " . $limit;
+    // view_copy_queue entries
     $entries = get_records_sql_assoc($sql);
 
     if ($entries) {
@@ -4891,10 +4892,8 @@ function portfolio_auto_copy() {
                     // auto copy templates are tracked in a different table, check if this collection is one
                     require_once(get_config('libroot') . 'collection.php');
                     $collection = new Collection($entry->collection);
-                    if (!$collection->get('autocopytemplate')) {
-                        $copied = $user->copy_collections(array($entry->collection), false);
-                    }
-                    else {
+                    // if it is a autocopytemplate, copy it...
+                    if ($collection->get('autocopytemplate')) {
                         // PCNZ customisation - only copy the autocopy template if the person is Registered, current
                         if (get_account_preference($user->get('id'), 'registerstatus') == 2) { // the value for PCNZ_REGISTEREDCURRENT
                             $copied = Collection::create_from_template(
@@ -4906,6 +4905,9 @@ function portfolio_auto_copy() {
                         else {
                             $copied = array('ignore'); // to trigger the deletion of the queued item
                         }
+                    }
+                    else {
+                        $copied = $user->copy_collections(array($entry->collection), false);
                     }
                 }
                 else {
