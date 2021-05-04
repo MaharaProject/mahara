@@ -72,7 +72,7 @@
  $string['sendfriendrequest'] = 'Send contact request';
  $string['addtomyfriends'] = 'Add to my contacts';
  $string['friendshiprequested'] = 'Contact requested';
- $string['existingfriend'] = 'existing friend';
+ $string['existingfriend'] = 'existing contact';
  $string['nosearchresultsfound'] = 'No search results found';
  $string['friend'] = 'contact';
  $string['friends'] = 'contacts';
@@ -80,7 +80,7 @@
  $string['friendrequests'] = 'Contact requests';
 
  $string['friendlistfailure'] = 'Failed to modify your contact list';
- $string['userdoesntwantfriends'] = 'This person does not want any new friends.';
+ $string['userdoesntwantfriends'] = 'This person does not want any new contacts.';
  $string['cannotrequestfriendshipwithself'] = 'You cannot become a contact with yourself.';
  $string['cantrequestfriendship'] = 'You cannot become a contact with this person.';
  $string['denyfriendrequest'] = 'Deny contact request';
