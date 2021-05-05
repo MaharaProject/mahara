@@ -1705,9 +1705,11 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('Moving page description to a text block on the top of the page');
         require_once(get_config('docroot') . 'lib/view.php');
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        $sql = "SELECT id FROM {view} v
-            WHERE v.template != ?
-            AND v.description IS NOT NULL";
+        $sql = "SELECT v.id FROM {view} v
+                LEFT JOIN {group} g ON v.group = g.id
+                WHERE (v.group IS NULL OR g.deleted = 0)
+                AND v.template != ?
+                AND v.description IS NOT NULL";
         $viewids = get_column_sql($sql, array(View::SITE_TEMPLATE));
 
         $count = 0;
@@ -2200,7 +2202,7 @@ function xmldb_core_upgrade($oldversion=0) {
         log_debug('Change the constraint on view_instruction_lock.originaltemplate field');
         $table = new XMLDBTable('view_instructions_lock');
         $field = new XMLDBField('originaltemplate');
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, false);
         change_field_notnull($table, $field);
 
         $key = new XMLDBKEY('templatefk');

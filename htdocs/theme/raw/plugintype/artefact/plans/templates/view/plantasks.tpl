@@ -40,7 +40,7 @@
             {/if}
             {if $task->tags}
                 <div class="tags text-small">
-                    <strong>{str tag=tags}:</strong> {list_tags owner=$task->owner tags=$task->tags view=$view}
+                    {str tag=tags}: {list_tags owner=$task->owner tags=$task->tags view=$view}
                 </div>
             {/if}
         </div>

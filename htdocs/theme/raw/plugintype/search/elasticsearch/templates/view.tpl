@@ -2,16 +2,16 @@
     <h2 class="title list-group-item-heading text-inline">
         <span class="icon icon-file left text-midtone" role="presentation" aria-hidden="true"></span>
         {$record->title}
+        <span class="artefacttype text-midtone text-regular">({str tag=deleted section=search.elasticsearch})</span>
     </h2>
-    <span class="artefacttype text-midtone">({str tag=deleted section=search.elasticsearch})</span>
 {else}
     <h2 class="title list-group-item-heading text-inline">
         <span class="icon icon-file left" role="presentation" aria-hidden="true"></span>
         <a href="{$WWWROOT}view/view.php?id={$record->id}">{$record->title}</a>
+        <span class="artefacttype text-midtone text-regular">({str tag=page section=search.elasticsearch})</span>
     </h2>
-    <span class="artefacttype text-midtone">({str tag=page section=search.elasticsearch})</span>
     {if $record->createdbyname}
-      <div class="createdby text-small">
+      <div class="createdby">
         {if $record->anonymise}
             {str tag=createdbyanon section=search.elasticsearch}
         {else}
@@ -19,7 +19,7 @@
         {/if}
       </div>
     {/if}
-      <div class="detail text-small">
+      <div class="detail">
           {if $record->highlight}
               {$record->highlight|safe}
           {else}
@@ -28,7 +28,7 @@
       </div>
     <!-- TAGS -->
     {if is_array($record->tags) && count($record->tags) > 0}
-    <div class="tags text-small"><strong>{str tag=tags section=search.elasticsearch}:</strong>
+    <div class="tags text-small">{str tag=tags section=search.elasticsearch}:
     {foreach from=$record->tags item=tag name=tags}
         <a href="{$WWWROOT}search/elasticsearch/index.php?query={$tag}&tagsonly=true">{$tag}</a>{if !$.foreach.tags.last}, {/if}
     {/foreach}

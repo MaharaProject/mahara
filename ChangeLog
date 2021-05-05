@@ -1,3 +1,42 @@
+20.10.1 (2021-05-04)
+- Bug 1898502: Android tablet - TinyMCE editor allows all 6 heading sizes 
+- Bug 1900786: combined exports: timing issues causing leap2a to be put into wrong directory 
+- Bug 1902146: SmartEvidence framework Institution "All" option cannot be saved in non-english 
+- Bug 1902474: Copying an existing SmartEvidence causes the original to lose their standards 
+- Bug 1902679: Add confirmation step for deleting an external app 
+- Bug 1902966: Style issues with plans 
+- Bug 1903205: Only show Account migrate link if migration is possible 
+- Bug 1903478: View update of description breaks for pages owned by deleted group 
+- Bug 1903620: Access list needs to retain the sorted list of people 
+- Bug 1904061: Line height too small in inbox 
+- Bug 1904352: Adding navigation block to a collection can cause loss of data 
+- Bug 1904607: Profile icon not displayed correctly when there is no language toggle 
+- Bug 1906383: Use of Image Gallery block means Copy page unavailable 
+- Bug 1907719: Various theme fixes 
+- Bug 1908837: Trying to get property of non-object in module/assessmentreport/lib.php line 60 
+- Bug 1908845: Removing the Admin Account from an institution is producing warning 
+- Bug 1908858: View access sharing to institution needs some adjustment 
+- Bug 1909034: Fix some styling issues in peer assessment 
+- Bug 1912414: Style updates 
+- Bug 1912685: Upgrade SimpleSAMLphp to 1.19.0 
+- Bug 1913504: Issues with postgres 12 and adsrc column 
+- Bug 1915352: Problem with view_instructions_lock when deleting a page  
+- Bug 1915995: Upgrade PHPMailer from v6.1.5 to 6.2.0 
+- Bug 1916654: Links that point to the page editor page in the Mahara manual don't work any more 
+- Bug 1918367: LTI accessing pages of collection when link is for progresscompletion.php page 
+- Bug 1895066: Draft peer assessment needs additional indicator besides colour 
+- Bug 1901436: Add custom theme inpage nav active link background constrast 
+- Bug 1901645: Needing to temporarily fix composer to version 1 because of ssphp 
+- Bug 1901780: layout of elasticsearch results is not consistent 
+- Bug 1903469: Array and string offset access syntax with curly braces is deprecated 
+- Bug 1903616: course info lib needs to check for present cpd hours, course organisation values before displaying 
+- Bug 1903618: Allow info button on plugins to work if clicking inner span  
+- Bug 1905086: Need to fix hardcoded strings in the view access messages 
+- Bug 1911358: Editing Dashboard produces a console error if inbox messages present 
+- Bug 1911817: Account and group access roles for Edit access drop-down is populated by more than one source 
+- Bug 1918077: Make the 'Access denied' message more noticeable 
+- Bug 1922695: Remove the institution membership joining notification when account is created by the system 
+
 20.10.0 (2020-10-22)
 - Bug 1829108: Changing the display name of the site shouldn't break the SAML private key pass
 - Bug 1867822: Tidy up the artefact attachments_from_id_list() function

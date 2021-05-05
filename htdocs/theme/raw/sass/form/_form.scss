@@ -177,6 +177,12 @@ input[type="checkbox"] {
     margin-left: $spacing-xl;
 }
 
+// group plans choose template radios overlap
+.radio input[type="radio"].templatelist {
+    position: inherit;
+    margin-right: $spacing-sm;
+}
+
 // for multiselect buttons
 .select-col {
     width : 6.25rem; // 100px;

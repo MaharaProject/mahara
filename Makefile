@@ -84,7 +84,7 @@ ifdef simplesamlphp
 	@echo "SimpleSAMLphp already exists - doing nothing"
 else
 	@echo "Pulling SimpleSAMLphp from download ..."
-	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.18.7/simplesamlphp-1.18.7.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
+	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.0/simplesamlphp-1.19.0.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
 	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp require predis/predis
 	@echo "Copying www/resources/* files to sp/resources/ ..."
 	@cp -R htdocs/auth/saml/extlib/simplesamlphp/www/resources/ htdocs/auth/saml/sp/
@@ -106,10 +106,10 @@ ifdef pdfexportfile
 	@echo "PDF export files already exists - doing nothing"
 else
 	@echo "Pulling Headless-chromium-php from download ..."
-	@curl -sSL https://github.com/chrome-php/headless-chromium-php/archive/master.zip -o pdf_tmp.zip && unzip pdf_tmp.zip -d htdocs/lib/chrome-php && rm pdf_tmp.zip
-	@php external/composer.phar --working-dir=htdocs/lib/chrome-php/headless-chromium-php-master install
-	@find htdocs/lib/chrome-php/headless-chromium-php-master -type f -name composer.json -delete
-	@find htdocs/lib/chrome-php/headless-chromium-php-master -type f -name composer.lock -delete
+	@curl -sSL https://github.com/chrome-php/headless-chromium-php/archive/0.10.zip -o pdf_tmp.zip && unzip pdf_tmp.zip -d htdocs/lib/chrome-php && rm pdf_tmp.zip
+	@php external/composer.phar --working-dir=htdocs/lib/chrome-php/headless-chromium-php-0.10 install
+	@find htdocs/lib/chrome-php/headless-chromium-php-0.10 -type f -name composer.json -delete
+	@find htdocs/lib/chrome-php/headless-chromium-php-0.10 -type f -name composer.lock -delete
 	@find htdocs/lib/chrome-php -type d -name Tests -exec rm -r {} +
 	@echo "Done!"
 endif

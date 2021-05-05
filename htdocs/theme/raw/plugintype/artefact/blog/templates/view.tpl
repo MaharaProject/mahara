@@ -19,7 +19,7 @@
     </div>
     {if $blog->get('tags')}
     <div class="tags">
-        <strong>{str tag=tags}:</strong> {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}
+        {str tag=tags}: {list_tags owner=$blog->get('owner') tags=$blog->get('tags')}
     </div>
     {/if}
 

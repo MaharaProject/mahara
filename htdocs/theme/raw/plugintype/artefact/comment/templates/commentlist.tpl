@@ -22,7 +22,7 @@
                 {/if}
                 <br />
 
-                <span class="postedon text-small">
+                <span class="postedon text-small detail">
                 {$item->date}
                 {if $item->updated}
                     <p class="metadata">[{str tag=Updated}: {$item->updated}]</p>

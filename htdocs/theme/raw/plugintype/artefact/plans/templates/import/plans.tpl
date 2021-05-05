@@ -13,7 +13,7 @@
                 </div>
                 {/if}{if $plan.tags}
                 <div class="tags">
-                    <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$plan.tags}
+                    {str tag=tags}: {list_tags owner=0 tags=$plan.tags}
                 </div>
                 {/if}
                 <div class="tasks">

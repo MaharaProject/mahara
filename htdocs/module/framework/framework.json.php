@@ -26,7 +26,7 @@ $fw_to_edit = param_variable('fw_id', null);
 $fw_sids = array();
 $fw_seids = array();
 
-$form_data = format_input_framework();
+$form_data = format_input_framework($fw_to_edit);
 
 if (is_null($form_data)) {
     json_reply(true, get_string('invalidjsonineditor', 'module.framework'));
@@ -87,7 +87,7 @@ json_reply(false, (object) array(
     'data' => $data)
 );
 
-function format_input_framework() {
+function format_input_framework($fw_to_edit=null) {
     global $fw_sids, $fw_seids;
     $form_data = (object) array_filter($_POST, function ($k) {
         $expected_data = [
@@ -127,7 +127,7 @@ function format_input_framework() {
         $priority ++;
         $std = (object) $std;
         $std->priority = $priority;
-        if (isset($std->uid)) {
+        if ($fw_to_edit && isset($std->uid)) {
             $std->id = $std->uid;
             // save to later check if need to delete from DB
             array_push($fw_sids, $std->uid);
@@ -143,7 +143,7 @@ function format_input_framework() {
         $priority ++;
         $stdel = (object) $stdel;
         $stdel->priority = $priority;
-        if (isset($stdel->uid)) {
+        if ($fw_to_edit && isset($stdel->uid)) {
             $stdel->id = $stdel->uid;
             // save to later check if need to delete from DB
             array_push($fw_seids, $stdel->uid);

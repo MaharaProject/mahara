@@ -60,7 +60,24 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
         }
     }
     if ($oldversion < 2020073000) {
-         set_config_plugin('auth', 'saml', 'version', '1.18.7');
+        set_config_plugin('auth', 'saml', 'version', '1.18.7');
+    }
+    if ($oldversion < 2021021700) {
+        set_config_plugin('auth', 'saml', 'version', '1.19.0');
+        // delete the external/composer.phar so on next make ssphp it will download composer v2
+        if (file_exists(get_config('docroot') . '../external/composer.phar') && !@unlink(get_config('docroot') . '../external/composer.phar')) {
+            $extroot = preg_replace('/\/htdocs/', '', get_config('docroot'));
+            log_warn(get_string('samlneedtoremovephar', 'auth.saml', $extroot . 'external/composer.phar'), true, false);
+        }
+    }
+    if ($oldversion < 2021021701) {
+        if (!get_config_plugin('auth', 'saml', 'keypass')) {
+            // We are upgrading from an older version of Mahara where the version id > 2020070900
+            set_config_plugin('auth', 'saml', 'keypass', get_config('sitename'));
+            if (file_exists(AuthSaml::get_certificate_path() . 'server_new.crt')) {
+                set_config_plugin('auth', 'saml', 'newkeypass', get_config('sitename'));
+            }
+        }
     }
 
     return $status;

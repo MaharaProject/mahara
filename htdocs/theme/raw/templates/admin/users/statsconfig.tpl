@@ -5,9 +5,9 @@
         {if $tableheadings}
             <div class="collapsible reportconfig float-right">
                 <div class="title card-header js-heading">
-                    <a data-toggle="collapse" href="#reportconfig" aria-expanded="false" class="outer-link collapsed"></a>
+                    <a data-toggle="collapse" href="#reportconfig" aria-expanded="false" class="collapsed"></a>
                     {str tag="Columns" section="admin"}
-                    <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </div>
                 <div class="block collapse options" id="reportconfig">
                 {foreach from=$tableheadings item=heading}

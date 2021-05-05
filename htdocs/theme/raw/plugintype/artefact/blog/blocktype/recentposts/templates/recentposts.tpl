@@ -57,7 +57,7 @@
             <span class="text-small">
                 {str tag='postedin' section='blocktype.blog/recentposts'}
                 {if $canviewblog}
-                    <a href="{$WWWROOT}artefact/blog/view/index.php?id={$post->parent}" class="inner-link">
+                    <a href="{$WWWROOT}artefact/blog/view/index.php?id={$post->parent}">
                         {$post->parenttitle}
                     </a>
                 {else}

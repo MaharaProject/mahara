@@ -13,7 +13,7 @@
                 </div>
                 {if $annotation.tags}
                 <div class="tags">
-                    <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$annotation.tags}
+                    {str tag=tags}: {list_tags owner=0 tags=$annotation.tags}
                 </div>
                 {/if}
                 <div class="annotationfeedback">

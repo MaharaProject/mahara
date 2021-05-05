@@ -42,9 +42,6 @@
         &.collapsed {
             background-color: $card-header-bg;
             padding: $card-spacer-y $card-spacer-x;
-            &.outer-link {
-                background: none;
-            }
             .card-secondary > & {
                 padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
             }
