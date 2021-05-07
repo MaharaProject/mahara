@@ -2253,24 +2253,28 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         // There is one public files directory and many admins, so the
         // name of the directory uses the site language rather than
         // the language of the admin who first creates it.
-        $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
-        $folders = get_records_select_array(
-            'artefact',
-            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
-            array($name, 'folder', 'mahara'),
-            'id', 'id', 0, 1
-        );
-        if (!$folders) {
-            $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
-            $data = (object) array('title' => $name,
+        $title = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
+        $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
+        $id = get_config('sitepublicfolder');
+        if ($id && get_field('artefact', 'id', 'artefacttype', 'folder', 'id', $id)) {
+            $a = new ArtefactTypeFolder($id);
+            // Check that the name of the folder matches the site language
+            if ($a->get('title') !== $title || $a->get('description') !== $description) {
+                $a->set('title', $title);
+                $a->set('description', $description);
+                $a->commit();
+            }
+        }
+        else {
+            $data = (object) array('title' => $title,
                                    'description' => $description,
                                    'institution' => 'mahara');
             $f = new ArtefactTypeFolder(0, $data);
             $f->commit();
-            $folderid = $f->get('id');
-            return $folderid;
+            $id = $f->get('id');
+            set_config('sitepublicfolder', $id);
         }
-        return $folders[0]->id;
+        return $id;
     }
 
     public static function change_public_folder_name($oldlang, $newlang) {
