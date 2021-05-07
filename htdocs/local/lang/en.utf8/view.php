@@ -28,3 +28,7 @@ $string['sharedwith'] = 'Search for someone to share your portfolio with';
 
 $string['configureblock2'] = 'Edit block';
 $string['drafttextblockdescription'] = 'Please leave this option set at "No" so your verifier can view your entries. Once the text is published, it can\'t be set to draft again.';
+
+$string['friends'] = 'Contacts';
+$string['friend'] = 'Contact';
+$string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you.';

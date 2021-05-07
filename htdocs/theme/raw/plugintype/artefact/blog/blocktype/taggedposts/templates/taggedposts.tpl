@@ -78,8 +78,7 @@
             </div>
             <div class="tags text-small text-midtone">
                 <span class="icon icon-tags" role="presentation" aria-hidden="true"></span>
-                <strong>{str tag=tags}:</strong>
-                {list_tags owner=$post->owner tags=$post->taglist view=$view}
+                {str tag=tags}: {list_tags owner=$post->owner tags=$post->taglist view=$view}
             </div>
 
             <div class="detail list-group-item-detail content-text">

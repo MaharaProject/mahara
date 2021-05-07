@@ -8,8 +8,7 @@
 {/if}
 {if $tags}
     <div class="tags">
-        <strong>{str tag=tags}</strong>:
-        {list_tags owner=$owner tags=$tags view=$viewid}
+        {str tag=tags}: {list_tags owner=$owner tags=$tags view=$viewid}
     </div>
 {/if}
 {if $description || $tags}
@@ -56,7 +55,7 @@
                 {/if}
                 <span class="title">
                   {if !$editing}
-                    <a class="modal_link inner-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                    <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                   {/if}
                       <span class="text-small">{$child->title}</span>
                   {if !$editing}

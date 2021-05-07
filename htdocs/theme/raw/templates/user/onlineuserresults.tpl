@@ -17,7 +17,7 @@
             {/if}
             {if $user->introduction}
             <div class="text-small detail text-midtone">
-                <a class="inner-link text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
+                <a class="text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
                     href="#userintro{$user->id}" role="button" aria-expanded="false"
                     aria-controls="userintro{$user->id}">
                     <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>

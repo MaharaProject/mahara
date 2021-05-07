@@ -10,7 +10,8 @@
     border-color: $btn-secondary-border;
     box-shadow: none;
     &:hover,
-    &:focus {
+    &:focus,
+    &:active {
         color: $btn-secondary-color;
         background-color: scale-color($btn-secondary-bg, $lightness: -10%);
         border-color: scale-color($btn-secondary-border, $lightness: -10%);
@@ -20,7 +21,8 @@
         border-color: $btn-disabled-border;
         background: $btn-disabled-bg;
         &:hover,
-        &:focus {
+        &:focus,
+        &:active {
             color: $btn-disabled-color;
             border-color: $btn-disabled-border;
             background: $btn-disabled-bg;
@@ -34,7 +36,8 @@
     border-color: $btn-primary-border;
     box-shadow: none;
     &:hover,
-    &:focus {
+    &:focus,
+    &:active {
         color: $btn-primary-color;
         background-color: scale-color($btn-primary-bg, $lightness: -10%);
         border-color: scale-color($btn-primary-border, $lightness: -10%);
@@ -44,7 +47,8 @@
         background-color: $btn-primary-bg;
         border-color: $btn-primary-border;
         &:hover,
-        &:focus {
+        &:focus,
+        &:active {
             color: $btn-primary-color;
             background-color: scale-color($btn-primary-bg, $lightness: -10%);
             border-color: scale-color($btn-primary-border, $lightness: -10%);

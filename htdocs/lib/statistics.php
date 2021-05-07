@@ -2471,11 +2471,11 @@ function portfolioswithverifiers_stats_table($limit, $offset, $extra, $instituti
     }
 
     $from = strtotime($start);
-    if (date('w', $from) > 1) {
+    if (date('w', $from) !== 1) {
         $from = strtotime( $start . ' next Monday');
     }
     $to = strtotime($end);
-    if (date('w', $to) > 1) {
+    if (date('w', $to) !== 1) {
         $to = strtotime( $end . ' last Monday');
     }
     $daterange = array();
@@ -2914,11 +2914,11 @@ function verifiersummary_stats_table($limit, $offset, $extra, $institution, $url
         $count = count_records('institution_data', 'type', 'verifierportfolios', 'institution', $institution);
     }
     $from = strtotime($start);
-    if (date('w', $from) > 1) {
+    if (date('w', $from) !== 1) {
         $from = strtotime( $start . ' next Monday');
     }
     $to = strtotime($end);
-    if (date('w', $to) > 1) {
+    if (date('w', $to) !== 1) {
         $to = strtotime( $end . ' last Monday');
     }
     $daterange = array();

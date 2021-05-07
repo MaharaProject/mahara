@@ -1,7 +1,7 @@
 <ul class="list-group">
 {foreach $files file}
     <li class="filedownload-item list-group-item">
-        <a class="inner-link file-icon-link" href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}">
+        <a class="file-icon-link" href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}">
         {if $file.iconsrc}
             <img src="{$file.iconsrc}" alt="" class="file-icon text-inline" />
         {else}
@@ -10,7 +10,7 @@
         </a>
 
         <h3 class="title list-group-item-heading text-inline">
-            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}" class="inner-link">
+            <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}">
                  {$file.title} [export_info/files/{$file.id}-{$file.title}]
                  <span class="sr-only">
                     {str tag=Details section=artefact.file}

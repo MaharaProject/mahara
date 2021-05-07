@@ -13,12 +13,11 @@
                 <div id="{$blog.id}_desc" class="detail d-none">{$blog.description|clean_html|safe}</div>
                 {if $blog.tags}
                 <div class="tags text-small text-midtone">
-                    <strong>{str tag=tags}:</strong> {list_tags owner=0 tags=$blog.tags}
+                    {str tag=tags}: {list_tags owner=0 tags=$blog.tags}
                 </div>
                 {/if}
                 <div class="posts">
-                    <strong>{str tag=blogpost section=artefact.blog}:</strong>
-                    {str tag=nposts section=artefact.blog arg1=count($blog.entryposts)}
+                    {str tag=blogpost section=artefact.blog}: {str tag=nposts section=artefact.blog arg1=count($blog.entryposts)}
                 </div>
                 <!-- TODO Display existing journals and jounrnal count with section title -->
                 <!-- {if $blog.existingitems}
@@ -84,7 +83,7 @@
                             <strong class="text-warning">{str tag=duplicatedpost section=artefact.blog}</strong>
                         </div>
                         {/if}
-<!--                         {if $post.existingitems}
+<!--                    {if $post.existingitems}
                         <div class="existingposts">
                             <div class="existingblogs">
                                 <strong>{str tag=existingposts section=artefact.blog}</strong>

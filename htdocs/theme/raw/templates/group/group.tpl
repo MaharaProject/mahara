@@ -27,7 +27,7 @@
                     <strong>{str tag=groupadmins section=group}:</strong>
                     {strip}
                     {foreach name=admins from=$group->admins item=user}
-                        <a href="{profile_url($user)}" class="inner-link"> {$user|display_name}</a>
+                        <a href="{profile_url($user)}"> {$user|display_name}</a>
                         {if !$.foreach.admins.last},{/if}
                     {/foreach}
                     {/strip}
@@ -35,7 +35,7 @@
                 {/if}
                 {if $group->membercount}
                     <div class="membernumber">
-                        <a href="{$WWWROOT}group/members.php?id={$group->id}" class="inner-link">
+                        <a href="{$WWWROOT}group/members.php?id={$group->id}">
                             <strong>{str tag=Members section=group}:</strong> {$group->membercount}
                         </a>
                     </div>
@@ -56,7 +56,7 @@
                         {if $labelselected}
                             &nbsp;{$label}
                         {else}
-                            <a href="{$paramsurl}&labelfilter={urlencode($label)}" title='{str tag=addgrouplabelfilter section=group arg1=$label}' class="inner-link"> {$label}</a>
+                            <a href="{$paramsurl}&labelfilter={urlencode($label)}" title='{str tag=addgrouplabelfilter section=group arg1=$label}'> {$label}</a>
                         {/if}
                         {if !$.foreach.labels.last},{/if}
                     {/foreach}

@@ -46,8 +46,7 @@
                 <!-- TAGS -->
                 {if is_array($result->tags) && count($result->tags) > 0}
                 <div class="tags text-small">
-                    <strong>{str tag=tags}: </strong>
-                    {list_tags tags=$result->tags owner=$owner view=$result->viewid}
+                    {str tag=tags}: {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
@@ -96,7 +95,7 @@
         </div>
         {elseif $result->type == 'blocktype'}
         <h2 class="title list-group-item-heading text-inline">
-        <span class="icon left pull-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+        <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
         {if $result->link}
             <a href="{$WWWROOT}{$result->link}">
                 {$result->title|str_shorten_html:50:true|safe}
@@ -116,8 +115,7 @@
                 <!-- TAGS -->
                 {if is_array($result->tags) && count($result->tags) > 0}
                 <div class="tags text-small">
-                    <strong>{str tag=tags}: </strong>
-                    {list_tags tags=$result->tags owner=$owner view=$result->viewid}
+                    {str tag=tags}: {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
@@ -150,8 +148,8 @@
                     {$result->description|str_shorten_html:100|strip_tags|safe}
                 </div>
                 {if is_array($result->tags) && count($result->tags) > 0}
-                <div class="tags text-small"><strong>{str tag=tags}:</strong>
-                    {list_tags tags=$result->tags owner=$owner view=$result->viewid}
+                <div class="tags text-small">
+                    {str tag=tags}: {list_tags tags=$result->tags owner=$owner view=$result->viewid}
                 </div>
                 {/if}
             </div>
@@ -170,8 +168,7 @@
                 {/if}
                 {if $result->viewtags}
                     <div class="tags text-small">
-                        <strong>{str tag=viewtags}: </strong>
-                        {list_tags tags=$result->viewtags owner=$owner view=$result->viewid}
+                        {str tag=viewtags}: {list_tags tags=$result->viewtags owner=$owner view=$result->viewid}
                     </div>
                 {/if}
             </div>

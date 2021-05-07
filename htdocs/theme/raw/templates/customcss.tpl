@@ -76,12 +76,36 @@ a:focus,
 .btn:focus,
 a[data-toggle="collapse"]:focus,
 tr[data-toggle="collapse"]:focus,
+button:focus,
+.form-control:focus,
+input:focus[type="password"],
+input:focus[type="text"],
+select:focus,
+textarea:focus,
+.form-switch .switch input:focus + .switch-label,
+.select2-container:focus,
+.select2-container:focus-within,
+input[type="file"]:focus,
+input[type="radio"]:focus,
 .dropdown .picker select.form-control:focus,
 .dropdown .picker select:focus,
 .pieform .picker select.form-control:focus,
 .pieform .picker select:focus,
-button:focus {
+.form-group.multisubmit .cancel:focus,
+.form-group.submitcancel .cancel:focus {
     outline-color: {$data.link};
+}
+
+.form-control:focus,
+input:focus[type="password"],
+input:focus[type="text"],
+select:focus,
+textarea:focus {
+    border-color: {$data.link};
+}
+
+.page-link:focus {
+    box-shadow: 0 0 0 .25rem {$data.link};
 }
 
 .card-header a:not(.secondary-link).btn-group-item {
@@ -92,18 +116,8 @@ button:focus {
     background-color: {$data.background};
     border-color: {$data.background};
 }
-.navbar-default .navbar-toggle:not(.collapsed) {
-    background-color: transparent;
-}
-.loading-inner,
-.navbar-toggle .icon {
-    color: {$data.backgroundfg};
-}
 .navbar-default .navbar-toggle {
-    border-color: transparent;
     background-color: transparent;
-}
-.navbar-default .navbar-collapse {
     border-color: transparent;
 }
 .navbar-toggle:hover,
@@ -115,13 +129,13 @@ button:focus {
     color: #333;
     background-color: #F1F1F1;
 }
-.navbar-toggle:hover .icon,
-.navbar-toggle:focus .icon,
-.navbar-toggle.collapsed:focus .icon,
-.navbar-toggle.collapsed:hover .icon,
-.navbar-default .navbar-toggle:focus .icon,
-.navbar-default .navbar-toggle:hover .icon {
-    color: #333;
+.loading-inner,
+.navbar-toggle .icon {
+    color: {$data.backgroundfg};
+}
+
+.navbar-default .navbar-collapse {
+    border-color: transparent;
 }
 @media (max-width: 767px) {
   .search-toggle.navbar-toggle .icon {
@@ -134,57 +148,83 @@ button:focus {
     background-color: {$data.navbg};
     border-color: transparent;
 }
+.navbar-main .navbar-nav > li > a .icon {
+    color: {$data.navfg};
+}
 .navbar-main .navbar-nav > li > a:hover,
 .navbar-main .navbar-nav > li > a:focus {
     color: #333;
     background-color: #F1F1F1;
 }
 
-.navbar-main .navbar-nav > li.active > a {
+.navbar-main .navbar-nav > li > a:hover .icon,
+.navbar-main .navbar-nav > li > a:focus .icon {
+    color: #333;
+}
+.navbar-main .navbar-nav > li > a:hover .navbar-toggle .icon,
+.navbar-main .navbar-nav > li > a:focus .navbar-toggle .icon {
+    color: #333;
+}
+
+.navbar-main .navbar-nav > .active > a {
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
-.navbar-main .navbar-nav > li.active > a:focus,
-.navbar-main .navbar-nav > li.active > a:hover {
+.navbar-main .navbar-nav > .active > a .icon {
+    color: {$data.navfg};
+}
+.navbar-main .navbar-nav > .active > a:focus,
+.navbar-main .navbar-nav > .active > a:hover {
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
-
-.navbar-toggle.navbar-showchildren .icon {
+.navbar-main .navbar-nav > .active > a:focus .icon,
+.navbar-main .navbar-nav > .active > a:hover .icon {
     color: {$data.navfg};
 }
-
-.navbar-main .navbar-nav .navbar-showchildren,
-.navbar-main .navbar-nav > .active .navbar-showchildren,
-.navbar-toggle.navbar-showchildren:hover,
-.navbar-toggle.navbar-showchildren:focus {
-    background-color: transparent;
+.navbar-main .navbar-nav > .active > a:focus .navbar-toggle .icon,
+.navbar-main .navbar-nav > .active > a:hover .navbar-toggle .icon {
+    ccolor: #333;
 }
 
-.navbar-toggle.navbar-showchildren:hover .icon,
-.navbar-toggle.navbar-showchildren:focus .icon {
-    color: {$data.navfg};
-}
-
-.navbar-main .child-nav > li > a {
+.nav .navbar-showchildren {
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
-
-.navbar-main .child-nav > li > a:hover,
-.navbar-main .child-nav > li > a:focus {
+.nav .navbar-showchildren:hover,
+.nav .navbar-showchildren:focus {
     color: #333;
     background-color: #F1F1F1;
 }
-
-.navbar-main .child-nav .active > a {
+.nav .navbar-showchildren .icon,
+.nav .navbar-showchildren .icon {
     color: {$data.navfg};
-    background-color: {$data.navbg};
+}
+.nav .active .navbar-showchildren {
+    background-color: #F1F1F1;
+    color: #333;
+}
+.nav .active .navbar-showchildren .icon {
+    color: #333;
+}
+
+.navbar-main .child-nav > li > a {
+    color: #333;
+    background-color: #F1F1F1;
+}
+.navbar-main .child-nav > li > a:hover,
+.navbar-main .child-nav > li > a:focus {
+    color: #333;
+    background-color: #FFFFFF;
+}
+.navbar-main .child-nav .active > a {
+    color: #333;
+    background-color: #F1F1F1;
 }
 .navbar-main .child-nav .active > a:hover,
 .navbar-main .child-nav .active > a:focus {
     color: #333;
-    background-color: #F1F1F1;
+    background-color: #FFFFFF;
 }
 
 .topright-menu .login-link a {
@@ -204,15 +244,14 @@ button:focus {
     color: {$data.backgroundfg};
 }
 
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:focus,
-.nav-tabs > li.active > a:hover,
+.nav-tabs.nav li > a.active,
+.nav-tabs.nav li > a.active:focus,
+.nav-tabs.nav li > a.active:hover,
 .nav-tabs.nav li > a:focus,
 .nav-tabs.nav li > a:hover {
    color: {$data.headings};
    border-bottom-color: {$data.headings};
 }
-
 
 .btn-link-danger,
 .btn-link-danger:link {
@@ -224,32 +263,54 @@ button:focus {
   color: #983d3b;
 }
 
-.btn-secondary, a.btn-secondary {
-  color: #333;
+.btn-primary,
+.btn-primary.btn-sm {
+    color: #FFF;
+    background-color: #575757;
+    border-color: #575757;
+    box-shadow: none;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.btn-sm:hover,
+.btn-primary.btn-sm:focus,
+.btn-primary.btn-sm:active {
+    color: #FFF;
+    background-color: #333;
+    border-color: #575757;
 }
 
-.btn-primary,
-a.btn-primary {
-    background-color: #575757;
-    color: #FFF;
-    border-color: #575757;
+.btn-secondary {
+    color: #333;
+    background-color: #F9F9F9;
+    border-color: #d1d1d1;
+    box-shadow: none;
 }
-.btn-primary.active,
-.btn-primary.focus,
-.btn-primary:active,
-.btn-primary:focus,
-.btn-primary:hover,
-.open > .btn-primary.dropdown-toggle {
-    border-color: #CCCCCC;
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
     color: #333;
     background-color: #e0e0e0;
+    border-color: #d1d1d1;
 }
-.btn-primary.btn:disabled,
-.btn-primary.disabled,
-.btn-primary[disabled] {
-    /* 1px alpha channel white to lighten by 25% */
-    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkPAhMnva5W6gAAAA1JREFUCNdj+P//vz0ACTsDPd3TBh4AAAAASUVORK5CYII=') {$data.background};
-    border-color: #575757;
+.btn-secondary.disabled,
+.btn-secondary.disabled:hover,
+.btn-secondary.disabled:focus,
+.btn-secondary.disabled:active {
+    color: #ddd;
+    border-color: #ddd;
+    background: #f9f9f9;
+}
+
+.show>.btn-primary.dropdown-toggle {
+    border-color: #CCCCCC;
+    color: #333;
+}
+
+.show>.btn-secondary.dropdown-toggle {
+    color: #333;
+    background-color: #F9F9F9;
 }
 
 .arrow-bar {
@@ -284,10 +345,12 @@ a.btn-primary {
 .pagination >.active > span {
     background-color: #767676;
     border-color: #767676;
+    color: #FFF;
 }
 .pagination >.active > span:hover,
 .pagination >.active > span:focus {
     background-color: #333;
+    color: #FFF;
 }
 
 .custom-dropdown > ul > li > span {
@@ -367,4 +430,39 @@ a.btn-primary {
 
 .block-header a {
     color: #FFFFFF;
+}
+
+.bootstrap-datetimepicker-widget table td span:hover,
+.bootstrap-datetimepicker-widget table thead tr:first-child th:hover,
+.bootstrap-datetimepicker-widget table td.day:hover,
+.bootstrap-datetimepicker-widget table td.hour:hover,
+.bootstrap-datetimepicker-widget table td.minute:hover,
+.bootstrap-datetimepicker-widget table td.second:hover {
+    background: #F1F1F1;
+}
+
+.bootstrap-datetimepicker-widget table td span.active,
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+    background-color: #575757;
+    color: #FFF;
+}
+.bootstrap-datetimepicker-widget table td.today:before {
+    border-bottom-color: #575757;
+}
+
+a[data-toggle="collapse"]:focus .collapse-indicator,
+a[data-toggle="collapse"]:hover .collapse-indicator,
+tr[data-toggle="collapse"]:focus .collapse-indicator,
+tr[data-toggle="collapse"]:hover .collapse-indicator {
+    color: #333;
+}
+tr[data-toggle="collapse"] .collapse-indicator,
+a[data-toggle="collapse"] .collapse-indicator {
+    color: #575757;
+}
+
+.link-blocktype:focus,
+.link-blocktype:hover {
+    color: #333;
 }

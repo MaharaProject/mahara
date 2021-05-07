@@ -20,3 +20,9 @@ $string['registeredstatusinactive'] = 'Account status is \'Registered, inactive\
 $string['registeredstatusinactivefor'] = '%s has status \'Registered, inactive\'';
 $string['registeredsuspended'] = 'Suspended';
 $string['legal']              = 'Terms and conditions';
+
+$string['statsmaxfriends1'] = array(
+    0 => 'Has %2$s contacts<br>(<a href="%3$s">%4$s has the most, with %1$d contact</a>)',
+    1 => 'Has %2$s contacts<br>(<a href="%3$s">%4$s has the most, with %1$d contacts</a>)',
+);
+$string['statsnofriends'] = 'Has 0 contacts';

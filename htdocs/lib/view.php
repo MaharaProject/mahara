@@ -989,7 +989,7 @@ class View {
         delete_records('view_versioning', 'view', $this->id);
         delete_records('existingcopy', 'view', $this->id);
         delete_records('view_instructions_lock', 'view', $this->id);
-        // Remove inst locking references to this view if it's a template
+        // Remove institution lock references to this view if it's a template.
         set_field('view_instructions_lock', 'originaltemplate', null, 'originaltemplate', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
@@ -2748,7 +2748,9 @@ class View {
                 );
                 foreach($instancejs as $jsfile) {
                   if (is_array($jsfile) && isset($jsfile['file'])) {
-                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
+                    if (!empty($jsfile['file'])) {
+                      $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile['file']);
+                    }
                     if (isset($jsfile['initjs'])) {
                       $initjavascripts[] = $jsfile['initjs'];
                     }
@@ -2758,8 +2760,8 @@ class View {
                       }
                     }
                   }
-                  else if (is_string($jsfile)) {
-                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);;
+                  else if (is_string($jsfile) && !empty($jstring)) {
+                    $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);
                   }
                 }
                 // Check to see if we need to include the block Ajax file.

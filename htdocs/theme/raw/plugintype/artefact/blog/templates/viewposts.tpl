@@ -35,8 +35,7 @@
             {if $post->tags}
             <div class="tags text-small text-midtone">
                 <span class="icon icon-tags left" role="presentation" aria-hidden="true"></span>
-                <strong>{str tag=tags}:</strong>
-                {list_tags owner=$post->owner tags=$post->tags view=$options.viewid}
+                {str tag=tags}: {list_tags owner=$post->owner tags=$post->tags view=$options.viewid}
             </div>
             {/if}
         </div>

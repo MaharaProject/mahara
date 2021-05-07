@@ -162,11 +162,8 @@ switch ($type) {
             $institutions = array();
         }
         $data = search_group($query, $limit, $offset, $type, $groupcategory, $institutions);
-        $roles = get_records_array('grouptype_roles');
-        $data['roles'] = array();
-        foreach ($roles as $r) {
-            $data['roles'][$r->grouptype][] = array('name' => $r->role, 'display' => get_string($r->role, 'grouptype.'.$r->grouptype));
-        }
+        $roles = get_group_access_roles();
+        $data['roles'] = $roles;
         if (!empty($data['data'])) {
             foreach ($data['data'] as $key => $value) {
                 $info = array(

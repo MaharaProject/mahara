@@ -710,6 +710,10 @@ class Institution {
             }
             update_record('usr', $user);
         }
+        if ($user->id == $USER->id) {
+            $USER->authinstance = $user->authinstance;
+            $USER->commit();
+        }
 
         // If this user has a favourites list which is updated by this institution, remove it
         // from this institution's control.
