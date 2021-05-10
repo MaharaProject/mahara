@@ -2233,5 +2233,10 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021042705) {
+        log_debug('Fix the mismatch series to match the release = 21.04');
+        execute_sql("UPDATE {config} SET value=21.04 WHERE field='series'");
+    }
+
     return $status;
 }
