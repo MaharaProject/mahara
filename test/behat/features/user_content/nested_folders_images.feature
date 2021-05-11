@@ -21,6 +21,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I press "Create folder"
     And I follow "Folder1"
     # Creating subfolder inside Folder1
+    And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Subfolder" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     # Uploading Image to Folder1
@@ -30,10 +31,12 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # Going back to Home
     And I follow "Home"
     # Creating Folder2
+    And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Folder2" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     And I follow "Folder2"
     # Creatign Subfolder2
+    And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Subfolder2" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
     And I follow "Subfolder2"
