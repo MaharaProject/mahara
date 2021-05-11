@@ -151,7 +151,18 @@ function initJs() {
             }
             if (e.type == 'hidden' && $(e.target).hasClass('block')) {
                 var block = $(e.target).closest('.grid-stack-item');
-                grid.data('gridstack').resize(block, block.attr('data-gs-width'), 6);
+                var height = Math.ceil(
+                  (
+                  block.find('.grid-stack-item-content .gridstackblock')[0].scrollHeight +
+                  grid.data('gridstack').opts.verticalMargin
+                  )
+                  /
+                  (
+                  grid.data('gridstack').cellHeight() +
+                  grid.data('gridstack').opts.verticalMargin
+                  )
+                );
+                grid.data('gridstack').resize(block, block.attr('data-gs-width'), height);
             }
             else {
                 updateBlockSizes();
