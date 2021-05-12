@@ -413,6 +413,8 @@ function toggleDetailsBtn() {
             headers.addClass('d-none');
             detailsActive = 0;
         }
+        // update the size of the blocks
+        updateBlockSizes();
 
         var params = {
             'field': 'view_details_active',
