@@ -18,6 +18,7 @@ $string['registeredcurrent'] = 'Registered, current';
 $string['registeredinactive'] = 'Registered, inactive';
 $string['registeredstatusinactive'] = 'Account status is \'Registered, inactive\'';
 $string['registeredstatusinactivefor'] = '%s has status \'Registered, inactive\'';
+$string['registeredstatussuspendedfor'] = '%s has status \'suspended\'';
 $string['registeredsuspended'] = 'Suspended';
 $string['legal']              = 'Terms and conditions';
 

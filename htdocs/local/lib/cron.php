@@ -273,7 +273,8 @@ function get_changes($token) {
                         if (!get_field('usr', 'suspendedctime', 'id', $suspenduserid)) {
                             // Not currently suspended so suspend them
                             set_apc_status($person->personid, null);
-                            suspend_user($suspenduserid, '', 0); // suspend as cron
+                            // PCNZ Customisation WR356091
+                            suspend_user($suspenduserid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
                             unset($people[$person->personid]);
                         }
                     }
@@ -412,7 +413,8 @@ function set_active_status($userid, $status) {
         // If we get here we should suspend the user
         set_account_preference($userid, 'registerstatus', $status);
         if (!get_field('usr', 'suspendedctime', 'id', $userid)) {
-            suspend_user($userid, '', 0); // suspend as cron
+            // PCNZ Customisation WR356091
+            suspend_user($userid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
         }
     }
 }
