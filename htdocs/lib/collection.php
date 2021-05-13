@@ -2234,6 +2234,9 @@ class Collection {
                 WHERE collection = ?
             )";
         execute_sql($sql, array($collectionid));
+        // Set the rollover / unlock date
+        // TODO - get this to be an institution / block setting rather than hard code for 6 months
+        execute_sql("UPDATE {collection_template} SET rolloverdate = ? WHERE collection = ?", array(db_format_timestamp(time()), $collectionid));
     }
 
     /**
@@ -2323,3 +2326,23 @@ function get_active_collection_template($institution='mahara') {
     return false;
 }
 
+/**
+ * Unlock the collections by the rollover date
+ *
+ * When unlocking via rollover we leave the views still locked
+ * so a person can only delete their collection but not edit it
+ *
+ * @param $date string A valid date or string that can be used by strtotime() function
+ *
+ */
+function unlock_collections_by_rollover($date = '-6 months') {
+    // Unlock the collections
+    $rollover = db_format_timestamp(strtotime($date));
+    execute_sql("UPDATE {collection} SET lock = 0
+                 WHERE id IN (
+                    SELECT ct.collection FROM {collection_template} ct
+                    JOIN {collection} c ON c.id = ct.collection
+                    WHERE ct.rolloverdate < ?
+                    AND c.lock = 1
+                 )", array($rollover));
+}

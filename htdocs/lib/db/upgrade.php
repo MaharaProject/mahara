@@ -2238,5 +2238,26 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {config} SET value=21.04 WHERE field='series'");
     }
 
+    if ($oldversion < 2021042706) {
+        log_debug('Add column to the "collection_template" table to track unlock / rollover date');
+        $table = new XMLDBTable('collection_template');
+        $field = new XMLDBField('rolloverdate');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
+            add_field($table, $field);
+        }
+        if (!get_record('cron', 'callfunction', 'collection_rollover')) {
+            log_debug('Add cron job for unlocking collections by rollover date');
+            $cron = new stdClass();
+            $cron->callfunction = 'unlock_collections_by_rollover';
+            $cron->minute       = '0';
+            $cron->hour         = '3';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+    }
+
     return $status;
 }

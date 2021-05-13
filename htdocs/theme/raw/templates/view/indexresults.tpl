@@ -168,6 +168,9 @@
                                     <br>
                                     {str tag=modified section=mahara} {format_date(strtotime($view.vmtime), 'strftimerecentyear')}
                                     <br>
+                                    {if $view.lockedcoll && $view.unlockcoll}{str tag=lockedcollection section=collection arg1=$view.unlockcoll}
+                                    <br>
+                                    {/if}
                                 </li>
                                 {if $view.submittedto}
                                 <li class="view-details dropdown-item">

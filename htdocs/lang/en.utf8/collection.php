@@ -215,3 +215,5 @@ $string['verifiednotavailabledate'] = 'Statement for the portfolio "%s" by %s ca
 $string['verificationtobedone'] = 'Confirm statement for the portfolio "%s" by %s';
 $string['verificationdone'] = 'Confirmed statement for the portfolio "%s" by %s';
 $string['removeaccess'] = 'Remove my access from the portfolio "%s" by %s';
+
+$string['lockedcollection'] = 'Locked until %s';
