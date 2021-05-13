@@ -5921,6 +5921,11 @@ class View {
                     $c->sharedby = $institutions[$c->institution]->displayname;
                 }
 
+                if (isset($c->lockedcoll) && $c->lockedcoll) {
+                    $unlockdate = get_field('collection_template', 'rolloverdate', 'collection', $c->{$useid});
+                    $c->unlockcoll = !empty($unlockdate) ? format_date(strtotime($unlockdate)) : null;
+                }
+
                 $c = (array)$c;
 
                 // Now that we have the owner & group records, create a temporary Collection object

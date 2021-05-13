@@ -1073,6 +1073,7 @@
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="originaltemplate" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="rolloverdate" TYPE="datetime" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1526,8 +1527,8 @@
         <TABLE NAME="view_copy_queue">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="collection" TYPE="int" LENGTH="10" />
-                <FIELD NAME="view" TYPE="int" LENGTH="10" />
+                <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
