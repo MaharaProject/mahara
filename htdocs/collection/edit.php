@@ -147,27 +147,41 @@ if (isset($institutionname)) {
 jQuery(function($) {
     $('#edit_autocopytemplate').on('click', function() {
         // show modal
+        var setpagemodal = $("#set-confirm-form");
+        var unsetpagemodal = $("#unset-confirm-form");
         var value = $('#edit input[name=autocopytemplate]:checked').val();
         if (value == 'on') {
-            $("#set-confirm-form").modal('show');
+            setpagemodal.modal('show');
+            setpagemodal.on('shown.bs.modal', function() {
+                setpagemodal.find('.btn').focus();
+                keytabbinginadialog(setpagemodal, setpagemodal.find('.btn'), setpagemodal.find('.cancel'));
+            });
         }
         else {
-            $("#unset-confirm-form").modal('show');
+            unsetpagemodal.modal('show');
+            unsetpagemodal.on('shown.bs.modal', function() {
+                unsetpagemodal.find('.btn').focus();
+                keytabbinginadialog(unsetpagemodal, unsetpagemodal.find('.btn'), unsetpagemodal.find('.cancel'));
+            });
         }
     });
     $('#set-cancel-button').on('click', function() {
         $("#set-confirm-form").modal('hide');
         $('#edit input[name=autocopytemplate]').prop('checked', false);
+        $('#edit_autocopytemplate').focus();
     });
     $('#set-yes-button').on('click', function() {
         $("#set-confirm-form").modal('hide');
+        $('#edit_autocopytemplate').focus();
     });
     $('#unset-cancel-button').on('click', function() {
         $("#unset-confirm-form").modal('hide');
         $('#edit input[name=autocopytemplate]').prop('checked', true);
+        $('#edit_autocopytemplate').focus();
     });
     $('#unset-yes-button').on('click', function() {
         $("#unset-confirm-form").modal('hide');
+        $('#edit_autocopytemplate').focus();
     });
 });
 EOF;
