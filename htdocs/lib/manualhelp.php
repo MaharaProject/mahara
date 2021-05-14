@@ -101,7 +101,7 @@ function _get_manual_link($length, $keys) {
  */
 function _get_manual_language() {
     $user_lang = current_language();
-    $manual_langs = array("de", "en", "fr", "nl");
+    $manual_langs = array("de", "en", "fr", "nl", "ja");
     foreach ($manual_langs as $lang) {
         if (strpos($user_lang, $lang) === 0) {
             return $lang;
