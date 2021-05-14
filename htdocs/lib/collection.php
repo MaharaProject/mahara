@@ -1915,7 +1915,8 @@ class Collection {
             $this->set('submittedtime', time());
             $this->set('submittedstatus', self::SUBMITTED);
             $this->commit();
-            if (is_plugin_active('submissions', 'module') && $group) {
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $group) {
                 PluginModuleSubmissions::add_submission($this, $group);
             }
             db_commit();
