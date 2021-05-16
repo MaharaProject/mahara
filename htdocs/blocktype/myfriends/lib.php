@@ -147,7 +147,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
         return false;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

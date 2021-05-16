@@ -197,7 +197,7 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 

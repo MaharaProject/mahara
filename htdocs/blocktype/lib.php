@@ -637,7 +637,7 @@ EOF;
         // Do nothing, in the default case
     }
 
-    /*
+    /**
      * The copy_type of a block affects how it should be copied when its view gets copied.
      * nocopy:       The block doesn't appear in the new view at all.
      * shallow:      A new block of the same type is created in the new view with a configuration as specified by the
@@ -651,8 +651,11 @@ EOF;
      *
      * If the old owner and the new owner are the same, reference is used unless 'fullinclself' is specified.
      * If a block contains no artefacts, reference and full are equivalent.
+     *
+     * @param BlockInstance $instance of the block
+     * @param View $view - the view the block is created for
      */
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -2201,7 +2204,7 @@ class BlockInstance {
             $copytype = $configdata['copytype'];
         }
         else {
-            $copytype = call_static_method($blocktypeclass, 'default_copy_type');
+            $copytype = call_static_method($blocktypeclass, 'default_copy_type', $this, $view);
         }
 
         $viewowner = $view->ownership();

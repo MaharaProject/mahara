@@ -120,7 +120,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         return $elements;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

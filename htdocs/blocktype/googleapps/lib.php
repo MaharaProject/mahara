@@ -409,7 +409,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:googleapps:supported.tpl');
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
