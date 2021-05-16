@@ -422,6 +422,14 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return 'nocopy';
     }
 
+    /**
+     * To stop original annotation getting copies of the feedback
+     * when we copy a page
+     */
+    public static function ignore_copy_artefacttypes() {
+        return array('annotationfeedback');
+    }
+
     public static function has_feedback_allowed($id) {
         return (bool) get_field_sql("
             SELECT a.allowcomments FROM {artefact} a
