@@ -1678,7 +1678,10 @@ class View {
         try {
             db_begin();
             self::_db_pendingrelease(array($this->get('id')));
-            PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active()) {
+                PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            }
             require_once(get_config('docroot') . 'export/lib.php');
             add_submission_to_export_queue($this, $releaseuser, $externalid);
             db_commit();
@@ -1699,7 +1702,10 @@ class View {
         try {
             db_begin();
             self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
-            PluginModuleSubmissions::release_submission($this, $releaseuser);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active()) {
+                PluginModuleSubmissions::release_submission($this, $releaseuser);
+            }
             db_commit();
         }
         catch (Exception $e) {
@@ -7044,7 +7050,8 @@ class View {
         try {
             db_begin();
             self::_db_submit(array($this->id), $group);
-            if (is_plugin_active('submissions', 'module')) {
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active()) {
                 PluginModuleSubmissions::add_submission($this, $group);
             }
             db_commit();
