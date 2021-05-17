@@ -244,7 +244,6 @@ class PluginExportHtml extends PluginExport {
         $this->export_progresscompletion_pages();
 
         $this->export_artefact_metadata_modals();
-
         if (!$this->exportingoneview) {
             $viewcollectionsumary = $this->get_view_collection_summary();
             $summaries['view'] = array(100, $viewcollectionsumary['view']);
@@ -547,6 +546,9 @@ class PluginExportHtml extends PluginExport {
                 $commentoptions->view = $view;
                 $commentoptions->limit = 0;
                 $commentoptions->export = true;
+                if (!$this->includeprivatefeedback) {
+                    $commentoptions->privatefeedback = false;
+                }
                 if ($feedback = ArtefactTypeComment::get_comments($commentoptions)) {
                     $feedback->tablerows = $outputfilter->filter($feedback->tablerows);
                 }
@@ -797,7 +799,9 @@ class PluginExportHtml extends PluginExport {
          $commentoptions = ArtefactTypeComment::get_comment_options();
          $commentoptions->view = $view;
          $commentoptions->artefact = $artefact;
-
+         if (!$this->includeprivatefeedback) {
+            $commentoptions->privatefeedback = false;
+        }
          $owner = $artefact->get('owner');
          $threaded = $owner ? $threaded = get_user_institution_comment_threads($owner) : false;
          $commentoptions->threaded = $threaded;
@@ -950,18 +954,18 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                     $this->get_block_artefacts($b->blocktype, $artefactidarray, $bi);
                     if (
                         //block contains any of these types or matches blocktype
-                         $type == 'image' ||
-                         $type == 'blog' ||
-                         $type == 'audio' ||
-                         $type == 'video' ||
-                         $type == 'html' ||
-                         $type == 'plans' ||
-                         $type == 'file' ||
-                         $type == 'internal' && $b->blocktype != 'profileinfo'||
-                         $b->blocktype == 'image' ||
-                         $b->blocktype == 'internalmedia' ||
-                         $b->blocktype == 'filedownload'
-                     ) {
+                        $type == 'image' ||
+                        $type == 'blog'  ||
+                        $type == 'audio' ||
+                        $type == 'video' ||
+                        $type == 'html'  ||
+                        $type == 'plans' ||
+                        $type == 'file'  ||
+                        $type == 'internal' && $b->blocktype != 'profileinfo'||
+                        $b->blocktype == 'image' ||
+                        $b->blocktype == 'internalmedia' ||
+                        $b->blocktype == 'filedownload'
+                    ) {
                         if (isset($configdata['artefactids']) && !empty($configdata['artefactids'])) {
                             $artefactidarray = $configdata['artefactids'];
                         }
@@ -984,7 +988,10 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                                     $html = '<script>' . $rendered['javascript'] . '</script>';
                                 }
                                 $html .= $rendered['html'];
-                                $html .= $this->get_comments_for_modal($artefact, $view);
+                                if ($this->includefeedback) {
+                                    $html .= $this->get_comments_for_modal($artefact, $view);
+
+                                }
                                 $smarty->assign('artefactid', $artefactid);
                                 $smarty->assign('content', $html);
                                 $smarty->assign('title', $artefact->get('title'));
