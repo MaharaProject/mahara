@@ -415,10 +415,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function default_copy_type() {
-        return 'fullinclself';
+    public static function default_copy_type(BlockInstance $instance, View $view) {
+        if ($instance->get_view()->get('owner') == $view->get('owner')) {
+            return 'fullinclself';
+        }
+        return 'nocopy';
     }
 
+    /**
+     * To stop original annotation getting copies of the feedback
+     * when we copy a page
+     */
     public static function ignore_copy_artefacttypes() {
         return array('annotationfeedback');
     }
