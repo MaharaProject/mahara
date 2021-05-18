@@ -600,8 +600,8 @@
      * Rewrites a configure button to be AJAX
      */
     function rewriteConfigureButton(button) {
-        button.off('click');
-        button.on('click', function(e) {
+        button.off('click touchstart');
+        button.on('click touchstart', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
@@ -622,10 +622,8 @@
      * in that case.
      */
     function rewriteDeleteButton(button, pblockinstanceId) {
-        button.off('click');
-
-        button.on('click', function(e) {
-
+        button.off('click touchstart');
+        button.on('click touchstart', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
