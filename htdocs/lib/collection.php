@@ -2007,7 +2007,8 @@ class Collection {
      * @return object|false The view_access record for the first view's secret URL
      */
     public function new_token($visible=true) {
-        $viewids = $this->get_viewids();
+        $viewids = get_column('collection_view', 'view', 'collection', $this->id);
+
         // It's not possible to add a secret key to a collection with no pages
         if (!$viewids) {
             return false;
