@@ -1218,14 +1218,19 @@ function listAttachments(attachments) {
         var tbody = jQuery('<tbody>');
         for (var i=0; i < attachments.length; i++) {
             var item = attachments[i];
-            var href = self.config.wwwroot + 'artefact/file/download.php?file=' + attachments[i].id;
-            var linkcontent = '<span class="sr-only">' + {$downloadstr} + item.title + '</span>';
+            var href = self.config.wwwroot + 'artefact/file/download.php?file=' + item.attachment;
+            var linkcontent = '<span class="sr-only">' + {$downloadstr} + ' "' + item.title + '"</span>';
             linkcontent += '<span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>';
             var link = jQuery('<a href="' + href + '">' + linkcontent + '</a>');
+            var icon = '<span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>';
+            if (item.icon) {
+                icon = '<img class="file-icon" src="' + item.icon + '" alt="' + item.title + '">';
+            }
             tbody.append(
               jQuery('<tr>').append(
                 jQuery('<td>').append(
-                  item.title,
+                  jQuery(icon),
+                  jQuery('<span>').append(item.title),
                   jQuery('<span>').append(link)
                 )
               )
