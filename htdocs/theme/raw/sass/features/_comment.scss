@@ -99,3 +99,10 @@
         width: 100%;
     }
 }
+
+// For comment / annotation / peerassessment blocks where the feedback modal is hidden
+// we need to hide the android version of tinymce also
+.modal-docked:not(.active) .tinymce-mobile-android-container,
+.modal-docked:not(.active) .tinymce-mobile-ios-container {
+    display: none;
+}
