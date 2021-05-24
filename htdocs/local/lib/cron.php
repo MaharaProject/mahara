@@ -273,7 +273,8 @@ function get_changes($token) {
                         if (!get_field('usr', 'suspendedctime', 'id', $suspenduserid)) {
                             // Not currently suspended so suspend them
                             set_apc_status($person->personid, null);
-                            suspend_user($suspenduserid, '', 0); // suspend as cron
+                            // PCNZ Customisation WR356091
+                            suspend_user($suspenduserid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
                             unset($people[$person->personid]);
                         }
                     }
@@ -412,7 +413,8 @@ function set_active_status($userid, $status) {
         // If we get here we should suspend the user
         set_account_preference($userid, 'registerstatus', $status);
         if (!get_field('usr', 'suspendedctime', 'id', $userid)) {
-            suspend_user($userid, '', 0); // suspend as cron
+            // PCNZ Customisation WR356091
+            suspend_user($userid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
         }
     }
 }
@@ -480,6 +482,7 @@ function process_changes($changes) {
             // Update user
             $user->find_by_username((string)$username);
             $oldapcstatus = get_account_preference($user->get('id'), 'apcstatusactive');
+            $oldregisterstatus = get_account_preference($user->get('id'), 'registerstatus');
             $user->firstname = $person['personalinfo']->firstname;
             $user->lastname = $person['personalinfo']->surname;
             $user->username = $person['personalinfo']->id;
@@ -489,7 +492,10 @@ function process_changes($changes) {
             $user->commit();
             $institution = get_field('auth_instance', 'institution', 'id', PCNZ_AUTHINSTANCE);
             if (isset($person['personalinfo']->apc)) {
-                if ($oldapcstatus != $person['personalinfo']->apc->active && $person['personalinfo']->apc->active === true) {
+                if (
+                    ($oldapcstatus != $person['personalinfo']->apc->active && $person['personalinfo']->apc->active === true) ||
+                    ($oldregisterstatus != $person['personalinfo']->practitioner->practicingstatusid && $person['personalinfo']->practitioner->practicingstatusid === PCNZ_REGISTEREDCURRENT)
+                   ) {
                     $template = get_active_collection_template($institution);
                     // Check that the person doesn't already have the current template so they don't get it twice
                     if ($template && !record_exists_sql("SELECT collection FROM {collection_template} ct

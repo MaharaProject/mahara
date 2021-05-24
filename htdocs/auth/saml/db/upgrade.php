@@ -70,6 +70,7 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
             log_warn(get_string('samlneedtoremovephar', 'auth.saml', $extroot . 'external/composer.phar'), true, false);
         }
     }
+
     if ($oldversion < 2021021701) {
         if (!get_config_plugin('auth', 'saml', 'keypass')) {
             // We are upgrading from an older version of Mahara where the version id > 2020070900
@@ -78,6 +79,10 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
                 set_config_plugin('auth', 'saml', 'newkeypass', get_config('sitename'));
             }
         }
+    }
+
+    if ($oldversion < 2021043000) {
+        set_config_plugin('auth', 'saml', 'version', '1.19.1');
     }
 
     return $status;
