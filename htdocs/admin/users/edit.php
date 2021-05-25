@@ -693,6 +693,9 @@ function edituser_site_submit(Pieform $form, $values) {
 
 // Suspension/deletion controls
 $suspended = $user->get('suspendedcusr');
+if (!empty($user->get('suspendedreason')) && $suspended == 0) {
+    $suspended = true;
+}
 $expired = ($user->get('active') == 0 && $user->get('expirymailsent') && !$suspended);
 if (empty($suspended)) {
     $suspendform = pieform(array(

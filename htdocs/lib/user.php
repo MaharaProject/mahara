@@ -1539,11 +1539,7 @@ function suspend_user($suspendeduserid, $reason, $suspendinguserid=null) {
 
     $iscron = false;
     if ($suspendinguserid == 0) {
-        // root user has ID = 0 -> happens when run in cron.
-        // Use a valid site admin ID.
         $iscron = true;
-        $admins = get_site_admins();
-        $suspendinguserid = $admins[0]->id;
     }
 
     $suspendrec = new stdClass();
