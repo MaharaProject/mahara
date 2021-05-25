@@ -18,6 +18,7 @@
  $string['suggestinvitefriends'] = 'You cannot enable both contact invitations and recommendations.';
  $string['suggestfriendsrequesterror'] = 'You can only enable contact recommendations on open or request groups.';
  $string['sendfriendrequest'] = 'Send contact request';
+ $string['sendfriendshiprequest'] = 'Sent %s a contact request';
 
  $string['friendformaddsuccess'] = 'Added %s to your contact list';
  $string['friendformremovesuccess'] = 'Removed %s from your contact list';
