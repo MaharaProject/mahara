@@ -20,12 +20,14 @@ $data = new stdClass();
 if (file_exists(AuthSaml::prepare_metadata_path($idp))) {
     $rawxml = file_get_contents(AuthSaml::prepare_metadata_path($idp));
     $data->metarefresh_metadata_url = Metarefresh::get_metadata_url($idp, true);
+    $data->metarefresh_metadata_signature = Metarefresh::get_metadata_fingerprint($idp, true);
     $data->metadata = $rawxml;
     $data->error = false;
 }
 else if ($list = PluginAuthSaml::get_disco_list()) {
     if (isset($list[$idp])) {
         $data->metarefresh_metadata_url = Metarefresh::get_metadata_url($idp, true);
+        $data->metarefresh_metadata_signature = Metarefresh::get_metadata_fingerprint($idp, true);
     }
     else {
         $data->error = 'unable to find metadata';
