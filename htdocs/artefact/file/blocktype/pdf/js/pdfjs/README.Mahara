@@ -2,40 +2,57 @@ PDF.js in Mahara
 ==================
 
 Website: http://mozilla.github.io/pdf.js/getting_started/#download
-Version: 2.2.228
+Version: 2.8.335
 License: Apache License 2.0
 
 PDF.js is used in the Mahara to provide a javascript library for
 viewing PDF file
 
-Build Instructions:
+**Have Node.JS installed.**
 
-1. Have Node.JS installed.
-2. Clone the pdf.js git repo ( https://github.com/mozilla/pdf.js/ )
-3. Navigate into the repo, and run
-    npm install -g gulp-cli
-    npm install
-    gulp generic
-4. Copy the contents of build/generic into this directory.
-5. Minify build/pdf.js and build/pdf.worker.min.js (see next section for details)
-6. Make sure you can open and see a PDF via browser
+1. Check what version of node you are using `node -e 'console.log(process.versions)'`
+2. Install the lastest stable if the version is not new enough - say 12+
+
+    ```bash
+    sudo npm cache clean -f
+    sudo npm install -g n
+    sudo n stable
+    ```
+
+**Clone the pdf.js git repo** <https://github.com/mozilla/pdf.js/> ...
+
+1. Checkout the repo locally and go into the pdf.js directory
+2. Let's build the pdf.js
+
+    ```bash
+    sudo npm install -g gulp-cli --force
+    sudo npm install
+    ```
+
+3. And once that completes we want to build the distribution
+
+    ``` bash
+    gulp dist-install
+    ```
+
+    This will make the `build/minified/build/` subdirectory as a version of pdf.js that is minified
+4. Copy and rename it to pdf.min.js
+5. Copy the new files in `build/minified/build/` to go in our version on the pdfjs/web/ directory
+
+**Checks** and file renames
+
+1. Make sure you can open and see a PDF via browser
     {WWWROOT}/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
-7. Update the template file htdocs/theme/raw/plugintype/artefact/file/blocktype/pdf/templates/pdf.tpl
+2. Update the template file htdocs/theme/raw/plugintype/artefact/file/blocktype/pdf/templates/pdf.tpl
     based on htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
     and htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
 
-Minify instructions (or use an online minifier):
-1. Install uglifyjs if you don't have: npm install uglify-js
-2. cd htdocs/artefact/file/blocktype/pdf/js/pdfjs/build/
-3. Run uglifyjs pdf.js -o pdf.min.js
-    and uglifyjs pdf.worker.js -o pdf.worker.min.js
-   Remove the files pdf.js and pdf.worker.js
-4. Change the path of pdf.js to pdf.min.js
+3. Change the path of pdf.js to pdf.min.js
     In htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
-5. Change the path of pdf.worker.js to pdf.worker.min.js
+4. Change the path of pdf.worker.js to pdf.worker.min.js
     In htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
 
-Changes:
+**Changes**:
 
 * Minify js files for faster loading
 * Use absolute paths in viewer.js
