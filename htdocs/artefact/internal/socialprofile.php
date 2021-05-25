@@ -105,7 +105,7 @@ else {
             'profiletype' => array(
                 'type' => 'select',
                 'class' => 'select-with-input autofocus',
-                'title' => get_string('profiletype', 'artefact.internal'),
+                'title' => get_string('socialprofile', 'artefact.internal'),
                 'options' => $socialnetworkoptions,
                 'allowother' => true,
                 'defaultvalue' => $note,

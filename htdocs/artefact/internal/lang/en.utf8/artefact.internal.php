@@ -213,13 +213,10 @@ $string['progress_makefriend'] = array(
 // Social profiles
 $string['socialprofile'] = 'Social media';
 $string['socialprofiles'] = 'Social media accounts';
-$string['service'] = 'Social network';
 $string['servicedesc'] = 'Enter the name of the social media network, e.g. Facebook, LinkedIn, Twitter, etc.';
 $string['profileurl'] = 'Your URL or username';
 $string['profileurldesc'] = 'The URL of your profile page or your username.';
 $string['profileurlexists'] = 'This social media account cannot be added because its username or URL is a duplicate of one you\'ve already entered.';
-$string['profiletype'] = 'Social network';
-
 $string['deleteprofile'] = 'Delete social media account';
 $string['deletethisprofile'] = 'Delete social media account: \'%s\'';
 $string['deleteprofileconfirm'] = 'Are you sure you wish to delete this social media account?';
