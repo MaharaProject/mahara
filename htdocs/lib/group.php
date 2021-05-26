@@ -332,6 +332,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *                userid => role,
  *                ...
  *            )
+ * @param boolean $forced set to true if the group is created through a cron job, or web services, where the logged in user doesn't count
  * @return int The ID of the created group
  * @throws InvalidArgumentException
  *         UserException
@@ -339,7 +340,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *         NotFoundException
  *         AccessDeniedException
  */
-function group_create($data) {
+function group_create($data, $forced=false) {
     global $USER;
 
     if (!is_array($data)) {
@@ -426,7 +427,7 @@ function group_create($data) {
 
     if (!empty($data['institution']) && $data['institution'] != 'mahara') {
         global $USER;
-        if (!$USER->can_edit_institution($data['institution'], true)) {
+        if (!$USER->can_edit_institution($data['institution'], true) && !$forced) {
             $data['institution'] = 'mahara';
         }
     }

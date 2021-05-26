@@ -30,3 +30,6 @@ $string['openidconnectlogin'] = 'OpenID Connect login URL';
 $string['keyset'] = 'Keyset URL';
 $string['deployments'] = 'Deployments';
 $string['deploymentsdesc'] = '\'Basic launch\' and \'Names and Roles Provisioning Service\' deployment IDs';
+$string['issueralreadyinuse'] = 'Issuer is already set to another client connection';
+$string['deploymentidcannotbeempty'] = 'Both deployment ID fields cannot be empty';
+$string['deploymentidcannotbesame'] = 'Both deployment ID fields cannot be the same';

@@ -64,6 +64,9 @@ class PluginModuleLti_advantage extends PluginModule {
                     'size'         => 50,
                     'disabled'     => false,
                     'title'        => get_string('issuer', 'module.lti_advantage'),
+                    'rules'        => array(
+                        'required' => true
+                    ),
                 ),
                 'client_id' => array(
                     'defaultvalue' => isset($platform->client_id) ? $platform->client_id : null,
@@ -71,6 +74,9 @@ class PluginModuleLti_advantage extends PluginModule {
                     'size'         => 50,
                     'disabled'     => false,
                     'title'        => get_string('client_id', 'module.lti_advantage'),
+                    'rules'        => array(
+                        'required' => true
+                    ),
                 ),
                 'platform_login_auth_endpoint' => array(
                     'defaultvalue' => isset($platform->platform_login_auth_endpoint) ? $platform->platform_login_auth_endpoint : null,
@@ -78,6 +84,9 @@ class PluginModuleLti_advantage extends PluginModule {
                     'size'         => 50,
                     'disabled'     => false,
                     'title'        => get_string('platform_login_auth_endpoint', 'module.lti_advantage'),
+                    'rules'        => array(
+                        'required' => true
+                    ),
                 ),
                 'platform_service_auth_endpoint' => array(
                     'defaultvalue' => isset($platform->platform_service_auth_endpoint) ? $platform->platform_service_auth_endpoint : null,
@@ -85,6 +94,9 @@ class PluginModuleLti_advantage extends PluginModule {
                     'size'         => 50,
                     'disabled'     => false,
                     'title'        => get_string('platform_service_auth_endpoint', 'module.lti_advantage'),
+                    'rules'        => array(
+                        'required' => true
+                    ),
                 ),
                 'platform_jwks_endpoint' => array(
                     'defaultvalue' => isset($platform->platform_jwks_endpoint) ? $platform->platform_jwks_endpoint : null,
@@ -92,6 +104,9 @@ class PluginModuleLti_advantage extends PluginModule {
                     'size'         => 50,
                     'disabled'     => false,
                     'title'        => get_string('platform_jwks_endpoint', 'module.lti_advantage'),
+                    'rules'        => array(
+                        'required' => true
+                    ),
                 ),
                 'platform_auth_provider' => array(
                     'defaultvalue' => isset($platform->platform_auth_provider) ? $platform->platform_auth_provider : null,
@@ -283,9 +298,10 @@ class PluginModuleLti_advantage extends PluginModule {
     }
 
     public static function get_oauth_service_config_options($serverid) {
-        $rawdbconfig = get_records_sql_array('SELECT c.field, c.value, r.institution FROM {oauth_server_registry} r
-                                           LEFT JOIN {oauth_server_config} c ON c.oauthserverregistryid = r.id
-                                           WHERE r.id = ?', array($serverid));
+        $rawdbconfig = get_records_sql_array('SELECT c.field, c.value, r.institution
+                                              FROM {oauth_server_registry} r
+                                              LEFT JOIN {oauth_server_config} c ON c.oauthserverregistryid = r.id
+                                              WHERE r.id = ?', array($serverid));
         $dbconfig = new stdClass();
         if ($rawdbconfig) {
             foreach ($rawdbconfig as $raw) {
@@ -378,34 +394,21 @@ class PluginModuleLti_advantage extends PluginModule {
 
     public static function webservice_oauth_server_validate(Pieform $form, $values) {
         if (get_field('module_installed', 'active', 'name', 'lti_advantage')) {
-            if (!isset($values['issuer']) || empty($values['issuer'])) {
-                $form->set_error('issuer', 'Field cannot be empty');
-            }
-            else {
-                // check the client_connections_institution is not related to a different issuer
-                if (isset($values['id']) && $values['id']) {
-                    $registration = get_record('lti_advantage_registration', 'issuer', $values['issuer']);
-                    if ($registration && $registration->connectionid != $values['id']) {
-                        $form->set_error('issuer', 'Issuer is already set to another client connection');
-                    }
+            // check the client_connections_institution is not related to a different issuer
+            if (isset($values['id']) && $values['id']) {
+                $registration = get_record('lti_advantage_registration', 'issuer', $values['issuer']);
+                if ($registration && $registration->connectionid != $values['id']) {
+                    $form->set_error('issuer', get_string('issueralreadyinuse', 'module.lti_advantage'));
                 }
             }
-            if (!isset($values['client_id']) || empty($values['client_id'])) {
-                $form->set_error('client_id', 'Field cannot be empty');
+            if (empty($values['deployment1_id']) && empty($values['deployment2_id'])) {
+                $form->set_error('deployment1_id', get_string('deploymentidcannotbeempty', 'module.lti_advantage'));
+                $form->set_error('deployment2_id', get_string('deploymentidcannotbeempty', 'module.lti_advantage'));
             }
-            if (!isset($values['platform_login_auth_endpoint']) || empty($values['platform_login_auth_endpoint'])) {
-                $form->set_error('platform_login_auth_endpoint', 'Field cannot be empty');
-            }
-            if (!isset($values['platform_service_auth_endpoint']) || empty($values['platform_service_auth_endpoint'])) {
-                $form->set_error('platform_service_auth_endpoint', 'Field cannot be empty');
-            }
-            if (!isset($values['platform_jwks_endpoint']) || empty($values['platform_jwks_endpoint'])) {
-                $form->set_error('platform_jwks_endpoint', 'Field cannot be empty');
-            }
-            if ((!isset($values['deployment1_id']) || empty($values['deployment1_id']))
-            && (!isset($values['deployment2_id']) || empty($values['deployment2_id']))) {
-                $form->set_error('deployment1_id', 'Fields cannot be both empty');
-                $form->set_error('deployment2_id', 'Fields cannot be both empty');
+            if (!empty($values['deployment1_id']) && !empty($values['deployment1_id']) &&
+                $values['deployment1_id'] == $values['deployment2_id']) {
+                $form->set_error('deployment1_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
+                $form->set_error('deployment2_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
             }
         }
         else {
