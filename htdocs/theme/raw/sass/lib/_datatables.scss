@@ -169,7 +169,8 @@ div.dt-button-collection div.dropdown-menu {
 }
 
 table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before,
-table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before {
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td.dtr-control::before {
   top: 12px;
   left: 4px;
   height: 14px;
@@ -195,7 +196,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
   }
 }
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before,
-table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control::before {
   background-color: transparent;
   font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
   font-weight: 900;
