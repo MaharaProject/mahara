@@ -2467,6 +2467,30 @@ EOD;
       $activity->notify_users();
     }
 
+    public function create_page_comment($record) {
+        $data = new stdClass();
+        $onview = $this->get_view_id($record['page']);
+        if (!$viewrecord = get_record('view', 'id', $onview)) {
+            throw new ViewNotFoundException(get_string('viewnotfound', 'error', $onview));
+        }
+        $data->onview = $onview;
+        require_once('view.php');
+        $view = new View($onview);
+        $ownerid = $view->get('owner');
+        $data->owner = $ownerid;
+        $data->author = $this->get_user_id($record['user']);
+        $data->private = !empty($record['private']) ? 1 : 0;
+        $data->title = 'Comment';
+
+        $comment = new ArtefactTypeComment(0, $data);
+        $comment->commit();
+        $newdescription = EmbeddedImage::prepare_embedded_images($record['comment'], 'comment', $comment->get('id'), null , $ownerid);
+        $updatedcomment = new stdClass();
+        $updatedcomment->id = $comment->get('id');
+        $updatedcomment->description = $newdescription;
+        update_record('artefact', $updatedcomment, 'id');
+    }
+
     /**
      * A fixture to set up page & collection permissions. Currently it only supports setting a blanket permission of
      * "public", "loggedin", "friends", "private", "user + role", and allowcomments & approvecomments

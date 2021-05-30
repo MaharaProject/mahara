@@ -17,7 +17,7 @@ Background:
     Given the following "users" exist:
     # Available fields: username*, password*, email*, firstname*, lastname*, institution, role, authname, remoteusername, studentid, preferredname, town, country, occupation
     | username | password | email             | firstname | lastname | institution | authname | role |
-    | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | member |
+    | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | admin |
     | UserB    | Kupuh1pa!| UserB@example.org | Mechania  | Mahara   | mahara      | internal | member |
 
     And the following "groups" exist:
@@ -117,18 +117,25 @@ Background:
 
     And the following "pages" exist:
     # Available fields: title*, description, ownertype*, ownername*, layout, tags
-    | title         | description   | ownertype | ownername |
-    | Page One A    | UserA Page 1 | user      | UserA     |
-    | Page Two A    | UserA Page 2 | user      | UserA     |
-    | Page Three A  | UserA Page 3 | user      | UserA     |
-    | Page Four A   | UserA Page 4 | user      | UserA     |
-    | Page One B    | UserB Page 1 | user      | UserB     |
-    | Page One Grp  | Group Page 1 | group     | Group1    |
+    | title        | description  | ownertype | ownername |
+    | Page One A   | UserA Page 1 | user      | UserA     |
+    | Page Two A   | UserA Page 2 | user      | UserA     |
+    | Page Three A | UserA Page 3 | user      | UserA     |
+    | Page Four A  | UserA Page 4 | user      | UserA     |
+    | Page One B   | UserB Page 1 | user      | UserB     |
+    | Page One Grp | Group Page 1 | group     | Group1    |
+
+    And the following "pagecomments" exist:
+    # Available fields: user*, comment*, page*, attachment, private
+    | user  | page         | comment          | private |
+    | UserB | Page Two A | Comment by User B on page | false   |
+    | UserB | Page Three A | Hi, I am a comment by User B | false   |
+    | UserA | Page Three A | Hi, I am a comment by the owner | false   |
 
     And the following "collections" exist:
     # Available fields: title*, description, ownertype*, ownername*, pages
-    | title          | ownertype | ownername | lock  | description | pages                   |
-    | collection one | user      | UserA     | false |desc of col  | Page One A, Page Two A  |
+    | title          | ownertype | ownername | description | pages                                |
+    | collection one | user      | UserA     | desc of col | Page One A, Page Two A, Page Three A |
 
     And the following "journals" exist:
     # Available fields: owner*, ownertype*, title*, description, tags
@@ -138,14 +145,14 @@ Background:
 
     And the following "journalentries" exist:
     # Available fields: owner*, ownertype*, title*, entry*, blog, tags, draft
-    | owner   | ownertype | title       | entry                  | blog     | tags      | draft |
-    | UserA   | user      | Entry One   | This is my entry One  | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Two   | This is my entry Two   | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Three | This is my entry Three | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Four  | This is my entry Four  | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Five  | This is my entry Five  | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Mini  | This is my min fields  |          |           | 0     |
-    | Group1  | group     | Group e1    | This is my group entry | journal2 |           | 0     |
+    |  owner  |  ownertype |  title       |  entry                  |  blog     |  tags      |  draft |
+    |  UserA  |  user      |  Entry One   |  This is my entry One   |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Two   |  This is my entry Two   |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Three |  This is my entry Three |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Four  |  This is my entry Four  |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Five  |  This is my entry Five  |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Mini  |  This is my min fields  |           |            |  0     |
+    |  Group1 |  group     |  Group e1    |  This is my group entry |  journal2 |            |  0     |
 
     And the following "plans" exist:
     # Available fields: owner*, ownertype*, title*, description, tags

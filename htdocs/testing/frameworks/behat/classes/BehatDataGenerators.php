@@ -376,6 +376,17 @@ class BehatDataGenerators extends BehatBase {
             'attachment'               => 'text'
           ),
           'required' => array('user','startdate','title')
+        ),
+        'pagecomments' => array(
+          'datagenerator' => 'page_comment',
+          'available' => array(
+            'user'                     => 'text',
+            'comment'                  => 'text',
+            'attachment'               => 'text',
+            'private'                  => 'bool',
+            'page'                     => 'text'
+          ),
+          'required' => array('user', 'comment', 'page')
         )
       );
 
