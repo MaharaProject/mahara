@@ -4,7 +4,7 @@
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset collapsible">
                 <legend>
-                    <a href="#dropdown{$k}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                    <a href="#dropdown{$k}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                         {$section.title}
                         <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
                     </a>

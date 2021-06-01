@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" {if !$keepParentModalOpen}data-dismiss="modal"{/if}>{str tag=Close}</button>
+                <button type="button" class="btn btn-secondary" {if !$keepParentModalOpen}data-bs-dismiss="modal"{/if}>{str tag=Close}</button>
             </div>
         </div>
     </div>

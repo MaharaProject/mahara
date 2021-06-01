@@ -5,7 +5,7 @@
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=createskin section=skin}
     </button>
-    <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="moreoptions"}</span>
     </button>
@@ -35,7 +35,7 @@
     <div class="skin">
         <div class="card">
             <h2 class="card-header {if $skin.metadata} has-link {/if}">
-                <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
+                <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-bs-toggle="modal" data-bs-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                     {$skin.title|escape|safe}
                     <span class="help float-right">
                         <span class="icon icon-info-circle link-indicator" role="presentation" aria-hidden="true"></span>
@@ -112,7 +112,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                             <span aria-hidden="true">&times;</span>
                         </button>
 

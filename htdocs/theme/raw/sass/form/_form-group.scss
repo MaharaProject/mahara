@@ -501,7 +501,7 @@
 
     .errmsg {
         @extend .align-with-input;
-        color: theme-color("danger");
+        color: $danger;
         display: block;
         padding-top: $spacing-base;
         font-size: $font-size-sm;
@@ -532,12 +532,12 @@
     }
     .requiredmarker,
     .oneofmarker {
-        color: scale-color(theme-color("danger"), $lightness: -8.5%);
+        color: scale-color($danger, $lightness: -8.5%);
     }
 
     &.requiredmarkerdesc,
     &.oneofmarkerdesc {
-        color: scale-color(theme-color("danger"), $lightness: -8.5%);
+        color: scale-color($danger, $lightness: -8.5%);
         border: 0;
         font-style: italic;
         font-size: $font-size-sm;

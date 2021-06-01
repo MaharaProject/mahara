@@ -51,7 +51,7 @@
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.info}
-                            <button class="btn btn-secondary btn-sm float-left btn-group-item info-item" data-toggle="modal-docked" data-target="#infomodal" type="button"
+                            <button class="btn btn-secondary btn-sm float-left btn-group-item info-item" data-bs-toggle="modal-docked" data-bs-target="#infomodal" type="button"
                                 title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
                                  <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden sr-only ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
@@ -80,7 +80,7 @@
                             <li>
                             {$type}
                             {if $config.info}
-                                <button class="btn btn-secondary btn-sm btn-group float-right" data-toggle="modal-docked" data-target="#infomodal"
+                                <button class="btn btn-secondary btn-sm btn-group float-right" data-bs-toggle="modal-docked" data-bs-target="#infomodal"
                                     title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" type="button" data-plugintype='{$plugintype}' data-pluginname='{$plugin}' data-type='{$type}'>
                                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
@@ -138,7 +138,7 @@ jQuery(function($) {
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                     <span class="times">×</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>

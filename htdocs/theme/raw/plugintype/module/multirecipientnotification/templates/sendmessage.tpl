@@ -9,7 +9,7 @@
             <span class="user-icon left" role="presentation" aria-hidden="true">
                 <img src="{profile_icon_url user=$message->fromid maxwidth=60 maxheight=60}" alt="{$message->fromusrname}">
             </span>
-            <a class="has-user-icon {if $dwoo.foreach.message.last}{else}collapsed{/if}" href="#message-{$message->id}" data-toggle="collapse" aria-expanded="{if $dwoo.foreach.message.last}true{else}false{/if}" aria-controls="#message-{$message->id}">
+            <a class="has-user-icon {if $dwoo.foreach.message.last}{else}collapsed{/if}" href="#message-{$message->id}" data-bs-toggle="collapse" aria-expanded="{if $dwoo.foreach.message.last}true{else}false{/if}" aria-controls="#message-{$message->id}">
 
                 {if ($message->fromusrlink != 0)}
                 <a href="{$message->fromusrlink}">

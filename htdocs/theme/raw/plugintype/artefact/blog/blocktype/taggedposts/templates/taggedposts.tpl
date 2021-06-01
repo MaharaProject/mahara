@@ -65,7 +65,7 @@
         <div class="post list-group-item flush">
             <h3 class="list-group-item-heading title">
                 {if !($editing)}
-                     <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+                     <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                          {$post->title}
                      </a>
                 {else}
@@ -110,7 +110,7 @@
     <div class="list-group-item flush-collapsible">
         <h3 class="list-group-item-heading title">
             {if !($editing)}
-            <a class="modal_link list-group-item-heading" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+            <a class="modal_link list-group-item-heading" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                 {$post->title}
             </a>
             {else}
@@ -118,7 +118,7 @@
             {/if}
         </h3>
 
-        <a class="collapsed" data-toggle="collapse" href="#tagged_post_{$post->id}" aria-expanded="false">
+        <a class="collapsed" data-bs-toggle="collapse" href="#tagged_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
             <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
         </a>

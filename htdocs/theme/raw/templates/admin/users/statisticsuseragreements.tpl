@@ -2,12 +2,12 @@
 {if $id !== null && !empty($usercontent)}
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
-            <a href="#privacy" id="privacylink" role="tab" data-toggle="tab" aria-expanded="true" onclick="showTab('#privacy')">
+            <a href="#privacy" id="privacylink" role="tab" data-bs-toggle="tab" aria-expanded="true" onclick="showTab('#privacy')">
                 {str tag="privacy" section="admin"}
             </a>
         </li>
         <li role="presentation">
-            <a href="#termsandconditions" id="termsandconditionslink" role="tab" data-toggle="tab" aria-expanded="false" onclick="showTab('#termsandconditions')">
+            <a href="#termsandconditions" id="termsandconditionslink" role="tab" data-bs-toggle="tab" aria-expanded="false" onclick="showTab('#termsandconditions')">
                 {str tag="termsandconditions" section="admin"}
             </a>
         </li>

@@ -123,10 +123,10 @@
 }
 
 .btn-link-danger {
-    color: theme-color("danger");
+    color: $danger;
     &:hover,
     &:focus {
-      color: scale-color(theme-color("danger"), $lightness: -10%);
+      color: scale-color($danger, $lightness: -10%);
     }
 }
 
@@ -375,7 +375,7 @@ a[type="submit"],
 .assessment-item-buttons {
     .assessbtn + .assessbtn {
         button {
-            @include border-left-radius(0);
+            @include border-start-radius
         }
     }
 }

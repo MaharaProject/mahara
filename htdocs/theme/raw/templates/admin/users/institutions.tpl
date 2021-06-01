@@ -47,7 +47,7 @@
 
         {if $countinstitutions > 1}
 
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title sr-only">{str tag="edit"}</span>

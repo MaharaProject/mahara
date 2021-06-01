@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Basic type related customisation
 body, p {
     font-weight: $font-weight-normal;
@@ -198,7 +200,7 @@ img {
 }
 
 hr {
-    margin-top: #{$line-height-base / 2}rem;
+    margin-top: math.div($line-height-base, 2);
 }
 
 ul {

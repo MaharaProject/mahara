@@ -33,7 +33,7 @@
                             <ul class="list-unstyled list-group">
                             {foreach from=$n->files item=file}
                                 <li class="list-group-item">
-                                    <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                                    <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-bs-toggle="tooltip"{/if}>
                                         {if $file->icon}
                                         <img src="{$file->icon}" alt="" class="file-icon">
                                         {else}
@@ -41,7 +41,7 @@
                                         {/if}
                                     </a>
                                     <span class="title">
-                                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                                        <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-bs-toggle="tooltip"{/if}>
                                             <span class="text-small">{$file->title|truncate:40}</span>
                                         </a>
                                     </span>

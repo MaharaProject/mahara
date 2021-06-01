@@ -26,7 +26,7 @@
         <td class="progresstitle">
             <div>
                 <a href="{$view->fullurl}">{$view->displaytitle}</a>
-                {if $view->description}<span id="pagetitlehelp_{$view->id}" class="icon icon-info-circle iconhelp" data-title="{hsc($view->displaytitle)}" data-content="{hsc($view->description)}"></span>{/if}
+                {if $view->description}<span id="pagetitlehelp_{$view->id}" class="icon icon-info-circle iconhelp" data-title="{hsc($view->displaytitle)}"data-bs-content="{hsc($view->description)}"></span>{/if}
             </div>
         </td>
         <td>
@@ -67,7 +67,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                 <h1 class="modal-title">
                     {str tag=signoffpagetitle section=blocktype.peerassessment/signoff}
                 </h1>
@@ -88,7 +88,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                 <h1 class="modal-title">
                     {str tag=verifypagetitle section=blocktype.peerassessment/signoff}
                 </h1>
@@ -109,7 +109,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=reportobjectionablematerial}
@@ -127,7 +127,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=objectionreview}
@@ -149,7 +149,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-trash-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=revokemyaccessformtitle section=collection}
@@ -170,7 +170,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-trash-flag text-danger left" role="presentation" aria-hidden="true"></span>
                         {str tag=undoverificationformtitle section=collection}

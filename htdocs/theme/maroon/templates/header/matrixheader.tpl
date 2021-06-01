@@ -25,7 +25,7 @@
                                 {str tag=objectionablematerialreportedreply}
                             {/if}
                                 <div class="form-group">
-                                    <a id="review_link" class="btn btn-secondary" href="#" data-toggle="modal" data-target="#review-form">
+                                    <a id="review_link" class="btn btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#review-form">
                                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                                         {str tag=objectionreview}
                                     </a>

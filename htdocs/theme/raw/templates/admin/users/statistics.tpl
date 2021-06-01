@@ -1,6 +1,6 @@
 {include file='header.tpl'}
 <div class="btn-group btn-group-top">
-    <button id="configbtn" type="button" class="btn btn-secondary" data-toggle="modal-docked" data-target="#modal-configs">
+    <button id="configbtn" type="button" class="btn btn-secondary" data-bs-toggle="modal-docked" data-bs-target="#modal-configs">
         <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
         {str tag="configurereport" section="admin"}
     </button>
@@ -62,7 +62,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                     <span class="times">×</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>

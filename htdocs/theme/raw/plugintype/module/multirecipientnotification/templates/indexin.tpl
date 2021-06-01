@@ -11,11 +11,11 @@
 
         <div class="btn-group bulk-actions" role="group">
             <label class="btn btn-secondary" for="selectall">
-                <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
+                <input type="checkbox" name="selectall" id="selectall" data-bs-togglecheckbox="tocheck">
                 <span class="sr-only">{str section='activity' tag='selectall'}</span>
             </label>
 
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 {str section='admin' tag='bulkactions'}  <span class="icon icon-caret-down right"></span>
             </button>
 
@@ -26,7 +26,7 @@
                 <button class="btn btn-link btn-link-danger text-left" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
-                <a class="btn btn-link btn-link-danger text-left" href="#delete_all_notifications_submit" data-triggersubmit="delete_all_notifications_submit">
+                <a class="btn btn-link btn-link-danger text-left" href="#delete_all_notifications_submit" data-bs-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>

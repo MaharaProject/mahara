@@ -8,7 +8,7 @@
                 {if !$item.submenu}{* Create a link to the main page *}
                 <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if}">
                 {else}{* Otherwise, create list items as buttons to expand submenus *}
-                <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle navbar-toggle{if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#nav" data-target="#childmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+                <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle navbar-toggle{if !$item.selected} collapsed{/if}" data-bs-toggle="collapse" data-bs-parent="#nav" data-bs-target="#childmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
                 {/if}
                 {if $item.iconclass}
                     <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
@@ -68,7 +68,7 @@
             {if !$item.submenu}{* Create a link to the main page *}
             <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if}">
             {else}{* Otherwise, create list items as buttons to expand submenus *}
-            <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle navbar-toggle{if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#navadmin" data-target="#adminchildmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+            <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle navbar-toggle{if !$item.selected} collapsed{/if}" data-bs-toggle="collapse" data-bs-parent="#navadmin" data-bs-target="#adminchildmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
             {/if}
             {if $item.iconclass}
                 <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
@@ -131,7 +131,7 @@
             {if !$item.submenu}{*if item is a link, create a link tag *}
             <a {if $item.linkid}id="{$item.linkid}"{/if} {if $item.aria}{foreach $item.aria key=key item=value}aria-{$key}="{$value}" {/foreach}{/if}href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}" class="menu-dropdown-toggle">
             {else} {* otherwise, create a button *}
-            <button type="button" class="navbar-toggle menu-dropdown-toggle{if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#navuser" data-target="#userchildmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+            <button type="button" class="navbar-toggle menu-dropdown-toggle{if !$item.selected} collapsed{/if}" data-bs-toggle="collapse" data-bs-parent="#navuser" data-bs-target="#userchildmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
             {/if}
                 {if $item.iconclass}
                 <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>

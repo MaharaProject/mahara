@@ -64,7 +64,7 @@
       {if $canremoveownaccess}
         <td class='revokemyaccess cell-center'>
           {if $view.accessrevokable}
-            <button class="deletebutton btn btn-inverse btn-sm" data-toggle="modal" data-target="#revokemyaccess-form" data-viewid={$view.viewid} data-title="{$view.title}" title='{str tag=removeaccess arg1=$view.title arg2=$view.sharedby section=collection}'>
+            <button class="deletebutton btn btn-inverse btn-sm" data-bs-toggle="modal" data-bs-target="#revokemyaccess-form" data-viewid={$view.viewid} data-title="{$view.title}" title='{str tag=removeaccess arg1=$view.title arg2=$view.sharedby section=collection}'>
               <span class="icon icon-trash-alt text-danger" aria-label='{str tag=removemyaccessiconaria arg1=$view.title arg2=$view.sharedby section=collection}'></span>
             </button>
           {/if}

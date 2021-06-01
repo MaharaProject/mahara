@@ -102,6 +102,6 @@ div.help {
     padding-right: 2.5rem; // 40px;
     select:not(:first-child),
     input:not(:first-child) {
-        @include border-right-radius($border-radius-sm);
+        @include border-end-radius($border-radius-sm);
     }
 }

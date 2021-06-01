@@ -109,7 +109,7 @@ label.sr-only + div.tox-tinymce {
     color: $btn-primary-bg;
     box-shadow: none;
     &:hover {
-        background-color: scale-color($btn-secondary-bg, $lightness: -10.05) !important;
+        background-color: scale-color($btn-secondary-bg, $lightness: -10.05%) !important;
         border-color: transparent !important;
     }
 }
@@ -117,7 +117,7 @@ label.sr-only + div.tox-tinymce {
     background-color: transparent;
     border-color: transparent;
     &:hover {
-        background-color: scale-color($btn-secondary-bg, $lightness: -10.05) !important;
+        background-color: scale-color($btn-secondary-bg, $lightness: -10.05%) !important;
         border-color: transparent !important;
     }
 }

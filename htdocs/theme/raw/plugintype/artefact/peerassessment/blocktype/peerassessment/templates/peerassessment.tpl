@@ -2,7 +2,7 @@
     <p class="editor-description">{$noassessment}</p>
 {else}
     {if $allowfeedback}
-        <a id="add_assessment_feedback_link" class="js-peerassessment-modal feedback link-blocktype" href="#" data-toggle="modal-docked" data-target="#assessment_feedbackform_{$blockid}" data-blockid="{$blockid}">
+        <a id="add_assessment_feedback_link" class="js-peerassessment-modal feedback link-blocktype" href="#" data-bs-toggle="modal-docked" data-bs-target="#assessment_feedbackform_{$blockid}" data-blockid="{$blockid}">
             <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
             {str tag=addpeerassessment section=blocktype.peerassessment/peerassessment}
         </a>
@@ -36,7 +36,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="close" data-dismiss="modal-docked">
+                    <button class="close" data-bs-dismiss="modal-docked">
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
@@ -50,7 +50,7 @@
                     <div class="last form-group collapsible-group small-group peerinstructions">
                         <fieldset class="pieform-fieldset collapsible collapsible-small">
                             <legend>
-                                <a href="#peerassessment-{$blockid}-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="peerassessment-{$blockid}-dropdown" class="collapsed">
+                                <a href="#peerassessment-{$blockid}-dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="peerassessment-{$blockid}-dropdown" class="collapsed">
                                     {str tag=instructions section=blocktype.peerassessment/peerassessment}
                                     <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                                 </a>

@@ -66,7 +66,7 @@
   {include file="module:framework:matrixsumrow.tpl" location="top-row"}
   {foreach from=$standards key=sk item=standard}
     <tr class="standard{if $standard->settingstate == 'closed'} collapsed{/if}" data-standard="{$standard->id}" data-collection="{$collectionid}"
-        data-toggle="collapse" aria-expanded="{if $standard->settingstate == 'closed'}false{else}true{/if}">
+        data-bs-toggle="collapse" aria-expanded="{if $standard->settingstate == 'closed'}false{else}true{/if}">
         <td colspan="{$viewcount + $colspan}">
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>

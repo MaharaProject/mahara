@@ -5,7 +5,7 @@
         {if $tableheadings}
             <div class="collapsible reportconfig float-right">
                 <div class="title card-header js-heading">
-                    <a data-toggle="collapse" href="#reportconfig" aria-expanded="false" class="collapsed"></a>
+                    <a data-bs-toggle="collapse" href="#reportconfig" aria-expanded="false" class="collapsed"></a>
                     {str tag="Columns" section="admin"}
                     <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                 </div>

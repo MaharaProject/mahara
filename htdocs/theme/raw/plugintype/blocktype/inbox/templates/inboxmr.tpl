@@ -7,7 +7,7 @@
         {foreach from=$items item=i}
         <div class="collapsible list-group-item flush-collapsible{if !$i->read} js-card-unread{/if}" data-requesturl="{$WWWROOT}module/multirecipientnotification/indexin.json.php">
             {if $i->message}
-                <h3 class="title list-group-item-heading"><a class="collapsed link-block{if !$i->read} unread{/if}" data-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" data-id="{$i->id}" data-list="{$i->table}" aria-expanded="false">
+                <h3 class="title list-group-item-heading"><a class="collapsed link-block{if !$i->read} unread{/if}" data-bs-toggle="collapse" href="#message_content_{$i->type}_{$i->id}" data-id="{$i->id}" data-list="{$i->table}" aria-expanded="false">
                     {if $i->type == 'usermessage'}
                         <span class="icon icon-envelope text-default left" role="presentation" aria-hidden="true"></span>
                     {elseif $i->type == 'institutionmessage'}

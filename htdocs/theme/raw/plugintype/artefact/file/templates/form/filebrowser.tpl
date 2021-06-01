@@ -17,7 +17,7 @@
         <div id="{$prefix}_upload_browse" class="filebrowser in-collapsible">
     {else}
         {if !$config.noselect}
-        <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#{$prefix}_upload_browse">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#{$prefix}_upload_browse">
             <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
             {str tag=addafile section=artefact.file}
         </button>
@@ -30,7 +30,7 @@
 {/if}
 
         {if $config.select && !$config.alwaysopen}
-            <button type="button" class="close" data-dismiss="modal">
+            <button type="button" class="close" data-bs-dismiss="modal">
                 <span class="sr-only">{str tag=Close}</span>
                 <span aria-hidden="true">&times;</span>
             </button>

@@ -34,7 +34,7 @@
                 {/foreach}
             </div>
             <div class="btn-group dropright">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-hidden="true" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-hidden="true" aria-haspopup="true" aria-expanded="false">
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}

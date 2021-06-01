@@ -40,7 +40,7 @@
     <div class="advanced as-link link-expand-right form-group collapsible-group">
         <fieldset class="pieform-fieldset advanced last as-link link-expand-right collapsible">
             <legend>
-                <button type="button" data-target="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
+                <button type="button" data-bs-target="#initials" data-bs-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
                     {str tag='moreoptions' section='view'}
                     <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
                 </button>

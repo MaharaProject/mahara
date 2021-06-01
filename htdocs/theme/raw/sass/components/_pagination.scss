@@ -39,7 +39,7 @@
 
 // Small
 .pagination-sm {
-    @include pagination-size($pagination-padding-y-sm, $pagination-padding-x-sm, $font-size-sm, $pagination-line-height, $border-radius-sm);
+    @include pagination-size($pagination-padding-y-sm, $pagination-padding-x-sm, $font-size-sm, $border-radius-sm);
 
     .page-link {
         white-space: nowrap;

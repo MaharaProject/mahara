@@ -24,7 +24,7 @@
         </button>
         {/if}
 
-        <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag="moreoptions"}</span>
         </button>
@@ -78,7 +78,7 @@
                                     <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=objectionablematerialreported}</span>
                                 </span>
                             {else}
-                                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                                <a id="objection_link" href="#" data-bs-toggle="modal" data-bs-target="#report-form">
                                     <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=reportobjectionablematerial}</span>
                                 </a>
                             {/if}
@@ -88,21 +88,21 @@
                 {/if}
                 {if $undoverificationform}
                     <li class="dropdown-item">
-                        <a id="undoverificationlink" href="#" data-toggle="modal" data-target="#undoverification-form">
+                        <a id="undoverificationlink" href="#" data-bs-toggle="modal" data-bs-target="#undoverification-form">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=undoverification section=collection}</span>
                         </a>
                     </li>
                 {/if}
                 {if $revokeaccessform}
                     <li class="dropdown-item">
-                        <a id="revokeaccesslink" href="#" data-toggle="modal" data-target="#revokemyaccess-form">
+                        <a id="revokeaccesslink" href="#" data-bs-toggle="modal" data-bs-target="#revokemyaccess-form">
                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=removeaccess}</span>
                         </a>
                     </li>
                 {/if}
                 {if $userisowner && $objectedpage}
                 <li class="dropdown-item">
-                    <a id="review_link" href="#" data-toggle="modal" data-target="#review-form">
+                    <a id="review_link" href="#" data-bs-toggle="modal" data-bs-target="#review-form">
                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=objectionreview}</span>
                     </a>
                 </li>

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $logged-in-height: 13.75rem; // 220px
 $logged-in-height-tablet: 12.5rem; // 200px;
 $logged-in-height-phone: 7.5rem; // 120px;
@@ -11,7 +13,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
         margin-left: 0;
         vertical-align: top;
         float:left;
-        width: 10 / 4 * 10%;
+        width: math.div(10, 4) * 10%;
         padding: 0;
 
         text-decoration: none;
@@ -19,13 +21,13 @@ $logged-in-height-phone: 7.5rem; // 120px;
         overflow:hidden;
 
         @include media-breakpoint-between (sm, lg) {
-            width: 10 / 3.7 * 10%;
+            width: math.div(10, 3.7) * 10%;
             border-left: 0;
             height: $logged-in-height-tablet;
         }
 
         @include media-breakpoint-down(sm) {
-            width: 10 / 3.1 * 10%;
+            width: math.div(10, 3.1) * 10%;
             border-left: 0;
             height: auto;
             overflow: visible;

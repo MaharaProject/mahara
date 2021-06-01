@@ -14,7 +14,7 @@
             displayiconsonly = true}
         <li class="filedownload-item list-group-item flush">
             {if !$editing}
-            <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$file.id}" data-blockid="{$blockid}" title="{$file.title}">
+            <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-artefactid="{$file.id}" data-blockid="{$blockid}" title="{$file.title}">
                 {if $file.iconsrc}
                     <img src="{$file.iconsrc}" alt="" class="file-icon text-inline" />
                 {else}
@@ -33,7 +33,7 @@
 
             <h3 class="title list-group-item-heading">
             {if !$editing}
-            <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$file.id}">
+            <a class="modal_link" title="{$child->hovertitle}" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$file.id}">
                 {$file.title}
                 <span class="sr-only">{str tag=Details section=artefact.file}</span>
             </a>
@@ -43,7 +43,7 @@
             </h3>
 
             <a href="{$file.downloadurl}" class="download-link">
-                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file.title arg2=$file.size|display_size}"></span>
+                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file.title arg2=$file.size|display_size}"></span>
                 <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$file.title arg2=$file.size|display_size}}</span>
             </a>
 

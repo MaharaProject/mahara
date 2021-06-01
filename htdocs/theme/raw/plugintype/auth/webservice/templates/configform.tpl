@@ -6,7 +6,7 @@
     {if $element.type == 'fieldset'}
     <div class="pseudofieldset card collapsible collapsible-group{if $.foreach.elements.last} last{/if}">
         <h2 class="pseudolegend card-header has-link">
-        <a class="{if $element.collapsed}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-toggle="collapse" aria-expanded="{if !count($element.elements}}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset" data-parent="#accordion">
+        <a class="{if $element.collapsed}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-bs-toggle="collapse" aria-expanded="{if !count($element.elements}}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset"data-bs-parent="#accordion">
         {$element.legend}
          <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
         </a>

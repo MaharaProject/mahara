@@ -1,13 +1,13 @@
 {if !$editing}
     <div id="annotationfeedbackview_{$blockid}" class="annotation-feedback">
         {if $annotationfeedbackcount > 0}
-            <a class="commentlink link-blocktype" id="block_{$blockid}" data-toggle="modal-docked" data-target="#annotation_feedbacktable_{$blockid}" href="#" data-artefactid="{$artefactid}" data-blockid="{$blockid}">
+            <a class="commentlink link-blocktype" id="block_{$blockid}" data-bs-toggle="modal-docked" data-bs-target="#annotation_feedbacktable_{$blockid}" href="#" data-bs-artefactid="{$artefactid}" data-bs-blockid="{$blockid}">
                 <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
                 {str tag=Annotationfeedback section=artefact.annotation} ({$annotationfeedbackcount})
             </a>
         {/if}
         {if $allowfeedback}
-            <a id="feedback_{$blockid}" class="placeannotationfeedback link-blocktype last" data-toggle="modal-docked" data-target="#annotation_feedbackform_{$blockid}" href="#">
+            <a id="feedback_{$blockid}" class="placeannotationfeedback link-blocktype last" data-bs-toggle="modal-docked" data-bs-target="#annotation_feedbackform_{$blockid}" href="#">
                 <span class="icon icon-arrow-circle-right" role="presentation" aria-hidden="true"></span>
                 {str tag=placeannotationfeedback section=artefact.annotation}
             </a>
@@ -18,7 +18,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header clearfix">
-                    <button class="deletebutton close" data-dismiss="modal-docked">
+                    <button class="deletebutton close" data-bs-dismiss="modal-docked">
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
@@ -38,7 +38,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="close" data-dismiss="modal-docked">
+                    <button class="close" data-bs-dismiss="modal-docked">
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>

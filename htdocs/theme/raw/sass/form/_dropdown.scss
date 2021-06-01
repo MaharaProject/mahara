@@ -1,3 +1,6 @@
+@use "sass:math";
+@use "sass:list";
+
 .pieform,
 .dropdown {
     .picker {
@@ -93,7 +96,7 @@
             }
             select.form-control {
                 height: $input-height-sm;
-                line-height: ($input-height-sm / 2) + 0.125rem;
+                line-height: list.slash($input-height-sm, 2) + 0.125rem;
             }
         }
     }
@@ -107,7 +110,7 @@
             padding-top: $spacing-sm;
             padding-bottom: $spacing-sm;
             height: $input-height-lg;
-            line-height: ($input-height-lg / 2) + $spacing-xs;
+            line-height: list.slash($input-height-lg, 2) + $spacing-xs;
         }
     }
 
@@ -116,7 +119,7 @@
             display: inline-block;
             float: left;
             height: $input-height;
-            line-height: $input-height / 2;
+            line-height: list.slash($input-height, 2);
         }
     }
     .input-short-error {

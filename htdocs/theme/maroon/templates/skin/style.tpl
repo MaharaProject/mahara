@@ -133,8 +133,8 @@ h1#viewh1 {
 .user-page-content .postedon {
     color: {$view_text_font_color};
 }
-a[data-toggle="collapse"] .collapse-indicator,
-tr[data-toggle="collapse"] .collapse-indicator,
+a[data-bs-toggle="collapse"] .collapse-indicator,
+tr[data-bs-toggle="collapse"] .collapse-indicator,
 .card.collapsible:not(.card-secondary).has-attachment .card-header .collapse-indicator,
 .card.collapsible:not(.card-secondary).has-attachment .card-header .metadata {
     color: {$view_link_normal_color};

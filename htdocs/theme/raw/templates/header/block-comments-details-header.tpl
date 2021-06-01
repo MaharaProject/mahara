@@ -4,8 +4,8 @@
             {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
         {/if}
         <a class="commentlink {if $displayiconsonly}btn btn-secondary{/if} {if $showquickedit}with-quickedit {/if}"
-            data-toggle="modal-docked"
-            data-target="#configureblock"
+            data-bs-toggle="modal-docked"
+            data-bs-target="#configureblock"
             href="#"
             data-blockid="{$blockid}"
             data-artefactid="{$artefactid}"
@@ -37,8 +37,8 @@
             {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
         {/if}
         <a class="detailslink {if $showquickedit}with-quickedit {/if}modal_link list-group-heading {if $displayiconsonly}btn btn-secondary{/if}"
-            data-toggle="modal-docked"
-            data-target="#configureblock"
+            data-bs-toggle="modal-docked"
+            data-bs-target="#configureblock"
             href="#"
             data-blockid="{$blockid}"
             data-artefactid="{$artefactid}"

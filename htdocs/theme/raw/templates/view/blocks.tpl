@@ -22,7 +22,7 @@
             <div id="viewinstructions" class="last form-group collapsible-group small-group">
             <fieldset  class="pieform-fieldset collapsible collapsible-small">
                 <legend>
-                    <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
+                    <a href="#viewinstructions-dropdown" data-bs-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
                         {str tag='instructions' section='view'}<span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                     </a>
                 </legend>

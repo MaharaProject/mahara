@@ -2,13 +2,12 @@ Bootstrap for Sass
 ==================
 
 Website: https://getbootstrap.com/
-Version: 4.6.0
+Version: 5.0.1
 
 The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile first projects on the web.
 
-Changes:
-- (the dist version)
-  - Inside kept the 'js/' directory,
-    copy bootstrap.min.js.map and bootstrap.min.js to htdocs/lib/bootstrap/assets
-- (the source version) Copy the '/scss' directory to 'theme/raw/sass/lib/'
-- The /htdocs/theme/raw/sass/lib/bootstrap4/_grid.scss file has !optional added for breakpoints where xs is 0 which breaks the normal process.
+Download the source files - this is for a base so we can customise
+- Only kept the 'js/' directory
+- Moved items inside'/scss' directory to 'theme/raw/sass/lib/bootstrap5'
+Download the compiled css and js - for our javascript files
+- Get the bootstrap.min.js and map.js and put it in htdocs/lib/bootstrap/assets/javascripts/bootstrap.min.js

@@ -6,7 +6,7 @@
 <div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
     <fieldset  class="pieform-fieldset collapsible collapsible-small">
         <legend>
-            <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
+            <a href="#viewinstructions-dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
                 {str tag='instructions' section='view'}<span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
             </a>
         </legend>
@@ -87,9 +87,9 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button class="close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
-                        <span class="times">&times;</span>
-                        <span class="sr-only">{str tag=Close}</span>
+                        <button class="close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
+                            <span class="times">&times;</span>
+                            <span class="sr-only">{str tag=Close}</span>
                         </button>
                         <h1 class="modal-title">
                         <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
@@ -110,7 +110,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=reportobjectionablematerial}
@@ -128,7 +128,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=objectionreview}
@@ -146,7 +146,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <h1 class="modal-title">
@@ -166,7 +166,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=confirmcopytitle section=view}

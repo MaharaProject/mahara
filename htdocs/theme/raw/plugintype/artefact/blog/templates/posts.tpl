@@ -65,7 +65,7 @@
         {if $post->files}
         <div class="has-attachment card collapsible" id="postfiles_{$post->id}">
             <div class="card-header">
-                <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                <a class="text-left collapsed" data-bs-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                     <span class="metadata">({$post->files|count})</span>
@@ -76,7 +76,7 @@
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
                     <li class="list-group-item">
-                        <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                        <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-bs-toggle="tooltip"{/if}>
                             {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                             {else}
@@ -84,7 +84,7 @@
                             {/if}
                         </a>
                         <span class="title">
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-bs-toggle="tooltip"{/if}>
                                 <span class="text-small">{$file->title|truncate:40}</span>
                             </a>
                         </span>

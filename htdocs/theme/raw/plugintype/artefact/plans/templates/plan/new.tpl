@@ -5,7 +5,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
                     <h1 class="modal-title">{$choosetemplate}</h1>
                 </div>
                 <div class="modal-body">
@@ -25,7 +25,7 @@
                     {/foreach}
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{$close}</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{$close}</button>
                 </div>
             </div>
 

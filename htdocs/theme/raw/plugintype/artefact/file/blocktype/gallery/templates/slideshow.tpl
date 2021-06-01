@@ -16,11 +16,11 @@
             {/foreach}
         </div>
 
-        <a class="carousel-control-prev carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="prev" title="{str tag=previous}">
+        <a class="carousel-control-prev carousel-control" href="#slideshow{$instanceid}" role="button" data-bs-slide="prev" title="{str tag=previous}">
             <span class="icon icon-angle-left icon-lg" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=previous}</span>
         </a>
-        <a class="carousel-control-next carousel-control" href="#slideshow{$instanceid}" role="button" data-slide="next" title="{str tag=next}">
+        <a class="carousel-control-next carousel-control" href="#slideshow{$instanceid}" role="button" data-bs-slide="next" title="{str tag=next}">
             <span class="icon icon-angle-right icon-lg" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=next}</span>
         </a>

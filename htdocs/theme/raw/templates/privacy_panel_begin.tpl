@@ -16,7 +16,7 @@
                 {else}
                     href="#dropdown{$privacy->id}"
                 {/if}
-                data-toggle="collapse" aria-expanded="false" aria-controls="dropdown">
+                data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown">
                     {$privacytitle}
                     <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
                 </a>

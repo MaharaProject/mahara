@@ -12,15 +12,18 @@
     "es6-promise": "^4.2.4",
     "event-stream": "3.3.4",
     "globule": "^1.0.0",
-    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^5.0.0",
     "gulp-clean-css": "^3.0.2",
     "gulp-if": "^2.0.2",
-    "gulp-sass": "^4.0.1",
     "path": "^0.11.14",
     "yargs": "^15.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "fibers": "^5.0.0",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0",
+    "sass": "1.52.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   }

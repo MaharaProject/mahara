@@ -1,6 +1,6 @@
 {if $tabs.subtabs}
 <div class="btn-group ownersubtab">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         {str tag="tab$tabs.owner"}
     <span class="icon icon-caret-down right" role="presentation" aria-hidden="true"></span>
     </button>

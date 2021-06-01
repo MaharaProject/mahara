@@ -5,7 +5,7 @@
         {if is_array($resumegroup.fields) && count($resumegroup.fields)}
         <fieldset id="{$resumegroup.id}_fs" class="pieform-fieldset collapsible">
             <legend>
-                <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
+                <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
                     {$resumegroup.legend}
                     <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
                 </a>

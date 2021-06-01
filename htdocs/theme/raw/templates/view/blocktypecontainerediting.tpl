@@ -13,7 +13,7 @@
             </button>
             <span class="float-right btn-group btn-group-top">
                 {if $retractable && !$configure}
-                <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="collapse-arrow{if $retractedonload} collapsed{/if}">
+                <a data-bs-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="collapse-arrow{if $retractedonload} collapsed{/if}">
                     <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=retractable section=view}</span>
                 </a>

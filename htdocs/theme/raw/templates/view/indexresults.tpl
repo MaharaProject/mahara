@@ -68,7 +68,7 @@
                             {* Note: This is positioned relative to base of card-quarter *}
                             <div class="page-access">
                                 {if $view.accesslist || $view.manageaccess}
-                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock{/if} close-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </button>
@@ -122,7 +122,7 @@
 
                             <div class="page-controls">
                                 <button class="dropdown-toggle btn btn-link moremenu" type="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
@@ -195,7 +195,7 @@
                                 {/if}
                                 <div class="collection-list" title="{str tag='numviewsincollection' section='collection' arg1='$fullnumviews'}">
                                     {if $view.numviews > 0}
-                                    <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="page-count">{$fullnumviews}</span>
                                         <span class="icon icon-file close-indicator" role="presentation" aria-hidden="true">

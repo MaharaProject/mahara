@@ -5,7 +5,7 @@
         {if is_array($profilegroup.fields) && count($profilegroup.fields)}
         <fieldset id="{$profilegroup.id}_fs" class="pieform-fieldset collapsible {if $dwoo.foreach.profilegroups.last} last{/if}">
             <legend>
-                <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
+                <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
                     {$profilegroup.legend}
                     <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
                 </a>

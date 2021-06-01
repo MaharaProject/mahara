@@ -4,27 +4,27 @@
         <p class="lead">{str tag=editselectedusersdescription1 section=admin}</p>
         <ul class="nav nav-tabs" role="tablist">
             <li id="suspend-user-tab" class="active" role="presentation" aria-hidden="true">
-                <a href="#suspend-form" aria-controls="suspend-form" role="tab" data-toggle="tab">
+                <a href="#suspend-form" aria-controls="suspend-form" role="tab" data-bs-toggle="tab">
                     <span class="icon icon-ban left" role="presentation" aria-hidden="true"></span>
                     {str tag=Suspend section=admin}
                 </a>
             </li>
             <li id="changeauth-user-tab" class="" role="presentation" aria-hidden="true">
-                <a href="#changeauth-form" aria-controls="changeauth-form" role="tab" data-toggle="tab">
+                <a href="#changeauth-form" aria-controls="changeauth-form" role="tab" data-bs-toggle="tab">
                     <span class="icon icon-key left" role="presentation" aria-hidden="true"></span>
                     {str tag=changeauthmethod section=admin}
                 </a>
             </li>
             {if $probationform}
             <li id="probation-user-tab" class="" role="presentation" aria-hidden="true">
-                <a href="#probation-form" aria-controls="probation-form" role="tab" data-toggle="tab">
+                <a href="#probation-form" aria-controls="probation-form" role="tab" data-bs-toggle="tab">
                     <span class="icon icon-exclamation-triangle left" role="presentation" aria-hidden="true"></span>
                     {str tag=probationbulksetspamprobation section=admin}
                 </a>
             </li>
             {/if}
             <li id="delete-user-tab" class="" role="presentation" aria-hidden="true">
-                <a href="#delete-form" aria-controls="delete-form" role="tab" data-toggle="tab">
+                <a href="#delete-form" aria-controls="delete-form" role="tab" data-bs-toggle="tab">
                     <span class="icon icon-trash-alt left" role="presentation" aria-hidden="true"></span>
                     {str tag=deleteusers section=admin}
                 </a>

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .collapsible legend,
 .card-header {
     background-color: $card-header-bg;
@@ -58,7 +60,7 @@
         padding: $card-spacer-y $card-spacer-x;
         border: $card-border-width solid $card-border-color;
         .card-secondary > & {
-            padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
+            padding: $card-spacer-y math.div($card-spacer-x, 2); // 10px 8px
             border-width: 0;
         }
 
@@ -71,7 +73,7 @@
             }
 
             .card-secondary > & {
-                padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
+                padding: $card-spacer-y math.div($card-spacer-x, 2); // 10px 8px
             }
         }
         &:hover, &:focus {

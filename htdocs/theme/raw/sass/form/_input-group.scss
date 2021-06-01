@@ -50,7 +50,7 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             &.submitonchange {
-                @include border-right-radius($border-radius);
+                @include border-end-radius($border-radius); // used to be border-right-radius
             }
             max-width: 100%;
             &.text {
@@ -59,7 +59,7 @@
         }
         ~ .form-group {
             .form-control {
-                @include border-left-radius(0);
+                @include border-start-radius(0); // used to be border-left-radius(0);
                 margin-left: -$border-width;
                 @include media-breakpoint-up(sm) {
                     border-left:0;
@@ -67,7 +67,7 @@
             }
             &:last-child {
                 .form-control {
-                    @include border-right-radius($border-radius);
+                    @include border-end-radius($border-radius);// border-right-radius($border-radius);
                 }
             }
         }

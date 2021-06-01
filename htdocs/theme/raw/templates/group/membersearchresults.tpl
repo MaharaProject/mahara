@@ -51,7 +51,7 @@
             {if $r.role}
                 {if $r.introduction}
                     <div class="detail text-small text-midtone">
-                        <a class="text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$r.id}"
+                        <a class="text-link collapsed with-introduction" data-bs-toggle="collapse" data-bs-target="#userintro{$r.id}"
                            href="#userintro{$r.id}" role="button" aria-expanded="false"
                            aria-controls="userintro{$r.id}">
                            <span class="icon icon-chevron-down collapse-indicator text-inline" role="presentation" aria-hidden="true"></span>

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // This file handles/modifies both real collapsible cards,
 // and collapsible pieform fieldsets (which are styled to look like cards)
 
@@ -5,7 +7,7 @@
     margin-bottom: 0;
     border-radius: 0;
     .card-header {
-        padding: $card-spacer-y ($card-spacer-x / 2);
+        padding: $card-spacer-y math.div($card-spacer-x, 2);
         a {
             text-decoration: none;
             border-radius: 0;

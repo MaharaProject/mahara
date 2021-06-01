@@ -199,7 +199,7 @@ Switchboxes are used for Yes/No, On/Off or other true/false type fields. They ar
 This button is used to show there are more options available. An example can be found on a regular portfolio page where the items of the "Watchlist" and "Objectionable content" are available via the "More options" button. Note: Styles are only added for layout here in the style guide.
 ```
 <div class="btn-group" style="margin-left: 200px;">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=moreoptions}</span>
     </button>
@@ -211,7 +211,7 @@ This button is used to show there are more options available. An example can be 
             </a>
         </li>
         <li class="dropdown-item">
-            <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+            <a id="objection_link" href="#" data-bs-toggle="modal" data-bs-target="#report-form">
                 <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                 {str tag=reportobjectionablematerial}
             </a>
@@ -260,12 +260,12 @@ section .navbar-form.navbar-collapse.search-form {
     <div class="navbar-default navbar-main float-right">
         <div class="nav-toggle-area">
             <!-- Nav One Button -->
-            <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
+            <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
                 <span class="sr-only">Show nav one</span>
                 <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Two Button -->
-            <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
+            <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
                 <span class="sr-only">Show nav two</span>
                 <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
@@ -274,13 +274,13 @@ section .navbar-form.navbar-collapse.search-form {
                 <a href="" class="user-icon user-icon-25" title="Profile page">
                     <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
                 </a>
-                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
                     <span class="sr-only">Show nav three</span>
                     <span class="icon icon-chevron-down collapsed"></span>
                 </button>
             </div>
             <!-- Hide Search When on Desktop -->
-            <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
+            <button class="search-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
                 <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title sr-only">{str tag=showsearch}</span>
             </button>
@@ -293,7 +293,7 @@ section .navbar-form.navbar-collapse.search-form {
               </li>
               <li>
                  <a href="">Link 2</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavone">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavone">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                      <span class="nav-title sr-only">Link 2</span>
                  </button>
@@ -304,7 +304,7 @@ section .navbar-form.navbar-collapse.search-form {
               </li>
               <li>
                  <a href="">Link 2</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavtwo">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavtwo">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                      <span class="nav-title sr-only">Link 2</span>
                  </button>
@@ -315,7 +315,7 @@ section .navbar-form.navbar-collapse.search-form {
               </li>
               <li>
                  <a href="">Link 4</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavthree">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavthree">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                      <span class="nav-title sr-only">Link 4</span>
                  </button>
@@ -331,7 +331,7 @@ section .navbar-form.navbar-collapse.search-form {
             <ul id="navtwo" class="nav navbar-nav">
                 <li>
                     <a href="">Link 1</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavfour">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavfour">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 1</span>
                     </button>
@@ -342,7 +342,7 @@ section .navbar-form.navbar-collapse.search-form {
                 </li>
                 <li>
                     <a href="">Link 2</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavfive">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavfive">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 2</span>
                     </button>
@@ -353,7 +353,7 @@ section .navbar-form.navbar-collapse.search-form {
                 </li>
                 <li>
                     <a href="">Link 3</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavsix">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavsix">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 3</span>
                     </button>
@@ -378,7 +378,7 @@ section .navbar-form.navbar-collapse.search-form {
                         <span class="icon icon-cogs" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title">Link 2</span>
                     </a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navuser" data-target="#subnavseven">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navuser" data-bs-target="#subnavseven">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title sr-only">Link 2</span>
                     </button>
@@ -472,16 +472,16 @@ These are tabs to switch between pages within one section, for example in the "P
 ```
 <ul class="nav nav-tabs" role="tablist">
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="true" class="active">Tab 1</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="true" class="active">Tab 1</a>
     </li>
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 2</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="false">Tab 2</a>
     </li>
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 3</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="false">Tab 3</a>
     </li>
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 4</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="false">Tab 4</a>
     </li>
 </ul>
 ```
@@ -615,7 +615,7 @@ A dropdown card.
 <div class="last form-group collapsible-group">
     <fieldset class="pieform-fieldset last collapsible">
         <legend>
-            <a href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+            <a href="#dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                 Drop-down
                 <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
             </a>
@@ -634,7 +634,7 @@ A attachment card.
 ```
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a class="text-left collapsed" aria-expanded="false" href="#attachment" data-toggle="collapse">
+        <a class="text-left collapsed" aria-expanded="false" href="#attachment" data-bs-toggle="collapse">
             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">Attachments</span>
             <span class="metadata">(2)</span>
@@ -644,48 +644,48 @@ A attachment card.
     <div id="attachment" class="collapse">
         <ul class="list-unstyled list-group">
             <li class="list-group-item">
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                     <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                 </a>
                 <span class="title">
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                       <span class="text-small">File name 1</span>
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
                 </div>
             </li>
             <li class="list-group-item">
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                     <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                 </a>
                 <span class="title">
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                       <span class="text-small">File name 2</span>
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
                 </div>
             </li>
             <li class="list-group-item">
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                     <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                 </a>
                 <span class="title">
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                       <span class="text-small">File name 3</span>
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -703,14 +703,14 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
 <div class="bt-inbox card card-secondary clearfix collapsible">
     <h2 class="title card-header js-heading">
-        <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
+        <a data-bs-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
         <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
     </h2>
     <div class="block collapse show" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
             <div class="has-attachment card collapsible list-group-item">
-                <a class="collapsed link-block" data-toggle="collapse" href="#item1" aria-expanded="false">
+                <a class="collapsed link-block" data-bs-toggle="collapse" href="#item1" aria-expanded="false">
                     <span class="icon icon-university text-default left" role="presentation" aria-hidden="true"></span>
                     Item 1
                     <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
@@ -722,7 +722,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                 </div>
             </div>
             <div class="has-attachment card collapsible list-group-item">
-                <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
+                <a class="collapsed link-block" data-bs-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     Item 2
                     <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
@@ -807,7 +807,7 @@ This is the general layout of blocks. An example of this being used is the 'Port
                 <a href="" data-index="2">Page 3</a>
             </li>
         </ul>
-        <button class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
+        <button class="picker form-control" tabindex="0" data-bs-toggle="collapse" data-bs-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
             <span id="currentindex" data-currentindex="1">2</span>
             /3
         </button>
@@ -833,7 +833,7 @@ This card is used to show a page.
         <div class="card-footer">
             <div class="page-access"></div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
@@ -882,7 +882,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
         </div>
         <div class="card-footer">
             <div class="page-access">
-                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">Access rules for "Unnamed page"</span>
@@ -904,7 +904,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
@@ -954,7 +954,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
         </div>
         <div class="card-footer">
             <div class="page-access">
-                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">Access rules for "collection"</span>
@@ -976,7 +976,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">More options for "collection"</span>
@@ -1012,7 +1012,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="collection-list" title="1 page in collection">
-                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="page-count">1</span>
                 <span class="icon icon-file close-indicator" role="presentation" aria-hidden="true">
@@ -1078,14 +1078,14 @@ Used to show information about Mahara. Usually, this is only shown to administra
 ### Modal docked
 A slide-out modal. This is used to show a block's configuration for example.
 ```
-<button type="button" class="btn btn-primary" data-toggle="modal-docked" data-target="#modal-docks">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal-docked" data-bs-target="#modal-docks">
     Launch demo modal
 </button>
 <div class="modal modal-docked modal-docked-right modal-shown closed" id="modal-docks" tabindex="-1" role="dialog" aria-labelledby="#modal-docks-label">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                   <span class="times">×</span>
                   <span class="sr-only">{str tag=Close}</span>
                 </button>
@@ -1104,14 +1104,14 @@ A slide-out modal. This is used to show a block's configuration for example.
 ### Modal
 A fold down modal. This is typially used to report objectionable content.
 ```
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#report-form">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-form">
     Launch demo modal
 </button>
 <div class="modal fade" id="report-form" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h1 class="modal-title">

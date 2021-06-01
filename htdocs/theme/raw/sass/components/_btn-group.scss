@@ -33,7 +33,7 @@
 
         ~ .form-as-button {
             .btn {
-                @include border-left-radius(0);
+                @include border-start-radius(0);
             }
         }
 
@@ -329,7 +329,7 @@ td.btn-group {
 // group action buttons on a list-group need to be small but not on group homepage
 .list-group-item .btn-action-list {
     .btn {
-        @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+        @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
