@@ -1,8 +1,4 @@
-// File imported by tiny mce
-
-
-@import "./lib/bootstrap5/functions";
-@import "./lib/bootstrap5/variables";
+// Files imported by tiny mce
 
 @import "utilities/theme-variables"; // Import our brand variables
 @import "utilities/bootstrap-variables";
@@ -11,6 +7,7 @@
 @import "./lib/bootstrap5/mixins";
 @import "utilities/mixins";
 
+@import "./lib/bootstrap5/variables";
 @import "./lib/bootstrap5/reboot";
 @import "./lib/bootstrap5/type";
 @import "./lib/bootstrap5/grid";
