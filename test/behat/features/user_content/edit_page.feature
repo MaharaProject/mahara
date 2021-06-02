@@ -18,7 +18,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Edit"
 
  # Checking if we can add a block
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -27,7 +27,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  And I wait "1" seconds
  Then I should see "Buck Mulligan"
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -36,7 +36,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  And I wait "1" seconds
  Then I should see "Robert Cohn"
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -69,7 +69,7 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking we can add a block, make config changes, then delete the block
  # without it causing 'unsaved changes' popup when navigating away
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:

@@ -83,7 +83,7 @@ Scenario: Creating a Journal entry
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page admin_01"
  And I press "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Tagged journal entries"
  And I set the field "Block title" to "Tagged journal entries"
@@ -97,7 +97,7 @@ Scenario: Creating a Journal entry
  And I wait "1" seconds
  And I clear value "one" from select2 field "instconf_tagselect"
  And I press "Save"
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Recent journal entries"
  And I check "Admin Account's Journal"

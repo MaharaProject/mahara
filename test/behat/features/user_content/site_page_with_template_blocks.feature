@@ -51,7 +51,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I should see "Share"
 
     # Add a Profile information block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Profile information"
     And I set the following fields to these values:

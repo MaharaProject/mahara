@@ -53,7 +53,7 @@ Scenario: Check default blocks are displayed
     And I set the field "Block title" to "Latest change: Cats are cool!"
     And I press "Save"
     # Check that a different block can be added
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Text"
     And I set the field "Block title" to "Favourite quote"

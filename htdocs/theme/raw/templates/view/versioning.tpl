@@ -41,18 +41,18 @@
             formatSubTitle: function (subTitle, obj) { return '<div class="metadata">' + subTitle + '</div>'; },
             formatBodyContent: function (bodyCnt, obj) {
               if (obj.gridlayout) {
-                  var grid = $('<div id="grid_' + obj.assignID + '" class="grid-stack"></div>');
+                  var gridElement = $('<div id="grid_' + obj.assignID + '" class="grid-stack"></div>');
+                  $('body').append(gridElement);
                   var options = {
-                      verticalMargin: 5,
+                      margin: 1,
                       cellHeight: 10,
                       float: true,
                       ddPlugin: false,
                   };
-                  grid.gridstack(options);
-                  grid = grid.data('gridstack');
+                  let el = document.querySelector('#grid_' + obj.assignID);
+                  var grid = GridStack.init(options, el);
                   loadGrid(grid, bodyCnt);
-
-                  var container = $('<div class="container-fluid"></div>').append(grid.container);
+                  var container = $('<div class="container-fluid"></div>').append(el);
                   return container[0].outerHTML;
               }
               else {

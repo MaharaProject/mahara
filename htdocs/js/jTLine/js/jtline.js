@@ -552,10 +552,12 @@
 
             var formatBodyContent = function (bodyCnt, obj) {
                 var formatBodyCnt = options.formatBodyContent(bodyCnt, obj);
-                if (formatBodyCnt)
-                    return options.formatBodyContent(bodyCnt, obj);
-                else
+                if (formatBodyCnt) {
+                    return formatBodyCnt;
+                }
+                else {
                     return '<p class="linep">' + bodyCnt + '</p>';
+                }
             }
             var _attacheEvents = function () {
 

@@ -24,7 +24,7 @@ if ($view->is_submitted()) {
     throw new AccessDeniedException(get_string('canteditsubmitted', 'view', $submittedto['name']));
 }
 
-// we actually ned to process stuff
+// We actually need to process the changes for the page
 if ($change) {
     try {
         $returndata = $view->process_changes();

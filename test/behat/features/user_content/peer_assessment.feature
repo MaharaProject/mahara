@@ -55,7 +55,7 @@ Background:
     And I go to portfolio page "Page UserA_00"
     And I press "Edit"
     # Author adds sign off block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
@@ -66,7 +66,7 @@ Background:
     And I go to portfolio page "Page UserA_01"
     And I press "Edit"
     # Author adds sign off block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
@@ -78,7 +78,7 @@ Background:
     Given I go to portfolio page "Page UserA_03"
     And I press "Edit"
     # Author adds sign off block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"

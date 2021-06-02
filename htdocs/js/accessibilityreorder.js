@@ -43,12 +43,12 @@ function accessibilityReorder() {
 
         prevEl = this.items[newpos - 1];
         nextEl = this.items[newpos +1];
-        itemY = item.getAttribute('data-gs-y');
+        itemY = item.getAttribute('gs-y');
         if (typeof(prevEl) != 'undefined' || typeof(nextEl) !== 'undefined') {
             // we have at least one more element in the list
             if (typeof(prevEl) === 'undefined') {
                 // moving element up the layout, to the first position
-                nextY = nextEl.getAttribute('data-gs-y');
+                nextY = nextEl.getAttribute('gs-y');
                 if (+itemY > +nextY) {
                     swapBlocks(item, nextEl, nextY);
                 }
@@ -58,14 +58,14 @@ function accessibilityReorder() {
                 swapBlocks(prevEl, item, itemY);
             }
             else {
-                prevY = prevEl.getAttribute('data-gs-y');
+                prevY = prevEl.getAttribute('gs-y');
                 if (+prevY > +itemY) {
                     // moving the element down in the layout
                     swapBlocks(prevEl, item, itemY);
                 }
                 else {
                     // moving the element up in the layout
-                    nextY = nextEl.getAttribute('data-gs-y');
+                    nextY = nextEl.getAttribute('gs-y');
                     if (+itemY > +nextY) {
                         swapBlocks(item, nextEl, nextY);
                     }
@@ -87,29 +87,28 @@ function accessibilityReorder() {
  * @param topBlockNewY int is the new gridstack value y for the block that will be on the top
  */
 function swapBlocks(topBlock, bottomBlock, topBlockNewY) {
-    var topHeight, bottomY;
-    topHeight = topBlock.getAttribute('data-gs-height');
-    var bottomY = +topBlockNewY + +topHeight;
-    let grid = $('.grid-stack').data('gridstack');
-    grid.move(topBlock, +topBlock.getAttribute('data-gs-x'), +topBlockNewY);
-    grid.move(bottomBlock, +bottomBlock.getAttribute('data-gs-x'), bottomY);
+    const topHeight = topBlock.getAttribute('gs-h');
+    const bottomY = +topBlockNewY + +topHeight;
+    let grid = document.querySelector('.grid-stack').gridstack;
+    grid.update(topBlock, {x: +topBlock.getAttribute('gs-x'), y: +topBlockNewY});
+    grid.update(bottomBlock, {x: +bottomBlock.getAttribute('gs-x'), y: bottomY});
 
     // save to DB new dimension values
-    var id = topBlock.getAttribute('data-gs-id'),
+    var id = topBlock.getAttribute('gs-id'),
     dimensions = {
         newx: "0",
-        newy: topBlock.getAttribute('data-gs-y'),
+        newy: topBlock.getAttribute('gs-y'),
         newwidth: "12",
-        newheight: topBlock.getAttribute('data-gs-height'),
+        newheight: topBlock.getAttribute('gs-h'),
     }
     moveBlock(id, dimensions, grid);
 
-    id = bottomBlock.getAttribute('data-gs-id');
+    id = bottomBlock.getAttribute('gs-id');
     dimensions = {
         newx: "0",
-        newy: bottomBlock.getAttribute('data-gs-y'),
+        newy: bottomBlock.getAttribute('gs-y'),
         newwidth: "12",
-        newheight: bottomBlock.getAttribute('data-gs-height'),
+        newheight: bottomBlock.getAttribute('gs-h'),
     }
     moveBlock(id, dimensions, grid);
 }

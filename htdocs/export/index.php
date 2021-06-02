@@ -90,8 +90,7 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
         'paginator',
         'js/preview.js',
         'js/export.js',
-        'js/lodash/lodash.js',
-        'js/gridstack/gridstack.js',
+        'js/gridstack/gridstack_modules/gridstack-h5.js',
         'js/gridlayout.js',
         'js/collection-navigation.js',
     );

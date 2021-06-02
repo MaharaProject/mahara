@@ -67,7 +67,7 @@ class PluginExportHtml extends PluginExport {
      * These javascript files will be included in index.html via the
      * export/html/templates/header.tpl
      */
-    protected $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
+    protected $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'gridstack_modules/gridstack-h5', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
 
     protected $collections = array();
     protected $collectionview;
@@ -1110,8 +1110,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
         $directoriestocopy[get_config('docroot') . 'js/popper/popper.min.js'] = $jsdir . 'popper.min.js';
         $directoriestocopy[get_config('docroot') . 'lib/bootstrap/assets/javascripts/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
         $directoriestocopy[get_config('docroot') . 'js/jquery/jquery.js'] = $jsdir . 'jquery.js';
-        $directoriestocopy[get_config('docroot') . 'js/lodash/lodash.js'] = $jsdir . 'lodash.js';
-        $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack.js'] = $jsdir . 'gridstack.js';
+        $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack_modules'] = $jsdir . 'gridstack_modules';
         $directoriestocopy[get_config('docroot') . 'js/gridlayout.js'] = $jsdir . 'gridlayout.js';
         $directoriestocopy[get_config('docroot') . 'js/masonry/masonry.min.js'] = $jsdir . 'masonry.min.js';
         $directoriestocopy[get_config('docroot') . 'js/select2/select2.full.js'] = $jsdir . 'select2.full.js';

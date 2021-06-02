@@ -17,7 +17,7 @@ Scenario: Embed and play mp4
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I press "Media"
@@ -33,7 +33,7 @@ Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I press "Media"
@@ -58,7 +58,7 @@ Scenario: Change settings and embed 3gp
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I press "Media"
@@ -72,7 +72,7 @@ Scenario: Embed unsupported file type
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
   And I press "Media"

@@ -10,6 +10,12 @@
       margin-left: $spacing-base;
       margin-right: $spacing-base;
     }
+
+    .grid-stack-placeholder > .placeholder-content {
+        inset: 0px !important;
+        background-color: $card-header-bg;
+        border-color: $draggable-border-color;
+    }
 }
 
 .gridstackblock.card {
@@ -20,6 +26,8 @@
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
     overflow: hidden !important;
     touch-action: auto !important;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
 }
 
 // take away the move cursor when page in display mode
@@ -50,5 +58,5 @@
 }
 
 .grid-stack.gridedit .ui-draggable-handle {
-    border: 1px dashed #d3d3d3;
+    border: 1px dashed $draggable-border-color;
 }

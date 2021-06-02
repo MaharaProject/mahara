@@ -67,7 +67,7 @@ Scenario: Add comments block to page
     And I click on "Edit" in "Page UserA_01" card menu
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Comments"
     Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."

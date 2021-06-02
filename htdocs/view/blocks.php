@@ -161,13 +161,13 @@ if ($viewtheme && !isset($allowedthemes[$viewtheme])) {
     exit;
 }
 
+// We use gridstack-jq.js here instead of gridstack-h5.js to allow block moving on mobile
+// but gridstack-h5.js elsewhere as it allows for better scrolling on page in mobile
 $javascript = array('views', 'tinymce', 'paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js',
                     'js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'tablerenderer',
                     'artefact/file/js/filebrowser.js',
                     'lib/pieforms/static/core/pieforms.js', 'js/switchbox.js',
-                    'js/lodash/lodash.js',
-                    'js/gridstack/gridstack.js',
-                    'js/gridstack/gridstack.jQueryUI.js',
+                    'js/gridstack/gridstack_modules/gridstack-jq.js',
                     'js/gridlayout.js',
                     );
 if ($view->get('accessibleview')) {
@@ -232,21 +232,18 @@ else {
 $blocksjs ="
 $(function () {
     var options = {
-        verticalMargin: 5,
+        margin: 1,
         cellHeight: 10,
         resizable: false,
-        acceptWidgets: '.blocktype-drag',
+        acceptWidgets: true,
         draggable: {
             scroll: true,
         },
         animate: true,
-        minCellColumns: {$mincolumns},
+        minCellColumns: {$mincolumns}
     },
-    grid, translate;
-    grid = $('.grid-stack');
-
-    grid.gridstack(options);
-    grid = $('.grid-stack').data('gridstack');
+    translate;
+    var grid = GridStack.init(options);
     if (grid) {
         grid.resizable('.grid-stack-item', true);
         // should add the blocks one by one
@@ -260,7 +257,18 @@ $(function () {
         }
         {$reorder}
     }
+    GridStack.setupDragIn('.btn-group-vertical .grid-stack-item', { revert: 'invalid', scroll: true, appendTo: 'body', helper: cloneGridstackNode });
+    // This helper node is used so that the normal click event is stopped so we don't get drag/drop and add block popup
+    function cloneGridstackNode(event) {
+        let node = event.target.cloneNode(true);
+        helper = $('<div></div>').append(node);
+        helper.find('.icon').addClass('hidden');
+        helper.find('.btn').removeClass('btn-primary');
+        return helper;
+    }
 });
+
+
 ";
 
 // The form for adding blocks via the keyboard

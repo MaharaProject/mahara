@@ -56,7 +56,7 @@ Scenario: Mahara member can use Institution tags in their content
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"
     And I press "Save"
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "One tag" and select "Institution One: One tag"
@@ -92,7 +92,7 @@ Scenario: Inst admin can use Institution tags when creating Institution pages
     And I press "Save"
 
     # Inst admin put an institution tag on a text block artefact on an institution page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Text"
     And I set the field "Block title" to "Text Block 1"
