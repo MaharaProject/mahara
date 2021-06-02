@@ -55,6 +55,7 @@ viewing PDF file
 **Changes**:
 
 - Add i18n to pdfjs matching current site lang: Change-Id *Idde1f070c247febbcd7c6b4a7cd2c53caed3cfe0*
+- Hide 'upload file' in the toolbar to avoid confusion of blocktype purpose: Change-Id: *I0e562446e4742cc40e8ab2b9dc87e1578421072d*
 
 * Minify js files for faster loading
 * Use absolute paths in viewer.js
@@ -64,7 +65,3 @@ viewing PDF file
 * viewer.css additions to support viewing by non-JS users
 (517f71a183f0ccfd89f379b1647407449785dda3)
 * viewer.css tweak to get the bottom of the display to show
-(d09a09ab51e80c2383b8a47b746f068271396863)
-* viewer.css tweak to avoid horizontal scrollbar on default 3-column page layout
-(6ef27c8c79279504bee31cce5762f0536f8d3c13)
-* Hide the "open file" button in the toolbar
