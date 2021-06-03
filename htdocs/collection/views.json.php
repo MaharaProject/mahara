@@ -161,7 +161,7 @@ if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'renderer' => 'div',
-            'class' => 'form-as-button float-right',
+            'class' => 'form-as-button float-end',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(

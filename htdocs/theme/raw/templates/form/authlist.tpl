@@ -56,7 +56,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                     <span class="sr-only">{str tag=cancel section=mahara}</span>
                 </button>
                 <h1 class="modal-title authinstance-header text-inline"></h1>
-                <span class="icon icon-cogs icon-2x float-right" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-cogs icon-2x float-end" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body authinstance-content">
             </div>

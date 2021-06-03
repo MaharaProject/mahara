@@ -42,7 +42,7 @@
             <legend>
                 <button type="button" data-bs-target="#initials" data-bs-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
                     {str tag='moreoptions' section='view'}
-                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"></span>
                 </button>
             </legend>
             <div id="initials" class="initials collapse{if $search->f || $search->l} show{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
@@ -151,7 +151,7 @@
         <div class="withselectedusers card-body">
             <div class="btn-group">
                 {if $USER->get('admin') || $USER->is_institutional_admin()}
-                <form class="nojs-hidden-inline form-as-button float-left" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
+                <form class="nojs-hidden-inline form-as-button float-start" id="bulkactions" action="{$WWWROOT}admin/users/bulk.php" method="post">
                     <button action="{$WWWROOT}admin/users/bulk.php" type="submit" class="btn btn-secondary disabled" name="edit" id="editbtn" value="{str tag=edit}">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         {str tag=withselectedusersedit section=admin}
@@ -159,7 +159,7 @@
 
                 </form>
                 {/if}
-                <form class="nojs-hidden-inline form-as-button float-left" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
+                <form class="nojs-hidden-inline form-as-button float-start" action="{$WWWROOT}admin/users/statistics.php" id="report" method="post">
 
                     <button action="{$WWWROOT}admin/users/statistics.php" type="submit" class="btn btn-secondary disabled" name="reports" id="reportsbtn" value="{str tag=getreports section=admin}">
                         <span class="icon icon-chart-pie left" role="presentation" aria-hidden="true"></span>

@@ -37,7 +37,7 @@
             <h2 class="card-header {if $skin.metadata} has-link {/if}">
                 <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-bs-toggle="modal" data-bs-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                     {$skin.title|escape|safe}
-                    <span class="help float-right">
+                    <span class="help float-end">
                         <span class="icon icon-info-circle link-indicator" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">
                             {str tag=viewmetadataspecific section=skin arg1=$skin.title}

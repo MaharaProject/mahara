@@ -45,7 +45,7 @@
                                             <span class="text-small">{$file->title|truncate:40}</span>
                                         </a>
                                     </span>
-                                    <span class="text-midtone text-small float-right">({$file->size|display_size})</span>
+                                    <span class="text-midtone text-small float-end">({$file->size|display_size})</span>
                                 </li>
                             {/foreach}
                             </ul>

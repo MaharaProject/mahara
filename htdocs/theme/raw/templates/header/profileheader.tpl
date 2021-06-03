@@ -4,7 +4,7 @@
             <div class="{if $relationship == 'pending'}col-lg-6 {else}col-md-12{/if} main">
 
                 <h1 id="viewh1" class="user-icon-name page-header">
-                    <span class="user-icon user-icon-50 float-left">
+                    <span class="user-icon user-icon-50 float-start">
                         <img src="{profile_icon_url user=$user maxwidth=50 maxheight=50}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" />
                     </span>
                     {if $pageheadinghtml}

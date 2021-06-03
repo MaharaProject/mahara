@@ -1260,7 +1260,7 @@ function listAttachments(attachments) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + item.attachment;
             var linkcontent = '<span class="sr-only">' + {$downloadstr} + ' "' + item.title + '"</span>';
-            linkcontent += '<span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>';
+            linkcontent += '<span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true"></span>';
             var link = jQuery('<a href="' + href + '">' + linkcontent + '</a>');
             var icon = '<span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>';
             if (item.icon) {

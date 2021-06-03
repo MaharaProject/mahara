@@ -1,5 +1,5 @@
 {if !$editing}
-    <div class="comments float-left">
+    <div class="comments float-start">
         {if $allowcomments}
             <a class="commentlink link-blocktype" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$artefactid}">
                 <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>

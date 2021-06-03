@@ -28,7 +28,7 @@
                 </span>
                 {elseif $post->canedit}
                 <div class="btn-group postcontrols">
-                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button float-left">
+                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button float-start">
                         <input type="hidden" name="id" value="{$post->id}">
                         <div class="first">
                             <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
@@ -69,7 +69,7 @@
                     <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                     <span class="metadata">({$post->files|count})</span>
-                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                 </a>
             </div>
             <div class="collapse" id="attach_{$post->id}">
@@ -88,7 +88,7 @@
                                 <span class="text-small">{$file->title|truncate:40}</span>
                             </a>
                         </span>
-                        <span class="text-midtone text-small float-right">({$file->size|display_size})</span>
+                        <span class="text-midtone text-small float-end">({$file->size|display_size})</span>
                     </li>
                 {/foreach}
                 </ul>

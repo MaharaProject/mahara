@@ -3,7 +3,7 @@
     <div class="card-body flush">
     {/if}
     {if $profileiconpath}
-        <div class="user-icon float-right user-icon-60">
+        <div class="user-icon float-end user-icon-60">
             <img src="{$profileiconpath}" alt="{$profileiconalt}" />
         </div>
     {/if}

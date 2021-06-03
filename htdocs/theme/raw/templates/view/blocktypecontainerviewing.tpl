@@ -17,13 +17,13 @@
             </span>
 
             {if $retractable}
-            <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-up collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
             {/if}
 
         </h2>
     {else}
         {if $link}
-            <a href="{$link}" class="text-default btn-secondary btn-sm float-right">
+            <a href="{$link}" class="text-default btn-secondary btn-sm float-end">
                 {str tag=detailslinkalt section=view}
             </a>
         {/if}

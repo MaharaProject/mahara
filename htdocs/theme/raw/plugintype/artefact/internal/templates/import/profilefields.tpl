@@ -7,7 +7,7 @@
             <legend>
                 <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
                     {$profilegroup.legend}
-                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"></span>
                 </a>
             </legend>
             <div id="profilefield-{$profilegroup.id}" class="collapse list-group">

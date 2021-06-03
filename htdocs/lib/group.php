@@ -1418,13 +1418,13 @@ function group_get_accept_form($name, $groupid) {
                     'accept' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-secondary form-as-button float-left',
+                        'class' => 'btn-secondary form-as-button float-start',
                         'value' => '<span class="icon icon-check text-success left" role="presentation" aria-hidden="true"></span> ' . get_string('acceptinvitegroup', 'group')
                     ),
                     'decline' => array(
                         'type'  => 'button',
                         'usebuttontag' => true,
-                        'class' => 'btn-secondary form-as-button float-left',
+                        'class' => 'btn-secondary form-as-button float-start',
                         'value' => '<span class="icon icon-ban text-danger left" role="presentation" aria-hidden="true"></span> ' . get_string('declineinvitegroup', 'group')
                     )
                 ),
@@ -1445,7 +1445,7 @@ function group_get_adduser_form($userid, $groupid) {
         'name'                => 'adduser' . $userid,
         'successcallback'     => 'group_adduser_submit',
         'renderer'            => 'div',
-        'class'               => 'form-as-button float-left',
+        'class'               => 'form-as-button float-start',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',
@@ -1478,7 +1478,7 @@ function group_get_removeuser_form($userid, $groupid) {
         'validatecallback'    => 'group_removeuser_validate',
         'successcallback'     => 'group_removeuser_submit',
         'renderer'            => 'div',
-        'class'               => 'float-left',
+        'class'               => 'float-start',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',
@@ -1510,7 +1510,7 @@ function group_get_denyuser_form($userid, $groupid) {
         'name'                => 'denyuser' . $userid,
         'successcallback'     => 'group_denyuser_submit',
         'renderer'            => 'div',
-        'class'               => 'form-as-button float-left',
+        'class'               => 'form-as-button float-start',
         'elements'            => array(
             'group' => array(
                 'type'    => 'hidden',

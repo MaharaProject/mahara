@@ -7917,7 +7917,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         'pluginname'      => 'view',
         'renderer'        => 'div',
         'successcallback' => 'createview_submit',
-        'class'           => 'form-as-button float-left',
+        'class'           => 'form-as-button float-start',
         'elements'   => array(
             'new' => array(
                 'type' => 'hidden',

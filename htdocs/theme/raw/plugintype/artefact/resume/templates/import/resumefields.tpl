@@ -7,7 +7,7 @@
             <legend>
                 <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
                     {$resumegroup.legend}
-                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"></span>
                 </a>
             </legend>
             <div id="resumefield-{$resumegroup.id}" class="collapse list-group">

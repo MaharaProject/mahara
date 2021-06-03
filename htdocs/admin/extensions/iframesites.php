@@ -110,7 +110,7 @@ if ($iframesources) {
                 'name'             => 'deleteurl_' . $i,
                 'successcallback'  => 'deleteurl_submit',
                 'renderer'         => 'div',
-                'class'            => 'form-inline form-as-button float-right btn-group',
+                'class'            => 'form-inline form-as-button float-end btn-group',
                 'elements'         => array(
                     'submit' => array(
                         'type'         => 'button',

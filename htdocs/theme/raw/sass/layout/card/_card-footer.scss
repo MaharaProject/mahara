@@ -15,7 +15,7 @@ a.card-footer {
         .icon {
             color: $theme-text-midtone-color;
         }
-        .icon.float-right { //only apply link color to right aligned icons
+        .icon.float-end { //only apply link color to right aligned icons
             color: $link-hover-color;
         }
     }

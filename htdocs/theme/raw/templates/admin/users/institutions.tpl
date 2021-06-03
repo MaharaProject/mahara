@@ -37,7 +37,7 @@
 
     <div class="btn-group btn-group-top{if $siteadmin && $countinstitutions == 1} only-button{/if}">
         {if $siteadmin}
-        <form class="form-as-button float-left btn-first" action="" method="post">
+        <form class="form-as-button float-start btn-first" action="" method="post">
             <button class="submit btn btn-secondary" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
                 <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>

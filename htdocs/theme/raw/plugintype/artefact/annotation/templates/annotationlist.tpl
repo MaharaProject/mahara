@@ -2,7 +2,7 @@
 <div class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-private{/if} list-group-item comment-item">
     <div class="flex-row">
         <div class="usericon-heading flex-title flex-row">
-            <div class="float-left">
+            <div class="float-start">
                 <span class="user-icon user-icon-30" role="presentation" aria-hidden="true">
                 {if $item->author}
                     <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">

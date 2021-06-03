@@ -23,11 +23,11 @@
         </h2>
         {if $not_institution_tag}
         <div class="btn-top-right btn-group btn-group-top d-block{if !$tag} d-none{/if}">
-            <button class="btn btn-secondary edit-tag float-right{if !$tag} d-none{/if}" data-url="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</button>
+            <button class="btn btn-secondary edit-tag float-end{if !$tag} d-none{/if}" data-url="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</button>
         </div>
         {/if}
         <div class="tag-filters">
-            <div id="results_sort" class="float-right">
+            <div id="results_sort" class="float-end">
                 <strong>{str tag=sortresultsby}</strong>
                 {foreach from=$results->sortcols item=sortfield name=sortcols}
                     <a href="{$results->baseurl}{$results->queryprefix}sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}

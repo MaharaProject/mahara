@@ -108,7 +108,7 @@ if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'renderer' => 'div',
-            'class' => 'form-as-button float-right',
+            'class' => 'form-as-button float-end',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(
@@ -149,7 +149,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
     );
 
     $elements['submit'] = array(
-        'class' => 'btn-secondary float-right add-pages',
+        'class' => 'btn-secondary float-end add-pages',
         'type' => 'button',
         'usebuttontag' => true,
         'value' => '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>' . get_string('addviews','collection'),

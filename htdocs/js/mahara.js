@@ -569,7 +569,7 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
  */
 function buildContextualHelpBox(content) {
     contextualHelpContainer.html(
-        '<div class="float-right pts">' +
+        '<div class="float-end pts">' +
             '<a href="" class="help-dismiss" onclick="return false;">' +
                 '<span class="icon icon-times"></span>' +
                 '<span class="sr-only">' + get_string('closehelp') + '</span>' +

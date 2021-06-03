@@ -28,7 +28,7 @@
         <div id="bookform" class="js-expanded-form collapse" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.book|safe}
         </div>
-        <button id="addbookbutton" data-bs-toggle="collapse" data-bs-target="#bookform" aria-expanded="false" aria-controls="bookform" class="float-right btn btn-secondary btn-sm collapsed expand-add-button">
+        <button id="addbookbutton" data-toggle="collapse" data-target="#bookform" aria-expanded="false" aria-controls="bookform" class="float-end btn btn-secondary btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
@@ -57,7 +57,7 @@
             <h4 class="list-group-item-heading">
             <a href="#book-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
                 {$row->title}
-                <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
             </a>
           </h4>
         {else}
@@ -131,7 +131,7 @@
                         {/if}
                         </span>
                         <a href="{$item->downloadpath}" class="download-link">
-                          <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
+                          <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>
                     {if $item->description}
                         <div class="file-description text-small text-midtone">

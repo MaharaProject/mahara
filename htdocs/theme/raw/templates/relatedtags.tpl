@@ -7,7 +7,7 @@
             <a class="tag secondary-link" href="{$results->baseurl}">{$tag|str_shorten_text:50}</a>
         </h2>
         <div class="tag-filters">
-            <div id="results_sort" class="float-right">
+            <div id="results_sort" class="float-end">
                 <strong>{str tag=sortresultsby}</strong>
                 {foreach from=$results->sortcols item=sortfield name=sortcols}
                     <a href="{$results->baseurl}{$results->queryprefix}type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}

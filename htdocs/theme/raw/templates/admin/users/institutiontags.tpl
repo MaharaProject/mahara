@@ -18,7 +18,7 @@
               <td>{$tag->tag}</td>
               <td>{$tag->count}</td>
               <td class="center">
-                <div class="float-right">
+                <div class="float-end">
                   {if $tag->count <= 0}
                     <a href="{$WWWROOT}admin/users/institutiontags.php?delete={$tag->id}&institution={$institution}" title="{str tag=deleteinstitutiontag}" class="btn btn-secondary btn-sm">
                     <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>

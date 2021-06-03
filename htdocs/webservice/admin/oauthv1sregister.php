@@ -657,7 +657,7 @@ function webservice_server_list_form($sopts, $iopts) {
                 'value' => pieform(array(
                         'name' => 'webservices_server_edit_' . $consumer->id,
                         'renderer' => 'div',
-                        'class' => 'form-as-button float-left',
+                        'class' => 'form-as-button float-start',
                         'elementclasses' => false,
                         'successcallback' => 'webservices_server_submit',
                         'jsform' => false,
@@ -677,7 +677,7 @@ function webservice_server_list_form($sopts, $iopts) {
                     pieform(array(
                         'name' => 'webservices_server_delete_' . $consumer->id,
                         'renderer' => 'div',
-                        'class' => 'form-as-button float-left',
+                        'class' => 'form-as-button float-start',
                         'elementclasses' => false,
                         'successcallback' => 'webservices_server_submit',
                         'jsform' => false,
@@ -720,7 +720,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                 pieform(array(
                                     'name' => 'webservices_server_config_' . $consumer->id,
                                     'renderer' => 'div',
-                                    'class' => 'form-as-button float-left',
+                                    'class' => 'form-as-button float-start',
                                     'elementclasses' => false,
                                     'successcallback' => 'webservices_server_submit',
                                     'jsform' => false,

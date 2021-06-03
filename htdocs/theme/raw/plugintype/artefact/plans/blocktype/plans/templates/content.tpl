@@ -4,7 +4,7 @@
 {foreach from=$plans item=plan}
     <div class="listing">
         {if $editing}
-            <div class="float-right btn-group">
+            <div class="float-end btn-group">
                 <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/plan/edit.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
                     <span class="icon icon-pencil-alt"></span>
                     <span class="sr-only">{str tag='edit'}</span>

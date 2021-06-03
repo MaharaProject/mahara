@@ -1130,7 +1130,7 @@ class ArtefactTypeComment extends ArtefactType {
             'jssuccesscallback' => 'delete_comment_from_modal_submit',
             'successcallback' => 'delete_comment_submit',
             'renderer' => 'div',
-            'class' => 'form-as-button float-left delete-comment btn-group-item',
+            'class' => 'form-as-button float-start delete-comment btn-group-item',
             'elements' => array(
                 'comment' => array('type' => 'hidden', 'value' => $id),
                 'submit'  => array(

@@ -11,7 +11,7 @@
                 <legend>
                     <a id="link_{$dwoo.foreach.data.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}">
                         {$k}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-end"></span>
                     </a>
                 </legend>
                 <div id="behatfield-{$dwoo.foreach.data.index}" class="fieldset-body collapse list-group">

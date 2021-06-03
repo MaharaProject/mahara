@@ -2,7 +2,7 @@
 <div class="card">
     <h2 class="card-header">
         {str tag="quota"}
-        <span class="float-right">
+        <span class="float-end">
         {contextualhelp plugintype='artefact' pluginname='file' section='quota_message'}
         </span>
     </h2>

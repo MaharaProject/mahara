@@ -5,7 +5,7 @@
             <li class="list-group-item flush">
                 <div class="usericon-heading clearfix">
                     <a href="{profile_url($postinfo->author)}" class="user-icon user-icon-30 small-icon">
-                        <img src="{profile_icon_url user=$postinfo->author maxheight=40 maxwidth=40}" alt="{str tag=profileimagetext arg1=$postinfo->author|display_default_name}" class="float-left">
+                        <img src="{profile_icon_url user=$postinfo->author maxheight=40 maxwidth=40}" alt="{str tag=profileimagetext arg1=$postinfo->author|display_default_name}" class="float-start">
                     </a>
                     <h3 class="title list-group-item-heading">
                         <a href="{$WWWROOT}interaction/forum/topic.php?id={$postinfo->topic}&post={$postinfo->id}">
@@ -29,7 +29,7 @@
                             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
                             <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                             <span class="metadata">({$postinfo->filecount})</span>
-                            <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                         </a>
                     </div>
                     <div class="collapse" id="post-attach-{$postinfo->id}">
@@ -47,7 +47,7 @@
                                     <span class="text-small">{$file->title}</span>
                                 </span>
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}&amp;post={$postinfo->id}" class="download-link">
-                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
                                 </a>
                             {if $file->description}
                                 <div class="file-description text-small text-midtone">
@@ -71,5 +71,5 @@
 </div>
 <a class="morelink card-footer text-small" href="{$WWWROOT}interaction/forum/index.php?group={$group->id}">
     {str tag=gotoforums section=interaction.forum}
-    <span class="icon icon-arrow-circle-right right float-right" role="presentation" aria-hidden="true"></span>
+    <span class="icon icon-arrow-circle-right right float-end" role="presentation" aria-hidden="true"></span>
 </a>

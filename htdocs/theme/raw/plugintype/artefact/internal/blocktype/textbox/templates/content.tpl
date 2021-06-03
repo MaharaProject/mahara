@@ -16,7 +16,7 @@
             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$count})</span>
-            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </div>
     {* Attachment list with view and download link *}
@@ -51,7 +51,7 @@
                 {/if}
                 </span>
                 <a href="{$item->downloadpath}" class="download-link">
-                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size|display_size}"></span>
+                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size|display_size}"></span>
                 </a>
             {if $item->description}
                 <div class="file-description text-small text-midtone">

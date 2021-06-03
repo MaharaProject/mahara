@@ -70,7 +70,7 @@
         <td colspan="{$viewcount + $colspan}">
             <div class="shortname-container">
                 <span class="sr-only">{str tag="standardbegin" section="module.framework"}</span>
-                <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
+                <span class="icon icon-chevron-down collapse-indicator right float-end"></span>
                 <h2>{$standard->shortname}</h2>
                 <span class="sr-only status">{if $standard->settingstate == 'closed'}{str tag="collapsedsection" section="module.framework"}{/if}</span>
                 <a href="#">
@@ -202,8 +202,8 @@
                     <span class="times">×</span>
                     <span class="sr-only">{str tag='closeconfiguration' section='view'}</span>
                 </button>
-                <h1 class="modal-title blockinstance-header text-inline float-left"></h1>
-                <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x float-right"></span>
+                <h1 class="modal-title blockinstance-header text-inline float-start"></h1>
+                <span aria-hidden="true" role="presentation" class="icon icon-cogs icon-2x float-end"></span>
             </div>
             <div class="modal-body blockinstance-content">
             </div>

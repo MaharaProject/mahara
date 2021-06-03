@@ -1,7 +1,7 @@
 {foreach from=$tasks.data item=task}
     <div class="task-item list-group-item{if $task->completed == -1} plan_incomplete{/if}">
         {if $editing}
-        <div class="float-right btn-group btn-group-top">
+        <div class="float-end btn-group btn-group-top">
             <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></button>
             <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></button>
         </div>
@@ -23,7 +23,7 @@
                 {/if}
                     <h4 class="list-group-item-heading text-default">{$task->title}</h4>
                 {if $task->description || $task->tags}
-                    <span class="icon icon-chevron-down right collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down right collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                 </a>
                 {/if}
                 {if $task->completiondate}

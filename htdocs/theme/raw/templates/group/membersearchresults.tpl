@@ -3,7 +3,7 @@
 {foreach from=$row item=r}
 <div class="list-group-item {if $membershiptype == 'invite' || $membershiptype == 'request'} list-group-item-warning{/if}">
     <div class="flex-row">
-        <div class="user-icon user-icon-40 float-left">
+        <div class="user-icon user-icon-40 float-start">
             <a href="{profile_url($r)}"><img src="{profile_icon_url user=$r maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$r|display_default_name}"></a>
         </div>
         <div class="flex-title">

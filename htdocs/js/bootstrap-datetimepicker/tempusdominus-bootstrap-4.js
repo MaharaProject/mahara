@@ -1874,9 +1874,9 @@ var TempusDominusBootstrap4 = function ($) {
             }
 
             if (horizontal === 'right') {
-                self.widget.addClass('float-right');
+                self.widget.addClass('float-end');
             } else {
-                self.widget.removeClass('float-right');
+                self.widget.removeClass('float-end');
             }
 
             // find the first parent element that has a relative css positioning

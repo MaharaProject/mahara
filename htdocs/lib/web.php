@@ -4373,7 +4373,7 @@ function build_pagination($params) {
     $resultsstr = isset($params['resultcounttext']) ? $params['resultcounttext'] : get_string('nresults', 'mahara', $params['count']);
     if ($params['count'] > 0) {
         if (!isset($params['hidecount'])) {
-            $output .= '<div class="lead text-small results float-right">' . $resultsstr . '</div>';
+            $output .= '<div class="lead text-small results float-end">' . $resultsstr . '</div>';
         }
     }
 

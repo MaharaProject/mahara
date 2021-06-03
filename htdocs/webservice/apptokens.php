@@ -199,7 +199,7 @@ if (!empty($dbservices)) {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
-                                    'class'           => 'form-as-button float-left',
+                                    'class'           => 'form-as-button float-start',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'service'    => array('type' => 'hidden', 'value' => $service->id),
@@ -220,7 +220,7 @@ if (!empty($dbservices)) {
                                     'renderer'        => 'div',
                                     'elementclasses'  => false,
                                     'successcallback' => 'webservices_user_token_submit',
-                                    'class'           => 'form-as-button float-left',
+                                    'class'           => 'form-as-button float-start',
                                     'jsform'          => false,
                                     'elements' => array(
                                         'token'    => array('type' => 'hidden', 'value' => $service->token),

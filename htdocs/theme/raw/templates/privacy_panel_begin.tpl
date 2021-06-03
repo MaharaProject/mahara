@@ -18,7 +18,7 @@
                 {/if}
                 data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown">
                     {$privacytitle}
-                    <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-end"></span>
                 </a>
             </legend>
             <div class="fieldset-body collapse {if (!($privacy->agreed && $ignoreagreevalue) || $ignoreformswitch)}show{/if}"

@@ -326,7 +326,7 @@ function release_form($text, $releasecollection) {
     $form['elements']['submit'] = array(
         'type'  => 'button',
         'usebuttontag' => true,
-        'class' => 'btn-secondary float-right',
+        'class' => 'btn-secondary float-end',
         'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
     );
     return pieform($form);

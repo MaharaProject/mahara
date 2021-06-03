@@ -13,7 +13,7 @@
             {if $canunverify && !$inedit}
             <a href="#" id="verify-{$blockid}">
             {/if}
-                <span class="verificationicon icon icon-check-square float-right"></span>
+                <span class="verificationicon icon icon-check-square float-end"></span>
                 <span class="sr-only">{str tag='verifiedspecific' section='blocktype.verification' arg1=$title}</span>
             {if $canunverify && !$inedit}
             </a>
@@ -22,7 +22,7 @@
             {if !$inedit}
             <a href="#" id="verify-{$blockid}">
             {/if}
-                <span class="verificationicon icon icon-square icon-regular float-right"></span>
+                <span class="verificationicon icon icon-square icon-regular float-end"></span>
                 <span class="sr-only">{str tag='toverifyspecific' section='blocktype.verification' arg1=$title}</span>
             {if !$inedit}
             </a>

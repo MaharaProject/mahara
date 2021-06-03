@@ -87,7 +87,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
     <h2 class="card-header">
       <span class="blockinstance-header">Context</span>
       <span class="blockinstance-controls">
-          <span class="float-right btn-group btn-group-top">
+          <span class="float-end btn-group btn-group-top">
               <button class="configurebutton btn btn-inverse btn-sm">
                   <span class="icon icon-cog"></span>
               </button>
@@ -257,7 +257,7 @@ section .navbar-form.navbar-collapse.search-form {
 </style>
 ```
 <div class="row">
-    <div class="navbar-default navbar-main float-right">
+    <div class="navbar-default navbar-main float-end">
         <div class="nav-toggle-area">
             <!-- Nav One Button -->
             <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
@@ -425,7 +425,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
 ```
 <div>
     <div class="pagination-wrapper">
-        <div class="lead text-small results float-right">
+        <div class="lead text-small results float-end">
             11 {str tag=results}
         </div>
         <ul class="pagination pagination-sm">
@@ -584,7 +584,7 @@ A side card is used in the sideblock area, e.g. on the dashboard for "Online use
         </ul>
         <a href="" class="card-footer text-small">
             Side card footer
-            <span class="icon icon-arrow-circle-right float-right"></span>
+            <span class="icon icon-arrow-circle-right float-end"></span>
         </a>
     </div>
 </div>
@@ -598,7 +598,7 @@ A side card without a footer. An examples is the "Tags" sideblock on the dashboa
 <div class="col-lg-3 sidebar">
     <div class="card">
         <h2 class="card-header has-link">
-            <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
+            <a href="">Side card<span class="icon icon-arrow-right float-end" role="presentation" aria-hidden="true"></span></a>
         </h2>
         <div class="tagblock card-body">
             <div class="no-results-small text-small">Lorem ipsum</div>
@@ -617,7 +617,7 @@ A dropdown card.
         <legend>
             <a href="#dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                 Drop-down
-                <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+                <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
             </a>
         </legend>
         <div class="fieldset-body collapse" id="dropdown">
@@ -638,7 +638,7 @@ A attachment card.
             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">Attachments</span>
             <span class="metadata">(2)</span>
-            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </div>
     <div id="attachment" class="collapse">
@@ -653,7 +653,7 @@ A attachment card.
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -669,7 +669,7 @@ A attachment card.
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -685,7 +685,7 @@ A attachment card.
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -705,7 +705,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
     <h2 class="title card-header js-heading">
         <a data-bs-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
-        <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-chevron-up collapse-indicator float-end inner-link" role="presentation" aria-hidden="true"></span>
     </h2>
     <div class="block collapse show" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
@@ -713,7 +713,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                 <a class="collapsed link-block" data-bs-toggle="collapse" href="#item1" aria-expanded="false">
                     <span class="icon icon-university text-default left" role="presentation" aria-hidden="true"></span>
                     Item 1
-                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end text-small" role="presentation" aria-hidden="true"></span>
                 </a>
                 <div class="collapse" id="item1">
                     <p class="content-text">
@@ -725,7 +725,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                 <a class="collapsed link-block" data-bs-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     Item 2
-                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end text-small" role="presentation" aria-hidden="true"></span>
                 </a>
                 <div class="collapse" id="item2">
                     <p class="content-text">

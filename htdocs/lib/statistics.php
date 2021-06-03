@@ -6068,7 +6068,7 @@ function report_config_form($extra, $institutionelement) {
         'plugintype'      => 'core',
         'pluginname'      => 'admin',
         'renderer'        => 'div',
-        'class'           => 'form-as-button float-left',
+        'class'           => 'form-as-button float-start',
         'elements'   => array(
             'type' => array(
                 'type' => 'hidden',

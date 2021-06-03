@@ -22,7 +22,7 @@
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
-                    <h1 class="modal-title float-left">
+                    <h1 class="modal-title float-start">
                         <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                         {str tag=Annotationfeedback section=artefact.annotation} - {$annotationtitle}
                     </h1>

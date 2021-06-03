@@ -12,7 +12,7 @@
                 {str tag=nposts section=artefact.blog arg1=$blog->postcount}
             </span>
         {/if}
-         <span class="icon icon-arrow-right float-right link-indicator" role="presentation" aria-hidden="true"></span>
+         <span class="icon icon-arrow-right float-end link-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </h2>
 
@@ -30,7 +30,7 @@
             {str tag=addpost section=artefact.blog}
         </button>
 
-        <div class="btn-group float-right">
+        <div class="btn-group float-end">
             {if $blog->locked}
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}

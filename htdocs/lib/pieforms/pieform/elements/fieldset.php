@@ -74,7 +74,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
             $legendcontent .= '<span class="icon-fieldset icon icon-'.$element['iconclass'].'" role="presentation" aria-hidden="true"> </span>';
         }
         $legendcontent .= Pieform::hsc($element['legend']);
-        $legendcontent .= '<span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"> </span> ';
+        $legendcontent .= '<span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"> </span> ';
 
         $legendcontent .= '</button>';
     }

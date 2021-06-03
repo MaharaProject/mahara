@@ -32,7 +32,7 @@
                     {if !$institution->site}</a>{/if}</td>
                 <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
                 <td class="controls">
-                        <form action="" method="post"  class="btn-group float-right">
+                        <form action="" method="post"  class="btn-group float-end">
                           <input type="hidden" name="i" value="{$institution->name}">
                           {if $webserviceconnections}
                               <a class="btn-secondary btn-sm button btn btn-group-first" href="{$WWWROOT}webservice/admin/connections.php?i={$institution->name}">

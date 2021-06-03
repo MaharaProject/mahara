@@ -197,7 +197,7 @@ $width-sm: 90%;
           font-size: $h4-font-size;
           font-family: $headings-font-family;
           font-weight: $headings-font-weight;
-          &.float-left {
+          &.float-start {
             width: calc(100% - 45px); // The cog icon plus 5px space
           }
         }

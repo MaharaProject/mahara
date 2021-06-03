@@ -1,7 +1,7 @@
 <div class="list-group-item {if $user->pending} list-group-item-warning{/if}">
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
-            <div class="user-icon user-icon-60 float-left">
+            <div class="user-icon user-icon-60 float-start">
                 <img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
             <h3 class="list-group-item-heading">

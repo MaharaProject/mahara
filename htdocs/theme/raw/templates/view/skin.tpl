@@ -49,7 +49,7 @@
             </ul>
 
             <div class="has-form">
-                <div class="float-left">
+                <div class="float-start">
                     {$form|safe}
                 </div>
 
@@ -78,7 +78,7 @@
                 <h4 class="card-header has-link">
                     <a href="#userskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
                         {str tag=userskins section=skin}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="userskins" class="card-body collapse show">
@@ -99,7 +99,7 @@
                 <h4 class="card-header has-link">
                     <a href="#favorskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                         {str tag=favoriteskins section=skin}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="favorskins" class="card-body collapse">
@@ -120,7 +120,7 @@
                 <h4 class="card-header has-link">
                     <a href="#siteskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                         {str tag=siteskins section=skin}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="siteskins" class="card-body no-footer collapse">

@@ -65,7 +65,7 @@
                             , {$item->date}
                         </span>
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                 </h2>
             </a>
         </div>

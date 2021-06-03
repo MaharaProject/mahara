@@ -11,10 +11,10 @@
             <button class="keyboardmovebutton btn btn-secondary d-none sr-only" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
                 {$strmovetitletext}
             </button>
-            <span class="float-right btn-group btn-group-top">
+            <span class="float-end btn-group btn-group-top">
                 {if $retractable && !$configure}
-                <a data-bs-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="collapse-arrow{if $retractedonload} collapsed{/if}">
-                    <span class="icon icon-chevron-up collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                <a data-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="collapse-arrow{if $retractedonload} collapsed{/if}">
+                    <span class="icon icon-chevron-up collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">{str tag=retractable section=view}</span>
                 </a>
                 {/if}

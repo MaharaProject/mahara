@@ -120,7 +120,7 @@
 
         <a class="collapsed" data-bs-toggle="collapse" href="#tagged_post_{$post->id}" aria-expanded="false">
             <span class="sr-only">{$post->title}</span>
-            <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
         </a>
 
         <div>

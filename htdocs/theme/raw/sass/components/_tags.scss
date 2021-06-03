@@ -47,7 +47,7 @@
     background: scale-color($card-bg, $lightness: -1.5%);
     padding: $card-spacer-y $card-spacer-x;
     border-bottom: $card-border-width solid $card-border-color;
-    .float-right {
+    .float-end {
       margin-top: 0.5rem; // 8px;
     }
 }

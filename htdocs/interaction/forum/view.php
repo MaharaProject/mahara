@@ -182,7 +182,7 @@ if ($membership && ( !isset($allowunsubscribe) || $allowunsubscribe == 1)) {
         'plugintype' => 'interaction',
         'pluginname' => 'forum',
         'autofocus' => false,
-        'class' => 'form-as-button float-left',
+        'class' => 'form-as-button float-start',
         'elements' => array(
             'submit' => array(
                 'type' => 'button',

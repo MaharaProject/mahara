@@ -26,7 +26,7 @@ a.card-control:hover span,
 a.card-footer,
 a.card-footer .icon,
 a.card-footer .icon:hover,
-a.card-footer .icon:hover .icon.float-right,
+a.card-footer .icon:hover .icon.float-end,
 .collapsible legend .secondary-link,
 .card-header .secondary-link,
 .card-header .btn-link:hover .icon,
@@ -51,11 +51,11 @@ a.card-footer .icon:hover .icon.float-right,
 .text-link,
 a.card-footer:not([href]):not([tabindex]),
 a.card-footer:hover,
-.btn-draggable a.card-footer:hover .btn-group-vertical > .float-right.btn,
-.list-group.ui-sortable a.card-footer:hover .float-right.ui-draggable-dragging,
-a.card-footer:hover .btn-draggable .btn-group-vertical > .float-right.btn,
-a.card-footer:hover .float-right.modal-loading, a.card-footer:hover .icon.float-right,
-a.card-footer:hover .list-group.ui-sortable .float-right.ui-draggable-dragging {
+.btn-draggable a.card-footer:hover .btn-group-vertical > .float-end.btn,
+.list-group.ui-sortable a.card-footer:hover .float-end.ui-draggable-dragging,
+a.card-footer:hover .btn-draggable .btn-group-vertical > .float-end.btn,
+a.card-footer:hover .float-end.modal-loading, a.card-footer:hover .icon.float-end,
+a.card-footer:hover .list-group.ui-sortable .float-end.ui-draggable-dragging {
     color: {$data.link};
 }
 .mytags .tagfreq.badge {

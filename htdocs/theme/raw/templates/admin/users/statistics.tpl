@@ -39,7 +39,7 @@
                             {$subpagedata.table.pagination|safe}
                         </div>
                         {if $subpagedata.table.csv}
-                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button float-right btn btn-secondary" title="{str tag="exportstatsascsv" section="admin"}">
+                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button float-end btn btn-secondary" title="{str tag="exportstatsascsv" section="admin"}">
                             <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
                             <span>{str tag="Download" section="admin"}</span></a>
                         {/if}
