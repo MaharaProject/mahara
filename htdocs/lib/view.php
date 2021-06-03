@@ -7746,11 +7746,38 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
     return $form;
 }
 
+/**
+ * Generate the copying success messages of portfolios.
+ *
+ * @param  string $templatename
+ * @param  int $numblocks
+ * @param  int $numartefacts
+ * @param  int $numpages
+ * @return string success message.
+ */
+function get_ok_copy_msg($templatename, $numblocks=0, $numartefacts=0, $numpages=0) {
+    $pages = get_string('countpages', 'collection', $numpages);
+    $blocks = get_string('countblocks', 'collection', $numblocks);
+    $art = get_string('countartefacts', 'collection', $numartefacts);
+    $from = get_string('fromtemplate', 'collection', $templatename);
+
+    // Collection copy
+    if ($numpages > 0) {
+        $msg = $pages . ', '. $blocks . ', ' . get_string('andparticle', 'collection', $art) . ' ' . $from;
+    }
+    // View copy
+    else {
+        $msg = $blocks . ' ' . get_string('andparticle', 'collection', $art) . ' ' . $from;
+    }
+    return get_string('copiedparticle' , 'collection', $msg);
+}
+
 function createview_submit(Pieform $form, $values) {
     global $SESSION;
 
     $values['template'] = !empty($values['istemplate']) ? 1 : 0; // Named 'istemplate' in the form to prevent confusion with 'usetemplate'
 
+    // Collection copy
     if (!empty($values['submitcollection'])) {
         require_once(get_config('libroot') . 'collection.php');
         $templateid = $values['copycollection'];
@@ -7761,15 +7788,12 @@ function createview_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
             redirect(get_config('wwwroot') . 'view/choosetemplate.php');
         }
-        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
-            $copystatus['pages'],
-            $copystatus['blocks'],
-            $copystatus['artefacts'],
-            $template->get('name'))
-        );
 
+        $msg = get_ok_copy_msg($template->get('name'), $copystatus['blocks'], $copystatus['artefacts'], $copystatus['pages']);
+        $SESSION->add_ok_msg($msg);
         redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
+    // Template copy
     else if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
@@ -7779,11 +7803,9 @@ function createview_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
             redirect(get_config('wwwroot') . 'view/choosetemplate.php');
         }
-        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
-            $copystatus['blocks'],
-            $copystatus['artefacts'],
-            $template->get('title'))
-        );
+
+        $msg = get_ok_copy_msg($template->get('title'), $copystatus['blocks'], $copystatus['artefacts']);
+        $SESSION->add_ok_msg($msg);
     }
     else {
         // Use the site default portfolio page to create a new page
@@ -7841,12 +7863,8 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
             redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
         }
-        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
-                                        $copystatus['pages'],
-                                        $copystatus['blocks'],
-                                        $copystatus['artefacts'],
-                                        $template->get('name'))
-                             );
+        $msg = get_ok_copy_msg( $template->get('name'), $copystatus['blocks'], $copystatus['artefacts'],$copystatus['pages']);
+        $SESSION->add_ok_msg($msg);
         redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
     else {
@@ -7856,11 +7874,8 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
             redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
         }
-        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
-                                        $copystatus['blocks'],
-                                        $copystatus['artefacts'],
-                                        $template->get('title'))
-                             );
+        $msg = get_ok_copy_msg( $template->get('title'), $copystatus['blocks'], $copystatus['artefacts']);
+        $SESSION->add_ok_msg($msg);
         redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
     }
 }
