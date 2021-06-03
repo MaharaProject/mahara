@@ -28,34 +28,6 @@ foreach ($exportplugins as $plugin) {
 $pdfrun = 'multi';
 
 /**
- * Convert a 2D array to a CSV file. This follows the basic rules from http://en.wikipedia.org/wiki/Comma-separated_values
- *
- * @param array $input 2D array of values: each line is an array of values
- */
-function data_to_csv($input) {
-    if (empty($input) or !is_array($input)) {
-        return '';
-    }
-
-    $output = '';
-    foreach ($input as $line) {
-        $lineoutput = '';
-
-        foreach ($line as $element) {
-            $element = str_replace('"', '""', $element);
-            if (!empty($lineoutput)) {
-                $lineoutput .= ',';
-            }
-            $lineoutput .= "\"$element\"";
-        }
-
-        $output .= $lineoutput . "\r\n";
-    }
-
-    return $output;
-}
-
-/**
  * Create a zip archive containing the exported data.
  *
  * @param array $listing The list of usernames that were exported
@@ -94,7 +66,7 @@ function create_zipfile($listing, $files) {
 
     // write username listing to a file
     $listingfile = 'usernames.csv';
-    if (!file_put_contents($exportdir . $listingfile, data_to_csv($listing))) {
+    if (!file_put_contents($exportdir . $listingfile, generate_csv($listing, array('username','exportfile')))) {
         throw new SystemException("Couldn't write usernames to a file");
     }
 
@@ -192,8 +164,7 @@ function bulkexport_submit(Pieform $form, $values) {
             $exporterrors[] = $username;
             continue;
         }
-
-        $listing[] = array($username, $zipfile);
+        $listing[] = array('username' => $username, 'exportfile' => $zipfile);
         $files[] = $exporter->get('exportdir') . $zipfile;
         $exportcount++;
     }
