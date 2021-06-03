@@ -129,7 +129,10 @@ function bulkimport_validate(Pieform $form, $values) {
     $csvusers->set('headerExists', false);
     $csvusers->set('format', array('username', 'filename'));
     $csvdata = $csvusers->get_data();
-
+    // Because we don't know if headers are present or not we need to detect them and remove if they are
+    if ($csvdata->data[0][0] == 'username') {
+        array_shift($csvdata->data);
+    }
     if (!empty($csvdata->errors['file'])) {
         $form->set_error('file', get_string('invalidlistingfile', 'admin'));
         return;
