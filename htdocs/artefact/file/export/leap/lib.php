@@ -1,5 +1,6 @@
 <?php
 /**
+ * Leap file exports
  *
  * @package    mahara
  * @subpackage artefact-file-export-leap
@@ -16,10 +17,16 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Leap Export File class
+ */
 class LeapExportElementFile extends LeapExportElement {
 
     private $filename;
 
+    /**
+     * {@inheritDoc}
+     */
     public function get_leap_type() {
         return 'resource';
     }
@@ -53,6 +60,9 @@ class LeapExportElementFile extends LeapExportElement {
     }
 }
 
+/**
+ * Leap Export Folder class
+ */
 class LeapExportElementFolder extends LeapExportElement {
 
     public function get_leap_type() {
@@ -69,9 +79,21 @@ class LeapExportElementFolder extends LeapExportElement {
     }
 }
 
+/**
+ * LeapExport Image class
+ */
 class LeapExportElementImage extends LeapExportElementFile { }
+/**
+ * LeapExport Video class
+ */
 class LeapExportElementVideo extends LeapExportElementFile { }
+/**
+ * LeapExport Audio class
+ */
 class LeapExportElementAudio extends LeapExportElementFile { }
+/**
+ * LeapExport ProfileIcon class
+ */
 class LeapExportElementProfileIcon extends LeapExportElementFile {
 
     public function add_links() {
@@ -81,4 +103,7 @@ class LeapExportElementProfileIcon extends LeapExportElementFile {
 
 }
 
+/**
+ * LeapExport Archive class
+ */
 class LeapExportElementArchive extends LeapExportElementFile { }

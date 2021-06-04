@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Lang file for the file artefact
  *
  * @package    mahara
  * @subpackage lang

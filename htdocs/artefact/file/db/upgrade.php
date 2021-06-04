@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Upgrade util for artefacts
  *
  * @package    mahara
  * @subpackage artefact-file
@@ -11,6 +12,12 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Upgrade steps for file artefacts
+ *
+ * @param  integer $oldversion
+ * @return boolean $status
+ */
 function xmldb_artefact_file_upgrade($oldversion=0) {
 
     $status = true;

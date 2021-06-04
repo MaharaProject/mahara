@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utility for the 'filedownload' blocktype
  *
  * @package    mahara
  * @subpackage blocktype-image
@@ -11,6 +12,9 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Blocktype class for downloading files
+ */
 class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
 
     public static function get_title() {
