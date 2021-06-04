@@ -1,5 +1,7 @@
 <?php
 /**
+ * Supplies helper functions to create & retrieve links to the Mahara manual
+ * with regard person's language and Mahara version.
  *
  * @package    mahara
  * @subpackage core
@@ -62,6 +64,8 @@ function get_manual_help_link_array($keys) {
 /**
  * For the given keys finds the most specific manual link.
  *
+ * @param   array $keys An array of keys that indicate what help file we want
+ *
  * @return string
  */
 function _get_manual_help_link_suffix($keys) {
@@ -74,6 +78,14 @@ function _get_manual_help_link_suffix($keys) {
     return "";
 }
 
+/**
+ * For the given keys finds the most specific manual link.
+ *
+ * @param   int $length of the $key
+ * @param   array $keys An array of keys that indicate what help file we want
+ *
+ * @return string
+ */
 function _get_manual_link($length, $keys) {
     global $manual_link_map;
     $key = "";
@@ -124,8 +136,11 @@ function _get_mahara_version() {
         // so we need the latest released branch
         $versions = cron_check_for_updates(true);
 
-        // Need this of PHP older than 7.3
+        // Need this if PHP older than 7.3
         if (!function_exists('array_key_first')) {
+            /** Return the first key of an array
+             * @param array  $arr the array
+            */
             function array_key_first(array $arr) {
                 foreach($arr as $key => $unused) {
                     return $key;
@@ -139,6 +154,9 @@ function _get_mahara_version() {
     return $series;
 }
 
+/**
+ * Return Mahara manual URL
+ */
 function _get_manual_link_prefix() {
     return "http://manual.mahara.org";
 }
