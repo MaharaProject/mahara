@@ -52,7 +52,10 @@ $url = $urlbase . 'artefact/file/download.php?file='.$fileid.'&view='.$viewid.'&
 
 // by default the default url inside of the wrong folder blocktype/pdf
 $js =<<<EOF
-      document.addEventListener('DOMContentLoaded', (event) => {
+    // load lang first to not get to en_US
+   PDFViewerApplicationOptions.set('locale', '$lang');
+
+    document.addEventListener('DOMContentLoaded', (event) => {
         PDFViewerApplicationOptions.set('defaultUrl', '$url');
     });
 EOF;

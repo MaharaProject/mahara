@@ -54,6 +54,8 @@ viewing PDF file
 
 **Changes**:
 
+- Add i18n to pdfjs matching current site lang: Change-Id *Idde1f070c247febbcd7c6b4a7cd2c53caed3cfe0*
+
 * Minify js files for faster loading
 * Use absolute paths in viewer.js
 (39154e686ea9de5c3bfcc194c417456b1aa184cf)
@@ -66,5 +68,3 @@ viewing PDF file
 * viewer.css tweak to avoid horizontal scrollbar on default 3-column page layout
 (6ef27c8c79279504bee31cce5762f0536f8d3c13)
 * Hide the "open file" button in the toolbar
-* viewer.js tweak to show pdf menu on language selected in Mahara
-(- required reinstating some code from a previous version ~ line 4381)
