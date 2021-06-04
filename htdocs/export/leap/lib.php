@@ -1,5 +1,6 @@
 <?php
 /**
+ * Leap import/exports
  *
  * @package    mahara
  * @subpackage export-leap
@@ -12,9 +13,12 @@
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/2009-03/Leap2A_specification and
-* https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export
-*/
+ * LEAP export plugin
+ *
+ * See pages:
+ * - http://wiki.cetis.ac.uk/2009-03/Leap2A_specification
+ * -  https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export
+ */
 class PluginExportLeap extends PluginExport {
 
     /**

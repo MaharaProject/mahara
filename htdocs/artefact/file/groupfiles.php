@@ -1,5 +1,6 @@
 <?php
 /**
+ * Group files
  *
  * @package    mahara
  * @subpackage artefact-file

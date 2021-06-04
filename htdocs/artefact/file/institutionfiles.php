@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utility to add files to an institution.
  *
  * @package    mahara
  * @subpackage artefact-file

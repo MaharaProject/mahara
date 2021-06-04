@@ -1,5 +1,6 @@
 <?php
 /**
+ * Helper to display progress bar during unzip
  *
  * @package    mahara
  * @subpackage artefact-file
