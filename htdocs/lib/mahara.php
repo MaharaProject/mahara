@@ -2908,30 +2908,19 @@ function format_timelapse($timestamp1, $timestamp2 = NULL) {
 
 /**
  * Returns a random string suitable for registration/change password requests
+ * and other places where we need a cryptographically secure random string
  *
  * @param int $length The length of the key to return
- * @param array $pool The pool to draw from (optional, will use A-Za-z0-9 as a default)
  * @return string
  */
-function get_random_key($length=16, $pool=null) {
-    if ($length < 1) {
-        throw new IllegalArgumentException('Length must be a positive number');
+function get_random_key($length=16) {
+    if ($length < 8) {
+        throw new IllegalArgumentException(get_string('randomkeyminlength', 'error'));
     }
-    if (empty($pool)) {
-        $pool = array_merge(
-            range('A', 'Z'),
-            range('a', 'z'),
-            range(0, 9)
-        );
-    }
-    shuffle($pool);
-    $result = '';
-    for ($i = 0; $i < $length; $i++) {
-        $result .= $pool[$i];
-    }
-    return $result;
+    // Length of bin2hex string is twice as long as passed in length
+    // so we halve it to get back the expected characters
+    return bin2hex(random_bytes($length / 2));
 }
-
 
 //
 // Pieform related functions
