@@ -2,10 +2,12 @@ Bootstrap for Sass
 ==================
 
 Website: https://getbootstrap.com/
-Version: 4.3.1
+Version: 4.6.0
 
 The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile first projects on the web.
 
 Changes:
-- Only kept the 'javaScripts/' directory
-- Moved '/scss' directory to 'theme/raw/sass/lib/'
+- (the dist version)
+  - Inside kept the 'js/' directory,
+    copy bootstrap.min.js.map and bootstrap.min.js to htdocs/lib/bootstrap/assets
+- (the source version) Copy the '/scss' directory to 'theme/raw/sass/lib/'
