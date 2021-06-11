@@ -1444,7 +1444,7 @@ function current_language() {
 
     // If there's no language from the user pref or the logged-out lang menu...
     if (empty($lang)) {
-        $lang = !empty($CFG->lang) ? $CFG->lang : 'en.utf8';
+        $lang = !empty($CFG->lang) ? $CFG->lang : get_accept_lang();
     }
 
     if ($lang == $lastlang) {
@@ -1452,8 +1452,53 @@ function current_language() {
     }
 
     set_locale_for_language($lang);
-
     return $lastlang = $lang;
+}
+
+/**
+ * Try to match the Accept-Language request header with installed lang packs
+ *
+ * @return string of matching lang pack key (ending with .utf8) on success
+ * @return en.utf8 on failing to match an installed language that is not English
+ */
+
+function get_accept_lang() {
+    $acceptlangs = array();
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $acceptlangs = preg_replace('/;q=[0-9\.]+/', '', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $acceptlangs = explode(',', $acceptlangs);
+    }
+    else if (isset($_SERVER['LANGUAGE'])) {
+        // If installing via CLI
+        $acceptlangs = explode(':', $_SERVER['LANGUAGE']);
+    }
+
+    $langpacks = get_languages(); // installed lang packs
+    // keep list of first 2 or 5 letters for the lang packs for matching the accept-language values
+    // Mahara language packs don't matchup with Accept-Language languages so will need to change any _ to -
+    $langpacksshort = array_map(function($v) {
+        $v = preg_replace('/_/', '-', $v);
+        if (preg_match('/-/', $v)) {
+            return substr($v, 0, 5);
+        }
+        return substr($v, 0, 2);
+    }, array_keys($langpacks));
+
+    // match the langpack short names to their full lang pack name
+    $matchedkeys = array_combine($langpacksshort, array_keys($langpacks));
+
+    foreach ($acceptlangs as $lang) {
+        // match the closest possible to an acceptlang option
+        if (isset($matchedkeys[$lang]) && language_installed($matchedkeys[$lang])) {
+            return $matchedkeys[$lang];
+        }
+        $langshort = substr($lang, 0, 2);
+        // check for next best similar lang option
+        if (isset($matchedkeys[$langshort]) && language_installed($matchedkeys[$langshort])) {
+            return $matchedkeys[$langshort];
+        }
+    }
+    return 'en.utf8';
 }
 
 
