@@ -27,7 +27,7 @@
       @each $name, $width in $grid-breakpoints {
         @if ($extend-breakpoint) {
           .container#{breakpoint-infix($name, $grid-breakpoints)} {
-            @extend %responsive-container-#{$breakpoint};
+            @extend %responsive-container-#{$breakpoint} !optional; // $grid-breakpoints xs: 0 in _variables.scss which breaks this in xs.
           }
 
           // Once the current breakpoint is reached, stop extending
