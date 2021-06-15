@@ -2391,7 +2391,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
                 $data[$i]->accessrevokedbysystemdate = format_date(strtotime($data[$i]->accessrevokedbysystemdate), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'completionverificationstatistics.csv', 'text/csv');
     }
 
     $result['csv'] = true;
