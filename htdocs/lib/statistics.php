@@ -2364,7 +2364,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'displayname', 'username', 'registration_number', 'email',
                             'apcstartdate', 'portfoliotitle',  'portfoliocreationdate', 'templatetitle', 'verifierfirstname',
-                            'verifierlastname', 'verifierdisplayname', 'verifierusername', 'verifierstudentid', 'verifieremail',
+                            'verifierlastname', 'verifierdisplayname', 'verifierusername', 'verifierstudentid', 'verifieremail', 'accessfromdate',
                             'accessrevokedbyauthordate', 'accessrevokedbyaccessordate', 'accessrevokedbysystemdate',
                             'verifiedprimarystatmentdate', 'completionpercentage');
         // Format all dates so that they are sortable in the CSV file
@@ -2391,7 +2391,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
                 $data[$i]->accessrevokedbysystemdate = format_date(strtotime($data[$i]->accessrevokedbysystemdate), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'completionverificationstatistics.csv', 'text/csv');
     }
 
     $result['csv'] = true;
