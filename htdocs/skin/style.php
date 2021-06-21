@@ -39,6 +39,7 @@ $smarty = smarty();
 // Font Notice
 $smarty->assign('view_text_font_notice', Skin::get_css_font_notice_from_font_name($skin->viewskin['view_text_font_family']));
 $smarty->assign('view_heading_font_notice', Skin::get_css_font_notice_from_font_name($skin->viewskin['view_heading_font_family']));
+$smarty->assign('view_block_header_font_notice', Skin::get_css_font_notice_from_font_name($skin->viewskin['view_block_header_font']));
 
 // BODY
 $smarty->assign('body_background_color', $skin->viewskin['body_background_color']);
@@ -79,8 +80,13 @@ $smarty->assign('view_text_font_family', Skin::get_css_font_family_from_font_nam
 $smarty->assign('tabs_height', Skin::get_tabs_height_from_font_name($skin->viewskin['view_text_font_family']));  // TODO remove this
 $smarty->assign('view_heading_font_face', Skin::get_css_font_face_from_font_name($skin->viewskin['view_heading_font_family']));
 $smarty->assign('view_heading_font_family', Skin::get_css_font_family_from_font_name($skin->viewskin['view_heading_font_family'], 'heading'));
-$smarty->assign('view_block_header_font', Skin::get_css_font_family_from_font_name($skin->viewskin['view_block_header_font']));
-$smarty->assign('view_block_header_font_color', $skin->viewskin['view_block_header_font_color']);
+if (isset($skin->viewskin['view_block_header_font'])) {
+    $smarty->assign('view_block_header_font_face', Skin::get_css_font_face_from_font_name($skin->viewskin['view_block_header_font']));
+    $smarty->assign('view_block_header_font', Skin::get_css_font_family_from_font_name($skin->viewskin['view_block_header_font']));
+}
+if (isset($skin->viewskin['view_block_header_font_color'])) {
+    $smarty->assign('view_block_header_font_color', $skin->viewskin['view_block_header_font_color']);
+}
 $smarty->assign('view_text_font_size', $skin->viewskin['view_text_font_size']);
 $smarty->assign('view_text_font_color', $skin->viewskin['view_text_font_color']);
 $smarty->assign('view_text_heading_color', $skin->viewskin['view_text_heading_color']);
