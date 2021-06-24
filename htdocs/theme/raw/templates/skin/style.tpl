@@ -2,6 +2,8 @@
 {$view_text_font_face|safe}
 /* {$view_heading_font_notice} */
 {$view_heading_font_face|safe}
+/* {$view_block_header_font_notice} */
+{$view_block_header_font_face|safe}
 body {
     background-color: {$body_background_color};
     background-image: {$body_background_image|safe};
@@ -23,15 +25,20 @@ body > .main-content > .row {
 }
 h1#viewh1 {
     color:  {$view_text_heading_color};
+    font-family: {$view_heading_font_family|safe};
 }
 .collection-title {
     color:  {$view_text_heading_color};
+    font-family: {$view_heading_font_family|safe};
+}
+.collection-nav .collection-title {
     border-bottom: 1px solid {$view_text_heading_color};
 }
 
 /* Used to style author, tag links in page headers */
 .pageheader-content .text-small {
     color: {$view_text_heading_color};
+    font-family: {$view_text_font_family|safe};
 }
 .pageheader-content .text-small a {
     color: {$view_text_heading_color};
@@ -66,6 +73,21 @@ h1#viewh1 {
     {/if}
 }
 
+.card-secondary .list-group-item-heading,
+.metadata, .postedon {
+    font-family: {$view_text_font_family|safe};
+}
+
+.pageinstructions legend {
+    font-family: {$view_text_font_family|safe};
+    color: {$view_link_normal_color};
+    text-decoration: {$view_link_normal_underline};
+}
+
+.viewinstructions {
+    font-family: {$view_text_font_family|safe};
+    color: {$view_text_font_color};
+}
 
 /* links and headings */
 
@@ -96,6 +118,7 @@ h1#viewh1 {
 .user-page-content .block-header a {
     color: #FFFFFF;
     text-decoration: none;
+    font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .user-page-content .card .card-header:not(.feedtitle) {
     font-weight: bold;
@@ -152,6 +175,9 @@ tr[data-toggle="collapse"] .collapse-indicator,
     background-color: {$view_link_normal_color};
 }
 
+.last-updated {
+    font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
 
 /* advanced: custom css */
 
