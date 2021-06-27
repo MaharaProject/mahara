@@ -758,6 +758,13 @@ abstract class TestingUtil {
                     else {
                         execute_sql('ALTER TABLE {lti_assessment} DROP CONSTRAINT {ltiasse_oau_fk}');
                     }
+                    // This module has a lit_advantage_registration.connectionid as a foreign key
+                    if (is_mysql()) {
+                        execute_sql('ALTER TABLE {lti_advantage_registration} DROP FOREIGN KEY {ltiadvaregi_con_fk}');
+                    }
+                    else {
+                        execute_sql('ALTER TABLE {lti_advantage_registration} DROP CONSTRAINT {ltiadvaregi_con_fk}');
+                    }
                 }
                 if ($plugintype == 'module' && $pluginname == 'framework') {
                     // This module has a core collection.framework as a foreign key

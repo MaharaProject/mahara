@@ -664,6 +664,13 @@ class PluginModuleLti_advantage extends PluginModule {
         if (!$userid) {
             if ($canautocreate) {
 
+                // We need an e-mail address. Bail here if we don't have one.
+                if (empty($params['email'])) {
+                    log_debug('LTI Advantage: Unable to create ' . $params['family_name'] . ', ' . $params['given_name'] . ' (' . $params['user_id'] . ') due to missing email.');
+                    return false;
+                }
+
+                // Create a user.
                 $user = new stdClass();
                 $user->email = $params['email'];
                 $user->password = sha1(uniqid('', true));
@@ -791,6 +798,10 @@ class PluginModuleLti_advantage extends PluginModule {
 
                                 foreach ($launch_users as $launch_user) {
                                     $userobj = PluginModuleLti_advantage::module_lti_advantage_ensure_user_exists($launch_user, $institution, $authinstanceid, $serviceid);
+                                    if ($userobj === false) {
+                                        // This user likely have no email address.
+                                        continue;
+                                    }
                                     $role = PluginModuleLti_advantage::get_role($launch_user['roles']);
 
                                     $user = new User();
