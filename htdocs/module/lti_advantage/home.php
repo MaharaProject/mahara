@@ -114,6 +114,13 @@ if ($launch->is_resource_launch() && key_exists('https://purl.imsglobal.org/spec
     $params['resource_launch'] = $data['https://purl.imsglobal.org/spec/lti/claim/custom'];
 }
 
+if (!empty($data['sub'])) {
+    // During the cron run that builds users/groups the users come over with a
+    // user_id that does not match user_id in any other calls. The 'sub' key
+    // contains this value in standard calls.
+    $params['sub'] = $data['sub'];
+}
+
 module_lti_advantage_launch::launch_advantage($params);
 
 redirect();

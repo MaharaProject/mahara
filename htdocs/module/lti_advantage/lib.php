@@ -602,24 +602,44 @@ class PluginModuleLti_advantage extends PluginModule {
         return 'member';
     }
 
+    /**
+     * Search for a user and create one if none found.
+     *
+     * @param array $params User data from the LTI request.
+     * @param mixed $institution
+     * @param mixed $authinstanceid
+     * @param mixed $webserviceid
+     *
+     * @return object|false The found or created user object or false if there's not email on a new user.
+     */
     public static function module_lti_advantage_ensure_user_exists($params, $institution, $authinstanceid, $webserviceid) {
         global $USER;
-        // Check for userid in auth_remote_user
+        // Check for user_id in auth_remote_user.
         $userid = get_field('auth_remote_user', 'localusr', 'authinstance', $authinstanceid, 'remoteusername', $params['user_id']);
 
         $updateremote = false;
         $updateuser = true;
 
-        // User not found
         $remoteusername = false;
-        // - try to match on ext username
+
+        // User not found - try to match on sub.
+        if (!$userid && isset($params['sub'])) {
+            // If a user was created on cron the user_id is of the form:
+            // <GUID>_<USERID>
+            // In other calls this value is stored in the "sub" parameter.
+            $userid = get_field('auth_remote_user', 'localusr', 'authinstance', $authinstanceid, 'remoteusername', $params['sub']);
+            $updateremote = true;
+            $remoteusername = $params['sub'];
+        }
+
+        // User not found - try to match on ext username.
         if (!$userid && isset($params['ext_user_username'])) {
             $userid = get_field('auth_remote_user', 'localusr', 'authinstance', $authinstanceid, 'remoteusername', $params['ext_user_username']);
             $updateremote = true;
             $remoteusername = $params['ext_user_username'];
         }
-        // User not found
-        // - try to match on email
+
+        // User not found - try to match on email.
         if (!$userid && isset($params['email'])) {
             $userid = get_field_sql("SELECT DISTINCT owner
                                     FROM {artefact_internal_profile_email}
@@ -631,7 +651,7 @@ class PluginModuleLti_advantage extends PluginModule {
             }
         }
 
-        // Check user belongs to institution specified by OAuth key
+        // Check user belongs to institution specified by OAuth key.
         if ($userid) {
 
             $is_site_admin = false;
@@ -644,10 +664,10 @@ class PluginModuleLti_advantage extends PluginModule {
             }
 
             if (!$is_site_admin) {
-                // check user is member of configured OAuth institution
+                // Check user is member of configured OAuth institution.
                 $institutions = array_keys(load_user_institutions($userid));
                 if (empty($institutions)) {
-                    // we check if they are in the 'mahara' institution
+                    // We check if they are in the 'mahara' institution.
                     $institutions = array('mahara');
                 }
 
@@ -657,7 +677,7 @@ class PluginModuleLti_advantage extends PluginModule {
             }
         }
 
-        // Auto create user if auth allowed
+        // Auto create user if auth allowed.
         $canautocreate = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $webserviceid, 'field', 'autocreateusers');
         $parentauthid = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $webserviceid, 'field', 'parentauth');
 
@@ -678,7 +698,7 @@ class PluginModuleLti_advantage extends PluginModule {
                 $user->lastname = $params['family_name'];
                 $user->authinstance = !empty($parentauthid) ? $parentauthid : $authinstanceid;
                 $user->username = !empty($remoteusername) ? $remoteusername : $user->email;
-                // Make sure that the username doesn't already exist
+                // Make sure that the username doesn't already exist.
                 if (get_field_sql("SELECT username
                                 FROM {usr}
                                 WHERE LOWER(username) = ?", array(strtolower($user->username)))) {
@@ -718,7 +738,8 @@ class PluginModuleLti_advantage extends PluginModule {
 
             $profilefields = new stdClass();
             $remoteuser = null;
-            // We need to update the following fields for both the usr and artefact tables
+            // We need to update the following fields for both the usr and
+            // artefact tables.
             foreach (array('firstname', 'lastname', 'email') as $field) {
                 if (isset($user->{$field})) {
                     $profilefields->{$field} = $user->{$field};
