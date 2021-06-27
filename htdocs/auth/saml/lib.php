@@ -612,50 +612,32 @@ class PluginAuthSaml extends PluginAuth {
         return false;
     }
 
-    private static function create_certificates($numberofdays = 3650, $altname = false) {
-        global $CFG;
-        // Get the details of the first site admin and use it for setting up the certificate
-        $userid = get_record_sql('SELECT id FROM {usr} WHERE "admin" = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
-        $id = $userid->id;
-        $user = new User;
-        $user->find_by_id($id);
-
-        $country = get_profile_field($id, 'country');
-        $town = get_profile_field($id, 'town');
-        $city = get_profile_field($id, 'city');
-        $industry = get_profile_field($id, 'industry');
-        $occupation = get_profile_field($id, 'occupation');
-
-        $dn = array(
-            'commonName' => ($user->get('username') ? substr($user->get('username'), 0, 64) : 'Mahara'),
-            'countryName' => ($country ? strtoupper($country) : 'NZ'),
-            'localityName' => ($town ? $town : 'Wellington'),
-            'emailAddress' => ($user->get('email') ? $user->get('email') : $CFG->noreplyaddress),
-            'organizationName' => ($industry ? $industry : get_config('sitename')),
-            'stateOrProvinceName' => ($city ? $city : 'Wellington'),
-            'organizationalUnitName' => ($occupation ? $occupation : 'Mahara'),
-        );
-
-        $privkeypass = ($altname && get_config_plugin('auth', 'saml', 'newkeypass')) ? get_config_plugin('auth', 'saml', 'newkeypass') : get_config_plugin('auth', 'saml', 'keypass');
-        $privkey = openssl_pkey_new();
-        $csr     = openssl_csr_new($dn, $privkey);
-        $sscert  = openssl_csr_sign($csr, null, $privkey, $numberofdays);
-        openssl_x509_export($sscert, $publickey);
-        openssl_pkey_export($privkey, $privatekey, $privkeypass);
-
-        // Write Private Key and Certificate files to disk.
-        // If there was a generation error with either explode.
-        if (empty($privatekey)) {
-            throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
+    /**
+     * Create the certs.
+     *
+     * @param int $numberofdays Number of days the certificats are good for.
+     * @param null $privkeypass Never used. Included to allow the method signature to match.
+     * @param bool $altname Current or new certificates.
+     *
+     * @throws Exception Failed to write the keys to disk.
+     *
+     * @return void
+     */
+    public static function create_certificates($numberofdays = 3650, $privkeypass = null, $altname = false) {
+        if ($altname && get_config_plugin('auth', 'saml', 'newkeypass')) {
+            $privkeypass = get_config_plugin('auth', 'saml', 'newkeypass');
         }
-        if (empty($publickey)) {
-            throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
+        else {
+            $privkeypass = get_config_plugin('auth', 'saml', 'keypass');
         }
+
+        // Fetch the Private and Public keys.
+        list($privatekey, $publickey) = parent::create_certificates($numberofdays, $privkeypass);
+
         $pemfile = 'server.pem';
         $crtfile = 'server.crt';
-        $altcert = false;
         if ($altname) {
-            // Save them with '_new' suffix
+            // Save them with '_new' suffix.
             $pemfile = 'server_new.pem';
             $crtfile = 'server_new.crt';
         }
@@ -982,7 +964,7 @@ class PluginAuthSaml extends PluginAuth {
                 set_config_plugin('auth', 'saml', 'newkeypass', $values['keypass']);
             }
             error_log("auth/saml: Creating new certificate");
-            self::create_certificates(3650, true);
+            self::create_certificates(3650, null, true);
             $SESSION->add_ok_msg(get_string('newkeycreated', 'auth.saml'));
             // Using cancel here as a hack to get it to redirect so it shows the new keys
             $form->reply(PIEFORM_CANCEL, array(

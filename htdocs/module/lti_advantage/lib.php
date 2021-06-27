@@ -433,50 +433,27 @@ class PluginModuleLti_advantage extends PluginModule {
         return $form;
     }
 
-    private static function create_certificates($numberofdays = 3650, $altname = false) {
-        global $CFG;
-        // Get the details of the first site admin and use it for setting up the certificate
-        $userid = get_record_sql('SELECT id FROM {usr} WHERE "admin" = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
-        $id = $userid->id;
-        $user = new User;
-        $user->find_by_id($id);
-
-        $country = get_profile_field($id, 'country');
-        $town = get_profile_field($id, 'town');
-        $city = get_profile_field($id, 'city');
-        $industry = get_profile_field($id, 'industry');
-        $occupation = get_profile_field($id, 'occupation');
-
-        $dn = array(
-            'commonName' => ($user->get('username') ? substr($user->get('username'), 0, 64) : 'Mahara'),
-            'countryName' => ($country ? strtoupper($country) : 'NZ'),
-            'localityName' => ($town ? $town : 'Wellington'),
-            'emailAddress' => ($user->get('email') ? $user->get('email') : $CFG->noreplyaddress),
-            'organizationName' => ($industry ? $industry : get_config('sitename')),
-            'stateOrProvinceName' => ($city ? $city : 'Wellington'),
-            'organizationalUnitName' => ($occupation ? $occupation : 'Mahara'),
-        );
-
-        $configargs = array(
+    /**
+     * Create ssl certs.
+     *
+     * @return string The Private key.
+     */
+    private static function create_certificates() {
+        // Custom options for openssl_pkey_new().
+        $options = array(
             "private_key_bits" => 2048,
             "private_key_type" => OPENSSL_KEYTYPE_RSA,
         );
-
-        $privkey = openssl_pkey_new($configargs);
-        $csr     = openssl_csr_new($dn, $privkey);
-        $sscert  = openssl_csr_sign($csr, null, $privkey, $numberofdays);
-        openssl_x509_export($sscert, $publickey);
-        openssl_pkey_export($privkey, $privatekey);
-
-        if (empty($privatekey)) {
-            throw new Exception(get_string('nullprivatecert', 'module.lti_advantage'), 1);
-        }
-        if (empty($publickey)) {
-            throw new Exception(get_string('nullpubliccert', 'module.lti_advantage'), 1);
-        }
+        // Fetch the Private and Public keys.
+        list($privatekey, $publickey) = PluginAuth::create_certificates(3650, null, $options);
         return $privatekey;
     }
 
+    /**
+     * Create the LTI Advantage keyset records.
+     *
+     * @return string Key set ID
+     */
     private static function create_private_key() {
         $key_id = uniqid('', true);
         $key_set_id = uniqid('', true);
