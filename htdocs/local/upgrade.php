@@ -99,4 +99,9 @@ function xmldb_local_upgrade($oldversion=0) {
             }
         }
     }
+
+    if ($oldversion < 2021062900) {
+        log_debug('Change the default usr setting for contacts / messages to be off by default');
+        execute_sql("DELETE FROM {usr_account_preference} WHERE field IN (?, ?)", array('friendscontrol', 'messages'));
+    }
 }
