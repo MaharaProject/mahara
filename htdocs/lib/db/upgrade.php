@@ -2254,5 +2254,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021063000) {
+        log_debug('Sorting mismatch with unlock collection cron name');
+        if (get_record('cron', 'callfunction', 'collection_rollover')) {
+            execute_sql("UPDATE {cron} SET callfunction = ? WHERE callfunction = ?", array('unlock_collections_by_rollover', 'collection_rollover'));
+        }
+    }
+
     return $status;
 }
