@@ -1,5 +1,6 @@
 <?php
 /**
+ * General utilities for imports
  *
  * @package    mahara
  * @subpackage import
@@ -120,7 +121,10 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     }
 
     /**
-     * helper method to return member variables
+     * Getter function to geturn member variables
+     *
+     * @param string $field
+     * @return mixed
      * @todo maybe refactor this to just use __get
      */
     public function get($field) {
