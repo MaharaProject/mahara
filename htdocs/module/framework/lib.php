@@ -607,26 +607,29 @@ class Framework {
     /**
      * Get available frameworks based on institution
      *
-     * @param string  $institution  If set to 'any' all results returned
+     * @param mixed   $institutions  If set to 'any' all results returned
      * @param boolean $shared       Return frameworks that can be viewed by all institutions
      *
      * @return frameworks
      */
-    public static function get_frameworks($institution = 'any', $shared = false) {
+    public static function get_frameworks($institutions = 'any', $shared = false) {
         global $USER;
 
         $sql = "SELECT * FROM {framework}";
         $values = array();
-        if ($institution != 'any') {
-            // Only get the frameworks available to this institution
-            $placeholders = '?';
-            $values[] = $institution;
+        if ($institutions != 'any' && is_array($institutions) && !empty($institutions)) {
+            $placeholders = array();
+            // Only get the frameworks available to the chosen institutions
+            foreach ($institutions as $institution) {
+                $placeholders[] = '?';
+                $values[] = $institution->name;
+            }
             if ($shared) {
                 // Include frameworks with institution set to 'all'
-                $placeholders .= ',?';
+                $placeholders[] = '?';
                 $values[] = 'all';
             }
-            $sql .= " WHERE institution IN (" . $placeholders . ")";
+            $sql .= " WHERE institution IN (" . implode(',', $placeholders) . ")";
         }
         $sql .= " ORDER BY name, id";
         $frameworks = get_records_sql_array($sql, $values);
