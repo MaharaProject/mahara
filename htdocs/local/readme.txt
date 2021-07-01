@@ -62,7 +62,7 @@ You can override theme files by placing them under /local/theme. Files placed he
 ALL themes in the site.
 
 Examples:
-* Core emplate file:    local/theme/templates/index.tpl
+* Core template file:   local/theme/templates/index.tpl
 * Core stylesheet:      local/theme/style/style.css
 * Core static file:     local/theme/images/site-logo.png
 * Plugin template file: local/theme/artefact/file/templates/profileicons.tpl
