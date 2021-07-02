@@ -585,15 +585,19 @@ class PluginExportHtml extends PluginExport {
     /**
      * Returns a summary about views and/or collections
      *
-     * @return array(
-     *      'view' => array(
-     *          'title' => ...
-     *          'description' => ...
-     *      )
-     *      'collection' => array(
-     *          'title' => ...
-     *          'description' => ...
-     *      )
+     * Returns an array
+     * $ret = [
+     *     'view' => [
+     *         'title' => string
+     *         'description' => string
+     *     ],
+     *     'collection' => [
+     *         'title' => string
+     *         'description' => string
+     *     ]
+     * ]
+     *
+     * @return array
      */
     protected function get_view_collection_summary() {
 

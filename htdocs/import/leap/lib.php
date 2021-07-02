@@ -442,9 +442,9 @@ class PluginImportLeap extends PluginImport {
     }
 
     /**
-     * Build the import entry requests form
+     * Build the import entry requests form.
      *
-     * @return HTML list of import entries and their existing artefacts
+     * @return  string HTML list of import entries and their existing artefacts
      */
     public function build_import_entry_requests_form() {
         global $USER;
@@ -499,7 +499,7 @@ class PluginImportLeap extends PluginImport {
     /**
      * Process the import artefacts.
      *
-     * @return HTML result of the import
+     * @return string HTML result of the import
      */
     public function do_import_from_requests() {
         global $USER;
@@ -1125,10 +1125,12 @@ class PluginImportLeap extends PluginImport {
     /**
      * Add import entry request for a view
      *
+     * Updates DB table 'import_entry_requests'.
+     *
      * @param SimpleXMLElement $entry
-     * @param  $strategy
+     * @param int $strategy A STRATEGY_IMPORT_* constant
      * @param array $otherentries
-     * @return update DB table 'import_entry_requests'
+     * @return void
      * @throws ImportException
      */
     public function add_import_entry_request_using_strategy(SimpleXMLElement $entry, $strategy, array $otherentries) {
@@ -1382,7 +1384,7 @@ class PluginImportLeap extends PluginImport {
     /**
      * Render import entry requests for Mahara views
      * @param PluginImportLeap $importer
-     * @return HTML code for displaying views and choosing how to import them
+     * @return string HTML code for displaying views and choosing how to import them
      */
     public function render_import_entry_requests() {
         $importid = $this->get('importertransport')->get('importid');
@@ -1679,7 +1681,7 @@ class PluginImportLeap extends PluginImport {
      * Extracts html from an entry XML element field
      *
      * @param SimpleXMLElement $xmlentryfield
-     * @return HTML/XML(array) entry data as html/xhtml
+     * @return string HTML/XML(array) entry data as html/xhtml
      */
     private function extract_view_entry_field(SimpleXMLElement $xmlentryfield) {
         $fieldtext = '';

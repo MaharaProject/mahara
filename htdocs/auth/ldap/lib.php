@@ -588,9 +588,10 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * Search for group members on an OpenLDAP directory
-     * @param string $group
-     * @return multitype:|multitype:Ambigous <string, boolean, string, unknown>
+     * Search for group members on an OpenLDAP directory.
+     *
+     * @param string $groupfilter
+     * @return array
      */
     private function ldap_get_group_members_rfc($groupfilter) {
         global $CFG;
@@ -665,10 +666,11 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * Specific search for Active Directory problems if more than 999 members
-     * TODO: Reduce redundancy between this and ldap_get_group_members_rfc
+     * Specific search for Active Directory problems if more than 999 members.
+     *
+     * @todo Reduce redundancy between this and ldap_get_group_members_rfc()
      * @param string $group
-     * @return multitype:|multitype:Ambigous <string, boolean, string, unknown>
+     * @return array
      */
     private function ldap_get_group_members_ad($groupfilter) {
         global $CFG;
