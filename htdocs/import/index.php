@@ -145,6 +145,9 @@ function remove_importer_from_session() {
     }
 }
 
+/**
+ * Create a pieform to display for the interactive self-import
+ */
 function print_upload_form() {
 
     $form = pieform(array(
@@ -178,6 +181,12 @@ function print_upload_form() {
 }
 
 
+/**
+ * Validate a user import
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ */
 function import_validate(Pieform $form, $values) {
     global $USER, $TRANSPORTER;
 
@@ -232,6 +241,12 @@ function import_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit a user import
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ */
 function import_submit(Pieform $form, $values) {
     global $USER, $TRANSPORTER, $IMPORTER;
 
@@ -262,6 +277,11 @@ function import_submit(Pieform $form, $values) {
     redirect('/import/index.php?action=' . PRINTIMPORTITEMSFORM_ACT);
 }
 
+/**
+ * Create the form for when importing items
+ *
+ * @return void
+ */
 function print_import_items_form() {
     global $IMPORTER;
 
@@ -314,6 +334,11 @@ function save_decisions() {
     }
 }
 
+/**
+ * Import the Leap2A items
+ *
+ * @return void
+ */
 function do_import() {
     global $IMPORTER;
 

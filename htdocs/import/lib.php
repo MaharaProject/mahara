@@ -22,7 +22,7 @@ interface IPluginImport {
      * For example, in the case of the administrator adding a user manually from a Leap2A file,
      * we want to validate the leap data before creating the user record.
      *
-     * @param array $importdata usually what ImportTransporter::files_info returns
+     * @param array $transporter usually what ImportTransporter::files_info returns
      * @throws ImportException
      */
     public static function validate_transported_data(ImporterTransport $transporter);
@@ -40,6 +40,9 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     const DECISION_ADDNEW  = 3;    // add imported entries as new artefacts
     const DECISION_APPEND  = 4;    // append the content of existing artefacts with imported entries'
 
+    /**
+     * A list of dislay decisions
+     */
     public $displaydecisions = array();
 
     // Import steps
@@ -51,20 +54,45 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     const IMPORT_FORMAT_FILE = 'file';
     const IMPORT_FORMAT_LEAP = 'leap';
 
+    /**
+     * Import ID
+     * @var int
+     */
     protected $id;
+    /**
+     * import data
+     * @var string
+     */
     protected $data;
+    /**
+     * Time for expiry of import
+     * @var timestamp without time zone
+     */
     protected $expirytime;
+    /**
+     * ID of user creating the import
+     * @var int
+     */
     protected $usr;
+    /**
+     * User object
+     * @var User
+     */
     protected $usrobj;
 
     /** the ImporterTransport object to use */
     protected $importertransport;
 
+    /**
+     * {@inheritDoc}
+     */
     public static function get_plugintype_name() {
         return 'import';
     }
 
     /**
+     * Constructor for PluginImport
+     *
      * @param int $id the queue record id
      * @param stdclass $record (optional, pass this to save db queries)
      */
@@ -109,12 +137,13 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     }
 
     /**
-    * process the files and adds them to the user's artefact area
+    * Process the files and adds them to the user's artefact area
+    * @param int $step
     */
     public abstract function process($step = PluginImport::STEP_NON_INTERACTIVE);
 
     /**
-     * perform cleanup tasks, delete temp files etc
+     * Perform cleanup tasks, delete temp files etc
      */
     public function cleanup() {
         $this->importertransport->cleanup();
@@ -135,10 +164,13 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     }
 
     /**
-     * helper function to return the appropriate class name from an import format.
+     * A Helper function to return the appropriate class name from an import format.
+     *
      * This will try and resolve inconsistencies (eg file/files, leap/leap2a etc.)
      * and also pull in the class definition for you.
      * If the format is not valid, it will raise an error.
+     *
+     * @param  string $format e.g. "leap"
      */
     public static function class_from_format($format) {
         $format = self::validate_import_format($format);
@@ -147,8 +179,8 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     }
 
     /**
-    * @todo check the rest of the queue table for options
     * Generate a new import to be queued
+    * @todo check the rest of the queue table for options
     *
     * @param int    $userid    idof user to import for
     * @param string $host      wwwroot of mnet host if applicable
@@ -173,7 +205,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
      * creates an importer object from the queue information
      *
      * @param int               $id the queue record (if there is one, else pass 0)
-     * @param ImporterTransport $transport the transporter object to use
+     * @param ImporterTransport $transporter the transporter object to use
      * @param stdclass          $record the queue data (this <strong>must</strong> be passed when no id is given
      *
      * @return PluginImport
@@ -448,12 +480,14 @@ abstract class ImporterTransport {
     protected $expectedsha1;
 
     /**
+     * ImporterTransport constructor
      * @param stdclass $import the import record. This should correspond to a record in import_queue, but can be faked
      */
     public abstract function __construct($import);
 
     /**
-     * small helper function to set up and unserialize the import data
+     * A small helper function to set up and unserialize the import data
+     * @param stdClass $import $data[array]->importfile, importfilename, importid, mimetype
      */
     protected  function set_import_data($import) {
         $this->importrecord = $import;
@@ -487,6 +521,7 @@ abstract class ImporterTransport {
     /**
      * helper get method
      * @todo maybe refactor this to __get
+     * @param string $field
      */
     public function get($field) {
         if (!property_exists($this,$field)) {
@@ -525,9 +560,9 @@ abstract class ImporterTransport {
         rmdirr($this->tempdir);
     }
 
-    /*
-     * set the importer object
-     * this must be done before prepare_files is called
+    /**
+     * Set the importer object
+     * This must be done before prepare_files is called.
      *
      * @param PluginImport $importer
      */
@@ -593,6 +628,7 @@ abstract class ImporterTransport {
 class LocalImporterTransport extends ImporterTransport {
 
     /**
+     * LocalImporterTransport constructor
      * @param stdclass $import the import record
      */
     public function __construct($import) {
@@ -624,14 +660,24 @@ class LocalImporterTransport extends ImporterTransport {
         }
     }
 
+    /**
+     * Validate import data
+     * @todo incomplete
+     */
     public function validate_import_data() { }
 
 
+    /**
+     * Call parent to clean up
+     */
     public function cleanup() {
         parent::cleanup();
     }
 
-    // nothing to do, unzipping is handled elsewhere
+    /**
+     * nothing to do, unzipping is handled elsewhere
+     * @todo is this a redundant function?
+     */
     public function prepare_files() { }
 }
 
@@ -648,6 +694,7 @@ class MnetImporterTransport extends ImporterTransport {
     private $token;
 
     /**
+     * MnetImporterTransport constructor
      * @param stdclass $import the import record
      */
     public function __construct($import) {
@@ -705,6 +752,12 @@ class MnetImporterTransport extends ImporterTransport {
         return get_string('remotehost', 'mahara', $this->host->name);
     }
 
+    /**
+     * Validate import data
+     *
+     * @throws ImportException on missing certain files
+     * @return boolean
+     */
     public function validate_import_data() {
         $importdata = $this->importrecord->data;
         if (is_string($importdata)) {
