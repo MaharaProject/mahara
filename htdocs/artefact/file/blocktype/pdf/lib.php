@@ -116,14 +116,12 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
                 $language = 'en-GB';
             }
 
-
-
             $viewid = $instance->get('view');
             $file = artefact_instance_from_id($artefactid);
-                if (!($file instanceof ArtefactTypeFile)) {
-                    throw new NotFoundException();
+            if (!($file instanceof ArtefactTypeFile)) {
+                throw new NotFoundException();
             }
-            $url = $urlbase . 'artefact/file/download.php?file='.$artefactid.'&view='.$viewid.'&title='.urlencode($file->get('title'));
+            $url = $urlbase . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid . '&title=' . urlencode($file->get('title'));
             $src = $urlbase . 'artefact/file/blocktype/pdf/viewer.php?';
             $src .= 'editing=' . $editing;
             $src .= '&ingroup=' . !empty($group);
@@ -132,7 +130,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             $src .= '&view=' . $viewid;
             $src .= ($versioning ? '&versioning=true' : '');
 
-            $result = '<iframe allowfullscreen src="' . $src .'"' . '" class="pdfiframe". ></iframe>';
+            $result = '<iframe allow="fullscreen" src="' . $src .'" class="pdfiframe"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
             require_once(get_config('docroot') . 'lib/view.php');

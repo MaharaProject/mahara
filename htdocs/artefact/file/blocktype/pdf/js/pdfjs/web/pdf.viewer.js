@@ -11565,7 +11565,7 @@
           externalLinkTarget: { value: 0, kind: s.VIEWER + s.PREFERENCE },
           historyUpdateUrl: { value: !1, kind: s.VIEWER + s.PREFERENCE },
           ignoreDestinationZoom: { value: !1, kind: s.VIEWER + s.PREFERENCE },
-          imageResourcesPath: { value: "./images/", kind: s.VIEWER },
+          imageResourcesPath: { value: window.parent.config.wwwroot + "artefact/file/blocktype/pdf/js/pdfjs/web/images/", kind: s.VIEWER },
           maxCanvasPixels: {
             value: 16777216,
             compatibility: n.viewerCompatibilityParams.maxCanvasPixels,
@@ -11583,7 +11583,7 @@
           viewerCssTheme: { value: 0, kind: s.VIEWER + s.PREFERENCE },
           viewOnLoad: { value: 0, kind: s.VIEWER + s.PREFERENCE },
           cMapPacked: { value: !0, kind: s.API },
-          cMapUrl: { value: "../web/cmaps/", kind: s.API },
+          cMapUrl: { value: window.parent.config.wwwroot + "artefact/file/blocktype/pdf/js/pdfjs/web/cmaps/", kind: s.API },
           disableAutoFetch: { value: !1, kind: s.API + s.PREFERENCE },
           disableFontFace: { value: !1, kind: s.API + s.PREFERENCE },
           disableRange: { value: !1, kind: s.API + s.PREFERENCE },
@@ -11596,7 +11596,7 @@
           pdfBug: { value: !1, kind: s.API },
           verbosity: { value: 1, kind: s.API },
           workerPort: { value: null, kind: s.WORKER },
-          workerSrc: { value: "../build/pdf.worker.js", kind: s.WORKER },
+          workerSrc: { value: window.parent.config.wwwroot + "artefact/file/blocktype/pdf/js/pdfjs/build/pdf.worker.js", kind: s.WORKER },
         };
         r.disablePreferences = { value: !1, kind: s.VIEWER };
         r.locale = {

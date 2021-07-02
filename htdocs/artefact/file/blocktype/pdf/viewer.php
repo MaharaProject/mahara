@@ -48,7 +48,7 @@ if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing
         $urlbase = profile_url($viewauthor) . '/';
     }
 }
-$url = $urlbase . 'artefact/file/download.php?file='.$fileid.'&view='.$viewid.'&title='.urlencode($file->get('title'));
+$url = $urlbase . 'artefact/file/download.php?file=' . $fileid . '&view=' . $viewid . '&title=' . urlencode($file->get('title'));
 
 // by default the default url inside of the wrong folder blocktype/pdf
 $js =<<<EOF

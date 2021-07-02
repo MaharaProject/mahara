@@ -54,14 +54,12 @@ viewing PDF file
 
 **Changes**:
 
-- Add i18n to pdfjs matching current site lang: Change-Id *Idde1f070c247febbcd7c6b4a7cd2c53caed3cfe0*
-- Hide 'upload file' in the toolbar to avoid confusion of blocktype purpose: Change-Id: *I0e562446e4742cc40e8ab2b9dc87e1578421072d*
+- Add i18n to pdfjs matching current site lang
+(6ed9230e287ca4915cb52e92391750adbc1ec4d0)
+- Hide 'upload file' in the toolbar to avoid confusion of blocktype purpose
+(b315e71ff5a39f22573c1c53e68bf8e63f1250c3)
 
 * Minify js files for faster loading
 * Use absolute paths in viewer.js
-(39154e686ea9de5c3bfcc194c417456b1aa184cf)
-* Open fileurl if defined
-(b4d5245867e7fede16fe848d48a0eee3b11f7c86)
-* viewer.css additions to support viewing by non-JS users
-(517f71a183f0ccfd89f379b1647407449785dda3)
 * viewer.css tweak to get the bottom of the display to show
+(1a980a7df7c44fed0cb99fc728233dc8668e17aa)
