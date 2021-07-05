@@ -281,6 +281,7 @@ else {
  * @return string The HTML for the Pieform.
  */
 function release_form($text, $releasecollection) {
+    global $view, $collection;
     $form = array(
         'name'     => 'releaseview',
         'method'   => 'post',

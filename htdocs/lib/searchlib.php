@@ -276,6 +276,24 @@ function get_admin_user_search_results($search, $offset, $limit) {
             'string' => array_unique($archivesubmissionsusers),
         );
     }
+
+    // Filter by submissions not yet archived.
+    if (!empty($search->currentsubmissions)) {
+        $currentsubmissionsusers = get_column_sql("
+            SELECT DISTINCT owner
+            FROM {view}
+            WHERE submittedstatus > 0");
+        if (empty($currentsubmissionsusers)) {
+            // use a fake id number so that the query's in function will return no results
+            $currentsubmissionsusers = array(-1);
+        }
+        $constraints[] = array(
+            'field'  => 'currentsubmissions',
+            'type'   => 'in',
+            'string' => array_unique($currentsubmissionsusers),
+        );
+    }
+
     // Filter by duplicate emails
     if (!empty($search->duplicateemail)) {
         $duplicateemailartefacts = get_column_sql('
@@ -431,6 +449,10 @@ function get_admin_user_search_results($search, $offset, $limit) {
                 unset($result['email']);
             }
         }
+    }
+
+    if (empty($results['data'])) {
+        $results['data'] = [];
     }
 
     return $results;
@@ -774,7 +796,6 @@ function build_admin_export_queue_results($search, $offset, $limit) {
  *
  * @return array  A data structure containing results (see top of file).
  */
-
 function build_admin_archived_submissions_results($search, $offset, $limit) {
     global $USER;
 
@@ -792,27 +813,44 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
             }
         }
     }
+    if ($search['type'] == 'current') {
+        $params[] = 'current=1';
+        $shortparams[] = 'current=1';
+    }
     $searchurl = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $params) . '&limit=' . $limit;
     $searchurlshort = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $shortparams) . '&limit=' . $limit;
 
     // Use get_admin_user_search_results() as it hooks into the same
     // funky stuff the user search box query does on user/search.php page.
-    $search->archivedsubmissions = true;
+    if ($search['type'] == 'current') {
+        $search['currentsubmissions'] = true;
+    }
+    else {
+        $search['archivedsubmissions'] = true;
+    }
 
-    $results = get_admin_user_search_results($search, $offset, $limit);
+    $results = get_admin_user_search_results((object) $search, $offset, $limit);
     // Now that we have the users we need to do some last minute alterations
-    if (!empty($results['count'])) {
-        foreach ($results['data'] as $key => $data) {
+    foreach ($results['data'] as $key => $data) {
+        // Massage the results for the Archived Submissions.
+        if ($search['type'] == 'archived') {
             // alter the archivectime to be human readable
             $results['data'][$key]['archivectime'] = format_date($data['archivectime']);
+
             // make sure the archive file is still on server at the path 'filepath' (not moved or deleted by server admin)
             $results['data'][$key]['filemissing'] = (!file_exists($data['filepath'] . $data['filename'])) ? true : false;
+
             // make the deleted group name more human readable
             $results['data'][$key]['groupdeleted'] = false;
             if (preg_match('/^(.*?)(\.deleted\.)(.*)$/', $data['submittedto'], $matches)) {
                 $results['data'][$key]['groupdeleted'] = true;
                 $results['data'][$key]['submittedto'] = $matches[1] . ' (' . get_string('deleted') . ' ' . format_date($matches[3]) . ')';
             }
+        }
+
+        // Massage the results for the Current Submissions.
+        if ($search['type'] == 'current') {
+            $results['data'][$key]['submissiondate'] = format_date(strtotime($data['submittedtime']));
         }
     }
 
@@ -831,50 +869,80 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
             'jsonscript' => 'admin/groups/archives.json.php',
     ));
 
-    $cols = array(
-        'submittedto' => array(
-            'name'     => get_string('submittedto', 'admin'),
-            'sort'     => true,
-            'template' => 'admin/groups/submittedtocontentcolumn.tpl',
-        ),
-        'specialid' => array(
-            'name'     => get_string('ID', 'admin'),
-            'sort'     => true,
-        ),
-        'icon' => array(
-            'template' => 'admin/users/searchiconcolumn.tpl',
-            'class'    => 'center',
-            'accessible' => get_string('profileicon'),
-        ),
-        'firstname' => array(
-            'name'     => get_string('firstname'),
-            'sort'     => true,
-            'template' => 'admin/users/searchfirstnamecolumn.tpl',
-        ),
-        'lastname' => array(
-            'name'     => get_string('lastname'),
-            'sort'     => true,
-            'template' => 'admin/users/searchlastnamecolumn.tpl',
-        ),
-        'preferredname' => array(
-            'name'     => get_string('displayname'),
-            'sort'     => true,
-        ),
-        'username' => array(
-            'name'     => get_string('username'),
-            'sort'     => true,
-            'template' => 'admin/users/searchusernamecolumn.tpl',
-        ),
-        'filetitle' => array(
+    $cols = [];
+    $cols['submittedto'] = [
+        'name'     => get_string('submittedto', 'admin'),
+        'sort'     => true,
+        // 'template' => 'admin/groups/submittedtocontentcolumn.tpl',
+    ];
+    if ($search['type'] == 'archived') {
+        // The Current Submissions does this in the SQL. Use a template for the
+        // Archived Submissions.
+        $cols['submittedto']['template'] = 'admin/groups/submittedtocontentcolumn.tpl';
+    }
+    $cols['specialid'] = [
+        'name'     => get_string('ID', 'admin'),
+        'sort'     => true,
+    ];
+    $cols['icon'] = [
+        'template' => 'admin/users/searchiconcolumn.tpl',
+        'class'    => 'center',
+        'accessible' => get_string('profileicon'),
+    ];
+    $cols['firstname'] = [
+        'name'     => get_string('firstname'),
+        'sort'     => true,
+        'template' => 'admin/users/searchfirstnamecolumn.tpl',
+    ];
+    $cols['lastname'] = [
+        'name'     => get_string('lastname'),
+        'sort'     => true,
+        'template' => 'admin/users/searchlastnamecolumn.tpl',
+     ];
+    $cols['preferredname'] = [
+        'name'     => get_string('displayname'),
+        'sort'     => true,
+    ];
+    $cols['username'] = [
+        'name'     => get_string('username'),
+        'sort'     => true,
+        'template' => 'admin/users/searchusernamecolumn.tpl',
+    ];
+    if ($search['type'] == 'archived') {
+        $cols['filetitle'] = [
             'name'     => get_string('filenameleaphtml', 'admin'),
             'sort'     => true,
             'template' => 'admin/groups/leap2acontentcolumn.tpl',
-        ),
-        'archivectime' => array(
-            'name'     => get_string('archivedon', 'admin'),
+        ];
+        $cols['archivectime'] = [
+            'name' => get_string('archivedon', 'admin'),
+            'sort' => true,
+        ];
+    }
+    if ($search['type'] == 'current') {
+        // Portfolio name is title.
+        $cols['title'] = [
+            'name' => get_string('Portfolio', 'view'),
             'sort'     => true,
-        ),
-    );
+            'template' => 'admin/groups/releasetitlecolumn.tpl',
+        ];
+
+        // Submitted on "submissiondate".
+        $cols['submissiondate'] = [
+            'name' => get_string('submittedon', 'admin'),
+            'sort'     => true,
+        ];
+
+        // Release checkboxen column.
+        $cols['release'] = array(
+            'name'     => get_string('releasesubmissionlabel', 'admin'),
+            // 'mergefirst' => true,
+            'headhtml' => '<div class="btn-group" role="group"><a class="btn btn-sm btn-secondary" href="" id="selectallrelease">' . get_string('All') . '</a><a class="btn active btn-sm btn-secondary" href="" id="selectnonerelease">' . get_string('none') . '</a></div>',
+            'template' => 'admin/groups/releaseselectcolumn.tpl',
+            'class'    => 'nojs-hidden',
+            'accessible' => get_string('bulkselect'),
+        );
+    }
 
     $smarty = smarty_core();
     $smarty->assign('results', $results);
@@ -888,8 +956,8 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
     return array($html, $cols, $pagination, array(
         'url' => $searchurl,
         'urlshort' => $searchurlshort,
-        'sortby' => $search->sortby,
-        'sortdir' => $search->sortdir
+        'sortby' => $search['sortby'],
+        'sortdir' => $search['sortdir'],
     ));
 }
 

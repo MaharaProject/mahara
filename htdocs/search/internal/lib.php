@@ -469,12 +469,24 @@ class PluginSearchInternal extends PluginSearch {
      *     ...
      * )
      *
-     * Each constraint should has these three keys:
-     * field: Should be a column in the usr table, or the special field "duplicateemails" (which indicates only users with a non-unique email).
-     *   also, for the field "institution", a string value of "mahara" indicates users with no institution
-     * string: The value to compare the contents of that field against
-     * type: The operation by which to compare "field" to "string". This can be any of the operations in PluginSearchInternal::match_expression
-     *   (starts, equals, notequals, greaterthan, greaterthanequal, lessthan, lessthanequal, contains, or in)
+     * Each constraint should have these three keys:
+     * field: Should be a column in the usr table, or the special field
+     *   "duplicateemails" which indicates only users with a non-unique email.
+     *   also, for the field "institution", a string value of "mahara"
+     *   indicates users with no institution.
+     * string: The value to compare the contents of that field against.
+     * type: The operation by which to compare "field" to "string". This can be
+     *   any of the operations in PluginSearchInternal::match_expression
+     *   (starts, equals, notequals, greaterthan, greaterthanequal, lessthan,
+     *   lessthanequal, contains, or in)
+     *
+     * The data is built using get_records_sql_assoc().  When building the
+     * firstcols ensure that the first column is an ID of the type of data
+     * you are wanting to return. i.e., if you are returning View records
+     * the first field in $firstcols should be v.id.
+     *
+     * By default $firstcols starts with 'u.id'. If you are returning users
+     * you can just start appending to it.
      *
      * @param string $query_string The string to search for
      * @param array $constraints A list of constraints on the search results (see above for format)
@@ -490,7 +502,7 @@ class PluginSearchInternal extends PluginSearch {
         $join = '';
         $where = 'WHERE u.id <> 0 AND u.deleted = 0';
 
-        // Add in info for custom artefact internal columns if the data exists
+        // Add in info for custom artefact internal columns if the data exists.
         $customcols = get_config_plugin('artefact', 'internal', 'profileadminusersearch');
         if ($customcols) {
             $customcolsarray = explode(',', $customcols);
@@ -500,7 +512,7 @@ class PluginSearchInternal extends PluginSearch {
                 if (!array_key_exists($v, $default)) {
                     $classname = 'ArtefactType' . $v;
                     if (is_callable(array($classname, 'can_be_multiple')) && $ismultiple = call_static_method($classname, 'can_be_multiple')) {
-                        continue; // we need to handle this post results
+                        continue; // we need to handle this post results.
                     }
                     $firstcols .= ', a' . $k . '.title AS ' . $v;
                     $join .= 'LEFT JOIN {artefact} a' . $k . ' ON (a' . $k . '.owner = u.id AND a' . $k . '.artefacttype = \'' . $v . '\') ';
@@ -521,10 +533,10 @@ class PluginSearchInternal extends PluginSearch {
 
         $values = array();
 
-        // Get the correct keyword for case insensitive LIKE
+        // Get the correct keyword for case insensitive LIKE.
         $ilike = db_ilike();
 
-        // Generate the part that matches the search term
+        // Generate the part that matches the search term.
         $querydata = self::split_query_string(mb_strtolower(trim($query_string)));
 
         $matches = array();
@@ -571,7 +583,7 @@ class PluginSearchInternal extends PluginSearch {
                                 )';
                         }
                         else {
-                            // No duplicate email is found, return empty list
+                            // No duplicate email is found, return empty list.
                             $where .= ' AND FALSE';
                         }
                         break;
@@ -581,7 +593,8 @@ class PluginSearchInternal extends PluginSearch {
                                 AND u.id IN (' . join(',', array_map('db_quote', $f['string'])) . ')';
                         }
                         else {
-                            // No users with objectionable content found, return empty list
+                            // No users with objectionable content found, return
+                            // empty list.
                             $where .= ' AND FALSE';
                         }
                         break;
@@ -606,6 +619,70 @@ class PluginSearchInternal extends PluginSearch {
                         $where .= ' AND u.id'
                             . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
                         break;
+                    case 'currentsubmissions':
+                        $casttype = is_mysql() ? 'char' : 'text';
+                        $uidlike = PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
+                        $uidfield = 'id';
+                        $userfields = '
+                        u.id,
+                        u.firstname,
+                        u.lastname,
+                        u.preferredname,
+                        u.username,
+                        u.email,
+                        u.staff,
+                        u.profileicon,
+                        u.lastlogin,
+                        u.active
+                        ';
+                        $customsql = '
+                        SELECT
+                            cv.view AS releaseid,
+                            cv.view AS specialid,
+                            c.name AS title,
+                            CASE
+                                WHEN g.name IS NOT NULL
+                                THEN g.name /* Group name */
+                                ELSE c.submittedhost
+                            END as submittedto,
+                            c.submittedtime,
+                            c.submittedstatus,
+                            ' . $userfields . '
+                            FROM {usr} AS u
+
+                            JOIN {collection} AS c ON c.owner = u.id
+                            JOIN {collection_view} AS cv ON (cv.collection = c.id AND cv.displayorder = 0)
+                            LEFT JOIN {group} AS g ON c.submittedgroup = g.id
+                            ' . $where . '
+                            AND (c.submittedhost IS NOT NULL OR c.submittedgroup IS NOT NULL)
+                            AND u.id ' . $uidlike . '
+                        UNION
+                        SELECT
+                            v.id AS releaseid,
+                            v.id AS specialid,
+                            v.title AS title,
+                            CASE
+                                WHEN g.name IS NOT NULL
+                                THEN g.name /* Group name */
+                                ELSE v.submittedhost
+                            END as submittedto,
+                            v.submittedtime,
+                            v.submittedstatus,
+                            ' . $userfields . '
+                            FROM {usr} AS u
+
+                            JOIN {view} AS v ON v.owner = u.id
+                            LEFT JOIN {group} AS g ON v.submittedgroup = g.id
+                            ' . $where . '
+                            AND (v.submittedhost IS NOT NULL OR v.submittedgroup IS NOT NULL)
+                            AND u.id ' . $uidlike . '
+                            AND v.id NOT IN (SELECT view FROM {collection_view})
+                            ';
+                        // We are using $where twice. We need to double the $values.
+                        $values = array_merge($values, $values);
+
+                        $customcountsql = 'SELECT COUNT(*) FROM (' . $customsql . ') AS countquery';
+                        break;
                     case 'authname':
                         $join .= 'JOIN {auth_instance} ai ON ai.id = u.authinstance ';
                         $where .= ' AND ai.authname ' . PluginSearchInternal::match_expression($f['type'], $f['string'], $values, $ilike);
@@ -617,30 +694,74 @@ class PluginSearchInternal extends PluginSearch {
             }
         }
 
-        $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $join . $where, $values);
+        if (empty($customcountsql)) {
+            $count = get_field_sql('SELECT COUNT(*) FROM {usr} u ' . $join . $where, $values);
+        }
+        else {
+            $count = get_field_sql($customcountsql, $values);
+        }
 
         $offset = get_max_offset($offset, $limit, $count);
 
         if ($count > 0) {
-
-            $data = get_records_sql_assoc('
+            if (empty($customsql)) {
+                $sql = '
                 SELECT ' . $firstcols . ',
-                    u.firstname, u.lastname, u.preferredname, u.username, u.email, u.staff, u.profileicon,
-                    u.lastlogin, u.active, NOT u.suspendedcusr IS NULL as suspended, au.instancename AS authname, au.active AS authactive
-                FROM {usr} u INNER JOIN {auth_instance} au ON u.authinstance = au.id ' . $join . $where . '
-                ORDER BY ' . $sort . ', u.id',
-                $values,
-                $offset,
-                $limit);
+                    u.firstname,
+                    u.lastname,
+                    u.preferredname,
+                    u.username,
+                    u.email,
+                    u.staff,
+                    u.profileicon,
+                    u.lastlogin,
+                    u.active,
+                    NOT u.suspendedcusr IS NULL as suspended,
+                    au.instancename AS authname,
+                    au.active AS authactive
+                FROM {usr} u
+                INNER JOIN {auth_instance} au ON u.authinstance = au.id
+                ' . $join . '
+                ' . $where . '
+                ORDER BY ' . $sort . ', u.id';
+            }
+            else {
+                $sql = $customsql . '
+                ORDER BY ' . $sort . ', id';
+            }
+            $data = get_records_sql_assoc($sql, $values, $offset, $limit);
 
             if ($data) {
-                $users = array_keys($data);
+                if (empty($uidfield)) {
+                    $users = array_keys($data);
+                }
+                else {
+                    // The users are stored on a field on the objects in the
+                    // array.
+                    $users = [];
+                    foreach ($data as $row) {
+                        $users[] = $row->{$uidfield};
+                    }
+                    $users = array_unique($users, SORT_NUMERIC);
+                }
                 $inst = get_records_select_array('usr_institution',
-                                                 'usr IN (' . join(',', $users) . ')',
-                                                 null, '', 'usr,institution');
+                                                'usr IN (' . join(',', $users) . ')',
+                                                null, '', 'usr,institution');
                 if ($inst) {
                     foreach ($inst as $i) {
-                        $data[$i->usr]->institutions[] = $i->institution;
+                        if (empty($uidfield)) {
+                            $data[$i->usr]->institutions[] = $i->institution;
+                        }
+                        else {
+                            // The users are stored on a field on the objects
+                            // in the array. We need to check each row for
+                            // matching users.
+                            foreach ($data as $key => $row) {
+                                if ($row->{$uidfield} == $i->usr) {
+                                    $data[$key]->institutions[] = $i->institution;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -662,7 +783,6 @@ class PluginSearchInternal extends PluginSearch {
             'data'    => $data,
         );
     }
-
 
     public static function group_search_user($group, $query_string, $constraints, $offset, $limit, $membershiptype, $order, $friendof, $orderbyoptionidx=null, $nontutor=false) {
         global $USER;

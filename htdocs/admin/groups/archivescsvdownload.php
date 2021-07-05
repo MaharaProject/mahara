@@ -21,8 +21,17 @@ $search = (object) array(
     'query'          => '',
     'sortby'         => 'firstname',
     'sortdir'        => 'asc',
-    'archivedsubmissions' => true,
+    'archivedsubmissions' => false,
+    'currentsubmissions' => false,
 );
+
+if (param_exists('current')) {
+    $search->currentsubmissions = true;
+}
+else {
+    $search->archivedsubmissions = true;
+}
+
 $search->institution = param_alphanum('institution', null);
 if (!empty($search->institution)) {
     if (!$USER->get('admin') && !$USER->is_institutional_admin($search->institution)) {
