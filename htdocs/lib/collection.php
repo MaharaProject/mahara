@@ -582,6 +582,15 @@ class Collection {
                 'institution' => isset($data->institution) ? $data->institution : null,
                 'usetemplate' => $v->view
             );
+            if ($v->skin) {
+                // Keep the skin on the copy if person is allowed to use that skin
+                require_once('skin.php');
+                $skin = new Skin($v->skin);
+                if ($skin->can_use()) {
+                    $values['skin'] = $v->skin;
+                }
+            }
+
             list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate, $artefactcopies);
             // Check to see if we need to re-map any framework evidence
             // and if a personal collection will be copied as another personal collection (copying to groups/institutions/site porttfolios will have no owner field)
@@ -967,7 +976,7 @@ class Collection {
 
         if (!isset($this->views)) {
 
-            $sql = "SELECT v.id, cv.*, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid
+            $sql = "SELECT v.id, cv.*, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid, v.skin
                 FROM {collection_view} cv JOIN {view} v ON cv.view = v.id
                 WHERE cv.collection = ?
                 AND v.type != 'progress'
