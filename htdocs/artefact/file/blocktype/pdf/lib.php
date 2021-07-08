@@ -77,6 +77,8 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         $view = new View($configdata['viewid']);
         $group = $view->get('group');
 
+        $blockid = ($instance->get('id'));
+
         $result = '';
         $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
         if ($artefactid) {
@@ -113,9 +115,22 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             else if ($language == 'en') {
                 $language = 'en-GB';
             }
-            $result = '<iframe allowfullscreen src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $artefactid . '&lang=' . $language . '&view=' . $instance->get('view')
-                 . ($versioning ? '&versioning=true' : '')
-                 . '" class="pdfiframe"></iframe>';
+
+            $viewid = $instance->get('view');
+            $file = artefact_instance_from_id($artefactid);
+            if (!($file instanceof ArtefactTypeFile)) {
+                throw new NotFoundException();
+            }
+            $url = $urlbase . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid . '&title=' . urlencode($file->get('title'));
+            $src = $urlbase . 'artefact/file/blocktype/pdf/viewer.php?';
+            $src .= 'editing=' . $editing;
+            $src .= '&ingroup=' . !empty($group);
+            $src .= '&artefactid=' . $artefactid;
+            $src .= '&lang=' . $language;
+            $src .= '&view=' . $viewid;
+            $src .= ($versioning ? '&versioning=true' : '');
+
+            $result = '<iframe allow="fullscreen" src="' . $src .'" class="pdfiframe"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
             require_once(get_config('docroot') . 'lib/view.php');
@@ -133,6 +148,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             }
         }
         $smarty->assign('html', $result);
+        $smarty->assign('blockid', $blockid);
         $smarty->assign('editing', $editing);
         $smarty->assign('blockid', $instance->get('id'));
         return $smarty->fetch('blocktype:pdf:pdfrender.tpl');

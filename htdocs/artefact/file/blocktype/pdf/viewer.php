@@ -18,11 +18,12 @@ define('PUBLIC', 1);
 require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/init.php');
 require_once(get_config('docroot') . '/artefact/lib.php');
 
-$fileid = param_integer('file');
+$fileid = param_integer('artefactid');
 $viewid = param_integer('view');
 $editing = param_boolean('editing', false);
 $ingroup = param_boolean('ingroup', false);
 $versioning = param_boolean('versioning', false);
+$lang = param_variable('lang');
 
 if (!can_view_view($viewid)) {
   throw new AccessDeniedException();
@@ -47,9 +48,21 @@ if (get_config('cleanurls') && get_config('cleanurlusersubdomains') && !$editing
         $urlbase = profile_url($viewauthor) . '/';
     }
 }
+$url = $urlbase . 'artefact/file/download.php?file=' . $fileid . '&view=' . $viewid . '&title=' . urlencode($file->get('title'));
+
+// by default the default url inside of the wrong folder blocktype/pdf
+$js =<<<EOF
+    // load lang first to not get to en_US
+   PDFViewerApplicationOptions.set('locale', '$lang');
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        PDFViewerApplicationOptions.set('defaultUrl', '$url');
+    });
+EOF;
 
 $smarty = smarty();
-$smarty->assign('url', $urlbase . 'artefact/file/download.php?file='.$fileid.'&view='.$viewid.'&title='.urlencode($file->get('title')));
+$smarty->assign('url', $url);
+$smarty->assign('js', $js);
 $smarty->assign('title', $file->get('title'));
 $smarty->assign('cacheversion', get_config('cacheversion'));
 $smarty->display('blocktype:pdf:pdf.tpl');

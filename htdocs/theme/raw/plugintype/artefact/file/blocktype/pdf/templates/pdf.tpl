@@ -1,25 +1,3 @@
-<!DOCTYPE html>
-<!--
-Copyright 2012 Mozilla Foundation
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Adobe CMap resources are covered by their own copyright but the same license:
-
-    Copyright 1990-2015 Adobe Systems Incorporated.
-
-See https://github.com/adobe-type-tools/cmap-resources
--->
 <html dir="ltr" mozdisallowselectionprint>
   <head>
     <meta charset="utf-8">
@@ -28,43 +6,63 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>PDF.js viewer</title>
 
-    <link rel="stylesheet" href="js/pdfjs/web/viewer.css?v={$cacheversion}"/>
+    <link rel="stylesheet" href="js/pdfjs/web/viewer.css">
+    <link rel="resource" type="application/l10n" href="js/pdfjs/web/locale/locale.properties" />
 
-    <script>
-        var wwwroot = '{$WWWROOT}';
-        var fileurl = "{$url|safe}";
-        // to handle showing download link when javascript is turned off
-        window.onload = function() {
-            document.body.className = 'js';
-            document.body.style.display = 'block';
-            if (document.getElementById('nojsdownload')) {
-                document.getElementById('nojsdownload').style.display = 'none';
-            }
+    <script src="js/pdfjs/build/pdf.worker.js"></script>
+    <script src="js/pdfjs/build/pdf.min.js"></script>
+    <script src="js/pdfjs/web/pdf.viewer.js"></script>
+    <script type="application/javascript">
+    var wwwroot = '{$WWWROOT}';
+    var fileurl = "{$url|safe}";
+    // to handle showing download link when javascript is turned off
+    window.onload = function() {
+        document.body.className = 'js';
+        document.body.style.display = 'block';
+        if (document.getElementById('nojsdownload')) {
+            document.getElementById('nojsdownload').style.display = 'none';
         }
+    }
     </script>
 
-    <link rel="resource" type="application/l10n" href="js/pdfjs/web/locale/locale.properties?v={$cacheversion}"/>
-    <script src="js/pdfjs/build/pdf.min.js?v={$cacheversion}"></script>
-    <script src="js/pdfjs/web/viewer.js?v={$cacheversion}"></script>
+  {if $js}
+    <script>
+      {$js|safe}
+    </script>
+  {/if}
 
   </head>
 
-  <body tabindex="1" class="loadingInProgress">
-        <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
+  <body tabindex="1">
+      <div id="nojsdownload" class="no-js"><a href="{$url|safe}&download=1">{$title}</a></div>
     <div id="outerContainer">
-
       <div id="sidebarContainer">
         <div id="toolbarSidebar">
-          <div class="splitToolbarButton toggled">
-            <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
-               <span data-l10n-id="thumbs_label">Thumbnails</span>
-            </button>
-            <button id="viewOutline" class="toolbarButton" title="Show Document Outline (double-click to expand/collapse all items)" tabindex="3" data-l10n-id="document_outline">
-               <span data-l10n-id="document_outline_label">Document Outline</span>
-            </button>
-            <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
-               <span data-l10n-id="attachments_label">Attachments</span>
-            </button>
+          <div id="toolbarSidebarLeft">
+            <div class="splitToolbarButton toggled">
+              <button id="viewThumbnail" class="toolbarButton toggled" title="Show Thumbnails" tabindex="2" data-l10n-id="thumbs">
+                <span data-l10n-id="thumbs_label">Thumbnails</span>
+              </button>
+              <button id="viewOutline" class="toolbarButton" title="Show Document Outline (double-click to expand/collapse all items)" tabindex="3" data-l10n-id="document_outline">
+                <span data-l10n-id="document_outline_label">Document Outline</span>
+              </button>
+              <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
+                <span data-l10n-id="attachments_label">Attachments</span>
+              </button>
+              <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="layers">
+                <span data-l10n-id="layers_label">Layers</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="toolbarSidebarRight">
+            <div id="outlineOptionsContainer" class="hidden">
+              <div class="verticalToolbarSeparator"></div>
+
+              <button id="currentOutlineItem" class="toolbarButton" disabled="disabled" title="Find Current Outline Item" tabindex="6" data-l10n-id="current_outline_item">
+                <span data-l10n-id="current_outline_item_label">Current Outline Item</span>
+              </button>
+            </div>
           </div>
         </div>
         <div id="sidebarContent">
@@ -74,9 +72,11 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
           <div id="attachmentsView" class="hidden">
           </div>
+          <div id="layersView" class="hidden">
+          </div>
         </div>
-        <div id="sidebarResizer" class="hidden"></div>
-      </div>  <!-- sidebarContainer -->
+        <div id="sidebarResizer"></div>
+      </div> <!-- sidebarContainer -->
 
       <div id="mainContainer">
         <div class="findbar hidden doorHanger" id="findbar">
@@ -93,7 +93,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
           </div>
 
-          <div id="findbarOptionsContainer">
+          <div id="findbarOptionsOneContainer">
             <input type="checkbox" id="findHighlightAll" class="toolbarField" tabindex="94">
             <label for="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">Highlight all</label>
             <input type="checkbox" id="findMatchCase" class="toolbarField" tabindex="95">
@@ -102,14 +102,13 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div id="findbarOptionsTwoContainer">
             <input type="checkbox" id="findEntireWord" class="toolbarField" tabindex="96">
             <label for="findEntireWord" class="toolbarLabel" data-l10n-id="find_entire_word_label">Whole words</label>
-
             <span id="findResultsCount" class="toolbarLabel hidden"></span>
           </div>
 
           <div id="findbarMessageContainer">
             <span id="findMsg" class="toolbarLabel"></span>
           </div>
-        </div>  <!-- findbar -->
+        </div> <!-- findbar -->
 
         <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
           <div id="secondaryToolbarButtonContainer">
@@ -117,7 +116,7 @@ See https://github.com/adobe-type-tools/cmap-resources
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
             </button>
 
-            <button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file">
+            <button style="display: none" id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file">
               <span data-l10n-id="open_file_label">Open</span>
             </button>
 
@@ -186,7 +185,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 
             <div class="horizontalToolbarSeparator spreadModeButtons"></div>
 
-            <button id="documentProperties" class="secondaryToolbarButton documentProperties" title="Document Properties…" tabindex="62" data-l10n-id="document_properties">
+            <button id="documentProperties" class="secondaryToolbarButton documentProperties" title="Document Properties…" tabindex="68" data-l10n-id="document_properties">
               <span data-l10n-id="document_properties_label">Document Properties…</span>
             </button>
           </div>
@@ -196,11 +195,12 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div id="toolbarContainer">
             <div id="toolbarViewer">
               <div id="toolbarViewerLeft">
-                <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar">
+                <button id="sidebarToggle" class="toolbarButton" title="Toggle Sidebar" tabindex="11" data-l10n-id="toggle_sidebar" aria-expanded="false" aria-controls="sidebarContainer">
                   <span data-l10n-id="toggle_sidebar_label">Toggle Sidebar</span>
                 </button>
+                <!-- Do we want this functionality? -->
                 <div class="toolbarButtonSpacer"></div>
-                <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12" data-l10n-id="findbar">
+                <button id="viewFind" class="toolbarButton" title="Find in Document" tabindex="12" data-l10n-id="findbar" aria-expanded="false" aria-controls="findbar">
                   <span data-l10n-id="findbar_label">Find</span>
                 </button>
                 <div class="splitToolbarButton hiddenSmallView">
@@ -212,7 +212,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <span data-l10n-id="next_label">Next</span>
                   </button>
                 </div>
-                <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page">
+                <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
                 <span id="numPages" class="toolbarLabel"></span>
               </div>
               <div id="toolbarViewerRight">
@@ -220,7 +220,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
+                <button style="display: none" id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
                   <span data-l10n-id="open_file_label">Open</span>
                 </button>
 
@@ -237,7 +237,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 
                 <div class="verticalToolbarSeparator hiddenSmallView"></div>
 
-                <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="36" data-l10n-id="tools">
+                <button id="secondaryToolbarToggle" class="toolbarButton" title="Tools" tabindex="36" data-l10n-id="tools" aria-expanded="false" aria-controls="secondaryToolbar">
                   <span data-l10n-id="tools_label">Tools</span>
                 </button>
               </div>
@@ -249,7 +249,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <div class="splitToolbarButtonSeparator"></div>
                   <button id="zoomIn" class="toolbarButton zoomIn" title="Zoom In" tabindex="22" data-l10n-id="zoom_in">
                     <span data-l10n-id="zoom_in_label">Zoom In</span>
-                   </button>
+                  </button>
                 </div>
                 <span id="scaleSelectContainer" class="dropdownToolbarButton">
                   <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
@@ -279,20 +279,10 @@ See https://github.com/adobe-type-tools/cmap-resources
           </div>
         </div>
 
-        <menu type="context" id="viewerContextMenu">
-          <menuitem id="contextFirstPage" label="First Page"
-                    data-l10n-id="first_page"></menuitem>
-          <menuitem id="contextLastPage" label="Last Page"
-                    data-l10n-id="last_page"></menuitem>
-          <menuitem id="contextPageRotateCw" label="Rotate Clockwise"
-                    data-l10n-id="page_rotate_cw"></menuitem>
-          <menuitem id="contextPageRotateCcw" label="Rotate Counter-Clockwise"
-                    data-l10n-id="page_rotate_ccw"></menuitem>
-        </menu>
-
-        <div id="viewerContainer" tabindex="0">
-          <div id="viewer" class="pdfViewer"></div>
+        <div id="viewerContainer" tabindex="0" id="mahara-pdf">
+          <div id="viewer" class="pdfViewer">
         </div>
+
 
         <div id="errorWrapper" hidden='true'>
           <div id="errorMessageLeft">
@@ -332,49 +322,63 @@ See https://github.com/adobe-type-tools/cmap-resources
         <div id="documentPropertiesOverlay" class="container hidden">
           <div class="dialog">
             <div class="row">
-              <span data-l10n-id="document_properties_file_name">File name:</span> <p id="fileNameField">-</p>
+              <span data-l10n-id="document_properties_file_name">File name:</span>
+              <p id="fileNameField">-</p>
             </div>
             <div class="row">
-              <span data-l10n-id="document_properties_file_size">File size:</span> <p id="fileSizeField">-</p>
-            </div>
-            <div class="separator"></div>
-            <div class="row">
-              <span data-l10n-id="document_properties_title">Title:</span> <p id="titleField">-</p>
-            </div>
-            <div class="row">
-              <span data-l10n-id="document_properties_author">Author:</span> <p id="authorField">-</p>
-            </div>
-            <div class="row">
-              <span data-l10n-id="document_properties_subject">Subject:</span> <p id="subjectField">-</p>
-            </div>
-            <div class="row">
-              <span data-l10n-id="document_properties_keywords">Keywords:</span> <p id="keywordsField">-</p>
-            </div>
-            <div class="row">
-              <span data-l10n-id="document_properties_creation_date">Creation Date:</span> <p id="creationDateField">-</p>
-            </div>
-            <div class="row">
-              <span data-l10n-id="document_properties_modification_date">Modification Date:</span> <p id="modificationDateField">-</p>
-            </div>
-            <div class="row">
-              <span data-l10n-id="document_properties_creator">Creator:</span> <p id="creatorField">-</p>
+              <span data-l10n-id="document_properties_file_size">File size:</span>
+              <p id="fileSizeField">-</p>
             </div>
             <div class="separator"></div>
             <div class="row">
-              <span data-l10n-id="document_properties_producer">PDF Producer:</span> <p id="producerField">-</p>
+              <span data-l10n-id="document_properties_title">Title:</span>
+              <p id="titleField">-</p>
             </div>
             <div class="row">
-              <span data-l10n-id="document_properties_version">PDF Version:</span> <p id="versionField">-</p>
+              <span data-l10n-id="document_properties_author">Author:</span>
+              <p id="authorField">-</p>
             </div>
             <div class="row">
-              <span data-l10n-id="document_properties_page_count">Page Count:</span> <p id="pageCountField">-</p>
+              <span data-l10n-id="document_properties_subject">Subject:</span>
+              <p id="subjectField">-</p>
             </div>
             <div class="row">
-              <span data-l10n-id="document_properties_page_size">Page Size:</span> <p id="pageSizeField">-</p>
+              <span data-l10n-id="document_properties_keywords">Keywords:</span>
+              <p id="keywordsField">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="document_properties_creation_date">Creation Date:</span>
+              <p id="creationDateField">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="document_properties_modification_date">Modification Date:</span>
+              <p id="modificationDateField">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="document_properties_creator">Creator:</span>
+              <p id="creatorField">-</p>
             </div>
             <div class="separator"></div>
             <div class="row">
-              <span data-l10n-id="document_properties_linearized">Fast Web View:</span> <p id="linearizedField">-</p>
+              <span data-l10n-id="document_properties_producer">PDF Producer:</span>
+              <p id="producerField">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="document_properties_version">PDF Version:</span>
+              <p id="versionField">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="document_properties_page_count">Page Count:</span>
+              <p id="pageCountField">-</p>
+            </div>
+            <div class="row">
+              <span data-l10n-id="document_properties_page_size">Page Size:</span>
+              <p id="pageSizeField">-</p>
+            </div>
+            <div class="separator"></div>
+            <div class="row">
+              <span data-l10n-id="document_properties_linearized">Fast Web View:</span>
+              <p id="linearizedField">-</p>
             </div>
             <div class="buttonRow">
               <button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
@@ -395,9 +399,10 @@ See https://github.com/adobe-type-tools/cmap-resources
             </div>
           </div>
         </div>
-      </div>  <!-- overlayContainer -->
+      </div> <!-- overlayContainer -->
 
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
   </body>
+
 </html>
