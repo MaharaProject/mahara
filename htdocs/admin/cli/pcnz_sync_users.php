@@ -76,6 +76,7 @@ $offset = $cli->get_cli_param('offset');
 $limit = $cli->get_cli_param('limit');
 $types = $cli->get_cli_param('type');
 $deleteinterns = $cli->get_cli_param_boolean('deleteinterns');
+$verbose = $cli->get_cli_param('verbose');
 
 $havetypes = false;
 if (!empty($types) && !is_array($types)) {
@@ -160,7 +161,9 @@ if ($token) {
                         $deletedcount++;
                     }
                     else {
-                        $cli->cli_print('Reg ID ' . $person->id . ' ...skipping as person is out of scope');
+                        if ($verbose) {
+                            $cli->cli_print('Reg ID ' . $person->id . ' ...skipping as person is out of scope');
+                        }
                     }
                 }
                 $deletecount++;
@@ -173,6 +176,9 @@ if ($token) {
         }
         else if (!$deleteinterns && isset($person->practitioner) && isset($person->practitioner->practicingstatusid) && in_array($person->practitioner->practicingstatusid, $types)) {
             $people[$person->id]['personalinfo'] = $person;
+            if ($verbose) {
+                $cli->cli_print('Reg ID ' . $person->id . ' found');
+            }
         }
         $count++;
         if (($count % $sublimit) == 0 || $count == $total) {
@@ -182,6 +188,9 @@ if ($token) {
 
     if (!empty($people)) {
         if ($dryrun) {
+            if ($verbose) {
+                $cli->cli_print(print_r($people, true));
+            }
             $cli->cli_print('A total of ' . count($people) . ' people matching your types within the records  ' . $offset . ' to ' . ($offset + $limit));
         }
         else {
