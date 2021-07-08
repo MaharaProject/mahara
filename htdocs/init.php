@@ -149,10 +149,12 @@ try {
     if (!empty($CFG->dbport)) {
         $db->port = $CFG->dbport;
     }
-    if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
+    if (!empty($CFG->dbpersist)) {
+        // Use persistent connection
         $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
-    else {                                                     // Use single connection
+    else {
+        // Use single connection (default)
         $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
 
