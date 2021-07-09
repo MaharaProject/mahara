@@ -1092,9 +1092,6 @@ class Collection {
      */
      public function get_framework_institution() {
         require_once('institution.php');
-        if (!empty($this->group)) {
-            return false;
-        }
 
         if (!is_plugin_active('framework', 'module')) {
             return false;
@@ -1106,9 +1103,16 @@ class Collection {
             $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? $institution : false;
         }
         else {
-            $user = new User();
-            $user->find_by_id($this->owner);
-            $institutionids = array_keys($user->get('institutions'));
+            $institutionids = array();
+            if (!empty($this->group)) {
+                $group =  get_group_by_id($this->group);
+                $institutionids[] = $group->institution;
+            }
+            else {
+                $user = new User();
+                $user->find_by_id($this->owner);
+                $institutionids = array_keys($user->get('institutions'));
+            }
             if (!empty($institutionids)) {
                 foreach ($institutionids as $institution) {
                     $institution = new Institution($institution);
