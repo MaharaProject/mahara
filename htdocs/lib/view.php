@@ -434,6 +434,14 @@ class View {
         else if ($checkaccess && !can_view_view($templateid, $userid)) {
             throw new SystemException("View::create_from_template: User $userid is not permitted to copy View $templateid");
         }
+        if ($skinid = $template->get('skin')) {
+            // Keep the skin on the copy if person is allowed to use that skin
+            require_once('skin.php');
+            $skin = new Skin($skinid);
+            if ($skin->can_use()) {
+                $viewdata['skin'] = $skinid;
+            }
+        }
 
         $view = self::_create($viewdata, $userid);
 
