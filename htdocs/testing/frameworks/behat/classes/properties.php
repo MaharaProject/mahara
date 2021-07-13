@@ -80,6 +80,7 @@ define ("LOCATOR_CONSTANTS", json_encode(array(
     'Terms and conditions Edit icon'            => array("#termsandconditions .btn-secondary","css_element"),
     'Privacy statement Edit icon'               => array("#privacy .btn-group","css_element"),
     'Content types'                             => array("#placeholderlist", "css_element"),
+    'Block header'                              => array(".block-header", "css_element"),
     // properties with xpath_elements
     'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
     'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
