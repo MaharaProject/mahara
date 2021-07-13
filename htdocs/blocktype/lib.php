@@ -1534,7 +1534,9 @@ class BlockInstance {
         }
         if (get_field('blocktype_installed', 'quickedit', 'name', $this->get('blocktype')) > 0) {
             $smarty->assign('blockid', $this->get('id'));
-            $smarty->assign('showquickedit', $USER->can_edit_view($this->get_view()));
+            $canedit = $USER->can_edit_view($this->get_view());
+            $viewsubmitted = $this->get_view()->is_submitted();
+            $smarty->assign('showquickedit', $canedit && !$viewsubmitted);
         }
 
         $smarty->assign('peerroleonly', $USER->has_peer_role_only($this->get_view()));
