@@ -58,7 +58,7 @@ Scenario: As administrator I can
     Then I should not see "Public key expires"
     And I press "Save"
     # Verify token was made and Test the token
-    And I scroll to the base of id "webservices_token_generate_userid_container"
+    And I scroll to the id "webservices_token_edit_1_submit_container"
     And I should see "Edit" in the "Manage service access tokens" "Webservices" property
     And I choose "Test client" in "Web services" from administration menu
     Then I should see "This is the interactive test client facility for web services."

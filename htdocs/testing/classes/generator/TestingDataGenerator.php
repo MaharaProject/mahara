@@ -2792,10 +2792,10 @@ EOD;
              $itemdata['artefact'] =  $artefact->get('id');
          }
          else {
-           $artefact = new ArtefactTypeEducationhistory();
-           $artefact->set('owner', $this->get_user_id($record['user']));
-           $artefact->commit();
-           $itemdata['artefact'] = $artefact->get('id');
+             $artefact = new ArtefactTypeEducationhistory();
+             $artefact->set('owner', $userid);
+             $artefact->commit();
+             $itemdata['artefact'] = $artefact->get('id');
          }
 
          $formelements = ArtefactTypeEducationhistory::get_addform_elements();
@@ -2804,8 +2804,10 @@ EOD;
                   $itemdata[$element] = $record[$element];
              }
          }
-         //default to prevent db error
-         $itemdata['displayorder'] = 1;
+         $display = get_field_sql("SELECT CASE WHEN MAX(displayorder) IS NULL THEN 1 ELSE MAX(displayorder) +1 END AS display
+                                   FROM {artefact_resume_educationhistory} WHERE artefact = ?", array($artefact->get('id')));
+
+         $itemdata['displayorder'] = $display;
          $table = 'artefact_resume_educationhistory';
          $itemid = insert_record($table, (object)$itemdata, 'id', true);
      }
@@ -2831,7 +2833,7 @@ EOD;
          }
          else {
            $artefact = new ArtefactTypeEmploymenthistory();
-           $artefact->set('owner', $this->get_user_id($record['user']));
+           $artefact->set('owner', $userid);
            $artefact->commit();
            $itemdata['artefact'] = $artefact->get('id');
          }
@@ -2842,8 +2844,9 @@ EOD;
                   $itemdata[$element] = $record[$element];
              }
          }
-         //default to prevent db error
-         $itemdata['displayorder'] = 1;
+         $display = get_field_sql("SELECT CASE WHEN MAX(displayorder) IS NULL THEN 1 ELSE MAX(displayorder) +1 END AS display
+                                   FROM {artefact_resume_employmenthistory} WHERE artefact = ?", array($artefact->get('id')));
+         $itemdata['displayorder'] = $display;
          $table = 'artefact_resume_employmenthistory';
          $itemid = insert_record($table, (object)$itemdata, 'id', true);
 

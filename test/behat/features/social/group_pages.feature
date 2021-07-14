@@ -40,7 +40,7 @@ Scenario: Copying a group page retains title (Bug 1519374)
  | Page title | Page GroupA_01 |
  Then I press "Save"
 
-Scenario: Group homepage basic settings and skins can't be edited - Bug 1718806
+Scenario: Group homepage basic settings and skins can't be edited ($cfg->skins must not be set) - Bug 1718806
  Given I log in as "UserC" with password "Kupuh1pa!"
  When I go to group "GroupA"
  And I follow "Edit"

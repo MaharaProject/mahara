@@ -305,7 +305,8 @@ class BehatDataGenerators extends BehatBase {
             'qualtype'               => 'text',
             'qualname'               => 'text',
             'qualdescription'        => 'text',
-            'attachment'             => 'text'
+            'attachment'             => 'text',
+            'displayorder'           => 'text'
           ),
           'required' => array('user','startdate','institution')
         ),
@@ -319,7 +320,8 @@ class BehatDataGenerators extends BehatBase {
             'employeraddress'        => 'text',
             'jobtitle'               => 'text',
             'positiondescription'    => 'text',
-            'attachment'             => 'text'
+            'attachment'             => 'text',
+            'displayorder'           => 'text'
           ),
           'required' => array ('user','startdate','employer','jobtitle')
         ),

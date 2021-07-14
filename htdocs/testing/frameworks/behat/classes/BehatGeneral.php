@@ -1961,16 +1961,15 @@ JS;
  * @When I scroll to the id beginning with :id instance :instance
  */
     public function i_scroll_into_id_like($id, $instance = 0) {
-        $function = <<<JS
-          (function(){
-            //   var elem = document.querySelector('[id^="$id"]');
-              var eleme = jQuery('[id^="$id"]')[$instance];
+        $jscode = <<<JS
+          (function() {
+              var elem = jQuery('[id^="$id"]')[$instance];
               elem.scrollIntoView(true);
               return 1;
-          })()
+          })();
 JS;
         try {
-            $this->getSession()->wait(5000, $function);
+            $this->getSession()->wait(5000, $jscode);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoViewLike failed");
