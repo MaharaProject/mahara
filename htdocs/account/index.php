@@ -80,6 +80,7 @@ if ($authobj->authname == 'internal') {
         'defaultvalue' => $USER->get('username'),
         'title' => get_string('changeusername', 'account'),
         'description' => get_string('changeusernamedesc', 'account', hsc(get_config('sitename'))),
+        'disabled' => true, // WR# 362406 - Disabled for PCNZ
     );
     $elements['oldpasswordchangeuser'] = array(
         'type' => 'password',
