@@ -15,3 +15,6 @@ $string['friendsauto'] = 'New contacts are automatically authorised';
 $string['friendsdescr'] = 'Contact control';
 $string['updatedfriendcontrolsetting'] = 'Updated contact control';
 $string['messagesfriends'] = 'Allow people on my contact list to send me messages';
+$string['changeusernameheading'] = 'Username';
+$string['changeusername'] = 'Username';
+$string['changeusernamedesc'] = 'You cannot change your username.';
