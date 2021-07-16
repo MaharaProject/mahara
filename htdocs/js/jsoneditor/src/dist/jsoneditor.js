@@ -8142,7 +8142,7 @@ JSONEditor.defaults.themes.bootstrap2 = JSONEditor.AbstractTheme.extend({
   },
   getGridRow: function() {
     var el = document.createElement('div');
-    el.classList.add('row-fluid');
+    el.classList.add('row');
     return el;
   },
   getFormInputLabel: function(text) {
