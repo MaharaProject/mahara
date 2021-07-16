@@ -1,5 +1,6 @@
 <?php
 /**
+ * Manage the archiving of submitted pages/collections from groups.
  *
  * @package    mahara
  * @subpackage admin

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Participation report - shared views.
  *
  * @package    mahara
  * @subpackage core

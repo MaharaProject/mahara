@@ -1,5 +1,6 @@
 <?php
 /**
+ * Change a group member's role.
  *
  * @package    mahara
  * @subpackage core
@@ -72,6 +73,13 @@ $changeform = pieform(array(
     )
 ));
 
+/**
+ * Validate a group member's role change
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function changerole_validate(Pieform $form, $values) {
     global $user, $group;
     if (!group_can_change_role($group->id, $user->id, $values['role'])) {
@@ -79,6 +87,13 @@ function changerole_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit a group member's role change
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function changerole_submit(Pieform $form, $values) {
     global $user, $group, $SESSION, $currentrole;
     if ($values['role'] != $currentrole) {

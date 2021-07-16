@@ -1,5 +1,6 @@
 <?php
 /**
+ * Show group info in a preview window.
  *
  * @package    mahara
  * @subpackage core

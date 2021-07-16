@@ -1,5 +1,6 @@
 <?php
 /**
+ * Participation report for a group.
  *
  * @package    mahara
  * @subpackage core

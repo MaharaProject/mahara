@@ -1,5 +1,6 @@
 <?php
 /**
+ * Add personal labels to a group.
  *
  * @package    mahara
  * @subpackage core

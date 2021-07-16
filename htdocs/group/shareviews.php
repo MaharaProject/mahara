@@ -1,5 +1,6 @@
 <?php
 /**
+ * Share tab on groups.
  *
  * @package    mahara
  * @subpackage core

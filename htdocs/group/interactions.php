@@ -1,5 +1,6 @@
 <?php
 /**
+ * Group forums.
  *
  * @package    mahara
  * @subpackage core

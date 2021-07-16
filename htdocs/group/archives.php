@@ -1,5 +1,6 @@
 <?php
 /**
+ * Group archive page.
  *
  * @package    mahara
  * @subpackage core

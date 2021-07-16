@@ -1,5 +1,6 @@
 <?php
 /**
+ * Page for finding groups.
  *
  * @package    mahara
  * @subpackage core
@@ -234,6 +235,13 @@ $pagination = build_pagination(array(
     'resultcounttextplural' => get_string('groups', 'group'),
 ));
 
+/**
+ * Submit search
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function search_submit(Pieform $form, $values) {
     redirect('/group/index.php?filter=' . $values['filter'] . ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') . (!empty($values['groupcategory']) ? '&groupcategory=' . intval($values['groupcategory']) : ''));
 }

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Create/edit a group.
  *
  * @package    mahara
  * @subpackage core
@@ -466,6 +467,13 @@ $form['elements']['settings']['elements'] = $elements;
 $editgroup = pieform($form);
 
 
+/**
+ * Validate group setting changes
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function editgroup_validate(Pieform $form, $values) {
     global $group_data, $namemaxlength;
     if ($group_data->name != $values['name']) {
@@ -531,10 +539,22 @@ function editgroup_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit cancelling edits to group settings.
+ *
+ * @return void
+ */
 function editgroup_cancel_submit() {
     redirect('/group/index.php');
 }
 
+/**
+ * Submit group setting edits
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function editgroup_submit(Pieform $form, $values) {
     global $USER, $SESSION, $group_data, $publicallowed;
 

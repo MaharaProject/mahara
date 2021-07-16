@@ -1,5 +1,6 @@
 <?php
 /**
+ * The group 'About' page.
  *
  * @package    mahara
  * @subpackage core

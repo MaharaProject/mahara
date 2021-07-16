@@ -1,5 +1,8 @@
 <?php
 /**
+ * Groups page.
+ *
+ * Allows creation of groups, search and shows list of my groups.
  *
  * @package    mahara
  * @subpackage core

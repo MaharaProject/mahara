@@ -1,6 +1,8 @@
 <?php
 /**
+ * Duplicate a group and its artefacts.
  *
+ * New group will use same name with '.v' + unique number appended
  * @package    mahara
  * @subpackage core
  * @author     Catalyst IT Ltd
