@@ -52,7 +52,7 @@ class webservice_soap_server extends webservice_base_server {
      */
     public function __construct($authmethod) {
         parent::__construct($authmethod);
-        // must not cache wsdl - the list of functions is created on the fly
+        // Must not cache wsdl - the list of functions is created on the fly.
         ini_set('soap.wsdl_cache_enabled', '0');
         $this->wsname = 'soap';
         $this->wsdlmode = false;
@@ -140,6 +140,165 @@ class webservice_soap_server extends webservice_base_server {
     }
 
     /**
+     * Generates the WSDL.
+     */
+    protected function generate_wsdl() {
+        // Initialise WSDL.
+        $this->wsdl = new wsdl($this->serviceclass, $this->serverurl);
+        // Register service struct classes as complex types.
+        foreach ($this->servicestructs as $structinfo) {
+            $this->wsdl->add_complex_type($structinfo->classname, $structinfo->properties);
+        }
+        // Register the method for the WSDL generation.
+        foreach ($this->servicemethods as $methodinfo) {
+            $this->wsdl->register($methodinfo->name, $methodinfo->inputparams, $methodinfo->outputparams, $methodinfo->description);
+        }
+    }
+
+    /**
+     * Handles the web service function call.
+     */
+    protected function handle() {
+        if ($this->wsdlmode) {
+            // Prepare the response.
+            $this->response = $this->wsdl->to_xml();
+            // Send the results back in correct format.
+            $this->send_response();
+        }
+        else {
+            $wsdlurl = clone($this->serverurl);
+            $wsdlurl->param('wsdl', 1);
+            $options = array(
+                'uri' => $this->serverurl->out(false)
+            );
+            // Initialise the SOAP server.
+            $this->soapserver = new SoapServer($wsdlurl->out(false), $options);
+            if (!empty($this->serviceclass)) {
+                $this->soapserver->setClass($this->serviceclass);
+                // Get all the methods for the generated service class then register to the SOAP server.
+                $functions = get_class_methods($this->serviceclass);
+                $this->soapserver->addFunction($functions);
+            }
+
+            // Get soap request from raw POST data.
+            $soaprequest = file_get_contents('php://input');
+            // Handle the request.
+            try {
+                $this->soapserver->handle($soaprequest);
+            }
+            catch (Exception $e) {
+                $this->fault($e);
+            }
+        }
+    }
+
+    /**
+     * Send the error information to the WS client formatted as an XML document.
+     *
+     * @param Exception $ex the exception to send back
+     */
+    protected function send_error($ex = null) {
+        if ($ex) {
+            $info = $ex->getMessage();
+            if (isset($ex->debuginfo)) {
+                $info .= ' - ' . $ex->debuginfo;
+            }
+        }
+        else {
+            $info = 'Unknown error';
+        }
+
+        // Initialise new DOM document object.
+        $dom = new DOMDocument('1.0', 'UTF-8');
+
+        // Fault node.
+        $fault = $dom->createElement('SOAP-ENV:Fault');
+        // Faultcode node.
+        $fault->appendChild($dom->createElement('faultcode', 'MOODLE:error'));
+        // Faultstring node.
+        $fault->appendChild($dom->createElement('faultstring', $info));
+
+        // Body node.
+        $body = $dom->createElement('SOAP-ENV:Body');
+        $body->appendChild($fault);
+
+        // Envelope node.
+        $envelope = $dom->createElement('SOAP-ENV:Envelope');
+        $envelope->setAttribute('xmlns:SOAP-ENV', 'http://schemas.xmlsoap.org/soap/envelope/');
+        $envelope->appendChild($body);
+        $dom->appendChild($envelope);
+
+        $this->response = $dom->saveXML();
+        $this->send_response();
+    }
+
+    /**
+     * Send the result of function call to the WS client.
+     */
+    protected function send_response() {
+        $this->send_headers();
+        echo $this->response;
+    }
+
+    /**
+     * Internal implementation - sending of page headers.
+     */
+    protected function send_headers() {
+        header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
+        header('Expires: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
+        header('Pragma: no-cache');
+        header('Accept-Ranges: none');
+        header('Content-Length: ' . strlen($this->response));
+        header('Content-Type: application/xml; charset=utf-8');
+        header('Content-Disposition: inline; filename="response.xml"');
+    }
+
+    /**
+     * Generate a server fault.
+     *
+     * Note that the parameter order is the reverse of SoapFault's constructor parameters.
+     *
+     * Moodle note: basically we return the faultactor (errorcode) and faultdetails (debuginfo).
+     *
+     * If an exception is passed as the first argument, its message and code
+     * will be used to create the fault object.
+     *
+     * @link   http://www.w3.org/TR/soap12-part1/#faultcodes
+     * @param  string|Exception $fault
+     * @param  string $code SOAP Fault Codes
+     */
+    public function fault($fault = null, $code = 'Receiver') {
+        $allowedfaultmodes = array(
+            'VersionMismatch', 'MustUnderstand', 'DataEncodingUnknown',
+            'Sender', 'Receiver', 'Server'
+        );
+        if (!in_array($code, $allowedfaultmodes)) {
+            $code = 'Receiver';
+        }
+
+        // Intercept any exceptions and add the errorcode and debuginfo (optional).
+        $actor = null;
+        $details = null;
+        $errorcode = 'unknownerror';
+        $message = get_string($errorcode);
+        if ($fault instanceof Exception) {
+            // Add the debuginfo to the exception message if debuginfo must be returned.
+            $actor = isset($fault->errorcode) ? $fault->errorcode : null;
+            $errorcode = $actor;
+            if (ws_debugging()) {
+                $message = $fault->getMessage();
+                $details = isset($fault->debuginfo) ? $fault->debuginfo : null;
+            }
+        }
+        else if (is_string($fault)) {
+            $message = $fault;
+        }
+
+        $this->soapserver->fault($code, $message . ' | ERRORCODE: ' . $errorcode, $actor, $details);
+    }
+
+
+    /**
      * Load the virtual class needed for the web service.
      *
      * Initialises the virtual class that contains the web service functions that the user is allowed to use.
@@ -215,6 +374,55 @@ class $classname {
 EOD;
         // Load the virtual class definition into memory.
         eval($code);
+    }
+
+    /**
+     * Generates a struct class.
+     *
+     * @param external_single_structure $structdesc The basis of the struct class to be generated.
+     * @return string The class name of the generated struct class.
+     */
+    protected function generate_simple_struct_class(external_single_structure $structdesc) {
+        global $USER;
+
+        $propeties = array();
+        $fields = array();
+        foreach ($structdesc->keys as $name => $fieldsdesc) {
+            $type = $this->get_phpdoc_type($fieldsdesc);
+            $propertytype = array('type' => $type);
+            if (empty($fieldsdesc->allownull) || $fieldsdesc->allownull == NULL_ALLOWED) {
+                $propertytype['nillable'] = true;
+            }
+            $propeties[$name] = $propertytype;
+            $fields[] = '    /** @var ' . $type . ' $' . $name . '*/';
+            $fields[] = '    public $' . $name .';';
+        }
+        $fieldsstr = implode("\n", $fields);
+
+        // We do this after the call to get_phpdoc_type() to avoid duplicate class creation.
+        $classname = 'webservices_struct_class_000000';
+        while (class_exists($classname)) {
+            $classname++;
+        }
+        $code = <<<EOD
+/**
+ * Virtual struct class for web services for user id $USER->id in context {$this->restricted_context->id}.
+ */
+class $classname {
+$fieldsstr
+}
+EOD;
+        // Load into memory.
+        eval($code);
+
+        // Prepare struct info.
+        $structinfo = new stdClass();
+        $structinfo->classname = $classname;
+        $structinfo->properties = $propeties;
+        // Add the struct info the the list of service struct classes.
+        $this->servicestructs[] = $structinfo;
+
+        return $classname;
     }
 
     /**
@@ -376,164 +584,6 @@ $castingcode
     return external_api::clean_returnvalue($callforreturnvaluedesc, $function->classname::$function->methodname($paramsstr));
 EOD;
         return $methodbody;
-    }
-
-    /**
-     * Generates the WSDL.
-     */
-    protected function generate_wsdl() {
-        // Initialise WSDL.
-        $this->wsdl = new wsdl($this->serviceclass, $this->serverurl);
-        // Register service struct classes as complex types.
-        foreach ($this->servicestructs as $structinfo) {
-            $this->wsdl->add_complex_type($structinfo->classname, $structinfo->properties);
-        }
-        // Register the method for the WSDL generation.
-        foreach ($this->servicemethods as $methodinfo) {
-            $this->wsdl->register($methodinfo->name, $methodinfo->inputparams, $methodinfo->outputparams, $methodinfo->description);
-        }
-    }
-
-    /**
-     * Handles the web service function call.
-     */
-    protected function handle() {
-        if ($this->wsdlmode) {
-            // Prepare the response.
-            $this->response = $this->wsdl->to_xml();
-            // Send the results back in correct format.
-            $this->send_response();
-        }
-        else {
-            $wsdlurl = clone($this->serverurl);
-            $wsdlurl->param('wsdl', 1);
-            $options = array(
-                'uri' => $this->serverurl->out(false)
-            );
-            // Initialise the SOAP server.
-            $this->soapserver = new SoapServer($wsdlurl->out(false), $options);
-            if (!empty($this->serviceclass)) {
-                $this->soapserver->setClass($this->serviceclass);
-                // Get all the methods for the generated service class then register to the SOAP server.
-                $functions = get_class_methods($this->serviceclass);
-                $this->soapserver->addFunction($functions);
-            }
-
-            // Get soap request from raw POST data.
-            $soaprequest = file_get_contents('php://input');
-            // Handle the request.
-            try {
-                $this->soapserver->handle($soaprequest);
-            }
-            catch (Exception $e) {
-                $this->fault($e);
-            }
-        }
-    }
-
-    /**
-     * Send the error information to the WS client formatted as an XML document.
-     *
-     * @param Exception $ex the exception to send back
-     */
-    protected function send_error($ex = null) {
-        if ($ex) {
-            $info = $ex->getMessage();
-            if (isset($ex->debuginfo)) {
-                $info .= ' - ' . $ex->debuginfo;
-            }
-        }
-        else {
-            $info = 'Unknown error';
-        }
-
-        // Initialise new DOM document object.
-        $dom = new DOMDocument('1.0', 'UTF-8');
-
-        // Fault node.
-        $fault = $dom->createElement('SOAP-ENV:Fault');
-        // Faultcode node.
-        $fault->appendChild($dom->createElement('faultcode', 'MOODLE:error'));
-        // Faultstring node.
-        $fault->appendChild($dom->createElement('faultstring', $info));
-
-        // Body node.
-        $body = $dom->createElement('SOAP-ENV:Body');
-        $body->appendChild($fault);
-
-        // Envelope node.
-        $envelope = $dom->createElement('SOAP-ENV:Envelope');
-        $envelope->setAttribute('xmlns:SOAP-ENV', 'http://schemas.xmlsoap.org/soap/envelope/');
-        $envelope->appendChild($body);
-        $dom->appendChild($envelope);
-
-        $this->response = $dom->saveXML();
-        $this->send_response();
-    }
-
-    /**
-     * Send the result of function call to the WS client.
-     */
-    protected function send_response() {
-        $this->send_headers();
-        echo $this->response;
-    }
-
-    /**
-     * Internal implementation - sending of page headers.
-     */
-    protected function send_headers() {
-        header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
-        header('Expires: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
-        header('Pragma: no-cache');
-        header('Accept-Ranges: none');
-        header('Content-Length: ' . strlen($this->response));
-        header('Content-Type: application/xml; charset=utf-8');
-        header('Content-Disposition: inline; filename="response.xml"');
-    }
-
-    /**
-     * Generate a server fault.
-     *
-     * Note that the parameter order is the reverse of SoapFault's constructor parameters.
-     *
-     * Moodle note: basically we return the faultactor (errorcode) and faultdetails (debuginfo).
-     *
-     * If an exception is passed as the first argument, its message and code
-     * will be used to create the fault object.
-     *
-     * @link   http://www.w3.org/TR/soap12-part1/#faultcodes
-     * @param  string|Exception $fault
-     * @param  string $code SOAP Fault Codes
-     */
-    public function fault($fault = null, $code = 'Receiver') {
-        $allowedfaultmodes = array(
-            'VersionMismatch', 'MustUnderstand', 'DataEncodingUnknown',
-            'Sender', 'Receiver', 'Server'
-        );
-        if (!in_array($code, $allowedfaultmodes)) {
-            $code = 'Receiver';
-        }
-
-        // Intercept any exceptions and add the errorcode and debuginfo (optional).
-        $actor = null;
-        $details = null;
-        $errorcode = 'unknownerror';
-        $message = get_string($errorcode);
-        if ($fault instanceof Exception) {
-            // Add the debuginfo to the exception message if debuginfo must be returned.
-            $actor = isset($fault->errorcode) ? $fault->errorcode : null;
-            $errorcode = $actor;
-            if (ws_debugging()) {
-                $message = $fault->getMessage();
-                $details = isset($fault->debuginfo) ? $fault->debuginfo : null;
-            }
-        }
-        else if (is_string($fault)) {
-            $message = $fault;
-        }
-
-        $this->soapserver->fault($code, $message . ' | ERRORCODE: ' . $errorcode, $actor, $details);
     }
 }
 

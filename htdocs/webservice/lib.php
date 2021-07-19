@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Web services utility functions and classes
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -53,9 +54,21 @@ define('EXTERNAL_TOKEN_USER', 3);
  */
 define('EXTERNAL_TOKEN_USER_EXPIRES', (12 * 7 * 24 * 60 * 60));
 
+/**
+ * Username/password authentication (also called simple authentication)
+ */
 define('WEBSERVICE_AUTHMETHOD_USERNAME', 0);
+
+/**
+ * The most common token authentication (external app, mobile app...)
+ */
 define('WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN', 1);
+
+/**
+ * The token for embedded application (requires Moodle session)
+ */
 define('WEBSERVICE_AUTHMETHOD_SESSION_TOKEN', 2);
+
 define('WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN', 3);
 define('WEBSERVICE_AUTHMETHOD_USER_TOKEN', 4);
 
