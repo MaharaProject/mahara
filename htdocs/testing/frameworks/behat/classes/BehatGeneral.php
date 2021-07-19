@@ -1954,6 +1954,28 @@ JS;
         }
     }
 
+/**
+ * Scroll element into view and align top of element with the top of the visible area.
+ *
+ * @When I scroll to the id beginning with :id
+ * @When I scroll to the id beginning with :id instance :instance
+ */
+    public function i_scroll_into_id_like($id, $instance = 0) {
+        $function = <<<JS
+          (function(){
+            //   var elem = document.querySelector('[id^="$id"]');
+              var eleme = jQuery('[id^="$id"]')[$instance];
+              elem.scrollIntoView(true);
+              return 1;
+          })()
+JS;
+        try {
+            $this->getSession()->wait(5000, $function);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollIntoViewLike failed");
+        }
+    }
 
 /**
  * Check if images exist in the block given its title
