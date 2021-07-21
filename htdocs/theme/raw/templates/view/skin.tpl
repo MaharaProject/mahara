@@ -65,7 +65,7 @@
         </div>
 
         <div class="manage-skins-btn">
-            <button class="btn btn-secondary" data-url="{$WWWROOT}skin/index.php">
+            <button class="btn btn-secondary" type="button" data-url="{$WWWROOT}skin/index.php">
               <span class="icon icon-magic icon-flip-horizontal left" role="presentation" aria-hidden="true"></span>
               {str tag=manageskins section=skin}
             </button>

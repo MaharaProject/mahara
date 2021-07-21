@@ -1,5 +1,5 @@
 {if $MAINNAV}
-<nav>
+<nav aria-label="{str tag=mainmenu setction=mahara}">
   <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabcard">
     <ul id="nav" class="nav navbar-nav">
         {strip}
@@ -57,7 +57,7 @@
     </ul>
   </div>
 </nav>
-<nav>
+<nav aria-label="{str tag=adminmenu section=mahara}">
   <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin" role="tabcard">
     <ul id="navadmin" class="nav navbar-nav">
     {strip}
@@ -118,7 +118,7 @@
 {/if}
 
 {if $RIGHTNAV}
-<nav>
+<nav aria-label="{str tag=usermenu1 section=mahara}">
   <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user" role="tabcard">
     <ul id="navuser" class="nav navbar-nav">
       {strip}

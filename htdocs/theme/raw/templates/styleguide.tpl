@@ -267,13 +267,15 @@ section .navbar-form.navbar-collapse.search-form {
                 <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Three Button and icon -->
-            <a href="" class="user-icon" title="Profile page">
-                <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
-            </a>
-            <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
-                <span class="sr-only">Show nav three</span>
-                <span class="icon icon-chevron-down collapsed"></span>
-            </button>
+            <div class="user-icon-wrap-toggle navbar-toggle">
+                <a href="" class="user-icon user-icon-25" title="Profile page">
+                    <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
+                </a>
+                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+                    <span class="sr-only">Show nav three</span>
+                    <span class="icon icon-chevron-down collapsed"></span>
+                </button>
+            </div>
             <!-- Hide Search When on Desktop -->
             <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
                 <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
@@ -281,7 +283,7 @@ section .navbar-form.navbar-collapse.search-form {
             </button>
         </div>
         <!-- Nav One -->
-        <nav id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabcard">
+        <nav aria-label="Nav one" id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabcard">
            <ul id="navone" class="nav navbar-nav">
               <li>
                   <a href="">Link 1</a>
@@ -322,7 +324,7 @@ section .navbar-form.navbar-collapse.search-form {
            </ul>
         </nav>
         <!-- Nav Two -->
-        <nav id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabcard" aria-expanded="false">
+        <nav aria-label="Nav two" id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabcard" aria-expanded="false">
             <ul id="navtwo" class="nav navbar-nav">
                 <li>
                     <a href="">Link 1</a>
@@ -360,7 +362,7 @@ section .navbar-form.navbar-collapse.search-form {
             </ul>
         </nav>
         <!-- Nav Three -->
-        <nav id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabcard">
+        <nav aria-label="Nav three" id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabcard">
             <ul id="navthree" class="nav navbar-nav">
                 <li class="has-icon">
                     <a href="">
@@ -790,7 +792,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
     </button>
     <h2>{str tag=Collection section=collection}: Collection 1</h2>
     <p class="navlabel">{str tag=navtopage section=collection}</p>
-    <nav class="custom-dropdown dropdown">
+    <nav aria-label="{str tag=Collection section=collection}" class="custom-dropdown dropdown">
         <ul id="pagelist" class="collapse">
             <li>
                 <a href="" data-index="0">Page 1</a>
@@ -802,10 +804,10 @@ This is the general layout of blocks. An example of this being used is the 'Late
                 <a href="" data-index="2">Page 3</a>
             </li>
         </ul>
-        <span class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
+        <button class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
             <span id="currentindex" data-currentindex="1">2</span>
             /3
-        </span>
+        </button>
     </nav>
 </div>
 ```
