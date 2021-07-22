@@ -19,6 +19,7 @@
 
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
     overflow: hidden !important;
+    touch-action: auto !important;
 }
 
 // take away the move cursor when page in display mode
