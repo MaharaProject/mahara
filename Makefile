@@ -95,21 +95,26 @@ else
 	@echo "Done!"
 endif
 
-pdfexportfile := $(shell ls -d htdocs/lib/chrome-php/headless-chromium-php-master 2>/dev/null)
+pdfexportdir := $(shell ls -d htdocs/lib/chrome-php/ 2>/dev/null)
+pdfexportfile := $(shell ls -d htdocs/lib/chrome-php/chrome-0.11/ 2>/dev/null)
 
 cleanpdfexport:
 	@echo "Cleaning out PDF export files..."
 	rm -rf htdocs/lib/chrome-php
 
 pdfexport: initcomposer
+ifdef pdfexportdir
 ifdef pdfexportfile
 	@echo "PDF export files already exists - doing nothing"
 else
-	@echo "Pulling Headless-chromium-php from download ..."
-	@curl -sSL https://github.com/chrome-php/headless-chromium-php/archive/0.10.zip -o pdf_tmp.zip && unzip pdf_tmp.zip -d htdocs/lib/chrome-php && rm pdf_tmp.zip
-	@php external/composer.phar --working-dir=htdocs/lib/chrome-php/headless-chromium-php-0.10 install
-	@find htdocs/lib/chrome-php/headless-chromium-php-0.10 -type f -name composer.json -delete
-	@find htdocs/lib/chrome-php/headless-chromium-php-0.10 -type f -name composer.lock -delete
+	@echo "Older PDF export files exists - update via: make cleanpdfexport && make pdfexport"
+endif
+else
+	@echo "Pulling chrome-0.11 from download ..."
+	@curl -sSL https://github.com/chrome-php/chrome/archive/0.11.zip -o pdf_tmp.zip && unzip pdf_tmp.zip -d htdocs/lib/chrome-php && rm pdf_tmp.zip
+	@php external/composer.phar --working-dir=htdocs/lib/chrome-php/chrome-0.11 install
+	@find htdocs/lib/chrome-php/chrome-0.11 -type f -name composer.json -delete
+	@find htdocs/lib/chrome-php/chrome-0.11 -type f -name composer.lock -delete
 	@find htdocs/lib/chrome-php -type d -name Tests -exec rm -r {} +
 	@echo "Done!"
 endif
