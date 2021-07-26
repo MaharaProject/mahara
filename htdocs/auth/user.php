@@ -2287,14 +2287,20 @@ class LiveUser extends User {
     * @param $content string file contents
     * @param $name string filename to be used when downloading the file
     * @param $mimetype string
+    * @param $suffix boolean datestamp to be added to end of filename
     */
-    public function set_download_file($content, $name, $mimetype) {
+    public function set_download_file($content, $name, $mimetype, $suffix=false) {
         global $SESSION;
 
         $filename = get_random_key();
         $dir = get_config('dataroot') . 'export/' . $this->id . '/';
         check_dir_exists($dir);
         file_put_contents($dir . $filename, $content);
+        if ($suffix) {
+            // Append the current date to the end of the name of the file but before the file extension
+            // eg "cats.csv" would become "cats_20210101123010.csv"
+            $name = preg_replace('/\.(.*?)$/', '_' . date('YmdHis', time()) . '.$1', $name);
+        }
 
         $SESSION->set('downloadfile', array(
             'file'     => $filename,
