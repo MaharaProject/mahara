@@ -969,7 +969,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
                 $data[$i]->lastlogin = format_date(strtotime($data[$i]->lastlogin), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -1250,7 +1250,7 @@ function useragreement_stats_table($limit, $offset, $extra, $institution, $urlli
                            'siteprivacy', 'siteprivacyconsentdate', 'siteterms', 'sitetermsconsentdate',
                            'institutionprivacy', 'institutionprivacyconsentdate', 'institutionterms', 'institutiontermsconsentdate',
                            'instname');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useragreementsstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useragreementsstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -1614,7 +1614,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
         $csvfields = array('firstname', 'lastname', 'displayname', 'username',
                            'artefacts', 'pages', 'collections', 'groups', 'logins',
                           'actions', 'lastlogin', 'lastactivity');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useractivitystatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useractivitystatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -1909,7 +1909,7 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
         $csvfields = array('date', 'comments', 'annotations', 'usershare', 'groupshare',
                            'institutionshare', 'loggedinshare', 'publicshare', 'secretshare',
                            'friendshare');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'collaborationstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'collaborationstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -2308,7 +2308,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
                 $data[$i]->accessrevokedbyauthordate = format_date(strtotime($data[$i]->accessrevokedbyauthordate), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'completionverificationstatistics.csv', 'text/csv', true);
     }
 
     $result['csv'] = true;
@@ -2510,7 +2510,7 @@ function portfolioswithverifiers_stats_table($limit, $offset, $extra, $instituti
                 $data[$i]->date = format_date(strtotime($data[$i]->date), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'portfolioswithverifiersummarystatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'portfolioswithverifiersummarystatistics.csv', 'text/csv', true);
     }
 
     $smarty = smarty_core();
@@ -2700,7 +2700,7 @@ function user_stats_table($limit, $offset, $extra) {
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('date', 'loggedin', 'created', 'total');
-        $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -2995,7 +2995,7 @@ function verifiersummary_stats_table($limit, $offset, $extra, $institution, $url
                 $data[$i]->date = format_date(strtotime($data[$i]->date), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'verifiersummarystatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'verifiersummarystatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -3160,7 +3160,7 @@ function institution_user_stats_table($limit, $offset, &$institutiondata, $extra
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('date', 'loggedin', 'created', 'total');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institutiondata['name'] . 'userstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institutiondata['name'] . 'userstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
 
@@ -3548,7 +3548,7 @@ function group_stats_table($limit, $offset, $extra) {
                             'views' => 'pages',
                             'groupcomments' => 'group_comments',
                             'sharedcomments' => 'shared_page_comments');
-        $USER->set_download_file(generate_csv($groupdata, $csvfields, $csvheaders), 'groupstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($groupdata, $csvfields, $csvheaders), 'groupstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
 
@@ -3836,7 +3836,7 @@ function view_stats_table($limit, $offset, $extra) {
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displaytitle', 'fullurl', 'collectiontitle','ownername', 'ownerurl',
                            'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
-        $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4098,7 +4098,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displaytitle', 'fullurl', 'collectiontitle', 'ownername', 'ownerurl',
                            'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
-        $USER->set_download_file(generate_csv($viewdata, $csvfields), $institutiondata['name'] . 'viewstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($viewdata, $csvfields), $institutiondata['name'] . 'viewstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4353,7 +4353,7 @@ function content_stats_table($limit, $offset, $extra) {
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('field', 'modified', 'value');
-        $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4515,7 +4515,7 @@ function objectionable_stats_table($limit, $offset, $extra, $institution, $urlli
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('objectname', 'reporter', 'reportedtime', 'report', 'status');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'objectionablestatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'objectionablestatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4653,7 +4653,7 @@ function institution_content_stats_table($limit, $offset, &$institutiondata, $ex
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('field', 'modified', 'value');
-        $USER->set_download_file(generate_csv($contentdata, $csvfields), $institutiondata['name'] . 'contentstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($contentdata, $csvfields), $institutiondata['name'] . 'contentstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
 
@@ -4809,7 +4809,7 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('user', 'reason', 'masquerader', 'masqueraderurl', 'date');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'masqueradingstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'masqueradingstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4987,7 +4987,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displayname', 'userurl', 'title', 'views', 'hasaccessrules');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -5167,7 +5167,7 @@ function institution_comparison_stats_table($limit, $offset, $extra, $urllink) {
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('name', 'count_members', 'count_views', 'count_blocks', 'count_artefacts', 'count_interaction_forum_post');
-        $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'institutionstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'institutionstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -5368,7 +5368,7 @@ function institution_logins_stats_table($limit, $offset, $extra) {
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('name', 'displayname', 'count_logins', 'count_active');
-        $USER->set_download_file(generate_csv($rawdata, $csvfields), 'userloginstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($rawdata, $csvfields), 'userloginstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -6380,7 +6380,7 @@ function assessment_statistics_table($limit, $offset, $extra, $institution, $url
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('type', 'viewname', 'owner', 'groupname',  'submitted', 'released', 'marker');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'assessmentstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'assessmentstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();

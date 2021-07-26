@@ -164,7 +164,7 @@ These list must take into account the sort option chosen in the block config (Bu
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I should see "GroupA"
     And I choose "Groups" in "Engage" from main menu
-    And I scroll to the base of id "findgroups"
+    And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I select "Page UserB_01" from "group_view_submission_form_1_options"
     And I press "Submit"
@@ -203,7 +203,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Pages and collections | GroupA"
     # Check if it is now in the first page of the list of group pages
     And I choose "Groups" in "Engage" from main menu
-    And I scroll to the base of id "findgroups"
+    And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I should see "Page GroupA_06" in the "Group portfolios" "Groups" property
     #And I follow "Next" in the "div#groupviews_pagination" "css_element"
@@ -211,6 +211,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     # Update the shared page "Page UserA_01"
     And I choose "Pages and collections" in "Create" from main menu
+    And I scroll to the base of id "showmorebtn"
     And I click on "Edit" in "Page UserA_01" card menu
     And I follow "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
@@ -219,7 +220,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I display the page
     # Check if it is now in the first page of the list of shared pages
     And I choose "Groups" in "Engage" from main menu
-    And I scroll to the base of id "findgroups"
+    And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I should see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     #And I follow "2" in the "div#sharedviews_pagination" "css_element"
@@ -233,7 +234,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups" in "Engage" from main menu
-    And I scroll to the base of id "findgroups"
+    And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I should see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
     #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
@@ -301,7 +302,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Submit"
     And I press "Yes"
     And I choose "Groups" in "Engage" from main menu
-    And I scroll to the base of id "findgroups"
+    And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I select "Page UserC_04" from "group_view_submission_form_1_options"
     And I press "Submit"
@@ -377,7 +378,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I press "Submit"
     And I press "Yes"
     And I choose "Groups" in "Engage" from main menu
-    And I scroll to the base of id "findgroups"
+    And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I select "Page UserC_12" from "group_view_submission_form_1_options"
     And I press "Submit"
