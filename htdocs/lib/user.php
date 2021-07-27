@@ -224,10 +224,10 @@ function get_user_language($userid) {
  * @returns array of fields => values
  */
 function expected_account_preferences() {
-    $core = array('friendscontrol' => 'auth',
+    $core = array('friendscontrol' => 'nobody', // PCNZ WR357487
                  'wysiwyg'        =>  1,
                  'licensedefault' => '',
-                 'messages'       => 'allow',
+                 'messages'       => 'nobody', // PCNZ WR357487
                  'lang'           => 'default',
                  'maildisabled'   => 0,
                  'tagssideblockmaxtags' => get_config('tagssideblockmaxtags'),
