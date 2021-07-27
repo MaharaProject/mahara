@@ -130,7 +130,11 @@ class BehatHooks extends BehatBase {
             throw new Exception('The test site is not enabled for behat testing');
         }
 
-        //BehatTestingUtil::drop_site();
+        // Check if our tests passed.
+        if ($event->getTestResult()->isPassed()) {
+            // Our tests passed. We can clean up the database.
+            BehatTestingUtil::drop_site();
+        }
         BehatTestingUtil::stop_test_mode();
     }
 

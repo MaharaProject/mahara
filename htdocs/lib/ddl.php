@@ -708,7 +708,7 @@ function uninstall_from_xmldb_file($file) {
                         // dropped when the table is dropped
                         continue;
                     }
-                    drop_key($table, $key);
+                    drop_key($table, $key, true, true, true);
                 }
             }
             drop_table($table);
@@ -1225,9 +1225,10 @@ function add_key($table, $key, $continue=true, $feedback=true) {
  * @param XMLDBKey key object (full specs are required)
  * @param boolean continue to specify if must continue on error (true) or stop (false)
  * @param boolean feedback to specify to show status info (true) or not (false)
+ * @param boolean quiet to specify if we need to alert about missing key
  * @return boolean true on success, false on error
  */
-function drop_key($table, $key, $continue=true, $feedback=true) {
+function drop_key($table, $key, $continue=true, $feedback=true, $quiet=false) {
 
     global $CFG, $db;
 
@@ -1242,7 +1243,9 @@ function drop_key($table, $key, $continue=true, $feedback=true) {
 
     // Check key exists.
     if (!db_key_exists($table, $key)) {
-        debugging('Key ' . $key->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
+        if (!$quiet) {
+            debugging('Key ' . $key->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
+        }
         return true; // Key doesn't exist, nothing to do.
     }
 
