@@ -71,7 +71,6 @@ $btn-primary-color:              $white;
 $btn-primary-bg:                 $theme-primary-color;
 $btn-primary-border:             scale-color($btn-primary-bg, $lightness: -8%);
 
-
 // Popovers
 $popover-fallback-border-color:       #ccc;
 
@@ -80,8 +79,7 @@ $card-border-color:          #ccc;
 $card-header-bg:             #f9f9f9;
 $card-footer-bg:             #f5f5f5;
 
-$card-secondary-border:       $theme-primary-color;
-
+$card-secondary-border-color:       $theme-primary-color;
 
 // User icon border radius
 $user-icon-border-radius:                   50%;

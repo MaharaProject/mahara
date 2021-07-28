@@ -1,6 +1,7 @@
 .collapsible legend,
 .card-header {
     background-color: $card-header-bg;
+    color: $card-header-color;
     position: relative;
     display: block;
     font-family: $font-family-base;
@@ -29,7 +30,7 @@
     // Use .secondary-link if you don't want this behaviour
     a:not(.secondary-link) {
         display: block;
-        color: inherit;
+        color: $card-header-color;
         padding: $card-spacer-y $card-spacer-x;
         border: $card-border-width solid $card-border-color;
         .card-secondary > & {
@@ -52,6 +53,7 @@
         &:hover, &:focus {
             background: none;
             text-decoration: none;
+            color: scale-color($card-header-color, $lightness: -15%);
         }
         .pieform > .collapsible-group:first-child &,
         .card.first & {
