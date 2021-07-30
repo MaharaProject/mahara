@@ -2380,9 +2380,11 @@ JS;
      */
     public function iSelectTheSkinFrom($skinname, $skinsection) {
         $skinnameliteral = $this->escaper->escapeLiteral($skinname);
-        $xpath = "//div[contains(@id, $skinsection)]" .
+        $skinsectionliteral = $this->escaper->escapeLiteral($skinsection);
+        $xpath = "//div[@id=$skinsectionliteral]" .
                 "/div[contains(concat(' ', normalize-space(@class), ' '), ' skin ')]" .
-                "/a/div";
+                "/a/div[contains(text(), $skinnameliteral)]";
+
         try {
             $skin = $this->find('xpath', $xpath);
             $this->ensure_node_is_visible($skin);
