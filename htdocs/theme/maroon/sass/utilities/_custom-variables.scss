@@ -69,6 +69,9 @@ $btn-primary-color:                         $white;
 $btn-primary-bg:                            scale-color($theme-secondary-color, $lightness: -35%);
 $btn-primary-border:                        scale-color($theme-secondary-color, $lightness: -35%);
 
+// Cards
+$card-secondary-header-color:               $theme-accent-color;
+
 // Header inbox message count background color
 $navbar-messages-count-color:               $white;
 $navbar-messages-count-bg:                  scale-color($theme-secondary-color, $lightness: -35%);
