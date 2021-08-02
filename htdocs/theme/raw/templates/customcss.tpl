@@ -129,9 +129,13 @@ textarea:focus {
     color: #333;
     background-color: #F1F1F1;
 }
-.loading-inner,
-.navbar-toggle .icon {
+.navbar-toggle .icon,
+.loading-inner {
     color: {$data.backgroundfg};
+}
+.navbar-toggle:hover .icon,
+.navbar-toggle:focus .icon {
+    color: #333;
 }
 
 .navbar-default .navbar-collapse {
@@ -381,10 +385,9 @@ textarea:focus {
 }
 
 .progress-bar {
-    color: #333;
-    background-color: #e0e0e0;
+    color: #FFF;
+    background-color: #333;
 }
-
 
 .page-item.active .page-link {
     color: #333;
@@ -428,8 +431,19 @@ textarea:focus {
     background-color: #F1F1F1;
 }
 
-.block-header a {
+.block-header a,
+.list-group .block-header.btn-group-top .btn-secondary,
+.list-group .block-header.btn-group-top .btn-secondary:focus,
+.list-group .block-header.btn-group-top .btn-secondary:hover {
     color: #FFFFFF;
+    background-color: #333;
+}
+.block-header.active-block a,
+.list-group .block-header.btn-group-top.active-block .btn-secondary,
+.block-header.btn-group-top .btn-secondary:not(:disabled):not(.disabled):active {
+    color: #333;
+    background-color: #F1F1F1;
+    outline: 2px solid {$data.link};
 }
 
 .bootstrap-datetimepicker-widget table td span:hover,

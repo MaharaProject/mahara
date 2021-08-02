@@ -2261,5 +2261,16 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021080200) {
+        // Check whether institution uses configurable theme and flag them to be resaved to get new css changes
+        $custom_themes = get_records_sql_array("SELECT name FROM {institution} WHERE theme = ?", array('custom'));
+        if ($custom_themes) {
+            require_once(get_config('docroot') . 'lib/institution.php');
+            foreach ($custom_themes as $inst) {
+                set_config_institution($inst->name, 'customthemeupdate', true);
+            }
+        }
+    }
+
     return $status;
 }
