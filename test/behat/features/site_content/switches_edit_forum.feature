@@ -48,7 +48,7 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     And I press "Save"
     And I log out
 
-# Person joins group and unsubscribes from Freshwater turtles forum
+# Person joins group and unsubscribes from forums via two ways
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     And I select "All groups" from "filter"
@@ -61,3 +61,6 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     When I click on "Unsubscribe" in "Freshwater turtles" row
     Then I should see "Forum unsubscribed successfully"
     And I should see "Subscribe" in the "Freshwater turtles" row
+    And I follow "General discussion"
+    And I click on "Unsubscribe from forum"
+    Then I should see "Subscribe to forum"
