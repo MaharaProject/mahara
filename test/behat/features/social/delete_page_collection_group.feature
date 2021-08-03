@@ -33,8 +33,8 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     # Share page to the group
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Collection UserA_01"
-    And I follow "Edit"
-    And I follow "Share" in the "Toolbar buttons" "Nav" property
+    And I press "Edit"
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
     # Delete a page from the collection

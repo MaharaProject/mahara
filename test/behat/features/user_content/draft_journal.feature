@@ -64,8 +64,8 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I wait "1" seconds
  Then I should see "My diary entry two"
  And I go to portfolio page "Page UserA_01"
- And I follow "Edit"
- And I follow "Share" in the "Toolbar buttons" "Nav" property
+ And I press "Edit"
+ And I click on "Share" in the "Toolbar buttons" "Nav" property
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I log out

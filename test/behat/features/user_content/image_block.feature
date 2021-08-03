@@ -30,7 +30,7 @@ Scenario: Create and delete image block
     And I display the page
     And I should see "Image1.jpg"
     # delete image block
-    And I follow "Edit"
+    And I press "Edit"
     And I delete the block "Image Block 1"
     And I display the page
     Then I should not see "Image Block 1"

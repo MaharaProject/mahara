@@ -31,12 +31,12 @@ Scenario: Testing that views & collections are collated properly
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Page UserA_01"
-    And I follow "Edit"
-    And I follow "Settings" in the "Toolbar buttons" "Nav" property
+    And I press "Edit"
+    And I press "Settings" in the "Toolbar buttons" "Nav" property
     And I set the following fields to these values:
     | Anonymise | 1 |
     And I press "Save"
-    And I follow "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I press "Save"
     And I log out

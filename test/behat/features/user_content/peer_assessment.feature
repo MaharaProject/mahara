@@ -53,7 +53,7 @@ Background:
     # Add signoff block to Page UserA_00
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
-    And I click on "Edit"
+    And I press "Edit"
     # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
@@ -62,9 +62,9 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I follow "Return to pages and collections"
+    And I press "Return to pages and collections"
     And I go to portfolio page "Page UserA_01"
-    And I click on "Edit"
+    And I press "Edit"
     # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
@@ -73,10 +73,10 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I follow "Return to pages and collections"
+    And I press "Return to pages and collections"
     # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
-    And I click on "Edit"
+    And I press "Edit"
     # Author adds sign off block
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
@@ -85,7 +85,7 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I follow "Return to pages and collections"
+    And I press "Return to pages and collections"
     # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"

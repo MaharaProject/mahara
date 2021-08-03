@@ -192,13 +192,13 @@ These list must take into account the sort option chosen in the block config (Bu
     # Update the group page "Page GroupA_06"
     And I follow "Pages and collections (tab)"
     And I click on "Edit" in "Page GroupA_06" card menu
-    And I follow "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I press "Save"
     And I display the page
     #add test for group button lang string (Bug 1772327)
-    And I click on "Edit"
+    And I press "Edit"
     And I click on "Return to group pages and collections"
     And I should see "Pages and collections | GroupA"
     # Check if it is now in the first page of the list of group pages
@@ -213,7 +213,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "showmorebtn"
     And I click on "Edit" in "Page UserA_01" card menu
-    And I follow "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I press "Save"

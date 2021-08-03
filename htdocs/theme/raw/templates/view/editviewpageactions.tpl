@@ -5,38 +5,45 @@
         <span>&nbsp;</span>
     {/if}
     {if ($edittitle || $canuseskins) }
-        <a class="btn btn-secondary first-of-group editviews editlayout {if $selected == 'editlayout'}active{/if}"
-            href="{$WWWROOT}view/editlayout.php?id={$viewid}"
+        <button
+            class="btn btn-secondary first-of-group editviews editlayout {if $selected == 'editlayout'}active{/if}"
+            data-url="{$WWWROOT}view/editlayout.php?id={$viewid}"
             title="{str tag=settings section=view}">
             <span class="icon icon-cogs icon-lg"></span>
             <span class="btn-title sr-only">{str tag=settings section=view}</span>
-        </a>
+        </button>
     {/if}
     {if $selected == 'content'}
         {if $viewurl}
-            <a id='displaypagebtn' class="btn btn-secondary editviews displaycontent" href="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}" title="{str tag=displayview section=view}">
-                <span class="icon icon-tv icon-lg" aria-hidden="true" role="presentation"></span>
-                <span class="btn-title sr-only">{str tag=displayview section=view}</span>
-            </a>
+            <button
+                data-url="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}"
+                id='displaypagebtn' type="button" class="btn btn-secondary editviews displaycontent" title="{str tag=displayview section=view}">
+                <span class="icon icon-tv icon-lg left" role="presentation" aria-hidden="true"></span>
+                <span class="sr-only">{str tag=displayview section=view}</span>
+            </button>
         {/if}
     {else}
-        <a class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" href="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/blocks.php?id={$viewid}{/if}" title="{str tag=editcontent1 section=view}">
+        <button
+            data-url="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/blocks.php?id={$viewid}{/if}"
+            class="btn btn-secondary editviews editcontent {if $selected == 'content'}active{/if}" title="{str tag=editcontent1 section=view}">
             <span class="icon icon-pencil-alt icon-lg" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=editcontent1 section=view}</span>
-        </a>
+        </button>
     {/if}
     {if !$accesssuspended && ($edittitle || $viewtype == 'share') && !$issitetemplate}
-        <a class="btn btn-secondary editviews editshare {if $selected == 'share'}active{/if}" href="{$WWWROOT}view/accessurl.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"  title="{str tag=shareview1 section=view}">
+        <button
+            data-url="{$WWWROOT}view/accessurl.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"
+            class="btn btn-secondary editviews editshare {if $selected == 'share'}active{/if}" title="{str tag=shareview1 section=view}">
             <span class="icon icon-unlock icon-lg" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=shareview1 section=view}</span>
-        </a>
+        </button>
     {/if}
 
-    <a class="btn btn-secondary editviews returntolocation"
-        href={$url}
+    <button class="btn btn-secondary editviews returntolocation"
+        data-url="{$url}"
         title="{$title}">
         <span class="icon icon-step-backward icon-lg" aria-hidden="true" role="presentation"></span>
         <span class="btn-title sr-only">{$title}</span>
-    </a>
+    </button>
     </div>
 </div>

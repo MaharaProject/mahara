@@ -17,14 +17,14 @@ Scenario: Moving pages within a group (Bug 1426983)
     And I follow "Testing Group 1"
     # Creating a forum
     And I follow "Forums (tab)"
-    And I follow "New forum"
+    And I click on "New forum"
     And I set the following fields to these values:
         | Title    | Testing forum 1    |
     And I fill in "Testing forum" in editor "Description"
     And I press "Save"
     And I follow "Forums (tab selected)"
     And I follow "General discussion"
-    And I follow "New topic"
+    And I press "New topic"
     And I set the following fields to these values:
         | Subject   | Testing topic 1   |
     And I fill in "Testing moving topic" in editor "Message"

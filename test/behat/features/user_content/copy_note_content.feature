@@ -19,7 +19,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I follow "Page UserA_01"
 
 # 1. Create an original Page1 note1 with content on Page1
-  And I follow "Edit"
+  And I press "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
@@ -54,7 +54,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   When I am on homepage
   And I follow "Page UserA_02"
 # 5. Create a Page2 note1 with the (original, unedited) Page1 note1 content
-  And I follow "Edit"
+  And I press "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"

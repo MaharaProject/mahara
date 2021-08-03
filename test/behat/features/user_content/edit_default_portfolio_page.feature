@@ -35,5 +35,5 @@ I can create a new page from the site default portfolio page
     And I follow "Add"
     And I click on "Page" in the dialog
     And I should see "Settings"
-    And I click on "Edit"
+    And I press "Edit"
     Then I should see "Lorem Ipsum is simply dummy text of the printing and typesetting industry."

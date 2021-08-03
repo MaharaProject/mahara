@@ -65,7 +65,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I press "Save"
     And I wait "1" seconds
     And I should see "Postal address"
-    And I follow "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "General" in shared with select2 box
     And I expand "Advanced options" node
     And I enable the switch "Allow copying"
@@ -77,8 +77,8 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Copy"
     And I press "Copy page"
-    And I follow "Edit"
-    And I follow "Display page"
+    And I press "Edit"
+    And I press "Display page"
     Then I should see "Town: Wellington"
     And I log out
 
@@ -87,7 +87,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Copy"
     And I press "Copy page"
-    And I follow "Edit"
-    And I follow "Display page"
+    And I press "Edit"
+    And I press "Display page"
     Then I should see "Town: Oslo"
     And I log out
