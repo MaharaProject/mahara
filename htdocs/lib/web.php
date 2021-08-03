@@ -513,7 +513,6 @@ EOF;
             unset($headers[$key]);
         }
     }
-    $javascript_array[] = $jsroot . 'keyboardNavigation.js';
 
     //If necessary, load MathJax path
     if (get_config('mathjax')) {
