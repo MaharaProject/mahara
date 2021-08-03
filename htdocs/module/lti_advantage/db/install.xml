@@ -27,13 +27,14 @@
         <TABLE NAME="lti_advantage_registration">
             <FIELDS>
                 <FIELD NAME="id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="will contain uuid" />
-                <FIELD NAME="display_name" TYPE="text" NOTNULL="true" />
+                <FIELD NAME="display_name" TYPE="char" LENGTH="32" NOTNULL="true" />
                 <FIELD NAME="issuer" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="client_id" TYPE="text" NOTNULL="true" COMMENT="This is the id received in the 'aud' during a launch" />
                 <FIELD NAME="platform_login_auth_endpoint" TYPE="text" NOTNULL="true" COMMENT="The platform's OIDC login endpoint" />
                 <FIELD NAME="platform_service_auth_endpoint" TYPE="text" NOTNULL="true" COMMENT="The platform's service authorization endpoint - AUTH TOKEN URL"/>
                 <FIELD NAME="platform_jwks_endpoint" TYPE="text" NOTNULL="true" COMMENT="The platform's JWKS endpoint - KEY SET URL"/>
                 <FIELD NAME="platform_auth_provider" TYPE="text" NOTNULL="false" />
+                <FIELD NAME="platform_vendor_key" TYPE="text" NOTNULL="false" COMMENT="The array key that holds the session data in the JWT packets"/>
                 <FIELD NAME="key_set_id" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="will contain uuid" />
                 <FIELD NAME="connectionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" />
             </FIELDS>
@@ -46,6 +47,7 @@
         <TABLE NAME="lti_advantage_deployment">
             <FIELDS>
                 <FIELD NAME="deployment_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" />
+                <FIELD NAME="deployment_key" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
                 <FIELD NAME="registration_id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="will contain uuid" />
                 <FIELD NAME="customer_id" TYPE="text" NOTNULL="true" />
             </FIELDS>

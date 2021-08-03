@@ -45,19 +45,53 @@ function xmldb_module_lti_advantage_upgrade($oldversion=0) {
     }
   }
 
-  if ($oldversion < 2021080415) {
-    log_debug('Add display_name field.');
-    $table = new XMLDBTable('lti_advantage_registration');
+  if ($oldversion < 2021081014) {
+    // We need to track which deployment is for which deployment ID.
+    log_debug('Add deployment_key field.');
+    $table = new XMLDBTable('lti_advantage_deployment');
     if (table_exists($table)) {
-      $field = new XMLDBField('display_name');
+      $field = new XMLDBField('deployment_key');
       if (!field_exists($table, $field)) {
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         if (!add_field($table, $field)) {
-          log_debug('Could not add display_name to lti_advantage_deployment');
+          log_debug('Could not add deployment_key to lti_advantage_deployment');
           return false;
         }
       }
     }
   }
+
+  if ($oldversion < 2021081015) {
+    log_debug('Add display_name field.');
+    $table = new XMLDBTable('lti_advantage_registration');
+    if (table_exists($table)) {
+      $field = new XMLDBField('display_name');
+      if (!field_exists($table, $field)) {
+        $field->setAttributes(XMLDB_TYPE_CHAR, 32, null, XMLDB_NOTNULL);
+        if (!add_field($table, $field)) {
+          log_debug('Could not add display_name to lti_advantage_registration');
+          return false;
+        }
+      }
+    }
+  }
+
+  if ($oldversion < 2021081114) {
+    // @see https://www.imsglobal.org/spec/lti/v1p3/#examplelinkrequest
+    log_debug('Add platform_vendor_key field.');
+    $table = new XMLDBTable('lti_advantage_registration');
+    if (table_exists($table)) {
+      $field = new XMLDBField('platform_vendor_key');
+      if (!field_exists($table, $field)) {
+        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        if (!add_field($table, $field)) {
+          log_debug('Could not add platform_vendor_key to lti_advantage_registration');
+          return false;
+        }
+      }
+    }
+
+  }
+
   return true;
 }

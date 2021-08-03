@@ -638,13 +638,17 @@ class PluginSearchInternal extends PluginSearch {
                         $customsql = '
                         SELECT
                             cv.view AS releaseid,
-                            cv.view AS specialid,
+                            CASE
+                                WHEN c.submittedgroup IS NOT NULL
+                                THEN CAST(c.submittedgroup AS ' . $casttype . ')
+                                ELSE CAST(c.submittedhost AS ' . $casttype . ')
+                            END AS specialid,
                             c.name AS title,
                             CASE
                                 WHEN g.name IS NOT NULL
                                 THEN g.name /* Group name */
                                 ELSE c.submittedhost
-                            END as submittedto,
+                            END AS submittedto,
                             c.submittedtime,
                             c.submittedstatus,
                             ' . $userfields . '
@@ -659,7 +663,11 @@ class PluginSearchInternal extends PluginSearch {
                         UNION
                         SELECT
                             v.id AS releaseid,
-                            v.id AS specialid,
+                            CASE
+                                WHEN v.submittedgroup IS NOT NULL
+                                THEN CAST(v.submittedgroup AS ' . $casttype . ')
+                                ELSE CAST(v.submittedhost AS ' . $casttype . ')
+                            END AS specialid,
                             v.title AS title,
                             CASE
                                 WHEN g.name IS NOT NULL

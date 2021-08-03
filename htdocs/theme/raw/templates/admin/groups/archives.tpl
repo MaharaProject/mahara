@@ -115,10 +115,10 @@
                                 <span class="accessible-hidden sr-only">{$c.accessible}</span>
                             {/if}
                         {/if}
-                        {if $c.help}
+                        {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
+                        {if $c.helplink}
                             {$c.helplink|safe}
                         {/if}
-                        {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
                     </th>
                     {/foreach}
                 </tr>

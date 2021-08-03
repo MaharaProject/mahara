@@ -124,23 +124,59 @@ class LTI_Advantage_Database implements LTI\Database {
     }
 
     /**
-     * Return  the plain name for an issuer URL.
+     * Return the display name for an issuer URL.
+     *
+     * The display name is a shorter name used where longer references won't
+     * look good like tables, etc.
      *
      * @param string $issuer The issuer to check.
-     * @param string|false $default A string (or false) to return if there is not display_name found.
+     * @param bool $return_issuer If a display name for the issuer is not
+     *     found, return the value of $issuer.
      *
-     * @return string|false The Issuer name or an empty string.
+     * @return string The Issuer name, value of $issuer, or an empty string.
      */
-    public static function find_name_of_issuer($issuer, $default = false) {
-        $registration = get_records_array('lti_advantage_registration', 'issuer', $issuer, '', 'display_name');
+    public static function find_name_of_issuer($issuer, $return_issuer = true) {
+        $registration = get_records_array(
+            'lti_advantage_registration',
+            'issuer',
+            $issuer,
+            '',
+            'display_name'
+        );
         if (!$registration) {
-            return '';
+            // No records found.
+            return ($return_issuer)?$issuer:'';
         }
+
         $registration = current($registration);
         if (empty($registration->display_name)) {
-            return $default;
+            // No display name set.
+            return ($return_issuer)?$issuer:'';
         }
 
         return $registration->display_name;
+    }
+
+    public static function get_vendor_key($issuer) {
+        $registration = get_records_array(
+            'lti_advantage_registration',
+            'issuer',
+            $issuer,
+            '',
+            'platform_vendor_key'
+        );
+        if (!$registration) {
+            // No record found.
+            return false;
+        }
+
+        $registration = current($registration);
+        if (empty($registration->display_name)) {
+            // No vendor key set.
+            return false;
+        }
+
+        return $registration->platform_vendor_key;
+
     }
 }

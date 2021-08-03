@@ -788,13 +788,13 @@ function build_admin_export_queue_results($search, $offset, $limit) {
 }
 
 /**
- * Returns the search results for the archived submissions
+ * Returns the search results for the archived or current submissions.
  *
- * @param array  $search            The parameters we want to search against
- * @param int    $offset            What result to start showing paginated results from
- * @param int    $limit             How many results to show
+ * @param array $search The parameters we want to search against.
+ * @param int $offset What result to start showing paginated results from.
+ * @param int $limit How many results to show.
  *
- * @return array  A data structure containing results (see top of file).
+ * @return array A data structure containing results (see top of file).
  */
 function build_admin_archived_submissions_results($search, $offset, $limit) {
     global $USER;
@@ -837,33 +837,34 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
     // Now that we have the results we need to do some last minute alterations.
     foreach ($results['data'] as $key => $data) {
+        // Massage the results regardless of type.
+        if (is_plugin_active('lti_advantage', 'module')) {
+            // Use the short name if set for the Submitted to column.
+            $results['data'][$key]['submittedto'] = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['submittedto']);
+            // Use the short name if set for the ID column.
+            $results['data'][$key]['specialid'] = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['specialid']);
+        }
+        // Make the deleted group name more human readable.
+        $results['data'][$key]['groupdeleted'] = false;
+        if (preg_match('/^(.*?)(\.deleted\.)(.*)$/', $data['submittedto'], $matches)) {
+            $results['data'][$key]['groupdeleted'] = true;
+            $results['data'][$key]['submittedto'] = $matches[1] . ' (' . get_string('deleted') . ' ' . format_date($matches[3]) . ')';
+        }
+
         // Massage the results for the Archived Submissions.
         if ($search['type'] == 'archived') {
-            // alter the archivectime to be human readable
+            // Alter the archivectime to be human readable.
             $results['data'][$key]['archivectime'] = format_date($data['archivectime']);
 
-            // make sure the archive file is still on server at the path 'filepath' (not moved or deleted by server admin)
+            // Make sure the archive file is still on server at the path
+            // 'filepath' (not moved or deleted by server admin).
             $results['data'][$key]['filemissing'] = (!file_exists($data['filepath'] . $data['filename'])) ? true : false;
-
-            // make the deleted group name more human readable
-            $results['data'][$key]['groupdeleted'] = false;
-            if (preg_match('/^(.*?)(\.deleted\.)(.*)$/', $data['submittedto'], $matches)) {
-                $results['data'][$key]['groupdeleted'] = true;
-                $results['data'][$key]['submittedto'] = $matches[1] . ' (' . get_string('deleted') . ' ' . format_date($matches[3]) . ')';
-            }
         }
 
         // Massage the results for the Current Submissions.
         if ($search['type'] == 'current') {
             // Format the date nicely.
             $results['data'][$key]['submissiondate'] = format_date(strtotime($data['submittedtime']));
-
-            // Use the shorter display name if set.
-            $display_name = false;
-            if (is_plugin_active('lti_advantage', 'module')) {
-                $display_name = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['submittedto']);
-            }
-            $results['data'][$key]['submittedto'] = $display_name?:$results['data'][$key]['submittedto'];
         }
     }
 
@@ -884,9 +885,10 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
     $cols = [];
     $cols['submittedto'] = [
+        'id'       => 'submittedto',
         'name'     => get_string('submittedto', 'admin'),
         'sort'     => true,
-        // 'template' => 'admin/groups/submittedtocontentcolumn.tpl',
+        'helplink' => get_help_icon('core', 'reports', 'submissions', 'submittedto'),
     ];
     if ($search['type'] == 'archived') {
         // The Current Submissions does this in the SQL. Use a template for the
@@ -894,8 +896,10 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
         $cols['submittedto']['template'] = 'admin/groups/submittedtocontentcolumn.tpl';
     }
     $cols['specialid'] = [
+        'id'       => 'specialid',
         'name'     => get_string('ID', 'admin'),
         'sort'     => true,
+        'helplink' => get_help_icon('core', 'groups', 'submissions', 'specialid'),
     ];
     $cols['icon'] = [
         'template' => 'admin/users/searchiconcolumn.tpl',

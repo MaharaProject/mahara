@@ -55,18 +55,39 @@ class PluginModuleLti_advantage extends PluginModule {
                 $platform = get_record('lti_advantage_registration', 'connectionid', $dbconnection->id);
                 if ($platform) {
                     $deployments = get_records_array('lti_advantage_deployment', 'registration_id', $platform->id);
+                    if ($deployments) {
+                        switch (count($deployments)) {
+                            case 2:
+                                if (empty($deployments[0]->deployment_key)) {
+                                    $deployments[0]->deployment_key = 1;
+                                }
+                                if (empty($deployments[1]->deployment_key)) {
+                                    $deployments[1]->deployment_key = 3;
+                                }
+                                break;
+
+                            case 3:
+                                for ($i = 0; $i < count($deployments); $i++) {
+                                    if (empty($deployments[$i]->deployment_key)) {
+                                        $deployments[$i]->deployment_key = $i + 1;
+                                    }
+                                }
+                        }
+                    }
                 }
             }
             $extra_fields = array(
                 'display_name' => array(
-                    'defaultvalue' => isset($platform->display_name) ? $platform->display_name : null,
-                    'type'         => 'text',
-                    'size'         => 50,
-                    'disabled'     => false,
-                    'title'        => get_string('display_name', 'module.lti_advantage'),
-                    'rules'        => array(
-                        'required' => true
+                    'defaultvalue'  => isset($platform->display_name) ? $platform->display_name : null,
+                    'type'          => 'text',
+                    'size'          => 30,
+                    'disabled'      => false,
+                    'title'         => get_string('short_name', 'module.lti_advantage'),
+                    'rules'         => array(
+                        'required'  => true,
+                        'maxlength' => 30,
                     ),
+                    'description'   => get_string('short_namedescription', 'module.lti_advantage'),
                 ),
                 'issuer' => array(
                     'defaultvalue' => isset($platform->issuer) ? $platform->issuer : null,
@@ -75,8 +96,24 @@ class PluginModuleLti_advantage extends PluginModule {
                     'disabled'     => false,
                     'title'        => get_string('issuer', 'module.lti_advantage'),
                     'rules'        => array(
-                        'required' => true
+                        'required' => true,
                     ),
+                    'help'         => true,
+                ),
+                'platform_vendor_key' => array(
+                    'id'           => 'platform_vendor_key',
+                    'type'         => 'select',
+                    'title'        => get_string('platformvendorkeytitle', 'module.lti_advantage'),
+                    'options'      => array(
+                        ''                           => get_string('platformvendorkeyoptionnone', 'module.lti_advantage'),
+                        'http://www.brightspace.com' => get_string('platformvendorkeyoptionbrightspace', 'module.lti_advantage'),
+                    ),
+                    'defaultvalue' => isset($platform->platform_vendor_key) ? $platform->platform_vendor_key : '',
+                    'allowother'   => true,
+                    'rules'        => array(
+                        'required' => true,
+                    ),
+                    'help'         => true,
                 ),
                 'client_id' => array(
                     'defaultvalue' => isset($platform->client_id) ? $platform->client_id : null,
@@ -133,28 +170,48 @@ class PluginModuleLti_advantage extends PluginModule {
                             'type' => 'html',
                             'value' => get_string('deploymentsdesc', 'module.lti_advantage'),
                         ),
-                       'deployment1_id' => array(
-                           'type'         => 'text',
-                           'defaultvalue' => isset($deployments[0]) ? $deployments[0]->deployment_id : null,
-                           'title'        =>get_string('deploymentsbasiclaunchtitle', 'module.lti_advantage'),
-                       ),
-                       'deployment2_id' => array(
-                           'type'         => 'text',
-                           'defaultvalue' => isset($deployments[1]) ? $deployments[1]->deployment_id : null,
-                           'title'        =>get_string('deploymentsnrpstitle', 'module.lti_advantage'),
-                       ),
-                       'deployment3_id' => array(
-                           'type'         => 'text',
-                           'defaultvalue' => isset($deployments[2]) ? $deployments[2]->deployment_id : null,
-                           'title'        =>get_string('deploymentsdeeplinkportfoliolisttitle', 'module.lti_advantage'),
-                           'rules' => array(
-                               'required' => true,
-                           ),
-                           'legend'       => 'test',
-                       ),
                     ),
-                ),
+                )
             );
+
+            // Build the deployment id elements.
+            $deployment_types = [
+                1 => [
+                    'title' => get_string('deploymentsbasiclaunchtitle', 'module.lti_advantage'),
+                    'rules' => [],
+                ],
+                2 => [
+                    'title' => get_string('deploymentsnrpstitle', 'module.lti_advantage'),
+                    'rules' => [],
+                ],
+                3 => [
+                    'title' => get_string('deploymentsdeeplinkportfoliolisttitle', 'module.lti_advantage'),
+                    'rules' => array(
+                        'required' => true,
+                    ),
+                ],
+            ];
+            $deployment_elements = [];
+            foreach ($deployment_types as $key => $deployment_type) {
+                $element_key = "deployment{$key}_id";
+                $deployment_elements[$element_key] = [
+                    'type'         => 'text',
+                    'defaultvalue' => null,
+                    'title'        => $deployment_type['title'],
+                    'rules'        => $deployment_type['rules'],
+                ];
+            }
+            // Populate the default values in the deployment id elements.
+            for ($i = 0; $i < count($deployments); $i++) {
+                $deployment = $deployments[$i];
+                $element_key = "deployment{$deployment->deployment_key}_id";
+                $deployment_elements[$element_key]['defaultvalue'] = $deployment->deployment_id;
+            }
+            $extra_fields['deployments']['elements'] = array_merge(
+                $extra_fields['deployments']['elements'],
+                $deployment_elements
+            );
+
             return $extra_fields;
         }
         return array();
@@ -421,10 +478,14 @@ class PluginModuleLti_advantage extends PluginModule {
     public static function webservice_oauth_server_validate(Pieform $form, $values) {
         if (get_field('module_installed', 'active', 'name', 'lti_advantage')) {
             if (empty($values['display_name'])) {
-                $form->set_error('display_name', get_string('display_namecannotbeempty', 'module.lti_advantage'));
+                $form->set_error('display_name', get_string('short_namecannotbeempty', 'module.lti_advantage'));
             }
-            // check the client_connections_institution is not related to a different issuer
+            if (empty($values['platform_vendor_key'])) {
+                $form->set_error('platform_vendor_key', get_string('platformvendorkeycannotbeempty', 'module.lti_advantage'));
+            }
+            // We are updating the record.
             if (isset($values['id']) && $values['id']) {
+                // Check the client_connections_institution is not related to a different issuer.
                 $registration = get_record('lti_advantage_registration', 'issuer', $values['issuer']);
                 if ($registration && $registration->connectionid != $values['id']) {
                     $form->set_error('issuer', get_string('issueralreadyinuse', 'module.lti_advantage'));
@@ -438,6 +499,26 @@ class PluginModuleLti_advantage extends PluginModule {
                 $values['deployment1_id'] == $values['deployment2_id']) {
                 $form->set_error('deployment1_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
                 $form->set_error('deployment2_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
+            }
+
+            // Check the deployment IDs aren't in use on another connection.
+            $deployments = ['deployment1_id', 'deployment2_id', 'deployment3_id'];
+            for ($i = 0; $i < count($deployments); $i++) {
+                $deployment_key = $deployments[$i];
+                $deployment = get_record('lti_advantage_deployment', 'deployment_id', $values[$deployment_key]);
+                if (!empty($deployment)) {
+                    $registration = get_record('lti_advantage_registration', 'id', $deployment->registration_id);
+                    if (!empty($registration)) {
+                        // We have found the registration.
+                        if (empty($values['id']) || $registration->connectionid != $values['id']) {
+                            // If $values['id'] is not set we shouldn't have a
+                            // record. It's in use.
+                            // If $values['id'] is set and it does not match the
+                            // connection id then it is already in use.
+                            $form->set_error($deployment_key, get_string($deployment_key . 'alreadyinuse', 'module.lti_advantage'));
+                        }
+                    }
+                }
             }
         }
         else {
@@ -499,6 +580,7 @@ class PluginModuleLti_advantage extends PluginModule {
             $registration->display_name = $values['display_name'];
             $registration->issuer = $values['issuer'];
             $registration->client_id = $values['client_id'];
+            $registration->platform_vendor_key = $values['platform_vendor_key'];
             $registration->platform_login_auth_endpoint = $values['platform_login_auth_endpoint'];
             $registration->platform_service_auth_endpoint = $values['platform_service_auth_endpoint'];
             $registration->platform_jwks_endpoint = $values['platform_jwks_endpoint'];
@@ -510,20 +592,14 @@ class PluginModuleLti_advantage extends PluginModule {
 
             insert_record('lti_advantage_registration', $registration);
 
-            $deployment = new stdClass();
-            $deployment->registration_id = $reg_id;
-            $deployment->customer_id = 'Brighspace';
-
-            if (isset($values['deployment1_id']) && !empty($values['deployment1_id'])) {
-                $deployment->deployment_id = $values['deployment1_id'];
-                insert_record('lti_advantage_deployment', $deployment);
-            }
-            if (isset($values['deployment2_id']) && !empty($values['deployment2_id'])) {
-                $deployment->deployment_id = $values['deployment2_id'];
-                insert_record('lti_advantage_deployment', $deployment);
-            }
-            if (isset($values['deployment3_id']) && !empty($values['deployment3_id'])) {
-                $deployment->deployment_id = $values['deployment3_id'];
+            // We currently have up to 3 deployment IDs.
+            for ($i = 1; $i < 4; $i++) {
+                $value_key = "deployment{$i}_id";
+                $deployment = new stdClass();
+                $deployment->registration_id = $registration->id;
+                $deployment->customer_id = 'Brighspace';
+                $deployment->deployment_key = $i;
+                $deployment->deployment_id = $values[$value_key];
                 insert_record('lti_advantage_deployment', $deployment);
             }
         }
@@ -536,6 +612,7 @@ class PluginModuleLti_advantage extends PluginModule {
             $registration->issuer = $values['issuer'];
             $registration->display_name = $values['display_name'];
             $registration->client_id = $values['client_id'];
+            $registration->platform_vendor_key = $values['platform_vendor_key'];
             $registration->platform_login_auth_endpoint = $values['platform_login_auth_endpoint'];
             $registration->platform_service_auth_endpoint = $values['platform_service_auth_endpoint'];
             $registration->platform_jwks_endpoint = $values['platform_jwks_endpoint'];
@@ -545,20 +622,15 @@ class PluginModuleLti_advantage extends PluginModule {
             update_record('lti_advantage_registration', $registration);
 
             delete_records('lti_advantage_deployment', 'registration_id', $registration->id);
-            $deployment = new stdClass();
-            $deployment->registration_id = $registration->id;
-            $deployment->customer_id = 'Brighspace';
 
-            if (isset($values['deployment1_id']) && !empty($values['deployment1_id'])) {
-                $deployment->deployment_id = $values['deployment1_id'];
-                insert_record('lti_advantage_deployment', $deployment);
-            }
-            if (isset($values['deployment2_id']) && !empty($values['deployment2_id'])) {
-                $deployment->deployment_id = $values['deployment2_id'];
-                insert_record('lti_advantage_deployment', $deployment);
-            }
-            if (isset($values['deployment3_id']) && !empty($values['deployment3_id'])) {
-                $deployment->deployment_id = $values['deployment3_id'];
+            // We currently have up to 3 deployment IDs.
+            for ($i = 1; $i < 4; $i++) {
+                $value_key = "deployment{$i}_id";
+                $deployment = new stdClass();
+                $deployment->registration_id = $registration->id;
+                $deployment->customer_id = 'Brighspace';
+                $deployment->deployment_key = $i;
+                $deployment->deployment_id = $values[$value_key];
                 insert_record('lti_advantage_deployment', $deployment);
             }
         }

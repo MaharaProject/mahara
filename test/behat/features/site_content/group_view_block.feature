@@ -11,17 +11,17 @@ Background:
      | insttwo | Institution Two | ON | OFF |
 
     And the following "users" exist:
-     | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | staff |
-     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | member |
-     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | instone | internal | member |
+     | username | password  | email             | firstname | lastname | institution | authname | role |
+     | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User | instone | internal | staff |
+     | UserB    | Kupuh1pa! | UserB@example.org | Bob       | User | instone | internal | member |
+     | UserC    | Kupuh1pa! | UserC@example.org | Cecilia   | User | instone | internal | member |
 
     And the following "groups" exist:
-     | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
-     | GroupA | UserA | GroupA owned by UserA | standard | ON | OFF | all | ON | OFF | UserB, UserC |  |
-     | GroupB | UserA | GroupB owned by UserA | standard | ON | OFF | all | OFF | OFF | UserB, UserC |  |
-     | GroupC | UserA | GroupC owned by UserA | course | ON | OFF | all | ON | OFF | UserC | UserB |
-     | GroupD | UserA | GroupD owned by UserA | standard | ON | OFF | all | ON | OFF | UserB, UserC |  |
+     | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members      | staff |
+     | GroupA | UserA | GroupA owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |       |
+     | GroupB | UserA | GroupB owned by UserA | standard  | ON   | OFF           | all       | OFF           | OFF           | UserB, UserC |       |
+     | GroupC | UserA | GroupC owned by UserA | course    | ON   | OFF           | all       | ON            | OFF           | UserC        | UserB |
+     | GroupD | UserA | GroupD owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |       |
 
     And the following "pages" exist:
      | title | description | ownertype | ownername |
