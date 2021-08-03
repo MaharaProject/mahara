@@ -44,5 +44,20 @@ function xmldb_module_lti_advantage_upgrade($oldversion=0) {
       }
     }
   }
+
+  if ($oldversion < 2021080415) {
+    log_debug('Add display_name field.');
+    $table = new XMLDBTable('lti_advantage_registration');
+    if (table_exists($table)) {
+      $field = new XMLDBField('display_name');
+      if (!field_exists($table, $field)) {
+        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        if (!add_field($table, $field)) {
+          log_debug('Could not add display_name to lti_advantage_deployment');
+          return false;
+        }
+      }
+    }
+  }
   return true;
 }

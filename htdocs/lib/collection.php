@@ -1739,11 +1739,34 @@ class Collection {
     }
 
     /**
-     * Release a submitted collection
+     * Release a submitted collection with a message to the user.
      *
-     * @param object $releaseuser The user releasing the collection
+     * The optional $releasemessageoverrides is of the form:
+     * $releasemessageoverrides [
+     *   'group' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ],
+     *   'host' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ]
+     * ]
+     *
+     * Only the ovrridden strings need to be supplied.  The strings need to be
+     * present in htdocs/lang/en.utf8/group.php.
+     *
+     * The strings can take up to 3 replacement parameters. These are:
+     * * Title - the title of what is being released.
+     * * Released from - the group name or submittedhost.
+     * * Released by - the display name of the user releasing the portfolio.
+     *
+     * @param LiveUser|null $releaseuser The Account releasing the Portfolio.
+     * @param array $releasemessageoverrides Optional array of string keys to use rather than the defaults.
+     *
+     * @return void
      */
-    public function release($releaseuser=null) {
+    public function release($releaseuser=null, $releasemessageoverrides = []) {
 
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
@@ -1796,18 +1819,37 @@ class Collection {
 
             if ((int)$releaseuserid !== (int)$this->get('owner')) {
                 require_once('activity.php');
+                $subjectkey = 'portfolioreleasedsubject';
+                $messagekey = 'portfolioreleasedmessage';
+                if ($this->submittedgroup) {
+                    $submitinfo = $this->submitted_to();
+                    if (!empty($releasemessageoverrides['group']['subjectkey'])) {
+                        $subjectkey = $releasemessageoverrides['group']['subjectkey'];
+                    }
+                    if (!empty($releasemessageoverrides['group']['messagekey'])) {
+                        $messagekey = $releasemessageoverrides['group']['messagekey'];
+                    }
+                }
+                else if ($this->submittedhost) {
+                    if (!empty($releasemessageoverrides['host']['subjectkey'])) {
+                        $subjectkey = $releasemessageoverrides['host']['subjectkey'];
+                    }
+                    if (!empty($releasemessageoverrides['host']['messagekey'])) {
+                        $messagekey = $releasemessageoverrides['host']['messagekey'];
+                    }
+                }
                 activity_occurred(
                     'maharamessage',
                     array(
                         'users' => array($this->get('owner')),
                         'strings' => (object) array(
                             'subject' => (object) array(
-                                'key'     => 'portfolioreleasedsubject',
+                                'key'     => $subjectkey,
                                 'section' => 'group',
                                 'args'    => array($this->name),
                             ),
                             'message' => (object) array(
-                                'key'     => 'portfolioreleasedmessage',
+                                'key'     => $messagekey,
                                 'section' => 'group',
                                 'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                             ),

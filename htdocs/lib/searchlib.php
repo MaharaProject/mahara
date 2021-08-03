@@ -799,6 +799,10 @@ function build_admin_export_queue_results($search, $offset, $limit) {
 function build_admin_archived_submissions_results($search, $offset, $limit) {
     global $USER;
 
+    if (is_plugin_active('lti_advantage', 'module')) {
+        safe_require('module', 'lti_advantage', 'database.php');
+    }
+
     $wantedparams = array('query', 'sortby', 'sortdir', 'institution');
     $params = array();
     $shortparams = array();
@@ -830,7 +834,8 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
     }
 
     $results = get_admin_user_search_results((object) $search, $offset, $limit);
-    // Now that we have the users we need to do some last minute alterations
+
+    // Now that we have the results we need to do some last minute alterations.
     foreach ($results['data'] as $key => $data) {
         // Massage the results for the Archived Submissions.
         if ($search['type'] == 'archived') {
@@ -850,7 +855,15 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
         // Massage the results for the Current Submissions.
         if ($search['type'] == 'current') {
+            // Format the date nicely.
             $results['data'][$key]['submissiondate'] = format_date(strtotime($data['submittedtime']));
+
+            // Use the shorter display name if set.
+            $display_name = false;
+            if (is_plugin_active('lti_advantage', 'module')) {
+                $display_name = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['submittedto']);
+            }
+            $results['data'][$key]['submittedto'] = $display_name?:$results['data'][$key]['submittedto'];
         }
     }
 

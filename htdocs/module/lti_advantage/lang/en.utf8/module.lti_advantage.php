@@ -12,6 +12,8 @@
 defined('INTERNAL') || die();
 
 $string['ltiserviceexists'] = 'The LTI advantage service group is registered.';
+$string['display_name'] = 'Display name';
+$string['display_namecannotbeempty'] = 'Display name cannot be empty.';
 $string['issuer'] = 'Issuer';
 $string['client_id'] = 'Client ID';
 $string['platform_login_auth_endpoint'] = 'OpenID Connect authentication endpoint';

@@ -63,11 +63,17 @@ if ($USER->get('admin') && param_exists('releaseids')) {
 
         // If we're a collection, release that.
         if ($collection) {
-
             $msg = $collection->get('name') . ': ';
             try {
-                $collection->release($USER);
-                $msg .= get_string('collectionreleasedsuccess', 'group');
+                // Override the strings for the message keys.
+                $releasemessageoverrides = [
+                    'host' => [
+                        'subjectkey' => 'portfolioreleasedmessage',
+                        'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
+                    ],
+                ];
+                $collection->release($USER, $releasemessageoverrides);
+                $msg .= get_string('portfolioreleasedsuccess', 'group');
             }
             catch (SystemException $e) {
                 $msg .= get_string('submissionreleasefailed', 'export');
@@ -77,8 +83,15 @@ if ($USER->get('admin') && param_exists('releaseids')) {
         else {
             $msg = $view->get('title') . ': ';
             try {
-                $view->release($USER);
-                $msg .= get_string('viewreleasedsuccess', 'group');
+                // Override the strings for the message keys.
+                $releasemessageoverrides = [
+                    'host' => [
+                        'subjectkey' => 'portfolioreleasedmessage',
+                        'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
+                    ],
+                ];
+                $view->release($USER, $releasemessageoverrides);
+                $msg .= get_string('portfolioreleasedsuccess', 'group');
             }
             catch (SystemException $e) {
                 $msg .= get_string('submissionreleasefailed', 'export');

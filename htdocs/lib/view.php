@@ -1703,13 +1703,40 @@ class View {
         }
     }
 
-    public function release($releaseuser=null) {
+    /**
+     * Release a locked Portfolio with a message to the user.
+     *
+     * The optional $releasemessageoverrides is of the form:
+     * $releasemessageoverrides [
+     *   'group' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ],
+     *   'host' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ]
+     * ]
+     *
+     * Only the ovrridden strings need to be supplied.  The strings need to be
+     * present in htdocs/lang/en.utf8/group.php.
+     *
+     * The strings can take up to 3 replacement parameters. These are:
+     * * Title - the title of what is being released.
+     * * Released from - the group name or submittedhost.
+     * * Released by - the display name of the user releasing the portfolio.
+     *
+     * @param LiveUser|null $releaseuser The Account releasing the Portfolio.
+     * @param array $releasemessageoverrides Optional array of string keys to use rather than the defaults.
+     *
+     * @return void
+     */
+    public function release($releaseuser=null, $releasemessageoverrides = []) {
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
         $releaseuser = optional_userobj($releaseuser);
-
         try {
             db_begin();
             self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
@@ -1735,11 +1762,32 @@ class View {
         $releaseuserid = ($releaseuser instanceof User) ? $releaseuser->get('id') : $releaseuser->id;
         if ((int)$releaseuserid !== (int)$this->get('owner')) {
             require_once('activity.php');
-            activity_occurred('maharamessage',
+            $title = $this->get('title');
+            $releaseuserdisplay = display_name($releaseuser, $this->get_owner_object());
+            $subjectkey = 'portfolioreleasedsubject';
+            $messagekey = 'portfolioreleasedmessage';
+            if ($submitinfo['type'] == 'group') {
+                if (!empty($releasemessageoverrides['group']['subjectkey'])) {
+                    $subjectkey = $releasemessageoverrides['group']['subjectkey'];
+                }
+                if (!empty($releasemessageoverrides['group']['messagekey'])) {
+                    $messagekey = $releasemessageoverrides['group']['messagekey'];
+                }
+            }
+            else if ($submitinfo['type'] == 'host') {
+                if (!empty($releasemessageoverrides['host']['subjectkey'])) {
+                    $subjectkey = $releasemessageoverrides['host']['subjectkey'];
+                }
+                if (!empty($releasemessageoverrides['host']['messagekey'])) {
+                    $messagekey = $releasemessageoverrides['host']['messagekey'];
+                }
+            }
+            activity_occurred(
+                'maharamessage',
                 array(
                     'users' => array($this->get('owner')),
-                    'subject' => get_string_from_language($ownerlang, 'portfolioreleasedsubject', 'group', $this->get('title')),
-                    'message' => get_string_from_language($ownerlang, 'portfolioreleasedmessage', 'group', $this->get('title'),
+                    'subject' => get_string_from_language($ownerlang, $subjectkey, 'group', $this->get('title')),
+                    'message' => get_string_from_language($ownerlang, $messagekey, 'group', $this->get('title'),
                         $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
                     'url' => $url,
                     'urltext' => $this->get('title'),

@@ -122,4 +122,25 @@ class LTI_Advantage_Database implements LTI\Database {
 
         return $registration->issuer;
     }
+
+    /**
+     * Return  the plain name for an issuer URL.
+     *
+     * @param string $issuer The issuer to check.
+     * @param string|false $default A string (or false) to return if there is not display_name found.
+     *
+     * @return string|false The Issuer name or an empty string.
+     */
+    public static function find_name_of_issuer($issuer, $default = false) {
+        $registration = get_records_array('lti_advantage_registration', 'issuer', $issuer, '', 'display_name');
+        if (!$registration) {
+            return '';
+        }
+        $registration = current($registration);
+        if (empty($registration->display_name)) {
+            return $default;
+        }
+
+        return $registration->display_name;
+    }
 }

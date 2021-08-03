@@ -58,6 +58,16 @@ class PluginModuleLti_advantage extends PluginModule {
                 }
             }
             $extra_fields = array(
+                'display_name' => array(
+                    'defaultvalue' => isset($platform->display_name) ? $platform->display_name : null,
+                    'type'         => 'text',
+                    'size'         => 50,
+                    'disabled'     => false,
+                    'title'        => get_string('display_name', 'module.lti_advantage'),
+                    'rules'        => array(
+                        'required' => true
+                    ),
+                ),
                 'issuer' => array(
                     'defaultvalue' => isset($platform->issuer) ? $platform->issuer : null,
                     'type'         => 'text',
@@ -410,6 +420,9 @@ class PluginModuleLti_advantage extends PluginModule {
 
     public static function webservice_oauth_server_validate(Pieform $form, $values) {
         if (get_field('module_installed', 'active', 'name', 'lti_advantage')) {
+            if (empty($values['display_name'])) {
+                $form->set_error('display_name', get_string('display_namecannotbeempty', 'module.lti_advantage'));
+            }
             // check the client_connections_institution is not related to a different issuer
             if (isset($values['id']) && $values['id']) {
                 $registration = get_record('lti_advantage_registration', 'issuer', $values['issuer']);
@@ -483,6 +496,7 @@ class PluginModuleLti_advantage extends PluginModule {
             $registration = new stdClass();
             $reg_id = uniqid('', true);
             $registration->id = $reg_id;
+            $registration->display_name = $values['display_name'];
             $registration->issuer = $values['issuer'];
             $registration->client_id = $values['client_id'];
             $registration->platform_login_auth_endpoint = $values['platform_login_auth_endpoint'];
@@ -520,6 +534,7 @@ class PluginModuleLti_advantage extends PluginModule {
                 $registration->key_set_id = $key_set_id;
             }
             $registration->issuer = $values['issuer'];
+            $registration->display_name = $values['display_name'];
             $registration->client_id = $values['client_id'];
             $registration->platform_login_auth_endpoint = $values['platform_login_auth_endpoint'];
             $registration->platform_service_auth_endpoint = $values['platform_service_auth_endpoint'];

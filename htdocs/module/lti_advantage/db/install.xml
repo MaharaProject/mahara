@@ -27,6 +27,7 @@
         <TABLE NAME="lti_advantage_registration">
             <FIELDS>
                 <FIELD NAME="id" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="will contain uuid" />
+                <FIELD NAME="display_name" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="issuer" TYPE="text" NOTNULL="true" />
                 <FIELD NAME="client_id" TYPE="text" NOTNULL="true" COMMENT="This is the id received in the 'aud' during a launch" />
                 <FIELD NAME="platform_login_auth_endpoint" TYPE="text" NOTNULL="true" COMMENT="The platform's OIDC login endpoint" />

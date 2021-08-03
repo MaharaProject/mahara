@@ -437,3 +437,6 @@ $string['mygrouplabel'] = 'My group labels';
 $string['removegrouplabelfilter'] = 'Remove the group label filter "%s"';
 $string['agrouplabeltooshort'] = 'One or more group labels are too short, they need at least %s characters.';
 $string['agrouplabeltoolong'] = 'One or more group labels are too long, they can have at most %s characters.';
+
+// Current Archive release messages.
+$string['currentarchivereleasedsubmittedhostmessage'] = 'Your portfolio "%s" has been released from "%s" by %s. You can submit your portfolio again if needed.';
