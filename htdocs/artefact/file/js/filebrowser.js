@@ -340,10 +340,10 @@ var FileBrowser = (function($) {
             rotatorimg.prop('src', config.wwwroot + '/artefact/file/download.php?file=' + id + '&maxheight=100&maxwidth=100&ts=' + jstimestamp);
             rotatorimg.data('angle', origangle);
             rotatorimg.prop('style', '');
-            rotator.find('span').off();
+            rotator.find('#rotate_img').off();
             $('#' + self.id + '_edit_orientation').val(origangle);
             // Do transformation
-            rotator.find('span').on('click', function() {
+            rotator.find('#rotate_img').on('click', function() {
                 var angle =  (rotatorimg.data('angle') + 90) || 90;
                 rotatorimg.css({'transform': 'rotate(' + (angle - origangle) + 'deg)', 'transition': 'all 1s ease'});
                 rotatorimg.data('angle', angle);
