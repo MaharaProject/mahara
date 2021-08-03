@@ -185,39 +185,10 @@ function get_changes($token) {
                 "createdat" => array(
                     "gt" => $lastrun
                 ),
-                "and" => array(
-                    array(
-                        "or" => array(
-                            array(
-                                "and" => array(
-                                    array(
-                                        "changeableType" => "Person",
-                                        "or" => array(
-                                            array(
-                                                "fieldnames" => array(
-                                                   "like" => "%name%"
-                                                )
-                                            ),
-                                            array(
-                                                "fieldnames" => array(
-                                                    "like" => "%contactemailaddress%"
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            ),
-                            array(
-                                "and" => array(
-                                    array(
-                                        "changeableType" => "Practitioner",
-                                        "fieldnames" => array(
-                                            "like" => "%practicingstatusid%"
-                                        )
-                                    )
-                                )
-                            )
-                        )
+                "changeableType" => array(
+                    "inq" => array(
+                        "Person",
+                        "Practitioner"
                     )
                 )
             )

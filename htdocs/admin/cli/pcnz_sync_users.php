@@ -114,6 +114,9 @@ if (isset($tokeninfo->data) && !empty($tokeninfo->data)) {
     $token = $tokeninfo->id;
 }
 if ($token) {
+    if ($verbose) {
+        $cli->cli_print('The token used: ' . $token);
+    }
     if ($havetypes) {
         $cli->cli_print('================== Fetching records for types ' . implode(',', $types) . ' ==================');
     }
