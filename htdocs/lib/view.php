@@ -6995,8 +6995,26 @@ class View {
         return $data;
     }
 
-    public function submit($group, $sendnotification=true) {
+    /**
+     * Submit this View to a group or a remote host.
+     *
+     * While $group and $submittedhost are optional, at least one is required.
+     *
+     * The notification is only sent if we have a $group and $sendnotification
+     * is true.
+     *
+     * @param object|null $group The Group object.
+     * @param string|null $submittedhost A URL for the remote host.
+     * @param int|null $owner A User ID.
+     * @param bool $sendnotification Should we send a notification for this submission?
+     */
+    public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
+
+        // One of these is needed.
+        if (!$group && !$submittedhost) {
+            throw new SystemException('Group or Submitted Host is needed.');
+        }
 
         if ($this->is_submitted()) {
             throw new SystemException('Attempting to submit a submitted view');
@@ -7016,13 +7034,15 @@ class View {
             }
         }
 
-        $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+        if ($group) {
+            $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
+        }
 
         try {
             db_begin();
-            self::_db_submit(array($this->id), $group);
+            self::_db_submit(array($this->id), $group, $submittedhost, $owner);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active()) {
+            if (PluginModuleSubmissions::is_active() && $group) {
                 PluginModuleSubmissions::add_submission($this, $group);
             }
             db_commit();
@@ -7034,10 +7054,10 @@ class View {
         handle_event('addsubmission', array('id' => $this->id,
                                             'eventfor' => 'view',
                                             'name' => $this->title,
-                                            'group' => $group->id,
-                                            'groupname' => $group->name));
+                                            'group' => ($group) ? $group->id : null,
+                                            'groupname' => ($group) ? $group->name : null));
 
-        if ($sendnotification) {
+        if ($group && $sendnotification) {
             activity_occurred(
                 'groupmessage',
                 array(

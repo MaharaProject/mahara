@@ -84,7 +84,7 @@ function submitview_submit(Pieform $form, $values) {
     }
     else if (!empty($view)) {
         try {
-            $view->submit($group, $USER);
+            $view->submit($group, null, $USER->get('id'));
             $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
         }
         catch (SubmissionException $e) {
