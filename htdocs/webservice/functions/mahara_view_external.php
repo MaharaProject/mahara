@@ -516,7 +516,7 @@ class mahara_view_external extends external_api {
                     }
                     else {
                         log_debug('doing the submit');
-                        View::_db_submit(array($viewid), null, $remotewwwroot, $userid);
+                        $view->submit(null, $remotewwwroot, $userid);
                         $access = View::new_token($viewid, false);
                     }
                     $token = $access->token;

@@ -92,7 +92,7 @@ function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $portfolioType, $portfolioElement, $group;
 
     if (!empty($portfolioElement)) {
-        $portfolioElement->submit($group, $USER);
+        $portfolioElement->submit($group, null, null, true);
         $SESSION->add_ok_msg(get_string($portfolioType .'submitted', 'view'));
     }
     redirect(gotoURL());
