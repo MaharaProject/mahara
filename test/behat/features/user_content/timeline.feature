@@ -78,8 +78,8 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     And I should see "Task 2a"
     # User creates new task via the plan block on the page
     When I press "Display page"
-    And I press "Edit"
-    And  I follow "Add task"
+    And I click on "Edit"
+    And I press "Add task"
     # check user is now on New task page
     Then I should see " New task"
     When I fill in the following:

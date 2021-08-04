@@ -14,7 +14,7 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Send a message
     And I choose inbox
-    And I follow "Compose"
+    And I press "Compose"
     Then I should see "Recipients *"
     And I should see "Subject *"
     And I should see "Message *"

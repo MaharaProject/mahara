@@ -44,7 +44,7 @@ Scenario: SmartEvidence interaction by member / staff
     # Creating a collection of existing pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Add"
+    And I press "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:
     | Collection name | Smart Evidence Collection 1 |
@@ -53,7 +53,7 @@ Scenario: SmartEvidence interaction by member / staff
     And I press "Next: Edit collection pages"
     And I follow "All"
     And I press "Add pages"
-    When I follow "Next: Edit access"
+    When I press "Next: Edit access"
     Then I click on "Return to pages and collections"
 
     # Mahara member makes page visible to public

@@ -51,16 +51,16 @@ Scenario: Creating groups and deleting them (Selenium)
     # Checking groups exist and can be deleted
     And I choose "Groups" in "Engage" from main menu
     And I follow "Admin Test Group"
-    And I follow "Delete \"Admin Test Group\""
+    And I press "Delete \"Admin Test Group\""
     And I press "Yes"
     And I follow "Controlled groups"
-    And I follow "Delete \"Controlled groups\""
+    And I press "Delete \"Controlled groups\""
     And I press "Yes"
     And I follow "Admin VIP Group"
-    And I follow "Delete \"Admin VIP Group\""
+    And I press "Delete \"Admin VIP Group\""
     And I press "Yes"
     And I follow "Public discussion"
-    And I follow "Delete \"Public discussion\""
+    And I press "Delete \"Public discussion\""
     And I press "Yes"
     # Verifying none of the deleted groups can be seen
     And I should not see "Admin Test Group"

@@ -7,7 +7,7 @@ Background:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
-     
+
     And the following "groups" exist:
      | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
      | GroupA | UserB | GroupA owned by UserB | standard | ON | OFF | all | OFF | OFF | UserA |  |
@@ -34,7 +34,7 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Collection UserA_01"
     And I press "Edit"
-    And I click on "Share" in the "Toolbar buttons" "Nav" property
+    And I press "Share" in the "Toolbar buttons" "Nav" property
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I press "Save"
     # Delete a page from the collection

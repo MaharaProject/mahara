@@ -118,6 +118,7 @@ return function (target, source, columns, options) {
                 }
             });
         }
+        findButtonDataUrls();
     };
 
     this.doupdate = function(request_args, options) {

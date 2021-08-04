@@ -32,7 +32,7 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
     And I click on blocktype "Note"
-    And I follow "Use content from another note"
+    And I press "Use content from another note"
     And I select the radio "Note block 1"
     # Set title after selection as selection updates the title with original one
     And I set the following fields to these values:

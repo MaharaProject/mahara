@@ -33,7 +33,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I choose "Groups" in "Engage" from main menu
  And I follow "Group Two"
  # Editing the group
- And I follow "Edit \"Group Two\" Settings"
+ And I press "Edit \"Group Two\" Settings"
  And I fill in the following:
  | Group name | Group awesome sauce |
  Then I press "Save group"
@@ -45,7 +45,7 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I choose "Groups" in "Engage" from main menu
  And I follow "GroupA"
  # Editing the group
- And I follow "Edit \"GroupA\" Settings"
+ And I press "Edit \"GroupA\" Settings"
  And I fill in the following:
  | Group name | Group awesome sauce |
  Then I press "Save group"

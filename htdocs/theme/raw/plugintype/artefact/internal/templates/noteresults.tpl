@@ -91,12 +91,12 @@
                     </span>
                     {else}
                     <div class="btn-group">
-                        <a href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" title="{str tag=edit}" class="btn btn-secondary btn-sm">
+                        <button data-url="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" type="button" title="{str tag=edit}" class="btn btn-secondary btn-sm">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str(tag=editspecific arg1=$n->title)|escape:html|safe}
                             </span>
-                        </a>
+                        </button>
                         {if $n->deleteform}{$n->deleteform|safe}{/if}
                     </div>
                     {/if}

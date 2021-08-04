@@ -1165,13 +1165,13 @@ EOF;
         $js .= <<<EOF
         function (row, data) {
             var editlink =
-                jQuery('<a>', {'href': 'editcomposite.php?id=' + row.id + '&artefact=' + row.artefact,
+                jQuery('<button>', {'data-url': 'editcomposite.php?id=' + row.id + '&artefact=' + row.artefact,
                                'title': {$editstr}, 'class': 'btn btn-secondary btn-sm'}).append(
                                     jQuery('<span>',{'class': 'icon icon-pencil-alt', 'role':'presentation'}),
                                     jQuery('<span>',{'class': 'sr-only'}).append({$editjsstr})
                                );
             var dellink =
-                jQuery('<a>', {'href': '', 'title': {$delstr}, 'class': 'btn btn-secondary btn-sm'}).append(
+                jQuery('<button>', {'data-ignore':'true', 'data-url': '', 'title': {$delstr}, 'class': 'btn btn-secondary btn-sm'}).append(
                     jQuery('<span>',{'class': 'icon icon-trash-alt text-danger','role':'presentation'}),
                     jQuery('<span>',{'class': 'sr-only'}).append({$deljsstr})
                 );
@@ -1184,7 +1184,7 @@ EOF;
         }
     ],
     {
-        focusElement: 'a'
+        focusElement: 'button'
     },
 );
 

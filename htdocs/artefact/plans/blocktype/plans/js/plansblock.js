@@ -70,3 +70,5 @@ jQuery(window).on('blocksloaded', {}, function() {
     // after all blocks are loaded
     enableCheckBoxes();
 });
+
+findButtonDataUrls();

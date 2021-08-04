@@ -24,20 +24,20 @@
 
     {if $blog->canedit}
     <div class="card-footer has-form">
-        <a href="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-secondary btn-sm">
+        <button data-url="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-secondary btn-sm">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
             {str tag=addpost section=artefact.blog}
-        </a>
+        </button>
 
         <div class="btn-group float-right">
             {if $blog->locked}
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
-            <a href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
+            <button data-url="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" type="button" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
-            </a>
+            </button>
             {$blog->deleteform|safe}
             {/if}
         </div>

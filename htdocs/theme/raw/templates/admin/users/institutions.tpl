@@ -51,36 +51,18 @@
 
         {if $countinstitutions > 1}
 
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title sr-only">{str tag="edit"}</span>
             </button>
-
-
-            <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                <li class="">
-                    <form class="form-as-button" action="{$WWWROOT}admin/users/institutionusers.php" method="post">
-                        <button class="submit btn btn-link text-left" type="submit" name="editmembers" value="{str tag="editmembers" section="admin"}">
-                            {str tag="editmembers" section="admin"}
-                        </button>
-                    </form>
+            <div class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionusers.php"">{str tag="editmembers" section="admin"}</a>
+                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionstaff.php">{str tag="editstaff" section="admin"}</a>
+                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionadmins.php">{str tag="editadmins" section="admin"}</a>
                 </li>
-                <li class="">
-                    <form class="form-as-button" action="{$WWWROOT}admin/users/institutionstaff.php" method="post">
-                        <button class="submit btn btn-link text-left" type="submit" name="editstaff" value="{str tag="editstaff" section="admin"}">
-                            {str tag="editstaff" section="admin"}
-                        </button>
-                    </form>
-                </li>
-                <li class="">
-                    <form class="form-as-button" action="{$WWWROOT}admin/users/institutionadmins.php" method="post">
-                          <button class="submit btn btn-link text-left" type="submit" name="editadmins" value="{str tag="editadmins" section="admin"}">
-                            {str tag="editadmins" section="admin"}
-                        </button>
-                    </form>
-                </li>
-            </ul>
+            </div>
         {/if}
     </div>
  {$searchform|safe}

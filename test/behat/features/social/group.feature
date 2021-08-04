@@ -21,17 +21,17 @@ Background:
 Scenario: Verify group member can set a personal label on the group
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Add a label to group \"GroupA\""
+    And I press "Add a label to group \"GroupA\""
     And I fill in select2 input "grouplabel_grouplabel" with "Cats" and select "Cats"
     And I fill in select2 input "grouplabel_grouplabel" with "Animals" and select "Animals"
     And I press "Save"
     Then I should see "My group labels: Animals, Cats" in the "GroupA" row
-    And I follow "Add a label to group \"GroupB\""
+    And I press "Add a label to group \"GroupB\""
     And I fill in select2 input "grouplabel_grouplabel" with "Dogs" and select "Dogs"
     And I fill in select2 input "grouplabel_grouplabel" with "Animals" and select "Animals"
     And I press "Save"
     Then I should see "My group labels: Animals, Dogs" in the "GroupB" row
-    And I follow "Add a label to group \"GroupC\""
+    And I press "Add a label to group \"GroupC\""
     And I fill in select2 input "grouplabel_grouplabel" with "Aardvarks" and select "Aardvarks"
     And I fill in select2 input "grouplabel_grouplabel" with "Animals" and select "Animals"
     And I press "Save"

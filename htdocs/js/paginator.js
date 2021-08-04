@@ -271,6 +271,8 @@ return function(id, list, heading, script, extradata) {
     };
 
     this.init(id, list, heading, script, extradata);
+    findButtonDataUrls();
+
 };
 }(jQuery));
 /**

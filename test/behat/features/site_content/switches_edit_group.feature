@@ -70,7 +70,7 @@ Background:
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Edit \"The Avengers\" Settings"
+    And I press "Edit \"The Avengers\" Settings"
     # Checking all the switches can all be changed
     And I set the following fields to these values:
     | Open | 0 |
@@ -88,7 +88,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Auto-add people | 1 |
     | Send forum posts immediately | 1 |
     And I press "Save group"
-    And I follow "Edit \"The Avengers\" Settings"
+    And I press "Edit \"The Avengers\" Settings"
     # Checking all the switches can all be changed back
     And I set the following fields to these values:
     | Open | 1 |
@@ -119,7 +119,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     And I wait "1" seconds
     When I click on "Join this group" in "The Avengers" row
     Then I should see "You are now a group member."
-    When I follow "Recommend to friends"
+    When I press "Recommend to friends"
     Then I should see "Bob UserB"
     And I should see "Cecilia UserC"
     And I should see "Dave UserD"

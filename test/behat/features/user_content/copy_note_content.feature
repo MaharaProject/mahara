@@ -32,7 +32,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
-  And I follow "Use content from another note"
+  And I press "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 1 other block(s) where it appears. Make a copy"
   And I click on "Make a copy"
@@ -58,7 +58,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
-  And I follow "Use content from another note"
+  And I press "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 1 other block(s) where it appears. Make a copy"
   And I set the following fields to these values:
@@ -71,7 +71,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
-  And I follow "Use content from another note"
+  And I press "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 2 other block(s) where it appears. Make a copy"
   And I scroll to the base of id "instconf_edit_container"
@@ -87,7 +87,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Note"
-  And I follow "Use content from another note"
+  And I press "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 2 other block(s) where it appears. Make a copy"
   And I set the following fields to these values:

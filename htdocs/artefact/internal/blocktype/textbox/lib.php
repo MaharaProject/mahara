@@ -434,8 +434,8 @@ EOF;
             ),
             'chooseartefact' => array(
                 'type'  => 'html',
-                'value' => '<a id="chooseartefactlink" href="#" class="btn btn-secondary">'
-                    . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</a>',
+                'value' => '<button id="chooseartefactlink" class="btn btn-secondary">'
+                    . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</button>',
             ),
             'managenotes' => array(
                 'type'  => 'html',

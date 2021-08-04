@@ -44,7 +44,7 @@ Scenario: Check templates not editable then create and use the Page template wit
 
     # Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     When I choose "Pages and collections" in "Configure site" from administration menu
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I set the field "Page title" to "Site page with block templates"
     And I press "Save"
@@ -65,7 +65,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I press "Save"
     And I wait "1" seconds
     And I should see "Postal address"
-    And I click on "Share" in the "Toolbar buttons" "Nav" property
+    And I press "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "General" in shared with select2 box
     And I expand "Advanced options" node
     And I enable the switch "Allow copying"
@@ -75,7 +75,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     # Copy site portfolio page for UserA
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Copy"
+    And I press "Copy"
     And I press "Copy page"
     And I press "Edit"
     And I press "Display page"
@@ -85,7 +85,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     # Copy site portfolio page for UserB
     And I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Copy"
+    And I press "Copy"
     And I press "Copy page"
     And I press "Edit"
     And I press "Display page"

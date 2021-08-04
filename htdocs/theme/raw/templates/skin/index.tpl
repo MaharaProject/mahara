@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 
 <div class="btn-top-right btn-group btn-group-top">
-    <a href="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}" class="btn btn-secondary button" type="submit">
+    <button data-url="{$WWWROOT}skin/design.php{if $siteskins}?site=1{/if}" class="btn btn-secondary button" type="submit">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=createskin section=skin}
-    </a>
+    </button>
     <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="moreoptions"}</span>
@@ -57,48 +57,50 @@
             </div>
             <div class="skin-controls card-footer">
                 {if $skin.editable}
-                <a href="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='editthisskin' section='skin'}" {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if} class="btn btn-secondary btn-sm">
+                <button data-url="{$WWWROOT}skin/design.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" type="button" title="{str tag='editthisskin' section='skin'}" class="btn btn-secondary btn-sm"
+                    {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if}
+                    >
                     <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=editspecific arg1=$skin.title}
                     </span>
-                </a>
+                </button>
                 {/if}
 
 
                 {if $skin.removable}
-                <a href="{$WWWROOT}skin/export.php?id={$skin.id}" title="{str tag='exportthisskin' section='skin'}" class="btn btn-secondary btn-sm">
+                <button data-url="{$WWWROOT}skin/export.php?id={$skin.id}" type="button" title="{str tag='exportthisskin' section='skin'}" class="btn btn-secondary btn-sm">
                     <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=exportspecific section=skin arg1=$skin.title}
                     </span>
-                </a>
+                </button>
 
-                <a href="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" title="{str tag='deletethisskin' section='skin'}" class="btn btn-secondary btn-sm">
+                <button data-url="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" type="button" title="{str tag='deletethisskin' section='skin'}" class="btn btn-secondary btn-sm">
                     <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">
                         {str tag=deletespecific arg1=$skin.title}
                     </span>
-                </a>
+                </button>
 
                 {else}
                 <div class="skinactions">
                     {if $skin.type == 'public' && $skin.owner != $user}
                         {if !$skin.favorite}
-                        <a href="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" class="btn btn-secondary btn-sm">
+                        <button data-url="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" type="button" class="btn btn-secondary btn-sm">
                             <span class="icon icon-regular icon-heart" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                                 {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
                             </span>
-                        </a>
+                        </button>
 
                         {else}
-                        <a href="{$WWWROOT}skin/favorite.php?del={$skin.id}" title="{str tag='removefromfavorites' section='skin'}" class="btn btn-secondary btn-sm">
+                        <button data-url="{$WWWROOT}skin/favorite.php?del={$skin.id}" title="{str tag='removefromfavorites' section='skin'}" type="button" class="btn btn-secondary btn-sm">
                             <span class="icon icon-heart" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">
                             {str tag=removefromfavoritesspecific section=skin arg1=$skin.title}
                             </span>
-                        </a>
+                        </button>
                         {/if}
                     {/if}
                 </div>

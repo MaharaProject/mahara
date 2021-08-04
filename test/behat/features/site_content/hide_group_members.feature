@@ -22,7 +22,7 @@ Scenario: Check if we can hide members of a group based on the 'Hide members' se
     And I select "All groups" from "filter"
     And I press "Search"
     And I wait "1" seconds
-    And I follow "Edit \"GroupA\" Settings"
+    And I press "Edit \"GroupA\" Settings"
     And I select "Hide tutors" from "editgroup_hidemembers"
     And I press "Save group"
     Then I should see "Group saved successfully"

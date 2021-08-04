@@ -59,6 +59,6 @@ Scenario: I should see a popup
     And I scroll to the base of id "educationhistoryform"
     And I attach the file "Image2.png" to "Attach file"
     When I press "Save"
-    And I follow "Delete"
+    And I press "Delete"
     And I should see "Are you sure you want to delete this?" in popup
     And I accept the confirm popup

@@ -108,7 +108,7 @@ Scenario: Make sure blogs (ie site journals) do not show in site file link optio
     Given I log in as "admin" with password "Kupuh1pa!"
     # I create a site journal
     And I choose "Journals" in "Configure site" from administration menu
-    And I follow "Create journal"
+    And I press "Create journal"
     And I fill in "Title" with "Site blog"
     And I press "Create journal"
     # I upload some site files

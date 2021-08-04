@@ -20,7 +20,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" card menu
  # Sharing Page
- And I click on "Share" in the "Toolbar buttons" "Nav" property
+ And I press "Share" in the "Toolbar buttons" "Nav" property
  And I set the following fields to these values:
  | accesslist[0][searchtype] | GroupA |
  And I disable the switch "Allow comments"
@@ -29,7 +29,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
 
  When I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" card menu
- When I click on "Share" in the "Toolbar buttons" "Nav" property
+ When I press "Share" in the "Toolbar buttons" "Nav" property
  And I scroll to the base of id "accessurl_more_open"
  And I check "accesslist[0][allowcomments]"
  And I press "Save"
@@ -37,7 +37,7 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  # Checking if checked option worked
  When I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" card menu
- When I click on "Share" in the "Toolbar buttons" "Nav" property
+ When I press "Share" in the "Toolbar buttons" "Nav" property
  Then I should see "Edit access"
  And I expand the section "Advanced options"
  And the "accesslist[0][allowcomments]" checkbox should be checked

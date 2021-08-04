@@ -2,10 +2,10 @@
 
     <h2>{$displayname}: {str tag='wall' section='blocktype.wall'}</h2>
 
-    <a href="{profile_url($owner)}" class="btn btn-secondary">
+    <button data-url="{profile_url($owner)}" type="button" class="btn btn-secondary">
         <span class="icon icon-arrow-left left" role="presentation" aria-hidden="true"></span>
         {str tag='backtoprofile' section='blocktype.wall'}
-    </a>
+    </button>
 
     <div class="row">
         <div class="col-md-8">

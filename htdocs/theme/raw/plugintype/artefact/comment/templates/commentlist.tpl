@@ -50,10 +50,10 @@
                     <div class="btn-group btn-group-top comment-item-buttons">
                     {if !$onview}
                         {if $item->canedit}
-                        <a href="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" class="btn btn-secondary btn-sm btn-group-item form-as-button float-left">
+                        <button data-url="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" type="button" class="btn btn-secondary btn-sm btn-group-item form-as-button float-left">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=edit}</span>
-                        </a>
+                        </button>
                         {/if}
                     {/if}
                     {if $item->deleteform}

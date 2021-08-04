@@ -1,8 +1,8 @@
 {include file="header.tpl"}
-<a title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-secondary" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
+<button title="{str section='module.multirecipientnotification' tag='composemessagedesc'}" class="btn-with-heading btn-lg btn btn-secondary" data-url="{$WWWROOT}module/multirecipientnotification/sendmessage.php">
     <span class="icon icon-edit icon-regular left" role="presentation" aria-hidden="true"></span>
     {str section='module.multirecipientnotification' tag='composemessage'}
-</a>
+</button>
 
 {include file="module:multirecipientnotification:indexsearch.tpl" searchdata=$searchdata boxtype=inbox}
 {if $activitylist.count > 0}

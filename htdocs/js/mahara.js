@@ -1329,15 +1329,20 @@ jQuery(function($) {
  * has been overwritten by other jquery/js to
  * allow the redirect of the buttons to work again.
  * e.g. <button data=url="..."></button>
+ *
+ * The data-ignore=true flag is to stop certain buttons
+ * with data-url from removing their existing on click functions
  */
 function findButtonDataUrls() {
     $('[data-url]').each(function() {
-        $(this).off('click');
-        $(this).on('click', function(e) {
-            e.preventDefault();
-            let btn = e.target.closest('button');
-            window.location.href = jQuery(btn).data('url');
-        });
+        if (!$(this).data('ignore')) {
+            $(this).off('click');
+            $(this).on('click', function(e) {
+                e.preventDefault();
+                let btn = e.target.closest('button');
+                window.location.href = jQuery(btn).data('url');
+            });
+        }
     });
 }
 

@@ -76,7 +76,7 @@ Scenario: Comments update the page's mtime
     Given I log in as "admin" with password "Kupuh1pa!"
 
     # Set New Views to only show me the most recently updated page
-    And I follow "Edit dashboard"
+    And I press "Edit dashboard"
     And I configure the block "Latest changes I can view"
     And I set the field "Maximum number of results to show" to "1"
     And I enable the switch "Public"

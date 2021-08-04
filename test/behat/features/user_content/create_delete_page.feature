@@ -22,7 +22,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
     And I should see "Pages and collections" in the "H1 heading" "Common" property
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Test view         |
@@ -35,7 +35,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # (Bug 1891265 end)
     And I press "Save"
     # Editing the pages
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I press "Settings" in the "Toolbar buttons" "Nav" property
     #Change the Page title
     And I fill in the following:
     | Page title       | This is the edited page title |

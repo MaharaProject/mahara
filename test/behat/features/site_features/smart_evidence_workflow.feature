@@ -52,7 +52,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Creating a collection AND adding pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Add"
+    And I press "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:
     | Collection name | Smart Evidence Collection 1 |
@@ -65,7 +65,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Verifying that the pages were added
     Then I should see "Page UserA_01"
     And I should see "Page UserA_03"
-    When I follow "Next: Edit access"
+    When I press "Next: Edit access"
     Then I should see "Edit access"
 
     # Mahara member makes to page visible to public

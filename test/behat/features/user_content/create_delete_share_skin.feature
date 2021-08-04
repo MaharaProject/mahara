@@ -48,7 +48,7 @@ Background:
      #Apply the skin to a page
      Given I choose "Pages and collections" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
-     And I click on "Settings" in the "Toolbar buttons" "Nav" property
+     And I press "Settings" in the "Toolbar buttons" "Nav" property
      And I follow "Skin"
      And I scroll to the base of id "settings_skin_open"
      Then I select the skin "A fabulous new skin" from "userskins"
@@ -65,7 +65,7 @@ Background:
      #Check the deleted skin has been removed from the page
      Given I choose "Pages and collections" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
-     And I click on "Settings" in the "Toolbar buttons" "Nav" property
+     And I press "Settings" in the "Toolbar buttons" "Nav" property
      And I follow "Skin"
      And I should not see "A fabulous new skin"
 
@@ -94,10 +94,10 @@ Scenario: Create a private skin and check its visibility
     Given I choose "Skins" in "Create" from main menu
     And I should see "A fabulous public skin"
     And I should not see "A fabulous private skin"
-    And I follow "Add to favourites"
+    And I press "Add to favourites"
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserB_01" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I press "Settings" in the "Toolbar buttons" "Nav" property
     And I follow "Skin"
     And I scroll to the base of id "settings_skin_container"
     # Apply a a skin saved to favourite skins
@@ -130,7 +130,7 @@ Scenario: Check public/private skins on copied pages.
     # Create a public page with a Public Skin.
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Public page with a skin that is public |
@@ -150,7 +150,7 @@ Scenario: Check public/private skins on copied pages.
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
     And I should see "Pages and collections" in the "H1 heading" "Common" property
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Public page with a skin that is private |

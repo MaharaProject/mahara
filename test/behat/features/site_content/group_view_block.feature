@@ -136,7 +136,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Group portfolios
     And I should see "Page GroupA_05" in the "Group portfolios" "Groups" property
     And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
-    #And I follow "Next page" in the "div#groupviews_pagination" "css_element"
+    #And I press "Next page" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
     And I should see "Page GroupA_08" in the "Group portfolios" "Groups" property
     And I should not see "Page GroupA_05" in the "Group portfolios" "Groups" property
@@ -192,7 +192,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Update the group page "Page GroupA_06"
     And I follow "Pages and collections (tab)"
     And I click on "Edit" in "Page GroupA_06" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I press "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I press "Save"
@@ -206,14 +206,14 @@ These list must take into account the sort option chosen in the block config (Bu
     And I scroll to the center of id "findgroups"
     And I follow "GroupA"
     And I should see "Page GroupA_06" in the "Group portfolios" "Groups" property
-    #And I follow "Next" in the "div#groupviews_pagination" "css_element"
+    #And I press "Next" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
     And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     # Update the shared page "Page UserA_01"
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "showmorebtn"
     And I click on "Edit" in "Page UserA_01" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I press "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I press "Save"

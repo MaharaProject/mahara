@@ -52,6 +52,6 @@ Scenario: Check modal is working for the "Edit group memebership" on find people
     # allow the modal to open
     And I wait "1" seconds
     And I check "GroupA"
-    And I follow "Apply changes"
+    And I press "Apply changes"
     And I scroll to the top
     Then I should see "Invite sent"
