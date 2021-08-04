@@ -1787,48 +1787,6 @@ class View {
     }
 
     /**
-     * Returns HTML for the category list
-     *
-     * @param string $category The currently selected category
-    */
-    public function build_category_list($category, $new=0) {
-        $categories = $this->get_category_data();
-        $flag = false;
-        foreach ($categories as $i => &$cat) {
-            // The "shortcut" category should be treated special.
-            if ($cat['name'] == 'shortcut') {
-                unset($categories[$i]);
-                continue;
-            }
-            $classes = array();
-            if (!$flag) {
-                $flag = true;
-                $classes[] = 'first';
-            }
-            if ($category == $cat['name']) {
-                $classes[] = 'current';
-            }
-            if (!empty($classes)) {
-                $cat['class'] = hsc(implode(' ', $classes));
-            }
-        }
-
-        // Because of the reference in the above loop, $cat refers to the last item
-        $cat['class'] = (isset($cat['class'])) ? $cat['class'] . ' last' : 'last';
-        $helplink = get_manual_help_link_array(array('blocktype', 'blocks'));
-        $manualhelplink = $helplink['prefix'] . '/' . $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
-        $blocktypelist = $this->build_blocktype_list($category);
-        $smarty = smarty_core();
-        $smarty->assign('categories', $categories);
-        $smarty->assign('selectedcategory', $category);
-        $smarty->assign('blocktypelist', $blocktypelist);
-        $smarty->assign('manualhelpblock', $manualhelplink);
-        $smarty->assign('viewid', $this->get('id'));
-        $smarty->assign('new', $new);
-        return $smarty->fetch('view/blocktypecategorylist.tpl');
-    }
-
-    /**
      * Gets the name of the first blocktype category for this View.
      *
      * This can change based on what blocktypes allow themselves to be in what
