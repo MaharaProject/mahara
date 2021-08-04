@@ -336,6 +336,7 @@ var FileBrowser = (function($) {
             var rotatorimg = rotator.find('img');
             // set up initial info
             var origangle = parseInt(self.filedata[id].orientation, 10);
+            rotator.find('#rotate_img').prop('title', get_string('rotate' + ((origangle + 90) % 360) + 'img', 'artefact.file'));
             var jstimestamp = Math.round(new Date().getTime()/1000);
             rotatorimg.prop('src', config.wwwroot + '/artefact/file/download.php?file=' + id + '&maxheight=100&maxwidth=100&ts=' + jstimestamp);
             rotatorimg.data('angle', origangle);
@@ -348,6 +349,8 @@ var FileBrowser = (function($) {
                 rotatorimg.css({'transform': 'rotate(' + (angle - origangle) + 'deg)', 'transition': 'all 1s ease'});
                 rotatorimg.data('angle', angle);
                 $('#' + self.id + '_edit_orientation').val(angle % 360);
+                $(this).prop('title', get_string('rotate' + ((angle + 90) % 360) + 'img', 'artefact.file'));
+                $(this).trigger('mouseout').trigger('mouseover'); // to allow the next tooltip to show without needing to move mose away from button
                 self.clear_create_folder_messages();
             });
         }

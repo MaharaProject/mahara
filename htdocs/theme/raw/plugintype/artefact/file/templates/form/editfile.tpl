@@ -9,9 +9,9 @@
             {* Rotate image *}
             <div id="{$prefix}_rotator" class="form-group image-rotator">
                 <div class="image-rotator-inner">
-                    <img role="presentation" aria-hidden="true" src="{$WWWROOT}theme/raw/images/no_userphoto25.png" id="myimage" title="" alt="">
+                    <img role="presentation" aria-hidden="true" src="{$WWWROOT}theme/raw/images/no_userphoto25.png" title="" alt="">
                 </div>
-                <button class="icon icon-redo btn btn-secondary" id="rotate_img" type="button"></button>
+                <button class="icon icon-redo btn btn-secondary" id="rotate_img" type="button" title="{str tag='rotate90img' section='artefact.file'}"></button>
                 <input type="hidden" id="{$prefix}_edit_orientation" name="{$prefix}_edit_orientation" value="0">
             </div>
 
