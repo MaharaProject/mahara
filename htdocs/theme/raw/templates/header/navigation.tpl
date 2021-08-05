@@ -5,7 +5,7 @@
         {strip}
             {foreach from=$MAINNAV item=item name=menu}
             <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}">
-                <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
+                <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
                     {if $item.iconclass}
                     <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
                     {/if}
@@ -32,14 +32,14 @@
                 {strip}
                     {foreach from=$item.submenu item=subitem}
                     <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
-                        <a href="{$WWWROOT}{$subitem.url}"{if $subitem.accesskey} accesskey="{$subitem.accesskey}"{/if}>
+                        <a href="{$WWWROOT}{$subitem.url}">
                             {$subitem.title}
                         </a>
                         {if $subitem.submenu}
                         <ul class="dropdown-tertiary">
                             {foreach from=$subitem.submenu item=tertiaryitem}
                             <li{if $tertiaryitem.selected} class="selected"{/if}>
-                                <a href="{$WWWROOT}{$tertiaryitem.url}"{if $tertiaryitem.accesskey} accesskey="{$tertiaryitem.accesskey}"{/if}>
+                                <a href="{$WWWROOT}{$tertiaryitem.url}">
                                     {$tertiaryitem.title}
                                 </a>
                             </li>
@@ -63,7 +63,7 @@
     {strip}
         {foreach from=$MAINNAVADMIN item=item name=menu}
         <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}">
-            <a href="{$WWWROOT}{$item.url}"{if $item.accesskey} accesskey="{$item.accesskey}"{/if} class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
+            <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
                 {if $item.iconclass}
                 <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
                 {/if}
@@ -90,14 +90,14 @@
             {strip}
                 {foreach from=$item.submenu item=subitem}
                 <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
-                    <a href="{$WWWROOT}{$subitem.url}"{if $subitem.accesskey} accesskey="{$subitem.accesskey}"{/if}>
+                    <a href="{$WWWROOT}{$subitem.url}">
                         {$subitem.title}
                     </a>
                     {if $subitem.submenu}
                     <ul class="dropdown-tertiary">
                         {foreach from=$subitem.submenu item=tertiaryitem}
                         <li{if $tertiaryitem.selected} class="selected"{/if}>
-                            <a href="{$WWWROOT}{$tertiaryitem.url}"{if $tertiaryitem.accesskey} accesskey="{$tertiaryitem.accesskey}"{/if}>
+                            <a href="{$WWWROOT}{$tertiaryitem.url}">
                                 {$tertiaryitem.title}
                             </a>
                         </li>
@@ -124,7 +124,7 @@
       {strip}
         {foreach from=$RIGHTNAV item=item}
         <li class="{$item.path}{if $item.selected} active{/if}{if $item.class} {$item.class}{/if}  {if $item.iconclass}has-icon{/if} dropdown-item">
-            <a {if $item.linkid}id="{$item.linkid}"{/if} {if $item.accesskey}accesskey="{$item.accesskey}" {/if}{if $item.aria}{foreach $item.aria key=key item=value}aria-{$key}="{$value}" {/foreach}{/if}href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}" class="{if $item.submenu}menu-dropdown-toggle{/if}">
+            <a {if $item.linkid}id="{$item.linkid}"{/if} {if $item.aria}{foreach $item.aria key=key item=value}aria-{$key}="{$value}" {/foreach}{/if}href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}" class="{if $item.submenu}menu-dropdown-toggle{/if}">
                 {if $item.iconclass}
                 <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
                 {/if}
@@ -140,14 +140,14 @@
             <ul id="userchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
                {foreach from=$item.submenu item=subitem}
                <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
-                   <a href="{$WWWROOT}{$subitem.url}"{if $subitem.accesskey} accesskey="{$subitem.accesskey}"{/if}>
+                   <a href="{$WWWROOT}{$subitem.url}">
                        {$subitem.title}
                    </a>
                    {if $subitem.submenu}
                    <ul class="dropdown-tertiary">
                        {foreach from=$subitem.submenu item=tertiaryitem}
                        <li{if $tertiaryitem.selected} class="selected"{/if}>
-                           <a href="{$WWWROOT}{$tertiaryitem.url}"{if $tertiaryitem.accesskey} accesskey="{$tertiaryitem.accesskey}"{/if}>
+                           <a href="{$WWWROOT}{$tertiaryitem.url}">
                                {$tertiaryitem.title}
                            </a>
                        </li>
@@ -161,7 +161,7 @@
         </li>
         {/foreach}
         <li class="btn-logout has-icon">
-            <a id="logoutbutton" href="{$WWWROOT}?logout" accesskey="l">
+            <a id="logoutbutton" href="{$WWWROOT}?logout">
                 <span class="icon icon-sign-out-alt" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title">{str tag="logout"}</span>
             </a>
