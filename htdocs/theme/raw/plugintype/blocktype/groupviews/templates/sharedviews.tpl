@@ -47,7 +47,7 @@
 
         {if $view.tags}
         <div class="tags text-small">
-            {str tag=tags}: list_tags owner=$view.owner tags=$view.tags}
+            {str tag=tags}: {list_tags owner=$view.owner tags=$view.tags}
         </div>
         {/if}
     </li>

@@ -13,6 +13,15 @@
             word-wrap: break-word;
         }
     }
+    .forumsubject {
+        a {
+            text-decoration: $link-decoration;
+            &:hover,
+            &:focus {
+                text-decoration: $link-hover-decoration;
+            }
+        }
+    }
     .media-body {
         padding-bottom: $spacing-base;
     }

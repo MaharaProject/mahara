@@ -16,7 +16,7 @@
         {$activegrouplabels|safe}
         </div>
         {/if}
-        <div id="findgroups" class="list-group list-group-top-border">
+        <div id="findgroups" class="list-group">
             {$groupresults|safe}
         </div>
     </div>

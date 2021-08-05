@@ -54,6 +54,27 @@ td.tiny {
             &:last-child > a::after {
                 right: 0;
             }
+
+            // need to remove the link decoration from the link and put on just the text, sparing the sort arrow
+            a {
+                text-decoration: none;
+                span {
+                    text-decoration: $link-decoration;
+                }
+                &:hover,
+                &:focus {
+                    text-decoration: none;
+                    span {
+                        text-decoration: $link-hover-decoration;
+                    }
+                }
+            }
+
+            // and take it off the help icon and get rid of margin-top so it doesn't touch text when wrapped
+            span.help  a .icon {
+              text-decoration: none;
+            }
+
         }
 
         a::after {
@@ -178,11 +199,10 @@ td.tiny {
                 color: $link-hover-color;
             }
         }
-        .file-download-link {
+
+        // folder name needs to be not link color
+        .changefolder {
             color: $theme-text-color;
-            &:hover {
-                color: $link-hover-color;
-            }
         }
     }
 }

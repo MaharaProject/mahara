@@ -16,6 +16,10 @@
     .plan-task-heading {
         margin-top: -1.5rem;
         margin-left: 1.5rem; // 24px;
+
+        a {
+            text-decoration: none;
+        }
     }
     .plan-task-detail {
         margin-left: 1.5rem; // 24px;

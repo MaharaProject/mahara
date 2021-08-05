@@ -60,15 +60,6 @@
   .unread {
       font-weight: $font-weight-bold;
   }
-  a {
-      &:hover,
-      &:focus {
-        text-decoration: none;
-        .subject {
-          text-decoration: underline;
-        }
-      }
-  }
 }
 
 .errormsg {

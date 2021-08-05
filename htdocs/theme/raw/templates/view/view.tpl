@@ -7,8 +7,7 @@
     <fieldset  class="pieform-fieldset collapsible collapsible-small">
         <legend>
             <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
-                {str tag='instructions' section='view'}
-                <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+                {str tag='instructions' section='view'}<span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
             </a>
         </legend>
         <div class="viewinstructions fieldset-body collapse" id="viewinstructions-dropdown">

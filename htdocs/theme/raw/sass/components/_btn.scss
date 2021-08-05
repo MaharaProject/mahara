@@ -1,6 +1,7 @@
 // Modifications and extra use cases for bootstrap  buttons
 .btn {
     vertical-align: baseline; // to align with submit buttons with cancels
+    text-decoration: none;
 
     &.focus,
     &:focus {
@@ -61,6 +62,7 @@
     background-color: $btn-secondary-bg;
     border-color: $btn-secondary-border;
     box-shadow: none;
+    text-decoration: none !important;
     &:hover,
     &:focus,
     &:active {

@@ -21,6 +21,10 @@ a.label.label-default,
     &.badge-warning {
         @extend .text-white;
     }
+
+    &.badge-primary {
+        text-decoration: none;
+    }
 }
 
 .field-label-bold {

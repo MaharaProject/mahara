@@ -436,6 +436,16 @@ div.toolbarhtml {
         margin-top: 1px !important;
         margin-bottom: 1px !important;
     }
+
+    // put the link underline option back in the legend link for instructions
+    legend a {
+        text-decoration: $link-decoration !important;
+
+        &:hover,
+        &:focus {
+           text-decoration: $link-hover-decoration !important;
+        }
+    }
 }
 .peerinstructions {
     div.fieldset-body {

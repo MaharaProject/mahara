@@ -94,6 +94,7 @@
             border-top: 1px solid $navbar-default-link-border;
             border-bottom: 1px solid $navbar-default-link-border;
             margin-top: -1px;
+            text-decoration: none;
             &:hover,
             &:focus {
                 background-color: $navbar-default-link-hover-bg;
@@ -139,6 +140,7 @@
             margin-top: -1px;
             font-weight: $font-weight-normal;
             white-space: normal;
+            text-decoration: none;
             &:hover,
             &:focus {
                 text-decoration: none;

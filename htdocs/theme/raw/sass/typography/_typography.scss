@@ -122,6 +122,7 @@ strong em {
 a {
     &.link-block {
         display: block;
+        text-decoration: none;
     }
     &:hover {
         text-decoration-color: $link-hover-color;
@@ -141,6 +142,7 @@ a {
 
 .link-unstyled {
     color: $theme-text-color;
+    text-decoration: none;
     &:hover,
     &:focus {
         text-decoration: none;
@@ -155,10 +157,11 @@ a {
     margin: $spacing-base 0 0 0;
     padding: $input-btn-padding-y $input-btn-padding-x;
     display: inline-block;
+    text-decoration: none !important;
     &:hover,
     &:focus {
         background-color: $accent-bg;
-        text-decoration: none;
+        text-decoration: none !important;
     }
     .icon {
         display: inline-block;
@@ -215,6 +218,13 @@ ul {
           }
           &.acceptdenyfriendbtns {
             margin-bottom: $spacing-base;
+          }
+          a {
+              text-decoration: none;
+              &:hover,
+              &:focus {
+                text-decoration: underline;
+              }
           }
         }
     }
@@ -322,7 +332,8 @@ pre {
 .forum-post .postedits,
 .mce-content-body,
 .blockinstructions,
-.viewinstructions {
+.viewinstructions,
+.bt-groupinfo {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
     font-weight: $font-weight-bold;
