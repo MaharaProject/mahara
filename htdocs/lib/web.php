@@ -2576,6 +2576,31 @@ function admin_nav() {
             'title'  => get_string('cleanurls', 'admin'),
             'weight' => 40,
         ),
+        'development' => array(
+            'path'   => 'development',
+            'url'    => 'map/componentmap.php',
+            'title'  => get_string('development', 'admin'),
+            'weight' => 80,
+            'iconclass' => 'code',
+        ),
+        'development/behatsteps' => array(
+            'path'   => 'development/behatsteps',
+            'url'    => 'testing/frameworks/behat/behat_steps_used.php',
+            'title'  => get_string('behatvariables', 'admin'),
+            'weight' => 10,
+        ),
+        'development/componentmap' => array(
+            'path'   => 'development/componentmap',
+            'url'    => 'map/componentmap.php',
+            'title'  => get_string('componentmap', 'admin'),
+            'weight' => 20,
+        ),
+        'development/styleguide' => array(
+            'path'   => 'development/styleguide',
+            'url'    => 'theme/styleguide.php',
+            'title'  => get_string('styleguide', 'admin'),
+            'weight' => 30,
+        ),
     );
 
     // Add the menu items for skins, if that feature is enabled

@@ -1,7 +1,7 @@
 FontAwesome
 ===========
 
-Website: http://fontawesome.io
+Website: https://fontawesome.com
 Version: 5.8.1
 License: http://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 See also: theme/raw/sass/lib/font-awesome/ for CSS license information
@@ -47,7 +47,7 @@ reading rhythm more commonly found in humanist and serif types.
 Bootstrap Glyphicons Halflings
 ==============================
 
-Website: http://getbootstrap.com/components/#glyphicons
+Website: https://getbootstrap.com/docs/3.3/components/
 Version: 1.9
 License: MIT License
 
