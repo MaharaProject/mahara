@@ -35,13 +35,13 @@
 {if $item.pending}
 <td colspan="2"></td>
 {else}
-<td class="al-edit text-center tiny table-active">
+<td class="al-edit text-center tiny">
     <a href="{$WWWROOT}view/access.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" title="{str tag=editaccess section=view}" class="text-default">
         <span class="icon icon-lock" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=editaccess}</span>
     </a>
 </td>
-<td class="secreturls text-center tiny table-active">
+<td class="secreturls text-center tiny">
     <a title="{str tag=editsecreturlaccess section=view}" href="{$WWWROOT}view/urls.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" class="text-default">
         <span class="text-small">{$item.secreturls}</span>
         <span class="icon icon-globe" role="presentation" aria-hidden="true"></span>
