@@ -139,7 +139,7 @@ class PluginSearchInternal extends PluginSearch {
             $where .= '
                 AND (u.id IN (
                     SELECT usr FROM {usr_institution} WHERE institution IN ('
-                . join(',', array_map('db_quote', $data['institutions'])) . ')' . $exclude . '
+                . join(',', array_map('db_quote', $data['institutions'])) . ')
                 )';
 
             if (isset($data['showadmins']) && !empty($data['showadmins'])) {
