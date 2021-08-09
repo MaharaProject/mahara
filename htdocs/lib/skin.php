@@ -672,7 +672,7 @@ class Skin {
      *      or empty string if no matches found.
      */
     public static function get_css_font_family_from_font_name($font, $type='text') {
-        if ($font === '') {
+        if (empty($font)) {
             global $THEME;
             $fonts = Skin::get_all_theme_fonts($type);
             $font = isset($fonts[$THEME->basename]) ? $fonts[$THEME->basename] : '';
