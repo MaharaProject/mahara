@@ -960,6 +960,7 @@ function file_cleanup_old_temp_files($paths=array()) {
     $validpaths = array(
         'export' => time() - (2 * 24 * 60 * 60),               // 2 days
         'htmllite' => time() - (2 * 24 * 60 * 60),             // 2 days
+        'pdflite' => time() - (2 * 24 * 60 * 60),              // 2 days
         'import' => time() - (3 * 24 * 60 * 60),               // 3 days
         'temp' => time() - (1 * 7 * 24 * 60 * 60),             // 1 week
         'langpacks_backup' => time() - (6 * 7 * 24 * 60 * 60), // 6 weeks

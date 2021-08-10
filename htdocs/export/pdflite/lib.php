@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage export-pdf
+ * @subpackage export-pdf-lite
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -10,53 +10,39 @@
  */
 
 defined('INTERNAL') || die();
-require_once(get_config('docroot') . 'export/html/lib.php');
 global $pdfactive;
-$pdfactive = false;
+$pdfliteactive = false;
+require_once(get_config('docroot') . 'export/pdf/lib.php');
+
 if (db_table_exists('export_installed')) {
-    $pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
+    $pdfliteactive = get_field('export_installed', 'active', 'name', 'pdflite');
+}
+if ($pdfliteactive && !$pdfactive) {
+    execute_sql("UPDATE {export_installed} SET active = 0 WHERE name = ?", array('pdflite'));
 }
 
-$chromephpexists = file_exists(get_config('docroot') . 'lib/chrome-php/chrome-0.11/vendor/autoload.php');
-if (($pdfactive && !$chromephpexists) ||
-    ($pdfactive && $chromephpexists && !get_config('usepdfexport'))) {
-    global $SESSION;
-    // need to disable the PDF export option
-    execute_sql("UPDATE {export_installed} SET active = 0 WHERE name = ?", array('pdf'));
-    $SESSION->add_info_msg(get_string('exportpdfdisabled', 'export.pdf', get_config('wwwroot') . 'admin/extensions/plugins.php'), false);
-    if (defined('INSTALLER')) {
-        redirect();
-    }
-    else {
-        redirect($_SERVER['SCRIPT_NAME']);
-    }
-}
-else if ($pdfactive) {
-    require_once(get_config('docroot') . 'lib/chrome-php/chrome-0.11/vendor/autoload.php');
-}
 use HeadlessChromium\BrowserFactory;
-use HeadlessChromium\Cookies\Cookie;
 
 /**
  * PDF export plugin
  */
-class PluginExportPdf extends PluginExportHtml {
+class PluginExportPdfLite extends PluginExportPdf {
 
     /**
-    * The name of the directory where files will be placed in the export
-    **/
-    protected $pdfdir = 'PDF';
+     * The name of the directory where files will be placed in the export
+     */
+    protected $pdfdir = 'PDF_Lite';
+    protected $validfiles = array('docx','sxw','pdf','txt','rtf','html','htm','wps','odt','pages','xls','xlsx','ps','hwp');
 
     /**
-    * constructor.  overrides the parent class
-    * to set up smarty and the attachment directory
-    */
+     * {@inheritDoc}
+     */
     public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback,  $loop, $looptotal, $exporttime);
-        $this->exporttype = 'pdf';
+        $this->exporttype = 'pdflite';
 
-        $this->zipfile = 'mahara-export-pdf-user'
+        $this->zipfile = 'mahara-export-pdflite-user'
             . $this->get('user')->get('id') . '-' . $this->exporttime . '.zip';
 
         $pdfdirectory = "{$this->exportdir}/{$this->pdfdir}";
@@ -65,12 +51,22 @@ class PluginExportPdf extends PluginExportHtml {
         }
     }
 
+    /**
+     * A human-readable title for the export
+     *
+     * @return string
+     */
     public static function get_title() {
-        return get_string('title', 'export.pdf');
+        return get_string('title', 'export.pdflite');
     }
 
+    /**
+     * A human-readable description for the export
+     *
+     * @return string
+     */
     public static function get_description() {
-        return get_string('description', 'export.pdf');
+        return get_string('description', 'export.pdflite');
     }
 
     /**
@@ -80,53 +76,37 @@ class PluginExportPdf extends PluginExportHtml {
      */
     public static function is_active() {
         $active = false;
-        if (get_field('export_installed', 'active', 'name', 'pdf')) {
+        if (get_field('export_installed', 'active', 'name', 'pdflite') && parent::is_active()) {
             $active = true;
         }
         return $active;
     }
 
+    /**
+     * Fetch plugin's display name rather than plugin name that is based on dir name.
+     *
+     * @return string
+     */
     public static function get_plugin_display_name() {
-        return 'PDF';
+        return 'PDF lite';
     }
 
     /**
      * Post install hook
+     *
+     * @param integer $fromversion The current version number
      */
     public static function postinst($fromversion) {
         if ($fromversion == 0) {
-            set_field('export_installed', 'active', 0, 'name', 'pdf');
+            set_field('export_installed', 'active', 0, 'name', 'pdflite');
         }
     }
 
-    public static function has_pdf_combiner() {
-        // Check we have a valid way to combine pdfs
-        $combiner = false;
-
-        if ($pdfunite = exec('apt-cache policy poppler-utils | grep Installed')) { // Ubuntu
-            if (!preg_match('/Installed\: \(none\)/', $pdfunite)) {
-                $combiner = 'pdfunite';
-            }
-        }
-        else if ($pdfunite = exec('rpm -q poppler-utils')) { // RHEL / CentOS
-            if (!preg_match('/is not installed/', $pdfunite)) {
-                $combiner = 'pdfunite';
-            }
-        }
-
-        if ($ghostscript = exec('apt-cache policy ghostscript | grep Installed')) { // Ubuntu
-            if (!preg_match('/Installed\: \(none\)/', $ghostscript)) {
-                $combiner = 'ghostscript';
-            }
-        }
-        else if ($ghostscript = exec('rpm -q ghostscript')) { // RHEL / CentOS
-            if (!preg_match('/is not installed/', $ghostscript)) {
-                $combiner = 'ghostscript';
-            }
-        }
-        return $combiner;
-    }
-
+    /**
+     * Asserts whether this plugin can be used.
+     *
+     * @return boolean
+     */
     public static function is_usable() {
         $dependencies = self::has_plugin_dependencies();
         if (!empty($dependencies['requires'])) {
@@ -135,20 +115,19 @@ class PluginExportPdf extends PluginExportHtml {
         return true;
     }
 
+    /**
+     * Check if plugin's contains dependencies before installing it.
+     *
+     * @return array
+     */
     public static function has_plugin_dependencies() {
-        $needs = get_string('needschromeheadless', 'export.pdf');
-        // make sure that composer has installed the headlessbrowser hook
+        $needs = get_string('isexperimental', 'export.pdflite');
         $requires = array();
-        if (!file_exists(get_config('docroot') . 'lib/chrome-php/chrome-0.11/src/BrowserFactory.php')) {
-            $requires[] = get_string('needschromeheadlessphp', 'export.pdf');
+        if (!parent::is_usable() || !get_field('export_installed', 'version', 'name', 'pdf')) {
+            $requires[] = get_string('needsinstalledpdfexport', 'export.pdflite');
         }
-
-        $combiner = self::has_pdf_combiner();
-        if (!$combiner) {
-            $requires[] = get_string('needspdfcombiner', 'export.pdf');
-        }
-        if (!get_config('usepdfexport')) {
-            $requires[] = get_string('needspdfconfig', 'export.pdf');
+        if (!parent::is_active()) {
+            $requires[] = get_string('needsactivepdfexport', 'export.pdflite');
         }
         $out = array('needs' => $needs, 'requires' => implode('<br>', $requires));
         return $out;
@@ -156,9 +135,13 @@ class PluginExportPdf extends PluginExportHtml {
 
     /**
      * Main export routine
-     * @param $createarchive Boolean specifies whether a zipfile will be created here
-     * or later on, i.e. in PluginExportAll which creates a zipfile of all export formats.
-     * Note: If running pdf export and html export together then this should be run first
+     *
+     * We can specify whether to make a zipfile now or later on, i.e. in PluginExportAll
+     * which creates a zipfile of all export formats. Note: If running pdf export and html
+     * export together then this should be run first
+     *
+     * @param $createarchive boolean whether to create zipfile
+     * @return array|string  Either an array of zipfile information or path string
      */
     public function export($createarchive=false) {
         parent::export(false);
@@ -196,11 +179,16 @@ class PluginExportPdf extends PluginExportHtml {
         $i = 0;
         $viewcount = count($this->views);
         ob_start();
-        if (system('command -v dpkg')) { // Ubuntu
+        if (system('command -v dpkg')) {
+            // For Ubuntu
             $command = 'dpkg -l';
         }
-        else { // RHEL / CentOS
+        else if (system('rpm -q --quiet glib')) {
+            // For RHEL / CentOS
             $command = 'rpm -qa';
+        }
+        else {
+            throw new SystemException("Operating system not supported");
         }
 
         if (!isset($pdfrun) || $pdfrun == 'first' || $pdfrun == 'all') {
@@ -210,7 +198,7 @@ class PluginExportPdf extends PluginExportHtml {
                 $browsertype = 'chrome';
                 system($command . ' | grep ' . $browsertype, $error2);
                 if ($error2) {
-                    throw new MaharaException('Need to have a Chrome browser installed to use the headless pdf option');
+                    throw new MaharaException('Need to have a Chrome browser installed to use the headless PDF lite option');
                 }
             }
 
@@ -224,7 +212,7 @@ class PluginExportPdf extends PluginExportHtml {
             $page = $browser->createPage();
         }
 
-        $combiner = self::has_pdf_combiner();
+        $combiner = parent::has_pdf_combiner();
 
         // Map the view id order to their collection order if applicable
         $viewids = array_keys($this->views);
@@ -266,18 +254,21 @@ class PluginExportPdf extends PluginExportHtml {
                     if (preg_match('/var blocks = (\[.*?\]);/', $filedata, $matches)) {
                         $content = json_decode($matches[1]);
                         foreach ($content as $c) {
-                            $c->content = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\\/a\>/s', "$1", $c->content); // $1 = url, $2 = name
-                            // Strip other links out
-                            $c->content = preg_replace('/\<a.*? href=.*?\>(.*?)\<\\/a\>/s', "$1", $c->content); // $1 = name
+                            // $1 = url, $2 = name
+                            $c->content = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\\/a\>/s', "$1", $c->content);
+                            // Strip other links out - $1 = name
+                            $c->content = preg_replace('/\<a.*? href=.*?\>(.*?)\<\\/a\>/s', "$1", $c->content);
                         }
                         $content = json_encode($content);
                         $filedata = preg_replace('/var blocks = \[.*?\];/', 'var blocks = ' . $content, $filedata);
                     }
                 }
                 else {
-                    $filedata = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\/a\>/s', "$1", $filedata); // $1 = url, $2 = name
-                    // Strip other links out
-                    $filedata = preg_replace('/\<a.*? href=.*?\>(.*?)\<\/a\>/s', "$1", $filedata); // $1 = name
+                    // $1 = url, $2 = name
+                    $filedata = preg_replace('/\<a href=\"\.\/(.*?)\".*?\>(.*?)\<\/a\>/s', "$1", $filedata);
+                    // Strip other links out - $1 = name
+                    $filedata = preg_replace('/\<a.*? href=.*?\>(.*?)\<\/a\>/s', "$1", $filedata);
+
                 }
                 file_put_contents($filename, $filedata, LOCK_EX);
 
@@ -294,12 +285,12 @@ class PluginExportPdf extends PluginExportHtml {
                 else {
                     $viewpdfs[] = $pdfname;
                 }
-
+                // Has 60s timeout
                 $page->pdf(['printBackground' => true,
-                            'preferCSSPageSize' => true])->saveToFile($pdfname, 60000); // 60s timeout
+                            'preferCSSPageSize' => true])->saveToFile($pdfname, 60000);
 
                 if (!file_exists($filename) || !is_readable($filename)) {
-                    throw new SystemException("Could not read view page for creating pdf for $viewid");
+                    throw new SystemException("Could not read view page for creating pdf lite for $viewid");
                 }
             }
         }
@@ -333,8 +324,34 @@ class PluginExportPdf extends PluginExportHtml {
         foreach ($viewpdfs as $view) {
             $path = explode('/', $view);
             $file = array_pop($path);
-            rename($view, $pdfdirectory . '/' . $file);
+            rename($view, $pdfdirectory . $file);
         }
+
+        // Sort out the files we want to keep
+        $subdirpaths = array();
+        $exportfilesdir = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->exportdir . $this->filedir), RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($exportfilesdir as $name => $contentdir) {
+            if ($contentdir->getFilename() === '.' || $contentdir->getFilename() === '..') continue;
+            if ($contentdir->getFilename() === 'index.html' || !in_array($contentdir->getExtension(), $this->validfiles)) {
+                if (is_dir($name)) {
+                    $subdirpaths[$name] = 1;
+                    continue;
+                }
+                unlink($name);
+            }
+            else {
+                rename($name, $this->exportdir . $this->infodir . '/' . $contentdir->getFilename());
+            }
+        }
+
+        // now deal with any empty directories
+        $subdirpaths[$this->exportdir . $this->filedir] = 1;
+        foreach (array_keys($subdirpaths) as $subkey) {
+            if (is_dir($subkey)) {
+                rmdirr($subkey);
+            }
+        }
+
         ob_end_clean();
     }
 }

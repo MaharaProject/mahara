@@ -43,7 +43,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
     }
 
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         // The exporting for pdf
@@ -51,8 +51,8 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
         $configdata['simpledisplay'] = true;
-        $configdata['pdfexport'] = true; // pass down flag that we are in pdf export
-        $configdata['pdfexportfiledir'] = 'export_info/files/';
+        $configdata['exporttype'] = $exporting; // pass down flag of the export type
+        $configdata['exportfiledir'] = 'export_info/files/';
         list($result, $commentcount, $comments) = self::render_instance_data($instance, $editing, $versioning, $configdata);
 
         $smarty = smarty_core();

@@ -60,7 +60,8 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
             if (isset($configdata['instructions'])) {
                 $newinstructions = ArtefactTypeFolder::append_view_url($configdata['instructions'], $instance->get('view'));
                 if ($exporter && (
-                    get_class($exporter) == 'PluginExportHtmlLite'
+                    get_class($exporter) == 'PluginExportHtmlLite' ||
+                    get_class($exporter) == 'PluginExportPdfLite'
                     )) {
                     $smarty->assign('instructions', null);
                 }

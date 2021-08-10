@@ -123,7 +123,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
     }
 
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         $configdata = $instance->get('configdata');
@@ -156,7 +156,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             // We can fetch the thumbnail of the video and display that
             $html .= '<div class="image"><img src="https://img.youtube.com/vi/' . $video['youtube'] . '/0.jpg"></div>';
         }
-        $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+        $html .= '<div class="text-midtone text-small">' . get_string('notrendertopdf', 'artefact.file');
         $html .= '<br>' . get_string('notrendertopdflink', 'artefact.file');
         // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
         // We then override the link in the PDF pdf_view_export_data() function.

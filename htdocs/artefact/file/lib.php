@@ -2226,12 +2226,17 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $child->title = $child->hovertitle = $c->get('title');
                 $child->date = format_date(strtotime($child->mtime), 'strftimedaydatetime');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                if (!empty($options['pdfexportfiledir'])) {
-                    if ($child->artefacttype == 'folder') {
-                        $child->title = $child->title . ' [' . $options['pdfexportfiledir'] . $this->get('title') . '/' . $child->title . ']';
+                if (!empty($options['exportfiledir'])) {
+                    if ($child->artefacttype == 'folder' && $options['exporttype'] == 'pdf') {
+                        $child->title = $child->title . ' [' . $options['exportfiledir'] . $this->get('title') . '/' . $child->title . ']';
                     }
                     else {
-                        $child->title = $child->title . ' [' . $options['pdfexportfiledir'] . $child->id . '-' . $child->title . ']';
+                        if ($options['exporttype'] == 'pdflite') {
+                            $child->title = $child->title;
+                        }
+                        else {
+                            $child->title = $child->title . ' [' . $options['exportfiledir'] . $child->id . '-' . $child->title . ']';
+                        }
                     }
                 }
                 $count = ArtefactTypeComment::count_comments(null, array($child->id));
@@ -2247,8 +2252,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         if (isset($options['blockid'])) {
             $smarty->assign('blockid', $options['blockid']);
         }
-        $template = !empty($options['pdfexport']) ? 'artefact:file:folder_render_self_pdfexport.tpl' : 'artefact:file:folder_render_self.tpl';
-        if (isset($options['modal']) && !isset($options['pdfexport'])) {
+        $template = !empty($options['exporttype']) ? 'artefact:file:folder_render_self_pdfexport.tpl' : 'artefact:file:folder_render_self.tpl';
+        if (isset($options['modal']) && !isset($options['exporttype'])) {
             $smarty->assign('modal', $options['modal']);
             $template = 'artefact:file:folder_render_in_modal.tpl';
         }
