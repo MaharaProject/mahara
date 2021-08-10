@@ -16,7 +16,7 @@ if (db_table_exists('export_installed')) {
     $pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
 }
 
-$chromephpexists = file_exists(get_config('docroot') . 'lib/chrome-php/headless-chromium-php-0.10/vendor/autoload.php');
+$chromephpexists = file_exists(get_config('docroot') . 'lib/chrome-php/chrome-0.11/vendor/autoload.php');
 if (($pdfactive && !$chromephpexists) ||
     ($pdfactive && $chromephpexists && !get_config('usepdfexport'))) {
     global $SESSION;
@@ -31,7 +31,7 @@ if (($pdfactive && !$chromephpexists) ||
     }
 }
 else if ($pdfactive) {
-    require_once(get_config('docroot') . 'lib/chrome-php/headless-chromium-php-0.10/vendor/autoload.php');
+    require_once(get_config('docroot') . 'lib/chrome-php/chrome-0.11/vendor/autoload.php');
 }
 use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Cookies\Cookie;
@@ -116,7 +116,7 @@ class PluginExportPdf extends PluginExportHtml {
         $needs = get_string('needschromeheadless', 'export.pdf');
         // make sure that composer has installed the headlessbrowser hook
         $requires = array();
-        if (!file_exists(get_config('docroot') . 'lib/chrome-php/headless-chromium-php-0.10/src/BrowserFactory.php')) {
+        if (!file_exists(get_config('docroot') . 'lib/chrome-php/chrome-0.11/src/BrowserFactory.php')) {
             $requires[] = get_string('needschromeheadlessphp', 'export.pdf');
         }
 
