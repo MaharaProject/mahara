@@ -515,13 +515,13 @@ $input-height-inner:                    ($font-size-base * $input-btn-line-heigh
 $input-height-inner-half:               calc(#{$input-line-height * .5em} + #{$input-padding-y}) !default;
 $input-height-inner-quarter:            calc(#{$input-line-height * .25em} + #{$input-padding-y / 2}) !default;
 
-$input-height:                          calc(#{$input-height-inner} + #{$input-height-border}) !default;
+$input-height:                          $input-height-inner + $input-height-border !default;
 
 $input-height-inner-sm:                 ($font-size-sm * $input-btn-line-height-sm) + ($input-btn-padding-y-sm * 2) !default;
-$input-height-sm:                       calc(#{$input-height-inner-sm} + #{$input-height-border}) !default;
+$input-height-sm:                       $input-height-inner-sm + $input-height-border !default;
 
 $input-height-inner-lg:                 ($font-size-lg * $input-btn-line-height-lg) + ($input-btn-padding-y-lg * 2) !default;
-$input-height-lg:                       calc(#{$input-height-inner-lg} + #{$input-height-border}) !default;
+$input-height-lg:                       $input-height-inner-lg + $input-height-border !default;
 
 $input-transition:                      border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
 
@@ -746,7 +746,7 @@ $nav-link-disabled-color:           $gray-600 !default;
 
 $nav-tabs-border-color:             $border-color !default;
 $nav-tabs-border-width:             $border-width !default;
-$nav-tabs-border-radius:            $border-radius $border-radius 0 0 !default;
+$nav-tabs-border-radius:            $border-radius !default;
 $nav-tabs-link-hover-border-color:  theme-color('primary') !default;
 $nav-tabs-link-active-color:        $gray-700 !default;
 $nav-tabs-link-active-bg:           $body-bg !default;
@@ -941,7 +941,7 @@ $badge-pill-border-radius:          10rem !default;
 // Modals
 
 // Padding applied to the modal body
-$modal-inner-padding:               0.625rem 0.9375rem !default; // 10px 15px
+$modal-inner-padding:               0.9375rem !default; // 15px
 
 $modal-dialog-margin:               .5rem !default;
 $modal-dialog-margin-y-sm-up:       1.75rem !default;
@@ -994,7 +994,7 @@ $alert-color-level:                 3 !default;
 
 $progress-height:                   1.3125rem !default;
 $progress-font-size:                ($font-size-base * .75) !default;
-$progress-bg:                       repeating-linear-gradient(45deg, scale-color($gray-100, $lightness: -5%), scale-color($gray-100, $lightness: -5%) 10px, $gray-100 10px, $gray-100 20px) !default;
+$progress-bg:                       $gray-100 !default;
 $progress-border-radius:            $border-radius !default;
 $progress-box-shadow:               inset 0 .1rem .1rem rgba($black, .1) !default;
 $progress-bar-color:                $white !default;

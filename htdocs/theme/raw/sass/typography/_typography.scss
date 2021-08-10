@@ -190,7 +190,7 @@ img {
 }
 
 hr {
-    margin-top: $line-height-base / 2;
+    margin-top: #{$line-height-base / 2}rem;
 }
 
 ul {

@@ -84,7 +84,7 @@ a.user-icon, a .user-icon {
         &:after {
             @include transition(opacity 0.5s);
             opacity:1;
-            visiblity: visible;
+            visibility: visible;
         }
     }
 }
