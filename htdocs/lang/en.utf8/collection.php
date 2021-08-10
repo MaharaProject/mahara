@@ -124,7 +124,23 @@ $string['viewnavigationdesc'] = 'Add a horizontal navigation bar to every page i
 $string['viewstobeadded'] = 'Pages to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this page from the collection?';
 $string['collectioncopywouldexceedquota'] = 'Copying this collection would exceed your file quota.';
-$string['copiedpagesblocksandartefactsfromtemplate'] = 'Copied %d pages, %d blocks and %d artefacts from %s';
+
+$string['copiedparticle'] = 'Copied %s';
+$string['andparticle'] = 'and %s';
+$string['countpages'] = array (
+    0 => '%d page',
+    1 => '%d pages'
+);
+$string['countblocks'] = array (
+    0 => '%d block',
+    1 => '%d blocks'
+);
+$string['countartefacts'] = array (
+    0 => '%d artefact',
+    1 => '%d artefacts'
+);
+$string['fromtemplate'] = 'from "%s"';
+
 $string['copiedblogpoststonewjournal'] = 'Copied journal posts have been put into a new separate journal.';
 $string['by'] = 'by';
 $string['copycollection'] = 'Copy collection';
