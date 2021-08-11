@@ -1320,3 +1320,26 @@ jQuery(function($) {
         }
     });
 });
+
+/**
+ * Helper function to set up redirects for 'data-url'
+ * attributes.
+ *
+ * Especially helpful to call after javascript
+ * has been overwritten by other jquery/js to
+ * allow the redirect of the buttons to work again.
+ * e.g. <button data=url="..."></button>
+ */
+function findButtonDataUrls() {
+    $('[data-url]').each(function() {
+        $(this).off('click');
+        $(this).on('click', function(e) {
+            e.preventDefault();
+            window.location.href = $(this).data('url');
+        });
+    });
+}
+
+jQuery(function($) {
+    findButtonDataUrls();
+});
