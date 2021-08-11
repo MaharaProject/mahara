@@ -1,25 +1,15 @@
 .carousel {
-    width: 82%;
-    margin: 0 auto;
-    .carousel-inner {
-        overflow: visible;
-    }
-    .carousel-item {
-        display: block;
-    }
+    width: 100%;
+    margin: 0;
+    height: 100% !important;
 
-    &.carousel-ready {
-        .carousel-item {
-            display: none;
-            &.active,
-            &.next {
-                display: block;
-            }
-            img {
-                vertical-align: middle;
-            }
+    .carousel-item {
+        img {
+            width: 100%;
+            margin: 0 !important;
         }
     }
+
     // Overriding bootstrap carousel styles
     .carousel-caption {
         text-align: left;
@@ -32,60 +22,51 @@
         bottom: 0;
         padding: $spacing-base 0 0 0;
     }
+
     .carousel-control {
-        width: auto;
-        opacity: 1;
-        top: 0;
-        bottom: 100%;
-        position: absolute;
-        ~ .icon {
-            vertical-align: middle;
-        }
-        &.left {
-            left: -2rem; // -32px;
-        }
-        &.right {
-            right: -1.5625rem; // -25px;
-        }
+        opacity: .75;
+
         &:hover,
         &:focus {
             opacity: 1;
         }
-        .icon-lg {
+
+        .icon {
             font-size: $font-size-base * 2; // 32px;
+            color: $white;
+            background-color: $black;
+            padding: $btn-padding-y $btn-padding-x;
+            border-radius: $btn-border-radius;
         }
-        .carousel-control-first,
-        .carousel-control-last {
-            margin-top: 2.1875rem; // 35px;
+    }
+
+    // if bootstrap example markup gets used on html pages they have a graphic icon instead, so this is to make it align with gallery styling
+    .carousel-control-prev,
+    .carousel-control-next {
+        opacity: .75;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
         }
-        .carousel-control-last {
-            text-align: right;
-        }
-        .carousel-control-prev,
-        .carousel-control-next {
-            .icon {
-                margin-right: 0;
-                margin-left: 0;
-            }
-        }
-        .carousel-control-prev {
-            margin-left: 0.4375rem;
-        }
-        a {
-            display: block;
-            color: $theme-text-color;
-            opacity: .5;
-            width: 1.25rem; // 20px;
-            &:hover,
-            &:focus {
-                outline: 0;
-                text-decoration: none;
-                opacity: .9;
-            }
-            .icon {
-                width: 100%;
-                text-align: center;
-            }
-        }
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon  {
+        @include fonttype(solid);
+        font-weight: 900;
+        font-size: $font-size-base * 2; // 32px;
+        line-height: .75em;
+        color: $white;
+        background: $black;
+        padding: $btn-padding-y $btn-padding-x;
+        border-radius: $btn-border-radius;
+        width: auto;
+        height: auto;
+    }
+    .carousel-control-prev-icon::before {
+        content: "\f104";
+    }
+    .carousel-control-next-icon::before {
+        content: "\f105";
     }
 }
