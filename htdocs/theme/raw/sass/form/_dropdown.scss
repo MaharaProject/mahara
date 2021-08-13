@@ -92,7 +92,7 @@
             }
             select.form-control {
                 height: $input-height-sm;
-                line-height: $input-height-sm / 2 + 0.125rem;
+                line-height: ($input-height-sm / 2) + 0.125rem;
             }
         }
     }
@@ -106,7 +106,7 @@
             padding-top: $spacing-sm;
             padding-bottom: $spacing-sm;
             height: $input-height-lg;
-            line-height: $input-height-lg / 2 + $spacing-xs;
+            line-height: ($input-height-lg / 2) + $spacing-xs;
         }
     }
 
@@ -131,7 +131,7 @@
 }
 
 .dropdown-toggle {
-    border-radius: $input-border-radius;  
+    border-radius: $input-border-radius;
 }
 
 .dropdown-single-option {
