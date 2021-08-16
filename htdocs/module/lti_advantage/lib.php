@@ -47,6 +47,7 @@ class PluginModuleLti_advantage extends PluginModule {
     }
 
     public static function extra_webservice_fields($dbconnection) {
+        $deployments = [];
         if (get_field('module_installed', 'active', 'name', 'lti_advantage')) {
             if (!isset($dbconnection->id)) {
                 $platform = new StdClass();
@@ -846,6 +847,14 @@ class PluginModuleLti_advantage extends PluginModule {
         return $user;
     }
 
+    /**
+     * Cron settings
+     *
+     * The lti_advantage_get_members_cron() is only called once a day as Course
+     * enrolments are not expected to be updated more frequently than this.
+     *
+     * @return Array An array of cron settings objects.
+     */
     public static function get_cron() {
         return array(
             (object)array(
