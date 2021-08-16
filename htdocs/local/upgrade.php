@@ -104,4 +104,16 @@ function xmldb_local_upgrade($oldversion=0) {
         log_debug('Change the default usr setting for contacts / messages to be off by default');
         execute_sql("DELETE FROM {usr_account_preference} WHERE field IN (?, ?)", array('friendscontrol', 'messages'));
     }
+
+    if ($oldversion < 2021081600) {
+        log_debug('Add local cron job for a backstop to deal with user not being switched to active');
+        $cron = new stdClass();
+        $cron->callfunction = 'local_pcnz_doublecheck';
+        $cron->minute       = '30';
+        $cron->hour         = '22';
+        $cron->day          = '*/2';
+        $cron->month        = '*';
+        $cron->dayofweek    = '*';
+        insert_record('cron', $cron);
+    }
 }
