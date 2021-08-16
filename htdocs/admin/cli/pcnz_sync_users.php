@@ -192,7 +192,7 @@ if ($token) {
     if (!empty($people)) {
         if ($dryrun) {
             if ($verbose) {
-                $cli->cli_print(print_r($people, true));
+                $cli->cli_print(var_export($people));
             }
             $cli->cli_print('A total of ' . count($people) . ' people matching your types within the records  ' . $offset . ' to ' . ($offset + $limit));
         }
