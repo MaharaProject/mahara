@@ -1,4 +1,18 @@
 <?php
+/**
+ * Elasticsearch PHP client
+ *
+ * @link      https://github.com/elastic/elasticsearch-php/
+ * @copyright Copyright (c) Elasticsearch B.V (https://www.elastic.co)
+ * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html GNU Lesser General Public License, Version 2.1
+ *
+ * Licensed to Elasticsearch B.V under one or more agreements.
+ * Elasticsearch B.V licenses this file to you under the Apache 2.0 License or
+ * the GNU Lesser General Public License, Version 2.1, at your option.
+ * See the LICENSE file in the project root for more information.
+ */
+
 
 declare(strict_types = 1);
 
@@ -6,19 +20,9 @@ namespace Elasticsearch\ConnectionPool;
 
 use Elasticsearch\Common\Exceptions\InvalidArgumentException;
 use Elasticsearch\ConnectionPool\Selectors\SelectorInterface;
-use Elasticsearch\Connections\Connection;
 use Elasticsearch\Connections\ConnectionFactoryInterface;
 use Elasticsearch\Connections\ConnectionInterface;
 
-/**
- * Class AbstractConnectionPool
- *
- * @category Elasticsearch
- * @package  Elasticsearch\ConnectionPool
- * @author   Zachary Tong <zach@elastic.co>
- * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache2
- * @link     http://elastic.co
- */
 abstract class AbstractConnectionPool implements ConnectionPoolInterface
 {
     /**
@@ -42,21 +46,25 @@ abstract class AbstractConnectionPool implements ConnectionPoolInterface
      */
     protected $selector;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $connectionPoolParams;
 
-    /** @var \Elasticsearch\Connections\ConnectionFactory  */
+    /**
+     * @var \Elasticsearch\Connections\ConnectionFactory
+     */
     protected $connectionFactory;
 
     /**
      * Constructor
      *
-     * @param ConnectionInterface[]          $connections          The Connections to choose from
-     * @param SelectorInterface              $selector             A Selector instance to perform the selection logic for the available connections
-     * @param ConnectionFactoryInterface     $factory              ConnectionFactory instance
-     * @param array                          $connectionPoolParams
+     * @param ConnectionInterface[]      $connections          The Connections to choose from
+     * @param SelectorInterface          $selector             A Selector instance to perform the selection logic for the available connections
+     * @param ConnectionFactoryInterface $factory              ConnectionFactory instance
+     * @param array                      $connectionPoolParams
      */
-    public function __construct($connections, SelectorInterface $selector, ConnectionFactoryInterface $factory, $connectionPoolParams)
+    public function __construct(array $connections, SelectorInterface $selector, ConnectionFactoryInterface $factory, array $connectionPoolParams)
     {
         $paramList = array('connections', 'selector', 'connectionPoolParams');
         foreach ($paramList as $param) {
@@ -66,7 +74,8 @@ abstract class AbstractConnectionPool implements ConnectionPoolInterface
         }
 
         if (isset($connectionPoolParams['randomizeHosts']) === true
-            && $connectionPoolParams['randomizeHosts'] === true) {
+            && $connectionPoolParams['randomizeHosts'] === true
+        ) {
             shuffle($connections);
         }
 
@@ -77,12 +86,7 @@ abstract class AbstractConnectionPool implements ConnectionPoolInterface
         $this->connectionFactory    = $factory;
     }
 
-    /**
-     * @param bool $force
-     *
-     * @return Connection
-     */
-    abstract public function nextConnection($force = false);
+    abstract public function nextConnection(bool $force = false): ConnectionInterface;
 
-    abstract public function scheduleCheck();
+    abstract public function scheduleCheck(): void;
 }

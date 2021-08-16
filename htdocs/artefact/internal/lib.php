@@ -1252,39 +1252,62 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
     }
 
     /**
-     * Add favicon of different messaging systems or
-     * social sites, contained in the input data.
+     * Add favicon of different messaging systems or social sites, contained in
+     * the input data in a number of formats.
+     *
+     * The returned array is of the form [
+     * 'note'      => string // originally passed into function.
+     * 'title'     => string // originally passed into function.
+     * 'icon'      => string // the URL of the icon.
+     * 'link'      => string // URL or application call.
+     * 'faicon'    => string // HTML span with the font awesome class.
+     * 'icon_class => string // Font Awesome class as a string.
+     * ]
      * @param array $data with details of the social profile.
-     * $data[]->note - the type of social profile (i.e. icq, aim, etc).
-     * $data[]->title - display name of the social profile.
-     * $data[]->icon - the URL of the icon. Will be populated by this function.
+     * [
+     *   $data[]->note - the type of social profile (i.e. icq, aim, etc).
+     *   $data[]->title - display name of the social profile.
+     *   $data[]->icon - the URL of the icon. Will be populated by this function.
+     * ]
      * @return array of icon details for the specified social profile.
-     * $newdata[]->note - originally passed into function.
-     * $newdata[]->title - originally passed into function.
-     * $newdata[]->icon - the URL of the icon.
-     * $newdata[]->link - URL or application call.
      */
     public static function get_profile_icons($data) {
         $newdata = array();
         foreach ($data as $record) {
 
             $record->link = self::get_profile_link($record->title, $record->note);
+            // Add the properties here so we don't have to check for their
+            // presence elsewhere.
+            if (!property_exists($record, 'faicon')) {
+                $record->faicon = '';
+            }
+            if (!property_exists($record, 'icon_class')) {
+                $record->icon_class = '';
+            }
+            if (!property_exists($record, 'icon')) {
+                $record->icon = '';
+            }
 
             switch ($record->note) {
                 case 'facebook':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-facebook-square" style="color: #4267B2"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-facebook-square';
                     break;
                 case 'tumblr':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-tumblr-square" style="color: #001935"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-tumblr-square';
                     break;
                 case 'twitter':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-twitter" style="color: #00ACED"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-twitter';
                     break;
                 case 'instagram':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-instagram" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); background-clip: text; color: transparent; line-height: 1"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-instagram';
                     break;
                 case 'pinterest':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-pinterest" style="color: #E80021"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-pinterest';
                     break;
                 case 'icq':
                     $record->icon = favicon_display_url('www.icq.com');
@@ -1294,9 +1317,11 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
                     break;
                 case 'yahoo':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-yahoo" style="color: #4B06A3"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-yahoo';
                     break;
                 case 'skype':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-skype" style="color: #3498D8"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-skype';
                     break;
                 case 'jabber':
                     // Since www.jabber.org favicon is not working...
@@ -1317,7 +1342,8 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
                     }
                     else {
                          // We'll fall back to the "no favicon" default icon
-                    $record->faicon = '<span class="icon icon-lg icon-globe-americas" style="color: #BFBFF2"></span>';
+                        $record->faicon = '<span class="icon icon-lg icon-globe-americas" style="color: #BFBFF2"></span>';
+                        $record->icon_class = 'icon icon-lg icon-globe-americas';
                     }
             }
             $newdata[] = $record;

@@ -35,6 +35,16 @@ $notificationelements = get_notification_settings_elements(null, true);
 
 validate_theme(get_config('theme'));
 
+// Search plugin doesn't clean up when switching.
+$search_plugin_default_value = get_config('searchplugin');
+$search_plugins_installed = plugins_installed('search');
+if (!array_key_exists($search_plugin_default_value, $search_plugins_installed)) {
+    $search_plugin_default_value = 'internal';
+}
+// Do we provide enhances event log reporting?
+$search_class = generate_class_name('search', $search_plugin_default_value);
+$enhanced_event_log_reporting = $search_class::provides_enhanced_event_log_reports();
+
 $spamtraps = available_spam_traps();
 $isolatedinstitutions = is_isolated();
 $siteoptionform = array(
@@ -584,7 +594,7 @@ $siteoptionform = array(
                     'type'         => 'select',
                     'title'        => get_string('searchplugin', 'admin'),
                     'description'  => get_string('searchplugindescription', 'admin'),
-                    'defaultvalue' => get_config('searchplugin'),
+                    'defaultvalue' => $search_plugin_default_value,
                     'collapseifoneoption' => true,
                     'options'      => $searchpluginoptions,
                     'help'         => true,
@@ -826,7 +836,7 @@ $siteoptionform = array(
                     'description'  => get_string('eventlogenhancedsearchdescription1', 'admin'),
                     'defaultvalue' => get_config('eventlogenhancedsearch'),
                     'help'         => true,
-                    'disabled'     => (get_config('searchplugin') != 'elasticsearch' || in_array('eventlogenhancedsearch', $OVERRIDDEN)),
+                    'disabled'     => !$enhanced_event_log_reporting,
                 ),
             ),
         ),
@@ -854,14 +864,14 @@ $siteoptionform = pieform($siteoptionform);
 
 function siteoptions_validate(Pieform $form, $values) {
 
-    if (get_config('searchplugin') != $values['searchplugin']) {
-        // Call the new search plugin's can connect
-        safe_require('search', $values['searchplugin']);
-        $connect = call_static_method(generate_class_name('search', $values['searchplugin']), 'can_connect');
-        if (!$connect) {
-            $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
-        }
+    // Call the new search plugin's can connect
+    safe_require('search', $values['searchplugin']);
+    $search_class_name = generate_class_name('search', $values['searchplugin']);
+    $connect = call_static_method($search_class_name, 'can_connect');
+    if (!$connect) {
+        $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
     }
+
     if ($values['viruschecking'] == true) {
         $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
         if (!$pathtoclam ) {
@@ -964,8 +974,19 @@ function siteoptions_submit(Pieform $form, $values) {
         $values['allowpublicprofiles'] = 1;
     }
     // Can only set advanced event log searching if search plugin is elasticsearch
-    if (!empty($values['eventlogenhancedsearch']) && $values['searchplugin'] != 'elasticsearch') {
-        $values['eventlogenhancedsearch'] = false;
+    if (!empty($values['eventlogenhancedsearch'])) {
+        $search_plugin = $values['searchplugin'];
+        $search_class = generate_class_name('search', $search_plugin);
+        if (
+            !class_exists($search_class) ||
+            !method_exists($search_class, 'provides_enhanced_event_log_reports') ||
+            !$search_class::provides_enhanced_event_log_reports()
+        ) {
+            // Either there is no search class, no way to check enhanced event
+            // log reports are supported, or the class doesn't support them.
+            // In these cases we want to force this to be false.
+            $values['eventlogenhancedsearch'] = false;
+        }
     }
     // If password policy is changed, force reset password for all users with internal authentication.
     if ($values['passwordpolicy'] != get_password_policy()) {

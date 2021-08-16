@@ -26,6 +26,8 @@ safe_require($plugintype, $pluginname);
 $enable  = param_integer('enable', 0);
 $disable = param_integer('disable', 0);
 
+
+
 if ($disable && !call_static_method(generate_class_name($plugintype, $pluginname), 'can_be_disabled')) {
     throw new UserException("Plugin $plugintype $pluginname cannot be disabled");
 }
@@ -87,7 +89,14 @@ $form['elements']['save'] = array(
 
 $form = pieform($form);
 
-$smarty = smarty(array(), $formcss);
+$javascript = [];
+// // If the current search class can tweak the javascript being loaded, do that
+// // now.
+if (method_exists($classname, 'tweak_settingsform_js')) {
+    $classname::tweak_settingsform_js($javascript);
+}
+
+$smarty = smarty($javascript, $formcss);
 $smarty->assign('form', $form);
 $smarty->assign('plugintype', $plugintype);
 $smarty->assign('pluginname', $pluginname);
@@ -117,7 +126,20 @@ function pluginconfig_submit(Pieform $form, $values) {
         $form->json_reply(PIEFORM_OK, get_string('settingssaved'));
     }
     else {
-        $form->json_reply(PIEFORM_ERR, array('message' => get_string('settingssavefailed')));
+        $error_message = [];
+        $error_message[] = get_string('settingssavefailed');
+        if (!empty($e->getMessage())) {
+            $msg = json_decode($e->getMessage());
+            if (property_exists($msg, 'error')
+                && property_exists($msg->error, 'root_cause')
+                && !empty($msg->error->root_cause)) {
+                foreach ($msg->error->root_cause as $root_cause) {
+                    $error_message[] = $root_cause->reason;
+                }
+            }
+        }
+
+        $form->json_reply(PIEFORM_ERR, array('message' => implode('<br>', $error_message)));
     }
 }
 

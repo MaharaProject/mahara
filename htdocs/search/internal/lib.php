@@ -18,6 +18,15 @@ require_once(get_config('docroot') . 'search/lib.php');
  */
 class PluginSearchInternal extends PluginSearch {
 
+
+    /**
+     * Does this search plugin provide enhanced event log reports?
+     * @return bool
+     */
+    public static function provides_enhanced_event_log_reports() {
+        return false;
+    }
+
     /**
      * This function indicates whether the plugin should take the raw $query string
      * when its group_search_user function is called, or whether it should get the
@@ -1170,6 +1179,7 @@ class PluginSearchInternal extends PluginSearch {
      * @param integer What result to start at (0 == first result)
      * @param string  Type to search for (either 'all' or one of the types above).
      *
+     * @return array<string,mixed>|false
      */
     public static function self_search($querystring, $limit, $offset, $type = 'all') {
         global $USER;

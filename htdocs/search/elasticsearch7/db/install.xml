@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="lib/db" VERSION="20130306" COMMENT="XMLDB file for Mahara's elastic search plugin"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+<TABLES>
+    <TABLE NAME="search_elasticsearch_7_queue">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+            <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" />
+            <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" />
+            <FIELD NAME="artefacttype" TYPE="char" LENGTH="255" NOTNULL="false" />
+            <FIELD NAME="status" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" />
+            <FIELD NAME="lastprocessed" TYPE="datetime" NOTNULL="false" />
+        </FIELDS>
+
+        <KEYS>
+            <KEY NAME="search_elasticsearch_7_queuepk" TYPE="primary" FIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="itemidix" UNIQUE="false" FIELDS="itemid"/>
+            <INDEX NAME="statusix" UNIQUE="false" FIELDS="status"/>
+        </INDEXES>
+    </TABLE>
+</TABLES>
+</XMLDB>

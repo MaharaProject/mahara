@@ -305,11 +305,11 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                     $record->link = 'artefact/resume/interests.php';
                     break;
                 case 'plan' :
-                    $record->link = 'artefact/plans/plan.php?id=' . $record->id;
+                    $record->link = 'artefact/plans/plan/view.php?id=' . $record->id;
                     break;
                 case 'task' :
                     if (isset ( $record->parent ) && intval ( $record->parent ) > 0) {
-                        $record->link = 'artefact/plans/plan.php?id=' . $record->parent;
+                        $record->link = 'artefact/plans/plan/view.php?id=' . $record->parent;
                     }
                     break;
             }

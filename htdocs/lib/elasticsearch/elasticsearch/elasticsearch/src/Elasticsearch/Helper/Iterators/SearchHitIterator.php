@@ -1,4 +1,18 @@
 <?php
+/**
+ * Elasticsearch PHP client
+ *
+ * @link      https://github.com/elastic/elasticsearch-php/
+ * @copyright Copyright (c) Elasticsearch B.V (https://www.elastic.co)
+ * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html GNU Lesser General Public License, Version 2.1
+ *
+ * Licensed to Elasticsearch B.V under one or more agreements.
+ * Elasticsearch B.V licenses this file to you under the Apache 2.0 License or
+ * the GNU Lesser General Public License, Version 2.1, at your option.
+ * See the LICENSE file in the project root for more information.
+ */
+
 
 declare(strict_types = 1);
 
@@ -6,16 +20,6 @@ namespace Elasticsearch\Helper\Iterators;
 
 use Iterator;
 
-/**
- * Class SearchHitIterator
- *
- * @category Elasticsearch
- * @package  Elasticsearch\Helper\Iterators
- * @author   Arturo Mejia <arturo.mejia@kreatetechnology.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache2
- * @link     http://elastic.co
- * @see      Iterator
- */
 class SearchHitIterator implements Iterator, \Countable
 {
 
@@ -42,7 +46,7 @@ class SearchHitIterator implements Iterator, \Countable
     /**
      * @var int
      */
-    protected $count;
+    protected $count = 0;
 
     /**
      * Constructor
@@ -60,7 +64,7 @@ class SearchHitIterator implements Iterator, \Countable
      * @return void
      * @see    Iterator::rewind()
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->current_key = 0;
         $this->search_responses->rewind();
@@ -87,7 +91,7 @@ class SearchHitIterator implements Iterator, \Countable
      * @return void
      * @see    Iterator::next()
      */
-    public function next()
+    public function next(): void
     {
         $this->current_key++;
         $this->current_hit_index++;
@@ -106,7 +110,7 @@ class SearchHitIterator implements Iterator, \Countable
      * @return bool
      * @see    Iterator::valid()
      */
-    public function valid()
+    public function valid(): bool
     {
         return is_array($this->current_hit_data);
     }
@@ -117,7 +121,7 @@ class SearchHitIterator implements Iterator, \Countable
      * @return array
      * @see    Iterator::current()
      */
-    public function current()
+    public function current(): array
     {
         return $this->current_hit_data;
     }
@@ -128,9 +132,9 @@ class SearchHitIterator implements Iterator, \Countable
      * @return int
      * @see    Iterator::key()
      */
-    public function key()
+    public function key(): int
     {
-        return $this->current_hit_index;
+        return $this->current_key;
     }
 
     /**
@@ -138,7 +142,7 @@ class SearchHitIterator implements Iterator, \Countable
      *
      * @internal
      */
-    private function readPageData()
+    private function readPageData(): void
     {
         if ($this->search_responses->valid()) {
             $current_page = $this->search_responses->current();
@@ -152,12 +156,8 @@ class SearchHitIterator implements Iterator, \Countable
     /**
      * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
-        if ($this->count === null) {
-            $this->rewind();
-        }
-
         return $this->count;
     }
 }

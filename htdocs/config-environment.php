@@ -96,6 +96,7 @@ set_from_env($cfg, 'redissentinelservers', 'MAHARA_REDIS_SENTINEL_SERVERS');
 set_from_env($cfg, 'redismastergroup', 'MAHARA_REDIS_MASTER_GROUP');
 set_from_env($cfg, 'redisprefix', 'MAHARA_REDIS_PREFIX');
 
+// Configuration for the Elasticsearch plugin.
 set_from_env($cfg, 'plugin_search_elasticsearch_host', 'MAHARA_ELASTICSEARCH_HOST');
 set_from_env($cfg, 'plugin_search_elasticsearch_port', 'MAHARA_ELASTICSEARCH_PORT');
 set_from_env($cfg, 'plugin_search_elasticsearch_scheme', 'MAHARA_ELASTICSEARCH_SCHEME');
@@ -111,6 +112,22 @@ set_from_env($cfg, 'plugin_search_elasticsearch_ignoressl', 'MAHARA_ELASTICSEARC
 set_from_env($cfg, 'plugin_search_elasticsearch_requestlimit', 'MAHARA_ELASTICSEARCH_REQUEST_LIMIT');
 set_from_env($cfg, 'plugin_search_elasticsearch_redolimit', 'MAHARA_ELASTICSEARCH_REDO_LIMIT');
 
+
+// Configuration for the Elasticsearch 7 plugin.
+set_from_env($cfg, 'plugin_search_elasticsearch7_host', 'MAHARA_ELASTICSEARCH7_HOST');
+set_from_env($cfg, 'plugin_search_elasticsearch7_port', 'MAHARA_ELASTICSEARCH7_PORT');
+set_from_env($cfg, 'plugin_search_elasticsearch7_scheme', 'MAHARA_ELASTICSEARCH7_SCHEME');
+set_from_env($cfg, 'plugin_search_elasticsearch7_username', 'MAHARA_ELASTICSEARCH7_USERNAME');
+set_from_env($cfg, 'plugin_search_elasticsearch7_password', 'MAHARA_ELASTICSEARCH7_PASSWD');
+set_from_env($cfg, 'plugin_search_elasticsearch7_indexingusername', 'MAHARA_ELASTICSEARCH7_INDEXING_USERNAME');
+set_from_env($cfg, 'plugin_search_elasticsearch7_indexingpassword', 'MAHARA_ELASTICSEARCH7_INDEXING_PASSWD');
+set_from_env($cfg, 'plugin_search_elasticsearch7_indexname', 'MAHARA_ELASTICSEARCH7_INDEX_NAME');
+set_from_env($cfg, 'plugin_search_elasticsearch7_bypassindexname', 'MAHARA_ELASTICSEARCH7_BYPASS_INDEX_NAME');
+set_from_env($cfg, 'plugin_search_elasticsearch7_analyzer', 'MAHARA_ELASTICSEARCH7_ANALYZER');
+set_from_env($cfg, 'plugin_search_elasticsearch7_types', 'MAHARA_ELASTICSEARCH7_TYPES');
+set_from_env($cfg, 'plugin_search_elasticsearch7_ignoressl', 'MAHARA_ELASTICSEARCH7_IGNORE_SSL');
+set_from_env($cfg, 'plugin_search_elasticsearch7_requestlimit', 'MAHARA_ELASTICSEARCH7_REQUEST_LIMIT');
+set_from_env($cfg, 'plugin_search_elasticsearch7_redolimit', 'MAHARA_ELASTICSEARCH7_REDO_LIMIT');
 
 // Behat config: This is only used for testing
 set_from_env($cfg, 'behat_dbprefix', 'MAHARA_BEHAT_DB_PREFIX', 'behat_');
