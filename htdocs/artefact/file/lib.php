@@ -188,6 +188,10 @@ class PluginArtefactFile extends PluginArtefact {
                     'uploadingfiletofolder',
                     'youmustagreetothecopyrightnotice',
                     'moveto',
+                    'rotate0img',
+                    'rotate90img',
+                    'rotate180img',
+                    'rotate270img',
                 ),
             ),
         );
