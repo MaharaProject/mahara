@@ -326,7 +326,7 @@ function addfontform_submit(Pieform $form, $values) {
         (object) array(
             'name' => $foldername,
             'title' => $values['fonttitle'],
-            'licence' => ($values['fontfilelicence']['name'] ? $values['fontfilelicence']['name'] : ''),
+            'licence' => (isset($values['fontfilelicence']) && !empty($values['fontfilelicence']['name']) ? $values['fontfilelicence']['name'] : ''),
             'notice' => $values['fontnotice'],
             'previewfont' => $values['fontfileTTF']['name'],
             'variants' => serialize(array($font_variant => $variantdata)),
