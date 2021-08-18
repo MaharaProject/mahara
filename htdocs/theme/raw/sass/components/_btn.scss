@@ -168,42 +168,6 @@ h1 + div > .btn-top-left,
     }
 }
 
-//page builder collapsible
-.btn-accordion.ui-accordion {
-    &.btn-help {
-        padding-left: 1.6875rem; // 27px;
-    }
-}
-.btn-accordion.ui-accordion .ui-accordion-content {
-    @include box-sizing(border-box);
-    border-radius: 0;
-    margin-top: $spacing-base;
-    margin-bottom: $spacing-lg;
-    padding: 0;
-    max-width: 100%;
-    border: 0;
-    .btn-group-vertical {
-        @include box-sizing(border-box);
-        max-width: 100%;
-        width: 100%;
-        // take away the edges on inner accordion buttons
-        .btn {
-            border-radius: 0;
-            display:block;
-            margin: 0;
-            &:not(:last-child) {
-                border-bottom: 0;
-
-                &:hover {
-                    +.btn {
-                        border-top-color: scale-color($btn-secondary-border, $lightness: -15%);
-                    }
-                }
-            }
-        }
-    }
-}
-
 // Hack to fix the inline script tags that keep getting in places they don't belong
 .btn-group .form-as-button.last + script + .btn {
     margin-left: -$btn-border-width;
