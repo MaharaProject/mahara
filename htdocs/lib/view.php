@@ -546,6 +546,11 @@ class View {
      *                        $view->set_access() after retrieving the $view
      *                        object.
      *
+     *                        quiet_update - a flag to skip notifying users
+     *                        on view-creation. When a view is part of a
+     *                        collection, notify users once views are added
+     *                        i.e. creating from a collection template.
+     *
      * @param int $userid The user who has issued the command to create the
      *                    View (note: this is different from the "owner" of the
      *                    View - a group or institution could be the "owner",
@@ -620,7 +625,7 @@ class View {
             require_once('activity.php');
 
             // Although group views are owned by the group, the view creator is treated as owner here.
-            // So we need to ignore them from the activity_occured email.
+            // So we need to ignore them from the activity_occurred email.
             $beforeusers[$userid] = get_record('usr', 'id', $userid);
 
             // By default, group views should be visible to the group
@@ -637,13 +642,16 @@ class View {
                 'parenttype' => 'view',
                 'rules' => $newaccess)
             );
-            // Notify group members
+
             $accessdata = new stdClass();
             $accessdata->view = $view->get('id');
             $accessdata->oldusers = $beforeusers;
-            activity_occurred('viewaccess', $accessdata);
-        }
 
+            // Only send out a notification if this view is not part of a collection in the making.
+            if (!isset($viewdata['quiet_update'])) {
+                activity_occurred('viewaccess', $accessdata);
+            }
+        }
         return new View($view->get('id')); // Reread to ensure defaults are set
     }
 
@@ -1479,9 +1487,9 @@ class View {
                 foreach ($viewobjs as $view) {
                     $views[] = array('id' => $view->get('id'),
                                     'title' => $view->get('title'),
-                                    $collection_id,
-                                    $collection_name,
-                                    $collection_url
+                                    'collection_id' => $collection_id,
+                                    'collection_name' => $collection_name,
+                                    'collection_url' => $collection_url
                                 );
                 }
             }
@@ -1489,9 +1497,9 @@ class View {
             else if (sizeof($viewids) === 1) {
                 $views[] = array('id' => $viewobjs[0]->get('id'),
                                  'title' => $viewobjs[0]->get('title'),
-                                $collection_id,
-                                $collection_name,
-                                $collection_url
+                                 'collection_id' => $collection_id,
+                                 'collection_name' => $collection_name,
+                                 'collection_url' => $collection_url
                             );
 
             }
