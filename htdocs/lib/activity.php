@@ -34,7 +34,7 @@ defined('INTERNAL') || die();
  * that is going to end up on a user's activity page.
  *
  * @param string $activitytype type of activity
- * @param array $data must contain the fields specified by get_required_parameters of the activity type subclass.
+ * @param object $data must contain the fields specified by get_required_parameters of the activity type subclass.
  * @param string $plugintype
  * @param string $pluginname
  * @param bool $delay
@@ -57,10 +57,10 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
         if (!record_exists('activity_queue', 'type', $delayed->type, 'data', $delayed->data)) {
-            if ($delayed->type == 4 && isset($data->views[0]['collection_id'])) {
+            if ($views = isset($data->views) && $delayed->type == 4 && isset($views[0]['collection_id'])) {
                 // try to ensure we don't end up with multiple notifications when sharing collections
                 $sql = 'SELECT * FROM {activity_queue} WHERE type = ? AND data like ';
-                $sql .= "'%" . '"collection_id"' . ";s:%" . '"' . $data->views[0]['collection_id'] . '"' . ";%'";
+                $sql .= "'%" . '"collection_id"' . ";s:%" . '"' . $views[0]['collection_id'] . '"' . ";%'";
                 if (!record_exists_sql($sql, array($delayed->type))) {
                     insert_record('activity_queue', $delayed);
                 }
@@ -68,6 +68,7 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
             else {
                 insert_record('activity_queue', $delayed);
             }
+
         }
     }
     else {
