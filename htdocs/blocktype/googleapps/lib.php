@@ -240,6 +240,15 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
                 'url'   => $httpstr . '://docs.google.com/$1document/d/$2/pub?embedded=true',
                 'type'  => 'iframe',
             ),
+            // https://docs.google.com/spreadsheets/d/e/ (updated on July 2021)
+            // $1 - domain, e.g. /a/domainname/
+            // $2 - url extras
+            // $3 - id, key, etc. of the document
+            array(
+                'match' => '#.*docs.google.com\/([a-zA-Z0-9\_\-\.]*)spreadsheets([a-zA-Z0-9\/]*)\/d\/e\/([a-zA-Z0-9\_\-\/]+).*#',
+                'url'   => $httpstr . '://docs.google.com/$1spreadsheets$2/d/e/$3',
+                'type'  => 'iframe',
+            ),
             // docs.google.com/spreadsheets - Google document (updated on Mar 2015)
             // $1 - domain, e.g. /a/domainname/
             // $2 - id, key, etc. of the spreadsheet
@@ -368,8 +377,8 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
             ),
         );
 
+        $url = htmlspecialchars_decode($url); // convert &amp; back to &, etc.
         foreach ($embedsources as $source) {
-            $url = htmlspecialchars_decode($url); // convert &amp; back to &, etc.
             if (preg_match($source['match'], $url)) {
                 if (is_string($source['url'])) {
                     $apps_url = preg_replace($source['match'], $source['url'], $url);
