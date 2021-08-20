@@ -1,18 +1,17 @@
 adodb
 -----
 
-Website: http://adodb.org/
-Version: 5.20.20
+Website: https://adodb.org/dokuwiki/doku.php
+
+Version: 5.21.1
 
 Modifications:
 
 - RecordSet_postgres7->MoveNext() - remove expensive is_array() (04ef8a3b9770f93326a2ece31e4089368117faca)
-- Allow check for $okversion of Postgres or MySql (c6dfccadfae432147fff99fa15b0985dcae7e503)
--- Minimum working version values should be in updated in Mahara's README.md file and in init.php
+- Allow check for $okversion of Postgres or MySql: Minimum working version values should be in updated in Mahara's README.md file and in init.php
 - Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
 - Deleted many files/folders we're not using: /cute_icons, /tests, /docs, /drivers except non-deprecated mysql and postgres, /datadict except mysql and postgres, /lang except english, /pear, /perf, /replicate, .git*, mailmap.
 - Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed. (f9818ff606bbe6ec00b34eab23d1743870407b48)
-- Moved the define ADODB_ASSOC_CASE_* calls as they are needed by ADONewConnection (741aa7d2150d22e9206ffa1fd8a93e3f4d697324)
 - Bug 1619036: Fix a bug when determine if an array is associative (606317195f8f3a8cdf9bc448c537b8c3708d75d7)
 - Removing the obsolete adodb-mysql.inc.php (2f19a42ddd6af732e40b1aae9359ee80e28f9111)
 - escaping names when showing table / index in adodb-mysqli.inc.php(08939ca25acddff39b132e4bd823668b98447947)
