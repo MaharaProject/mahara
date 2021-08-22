@@ -1785,12 +1785,12 @@ class Collection {
                         'users' => array($this->get('owner')),
                         'strings' => (object) array(
                             'subject' => (object) array(
-                                'key'     => 'collectionreleasedsubject1',
+                                'key'     => 'portfolioreleasedsubject',
                                 'section' => 'group',
-                                'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+                                'args'    => array($this->name),
                             ),
                             'message' => (object) array(
-                                'key'     => 'collectionreleasedmessage1',
+                                'key'     => 'portfolioreleasedmessage',
                                 'section' => 'group',
                                 'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                             ),
@@ -1845,8 +1845,10 @@ class Collection {
             $record->url = group_homepage_url($record);
         }
         else if ($this->submittedhost) {
-            $record = get_record('host', 'wwwroot', $this->submittedhost, null, null, null, null, 'wwwroot, name');
-            $record->url = $record->wwwroot;
+            if (!$hostconnection = get_field('host', 'name', 'wwwroot', $this->submittedhost)) {
+                $hostconnection = $this->submittedhost;
+            }
+            $record->url = $hostconnection;
         }
         else {
             throw new SystemException("Collection with id " . $this->id . " has not been submitted");

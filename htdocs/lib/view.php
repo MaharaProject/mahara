@@ -1665,7 +1665,10 @@ class View {
             return array('type' => 'group', 'id' => $group, 'name' => get_field('group', 'name', 'id', $group));
         }
         if ($host = $this->get('submittedhost')) {
-            return array('type' => 'host', 'wwwroot' => $host, 'name' => get_field('host', 'name', 'wwwroot', $host));
+            if (!$hostconnection = get_field('host', 'name', 'wwwroot', $host)) {
+                $hostconnection = $host;
+            }
+            return array('type' => 'host', 'wwwroot' => $host, 'name' => $hostconnection);
         }
         return null;
     }
@@ -1727,9 +1730,8 @@ class View {
             activity_occurred('maharamessage',
                 array(
                     'users' => array($this->get('owner')),
-                    'subject' => get_string_from_language($ownerlang, 'viewreleasedsubject1', 'group', $this->get('title'),
-                        $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
-                    'message' => get_string_from_language($ownerlang, 'viewreleasedmessage1', 'group', $this->get('title'),
+                    'subject' => get_string_from_language($ownerlang, 'portfolioreleasedsubject', 'group', $this->get('title')),
+                    'message' => get_string_from_language($ownerlang, 'portfolioreleasedmessage', 'group', $this->get('title'),
                         $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
                     'url' => $url,
                     'urltext' => $this->get('title'),
