@@ -134,22 +134,15 @@ function _get_mahara_version() {
     if (preg_match('/dev$/', $release) || preg_match('/rc/', $release)) {
         // We are either on master or a branch in release candidate
         // so we need the latest released branch
-        $versions = cron_check_for_updates(true);
-
-        // Need this if PHP older than 7.3
-        if (!function_exists('array_key_first')) {
-            /** Return the first key of an array
-             * @param array  $arr the array
-            */
-            function array_key_first(array $arr) {
-                foreach($arr as $key => $unused) {
-                    return $key;
-                }
-                return NULL;
-            }
+        preg_match('/^(\d+)\.(\d+).*/', $release, $matches);
+        if ($matches[2] == '10') {
+            $matches[2] = '04';
         }
-
-        $series = array_key_first((array)$versions);
+        else {
+            $matches[1] = (int)$matches[1] - 1;
+            $matches[2] = '10';
+        }
+        $series = $matches[1] . '.' . $matches[2];
     }
     return $series;
 }
