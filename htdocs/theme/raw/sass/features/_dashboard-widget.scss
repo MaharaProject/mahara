@@ -6,6 +6,7 @@
         position: relative;
         display: block;
         margin-bottom: $spacing-lg;
+        text-decoration: none;
 
         @include media-breakpoint-up(md) {
             float:left;

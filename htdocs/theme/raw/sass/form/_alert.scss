@@ -55,6 +55,12 @@
     }
     a {
         font-weight: $font-weight-bold;
+        text-decoration: underline;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
     }
 }
 
@@ -74,6 +80,9 @@
       content: fa-content($fa-var-check);
       color: scale-color($success, $lightness: -30%);
     }
+    a {
+        color: scale-color($success, $lightness: -30%);
+    }
 }
 .alert-pending {
     color: scale-color($info, $lightness: -30%);
@@ -84,6 +93,9 @@
       color: scale-color($info, $lightness: -30%);
       animation: fa-spin 1s infinite steps(8);
     }
+    a {
+        color: scale-color($info, $lightness: -30%);
+    }
 }
 .alert-info {
     color: scale-color($info, $lightness: -30%);
@@ -92,6 +104,9 @@
     &:before {
       content: fa-content($fa-var-info-circle);
       color: scale-color($info, $lightness: -30%);
+    }
+    a {
+        color: scale-color($info, $lightness: -30%);
     }
 }
 .alert-warning {
@@ -102,6 +117,9 @@
       content: fa-content($fa-var-exclamation-triangle);
       color: scale-color($warning, $lightness: -40%);
     }
+    a {
+        color: scale-color($warning, $lightness: -40%);
+    }
 }
 .alert-danger {
     color: scale-color($danger, $lightness: -30%);
@@ -111,12 +129,18 @@
       content: fa-content($fa-var-times);
       color: scale-color($danger, $lightness: -30%);
     }
+    a {
+        color: scale-color($danger, $lightness: -30%);
+    }
 }
 .alert-submitted {
     background-color: $state-submitted-bg;
     border: $alert-border-width solid $state-submitted-border;
     color: $state-submitted-text;
     padding-left: 1.25rem;
+    a {
+        color: $state-submitted-text;
+    }
 }
 
 // people search when noone is selected and edit button is pressed

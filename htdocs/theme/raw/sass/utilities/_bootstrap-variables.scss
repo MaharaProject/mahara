@@ -184,7 +184,7 @@ $body-color:                $theme-text-color !default;
 // Style anchor elements.
 
 $link-color:                                theme-color("primary") !default; // Global textual link color.
-$link-decoration:                           none !default;
+$link-decoration:                           underline !default;
 $link-hover-color:                          scale-color(theme-color("primary"), $lightness: -16%) !default;
 $link-hover-decoration:                     underline !default;
 // Darken percentage for links with `.text-*` class (e.g. `.text-success`)

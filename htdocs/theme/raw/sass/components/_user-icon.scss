@@ -166,6 +166,7 @@ a.user-icon, a .user-icon {
         padding: 0.25rem; // 4px
         max-width: 6.875rem; // 110px
         border-radius: $thumbnail-border-radius;
+        text-decoration: none;
 
         img {
             border-radius: $user-icon-border-radius;

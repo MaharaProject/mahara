@@ -65,7 +65,7 @@
         &.clearboth {
             clear: both;
         }
-        .list-group-item {
+        .list-group-item:first-child {
             border-top-width: $list-group-border-width;
         }
     }
@@ -109,7 +109,7 @@
 .list-group-item-warning {
     background-color: $state-warning-bg;
     color: $state-warning-text;
-    
+
     // links but not .btn links
     a:not(.btn) {
         color: $state-warning-link;
@@ -142,10 +142,11 @@
     padding: 0;
     a {
         display: block;
+        text-decoration: none;
         &:hover,
         &:focus {
             background: $list-group-hover-bg;
-            text-decoration: none;
+            text-decoration: none !important;
         }
 
         // online users sidebar
@@ -344,13 +345,20 @@
         display: inline-block;
         width: 80%;
         margin-right: 0;
+
+        a {
+          text-decoration: $link-decoration;;
+          &:hover,
+          &:focus {
+            text-decoration: $link-hover-decoration;
+          }
+        }
     }
     a {
         word-break: break-all;
         vertical-align: top;
         &:hover,
         &:focus {
-          text-decoration: none;
           &.inner-link {
             text-decoration: $link-hover-decoration;
           }
@@ -412,6 +420,13 @@
           display: inline-block;
           margin-right: 0;
           word-wrap: anywhere;
+          a {
+            text-decoration: $link-decoration;
+            &:hover,
+            &:focus {
+              text-decoration: $link-hover-decoration;
+            }
+          }
       }
       .icon-download {
         position: relative;
@@ -450,7 +465,7 @@
 // Resume field blocks need first-child border-top removed
 .bt-resumefield,
 .bt-resumefield-editor {
-    .list-group-item:first-child {
+    .list-group.list-group-top-border .list-group-item:first-child {
         border-top-width: 0;
     }
 }
@@ -499,6 +514,7 @@
         max-width: 85%;
         white-space: nowrap;
         vertical-align: bottom;
+        text-decoration: underline;
     }
 }
 
@@ -516,5 +532,28 @@
   .download-link {
     display: block;
     float: right;
+  }
+}
+
+// remove top border radius from find groups list
+#findgroups {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  .list-group-item:last-child {
+    border-bottom-left-radius: $card-inner-border-radius;
+    border-bottom-right-radius: $card-inner-border-radius;
+  }
+}
+
+// tags results list-group first child remove top border and radius
+.tag-results #results {
+  border-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+
+  .list-group-item:last-child {
+    border-bottom-left-radius: $card-inner-border-radius;
+    border-bottom-right-radius: $card-inner-border-radius;
   }
 }

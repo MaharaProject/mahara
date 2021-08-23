@@ -7,6 +7,7 @@
     font-size: $font-size-base * 1.25; // 20px
     margin-bottom: 0.25rem; // 4px;
     background-color: $thumbnail-bg;
+    text-decoration: none !important;
 
     &.thumbnail {
         &:hover,

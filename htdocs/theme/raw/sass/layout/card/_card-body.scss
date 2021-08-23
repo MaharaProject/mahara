@@ -42,6 +42,14 @@
             font-size: $font-size-base;
             margin-bottom: ($list-group-item-padding-y / 2);
         }
+
+        a {
+            text-decoration: none;
+            &:hover,
+            &:focus {
+                text-decoration: underline;
+            }
+        }
     }
     .progressbar {
         .progress-container {
@@ -49,6 +57,12 @@
         }
         .list-group {
             margin-top: $spacing-lg;
+        }
+    }
+
+    #sb-onlineusers {
+        .list-group {
+            border-radius: 0;
         }
     }
 }

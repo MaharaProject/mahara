@@ -7,6 +7,7 @@
     .card-header {
         padding: $card-spacer-y ($card-spacer-x / 2);
         a {
+            text-decoration: none;
             border-radius: 0;
         }
     }
@@ -78,6 +79,10 @@
             .pieform > .collapsible-group:first-child & {
                 border-top-left-radius: $card-border-radius;
                 border-top-right-radius: $card-border-radius;
+            }
+
+            a {
+                text-decoration: none;
             }
         }
 
@@ -175,6 +180,16 @@
         @include media-breakpoint-down(sm) {
             position: static;
             text-align: right;
+        }
+
+        a {
+           text-decoration: $link-decoration;
+           color: $link-color;
+           &:hover,
+           &:focus {
+               text-decoration: $link-hover-decoration !important;
+               color: $link-hover-color !important;
+           }
         }
     }
 }

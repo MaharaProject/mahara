@@ -54,6 +54,7 @@
             margin-bottom: 0.5rem;
             display: block;
             color: $arrow-link-color;
+            text-decoration: none;
             &:hover,
             &:focus {
                 @include transition-duration(0.3s);

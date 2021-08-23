@@ -18,8 +18,7 @@
             <fieldset  class="pieform-fieldset collapsible collapsible-small">
                 <legend>
                     <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
-                        {str tag='instructions' section='view'}
-                        <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+                        {str tag='instructions' section='view'}<span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                     </a>
                 </legend>
                 <div class="fieldset-body collapse viewinstructions {if !$instructionscollapsed} show {/if}" id="viewinstructions-dropdown">

@@ -266,6 +266,7 @@
             background-color: transparent;
             border: none;
             color: $link-color;
+            text-decoration: underline;
             &:hover,
             &:focus {
                 color: $link-hover-color;

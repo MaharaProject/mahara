@@ -6,7 +6,13 @@
         padding: $spacing-base 5.625rem $spacing-base $spacing-lg; // 10px 90px 10px 15px;
         display: block;
         word-break: break-word;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
     }
+
     a.user-icon {
         z-index: 5;
         position: absolute;

@@ -2,14 +2,16 @@ a.card-footer {
     text-align:center;
     color: $link-color;
     display: block;
+    text-decoration: none;
     .icon {
         color: $link-color;
         line-height: $line-height-base;
     }
-    &:hover {
+    &:hover,
+    &:focus {
         color: $link-hover-color;
         background: scale-color($card-footer-bg, $lightness: 20%);
-        text-decoration: none;
+        text-decoration: underline;
         .icon {
             color: $theme-text-midtone-color;
         }

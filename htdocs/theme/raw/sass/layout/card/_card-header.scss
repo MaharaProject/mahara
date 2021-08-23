@@ -7,6 +7,17 @@
     font-family: $font-family-base;
     font-weight: $font-weight-light;
 
+    a {
+        text-decoration: none;
+        color: $card-header-color;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+            color: $card-header-color;
+        }
+    }
+
     p {
         margin: 0;
     }
@@ -25,6 +36,12 @@
 
     .secondary-link {
         color: $link-color;
+        text-decoration: $link-decoration;
+
+        &:hover,
+        &:focus {
+          text-decoration: $link-hover-decoration;
+        }
     }
     // by default links in headings get display: block and padding.
     // Use .secondary-link if you don't want this behaviour
@@ -113,6 +130,7 @@ h3 {
                 a {
                     border-width: 0;
                     line-height: 1;
+                    text-decoration: none;
 
                     .icon-paperclip,
                     .collapse-indicator {
@@ -155,4 +173,5 @@ h3 {
 // remove border-bottom for attachments list card-header
 .has-attachment .card-header {
     border-bottom: 0;
+    font-weight: $font-weight-normal;
 }
