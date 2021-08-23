@@ -2,7 +2,7 @@ PDF.js in Mahara
 ==================
 
 Website: http://mozilla.github.io/pdf.js/getting_started/#download
-Version: 2.8.335
+Version: 2.9.359
 License: Apache License 2.0
 
 PDF.js is used in the Mahara to provide a javascript library for
@@ -35,9 +35,9 @@ viewing PDF file
     gulp dist-install
     ```
 
-    This will make the `build/minified/build/` subdirectory as a version of pdf.js that is minified
+    This will make the `build/minified/build/` subdirectory - a minfied a version of pdf.js
 4. Copy and rename it to pdf.min.js
-5. Copy the new files in `build/minified/build/` to go in our version on the pdfjs/web/ directory
+5. Copy the new files in `build/minified/` to go in our version on the pdfjs/ directory
 
 **Checks** and file renames
 
@@ -58,8 +58,3 @@ viewing PDF file
 (6ed9230e287ca4915cb52e92391750adbc1ec4d0)
 - Hide 'upload file' in the toolbar to avoid confusion of blocktype purpose
 (b315e71ff5a39f22573c1c53e68bf8e63f1250c3)
-
-* Minify js files for faster loading
-* Use absolute paths in viewer.js
-* viewer.css tweak to get the bottom of the display to show
-(1a980a7df7c44fed0cb99fc728233dc8668e17aa)
