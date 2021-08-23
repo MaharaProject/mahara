@@ -2,13 +2,18 @@ TinyMCE
 ========
 
 Website: https://www.tiny.cloud/
-Version: 5.7.0
+Version: 5.8.2
+
+https://www.tiny.cloud/get-tiny/self-hosted/
+- download the latest dev version
+- open the js folder inside the extracted folder
 
 Changes:
 
   * Added
     -new versions don't have lang files so keep all of the original language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
-    -add icons to icons.js inside icons/default
+    -remove min.js inside icons/default
+
     Custom plugins:
       -/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
          This is from a previous version that still works. The new one tinymce 5.0 offers is a pay service.
@@ -22,6 +27,9 @@ Changes:
     - restrict heading levels on mobile for accessibility (original commit: 844604d96bcd095cd08235fc97b8f700f81aa55a)
 
  * Removed
+   - replace the current files
+   - remove jquery.tinymce.min.js and tinymce.min.js
+
     min.js files from main and plugin folders
     skins/ui/oxide-dark
     plugins/help

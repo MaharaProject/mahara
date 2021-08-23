@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.7.0 (2021-02-10)
+ * Version: 5.8.2 (2021-06-23)
  */
 (function () {
     'use strict';
@@ -41,6 +41,41 @@
           r[k] = a[j];
       return r;
     }
+
+    var typeOf = function (x) {
+      var t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+        return 'array';
+      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
+      };
+    };
+    var isSimpleType = function (type) {
+      return function (value) {
+        return typeof value === type;
+      };
+    };
+    var isString = isType('string');
+    var isObject = isType('object');
+    var isArray = isType('array');
+    var isBoolean = isSimpleType('boolean');
+    var isNullable = function (a) {
+      return a === null || a === undefined;
+    };
+    var isNonNullable = function (a) {
+      return !isNullable(a);
+    };
+    var isFunction = isSimpleType('function');
+    var isNumber = isSimpleType('number');
 
     var noop = function () {
     };
@@ -239,41 +274,6 @@
       none: none,
       from: from
     };
-
-    var typeOf = function (x) {
-      var t = typeof x;
-      if (x === null) {
-        return 'null';
-      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
-        return 'array';
-      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
-        return 'string';
-      } else {
-        return t;
-      }
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isSimpleType = function (type) {
-      return function (value) {
-        return typeof value === type;
-      };
-    };
-    var isString = isType('string');
-    var isObject = isType('object');
-    var isArray = isType('array');
-    var isBoolean = isSimpleType('boolean');
-    var isNullable = function (a) {
-      return a === null || a === undefined;
-    };
-    var isNonNullable = function (a) {
-      return !isNullable(a);
-    };
-    var isFunction = isSimpleType('function');
-    var isNumber = isSimpleType('number');
 
     var nativeSlice = Array.prototype.slice;
     var nativeIndexOf = Array.prototype.indexOf;
@@ -6089,10 +6089,14 @@
           getSpectrum: getSpectrum
         });
       };
-      var changeValue = function (slider, newValue) {
+      var setValue = function (slider, newValue) {
         modelDetail.value.set(newValue);
         var thumb = getThumb(slider);
         refresh(slider, thumb);
+      };
+      var changeValue = function (slider, newValue) {
+        setValue(slider, newValue);
+        var thumb = getThumb(slider);
         detail.onChange(slider, thumb, newValue);
         return Optional.some(true);
       };
@@ -6166,7 +6170,7 @@
         apis: {
           resetToMin: resetToMin,
           resetToMax: resetToMax,
-          changeValue: changeValue,
+          setValue: setValue,
           refresh: refresh
         },
         domModification: { styles: { position: 'relative' } }
@@ -6179,6 +6183,9 @@
       partFields: SliderParts,
       factory: sketch,
       apis: {
+        setValue: function (apis, slider, value) {
+          apis.setValue(slider, value);
+        },
         resetToMin: function (apis, slider) {
           apis.resetToMin(slider);
         },
@@ -7535,112 +7542,6 @@
         });
       });
     };
-
-    var DefaultStyleFormats = [
-      {
-        title: 'Headings',
-        items: [
-          {
-            title: 'Heading 1',
-            format: 'h4'
-          },
-          {
-            title: 'Heading 2',
-            format: 'h5'
-          },
-          {
-            title: 'Heading 3',
-            format: 'h6'
-          }
-        ]
-      },
-      {
-        title: 'Inline',
-        items: [
-          {
-            title: 'Bold',
-            icon: 'bold',
-            format: 'bold'
-          },
-          {
-            title: 'Italic',
-            icon: 'italic',
-            format: 'italic'
-          },
-          {
-            title: 'Underline',
-            icon: 'underline',
-            format: 'underline'
-          },
-          {
-            title: 'Strikethrough',
-            icon: 'strikethrough',
-            format: 'strikethrough'
-          },
-          {
-            title: 'Superscript',
-            icon: 'superscript',
-            format: 'superscript'
-          },
-          {
-            title: 'Subscript',
-            icon: 'subscript',
-            format: 'subscript'
-          },
-          {
-            title: 'Code',
-            icon: 'code',
-            format: 'code'
-          }
-        ]
-      },
-      {
-        title: 'Blocks',
-        items: [
-          {
-            title: 'Paragraph',
-            format: 'p'
-          },
-          {
-            title: 'Blockquote',
-            format: 'blockquote'
-          },
-          {
-            title: 'Div',
-            format: 'div'
-          },
-          {
-            title: 'Pre',
-            format: 'pre'
-          }
-        ]
-      },
-      {
-        title: 'Alignment',
-        items: [
-          {
-            title: 'Left',
-            icon: 'alignleft',
-            format: 'alignleft'
-          },
-          {
-            title: 'Center',
-            icon: 'aligncenter',
-            format: 'aligncenter'
-          },
-          {
-            title: 'Right',
-            icon: 'alignright',
-            format: 'alignright'
-          },
-          {
-            title: 'Justify',
-            icon: 'alignjustify',
-            format: 'alignjustify'
-          }
-        ]
-      }
-    ];
 
     var isRecursive = function (component, originator, target) {
       return eq(originator, component.element) && !eq(originator, target);
