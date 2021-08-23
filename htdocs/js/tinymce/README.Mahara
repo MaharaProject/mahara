@@ -12,8 +12,9 @@ Changes:
 
   * Added
     -new versions don't have lang files so keep all of the original language packs (original commit: 259a86431ad1140e15288d39702cea885c08f3fe)
-    -remove min.js inside icons/default
-
+      - or the single commit: e6281526177bbd62e3b0b4b0fb9efc64fd57aff9
+    -add icons to icons.js inside icons/default
+    
     Custom plugins:
       -/imagebrowser (originally added in commit 36bc9f7d26076d74ebc6cd0672441eed8ed9cd2d)
          This is from a previous version that still works. The new one tinymce 5.0 offers is a pay service.
