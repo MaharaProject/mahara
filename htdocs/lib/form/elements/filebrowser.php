@@ -1649,7 +1649,7 @@ function pieform_element_filebrowser_get_headdata($element) {
     if ($element['config']['upload']) {
         // only add dropzone if filebrowser is allowed to upload
         $headdata[] = '<script>var upload_max_filesize = ' . get_real_size(ini_get('upload_max_filesize')) . '</script>';
-        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/min/dropzone.min.js?v=' . $cacheversion . '"></script>';
+        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js?v=' . $cacheversion . '"></script>';
         $headdata[] = '<script src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js?v=' . $cacheversion . '"></script>';
     }
     if ($element['config']['edit']) {
