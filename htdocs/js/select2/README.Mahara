@@ -2,7 +2,7 @@ Select2
 =======
 
 Website: https://github.com/select2/select2/
-Version: 4.0.9
+Version: 4.0.13
 
 Select2 is a jQuery-based replacement for <select> browser elements. It turns them into snazzy
 interactive widgets, supports searching, ajax, and infinite scrolling of results.
@@ -35,5 +35,5 @@ _multiple.scss y
 
 _dropdown.scss
 * user profile picture in select2 styling
-(commit 1bdfef8ca2056a17ce14268970be9f969d6d6930)
-
+(original commit 1bdfef8ca2056a17ce14268970be9f969d6d6930)
+though the styles now live in htdocs/theme/raw/sass/lib/select2/_dropdown.scss
