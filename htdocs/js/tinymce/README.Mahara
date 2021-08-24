@@ -2,7 +2,7 @@ TinyMCE
 ========
 
 Website: https://www.tiny.cloud/
-Version: 5.8.2
+Version: 5.10.2
 
 https://www.tiny.cloud/get-tiny/self-hosted/
 - download the latest dev version
@@ -40,11 +40,4 @@ Changes:
     (We used to remove theme/mobile, but this is required for the editor
     to display on Android devices) We currently override the buttons displayed
     in the mobile toolbar (in lib/web.php) so image is not there, as there is no easy way to configure it to work with our imagebrowser.
-
- * Checked for icon.*presentation to make sure icons with 'role="presentation"' also have 'aria-hidden="true"' in the html (original commit: 4ac89c31a719a9f63be6555c4d1a094fd2b09d0e) (no changes this time - remove comment?)
-
- * Checked for stying of the table plugin calling dom.getAttrib without optionally calling dom.getStyle first (original commit: 63f91a7ea8bd60c102e257c05678cc6d55e21683) (no changes this time - remove comment?)
-
- * Modified plugins/link/plugin.js to add 'user_' to the anchorlist value and selected to account for htmlpurification prefixing all user id's with 'user_'
- (original commit: 099b3d3119a1e9900ab2ea2341470d15f05adbe3)
 
