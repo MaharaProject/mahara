@@ -70,7 +70,7 @@ require('class.csstidy_optimise.php');
  * An online version should be available here: http://cdburnerxp.se/cssparse/css_optimiser.php
  * @package csstidy
  * @author Florian Schmitz (floele at gmail dot com) 2005-2006
- * @version 1.7.0
+ * @version 1.7.3
  */
 class csstidy {
 
@@ -81,21 +81,9 @@ class csstidy {
 	 */
 	public $css = array();
 	/**
-	 * Saves the comments.
-	 * @var array
-	 * @access public
-	 */
-	public $comments = array();
-	/**
-	 * Saves the current comments of the selectors
-	 * @var array
-	 * @access public
-	 */
-	public $cur_comments = array();
-	/**
 	 * Saves the parsed CSS (raw)
 	 * @var array
-	 * @access public
+	 * @access private
 	 */
 	public $tokens = array();
 	/**
@@ -135,7 +123,7 @@ class csstidy {
 	 * @var string
 	 * @access private
 	 */
-	public $version = '1.7.1';
+	public $version = '1.7.3';
 	/**
 	 * Stores the settings
 	 * @var array
@@ -314,7 +302,6 @@ class csstidy {
 		$this->settings['discard_invalid_properties'] = false;
 		$this->settings['css_level'] = 'CSS3.0';
 		$this->settings['preserve_css'] = false;
-		$this->settings['preserve_css_comment'] = false;
 		$this->settings['timestamp'] = false;
 		$this->settings['template'] = ''; // say that propertie exist
 		$this->set_cfg('template','default'); // call load_template
@@ -848,7 +835,6 @@ class csstidy {
 								}
 							}
 
-                            $previous_property = $this->property;
 							$this->property = '';
 							$this->sub_value_arr = array();
 							$this->value = '';
@@ -956,9 +942,6 @@ class csstidy {
 					if ($string[$i] === '*' && $string[$i + 1] === '/') {
 						$this->status = array_pop($this->from);
 						$i++;
-						if ($this->get_cfg('preserve_css_comment')) {
-							$this->css_add_comment($this->at, $this->selector, $previous_property, $this->status, $cur_comment);
-							}
 						if (strlen($cur_comment) > 1 and strncmp($cur_comment, '!', 1) === 0) {
 							$this->_add_token(IMPORTANT_COMMENT, $cur_comment);
 							$this->css_add_important_comment($cur_comment);
@@ -1053,29 +1036,7 @@ class csstidy {
 	static function escaped(&$string, $pos) {
 		return!(@($string[$pos - 1] !== '\\') || csstidy::escaped($string, $pos - 1));
 	}
-	/**
-	 * Adds a comment to the existing CSS code
-	 * @param string $media
-	 * @param string $selector
-	 * @param string $property
-	 * @param string $comment
-	 * @access private
-	 * @version 1.2
-	 */
-	public function css_add_comment($media, $selector, $property, $status, $comment) {
-        switch ($status) {
-            case 'is':
-                $this->cur_comments[] = trim($comment);
-                break;
-            case 'ip':
-                if (isset($this->css[$media][$selector][$property])) {
-                    $this->comments[$media.$selector.$property][] = trim($comment);
-                }
-                break;
-            default:
-                break;
-        }
-    }
+
 
 	/**
 	 * Add an important comment to the css code
@@ -1115,10 +1076,6 @@ class csstidy {
 				$this->css[$media][$selector][$property] = trim($new_val);
 			}
 		} else {
-			if (!empty($this->cur_comments)) {
-				$this->comments[$media.$selector] = $this->cur_comments;
-				$this->cur_comments = array();
-				}
 			$this->css[$media][$selector][$property] = trim($new_val);
 		}
 	}
@@ -1336,7 +1293,7 @@ class csstidy {
 	/**
 	 * Checks if a property is valid
 	 * @param string $property
-	 * @return bool;
+	 * @return bool
 	 * @access public
 	 * @version 1.0
 	 */
@@ -1360,7 +1317,6 @@ class csstidy {
 	 * @param string
 	 * @return array
 	 */
-
 	public function parse_string_list($value) {
 		$value = trim($value);
 
