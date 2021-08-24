@@ -15,13 +15,8 @@ $width-sm: 90%;
     text-align: center;
     width: 100%;
     overflow: hidden;
-    @extend .icon;
-    @extend .icon-spinner;
     @extend .icon-3x;
     @extend .text-watermark;
-    &::before {
-        @extend .icon-pulse;
-    }
 }
 
 .modal-tinymce {
