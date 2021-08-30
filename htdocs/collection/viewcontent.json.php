@@ -1,5 +1,6 @@
 <?php
 /**
+ * Handle the AJAX requests for View content.
  *
  * @package    mahara
  * @subpackage core

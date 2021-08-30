@@ -1,5 +1,6 @@
 <?php
 /**
+ * Manage the editing of a Collection.
  *
  * @package    mahara
  * @subpackage core
@@ -22,7 +23,8 @@ $new = param_boolean('new', 0);
 $copy = param_boolean('copy', 0);
 
 $subtitle = false;
-if ($new) {    // if creating a new collection
+if ($new) {
+    // We're creating a new collection.
     $owner = null;
     $groupid = param_integer('group', 0);
     $institutionname = param_alphanum('institution', false);
@@ -32,7 +34,8 @@ if ($new) {    // if creating a new collection
     $collection = new Collection(null, array('owner' => $owner, 'group' => $groupid, 'institution' => $institutionname));
     define('SUBSECTIONHEADING', get_string('edittitleanddesc', 'collection'));
 }
-else {    // if editing an existing or copied collection
+else {
+    // We're editing an existing or copied collection.
     $id = param_integer('id');
     $collection = new Collection($id);
     $owner = $collection->get('owner');
@@ -131,7 +134,8 @@ $form = pieform(array(
 $autocopyjs = '';
 if (isset($institutionname)) {
     $updatingautocopytemplatewarning = null;
-    // check if there's another collection set up as institution auto copy template
+    // Check if there's another collection set up as the institution auto copy
+    // template.
     $oldtemplate = get_active_collection_template($institutionname);
     if ($oldtemplate && $oldtemplate->get('id') != $collection->get('id')) {
         $updatingautocopytemplatewarning = get_string(
@@ -206,11 +210,18 @@ if (isset($institutionname)) {
 }
 $smarty->display('collection/edit.tpl');
 
+/**
+ * The validation callback for the Collection Edit form.
+ *
+ * @param Pieform $form The Pieform being validated.
+ * @param mixed $values The values submitted by the Pieform.
+ */
 function collectionedit_validate(Pieform $form, $values) {
     if (!empty($values['id'])) {
         $collection = new Collection($values['id']);
         if ($collection->has_framework() && $collection->get('framework') != $values['framework']) {
-            // Make sure that if the user is changing the framework that there isn't annotations paired to the old framework
+            // Make sure that if the user is changing the framework that there
+            // are not any annotations paired to the old framework.
             $views = get_records_sql_array("SELECT v.id, v.title FROM {view} v
                                             JOIN {collection_view} cv ON cv.view = v.id
                                             JOIN {framework_evidence} fe ON fe.view = cv.view
@@ -227,6 +238,12 @@ function collectionedit_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * The submit callback for the Collection Edit form.
+ *
+ * @param Pieform $form The form being processed.
+ * @param mixed $values The values that were submitted.
+ */
 function collectionedit_submit(Pieform $form, $values) {
     global $SESSION, $new, $copy, $urlparams, $institutionname, $collection, $USER;
     $values['navigation'] = (int) $values['navigation'];
@@ -240,7 +257,7 @@ function collectionedit_submit(Pieform $form, $values) {
         $values['template'] = (int) $values['template'];
     }
     if (isset($values['autocopytemplate'])) {
-        // need to deal with this after we have a collection id
+        // Need to deal with this after we have a collection id.
         $autocopytemplate = (int)$values['autocopytemplate'];
         unset($values['autocopytemplate']);
         $values['template'] = $autocopytemplate ? 1 : $values['template'];
@@ -253,12 +270,13 @@ function collectionedit_submit(Pieform $form, $values) {
 
     if (isset($values['progresscompletion'])) {
         if ($values['progresscompletion']) {
-            // Switch is on
+            // Switch is on.
             $collection->add_progresscompletion_view();
         }
         else {
-            // Switch is off
-            // Delete the progress page as it can't exist in a collection that is not progress completion
+            // Switch is off.
+            // Delete the progress page as it can't exist in a collection that
+            // is not progress completion.
             if ($progressview = get_field_sql("SELECT v.id
                                                FROM {collection_view} cv
                                                JOIN {view} v ON v.id = cv.view
@@ -293,13 +311,18 @@ function collectionedit_submit(Pieform $form, $values) {
     );
 
     if ($form->submitted_by_js()) {
-        // Redirect back to the note page from within the iframe
+        // Redirect back to the note page from within the iframe.
         $SESSION->add_ok_msg($result['message']);
         $form->json_reply(PIEFORM_OK, $result, false);
     }
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Callback to return the user to the base URL.
+ *
+ * @todo Is this actually used?
+ */
 function edit_cancel_submit() {
     global $baseurl;
     redirect($baseurl);

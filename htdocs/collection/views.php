@@ -1,5 +1,6 @@
 <?php
 /**
+ * Provides a UI to edit which Pages will appear in the Collection.
  *
  * @package    mahara
  * @subpackage core
@@ -180,11 +181,16 @@ $smarty->assign('views', $views);
 $smarty->assign('viewsform', $viewsform);
 $smarty->display('collection/views.tpl');
 
+/**
+ * Callback to validate the Add Views Pieform.
+ *
+ * @param Pieform $form
+ * @param array $values
+ */
 function addviews_validate(Pieform $form, $values) {
-
     // Check if a view was selected. Each view was marked with a
     // key of view_<id> in order to identify the correct items
-    // from the form values
+    // from the form values.
     $chosen = array();
     foreach ($values as $key => $value) {
         if (substr($key, 0, 5) === 'view_' AND $value == true) {
@@ -197,10 +203,17 @@ function addviews_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Callback to handle the submission of the Add Views Pieform.
+ *
+ * @param Pieform $form
+ * @param array $values
+ */
 function addviews_submit(Pieform $form, $values) {
     global $SESSION, $collection;
 
-    // Check if the existing view permissions are different from the views being added
+    // Check if the existing view permissions are different from the views
+    // being added.
     $viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'));
     $firstviewaccess = array();
     if (count($viewids)) {
@@ -214,13 +227,13 @@ function addviews_submit(Pieform $form, $values) {
             $chosen[] = substr($key, 5);
         }
     }
-    // New view permissions
+    // New view permissions.
     $collectiondifferent = false;
     $different = false;
     $differentarray = array();
 
-    // if the collection has been set to be auto copy and it doesnt have any views yet,
-    // make sure the new views are shared with the institution
+    // If the collection has been set to be auto copy and it doesnt have any
+    // views yet, make sure the new views are shared with the institution.
     $institution = $collection->get('institution');
     if (isset($institution) && $institution && empty($viewids) && $collection->get('autocopytemplate')) {
         $time = db_format_timestamp(time());
@@ -237,36 +250,38 @@ function addviews_submit(Pieform $form, $values) {
         $viewaccess = $view->get_access();
 
         if (!empty($firstviewaccess) && empty($viewaccess)) {
-            // adding the collection access rules to the added pages
+            // Adding the collection access rules to the added pages.
             $different = true;
             $differentarray[] = $viewid;
         }
         else if (!empty($firstviewaccess)) {
             $merged = combine_arrays($firstviewaccess, $viewaccess);
             if ($merged != $firstviewaccess) {
-                // adding the new access rules to both collection and added pages
+                // Adding the new access rules to both collection and added
+                // pages.
                 $different = true;
                 $collectiondifferent = true;
                 $differentarray[] = $viewid;
             }
             else if ($merged != $viewaccess) {
-                // adding collection access rules to the added pages
+                // Adding collection access rules to the added pages.
                 $different = true;
                 $differentarray[] = $viewid;
             }
         }
         else if (empty($firstviewaccess) && !empty($viewaccess)) {
-            // adding the page's access rules to the collection pages
+            // Adding the page's access rules to the collection pages.
             $different = true;
             $collectiondifferent = true;
         }
     }
     $count = $collection->add_views($values);
     if ($collection->get('template')) {
-        // added views should be set to template too
+        // Added views should be set to template too.
         $collection->set_views_as_template();
     }
-    // Check if the collection has a secret url token for any of the existing views
+    // Check if the collection has a secret url token for any of the existing
+    // views.
     $hassecreturl = false;
     $views_all = array_merge($differentarray, $viewids);
     if (!empty($views_all)) {
@@ -292,6 +307,12 @@ function addviews_submit(Pieform $form, $values) {
     redirect('/collection/views.php?id=' . $collection->get('id'));
 }
 
+/**
+ * Callback for the remove view form.
+ *
+ * @param Pieform $form
+ * @param array $values
+ */
 function removeview_submit(Pieform $form, $values) {
     global $SESSION, $collection;
     $collection->remove_view((int)$values['view']);

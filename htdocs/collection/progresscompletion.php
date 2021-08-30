@@ -1,5 +1,9 @@
 <?php
 /**
+ * Provides support for Progress Completion of Collections.
+ *
+ * Provides a summary page of Pages in the portfolio and their sign-off status
+ * if the Page has a "Sign off" block on it.
  *
  * @package    mahara
  * @subpackage core
@@ -40,7 +44,7 @@ if (!$pid = $collection->has_progresscompletion()) {
     throw new AccessDeniedException();
 }
 
-// Get the first view from the collection
+// Get the first view from the collection.
 $firstview = $views['views'][0];
 $view = new View($firstview->id);
 
@@ -71,7 +75,7 @@ $(function () {
 EOF;
 }
 
-// Set up theme
+// Set up the theme.
 $viewtheme = $view->get('theme');
 if ($viewtheme && $THEME->basename != $viewtheme) {
     $THEME = new Theme($viewtheme);
@@ -90,22 +94,25 @@ if ($USER->is_logged_in()) {
     if ($notrudeform = notrude_form()) {
         $notrudeform = pieform($notrudeform);
     }
-    // For admin to review objection claim, add comment
-    // about objectionable content and possibly remove access
+    // For admin to review objection claim, add comment about objectionable
+    // content and possibly remove access.
     if ($stillrudeform = stillrude_form()) {
         $stillrudeform = pieform($stillrudeform);
     }
-    // Check to see if there are any 'verified' verification blocks that the $USER can undo
+    // Check to see if there are any 'verified' verification blocks that the
+    // $USER can undo.
     if ($pview->get('owner') && $vblocks = get_records_sql_array("SELECT * FROM {block_instance} WHERE blocktype = ? AND view = ?", array('verification', $pid))) {
         $vblockids = array();
         foreach ($vblocks as $vblock) {
             $blockinstance = new BlockInstance($vblock->id);
             $configdata = $blockinstance->get('configdata');
             if (empty($configdata['resetstatement'])) {
-                continue; // no one to undo the block
+                // No one to undo the block.
+                continue;
             }
             if (!empty($configdata['availabilitydate']) && $configdata['availabilitydate'] > time()) {
-                continue; // not currently verifiable
+                // Not currently verifiable.
+                continue;
             }
             if (!empty($configdata['verified']) && $configdata['verifierid'] == $USER->get('id')) {
                 $vblockids[$vblock->id] = 1;
@@ -169,7 +176,7 @@ else {
     $smarty->assign('author', $view->display_author());
 }
 
-// collection top navigation
+// Collection top navigation.
 if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
@@ -185,14 +192,14 @@ if ($collection) {
 
 $smarty->assign('progresscompletion', true);
 
-// progress bar
+// Progress bar.
 $smarty->assign('quotamessage', get_string('overallcompletion', 'collection'));
 list($completedactionspercentage, $totalactions) = $collection->get_signed_off_and_verified_percentage();
 $smarty->assign('completedactionspercentage', $completedactionspercentage);
 $smarty->assign('totalactions', $totalactions);
 
 
-// table
+// Table.
 $showVerification = false;
 foreach ($views['views'] as &$view) {
     $viewobj = new View($view->id);
@@ -214,7 +221,9 @@ foreach ($views['views'] as &$view) {
     $view->description = $viewobj->get('description');
 }
 
-$viewobj = new View($firstview->id); // Need to call this as $viewobj to avoid clash with $view in foreach loop above
+// Need to call this as $viewobj to avoid clash with $view in foreach loop
+// above.
+$viewobj = new View($firstview->id);
 $submittedgroup = (int)$viewobj->get('submittedgroup');
 $can_edit = $USER->can_edit_view($viewobj) && !$submittedgroup && !$viewobj->is_submitted();
 if ($viewobj->get_collection()) {
@@ -243,6 +252,13 @@ if ($can_edit && !$collection->get('lock')) {
 }
 $smarty->display('collection/progresscompletion.tpl');
 
+/**
+ * Pieform definition of the Undo Verification form.
+ *
+ * @param array $ids The array of block instance IDs.
+ *
+ * @return array The Pieform array.
+ */
 function undo_verification_form($ids) {
     $form = array(
         'name'              => 'undo_verification_form',
@@ -286,6 +302,12 @@ function undo_verification_form($ids) {
     return $form;
 }
 
+/**
+ * The submit callback for the Undo Verification form.
+ *
+ * @param Pieform $form The form being processed.
+ * @param mixed $values The values that were submitted.
+ */
 function undo_verification_form_submit(Pieform $form, $values) {
     global $USER, $collection, $pview;
 
@@ -295,7 +317,7 @@ function undo_verification_form_submit(Pieform $form, $values) {
     if (!$pview->get('owner')) {
         throw new AccessDeniedException();
     }
-    // Double check the block exists on the page
+    // Double check the block exists on the page.
     if ($values['options'] && !record_exists('block_instance', 'id', $values['options'], 'view', $pview->get('id'))) {
         throw new AccessDeniedException();
     }
@@ -303,7 +325,7 @@ function undo_verification_form_submit(Pieform $form, $values) {
     safe_require('blocktype', 'verification');
     $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $collection->get('id');
 
-    // Notification
+    // Notification.
     $title = $pview->get('id');
     $bi = new BlockInstance($values['options']);
     $configdata = $bi->get('configdata');
@@ -351,7 +373,7 @@ function undo_verification_form_submit(Pieform $form, $values) {
         }
     }
     $users = array_keys(array_flip($users));
-    // Save these user ids so we know who is allowed to undo the verification
+    // Save these user ids so we know who is allowed to undo the verification.
     foreach ($users as $u) {
         ensure_record_exists('blocktype_verification_undo', (object) array('usr' => $u,
                                                                            'block' => $values['options'],
@@ -386,6 +408,11 @@ function undo_verification_form_submit(Pieform $form, $values) {
     }
 }
 
+/**
+ * The destination if the form was submitted or cancelled.
+ *
+ * @param Pieform $form
+ */
 function undo_verification_form_cancel_submit(Pieform $form) {
     global $collection, $pview;
     $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $collection->get('id');
