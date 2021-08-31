@@ -163,6 +163,11 @@ abstract class PluginExport extends Plugin implements IPluginExport {
     public $includefeedback = false;
 
     /**
+     * Include private comments in export
+     */
+    public $includeprivatefeedback = false;
+
+    /**
      * User object for the user being exported.
      */
     protected $user;
@@ -719,10 +724,12 @@ function export_process_queue($id = false) {
 
         if ($row->exporttype == 'leap') {
             $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
+            $exporter->includeprivatefeedback = false;
             $createarchive = true;
         }
         else {
             $exporter->includefeedback = true;
+            $exporter->includeprivatefeedback = true;
             $createarchive = false;
         }
 
@@ -1039,9 +1046,14 @@ class PluginExportAll extends PluginExport {
     public function export() {
 
         $this->htmlexporter->includefeedback = $this->includefeedback;
+        $this->htmlexporter->includeprivatefeedback = $this->includeprivatefeedback;
+
         $this->leapexporter->includefeedback = $this->includefeedback;
+        $this->leapexporter->includeprivatefeedback = $this->includeprivatefeedback;
+
         if ($this->pdfactive) {
             $this->pdfexporter->includefeedback = $this->includefeedback;
+            $this->pdfexporter->includeprivatefeedback = $this->includeprivatefeedback;
             $this->notify_progress_callback(0, get_string('startingpdfexport', 'export'));
             try {
                 $pdf = $this->pdfexporter->export();

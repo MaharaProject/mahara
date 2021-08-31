@@ -342,6 +342,8 @@ class ArtefactTypeComment extends ArtefactType {
      * bool   $export          Determines if comments are fetched for html export purposes
      * bool   $onview          Optional - is viewing artefact comments on view page so don't show edit buttons
      * string $sort            Optional - the sort order of the comments. Valid options are 'earliest' and 'latest'.
+     * bool   $threaded        Optional - allows threaded comments.
+     * book   $privatefeedback Optional - show private comments.
      * @return object $options Default comments data object
      */
     public static function get_comment_options() {
@@ -358,6 +360,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->threaded = null;
         $options->blockid = null;
         $options->versioning = false;
+        $options->privatefeedback = true;
         return $options;
     }
 
@@ -409,18 +412,19 @@ class ArtefactTypeComment extends ArtefactType {
         }
 
         $result = (object) array(
-            'limit'    => $limit,
-            'offset'   => $offset,
-            'view'     => $viewid,
-            'artefact' => $artefactid,
-            'canedit'  => $canedit,
-            'owner'    => $owner,
-            'isowner'  => $isowner,
-            'export'   => $export,
-            'sort'     => $sort,
-            'threaded' => $threaded,
-            'data'     => array(),
-            'versioning' => $versioning,
+            'limit'           => $limit,
+            'offset'          => $offset,
+            'view'            => $viewid,
+            'artefact'        => $artefactid,
+            'canedit'         => $canedit,
+            'owner'           => $owner,
+            'isowner'         => $isowner,
+            'export'          => $export,
+            'sort'            => $sort,
+            'threaded'        => $threaded,
+            'data'            => array(),
+            'versioning'      => $versioning,
+            'privatefeedback' => $privatefeedback,
         );
 
         $where = 'c.hidden = 0';
@@ -429,6 +433,9 @@ class ArtefactTypeComment extends ArtefactType {
         }
         else {
             $where .= ' AND c.onview = ' . (int)$viewid;
+        }
+        if ($privatefeedback == false) {
+            $where .= ' AND c.private = 0';
         }
         if (!$canedit) {
             $where .= ' AND (';
@@ -690,6 +697,7 @@ class ArtefactTypeComment extends ArtefactType {
      * @param   bool    $html     Whether to return the information rendered as html or not
      * @param   bool    $editing  Whether we are view edit mode or not
      * @param   bool    $versioning  Whether we are view versioning mode or not
+     * @param   bool    $privatefeedback Whether to retrieve private comments or not
      *
      * @return  array   $commentcount, $comments   The count of comments and either the comments
      *                                             or the html to render them.

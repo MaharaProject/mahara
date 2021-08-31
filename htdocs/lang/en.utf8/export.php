@@ -46,6 +46,9 @@ $string['justsomecollections'] = 'Just some of my collections';
 $string['justsomeviews'] = 'Just some of my pages';
 $string['includecomments'] = 'Include comments';
 $string['includecommentsdescription'] = 'All comments will be included in the HTML export.';
+$string['includeprivatefeedback'] = 'Include private comments';
+$string['includeprivatefeedbackdesc'] = '
+The people you share this export with will see your private comments. To keep them private, create an export without comments or with only public comments.';
 $string['nonexistentfile'] = "Tried to add non-existent file '%s'";
 $string['nonexistentprofileicon'] = "Tried to add non-existent profile icon '%s'";
 $string['nonexistentresizedprofileicon'] = "Tried to add non-existent resized profile icon '%s'";

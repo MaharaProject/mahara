@@ -59,18 +59,6 @@ jQuery(function($) {
         }
     });
 
-    // Make the export format radio buttons show/hide the includefeedback checkbox
-    $('#exportformat-buttons input.radio').each(function() {
-        $(this).on('click', function(e) {
-            $('#includefeedback').hide();
-            if ($(this).prop('checked')) {
-                if ($(this).val() === 'html') {
-                    $('#includefeedback').show();
-                }
-            }
-        });
-    });
-
     // Hook up 'click to preview' links
     $(containers.views.container).find('a.viewlink').each(function() {
         $(this).off();
