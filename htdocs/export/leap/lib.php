@@ -471,7 +471,9 @@ class PluginExportLeap extends PluginExport {
             if (is_callable($classname . '::setup_links')) {
                 call_user_func_array(
                     array($classname, 'setup_links'),
-                    array(&$this->links, array_keys($this->views), array_keys($this->artefacts))
+                    array(
+                            &$this->links,
+                            array_keys($this->views), array_keys($this->artefacts), $this->includefeedback, $this->includeprivatefeedback)
                 );
             }
         }
@@ -641,6 +643,16 @@ class PluginExportLeap extends PluginExport {
                     continue;
                 }
                 try {
+                    if (in_array($artefact->get('artefacttype'), array('annotationfeedback', 'comment', 'peerassessment'))) {
+                        if ($this->includefeedback) {
+                            if (!$this->includeprivatefeedback && $artefact->get('private')) {
+                                continue;
+                            }
+                        }
+                        else {
+                            continue;
+                        }
+                    }
                     $element->add_attachments();
                     $element->assign_smarty_vars();
                     $this->xml .= $element->get_export_xml();

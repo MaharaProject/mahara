@@ -13,9 +13,18 @@ defined('INTERNAL') || die();
 
 class LeapExportElementAnnotation extends LeapExportElement {
 
-    public static function setup_links(&$links, $viewids, $artefactids) {
+    public static function setup_links(&$links, $viewids, $artefactids, $includefeedback, $includeprivatefeedback) {
         $viewlist = join(',', array_map('intval', $viewids));
         $artefactlist = join(',', array_map('intval', $artefactids));
+        if ($includeprivatefeedback && $includefeedback) {
+            $feedback = 1;
+        }
+        else if ($includefeedback) {
+            $feedback = 0;
+        }
+        else {
+            $feedback = -1;
+        }
 
         // Get the annotations that are on these views.
         $records = get_records_select_array(
@@ -52,10 +61,10 @@ class LeapExportElementAnnotation extends LeapExportElement {
                 // Get the feedback on the annotation.
                 $sql = "SELECT f.artefact as feedback
                         FROM {artefact_annotation_feedback} f
-                        WHERE f.onannotation = ?
+                        WHERE f.onannotation = ? AND f.private <= ?
                         AND f.deletedby IS NULL
                         ORDER BY f.artefact DESC";
-                if ($annotationfeedback = get_records_sql_array($sql, array($r->annotation))) {
+                if ($annotationfeedback = get_records_sql_array($sql, array($r->annotation, $feedback))) {
                     foreach ($annotationfeedback as $f) {
                         // feedback reflects_on annotation.
                         if (!isset($links->artefactartefact[$f->feedback][$r->annotation])) {
