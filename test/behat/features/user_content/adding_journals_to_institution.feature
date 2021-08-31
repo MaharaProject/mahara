@@ -121,7 +121,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     And I select "Others will get their own copy of your journal" from "Block copy permission"
     And I press "Save"
     And I scroll to the id "main-nav"
-    And I follow "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I follow "Advanced options"
     And I set the following fields to these values:

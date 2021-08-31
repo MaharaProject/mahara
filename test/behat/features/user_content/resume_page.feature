@@ -43,7 +43,7 @@ Scenario: Creating a Cover letter
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I choose "Résumé" in "Create" from main menu
     And I follow "Introduction"
-    And I click on "Edit"
+    And I press "Edit"
     And I fill in "A whole bunch of Texty text" in first editor
     And I click on "Save"
     Then I should see "Saved successfully"

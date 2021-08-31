@@ -1818,7 +1818,7 @@ EOF;
  *
  */
     public function i_display_page() {
-        $this->getSession()->executeScript('jQuery("#displaypagebtn:contains(\'Display page\')")[0].click();');
+        $this->getSession()->executeScript('jQuery("#displaypagebtn").click();');
     }
 
 /**

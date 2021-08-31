@@ -125,7 +125,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     And I follow "GroupB"
-    And I follow "Edit"
+    And I click on "Edit"
     And I scroll to the id "column-container"
     And I configure the block "Group portfolios"
     When I set the following fields to these values:

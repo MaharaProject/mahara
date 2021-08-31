@@ -2,15 +2,16 @@
 
 <div class="btn-top-right btn-group btn-group-top">
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
-        <a href="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}" class="btn btn-secondary newforumtopic">
+        <button class="btn btn-secondary newforumtopic" type="submit" data-url="{$WWWROOT}interaction/forum/edittopic.php?forum={$forum->id}">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str tag="newtopic" section="interaction.forum"}
-        </a>
+        </button>
+
         {if $admin}
-            <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}" class="btn btn-secondary editforumtitle">
+            <button class="btn btn-secondary editforumtitle" type="submit" data-url="{$WWWROOT}interaction/edit.php?id={$forum->id}">
                 <span class="icon icon-cog left" role="presentation" aria-hidden="true"></span>
                 {str tag="edittitle" section="interaction.forum"}
-            </a>
+            </button>
         {/if}
     {/if}
     {if $membership}
@@ -18,10 +19,10 @@
     {/if}
     {if $membership && ($moderator || ($forum->newtopicusers != 'moderators') && $ineditwindow) }
         {if $admin}
-            <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}" class="btn btn-secondary deleteforum">
+            <button class="btn btn-secondary deleteforum" type="submit" data-url="{$WWWROOT}interaction/delete.php?id={$forum->id}">
                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 {str tag="deleteforum" section="interaction.forum"}
-            </a>
+            </button>
         {/if}
     {/if}
 </div>

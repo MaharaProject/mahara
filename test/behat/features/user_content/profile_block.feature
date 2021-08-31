@@ -27,7 +27,7 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   # Add profile block to page
   And I choose "Pages and collections" in "Create" from main menu
   And I follow "Page UserA_01"
-  And I follow "Edit"
+  And I press "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Profile information"

@@ -10,17 +10,18 @@
         {/if}
 
         {if $editurl}{strip}
-            <a title="{str tag=editthisview section=view}" href="{$editurl}" class="btn btn-secondary">
+            <button data-url="{$editurl}" type="button" class="btn btn-secondary" title="{str tag=editthisview section=view}">
                 <span class="icon icon-pencil-alt icon-lg left" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">{str tag=editthisview section=view}</span>
-            </a>
+            </button>
         {/strip}{/if}
 
         {if $mnethost}
-        <a href="{$mnethost.url}" class="btn btn-secondary" title="{str tag=backto arg1=$mnethost.name}">
+        <button
+            data-url="{$mnethost.url}" class="btn btn-secondary" title="{str tag=backto arg1=$mnethost.name}">
             <span class="icon icon-long-arrow-alt-right icon-lg left" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag=backto arg1=$mnethost.name}</span>
-        </a>
+        </button>
         {/if}
 
         <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">

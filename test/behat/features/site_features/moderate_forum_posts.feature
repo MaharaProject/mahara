@@ -22,7 +22,7 @@ Scenario: Group moderator approved a forum post
     And I choose "Groups" in "Engage" from main menu
     And I follow "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
-    And I follow "New forum"
+    And I click on "New forum"
     And I set the following fields to these values:
     | Title       | Group A's forum                        |
     | Description | Talking about things this group can do |
@@ -38,7 +38,7 @@ Scenario: Group moderator approved a forum post
     And I select "Posts and replies" from "moderateposts"
     And I press "Save"
     #Group owner sets up topic for the forum
-    And I follow "New topic"
+    And I press "New topic"
     And I set the following fields to these values:
     | Subject | Taking photos of cats |
     | Message | The difficulty of cat photography is often underrated. You need a fast lens to accurately capture the speed and agility of the cat. |
@@ -51,7 +51,7 @@ Scenario: Group moderator approved a forum post
     And I follow "GroupA"
     And I follow "Forums (tab)"
     And I follow "Group A's forum"
-    And I follow "New topic"
+    And I press "New topic"
     And I set the following fields to these values:
     | Subject | Bob's forum topic                            |
     | Message | Bob's topic is now open for discussion |

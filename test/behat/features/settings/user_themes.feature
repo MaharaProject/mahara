@@ -23,8 +23,8 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  # Now set a theme as an author and confirm logo changes
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I follow "Page UserA_01"
- And I follow "Edit"
- And I follow "Settings" in the "Toolbar buttons" "Nav" property
+ And I press "Edit"
+ And I press "Settings" in the "Toolbar buttons" "Nav" property
  And I follow "Advanced"
  And I scroll to the id "settings_theme"
  And I select "Modern" from "theme"

@@ -36,7 +36,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  And I should see "Plans" in the "Create sub-menu" "Nav" property
  And I should see "Notes" in the "Create sub-menu" "Nav" property
  # Checking the sub navigation in Share
- When I follow "Share"
+ When I click on "Share"
  And I should see "Shared by me" in the "Share sub-menu" "Nav" property
  And I should see "Shared with me" in the "Share sub-menu" "Nav" property
  # Checking the sub navigation in Engage

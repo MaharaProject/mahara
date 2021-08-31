@@ -1335,7 +1335,8 @@ function findButtonDataUrls() {
         $(this).off('click');
         $(this).on('click', function(e) {
             e.preventDefault();
-            window.location.href = $(this).data('url');
+            let btn = e.target.closest('button');
+            window.location.href = jQuery(btn).data('url');
         });
     });
 }

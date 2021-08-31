@@ -25,7 +25,7 @@ Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I follow "Collection UserA_01"
-  And I follow "Edit"
+  And I press "Edit"
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Navigation"

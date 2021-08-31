@@ -27,7 +27,7 @@ Scenario: Create and delete text block
     And I display the page
     Then I should see "Here is a new block"
     # delete block
-    And I follow "Edit"
+    And I press "Edit"
     And I delete the block "Text block 1"
     And I display the page
     Then I should not see "Text block 1"

@@ -36,7 +36,7 @@ Scenario: Add Journal block to the page
     Then I should see "Spacefood is kind of gross"
 
 # Adding a journal entry from a journal block on a portfolio page
-    Given I click on "Edit"
+    Given I press "Edit"
     Then I should see "New entry"
     When I follow "New entry"
     Then I should see "New journal entry in journal \"Mars journal\""

@@ -21,7 +21,7 @@ Scenario: Enable/disable external resources in mahara pages
  And I attach the file "Image2.png" to "files_filebrowser_userfile"
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page UserA_01"
- And I follow "Edit"
+ And I press "Edit"
 
  # Add a "Text" block with an image from file area
  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property

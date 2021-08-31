@@ -44,7 +44,7 @@ Scenario: Add blocks and create versions
     And I press "More options"
     And I follow "Save to timeline"
     And I should see "Saved to timeline"
-    And I follow "Edit"
+    And I press "Edit"
     And I configure the block "Text block version 1"
     And I set the field "Block title" to "Text block version 2"
     And I set the field "Block content" to "Here is the second version of the block."
@@ -77,8 +77,8 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     And I should see "Task 2b"
     And I should see "Task 2a"
     # User creates new task via the plan block on the page
-    When I follow "Display page"
-    And I click on "Edit"
+    When I press "Display page"
+    And I press "Edit"
     And  I follow "Add task"
     # check user is now on New task page
     Then I should see " New task"
@@ -92,7 +92,7 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     Then I should see " Page Two"
     And I should see "New Space Task" in the block "my plan"
     # confirm that plan blocks on timeline are not automatically updated when new tasks are added
-    When I follow "Display page"
+    When I press "Display page"
     And I press "More options"
     And I follow "Timeline"
     # confirm all the previous tasks are still displayed

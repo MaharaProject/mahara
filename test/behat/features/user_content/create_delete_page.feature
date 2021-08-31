@@ -35,20 +35,12 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # (Bug 1891265 end)
     And I press "Save"
     # Editing the pages
-    And I follow "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     #Change the Page title
     And I fill in the following:
     | Page title       | This is the edited page title |
     | Page description | This is the edited description |
     And I press "Save"
-    # Adding media block
-    # confirm h1 page title displayed
-    And I should see "This is the edited page title" in the "H1 heading" "Common" property
-    # confirm settings, edit and share buttons have correct text titles
-    And I should see "Settings" in the "Settings button" "Views" property
-    And I should see "Display page" in the "Display page button" "Views" property
-    And I should see "Share" in the "Share button" "Views" property
-    And I should see "Return to pages and collections" in the "Return button" "Views" property
     # Adding media block
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
@@ -107,7 +99,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I fill in the following:
     | Page title | This is my page now |
     And I press "Save"
-    And I follow "Display page"
+    And I press "Display page"
     And I should not see "This is the edited description"
     And I log out
 

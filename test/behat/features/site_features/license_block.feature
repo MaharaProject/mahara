@@ -33,7 +33,7 @@ Scenario:
   # Open the block and check it has the correct text
   And I expand "Creative Commons license" node
   Then I should see "Page UserA_01 by Angela User is licensed under a Creative Commons Attribution-Share Alike 4.0 Unported license."
-  When I follow "Edit"
+  When I press "Edit"
   # change to noncommercial and check message
   And I configure the block "Creative Commons license"
   And I disable the switch "Allow commercial uses of your work?"

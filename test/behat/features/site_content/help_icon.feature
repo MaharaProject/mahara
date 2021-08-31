@@ -32,7 +32,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I follow "Close help"
   # Pages
   And I follow "Page 01"
-  And I follow "Edit"
+  And I press "Edit"
   And I click on "Help"
   Then I should see "Designing your page layout enables you to personalise the way in which your resources and information can be displayed."
   And I follow "Close help"

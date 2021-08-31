@@ -82,7 +82,7 @@ Scenario: Creating a Journal entry
  # Adding journal blocks to a page
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page admin_01"
- And I follow "Edit"
+ And I press "Edit"
  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
  And I click on blocktype "Tagged journal entries"
