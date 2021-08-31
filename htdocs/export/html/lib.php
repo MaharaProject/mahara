@@ -550,10 +550,10 @@ class PluginExportHtml extends PluginExport {
                 if ($feedback = ArtefactTypeComment::get_comments($commentoptions)) {
                     $feedback->tablerows = $outputfilter->filter($feedback->tablerows);
                 }
-                $smarty->assign('feedback', $feedback);
-            }
-            else {
-                $smarty->assign('feedback', false);
+                $smarty->assign('viewfeedback', $feedback);
+                if ($this->exporttype === 'pdf') {
+                    $smarty->assign('viewartefactsfeedback', $this->get_blocks_artefacts_feedback($view, $commentoptions, $outputfilter));
+                }
             }
 
             if (!$view->uses_new_layout()) {
@@ -579,6 +579,118 @@ class PluginExportHtml extends PluginExport {
             if (!file_put_contents("$directory/index.html", $content)) {
                 throw new SystemException("Could not write view page for view $viewid");
             }
+        }
+    }
+
+    /**
+     * Get comments for each artefact used in the blocks of a view
+     *
+     * @param  mixed $view
+     * @param  mixed $commentoptions
+     * @param  mixed $outputfilter
+     * @return array
+     */
+    function get_blocks_artefacts_feedback($view, $commentoptions, $outputfilter) {
+        // include artefact comments
+        $viewartefactsids = $this->get_view_artefacts_ids($view);
+        $viewartefactsfeedback = array();
+        foreach ($viewartefactsids as $id) {
+            $artefactobj =  artefact_instance_from_id($id);
+            $artefacttype = $artefactobj->get('artefacttype');
+
+            $plugin = get_field('artefact_installed_type', 'plugin', 'name', $artefacttype);
+            $headingtext = get_string($artefacttype, 'artefact.' . $plugin);
+
+            // Prep comment config
+            $commentoptions->artefact = $artefactobj;
+            $commentoptions->onview = 1;
+            $comments = ArtefactTypeComment::get_comments($commentoptions);
+
+            // Don't continue if no comments found
+            if (isset($comments->count) && $comments->count == 0) {
+                continue;
+            }
+
+            // Prep info
+            $viewartefactsfeedback[$id] = new stdClass();
+            $viewartefactsfeedback[$id]->type = $artefacttype;
+            $viewartefactsfeedback[$id]->heading = $headingtext;
+            $viewartefactsfeedback[$id]->title = $artefactobj->get('title');
+
+            // Assign comment count
+            $commentcount = isset($comments->count) ? $comments->count : 0;
+            if (!isset($viewartefactsfeedback[$id]->commentcount)) {
+                $viewartefactsfeedback[$id]->commentcount = 0;
+            }
+            $viewartefactsfeedback[$id]->commentcount += $commentcount;
+
+            // Assign comments
+            $comments->tablerows = $outputfilter->filter($comments->tablerows);
+            $viewartefactsfeedback[$id]->comments[] = $comments;
+
+            // Display the image for image artefacts
+            if (get_parent_class($artefactobj) == 'ArtefactTypeFile') {
+                $viewartefactsfeedback[$id]->file = $id . '-' . $artefactobj->get('title');
+            }
+
+        }
+        return $viewartefactsfeedback;
+    }
+
+    /**
+     * Get a unique list of all the artefacts used across the blocks on the view
+     *
+     * @param  View $view
+     * @return array of blockid => artefact ids
+     */
+    function get_view_artefacts_ids($view) {
+        // Get all the block info on given view id
+        $blocks = get_records_array('block_instance', 'view', $view->get('id'));
+        $viewartefactsids = array();
+
+        foreach ($blocks as $b) {
+            $configdata = unserialize($b->configdata);
+
+            // Get related artefacts
+            if (array_key_exists('artefactids', $configdata) && isset($configdata['artefactids'])) {
+                foreach ($configdata['artefactids'] as $artefactid) {
+                    $viewartefactsids[] = $artefactid;
+                }
+            }
+            if (array_key_exists('artefactid', $configdata) && isset($configdata['artefactid'])) {
+                $viewartefactsids[] = $configdata['artefactid'];
+            }
+            // Clean doubled-up artefacts
+            $viewartefactsids = array_unique($viewartefactsids);
+        }
+        return $viewartefactsids;
+    }
+
+    /**
+     * Get artefacts for blocktypes that hold nested child artefacts
+     */
+    public function get_block_artefacts($blocktype, &$idarray, BlockInstance $bi) {
+        switch ($blocktype) {
+            case 'blog':
+                $this->get_blog_posts_modals($idarray, $bi);
+                break;
+            case 'recentposts':
+                $this->get_recent_posts_modals($idarray, $bi);
+                break;
+            case 'taggedposts':
+                $this->get_tagged_posts_modals($idarray, $bi);
+                break;
+            case 'entireresume':
+                $this->get_entire_resume_modals($idarray, $bi);
+                break;
+            case 'resumefield':
+                $this->get_resume_field_modals($idarray, $bi);
+                break;
+            case 'folder':
+                $this->get_folder_modals($idarray, $bi);
+                break;
+            default:
+                break;
         }
     }
 
@@ -697,8 +809,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for blogs posts (Journal block)
-*  @param BlockInstance $bi  The journal block containing the posts
 *  @param array &$idarray     Existing array that stores ids of modals to be created
+*  @param BlockInstance $bi  The journal block containing the posts
 */
     private function get_blog_posts_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/blog/blocktype/blog/lib.php');
@@ -710,8 +822,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *   Creates the hard-coded modals for tagged posts (Tagged journal entries)
-*  @param BlockInstance $bi  The tagged journal entries block containing the posts
 *  @param array &$idarray     Existing array that stores ids of modals to be created
+*  @param BlockInstance $bi  The tagged journal entries block containing the posts
 */
     private function get_tagged_posts_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/blog/blocktype/taggedposts/lib.php');
@@ -727,8 +839,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for recent posts (Recent journal entries)
-* @param BlockInstance $bi     The recent journal entries block containing the posts
 * @param array &$idarray       Exisiting array that stores ids of modals to be created
+* @param BlockInstance $bi     The recent journal entries block containing the posts
 */
     private function get_recent_posts_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/blog/blocktype/recentposts/lib.php');
@@ -744,8 +856,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for all attachments in the entire resume block
-* @param BlockInstance $bi     The entire resume block containing the attachments
 * @param array &$idarray       The exisiting array that stores modal ids to be created
+* @param BlockInstance $bi     The entire resume block containing the attachments
 */
     private function get_entire_resume_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/resume/blocktype/entireresume/lib.php');
@@ -766,8 +878,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for all attachments in the one resume field block
-* @param BlockInstance $bi      The resume field block containing the attachments
 * @param array &$idarray        The exisiting array that stores modal ids to be created
+* @param BlockInstance $bi      The resume field block containing the attachments
 */
     private function get_resume_field_modals(&$idarray, BlockInstance $bi) {
         $configdata = $bi->get('configdata');
@@ -787,8 +899,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for File(s) to download block
-* @param BlockInstance $bi      The File(s) to download block
 * @param array  &$idarray       The exisiting array that stores modal ids to be created
+* @param BlockInstance $bi      The File(s) to download block
 */
 private function get_folder_modals(&$idarray, BlockInstance $bi) {
     $artefacts = PluginBlocktypeFolder::get_current_artefacts($bi);
@@ -835,25 +947,8 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                     $type = $bi->get('artefactplugin');
                     $configdata = unserialize($b->configdata);
                     $artefactidarray = array();
-                    if ($b->blocktype == 'blog') {
-                        $this->get_blog_posts_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'recentposts') {
-                        $this->get_recent_posts_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'taggedposts') {
-                        $this->get_tagged_posts_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'entireresume') {
-                        $this->get_entire_resume_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'resumefield') {
-                        $this->get_resume_field_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'folder') {
-                        $this->get_folder_modals($artefactidarray, $bi);
-                    }
-                    else if (
+                    $this->get_block_artefacts($b->blocktype, $artefactidarray, $bi);
+                    if (
                         //block contains any of these types or matches blocktype
                          $type == 'image' ||
                          $type == 'blog' ||

@@ -30,8 +30,8 @@ $(function () {
 <div class="breadcrumbs collection">
    <ul>
      <li class="collectionname">{$collectionname}</li>
-{foreach from=$collectionmenu item=item}
-     | <li{if $item.id == $viewid} class="selected"{/if}><a href="{$rootpath}HTML/views/{$item.url}">{$item.text}</a></li>
+      {foreach from=$collectionmenu item=item}
+     | <li{if $item.id == $viewid} class="selected" {/if}><a href="{$rootpath}HTML/views/{$item.url}">{$item.text}</a></li>
 {/foreach}
    </ul>
 </div>
@@ -54,16 +54,43 @@ $(function () {
     </div>
 {/if}
 
-{if $feedback && $feedback->count && $feedback->position == 'base'}
-<div class="viewfooter">
-    <table id="feedbacktable" class="feedbacktable fullwidth table">
-      <thead><tr><th>{str tag="feedback" section="artefact.comment"}</th></tr></thead>
-      <tbody>
-        {$feedback->tablerows|safe}
-      </tbody>
-    </table>
-    {$feedback->pagination|safe}
-</div>
+{if $viewfeedback || $viewartefactsfeedback}
+  <div class="viewfooter">
+
+    {* View comments *}
+    {if $viewfeedback && $viewfeedback->count && $viewfeedback->position == 'base'}
+      <div id="feedbacktable" class="feedbacktable fullwidth table">
+        <h2 class="title">
+          {str tag="viewcomments" section="artefact.comment"}
+        </h2>
+          {$viewfeedback->tablerows|safe}
+      </div>
+      {$viewfeedback->pagination|safe}
+    {/if}
+
+    {* Artefact comments *}
+    {if $viewartefactsfeedback}
+      {foreach from=$viewartefactsfeedback key=artefactid item=artefactobj}
+        {if $artefactobj->commentcount > 0}
+          <h2 class="title">
+            {str tag="artefactcomments1" section="artefact.comment"} {$artefactobj->heading} '{$artefactobj->title}'
+          </h2>
+          <div id="feedbacktable" class="feedbacktable fullwidth table">
+            {foreach from=$artefactobj->comments item=comment}
+              {* display an image reference for image artefacts *}
+              {if $artefactobj->type == image}
+                <div class="push-left-for-usericon">
+                  <img width="200" alt="{$artefactobj->file}" src="../export_info/files/{$artefactobj->file}">
+                </div>
+              {/if}
+              {$comment->tablerows|safe}
+            {/foreach}
+          </div>
+          {$comment->pagination|safe}
+        {/if}
+      {/foreach}
+    {/if}
+  </div>
 {/if}
 
 {include file="export:html:footer.tpl"}

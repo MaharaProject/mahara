@@ -146,7 +146,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
             $elements[] = array(
                 'type' => 'html',
                 'name' => 'notice',
-                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('blogpost', 'artefact.blog')) . '</div>',
+                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('Blogpost', 'artefact.blog')) . '</div>',
             );
         }
         return $elements;
@@ -156,7 +156,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('blogpost', 'artefact.blog'),
+            'title' => get_string('Blogpost', 'artefact.blog'),
             'description' => get_string('choosepublishedblogpostsdescription', 'blocktype.blog/blogpost'),
             'defaultvalue' => $default,
             'blocktype' => 'blogpost',

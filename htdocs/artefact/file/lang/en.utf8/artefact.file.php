@@ -88,7 +88,7 @@ $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['editingfailed'] = 'Editing failed: file or folder does not exist any more';
 $string['emptyfolder'] = 'Empty folder';
-$string['file'] = 'File'; // Capitalised to be consistent with names of all the other artefact types
+$string['file'] = 'file';
 $string['File'] = 'File';
 $string['fileadded'] = 'File selected';
 $string['filealreadyindestination'] = 'The file you moved is already in that folder';
@@ -135,7 +135,8 @@ $string['groupfiles'] = 'Group files';
 $string['home'] = 'Home';
 $string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content and is only a rough representation of the original.';
 $string['htmlremovedmessagenoowner'] = 'You are viewing <strong>%s</strong>. The file displayed below has been filtered to remove malicious content and is only a rough representation of the original.';
-$string['image'] = 'Image';
+$string['image'] = 'image';
+$string['Image'] = 'Image';
 $string['Images'] = 'Images';
 $string['imagesdir'] = 'images';
 $string['imagesdirdesc'] = 'Image files';
@@ -255,7 +256,7 @@ $string['tar'] = 'TAR archive';
 $string['gz'] = 'Gzip compressed file';
 $string['bz2'] = 'Bzip2 compressed file';
 $string['txt'] = 'Plain text file';
-$string['video'] = 'Video file';
+$string['videofile'] = 'Video file';
 $string['wav'] = 'WAV audio file';
 $string['m4a'] = 'M4A audio file';
 $string['wmv'] = 'WMV video file';
@@ -270,7 +271,7 @@ $string['rpm'] = 'RPM RealPlayer movie';
 $string['rm'] = 'RM RealPlayer movie';
 $string['webm'] = 'WEBM video file';
 $string['3gp'] = '3GPP media file';
-
+$string['video'] = 'video';
 
 // Profile icons
 $string['cantcreatetempprofileiconfile'] = 'Could not write temporary profile picture image in %s';

@@ -77,7 +77,7 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
                 'type'         => 'fieldset',
                 'collapsible'  => true,
                 'collapsed'    => true,
-                'legend'       => get_string('file', 'artefact.file'),
+                'legend'       => get_string('File', 'artefact.file'),
                 'class'        => 'last select-file with-formgroup',
                 'elements'     => array(
                     'artefactid' => self::filebrowser_element($instance, (isset($configdata['artefactid'])) ? array($configdata['artefactid']) : null),
@@ -96,7 +96,7 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
 
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
-        $element['title'] = get_string('file', 'artefact.file');
+        $element['title'] = get_string('File', 'artefact.file');
         $element['name'] = 'artefactid';
         $element['config']['selectone'] = true;
         $element['config']['selectmodal'] = true;
@@ -112,7 +112,7 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('file', 'artefact.file'),
+            'title' => get_string('File', 'artefact.file'),
             'defaultvalue' => $default,
             'blocktype' => 'html',
             'limit' => 10,

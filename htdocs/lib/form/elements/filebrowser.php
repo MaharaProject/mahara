@@ -1014,7 +1014,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     else {
         $originalname = $_FILES['userfile']['name'];
     }
-    $originalname = $originalname ? basename($originalname) : get_string('file', 'artefact.file');
+    $originalname = $originalname ? basename($originalname) : get_string('File', 'artefact.file');
     $data->title = ArtefactTypeFileBase::get_new_file_title($originalname, $parentfolder, $data->owner, $group, $institution);
 
     // Overwrite image file with resized version if required

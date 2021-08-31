@@ -224,7 +224,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
 
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
-        $element['title'] = get_string('file', 'artefact.file');
+        $element['title'] = get_string('File', 'artefact.file');
         $element['name'] = 'artefactid';
         $element['config']['upload'] = false;
         $element['config']['selectone'] = true;
