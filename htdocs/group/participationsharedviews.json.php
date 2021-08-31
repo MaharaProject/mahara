@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Son Nguyen <son.nguyen@catalyst.net.nz>, Catalyst IT, NZ
+ * @author     Son Nguyen (Catalyst IT, NZ) <son.nguyen@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */

@@ -1225,15 +1225,17 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
     }
 
     /**
-     * Create a form so the user can enter feedback for an annotation that is linked to
-     * a view or an artefact.
-     * @param object $annotation the annotation artefact object.
-     * @param object $view the view object that the annotation is linked to.
-     * @param object $artefact the artefact object that the annotation is linked to.
-     * @param string $blockid the id of the block instance
-     * @param boolean $defaultprivate set the private setting. Default is false.
-     * @param boolean $moderate if moderating feedback. Default is false.
-     * @return multitype:string multitype:NULL string
+     * Create a form so the user can enter feedback for an annotation.
+     *
+     * The annotation feedback is linked to a view or an artefact.
+     *
+     * @param object $annotation The annotation artefact object.
+     * @param object $view The view object that the annotation is linked to.
+     * @param object $artefact The artefact object that the annotation is linked to.
+     * @param string $blockid The id of the block instance
+     * @param boolean $defaultprivate Set the private setting. Default is false.
+     * @param boolean $moderate If moderating feedback. Default is false.
+     * @return array A Pieform form array.
      */
     public static function add_annotation_feedback_form($annotation, $view, $artefact, $blockid, $defaultprivate=false, $moderate=false) {
         global $USER;
