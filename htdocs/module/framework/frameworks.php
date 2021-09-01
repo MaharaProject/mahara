@@ -166,7 +166,8 @@ function edit_framework_section() {
         'all' => 'module.framework',
         'copyexistingframework' => 'module.framework',
         'editsavedframework' => 'module.framework',
-        'removestandardorelementconfirm' => 'module.framework'
+        'removestandardorelementconfirm' => 'module.framework',
+        'delete' => 'module.framework'
     );
 
     //set up variables for correct selection of framework from dropdowns
