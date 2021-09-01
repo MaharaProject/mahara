@@ -131,3 +131,4 @@ $string['removestandardorelementconfirm'] = 'Are you sure you want to remove thi
 $string['noframeworkfoundondb'] = 'The framework could not be found on the database';
 $string['missingparamframeworkid'] = 'The parameter framework id is missing';
 $string['missingrecordsdb'] = 'The following records could not be found on the DB: %s';
+$string['delete'] = 'Delete %s';
