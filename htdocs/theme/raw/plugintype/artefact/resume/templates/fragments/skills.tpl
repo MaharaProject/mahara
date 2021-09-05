@@ -10,7 +10,7 @@
     <div id="skillslist{$suffix}" class="card-items card-items-no-margin js-masonry" data-masonry-options='{ "itemSelector": ".card" }'>
         {foreach from=$skills item=n}
         <div class="card">
-            <h2 class="card-header has-link">
+            <h3 class="card-header has-link">
                 {if $n->exists}
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
@@ -24,7 +24,7 @@
                 <span class="sr-only">{str tag=edit}</span>
                 </a>
                 {/if}
-            </h2>
+            </h3>
             <div class="card-body">
                 {if $n->description != ''}
                 {$n->description|clean_html|safe}
