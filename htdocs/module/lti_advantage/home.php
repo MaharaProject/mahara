@@ -43,9 +43,18 @@ if (!empty($data['aud'])) {
 global $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_SERVERID;
 $params = array();
 
-// get basic parameters
+// Get basic parameters.
+if (!array_key_exists('iss', $data)) {
+    $msg = get_string('platformvendorissnotfound', 'module.lti_advantage');
+    throw new WebserviceInvalidResponseException($msg);
+}
 $vendor_key = $lti_db->get_vendor_key($data['iss']);
 try {
+    if ($vendor_key === false) {
+        // We could not find an lti_advantage_registration that matched 'iss' in $data.
+        $msg = get_string('platformvendorkeynotfound', 'module.lti_advantage', $data['iss']);
+        throw new WebserviceInvalidResponseException($msg);
+    }
     if (!key_exists($vendor_key, $data)) {
         $msg = get_string('platformvendorkeyinvalid', 'module.lti_advantage', implode(', ', array_keys($data)));
         throw new WebserviceInvalidResponseException($msg);
