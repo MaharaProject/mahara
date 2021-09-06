@@ -108,6 +108,8 @@ function addFeedbackSuccess(form, data) {
         // update the size of the comment block
         updateBlockSizes();
     }
+    findButtonDataUrls();
+
 }
 
 function objectionSuccess(form, data) {

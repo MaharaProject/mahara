@@ -1,14 +1,14 @@
 {include file="header.tpl"}
     {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
-        <a id="addview-button" class="btn btn-secondary" href="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}">
-            <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
+        <button id="addview-button" class="btn btn-secondary" type="button" data-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}" >
+            <span class="icon icon-plus left" role="presentation" aria-hidden="true" ></span>
             {str section=mahara tag=add}
-        </a>
-        <a id="copyview-button" class="btn btn-secondary" href="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
+        </button>
+        <button id="copyview-button" class="btn btn-secondary" type="button" data-url="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
             <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
             {str section=mahara tag=copy}
-        </a>
+        </button>
     </div>
     {/if}
     {$searchform|safe}
@@ -56,7 +56,7 @@
 
     <script>
 
-    var addurl = $j("#addview-button").attr('href');
+    var addurl = $j("#addview-button").attr('data-target');
 
     $j("#addview-button").on('click', function(event) {
         event.preventDefault();

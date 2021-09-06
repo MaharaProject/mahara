@@ -7,10 +7,10 @@
             <a href="{profile_url($user)}">{$user->display_name}</a>
         </h3>
         {if $USER->get('id') != $user->id && $user->messages && ($listtype == 'admin' || $listtype == 'staff')}
-            <a href="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&returnto={$page}&inst={$inst}" id="btn-sendmessage" class="btn btn-secondary btn-sm">
+            <button data-url="{$WWWROOT}{if $mrmoduleactive}module/multirecipientnotification{else}user{/if}/sendmessage.php?id={$user->id}&returnto={$page}&inst={$inst}" id="btn-sendmessage" type="submit" class="btn btn-secondary btn-sm">
                 <span class="icon icon-envelope left" aria-hidden="true" role="presentation"></span>
                 {str tag='sendmessage' section='group'}
-            </a>
+            </button>
         {/if}
     </div>
 </div>

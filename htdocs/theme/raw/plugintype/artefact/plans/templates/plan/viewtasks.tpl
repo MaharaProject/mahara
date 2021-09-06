@@ -40,34 +40,34 @@
             <div class="text-nowrap">
                 <div class="btn-group btn-tasks">
                     {if $task->taskview}
-                        <a href="{$WWWROOT}view/view.php?id={$task->taskview}" class="btn btn-secondary btn-sm btn-view" title="{$showassignedview}">
+                        <button href="{$WWWROOT}view/view.php?id={$task->taskview}" type="button" class="btn btn-secondary btn-sm btn-view" title="{$showassignedview}">
                             <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
-                        </a>
+                        </button>
                     {/if}
 
                     {if $task->outcomeurl}
-                        <a href="{$task->outcomeurl}" class="btn btn-secondary btn-sm btn-outcome" title="{$editassignedoutcome}" {if $task->sourceoutcomeurl}data-sourceoutcomeurl="{$task->sourceoutcomeurl}"{/if}>
+                        <button data-url="{$task->outcomeurl}" class="btn btn-secondary btn-sm btn-outcome" type="button" title="{$editassignedoutcome}" {if $task->sourceoutcomeurl}data-sourceoutcomeurl="{$task->sourceoutcomeurl}"{/if}>
                             <span class="icon icon-file" role="presentation" aria-hidden="true"></span>
-                        </a>
+                        </button>
                     {/if}
 
                     {if !$task->outcomeiscurrentlysubmitted}
                         {if $task->outcomesubmissionurl}
-                            <a href="{$task->outcomesubmissionurl}" title="{$submitassignedoutcome}" class="btn btn-secondary btn-sm">
+                            <button data-url="{$task->outcomesubmissionurl}" type="submit" title="{$submitassignedoutcome}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-file-upload" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{$submitassignedoutcome}</span>
-                            </a>
+                            </button>
                         {/if}
 
                         {if $canedit}
-                            <a href="{$WWWROOT}artefact/plans/task/edit.php?{$groupurlquery}id={$task->task}" title="{str tag=edit}" class="btn btn-secondary btn-sm">
+                            <button data-url="{$WWWROOT}artefact/plans/task/edit.php?{$groupurlquery}id={$task->task}" type="button" title="{str tag=edit}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>
-                            </a>
-                            <a href="{$WWWROOT}artefact/plans/task/delete.php?{$groupurlquery}id={$task->task}" title="{str tag=delete}" class="btn btn-secondary btn-sm">
+                            </button>
+                            <button data-url="{$WWWROOT}artefact/plans/task/delete.php?{$groupurlquery}id={$task->task}" type="button" title="{str tag=delete}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">{str(tag=deletespecific arg1=$task->title)|escape:html|safe}</span>
-                            </a>
+                            </button>
                         {/if}
                     {/if}
                 </div>

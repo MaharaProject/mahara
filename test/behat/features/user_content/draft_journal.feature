@@ -18,7 +18,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Create draft entry
  Given I log in as "UserA" with password "Kupuh1pa!"
  When I choose "Journals" in "Create" from main menu
- And I follow "New entry"
+ And I press "New entry"
  And I fill in the following:
  | Title * | My diary entry one |
  And I set the following fields to these values:
@@ -36,7 +36,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  Then I should see "Published"
 
  # Add another entry
- And I follow "New entry"
+ And I press "New entry"
  And I fill in the following:
  | Title * | My diary entry two |
  And I set the following fields to these values:
@@ -65,7 +65,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  Then I should see "My diary entry two"
  And I go to portfolio page "Page UserA_01"
  And I press "Edit"
- And I click on "Share" in the "Toolbar buttons" "Nav" property
+ And I press "Share" in the "Toolbar buttons" "Nav" property
  And I select "Public" from "accesslist[0][searchtype]"
  And I press "Save"
  And I log out

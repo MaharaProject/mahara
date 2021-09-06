@@ -1,9 +1,9 @@
 {if $rows}
 <div class="text-right">
-    <a class="btn btn-secondary" href="{$WWWROOT}artefact/internal/socialprofile.php">
+    <button class="btn btn-secondary" type="submit" data-url="{$WWWROOT}artefact/internal/socialprofile.php">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=newsocialprofile section=artefact.internal}
-    </a>
+    </button>
 </div>
 <div class="table-responsive">
 <table id="socialprofilelist" class="tablerenderer fullwidth table">
@@ -41,15 +41,15 @@
             {if $controls}
             <td class="control-buttons">
                 <div class="btn-group">
-                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" title="{str tag='edit'}" class="btn btn-secondary btn-sm">
+                    <button data-url="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" type="button" title="{str tag='edit'}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='edit'}</span>
-                    </a>
+                    </button>
                     {if $candelete}
-                    <a href="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" title="{str tag='delete'}" class="btn btn-secondary btn-sm">
+                    <button data-url="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" type="button" title="{str tag='delete'}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag='delete'}</span>
-                    </a>
+                    </button>
                     {/if}
                 </div>
             </td>
@@ -61,10 +61,10 @@
 </div>
 {else}
 <p class="no-results">
-    <a class="btn btn-secondary" href="{$WWWROOT}artefact/internal/socialprofile.php">
+    <button class="btn btn-secondary" data-url="{$WWWROOT}artefact/internal/socialprofile.php">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=newsocialprofile section=artefact.internal}
-    </a>
+    </button>
 </p>
 {/if}
 {$pagination.html|safe}

@@ -64,17 +64,17 @@
                 <li class="acceptdenyfriendbtns">
                     <div class="btn-group">
                         {$user->accept|safe}
-                        <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn btn-secondary btn-sm">
+                        <button data-url="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" type="submit" class="btn btn-secondary btn-sm">
                             <span class="icon icon-ban text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag='deny' section='group'}
-                        </a>
+                        </button>
                     </div>
                 </li>
                 {/if}
                 {if $user->friend}
                 <li class="removefriend">
                     <span class="icon text-danger icon-user-times left" role="presentation" aria-hidden="true"></span>
-                    <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
+                    <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}">
                         {str tag='removefromfriendslist' section='group'}
                     </a>
                 </li>
@@ -89,7 +89,7 @@
                 {if $user->friendscontrol == 'auth'}
                 <li class="friend">
                     <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
+                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                 </li>

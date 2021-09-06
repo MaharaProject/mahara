@@ -68,11 +68,10 @@
                             {* Note: This is positioned relative to base of card-quarter *}
                             <div class="page-access">
                                 {if $view.accesslist || $view.manageaccess}
-                                    <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
-                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock{/if} close-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu" role="menu">
                                       {if $view.manageaccesssuspended}
                                         <li class="view-details">{str tag="pending" section="view"}</li>
@@ -122,11 +121,12 @@
                             </div>
 
                             <div class="page-controls">
-                                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
+                                <button class="dropdown-toggle btn btn-link moremenu" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
-                                </a>
+                                </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
                                     <li class="dropdown-item">

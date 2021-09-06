@@ -39,7 +39,7 @@ Background:
    And I press "Save changes"
    # Creating a Journal with tag
    And I choose "Journals" in "Create" from main menu
-   And I follow "New entry"
+   And I press "New entry"
    And I set the following fields to these values:
    | Title *  | Journal one  |
    | Entry | This is a test |
@@ -48,7 +48,7 @@ Background:
    And I press "Save entry"
    # Creating a Plan with a tag
    And I choose "Plans" in "Create" from main menu
-   And I follow "New plan"
+   And I press "New plan"
    And I fill in the following:
    | Title *  | Plan 9 from outer space  |
    | Description  | Woooo |
@@ -56,7 +56,7 @@ Background:
    And I fill in select2 input "addplan_tags" with "blue" and select "blue"
    And I press "Save plan"
    # Creating a Task with a tag
-   And I follow "New task"
+   And I press "New task"
    And I fill in the following:
    | Title * | Task one   |
    And I fill in "Completion date" with "tomorrow" date in the format "Y/m/d"
@@ -66,14 +66,14 @@ Background:
    # Adding a tag to page 1
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_01" card menu
-   And I click on "Settings" in the "Toolbar buttons" "Nav" property
+   And I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Adding a tag to page 2
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_02" card menu
-   And I click on "Settings" in the "Toolbar buttons" "Nav" property
+   And I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "#orange" and select "#orange"
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
@@ -143,7 +143,7 @@ Background:
    # Create Portfolio page via tags = blue
    Given I choose "Pages and collections" in "Create" from main menu
    And I scroll to the base of id "addview-button"
-   And I follow "Add"
+   And I press "Add"
    And I click on "Page" in the dialog
    And I fill in the following:
    | Page title | Create portfolio via tags feature |
@@ -154,11 +154,11 @@ Background:
    When I press "Save"
    Then I should see "Tagged journal entries"
    And I should see "Plans"
-   When I click on "Settings" in the "Toolbar buttons" "Nav" property
+   When I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_createtags" with "@black" and select "@black"
    And I press "Save"
    Then I should see "Note Block 3304"
-   When I click on "Settings" in the "Toolbar buttons" "Nav" property
+   When I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
    And I press "Save"
 

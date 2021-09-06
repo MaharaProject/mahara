@@ -15,7 +15,7 @@ Scenario: Selection options to filter messages (Bug 1433342)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "People" from administration menu
  And I follow "Angela"
- And I follow "Send message"
+ And I press "Send message"
  And I fill in the following:
  | Subject   | Hi there |
  | Message   | This is a test message |

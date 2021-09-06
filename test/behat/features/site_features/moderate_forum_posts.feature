@@ -20,7 +20,7 @@ Scenario: Group moderator approved a forum post
     # Group owner sets up a forum (Group A's forum)
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Edit \"GroupA\" Settings"
+    And I press "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
     And I click on "New forum"
     And I set the following fields to these values:

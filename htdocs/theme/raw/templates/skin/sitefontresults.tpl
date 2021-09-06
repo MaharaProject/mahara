@@ -36,7 +36,7 @@
                         {/if}
                         {if $font.fonttype == 'site'}
                             <li>
-                                <a class="btn-edit" href="{$WWWROOT}admin/site/font/edit.php?font={$font.name}">
+                                <a href="{$WWWROOT}admin/site/font/edit.php?font={$font.name}">
                                     <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                                     {str tag="editproperties" section="skin"}
                                     <span class="accessible-hidden sr-only">

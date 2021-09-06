@@ -68,7 +68,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   Then I should see "Skins help you customise the look of your portfolio pages to give them a personal touch."
   And I follow "Close help"
   # Create skin
-  And I follow "Create skin"
+  And I press "Create skin"
   And I click on "Help"
   Then I should see "You can design your own skin"
   # Import skin

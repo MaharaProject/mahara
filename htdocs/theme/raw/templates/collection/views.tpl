@@ -71,8 +71,8 @@
     </div>
 
     <div id="collectiondonewrap" class=" primary submitcancel form-group">
-        <a class="btn btn-primary submitcancel submit" href="{$accessurl}">{str tag=nexteditaccess section=collection}</a>
-        <a class="btn submitcancel cancel" href="{$baseurl}">{str tag=cancel}</a>
+        <button class="btn btn-primary submitcancel submit" type="submit" data-url="{$accessurl}">{str tag=nexteditaccess section=collection}</button>
+        <button class="btn submitcancel cancel" type="submit" data-url="{$baseurl}">{str tag=cancel}</button>
     </div>
 
 {include file="footer.tpl"}

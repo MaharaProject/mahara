@@ -17,7 +17,7 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
  Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Create" from main menu
- And I follow "New entry"
+ And I press "New entry"
  And I press "Save entry"
  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
 
@@ -26,7 +26,7 @@ Scenario: Creating a Journal entry
  Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Create" from main menu
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "Story of my life"
  And I set the following fields to these values:
  | Allow comments | 0 |
@@ -38,7 +38,7 @@ Scenario: Creating a Journal entry
 
  And I press "Save entry"
 
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "Story of my life, part 2"
  And I set the following fields to these values:
  | Allow comments | 0 |
@@ -49,7 +49,7 @@ Scenario: Creating a Journal entry
  And I fill in select2 input "editpost_tags" with "test" and select "test"
  And I press "Save entry"
 
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "Story of my life, part 3"
  And I set the following fields to these values:
  | Allow comments | 0 |
@@ -70,10 +70,10 @@ Scenario: Creating a Journal entry
  When I follow "Add one"
  Then I should see "New journal | GroupA"
  And I move backward one page
- And I follow "Create journal"
+ And I press "Create journal"
  And I fill in "Title *" with "My group journal"
  And I press "Create journal"
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "My group entry one"
  And I set the following fields to these values:
  | Entry | I love my mum |

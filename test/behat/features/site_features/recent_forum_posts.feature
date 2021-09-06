@@ -53,7 +53,7 @@ Scenario: Create forum and add block to group page
 Scenario: Administrative forum bulk actions
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Edit \"GroupA\" Settings"
+    And I press "Edit \"GroupA\" Settings"
     And I follow "Forums (tab)"
     And I follow "Group A's forum"
     # Perform bulk actions of
@@ -68,6 +68,6 @@ Scenario: Administrative forum bulk actions
     And I select "Sticky" from "action"
     When I press "Update selected topics"
     And I follow "Taking photos of Cows"
-    And I follow "Edit topic"
+    And I press "Edit topic"
     And the "Closed" checkbox should be checked
     And the "Sticky" checkbox should be checked

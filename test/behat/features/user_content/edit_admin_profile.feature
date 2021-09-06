@@ -37,7 +37,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I should see "Profile saved successfully"
     # Updating Social media tab
     And I follow "Social media"
-    And I follow "New social media account"
+    And I press "New social media account"
     And I fill in the following:
     | Enter URL | http://github.com/MaharaProject |
     | Your URL or username | https://twitter.com/MaharaProject |

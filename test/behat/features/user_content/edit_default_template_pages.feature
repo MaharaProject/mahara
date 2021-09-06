@@ -37,7 +37,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I press "Save"
 
     # Site admin Site admin set up "Profile template" to include the following:
-    Given I click on "Return to site pages and collections"
+    Given I press "Return to site pages and collections"
     And I click on "Edit" in "Profile template" card menu
     # Verify that only one block of a certin type can be added to a template page  (ie only 1 Wall block)
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property

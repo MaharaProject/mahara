@@ -34,10 +34,10 @@
             <div class="flex-controls">
                 <div class="btn-group btn-group-top comment-item-buttons">
                     {if $item->canedit}
-                    <a href="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" class="btn btn-secondary btn-sm">
+                    <button data-url="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" type="button" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
                         <span class="sr-only">{str tag=edit}</span>
-                    </a>
+                    </button>
                     {/if}
                     {if $item->deleteform}
                         {$item->deleteform|safe}

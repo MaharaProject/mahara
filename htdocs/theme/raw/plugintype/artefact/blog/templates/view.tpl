@@ -1,15 +1,15 @@
 {include file="header.tpl"}
 {if $canedit}
 <div class="btn-top-right btn-group btn-group-top">
-    <a class="btn btn-secondary addpost" href="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">
+    <button class="btn btn-secondary addpost" data-url="{$WWWROOT}artefact/blog/post.php?blog={$blog->get('id')}">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str section="artefact.blog" tag="addpost"}
-    </a>
+    </button>
     {if !$blog->get('locked')}
-    <a class="btn btn-secondary settings" href="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->get('id')}">
+    <button class="btn btn-secondary settings" data-url="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->get('id')}">
         <span class="icon icon-cogs left" role="presentation" aria-hidden="true"></span>
         {str section="artefact.blog" tag="settings"}
-    </a>
+    </button>
     {/if}
 </div>
 {/if}

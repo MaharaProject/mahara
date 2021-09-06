@@ -1,9 +1,9 @@
 {include file="header.tpl"}
 {if $canedit}
     <div class="btn-group btn-group-top">
-        <a class="btn btn-secondary" href="{$newPlanLink}">
+        <button class="btn btn-secondary" type="button" data-url="{$newPlanLink}">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
-            {str section="artefact.plans" tag="newplan"}</a>
+            {str section="artefact.plans" tag="newplan"}</button>
     </div>
 {/if}
 {if !$plans.data}

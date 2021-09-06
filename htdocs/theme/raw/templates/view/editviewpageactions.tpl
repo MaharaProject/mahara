@@ -39,9 +39,7 @@
         </button>
     {/if}
 
-    <button class="btn btn-secondary editviews returntolocation"
-        data-url="{$url}"
-        title="{$title}">
+    <button class="btn btn-secondary editviews returntolocation" data-url="{$url}" title="{$title}">
         <span class="icon icon-step-backward icon-lg" aria-hidden="true" role="presentation"></span>
         <span class="btn-title sr-only">{$title}</span>
     </button>

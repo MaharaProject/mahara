@@ -20,7 +20,7 @@ Scenario: Verifying a person's authentication method only displays institutions 
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People search" in "People" from administration menu
     When I follow "Angela"
-    And I follow "Account settings"
+    And I click on "Account settings"
     Then I should see "Authentication method"
     And the "Authentication method" select box should contain "Institution One: internal"
     And the "Authentication method" select box should contain "No Institution: Internal"
