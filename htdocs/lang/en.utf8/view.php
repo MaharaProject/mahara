@@ -233,6 +233,7 @@ $string['shareallwithmaximum'] = array(
 $string['submitconfirm'] = 'If you submit \'%s\' to %s for assessment, you will not be able to edit its contents until your tutor has finished marking it. Are you sure you want to submit now?';
 $string['viewsubmitted'] = 'Page submitted';
 $string['collectionsubmitted'] = 'Collection submitted';
+$string['viewnotsubmitted'] = 'Portfolio not currently submitted';
 $string['collectionviewsalreadysubmitted'] = "Some pages in this collection have already been submitted: \"%s\"\nYou cannot submit the collection until they have been released, or removed from the collection.";
 $string['viewalreadysubmitted'] = 'This page has already been submitted to another assignment or group.';
 $string['collectionalreadysubmitted'] = 'This collection has already been submitted to another assignment or group.';

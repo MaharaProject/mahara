@@ -1909,6 +1909,7 @@ class WebserviceException extends MaharaException {
 
     /**
      * Constructor
+     *
      * @param string $errorcode The name of the string to print
      * @param string $debuginfo optional debugging information
      * @param integer $errornumber A numerical identifier for the error (optional)
@@ -1926,6 +1927,7 @@ class WebserviceException extends MaharaException {
             }
         }
         else {
+            $count = 0;
             $message = $errorcode;
         }
 
@@ -1968,6 +1970,7 @@ class WebserviceParameterException extends WebserviceException {}
 class WebserviceCodingException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo optional debugging information
      */
     function __construct($debuginfo='') {
@@ -1984,6 +1987,7 @@ class WebserviceCodingException extends WebserviceException {
 class WebserviceInvalidParameterException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo='') {
@@ -2000,6 +2004,7 @@ class WebserviceInvalidParameterException extends WebserviceException {
 class WebserviceInvalidResponseException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo='') {
@@ -2013,10 +2018,25 @@ class WebserviceInvalidResponseException extends WebserviceException {
 class WebserviceAccessException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo='') {
         parent::__construct('accessexception', $debuginfo);
+    }
+}
+
+/**
+ * Exception indicating missing file problem in web service call
+ */
+class WebserviceFileNotFoundException extends WebserviceException {
+    /**
+     * Constructor
+     *
+     * @param string $debuginfo some detailed information
+     */
+    function __construct($debuginfo='') {
+        parent::__construct('filenotfoundexception', $debuginfo);
     }
 }
 

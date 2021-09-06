@@ -225,3 +225,7 @@ $string['viewtitle'] = 'Page title';
 $string['viewtype'] = 'Page type';
 $string['wwwroot'] = 'Client URN to distinguish remote lockers';
 $string['yahoochat'] = 'Yahoo chat';
+$string['viewidtotest'] = 'The submitted portfolio to export';
+$string['submittedhost'] = 'The external host it was submitted to';
+$string['liteexporttype'] = 'The export type to use. Valid options are \'htmllite\'.';
+$string['fileurl'] = 'The download URL to fetch the zip file. Note: need to supply valid webservice token to be able to download file.';

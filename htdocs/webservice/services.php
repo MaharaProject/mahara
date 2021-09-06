@@ -264,6 +264,14 @@ $functions = array(
         'type'        => 'write',
     ),
 
+    'mahara_submission_generate_view_for_plagiarism_test' => array(
+        'classname'   => 'mahara_view_external',
+        'methodname'  => 'generate_view_for_plagiarism_test',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Generate a zip file containing view to be sent to a plagiarism tester',
+        'type'        => 'write',
+    ),
+
     // === blog related functions ===
 
     'mahara_blog_get_blogs_for_user' => array(

@@ -92,3 +92,4 @@ $string['deleteexportqueueitems'] = 'Failed to remove items from export queue it
 $string['deleteexportqueuerow'] = 'Failed to remove items from export queue database table';
 $string['exportqueueerrorsadminsubject'] = 'Error running export queue';
 $string['exportqueueerrorsadminmessage'] = 'Unable to export row "%s" due to: %s';
+$string['exportlitenotwritable'] = 'Export directory "%s" is not writable.';

@@ -72,8 +72,30 @@ class PluginExportPdf extends PluginExportHtml {
         return get_string('description', 'export.pdf');
     }
 
+    /**
+     * Is the plugin activated or not?
+     *
+     * @return boolean
+     */
+    public static function is_active() {
+        $active = false;
+        if (get_field('export_installed', 'active', 'name', 'pdf')) {
+            $active = true;
+        }
+        return $active;
+    }
+
     public static function get_plugin_display_name() {
         return 'PDF';
+    }
+
+    /**
+     * Post install hook
+     */
+    public static function postinst($fromversion) {
+        if ($fromversion == 0) {
+            set_field('export_installed', 'active', 0, 'name', 'pdf');
+        }
     }
 
     public static function has_pdf_combiner() {
