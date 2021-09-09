@@ -1783,12 +1783,22 @@ S2.define('select2/selection/multiple',[
     return escapeMarkup(template(data, container));
   };
 
-  MultipleSelection.prototype.selectionContainer = function () {
+  MultipleSelection.prototype.selectionContainer = function (selection, readonly) {
+    let state, button;
+    if (readonly) {
+        state = 'readonly';
+        button = '';
+    }
+    else {
+        state = 'remove';
+        button = '<button class="select2-hidden-accessible">' +
+                   get_string_ajax('element.select.remove', 'pieforms', selection.text || selection.title) +
+                 '</button>&times;';
+    }
+
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__remove" role="presentation">' +
-          '&times;' +
-        '</span>' +
+        '<span class="select2-selection__choice__' + state + '" role="presentation">' + button + '</span>' +
       '</li>'
     );
 
@@ -1807,7 +1817,8 @@ S2.define('select2/selection/multiple',[
     for (var d = 0; d < data.length; d++) {
       var selection = data[d];
 
-      var $selection = this.selectionContainer();
+      var readonly = $(selection.element).hasClass('readonly');
+      var $selection = this.selectionContainer(selection, readonly);
       var formatted = this.display(selection, $selection);
 
       $selection.append(formatted);
