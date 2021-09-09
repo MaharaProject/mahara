@@ -13,14 +13,22 @@ defined('INTERNAL') || die();
 
 class LeapExportElementComment extends LeapExportElement {
 
-    public static function setup_links(&$links, $viewids, $artefactids) {
+    public static function setup_links(&$links, $viewids, $artefactids, $includefeedback, $includeprivatefeedback) {
         $viewlist = join(',', array_map('intval', $viewids));
         $artefactlist = join(',', array_map('intval', $artefactids));
-
+        if ($includeprivatefeedback && $includefeedback) {
+            $feedback = 1;
+        }
+        else if ($includefeedback) {
+            $feedback = 0;
+        }
+        else {
+            $feedback = -1;
+        }
         $records = get_records_select_array(
             'artefact_comment_comment',
-            "artefact IN ($artefactlist) AND onview IN ($viewlist)",
-            array(),
+            "artefact IN ($artefactlist) AND onview IN ($viewlist) AND private <= ?",
+            array($feedback),
             '',
             'artefact,onview'
         );
@@ -39,8 +47,8 @@ class LeapExportElementComment extends LeapExportElement {
 
         $records = get_records_select_array(
             'artefact_comment_comment',
-            "artefact IN ($artefactlist) AND onartefact IN ($artefactlist)",
-            array(),
+            "artefact IN ($artefactlist) AND onartefact IN ($artefactlist) AND private <= ?",
+            array($feedback),
             '',
             'artefact,onartefact'
         );
