@@ -1714,6 +1714,16 @@ function delete_user($userid) {
         delete_records('framework_assessment_feedback', 'usr', $userid);
     }
 
+    // Remove the user's collections
+    $collectionids = get_column('collection', 'id', 'owner', $userid);
+    if ($collectionids) {
+        require_once(get_config('libroot') . 'collection.php');
+        foreach ($collectionids as $collectionid) {
+            $collection = new Collection($collectionid);
+            $collection->delete();
+        }
+    }
+
     // Remove the user's views & artefacts
     $viewids = get_column('view', 'id', 'owner', $userid);
     if ($viewids) {
@@ -1739,16 +1749,6 @@ function delete_user($userid) {
             catch (ArtefactNotFoundException $e) {
                 // Awesome, it's already gone.
             }
-        }
-    }
-
-    // Remove the user's collections
-    $collectionids = get_column('collection', 'id', 'owner', $userid);
-    if ($collectionids) {
-        require_once(get_config('libroot') . 'collection.php');
-        foreach ($collectionids as $collectionid) {
-            $collection = new Collection($collectionid);
-            $collection->delete();
         }
     }
 
