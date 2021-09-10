@@ -1,5 +1,8 @@
 <?php
 /**
+ * View artefact
+ *
+ * Utilities for managing pages in portfolios
  *
  * @package    mahara
  * @subpackage core
@@ -11,6 +14,11 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * View artefact class
+ *
+ * Associated with collections, artefacts, etc.
+ */
 class View {
     private $dirty;
     private $deleted;
@@ -49,9 +57,9 @@ class View {
     private $categorydata;
 
     /**
-     * The type of template
+     * The type of template (integer = 0 if neither USER_TEMPLATE nor SITE_TEMPLATE)
      *
-     * @var USER_TEMPLATE|SITE_TEMPLATE|0
+     * @var USER_TEMPLATE|SITE_TEMPLATE|integer
      */
     private $template;
     private $retainview;
@@ -820,6 +828,11 @@ class View {
         return array($count, $alltags);
     }
 
+    /**
+     * Get the associated collection
+     *
+     * @return false|object Collection object
+     */
     public function get_collection() {
         if (!isset($this->collection)) {
             require_once(get_config('libroot') . 'collection.php');
@@ -828,6 +841,11 @@ class View {
         return $this->collection;
     }
 
+    /**
+     * Get the columns per row of this view
+     *
+     * @return integer
+     */
     public function get_columnsperrow() {
         if (!isset($this->columnsperrow)) {
             $this->columnsperrow = get_records_sql_assoc('SELECT "row", columns
@@ -838,6 +856,11 @@ class View {
         return $this->columnsperrow;
     }
 
+    /**
+     * Get the collection ID of this view
+     *
+     * @return false|integer
+     */
     public function collection_id() {
         if ($collection = $this->get_collection()) {
             return $collection->get('id');
@@ -845,6 +868,12 @@ class View {
         return false;
     }
 
+    /**
+     * Get the group ID corresponding to the group tasks
+     * associated with this view
+     *
+     * @return false|integer Group ID
+     */
     public function get_group_id_of_corresponding_group_task() {
         $collection = $this->get_collection();
         if ($collection) {
@@ -1310,13 +1339,18 @@ class View {
     }
 
     /**
-     * Manage view access
-     *
+     * Set the access rules
      * Given some accessdata, fills in the object and updates/inserts it in the db
      *
-     * @param  array $accessdata
-     * @param  boolean $allowcomments
-     * @return array $accessdata_added a list of access data added to the db table
+     * @param array  $accessdata       For each view access row
+     *                                 Can contain id, type, startdate, stopdate, allowcomments,
+     *                                 approvecomments
+     * @param array  $viewids          Contains ids of the views getting the access rules
+     * @param bool   $allowcomments    Holds the view wide allowcomments option
+     *                                 Needed when changing this and saving page at same time
+     *                                 as the views are not saved at this point.
+     *
+     * @return array $accessdata_added A list of access data added to the db table
      */
     public function manage_view_access($accessdata, $allowcomments) {
         // View access
@@ -1467,14 +1501,14 @@ class View {
     /**
      * Set the view access rules
      *
-     * @param  $accessdata     array  For each view access row
-                                      Can contain id, type, startdate, stopdate, allowcomments, approvecomments
-     * @param  $viewids        array  Contains ids of the views getting the access rules
-     * @param  $allowcomments  bool   Holding the view wide allowcomments option
-                                      Needed when changing this and saving page at same time
-                                      as the views are not saved at this point.
+     * @param  array $accessdata       For each view access row. Can contain id, type, startdate,
+     *                                 stopdate, allowcomments, approvecomments
+     * @param  array $viewids          Contains ids of the views getting the access rules
+     * @param  bool  $allowcomments    Holding the view wide allowcomments option (Needed when changing
+     *                                 this and saving page at same time as the views are not saved
+     *                                 at this point.
      *
-     * @return  $accessdata_added  array  The added access rows
+     * @return array $accessdata_added The added access rows
      */
     public function set_access($accessdata, $viewids = null, $allowcomments = true) {
         global $USER;
@@ -5462,12 +5496,12 @@ class View {
      * @param int $limit
      * @param int $offset
      * @throws AccessDeniedException if the logged-in user is not the group admin or member
-     * @return array(
-            'data'   => array(),
-            'count'  => $count,
-            'limit'  => $limit,
-            'offset' => $offset,
-        );
+     * @return array [
+     *     'data'   => array(),
+     *     'count'  => int,
+     *     'limit'  => int,
+     *     'offset' => int,
+     * ];
      */
     public static function get_participation_groupviews_data($groupid, $sort, $direction, $limit=10, $offset=0) {
         global $USER;
@@ -5523,12 +5557,12 @@ class View {
      * @param int $limit
      * @param int $offset
      * @throws AccessDeniedException if the logged-in user is not the group admin or member
-     * @return array(
-            'data'   => array(),
-            'count'  => $count,
-            'limit'  => $limit,
-            'offset' => $offset,
-        );
+     * @return array [
+     *      'data'   => array(),
+     *      'count'  => int,
+     *      'limit'  => int,
+     *      'offset' => int,
+     *  ];
      */
     public static function get_participation_sharedviews_data($groupid, $sort, $direction, $limit=10, $offset=0) {
     global $USER;
@@ -6865,7 +6899,10 @@ class View {
      * @param integer $submittedgroup return only views & collections submitted to this group
      * @param $string $sort Order to sort by (defaults to 'c.name, v.title')
      *
-     * @return array, array
+     * @return array [
+     *  0 => array(),  // collections
+     *  1 => array()   // views
+     * ];
      */
     public static function get_views_and_collections($owner=null, $group=null, $institution=null, $obsoleteparam=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
 
@@ -7969,6 +8006,13 @@ function get_ok_copy_msg($templatename, $numblocks=0, $numartefacts=0, $numpages
     return get_string('copiedparticle' , 'collection', $msg);
 }
 
+/**
+ * Form submission for creating views
+ *
+ * @param  Pieform $form
+ * @param  array   $values
+ * @return void
+ */
 function createview_submit(Pieform $form, $values) {
     global $SESSION;
 
@@ -8077,6 +8121,13 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
     }
 }
 
+/**
+ * Form cancellation for creating a view
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function createview_cancel_submit(Pieform $form, $values) {
     if (isset($values['group'])) {
         redirect(get_config('wwwroot') . 'view/groupviews.php?group=' . $values['group']);
@@ -8087,6 +8138,13 @@ function createview_cancel_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'view/index.php');
 }
 
+/**
+ * Form submission for view search
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function searchviews_submit(Pieform $form, $values) {
     $tag = $query = null;
     if ($values['query'] != '') {
@@ -8188,6 +8246,13 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
     return pieform($form);
 }
 
+/**
+ * Form submission for creating a view in a group
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function view_group_submission_form_submit(Pieform $form, $values) {
     $params = array(
         'group' => $values['options'],
@@ -8225,6 +8290,15 @@ function install_system_portfolio_view() {
     return $view->get('id');
 }
 
+/**
+ * Filter isolated view access
+ *
+ * Restricting access users
+ *
+ * @param  View $view
+ * @param  array $viewaccess
+ * @return array $viewaccess
+ */
 function filter_isolated_view_access($view, $viewaccess) {
     global $SESSION;
 
@@ -8285,9 +8359,13 @@ function filter_isolated_view_access($view, $viewaccess) {
 /**
  * Checks if the tinymce text has any tags other than <p> or <br>
  * if it doesn't have extra tags, then it will remove them and return only the text
+ *
+ *
+ * @param  mixed $description
+ * @return false|string $cleandescription
  */
 function can_extract_description_text($description) {
-    //remove html tags form the text but leaving only the tags that can be translated to text
+    // remove html tags from the text but leaving only the tags that can be translated to text
     $texttagsonly_description = strip_tags($description, '<p><br><span><em><strong>');
     $cleandescription = strip_tags($description);
 
