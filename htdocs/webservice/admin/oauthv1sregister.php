@@ -1,5 +1,6 @@
 <?php
 /**
+ * External application using the oAuth version 1 protocol
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -68,6 +69,12 @@ else {
     $form = webservice_server_list_form($sopts, $iopts);
 }
 
+/**
+ * Add webservice external application
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservices_add_application_submit(Pieform $form, $values) {
     global $SESSION, $USER, $services;
 
@@ -120,6 +127,12 @@ function webservices_add_application_submit(Pieform $form, $values) {
 
 }
 
+/**
+ * Add webservice external application configuration
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservices_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
     $store = OAuthStore::instance();
@@ -156,6 +169,12 @@ function webservices_server_submit(Pieform $form, $values) {
     redirect('/webservice/admin/oauthv1sregister.php');
 }
 
+/**
+ * Validate the webservice external application
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_oauth_server_validate(Pieform $form, $values) {
     $owner = array_diff($values['user'], array(''));
     if (empty($owner)) {
@@ -163,6 +182,12 @@ function webservice_oauth_server_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Save the webservice external application
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_oauth_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
@@ -214,9 +239,24 @@ PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');
 
+/**
+ * Dummy save function for external application list
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_main_submit(Pieform $form, $values) {
 }
 
+/**
+ * The form array for making the edit external application form
+ *
+ * @param object $dbserver A db object
+ * @param array $sopts     Service options
+ * @param array $iopts     Institution options
+ * @param array $disabled  Any webservice fields to be disabled
+ * @return array A pieform compatible array to build a Pieform from
+ */
 function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = array()) {
     global $USER, $disabledopts;
 
@@ -394,6 +434,13 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
     return $form;
 }
 
+/**
+ * The form array for making the server list
+ *
+ * @param array $sopts     Service options
+ * @param array $iopts     Institution options
+ * @return array $form A pieform compatible array for building a Pieform
+ */
 function webservice_server_list_form($sopts, $iopts) {
     global $USER, $THEME;
 
@@ -675,6 +722,13 @@ function webservice_server_list_form($sopts, $iopts) {
     return $form;
 }
 
+/**
+ * The form array for making the server config form
+ *
+ * @param integer $serverid   ID of service record
+ *
+ * @return array $form A pieform compatible array for building a Pieform
+ */
 function webservice_server_config_form($serverid) {
     global $USER, $THEME;
 
@@ -725,6 +779,12 @@ function webservice_server_config_form($serverid) {
     }
 }
 
+/**
+ * Submit the webservice server config form
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_server_config_submit(Pieform $form, $values) {
 
     $serverid = $values['id'];
@@ -740,7 +800,14 @@ function webservice_server_config_submit(Pieform $form, $values) {
     return false;
 }
 
-
+/**
+ * Update values in the external application configuration
+ *
+ * @param integer $serverid External server ID
+ * @param string $key   The configuration field
+ * @param string $value The configuration value
+ * @return boolean
+ */
 function update_oauth_server_config($serverid, $key, $value) {
 
     $dbvalue = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $serverid, 'field', $key);
@@ -764,6 +831,12 @@ function update_oauth_server_config($serverid, $key, $value) {
     return false;
 }
 
+/**
+ * Get the external application service plugintype and pluginname based on server id
+ *
+ * @param integer $serverid The id of the external service
+ * @return array
+ */
 function get_module_from_serverid($serverid) {
 
     $consumer = get_record_sql('

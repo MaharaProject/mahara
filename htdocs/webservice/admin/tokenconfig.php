@@ -1,5 +1,6 @@
 <?php
 /**
+ * Token configuration
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -213,6 +214,12 @@ $heading = get_string('tokens', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');
 
+/**
+ * Save the allocation webservice token information to external_tokens db table
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
+ */
 function allocate_webservice_tokens_submit(Pieform $form, $values) {
     global $SESSION;
     $dbtoken = get_record('external_tokens', 'id', $values['tokenid']);
@@ -271,6 +278,13 @@ function allocate_webservice_tokens_submit(Pieform $form, $values) {
     redirect('/webservice/admin/index.php?open=webservices_token');
 }
 
+/**
+ * Validate the webservice token form
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ * @return bool|void
+ */
 function allocate_webservice_tokens_validate(PieForm $form, $values) {
     global $SESSION;
     $dbtoken = get_record('external_tokens', 'id', $values['tokenid']);

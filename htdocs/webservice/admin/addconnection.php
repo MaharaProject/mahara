@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservice add /edit connections
  *
  * @package    mahara
  * @subpackage admin
@@ -79,11 +80,22 @@ if ($delete) {
     exit();
 }
 
+/**
+ * Cancel routine for allocate connection form
+ *
+ * @param Pieform $form The pieform being submitted
+ */
 function allocate_client_connection_cancel_submit(Pieform $form) {
     $institution = $form->get_element_option('i', 'value');
     redirect(get_config('wwwroot') . 'webservice/admin/connections.php?i=' . $institution);
 }
 
+/**
+ * Validate the webservice connection allocation
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function allocate_client_connection_validate(Pieform $form, $values) {
     global $SESSION;
 
@@ -153,6 +165,12 @@ function allocate_client_connection_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit the webservice connection allocation
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function allocate_client_connection_submit(Pieform $form, $values) {
     global $SESSION;
 

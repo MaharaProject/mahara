@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservice service group configuration form
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -230,6 +231,12 @@ $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');
 
+/**
+ * Validate the webservice service group
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function serviceconfig_validate(Pieform $form, $values) {
     // Some fields can't be edited on a plugin's service. So don't bother validating
     // any inputs relating to them.
@@ -286,8 +293,8 @@ function serviceconfig_validate(Pieform $form, $values) {
  * 6. Do one "update_record()" call at the end of the function, instead
  * of a separate one for each form field.
  *
- * @param Pieform $form
- * @param array $values
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function serviceconfig_submit(Pieform $form, $values) {
     global $SESSION, $service, $dbservice;

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservice logging data to be delivered via ajax
  *
  * @package    mahara
  * @subpackage auth-webservice

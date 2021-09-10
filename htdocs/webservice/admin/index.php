@@ -1,5 +1,9 @@
 <?php
 /**
+ * Webservice configuration overview page
+ *
+ * Contains the switches fro turing on / off the services and service types
+ * as well as the lists of service groups and assigned tokens
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -328,6 +332,9 @@ function webservice_requester_enabled_form() {
 
 /**
  * Pieforms submit callback for Webservices Requester form
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function webservice_requester_enabled_submit(Pieform $form, $values) {
 
@@ -386,6 +393,9 @@ function webservice_provider_enabled_form() {
 
 /**
  * Pieform callback function for the "Publish webservices" master switch
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function webservice_provider_enabled_submit(Pieform $form, $values) {
 
@@ -470,6 +480,9 @@ function webservice_provider_protocols_form() {
 
 /**
  * Pieform callback function for the per-protocol master switches
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function webservice_provider_protocols_submit(Pieform $form, $values) {
     $enabled = $values['enabled'] ? 0 : 1;
@@ -679,6 +692,9 @@ function webservice_function_groups_form() {
 
 /**
  * Pieform callback for the "function groups" section
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function webservice_function_groups_submit(Pieform $form, $values) {
     global $SESSION;
@@ -944,6 +960,9 @@ function webservice_tokens_form() {
 
 /**
  * Pieform callback for the webservices token management form
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function webservice_token_submit(Pieform $form, $values) {
     global $SESSION, $USER;
@@ -1206,6 +1225,9 @@ function webservice_users_form() {
 
 /**
  * Pieform callback for the user permissions section
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
  */
 function webservice_users_submit(Pieform $form, $values) {
     global $SESSION, $USER;

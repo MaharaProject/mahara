@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservice logging page
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -164,6 +165,12 @@ $smarty->assign('form', $form);
 
 $smarty->display('auth:webservice:webservicelogs.tpl');
 
+/**
+ * Pieform callback for the logging search form
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
+ */
 function logsearchform_submit(Pieform $form, $values) {
     $query = array();
     $validoptions = array('userquery', 'protocol', 'authtype', 'functionquery', 'onlyerrors');

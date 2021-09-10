@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservice user access configuration page
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -215,6 +216,12 @@ $heading = get_string('users', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');
 
+/**
+ * Submission of the webservice user access
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
+ */
 function allocate_webservice_users_submit(Pieform $form, $values) {
     global $SESSION;
     $dbserviceuser = get_record('external_services_users', 'id', $values['suid']);
@@ -262,6 +269,13 @@ function allocate_webservice_users_submit(Pieform $form, $values) {
     redirect('/webservice/admin/userconfig.php?suid=' . $dbserviceuser->id);
 }
 
+/**
+ * Validation of the webservice user access
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
+ * @return boolean true
+ */
 function allocate_webservice_users_validate(PieForm $form, $values) {
     global $SESSION;
     return true;

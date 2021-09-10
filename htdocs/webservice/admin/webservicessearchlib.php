@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservices logging search library
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -102,6 +103,9 @@ function build_webservice_log_search_results($search) {
  *
  * Contents of double-quoted strings are counted as a single term,
  * '"' can be entered as '\"', '\' as '\\'.
+ *
+ * @param string $query The value to be chuncked in to search terms
+ * @return array $terms
  */
 function split_query_string($query) {
     $terms = array();

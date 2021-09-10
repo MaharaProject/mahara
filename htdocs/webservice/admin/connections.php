@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservice connection manager overview
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -77,12 +78,14 @@ if ($reorder && $row && $direction) {
 
 /**
  *  Custom webservices config page
+ *
  *  - activate/deactivate webservices comletely
  *  - activate/deactivat protocols - SOAP/XML-RPC/REST
  *  - manage service clusters
  *  - manage users and access tokens
  *
- *  @return pieforms $element array
+ * @param string $institution The institution the webservice connections belong to
+ * @return pieforms $element array
  */
 function webservice_client_connections($institution) {
     $wcc = webservice_connection_classes($institution);
@@ -121,7 +124,8 @@ function webservice_client_connections($institution) {
 /**
  * Service Function Groups edit form
  *
- * @return html
+ * @param string $institution The institution the webservice connection classes belong to
+ * @return array Containing html markup for instance list and add new instance form
  */
 function webservice_connection_classes($institution) {
     global $USER;
