@@ -2741,7 +2741,7 @@ class View {
                       }
                     }
                   }
-                  else if (is_string($jsfile) && !empty($jstring)) {
+                  else if (is_string($jsfile) && !empty($jsfile)) {
                     $javascriptfiles[] = $this->add_blocktype_path($blockinstance, $jsfile);
                   }
                 }
