@@ -373,7 +373,7 @@ class PluginModuleLti extends PluginModule {
         else {
             $view = new View($viewid);
 
-            $view->submit(get_group_by_id($assessment->group), false);
+            $view->submit(get_group_by_id($assessment->group), null, null, false);
             $submissionname = $view->get('title');
         }
 
