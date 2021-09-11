@@ -152,6 +152,10 @@ class Session {
         ini_set('session.cookie_httponly', true);
         if (is_https()) {
             ini_set('session.cookie_secure', true);
+            ini_set('session.cookie_samesite', 'None');
+        }
+        else {
+            ini_set('session.cookie_samesite', 'Lax');
         }
         if ($domain = get_config('cookiedomain')) {
             ini_set('session.cookie_domain', $domain);
@@ -480,15 +484,7 @@ class Session {
             // will be ignored, and instead the old session cookie will
             // be replaced by the new one.)
             if (isset($_COOKIE[session_name()])) {
-                setcookie(
-                    session_name(),
-                    '',
-                    1,
-                    ini_get('session.cookie_path'),
-                    ini_get('session.cookie_domain'),
-                    ini_get('session.cookie_secure'),
-                    ini_get('session.cookie_httponly')
-                );
+                $this->set_session_cookie(session_name(), '', 1);
             }
         }
     }
@@ -597,6 +593,54 @@ class Session {
         $this->set_cookie_secure(true);
     }
 
+    /**
+     * Helper function to set session cookie depending on PHP version
+     *
+     * The way set_cookie works differs from PHP 7.3+
+     *
+     * @param string  $name    Name of cookie
+     * @param string  $value   Value for cookie
+     * @param integer $expires Timestamp for expiry of cookie
+     */
+    public function set_session_cookie($name, $value, $expires) {
+        global $SESSION;
+
+        $secure = $SESSION->get_cookie_secure();
+        $path = ini_get('session.cookie_path');
+        if (empty($path)) {
+            $path = '/';
+        }
+
+        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
+            setcookie(
+                $name,
+                $value,
+                array('expires' => $expires,
+                    'path' => $path,
+                    'domain' => ini_get('session.cookie_domain'),
+                    'secure' => $secure,
+                    'httponly' => ini_get('session.cookie_httponly'),
+                    'samesite' => ini_get('session.cookie_samesite')
+                )
+            );
+        }
+        else {
+            $path_extra = $SESSION->get_cookie_extra_path();
+            if (!empty($path_extra)) {
+                // We have things to add to path. Prepend it with the separator.
+                $path_extra = '; ' . $path_extra;
+            }
+            setcookie(
+                $name,
+                $value,
+                $expires,
+                $path . $path_extra,
+                ini_get('session.cookie_domain'),
+                $secure,
+                ini_get('session.cookie_httponly')
+            );
+        }
+    }
 }
 
 /**
@@ -730,25 +774,7 @@ function clear_duplicate_cookies() {
 
     // Now manually regenerate just ONE session cookie header.
     if ($SESSION->session_id()) {
-        $path = ini_get('session.cookie_path');
-        if (empty($path)) {
-            $path = '/';
-        }
-        $path_extra = $SESSION->get_cookie_extra_path();
-        if (!empty($path_extra)) {
-            // We have things to add to path. Prepend it with the separator.
-            $path_extra = '; ' . $path_extra;
-        }
-        $secure = $SESSION->get_cookie_secure();
-        setcookie(
-            $cookiename,
-            $SESSION->session_id(),
-            0,
-            $path . $path_extra,
-            ini_get('session.cookie_domain'),
-            $secure,
-            ini_get('session.cookie_httponly')
-        );
+        $SESSION->set_session_cookie($cookiename, $SESSION->session_id(), 0);
     }
 }
 
