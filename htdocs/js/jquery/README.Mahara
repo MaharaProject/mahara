@@ -2,9 +2,11 @@ jQuery in Mahara
 =================
 
 Website: http://jquery.com/
-Version: 3.5.1
+Version: 3.6.0
 
-To update fetch the minimised version from the website, e.g https://code.jquery.com/jquery-3.5.1.min.js and rename it as htdocs/js/jquery/jquery.js
+- To update fetch the minimised version from the website, e.g https://code.jquery.com/jquery-3.5.1.min.js and
+  rename it as htdocs/js/jquery/jquery.js
+- Or go to the github page, download the latest zip, and rename the jquery.min.js file as stated above.
 
 Changes:
 
