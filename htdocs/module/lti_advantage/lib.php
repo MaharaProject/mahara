@@ -649,8 +649,8 @@ class PluginModuleLti_advantage extends PluginModule {
             if (count_records_sql($sql, array($registration->key_set_id, $registration->id)) == 0) {
                 $delete_key = true;
             }
-
-            $success = delete_records('lti_advantage_deployment', 'registration_id', $registration->id);
+            $success = delete_records('lti_advantage_group_membership', 'registration_id', $registration->id);
+            $success = $success && delete_records('lti_advantage_deployment', 'registration_id', $registration->id);
             $success = $success && delete_records('lti_advantage_registration', 'id', $registration->id);
             if ($delete_key) {
                 $success = $success && delete_records('lti_advantage_key', 'key_set_id', $registration->key_set_id);
