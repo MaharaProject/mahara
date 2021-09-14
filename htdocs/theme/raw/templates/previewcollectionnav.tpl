@@ -1,13 +1,13 @@
 <div id="collectionnavwrap" class="collection-nav">
 
     <span id="collectionbtns" class="collection-nav-btns">
-        <nav class="custom-dropdown dropdown">
+        <nav aria-label="{str tag="Collection" section="collection"}" class="custom-dropdown dropdown">
             {foreach from=$collection item=view name=page}
                 {if $viewid && $view->view == $viewid}
                     {$currentindex = $dwoo.foreach.page.index}
                 {/if}
             {/foreach}
-            <span class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</span>
+            <button class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</button>
 
             <ul id="pagelist" class="collapse">
                 {foreach from=$collection item=view name=page}
