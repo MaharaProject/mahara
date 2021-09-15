@@ -1708,7 +1708,7 @@ class Collection {
             );
             View::_db_pendingrelease($viewids);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active()) {
+            if (PluginModuleSubmissions::is_active() && $this->submittedgroup) {
                 PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
             }
             require_once(get_config('docroot') . 'export/lib.php');
@@ -1752,7 +1752,7 @@ class Collection {
             );
             View::_db_release($viewids, $this->owner, $this->submittedgroup);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active()) {
+            if (PluginModuleSubmissions::is_active() && $this->submittedgroup) {
                 PluginModuleSubmissions::release_submission($this, $releaseuser);
             }
             db_commit();
