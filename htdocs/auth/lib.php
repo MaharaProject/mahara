@@ -1,5 +1,6 @@
 <?php
 /**
+ * Base authentication class
  *
  * @package    mahara
  * @subpackage auth
@@ -28,11 +29,19 @@ class AuthUnknownUserException extends UserException {}
  */
 class AuthInstanceException extends UserException {
 
+    /**
+     * Return the error strings for the exception
+     * @return array Title and message strings for exception
+     */
     public function strings() {
         return array_merge(parent::strings(),
                            array('title' => $this->get_sitename() . ': Authentication problem'));
     }
 
+    /**
+     * Render the exception message
+     * @return string
+     */
     public function render_exception() {
         return $this->get_string('message') . "\n\n" . preg_replace('/<br\s?\/?>/ius', "\n", $this->getMessage());
     }
@@ -51,6 +60,10 @@ class UninitialisedAuthException extends SystemException {}
  */
 class AccountAutoCreationException extends AuthInstanceException {
 
+    /**
+     * Return the error strings for the exception
+     * @return array Title and message strings for exception
+     */
     public function strings() {
         return array_merge(parent::strings(),
                            array('message' => 'The automatic creation of your user account failed.'
@@ -70,15 +83,64 @@ class AccountAutoCreationException extends AuthInstanceException {
  */
 abstract class Auth {
 
+    /**
+     * The authentication instance id
+     * @var integer
+     */
     protected $instanceid;
+
+    /**
+     * The institution
+     * @var string
+     */
     protected $institution;
+
+    /**
+     * The authentication instance name
+     * @var string
+     */
     protected $instancename;
+
+    /**
+     * The authentication instance priority
+     * @var integer
+     */
     protected $priority;
+
+    /**
+     * The authentication name
+     * @var string
+     */
     protected $authname;
+
+    /**
+     * Authentication instance is active
+     * @var boolean
+     */
     protected $active;
+
+    /**
+     * The authentication instance configuration
+     * @var array
+     */
     protected $config;
+
+    /**
+     * Whether authentication instance needs configuration form
+     * @var boolean
+     */
     protected $has_instance_config;
+
+    /**
+     * The authentication type
+     * @var string
+     */
     protected $type;
+
+    /**
+     * The authentication class is ready
+     * @var boolean
+     */
     protected $ready;
 
     /**
@@ -294,6 +356,14 @@ abstract class Auth {
         return true;
     }
 
+    /**
+     * Return the temporary password
+     *
+     * This only needs to be defined by subclasses if:
+     * - The user needs to be able to authenticated by information in the usr table
+     *
+     * @return string|null
+     */
     public function get_temp_password() {
         return null;
     }
@@ -368,10 +438,13 @@ abstract class Auth {
 /******************************************************************************/
     // End of Auth base-class
 /******************************************************************************/
-/*
-* Checks all the available auth types and executes 'install_auth_default' method
-* if they have one
-*/
+
+/**
+ * Install the authentication defaults
+ *
+ * Checks all the available auth types and executes 'install_auth_default' method
+ * if they have one
+ */
 function install_auth_default() {
     $plugins = auth_get_available_auth_types();
 
@@ -595,10 +668,22 @@ function auth_setup () {
     }
 }
 
+
 /**
-* Check that the session handlers are okay.
-*
-**/
+ * Check that the session handlers are okay.
+ * Returns array containing the name of the sessionhandler and the config:
+ * [array]
+ *      ['name'] Name of the sessionhandler
+ *  '   ['config'] Configuration of the session handler
+ * Or void if it is file.
+ * or throws an exception if the session handler is inappropriate for the session type being requested.
+ * @param sessiontype String identifying the session type
+ * @return array |void
+ * @throws Exception
+ * @throws InvalidArgumentException
+ * @throws ConfigSanityException
+ * @throws AuthInstanceException
+ */
 function auth_configure_session_handlers($sessiontype) {
     if ($sessiontype == 'site') {
         $sessionhandler = get_config('sessionhandler');
@@ -710,6 +795,10 @@ function auth_configure_session_handlers($sessiontype) {
     }
 }
 
+/**
+ * True if memache is configured
+ *  @return bool
+ * */
 function is_memcache_configured() {
     $is_configured = false;
     if (!class_exists('Memcached')) {
@@ -740,6 +829,12 @@ function is_memcache_configured() {
     return $is_configured;
 }
 
+/**
+ * Returns a list of memcahced servers.
+ * Set string parameter to true to get the memcache configuration in string rather than array format.
+ * @param bool $string
+ * @return string|array
+ */
 function get_memcache_servers($string = false) {
     $memcache_servers = array();
     $servers = get_config('memcacheservers');
@@ -761,10 +856,21 @@ function get_memcache_servers($string = false) {
     return $memcache_servers;
 }
 
+/**
+ * Returns true if redis has been configured.
+ *
+ * @return bool
+ * @throws Exception
+ */
 function is_redis_configured() {
     return (bool) get_redis_master();
 }
 
+/**
+ * Return information about the Redis master pool
+ *
+ * @return object containing Redis ip and port values
+ */
 function get_redis_master() {
     $master = null;
 
@@ -788,6 +894,11 @@ function get_redis_master() {
     return $master;
 }
 
+/**
+ * Return list of Redis servers for master group
+ *
+ * @return array list of Redis servers
+ */
 function get_redis_servers() {
     $redisserver = get_config('redisserver') ? get_config('redisserver') : get_config('redissentinelservers');
     $redismastergroup = get_config('redismastergroup');
@@ -801,6 +912,11 @@ function get_redis_servers() {
     return $redis_servers;
 }
 
+/**
+ * Return Redis config for the master server
+ *
+ * @return array Redis config
+ */
 function get_redis_config() {
     $servers = get_redis_servers();
     $master = get_redis_master();
@@ -811,6 +927,11 @@ function get_redis_config() {
     );
 }
 
+/**
+ * Return whether SQL is ready to be used for auth sessions
+ *
+ * @return boolean
+ */
 function is_sql_configured() {
     $config = get_sql_config();
     try {
@@ -822,6 +943,11 @@ function is_sql_configured() {
     }
 }
 
+/**
+ * Return SQL config for saving session
+ *
+ * @return array SQL config
+ */
 function get_sql_config() {
     return array(
         'dsn' => get_config('ssphpsqldsn'),
@@ -910,7 +1036,8 @@ function auth_get_auth_instances() {
  *
  * Given a list of institutions, returns all auth instances associated with them
  *
- * @return array                     Array of auth instance records
+ * @param array|null    Array of institutions
+ * @return array        Array of auth instance records
  */
 function auth_get_auth_instances_for_institutions($institutions) {
     if (empty($institutions)) {
@@ -1440,6 +1567,12 @@ function auth_check_required_fields() {
     exit;
 }
 
+/**
+ * Validate the required fields for User
+ *
+ * @param $form Pieform  The pieform object to validate
+ * @param $values array  The form field values submitted
+ */
 function requiredfields_validate(Pieform $form, $values) {
     global $USER;
     if (isset($values['password1'])) {
@@ -1483,6 +1616,13 @@ function requiredfields_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Saving of the required fields for User
+ *
+ * @param $form Pieform  The pieform object to submit
+ * @param $values array  The form field values submitted
+ * @throws SystemError
+ */
 function requiredfields_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
@@ -1603,6 +1743,12 @@ function requiredfields_submit(Pieform $form, $values) {
     redirect();
 }
 
+/**
+ * Saving of the privacy agreement for User
+ *
+ * @param $form Pieform  The pieform object to submit
+ * @param $values array  The form field values submitted
+ */
 function agreetoprivacy_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
@@ -1652,6 +1798,7 @@ function agreetoprivacy_submit(Pieform $form, $values) {
     $USER->renew();
     redirect();
 }
+
 /**
  * Creates and displays the transient login page.
  *
@@ -1662,6 +1809,7 @@ function agreetoprivacy_submit(Pieform $form, $values) {
  * As this function builds and validates a login form, it is possible that
  * calling this may validate a user to be logged in.
  *
+ * @param string|null $message  Optional message to display
  * @param Pieform $form If specified, just build this form to get the HTML
  *                      required. Otherwise, this function will build and
  *                      validate the form itself.
@@ -1962,12 +2110,15 @@ function auth_get_enabled_auth_plugins() {
     return $cached_plugins;
 }
 
-
 /**
  * Class to build and cache instances of auth objects
  */
 class AuthFactory {
 
+    /**
+     * Cache of authentication objects
+     * @var array
+     */
     static $authcache = array();
 
     /**
@@ -2309,6 +2460,16 @@ function auth_clean_expired_migrations() {
         WHERE ctime < ?', array(db_format_timestamp(strtotime('-30 mins'))));
 }
 
+/**
+ * Internal function to try and email a user with notification fallback
+ *
+ * If the email is unable to send we set an inbox notification instead
+ *
+ * @param object $user     A database user object
+ * @param string $subject  The subject line for the message
+ * @param string $bodytext The plain text message
+ * @param string $bodyhtml The HTML message
+ */
 function _email_or_notify($user, $subject, $bodytext, $bodyhtml) {
     try {
         email_user($user, null, $subject, $bodytext, $bodyhtml);
@@ -2608,7 +2769,7 @@ function auth_generate_login_form() {
  *
  * @param Pieform $form         The form to validate
  * @param array $values         The values passed through
- * @param string $authplugin    The authentication plugin that the user uses
+ * @param object $user          The user object fetched from database
  */
 function password_validate(Pieform $form, $values, $user) {
 
@@ -2659,11 +2820,15 @@ function password_validate(Pieform $form, $values, $user) {
 
 }
 
+/**
+ * Return a random salt for passwords
+ *
+ * @return string
+ */
 function auth_get_random_salt() {
     return substr(md5(rand(1000000, 9999999)), 2, 8);
 }
 
-//
 /**
  * Add salt and encrypt the pw for a user, if their auth instance allows for it
  *
@@ -2689,18 +2854,30 @@ function reset_password($user, $resetpasswordchange=true, $quickhash=false) {
     }
 }
 
-
-/*
+/**
  * Check if we need to set any user login tries to 0
+ *
+ * @return boolean
  */
 function user_login_tries_to_zero_needs_to_run() {
     return (bool)count_records_sql("SELECT COUNT(*) FROM {usr} WHERE logintries >= ?", array(MAXLOGINTRIES));
 }
 
+/**
+ * Set user login tries to 0
+ */
 function user_login_tries_to_zero() {
     execute_sql('UPDATE {usr} SET logintries = 0 WHERE logintries > 0');
 }
 
+/**
+ * Generate the registration form for the register.php page
+ *
+ * @param string $formname Name to give to the register form
+ * @param string $authname Auth type to build the form for
+ * @param string $goto     The place to return after form is submitted
+ * @return array $form and $registerconfirm options
+ */
 function auth_generate_registration_form($formname, $authname='internal', $goto) {
 
     $registerterms = get_config('registerterms');
@@ -2947,6 +3124,13 @@ function auth_generate_registration_form($formname, $authname='internal', $goto)
     return array($form, $registerconfirm);
 }
 
+/**
+ * Generate the registration form for the register.php page
+ *
+ * @param array $aform  Array of form information suitable for Pieforms
+ * @param array $registerconfirm Array of fields we need to make required via javascript
+ * @return array $formhtml and $js - the HTML and JavaScript for the rendered form
+ */
 function auth_generate_registration_form_js($aform, $registerconfirm) {
 
     // The javascript needs to refer to field names, but they are obfuscated in this form,
@@ -3041,10 +3225,10 @@ function auth_generate_registration_form_js($aform, $registerconfirm) {
 }
 
 /**
- * @todo add note: because the form select thing will eventually enforce
- * that the result for $values['institution'] was in the original lot,
- * and because that only allows authmethods that use 'internal' auth, we
- * can guarantee that the auth method is internal
+ * The validation of the registration form
+ *
+ * @param object $form   The Pieform form object
+ * @param array  $values The submitted values
  */
 function auth_register_validate(Pieform $form, $values) {
     global $SESSION;
@@ -3147,6 +3331,12 @@ function auth_register_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * The saving of the registration form
+ *
+ * @param object $form   The Pieform form object
+ * @param array  $values The submitted values
+ */
 function auth_register_submit(Pieform $form, $values) {
     global $SESSION;
 
@@ -3288,12 +3478,21 @@ function auth_register_submit(Pieform $form, $values) {
     redirect($values['goto']);
 }
 
+/**
+ * The base plugin class for Auth
+ */
 class PluginAuth extends Plugin {
 
+    /**
+     * {@inheritDoc}
+     */
     public static function get_plugintype_name() {
         return 'auth';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function get_event_subscriptions() {
         $subscriptions = array();
 
@@ -3372,6 +3571,14 @@ class PluginAuth extends Plugin {
         return array();
     }
 
+    /**
+     * Update the 'active' flag for a User
+     *
+     * Called when user changing events are triggered
+     *
+     * @param $event string The event called
+     * @param $user array Array of user information
+     */
     public static function update_active_flag($event, $user) {
         if (!isset($user['id'])) {
             log_warn("update_active_flag called without a user id");
@@ -3408,6 +3615,11 @@ class PluginAuth extends Plugin {
         }
     }
 
+    /**
+     * Whether the plugin can be disabled
+     *
+     * @return false
+     */
     public static function can_be_disabled() {
         return false;
     }
