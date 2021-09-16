@@ -20,6 +20,8 @@ class PluginModuleLti_advantage extends PluginModule {
     public static $can_create_groups_role = array('Administrator','Instructor');
     public static $group_tutor_role = array('TeachingAssistant');
 
+    public static $deployment_options = ['deployment1_id', 'deployment2_id', 'deployment3_id'];
+
     /**
      * Is the plugin activated or not?
      *
@@ -179,11 +181,15 @@ class PluginModuleLti_advantage extends PluginModule {
             $deployment_types = [
                 1 => [
                     'title' => get_string('deploymentsbasiclaunchtitle', 'module.lti_advantage'),
-                    'rules' => [],
+                    'rules' => array(
+                        'oneof' => 'deployid',
+                    ),
                 ],
                 2 => [
                     'title' => get_string('deploymentsnrpstitle', 'module.lti_advantage'),
-                    'rules' => [],
+                    'rules' => array(
+                        'oneof' => 'deployid',
+                    ),
                 ],
                 3 => [
                     'title' => get_string('deploymentsdeeplinkportfoliolisttitle', 'module.lti_advantage'),
@@ -503,7 +509,7 @@ class PluginModuleLti_advantage extends PluginModule {
             }
 
             // Check the deployment IDs aren't in use on another connection.
-            $deployments = ['deployment1_id', 'deployment2_id', 'deployment3_id'];
+            $deployments = static::$deployment_options;
             for ($i = 0; $i < count($deployments); $i++) {
                 $deployment_key = $deployments[$i];
                 $deployment = get_record('lti_advantage_deployment', 'deployment_id', $values[$deployment_key]);
@@ -592,17 +598,6 @@ class PluginModuleLti_advantage extends PluginModule {
             $registration->connectionid = $values['id'];
 
             insert_record('lti_advantage_registration', $registration);
-
-            // We currently have up to 3 deployment IDs.
-            for ($i = 1; $i < 4; $i++) {
-                $value_key = "deployment{$i}_id";
-                $deployment = new stdClass();
-                $deployment->registration_id = $registration->id;
-                $deployment->customer_id = 'Brighspace';
-                $deployment->deployment_key = $i;
-                $deployment->deployment_id = $values[$value_key];
-                insert_record('lti_advantage_deployment', $deployment);
-            }
         }
         else {
             $key = get_record('lti_advantage_key', 'key_set_id', $registration->key_set_id);
@@ -623,15 +618,16 @@ class PluginModuleLti_advantage extends PluginModule {
             update_record('lti_advantage_registration', $registration);
 
             delete_records('lti_advantage_deployment', 'registration_id', $registration->id);
-
-            // We currently have up to 3 deployment IDs.
-            for ($i = 1; $i < 4; $i++) {
-                $value_key = "deployment{$i}_id";
+        }
+        // Now add in the deployment information
+        $deployments = static::$deployment_options;
+        foreach ($deployments as $k => $option) {
+            if (!empty($values[$option])) {
                 $deployment = new stdClass();
                 $deployment->registration_id = $registration->id;
-                $deployment->customer_id = 'Brighspace';
-                $deployment->deployment_key = $i;
-                $deployment->deployment_id = $values[$value_key];
+                $deployment->customer_id = $values['display_name'];
+                $deployment->deployment_key = $k + 1;
+                $deployment->deployment_id = $values[$option];
                 insert_record('lti_advantage_deployment', $deployment);
             }
         }
