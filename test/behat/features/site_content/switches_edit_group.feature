@@ -138,8 +138,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Then I should see "Angela UserA suggested you join a group"
     When I follow "Angela UserA suggested you join a group"
     Then I should see "Angela UserA suggested that you join the group \"The Avengers\" on Mahara - Acceptance test site"
-    When I follow "The Avengers"
-    And I wait "1" seconds
+    When I go to group "The Avengers"
     Then I should see "About | The Avengers"
     When I press "Join this group"
     Then I should see "You are now a group member."
