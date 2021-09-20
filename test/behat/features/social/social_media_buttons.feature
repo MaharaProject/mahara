@@ -53,7 +53,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I check "Instagram (Social media)"
  And I check "Skype (Social media)"
  And I check "Yahoo Messenger (Social media)"
- And I follow "Display settings"
+ And I press "Display settings"
  And the field "buttons with icons and text" matches value "1"
  And I press "Save"
  And I go to "/view/share.php"

@@ -25,7 +25,7 @@ Scenario: Copying a group page retains title (Bug 1519374)
  When I go to group "GroupA"
  And I follow "Share" in the "Arrow-bar nav" "Nav" property
  And I click on "Edit access" in "Page GroupA_01" row
- And I follow "Advanced options"
+ And I press "Advanced options"
  And I set the following fields to these values:
  | Allow copying | 1 |
  And I press "Save"

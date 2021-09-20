@@ -49,7 +49,7 @@ Background:
      Given I choose "Pages and collections" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
      And I press "Settings" in the "Toolbar buttons" "Nav" property
-     And I follow "Skin"
+     And I press "Skin"
      And I scroll to the base of id "settings_skin_open"
      Then I select the skin "A fabulous new skin" from "userskins"
      And I wait "1" seconds
@@ -66,7 +66,7 @@ Background:
      Given I choose "Pages and collections" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
      And I press "Settings" in the "Toolbar buttons" "Nav" property
-     And I follow "Skin"
+     And I press "Skin"
      And I should not see "A fabulous new skin"
 
 Scenario: Create a private skin and check its visibility
@@ -98,7 +98,7 @@ Scenario: Create a private skin and check its visibility
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserB_01" card menu
     And I press "Settings" in the "Toolbar buttons" "Nav" property
-    And I follow "Skin"
+    And I press "Skin"
     And I scroll to the base of id "settings_skin_container"
     # Apply a a skin saved to favourite skins
     And I follow "Favourite skins"
@@ -136,13 +136,13 @@ Scenario: Check public/private skins on copied pages.
     | Page title       | Public page with a skin that is public |
     | Page description | First description                      |
     # Open the 'Advanced' accordion
-    And I follow "Skin"
+    And I press "Skin"
     And I scroll to the base of id "settings_skin_open"
     And I select the skin "Publicskin" from "userskins"
     And I wait "1" seconds
     And I press "Save"
     And I click on "Share" in the "Page action buttons" "Views" property
-    And I follow "Advanced"
+    And I press "Advanced"
     And I enable the switch "Allow copying"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
@@ -156,13 +156,13 @@ Scenario: Check public/private skins on copied pages.
     | Page title       | Public page with a skin that is private |
     | Page description | Second description                      |
     # Open the 'Advanced' accordion.
-    And I follow "Skin"
+    And I press "Skin"
     And I scroll to the base of id "settings_skin_open"
     And I select the skin "Privateskin" from "userskins"
     And I wait "1" seconds
     And I press "Save"
     And I click on "Share" in the "Page action buttons" "Views" property
-    And I follow "Advanced"
+    And I press "Advanced"
     And I enable the switch "Allow copying"
     And I select "Public" from "accesslist[0][searchtype]"
     And I press "Save"
@@ -177,7 +177,7 @@ Scenario: Check public/private skins on copied pages.
     And I follow "Public page with a skin that is public"
     And I click on "More options" in the "Page action buttons" "Views" property
     And I follow "Copy"
-    And I follow "Skin"
+    And I press "Skin"
     And I scroll to the base of id "settings_skins_html_container"
     Then I should see "Current skin"
     And I should see "Publicskin"
@@ -190,7 +190,7 @@ Scenario: Check public/private skins on copied pages.
     And I follow "Public page with a skin that is private"
     And I click on "More options" in the "Page action buttons" "Views" property
     And I follow "Copy"
-    And I follow "Skin"
+    And I press "Skin"
     And I scroll to the base of id "settings_skins_html_container"
     Then I should see "Current skin"
     And I should not see "Privateskin"

@@ -26,7 +26,7 @@ Background:
   Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to notification settings
     And I choose "Site options" in "Configure site" from administration menu
-    And I follow "Notification settings"
+    And I press "Notification settings"
     And I select "Inbox" from "Objectionable content"
     And I select "Inbox" from "Objectionable content in forum"
     And I press "Update site options"

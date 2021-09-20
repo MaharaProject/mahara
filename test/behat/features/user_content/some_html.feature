@@ -23,7 +23,7 @@ Scenario:
     And I press "Add"
     And I click on blocktype "Some HTML"
     And I set the field "Block title" to "Some HTML"
-    And I follow "File"
+    And I press "File"
     And I attach the file "test_html.html" to "File"
     And I press "Save"
     #give time for the block to resize

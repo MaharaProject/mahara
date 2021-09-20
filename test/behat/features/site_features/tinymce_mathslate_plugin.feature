@@ -12,7 +12,7 @@ Background:
 Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
- And I follow "Site settings"
+ And I press "Site settings"
  And I enable the switch "Enable MathJax"
  And I press "Update site options"
  And I choose "Pages and collections" in "Configure site" from administration menu

@@ -14,7 +14,7 @@ Scenario: When quota notification threshold is changed, send notifications to us
     Given I log in as "admin" with password "Kupuh1pa!"
     # Modifying account quota to 2MB
     And I go to the "artefact" plugin "file" configuration "file" type
-    And I follow "Default account quota"
+    And I press "Default account quota"
     And I fill in "Default quota" with "2"
     # Update already existing accounts
     And I enable the switch "Update account quotas"
