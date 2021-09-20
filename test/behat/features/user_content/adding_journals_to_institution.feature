@@ -123,7 +123,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     And I scroll to the id "main-nav"
     And I press "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "accesslist[0][searchtype]"
-    And I follow "Advanced options"
+    And I press "Advanced options"
     And I set the following fields to these values:
     | Allow copying | 1 |
     | Copy into new accounts | 1 |
