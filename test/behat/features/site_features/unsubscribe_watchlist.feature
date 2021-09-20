@@ -21,7 +21,7 @@ And the following "permissions" exist:
 
 And the following "blocks" exist:
     | title                     | type     | page                   | retractable | updateonly | data                                                |
-    | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+    | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Given I log in as "UserB" with password "Kupuh1pa!"

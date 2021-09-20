@@ -78,10 +78,10 @@ define('BLOCKS', array(
     //in edit mode, the class has '-editor', so we use 'class^='
     //to capture both options
     'My portfolios' => '[class^=bt-myviews]',
-    'Latest changes I can view' => '[class^=bt-newviews]',
+    'Portfolios shared with me' => '[class^=bt-newviews]',
     'Inbox' => '[class^=bt-inbox]',
     'Resume field block' => '.bt-resumefield',
-    'Watched pages' => '[class^=bt-watchlist]',
+    'Pages I am watching' => '[class^=bt-watchlist]',
     'Online users block' => '#sb-onlineusers',
     'Block header' => '.block-header',
     'Tags block' => '#sb-tags',

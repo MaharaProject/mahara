@@ -17,8 +17,8 @@ Background:
 
   And the following "blocks" exist:
      | title                     | type     | page                   | retractable | updateonly | data                                                |
-     | Latest changes I can view | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
-     | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Portfolios shared with me | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
  Scenario: Adding tags to files (Bug 1426983)
    # Log in as the UserA

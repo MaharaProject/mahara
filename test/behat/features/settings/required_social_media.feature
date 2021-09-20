@@ -19,4 +19,4 @@ Scenario: Social media credentials upon logging in as student (Bug 1432988)
  | Social media | Facebook URL |
  | Your URL or username | https://www.facebook.com |
  And I press "Submit"
- Then I should see "Latest changes I can view"
+ Then I should see "Portfolios shared with me"
