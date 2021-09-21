@@ -585,6 +585,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
             'renderer' => 'div',
+            'autofocus' => false,
             'class' => 'form-as-button float-left btn-group-item',
             'elements' => array(
                 'submit' => array(
