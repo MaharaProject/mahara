@@ -648,58 +648,6 @@ class PluginAuthSaml extends PluginAuth {
             throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
         }
 
-        // global $CFG;
-        // // Get the details of the first site admin and use it for setting up the certificate
-        // $userid = get_record_sql('SELECT id FROM {usr} WHERE "admin" = 1 AND deleted = 0 ORDER BY id LIMIT 1', array());
-        // $id = $userid->id;
-        // $user = new User;
-        // $user->find_by_id($id);
-
-        // $country = get_profile_field($id, 'country');
-        // $town = get_profile_field($id, 'town');
-        // $city = get_profile_field($id, 'city');
-        // $industry = get_profile_field($id, 'industry');
-        // $occupation = get_profile_field($id, 'occupation');
-
-        // $dn = array(
-        //     'commonName' => ($user->get('username') ? substr($user->get('username'), 0, 64) : 'Mahara'),
-        //     'countryName' => ($country ? strtoupper($country) : 'NZ'),
-        //     'localityName' => ($town ? $town : 'Wellington'),
-        //     'emailAddress' => ($user->get('email') ? $user->get('email') : $CFG->noreplyaddress),
-        //     'organizationName' => ($industry ? $industry : get_config('sitename')),
-        //     'stateOrProvinceName' => ($city ? $city : 'Wellington'),
-        //     'organizationalUnitName' => ($occupation ? $occupation : 'Mahara'),
-        // );
-
-        // $privkeypass = ($altname && get_config_plugin('auth', 'saml', 'newkeypass')) ? get_config_plugin('auth', 'saml', 'newkeypass') : get_config_plugin('auth', 'saml', 'keypass');
-        // $privkey = openssl_pkey_new();
-        // $csr     = openssl_csr_new($dn, $privkey);
-        // $sscert  = openssl_csr_sign($csr, null, $privkey, $numberofdays);
-        // openssl_x509_export($sscert, $publickey);
-        // openssl_pkey_export($privkey, $privatekey, $privkeypass);
-
-        // // Write Private Key and Certificate files to disk.
-        // // If there was a generation error with either explode.
-        // if (empty($privatekey)) {
-        //     throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
-        // }
-        // if (empty($publickey)) {
-        //     throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
-        // }
-        // $pemfile = 'server.pem';
-        // $crtfile = 'server.crt';
-        // $altcert = false;
-        // if ($altname) {
-        //     // Save them with '_new' suffix
-        //     $pemfile = 'server_new.pem';
-        //     $crtfile = 'server_new.crt';
-        // }
-        // if ( !file_put_contents(AuthSaml::get_certificate_path() . $pemfile, $privatekey) ) {
-        //     throw new Exception(get_string('nullprivatecert', 'auth.saml'), 1);
-        // }
-        // if ( !file_put_contents(AuthSaml::get_certificate_path() . $crtfile, $publickey) ) {
-        //     throw new Exception(get_string('nullpubliccert', 'auth.saml'), 1);
-        // }
     }
 
     /*

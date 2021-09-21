@@ -13,13 +13,11 @@ use \IMSGlobal\LTI;
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 
-// require_once('lib/lti-1-3-php-library/lti/lti.php');
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
 require_once(get_config('libroot') . 'web.php');
 require_once('database.php');
-// require_once(dirname(dirname(dirname(__FILE__))) . '/lib/institution.php');
 require_once('webservice/functions/module_lti_advantage_launch.php');
 
 global $USER, $SESSION;
@@ -43,13 +41,12 @@ if (!$launch->is_deep_link_launch()) {
   throw new Exception("Must be a deep link.");
 }
 
-/*
-@TODO
-Here we:
-* look up the portfolio
-* verify it belongs to the current user
-* "lock" it.
-*/
+/**
+ * Here we:
+ * look up the portfolio
+ * verify it belongs to the current user
+ * "lock" it.
+ */
 $portfolio_id = param_integer('portfolio_id');
 $collection_id = param_integer('collection_id', null);
 
@@ -75,10 +72,7 @@ $portfolio_title = $portfolio->get($link_text_field);
 
 // Return the deep link resource.
 $resource = LTI\LTI_Deep_Link_Resource::new()
-  // TODO: Is this the correct URL?
-  // Do we go through this link, logging in, and then redirect to PublicUrl?
   ->set_url(get_config('wwwroot') . 'module/lti_advantage/login.php')
-  // TODO: Do we need to send an id of the item?
   ->set_custom_params([
     'LtiLinkId' => '',
     'PublicUrl' => $portfolio_url,

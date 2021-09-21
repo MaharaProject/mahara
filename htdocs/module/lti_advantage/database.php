@@ -145,13 +145,13 @@ class LTI_Advantage_Database implements LTI\Database {
         );
         if (!$registration) {
             // No records found.
-            return ($return_issuer)?$issuer:'';
+            return ($return_issuer) ? $issuer : '';
         }
 
         $registration = current($registration);
         if (empty($registration->display_name)) {
             // No display name set.
-            return ($return_issuer)?$issuer:'';
+            return ($return_issuer) ? $issuer : '';
         }
 
         return $registration->display_name;

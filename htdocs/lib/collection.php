@@ -1709,7 +1709,7 @@ class Collection {
      */
     public function pendingrelease($releaseuser=null, $externalid=null, $checkhost=true) {
         if ($checkhost) {
-            // While not used, the absence of a record willl throw an exception.
+            // While not used, the absence of a record will throw an exception.
             $submitinfo = $this->submitted_to();
         }
         if (!$this->is_submitted()) {

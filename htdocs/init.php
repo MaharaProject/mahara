@@ -389,16 +389,16 @@ if (!defined('CLI')) {
         if (!empty($csp_ancestor_exemption)) {
             update_csp_headers($csp_ancestor_exemption);
         }
-        // header("Content-Security-Policy: frame-ancestors 'self' " . $csp_ancestor_exemption);
-        // header('X-Frame-Options: ALLOW-FROM '. $csp_ancestor_exemption);
+        else {
+            set_default_headers();
+        }
     }
     else if ($saml_logout = $SESSION->get('saml_logout')) {
         // To allow IDP SAML to logout within an iframe we temporarily ignore content security policy
         // This is set via auth/saml/sp/saml2-logout.php
     }
     else {
-        header("Content-Security-Policy: frame-ancestors 'self'");
-        header('X-Frame-Options: SAMEORIGIN');
+        set_default_headers();
     }
 }
 
@@ -579,4 +579,12 @@ function is_cli() {
 function update_csp_headers($csp_ancestor_exemption) {
     header("Content-Security-Policy: frame-ancestors 'self' " . $csp_ancestor_exemption);
     header('X-Frame-Options: ALLOW-FROM '. $csp_ancestor_exemption);
+}
+
+/**
+ * Set default security headers.
+ */
+function set_default_headers() {
+    header("Content-Security-Policy: frame-ancestors 'self'");
+    header('X-Frame-Options: SAMEORIGIN');
 }

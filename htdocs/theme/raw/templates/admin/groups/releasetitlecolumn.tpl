@@ -1,1 +1,1 @@
-<a href="/view/view.php?id={$r.releaseid}">{$r.title}</a>
+<a href="{$WWWROOT}view/view.php?id={$r.releaseid}">{$r.title}</a>

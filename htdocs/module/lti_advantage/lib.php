@@ -912,7 +912,7 @@ class PluginModuleLti_advantage extends PluginModule {
                                 foreach ($launch_users as $launch_user) {
                                     $userobj = PluginModuleLti_advantage::module_lti_advantage_ensure_user_exists($launch_user, $institution, $authinstanceid, $serviceid);
                                     if ($userobj === false) {
-                                        // This user likely have no email address.
+                                        // This user doesn't exist. Likely due to having no email address.
                                         continue;
                                     }
                                     $role = PluginModuleLti_advantage::get_role($launch_user['roles']);

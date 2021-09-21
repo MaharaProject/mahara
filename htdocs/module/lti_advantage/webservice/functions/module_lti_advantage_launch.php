@@ -350,8 +350,6 @@ class module_lti_advantage_launch extends external_api {
 
         db_commit();
 
-        //$SESSION->set('lti.group_membership', $group_membership->id);
-
         // only redirect if is a group admin
         if (isset($groupid) && PluginModuleLti_advantage::can_create_groups($params['roles'])) {
             redirect(get_config('wwwroot') . 'group/view.php?id=' . $groupid);
