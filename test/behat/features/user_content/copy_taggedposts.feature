@@ -21,7 +21,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
 
   And the following "blocks" exist:
     | title                     | type     | page                   | retractable | updateonly | data                                                |
-    | Latest changes I can view | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+    | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
  Scenario: Create blogs
   Given I log in as "UserA" with password "Kupuh1pa!"

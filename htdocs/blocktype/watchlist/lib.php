@@ -23,7 +23,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
     }
 
     public static function get_title() {
-        return get_string('title', 'blocktype.watchlist');
+        return get_string('title1', 'blocktype.watchlist');
     }
 
     public static function get_description() {
@@ -322,7 +322,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
      * on the dashboard is translatable.
      */
     public static function get_instance_title(BlockInstance $instance) {
-        return get_string('title', 'blocktype.watchlist');
+        return get_string('title1', 'blocktype.watchlist');
     }
 
     public static function filter_views_shared_to_user($viewdata, $options) {

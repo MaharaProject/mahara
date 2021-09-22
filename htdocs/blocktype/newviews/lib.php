@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
 
     public static function get_title() {
-        return get_string('title1', 'blocktype.newviews');
+        return get_string('title2', 'blocktype.newviews');
     }
 
     public static function get_description() {
@@ -125,7 +125,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
     }
 
     public static function get_instance_title(BlockInstance $instance) {
-        return get_string('title1', 'blocktype.newviews');
+        return get_string('title2', 'blocktype.newviews');
     }
 
     public static function should_ajaxify() {

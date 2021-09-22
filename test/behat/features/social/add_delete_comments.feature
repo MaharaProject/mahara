@@ -77,7 +77,7 @@ Scenario: Comments update the page's mtime
 
     # Set New Views to only show me the most recently updated page
     And I press "Edit dashboard"
-    And I configure the block "Latest changes I can view"
+    And I configure the block "Portfolios shared with me"
     And I set the field "Maximum number of results to show" to "1"
     And I enable the switch "Public"
     And I enable the switch "Registered people"
@@ -89,8 +89,8 @@ Scenario: Comments update the page's mtime
     And I press "Comment"
     And I choose "Dashboard" from main menu
     And I scroll to the base of id "column-container"
-    Then I should see "Page UserA_01" in the "Latest changes I can view" "Blocks" property
-    And I should not see "Page UserA_02" in the "Latest changes I can view" "Blocks" property
+    Then I should see "Page UserA_01" in the "Portfolios shared with me" "Blocks" property
+    And I should not see "Page UserA_02" in the "Portfolios shared with me" "Blocks" property
 
     # Private comment updates page last updated
     And I go to portfolio page "Page UserA_02"
@@ -100,5 +100,5 @@ Scenario: Comments update the page's mtime
     And I choose "Dashboard" from main menu
     And I scroll to the id "column-container"
     And I wait "1" seconds
-    Then I should see "Page UserA_02" in the "Latest changes I can view" "Blocks" property
-    And I should not see "Page UserA_01" in the "Latest changes I can view" "Blocks" property
+    Then I should see "Page UserA_02" in the "Portfolios shared with me" "Blocks" property
+    And I should not see "Page UserA_01" in the "Portfolios shared with me" "Blocks" property

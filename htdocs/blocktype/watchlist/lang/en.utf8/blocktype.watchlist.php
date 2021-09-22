@@ -12,7 +12,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'Watched pages';
+$string['title1'] = 'Pages I am watching';
 $string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank.';
 $string['description'] = 'Display pages on your watchlist';
 $string['nopages'] = 'There are no pages on your watchlist.';
@@ -43,4 +43,3 @@ $string['orderby.owner'] = 'Page owner';
 $string['watchlistnotification'] = 'Watchlist notification';
 $string['watchlistdelaytitle'] = 'Watchlist notification delay';
 $string['watchlistdelaydescription'] = 'The delay in minutes between sending emails regarding watchlist changes.';
-

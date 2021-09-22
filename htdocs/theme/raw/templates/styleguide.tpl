@@ -744,7 +744,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 
 <section data-markdown data-category="cards">
 ### Block layout
-This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
+This is the general layout of blocks. An example of this being used is the 'Portfolios shared with me' block on the dashboard.
 ```
 <div class="bt-newviews card clearfix">
     <h2 class="title card-header js-heading">Block</h2>

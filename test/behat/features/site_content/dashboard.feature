@@ -31,30 +31,27 @@ Scenario: Check default blocks are displayed
     Then I should see "Find people and join groups"
 
     # Check for the presence of the 5 default blocks
-    # check for bug 1493199 name changed from “Latest pages” to “Latest changes I can view”
-    And I should see "Latest changes I can view"
+    # check for bug 1493199 name changed from “Latest pages” to “Portfolios shared with me”
+    And I should see "Portfolios shared with me"
     And I should not see "Latest pages"
     And I should see "My portfolios"
     And I should see "Inbox"
-    And I should see "Topics I am following"
-    And I should see "Watched pages"
+    And I should see "Pages I am watching"
 
     When I click on "Edit dashboard"
     # Confirm that the blocks each contain a "Remove block" option and
     # except My portfolios each contains a "Configure block" option.
-    Then "Remove block" should be in the "Latest changes I can view" "Blocks" property
+    Then "Remove block" should be in the "Portfolios shared with me" "Blocks" property
     And "Configure block" should not be in the "My portfolios" "Blocks" property
     And "Remove block" should be in the "My portfolios" "Blocks" property
     And "Configure block" should be in the "Inbox" "Blocks" property
-    # We test remove for "Topics I am following", which is a second instance of "Inbox", so we can ignore the rest.
-    And "Configure block" should be in the "Watched pages" "Blocks" property
-    And "Remove block" should be in the "Watched pages" "Blocks" property
+    And "Configure block" should be in the "Pages I am watching" "Blocks" property
+    And "Remove block" should be in the "Pages I am watching" "Blocks" property
 
-    When I configure the block "Latest changes I can view"
+    When I configure the block "Portfolios shared with me"
     And I click on "Set a block title"
     And I set the field "Block title" to "Latest change: Cats are cool!"
     And I press "Save"
-    And I delete the block "Topics I am following"
     # Check that a different block can be added
     When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
     And I press "Add"
@@ -64,10 +61,9 @@ Scenario: Check default blocks are displayed
     And I press "Save"
     # Check that the edited changes persist
     And I choose "Dashboard" from main menu
-    Then I should not see "Latest changes I can view"
+    Then I should not see "Portfolios shared with me"
     And I should see "Latest change: Cats are cool!"
     And I should see "My portfolios"
     And I should see "Inbox"
-    And I should not see "Topics I am following"
-    And I should see "Watched pages"
+    And I should see "Pages I am watching"
     And I should see "Favourite quote"
