@@ -81,22 +81,25 @@
                     {/if}
                 {/if}
 
-                {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
                 <div class="comment-privacy metadata push-left-for-usericon">
                     {if $item->pubmessage}
-                    <em class="privatemessage"> {$item->pubmessage} </em>
+                        <em class="privatemessage"> {$item->pubmessage} </em>
                     {/if}
 
-                    {if $item->makepublicform}
-                        {$item->makepublicform|safe}
-                    {/if}
+                    {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
+                        {if $item->private && $isowner && $item->makepublicrequested && !$item->deletedmessage}
+                            <em>{str tag=moderatecomment section=artefact.comment}</em>
+                        {/if}
 
-                    {if $item->makepublicrequested && !$item->deletedmessage}
-                        <span class="icon icon-lock text-default left" role="presentation" aria-hidden="true"></span>
-                        <span>{str tag=youhaverequestedpublic section=artefact.comment}</span>
+                        {if $item->makepublicform}
+                            {$item->makepublicform|safe}
+                        {/if}
+
+                        {if $item->makepublicrequested && $item->isauthor && !$item->deletedmessage}
+                            <em>{str tag=youhaverequestedpublic section=artefact.comment}</em>
+                        {/if}
                     {/if}
                 </div>
-                {/if}
             </div>
 
             {if !$item->deletedmessage && $item->attachments}

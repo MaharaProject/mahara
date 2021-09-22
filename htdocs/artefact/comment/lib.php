@@ -382,12 +382,14 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $userid = $USER->get('id');
         $viewid = $view->get('id');
+        // Make an artefact comment
         if (!empty($artefact)) {
             $canedit = $USER->can_edit_artefact($artefact);
             $owner = $artefact->get('owner');
             $isowner = $userid && $userid == $owner;
             $artefactid = $artefact->get('id');
         }
+        // Make a page comment
         else {
             if ($group = $view->get('group')) {
                 $group_admins = group_get_admin_ids($group);
@@ -788,7 +790,7 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
             if ($item->private) {
-                $item->pubmessage = get_string('thiscommentisprivate', 'artefact.comment');
+                $item->pubmessage = get_string('thiscommentisprivate1', 'artefact.comment');
             }
 
             if (isset($data->showcomment) && $data->showcomment == $item->id) {
@@ -823,13 +825,20 @@ class ArtefactTypeComment extends ArtefactType {
             // private comment be made public
             if (!$item->deletedby && $item->private && $item->author && $data->owner
                 && ($item->isauthor || $data->isowner)) {
+                // The private comment is made by someone who is not logged in
+                // There doesn't need to be a request for the page owner to publicise any private comment
                 if ((empty($item->requestpublic) && $data->isowner)
                     || $item->isauthor && $item->requestpublic == 'owner'
                     || $data->isowner && $item->requestpublic == 'author') {
                     if (!$is_export_preview) {
                         $item->makepublicform = pieform(self::make_public_form($item->id));
                     }
+                    // If a request was made
+                    if ($item->requestpublic) {
+                        $item->makepublicrequested = 1;
+                    }
                 }
+                // The request was made by the person who is logged in
                 else if ($item->isauthor && $item->requestpublic == 'author'
                          || $data->isowner && $item->requestpublic == 'owner') {
                     $item->makepublicrequested = 1;
@@ -903,6 +912,7 @@ class ArtefactTypeComment extends ArtefactType {
 
         $smarty = smarty_core();
         $smarty->assign('data', $data->data);
+        $smarty->assign('isowner', $data->isowner);
         $smarty->assign('canedit', $data->canedit);
         $smarty->assign('position', $data->position);
         $smarty->assign('viewid', $data->view);

@@ -76,9 +76,10 @@ $string['replyto'] = 'Reply to:';
 $string['replytonoaccess'] = 'You are not allowed to post a reply to this comment.';
 $string['replytonoprivatereplyallowed'] = 'You are not allowed to post a private reply to this comment.';
 $string['replytonopublicreplyallowed'] = 'You are not allowed to post a public reply to this comment.';
-$string['thiscommentisprivate'] = 'This comment is private';
+$string['thiscommentisprivate1'] = 'This comment is private.';
 $string['typefeedback'] = 'Comment';
 $string['viewcomment'] = 'View comment';
+$string['moderatecomment'] = 'The comment author requested that this comment be made public.';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
 $string['commentsnotincluded'] = 'Comments were not included in this export';
 
