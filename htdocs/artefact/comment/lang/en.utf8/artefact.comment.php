@@ -64,6 +64,7 @@ $string['messageempty'] = 'Your message is empty. Please enter a message or atta
 $string['Moderate'] = 'Moderate';
 $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription2'] = 'Comments on pages and artefacts remain private until you approve them. Comments by people not logged into their accounts always go into a moderation queue and need to be approved.';
+$string['commentmoderatenotificationsubject'] = 'Moderate a new comment';
 $string['newcommentnotificationsubject'] = 'New comment on %s';
 $string['progress_feedback'] = array(
     'Comment on another person\'s page',
@@ -82,6 +83,29 @@ $string['viewcomment'] = 'View comment';
 $string['moderatecomment'] = 'The comment author requested that you make their comment public.';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
 $string['commentsnotincluded'] = 'Comments were not included in this export.';
+
+$string['feedbackmoderationnotificationhtml'] = "
+<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\">
+    <strong>You have turned on comment moderation on page \"%s'\"</strong><br>
+    %s asked that you make their comment public. They wrote:
+</div>
+<div style=\"margin: 1em 0;\">%s</div>
+    <div style=\"font-size: smaller; border-top: 1px solid #999;\">
+    <p>You can <a href=\"%s\">make this comment public</a>.</p>
+</div>
+";
+
+$string['feedbackmoderationnotificationtext'] = "
+<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\">
+    <strong>You have turned on comment moderation on page %s</strong><br>
+    %s asked that you make their comment public. They wrote:
+</div>
+<div style=\"margin: 1em 0;\">%s</div>
+    <div style=\"font-size: smaller; border-top: 1px solid #999;\">
+    <p>You can make this comment public at <a href=\"%s\">.
+    </a></p>
+</div>
+";
 
 $string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s commented on %s</strong><br>%s</div>
 
