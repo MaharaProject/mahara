@@ -1853,32 +1853,6 @@ function add_feedback_form_submit(Pieform $form, $values) {
     $url = $comment->get_view_url($view->get('id'), true, false);
     $goto = get_config('wwwroot') . $url;
 
-    if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
-        $arg = $author ? display_name($USER, null, true) : $data->authorname;
-        $moderatemsg = (object) array(
-            'subject'   => false,
-            'message'   => false,
-            'strings'   => (object) array(
-                'subject' => (object) array(
-                    'key'     => 'makepublicrequestsubject',
-                    'section' => 'artefact.comment',
-                    'args'    => array(),
-                ),
-                'message' => (object) array(
-                    'key'     => 'makepublicrequestbyauthormessage',
-                    'section' => 'artefact.comment',
-                    'args'    => array(hsc($arg)),
-                ),
-                'urltext' => (object) array(
-                    'key'     => 'Comment',
-                    'section' => 'artefact.comment',
-                ),
-            ),
-            'users'     => array($data->owner),
-            'url'       => $url,
-        );
-    }
-
     if (!empty($values['attachments']) && is_array($values['attachments']) && !empty($data->author)) {
 
         require_once(get_config('libroot') . 'uploadmanager.php');
@@ -1955,12 +1929,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $updatelink .= ($artefact) ? get_string('removefromwatchlistartefact', 'view', hsc($view->get('title'))) : get_string('removefromwatchlist', 'view');
     }
 
+    // Notification of comment made
     activity_occurred('feedback', $data, 'artefact', 'comment');
-
-    if (isset($moderatemsg)) {
-        activity_occurred('maharamessage', $moderatemsg);
-    }
-
     db_commit();
 
     $commentoptions = ArtefactTypeComment::get_comment_options();
@@ -2143,11 +2113,14 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             return;
         }
 
+        // Moderate a comment request by someone to be made public
+        $moderatingcomment = $comment->get('requestpublic');
+
         $this->strings = (object) array(
             'subject' => (object) array(
-                'key'     => 'newcommentnotificationsubject',
+                'key'     => $moderatingcomment ? 'commentmoderatenotificationsubject':'newcommentnotificationsubject',
                 'section' => 'artefact.comment',
-                'args'    => array($title),
+                'args'    => $moderatingcomment ? null : array($title),
             ),
         );
 
@@ -2172,14 +2145,30 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             else {
                 $lang = $user->lang;
             }
-            $this->users[$key]->htmlmessage = get_string_from_language(
-                $lang, 'feedbacknotificationhtml', 'artefact.comment',
-                hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
-            );
-            $this->users[$key]->emailmessage = get_string_from_language(
-                $lang, 'feedbacknotificationtext', 'artefact.comment',
-                $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
-            );
+
+            if ($moderatingcomment) {
+                $htmlmessage = get_string_from_language(
+                    $lang, 'feedbackmoderationnotificationhtml', 'artefact.comment',
+                    hsc($title), hsc($authorname), clean_html($body), get_config('wwwroot') . $this->url
+                );
+                $textmessage = get_string_from_language(
+                    $lang, 'feedbackmoderationnotificationtext', 'artefact.comment',
+                    hsc($title), hsc($authorname), trim(html2text($body)), get_config('wwwroot') . $this->url
+                );
+            }
+            else {
+                $htmlmessage = get_string_from_language(
+                    $lang, 'feedbacknotificationhtml', 'artefact.comment',
+                    hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
+                );
+                $textmessage = get_string_from_language(
+                    $lang, 'feedbacknotificationtext', 'artefact.comment',
+                    hsc($authorname), hsc($title), $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
+                );
+            }
+
+            $this->users[$key]->htmlmessage =  $htmlmessage;
+            $this->users[$key]->emailmessage = $textmessage;
         }
     }
 
