@@ -2126,6 +2126,9 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         );
 
         $this->url .= '&showcomment=' . $comment->get('id');
+        if ($onartefact) {
+            $this->url .= '&modal=1&artefact='. $artefactinstance->get('id');
+        }
 
         // Email
         $author = $comment->get('author');

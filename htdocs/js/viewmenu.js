@@ -253,6 +253,14 @@ function open_modal(e) {
         params['blockid'] = $(e.target).closest('a').data('blockid');
     }
 
+    // When getting comments artefacts inside a block, configure the showcomment option
+    if (window.location.search.match(/showcomment=([^&]*)/)) {
+        const showcommentid = window.location.search.match(/showcomment=([^&]*)/)[1];
+        if (showcommentid) {
+            params['showcomment'] = showcommentid;
+        }
+    }
+
     sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
         block.find('.modal-title').text(data.title);
         $('.blockinstance-content').html(data.html);
