@@ -155,7 +155,7 @@ switch ($type) {
                 $info = array(
                     'id' => $value->id,
                     'url' => group_homepage_url($value),
-                    'name' => $value->name,
+                    'name' => htmlspecialchars($value->name),
                     'grouptype' => $value->grouptype
                 );
                 $data['data'][$key] = $info;
