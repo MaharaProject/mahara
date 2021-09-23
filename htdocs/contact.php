@@ -123,15 +123,21 @@ function contactus_validate(Pieform $form, $values) {
 }
 
 function contactus_submit(Pieform $form, $values) {
-    global $SESSION;
+    global $SESSION, $USER;
+    $institutions = array();
+    if ($USER->is_logged_in()) {
+        $institutions = array_keys($USER->get('institutions'));
+    }
     $data = new stdClass();
-    $data->fromname    = $values['name'];
-    $data->fromemail   = $values['email'];
-    $data->subject     = $values['subject'];
-    $data->message     = $values['message'];
+    $data->fromname     = $values['name'];
+    $data->fromemail    = $values['email'];
+    $data->subject      = $values['subject'];
+    $data->message      = $values['message'];
+    $data->institutions = $institutions;
     if ($values['userid']) {
         $data->fromuser = $values['userid'];
     }
+
     require_once('activity.php');
     activity_occurred('contactus', $data);
     $SESSION->add_ok_msg(get_string('messagesent'));
