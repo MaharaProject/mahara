@@ -557,9 +557,20 @@ $smarty = smarty(
     )
 );
 
+$commentonartefact = param_integer('artefact', null);
+// doublecheck it's a comment on  artefact in case is old email
+if ($showcomment) {
+    $tmpcomment = new ArtefactTypeComment($showcomment);
+    if ($tmpcomment->get('onartefact') && !$commentonartefact) {
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&showcomment=' . $showcomment . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
+    }
+}
+
 $javascript = <<<EOF
 var viewid = {$viewid};
 var showmore = {$showmore};
+var commentonartefact = '{$commentonartefact}';
+var showcommentid = '{$showcomment}';
 
 jQuery(function () {
     paginator = {$feedback->pagination_js}
@@ -615,7 +626,49 @@ jQuery(window).on('blocksloaded', {}, function() {
     $('.feedbacktable.modal-docked form').each(function() {
         initTinyMCE($(this).prop('id'));
     });
+
+    // Focus on a page comment
+    if (showcommentid && !commentonartefact) {
+        focusOnShowComment();
+    }
 });
+
+/**
+ * Focus on the comment matching the id provided by the showcomment param value
+ *
+ * Note: First wait for blocks to load
+ */
+function focusOnShowComment() {
+    setTimeout(function() {
+        const commentIdString = 'comment' + showcommentid;
+
+        // Identify the comment by focusing on the author link
+        $(".comment-container button.collapsed").trigger('click');
+
+        const author_link = $("#" + commentIdString + " a")[1];
+        author_link.focus();
+        scrollToComment(commentIdString);
+    }, 500);
+}
+
+/**
+ * Scroll down to the commentIdString
+ *
+ * Note: First wait for the dropdown to open
+ */
+function scrollToComment(commentIdString) {
+    setTimeout(function() {
+        const element = document.getElementById(commentIdString);
+        const headerOffset = $('header').height();
+        const sitemessagesOffset = $('.site-messages').height();
+
+        // Scroll down for page comments
+        if (!commentonartefact) {
+            const y = element.getBoundingClientRect().top + window.pageYOffset - headerOffset - sitemessagesOffset;
+            window.scrollTo({top: y, behavior: 'smooth'});
+        }
+    }, 500);
+}
 
 function activateModalLinks() {
     $('.commentlink').off('click');
@@ -676,6 +729,12 @@ EOF;
                 $('#configureblock').addClass('active').removeClass('closed');
             });
             $('a#tmp_modal_link').click();
+
+            // Focus on an artefact comment
+            const commentonartefact = {$artefact};
+            if (showcommentid && commentonartefact) {
+                focusOnShowComment();
+            }
         });
 EOF;
     }

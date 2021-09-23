@@ -20,6 +20,7 @@ safe_require('artefact', 'comment');
 $viewid = param_integer('viewid');
 $blockid = param_variable('blockid', null);
 $artefactid = param_integer('artefactid', null);
+$showcomment = param_integer('showcomment', null);
 
 if (!can_view_view($viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
@@ -88,6 +89,7 @@ else {
         $commentoptions = ArtefactTypeComment::get_comment_options();
         $commentoptions->view = $view;
         $commentoptions->artefact = $artefact;
+        $commentoptions->showcomment = $showcomment;
         if ($blockid) {
             $commentoptions->blockid = $blockid;
         }
