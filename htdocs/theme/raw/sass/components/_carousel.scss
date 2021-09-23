@@ -2,6 +2,7 @@
     width: 100%;
     margin: 0;
     height: 100% !important;
+    clear: both;
 
     .carousel-item {
         img {
@@ -44,10 +45,12 @@
     .carousel-control-prev,
     .carousel-control-next {
         opacity: .75;
+        text-decoration: none;
 
         &:hover,
         &:focus {
             opacity: 1;
+            text-decoration: none;
         }
     }
     .carousel-control-prev-icon,
