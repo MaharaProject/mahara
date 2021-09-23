@@ -39,7 +39,16 @@ function get_string(name) {
     // @TODO: get the javascript strings to respect 'section' so that
     // strings with same key but different section can be used without clashes.
     var i = 1;
-    return str.replace(/%((%)|s|d)/g, function (m) { return m[2] || args[i++]; });
+    return str.replace(/%((%)|s|d)/g, function (m) {
+        let htmlpart = jQuery('<div>').html(args[i++]);
+        let cleanstr = htmlpart.text();
+        if (cleanstr.match(/\<|\>/)) {
+            // We've ended up turning things like &gt; or &lt; back into > or <
+            // so we need to deal with the string again
+            cleanstr = jQuery(cleanstr).text();
+        }
+        return m[2] || cleanstr;
+    });
 }
 
 /**
