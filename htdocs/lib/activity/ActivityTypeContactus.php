@@ -1,13 +1,13 @@
 <?php
 
-require_once('ActivityTypeAdmin.php');
+require_once('ActivityType.php');
 
 /**
  * Contactus class for the contact form activity.
  *
  * This activity type is only available to administrators.
  */
-class ActivityTypeContactus extends ActivityTypeAdmin {
+class ActivityTypeContactus extends ActivityType {
 
   /**
    * @var string Display name for the sender.
@@ -38,10 +38,21 @@ class ActivityTypeContactus extends ActivityTypeAdmin {
    */
   function __construct($data, $cron=false) {
       parent::__construct($data, $cron);
+      $this->users = activity_get_users($this->get_id(), null, null, true);
+      // check if user is logged in
       if (!empty($this->fromuser)) {
           $this->url = profile_url($this->fromuser, false);
+          // check if user belongs to institution
+          if (!empty($data->institutions)) {
+              $results = activity_get_users($this->get_id(), null, null, null, $data->institutions);
+              // check if there is an admin for their institution(s)
+              if (!empty($results)) {
+                  $this->users = $results;
+              }
+          }
       }
       else {
+          // user is not logged in
           $this->customheaders = array(
               'Reply-to: ' . $this->fromname . ' <' . $this->fromemail . '>',
           );

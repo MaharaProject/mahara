@@ -102,7 +102,6 @@ function handle_activity($activitytype, $data, $cron=false, $queuedactivity=null
     if (!$activity->any_users()) {
         return 0;
     }
-
     return $activity->notify_users();
 }
 
@@ -181,7 +180,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
             u.suspendedctime,
             p.method, ap.value, apm.value, aic.value, h.appname
-        HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
+        HAVING (SUM(ui.admin) > 0)';
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
     }
@@ -833,10 +832,11 @@ function get_special_notifications($user, $activitytypes) {
         }
     }
 
-    // If user is an institution admin, should receive objectionable material notifications
+    // If user is an institution admin, should receive objectionable material and contactus notifications
     if ($user->is_institutional_admin()) {
         $objectionable = get_records_array('activity_type', 'name', 'objectionable', 'id');
-        $activitytypes = array_merge($activitytypes, $objectionable);
+        $contactus = get_records_array('activity_type', 'name', 'contactus', 'id');
+        $activitytypes = array_merge($activitytypes, $objectionable, $contactus);
     }
 
     return $activitytypes;
