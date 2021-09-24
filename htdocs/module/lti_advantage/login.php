@@ -9,7 +9,16 @@
  *
  */
 
+/**
+ * Script cannot be called directly.
+ *
+ * @var int
+ */
 define('INTERNAL', 1);
+
+/**
+ * Can be accessed while not logged in.
+ */
 define('PUBLIC', 1);
 
 require_once('lib/lti-1-3-php-library/lti/lti.php');

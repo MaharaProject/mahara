@@ -16,6 +16,12 @@ defined('INTERNAL') || die();
 require_once('lib/lti-1-3-php-library/lti/lti.php');
 require_once('database.php');
 require_once(dirname(dirname(dirname(__FILE__))) . '/lib/institution.php');
+
+/**
+ * Supporting the LTI Advantage webservice.
+ *
+ * @see https://www.imsglobal.org/spec/lti/v1p3/impl
+ */
 class PluginModuleLti_advantage extends PluginModule {
     public static $can_create_groups_role = array('Administrator','Instructor');
     public static $group_tutor_role = array('TeachingAssistant');
@@ -44,10 +50,24 @@ class PluginModuleLti_advantage extends PluginModule {
         return 'ltiadvantage';
     }
 
+    /**
+     * Webservice fields we do not need.
+     *
+     * @return array A list of field names.
+     */
     public static function disable_webservice_fields() {
         return array('service' => 1, 'institution' => 1);
     }
 
+    /**
+     * Extra fields we collect on the Webservice edit form.
+     *
+     * Collects Vendor and Deployment details.
+     *
+     * @param mixed $dbconnection
+     *
+     * @return array An array of Pieform elements.
+     */
     public static function extra_webservice_fields($dbconnection) {
         $deployments = [];
         if (get_field('module_installed', 'active', 'name', 'lti_advantage')) {
@@ -258,30 +278,47 @@ class PluginModuleLti_advantage extends PluginModule {
         return $info_fields;
     }
 
+    /**
+     * @var array Default config settings.
+     */
     private static $default_config = array(
         'autocreateusers'   => false,
         'parentauth'        => null,
     );
 
+    /**
+     * Does this Plugin have config?
+     *
+     * @return boolean
+     */
     public static function has_config() {
         return true;
     }
 
+    /**
+     * Does this Plugin have config for the OAuth service?
+     *
+     * @return boolean
+     */
     public static function has_oauth_service_config() {
         return true;
     }
 
     /**
+     * Called post install and after every upgrade.
+     *
      * @param int $prevversion
      * @return bool|void
      */
     public static function postinst($prevversion) {
 
     }
+
     /**
-     * Check the status of each configuration element needed for the LTI API
+     * Check the status of each configuration element needed for the LTI API.
      *
-     * @param boolean $clearcache Whether to clear the cached results of the check
+     * @param boolean $clearcache Whether to clear the cached results of the
+     *      check.
      * @return array Information about the status of each config step needed.
      */
     public static function check_service_status($clearcache = false) {
@@ -317,8 +354,10 @@ class PluginModuleLti_advantage extends PluginModule {
     }
 
     /**
-     * Determine whether the LTI webservice, as a whole, is fully configured
-     * @param boolean $clearcache Whether to clear cached results from a previous check
+     * Determine whether the LTI webservice, as a whole, is fully configured.
+     *
+     * @param boolean $clearcache Whether to clear cached results from a
+     *      previous check.
      * @return boolean
      */
     public static function is_service_ready($clearcache = false) {
@@ -331,6 +370,11 @@ class PluginModuleLti_advantage extends PluginModule {
         );
     }
 
+    /**
+     * Form elements for the Plugin config page.
+     *
+     * @return array Pieform elements.
+     */
     public static function get_config_options() {
 
         $statuslist = static::check_service_status(true);
@@ -373,6 +417,14 @@ class PluginModuleLti_advantage extends PluginModule {
         return $form;
     }
 
+    /**
+     * Process the config form.
+     *
+     * @param Pieform $form
+     * @param mixed $values
+     *
+     * @return boolean
+     */
     public static function save_config_options(Pieform $form, $values) {
 
         if (!empty($values['activate'])) {
@@ -387,6 +439,13 @@ class PluginModuleLti_advantage extends PluginModule {
         return true;
     }
 
+    /**
+     * OAuth config form elements for the webservice.
+     *
+     * @param mixed $serverid The server we are editing.
+     *
+     * @return array Pieform elements
+     */
     public static function get_oauth_service_config_options($serverid) {
         $rawdbconfig = get_records_sql_array('SELECT c.field, c.value, r.institution
                                               FROM {oauth_server_registry} r
@@ -436,6 +495,14 @@ class PluginModuleLti_advantage extends PluginModule {
 
     }
 
+    /**
+     * Process the OAuth service config form submission.
+     *
+     * @param int $serverid
+     * @param array $values The submitted form values.
+     *
+     * @return boolean
+     */
     public static function save_oauth_service_config_options($serverid, $values) {
         $options = array('autocreateusers', 'parentauth');
         foreach ($options as $option) {
@@ -447,6 +514,12 @@ class PluginModuleLti_advantage extends PluginModule {
 
     // Disable form fields that are not needed by this plugin
     // @return array of fields not needed with key the field name
+
+    /**
+     * Elements to hide on the webservice edit form.
+     *
+     * @return array Fields to hide.
+     */
     public static function hide_webservice_fields() {
         $fields = array (
             'consumer_key_html',

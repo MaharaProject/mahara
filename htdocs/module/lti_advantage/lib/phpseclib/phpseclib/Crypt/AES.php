@@ -78,7 +78,7 @@ class AES extends Rijndael
      * Valid key lengths are 128, 192, and 256.  If the length is less than 128, it will be rounded up to
      * 128.  If the length is greater than 128 and invalid, it will be rounded down to the closest valid amount.
      *
-     * @see \phpseclib\Crypt\Rijndael:setKeyLength()
+     * @see Crypt::Rijndael::setKeyLength()
      * @access public
      * @param int $length
      */
@@ -99,7 +99,7 @@ class AES extends Rijndael
      *
      * Rijndael supports five different key lengths, AES only supports three.
      *
-     * @see \phpseclib\Crypt\Rijndael:setKey()
+     * @see Crypt::Rijndael::setKey()
      * @see setKeyLength()
      * @access public
      * @param string $key

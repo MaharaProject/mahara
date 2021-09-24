@@ -224,7 +224,7 @@ class TripleDES extends DES
      *
      * Valid key lengths are 64, 128 and 192
      *
-     * @see \phpseclib\Crypt\Base:setKeyLength()
+     * @see Crypt::Base::setKeyLength()
      * @access public
      * @param int $length
      */
