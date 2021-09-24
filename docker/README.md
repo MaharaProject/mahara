@@ -139,6 +139,17 @@ These commands are for wiping an existing database and restoring a database from
 * `make docker-database-refresh`: Deletes the current database and creates an empty one.
 * `dbpath="/example/database/path.pg" make docker-database-restore`: Restores a database from a database file that you specified in the path. Your previous database will be deleted.
 
+### Connect to the database
+
+1. Run `docker ps` to list the running containers.
+1. Get the container ID and port number of the PostreSQL container.
+1. Run `docker exec -it <container id> /bin/bash` to enter the container.
+1. Run `psql -h 127.0.0.1 -U mahara -W -p 5432 mahara` to connect to the Mahara database. You will be asked for the password. It is stated in the config.php file. 
+
+If you fail to connect at this point, check your `.env` file for the correct value in the `MAHARA_DB_*` value. If you don't have an `.env` file, check in the `config-environment.php` file.
+
+Run SQL queries.
+
 ### Run automated tests
 
 To run PHPUnit and Behat tests, a different image is required. You can get it by running `make docker-builder`.
