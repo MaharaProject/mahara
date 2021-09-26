@@ -163,7 +163,7 @@ class LTI_Advantage_Database implements LTI\Database {
             'issuer',
             $issuer,
             '',
-            'platform_vendor_key'
+            'platform_vendor_key, display_name'
         );
         if (!$registration) {
             // No record found.
