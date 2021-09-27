@@ -68,8 +68,9 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
      * @param string template
      * @param array options
      * @param array pagination
+     * @param boolean editing
      */
-    public static function render_items(&$items, $template, $options, $pagination) {
+    public static function render_items(&$items, $template, $options, $pagination, $editing) {
         $smarty = smarty_core();
         $smarty->assign('options', $options);
         $smarty->assign('items', $items['data']);
@@ -85,7 +86,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
                 'jsonscript' => $pagination['jsonscript'],
                 'count' => $items['count'],
                 'limit' => $items['limit'],
-                'setlimit' => true,
+                'setlimit' => $editing ? false : true,
                 'offset' => $items['offset'],
                 'numbersincludefirstlast' => false,
                 'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
@@ -134,7 +135,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
             'resultcounttextsingular' => get_string('result'),
             'resultcounttextplural'   => get_string('results'),
         );
-        self::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination);
+        self::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination, $editing);
         $smarty->assign('myviews', $views);
         return $smarty->fetch('blocktype:myviews:myviews.tpl');
     }
