@@ -205,7 +205,14 @@ class module_lti_launch extends external_api {
             }
             else {
                 $USER->logout();
-                throw new AccessDeniedException(get_string('autocreationnotenabled', 'module.lti'));
+                if ($parentauthid && in_array(get_field('auth_instance', 'authname', 'id', $parentauthid), array('internal', 'ldap'))) {
+                    // They can just login via the login box with their parent auth
+                    $SESSION->add_error_msg(get_string('autocreationnotenabledredirect', 'module.lti'));
+                    redirect(get_config('wwwroot'));
+                }
+                else {
+                    throw new AccessDeniedException(get_string('autocreationnotenabled', 'module.lti'));
+                }
             }
         }
 
