@@ -368,6 +368,33 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
     return false;
 }
 
+/**
+ * The popup help for a page needs to be within webroot
+ *
+ * As page popup help can take a path segment as input
+ * we need to check that the final generated path is valid
+ * and within our webroot path.
+ *
+ * @param $langfile The generated path to find the file
+ * @return boolean
+ */
+function is_valid_help_page($langfile) {
+
+    $docroot = get_config('docroot');
+    if (substr($langfile, 0, strlen($docroot)) !== $docroot) {
+        // The real path endpoint is not within the webroot
+        return false;
+    }
+    if (!preg_match('#/help/#', $langfile)) {
+        // The page help path doesn't contain /help/ in it
+        return false;
+    }
+    if (!is_readable($langfile)) {
+        return false;
+    }
+    return true;
+}
+
 function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=null, $section=null) {
 
     $subdir = 'help/';
@@ -415,7 +442,9 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     else {
         $langfile .= $file;
     }
-    if (is_readable($langfile)) {
+
+    $langfile = Path::getAbsolute($langfile);
+    if (is_valid_help_page($langfile)) {
         return $langfile;
     }
 
@@ -449,7 +478,8 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
 
     // try the current language
     $langfile = get_language_root() . $location . $lang . '/' . $subdir . $file;
-    if (is_readable($langfile)) {
+    $langfile = Path::getAbsolute($langfile);
+    if (is_valid_help_page($langfile)) {
         return $langfile;
     }
 
@@ -461,7 +491,8 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
                 $trieden = true;
             }
             $langfile = get_language_root($parentlang) . $location . $parentlang . '/' . $subdir . $file;
-            if (is_readable($langfile)) {
+            $langfile = Path::getAbsolute($langfile);
+            if (is_valid_help_page($langfile)) {
                 return $langfile;
             }
         }
@@ -470,7 +501,8 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     // if it's STILL not found, and we haven't already tried english ...
     if (empty($data) && empty($trieden)) {
         $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $subdir . $file;
-        if (is_readable($langfile)) {
+        $langfile = Path::getAbsolute($langfile);
+        if (is_valid_help_page($langfile)) {
             return $langfile;
         }
     }
@@ -2319,6 +2351,58 @@ function webservice_create_context($url) {
     }
     $context = stream_context_create($context);
     return $context;
+}
+
+/**
+ * Path class
+ *
+ * Used for working out the realpath of a path string without needing
+ * to have permissions on the actual paths themselves
+ */
+class Path {
+    /**
+     * There is a method that deal with Sven Arduwie proposal https://www.php.net/manual/en/function.realpath.php#84012
+     * And runeimp at gmail dot com proposal https://www.php.net/manual/en/function.realpath.php#112367
+     * @param string $path
+     * @return string
+     */
+    public static function getAbsolute(string $path): string {
+        // Cleaning path regarding OS
+        $path = mb_ereg_replace('\\\\|/', DIRECTORY_SEPARATOR, $path, 'msr');
+        // Check if path start with a separator (UNIX)
+        $startWithSeparator = $path[0] === DIRECTORY_SEPARATOR;
+        // Check if start with drive letter
+        preg_match('/^[a-z]:/', $path, $matches);
+        $startWithLetterDir = isset($matches[0]) ? $matches[0] : false;
+        // Get and filter empty sub paths
+        $subPaths = array_filter(explode(DIRECTORY_SEPARATOR, $path), 'mb_strlen');
+
+        $absolutes = [];
+        foreach ($subPaths as $subPath) {
+            if ('.' === $subPath) {
+                continue;
+            }
+            // if $startWithSeparator is false
+            // and $startWithLetterDir
+            // and (absolutes is empty or all previous values are ..)
+            // save absolute cause that's a relative and we can't deal with that and just forget that we want go up
+            if ('..' === $subPath
+                && !$startWithSeparator
+                && !$startWithLetterDir
+                && empty(array_filter($absolutes, function ($value) { return !('..' === $value); }))
+            ) {
+                $absolutes[] = $subPath;
+                continue;
+            }
+            if ('..' === $subPath) {
+                array_pop($absolutes);
+                continue;
+            }
+            $absolutes[] = $subPath;
+        }
+
+        return (($startWithSeparator ? DIRECTORY_SEPARATOR : $startWithLetterDir) ? $startWithLetterDir.DIRECTORY_SEPARATOR : '').implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
 }
 
 /**
