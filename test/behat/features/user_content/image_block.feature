@@ -21,7 +21,7 @@ Scenario: Create and delete image block
     And I press "Add"
     And I set the field "Block title" to "Image Block 1"
     And I click on blocktype "Image"
-    Then I should see "Image Block 1: Configure"
+    Then I should see "Image Block 1: Edit"
     And I follow "Image"
     And I attach the file "Image1.jpg" to "File"
     Then I should see "Image - Image1.jpg"

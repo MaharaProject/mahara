@@ -438,7 +438,7 @@ tinyMCE.init({
             // such as div.vertcentre
             // and IE doesn't like a preset z-index
             // This work-around will remove/add classes: .vertcenter .configure .blockinstane
-            // of the configure block div
+            // of the edit block div
             // when toggling fullscreen
             jQuery('div[aria-label="Fullscreen"]').on('click', function(e) {
                 jQuery('div#configureblock').toggleClass('vertcentre');

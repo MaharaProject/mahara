@@ -4,7 +4,7 @@
         <span class="blockinstance-header{if $retractable && $retractedonload} retracted{/if}">
             {if $configure}
                 <div class="icon icon-sm icon-{$cssicon} {$cssicontype}" title="{$blocktypename}"></div>
-                {$configtitle}: {str tag=Configure section=view}{else}{$title|default:"[$strnotitle]"}
+                {$configtitle}: {str tag=Configure1 section=view}{else}{$title|default:"[$strnotitle]"}
             {/if}
         </span>
         <span class="blockinstance-controls">
@@ -20,7 +20,7 @@
                 {/if}
                 {if $configurable && !$configure}
                 <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
-                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
+                    <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
                     <span class="sr-only">{$strconfigtitletext}</span>
                 </button>
                 {/if}

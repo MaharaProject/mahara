@@ -40,12 +40,12 @@ Scenario: Check default blocks are displayed
 
     When I click on "Edit dashboard"
     # Confirm that the blocks each contain a "Remove block" option and
-    # except My portfolios each contains a "Configure block" option.
+    # except My portfolios each contains a "Edit block" option.
     Then "Remove block" should be in the "Portfolios shared with me" "Blocks" property
-    And "Configure block" should not be in the "My portfolios" "Blocks" property
+    And "Edit block" should not be in the "My portfolios" "Blocks" property
     And "Remove block" should be in the "My portfolios" "Blocks" property
-    And "Configure block" should be in the "Inbox" "Blocks" property
-    And "Configure block" should be in the "Pages I am watching" "Blocks" property
+    And "Edit block" should be in the "Inbox" "Blocks" property
+    And "Edit block" should be in the "Pages I am watching" "Blocks" property
     And "Remove block" should be in the "Pages I am watching" "Blocks" property
 
     When I configure the block "Portfolios shared with me"

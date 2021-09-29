@@ -30,7 +30,7 @@ function addFeedbackError(form, data) {
         formError(form, data);
     }
     else {
-        // Error was made in a modal, find out if comment block or configure block and display error message there
+        // Error was made in a modal, find out if comment block or edit block and display error message there
         var errmsg = get_string('errorprocessingform', 'mahara');
         if ($('#configureblock').hasClass('active')) {
             $('#modal_messages').addClass('alert alert-danger').html(errmsg);
