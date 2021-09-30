@@ -96,9 +96,13 @@ $string['Viewscollections'] = 'Pages and collections';
 $string['viewsubmittedtogroup1'] = 'This portfolio has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon1'] = 'This portfolio was submitted to <a href="%s">%s</a> on %s.';
 $string['viewsubmittedtogroupgrade'] = 'This portfolio was submitted to the assignment <a href="%s">"%s"</a> in "%s" on %s.';
+$string['viewsubmittedtohoston'] = 'This portfolio was submitted on %s.';
+$string['viewsubmittedtohost'] = 'This portfolio has been submitted for assessment.';
 $string['collectionsubmittedtogroup'] = 'This collection has been submitted to <a href="%s">%s</a>.';
 $string['collectionsubmittedtogroupon'] = 'This collection was submitted to <a href="%s">%s</a> on %s.';
 $string['collectionsubmittedtogroupgrade'] = 'This collection was submitted to the assignment <a href="%s">"%s"</a> in "%s" on %s.';
+$string['collectionsubmittedtohost'] = 'This collection has been submitted for assessment.';
+$string['collectionsubmittedtohoston'] = 'This collection was submitted on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
 $string['noviews1'] = 'No pages or collections.';
@@ -468,6 +472,7 @@ $string['Profile'] = 'Profile';
 $string['profile'] = 'profile'; // for stats
 $string['Portfolio'] = 'Portfolio';
 $string['Portfolios'] = 'Portfolios';
+$string['Pages'] = 'Pages';
 $string['Collection'] = 'Collection';
 $string['Grouphomepage'] = 'Group homepage';
 $string['grouphomepage'] = 'group homepage'; // for stats

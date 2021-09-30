@@ -418,6 +418,15 @@ class mahara_url {
     }
 
     /**
+     * Return the Anchor.
+     *
+     * @return string|null The value of the URL anchor if there is/was one.
+     */
+    public function get_anchor() {
+        return $this->anchor;
+    }
+
+    /**
      * Returns the 'path' portion of a URL. For example, if the URL is
      * http://www.example.org:447/my/file/is/here.txt?really=1 then this will
      * return '/my/file/is/here.txt'.

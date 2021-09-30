@@ -84,3 +84,6 @@ $string['warninstitutionregistrationinstitutions'] = array(
 $string['warnmultiinstitutionsoff'] = '$cfg->usersuniquebyusername is turned on but the site option \'People allowed multiple institutions\' is off. This makes no sense, as people will then change institutions every time they log in from somewhere else. Please turn this setting on in "Administration → Configure site → Institution settings".';
 $string['alternativelogins'] = 'Administration login';
 $string['unabletosigninviasso'] = 'Unable to sign in via external authentication (SSO)';
+
+$string['nullprivatecert'] = "Could not generate the private key";
+$string['nullpubliccert'] = "Could not generate the public certificate";

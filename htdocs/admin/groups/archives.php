@@ -15,25 +15,108 @@ define('MENUITEM', 'managegroups/archives');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
-define('TITLE', get_string('archivedsubmissions', 'admin'));
+require_once(get_config('libroot') . 'view.php');
+require_once(get_config('libroot') . 'collection.php');
+
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'archives');
 
+$tabs = (object) [
+    'currentclass' => '',
+    'archivedclass' => '',
+];
+
+if (param_exists('current')) {
+    define('TITLE', get_string('currentsubmissions', 'admin'));
+    $tabs->currentclass = 'active';
+}
+else {
+    define('TITLE', get_string('archivedsubmissions', 'admin'));
+    $tabs->archivedclass = 'active';
+}
+
+if ($USER->get('admin') && param_exists('releaseids')) {
+    $releaseids = array_map('intval', (array) param_variable('releaseids'));
+    // Release the locked items.
+    foreach ($releaseids as $releaseid) {
+        $view = new View($releaseid);
+        $collection = $view->get_collection();
+        if ($collection === false) {
+            $releasecollection = false;
+        }
+        else {
+            $releasecollection = true;
+        }
+
+        if (is_plugin_active('submissions', 'module')) {
+            /** @var \Submissions\Models\Submission $submission */
+            /** @var \Submissions\Models\Evaluation $evaluation */
+            list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
+            // This value (1) is based on the option in the release form at
+            // releaseview_submit(). A value of 1 means 'noresult'.
+            if ($submission && $evaluation->get('success') != 1) {
+                $evaluation->set('success', 1);
+                $evaluation->commit();
+            }
+        }
+
+        // If we're a collection, release that.
+        if ($collection) {
+            $msg = $collection->get('name') . ': ';
+            try {
+                // Override the strings for the message keys.
+                $releasemessageoverrides = [
+                    'host' => [
+                        'subjectkey' => 'portfolioreleasedmessage',
+                        'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
+                    ],
+                ];
+                $collection->release($USER, $releasemessageoverrides);
+                $msg .= get_string('portfolioreleasedsuccess', 'group');
+            }
+            catch (SystemException $e) {
+                $msg .= get_string('submissionreleasefailed', 'export');
+            }
+            $SESSION->add_ok_msg($msg);
+        }
+        else {
+            $msg = $view->get('title') . ': ';
+            try {
+                // Override the strings for the message keys.
+                $releasemessageoverrides = [
+                    'host' => [
+                        'subjectkey' => 'portfolioreleasedmessage',
+                        'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
+                    ],
+                ];
+                $view->release($USER, $releasemessageoverrides);
+                $msg .= get_string('portfolioreleasedsuccess', 'group');
+            }
+            catch (SystemException $e) {
+                $msg .= get_string('submissionreleasefailed', 'export');
+            }
+            $SESSION->add_ok_msg($msg);
+        }
+    }
+    redirect('/admin/groups/archives.php?current=1');
+}
+
 require_once('searchlib.php');
 
-$search = (object) array(
+$search_params = [
+    'type' => param_exists('current') ? 'current' : 'archived',
     'query' => trim(param_variable('query', '')),
     'sortby' => param_alpha('sortby', 'firstname'),
     'sortdir' => param_alpha('sortdir', 'asc'),
-);
+];
 
 $offset = param_integer('offset', 0);
 $limit = param_integer('limit', 10);
 
 if ($USER->get('admin')) {
     $institutions = get_records_array('institution', '', '', 'displayname');
-    $search->institution = param_alphanum('institution', 'all');
+    $search_params['institution'] = trim(param_alphanum('institution', 'all'));
 }
 else {
     $institutionnames = array_keys($USER->get('admininstitutions'));
@@ -44,20 +127,38 @@ else {
         'displayname'
     );
 }
+list($html, $columns, $pagination, $search) = build_admin_archived_submissions_results($search_params, $offset, $limit);
 
-list($html, $columns, $pagination, $search) = build_admin_archived_submissions_results($search, $offset, $limit);
+$searchtypecurrent = false;
+$searchtypearchived = false;
+if (param_exists('current')) {
+    $search['type'] = 'current';
+    $searchtypecurrent = true;
+}
+else {
+    $search['type'] = 'archived';
+    $searchtypearchived = true;
+}
 
 $js = <<<EOF
 jQuery(function() {
     var p = {$pagination['javascript']}
 
-    new UserSearch(p);
+    new CurrentSubmissionsRelease(p);
 })
 EOF;
 
-$smarty = smarty(array('adminusersearch', 'adminexportqueue','paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
+$jsscripts = [
+    'adminreleasesubmissions',
+    'paginator',
+];
+
+$smarty = smarty($jsscripts, array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
 setpageicon($smarty, 'icon-archive');
+$smarty->assign('tabs', $tabs);
 $smarty->assign('search', $search);
+$smarty->assign('searchtypecurrent', $searchtypecurrent);
+$smarty->assign('searchtypearchived', $searchtypearchived);
 $smarty->assign('query', trim(param_variable('query', '')));
 $smarty->assign('limit', $limit);
 $smarty->assign('institutions', !empty($institutions) ? $institutions : array());

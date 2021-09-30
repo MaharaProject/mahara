@@ -26,6 +26,7 @@ require_once('group.php');
 safe_require('artefact', 'comment');
 safe_require('artefact', 'file');
 require_once(get_config('docroot') . 'blocktype/lib.php');
+require_once(get_config('docroot') . 'export/lib.php');
 
 // Used by the Mahara assignment submission plugin for Moodle, to indicate that a user
 // coming over from mnet should be able to view a certain page (i.e. a teacher viewing
@@ -165,7 +166,46 @@ else if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has
     redirect($collection->get_framework_url($collection, true));
 }
 $submittedgroup = (int)$view->get('submittedgroup');
-if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
+$submittedhost = $view->get('submittedhost');
+
+$user_logged_in = $USER->is_logged_in();
+$access_via_group = ($submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id')));
+$access_via_submittedhost = ($submittedhost && host_user_can_assess_submitted_views($submittedhost));
+
+if ($user_logged_in && $access_via_submittedhost) {
+    // If the view is part of a submitted collection, the whole
+    // collection must be released at once.
+    $releasecollection = !empty($collection);
+    $add_form = true;
+    if ($releasecollection) {
+        if ($ctime = $collection->get('submittedtime')) {
+            $text = get_string('collectionsubmittedtohoston', 'view', format_date(strtotime($ctime)));
+        }
+        else {
+            $text = get_string('collectionsubmittedtohost', 'view');
+        }
+        if (is_collection_in_export_queue($collection->get('id'))) {
+            $add_form = false;
+        }
+    }
+    else if ($view->get('submittedtime')) {
+        $text = get_string('viewsubmittedtohoston', 'view', format_date(strtotime($view->get('submittedtime'))));
+        if (is_view_in_export_queue($view->get('id'))) {
+            $add_form = false;
+        }
+    }
+    else {
+        $text = get_string('viewsubmittedtohost', 'view');
+        // $add_form = false;
+    }
+    if ($add_form) {
+        $releaseform = release_form($text, $releasecollection);
+    }
+    else {
+        $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
+    }
+}
+else if ($user_logged_in && $access_via_group) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_group_by_id($submittedgroup, true);
@@ -214,45 +254,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         $text = get_string('viewsubmittedtogroup1', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
     if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED && empty($ltigradeform)) {
-        $pieformdata = array(
-            'name'     => 'releaseview',
-            'method'   => 'post',
-            'class' => 'form-inline',
-            'plugintype' => 'core',
-            'pluginname' => 'view',
-            'autofocus' => false,
-            'elements' => array(
-                'submittedview' => array(
-                    'type'  => 'html',
-                    'value' => $text,
-                )
-            ),
-        );
-
-        if (is_plugin_active('submissions', 'module')) {
-            list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
-
-            if (!empty($submission)) {
-                $pieformdata['elements']['selectsuccess'] = [
-                    'type' => 'select',
-                    'options' => [
-                        null => get_string('chooseresult', 'module.submissions'),
-                        1 => get_string('noresult', 'module.submissions'),
-                        2 => get_string('fail', 'module.submissions'),
-                        3 => get_string('success', 'module.submissions'),
-                    ],
-                    'defaultvalue' => $evaluation->get('success')
-                ];
-            }
-        }
-        $pieformdata['elements']['submit'] = array(
-            'type'  => 'button',
-            'usebuttontag' => true,
-            'class' => 'btn-secondary float-right',
-            'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
-        );
-
-        $releaseform = pieform($pieformdata);
+        $releaseform = release_form($text, $releasecollection);
     }
     else if ($ltigradeform) {
         $releaseform = $text;
@@ -270,8 +272,59 @@ else {
     $releaseform = '';
 }
 
+/**
+ * Return the release form.
+ *
+ * @param string $text
+ * @param bool $releasecollection
+ *
+ * @return string The HTML for the Pieform.
+ */
+function release_form($text, $releasecollection) {
+    global $view, $collection;
+    $form = array(
+        'name'     => 'releaseview',
+        'method'   => 'post',
+        'class' => 'form-inline',
+        'plugintype' => 'core',
+        'pluginname' => 'view',
+        'autofocus' => false,
+        'elements' => [],
+    );
+
+    $form['elements']['submittedview'] = array(
+        'type'  => 'html',
+        'value' => $text,
+    );
+
+    if (is_plugin_active('submissions', 'module')) {
+        list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
+
+        if (!empty($submission)) {
+            $form['elements']['selectsuccess'] = [
+                'type' => 'select',
+                'options' => [
+                    null => get_string('chooseresult', 'module.submissions'),
+                    1 => get_string('noresult', 'module.submissions'),
+                    2 => get_string('fail', 'module.submissions'),
+                    3 => get_string('success', 'module.submissions'),
+                ],
+                'defaultvalue' => $evaluation->get('success')
+            ];
+        }
+    }
+
+    $form['elements']['submit'] = array(
+        'type'  => 'button',
+        'usebuttontag' => true,
+        'class' => 'btn-secondary float-right',
+        'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
+    );
+    return pieform($form);
+}
+
 function releaseview_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $view, $collection, $submittedgroup, $releasecollection;
+    global $USER, $SESSION, $view, $collection, $submittedgroup, $submittedhost, $releasecollection;
 
     if (is_plugin_active('submissions', 'module')) {
         /** @var \Submissions\Models\Submission $submission */
@@ -288,6 +341,14 @@ function releaseview_submit(Pieform $form, $values) {
             $collection->pendingrelease($USER);
             $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
+        else if ($submittedhost) {
+            $externalhost = new stdClass();
+            $externalhost->id = $submittedhost;
+            $externalhost->name = $submittedhost;
+            $externalhost->url = $submittedhost;
+            $collection->pendingrelease($USER, $externalhost, false);
+            $SESSION->add_ok_msg(get_string('collectionreleasedpending', 'group'));
+        }
         else {
             $collection->release($USER);
             $SESSION->add_ok_msg(get_string('portfolioreleasedsuccess', 'group'));
@@ -297,6 +358,14 @@ function releaseview_submit(Pieform $form, $values) {
         if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
             $view->pendingrelease($USER);
             $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
+        }
+        else if ($submittedhost) {
+            $externalhost = new stdClass();
+            $externalhost->id = $submittedhost;
+            $externalhost->name = $submittedhost;
+            $externalhost->url = $submittedhost;
+            $view->pendingrelease($USER, $externalhost);
+            $SESSION->add_ok_msg(get_string('viewreleasedpending', 'group'));
         }
         else {
             $view->release($USER);

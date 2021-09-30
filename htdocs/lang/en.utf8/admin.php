@@ -267,7 +267,10 @@ $string['groupquotaupdated'] = 'Group quota has been updated';
 $string['addnewgroupcategory'] = 'Enter new group category';
 $string['archivedsubmissions'] = 'Archived submissions';
 $string['archivedsubmissionsdesc'] = 'Administer archived submissions';
+$string['currentsubmissions'] = 'Current submissions';
+$string['releasesubmissionlabel'] = 'Release';
 $string['submittedto'] = 'Submitted to';
+$string['submittedon'] = 'Submitted on';
 $string['ID'] = 'ID';
 $string['filenameleap'] = 'Leap2A file';
 $string['filenameleaphtml'] = 'Archive file';
@@ -865,6 +868,7 @@ $string['confirmdeleteusers1'] = 'Are you sure you want to delete the accounts f
 $string['exportingnotsupportedyet'] = 'Exporting profiles is not supported yet.';
 $string['exportuserprofiles'] = 'Export profiles';
 $string['nousersselected'] = 'Nobody selected';
+$string['nocontentselected'] = 'No Portfolios selected';
 $string['suspenduser'] = 'Suspend person';
 $string['suspendeduserstitle'] = 'Suspended and expired accounts';
 $string['suspendedusers'] = 'Suspended people';
@@ -1481,6 +1485,7 @@ $string['cli_deleteinactivegroups_groupunabletoclean'] = 'Unable to fully delete
 
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
+$string['withselectedcontentrelease'] = 'Release selected items';
 $string['allothers'] = 'All others';
 
 // Behat variables script

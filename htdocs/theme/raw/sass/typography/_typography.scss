@@ -89,6 +89,11 @@ h1 {
             margin-right: 0;
         }
     }
+
+    // when there are tabs above search under h1
+    ~ .nav-tabs + form.with-heading {
+        margin-top: 0;
+    }
 }
 
 h2, h3, h4, h5, legend {

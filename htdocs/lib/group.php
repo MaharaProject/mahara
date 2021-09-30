@@ -307,6 +307,29 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
             AND m.group = ?', array($userid, $groupid));
 }
 
+/**
+ * Does the presented host match the one in the SESSION?
+ *
+ * LTI Advantage sets an 'lti.submittedhost' value in the session. If this
+ * matches the one supplied we return true. In Views can be assigned to a
+ * Group or a Host. We don't appear to have a file for 'not group' so working
+ * on it here.
+ *
+ * @param string $submittedhost
+ *
+ * @return boolean True if this SESSION matches the submitted host.
+ */
+function host_user_can_assess_submitted_views($submittedhost) {
+    global $SESSION;
+    $sessionhost = $SESSION->get('lti.submittedhost');
+    if ($sessionhost && $sessionhost == $submittedhost) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 // Functions for creation/deletion of groups, and adding/removing users to groups
 
 /**
@@ -332,6 +355,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *                userid => role,
  *                ...
  *            )
+ * @param boolean $forced set to true if the group is created through a cron job, or web services, where the logged in user doesn't count
  * @return int The ID of the created group
  * @throws InvalidArgumentException
  *         UserException
@@ -339,7 +363,7 @@ function group_user_can_assess_submitted_views($groupid, $userid) {
  *         NotFoundException
  *         AccessDeniedException
  */
-function group_create($data) {
+function group_create($data, $forced=false) {
     global $USER;
 
     if (!is_array($data)) {
@@ -426,7 +450,7 @@ function group_create($data) {
 
     if (!empty($data['institution']) && $data['institution'] != 'mahara') {
         global $USER;
-        if (!$USER->can_edit_institution($data['institution'], true)) {
+        if (!$USER->can_edit_institution($data['institution'], true) && !$forced) {
             $data['institution'] = 'mahara';
         }
     }

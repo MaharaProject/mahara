@@ -2429,6 +2429,12 @@ function admin_nav() {
             'title'  => get_string('groupcategories', 'admin'),
             'weight' => 20,
         ),
+        'managegroups/current' => array(
+            'path'   => 'managegroups/archives',
+            'url'    => 'admin/groups/archives.php?current=1',
+            'title'  => get_string('currentsubmissions', 'admin'),
+            'weight' => 27,
+        ),
         'managegroups/archives' => array(
             'path'   => 'managegroups/archives',
             'url'    => 'admin/groups/archives.php',
