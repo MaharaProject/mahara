@@ -37,7 +37,7 @@ $services = get_records_array('external_services', 'restrictedusers', 0);
 $disabledopts = array();
 $sopts = array();
 foreach ($services as $service) {
-    $sopts[$service->id] = $service->name;
+    $sopts[$service->id] = get_string($service->shortname, preg_replace('/\//', '.', $service->component));
     $disabledopts[$service->id] = array();
     if (substr_count($service->component, '/') > 0) {
         list($moduletype, $module) = explode("/", $service->component);
