@@ -79,9 +79,9 @@ $string['replytonopublicreplyallowed'] = 'You are not allowed to post a public r
 $string['thiscommentisprivate1'] = 'This comment is private.';
 $string['typefeedback'] = 'Comment';
 $string['viewcomment'] = 'View comment';
-$string['moderatecomment'] = 'The comment author requested that this comment be made public.';
+$string['moderatecomment'] = 'The comment author requested that you make their comment public.';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
-$string['commentsnotincluded'] = 'Comments were not included in this export';
+$string['commentsnotincluded'] = 'Comments were not included in this export.';
 
 $string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s commented on %s</strong><br>%s</div>
 

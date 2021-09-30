@@ -42,4 +42,4 @@ $string['orderby.owner'] = 'Page owner';
 
 $string['watchlistnotification'] = 'Watchlist notification';
 $string['watchlistdelaytitle'] = 'Watchlist notification delay';
-$string['watchlistdelaydescription'] = 'The delay in minutes between sending emails regarding watchlist changes.';
+$string['watchlistdelaydescription'] = 'The delay in minutes between sending notifications regarding watchlist changes.';

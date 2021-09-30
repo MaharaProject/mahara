@@ -61,8 +61,8 @@ $string['idpentityupdatedduplicates'] = array(
 $string['metarefresh_metadata_url'] = 'Metadata URL for auto-refresh';
 $string['metarefresh_metadata_signature'] = 'Metadata validate signature';
 $string['metadatarefreshfailed_subject'] = 'Metadata auto-refresh failed';
-$string['metadatarefreshfailed_body'] = 'The auto-refresh of the SAML metadata was not able to complete.
-Check the cron logs for full information about the failure. Error response may appear below:
+$string['metadatarefreshfailed_body'] = 'The auto-refresh of the SAML metadata could not be completed.
+Check the cron log for more information. The error response may appear below:
 
 %s';
 $string['idpprovider'] = 'Provider';

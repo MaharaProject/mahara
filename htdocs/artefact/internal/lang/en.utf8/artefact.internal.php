@@ -216,7 +216,6 @@ $string['socialprofiles'] = 'Social media accounts';
 $string['servicedesc'] = 'Enter the name of the social media network, e.g. Facebook, LinkedIn, Twitter, etc.';
 $string['profileurl'] = 'Your URL or username';
 $string['profileurldesc'] = 'The URL of your profile page or your username.';
-$string['profileurlexists'] = 'This social media account cannot be added because its username or URL is a duplicate of one you\'ve already entered.';
 $string['deleteprofile'] = 'Delete social media account';
 $string['deletethisprofile'] = 'Delete social media account: \'%s\'';
 $string['deleteprofileconfirm'] = 'Are you sure you wish to delete this social media account?';
@@ -226,7 +225,7 @@ $string['notvalidprofileurl'] = 'This is not a valid social profile URL. Please 
 $string['profiledeletedsuccessfully'] = 'Social media account deleted successfully';
 $string['profilesavedsuccessfully'] = 'Social media account saved successfully';
 $string['socialprofilerequired'] = 'At least one social media account is required.';
-$string['duplicateurl'] = 'This social media account username or URL is a duplicate of one you\'ve already entered.';
+$string['duplicateurl'] = 'You cannot add this social media account because its username or URL is a duplicate of one you already have.';
 
 // Allow comments
 $string['notes'] = 'Notes';

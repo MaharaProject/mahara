@@ -57,7 +57,7 @@ $elements = array(
         'type' => 'switchbox',
         'class' => 'last',
         'title' => get_string('includeprivatefeedback', 'export'),
-        'description' => get_string('includeprivatefeedbackdesc', 'export'),
+        'description' => get_string('includeprivatefeedbackdesc1', 'export'),
         'defaultvalue' => 0,
     ),
 );

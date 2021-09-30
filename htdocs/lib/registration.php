@@ -45,7 +45,11 @@ EOF;
     $data = registration_data();
     // Format each line of data to be sent.
     foreach($data as $key => $val) {
-        $info .= '<tr><th>'. hsc($key) . '</th><td>' . hsc($val) . "</td></tr>\n";
+        $keystring = hsc($key);
+        if (string_exists($keystring, 'statistics')) {
+            $keystring = get_string($keystring, 'statistics');
+        }
+        $info .= '<tr><th>'. $keystring . '</th><td>' . hsc($val) . "</td></tr>\n";
     }
     $info .= '</tbody></table>';
 
