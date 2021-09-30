@@ -24,6 +24,7 @@ Scenario: Moderating a group comment when approve comments is turned on
     # Adding a comment to a group page as a non-group member
     Given I log in as "UserC" with password "Kupuh1pa!"
     And I go to portfolio page "Page GroupA_01"
+    And I press "Add comment"
     And I set the field "Comment" to "This is a comment from UserC"
     And I enable the switch "Make comment public"
     And I press "Comment"
@@ -43,6 +44,7 @@ Scenario: Moderating a group comment when approve comments is turned on
     # Moderating the comment as group admin
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page GroupA_01"
+    And I press "Comments"
     Then I should see "This is a comment from UserC"
     And I should see "これはUserCからのコメントです"
     And I click on "Make comment public" in the "This is a comment from UserC" comment

@@ -17,6 +17,7 @@ Background:
 Scenario: Adding and deleting public comments
     # Adding
     Given I go to portfolio page "Page UserA_01"
+    And I press "Add comment"
     # The label for message text area - anonymous people
     And I fill in "Name" with "Joe Anonymous"
     # No TinyMCE editor for anonymous people
@@ -26,6 +27,7 @@ Scenario: Adding and deleting public comments
     And I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_01"
     # The label for message text area - logged in people
+    And I press "Comments"
     And I fill in "Comment by page owner" in editor "Comment"
     And I press "Comment"
     Then I should see "Joe Anonymous"
@@ -53,6 +55,7 @@ Scenario: Adding and deleting public comments
 
 Scenario: Add comments block to page
     Given I go to portfolio page "Page UserA_01"
+    And I press "Add comment"
     # The label for message text area - anonymous people
     And I fill in "Name" with "Joe Anonymous"
     # No TinyMCE editor for anonymous people
@@ -85,6 +88,7 @@ Scenario: Comments update the page's mtime
 
     # Public comment updates page last updated
     And I go to portfolio page "Page UserA_01"
+    And I press "Add comment"
     And I fill in "Public comment" in editor "Comment"
     And I press "Comment"
     And I choose "Dashboard" from main menu
@@ -94,6 +98,7 @@ Scenario: Comments update the page's mtime
 
     # Private comment updates page last updated
     And I go to portfolio page "Page UserA_02"
+    And I press "Add comment"
     And I fill in "Private comment" in editor "Comment"
     And I disable the switch "Make comment public"
     And I press "Comment"

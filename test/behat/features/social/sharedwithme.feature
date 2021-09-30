@@ -46,16 +46,19 @@ Scenario: Testing that views & collections are collated properly
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" in "Collection UserA_01" card collection
+    And I press "Add comment"
     And I fill in "I am on UserA_01 page" in editor "Comment"
     And I press "Comment"
 
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_02" in "Collection UserA_01" card collection
+    And I press "Add comment"
     And I fill in "I am on UserA_02 page" in editor "Comment"
     And I press "Comment"
 
     And I choose "Pages and collections" in "Create" from main menu
     And I click the card "Page UserA_03"
+    And I press "Add comment"
     And I fill in "I am on Page UserA_03" in editor "Comment"
     And I press "Comment"
 
@@ -88,10 +91,12 @@ Scenario: Testing that views & collections are collated properly
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" in "Collection UserA_01" card collection
+    And I press "Comments"
     And I fill in "I am on only the UserA_01 page again" in editor "Comment"
     And I press "Comment"
     And I choose "Dashboard" from main menu
     And I click on "Page mahara_01"
+    And I press "Add comment"
     And I fill in "I am on the site page" in editor "Comment"
     And I press "Comment"
 
@@ -105,4 +110,3 @@ Scenario: Testing that views & collections are collated properly
     And "I am on only the UserA_01 page again" "text" should appear before "I am on Page UserA_03" "text"
     And I should not see "I am on UserA_02 page"
     # End (Bug 1890973)
-

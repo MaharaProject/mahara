@@ -19,9 +19,11 @@ Scenario: Making adjustments to the mathslate plugin for mahara (Bug 1472446)
  And I follow "Page mahara_01"
  # Tinymce field adding a math equation
  And I scroll to the id "feedbacktable"
+ And I press "Add comment"
  And I fill in "\\[\\alpha A\\beta B\\]" in editor "Comment"
  And I press "Comment"
  And I choose "Pages and collections" in "Configure site" from administration menu
  And I follow "Page mahara_01"
  And I wait "1" seconds
+ And I press "Comments"
  And I should see "αAβB"
