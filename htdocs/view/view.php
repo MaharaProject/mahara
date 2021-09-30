@@ -548,7 +548,9 @@ $smarty = smarty(
     array('confirmcopytitle' => 'view',
           'confirmcopydesc' => 'view',
           'View' => 'view',
-          'Collection' => 'collection'),
+          'Collection' => 'collection',
+          'Comments' => 'artefact.comment',
+          'addcomment' => 'artefact.comment'),
     array(
         'sidebars' => false,
         'skin' => $skin

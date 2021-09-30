@@ -935,6 +935,7 @@ class ArtefactTypeComment extends ArtefactType {
             'jsonscript' => $data->jsonscript,
             'datatable' => $datatable,
             'count' => $data->count,
+            'hidecount' => true,
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,

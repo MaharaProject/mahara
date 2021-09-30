@@ -50,6 +50,8 @@ function addFeedbackSuccess(form, data) {
 
     if (data.data.baseplacement) {
         paginator.updateResults(data);
+        $('#comment-section-count').text('(' + data.data.count + ')');
+        $('#comment-section-title').text(get_string('Comments', 'artefact.comments'));
     }
     // Clear rating from previous submission
     jQuery('#add_feedback_form_rating_container input.star').each(function() {
@@ -274,6 +276,15 @@ function open_modal(e) {
 function delete_comment_from_modal_submit(form, data) {
     if (!data.data.artefact) {
         paginator.updateResults(data);
+        if (data.data.baseplacement) {
+            if (data.data.count > 0) {
+                $('#comment-section-count').text('(' + data.data.count + ')');
+            }
+            else {
+                $('#comment-section-title').text(get_string('addcomment', 'artefact.comments'));
+                $('#comment-section-count').text('');
+            }
+        }
         paginator.alertProxy('pagechanged', data);
         return;
     }

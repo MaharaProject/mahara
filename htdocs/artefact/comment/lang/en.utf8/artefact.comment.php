@@ -21,6 +21,7 @@ $string['comments'] = 'comments';
 $string['Details'] = 'Details';
 $string['anddetails'] = 'and details';
 $string['addcomment'] = 'Add comment';
+$string['addyourcomment'] = 'Add your comment';
 $string['commentsanddetails'] = 'Comments (%d) and details';
 $string['Allow'] = 'Allow';
 $string['allowcomments'] = 'Allow comments';

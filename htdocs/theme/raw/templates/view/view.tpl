@@ -3,7 +3,7 @@
 
 <input type="hidden" id="viewid" name="id" value="{$viewid}">
 {if $viewinstructions}
-    <div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
+<div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
     <fieldset  class="pieform-fieldset collapsible collapsible-small">
         <legend>
             <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">
@@ -14,21 +14,21 @@
             {$viewinstructions|clean_html|safe}
         </div>
     </fieldset>
-    </div>
+</div>
 {/if}
 
 <div id="view" class="view-container">
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">
             {if $peerhidden}
-                <div class="alert alert-info">
-                    {str tag=nopeerassessmentrequired section=artefact.peerassessment}
-                </div>
+            <div class="alert alert-info">
+                {str tag=nopeerassessmentrequired section=artefact.peerassessment}
+            </div>
             {/if}
             {if $signedoffalertpeermsg}
-                <div class="alert alert-info">
-                    {$signedoffalertpeermsg|clean_html|safe}
-                </div>
+            <div class="alert alert-info">
+                {$signedoffalertpeermsg|clean_html|safe}
+            </div>
             {/if}
             <div class="grid-stack">
             {if $viewcontent}
@@ -59,37 +59,43 @@
         {if $feedback->position eq 'base' && $feedback->baseplacement}
         <div class="comment-container">
             {if $feedback->count || $enablecomments}
-            <h2 class="title">
-                {str tag="Comments" section="artefact.comment"}
-            </h2>
-            {* Do not change the id because it is used by paginator.js *}
-            <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackbase fullwidth">
-                {$feedback->tablerows|safe}
-            </div>
-            {$feedback->pagination|safe}
-            {/if}
-
-            {if $enablecomments}
-                {include file="view/viewmenu.tpl"}
+            <fieldset class="pieform-fieldset last collapsible">
+                <legend class="collapsible card-header">
+                    <button href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                        <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
+                        <span id="comment-section-title">{if $feedback->count}{str tag="Comments" section="artefact.comment"}{else}{str tag=addcomment section=artefact.comment}{/if}</span>
+                        <span id="comment-section-count">{if $feedback->count}({$feedback->count}){/if}</span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                    </button>
+                </legend>
+                <div class="fieldset-body collapse" id="dropdown">
+                {* Do not change the id because it is used by paginator.js *}
+                    <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackbase fullwidth">
+                    {$feedback->tablerows|safe}
+                    </div>
+                    {$feedback->pagination|safe}
+                    {if $enablecomments}
+                        {include file="view/viewmenu.tpl"}
+                    {/if}
+                </div>
+            </fieldset>
             {/if}
         </div>
         {/if}
-
         {if $feedback->position eq 'blockinstance' && $enablecomments}
         <div class="feedback modal modal-docked" id="feedback-form">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button class="close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
-                            <span class="times">&times;</span>
-                            <span class="sr-only">{str tag=Close}</span>
+                        <span class="times">&times;</span>
+                        <span class="sr-only">{str tag=Close}</span>
                         </button>
                         <h1 class="modal-title">
-                            <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
-                            {str tag=addcomment section=artefact.comment}
+                        <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
+                        {str tag=addcomment section=artefact.comment}
                         </h1>
                     </div>
-
                     <div id="comment_modal_messages"></div>
                     <div class="modal-body">
                         {$addfeedbackform|safe}

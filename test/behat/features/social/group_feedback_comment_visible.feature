@@ -28,6 +28,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     And I press "Save group"
     When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
     And I follow "Page GroupA_01"
+    And I press "Add comment"
     And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Comment"
     # Checking that the make public is on
     And I enable the switch "Make comment public"
@@ -40,6 +41,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     When I follow "GroupA"
     When I follow "Pages and collections (tab)"
     And I click the card "Page GroupA_01"
+    And I press "Comments"
     Then I should see "Adding a comment to this field. Student = Awesome!" in the "Comment text" "Comment" property
 
 # As part of consolidating behat tests, this scenario has been added.
@@ -51,6 +53,7 @@ Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notif
     And I follow "Pages and collections (tab)"
     # And I click on "Pages"
     And I follow "Page GroupA_01"
+    And I press "Add comment"
     And I fill in "Testing comment notifications" in editor "Comment"
     And I press "Comment"
     # Log out as user 1

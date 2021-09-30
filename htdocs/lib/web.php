@@ -4246,6 +4246,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  *   for an example. Note that the paginator javascript library is NOT
  *   automatically included just because you call this function, so make sure
  *   that your smarty() call hooks it in.
+ * - hidecount(bool): option to hide count
  *
  * @param array $params Options for the pagination
  */
@@ -4318,8 +4319,10 @@ function build_pagination($params) {
     $output .= '">';
     // Output the count of results
     $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
-    if($params['count'] > 0){
-        $output .= '<div class="lead text-small results float-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+    if ($params['count'] > 0) {
+        if (!isset($params['hidecount'])) {
+            $output .= '<div class="lead text-small results float-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+        }
     }
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
