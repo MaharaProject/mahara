@@ -12,7 +12,7 @@ Background:
 Scenario: Testing functions for people search page (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "People search" in "People" from administration menu
- And I follow "Advanced options"
+ And I press "Advanced options"
  And I follow "A" in the "Filter by first name" "People" property
  And I follow "UserA"
  And I should see "Account settings | Angela User (UserA)"
