@@ -280,7 +280,7 @@ Scenario: Adding license info
     And I follow "License"
     And I fill in the following:
     | License | http://creativecommons.org/licenses/by/4.0/ |
-    And I follow "Advanced licensing"
+    And I press "Advanced licensing"
     And I fill in the following:
     | Licensor| test1 |
     | Original URL | something here |

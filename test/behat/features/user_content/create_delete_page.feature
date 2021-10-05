@@ -29,7 +29,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     | Page description | First description |
     # Open the 'Advanced' accordion and check for the instructions field and 'Prevent removing of blocks' toggle
     # (Bug 1891265)
-    When I follow "Advanced"
+    When I press "Advanced"
     Then I should see "Instructions"
     And I should see "Prevent removing of blocks"
     # (Bug 1891265 end)
@@ -83,7 +83,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # User share page with public and enable copy page functionality
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "This is the edited page title" card access menu
-    And I follow "Advanced options"
+    And I press "Advanced options"
     And I enable the switch "Allow copying"
     And I select "Public" from "General" in shared with select2 box
     And I press "Save"

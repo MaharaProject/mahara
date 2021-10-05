@@ -25,7 +25,7 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  And I follow "Page UserA_01"
  And I press "Edit"
  And I press "Settings" in the "Toolbar buttons" "Nav" property
- And I follow "Advanced"
+ And I press "Advanced"
  And I scroll to the id "settings_theme"
  And I select "Modern" from "theme"
  And I press "Save"

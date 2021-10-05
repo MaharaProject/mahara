@@ -22,7 +22,7 @@ Scenario: Create and delete image block
     And I set the field "Block title" to "Image Block 1"
     And I click on blocktype "Image"
     Then I should see "Image Block 1: Edit"
-    And I follow "Image"
+    And I press "Image"
     And I attach the file "Image1.jpg" to "File"
     Then I should see "Image - Image1.jpg"
     And I enable the switch "Show description"

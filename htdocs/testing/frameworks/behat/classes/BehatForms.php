@@ -67,7 +67,11 @@ class BehatForms extends BehatBase {
     protected function expand_all_fields() {
 
         // Using jQuery (work properly and run faster then Mink SeleniumDriver)
+        // For expanders that are links - old way
         $jscode = "jQuery(\"fieldset.collapsible legend a.collapsed\").each(function(){jQuery(this).trigger('click');});";
+        $this->getSession()->executeScript($jscode);
+        // For expanders that are buttons - new way
+        $jscode = "jQuery(\"fieldset.collapsible legend button.collapsed\").each(function(){jQuery(this).trigger('click');});";
         $this->getSession()->executeScript($jscode);
 
     }

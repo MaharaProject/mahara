@@ -25,7 +25,7 @@ Scenario:
     And I fill in the following:
     | Block title | Mahara about PDF |
 
-    And I follow "File"
+    And I press "File"
     And I attach the file "mahara_about.pdf" to "File"
     And I press "Save"
     And I display the page

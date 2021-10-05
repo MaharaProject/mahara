@@ -1635,6 +1635,11 @@ EOF;
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
                     "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]" .
+                 " | " .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//button[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
         $section_heading_link = $this->find('xpath', $xpath, $exception);
 
@@ -1657,6 +1662,11 @@ EOF;
         $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the uncollapsed section heading containing the text "' . $text . '"');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
                     "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]" .
+                 " | " .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//button[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]";
         $section_heading_link = $this->find('xpath', $xpath, $exception);

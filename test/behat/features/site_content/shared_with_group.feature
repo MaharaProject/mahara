@@ -58,7 +58,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"
     And I click on "Edit access" in "Page UserA_03" row
-    And I follow "Advanced options"
+    And I press "Advanced options"
     And I fill in the following:
       | Access start date/time | 2015/06/15 00:00 |
     And I press "Save"
@@ -91,7 +91,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     # Edit access for Collection 03
     And I click on "Edit access" in "Collection UserA_03" row
     And I set the select2 value "Collection UserA_03" for "editaccess_collections"
-    And I follow "Advanced options"
+    And I press "Advanced options"
     And I fill in the following:
       | Access start date/time | 2015/06/15 00:00 |
     And I press "Save"

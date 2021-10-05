@@ -46,7 +46,7 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     And I click on "Save"
     And I follow "Pages"
     And I click on "Edit access" in "Page GroupA_01" row
-    And I follow "Advanced options"
+    And I press "Advanced options"
     # verify field lalel is displayed on page
     Then I should see "Copy for existing group members"
     # enable the "Copy for existing group members" toggle
