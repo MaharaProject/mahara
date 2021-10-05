@@ -13,7 +13,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to notification settings
     And I choose "Site options" in "Configure site" from administration menu
-    And I follow "Notification settings"
+    And I press "Notification settings"
     # Verifying "None" option is not available for these notifications
     And the "System message" field should not contain "None"
     And the "Message from other people" field should not contain "None"

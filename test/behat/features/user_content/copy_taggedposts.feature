@@ -38,7 +38,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I press "Save"
   And I scroll to the id "main-nav"
   And I press "Share" in the "Toolbar buttons" "Nav" property
-  And I follow "Advanced options"
+  And I press "Advanced options"
   And I enable the switch "Allow copying"
   And I select "Public" from "accesslist[0][searchtype]"
   And I press "Save"

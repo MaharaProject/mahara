@@ -21,7 +21,7 @@ Scenario: Testing that views & collections are collated properly
     # Turn on anonymous pages
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to "admin/site/options.php"
-    And I follow "Account settings"
+    And I press "Account settings"
     And I set the following fields to these values:
     | Allow anonymous pages | 1 |
     And I press "Update site options"

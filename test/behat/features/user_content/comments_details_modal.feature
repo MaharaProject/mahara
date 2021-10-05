@@ -20,7 +20,7 @@ Scenario: Create a block and see comments and details modal and headers update a
     And I press "Add"
     And I set the field "Block title" to "Image Block"
     And I click on blocktype "Image"
-    And I follow "Image"
+    And I press "Image"
     And I attach the file "Image1.jpg" to "File"
     And I press "Save"
     And I display the page

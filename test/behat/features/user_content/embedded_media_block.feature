@@ -20,7 +20,7 @@ Scenario: Embed and play mp4
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   And I attach the file "testvid3.mp4" to "File"
   And I press "Save"
   And I display the page
@@ -36,7 +36,7 @@ Scenario: Embed and play mp3
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   And I set the field "Block title" to "mahara.mp3"
   And I attach the file "mahara.mp3" to "File"
   And I press "Save"
@@ -61,7 +61,7 @@ Scenario: Change settings and embed 3gp
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   And I attach the file "testvid1.3gp" to "File"
   And I press "Save"
   And I display the page
@@ -75,7 +75,7 @@ Scenario: Embed unsupported file type
   When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   # mkv is not supported
   And I attach the file "testvid2.mkv" to "File"
   Then I should see "The file you uploaded was not the correct type for this block."
