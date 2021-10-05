@@ -50,7 +50,8 @@
 }
 
 tr[data-toggle="collapse"],
-a[data-toggle="collapse"] {
+a[data-toggle="collapse"],
+button[data-toggle="collapse"] {
     &:hover {
       outline: none;
     }
