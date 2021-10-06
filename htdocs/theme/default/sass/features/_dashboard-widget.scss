@@ -78,10 +78,13 @@
                 }
             }
         }
-        &:hover,
-        &:focus {
-            .widget-heading {
-                background: $dashboard-widget-hover-bg;
+
+        &.logged-in {
+            &:hover,
+            &:focus {
+                .widget-heading {
+                    background: $dashboard-widget-hover-bg;
+                }
             }
         }
     }

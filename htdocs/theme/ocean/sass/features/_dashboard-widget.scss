@@ -25,10 +25,12 @@
             }
         }
 
-        &:hover,
-        &:focus {
-            background-color: scale-color($theme-secondary-color, $lightness: 70%);
-            transition: all 0.2s ease 0s;
+        &.logged-in {
+            &:hover,
+            &:focus {
+                background-color: scale-color($theme-secondary-color, $lightness: 70%);
+                transition: all 0.2s ease 0s;
+            }
         }
 
         .widget-heading {
