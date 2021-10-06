@@ -162,10 +162,12 @@ $logged-in-height-phone: 7.5rem; // 120px;
             }
         }
 
-        &:hover,
-        &:focus {
-            .widget-heading {
-                background-color: $theme-primary-color;
+        &.logged-in {
+            &:hover,
+            &:focus {
+                .widget-heading {
+                    background-color: $theme-primary-color;
+                }
             }
         }
     }

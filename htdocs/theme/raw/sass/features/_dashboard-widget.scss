@@ -62,12 +62,14 @@
             }
         }
 
-        &:hover,
-        &:focus {
-            text-decoration: none;
+        &.logged-in {
+            &:hover,
+            &:focus {
+                text-decoration: none;
 
-            .widget-heading {
-                background: $dashboard-widget-hover-bg;
+                .widget-heading {
+                    background: $dashboard-widget-hover-bg;
+                }
             }
         }
     }
