@@ -2665,15 +2665,16 @@ class View {
     }
 
     /**
-    * moves a block instance to a specified location
-    *
-    * @param array $values parameters for this function
-    *                      id     => int of block instance to move
-    *                      newx   => int x position to move to
-    *                      newy   => int y position to move to
-    *                      newheight  => int height of the block
-    *                      newwidth   => int width of the block
-    */
+     * Moves a block instance to a specified location
+     *
+     * @param array $values parameters for this function
+     *                  id     => int of block instance to move
+     *                  newx   => int x position to move to
+     *                  newy   => int y position to move to
+     *                  newheight  => int height of the block
+     *                  newwidth   => int width of the block
+     * @return array An array holding the new html after the block move
+     */
     public function moveblockinstance($values) {
         $requires = array('id', 'newx', 'newy', 'newheight', 'newwidth');
         foreach ($requires as $require) {
@@ -2691,6 +2692,7 @@ class View {
         $bi->set('positiony', $values['newy']);
         $bi->set('width', $values['newwidth']);
         $bi->set('height', $values['newheight']);
+        $bi->set('quietupdate', 1);
         $bi->commit();
 
         //TODO: check if code down here is still needed

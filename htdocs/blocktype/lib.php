@@ -1162,6 +1162,16 @@ class BlockInstance {
      */
     private $new;
 
+
+    /**
+     * Quiet notifications for updates not related to content.
+     *
+     * E.g. If a block is moved/resized, we won't notify the watchlist about the event.
+     *
+     * @var bool
+     */
+    private $quietupdate = false;
+
     /**
      * Constructor for the block instance
      *
@@ -2263,8 +2273,14 @@ class BlockInstance {
             $this->set_block_dimensions($this->positionx, $this->positiony, $this->width, $this->height);
         }
 
-        // Tell stuff about this
-        handle_event('blockinstancecommit', $this);
+        if (!$this->quietupdate) {
+            // Record the event in the watchlist
+            handle_event('blockinstancecommit', $this);
+        }
+        else {
+            // Skip sending notifications and reset the flag
+            $this->quietupdate = false;
+        }
 
         $this->dirty = false;
     }
