@@ -929,7 +929,7 @@ var FileBrowser = (function($) {
 
             filelink = '';
             if (self.filedata[id].artefacttype == 'folder') {
-                filelink = $('').text(self.filedata[id].title);
+                filelink = $('<span>', {'class': 'js-display-title'}).text(self.filedata[id].title);
             }
             else {
                 filelink = $('<a>', {'href':self.config.wwwroot + 'artefact/file/download.php?file=' + id}).text(self.filedata[id].title);
@@ -944,9 +944,9 @@ var FileBrowser = (function($) {
             }
 
             tbody.append($('<tr>', {'class': (highlight ? ' highlight-file' : '')}).append(
-                $('<td>').append(fileIconImg),
-                $('<td>').append(filelink),
-                $('<td>', {'class':'text-right s'}).append(remove, $('<input>', {'type':'hidden', 'class':'d-none', 'id':self.id+'_selected[' + id + ']',
+                $('<td>', {'class':'icon-container'}).append(fileIconImg),
+                $('<td>', {'class':'filename'}).append(filelink),
+                $('<td>', {'class':'text-right text-small'}).append(remove, $('<input>', {'type':'hidden', 'class':'d-none', 'id':self.id+'_selected[' + id + ']',
                                                                                             'name':self.id+'_selected[' + id + ']', 'value':id}))
             ));
         }
