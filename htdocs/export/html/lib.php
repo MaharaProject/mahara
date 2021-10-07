@@ -1340,7 +1340,7 @@ class HtmlExportOutputFilter {
 
         // Links to pdf block files
         $html = preg_replace_callback(
-            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/blocktype/pdf/viewer\.php\?.*?file=(\d+)(?:&amp;|&|%26).*?(?=[\'"])#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/blocktype/pdf/viewer\.php\?.*?artefactid=(\d+)(?:&amp;|&|%26).*?(?=[\'"])#',
             array($this, 'replace_pdf_link'),
             $html
         );
