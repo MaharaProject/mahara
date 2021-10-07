@@ -274,7 +274,7 @@ function activity_process_queue() {
  * database
  *
  * @global User $USER
- * @param string $event
+ * @param string|BlockInstance|ArtefactType $event
  */
 function watchlist_record_changes($event) {
     global $USER;
@@ -288,6 +288,8 @@ function watchlist_record_changes($event) {
         if ($viewid) {
             set_field('view', 'mtime', db_format_timestamp(time()), 'id', $viewid);
         }
+
+        // Check if someone has added this view to their watchlist
         if (record_exists('usr_watchlist_view', 'view', $viewid)) {
             $whereobj = new stdClass();
             $whereobj->block = $event->get('id');
@@ -386,6 +388,7 @@ function watchlist_process_notifications() {
     $delayMin = get_config('watchlistnotification_delay');
     $comparetime = time() - $delayMin * 60;
 
+    // Get the latest changes on views being watched
     $sql = "SELECT usr, view, MAX(changed_on) AS time
             FROM {watchlist_queue}
             GROUP BY usr, view";
