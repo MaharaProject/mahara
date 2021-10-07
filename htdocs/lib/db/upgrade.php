@@ -2241,7 +2241,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $field->setAttributes(XMLDB_TYPE_DATETIME, null, null);
             add_field($table, $field);
         }
-        if (!get_record('cron', 'callfunction', 'collection_rollover')) {
+        if (!get_record('cron', 'callfunction', 'collection_rollover') && !get_record('cron', 'callfunction', 'unlock_collections_by_rollover')) {
             log_debug('Add cron job for unlocking collections by rollover date');
             $cron = new stdClass();
             $cron->callfunction = 'unlock_collections_by_rollover';
