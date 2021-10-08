@@ -581,6 +581,9 @@
      * in that case.
      */
     function rewriteDeleteButton(button, pblockinstanceId) {
+        if (button.hasClass('gallery')) {
+            return;
+        }
         button.off('click touchstart');
         button.on('click touchstart', function(e) {
             e.stopPropagation();

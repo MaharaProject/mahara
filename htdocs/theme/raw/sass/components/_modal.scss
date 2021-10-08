@@ -92,6 +92,18 @@ $width-sm: 90%;
     }
 }
 
+.modal-dialog.gallery {
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: calc(100% - 4rem);
+    & .modal-header-title {
+      font-size: $h4-font-size;
+    }
+    & .modal-title button {
+      margin-left: 10px;
+    }
+}
+
 .modal-header,
 .mce-panel .mce-window-head {
     background: $modal-header-bg;
