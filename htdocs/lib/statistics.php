@@ -2024,6 +2024,13 @@ function completionverification_statistics_headers($extra, $urllink) {
               // 'link' => format_goto($urllink . '&sort=verifieremail', $extra, array('sort'), 'verifieremail')
         ),
         array(
+              'id' => 'accessfromdate',
+              'name' => get_string('accessfromdate', 'statistics'),
+              'class' => format_class($extra, 'accessfromdate'),
+              'link' => format_goto($urllink . '&sort=accessfromdate', $extra, array('sort'), 'accessfromdate'),
+              'helplink' => get_help_icon('core', 'reports', 'completionverification', 'accessgranteddate')
+        ),
+        array(
               'id' => 'accessrevokedbyauthordate',
               'name' => get_string('accessrevokedbyauthordate', 'statistics'),
               'class' => format_class($extra, 'accessrevokedbyauthordate'),
@@ -2176,11 +2183,13 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     }
     if (is_mysql()) {
         $customsql = "
+        el.ctime AS accessfromdate,
         (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el.data->>'$.rules.usr' = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'accessor' ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyaccessordate,
         (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'owner') ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyauthordate ";
     }
     else {
         $customsql = "
+        el.ctime AS accessfromdate,
         (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
         (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1) ";
     }
@@ -2273,6 +2282,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
             $item->portfoliocreationdate = format_date(strtotime($item->collection_ctime), 'strftimedateshort');
             $item->templatetitleurl = $item->originaltemplate ? 'collection/progresscompletion.php?id=' . $item->originaltemplate : '';
             $item->verifiedprimarystatmentdate = isset($item->verifieddate) && $item->verifieddate ?  format_date(strtotime($item->verifieddate), 'strftimedateshort') : '';
+            $item->accessfromdate = $item->accessfromdate ? format_date(strtotime($item->accessfromdate), 'strftimedateshort') : '';
             $item->accessrevokedbyaccessordate = $item->accessrevokedbyaccessordate ? format_date(strtotime($item->accessrevokedbyaccessordate), 'strftimedateshort') : '';
             $item->accessrevokedbyauthordate = $item->accessrevokedbyauthordate ? format_date(strtotime($item->accessrevokedbyauthordate), 'strftimedateshort') : '';
             require_once('collection.php');
@@ -2290,7 +2300,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('firstname', 'lastname', 'displayname', 'username', 'registration_number', 'email',
                             'portfoliotitle',  'portfoliocreationdate', 'templatetitle', 'verifierfirstname',
-                            'verifierlastname', 'verifierdisplayname', 'verifierusername', 'verifierstudentid', 'verifieremail',
+                            'verifierlastname', 'verifierdisplayname', 'verifierusername', 'verifierstudentid', 'verifieremail', 'accessfromdate',
                             'accessrevokedbyauthordate', 'accessrevokedbyaccessordate', 'accessrevokedbysystemdate',
                             'verifiedprimarystatmentdate', 'completionpercentage');
         // Format all dates so that they are sortable in the CSV file
@@ -2300,6 +2310,9 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
             }
             if (!empty($data[$i]->verifiedprimarystatmentdate)) {
                 $data[$i]->verifiedprimarystatmentdate = format_date(strtotime($data[$i]->verifiedprimarystatmentdate), 'strftimew3cdatetime');
+            }
+            if (!empty($data[$i]->accessfromdate)) {
+                $data[$i]->accessfromdate = format_date(strtotime($data[$i]->accessfromdate), 'strftimew3cdatetime');
             }
             if (!empty($data[$i]->accessrevokedbyaccessordate)) {
                 $data[$i]->accessrevokedbyaccessordate = format_date(strtotime($data[$i]->accessrevokedbyaccessordate), 'strftimew3cdatetime');
