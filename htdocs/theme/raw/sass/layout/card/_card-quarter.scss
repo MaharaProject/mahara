@@ -88,16 +88,6 @@
             padding: 0;
             margin: 0;
             min-width: auto;
-            a {
-                white-space: normal;
-                background-color: $dropdown-bg;
-                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-
-                &:focus,
-                &:hover {
-                    background-color: $dropdown-link-hover-bg;
-                }
-            }
             .icon {
                 position: absolute;
                 padding-top: $dropdown-item-padding-y / 2;
