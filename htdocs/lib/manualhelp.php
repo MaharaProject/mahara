@@ -124,7 +124,7 @@ function _get_manual_language() {
 
 /**
  * Get the current version of Mahara so we can point to the corresponding version of the manual.
- * If current version is master/release candidate we use the most current stable version
+ * If current version is main/release candidate we use the most current stable version
  *
  * @return string
  */
@@ -132,7 +132,7 @@ function _get_mahara_version() {
     $release = get_config("release");
     $series = get_config("series");
     if (preg_match('/dev$/', $release) || preg_match('/rc/', $release)) {
-        // We are either on master or a branch in release candidate
+        // We are either on main or a branch in release candidate
         // so we need the latest released branch
         preg_match('/^(\d+)\.(\d+).*/', $release, $matches);
         if ($matches[2] == '10') {
