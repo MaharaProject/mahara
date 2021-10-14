@@ -170,11 +170,13 @@ div.dt-button-collection div.dropdown-menu {
 
 table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before,
 table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before,
-table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td.dtr-control::before {
-  top: 12px;
-  left: 4px;
-  height: 14px;
-  width: 14px;
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td.dtr-control::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
+  top: 1.5rem; // 24px
+  left: 0.25rem; // 4px;
+  height: 1rem;
+  width: 1rem;
   display: block;
   position: absolute;
   color: $collapse-indicator-color;
@@ -184,11 +186,11 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td.dtr-control::
   box-sizing: content-box;
   text-align: center;
   text-indent: 0 !important;
-  line-height: 14px;
+  line-height: 1;
   background-color: transparent;
   font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
   font-weight: 900;
-  padding-left: 4px;
+  padding-left: 0.25rem; // 4px;
   content: "\f107";
   &:hover,
   &:focus {
