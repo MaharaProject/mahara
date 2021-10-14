@@ -163,7 +163,7 @@ behat:
 
 revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
 whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
-mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/master)
+mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/main)
 breakpoints := $(shell git diff-tree --diff-filter=ACM --no-commit-id -r -z -p $(mergebase) HEAD test/behat/features |  grep "I insert breakpoint")
 
 minaccept:
@@ -204,17 +204,17 @@ securitycheck:
 push: securitycheck minaccept
 	@echo "Pushing the change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/publish/master; \
+		git push gerrit HEAD:refs/publish/main; \
 	else \
-		git push gerrit HEAD:refs/publish/master/$(TAG); \
+		git push gerrit HEAD:refs/publish/main/$(TAG); \
 	fi
 
 security: minaccept
 	@echo "Pushing the SECURITY change upstream..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/drafts/master; \
+		git push gerrit HEAD:refs/drafts/main; \
 	else \
-		git push gerrit HEAD:refs/drafts/master/$(TAG); \
+		git push gerrit HEAD:refs/drafts/main/$(TAG); \
 	fi
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
 
