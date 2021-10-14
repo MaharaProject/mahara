@@ -202,7 +202,7 @@ securitycheck:
 	fi
 
 push: securitycheck minaccept
-	@echo "Pushing the change upstream..."
+	@echo "Pushing the change upstream ..."
 	@if test -z "$(TAG)"; then \
 		git push gerrit HEAD:refs/publish/main; \
 	else \
@@ -210,7 +210,7 @@ push: securitycheck minaccept
 	fi
 
 security: minaccept
-	@echo "Pushing the SECURITY change upstream..."
+	@echo "Pushing the SECURITY change upstream ..."
 	@if test -z "$(TAG)"; then \
 		git push gerrit HEAD:refs/drafts/main; \
 	else \
