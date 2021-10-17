@@ -202,6 +202,13 @@
           background-color: $dropdown-link-hover-bg;
       }
     }
+    &:active,
+    &.active {
+        background-color: $dropdown-link-active-bg;
+        a {
+            color: $dropdown-link-active-color;
+        }
+    }
 }
 
 .card-footer {

@@ -405,21 +405,6 @@ textarea:focus {
     color: {$data.link};
 }
 
-.dropdown-item.active,
-.dropdown-item:active {
-    background-color: #e0e0e0;
-}
-
-.dropdown-item.active a,
-.dropdown-item:active a {
-    color: #333;
-}
-
-.dropdown-menu > li:active > a {
-    background-color: #e0e0e0;
-    color: #333;
-}
-
 .dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg {
     background-color: {$data.background};
 }
