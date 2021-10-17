@@ -661,11 +661,14 @@ function scrollToComment(commentIdString) {
         const element = document.getElementById(commentIdString);
         const headerOffset = $('header').height();
         const sitemessagesOffset = $('.site-messages').height();
-
         // Scroll down for page comments
         if (!commentonartefact) {
             const y = element.getBoundingClientRect().top + window.pageYOffset - headerOffset - sitemessagesOffset;
             window.scrollTo({top: y, behavior: 'smooth'});
+        }
+        else {
+            const sectionOffset = $('#' + commentIdString).offset();
+            $('#configureblock .modal-body').animate({ scrollTop: sectionOffset.top - 60 }, 'smooth');
         }
     }, 500);
 }

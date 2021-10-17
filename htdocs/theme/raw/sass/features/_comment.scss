@@ -62,14 +62,6 @@
             flex: 0 1 auto;
         }
     }
-    
-    .collapse & {
-        &:first-child {
-            // To override card listgroup no top border on first-child
-            border-top: $list-group-border-width solid $list-group-border-color !important;
-            border-bottom: 0;
-        }
-    }
 
     // Indentation for nested comments
     @for $i from 1 through 5 {
@@ -111,4 +103,19 @@
 .modal-docked:not(.active) .tinymce-mobile-android-container,
 .modal-docked:not(.active) .tinymce-mobile-ios-container {
     display: none;
+}
+
+// removing the padding in the collapsible fieldset-body for page comments
+.comment-fieldset-body {
+    padding: 0 !important;
+
+    // adding side padding to pagination wrapper in a collapsible fieldset
+    .pagination-wrapper {
+        margin: $spacing-base;
+    }
+}
+
+// padding around comment form within collapsible in page to match list-group padding
+.viewfooter .add-comment-container {
+    padding: $list-group-item-padding-y $list-group-item-padding-x;
 }

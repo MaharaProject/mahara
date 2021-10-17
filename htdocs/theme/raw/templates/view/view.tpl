@@ -57,18 +57,18 @@
         {/if}
 
         {if $feedback->position eq 'base' && $feedback->baseplacement}
-        <div class="comment-container">
+        <div class="comment-container collapsible-group">
             {if $feedback->count || $enablecomments}
-            <fieldset class="pieform-fieldset last collapsible">
-                <legend class="collapsible card-header">
+            <fieldset class="pieform-fieldset first last collapsible">
+                <legend>
                     <button href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                         <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                         <span id="comment-section-title">{if $feedback->count}{str tag="Comments" section="artefact.comment"}{else}{str tag=addcomment section=artefact.comment}{/if}</span>
-                        <span id="comment-section-count">{if $feedback->count}({$feedback->count}){/if}</span>
+                        <span id="comment-section-count" class="text-small">{if $feedback->count}({$feedback->count}){/if}</span>
                         <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
                     </button>
                 </legend>
-                <div class="fieldset-body collapse" id="dropdown">
+                <div class="fieldset-body comment-fieldset-body collapse" id="dropdown">
                 {* Do not change the id because it is used by paginator.js *}
                     <div id="feedbacktable{if $blockid}_{$blockid}{/if}" class="feedbacktable js-feedbackbase fullwidth">
                     {$feedback->tablerows|safe}
