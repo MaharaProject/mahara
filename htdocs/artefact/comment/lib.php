@@ -1051,6 +1051,7 @@ class ArtefactTypeComment extends ArtefactType {
         $snippet = smarty_core();
         $form['elements']['replytoview'] = array(
             'type' => 'html',
+            'class' => 'last',
             'value' => $snippet->fetch('artefact:comment:replyplaceholder.tpl')
         );
         // This is a placeholder for the parent comment's ID. It'll be populated by Javascript if needed.

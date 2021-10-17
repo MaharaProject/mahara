@@ -39,7 +39,8 @@
                 }
             }
             legend {
-                a {
+                a,
+                button {
                     border-bottom: $card-border-width solid $card-border-color;
                     &.collapsed {
                         @include border-bottom-radius($card-border-radius);
@@ -53,7 +54,8 @@
             }
         }
         &.first .card-header a,
-        &.first legend a {
+        &.first legend a,
+        &.first legend button {
             @include border-top-radius($card-border-radius);
         }
 
