@@ -12,6 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['ltiserviceexists'] = 'The LTI advantage service group is registered.';
+$string['maharaltiadvantage'] = 'LTI Advantage';
 $string['short_name'] = 'Short name';
 $string['short_namedescription'] = 'Maximum of 30 characters. This short name is the name for the LTI Provider that is displayed in the "Submitted to" column in the "Current submissions" table.';
 $string['short_namecannotbeempty'] = 'Short name cannot be empty.';
