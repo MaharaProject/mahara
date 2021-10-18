@@ -67,14 +67,14 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
             if ($editing) {
                 if (self::check_connection_for_user($owner)) {
                     // We display the complete configuration message if we are page owner
-                    $smarty->assign('message', get_string('completeconfiguration', 'blocktype.courseinfo'));
+                    $smarty->assign('message', get_string('completeconfiguration1', 'blocktype.courseinfo'));
                 }
                 else {
                     $smarty->assign('message', get_string('completeconfigurationnotpossible', 'blocktype.courseinfo'));
                 }
             }
             else {
-                $smarty->assign('message', get_string('nocourses','blocktype.courseinfo'));
+                $smarty->assign('message', get_string('nocourses1','blocktype.courseinfo'));
             }
         }
         else if (is_null($configdata['userid'])) {
@@ -88,7 +88,7 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
                 }
             }
             else {
-                $smarty->assign('message', get_string('nocourses','blocktype.courseinfo'));
+                $smarty->assign('message', get_string('nocourses1','blocktype.courseinfo'));
             }
         }
         else {
