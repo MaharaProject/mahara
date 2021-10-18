@@ -75,6 +75,7 @@ a:focus,
 .btn.focus,
 .btn:focus,
 a[data-toggle="collapse"]:focus,
+button[data-toggle="collapse"]:focus,
 tr[data-toggle="collapse"]:focus,
 button:focus,
 .form-control:focus,
@@ -268,6 +269,7 @@ textarea:focus {
 }
 
 .btn-primary,
+.btn-primary:not(:disabled):not(.disabled),
 .btn-primary.btn-sm {
     color: #FFF;
     background-color: #575757;
@@ -279,10 +281,21 @@ textarea:focus {
 .btn-primary:active,
 .btn-primary.btn-sm:hover,
 .btn-primary.btn-sm:focus,
-.btn-primary.btn-sm:active {
+.btn-primary.btn-sm:active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.btn-primary:not(:disabled):not(.disabled):active,
+.show > .btn-primary.dropdown-toggle {
     color: #FFF;
     background-color: #333;
     border-color: #575757;
+}
+
+.btn:not(:disabled):not(.disabled).active:focus,
+.btn:not(:disabled):not(.disabled):active:focus,
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125),0 0 0 .25rem rgba(111,111,111,.5);
 }
 
 .btn-secondary {
@@ -426,6 +439,8 @@ textarea:focus {
 .dashboard-widget-container .thumbnail-widget .widget-heading .circle-bg .icon {
     color: {$data.backgroundfg};
 }
+.dashboard-widget-container .thumbnail-widget.logged-in:focus .widget-heading,
+.dashboard-widget-container .thumbnail-widget.logged-in:hover .widget-heading,
 .dashboard-widget-container .thumbnail-widget:focus .widget-heading,
 .dashboard-widget-container .thumbnail-widget:hover .widget-heading {
     background-color: #F1F1F1;
@@ -468,10 +483,13 @@ textarea:focus {
 a[data-toggle="collapse"]:focus .collapse-indicator,
 a[data-toggle="collapse"]:hover .collapse-indicator,
 tr[data-toggle="collapse"]:focus .collapse-indicator,
-tr[data-toggle="collapse"]:hover .collapse-indicator {
+tr[data-toggle="collapse"]:hover .collapse-indicator,
+button[data-toggle="collapse"]:focus .collapse-indicator,
+button[data-toggle="collapse"]:hover .collapse-indicator {
     color: #333;
 }
 tr[data-toggle="collapse"] .collapse-indicator,
+button[data-toggle="collapse"] .collapse-indicator,
 a[data-toggle="collapse"] .collapse-indicator {
     color: #575757;
 }
@@ -479,4 +497,35 @@ a[data-toggle="collapse"] .collapse-indicator {
 .link-blocktype:focus,
 .link-blocktype:hover {
     color: #333;
+}
+
+.btn-draggable .nav .navbar-showchildren:focus .btn-group-vertical > .btn,
+.btn-draggable .nav .navbar-showchildren:hover .btn-group-vertical > .btn,
+.list-group.ui-sortable .nav .navbar-showchildren:focus .ui-draggable-dragging,
+.list-group.ui-sortable .nav .navbar-showchildren:hover .ui-draggable-dragging,
+.nav .navbar-showchildren:focus .btn-draggable .btn-group-vertical > .btn,
+.nav .navbar-showchildren:focus .icon,
+.nav .navbar-showchildren:focus .list-group.ui-sortable .ui-draggable-dragging,
+.nav .navbar-showchildren:hover .btn-draggable .btn-group-vertical > .btn,
+.nav .navbar-showchildren:hover .icon,
+.nav .navbar-showchildren:hover .list-group.ui-sortable .ui-draggable-dragging {
+    color: #333;
+}
+
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc,
+table.dataTable thead .sorting_asc_disabled,
+table.dataTable thead .sorting_desc_disabled,
+table.dataTable thead .sorting:focus,
+table.dataTable thead .sorting:hover,
+table.dataTable thead .sorting_asc:focus,
+table.dataTable thead .sorting_asc:hover,
+table.dataTable thead .sorting_asc_disabled:focus,
+table.dataTable thead .sorting_asc_disabled:hover,
+table.dataTable thead .sorting_desc:focus,
+table.dataTable thead .sorting_desc:hover,
+table.dataTable thead .sorting_desc_disabled:focus,
+table.dataTable thead .sorting_desc_disabled:hover {
+    color: {$data.link};
 }
