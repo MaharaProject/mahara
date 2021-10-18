@@ -67,7 +67,7 @@ if (empty($langpacks)) {
 $languages = get_languages();
 $series = get_config('series');
 if (preg_match('/dev$/', get_config('release'))) {
-    $series = 'master';
+    $series = 'main';
 }
 $seriesfilesuffix = $series . '.tar.gz';
 
