@@ -37,7 +37,9 @@ $services = get_records_array('external_services', 'restrictedusers', 0);
 $disabledopts = array();
 $sopts = array();
 foreach ($services as $service) {
-    $sopts[$service->id] = get_string($service->shortname, preg_replace('/\//', '.', $service->component));
+    //check langstring exists before adding to list options
+    $displayname = get_string($service->shortname, preg_replace('/\//', '.', $service->component));
+    $sopts[$service->id] = string_exists($displayname) ? $displayname : $service->name;
     $disabledopts[$service->id] = array();
     if (substr_count($service->component, '/') > 0) {
         list($moduletype, $module) = explode("/", $service->component);
