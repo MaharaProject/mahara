@@ -20,7 +20,7 @@
         {/if}
     {else}
     <p>{$resultstr}</p>
-    <div class="lead text-center content-text">{str tag='nocourses' section='blocktype.courseinfo'}</div>
+    <div class="lead text-center content-text">{str tag='nocourses1' section='blocktype.courseinfo'}</div>
     {/if}
 {/if}
 </div>
