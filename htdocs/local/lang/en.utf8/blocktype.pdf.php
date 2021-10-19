@@ -11,4 +11,4 @@
 
 defined('INTERNAL') || die();
 
-$string['pdfwarning'] = 'You can add only one PDF in this block.<br /> Note: Displaying large PDF can slow down your browser.';
+$string['pdfwarning'] = 'You can only add ONE PDF in this block.<br /> Note: If you add a large PDF that may slow down your browser.';
