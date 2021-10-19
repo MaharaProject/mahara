@@ -1,0 +1,12 @@
+<!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
+<!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
+<h1>SAML 2.0 field for affiliation roles</h1>
+<p>The Identity Provider (IdP) can pass in affiliation role information for account holders. This field works in conjunction with</p>
+    <ul>
+      <li>SSO field for affiliation IDs</li>
+      <li>SSO field for affiliation emails</li>
+      <li>SSO field for affiliation role delimiter</li>
+    </ul>
+
+<p>If you set this, the "Role delimiter character", and the required "Role mapping" fields then the person will be granted the associated roles in the institutions indicated in the affiliation roles array passed in.</p>
+<p>For example, if the role associations passed in are 'staffmember@institution_a' and 'administrator@institution_b' and the role mapping for 'Institution staff' is 'staffmember' and for 'Institution administrator' is 'administrator', then they will be an institution staff member in institution_a and an institution administrator in institution_b.</p>

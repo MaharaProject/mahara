@@ -858,6 +858,10 @@ $string['potentialadmins'] = 'Potential administrators';
 $string['currentadmins'] = 'Current administrators';
 $string['adminusersupdated'] = 'Administrators updated';
 
+// Institution support admin
+
+$string['institutionsupportadminpagedescription'] = 'Here you can choose which institution members shall be institution support administrators for your institution. The current support administrators are in the "Institution support administrator" field, and potentials are in the "Institution members" field.';
+
 // Staff Users
 $string['staffuserspagedescription1'] = 'Here you can choose which people shall be staff for the site. The current staff are in the "Current staff" field, and potential staff are in the "Potential staff" field.';
 $string['institutionstaffuserspagedescription1'] = 'Here you can choose which institution members shall be staff for your institution. The current staff are in the "Institution staff" field, and potential staff are in the "Institution members" field.';
@@ -1090,6 +1094,8 @@ $string['institutionadmin'] = 'Institution administrator';
 $string['institutionadmins'] = 'Institution administrators';
 $string['institutionadministrator'] = 'Institution administrator';
 $string['institutionadmindescription1'] = 'Allow this person to administer all others in this institution.';
+$string['institutionsupportadmin'] = 'Institution support administrator';
+$string['institutionsupportadmindescription'] = 'Allow this person to masquerade as others in this institution who have fewer privileges, i.e. members and staff.';
 $string['settingsfor'] = 'Settings for:';
 $string['institutionmembers'] = 'Institution members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution.';
@@ -1171,11 +1177,12 @@ $string['Maximummembers'] = 'Maximum members';
 $string['Maximumgroups'] = 'Maximum groups';
 $string['Staff'] = 'Staff';
 $string['Admins'] = 'Administrators';
+$string['Supportadmins'] = 'Support administrators';
 
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate people with an institution, you should create the institution first.';
 $string['noinstitutionreports'] = 'Unable to view institution reports';
-$string['noinstitutionreportsdescription1'] = 'Staff report access needs to be turned on for the site to allow staff to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
+$string['noinstitutionreportsdescription2'] = 'Institution report access needs to be turned on for the site to allow staff or support adminstrators to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
 $string['noinstitutionstaticpages'] = 'You do not have permission to edit any institution static pages or no institutions have been created yet.';
 $string['noinstitutionstaticpagesadmin'] = 'If you are a site administrator, please edit the default static pages in <a href="%s">Configure site</a>.';
 

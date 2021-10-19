@@ -2369,6 +2369,9 @@ function auth_check_admin_section() {
     else if (defined('INSTITUTIONALSTAFF')) {
         $allowed = $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff();
     }
+    else if (defined('INSTITUTIONALSUPPORTADMIN')) {
+        $allowed = $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin() || $USER->is_institutional_staff() || $USER->is_institutional_supportadmin();
+    }
     else {
         return;
     }

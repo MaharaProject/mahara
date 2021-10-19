@@ -229,3 +229,4 @@ $string['duplicateurl'] = 'You cannot add this social media account because its 
 
 // Allow comments
 $string['notes'] = 'Notes';
+$string['supportadmin'] = 'Support administrator';

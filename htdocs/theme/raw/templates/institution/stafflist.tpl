@@ -8,18 +8,14 @@
 <div id="{$listtype}_left" class="leftdiv">
     <div id="{$listtype}list" class="fullwidth list-group">
         {foreach from=$columnleft item=leftuser}
-            <div class="list-group-item">
-                {include file="institution/staff.tpl" user=$leftuser page=$page mrmoduleactive=$mrmoduleactive}
-            </div>
+            {include file="institution/staff.tpl" user=$leftuser page=$page mrmoduleactive=$mrmoduleactive}
         {/foreach}
     </div>
 </div>
 <div id="{$listtype}_right" class="rightdiv">
     <div id="{$listtype}list" class="fullwidth list-group">
         {foreach from=$columnright item=rightuser}
-            <div class="list-group-item">
-                {include file="institution/staff.tpl" user=$rightuser page=$page mrmoduleactive=$mrmoduleactive}
-            </div>
+            {include file="institution/staff.tpl" user=$rightuser page=$page mrmoduleactive=$mrmoduleactive}
         {/foreach}
     </div>
 </div>

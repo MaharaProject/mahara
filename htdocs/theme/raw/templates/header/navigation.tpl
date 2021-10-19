@@ -1,6 +1,6 @@
 {if $MAINNAV}
 <nav aria-label="{str tag=mainmenu setction=mahara}">
-  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main">
+  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}adminnav{/if} nav collapse navbar-collapse nav-main">
     <ul id="nav" class="nav navbar-nav">
         {strip}
             {foreach from=$MAINNAV item=item name=menu}
@@ -60,7 +60,7 @@
   </div>
 </nav>
 <nav aria-label="{str tag=adminmenu section=mahara}">
-  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin">
+  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}adminnav{/if} nav collapse navbar-collapse nav-main-admin">
     <ul id="navadmin" class="nav navbar-nav">
     {strip}
         {foreach from=$MAINNAVADMIN item=item name=menu}
@@ -123,7 +123,7 @@
 
 {if $RIGHTNAV}
 <nav aria-label="{str tag=usermenu1 section=mahara}">
-  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user">
+  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}{/if} nav collapse navbar-collapse nav-main-user">
     <ul id="navuser" class="nav navbar-nav">
       {strip}
         {foreach from=$RIGHTNAV item=item}

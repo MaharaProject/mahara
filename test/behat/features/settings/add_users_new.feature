@@ -11,8 +11,29 @@ Background:
   | insttwo | Institution Two | ON | OFF |
 
   And the following "users" exist:
-  | username | password | email | firstname | lastname | institution | authname | role |
-  | StaffA | Kupuh1pa! | StaffA@example.com | Alexei | Staff | instone | internal | staff |
+  | username      | password  | email              | firstname | lastname | institution | authname | role         |
+  | StaffA        | Kupuh1pa! | StaffA@example.com | Alexei    | Staff    | instone     | internal | staff        |
+  | SupportAdminB | Kupuh1pa! | SAB@example.com    | Betty     | Support  | instone     | internal | supportadmin |
+
+Scenario: Masquerading as a support admin
+  Given I log in as "SupportAdminB" with password "Kupuh1pa!"
+  And I choose "People search" from administration menu
+  # Check they can get to the user edit admin page from the people list
+  And I follow "StaffA"
+  And I follow "Log in as this person"
+  And I follow "Become Betty Support again"
+  And I choose "People search" from administration menu
+  # Check they can get to the user edit admin page via the person's profile page
+  And I follow "Alexei"
+  And I press "Log in as StaffA"
+  And I follow "Become Betty Support again"
+  And I log out
+  Given I log in as "StaffA" with password "Kupuh1pa!"
+  And I choose "People search" from administration menu
+  # Check they can not get to the user edit admin page via the person's profile page
+  And I follow "Betty"
+  Then I should not see "Log in as SupportAdminB"
+  # Need to have a step to check that a link is not present on the page
 
 Scenario: Admin to add a person (Bug 1703721)
   Given I log in as "admin" with password "Kupuh1pa!"

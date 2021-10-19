@@ -338,12 +338,13 @@ if (!empty($loggedinid) && $loggedinid != $userid) {
     $remoteuserrelationship = $relationship;
 }
 
-$adminforuser = $USER->is_admin_for_user($user);
+$adminforuser = $USER->is_supportadmin_for_user($user);
 if ($userid != $USER->get('id') && $adminforuser && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', display_username($user));
 } else {
     $loginas = null;
 }
+
 // Set up skin, if the page has one
 $viewskin = $view->get('skin');
 $owner    = $view->get('owner');

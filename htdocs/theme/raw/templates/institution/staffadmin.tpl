@@ -16,5 +16,13 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+       <div class="card card-secondary">
+            <h2 class="card-header">{str tag=institutionsupportadmin section=admin}</h2>
+            <div class="block">
+                {$supportadmin.tablerows|safe}
+            </div>
+        </div>
+    </div>
 </div>
 {include file="footer.tpl"}

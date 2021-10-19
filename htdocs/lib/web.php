@@ -115,7 +115,7 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 */
 function user_personal_section() {
     $usersection = !defined('ADMIN') && !defined('STAFF') && !defined('INSTITUTIONALADMIN') &&
-        !defined('INSTITUTIONALSTAFF') && !defined('GROUP') && !defined('CREATEGROUP');
+        !defined('INSTITUTIONALSTAFF') && !defined('INSTITUTIONALSUPPORTADMIN') && !defined('GROUP') && !defined('CREATEGROUP');
 
     return $usersection ? 1 : 0;
 }
@@ -775,6 +775,9 @@ EOF;
     if (defined('INSTITUTIONALSTAFF')) {
         $smarty->assign('INSTITUTIONALSTAFF', true);
     }
+    if (defined('INSTITUTIONALSUPPORTADMIN')) {
+        $smarty->assign('INSTITUTIONALSUPPORTADMIN', true);
+    }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     $smarty->assign('loggedout', !$USER->is_logged_in());
@@ -788,7 +791,7 @@ EOF;
     if ($USER->is_logged_in()) {
         global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
         $smarty->assign('MAINNAV', main_nav());
-        $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
+        $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff() || $USER->is_institutional_supportadmin();
         if ($is_admin) {
             $smarty->assign('MAINNAVADMIN', main_nav('adminnav'));
         }
@@ -2265,7 +2268,7 @@ function get_block_help(Pieform $form, $element) {
  * @return bool
  */
 function in_admin_section() {
-    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF') || defined('INADMINMENU');
+    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF') || defined('INSTITUTIONALSUPPORTADMIN') || defined('INADMINMENU');
 }
 
 /**
@@ -2493,6 +2496,12 @@ function admin_nav() {
             'url'    => 'admin/users/institutionstaff.php',
             'title'  => get_string('Staff', 'admin'),
             'weight' => 30,
+        ),
+        'manageinstitutions/institutionsupportadmins' => array(
+            'path'   => 'manageinstitutions/institutionsupportadmins',
+            'url'    => 'admin/users/institutionsupportadmins.php',
+            'title'  => get_string('Supportadmins', 'admin'),
+            'weight' => 35,
         ),
         'manageinstitutions/institutionadmins' => array(
             'path'   => 'manageinstitutions/institutionadmins',

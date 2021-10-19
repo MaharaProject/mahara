@@ -179,6 +179,7 @@ $string['showmore'] = 'Show more';
 $string['accept'] = 'Accept';
 $string['memberofinstitutions'] = 'Member of %s';
 $string['staffofinstitutions'] = 'Staff of %s';
+$string['supportadminofinstitutions'] = 'Support administrator of %s';
 $string['adminofinstitutions'] = 'Administrator of %s';
 $string['reject'] = 'Reject';
 $string['sendrequest'] = 'Send request';

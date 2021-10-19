@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('INSTITUTIONALSTAFF', 1);
+define('INSTITUTIONALSUPPORTADMIN', 1);
 define('JSON', 1);
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
@@ -37,7 +37,9 @@ $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masq
 
 if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
     (!$USER->is_institutional_staff($institution) ||
-    ($USER->is_institutional_staff($institution) && empty($allstaffstats) && empty($userstaffstats)))) {
+     ($USER->is_institutional_staff($institution) && empty($allstaffstats) && empty($userstaffstats))) &&
+    (!$USER->is_institutional_supportadmin($institution) ||
+     ($USER->is_institutional_supportadmin($institution) && empty($allstaffstats) && empty($userstaffstats)))) {
    $notallowed = true;
 }
 if (!$notallowed) {

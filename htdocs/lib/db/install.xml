@@ -191,6 +191,7 @@
                 <FIELD NAME="studentid" TYPE="text" NOTNULL="false"/>
                 <FIELD NAME="staff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
                 <FIELD NAME="admin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="supportadmin" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="usr,institution" />

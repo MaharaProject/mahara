@@ -348,7 +348,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
     // Filter by viewable institutions:
     global $USER;
     if (!$USER->get('admin') && !$USER->get('staff')) {
-        $allowed = array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions'));
+        $allowed = array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions'), $USER->get('supportadmininstitutions'));
         if (empty($search->institution)) {
             $search->institution = 'all';
         }
@@ -597,7 +597,7 @@ function build_admin_user_search_results($search, $offset, $limit) {
 
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
-            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
         }
     }
 
@@ -776,7 +776,7 @@ function build_admin_export_queue_results($search, $offset, $limit) {
 
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
-            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
         }
     }
 
@@ -975,7 +975,7 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
-            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
         }
     }
 
