@@ -419,3 +419,10 @@ small, .small {
     font-family: $font-family-base;
     font-weight: $font-weight-base;
 }
+
+// portfolio completion table icons
+a.verify_action,
+a.unsignoff_action,
+a.signoff_action {
+    text-decoration: none;
+}
