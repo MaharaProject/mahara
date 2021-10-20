@@ -5864,6 +5864,7 @@ class View {
                 }
                 if ($view->get('coverimage') && ($coverimage = get_record('artefact', 'id', $view->get('coverimage')))) {
                     safe_require('artefact', 'file');
+                    $v['coverimage'] = $view->get('coverimage');
                     $v['coverimageurl'] = ArtefactTypeImage::get_coverimage_url(array('id' => $coverimage->id));
                     if ($coverimage->description) {
                         $v['coverimagedescription'] = $coverimage->description;
@@ -5983,6 +5984,7 @@ class View {
                 }
                 if ($collection->get('coverimage') && ($coverimage = get_record('artefact', 'id', $collection->get('coverimage')))) {
                     safe_require('artefact', 'file');
+                    $c['coverimage'] = $collection->get('coverimage');
                     $c['coverimageurl'] = ArtefactTypeImage::get_coverimage_url(array('id' => $coverimage->id));
                     if ($coverimage->description) {
                         $c['coverimagedescription'] = $coverimage->description;
