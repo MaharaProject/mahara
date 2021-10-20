@@ -17,6 +17,12 @@
                 </td>
                 <td class="center">{if $institution->maxuseraccounts}{$institution->maxuseraccounts}{/if}</td>
                 <td class="center">
+                {if !$institution->site}
+                        <a href="{$WWWROOT}group/index.php?filter=all">{$institution->groupcount}</a>
+                {/if}
+                </td>
+                <td class="center">{if $institution->maxgroups}{$institution->maxgroups}{/if}</td>
+                <td class="center">
                     {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{/if}
                         {$institution->staff}
                     {if !$institution->site}</a>{/if}</td>

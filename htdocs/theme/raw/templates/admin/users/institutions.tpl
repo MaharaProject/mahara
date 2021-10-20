@@ -71,7 +71,9 @@
                 <th>{str tag="institution"}</th>
                 <th>{str tag="Shortname" section="admin"}</th>
                 <th>{str tag="Members" section="admin"}</th>
-                <th>{str tag="Maximum" section="admin"}</th>
+                <th>{str tag="Maximummembers" section="admin"}</th>
+                <th>{str tag="Groups" section="admin"}</th>
+                <th>{str tag="Maximumgroups" section="admin"}</th>
                 <th>{str tag="Staff" section="admin"}</th>
                 <th>{str tag="Admins" section="admin"}</th>
                 <th></th>

@@ -253,6 +253,7 @@ if ($institution || $add) {
         $data->reviewselfdeletion = get_config_institution($institution, 'reviewselfdeletion');
         $data->progresscompletion = get_config_institution($institution, 'progresscompletion');
         $data->showonlineusers = (is_isolated() && $data->showonlineusers == 2 ? 1 : $data->showonlineusers);
+        $data->maxgroups = get_config_institution($institution, 'maxgroups');
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -617,6 +618,17 @@ if ($institution || $add) {
                 ),
                 'size'         => 5,
             );
+            $elements['maxgroups'] = array(
+                'type'         => 'text',
+                'title'        => get_string('maxnumberofgroups', 'admin'),
+                'description'  => get_string('maxgroupsdescription', 'admin'),
+                'defaultvalue' => empty($data->maxgroups) ? '' : $data->maxgroups,
+                'rules'        => array(
+                    'regex'     => '/^\d*$/',
+                    'maxlength' => 8,
+                ),
+                'size'         => 5,
+            );
         }
     }
     if (is_plugin_active('signoff', 'blocktype')) {
@@ -708,7 +720,6 @@ if ($institution || $add) {
         'pluginname' => 'admin',
         'elements' => $elements
     ));
-
 }
 else {
     // Get a list of institutions
@@ -874,6 +885,18 @@ function institution_validate(Pieform $form, $values) {
         $form->set_error('allowinstitutionsmartevidence', get_string('institutionsmartevidencenotallowed', 'admin'));
     }
 
+    // check that current group/member count is within new limit
+    if (!empty($institution)) {
+        $instarray = Institution::count_members(false, false, $institution);
+        $thisinst = $instarray[$institution];
+        if ($thisinst->members > $values['maxuseraccounts'] && !empty($values['maxuseraccounts'])) {
+            $form->set_error('maxuseraccounts', get_string('maxmembersexceeded', 'admin', $thisinst->members));
+        }
+        if ($thisinst->groupcount > $values['maxgroups'] && !empty($values['maxgroups'])) {
+            $form->set_error('maxgroups', get_string('institutionmaxgroupsexceeded', 'admin', $thisinst->groupcount));
+        }
+    }
+
     // Validate plugins settings.
     plugin_institution_prefs_validate($form, $values);
 }
@@ -1008,6 +1031,7 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
         if ($USER->get('admin')) {
             $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+            $newinstitution->maxgroups            = ($values['maxgroups']) ? intval($values['maxgroups']) : null;
             $newinstitution->expiry               = db_format_timestamp($values['expiry']);
         }
     }

@@ -956,6 +956,8 @@ class Institution {
                 ii.name,
                 ii.displayname,
                 ii.maxuseraccounts,
+                (SELECT value FROM {institution_config} WHERE institution = ii.name AND field = \'maxgroups\') AS maxgroups,
+                (SELECT COUNT(*) FROM {group} WHERE institution = ii.name) AS groupcount,
                 ii.suspended,
                 COALESCE(a.members, 0) AS members,
                 COALESCE(a.staff, 0) AS staff,
