@@ -36,9 +36,12 @@ This button has padding on the right of the icon due to the plus class.
 <section data-markdown data-category="buttons">
 ### Add button (small)
 This button is used for adding items to a list or table, e.g. URLs and users.
+When relying on icons, make sure they are universal symbols, e.g. magnifying glass for search.
+When button does not display any text, include title attribute for sighted people and screen readers.
+For button icon images, add the aria-hidden="true" attribute.
 ```
-<button class="btn-secondary btn-sm btn">
-    <span class="icon icon-plus" role="presentation"></span>
+<button class="btn-secondary btn-sm btn" title="{str tag=addspecific}">
+    <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
 </button>
 ```
 </section>
