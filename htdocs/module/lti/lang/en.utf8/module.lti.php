@@ -17,6 +17,7 @@ $string['autoconfiguredesc'] = 'Automatically enable settings and configurations
 $string['autoconfiguretitle'] = 'Auto-configure LTI';
 $string['autocreateusers'] = 'Auto-create accounts';
 $string['autocreationnotenabled'] = 'Auto-creation of accounts is not enabled';
+$string['autocreationnotenabledredirect'] = 'You could not be logged in because your institution doesn\'t allow for the creation of accounts via LTI. If you do already have an account, you can log in via the regular login form. If you have any questions, please get in touch with the site administrator.';
 $string['portfolioname'] = 'Portfolio title';
 $string['configstep'] = 'Configuration item';
 $string['configstepstatus'] = 'Status';
