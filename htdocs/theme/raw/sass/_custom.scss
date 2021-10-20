@@ -173,6 +173,12 @@
 .editgroup-container {
     padding-bottom: $spacing-xl;
     margin-bottom: $spacing-xl;
+    @include media-breakpoint-down(sm) {
+        .column-list {
+            column-count: 1;
+            column-gap: 0;
+        }
+    }
     &:last-child {
         border-bottom-width: 0;
         margin-bottom: 0;
@@ -184,6 +190,20 @@
     }
     .checkbox {
         display: inline-block;
+    }
+    .form-check.group-invite {
+        white-space: nowrap;
+        margin-bottom: $spacing-base;
+        padding-left: 0;
+
+        label {
+            white-space: normal;
+        }
+        @include media-breakpoint-up(sm) {
+            label {
+                min-width: 1rem;
+            }
+        }
     }
 }
 

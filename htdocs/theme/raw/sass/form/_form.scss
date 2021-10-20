@@ -461,11 +461,6 @@ select {
     padding-right: $input-btn-padding-x !important;
 }
 
-// checkbox group invites in modal wrapping to next line
-.form-check.group-invite {
-    white-space: nowrap;
-}
-
 //sidebar search
 input#sidebar-search {
     border-top-left-radius: $input-border-radius;
