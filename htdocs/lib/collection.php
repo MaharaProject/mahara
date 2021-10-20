@@ -2287,7 +2287,7 @@ class Collection {
     public function lock_collection() {
         // Lock the collection
         $collectionid = $this->get('id');
-        execute_sql("UPDATE {collection} SET lock = 1 WHERE id = ?", array($collectionid));
+        execute_sql("UPDATE {collection} SET " . db_quote_identifier('lock') . " = 1 WHERE id = ?", array($collectionid));
         // Lock all views in that collection
         $sql = "UPDATE {view} SET locked = 1
             WHERE id IN (
@@ -2306,7 +2306,7 @@ class Collection {
     public function unlock_collection() {
         // Unlock the collection
         $collectionid = $this->get('id');
-        execute_sql("UPDATE {collection} SET lock = 0 WHERE id = ?", array($collectionid));
+        execute_sql("UPDATE {collection} SET " . db_quote_identifier('lock') . " = 0 WHERE id = ?", array($collectionid));
         // Unlock all views in that collection
         $sql = "UPDATE {view} SET locked = 0
             WHERE id IN (
@@ -2399,11 +2399,13 @@ function get_active_collection_template($institution='mahara') {
 function unlock_collections_by_rollover($date = '-6 months') {
     // Unlock the collections
     $rollover = db_format_timestamp(strtotime($date));
-    execute_sql("UPDATE {collection} SET lock = 0
+    execute_sql("UPDATE {collection} SET " . db_quote_identifier('lock') . " = 0
                  WHERE id IN (
-                    SELECT ct.collection FROM {collection_template} ct
-                    JOIN {collection} c ON c.id = ct.collection
-                    WHERE ct.rolloverdate < ?
-                    AND c.lock = 1
-                 )", array($rollover));
+                    SELECT ct_collection  FROM (
+                        SELECT ct.collection as ct_collection FROM {collection_template} ct
+                        JOIN {collection} c ON c.id = ct.collection
+                        WHERE ct.rolloverdate < ?
+                        AND c." . db_quote_identifier('lock') . " = 1
+                    ) as ct
+                )", array($rollover));
 }
