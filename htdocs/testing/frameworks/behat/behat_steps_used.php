@@ -31,6 +31,7 @@ function read_dir_files(&$output, $dirpath) {
         }
         if (is_dir($dirpath . '/' . $file)) {
             read_dir_files($output, $dirpath . '/' . $file);
+            continue;
         }
         $gitroot = dirname(get_config('docroot'));
         $filename = str_replace($gitroot, '', str_replace('.', '_', $file->getPathname()));
@@ -66,6 +67,14 @@ if (get_config('behat_dataroot')) {
     // Find the behat.yml file
     require_once(get_config('docroot') . 'testing/frameworks/behat/classes/util.php');
     $behatyml = BehatTestingUtil::get_behat_config_path();
+    if (!is_readable($behatyml)) {
+        // Try and get it to be readable
+        if (is_writable(get_config('behat_dataroot') . '/behat')) {
+            // If we need to update the config file we need this to call validate_plugin().
+            require_once(get_config('docroot') . 'lib/upgrade.php');
+            $test = BehatConfigManager::update_config_file();
+        }
+    }
     if (is_readable($behatyml)) {
         $hascore = true;
         // Run the behat config command to get list of core features
