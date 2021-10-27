@@ -1,5 +1,3 @@
-@TODO This is only a draft. Review before the final .0 release and update the information accordingly.
-
 # Mahara Readme
 
 Mahara is an open source ePortfolio system. An ePortfolio is a type of
@@ -76,11 +74,11 @@ Here are the system requirements needed to run Mahara 21.10.
 
 ### OS
 
-Mahara is only officially supported on Debian (8.0/"Jessie" LTS or later) and
-Ubuntu (16.04/"Xenial Xerus" LTS or later), however it will probably run in any
+Mahara is only officially supported on Debian (9.0/"Stretch" LTS or later) and
+Ubuntu (18.04/"Bionic Beaver" LTS or later), however it will probably run in any
 OS with a suitable web server.
 
-Note: This version of Mahara has NOT been tested on Debian 10+ / Ubuntu 19.04+
+Note: This version of Mahara has NOT been tested on Debian 11+ / Ubuntu 21.04+
 
 ### Web Server
 
@@ -95,8 +93,8 @@ modification to support other databases.
  * MySQL 5.7 or later
  * MariaDB 10.1 or later
 
-Note: This version of Mahara has NOT been tested on Postgres 12+,
-MariaDB 10.3+ versions.
+Note: This version of Mahara has NOT been tested on Postgres 14+,
+MariaDB 10.6+ versions.
 
 ### PHP
 
@@ -138,11 +136,11 @@ You can still use Mahara on older browsers, but may not have all functionality
 available.
 
 For Mahara 21.10, the supported browser versions are:
- * Firefox - 75.0
- * Chrome - 81.0
- * Safari - 13.1
- * Opera - 67.0
- * MS Edge - 81.0
+ * Firefox - 93.0
+ * Chrome - 95.0
+ * Safari - 15.0
+ * Opera - 80.0
+ * MS Edge - 95.0
  * Safari for iOS
  * Chrome for Android
 
