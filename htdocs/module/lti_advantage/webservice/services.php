@@ -11,7 +11,7 @@
  */
 
 $services = array(
-    'LTI advantage integration' => array(
+    'LTI Advantage' => array(
         'shortname' => 'maharaltiadvantage',
         'functions' => [
             'module_lti_advantage_launch',

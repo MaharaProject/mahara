@@ -93,5 +93,22 @@ function xmldb_module_lti_advantage_upgrade($oldversion=0) {
 
   }
 
+  if ($oldversion < 2021102710) {
+    log_debug('Updating External Service label: LTI advantage integration is now LTI Advantage.');
+    try {
+      $id = get_field('external_services', 'id', 'shortname', 'maharaltiadvantage');
+      if ($id) {
+        $record = new stdClass;
+        $record->name = 'LTI Advantage';
+        $record->id = $id;
+        update_record('external_services', $record);
+      }
+    }
+    catch (Exception $e) {
+      log_debug($e->getMessage());
+      return false;
+    }
+  }
+
   return true;
 }

@@ -11,7 +11,7 @@
  */
 
 $services = array(
-    'LTI integration' => array(
+    'LTI 1.1' => array(
         'shortname' => 'maharalti',
         'functions' => [
             'module_lti_launch',
