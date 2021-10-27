@@ -728,9 +728,10 @@ function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=nul
             $bi->set('title', $title);
         }
     }
-
-    if ($blockinfo['tags']) {
-        $bi->set('tags', $blockinfo['tags']);
+    if (!is_null($blockinfo)) {
+        if ($blockinfo['tags']) {
+            $bi->set('tags', $blockinfo['tags']);
+        }
     }
     if ($bt == 'taggedposts') {
         $blocktypeclass::save_tag_selection($tagselect, $bi);
