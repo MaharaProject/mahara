@@ -200,22 +200,21 @@ class PluginModuleLti_advantage extends PluginModule {
             // Build the deployment id elements.
             $deployment_types = [
                 1 => [
-                    'title' => get_string('deploymentsbasiclaunchtitle', 'module.lti_advantage'),
-                    'rules' => array(
-                        'oneof' => 'deployid',
-                    ),
-                ],
-                2 => [
-                    'title' => get_string('deploymentsnrpstitle', 'module.lti_advantage'),
-                    'rules' => array(
-                        'oneof' => 'deployid',
-                    ),
-                ],
-                3 => [
-                    'title' => get_string('deploymentsdeeplinkportfoliolisttitle', 'module.lti_advantage'),
+                    'title' => get_string('deployment1_title', 'module.lti_advantage'),
+                    'description' => get_string('deployment1_description', 'module.lti_advantage'),
                     'rules' => array(
                         'required' => true,
                     ),
+                ],
+                2 => [
+                    'title' => get_string('deployment2_title', 'module.lti_advantage'),
+                    'description' => get_string('deployment2_description', 'module.lti_advantage'),
+                    'rules' => array(),
+                ],
+                3 => [
+                    'title' => get_string('deployment3_title', 'module.lti_advantage'),
+                    'description' => get_string('deployment3_description', 'module.lti_advantage'),
+                    'rules' => array(),
                 ],
             ];
             $deployment_elements = [];
@@ -225,6 +224,7 @@ class PluginModuleLti_advantage extends PluginModule {
                     'type'         => 'text',
                     'defaultvalue' => null,
                     'title'        => $deployment_type['title'],
+                    'description'  => $deployment_type['description'],
                     'rules'        => $deployment_type['rules'],
                 ];
             }
@@ -571,14 +571,29 @@ class PluginModuleLti_advantage extends PluginModule {
                     $form->set_error('issuer', get_string('issueralreadyinuse', 'module.lti_advantage'));
                 }
             }
-            if (empty($values['deployment1_id']) && empty($values['deployment2_id'])) {
-                $form->set_error('deployment1_id', get_string('deploymentidcannotbeempty', 'module.lti_advantage'));
-                $form->set_error('deployment2_id', get_string('deploymentidcannotbeempty', 'module.lti_advantage'));
-            }
-            if (!empty($values['deployment1_id']) && !empty($values['deployment1_id']) &&
-                $values['deployment1_id'] == $values['deployment2_id']) {
+
+            // Check the deployments are unique on the form.
+            // Checking 1 & 2.
+            if (!empty($values['deployment2_id'])
+                && $values['deployment1_id'] == $values['deployment2_id']
+            ) {
                 $form->set_error('deployment1_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
                 $form->set_error('deployment2_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
+            }
+            // Checking 1 & 3.
+            if (!empty($values['deployment3_id'])
+                && $values['deployment1_id'] == $values['deployment3_id']
+            ) {
+                $form->set_error('deployment1_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
+                $form->set_error('deployment3_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
+            }
+            // Checking 2 & 3.
+            if (!empty($values['deployment2_id'])
+                && !empty($values['deployment3_id'])
+                && $values['deployment2_id'] == $values['deployment3_id']
+            ) {
+                $form->set_error('deployment2_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
+                $form->set_error('deployment3_id', get_string('deploymentidcannotbesame', 'module.lti_advantage'));
             }
 
             // Check the deployment IDs aren't in use on another connection.
