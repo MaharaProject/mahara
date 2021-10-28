@@ -1478,12 +1478,9 @@ abstract class webservice_base_server extends webservice_server {
      * @return void
      */
     protected function session_cleanup($exception=null) {
-        if ($this->authmethod == WEBSERVICE_AUTHMETHOD_USERNAME) {
-            // nothing needs to be done, there is no persistent session
-        }
-        else {
-            // close emulated session if used
-        }
+        global $USER;
+
+        $USER->logout();
     }
 
     /**
