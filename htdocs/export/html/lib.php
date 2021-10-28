@@ -356,7 +356,7 @@ class PluginExportHtml extends PluginExport {
      */
     public static function text_to_filename($text) {
         // truncates the text and replaces NOT allowed characters to hyphens
-        return preg_replace('#["()*/:<>?\\| ]+#', '-', mb_substr($text, 0, parent::MAX_FILENAME_LENGTH, 'utf-8'));
+        return preg_replace('#[\;\{\}\$"()*/:<>?\\| ]+#', '-', mb_substr($text, 0, parent::MAX_FILENAME_LENGTH, 'utf-8'));
     }
 
     /**
