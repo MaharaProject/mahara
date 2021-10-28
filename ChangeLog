@@ -1,3 +1,157 @@
+21.10.0 (2021-10-28)
+- Bug 1930469: Need to kill web service authentication session at end of process
+- Bug 1930471: Exporting of CSV files needs to sanitize data
+- Bug 1940612: Update library: PHPMailer to 6.5.1 (incl. security)
+- Bug 1942903: Command injection vulnerability when PDF bulk export is enabled
+- Bug 1944633: Stored cross site scripting in all "tags" input
+- Bug 1944979: Path traversal leads to unauthenticated HTML file disclosure
+- Bug 1788173: Incorrect language strings in module_lti and module_mobileapi
+- Bug 1883820: Keyboard Navigation: Image Rotator button when editing image is not reachable
+- Bug 1887748: collection page navigation menu drop-down needs to operate on space
+- Bug 1901256: Can't set plan task completion date to today's date
+- Bug 1911824: When you copy a collection with SmartEvidence, all annotations come along as well
+- Bug 1912705: Task "export_process_queue" fails on cron run
+- Bug 1915994: Upgrade PDFjs from v2.2.228 to v2.6.346
+- Bug 1918193: Convert links that are buttons to buttons
+- Bug 1926287: Locked submitted pages still allow quick editing of text blocks
+- Bug 1926682: Upgrade SimpleSAMLphp to version 1.19.1
+- Bug 1927900: Block title not displayed with retractable blocks
+- Bug 1928265: SimpleSamlphp SP metadata link not working
+- Bug 1928270: Be able to delete reviewed and locked portfolios after 6 month
+- Bug 1928415: Need to add Japanese as a valid manul help link option
+- Bug 1928506: Releasing submitted page to be archived on upgraded site fails if new submission module is not installed
+- Bug 1928611: Annotation block text entry blocks screen on mobile
+- Bug 1928900: Adding secret url to collection doesn't work fully for SE / Progress pages
+- Bug 1928920: Need to adjust the verification report so that it correctly shows the week beginning
+- Bug 1928999: Error while deleting an External App if LTI plugin was never installed
+- Bug 1929127: Maroon theme doesn't display action buttons on 'Portfolio completion' and 'SmartEvidence' pages
+- Bug 1929473: Fix slow query for a student accessing the People page
+- Bug 1930624: Grid Stack items prevent touch swipe
+- Bug 1931557: Upgrade bootstrap from 4.3.1 to 4.6.0 before major upgrade
+- Bug 1931826: Correct skin font
+- Bug 1932450: SmartEvidence frameworks partially loading when member of multiple institutions
+- Bug 1934023: collection_rollover cronjob fails on fresh 21.04 install
+- Bug 1937328: Update the chrome-php library to use chrome-0.11
+- Bug 1937982: Download button on reports page always downloads same file
+- Bug 1938231: Manage groups page continues even though group does not exist
+- Bug 1938741: Unsubscribe from a forum missing group ID
+- Bug 1938842: Submissions for view via submitted host not working correctly
+- Bug 1939359: LDAP Sync: Error with Adding
+- Bug 1940033: Unable to delete account when they have a collection with a cover image
+- Bug 1940376: Need to adjust the checking for versions from mahara.org so that it only happens less frequently
+- Bug 1940447: Open Badge details aren't shown
+- Bug 1940611: Update library: ADODB to 5.21.1 (incl. security)
+- Bug 1940613: Update library: jQuery to 3.6.0
+- Bug 1940614: Update library: PDFjs to 2.9.359
+- Bug 1940615: Update library: TinyMCE to 5.8.2
+- Bug 1940798: Comment notification doesn't take you to the comment
+- Bug 1940800: Comments for moderation are not identified to portfolio author
+- Bug 1941663: LTI grader option not visible on the portfolio submitted to an LMS
+- Bug 1943668: Errors releasing submission whensubmitted to external host and module/submissions is enabled
+- Bug 1945384: Change 'Configure block' to 'Edit block', including icon
+- Bug 1945692: General language string review for Mahara 21.10
+- Bug 1945922: ADODB v5.21.2
+- Bug 1946046: PDFs in PDF artifacts are not exporting to HTML
+- Bug 1946301: Upgrade issue with unlock_collections_by_rollover
+- Bug 1946616: MySQL8 syntax error - reserved word 'lock'
+- Bug 1947207: The 'accessfromdate' column is missing from the Completion and review report
+- Bug 1947522: Language string for LTI Advantage is missing
+- Bug 1947529: Manually set up web services display as missing strings
+- Bug 1947541: Mahara langpack sync needs to use 'main' instead of 'master'
+- Bug 1948744: LTI Advantage: Remove deep link required field
+- Bug 1489259: Edit/delete buttons under iframe sources are not accessible
+- Bug 1663083: Accessibility - From/To date field label incorrect
+- Bug 1698043: Update keyboard accessibility shortcuts
+- Bug 1883187: Missing help text file: Forum Moderation
+- Bug 1889492: remove Mahara keyboard short keys
+- Bug 1893591: improve block dimension saving to DB on block resize
+- Bug 1896347: Image Gallery Refactor
+- Bug 1896564: authentication method not assigned properly
+- Bug 1904636: Only check pre-login hook if the auth method is active
+- Bug 1916648: blocktype/externalfeed/lib.php:84 count(): Parameter must be an array or an object that implements Countable
+- Bug 1918423: Missing function generate_simple_struct_class in soap webservice in /webservice/soap/locallib.php
+- Bug 1919559: Add general page comments in Behat testing generator form
+- Bug 1922153: Behat: clean up tables after tests
+- Bug 1923386: Auto-copied template focus not on modal
+- Bug 1924973: Keyboard focus should be on title of the first journal for multiple journals
+- Bug 1926388: Google Sheets in Google Apps block not working
+- Bug 1926556: Social media icons not appearing on elasticsearch (artefact)
+- Bug 1927043: "Wall" icon is missing when block is displayed, Maroon theme
+- Bug 1927661: Mahara ends up with multiple site 'public' folders
+- Bug 1928150: Retractable blocks are cutting off the title when adding / removing quick edit
+- Bug 1928908: Resume attachment can't be downloaded
+- Bug 1929487: 'Feedback' chevron turns into old icon in submissions management
+- Bug 1929610: Fix typo in web services
+- Bug 1932238: "T" Letter is missing
+- Bug 1933940: Raw Resume views are not displaying headers
+- Bug 1934830: Allow copied pages keep the skin if the template had it
+- Bug 1935782: Behat: Skin selection always selects first skin
+- Bug 1936013: Behat: Fix failing tests for 21.10
+- Bug 1936757: Behat: And I follow "GroupA"
+- Bug 1936765: Tidy up some phpdocs in Mahara 21.10
+- Bug 1938139: Cover images in group not visible to everyone
+- Bug 1938973: Web services configuration names do not appear to be translatable strings
+- Bug 1938975: Don't send watchlist notification when block has been moved or resized
+- Bug 1939076: Accordion across Mahara e.g. 'Site options' are not expandable by screen reader
+- Bug 1939094: Remove old accordion code used to add new blocks to page
+- Bug 1939165: Bootstrap4 carousel doesn't render correctly
+- Bug 1939249: CSS errors
+- Bug 1939252: Change background colour for 'Edit access' and 'Edit secret URL' columns
+- Bug 1939470: Skin font is not saved correctly
+- Bug 1939471: Font upload results in warning
+- Bug 1940020: Remove space in autogenerated username during self-registration
+- Bug 1940881: Update library: CSSTidy to 1.7.3 
+- Bug 1940885: Update library: Dropzone to 5.9.2
+- Bug 1940886: Update library: Fontawesome to 5.15.4
+- Bug 1940887: Update library: VideoJS to 7.14.3
+- Bug 1940890: Update library: MarkedJS to 2.1.3
+- Bug 1940891: Update library PopperJS to 1.16.1 LTS
+- Bug 1940892: Update library: ClipboardJS to 2.0.8
+- Bug 1940893: Update library: Select2 to 4.0.13
+- Bug 1941023: Update library: DataTables to 1.10.25
+- Bug 1941024: Update library: reCAPTCHA to 1.2.4
+- Bug 1941029: Update library: Fancybox to 3.5.7
+- Bug 1941034: Update library: Roboto Slab to 2.000
+- Bug 1941035: Update library: DejaVuSans to 2.37
+- Bug 1942009: Incorrect heading level for sub items in 'My skills'
+- Bug 1942268: Making 'Delete standard' and 'Delete standard element' button on SmartEvidence Editor translatable.
+- Bug 1944097: Change the default blocks on the dashboard page
+- Bug 1944644: Update docker Readme with db connection info
+- Bug 1945237: Remove the extra space / longer link underline in the 'More options' menu
+- Bug 1945919: Remove 'hover' state on homepage
+- Bug 1946391: Selecting a folder option in artefact chooser doesn't display title in chosen line
+- Bug 1947057: Button text turns white on pressing the options in the drop-down menu of portfolios on the 'Pages and Collections' page
+- Bug 1947065: Switch 'master' branch to 'main' and update strings where needed
+- Bug 1947205: 'Feedback' chevron reverted back to old icon in submissions management
+- Bug 1947520: Change drop-down menu 'on click' colour for better accessibility
+- Bug 1947523: Configurable theme: Regular focus colour is not used on changed card headers
+- Bug 1947622: Update lang strings for course completion block
+- Bug 1947625: 'Edit group membership' screen has overlapping text with long group names
+- Bug 1947634: Portfolio completion page has link underline for sign-off and verification
+- Bug 1948871: Behat steps page showing "failed with errno=21 is a directory"
+- Bug 1948998: Trying to access array offset on value of type null
+- Bug  803747: Do not display the username to a person registering for an account
+- Bug 1693063: Remove "Results per page" option while editing "My portfolios" block
+- Bug 1887321: too many DB connections
+- Bug 1926221: Grammatically incorrect success message on portfolio copying
+- Bug 1928012: Split functions from lib/activity.php into several files
+- Bug 1936875: Create a behat step to find ids that start with a string so we can get the start of a group
+- Bug 1938235: The 'Details' bar when active doesn't use theme colours in configurable theme
+- Bug  800511: "Contact Us" emails should only go to institution admins when sent by an institution member
+- Bug  914019: The language chooser drop down should honor Accept-Language
+- Bug 1832691: Allow SmartEvidence collection to be set up in a group
+- Bug 1843154: Allowlist more modern, safe CSS 3 rules in HTMLPurifier
+- Bug 1855630: Third-party plugins overview
+- Bug 1873119: Differentiate private and public comments in exports
+- Bug 1895590: Allow metadata refresh url to also record validateFingerprint value via SAML instance config form
+- Bug 1903600: Making Mahara able to use Oauth2 as client
+- Bug 1903601: Account creation and group creation in bulk through LTI 1.3
+- Bug 1903603: Implement LTI 1.3 for authentication purposes
+- Bug 1929474: Allow people suspended by cron to have a generic suspension message
+- Bug 1934833: Make links in text more accessible
+- Bug 1944420: Make the page comments section collapsable
+- Bug 1945243: Allow LTI integration with no createuser option to redirect to homepage if needed
+
 21.10rc2 (2021-10-21)
 
 21.10rc1 (2021-10-01)
