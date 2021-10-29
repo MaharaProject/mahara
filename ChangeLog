@@ -1,3 +1,23 @@
+20.04.5 (2021-10-29)
+- Bug 1937328: Update pdfexport to use chrome-php/chrome-0.11
+- Bug 1929473: Fix slow query for a student accessing the People page
+- Bug 1930469: Need to kill web service authentication session at end of process
+- Bug 1930471: Exporting of CSV files needs to sanitize data
+- Bug 1930624: Grid Stack items prevent touch swipe
+- Bug 1932450: SmartEvidence frameworks partially loading when member of multiple institutions
+- Bug 1938741: Unsubscribe from a forum missing group ID
+- Bug 1938741: Unsubscribe from a forum missing group ID
+- Bug 1939359: LDAP Sync: Error with Adding
+- Bug 1940033: Unable to delete account when they have a collection with a cover image
+- Bug 1940447: Open Badge details aren't shown
+- Bug 1940612: Update library: PHPMailer to 6.5.1 (incl. security)
+- Bug 1942903: Command injection vulnerability when PDF bulk export is enabled
+- Bug 1944633: Stored cross site scripting in all "tags" input
+- Bug 1944979: Path traversal leads to unauthenticated HTML file disclosure
+- Bug 1893591: improve block dimension saving to DB on block resize
+- Bug 1926388: Google Sheets in Google Apps block not working
+- Bug 1932238: T" Letter is missing
+
 20.04.4 (2021-05-21)
 - Bug 1788173: Incorrect language strings in module_lti and module_mobileapi
 - Bug 1912705: Task "export_process_queue" fails on cron run
