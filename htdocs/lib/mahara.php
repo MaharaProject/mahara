@@ -5107,8 +5107,14 @@ function generate_csv($data, $csvfields, $csvheaders = array()) {
             $row = (array) $row;
         }
         $u = array();
+        $x = 0;
+        // Make sure the fields are safe
         foreach ($csvfields as $f) {
-            $u[] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
+            // Escape doublequotes for spreadsheets
+            $u[$x] = str_replace('"', '""', (isset($row[$f]) ? $row[$f] : 0));
+            // Append apostrophe to lines beginning with formula characters so they are handled as text strings
+            $u[$x] = preg_replace('/^([\=\+\-\@\t\n])/m', '\'${1}', $u[$x]);
+            $x++;
         }
         $csv .= '"' . join('","', $u) . '"' . "\n";
     }
