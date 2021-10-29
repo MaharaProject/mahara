@@ -1,3 +1,29 @@
+21.04.2 (2021-10-29)
+- Bug 1926287: Locked submitted pages still allow quick editing of text blocks
+- Bug 1929473: Fix slow query for a student accessing the People page
+- Bug 1930469: Need to kill web service authentication session at end of process
+- Bug 1930471: Exporting of CSV files needs to sanitize data
+- Bug 1930624: Grid Stack items prevent touch swipe
+- Bug 1931826: Correct skin font
+- Bug 1932450: SmartEvidence frameworks partially loading when member of multiple institutions
+- Bug 1934023: collection_rollover cronjob fails on fresh 21.04 install
+- Bug 1937328: Update the chrome-php library to use chrome-0.11
+- Bug 1937982: Download button on reports page always downloads same file
+- Bug 1938842: Submissions for view via submitted host not working correctly
+- Bug 1939359: LDAP Sync: Error with Adding
+- Bug 1940033: Unable to delete account when they have a collection with a cover image
+- Bug 1940447: Open Badge details aren't shown
+- Bug 1940612: Update library: PHPMailer to 6.5.1 (incl. security)
+- Bug 1941663: LTI grader option not visible on the portfolio submitted to an LMS
+- Bug 1942903: Command injection vulnerability when PDF bulk export is enabled
+- Bug 1943668: Errors releasing submission whensubmitted to external host and module/submissions is enabled
+- Bug 1944633: Stored cross site scripting in all "tags" input
+- Bug 1944979: Path traversal leads to unauthenticated HTML file disclosure
+- Bug 1893591: improve block dimension saving to DB on block resize
+- Bug 1926388: Google Sheets in Google Apps block not working
+- Bug 1932238: "T" Letter is missing
+- Bug 1942268: Making 'Delete standard' and 'Delete standard element' button on SmartEvidence Editor translatable.
+
 21.04.1 (2021-05-21)
 - Bug 1788173: 	Incorrect language strings in module_lti and module_mobileapi
 - Bug 1911824: 	When you copy a collection with SmartEvidence, all annotations come along as well
