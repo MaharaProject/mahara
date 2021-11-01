@@ -37,6 +37,7 @@ var editor;
 jQuery(function($) {
     // Use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
+    JSONEditor.defaults.options.iconlib = 'fontawesome4';
     // Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
     JSONEditor.defaults.options.disable_edit_json = true;
 
@@ -45,15 +46,24 @@ jQuery(function($) {
 
     // Override default editor strings to allow translation by us
     // - fyi, not all editor strings are overridden, just the ones currently used.
-    // - The original editor defaults in htdocs/js/jsoneditor/src/defaults.js
-    JSONEditor.defaults.languages.en.button_collapse = get_string('collapse');
-    JSONEditor.defaults.languages.en.button_expand = get_string('expand');
-    JSONEditor.defaults.languages.en.button_add_row_title = get_string('add');
-    JSONEditor.defaults.languages.en.button_move_down_title = get_string('moveright'); // Move right
-    JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
-    JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
+    // - The original editor defaults in htdocs/js/jsoneditor/src/jsoneditor.js
+    JSONEditor.defaults.languages.en.button_collapse = get_string('collapse', 'module.framework'); // string used for button text
+    JSONEditor.defaults.languages.en.button_collapse_title = get_string('collapseform', 'module.framework', '{{0}}'); // string used for title and aria-label
+    JSONEditor.defaults.languages.en.button_expand = get_string('expand', 'module.framework'); // string used for button text
+    JSONEditor.defaults.languages.en.button_expand_title = get_string('expandform', 'module.framework', '{{0}}'); // string used for title and aria-label
+    JSONEditor.defaults.languages.en.button_add_row_text = get_string('add');
+    JSONEditor.defaults.languages.en.button_add_row_title = get_string('addspecific', 'module.framework');
+    JSONEditor.defaults.languages.en.button_move_down = get_string('moveright', 'module.framework');
+    JSONEditor.defaults.languages.en.button_move_down_title = get_string('moverightspecific', 'module.framework', '{{0}}');
+    JSONEditor.defaults.languages.en.button_move_up = get_string('moveleft', 'module.framework');
+    JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleftspecific', 'module.framework', '{{0}}');
+    JSONEditor.defaults.languages.en.button_delete_all = get_string('deleteall');
+    JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteallspecific', 'module.framework', '{{0}}');
+
     JSONEditor.defaults.languages.en.remove_element_message = get_string('removestandardorelementconfirm');
-    JSONEditor.defaults.languages.en.button_delete_row_title = get_string('delete','module.framework','{{0}}');
+    JSONEditor.defaults.languages.en.button_delete_row_title_short = get_string('delete','module.framework');
+    JSONEditor.defaults.languages.en.button_delete_row_title = get_string('deletespecific','mahara', '{{0}}');
+
 
     // Enable select2
     JSONEditor.plugins.select2.enable = true;
@@ -451,7 +461,6 @@ jQuery(function($) {
         // Add ids to buttons so we can call them more easily later in this file
         $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
         $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
-
         // Add ids to all <input>, <select> and <textarea> tags and associate with their <label> for accessibility
         $('#editor_holder :input').each(function() {
             let name = $(this).attr('name');
@@ -462,6 +471,11 @@ jQuery(function($) {
                 $(this).prev('label').prop('for', name);
               }
         });
+        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btntype-deleteall').attr("id", "deleteall_standardelements");
+        // Add aria-labels to add, delete and move buttons
+        $('#add_standard').attr('aria-label', get_string('addstandard', 'module.framework'))
+        $('#add_standardelement').attr('aria-label', get_string('addstandardelement', 'module.framework'));
+        $('#deleteall_standardelements').attr('aria-label', get_string('deleteallstandardelements', 'module.framework'));
 
         // Make text same as rest of site
         $("div.form-group p.form-text").addClass("description");
