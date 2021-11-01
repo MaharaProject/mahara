@@ -347,7 +347,7 @@ function releaseview_submit(Pieform $form, $values) {
             $externalhost->name = $submittedhost;
             $externalhost->url = $submittedhost;
             $collection->pendingrelease($USER, $externalhost, false);
-            $SESSION->add_ok_msg(get_string('collectionreleasedpending', 'group'));
+            $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
         else {
             $collection->release($USER);
@@ -365,7 +365,7 @@ function releaseview_submit(Pieform $form, $values) {
             $externalhost->name = $submittedhost;
             $externalhost->url = $submittedhost;
             $view->pendingrelease($USER, $externalhost);
-            $SESSION->add_ok_msg(get_string('viewreleasedpending', 'group'));
+            $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
         else {
             $view->release($USER);
