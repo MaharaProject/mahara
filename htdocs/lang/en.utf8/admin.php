@@ -1004,6 +1004,7 @@ $string['loginasoverridelegalaccept'] = 'As you are masquerading as another pers
 $string['Add'] = 'Add';
 $string['all'] = 'All';
 $string['admininstitutions'] = 'Administer institutions';
+$string['editinstitution'] = 'Edit institution';
 $string['adminauthorities'] = 'Administer authorities';
 $string['addinstitution'] = 'Add institution';
 $string['authplugin'] = 'Authentication plugin';
