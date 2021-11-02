@@ -213,7 +213,8 @@ jQuery(function($) {
                         "description": get_string('instdescription'),
                         "id": "inst_desc",
                         "enum": inst_names.split(','),
-                        "default": get_string('all')
+                        "default": get_string('all'),
+                        "required": true
                     },
                     "name": {
                         "type": "string",
@@ -235,7 +236,8 @@ jQuery(function($) {
                         "default": false,
                         "options": {
                             "enum_titles": [get_string('yes'), get_string('no')]
-                        }
+                        },
+                        "required": true
                     },
                     "evidencestatuses": {
                         "title": get_string('evidencestatuses'),
@@ -445,9 +447,22 @@ jQuery(function($) {
                 }
             },
         });
-        // Add ids to things so we can call them more easily later.
+
+        // Add ids to buttons so we can call them more easily later in this file
         $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
         $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
+
+        // Add ids to all <input>, <select> and <textarea> tags and associate with their <label> for accessibility
+        $('#editor_holder :input').each(function() {
+            let name = $(this).attr('name');
+            if (name !== undefined) {
+                name = name.replace(/[\[\]']+/g, '');
+                name = name.replace('root', '');
+                $(this).prop('id', name);
+                $(this).prev('label').prop('for', name);
+              }
+        });
+
         // Make text same as rest of site
         $("div.form-group p.form-text").addClass("description");
         $("div.form-group form-control-label").addClass("label");
@@ -460,8 +475,7 @@ jQuery(function($) {
         std_index = 0;
         eid = 1;
         se_index = 0;
-        // Add id to the framework description textarea
-        $('div[data-schemapath="root.description"] > div > textarea').attr("id", "title_description_textarea");
+
         textarea_init();
 
         update_parent_array();
@@ -786,10 +800,10 @@ jQuery(function($) {
                 $(this).attr("id", "std_element_" + standardelementid + "_" + schemapath[3] + "_textarea");
             }
         });
-        // Set min row height for desc fields to 6
-        $("textarea[id$='_description_textarea']").attr('rows', '6');
+        // Set min row height for description fields to 6
+        $("textarea[id$='description']").attr('rows', '6');
 
-        $('div.form-group textarea[id$="_description_textarea"]').each(function() {
+        $('div.form-group textarea[id$="description"]').each(function() {
             $(this).off('click input');
             $(this).on('click input', function() {
                 textarea_autoexpand(this);
