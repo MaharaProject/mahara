@@ -77,6 +77,7 @@ class mobileapi_profileicon_webservice_server extends webservice_base_server {
 
 $server = new mobileapi_profileicon_webservice_server();
 $server->can_user_download_via_webservice();
+$server->session_cleanup();
 
 switch(param_alphanumext('wsfunction')) {
     case 'module_mobileapi_get_user_profileicon':

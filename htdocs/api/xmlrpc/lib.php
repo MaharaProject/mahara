@@ -877,7 +877,7 @@ function submit_view_for_assessment($username, $id, $iscollection = false, $apil
                 $access = View::get_invisible_token($id);
             }
             else {
-                View::_db_submit(array($id), null, $remotehost, $userid);
+                $view->submit(null, $remotehost, $userid);
                 $access = View::new_token($id, false);
             }
             $token = $access->token;

@@ -942,7 +942,7 @@ class Collection {
      * - The institution has 'SmartEvidence' turned on
      * - There are frameworks available for the institutions
      *
-     * @return object $institution or false
+     * @return array of $institution objects or false
      */
      public function get_framework_institution() {
         require_once('institution.php');
@@ -957,7 +957,7 @@ class Collection {
         if ($this->institution) {
             $institution = $this->institution;
             $institution = new Institution($institution);
-            $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? $institution : false;
+            $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? array($institution) : false;
         }
         else {
             $user = new User();
@@ -967,14 +967,13 @@ class Collection {
                 foreach ($institutionids as $institution) {
                     $institution = new Institution($institution);
                     if ($institution->allowinstitutionsmartevidence == true) {
-                        $allowsmartevidence = $institution;
-                        break;
+                        $allowsmartevidence[] = $institution;
                     }
                 }
             }
             else {
                 $institution = new Institution('mahara');
-                $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? $institution : false;
+                $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? array($institution) : false;
             }
         }
         return $allowsmartevidence;
@@ -986,12 +985,12 @@ class Collection {
      * @return array Available frameworks
      */
     public function get_available_frameworks() {
-        $institution = $this->get_framework_institution();
-        if (!$institution) {
+        $institutions = $this->get_framework_institution();
+        if (!$institutions) {
             return array();
         }
 
-        if ($frameworks = Framework::get_frameworks($institution->name, true)) {
+        if ($frameworks = Framework::get_frameworks($institutions, true)) {
             // Inactive frameworks are only allowed if they were added to
             // collection when they were active.
             foreach ($frameworks as $key => $framework) {
@@ -1647,12 +1646,12 @@ class Collection {
                         'users' => array($this->get('owner')),
                         'strings' => (object) array(
                             'subject' => (object) array(
-                                'key'     => 'collectionreleasedsubject1',
+                                'key'     => 'portfolioreleasedsubject',
                                 'section' => 'group',
-                                'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
+                                'args'    => array($this->name),
                             ),
                             'message' => (object) array(
-                                'key'     => 'collectionreleasedmessage1',
+                                'key'     => 'portfolioreleasedmessage',
                                 'section' => 'group',
                                 'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                             ),
@@ -1688,8 +1687,10 @@ class Collection {
             $record->url = group_homepage_url($record);
         }
         else if ($this->submittedhost) {
-            $record = get_record('host', 'wwwroot', $this->submittedhost, null, null, null, null, 'wwwroot, name');
-            $record->url = $record->wwwroot;
+            if (!$hostconnection = get_field('host', 'name', 'wwwroot', $this->submittedhost)) {
+                $hostconnection = $this->submittedhost;
+            }
+            $record->url = $hostconnection;
         }
         else {
             throw new SystemException("Collection with id " . $this->id . " has not been submitted");

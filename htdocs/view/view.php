@@ -265,21 +265,21 @@ function releaseview_submit() {
     if ($releasecollection) {
         if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
             $collection->pendingrelease($USER);
-            $SESSION->add_ok_msg(get_string('collectionreleasedpending', 'group'));
+            $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
         else {
             $collection->release($USER);
-            $SESSION->add_ok_msg(get_string('collectionreleasedsuccess', 'group'));
+            $SESSION->add_ok_msg(get_string('portfolioreleasedsuccess', 'group'));
         }
     }
     else {
         if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
             $view->pendingrelease($USER);
-            $SESSION->add_ok_msg(get_string('viewreleasedpending', 'group'));
+            $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
         else {
             $view->release($USER);
-            $SESSION->add_ok_msg(get_string('viewreleasedsuccess', 'group'));
+            $SESSION->add_ok_msg(get_string('portfolioreleasedsuccess', 'group'));
         }
     }
     if ($submittedgroup) {

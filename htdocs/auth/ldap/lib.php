@@ -1332,7 +1332,7 @@ class AuthLdap extends Auth {
                             e.preferredname
                         FROM
                             {auth_ldap_extusers_temp} e
-                            " . $sjoinsql . "
+                            ' . $joinsql . '
                         WHERE u.id IS NULL
                         ORDER BY e.extusername';
                 $rs = get_recordset_sql($sql);
