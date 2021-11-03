@@ -156,7 +156,7 @@ Mahara has been translated into many languages. You can get language packs from:
 ------------------
 # Copyright notice
 
-Copyright (C) 2006-2020 Catalyst IT and others; see:
+Copyright (C) 2006-2022 Catalyst IT and others; see:
 https://wiki.mahara.org/wiki/Contributors
 
 This program is free software: you can redistribute it and/or modify
