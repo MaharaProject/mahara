@@ -1490,6 +1490,12 @@ class Collection {
         return $this->submittedgroup || $this->submittedhost;
     }
 
+    /**
+     * Helper to find where collection is submitted.
+     *
+     * @throws SystemException  Collection is not submitted
+     * @return object Info about what this was submitted to
+     */
     public function submitted_to() {
         if ($this->submittedgroup) {
             $record = get_record('group', 'id', $this->submittedgroup, null, null, null, null, 'id, name, urlid');
@@ -1499,6 +1505,7 @@ class Collection {
             if (!$hostconnection = get_field('host', 'name', 'wwwroot', $this->submittedhost)) {
                 $hostconnection = $this->submittedhost;
             }
+            $record = new stdClass;
             $record->url = $hostconnection;
         }
         else {
