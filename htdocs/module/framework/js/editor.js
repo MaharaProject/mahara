@@ -353,7 +353,7 @@ jQuery(function($) {
                         "description": get_string('standardelementsdescription', 'module.framework'),
                         "items": {
                             "title": get_string('standardelement'),
-                            "headerTemplate": "{{self.elementid}}",
+                            "headerTemplate": "Standard element {{self.elementid}}",
                             "type": "object",
                             "id": "standardelement",
                             "options": {
@@ -457,10 +457,10 @@ jQuery(function($) {
                 }
             },
         });
-
-        // Add ids to buttons so we can call them more easily later in this file
-        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
-        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
+        // Add ids to things so we can call them more easily later.
+        $('div[data-schemaid="standards"] > div > div > button.json-editor-btn-add').attr("id", "add_standard");
+        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btn-add').attr("id", "add_standardelement");
+        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btntype-deleteall').attr("id", "deleteall_standardelements");
         // Add ids to all <input>, <select> and <textarea> tags and associate with their <label> for accessibility
         $('#editor_holder :input').each(function() {
             let name = $(this).attr('name');
@@ -471,7 +471,6 @@ jQuery(function($) {
                 $(this).prev('label').prop('for', name);
               }
         });
-        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btntype-deleteall').attr("id", "deleteall_standardelements");
         // Add aria-labels to add, delete and move buttons
         $('#add_standard').attr('aria-label', get_string('addstandard', 'module.framework'))
         $('#add_standardelement').attr('aria-label', get_string('addstandardelement', 'module.framework'));
@@ -1099,8 +1098,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_standard_button_handlers() {
-        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function(e) {
+        $('[data-schemaid="standard"] > div > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standard"] > div > div > button.json-editor-btn-delete').on('click', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
@@ -1207,8 +1206,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_element_button_handlers() {
-        $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').on('click', function() {
+        $('[data-schemaid="standardelement"] > div > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standardelement"] > div > div > button.json-editor-btn-delete').on('click', function() {
             var el_id = 0,
             parent_array_temp = parent_array;
 
@@ -1237,7 +1236,7 @@ jQuery(function($) {
     function update_delete_button_handler() {
         // Standard element section
         // 'Delete all' button
-        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-delete').eq(1).on('click', function () {
+        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btn-delete').eq(1).on('click', function () {
             update_parent_array();
             eid = 1;
             se_index = 0;

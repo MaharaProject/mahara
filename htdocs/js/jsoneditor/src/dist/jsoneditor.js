@@ -3409,7 +3409,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     else {
       this.header = document.createElement('span');
       this.header.textContent = this.getTitle();
-      this.title = this.theme.getHeader(this.header);
+      this.title = this.theme.getHeader(this.header, 3);
       this.container.appendChild(this.title);
       this.container.style.position = 'relative';
 
@@ -3572,9 +3572,13 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.title_controls = this.theme.getHeaderButtonHolder();
       this.editjson_controls = this.theme.getHeaderButtonHolder();
       this.addproperty_controls = this.theme.getHeaderButtonHolder();
-      this.title.appendChild(this.title_controls);
-      this.title.appendChild(this.editjson_controls);
-      this.title.appendChild(this.addproperty_controls);
+      this.header_container = document.createElement('div');
+      this.container.appendChild(this.header_container);
+      this.title.setAttribute('style', 'display: inline-block');
+      this.title.after(this.title_controls);
+      this.title_controls.after(this.editjson_controls);
+      this.editjson_controls.after(this.addproperty_controls);
+
 
       // Show/Hide button
       this.collapsed = false;
@@ -3582,6 +3586,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.toggle_button.classList.add('json-editor-btntype-toggle');
       this.toggle_button.setAttribute('aria-expanded', 'true');
       this.toggle_button.removeAttribute('title');
+      this.toggle_button.setAttribute('style', 'margin-bottom: 10px;')
       this.title_controls.appendChild(this.toggle_button);
       this.toggle_button.addEventListener('click',function(e) {
         e.preventDefault();
@@ -4179,22 +4184,26 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     var self = this;
 
     if(!this.options.compact) {
+      this.header_container = document.createElement('div');
+      this.header_container.setAttribute('style', 'display:flex; align-items: center; padding: 20px 0;')
+      this.container.appendChild(this.header_container);
       this.header = document.createElement('span');
       this.header.textContent = this.getTitle();
-      this.title = this.theme.getHeader(this.header);
-      this.container.appendChild(this.title);
+      this.title = this.theme.getHeader(this.header, 2);
+      this.title.setAttribute('style', 'display: inline-block; margin: 0px;');
+      this.header_container.appendChild(this.title);
       this.title_controls = this.theme.getHeaderButtonHolder();
-      this.title.appendChild(this.title_controls);
+      this.header_container.appendChild(this.title_controls);
       if(this.schema.description) {
         this.description = this.theme.getDescription(this.schema.description);
-        this.container.appendChild(this.description);
+        this.header_container.after(this.description);
       }
       this.error_holder = document.createElement('div');
       this.container.appendChild(this.error_holder);
 
       if(this.schema.format === 'tabs-top') {
         this.controls = this.theme.getHeaderButtonHolder();
-        this.title.appendChild(this.controls);
+        this.header_container.appendChild(this.controls);
         this.tabs_holder = this.theme.getTopTabHolder(this.getValidId(this.getItemTitle()));
         this.container.appendChild(this.tabs_holder);
         this.row_holder = this.theme.getTopTabContentHolder(this.tabs_holder);
@@ -4729,7 +4738,6 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     var self = this;
 
     this.collapsed = false;
-    console.log(self.getTitle());
     this.toggle_button = this.getButton(self.translate('button_collapse'),'collapse',this.translate('button_collapse_title',[self.getTitle()]));
     this.toggle_button.classList.add('json-editor-btntype-toggle');
     this.toggle_button.setAttribute('aria-expanded', 'true');
@@ -4944,7 +4952,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
     this.width = tmp.getNumColumns() + 2;
 
     if(!this.options.compact) {
-      this.title = this.theme.getHeader(this.getTitle());
+      this.title = this.theme.getHeader(this.getTitle(), 3);
       this.container.appendChild(this.title);
       this.title_controls = this.theme.getHeaderButtonHolder();
       this.title.appendChild(this.title_controls);
@@ -7796,15 +7804,14 @@ JSONEditor.AbstractTheme = Class.extend({
     el.style.fontWeight = 'normal';
     return el;
   },
-  getHeader: function(text) {
-    var el = document.createElement('h3');
+  getHeader: function(text, level) {
+    var el = document.createElement('h' + level);
     if(typeof text === "string") {
       el.textContent = text;
     }
     else {
       el.appendChild(text);
     }
-
     return el;
   },
   getCheckbox: function() {
@@ -9913,7 +9920,6 @@ JSONEditor.defaults.themes.materialize = JSONEditor.AbstractTheme.extend(
    * @returns {HTMLElement} The header element.
    */
   getHeader: function(text) {
-
       var el = document.createElement('h5');
 
       if (typeof text === 'string') {
