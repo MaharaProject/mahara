@@ -146,13 +146,12 @@ unset($elements['groupsideblocklabels']);
 
 $form = pieform(array(
     'name'       => 'adduser',
-    'class'      => 'card card-body',
+    'class'      => 'card card-body form-condensed',
     'autofocus'  => false,
     'template'   => 'adduser.php',
     'templatedir' => pieform_template_dir('adduser.php'),
     'plugintype' => 'core',
     'pluginname' => 'admin',
-    'class'      => 'form-condensed',
     'elements'   => $elements,
 ));
 
