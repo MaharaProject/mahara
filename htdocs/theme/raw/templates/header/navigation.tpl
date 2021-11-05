@@ -5,22 +5,31 @@
         {strip}
             {foreach from=$MAINNAV item=item name=menu}
             <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}">
-                <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
-                    {if $item.iconclass}
+                {* Create a link to the main page *}
+                {if !$item.submenu}
+                <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if}">
+                {* Otherwise, create list items as buttons to expand submenus *}
+                {else}
+                <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle {if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#nav" data-target="#childmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+                {/if}
+                {if $item.iconclass}
                     <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
-                    {/if}
-
-                    {if $item.accessibletitle}
+                {/if}
+                {if $item.accessibletitle}
                     <span role="presentation" aria-hidden="true">
-                        {/if}
-                        {$item.title}
-                        {if $item.accessibletitle}
+                {/if}
+                {$item.title}
+                {if $item.accessibletitle}
                     </span>
                     <span class="accessible-hidden sr-only">
                         ({$item.accessibletitle})
                     </span>
-                    {/if}
+                {/if}
+                {if !$item.submenu}
                 </a>
+                {else}
+                </button>
+                {/if}
                 {if $item.submenu}
                 <button type="button" class="navbar-showchildren navbar-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="#nav" data-target="#childmenu-{$dwoo.foreach.menu.index}">
                     <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
