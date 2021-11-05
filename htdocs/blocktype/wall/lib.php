@@ -137,7 +137,7 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
         return delete_records('blocktype_wall_post', 'instance', $instance->get('id'));
     }
 
-    public function wallpost_form(BlockInstance $instance, $replyto='', $replyuser='') {
+    public static function wallpost_form(BlockInstance $instance, $replyto='', $replyuser='') {
         if ($replyuser) {
             $walltoreplyto = self::get_wall_id_for_user($replyuser);
         }
@@ -195,7 +195,7 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
         // depending on if the user we're replying to has a wall
     }
 
-    public function wallpost_js() {
+    public static function wallpost_js() {
         $js = <<<EOF
 function wallpost_success(form, data) {
     var wall = jQuery('#wall');

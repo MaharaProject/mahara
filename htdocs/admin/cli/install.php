@@ -51,7 +51,7 @@ $cli->setup($settings);
 
 // Check whether we need to do anything
 if (table_exists(new XMLDBTable('config'))) {
-    cli::cli_exit(get_string('maharainstalled', 'admin'), false);
+    $cli->cli_exit(get_string('maharainstalled', 'admin'), false);
 }
 
 // Check initial password and e-mail address before we install
@@ -60,7 +60,7 @@ try {
     $adminemail     = $cli->get_cli_param('adminemail');
 }
 catch (ParameterException $e) {
-    cli::cli_exit($e->getMessage(), true);
+    $cli->cli_exit($e->getMessage(), true);
 }
 
 // Determine what we will install
@@ -91,6 +91,6 @@ $authobj->change_password($userobj, $adminpassword, true);
 // Set site name
 if ($sitename = $cli->get_cli_param('sitename')) {
     if (!set_config('sitename', $sitename)) {
-        cli::cli_exit(get_string('cliupdatesitenamefailed', 'admin'), true);
+        $cli->cli_exit(get_string('cliupdatesitenamefailed', 'admin'), true);
     }
 }

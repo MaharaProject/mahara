@@ -384,7 +384,7 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
         return null;
     }
 
-    private function test_connection($connection, $user, $data, $functionname) {
+    private static function test_connection($connection, $user, $data, $functionname) {
         if (empty($connection)) {
             return array('error' => true,
                          'errormsg' => get_string('novalidconnections', 'blocktype.courseinfo'));

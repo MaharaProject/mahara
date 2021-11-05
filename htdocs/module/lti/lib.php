@@ -578,7 +578,7 @@ class PluginModuleLti extends PluginModule {
     }
 
 
-    public function get_grade_dialogue($collectionid, $viewid) {
+    public static function get_grade_dialogue($collectionid, $viewid) {
         global $SESSION;
 
         if (empty($SESSION->get('lti.assessment'))) {

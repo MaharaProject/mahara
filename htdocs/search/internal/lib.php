@@ -263,7 +263,7 @@ class PluginSearchInternal extends PluginSearch {
      * Returns a snippet of an sql WHERE clause to filter users whose (visible)
      * names match the terms in a given query string.
      */
-    function name_search_sql($query_string, $usralias='u', $usrprefalias='h') {
+    private static function name_search_sql($query_string, $usralias='u', $usrprefalias='h') {
         global $USER;
 
         safe_require('artefact', 'internal');
@@ -1775,7 +1775,7 @@ class PluginSearchInternal extends PluginSearch {
      *   An array of characters which should not be decoded. For example,
      *   array('<', '&', '"'). This affects both named and numerical entities.
      */
-    function decode_entities($text, $exclude = array()) {
+    private static function decode_entities($text, $exclude = array()) {
       static $table;
       // We store named entities in a table for quick processing.
       if (!isset($table)) {
@@ -1797,7 +1797,7 @@ class PluginSearchInternal extends PluginSearch {
     /**
      * Helper function for decode_entities
      */
-    function _decode_entities($prefix, $codepoint, $original, &$table, &$exclude) {
+    private static function _decode_entities($prefix, $codepoint, $original, &$table, &$exclude) {
       // Named entity
       if (!$prefix) {
         if (isset($table[$original])) {

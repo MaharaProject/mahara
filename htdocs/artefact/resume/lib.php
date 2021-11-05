@@ -2061,7 +2061,7 @@ class ArtefactTypeResumeGoalAndSkill extends ArtefactTypeResume {
         return $result;
     }
 
-    public function get_goals_and_skills($type='') {
+    public static function get_goals_and_skills($type='') {
         global $USER;
         switch ($type) {
             case 'goals':
