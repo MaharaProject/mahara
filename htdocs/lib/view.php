@@ -2139,11 +2139,12 @@ class View {
             SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
             positionx, positiony, width, height, blocktype, title, configdata
             FROM {block_instance_dimension} bd
-            INNER JOIN {block_instance} bi
-            ON bd.block = bi.id
+            INNER JOIN {block_instance} bi ON bd.block = bi.id
+            INNER JOIN {blocktype_installed} bt ON bt.name = bi.blocktype
             WHERE bi.view = ?
+            AND bt.active = ?
             ORDER BY positiony, positionx';
-            $blocks = get_records_sql_array($sql, array($this->get('id')));
+            $blocks = get_records_sql_array($sql, array($this->get('id'), 1));
         }
         else {
             $blocks = $versioning->blocks;
