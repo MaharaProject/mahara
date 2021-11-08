@@ -74,9 +74,9 @@
     // Indentation for nested comments
     @for $i from 1 through 5 {
         &.indent-#{$i} {
-            $width: 100 - percentage(($i * 2)/100);
-            width: $width;
-            margin-left: auto;
+            $indent-border: $i * $spacing-lg;
+            border-left: $indent-border solid $list-group-border-color !important;
+            margin-left: 0;
             margin-right: 0;
             .user-icon {
                 max-width: 3.125rem; // 50px;
