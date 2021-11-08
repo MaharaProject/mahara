@@ -6202,3 +6202,33 @@ function clean_str_replace($str, $replace='', $exclude=array()) {
     }
     return $str;
 }
+
+/**
+ * Get the timezone for the mahara site
+ *
+ * @return string timezone
+ */
+function get_mahara_timezone() {
+    db_ignore_sql_exceptions(true);
+    try {
+        $timezone = get_field_sql("SELECT value FROM {config} WHERE field = ? LIMIT 1", array('timezone'));
+        if (empty($timezone)) {
+            // Get the two letter country identifier.
+            $country = get_field_sql("SELECT value FROM {config} WHERE field = ? LIMIT 1", array('country'));
+            if ($country) {
+                // Country ID has to be uppercase or this won't work.
+                $timezone = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, strtoupper($country))[0];
+            }
+            else {
+                // No timezone available
+                $timezone = 'UTC';
+            }
+        }
+        return $timezone;
+    }
+    catch (SQLException $e) {
+        // Site probably not installed yet
+        return 'UTC';
+    }
+    db_ignore_sql_exceptions(false);
+}

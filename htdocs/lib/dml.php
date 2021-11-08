@@ -1761,25 +1761,7 @@ function configure_dbconnection() {
     // Bug 1771362: Set timezone for PHP and the DB to a user selected timezone or the country
     // selected in site settings (if no timezone selected) to avoid innaccurate times being shown.
     try {
-        $timezoners = $db->_Execute("SELECT value FROM " . db_table_name('config') . " WHERE field = 'timezone' LIMIT 1");
-        if (!$timezoners->fields || $timezoners->fields['value'] == "") {
-            $countryrs = $db->_Execute("SELECT value FROM " . db_table_name('config') . " WHERE field = 'country' LIMIT 1");
-            if ($countryrs->fields && $countryrs->fields['value'] != "") {
-                // Get the two letter country identifier.
-                $country = $countryrs->fields['value'];
-                // Country ID has to be uppercase or this won't work.
-                $timezone = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, strtoupper($country))[0];
-                if (!$timezoners->fields) {
-                    $db->_Execute("INSERT INTO " . db_table_name('config') . " (field, value) VALUES ('timezone', '" . $timezone . "')");
-                }
-                else {
-                    $db->_Execute("UPDATE " . db_table_name('config') . " SET value = '" . $timezone . "' WHERE field = 'timezone'");
-                }
-            }
-        }
-        else {
-            $timezone = $timezoners->fields['value'];
-        }
+        $timezone = get_mahara_timezone();
 
         if (!empty($timezone)) {
             date_default_timezone_set($timezone); // For PHP.
