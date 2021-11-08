@@ -1209,15 +1209,6 @@ function replaceTarget(element) {
  */
 jQuery(function($) {
     /**
-     * Wire up menu so that links with submenu but no url just toggle the child collapse
-     */
-    $('nav .menu-dropdown-toggle').on('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $(this).next().trigger('click');
-    });
-
-    /**
      * Send focus to first menu item unless it's an element of a sub menu
      * Closes menu and returns focus to menu button
      */
@@ -1225,11 +1216,11 @@ jQuery(function($) {
         var parent = $(this);
 
         if (!$(e.target).hasClass('child-nav collapse show')) {
-            $(this).find('ul li').first().find('a').focus();
+            $(this).find('ul li').first().find('a, button').focus();
         }
 
         // Return focus to menu button from last submenu button
-        $($(this).find('button.navbar-showchildren').last()).on('blur', function() {
+        $($(this).find('.menu-dropdown-toggle').last()).on('blur', function() {
             if ($(this).hasClass('collapsed')) {
                 var id = $(parent).attr('id');
                 $('button[aria-controls="' + id + '"]').focus();
@@ -1238,7 +1229,7 @@ jQuery(function($) {
         });
 
         // Return focus to menu button from last element in last submenu when tabbing away
-        $(this).find('ul li').last().find('a').on('blur', function() {
+        $(this).find('ul li').last().focusout(function() {
             var id = $(parent).attr('id');
             $('button[aria-controls="' + id + '"]').focus();
             $(parent).collapse('hide');
