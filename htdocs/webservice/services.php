@@ -123,6 +123,15 @@ $functions = array(
         'type'        => 'write',
     ),
 
+    // === artefact file related functions ===
+    'mahara_upload_file' => array(
+        'classname'   => 'mahara_user_external',
+        'methodname'  => 'upload_file',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Upload a file to the files area',
+        'type'        => 'write',
+    ),
+
     // === group related functions ===
 
     'mahara_group_create_groups' => array(

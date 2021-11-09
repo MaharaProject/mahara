@@ -845,10 +845,11 @@ class external_api {
      * @param string $title
      * @param string $description
      * @param array $tags
+     * @param int $recipient ID, if null, upload to self
      * @return ID of newly created file
      * @throws WebserviceInvalidParameterException
      */
-    protected static function handle_file_upload($inputname, $inputindex = null, $foldername = null, $title = null, $description = null, $tags = array()) {
+    protected static function handle_file_upload($inputname, $inputindex = null, $foldername = null, $title = null, $description = null, $tags = array(), $recipient = null) {
         global $USER;
         if (!$_FILES[$inputname]) {
             throw new WebserviceInvalidParameterException('No uploaded files found in request');
@@ -856,7 +857,7 @@ class external_api {
         safe_require('artefact', 'file');
 
         $data = new stdClass();
-        $data->owner = $USER->get('id'); // id of owner
+        $data->owner = $recipient ? $recipient : $USER->get('id'); // id of owner
 
         // See if a folder by this name already exists.
         // Create a folder by this name if it doesn't exist yet.

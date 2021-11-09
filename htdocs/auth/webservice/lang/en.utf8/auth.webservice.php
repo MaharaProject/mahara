@@ -331,6 +331,7 @@ $string['invalidaccount'] = 'Invalid web services account: Check service user co
 $string['invalidextparam'] = 'Invalid external API parameter: %s';
 $string['invalidextresponse'] = 'Invalid external API response: %s';
 $string['invalidiptoken'] = 'Invalid token: Your IP is not supported';
+$string['invalidpermission'] = 'You do not have permission to upload files to the account identified by "%s"';
 $string['invalidtimedtoken'] = 'Invalid token: Token expired';
 $string['invalidtoken'] = 'Invalid token: Token not found';
 $string['invalidtokensession'] = 'Invalid session based token: Session not found or expired';

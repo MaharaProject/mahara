@@ -1382,4 +1382,99 @@ class mahara_user_external extends external_api {
     public static function get_all_favourites_returns() {
         return self::get_favourites_returns();
     }
+
+    /**
+     * The parameter definition for input of upload_file method
+     *
+     * Returns description of method parameters
+     * @return external_function_parameters
+     */
+    public static function upload_file_parameters() {
+        return new external_function_parameters(
+      array(
+                'externalsource' => new external_value(PARAM_TEXT, get_string('externalfilesource', WEBSERVICE_LANG)),
+                'userid'         => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                'username'       => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                'filetoupload'   => new external_value(PARAM_FILE, get_string('filetoupload', WEBSERVICE_LANG)),
+                'foldername'     => new external_value(PARAM_RAW, get_string('foldername', WEBSERVICE_LANG)),
+                'title'          => new external_value(PARAM_TEXT, get_string('filetitle', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                'description'    => new external_value(PARAM_TEXT, get_string('filedescription', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                'tags'           => new external_multiple_structure(
+                    new external_value(PARAM_RAW, "Text of tag"),
+                    "List of tags to apply to the file",
+                    VALUE_DEFAULT,
+                    array()
+                )
+            )
+        );
+    }
+
+    /**
+     * Upload a file to files area
+     *
+     * @param  mixed $externalsource
+     * @param  mixed $userid
+     * @param  mixed $username
+     * @param  mixed $filetoupload
+     * @param  mixed $foldername
+     * @param  mixed $title
+     * @param  mixed $description
+     * @param  mixed $tags
+     * @return array An array describing the results of uploading the file
+
+     */
+    public static function upload_file($externalsource, $userid, $username, $filetoupload, $foldername, $title=null, $description = '', $tags = array() ) {
+        global $USER;
+
+        $params = array('externalsource' => $externalsource, 'userid' => $userid,
+                        'username' => $username, 'filetoupload' => $filetoupload,
+                        'foldername' => $foldername, 'title' => $title,
+                        'description' => $description, 'tags' => $tags);
+        $params = self::validate_parameters(self::upload_file_parameters(), $params);
+
+        $u = new User;
+        $filetoupload = $title ? $title : $filetoupload;
+        if ($userid) {
+            $u->find_by_id($userid);
+            $recipient_id = $u->get('id');
+        }
+        else {
+            $u->find_by_username($username);
+            $recipient_id = $u->get('id');
+        }
+
+        if ($recipient_id) {
+            $upload_to_self = $USER->get('id') === $recipient_id;
+            $has_permission = $USER->is_admin_for_user($recipient_id);
+
+            if (!$upload_to_self && !$has_permission) {
+                throw new WebserviceAccessException(get_string('invalidpermission', 'auth.webservice', $userid ? $userid : $username ));
+
+            }
+            $result_artefact_id = parent::handle_file_upload('filetoupload', null, $foldername, $title, $description, $tags, $recipient_id);
+        }
+
+        return array(
+            'userid' => $recipient_id,
+            'username' => $u->get('username'),
+            'filetoupload' => $filetoupload,
+            'status' => $result_artefact_id ? get_string('fileuploadsuccess', WEBSERVICE_LANG) : get_string('fileuploadfail', WEBSERVICE_LANG)
+        );
+    }
+
+    /**
+     * The parameter definition for output of upload_file method
+     *
+     * @return external_description
+     */
+    public static function upload_file_returns() {
+        return new external_single_structure(
+        array(
+                'userid'       => new external_value(PARAM_INT, get_string('userid', WEBSERVICE_LANG)),
+                'username'     => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG)),
+                'filetoupload' => new external_value(PARAM_TEXT, get_string('filetoupload', WEBSERVICE_LANG)),
+                'status'       => new external_value(PARAM_TEXT, get_string('fileuploadstatus', WEBSERVICE_LANG)),
+            )
+        );
+    }
 }
