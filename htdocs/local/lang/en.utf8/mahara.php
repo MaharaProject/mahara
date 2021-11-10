@@ -129,3 +129,9 @@ $string['helpfor'] = 'Manual for "%s"';
 $string['pendingfriend'] = 'pending contact';
 $string['pendingfriends'] = 'pending contacts';
 $string['myfriends']          = 'My friends';
+
+$string['yournewpassword1'] = 'Your new password. It must be at least %s characters long. Passwords are case sensitive and cannot be your username. %s<br/>
+For good security, consider using a passphrase. A passphrase is a sentence rather than a single word, e.g. your favourite quote or two (or more) of your favourite things, taking the above requirements for characters into account.';
+$string['passworddescription1.ul'] = 'It must contain <ul><li>upper case letters [A-Z]</li><li>lower case letters [a-z]</li></ul>';
+$string['passworddescription1.uln'] = 'It must contain at minimum <ul><li>1 upper case letter [A-Z]</li><li>1 lower case letter [a-z]</li><li>1 number [0-9]';
+$string['passworddescription1.ulns'] = 'It must contain at minimum <ul><li>1 upper case letter [A-Z]</li><li>1 lower case letter [a-z]</li><li>1 number [0-9]</li><li>1 symbol, e.g. ! . @ # $ & * - _ </li></ul>';

@@ -27,6 +27,11 @@ Feature: Mahara users submit pages / colelctions to a group
       | Page UserC_01 | Page 06 | user | UserC |
       | Page UserC_02 | Page 07 | user | UserC |
 
+     And the following "blocks" exist:
+    | title                | type           | page             |retractable | data |
+    | Text                 | text           | Page UserA_01    | yes        | textinput=This is some text;tags=texttag |
+    | Image JPG            | image          | Page UserA_01    | no         | attachment=Image1.jpg; width=100;tags=imagetag |
+
     And the following "collections" exist:
       | title | description | ownertype | ownername | pages |
       | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
@@ -34,7 +39,7 @@ Feature: Mahara users submit pages / colelctions to a group
       | Collection UserB_01 | Collection 03 | user | UserB | Page UserB_01 |
       | Collection UserC_01 | Collection 05 | user | UserC | Page UserC_01 |
 
-  Scenario: Group users submit content to the group and group admin checks who is still to submit content
+  Scenario: Group users submit content to the group (and shouldn't be able to make edits/quick edit) and group admin checks who is still to submit content
     # UserA submits a collection to the group
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
@@ -44,6 +49,11 @@ Feature: Mahara users submit pages / colelctions to a group
     And I press "Submit"
     And I press "Yes"
     Then I should see "Collection submitted"
+    And I follow "Collection UserA_01"
+    And I click on "Details"
+    And I should see "Add comment" in the "Block header" property
+    And I should see "Details" in the "Block header" property
+    And I should not see "Quick edit"
     And I log out
 
     # UserB submits a page to the group

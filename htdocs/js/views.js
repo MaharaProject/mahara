@@ -294,7 +294,7 @@
 
         $(workspace).show();
 
-        $(window).on('resize colresize', function(){
+        $(window).on('resize colresize', function() {
             equalHeights();
         });
 
@@ -302,12 +302,10 @@
             location.reload();
         });
 
-        gridInit();
-
         // images need time to load before height can be properly calculated
-         window.setTimeout(function(){
+        window.setTimeout(function() {
             $(window).trigger('colresize');
-         }, 300);
+        }, 300);
 
     } // init
 

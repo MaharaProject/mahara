@@ -56,10 +56,11 @@ function loadGridTranslate(grid, blocks) {
     window.setTimeout(function(){
         updateBlockSizes();
         updateTranslatedGridRows(blocks);
-        gridInit();
+
         $.each(gridElements, function(index, el) {
             el.on('resizestart', resizeStartBlock);
             el.on('resizestop', resizeStopBlock);
+            el.on('dragstop', moveBlockEnd);
         });
         initJs();
         window.isGridstackRendering = false;
@@ -307,6 +308,7 @@ function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, m
     $(el).addClass(blocktypeclass);
     el.on('resizestart', resizeStartBlock);
     el.on('resizestop', resizeStopBlock);
+    el.on('dragstop', moveBlockEnd);
 
     // images need time to load before height can be properly calculated
     window.setTimeout(function(){
@@ -318,6 +320,11 @@ function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, m
     }, 300);
 
     return el;
+}
+
+function moveBlockEnd(event, data) {
+    var grid = $('.grid-stack').data('gridstack');
+    serializeWidgetMap(grid.grid.nodes);
 }
 
 function resizeStartBlock(event, data) {
@@ -336,14 +343,6 @@ function resizeStopBlock(event, data) {
     grid.minHeight($(this), heightgrid);
 
     // update dimesions in db
-    var id = this.attributes['data-gs-id'].value,
-    dimensions = {
-      newx: this.attributes['data-gs-x'].value,
-      newy: this.attributes['data-gs-y'].value,
-      newwidth: widthgrid,
-      newheight: heightgrid,
-    }
-    moveBlock(id, dimensions);
     serializeWidgetMap(grid.grid.nodes);
 }
 
@@ -386,15 +385,6 @@ var serializeWidgetMap = function(items) {
         }
     }
 };
-
-function gridInit() {
-    $('.grid-stack').on('change', function(event, items) {
-        event.stopPropagation();
-        event.preventDefault();
-        serializeWidgetMap(items);
-    });
-
-}
 
 function gridRemoveEvents() {
     $('.grid-stack').off('change');

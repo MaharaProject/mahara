@@ -196,6 +196,10 @@ if ($membership && ( !isset($allowunsubscribe) || $allowunsubscribe == 1)) {
                 'type' => 'hidden',
                 'value' => 'view'
             ),
+            'group' => array(
+                'type' => 'hidden',
+                'value' => $forum->groupid
+            ),
             'offset' => array(
                 'type' => 'hidden',
                 'value' => $offset
