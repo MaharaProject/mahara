@@ -599,6 +599,23 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
             add_field($table, $field);
         }
     }
+    if ($oldversion < 2021102710) {
+        log_debug('Updating External Service label: LTI integration is now LTI 1.1.');
+        // Need to have this here and not in LTI integration as this is called first in upgrade
+        try {
+            $id = get_field('external_services', 'id', 'shortname', 'maharalti');
+            if ($id) {
+                $record = new stdClass;
+                $record->name = 'LTI 1.1';
+                $record->id = $id;
+                update_record('external_services', $record);
+            }
+        }
+        catch (Exception $e) {
+            log_debug($e->getMessage());
+            $status = false;
+        }
+    }
 
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
