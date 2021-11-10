@@ -53,6 +53,7 @@ jQuery(function($) {
     JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
     JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
     JSONEditor.defaults.languages.en.remove_element_message = get_string('removestandardorelementconfirm');
+    JSONEditor.defaults.languages.en.button_delete_row_title = get_string('delete','module.framework','{{0}}');
 
     // Enable select2
     JSONEditor.plugins.select2.enable = true;
