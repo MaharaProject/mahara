@@ -119,3 +119,16 @@
 .viewfooter .add-comment-container {
     padding: $list-group-item-padding-y $list-group-item-padding-x;
 }
+
+// override the default link text-decoration
+.star-comment-rating a {
+    text-decoration: none;
+}
+
+// the solid and outline stars were not working with new fontawesome fonts
+.star-rating a.icon {
+    font-weight: 900;
+}
+.star-rating a.icon-regular {
+    @include fonttype(regular);
+}
