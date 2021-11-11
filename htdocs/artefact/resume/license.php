@@ -49,7 +49,7 @@ $form = array(
 $form = pieform($form);
 
 function resumelicense_submit(Pieform $form, $values) {
-    global $personalinformation, $USER;
+    global $personalinformation, $USER, $SESSION;
     $userid = $USER->get('id');
 
     if (empty($personalinformation)) {
