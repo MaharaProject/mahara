@@ -95,6 +95,8 @@ class XMLDBgenerator {
     var $rename_table_sql = 'ALTER TABLE OLDNAME RENAME TO NEWNAME'; //SQL sentence to rename one table, both
                                   //OLDNAME and NEWNAME are dinamically replaced
 
+    var $table_extra_code = false;
+
     var $rename_table_extra_code = false; //Does the generator need to add code after table rename
 
     var $drop_table_sql = 'DROP TABLE TABLENAME'; //SQL sentence to drop one table
@@ -129,7 +131,7 @@ class XMLDBgenerator {
     var $reserved_words; // List of reserved words (in order to quote them properly)
 
     /**
-     * Creates one new XMLDBGenerator
+     * Creates one new XMLDBgenerator
      */
     function __construct() {
         global $CFG;
