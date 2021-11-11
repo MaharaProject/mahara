@@ -289,7 +289,7 @@ $addform = pieform(array(
 ));
 
 // Get the placeholder block info
-$placeholderblock = PluginBlockType::get_blocktypes_for_category('shortcut', $view, 'placeholder');
+$placeholderblock = PluginBlocktype::get_blocktypes_for_category('shortcut', $view, 'placeholder');
 $placeholderbutton = '';
 if ($placeholderblock) {
     // it's active so make the button with different display title

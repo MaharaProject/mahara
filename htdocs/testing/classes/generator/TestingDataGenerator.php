@@ -2120,7 +2120,7 @@ EOD;
             }
         }
         else {
-            throw new systemException("The " . $record['title'] . " cannot be empty");
+            throw new SystemException("The " . $record['title'] . " cannot be empty");
         }
         safe_require('artefact', 'blog');
         if (!empty($record['tags'])) {

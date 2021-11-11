@@ -339,7 +339,7 @@ class ArtefactTypeBlog extends ArtefactType {
             $options['countcomments'] = (!empty($options['viewid']));
         }
 
-        $posts = ArtefactTypeBlogpost::get_posts($this->id, $limit, $offset, $options);
+        $posts = ArtefactTypeBlogPost::get_posts($this->id, $limit, $offset, $options);
 
         $template = 'artefact:blog:viewposts.tpl';
 
@@ -351,7 +351,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'jsonscript' => 'artefact/blog/posts.json.php',
         );
 
-        ArtefactTypeBlogpost::render_posts($posts, $template, $options, $pagination);
+        ArtefactTypeBlogPost::render_posts($posts, $template, $options, $pagination);
         $smarty = smarty_core();
         if (isset($options['viewid'])) {
             $smarty->assign('view', $options['viewid']);
@@ -1066,8 +1066,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             // Format dates properly
             if (is_null($viewoptions)) {
                 // My Blogs area: create forms for changing post status & deleting posts.
-                $post->changepoststatus = ArtefactTypeBlogpost::changepoststatus_form($post->id, $post->published, $post->title);
-                $post->delete = ArtefactTypeBlogpost::delete_form($post->id, $post->title);
+                $post->changepoststatus = ArtefactTypeBlogPost::changepoststatus_form($post->id, $post->published, $post->title);
+                $post->delete = ArtefactTypeBlogPost::delete_form($post->id, $post->title);
             }
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;

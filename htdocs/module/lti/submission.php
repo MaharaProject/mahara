@@ -73,7 +73,7 @@ else if (PluginModuleLti::can_submit_for_grading()) {
 
         $smarty->display('module:lti:submittedforgrading.tpl');
     }
-    else if (PluginModuleLTI::activity_configured()) {
+    else if (PluginModuleLti::activity_configured()) {
         $smarty->assign('PAGEHEADING', get_string('submitportfolio', 'module.lti'));
         // Assessment submission form
         $smarty->assign('form', $form);

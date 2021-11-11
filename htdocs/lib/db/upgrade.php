@@ -637,7 +637,7 @@ function xmldb_core_upgrade($oldversion=0) {
         // Defaults to usr = 0 on install
         execute_sql("UPDATE {site_content} SET mauthor = 0 WHERE mauthor IS NULL");
         $table = new XMLDBTable('site_content');
-        $key = new XMLDBKEY('mauthorfk');
+        $key = new XMLDBKey('mauthorfk');
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('mauthor'), 'usr', array('id'));
         drop_key($table, $key);
 
@@ -645,7 +645,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
         change_field_notnull($table, $field);
 
-        $key = new XMLDBKEY('mauthorfk');
+        $key = new XMLDBKey('mauthorfk');
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('mauthor'), 'usr', array('id'));
         add_key($table, $key);
     }
@@ -1051,7 +1051,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, null);
         if (!field_exists($table, $field)) {
             add_field($table, $field);
-            $key = new XMLDBKEY('reviewerfk');
+            $key = new XMLDBKey('reviewerfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('reviewedby'), 'usr', array('id'));
             add_key($table, $key);
         }
@@ -1520,7 +1520,7 @@ function xmldb_core_upgrade($oldversion=0) {
         if (isset($searches['elasticsearch'])) {
             log_debug('Remove triggers for elasticsearch');
             safe_require('search', 'elasticsearch');
-            ElasticSearchIndexing::drop_trigger_functions();
+            ElasticsearchIndexing::drop_trigger_functions();
         }
         log_debug('Remove triggers for notifications');
         db_drop_trigger('update_unread_insert', 'notification_internal_activity');
@@ -1774,7 +1774,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('artefact_plans_plan');
         if (table_exists($table)) {
             log_debug('Remove sequence from artefact_plans_plan "artefact" field');
-            $key = new XMLDBKEY('artefactfk');
+            $key = new XMLDBKey('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
             drop_key($table, $key);
             $field = new XMLDBField('artefact');
@@ -1783,7 +1783,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $key = new XMLDBKey('primary');
             $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
             add_key($table, $key);
-            $key = new XMLDBKEY('artefactfk');
+            $key = new XMLDBKey('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
             add_key($table, $key);
         }
@@ -1791,7 +1791,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('artefact_plans_task');
         if (table_exists($table)) {
             log_debug('Remove sequence from artefact_plans_task "artefact" field');
-            $key = new XMLDBKEY('artefactfk');
+            $key = new XMLDBKey('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
             drop_key($table, $key);
             $field = new XMLDBField('artefact');
@@ -1800,7 +1800,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $key = new XMLDBKey('primary');
             $key->setAttributes(XMLDB_KEY_PRIMARY, array('artefact'));
             add_key($table, $key);
-            $key = new XMLDBKEY('artefactfk');
+            $key = new XMLDBKey('artefactfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('artefact'), 'artefact', array('id'));
             add_key($table, $key);
         }
@@ -1845,7 +1845,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('view');
         if (table_exists($table)) {
             log_debug('Remove host FK from view table');
-            $key = new XMLDBKEY('submittedhostfk');
+            $key = new XMLDBKey('submittedhostfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('submittedhost'), 'host', array('wwwroot'));
             drop_key($table, $key);
         }
@@ -1853,7 +1853,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $table = new XMLDBTable('collection');
         if (table_exists($table)) {
             log_debug('Remove host FK from collection table');
-            $key = new XMLDBKEY('submittedhostfk');
+            $key = new XMLDBKey('submittedhostfk');
             $key->setAttributes(XMLDB_KEY_FOREIGN, array('submittedhost'), 'host', array('wwwroot'));
             drop_key($table, $key);
         }
@@ -2044,7 +2044,7 @@ function xmldb_core_upgrade($oldversion=0) {
         $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, false);
         change_field_notnull($table, $field);
 
-        $key = new XMLDBKEY('templatefk');
+        $key = new XMLDBKey('templatefk');
         $key->setAttributes(XMLDB_KEY_FOREIGN, array('originaltemplate'), 'view', array('id'));
         if (db_key_exists($table, $key)) {
             drop_key($table, $key);

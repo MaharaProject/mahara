@@ -1189,7 +1189,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->width    = $imageinfo[0];
             $data->height   = $imageinfo[1];
             if (isset($data->artefacttype) && $data->artefacttype == 'profileicon') {
-                return new ArtefactTypeProfileicon(0, $data);
+                return new ArtefactTypeProfileIcon(0, $data);
             }
             return new ArtefactTypeImage(0, $data);
         }

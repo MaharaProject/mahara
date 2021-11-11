@@ -177,7 +177,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
             safe_require('artefact', 'peerassessment');
             foreach ($artefacts as $artefactid) {
                 // Delete the assessment.
-                $a = new ArtefactTypePeerAssessment($artefactid);
+                $a = new ArtefactTypePeerassessment($artefactid);
                 $a->delete();
             }
         }

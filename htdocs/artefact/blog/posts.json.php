@@ -31,7 +31,7 @@ if ($blockid = param_integer('block', null)) {
     $configdata['versioning'] = false;
     $configdata['viewid'] = $bi->get('view');
     $configdata['blockid'] = $blockid;
-    $posts = ArtefactTypeBlogpost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
+    $posts = ArtefactTypeBlogPost::get_posts($configdata['artefactid'], $limit, $offset, $configdata);
     $template = 'artefact:blog:viewposts.tpl';
     $baseurl = $bi->get_view()->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'block=' . $blockid;
@@ -41,7 +41,7 @@ if ($blockid = param_integer('block', null)) {
         'datatable' => 'postlist_' . $blockid,
         'jsonscript' => 'artefact/blog/posts.json.php',
     );
-    ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
+    ArtefactTypeBlogPost::render_posts($posts, $template, $configdata, $pagination);
 }
 
 json_reply(false, array('data' => $posts));
