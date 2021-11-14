@@ -1372,7 +1372,13 @@ if (isset($suspended)) {
     }
 }
 
-$smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
+if ($add) {
+    $smarty->assign('PAGEHEADING', get_string('addinstitution', 'admin'));
+}
+else {
+    $smarty->assign('PAGEHEADING', get_string('editinstitution', 'admin'));
+}
+
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

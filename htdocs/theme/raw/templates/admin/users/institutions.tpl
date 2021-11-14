@@ -29,10 +29,6 @@
         </div>
         {/if}
     {/if}
-
-    {if $add}
-    <h2 class="title card-header">{str tag="addinstitution" section="admin"}</h2>
-    {/if}
     <div class="card-body">
         {$institution_form|safe}
     </div>
