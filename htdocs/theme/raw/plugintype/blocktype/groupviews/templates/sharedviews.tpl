@@ -7,16 +7,17 @@
                 </h4>
             </div>
 
-          {if $view.template}
-          <div class="grouppage-form flex-controls">
-              <div class="btn-group btn-group-top only-button">
-                  {$view.form|safe}
-              </div>
-          </div>
-          {/if}
+            {if $view.template}
+            <div class="grouppage-form flex-controls">
+                <div class="btn-group btn-group-top only-button">
+                    {$view.form|safe}
+                </div>
+            </div>
+            {/if}
         </div>
         {if $view.sharedby}
         <span class="owner text-small text-midtone">
+            {strip}
             {if $view.group}
                 <a href="{$view.groupdata->homeurl}" class="text-small">
                      {$view.sharedby}
@@ -27,17 +28,27 @@
                         {assign var='realauthor' value=$view.sharedby}
                         {assign var='realauthorlink' value=profile_url($view.user)}
                     {/if}
-                </span>
+                    {assign var='author' value=get_string('anonymoususer')}
+                    {include file=author.tpl}
+                {else}
+                    <a href="{profile_url($view.user)}" class="text-small">
+                        {$view.sharedby}
+                    </a>
+                {/if}
+            {else}
+                {$view.sharedby}
             {/if}
-            <span class="postedon text-small text-midtone">
-                - {if $view.mtime == $view.ctime}
+            {/strip}
+            <span class="postedon text-small text-midtone"> -
+                {if $view.mtime == $view.ctime}
                     {str tag=Created}
                 {else}
                     {str tag=Updated}
                 {/if}
                 {$view.mtime|strtotime|format_date}
             </span>
-        </h4>
+        </span>
+        {/if}
 
         {if $view.description}
             <div class="detail text-small">
