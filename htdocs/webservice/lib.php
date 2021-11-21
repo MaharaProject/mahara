@@ -831,6 +831,76 @@ class external_api {
 
         return $function;
     }
+
+       /**
+     * Internal function to upload a file using the same logic whether
+     * it's a standalone file or an attachment to a blog post.
+     *
+     * This function can deal with files that are in an array param,
+     * but it will only do one of them at a time.
+     *
+     * @param string $inputname Name of the parameter the file is in
+     * @param int $inputindex NULL if there's just one file; index of particular file if it's an array
+     * @param string $foldername Folder to put the files in (or create if it doesn't exist yet.)
+     * @param string $title
+     * @param string $description
+     * @param array $tags
+     * @return ID of newly created file
+     * @throws WebserviceInvalidParameterException
+     */
+    protected static function handle_file_upload($inputname, $inputindex = null, $foldername = null, $title = null, $description = null, $tags = array()) {
+        global $USER;
+        if (!$_FILES[$inputname]) {
+            throw new WebserviceInvalidParameterException('No uploaded files found in request');
+        }
+        safe_require('artefact', 'file');
+
+        $data = new stdClass();
+        $data->owner = $USER->get('id'); // id of owner
+
+        // See if a folder by this name already exists.
+        // Create a folder by this name if it doesn't exist yet.
+        $artefact = ArtefactTypeFolder::get_folder_by_name($foldername, null, $data->owner);
+        if ($artefact) {
+            $data->parent = $artefact->id;
+            if ($data->parent == 0) {
+                $data->parent = null;
+            }
+        }
+        else {
+            $fd = (object) array(
+                'owner' => $data->owner,
+                'title' => $foldername,
+                'parent' => null,
+            );
+            $f = new ArtefactTypeFolder(0, $fd);
+            $f->commit();
+            $data->parent = $f->get('id');
+        }
+
+        if (!$title) {
+            if ($inputindex) {
+                $rawname = $_FILES[$inputname]['name'][$inputindex];
+            }
+            else {
+                $rawname = $_FILES[$inputname]['name'];
+            }
+            $title = basename($rawname);
+        }
+        $data->title = ArtefactTypeFileBase::get_new_file_title($title, $data->parent, $data->owner);
+        if ($description) {
+            $data->description = $description;
+        }
+        if ($tags) {
+            $data->tags = $tags;
+        }
+
+        // This will throw a QuotaExceededException or UploadExceptoin if there's
+        // a problem.
+        $artefact_id = ArtefactTypeFile::save_uploaded_file($inputname, $data, $inputindex);
+
+        return $artefact_id;
+    }
 }
 
 /**
