@@ -4,10 +4,12 @@ Bootstrap for Sass
 Website: https://getbootstrap.com/
 Version: 5.0.1
 
-The most popular HTML, CSS, and JavaScript framework for developing responsive, mobile first projects on the web.
+Bootstrap is a popular HTML, CSS, and JavaScript framework for developing responsive, mobile-first projects on the web.
+
+On updating the major version, please update the version check inside 'ensure_upgrade_sanity()' found in htdocs/lib/mahara.php.
 
 Download the source files - this is for a base so we can customise
 - Only kept the 'js/' directory
 - Moved items inside'/scss' directory to 'theme/raw/sass/lib/bootstrap5'
-Download the compiled css and js - for our javascript files
-- Get the bootstrap.min.js and map.js and put it in htdocs/lib/bootstrap/assets/javascripts/bootstrap.min.js
+Download the compiled CSS and js - for our javascript files
+- Get the bootstrap.min.js and map.js and put them in htdocs/lib/bootstrap/assets/javascripts/bootstrap.min.js
