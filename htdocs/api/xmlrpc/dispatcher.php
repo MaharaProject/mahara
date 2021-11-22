@@ -195,7 +195,7 @@ class Dispatcher {
         return null;
     }
 
-    function keyswap($function, $params) {
+    public static function keyswap($function, $params) {
         require_once(get_config('libroot') . 'peer.php');
 
         //TODO: Verify params

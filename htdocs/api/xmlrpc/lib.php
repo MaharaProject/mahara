@@ -1090,7 +1090,7 @@ function get_public_key($uri, $application=null) {
  *
  * @param  string   $message              The error message
  * @param  int      $code                 Unique identifying integer
- * @return string                         An XMLRPC error doc
+ * @return void
  */
 function xmlrpc_error($message, $code) {
     echo <<<EOF
@@ -1250,7 +1250,7 @@ function xmlenc_envelope($message, $remote_certificate) {
     $symmetric_keys = array();
 
     //      passed by ref ->      &$encryptedstring &$symmetric_keys
-    $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey));
+    $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey), "AES256");
     $message = base64_encode($encryptedstring);
     $symmetrickey = base64_encode(array_pop($symmetric_keys));
     $zed = 'nothing';
@@ -1385,7 +1385,7 @@ class OpenSslRepo {
      */
     public function openssl_open($data, $key, $oldkeyok=false) {
         $payload = '';
-        $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey']);
+        $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey'], "AES256");
 
         if (!empty($isOpen)) {
             return $payload;
@@ -1395,7 +1395,7 @@ class OpenSslRepo {
             foreach($openssl_history as $keyset) {
                 if (isset($keyset['keypair_PEM'])) {
                     $keyresource = openssl_pkey_get_private($keyset['keypair_PEM']);
-                    $isOpen      = openssl_open($data, $payload, $key, $keyresource);
+                    $isOpen      = openssl_open($data, $payload, $key, $keyresource, "AES256");
                     if ($isOpen) {
                         // It's an older code, sir, but it checks out
                         if ($oldkeyok) {
