@@ -30,7 +30,7 @@
             {$compositeforms.employmenthistory|safe}
         </div>
 
-        <button id="addemploymenthistorybutton" data-toggle="collapse" data-target="#employmenthistoryform" aria-expanded="false" aria-controls="employmenthistoryform" class="float-end btn btn-secondary btn-sm collapsed expand-add-button">
+        <button id="addemploymenthistorybutton" data-bs-toggle="collapse" data-bs-target="#employmenthistoryform" aria-expanded="false" aria-controls="employmenthistoryform" class="float-end btn btn-secondary btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
@@ -132,7 +132,7 @@
                         {/if}
                         </span>
                         <a href="{$item->downloadpath}" class="download-link">
-                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
+                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>
                     {if $item->description}
                         <div class="file-description text-small text-midtone">

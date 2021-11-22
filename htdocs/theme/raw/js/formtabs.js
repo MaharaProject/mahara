@@ -45,7 +45,7 @@ jQuery(function($) {
             // if the tab-pane isn't hidden
             if (!$(tabcontent[i]).hasClass('d-none')) {
                 listitem = '<li role="presentation" aria-hidden="true">' +
-                    '<a href="#'+id+'" role="tab" data-toggle="tab" aria-controls="'+id+'" aria-expanded="false">'+heading+'</a>' +
+                    '<a href="#'+id+'" role="tab" data-bs-toggle="tab" aria-controls="'+id+'" aria-expanded="false">'+heading+'</a>' +
                 '</li>';
                 mahara.tabnav.append(listitem);
             }
@@ -73,7 +73,7 @@ jQuery(function($) {
             mahara.tabnav.closest('form').find('.requiredmarkerdesc').addClass('d-none');
         }
         // Store current tab on change
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+        $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function(e){
             if ($($(e.target).attr('href')).find('.requiredmarker').length) {
                 // show 'required' header message
                 $(e.target).closest('form').find('.requiredmarkerdesc').removeClass('d-none');

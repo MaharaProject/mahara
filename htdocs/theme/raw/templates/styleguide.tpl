@@ -274,7 +274,7 @@ section .navbar-form.navbar-collapse.search-form {
                 <a href="" class="user-icon user-icon-25" title="Profile page">
                     <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
                 </a>
-                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
                     <span class="sr-only">Show nav three</span>
                     <span class="icon icon-chevron-down collapsed"></span>
                 </button>
@@ -653,7 +653,7 @@ A attachment card.
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -669,7 +669,7 @@ A attachment card.
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -685,7 +685,7 @@ A attachment card.
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.

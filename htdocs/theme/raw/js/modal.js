@@ -1,6 +1,6 @@
 function modal_handler(e) {
 
-    var modal = $('#' + e.target.attributes.getNamedItem('data-target').value);
+    var modal = $('#' + e.target.attributes.getNamedItem('data-bs-target').value);
     modal.addClass('active').removeClass('closed');
 
     $(modal).find('.deletebutton').on('click', function(e) {
@@ -14,8 +14,8 @@ function modal_handler(e) {
 jQuery(window).on('blocksloaded', {}, function() {
 "use strict";
 
-    $('[data-target="#configureblock"]').each(function(i, obj) {
-        $(obj).attr('data-target', 'modal_' + $(obj).attr('data-artefactid'));
+    $('[data-bs-target="#configureblock"]').each(function(i, obj) {
+        $(obj).attr('data-bs-target', 'modal_' + $(obj).attr('data-artefactid'));
     });
 
     var deletebutton = $('#configureblock').find('.deletebutton');

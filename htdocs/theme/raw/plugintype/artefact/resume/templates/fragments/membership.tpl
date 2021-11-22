@@ -36,7 +36,7 @@
         <div id="membershipform" class="collapse" data-action='focus-on-open reset-on-collapse'>
             {$compositeforms.membership|safe}
         </div>
-        <button id="addmembershipbutton" data-toggle="collapse" data-target="#membershipform" aria-expanded="false" aria-controls="membershipform"class="float-end btn btn-secondary btn-sm collapsed expand-add-button">
+        <button id="addmembershipbutton" data-bs-toggle="collapse" data-bs-target="#membershipform" aria-expanded="false" aria-controls="membershipform"class="float-end btn btn-secondary btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
@@ -131,7 +131,7 @@
                         {/if}
                         </span>
                         <a href="{$item->downloadpath}" class="download-link">
-                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
+                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>
                     {if $item->description}
                         <div class="file-description text-small text-midtone">

@@ -68,7 +68,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
         $triggerclass = $iscollapsed ? 'collapsed': '';
         $ariaexpanded = $iscollapsed ? 'false' : 'true';
 
-        $legendcontent = '<button type="button" data-target="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$ariaexpanded.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
+        $legendcontent = '<button type="button" data-bs-target="#' . $openparam . '" data-bs-toggle="collapse" aria-expanded="'.$ariaexpanded.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
 
         if (!empty($element['iconclass'])){
             $legendcontent .= '<span class="icon-fieldset icon icon-'.$element['iconclass'].'" role="presentation" aria-hidden="true"> </span>';

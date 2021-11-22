@@ -131,7 +131,7 @@
                                     </a>
                                 </span>
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}" class="download-link">
-                                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}"></span>
+                                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}"></span>
                                     <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}</span>
                                 </a>
                             </li>

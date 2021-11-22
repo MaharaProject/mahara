@@ -58,7 +58,7 @@
                                 <span class="text-small">{$file->title|truncate:40}</span>
                             </span>
                             <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">
-                                <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                                <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
                             </a>
                         {if $file->description}
                             <div class="file-description text-small text-midtone">

@@ -5,7 +5,7 @@
     <fieldset class="pieform-fieldset collapsible">
         <legend>
             <h3 class="form-group collapsible-group">
-                <a href="#third-party" aria-expanded="true" data-toggle="collapse">{str tag=thirdpartyplugins section=admin}<span class="icon icon-chevron-down float-right collapse-indicator" role="presentation"
+                <a href="#third-party" aria-expanded="true" data-bs-toggle="collapse">{str tag=thirdpartyplugins section=admin}<span class="icon icon-chevron-down float-right collapse-indicator" role="presentation"
                         aria-hidden="true"></span></a></h3>
         </legend>
 

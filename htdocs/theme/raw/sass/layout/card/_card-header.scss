@@ -10,7 +10,7 @@
     font-weight: $font-weight-light;
 
     a,
-    button[data-toggle="collapse"] {
+    button[data-bs-toggle="collapse"] {
         text-decoration: none;
         color: $card-header-color;
 
@@ -47,14 +47,14 @@
         }
     }
 
-    button[data-toggle="collapse"] {
+    button[data-bs-toggle="collapse"] {
         width: 100%;
         text-align: left;
     }
     // by default links in headings get display: block and padding.
     // Use .secondary-link if you don't want this behaviour
     a:not(.secondary-link),
-    button[data-toggle="collapse"] {
+    button[data-bs-toggle="collapse"] {
         display: block;
         color: $card-header-color;
         padding: $card-spacer-y $card-spacer-x;

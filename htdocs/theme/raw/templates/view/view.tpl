@@ -61,7 +61,7 @@
             {if $feedback->count || $enablecomments}
             <fieldset class="pieform-fieldset first last collapsible">
                 <legend>
-                    <button href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                    <button href="#dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                         <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                         <span id="comment-section-title">{if $feedback->count}{str tag="Comments" section="artefact.comment"}{else}{str tag=addcomment section=artefact.comment}{/if}</span>
                         <span id="comment-section-count" class="text-small">{if $feedback->count}({$feedback->count}){/if}</span>

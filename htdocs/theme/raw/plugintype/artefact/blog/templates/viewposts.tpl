@@ -75,7 +75,7 @@
                         {/if}
                         </span>
                         <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}{if $options.viewid}&amp;view={$options.viewid}{/if}" class="download-link">
-                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
                         </a>
                         {if $file->description}
                         <div class="file-description text-small text-midtone">

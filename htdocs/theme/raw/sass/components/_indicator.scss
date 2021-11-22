@@ -48,9 +48,9 @@
     }
 }
 
-tr[data-toggle="collapse"],
-a[data-toggle="collapse"],
-button[data-toggle="collapse"] {
+tr[data-bs-toggle="collapse"],
+a[data-bs-toggle="collapse"],
+button[data-bs-toggle="collapse"] {
     &:hover {
       outline: none;
     }
@@ -76,12 +76,12 @@ button[data-toggle="collapse"] {
 // need to be float right for blog post list
 .taggedposts,
 .recentblogpost {
-  a[data-toggle="collapse"] {
+  a[data-bs-toggle="collapse"] {
     display: inline-block;
     float: right;
   }
   // but not the attachments
-  .has-attachment a[data-toggle="collapse"] {
+  .has-attachment a[data-bs-toggle="collapse"] {
     display: block;
     float: none;
   }
@@ -102,7 +102,7 @@ button[data-toggle="collapse"] {
 }
 
 // syntax change if link is an outer-link
-[data-toggle="collapse"].outer-link {
+[data-bs-toggle="collapse"].outer-link {
     &.collapsed {
         ~ .collapse-indicator {
             color: $collapse-indicator-color;

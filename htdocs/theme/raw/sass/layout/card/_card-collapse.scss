@@ -187,7 +187,7 @@
             text-align: right;
         }
 
-        button[data-toggle="collapse"] {
+        button[data-bs-toggle="collapse"] {
             margin-top: -$btn-border-width;
             border-bottom-left-radius: $btn-border-radius;
             border-bottom-right-radius: $btn-border-radius;

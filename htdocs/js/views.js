@@ -348,12 +348,12 @@
 
         // collapse the toolbar if the cookie says its collapsed
         if(loadCookieContentEditorCollapsed()){
-            $('[data-target="col-collapse"]').addClass('col-collapsed');
+            $('[data-bs-target="col-collapse"]').addClass('col-collapsed');
         }
 
         // Attach expand/collapse to click and tap events
         $('[data-trigger="col-collapse"]').on('click tap', function(){
-            var target = $(this).closest('[data-target="col-collapse"]');
+            var target = $(this).closest('[data-bs-target="col-collapse"]');
 
             target.toggleClass('col-collapsed');
 

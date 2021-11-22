@@ -80,7 +80,7 @@ jQuery(function($) {
     }
 
     function attachTooltip() {
-        $('[data-toggle="tooltip"]').tooltip({
+        $('[data-bs-toggle="tooltip"]').tooltip({
             container: 'body',
             placement: 'right',
             viewport: 'body'

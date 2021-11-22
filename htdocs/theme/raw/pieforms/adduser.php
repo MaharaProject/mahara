@@ -65,7 +65,7 @@ echo $form_tag;
             <h2 class="card-header"><?php echo get_string('create', 'admin'); ?></h2>
             <div class="card-body">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-link" data-toggle="modal-docked" data-target="#general-account-options">
+                <button type="button" class="btn btn-link" data-bs-toggle="modal-docked" data-bs-target="#general-account-options">
                     <span class="icon icon-cog left text-default" role="presentation" aria-hidden="true"></span>
                     <?php echo get_string('accountoptionsdesc', 'account'); ?>
                 </button>

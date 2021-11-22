@@ -510,7 +510,7 @@ jQuery(window).on('blocksloaded', {}, function() {
         }
 
         if (replybutton.parents('.js-feedbackblock').length) {
-            var commentModal = $('#add_feedback_link').attr('data-target');
+            var commentModal = $('#add_feedback_link').attr('data-bs-target');
             var target = $(commentModal);
             dock.show(target, false, true);
         }

@@ -64,7 +64,7 @@
                 </span>
                 {if $child->artefacttype != 'folder'}
                 <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}" class="download-link">
-                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$child->title arg2=$child->size}"></span>
+                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$child->title arg2=$child->size}"></span>
                 </a>
                 {/if}
                 {if $child->description}

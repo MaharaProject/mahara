@@ -188,7 +188,7 @@ function notrude_form() {
                     'review' => array(
                         'class' => 'btn-secondary text-inline',
                         'type' => 'html',
-                        'value' => '<button type="button" class="btn btn-secondary" data-toggle="modal-docked" data-target="#objection-review">
+                        'value' => '<button type="button" class="btn btn-secondary" data-bs-toggle="modal-docked" data-bs-target="#objection-review">
                                         <span class="icon icon-check text-danger left" role="presentation" aria-hidden="true"></span>' .
                                         get_string('stillobjectionable') .
                                     '</button>'
