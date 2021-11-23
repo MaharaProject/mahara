@@ -10,13 +10,13 @@
     .pagination {
         margin: 0;
         padding-left: 0 !important;
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             padding-top: $spacing-base;
             .hidden-xs {
                 display: none;
             }
         }
-        @include media-breakpoint-down(lg) {
+        @include media-breakpoint-down(xl) {
             max-width: 500px;
         }
     }

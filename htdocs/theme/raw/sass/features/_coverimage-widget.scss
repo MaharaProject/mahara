@@ -36,7 +36,7 @@ $coverimage-height: 7.75rem; // 124px;
 
     &:hover {
         .widget-heading {
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 background: scale-color($dashboard-widget-bg, $lightness: -5%);
             }
         }
@@ -51,7 +51,7 @@ $coverimage-height: 7.75rem; // 124px;
         /* Touch screen device style goes here */
         &:focus {
             .widget-heading {
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     background: scale-color($dashboard-widget-bg, $lightness: -5%);
                 }
             }

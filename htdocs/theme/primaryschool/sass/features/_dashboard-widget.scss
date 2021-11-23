@@ -20,13 +20,13 @@ $logged-in-height-phone: 7.5rem; // 120px;
         height: $logged-in-height;
         overflow:hidden;
 
-        @include media-breakpoint-between (sm, lg) {
+        @include media-breakpoint-between (sm, xl) {
             width: math.div(10, 3.7) * 10%;
             border-left: 0;
             height: $logged-in-height-tablet;
         }
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             width: math.div(10, 3.1) * 10%;
             border-left: 0;
             height: auto;
@@ -38,11 +38,11 @@ $logged-in-height-phone: 7.5rem; // 120px;
             border-left: 10px solid $white;
             height: $logged-in-height;
 
-            @include media-breakpoint-between (sm, lg) {
+            @include media-breakpoint-between (sm, xl) {
                 height: $logged-in-height-tablet;
             }
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 height: $logged-in-height-phone;
             }
 
@@ -60,7 +60,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
                 left: -$spacing-base;
                 top: 30%;
 
-                @include media-breakpoint-between (sm, lg) {
+                @include media-breakpoint-between (sm, xl) {
                     width: 40px;
                     height: 60px;
                     -moz-border-radius: 20px 100px 100px 20px;
@@ -68,7 +68,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
                     border-radius: 20px 100px 100px 20px;
                 }
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     display: none;
                 }
             }
@@ -106,13 +106,13 @@ $logged-in-height-phone: 7.5rem; // 120px;
             top: -80px;
             text-align: center;
 
-            @include media-breakpoint-between (sm, lg) {
+            @include media-breakpoint-between (sm, xl) {
                 height: $logged-in-height-tablet;
                 top: -60px;
                 padding: $spacing-base $spacing-lg;
             }
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 height: $logged-in-height-phone;
                 top: 0;
                 padding: $spacing-sm;
@@ -124,12 +124,12 @@ $logged-in-height-phone: 7.5rem; // 120px;
                 font-size: 1.875rem; // 30px;
                 color: $white;
 
-                @include media-breakpoint-between (sm, lg) {
+                @include media-breakpoint-between (sm, xl) {
                     font-size: 2rem; // 32px;
                     margin: 0;
                 }
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     font-size: 1.375rem; // 22px;
                     margin: 0;
                 }
@@ -142,7 +142,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
                 img {
                     max-width: 100%;
 
-                    @include media-breakpoint-down(sm) {
+                    @include media-breakpoint-down(md) {
                         display: none;
                     }
                 }
@@ -153,7 +153,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
                 font-size: $font-size-sm;
                 color: $white;
 
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                     margin: 0;
                     line-height: 1.1;
                 }
@@ -185,12 +185,12 @@ $logged-in-height-phone: 7.5rem; // 120px;
         margin-bottom: $spacing-base;
         width: 125px;
 
-        @include media-breakpoint-between (sm, lg) {
+        @include media-breakpoint-between (sm, xl) {
             height: $logged-in-height-tablet;
             width: 100px;
         }
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             display: none;
         }
 
@@ -202,7 +202,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
             left: -100px;
             top: -90px;
 
-            @include media-breakpoint-between (sm, lg) {
+            @include media-breakpoint-between (sm, xl) {
                 height: $logged-in-height-tablet;
             }
         }
@@ -221,7 +221,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
             top: 30%;
             left: -10px;
 
-            @include media-breakpoint-between (sm, lg) {
+            @include media-breakpoint-between (sm, xl) {
                 width: 40px;
                 height: 60px;
                 -moz-border-radius: 20px 100px 100px 20px;
@@ -241,7 +241,7 @@ $logged-in-height-phone: 7.5rem; // 120px;
                 left: 100px;
                 top: 14px;
 
-                @include media-breakpoint-between (sm, lg) {
+                @include media-breakpoint-between (sm, xl) {
                     left: 90px;
                     top: 12px;
                     width: 20px;
@@ -254,10 +254,10 @@ $logged-in-height-phone: 7.5rem; // 120px;
 
 .loggedout .dashboard-widget-container {
     min-height: 350px;
-    @include media-breakpoint-between (sm, lg) {
+    @include media-breakpoint-between (sm, xl) {
         min-height: 320px;
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         min-height: 0;
     }
 }

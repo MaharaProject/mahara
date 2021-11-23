@@ -30,7 +30,7 @@ body {
 
 // Expose a section of the page
 .expose {
-    background-color: theme-color("secondary");
+    background-color: $theme-secondary-color;
     margin-bottom: 2.5rem; // 40px;
     margin-top: -6.8125rem; // -109px;
     padding: 2.5rem 0 1.25rem; // 40px 0 20px;
@@ -196,7 +196,7 @@ body.presentation-iframe {
         padding-top: $spacing-xxxl;
         padding-bottom: $spacing-xxxl;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             padding-top: $spacing-base;
             padding-bottom: $spacing-xxl;
         }
@@ -225,7 +225,7 @@ form#settings,
     margin-top: $spacing-xxxl + $spacing-xl;
     margin-bottom: $spacing-xl;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         margin: 0;
     }
 }
@@ -249,7 +249,7 @@ body {
       flex: 1 0 0%;
       max-width: 25%;
 
-      @include media-breakpoint-down(md) {
+      @include media-breakpoint-down(lg) {
           flex: 1 0 0%;
           max-width: 100%;
       }

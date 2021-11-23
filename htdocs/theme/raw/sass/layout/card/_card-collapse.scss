@@ -182,7 +182,7 @@
         font-weight: $font-weight-normal;
         font-size: $font-size-base;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             position: static;
             text-align: right;
         }

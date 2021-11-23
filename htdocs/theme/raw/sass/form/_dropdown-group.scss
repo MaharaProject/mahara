@@ -104,7 +104,7 @@
 // User search dropdown-group
 .admin-user-search {
     .usersearchform {
-        @include media-breakpoint-between(sm, md) {
+        @include media-breakpoint-between(sm, lg) {
             width: 65%;
         }
     }

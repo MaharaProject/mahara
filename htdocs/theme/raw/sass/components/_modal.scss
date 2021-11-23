@@ -168,7 +168,7 @@ $width-sm: 90%;
         .modal-dialog {
             @include transition(right 0.5s ease-in-out);
             right: -($width + 5);
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 right: -($width-sm + 5);
             }
         }
@@ -180,7 +180,7 @@ $width-sm: 90%;
         position: fixed;
         top: 0;
         bottom: 0;
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             width: ($width-sm + 5);
         }
     }

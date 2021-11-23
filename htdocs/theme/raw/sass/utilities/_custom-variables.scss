@@ -22,18 +22,18 @@ $dashboard-widget-title-color:              #333333 !default;
 $dashboard-widget-circle-bg:                $theme-primary-color !default;
 $dashboard-widget-cirlce-icon-color:        $white !default;
 
-$help-icon-color:                           theme-color("statetext") !default;
+$help-icon-color:                           $theme-color-statetext !default;
 $rss-icon-color:                            #FE6500 !default;
 
 // SmartEvidence status colors
 $assessment-begun-color:                    #5b9aa9 !default;
-$assessment-incomplete-color:               theme-color("danger") !default;
-$assessment-partial-color:                  theme-color("warning") !default;
-$assessment-completed-color:                theme-color("success") !default;
+$assessment-incomplete-color:               $theme-color-danger !default;
+$assessment-partial-color:                  $theme-color-warning !default;
+$assessment-completed-color:                $theme-color-success !default;
 
 // Progress completion page
-$progresscompletion-verified-color:         theme-color("success") !default;
-$progresscompletion-notverified-color:      theme-color("danger") !default;
+$progresscompletion-verified-color:         $theme-color-success !default;
+$progresscompletion-notverified-color:      $theme-color-danger !default;
 
 // Pages and collections page header
 $pageheader-bg:                             #f7f7f7 !default;

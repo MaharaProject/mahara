@@ -184,7 +184,7 @@ p ~ div > .btn-group-top,
     margin-top: -1.25rem; // -20px;
     margin-left: -100%;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         margin: 0 0 $spacing-base 0;
         width: 100%;
         float: none;
@@ -196,7 +196,7 @@ p ~ div > .btn-group-top,
         @include border-top-radius(0);
         border-top: 0;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             margin-bottom: $spacing-xs;
             margin-left: $btn-border-width;
             margin-right: $btn-border-width;
@@ -215,7 +215,7 @@ p ~ div > .btn-group-top,
         border-bottom-right-radius: $btn-border-radius-sm;
     }
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         .form-as-button,
         .form-as-button:last-child,
         .form-as-button:not(:first-child),

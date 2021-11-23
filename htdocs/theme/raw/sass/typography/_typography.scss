@@ -10,7 +10,7 @@ h1 {
     padding-bottom: $line-height-computed * 0.5;
     margin-bottom: $spacing-xl;
     border-bottom: $h1heading-border-width solid $h1heading-border-color;
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
       border-bottom: 0;
       font-size: $h2-font-size; // making it smaller for mobile
     }
@@ -47,7 +47,7 @@ h1 {
         margin-top: -$spacing-xl; // -20px (from H1 margin)
         margin-bottom: $spacing-lg;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             padding: $spacing-xl;
             margin-top: $spacing-sm; // 5px;
         }
@@ -81,7 +81,7 @@ h1 {
     ~ div.with-heading {
         padding-bottom: $spacing-base;
         margin-bottom: $spacing-base;
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             border-bottom: $h1heading-border-width solid $h1heading-border-color;
         }
         a {
@@ -309,7 +309,7 @@ pre {
 
         .wsrequired {
             font-weight: $font-weight-bold;
-            color: theme-color("danger");
+            color: $theme-color-danger;
         }
         .wsoptional {
             font-weight: $font-weight-bold;

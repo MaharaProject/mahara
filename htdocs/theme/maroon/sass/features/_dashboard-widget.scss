@@ -9,7 +9,7 @@ $logged-in-height-small: 5rem; // 80px;
             height: $logged-in-height;
             background-color: scale-color($theme-secondary-color, $lightness: -10%);
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
               height: $logged-in-height-small;
             }
 
@@ -35,14 +35,14 @@ $logged-in-height-small: 5rem; // 80px;
             border-top: 0;
             background-color: transparent;
 
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
               height: $logged-in-height-small;
             }
 
             .circle-bg {
               border-radius: 0;
               margin-top: -$spacing-base;
-              @include media-breakpoint-down(md) {
+              @include media-breakpoint-down(lg) {
                 display: none;
               }
             }

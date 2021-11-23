@@ -90,7 +90,7 @@ $warning:       $theme-color-warning !default;
 $danger:        $theme-color-danger !default;
 $light:         $gray-100 !default;
 $dark:          $gray-800 !default;
-$statetext:     $midblue !default;
+$statetext:     $theme-color-statetext !default;
 $text:          $gray-700 !default;
 
 $theme-colors: () !default;
@@ -112,15 +112,13 @@ $theme-colors: map-merge(
   $theme-colors
 );
 
-// Set a specific jump point for requesting color jumps
-$theme-color-interval:      8% !default;
-
-// The yiq lightness value that determines when the lightness of color changes from "dark" to "light". Acceptable values are between 0 and 255.
-$yiq-contrasted-threshold:  150 !default;
+// The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
+// See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
+$min-contrast-ratio:   4.5 !default;
 
 // Customize the light and dark text colors for use in our YIQ color contrast function.
-$yiq-text-dark:             $gray-900 !default;
-$yiq-text-light:            $white !default;
+$color-contrast--dark:  $gray-900 !default;
+$color-contrast-light:  $white !default;
 
 
 // Options
@@ -132,10 +130,10 @@ $enable-rounded:                              true !default;
 $enable-shadows:                              true !default;
 $enable-gradients:                            false !default;
 $enable-transitions:                          true !default;
-$enable-prefers-reduced-motion-media-query:   true !default;
+$enable-reduced-motion :                      true !default;
 $enable-hover-media-query:                    false !default; // Deprecated, no longer affects any compiled CSS
 $enable-grid-classes:                         true !default;
-$enable-pointer-cursor-for-buttons:           true !default;
+$enable-button-pointers:                      true !default;
 $enable-print-styles:                         true !default;
 $enable-responsive-font-sizes:                false !default;
 $enable-validation-icons:                     true !default;
@@ -751,10 +749,10 @@ $nav-link-disabled-color:           $gray-600 !default;
 $nav-tabs-border-color:             $border-color !default;
 $nav-tabs-border-width:             $border-width !default;
 $nav-tabs-border-radius:            $border-radius !default;
-$nav-tabs-link-hover-border-color:  theme-color('primary') !default;
+$nav-tabs-link-hover-border-color:  $theme-primary-color !default;
 $nav-tabs-link-active-color:        $gray-700 !default;
 $nav-tabs-link-active-bg:           $body-bg !default;
-$nav-tabs-link-active-border-color: theme-color('primary') !default;
+$nav-tabs-link-active-border-color: $theme-primary-color !default;
 
 $nav-pills-border-radius:           $border-radius !default;
 $nav-pills-link-active-color:       $component-active-color !default;

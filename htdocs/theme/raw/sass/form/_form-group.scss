@@ -466,7 +466,7 @@
             display: inline-block;
         }
         .pseudolabel {
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 display: block;
                 min-width: auto;
                 max-width: none;
@@ -475,7 +475,7 @@
         .modal-docked & {
             .pseudolabel,
             .radio-wrapper {
-                @include media-breakpoint-down(lg) {
+                @include media-breakpoint-down(xl) {
                     display: block;
                 }
             }
@@ -599,7 +599,7 @@
 }
 
 // upload forms browse button overlaps on phone
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
   .form-upload .align-with-input {
     margin-top: 0;
   }

@@ -116,7 +116,7 @@
     transform: rotate(-1.5deg);
     padding-top: 2.25rem;
     padding-bottom: 2.25rem;
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .row {
           margin-left: 5%;
         }

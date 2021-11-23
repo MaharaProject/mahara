@@ -81,7 +81,7 @@
         }
 
         .select2-results__option--highlighted[aria-selected] {
-            background-color: theme-color("success");
+            background-color: $theme-color-success;
             color: $white;
         }
     }

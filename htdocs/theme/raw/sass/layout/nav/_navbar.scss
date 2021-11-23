@@ -51,7 +51,7 @@
     }
 
     .header-search-form {
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             width: 100%;
         }
         input[type=text] {

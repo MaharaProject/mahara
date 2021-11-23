@@ -47,7 +47,7 @@
     input, .picker {
         max-width: 12.5rem; // 200px;
     }
-    @include media-breakpoint-between(lg, lg) {
+    @include media-breakpoint-between(lg, xl) {
         label {
             min-width: 100%;
         }

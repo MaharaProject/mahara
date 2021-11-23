@@ -3,7 +3,7 @@
 }
 
 .forum-post {
-    border-left: 5px solid theme-color("secondary");
+    border-left: 5px solid $theme-secondary-color;
     padding-left: $spacing-lg;
     .forumpostleft {
         max-width: 7.5rem; // 120px;
