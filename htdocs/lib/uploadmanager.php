@@ -65,11 +65,13 @@ class upload_manager {
 
     /**
      * Gets file information out of $_FILES and stores it locally in $files.
+     *
      * Checks file against max upload file size.
      * Scans file for viruses.
+     * @param array $accept Supply an extension not in the 'validfiletypes' to also be accepted
      * @return false for no errors, or a string describing the error
      */
-    public function preprocess_file() {
+    public function preprocess_file($accept=array()) {
 
         $name = $this->inputname;
         if (!isset($_FILES[$name])) {
@@ -139,16 +141,21 @@ class upload_manager {
         $ext = $this->original_filename_extension();
         if ($validfiletypes = get_config('validfiletypes')) {
             $validext = array_map('trim', explode(',', $validfiletypes));
+            $validext = array_merge($validext, $accept);
             if (!in_array($ext, $validext)) {
                 // the extension is not one of the valid options
                 return get_string('filetypenotallowed', 'artefact.file', $ext);
             }
             $typeparts = explode('/', $type);
+            require_once(get_config('docroot') . 'lib/file.php');
             $mimetype = file_mime_type($tmpname);
             $mimetypeparts = explode('/', $mimetype);
             if ($typeparts[0] !== $mimetypeparts[0]) {
-                // the extension is not correct type for the file
-                return get_string('filetypenotmatchingmimetype', 'artefact.file', $mimetype);
+                // matrix files are a special Mahara type where it is seen as both octet-stream and text/plain
+                if (!($ext == 'matrix' && $mimetype == 'text/plain')) {
+                    // the extension is not correct type for the file
+                    return get_string('filetypenotmatchingmimetype', 'artefact.file', $mimetype);
+                }
             }
         }
         return false;

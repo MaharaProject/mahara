@@ -98,11 +98,16 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
-    require_once('csvfile.php');
+    require_once('uploadmanager.php');
+    $um = new upload_manager('file');
+    if ($error = $um->preprocess_file(array('csv'))) {
+        $form->set_error('file', $error);
+        return;
+    }
 
+    require_once('csvfile.php');
     $csvgroups = new CsvFile($values['file']['tmp_name']);
     $csvgroups->set('allowedkeys', $ALLOWEDKEYS);
-
     $csvgroups->set('mandatoryfields', $MANDATORYFIELDS);
     $csvdata = $csvgroups->get_data();
     $num_lines = count($csvdata->data);

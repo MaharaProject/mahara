@@ -1273,7 +1273,7 @@ function validate_matrixupload(Pieform $form, $values) {
         return;
     }
     $um = new upload_manager('matrix');
-    if ($error = $um->preprocess_file()) {
+    if ($error = $um->preprocess_file(array('matrix'))) {
         $form->set_error('matrix', $error);
         return;
     }
