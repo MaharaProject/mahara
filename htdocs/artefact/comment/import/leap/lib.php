@@ -90,13 +90,13 @@ class LeapImportComment extends LeapImportArtefactPlugin {
         return $strategies;
     }
 
-/**
- * Import from entry requests for Mahara comments
- *
- * @param PluginImportLeap $importer
- * @return updated DB
- * @throw    ImportException
- */
+    /**
+     * Import from entry requests for Mahara comments
+     *
+     * @param PluginImportLeap $importer
+     * @return void
+     * @throw    ImportException
+     */
     public static function import_from_requests(PluginImportLeap $importer) {
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importer->get('importertransport')->get('importid'), 'comment'))) {
             foreach ($entry_requests as $entry_request) {

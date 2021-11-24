@@ -245,7 +245,7 @@ class PluginImportLeap extends PluginImport {
      * Otherwise, look for `leap.xml, leap2.xml, leap2a.xml` files and @return string path if one is found.
      *
      * @param  mixed $importdata
-     * @return void
+     * @return string|null
      */
     public static function find_file($importdata) {
         $path = $importdata['tempdir'] . 'extract/';
@@ -259,6 +259,7 @@ class PluginImportLeap extends PluginImport {
                 return $path . $f;
             }
         }
+        return null;
     }
 
     /**
@@ -362,8 +363,6 @@ class PluginImportLeap extends PluginImport {
             $this->build_import_entry_requests();
             break;
         case PluginImport::STEP_INTERACTIVE_IMPORT_RESULT:
-            // Load import requests from DB
-            $this->load_import_entry_requests();
             // Import based on import requests
             $this->import_from_requests();
             $this->snapshot('imported data based on import requests');
@@ -1835,8 +1834,8 @@ class PluginImportLeap extends PluginImport {
      * For example, the 'Text' blocktype will rewrite the embedded image urls
      * which is stored in $blockinstance['config']['text']
      *
-     * @param  mixed $config
-     * @return void
+     * @param  array $config
+     * @return array
      */
     private function rewrite_blockinstance_config($config) {
         if (isset($config['grid'])) {
@@ -2577,7 +2576,7 @@ abstract class LeapImportArtefactPlugin implements ILeapImportArtefactPlugin {
      *                                   previously said were required to import
      *                                   the entry
      * @throws ImportException If the strategy is unrecognised
-     * @return int ID of the record inserted into the import_entry_requests table
+     * @return void
      */
     public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         return false;
@@ -2600,7 +2599,7 @@ abstract class LeapImportArtefactPlugin implements ILeapImportArtefactPlugin {
      * a new artefact
      *
      * @param PluginImportLeap $importer      The importer
-     * @return updated DB
+     * @return void
      */
     public static function import_from_requests(PluginImportLeap $importer) {
         return false;

@@ -73,13 +73,13 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         }
     }
 
-/**
- * Import from entry requests for Mahara files/folders
- *
- * @param PluginImportLeap $importer
- * @return updated DB
- * @throw    ImportException
- */
+    /**
+     * Import from entry requests for Mahara files/folders
+     *
+     * @param PluginImportLeap $importer
+     * @return void
+     * @throw    ImportException
+     */
     public static function import_from_requests(PluginImportLeap $importer) {
         $importid = $importer->get('importertransport')->get('importid');
         // Create a folder for import files/folders
@@ -107,7 +107,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
      * @param PluginImportLeap $importer    The importer
      * @param $entry_request    The entry request for the folder
      * @param int $parent       The ID of the parent artefact for this folder
-     * @return updated DB
+     * @return void
      */
     private static function import_folder_and_children_from_request(PluginImportLeap $importer, $entry_request, $parent=null) {
         $importid = $importer->get('importertransport')->get('importid');

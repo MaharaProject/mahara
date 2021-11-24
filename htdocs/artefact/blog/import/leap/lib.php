@@ -161,13 +161,13 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
         }
     }
 
-/**
- * Import from entry requests for Mahara blogs
- *
- * @param PluginImportLeap $importer
- * @return updated DB
- * @throw    ImportException
- */
+    /**
+     * Import from entry requests for Mahara blogs
+     *
+     * @param PluginImportLeap $importer
+     * @return void
+     * @throw    ImportException
+     */
     public static function import_from_requests(PluginImportLeap $importer) {
         $importid = $importer->get('importertransport')->get('importid');
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND entrytype = ?', array($importid, 'blog'))) {
@@ -275,7 +275,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
                         $blogpost = new ArtefactTypeBlogPost($artefactids[0]);
                     }
                     if ($id = $importer->create_attachment($entry, $blogpostlink, $blogpost)) {
-                        $newartefactmapping[$link['href']][] = $id;
+                        $newartefactmapping[$blogpostlink['href']][] = $id;
                     }
                     if ($blogpost) {
                         $blogpost->commit();
