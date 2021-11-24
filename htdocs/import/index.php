@@ -160,7 +160,8 @@ function print_upload_form() {
                 'rules' => array(
                     'required' => true
                 ),
-                'maxfilesize'  => get_max_upload_size(true)
+                'maxfilesize'  => get_max_upload_size(true),
+                'accept' => '.zip, .xml'
             ),
             'submit' => array(
                 'class' => 'btn-primary',
@@ -182,6 +183,13 @@ function import_validate(Pieform $form, $values) {
 
     if (!isset($values['leap2afile'])) {
         $form->set_error('leap2afile', $form->i18n('rule', 'required', 'required'));
+        return;
+    }
+
+    require_once('uploadmanager.php');
+    $um = new upload_manager('leap2afile');
+    if ($error = $um->preprocess_file(array('zip'))) {
+        $form->set_error('leap2afile', $error);
         return;
     }
 
