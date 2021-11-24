@@ -2359,6 +2359,19 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         return $record->id;
     }
 
+    /**
+     * Get the folder id of which contains the given file artefact
+     *
+     * @param  integer $artefactid of a file stored inside a folder
+     * @return integer|false
+     */
+    public static function get_folder_id_artefact_contents($artefactid) {
+        if ($folderid = get_field_sql("SELECT id FROM {artefact} WHERE id = (SELECT parent FROM {artefact} WHERE id = ?)", array($artefactid))) {
+            return $folderid;
+        }
+        return false;
+    }
+
     // append the view id to to the end of image and anchor urls so they are visible to logged out users also
     public static function append_view_url($postcontent, $view_id) {
         $postcontent = preg_replace('#(<a[^>]+href="(/|' . get_config('wwwroot') . ')artefact/file/download\.php\?file=\d+)#', '\1&amp;view=' . $view_id , $postcontent);
