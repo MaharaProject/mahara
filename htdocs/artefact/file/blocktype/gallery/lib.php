@@ -41,39 +41,13 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
     public static function get_instance_javascript(BlockInstance $instance) {
         $blockid = $instance->get('id');
-        // The initjs for the fancybox will be applied to all galleries on the page
+        // The initjs for the masonry will be applied to all galleries on the page
         return array(
             array(
-                'file'   => get_config('wwwroot') . 'js/fancybox/jquery.fancybox.min.js',
-                'initjs' => " $('[data-fancybox]').fancybox({
-                      buttons : [
-                               'zoom',
-                               'slideShow',
-                               'download',
-                               'close'
-                               ],
-                      loop : true,
-                      lang : '" . current_language() . "',
-                      i18n : {
-                          '" . current_language() . "' : {
-                              CLOSE: \"" . get_string('CLOSE', 'blocktype.file/gallery') . "\",
-                              NEXT: \"" . get_string('NEXT', 'blocktype.file/gallery') . "\",
-                              PREV: \"" . get_string('PREV', 'blocktype.file/gallery') . "\",
-                              ERROR: \"" . get_string('ERROR', 'blocktype.file/gallery') . "\",
-                              PLAY_START: \"" . get_string('PLAY_START', 'blocktype.file/gallery') . "\",
-                              PLAY_STOP: \"" . get_string('PLAY_STOP', 'blocktype.file/gallery') . "\",
-                              FULL_SCREEN: \"" . get_string('FULL_SCREEN', 'blocktype.file/gallery') . "\",
-                              THUMBS: \"" . get_string('THUMBS', 'blocktype.file/gallery') . "\",
-                              DOWNLOAD: \"" . get_string('DOWNLOAD', 'blocktype.file/gallery') . "\",
-                              SHARE: \"" . get_string('SHARE', 'blocktype.file/gallery') . "\",
-                              ZOOM: \"" . get_string('ZOOM', 'blocktype.file/gallery') . "\"
-                          }
-                      }
-                });"
-            ),
-            array(
                 'file'   => get_config('wwwroot') . 'js/masonry/masonry.min.js',
-                'initjs' => " $('.js-masonry.thumbnails').masonry({ itemSelector: '.thumb' });"
+                'initjs' => "$(function() {
+                    $('.js-masonry.thumbnails').masonry({ itemSelector: '.thumb' });
+                });"
             ),
             array(
                 'file' => '',
@@ -83,12 +57,6 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                     });
                 });"
             )
-        );
-    }
-
-    public static function get_instance_css(BlockInstance $instance) {
-        return array(
-            get_config('wwwroot') . 'js/fancybox/jquery.fancybox.min.css'
         );
     }
 
@@ -162,7 +130,8 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata'); // this will make sure to unserialize it for us
         $configdata['viewid'] = $instance->get('view');
         $style = isset($configdata['style']) ? intval($configdata['style']) : 0;
-        $copyright = null; // Needed to set Panoramio copyright later...
+        $showdescription = isset($configdata['showdescription']) ? intval($configdata['showdescription']) : 0;
+        $copyright = null;
         $width = 75;
         $width = floor($width);
         switch ($style) {
@@ -217,7 +186,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 $link = $src . '&maxwidth=' . get_config_plugin('blocktype', 'gallery', 'previewwidth');
             }
             else {
-                $link = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&modal=1&block=' . $instance->get('id') .' &artefact=' . $artefactid;
+                $link = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&modal=1&block=' . $instance->get('id') .'&artefact=' . $artefactid;
             }
 
             $images[] = array(
@@ -226,7 +195,8 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 'source' => $src,
                 'height' => null,
                 'width' => null,
-                'title' => $image->get('description'),
+                'title' => $image->get('title'),
+                'description' => $showdescription ? $description : '',
                 'fancybox' => $fancyboxattr,
                 'squaredimensions' => $width
             );
@@ -236,7 +206,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         $smarty->assign('count', count($images));
         $smarty->assign('instanceid', $instance->get('id'));
         $smarty->assign('images', $images);
-        $smarty->assign('showdescription', (!empty($configdata['showdescription'])) ? $configdata['showdescription'] : false);
+        $smarty->assign('showdescription', $showdescription);
         $smarty->assign('width', $width);
         $smarty->assign('editing', $editing);
         $smarty->assign('copyright', $copyright);
@@ -264,15 +234,15 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             'elements' => array(
                 'usefancybox' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('usefancybox', 'blocktype.file/gallery'),
-                    'description'  => get_string('usefancyboxdesc', 'blocktype.file/gallery'),
+                    'title'        => get_string('usefancybox1', 'blocktype.file/gallery'),
+                    'description'  => get_string('usefancyboxdesc1', 'blocktype.file/gallery'),
                     'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'usefancybox'),
                 ),
                 'previewwidth' => array(
                     'type'         => 'text',
                     'size'         => 4,
                     'title'        => get_string('previewwidth', 'blocktype.file/gallery'),
-                    'description'  => get_string('previewwidthdesc', 'blocktype.file/gallery'),
+                    'description'  => get_string('previewwidthdesc1', 'blocktype.file/gallery'),
                     'defaultvalue' => get_config_plugin('blocktype', 'gallery', 'previewwidth'),
                     'rules'        => array('integer' => true, 'minvalue' => 16, 'maxvalue' => 1600),
                 )
