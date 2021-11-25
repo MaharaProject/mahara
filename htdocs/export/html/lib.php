@@ -34,9 +34,14 @@ class PluginExportHtml extends PluginExport {
     protected $infodir = 'export_info';
 
     /**
-    * The name of the directory where files will be placed in the export
-    **/
+     * The name of the directory where files will be placed in the export
+     */
     protected $filedir = 'export_info/files/';
+
+    /**
+     * The name of the export directory
+     */
+    protected $exportdir = '';
 
     /**
      * List of directories of static files provided by artefact plugins
@@ -63,6 +68,10 @@ class PluginExportHtml extends PluginExport {
      * export/html/templates/header.tpl
      */
     private $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
+
+    protected $collections;
+    protected $collectionview;
+    protected $viewcollection;
 
     /**
     * constructor.  overrides the parent class
@@ -411,7 +420,7 @@ class PluginExportHtml extends PluginExport {
         }
     }
 
-    private function collection_menu($collectionid) {
+    protected function collection_menu($collectionid) {
         static $menus = array();
         if (!isset($menus[$collectionid])) {
             $menus[$collectionid] = array();
@@ -487,7 +496,7 @@ class PluginExportHtml extends PluginExport {
 
                 $content = $smarty->fetch('export:html:progresscompletion.tpl');
                 if (!file_put_contents("$directory/index.html", $content)) {
-                    throw new SystemException("Could not write view page for view $viewid");
+                    throw new SystemException("Could not write view page for view " . $firstview->id);
                 }
             }
         }
@@ -1100,6 +1109,8 @@ abstract class HtmlExportArtefactPlugin {
 
     protected $fileroot;
 
+    protected $extrafileroot;
+
     public function __construct(PluginExportHTML $exporter) {
         $this->exporter = $exporter;
 
@@ -1128,6 +1139,8 @@ abstract class HtmlExportArtefactPlugin {
     abstract public function get_summary();
 
     abstract public function get_summary_weight();
+
+    abstract public function pagination_data($artefact);
 
     public function paginate($artefact) {
 

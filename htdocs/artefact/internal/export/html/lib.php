@@ -124,6 +124,9 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         return 0;
     }
 
+    public function pagination_data($artefact) {
+    }
+
     private function get_category_for_artefacttype($artefacttype) {
         switch ($artefacttype) {
         case 'firstname':

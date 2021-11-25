@@ -94,4 +94,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
         return 30;
     }
 
+    public function pagination_data($artefact) {
+    }
+
 }

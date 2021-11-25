@@ -104,6 +104,9 @@ class HtmlExportFile extends HtmlExportArtefactPlugin {
         return 20;
     }
 
+    public function pagination_data($artefact) {
+    }
+
     /**
      * Puts all profile icons in the static/profileicons/ directory
      */
