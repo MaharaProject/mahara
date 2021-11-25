@@ -96,7 +96,9 @@ if ($institution || $add) {
 
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
             $collectionids = get_column('collection', 'id', 'institution', $values['i']);
-            $viewids = get_column('view', 'id', 'institution', $values['i']);
+            // progress page types will be deleted as part of the collection so we don't want to try and delete them again as a view
+            $viewids = get_column_sql("SELECT id FROM {view} WHERE institution = ? AND type != ?", array($values['i'], 'progress'));
+
             $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
             $regdataids = get_column('institution_registration', 'id', 'institution', $values['i']);
             $host = get_field('host', 'wwwroot', 'institution', $values['i']);
