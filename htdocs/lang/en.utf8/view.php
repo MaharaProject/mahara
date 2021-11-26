@@ -332,8 +332,9 @@ $string['nrrows'] = array(
     '%s row',
     '%s rows',
 );
-$string['addnewblock'] = 'Drag to add a new block';
-$string['addnewblockaccessibility'] = 'Click to add a new block';
+$string['addnewblockdrag'] = 'Drag to add a new block';
+$string['addnewblockaccessible'] = 'Click to add a new block';
+$string['addnewblock'] = 'Add new block';
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';

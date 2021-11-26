@@ -293,7 +293,7 @@ $placeholderblock = PluginBlocktype::get_blocktypes_for_category('shortcut', $vi
 $placeholderbutton = '';
 if ($placeholderblock) {
     // it's active so make the button with different display title
-    $placeholderblock[0]['title'] = $view->get('accessibleview') ? get_string('addnewblockaccessibility', 'view') : get_string('addnewblock', 'view');
+    $placeholderblock[0]['title'] = $view->get('accessibleview') ? get_string('addnewblockaccessible', 'view') : get_string('addnewblockdrag', 'view');
     $placeholderblock[0]['cssicon'] = 'plus';
     $smarty = smarty_core();
     $smarty->assign('blocktypes', $placeholderblock);
