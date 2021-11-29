@@ -27,12 +27,11 @@ $tabs = (object) [
     'archivedclass' => '',
 ];
 
+define('TITLE', get_string('submissions', 'admin'));
 if (param_exists('current')) {
-    define('TITLE', get_string('currentsubmissions', 'admin'));
     $tabs->currentclass = 'active';
 }
 else {
-    define('TITLE', get_string('archivedsubmissions', 'admin'));
     $tabs->archivedclass = 'active';
 }
 

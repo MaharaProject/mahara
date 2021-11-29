@@ -265,6 +265,7 @@ $string['makeadminsintousers'] = 'Turn selected administrator accounts back into
 $string['groupadminsupdated'] = 'Group administrators have been updated';
 $string['groupquotaupdated'] = 'Group quota has been updated';
 $string['addnewgroupcategory'] = 'Enter new group category';
+$string['submissions'] = 'Submissions';
 $string['archivedsubmissions'] = 'Archived submissions';
 $string['archivedsubmissionsdesc'] = 'Administer archived submissions';
 $string['currentsubmissions'] = 'Current submissions';
