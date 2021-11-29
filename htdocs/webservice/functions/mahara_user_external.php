@@ -1451,7 +1451,15 @@ class mahara_user_external extends external_api {
                 throw new WebserviceAccessException(get_string('invalidpermission', 'auth.webservice', $userid ? $userid : $username ));
 
             }
-            $result_artefact_id = parent::handle_file_upload('filetoupload', null, $foldername, $title, $description, $tags, $recipient_id);
+            if ($result_artefact_id = parent::handle_file_upload('filetoupload', null, $foldername, $title, $description, $tags, $recipient_id)) {
+                $parent_folder_id = ArtefactTypeFolder::get_folder_id_artefact_contents($result_artefact_id);
+                $message = new stdClass();
+                $message->users = array($recipient_id);
+                $message->subject = get_string('fileuploadmessagesubject', WEBSERVICE_LANG);
+                $message->message = get_string('fileuploadmessagebody', WEBSERVICE_LANG, $filetoupload, $externalsource, $foldername);
+                $message->url = 'artefact/file/index.php' . ($parent_folder_id ? '?folder=' . $parent_folder_id : '');
+                activity_occurred('maharamessage', $message);
+            }
         }
 
         return array(
