@@ -1280,36 +1280,15 @@ class View {
     }
 
     /**
-     * Set the view access rules
-     * @param  $accessdata     array  For each view access row
-                                      Can contain id, type, startdate, stopdate, allowcomments, approvecomments
-     * @param  $viewids        array  Contains ids of the views getting the access rules
-     * @param  $allowcomments  bool   Holding the view wide allowcomments option
-                                      Needed when changing this and saving page at same time
-                                      as the views are not saved at this point.
+     * Manage view access
      *
-     * @return  $accessdata_added  array  The added access rows
+     * Given some accessdata, fills in the object and updates/inserts it in the db
+     *
+     * @param  array $accessdata
+     * @param  boolean $allowcomments
+     * @return array $accessdata_added a list of access data added to the db table
      */
-    public function set_access($accessdata, $viewids = null, $allowcomments = true) {
-        global $USER;
-        require_once('activity.php');
-        require_once('group.php');
-        require_once('institution.php');
-
-        $beforeusers = activity_get_viewaccess_users($this->get('id'));
-        $beforeusrids = get_column_sql('SELECT usr FROM {view_access} WHERE view = ? AND usr IS NOT NULL', array($this->id));
-
-        $select = 'view = ? AND visible = 1 AND token IS NULL';
-        $beforerules = get_records_select_array('view_access', $select, array($this->id));
-        if (get_config('searchplugin') == 'elasticsearch' && !empty($beforerules) && empty($accessdata) && $viewids != null) {
-            // We are removing access rules and none are left so we need to let elasticsearch know
-            // as it won't be picked up by the add_to_queue_access() function
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue_access(null, null, $viewids);
-        }
-        db_begin();
-        delete_records_select('view_access', $select, array($this->id));
-
+    public function manage_view_access($accessdata, $allowcomments) {
         // View access
         $accessdata_added = array();
         if ($accessdata) {
@@ -1422,35 +1401,101 @@ class View {
                 }
             }
         }
+        return $accessdata_added;
+    }
 
+    /**
+     * Delete view access
+     *
+     * @param  array $accessdata
+     * @param  mixed $viewids for if there is elasticsearch is on, there are $beofrerules
+     * @return array (
+     *                  $beforeusers - the people who have access this this view
+     *                  $beforeuserids - the ids of people who have access to this view
+     *               )
+     */
+    public function delete_view_access($accessdata, $viewids) {
+        $beforeusers = activity_get_viewaccess_users($this->get('id'));
+        $beforeusrids = get_column_sql('SELECT usr FROM {view_access} WHERE view = ? AND usr IS NOT NULL', array($this->id));
+
+        $select = 'view = ? AND visible = 1 AND token IS NULL';
+        $beforerules = get_records_select_array('view_access', $select, array($this->id));
+        if (get_config('searchplugin') == 'elasticsearch' && !empty($beforerules) && empty($accessdata) && $viewids != null) {
+            // as it won't be picked up by the add_to_queue_access() function
+            safe_require('search', 'elasticsearch');
+            ElasticsearchIndexing::add_to_queue_access(null, null, $viewids);
+        }
+        delete_records_select('view_access', $select, array($this->id));
+        return array($beforeusers, $beforeusrids);
+    }
+
+    /**
+     * Set the view access rules
+     *
+     * @param  $accessdata     array  For each view access row
+                                      Can contain id, type, startdate, stopdate, allowcomments, approvecomments
+     * @param  $viewids        array  Contains ids of the views getting the access rules
+     * @param  $allowcomments  bool   Holding the view wide allowcomments option
+                                      Needed when changing this and saving page at same time
+                                      as the views are not saved at this point.
+     *
+     * @return  $accessdata_added  array  The added access rows
+     */
+    public function set_access($accessdata, $viewids = null, $allowcomments = true) {
+        global $USER;
+        require_once('activity.php');
+        require_once('group.php');
+        require_once('institution.php');
+
+       db_begin();
+       list($beforeusers, $beforeusrids) = $this->delete_view_access($accessdata, $viewids);
+
+        // view access
+        $accessdata_added = $this->manage_view_access($accessdata, $allowcomments);
+
+        // updated access
         $data = new stdClass();
         $data->view = $this->get('id');
         $data->oldusers = $beforeusers;
-        if (!empty($viewids) && sizeof($viewids) > 1) {
+        // more than one page
+        if (!empty($viewids)) {
             $views = array();
+            $viewobjs = array();
+
+            // create all the view objects
             foreach ($viewids as $viewid) {
-                $view = new View($viewid);
-                $views[] = array('id' => $view->get('id'),
-                                 'title' => $view->get('title'),
-                                 'collection_id' => $view->get_collection() ? $view->get_collection()->get('id') : null,
-                                 'collection_name' => $view->get_collection() ? $view->get_collection()->get('name') : null,
-                                 'collection_url' => $view->get_collection() ? $view->get_collection()->get_url() : null,
-                             );
+                $viewobjs[] = new View($viewid);
+            }
+
+
+            // collection data about the view's collection
+            $vc = $viewobjs[0]->get_collection();
+            $collection_id = $vc ? $vc->get('id') : null;
+            $collection_name = $vc ? $vc->get('name') : null;
+            $collection_url = $vc ? $vc->get_url() : null;
+
+            // multipage collection
+            if (sizeof($viewids) > 1) {
+                foreach ($viewobjs as $view) {
+                    $views[] = array('id' => $view->get('id'),
+                                    'title' => $view->get('title'),
+                                    $collection_id,
+                                    $collection_name,
+                                    $collection_url
+                                );
+                }
+            }
+            // one page collection
+            else if (sizeof($viewids) === 1) {
+                $views[] = array('id' => $viewobjs[0]->get('id'),
+                                 'title' => $viewobjs[0]->get('title'),
+                                $collection_id,
+                                $collection_name,
+                                $collection_url
+                            );
+
             }
             $data->views = $views;
-        }
-        else if (!empty($viewids) && sizeof($viewids) == 1) {
-            // dealing with a one page collection
-            $view = new View($viewids[0]);
-            if ($view->get_collection()) {
-                $views [] = array('id' => $view->get('id'),
-                                 'title' => $view->get('title'),
-                                 'collection_id' => $view->get_collection() ? $view->get_collection()->get('id') : null,
-                                 'collection_name' => $view->get_collection() ? $view->get_collection()->get('name') : null,
-                                 'collection_url' => $view->get_collection() ? $view->get_collection()->get_url() : null,
-                             );
-                $data->views = $views;
-            }
         }
 
         activity_occurred('viewaccess', $data);
