@@ -40,6 +40,7 @@ if (!empty($search->institution)) {
 }
 
 $results = get_admin_user_search_results($search, 0, 0);
+$archivedflag = false;
 if (!empty($results['data'])) {
     foreach ($results['data'] as $key => $data) {
         $primaryemail = '';
@@ -51,13 +52,27 @@ if (!empty($results['data'])) {
             }
         }
         $results['data'][$key]['email'] = $primaryemail;
+
+        // convert archivectime to human readable and sortable format
+        if (!empty($results['data'][$key]['archivectime'])) {
+            $archivedflag = true;
+            $results['data'][$key]['archivectime'] = date("Y-m-d H:i:s", $results['data'][$key]['archivectime']);
+        }
     }
 }
 
 if (!empty($results['data'])) {
-    $csvfields = array('username', 'email', 'firstname', 'lastname', 'preferredname', 'submittedto', 'specialid', 'filetitle', 'filepath', 'filename', 'archivectime');
+    $csvfields = array('username', 'email', 'firstname', 'lastname', 'preferredname', 'submittedto', 'specialid');
 
-    $USER->set_download_file(generate_csv($results['data'], $csvfields), 'archivedsubmissions.csv', 'text/csv');
+    if ($archivedflag) {
+        $csvfields[] = 'archivectime';
+        $USER->set_download_file(generate_csv($results['data'], $csvfields), 'archivedsubmissions.csv', 'text/csv');
+    }
+    else {
+        $csvfields[] = 'submittedtime';
+        $USER->set_download_file(generate_csv($results['data'], $csvfields), 'currentsubmissions.csv', 'text/csv');
+    }
+
     redirect(get_config('wwwroot') . 'download.php');
 }
 $SESSION->add_error_msg(get_string('nocsvresults', 'admin'));
