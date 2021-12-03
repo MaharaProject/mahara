@@ -3366,6 +3366,29 @@ class View {
                         $bi->set('order', $blockinstance['order']);
                     }
                     $view->addblockinstance($bi);
+                    // Need to rewrite images links in configdata[text] if blocktype is text.
+                    if ($bi->get('blocktype') === 'text') {
+                        require_once(get_config('libroot') . 'embeddedimage.php');
+                        $configdata = $bi->get('configdata');
+                        if (
+                            isset($configdata['text']) &&
+                            !empty($configdata['text']) &&
+                            $configdata['text'] !== (
+                                $newtext = EmbeddedImage::prepare_embedded_images(
+                                    $configdata['text'],
+                                    'text',
+                                    $bi->get('id'),
+                                    $view->get('group'),
+                                    $view->get('owner')
+                                )
+                            )
+                        ) {
+                            // Update the text block_instance with the $newtext.
+                            $configdata['text'] = $newtext;
+                            $bi->set('configdata', $configdata);
+                            $bi->commit();
+                        }
+                    }
                 }
                 else {
                     log_debug("Blocktype {$blockinstance['type']}'s import_create_blockinstance did not give us a blockinstance, so not importing this block");
@@ -7553,6 +7576,23 @@ class View {
             (object) array('resourcetype' => 'text', 'resourceid' => $bi->get('id')),
             array('resourcetype' => 'description', 'resourceid' => $this->get('id'))
         );
+
+        require_once(get_config('libroot') . 'embeddedimage.php');
+        $newdescription = EmbeddedImage::prepare_embedded_images(
+            $description,
+            'text',
+            $bi->get('id'),
+            $this->get('group'),
+            $this->get('owner')
+        );
+        if ($description !== $newdescription) {
+            $bi->set('configdata', array(
+                'text' => $newdescription,
+                'retractable' => false,
+                'retractedonload' => false,
+            ));
+            $bi->commit();
+        }
     }
 
     public function has_signoff_block() {

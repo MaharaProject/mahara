@@ -2272,5 +2272,65 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021080207) {
+        log_debug('Updating description text block image src attributes missing text parameter in url');
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        require_once(get_config('libroot') . 'embeddedimage.php');
+        // Find block instances which might need updating.
+        $sql = "SELECT b.id, b.configdata, v.group, v.owner
+                  FROM {block_instance} b
+            INNER JOIN {view} v on b.view = v.id
+                 WHERE blocktype = ?
+                   AND configdata LIKE CONCAT('%description=', b.view, '%')
+                 ORDER BY b.id";
+        // Find the total count of block instances (for logging purposes).
+        $sqlcount = "SELECT COUNT(b.id)
+                       FROM {block_instance} b
+                 INNER JOIN {view} v on b.view = v.id
+                      WHERE blocktype = ?
+                        AND configdata LIKE CONCAT('%description=', b.view, '%')";
+
+        $total = get_field_sql($sqlcount, array('text'));
+        $changes = 0;
+        $limit = 100;
+        $offset = 0;
+        while ($total > 0 && $records = get_records_sql_array($sql, array('text'), $offset, $limit)) {
+            $offset += count($records);
+            foreach($records as $record) {
+                $configdata = unserialize($record->configdata);
+                if (
+                    isset($configdata['text']) &&
+                    !empty($configdata['text']) &&
+                    $configdata['text'] !== (
+                        $newtext = EmbeddedImage::prepare_embedded_images(
+                            $configdata['text'],
+                            'text',
+                            $record->id,
+                            $record->group,
+                            $record->owner
+                        )
+                    )
+                ) {
+                    // Update the text block_instance with the $newtext.
+                    $bi = new BlockInstance($record->id);
+                    $configdata['text'] = $newtext;
+                    $bi->set('configdata', $configdata);
+                    $bi->commit();
+                    $changes++;
+                }
+            }
+
+            log_debug("$offset/$total");
+        }
+
+        // If we haven't found any results notify.
+        if ($total === 0) {
+            log_debug('Found no related block instances');
+        }
+        else {
+            log_debug("{$changes} of {$total} block_instances configdata text have been updated with a text parameter in src attribute");
+        }
+    }
+
     return $status;
 }
