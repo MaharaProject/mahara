@@ -1152,9 +1152,15 @@ $string['institutionmaxusersexceeded'] = 'This institution is full. You will hav
 $string['institutionuserserrortoomanyusers'] = 'These people were not added. The number of members cannot exceed the maximum allowed for the institution. You can add fewer people, remove some members from the institution or ask the site administrator to increase the maximum number.';
 $string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent. The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of account. You can invite fewer people, remove some members from the institution, or ask the site administrator to increase the maximum number.';
 
+$string['maxnumberofgroups'] = 'Maximum number of groups allowed';
+$string['maxgroupsdescription'] = 'The maximum number of groups that can be associated with the institution. If there is no limit, this field should be left blank.';
+$string['institutionmaxgroupsexceeded'] = 'This institution already has %s groups. Either delete some groups or increase the group limit.';
+$string['maxmembersexceeded'] = 'This institution already has %s members. Either remove members or increase the account limit.';
+
 $string['Shortname'] = 'Short name';
 $string['Members'] = 'Members';
-$string['Maximum'] = 'Maximum';
+$string['Maximummembers'] = 'Maximum members';
+$string['Maximumgroups'] = 'Maximum groups';
 $string['Staff'] = 'Staff';
 $string['Admins'] = 'Administrators';
 

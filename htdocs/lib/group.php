@@ -366,6 +366,10 @@ function host_user_can_assess_submitted_views($submittedhost) {
 function group_create($data, $forced=false) {
     global $USER;
 
+    if (isset($data['institution']) && group_max_reached($data['institution'], true)) {
+        throw new AccessDeniedException(get_string('groupmaxreachednolink','group', get_config('wwwroot'), $data['institution']));
+    }
+
     if (!is_array($data)) {
         throw new InvalidArgumentException("group_create: data must be an array, see the doc comment for this "
             . "function for details on its format");
@@ -634,6 +638,44 @@ function group_create($data, $forced=false) {
     return $id;
 }
 
+/**
+ * Check that the institutions max group limit has not been reached
+ *
+ * @param string $inst The internal name of the institution
+ * @return int
+ */
+function group_max_limit($inst) {
+    $max = get_field('institution_config', 'value', 'institution', $inst, 'field', 'maxgroups');
+    return (int)$max;
+}
+
+/**
+ * Count the number of groups in an institution
+ *
+ * @param string $inst The internal name of the institution
+ * @return int
+ */
+function group_count($inst) {
+    return count_records('group', 'institution', $inst);
+}
+
+/**
+ * Have we reached maximum number of groups in an institution
+ *
+ * @param string $inst The internal name of the institution
+ * @param boolean $creating Checking if max reached if adding a new group
+ * @return boolean
+ */
+function group_max_reached($inst, $creating=false) {
+    $maxlimit = group_max_limit($inst);
+    if ($creating && !empty($maxlimit) && (group_count($inst) + 1) > $maxlimit) {
+        return true;
+    }
+    else if (!empty($maxlimit) && group_count($inst) >= $maxlimit) {
+        return true;
+    }
+    return false;
+}
 
 /**
  * Update details of an existing group.

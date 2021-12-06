@@ -111,6 +111,12 @@ function uploadcsv_validate(Pieform $form, $values) {
     $csvgroups->set('mandatoryfields', $MANDATORYFIELDS);
     $csvdata = $csvgroups->get_data();
     $num_lines = count($csvdata->data);
+    // check that this does not exceed group max limit after adding new groups
+    if (!empty(group_max_limit($institution)) && (group_count($institution) + $num_lines > group_max_limit($institution))) {
+        $groupsleft = group_max_limit($institution) - group_count($institution);
+        $form->set_error('file', get_string('exceedsgroupmax', 'group', $groupsleft));
+        return;
+    }
 
     if (!empty($csvdata->errors['file'])) {
         $form->set_error('file', $csvdata->errors['file']);

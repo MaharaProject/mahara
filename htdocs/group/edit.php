@@ -101,6 +101,20 @@ else {
             }
         }
     }
+    // If we are in institutions other than "mahara" check which institutions have reached their max group limit
+    $userinsts = $USER->institutions;
+    if (!empty($userinsts)) {
+        $maxedoutgroups = 0;
+        foreach ($USER->institutions as $inst) {
+            if (group_max_reached($inst->institution, false)) {
+                $maxedoutgroups++;
+            }
+        }
+        // if all groups have reached max limit, prevent creating new group
+        if ($maxedoutgroups === count($USER->institutions) && !$USER->get('admin')) {
+            throw new AccessDeniedException(get_string('groupmaxreachednolink','group', $group_data->institution));
+        }
+    }
 }
 
 $namemaxlength = 128;
@@ -476,6 +490,11 @@ $editgroup = pieform($form);
  */
 function editgroup_validate(Pieform $form, $values) {
     global $group_data, $namemaxlength;
+
+    if ((empty($group_data->id) || $group_data->institution !== $values['institution']) && group_max_reached($values['institution'], true)) {
+        $form->set_error('institution', get_string('groupmaxreached','group', get_config('wwwroot'), $values['institution']), false);
+    }
+
     if ($group_data->name != $values['name']) {
         // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
         if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {

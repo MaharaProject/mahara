@@ -66,6 +66,9 @@ $string['groupalreadyexistssuggest'] = 'A group by this name already exists. The
 $string['groupshortnamealreadyexists'] = 'A group by this short name already exists.';
 $string['invalidshortname'] = 'Invalid group short name.';
 $string['shortnameformat1'] = 'Group short names can be from 2 to 255 characters in length and contain only lowercase alphanumeric characters, ".", "-", and "_".';
+$string['groupmaxreached'] = 'Groups cannot be added to this institution because the maximum number of groups allowed in the institution has been reached. Please get in touch with the <a href="%sinstitution/index.php?institution=%s">institution administrator</a> to increase the limit.';
+$string['groupmaxreachednolink'] = 'Groups cannot be added to this institution because the maximum number of groups allowed in the institution has been reached. Please get in touch with the institution administrator to increase the limit.';
+$string['exceedsgroupmax'] = 'Adding this many groups exceeds the group limit for your institution. You can add %s more groups within your limit. Try adding fewer groups or get in touch with the site administrator to discuss raising the limit.';
 $string['Created'] = 'Created';
 $string['editable'] = 'Editable';
 $string['editability'] = 'Editability';
