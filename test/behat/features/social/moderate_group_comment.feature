@@ -28,7 +28,7 @@ Scenario: Moderating a group comment when approve comments is turned on
     And I set the field "Comment" to "This is a comment from UserC"
     And I enable the switch "Make comment public"
     And I press "Comment"
-    Then I should see "You have requested that this comment be made public." in the "Comment feedbacktable" "Comment" property
+    Then I should see "Comment submitted, awaiting moderation"
     # Check that multibyte comments render correctly
     And I set the field "Comment" to "これはUserCからのコメントです"
     And I enable the switch "Make comment public"
