@@ -839,37 +839,60 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
 
-            // Form to make private comment public, or request that a
-            // private comment be made public
-            if (!$item->deletedby && $item->private && $item->author && $data->owner
-                && ($item->isauthor || $data->isowner)) {
-                // The private comment is made by someone who is not logged in
-                // There doesn't need to be a request for the page owner to publicise any private comment
-                if ((empty($item->requestpublic) && $data->isowner)
-                    || $item->isauthor && $item->requestpublic == 'owner'
-                    || $data->isowner && $item->requestpublic == 'author') {
+            // Helper vars for readability
+            $view_owner = $data->owner;
+            $comment_author = $item->author;
+            $usr_is_view_owner = $data->isowner;
+            $usr_is_commenter = $item->isauthor;
+            $is_private_comment = $item->private;
+            $is_deleted_comment = $item->deletedby;
+            $make_public_requested = $item->requestpublic;
+
+            // If comment is not deleted and is private
+            if (!$is_deleted_comment && $is_private_comment
+                && $comment_author && $view_owner
+                && ($usr_is_commenter || $usr_is_view_owner)) {
+
+                // Show the 'Make comment public' form on private comments (4 scenarios)
+                // 1. when usr is view owner && it's their own comment i.e. they are the commenter
+                // 2. when usr is view owner && it's sb else's comment they want to make public
+                // 3. when usr is the commenter && there is a request to make it public ...
+                //    requested by the view owner
+                //    OR
+                //    auto-requested by commenter making a public comment on a moderated view
+                // 4. when usr is the commenter && it's their own p comment
+
+                if (($usr_is_view_owner && empty($make_public_requested))    // Sc. 1
+                || ($usr_is_commenter && empty($make_public_requested)       // Sc. 4
+                || ($usr_is_view_owner && !$usr_is_commenter)                // Sc. 2
+                || ($usr_is_commenter && $make_public_requested)             // Sc. 3
+                )) {
                     if (!$is_export_preview) {
                         $item->makepublicform = pieform(self::make_public_form($item->id));
+                        $item->makepublicrequested = $make_public_requested;
+                        $item->usr_is_view_owner = $usr_is_view_owner;
+
+                        // Message is from you when you request sb else's private comment (on your page) to be public
+                        if ($usr_is_view_owner && !$usr_is_commenter && $make_public_requested === 'owner') {
+                            $item->requested_by_usr = true;
+                        }
+                        // Message is from you when you make a public comment on a moderated view, you requested it
+                        if ($usr_is_commenter && !$usr_is_view_owner && $make_public_requested === 'author') {
+                            $item->requested_by_usr = true;
+                        }
                     }
-                    // If a request was made
-                    if ($item->requestpublic) {
-                        $item->makepublicrequested = 1;
-                    }
-                }
-                // The request was made by the person who is logged in
-                else if ($item->isauthor && $item->requestpublic == 'author'
-                         || $data->isowner && $item->requestpublic == 'owner') {
-                    $item->makepublicrequested = 1;
                 }
             }
-            else if (!$item->deletedby && $item->private && !$item->author
-                && $data->owner && $data->isowner && $item->requestpublic == 'author' && !$is_export_preview) {
+            // Anonymous comments (must be moderated)
+            else if (!$is_deleted_comment && $is_private_comment && !$comment_author && $view_owner
+                    && $usr_is_view_owner && $make_public_requested  === 'author' && !$is_export_preview) {
                 $item->makepublicform = pieform(self::make_public_form($item->id));
+                $item->makepublicrequested = $make_public_requested;
             }
-            else if (!$item->deletedby && $item->private && !$data->owner
-                && $item->group && $item->requestpublic == 'author') {
+            else if (!$is_deleted_comment && $is_private_comment && !$view_owner
+                && $item->group && $make_public_requested  === 'author') {
                 // no owner as comment is on a group view / artefact
-                if ($item->isauthor) {
+                if ($usr_is_commenter) {
                     $item->makepublicrequested = 1;
                 }
                 else {

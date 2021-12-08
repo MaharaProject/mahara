@@ -87,17 +87,25 @@
                     {/if}
 
                     {if $item->makepublicform || ($item->makepublicrequested && !$item->deletedmessage)}
-                        {if $item->private && $isowner && $item->makepublicrequested && !$item->deletedmessage}
+                        {* comment author wants their private comment public - for page owner*}
+                        {if !$item->requested_by_usr && $item->makepublicrequested === 'author' && $item->makepublicrequested}
                             <em>{str tag=moderatecomment section=artefact.comment}</em>
+                        {/if}
+
+                        {* view owner wants sb else's comment public - for commenter*}
+                        {if !$item->requested_by_usr && $item->makepublicrequested === 'owner' && $item->makepublicrequested}
+                            <em>{str tag=privatetopubliccomment section=artefact.comment}</em>
                         {/if}
 
                         {if $item->makepublicform}
                             {$item->makepublicform|safe}
                         {/if}
 
-                        {if $item->makepublicrequested && $item->isauthor && !$item->deletedmessage}
+                        {* the usr has made a request to make a comment public *}
+                        {if $item->requested_by_usr && $item->makepublicrequested}
                             <em>{str tag=youhaverequestedpublic section=artefact.comment}</em>
                         {/if}
+
                     {/if}
                 </div>
             </div>
