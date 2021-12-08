@@ -100,7 +100,6 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 
     // Include rtl.css for right-to-left langs
     if ($langdirection == 'rtl') {
-        $smarty->assign('LANGDIRECTION', 'rtl');
         if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
         }
@@ -644,6 +643,10 @@ EOF;
 
     $smarty->assign('STRINGJS', $stringjs);
 
+    if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
+    }
+
     $stylesheets = get_stylesheets_for_current_page($stylesheets, $extraconfig);
 
     // Disable CSS transforms, transitions, and animations when running behat tests
@@ -752,7 +755,7 @@ EOF;
         $smarty->assign('SITEOUTOFSYNC', SITEOUTOFSYNC);
     }
     if (function_exists('local_header_top_content')) {
-        $sitetop = (isset($sitetop) ? $sitetop : '') . local_header_top_content();
+        $sitetop = local_header_top_content();
     }
     if (isset($sitetop)) {
         $smarty->assign('SITETOP', $sitetop);
@@ -1076,6 +1079,7 @@ class Theme {
      * Given a theme name, retrieves the $theme variable in the themeconfig.php file
      */
     public static function get_theme_config($themename) {
+        $theme = null;
         $themeconfigfile = get_config('docroot') . 'theme/' . $themename . '/themeconfig.php';
         if (is_readable($themeconfigfile)) {
             require( get_config('docroot') . 'theme/' . $themename . '/themeconfig.php' );

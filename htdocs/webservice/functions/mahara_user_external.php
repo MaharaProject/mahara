@@ -1260,7 +1260,7 @@ class mahara_user_external extends external_api {
             $dbuser = self::checkuser($user);
             // check the institution
             if (!mahara_external_in_institution($dbuser, $WEBSERVICE_INSTITUTION)) {
-                throw new WebserviceInvalidParameterException('get_favourites | ' . get_string('notauthforuseridinstitution', 'auth.webservice', $user['userid'], $auth_instance->institution));
+                throw new WebserviceInvalidParameterException('get_favourites | ' . get_string('notauthforuseridinstitution', 'auth.webservice', $user['userid'], $WEBSERVICE_INSTITUTION));
             }
 
             // get the favourite for the shortname for this user

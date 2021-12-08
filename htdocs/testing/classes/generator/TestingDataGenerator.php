@@ -70,8 +70,8 @@ EOD;
     */
     public function reset() {
         $this->usercounter = 0;
-        $this->$groupcount = 0;
-        $this->$institutioncount = 0;
+        $this->groupcount = 0;
+        $this->institutioncount = 0;
         self::$viewcolcounts = array();
 
         foreach ($this->generators as $generator) {
@@ -1012,8 +1012,8 @@ EOD;
     public static function generate_configdata_blogpost($sortedfields) {
 
         $configdata = array();
-        $blogpostid;
-        $blogid;
+        $blogpostid = null;
+        $blogid = null;
 
         foreach($sortedfields as $key => $value) {
             if ($key == 'journaltitle') {
@@ -1326,7 +1326,6 @@ EOD;
      * @return array $configdata of key and values of db table
      */
     public static function generate_configdata_internalmedia($sortedfields, $ownertype, $ownerid) {
-        $mediatype;
         $configdata = array();
         foreach ($sortedfields as $key => $value) {
             if ($key == 'attachment') {
@@ -1365,7 +1364,7 @@ EOD;
     public static function generate_configdata_navigation($sortedfields, $ownertype, $ownerid, $title, $view) {
         $configdata = array();
         $copytoall = true;
-        $collectionid;
+        $collectionid = null;
 
         foreach ($sortedfields as $key => $value) {
             if ($key == 'collection') {
@@ -2264,11 +2263,11 @@ EOD;
         $record['topic'] = trim($record['topic']);
         $record['user'] = trim($record['user']);
 
-        $groupid;
-        $forumid;
-        $topicid;
-        $postid;
-        $userid;
+        $groupid = null;
+        $forumid = null;
+        $topicid = null;
+        $postid = null;
+        $userid = null;
         $parentpostid = null;
         $newtopic = false;
         $newsubject = false;
@@ -3050,7 +3049,7 @@ EOD;
         }
         else {
             //pick any plan artefact owned by the given user
-            $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
+            $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $record['ownertype'] . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
             if (!$planid) {
                 throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan to add task to. Please create plan first");
             }

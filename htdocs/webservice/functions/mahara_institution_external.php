@@ -203,6 +203,7 @@ class mahara_institution_external extends external_api {
         }
         $institution = new Institution($params['institution']);
         $maxusers = $institution->maxuseraccounts;
+        $members = Institution::count_members($params['institution'], false);
         if (!empty($maxusers)) {
             if ($members + $institution->countInvites() + count($userids) > $maxusers) {
                 throw new AccessDeniedException("Institution::invite_members | " . get_string('institutionuserserrortoomanyinvites', 'admin'));

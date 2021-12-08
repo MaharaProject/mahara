@@ -374,6 +374,23 @@ class ArtefactTypeComment extends ArtefactType {
     public static function get_comments($options) {
         global $USER;
 
+        // Vars from $options.
+        $view = null;
+        $limit = null;
+        $offset = null;
+        $viewid = null;
+        $artefactid = null;
+        $canedit = null;
+        $owner = null;
+        $isowner = null;
+        $export = null;
+        $sort = null;
+        $threaded = null;
+        $versioning = null;
+        $privatefeedback = null;
+        $showcomment = null;
+        $onview = null;
+
         $allowedoptions = self::get_comment_options();
         // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {

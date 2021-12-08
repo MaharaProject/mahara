@@ -1454,7 +1454,7 @@ function optional_userobj($user) {
         if ($user = get_record('usr', 'id', $user)) {
             return $user;
         }
-        throw new InvalidArgumentException("optional_userobj given id $id no db match found");
+        throw new InvalidArgumentException("optional_userobj given id $user no db match found");
     }
 
     if (!is_logged_in()) {

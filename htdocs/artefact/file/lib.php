@@ -2130,6 +2130,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
+    protected $size;
+
     public function __construct($id = 0, $data = null) {
 
         parent::__construct($id, $data);
@@ -3223,7 +3225,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
         if (!$keeptemphandle) {
             // Delete the temporary file
-            self::delete_from_temp($tmparchivepath);
+            self::delete_from_temp($this->get_path());
             $this->handle = null;
             $this->temparchivepathlength = 0;
         }

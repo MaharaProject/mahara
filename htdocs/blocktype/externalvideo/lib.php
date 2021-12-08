@@ -507,8 +507,8 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 );
                 $lname = strtolower($name);
                 if (isset($fa_domains[$lname])) {
-                    $data[$sourcestr]['faicon'] = $fa_domains[$lname]['faicon'];
-                    $data[$sourcestr]['style'] = $fa_domains[$lname]['style'];
+                    $data[$servicestr]['faicon'] = $fa_domains[$lname]['faicon'];
+                    $data[$servicestr]['style'] = $fa_domains[$lname]['style'];
                 }
             }
         }

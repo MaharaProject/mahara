@@ -218,9 +218,10 @@ class PluginArtefactAnnotation extends PluginArtefact {
 
 class ArtefactTypeAnnotation extends ArtefactType {
 
-    protected $annotation;  // artefactid of the annotation artefact.
-    protected $artefact;    // artefactid of the artefact this annotation is linked to.
-    protected $view;        // viewid of the view this annotation is linked to.
+    protected $annotation;        // artefactid of the annotation artefact.
+    protected $artefact;          // artefactid of the artefact this annotation is linked to.
+    protected $view;              // viewid of the view this annotation is linked to.
+    protected $lastcontentupdate; // last updated as a datetime.
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -636,6 +637,21 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      */
     public static function get_annotation_feedback($options) {
         global $USER;
+
+        // Vars populated from $options.
+        $limit = null;
+        $offset = null;
+        $annotation = null;
+        $view = null;
+        $artefact = null;
+        $block = null;
+        $canedit = null;
+        $owner = null;
+        $isowner = null;
+        $export = null;
+        $sort = null;
+        $showcomment = null;
+
         // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
             $$key = $option;
@@ -1027,15 +1043,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $data->owner       = $view->get('owner');
         $data->group       = $view->get('group');
         $data->institution = $view->get('institution');
+        $data->author      = $USER->get('id');
 
-        if ($author = $USER->get('id')) {
-            $anonymous = false;
-            $data->author = $author;
-        }
-        else {
-            $anonymous = true;
-            $data->authorname = $values['authorname'];
-        }
+        $relativeurl = $annotationartefact->get_view_url($view->get('id'), true, false);
+        $url = get_config('wwwroot') . $relativeurl;
 
         // @TODO deal with moderation
         // if (isset($values['moderate']) && $values['ispublic'] && !$USER->can_edit_view($view)) {
@@ -1058,7 +1069,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         db_commit();
 
         if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
-            $arg = $author ? display_name($USER, null, true) : $data->authorname;
+            $arg = display_name($USER, null, true);
             $moderatemsg = (object) array(
                 'subject'   => false,
                 'message'   => false,

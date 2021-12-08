@@ -239,7 +239,9 @@ class ArtefactTypePeerassessment extends ArtefactType {
     }
 
     public static function get_links($id) {
-        $v = $this->get_view();
+        $artefact = new ArtefactTypePeerassessment($id);
+        require_once(get_config('libroot') . 'view.php');
+        $v = new View($artefact->get('view'));
         return array(
             '_default' => $v->get_url(),
         );
@@ -386,11 +388,21 @@ class ArtefactTypePeerassessment extends ArtefactType {
      */
     public static function get_assessments($options, $versioning=null, $exporter=null) {
         global $USER;
-        $allowedoptions = self::get_assessment_options();
-        // set the object's key/val pairs as variables
 
+        $allowedoptions = self::get_assessment_options();
+
+        // vars populated from $options
+        $limit = null;
+        $offset = null;
+        $block = null;
+        $export = null;
+        $sort = null;
+        $showcomment = null;
+        $view = (object) null;
+
+        // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
-            if (array_key_exists($key, $allowedoptions));
+            if (property_exists($allowedoptions, $key));
             $$key = $option;
         }
         $userid = $USER->get('id');

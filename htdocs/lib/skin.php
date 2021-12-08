@@ -1210,6 +1210,7 @@ class Skin {
 
         // ========== SAVE GENERATED THUMBNAIL ==========
         if (!check_dir_exists(get_config('dataroot') . 'skins/', true, true)) {
+            $fontpath = get_config('dataroot') . 'skins/';
             throw new SystemException("Unable to create folder $fontpath");
         }
         else {

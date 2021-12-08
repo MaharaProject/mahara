@@ -182,7 +182,7 @@ class webservice_soap_client_wsse {
             $input_headers=null, &$output_headers=null) {
 
         $client = new SoapClient($this->serverurl->out(false), $this->options);
-        return $client->__soapCall($functionname, $arguments, $options, $this->wssecurity_header());
+        return $client->__soapCall($function_name, $arguments, $options, $this->wssecurity_header());
     }
 
     /**

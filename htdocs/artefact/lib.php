@@ -1651,7 +1651,7 @@ function artefact_check_plugin_sanity($pluginname) {
             }
         }
         if (!class_exists($typeclassname)) {
-            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $plugin));
+            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $pluginname));
         }
     }
     $types = call_static_method($classname, 'get_block_types');
