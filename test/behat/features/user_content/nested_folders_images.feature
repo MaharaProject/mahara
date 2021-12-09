@@ -29,6 +29,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # Confirming upload was successful
     And I should see "Upload of Image1.jpg to Folder1 complete"
     # Going back to Home
+    And I scroll to the base of id 'files_filebrowser_foldernav'
     And I follow "Home"
     # Creating Folder2
     And I scroll to the base of id "files_filebrowser_upload_container"
@@ -50,6 +51,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I delete the "Image3.png" row
     And I should see "Image Image3.png deleted"
     # Verifying you can move from subfolder2 to Home
+    And I scroll to the base of id 'files_filebrowser_foldernav'
     And I follow "Home"
     # Verifying all 2 folders are still there
     Then I should see "Folder1"
