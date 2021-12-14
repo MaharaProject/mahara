@@ -1169,6 +1169,7 @@ function delete_records_sql($sql, array $values=null) {
  * @param array $dataobject A data object with values for one or more fields in the record
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
+ * @return true|int if $returnpk is given, then the ID of the new entry is given, otherwise true is returned
  * @throws SQLException
  */
 global $INSERTRECORD_TABLE_COLUMNS;

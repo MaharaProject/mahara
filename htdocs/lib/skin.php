@@ -1400,7 +1400,7 @@ class Skin {
      */
     public function get_stylesheets($viewid = null) {
         if (!$this->id) {
-            throw SkinNotFoundException("Can't display the stylesheet for a skin that hasn't been committed to the DB yet.");
+            throw new SkinNotFoundException("Can't display the stylesheet for a skin that hasn't been committed to the DB yet.");
         }
         $sheets = array();
         $skinversion = preg_replace('/[^0-9]/', '', $this->mtime);

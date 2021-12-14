@@ -110,7 +110,7 @@ class Institution {
 
     public function __set($name, $value) {
         if (!is_string($name)) {
-            throw new ParamOutOfRangeException();
+            throw new ParamOutOfRangeException('');
         }
 
         // Validate the DB fields

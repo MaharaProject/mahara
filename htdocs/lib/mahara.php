@@ -101,11 +101,6 @@ function ensure_sanity() {
         }
     }
 
-    if (ini_get_bool('magic_quotes_runtime')) {
-        // Turn of magic_quotes_runtime. Anyone with this on deserves a slap in the face
-        set_magic_quotes_runtime(0);
-    }
-
     if (ini_get_bool('magic_quotes_sybase')) {
         // See above comment re. magic_quotes_runtime
         @ini_set('magic_quotes_sybase', 0);
@@ -2296,7 +2291,7 @@ function event_find_owner_type($event) {
 /**
  * Used by XMLDB
  */
-function debugging($message, $level) {
+function debugging($message, $level=null) {
     log_debug($message);
 }
 function xmldb_dbg($message) {
@@ -2651,7 +2646,7 @@ abstract class Plugin implements IPlugin {
                     break;
 
                 default:
-                    log_error("Unknown WEBSERVICE_TYPE: ".$c->type);
+                    log_warn("Unknown WEBSERVICE_TYPE: ".$c->type);
                     break;
             }
             if ($client) {
@@ -2957,7 +2952,7 @@ function format_timelapse($timestamp1, $timestamp2 = NULL) {
  */
 function get_random_key($length=16, $pool=null) {
     if ($length < 1) {
-        throw new IllegalArgumentException('Length must be a positive number');
+        throw new MaharaException('Length must be a positive number');
     }
     if (empty($pool)) {
         $pool = array_merge(
@@ -5864,6 +5859,7 @@ function clear_resized_images_cache($profileonly=false) {
             return false;
         }
     }
+    return true;
 }
 
 /*

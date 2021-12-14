@@ -24,6 +24,9 @@ class CsvFile {
     protected $format = array();
     protected $headerExists = true;
     protected $mandatoryfields;
+    protected $dirty;
+    protected $parentdirty;
+    protected $mtime;
 
     public function __construct($filename = '') {
         if (!empty($filename) && file_exists($filename)) {

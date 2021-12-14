@@ -51,6 +51,12 @@ class upload_manager {
     public $maxfilesize;
 
     /**
+     * @var mixed
+     */
+    public $inputindex;
+
+
+    /**
      * Constructor.
      *
      * @param string $inputname Name in $_FILES.
@@ -240,7 +246,7 @@ class upload_manager {
      * Handles filename collisions - if the desired filename exists it will rename it according to the pattern in $format
      * @param string $destination Destination directory (to check existing files against)
      * @param object $file Passed in by reference. The current file from $files we're processing.
-     * @param string $format The printf style format to rename the file to (defaults to filename_number.extn)
+     * @param string|null $format The printf style format to rename the file to (defaults to filename_number.extn)
      * @return string The new filename.
      */
     public function rename_duplicate_file($destination, $filename, $format='%s_%d.%s') {

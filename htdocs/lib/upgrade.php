@@ -1291,6 +1291,12 @@ function reload_html_filters() {
     log_info('Enabled ' . count($filters) . ' HTML filters.');
 }
 
+/**
+ * Update safe iframe regex
+ *
+ * @return bool
+ * @throws SystemException
+ */
 function update_safe_iframe_regex() {
     $prefixes = get_column('iframe_source', 'prefix');
     if (!empty($prefixes)) {
@@ -1312,7 +1318,7 @@ function update_safe_iframe_regex() {
         // prefaced by http:// or https:// or just // (which is a protocol-relative URL)
         $iframeregexp = '%^(http:|https:|)//(' . str_replace('.', '\.', implode('|', $prefixes)) . ')%';
     }
-    set_config('iframeregexp', isset($iframeregexp) ? $iframeregexp : null);
+    return set_config('iframeregexp', isset($iframeregexp) ? $iframeregexp : null);
 }
 
 function update_safe_iframes(array $iframesources, array $iframedomains) {
