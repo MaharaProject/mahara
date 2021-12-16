@@ -75,7 +75,7 @@ require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthServer.php'
 require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php');
 OAuthStore::instance('Mahara');
 global $server;
-$server = new OAuthServer();
+$server = new OAuthServer(get_full_script_path());
 
 !isset($_SERVER['PATH_INFO']) && $_SERVER['PATH_INFO'] = null;
 

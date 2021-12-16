@@ -89,7 +89,12 @@ class webservice_rest_server extends webservice_base_server {
         $oauth_token = null;
         if (webservice_protocol_is_enabled('oauth')) {
             OAuthStore::instance('Mahara');
-            $this->oauth_server = new OAuthServer();
+            // Instantiating OAuthServer() with get_full_script_path() ensures that
+            // the locally generated signature will contain a URI using the correct
+            // protocol if this server is behind an sslproxy.
+            // Otherwise OAuthServer() determines the protocol based only on a
+            // check for $_SERVER['HTTPS'] and signature verification will fail.
+            $this->oauth_server = new OAuthServer(get_full_script_path());
             $headers = OAuthRequestLogger::getAllHeaders();
             // try 2 Legged
             if (OAuthRequestVerifier::requestIsSigned()) {
