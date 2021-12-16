@@ -2033,7 +2033,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
             }
             $smarty->assign('membershiptype', $membershiptype);
         }
-
+        $r['canedituser'] = $USER->is_admin_for_user((object)$r);
         $results['cdata'] = array_chunk($results['data'], 2);
     }
     $results['roles'] = group_get_role_info($group);
