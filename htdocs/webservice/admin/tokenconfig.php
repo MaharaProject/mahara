@@ -114,14 +114,16 @@ if ($functions) {
         $function_list[]= '<a href="' . get_config('wwwroot') . 'webservice/wsdoc.php?id=' . $dbfunction->id . '">' . $function->functionname . '</a>';
     }
 }
+$selected_auth_instance_id = get_field('external_tokens', 'authinstance', 'token', $dbtoken->token);
+$auth_instance_options = get_auth_instances_options();
 $token_details['elements']['authinstance'] = array(
-        'type'         => 'select',
-        'title'        => get_string('authenticatedby', 'admin'),
-        'description'  => get_string('authenticatedbydescription', 'admin'),
-        'options'      => get_auth_instances_options(),
-        'defaultvalue' => null,
-        'class'        => 'hidden',
-    );
+    'type'         => 'select',
+    'title'        => get_string('authenticatedby', 'admin'),
+    'description'  => get_string('authenticatedbydescription', 'admin'),
+    'options'      => $auth_instance_options,
+    'defaultvalue' =>  $selected_auth_instance_id,
+    'class'        => 'hidden',
+);
 
 $token_details['elements']['functions'] = array(
     'title'        => get_string('functions', 'auth.webservice'),

@@ -1206,7 +1206,7 @@ abstract class webservice_server implements webservice_server_interface {
      * @return $user object
      */
     public function authenticate_by_token($tokentype) {
-        global $WEBSERVICE_INSTITUTION;
+        global $WEBSERVICE_INSTITUTION, $WEBSERVICE_AUTH_METHOD;
 
         if ($tokentype == EXTERNAL_TOKEN_OAUTH1) {
             $user = get_record('usr', 'id', $this->oauth_token_details['user_id']);
@@ -1268,6 +1268,7 @@ abstract class webservice_server implements webservice_server_interface {
 
         // set the global for the web service users defined institution
         $WEBSERVICE_INSTITUTION = $token->institution;
+        $WEBSERVICE_AUTH_METHOD = $token->authinstance;
 
         return $user;
     }

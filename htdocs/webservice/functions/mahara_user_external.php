@@ -1393,7 +1393,7 @@ class mahara_user_external extends external_api {
         return new external_function_parameters(
       array(
                 'externalsource' => new external_value(PARAM_TEXT, get_string('externalfilesource', WEBSERVICE_LANG)),
-                'userid'         => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                'userid'         => new external_value(PARAM_INT, get_string('userid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                 'username'       => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                 'filetoupload'   => new external_value(PARAM_FILE, get_string('filetoupload', WEBSERVICE_LANG)),
                 'foldername'     => new external_value(PARAM_RAW, get_string('foldername', WEBSERVICE_LANG)),
@@ -1424,42 +1424,80 @@ class mahara_user_external extends external_api {
 
      */
     public static function upload_file($externalsource, $userid, $username, $filetoupload, $foldername, $title=null, $description = '', $tags = array() ) {
-        global $USER;
+        global $USER, $WEBSERVICE_AUTH_METHOD;
 
-        $params = array('externalsource' => $externalsource, 'userid' => $userid,
-                        'username' => $username, 'filetoupload' => $filetoupload,
-                        'foldername' => $foldername, 'title' => $title,
-                        'description' => $description, 'tags' => $tags);
+        $params = array(
+                    'externalsource' => $externalsource,
+                    'userid'         => $userid,
+                    'username'       => $username,
+                    'filetoupload'   => $filetoupload,
+                    'foldername'     => $foldername,
+                    'title'          => $title,
+                    'description'    => $description,
+                    'tags'           => $tags
+                );
         $params = self::validate_parameters(self::upload_file_parameters(), $params);
 
+        // Get authinstance connected to this webservice instance
+        $auth_instance = AuthFactory::create($WEBSERVICE_AUTH_METHOD);
+        $is_remote_auth = ($auth_instance->needs_remote_username() || $auth_instance->authname === 'webservice');
+        $filetoupload = $title ?: $filetoupload;
+        $recipient_id = 0;
+        $result_artefact_id = null;
+        $upload_to_self = false;
+
+        // Match the given ID or username with an account
         $u = new User;
-        $filetoupload = $title ? $title : $filetoupload;
-        if ($userid) {
+
+        if (isset($userid)) {
             $u->find_by_id($userid);
-            $recipient_id = $u->get('id');
+        }
+        else if ($is_remote_auth) {
+            // Check the remote user table first and then fall back to the usr table if the username passed in is their username and not their remoteusername.
+            $u->find_by_instanceid_username($WEBSERVICE_AUTH_METHOD, $username, $is_remote_auth);
         }
         else {
             $u->find_by_username($username);
-            $recipient_id = $u->get('id');
         }
 
-        if ($recipient_id) {
-            $upload_to_self = $USER->get('id') === $recipient_id;
-            $has_permission = $USER->is_admin_for_user($recipient_id);
+        $recipient_id = $u->get('id');
+        $upload_to_self = $USER->get('id') === $recipient_id;
 
-            if (!$upload_to_self && !$has_permission) {
-                throw new WebserviceAccessException(get_string('invalidpermission', 'auth.webservice', $userid ? $userid : $username ));
+        // Check the capabilities of the auth method, i.e. > 0 targets institutions, where as 0 = No access to any institution, -1 = access to all institutitons
+        $check_institution = true;
 
+        if (!$upload_to_self) {
+            switch ($WEBSERVICE_AUTH_METHOD) {
+                case -1: # Access to all institutions
+                    # No need to check institution, just upload
+                    $check_institution = false;
+                    break;
+                case 0: # No access to any institution
+                    throw new WebserviceAccessException(get_string('invalidpermission', 'auth.webservice', isset($userid) ? $userid : $username ));
+                default: # Limited to an institution or 'mahara'. i.e. no institution
+                    break;
             }
-            if ($result_artefact_id = parent::handle_file_upload('filetoupload', null, $foldername, $title, $description, $tags, $recipient_id)) {
-                $parent_folder_id = ArtefactTypeFolder::get_folder_id_artefact_contents($result_artefact_id);
-                $message = new stdClass();
-                $message->users = array($recipient_id);
-                $message->subject = get_string('fileuploadmessagesubject', WEBSERVICE_LANG);
-                $message->message = get_string('fileuploadmessagebody', WEBSERVICE_LANG, $filetoupload, $externalsource, $foldername);
-                $message->url = 'artefact/file/index.php' . ($parent_folder_id ? '?folder=' . $parent_folder_id : '');
-                activity_occurred('maharamessage', $message);
+
+            if ($check_institution) {
+                $recipient_institutions = array_keys($u->get('institutions'));
+                $token_has_access_to_institution = in_array($auth_instance->institution, $recipient_institutions);
+                $has_permission = $token_has_access_to_institution || $USER->is_admin_for_user($recipient_id);
+
+                if (!$has_permission) {
+                    throw new WebserviceAccessException(get_string('invalidpermission', 'auth.webservice', $userid ? $userid : $username ));
+                }
             }
+        }
+
+        // Upload
+        if ($result_artefact_id = parent::handle_file_upload('filetoupload', null, $foldername, $title, $description, $tags, $recipient_id)) {
+            $parent_folder_id = ArtefactTypeFolder::get_folder_id_artefact_contents($result_artefact_id);
+            $message = new stdClass();
+            $message->users = array($recipient_id);
+            $message->subject = get_string('fileuploadmessagesubject', WEBSERVICE_LANG);
+            $message->message = get_string('fileuploadmessagebody', WEBSERVICE_LANG, $filetoupload, $externalsource, $foldername);
+            $message->url = 'artefact/file/index.php' . ($parent_folder_id ? '?folder=' . $parent_folder_id : '');
+            activity_occurred('maharamessage', $message);
         }
 
         return array(
