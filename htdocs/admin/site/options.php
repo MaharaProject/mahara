@@ -75,7 +75,6 @@ $siteoptionform = array(
                 'country' => array(
                     'type'         => 'select',
                     'title'        => get_string('country', 'admin'),
-                    'description'  => get_string('sitecountrydescription', 'admin'),
                     'defaultvalue' => get_config('country'),
                     'options'      => array('' => get_string('nocountryselected')) + $countries,
                     'help'         => true,

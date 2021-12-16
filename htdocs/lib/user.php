@@ -226,7 +226,6 @@ function get_user_language($userid) {
 function expected_account_preferences() {
     $core = array('friendscontrol' => 'auth',
                  'wysiwyg'        =>  1,
-                 'licensedefault' => '',
                  'messages'       => 'allow',
                  'lang'           => 'default',
                  'maildisabled'   => 0,
@@ -2300,7 +2299,6 @@ function build_onlinelist_html(&$data, $page) {
         'count' => $data['count'],
         'limit' => $data['limit'],
         'offset' => $data['offset'],
-        'datatable' => 'onlinelist',
         'jsonscript' => 'user/online.json.php',
         'setlimit' => true,
         'resultcounttextsingular' => $resultcounttextsingular,

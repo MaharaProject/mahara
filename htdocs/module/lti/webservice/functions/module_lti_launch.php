@@ -66,7 +66,6 @@ class module_lti_launch extends external_api {
 
                 // Canvas specific LTI params
                 'custom_canvas_api_domain' => new external_value(PARAM_TEXT, 'LTI custom_canvas_api_domain', VALUE_OPTIONAL),
-                'custom_canvas_api_domain' => new external_value(PARAM_TEXT, 'LTI custom_canvas_api_domain', VALUE_OPTIONAL),
                 'custom_canvas_course_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_course_id', VALUE_OPTIONAL),
                 'custom_canvas_enrollment_state' => new external_value(PARAM_TEXT, 'LTI custom_canvas_enrollment_state', VALUE_OPTIONAL),
                 'custom_canvas_user_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_user_id', VALUE_OPTIONAL),
