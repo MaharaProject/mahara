@@ -2019,6 +2019,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
             // sends them back here saying that the user has no roles they can
             // change to anyway.
             $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
+            $r['canedituser'] = $USER->is_admin_for_user((object)$r);
         }
 
         if (!empty($membershiptype)) {
@@ -2033,7 +2034,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
             }
             $smarty->assign('membershiptype', $membershiptype);
         }
-        $r['canedituser'] = $USER->is_admin_for_user((object)$r);
+
         $results['cdata'] = array_chunk($results['data'], 2);
     }
     $results['roles'] = group_get_role_info($group);
