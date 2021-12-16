@@ -20,6 +20,11 @@ Background:
     | GroupC | UserA | GroupC owned by UserA | course    | ON   | OFF           | all       | ON            | OFF           | instone     |
     | GroupD | UserA | GroupD owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | instone     |
 
+    # Group creation need to be for all
+    And the following site settings are set:
+    | field | value |
+    | creategroups | all |
+
 Scenario: Set group limit for an institution
     # Log in as an admin user
     Given I log in as "admin" with password "Kupuh1pa!"
