@@ -468,7 +468,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         ));
     }
 
-    public function verification_comment_js($id, $text) {
+    public static function verification_comment_js($id, $text) {
        $js = <<<EOF
 function verification_comment_success_{$id}(form, data) {
     formSuccess(form, data);

@@ -201,7 +201,7 @@ function accountprefs_validate(Pieform $form, $values) {
     }
 
     if ($authobj->authname == 'internal' && $values['username'] != $USER->get('username')) {
-        if (!AuthInternal::is_username_valid($values['username'])) {
+        if (!$authobj->is_username_valid($values['username'])) {
             $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
         }
         if (!$form->get_error('username') && record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($values['username'])))) {

@@ -1227,7 +1227,7 @@ abstract class ArtefactType implements IArtefactType {
         return array();
     }
 
-    public function attachments_from_id_list($artefactids, $viewid=null, $itemid=null) {
+    public static function attachments_from_id_list($artefactids, $viewid=null, $itemid=null) {
         if (empty($artefactids)) {
             return array();
         }
@@ -1273,7 +1273,7 @@ abstract class ArtefactType implements IArtefactType {
     }
 
 
-    public function tags_from_id_list($artefactids) {
+    public static function tags_from_id_list($artefactids) {
         if (empty($artefactids)) {
             return array();
         }

@@ -958,7 +958,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   boolean $listonly Only return the list and not the form
      *
      */
-    public function get_annotation_feedback_for_matrix($annotationartefact, $view, $blockid, $listonly = false) {
+    public static function get_annotation_feedback_for_matrix($annotationartefact, $view, $blockid, $listonly = false) {
         $options = ArtefactTypeAnnotationfeedback::get_annotation_feedback_options();
         $options->limit = 0;
         $options->view = $view->get('id');
@@ -1011,7 +1011,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   string  $message   The feedback message
      * @param   boolean $ispublic  Whether it is a public message or not
      */
-    public function save_matrix_feedback($annotationartefact, $view, $blockid, $message, $ispublic = true) {
+    public static function save_matrix_feedback($annotationartefact, $view, $blockid, $message, $ispublic = true) {
         global $USER;
         if (!is_object($annotationartefact) || !is_object($view) || empty($message)) {
             throw new MaharaException(get_string('annotationinformationerror', 'artefact.annotation'));
@@ -1108,7 +1108,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   bool    $html     Whether to return the information rendered as html or not
      * @param   bool    $editing  Whether we are view edit mode or not
      */
-    public function get_annotation_feedback_for_view($annotationartefact, $view, $blockid, $html = true, $editing = false) {
+    public static function get_annotation_feedback_for_view($annotationartefact, $view, $blockid, $html = true, $editing = false) {
         global $USER;
         if (!is_object($annotationartefact) || !is_object($view)) {
             throw new MaharaException(get_string('annotationinformationerror', 'artefact.annotation'));

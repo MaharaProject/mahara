@@ -37,7 +37,7 @@ class mahara_user_external extends external_api {
     private static $ALLOWEDKEYS;
     private static $localoptions;
 
-    private function get_allowed_keys() {
+    private static function get_allowed_keys() {
         if (is_array(self::$ALLOWEDKEYS)) {
             return self::$ALLOWEDKEYS;
         }
@@ -67,7 +67,7 @@ class mahara_user_external extends external_api {
         return self::$ALLOWEDKEYS;
     }
 
-    private function get_local_options() {
+    private static function get_local_options() {
         if (is_array(self::$localoptions)) {
             return self::$localoptions;
         }

@@ -1988,7 +1988,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      *                       that is set by: (quotaused / quota) * 100
      * @param $notifyadmins  bool
      */
-    function notify_users_threshold_exceeded($users, $notifyadmins = false) {
+    public static function notify_users_threshold_exceeded($users, $notifyadmins = false) {
         // if we have just been given a $user object
         if (is_object($users)) {
             $users[] = $users;
@@ -2031,7 +2031,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * @param $groups        array of group objects - the $group object needs to include a quotausedpercent
      *                       that is set by: (quotaused / quota) * 100
      */
-    function notify_groups_threshold_exceeded($groups) {
+    public static function notify_groups_threshold_exceeded($groups) {
         // if we have just been given a $group object
         if (is_object($groups)) {
             $groups[] = $groups;

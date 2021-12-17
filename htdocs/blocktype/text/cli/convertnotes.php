@@ -9,6 +9,7 @@ require(get_config('libroot') . 'cli.php');
 safe_require('blocktype', 'text', 'lib.php');
 safe_require('artefact', 'internal', 'lib.php');
 
+$cli = get_cli();
 // Set $numtoprocess to a number to process notes in a smaller batch size.
 $numtoprocess = null;
 try {
@@ -16,7 +17,7 @@ try {
     PluginBlocktypeText::convert_notes_to_text_blocks($numtoprocess);
 }
 catch (Exception $e) {
-    cli::cli_exit($e->getMessage(), true);
+    $cli->cli_exit($e->getMessage(), true);
 }
 
 log_info("Done!");

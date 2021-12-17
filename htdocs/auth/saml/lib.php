@@ -2015,7 +2015,7 @@ class Metarefresh {
     * With only minimal mahara specific tweaks around config and data paths
     *
     */
-    function metadata_refresh_hook() {
+    public static function metadata_refresh_hook() {
         try {
             //Include autoloader and setup config dir correctly
             PluginAuthSaml::init_simplesamlphp();

@@ -704,7 +704,7 @@ class ArtefactTypeComment extends ArtefactType {
      * @return  array   $commentcount, $comments   The count of comments and either the comments
      *                                             or the html to render them.
      */
-    public function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false, $versioning = false) {
+    public static function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false, $versioning = false) {
         global $USER;
 
         if (!is_object($artefact) || !is_object($view)) {

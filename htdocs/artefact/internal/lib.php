@@ -1170,7 +1170,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
      * Get an array of all the social profiles input for this user.
      * @return array of social profiles.
      */
-    public function get_social_profiles() {
+    public static function get_social_profiles() {
         global $USER;
 
         $sql = 'SELECT * FROM {artefact}
@@ -1319,7 +1319,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         return $newdata;
     }
 
-    public function render_profile_element() {
+    public static function render_profile_element() {
         $data = self::get_social_profiles();
 
         // Build pagination for 'socialprofile' artefacts table
@@ -1362,7 +1362,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
     /**
      * Used in the mandatory fields check during the authentication process.
      */
-    public function get_new_profile_elements() {
+    public static function get_new_profile_elements() {
 
         $socialnetworkoptions = array();
         foreach (ArtefactTypeSocialprofile::$socialnetworks as $socialnetwork) {

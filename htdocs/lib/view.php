@@ -4483,7 +4483,7 @@ class View {
     }
 
 
-    public function get_site_template_views() {
+    public static function get_site_template_views() {
         $views = get_records_sql_array(
             "SELECT v.*
                FROM {view} v
@@ -5606,7 +5606,7 @@ class View {
      * @param array options
      * @param array pagination
      */
-    public function render_participation_views($views, $template, $pagination) {
+    public static function render_participation_views($views, $template, $pagination) {
         $smarty = smarty_core();
         $smarty->assign('itemcount', (!empty($views['data']) ? count($views['data']) : false));
         $smarty->assign('items', $views['data']);
@@ -6796,7 +6796,7 @@ class View {
      *
      * @return array, array
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $obsoleteparam=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
+    public static function get_views_and_collections($owner=null, $group=null, $institution=null, $obsoleteparam=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
 
         $excludelocked = $group && group_user_access($group) != 'admin';
         $sql = "
@@ -7346,7 +7346,7 @@ class View {
      * @param $todate date of the newest version we want to retrieve
      * @return object $views an object containing the count and data of the versions
      */
-    public function get_versions($view, $fromdate = null, $todate = null) {
+    public static function get_versions($view, $fromdate = null, $todate = null) {
         if (!is_numeric($view)) {
             throw new InvalidArgumentException(get_string('noaccesstoview', 'view'));
         }
@@ -7389,7 +7389,7 @@ class View {
         return $versions;
     }
 
-    public function get_timeline_form($view, $from = null, $to = null) {
+    public static function get_timeline_form($view, $from = null, $to = null) {
         if (is_numeric($from)) {
             $from = db_format_timestamp($from);
         }

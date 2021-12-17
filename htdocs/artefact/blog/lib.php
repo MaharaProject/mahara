@@ -220,7 +220,7 @@ class ArtefactTypeBlog extends ArtefactType {
         return $title;
     }
 
-    public function display_postedby($date, $by) {
+    public static function display_postedby($date, $by) {
         global $USER;
 
         if (!is_numeric($date)) {
@@ -1122,7 +1122,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param array options
      * @param array pagination
      */
-    public function render_posts(&$posts, $template, $options, $pagination) {
+    public static function render_posts(&$posts, $template, $options, $pagination) {
         $smarty = smarty_core();
         $smarty->assign('options', $options);
         $smarty->assign('posts', $posts['data']);
