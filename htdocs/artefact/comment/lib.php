@@ -379,6 +379,7 @@ class ArtefactTypeComment extends ArtefactType {
         $limit = null;
         $offset = null;
         $viewid = null;
+        $artefact = null;
         $artefactid = null;
         $canedit = null;
         $owner = null;

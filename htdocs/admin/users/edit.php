@@ -173,7 +173,7 @@ else {
 }
 
 // Probation points
-if (is_using_probation($user->id)) {
+if (is_using_probation()) {
     $elements['probationpoints'] = array(
         'type' => 'select',
         'title' => get_string('probationtitle', 'admin'),

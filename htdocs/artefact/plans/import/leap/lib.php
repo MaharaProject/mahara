@@ -183,7 +183,7 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
             'content' => array(
                 'title'       => (string)$entry->title,
                 'description' => PluginImportLeap::get_entry_content($entry, $importer),
-                'authorname'  => isset($authorname) ? $authorname : null,
+                'authorname'  => $authorname,
                 'author'      => isset($author) ? $author : null,
                 'ctime'       => (string)$entry->published,
                 'mtime'       => (string)$entry->updated,

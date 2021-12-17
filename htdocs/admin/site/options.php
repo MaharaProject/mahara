@@ -21,7 +21,6 @@ require_once('searchlib.php');
 require_once('antispam.php');
 require_once(get_config('libroot') . 'activity.php');
 define('TITLE', get_string('siteoptions', 'admin'));
-
 $langoptions = get_languages();
 $themeoptions = get_all_themes();
 unset($themeoptions['custom']); // Only available for institution configurable themes

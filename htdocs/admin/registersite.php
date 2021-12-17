@@ -21,6 +21,7 @@ require(get_config('libroot') . 'registration.php');
 define('TITLE', get_string('Registration', 'admin'));
 
 // This runs register_site in registration.php, which is what displays the form and the button for emails.
+$firstregistered = '';
 if (!get_config('registration_lastsent')
     || get_config('new_registration_policy')) {
     $register = register_site();

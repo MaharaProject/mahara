@@ -30,6 +30,7 @@ if ($pagenames = array_merge($corepagenames, $localpagenames)) {
 }
 
 $pageoptions = array();
+$pagecontents = array();
 foreach ($sitepages as $page) {
     $section = in_array($page->name, $localpagenames) ? 'local' : 'admin';
     $pageoptions[$page->name] = get_string($page->name, $section);

@@ -650,7 +650,7 @@ function auth_setup () {
                                                AND osr.institution = ?
                                                AND (osr.application_uri != 'http://example.com' and osr.application_uri != '') LIMIT 1", array($authinstance->institution))) {
 
-                        if (!empty($host)) {
+                        if ($host) {
                             redirect($host);
                         }
                     }

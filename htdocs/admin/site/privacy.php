@@ -38,6 +38,8 @@ foreach ($data as $key => $content) {
 }
 
 $selectedtab = $fs;
+$pageoptions = array();
+
 if ($versionid) {
     if ($pageoptions = get_record('site_content_version', 'id', $versionid, 'institution', 'mahara')) {
         $selectedtab = $pageoptions->type;

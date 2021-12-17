@@ -26,7 +26,9 @@ if ($font) {
     $font = preg_replace(Skin::FONTNAME_FILTER_CHARACTERS, '', $font);
 }
 $fontdata = null;
-
+$fontlicence = '';
+$fonttitle = '';
+$stylesheet = '';
 if (!empty($font)) {
     $stylesheet = Skin::get_css_font_face_from_font_name($font);
     $fontdata = get_record('skin_fonts', 'name', $font);

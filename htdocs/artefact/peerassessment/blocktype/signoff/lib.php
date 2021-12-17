@@ -79,12 +79,12 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
             $smarty->assign('view', $view->get('id'));
             // Verify option
             $smarty->assign('showverify', !empty($configdata['verify']));
-            $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view, false));
-            $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view, false));
+            $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view));
+            $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view));
             // Signoff option
             $smarty->assign('showsignoff', !empty($configdata['signoff']));
-            $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view, false));
-            $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view, false));
+            $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view));
+            $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view));
             $html = $smarty->fetch('blocktype:signoff:verifyform.tpl');
         }
         return $html;

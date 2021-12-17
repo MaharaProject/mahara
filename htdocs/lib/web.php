@@ -1841,14 +1841,14 @@ function param_integer_list($name) {
 }
 
 /**
- * This function returns a GET or POST parameter as a boolean.
+ * param_boolean
  *
  * @param string The GET or POST parameter you want returned
- *
+ * @param  mixed $params _param_retrieve looks for further arguments
+ *               - needed for PHPStan compaining about the wrong number of arguments given
  * @return bool The value of the parameter
- *
  */
-function param_boolean($name) {
+function param_boolean($name,...$params) {
 
     list ($value) = _param_retrieve($name, false);
 

@@ -13,6 +13,7 @@ define('INTERNAL', 1);
 define('MENUITEM', 'settings/preferences');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+
 define('TITLE', get_string('deleteaccountuser', 'account', display_name($USER, null, false, false, true)));
 
 if (!$USER->can_delete_self()) {
