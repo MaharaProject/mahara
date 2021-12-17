@@ -497,7 +497,7 @@ class module_mobileapi_sync extends external_api {
                 );
 
                 if ($includeblogposts) {
-                    $blogpostrecords = ArtefactTypeBlogpost::get_posts($blogrecord->id, $blogpostslimit, $blogpostsoffset, null);
+                    $blogpostrecords = ArtefactTypeBlogPost::get_posts($blogrecord->id, $blogpostslimit, $blogpostsoffset, null);
                     if ($blogpostrecords) {
                         foreach ($blogpostrecords['data'] as $blogpost) {
                             // TODO: Let the client deal with locked posts

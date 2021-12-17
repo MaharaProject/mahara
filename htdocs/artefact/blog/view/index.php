@@ -82,10 +82,10 @@ else {
 }
 
 if ($changepoststatus = param_integer('changepoststatus', null)) {
-    ArtefactTypeBlogpost::changepoststatus_form($changepoststatus);
+    ArtefactTypeBlogPost::changepoststatus_form($changepoststatus);
 }
 if ($delete = param_integer('delete', null)) {
-    ArtefactTypeBlogpost::delete_form($delete);
+    ArtefactTypeBlogPost::delete_form($delete);
 }
 
 if (is_null($id)) {

@@ -29,7 +29,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
+class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
 
     private static $source = null;
     private static $deprecatedhosts = array('backpack');

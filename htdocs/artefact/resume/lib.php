@@ -437,10 +437,10 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
         return true;
     }
 
-    public static function render_fields(ArtefactTypePersonalInformation $a=null, $options=array(), $values=null) {
+    public static function render_fields(ArtefactTypePersonalinformation $a=null, $options=array(), $values=null) {
         $smarty = smarty_core();
         $fields = array();
-        foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
+        foreach (array_keys(ArtefactTypePersonalinformation::get_composite_fields()) as $field) {
             if ($values && isset($values[$field])) {
                 $value = $values[$field];
                 // TODO: Make this be a call to a subclass instead of a hard-coded listing

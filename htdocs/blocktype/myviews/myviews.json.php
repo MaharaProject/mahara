@@ -61,6 +61,6 @@ $pagination = array(
     'resultcounttextsingular' => get_string('view', 'view'),
     'resultcounttextplural'   => get_string('views', 'view'),
 );
-PluginBlocktypeMyViews::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination, $editing);
+PluginBlocktypeMyviews::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination, $editing);
 
 json_reply(false, array('data' => $views));

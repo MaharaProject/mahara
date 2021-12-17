@@ -1458,7 +1458,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
  */
 function make_annotation_feedback_public_validate(Pieform $form, $values) {
     global $USER;
-    $annotationfeedback = new ArtefactTypeAnnotationFeedback((int) $values['annotationfeedbackid']);
+    $annotationfeedback = new ArtefactTypeAnnotationfeedback((int) $values['annotationfeedbackid']);
 
     if (!empty($values['viewid']) && !can_view_view($values['viewid'])) {
         // The user does not access to this view.
@@ -1494,7 +1494,7 @@ function make_annotation_feedback_public_validate(Pieform $form, $values) {
 function make_annotation_feedback_public_submit(Pieform $form, $values) {
     global $USER;
 
-    $annotationfeedback = new ArtefactTypeAnnotationFeedback((int) $values['annotationfeedbackid']);
+    $annotationfeedback = new ArtefactTypeAnnotationfeedback((int) $values['annotationfeedbackid']);
     $annotationid = $annotationfeedback->get('onannotation');
     $annotation = new ArtefactTypeAnnotation((int) $annotationid);
 

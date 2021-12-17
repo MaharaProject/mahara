@@ -70,7 +70,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
 
             $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
             $limit = ($exporter || $versioning) ? 0 : $limit;
-            $posts = ArtefactTypeBlogpost::get_posts($blog->get('id'), $limit, 0, $configdata);
+            $posts = ArtefactTypeBlogPost::get_posts($blog->get('id'), $limit, 0, $configdata);
             $template = 'artefact:blog:viewposts.tpl';
             if ($exporter || $versioning) {
                 $pagination = false;
@@ -87,7 +87,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             }
             $configdata['blockid'] = $instance->get('id');
             $configdata['editing'] = $editing;
-            ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
+            ArtefactTypeBlogPost::render_posts($posts, $template, $configdata, $pagination);
 
             $smarty = smarty_core();
             if (isset($configdata['viewid'])) {

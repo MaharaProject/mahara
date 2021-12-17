@@ -145,7 +145,7 @@ function personalinformation_submit(Pieform $form, $values) {
                 'title' => get_string('personalinformation', 'artefact.resume'),
             ));
         }
-        foreach (array_keys(ArtefactTypePersonalInformation::get_composite_fields()) as $field) {
+        foreach (array_keys(ArtefactTypePersonalinformation::get_composite_fields()) as $field) {
             $personalinformation->set_composite($field, $values[$field]);
         }
         $personalinformation->commit();

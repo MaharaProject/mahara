@@ -590,7 +590,7 @@ class PluginSearchElasticsearch extends PluginSearch {
         foreach ($enabledtypes as $type) {
             ElasticsearchIndexing::drop_triggers($type);
         }
-        ElasticSearchIndexing::drop_trigger_functions();
+        ElasticsearchIndexing::drop_trigger_functions();
         delete_records('search_elasticsearch_queue');
     }
 
@@ -605,7 +605,7 @@ class PluginSearchElasticsearch extends PluginSearch {
      *  - Loads every record for that type into the queue table, for the cron to chug away at them
      */
     public static function reset_all_searchtypes() {
-        ElasticSearchIndexing::create_index();
+        ElasticsearchIndexing::create_index();
 //        ElasticsearchIndexing::create_trigger_functions();
         $enabledtypes = explode(',', get_config_plugin('search', 'elasticsearch', 'types'));
         $mappings = array();

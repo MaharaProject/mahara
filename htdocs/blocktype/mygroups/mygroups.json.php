@@ -31,7 +31,7 @@ if (!can_view_view($view)) {
     json_reply(true, get_string('accessdenied', 'error'));
 }
 
-$bi = new Blockinstance($blockid);
+$bi = new BlockInstance($blockid);
 $configdata = $bi->get('configdata');
 $sort = !empty($configdata['sort']) ? $configdata['sort'] : null;
 $limit = !empty($configdata['limitto']) ? $configdata['limitto'] : null;
@@ -70,6 +70,6 @@ $pagination = array(
                     'resultcounttextsingular' => get_string('group', 'group'),
                     'resultcounttextplural' => get_string('groups', 'group'),
                     );
-PluginBlocktypeMygroups::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
+PluginBlocktypeMyGroups::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
 
 json_reply(false, array('data' => $groups));

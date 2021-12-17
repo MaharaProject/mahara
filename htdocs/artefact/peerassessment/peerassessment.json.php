@@ -46,6 +46,6 @@ $options->limit = $limit;
 $options->offset = $offset;
 $options->view = $view;
 $options->block = $blockid;
-$data = ArtefactTypePeerAssessment::get_assessments($options);
+$data = ArtefactTypePeerassessment::get_assessments($options);
 
 json_reply(false, array('data' => $data));

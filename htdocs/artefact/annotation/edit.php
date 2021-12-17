@@ -20,7 +20,7 @@ $annotationfeedbackid = param_integer('id');
 $viewid = param_integer('viewid');
 $view = new View($viewid);
 View::set_nav($view->get('group'), $view->get('institution'), false, false, false);
-$annotationfeedback = new ArtefactTypeAnnotationFeedback((int) $annotationfeedbackid);
+$annotationfeedback = new ArtefactTypeAnnotationfeedback((int) $annotationfeedbackid);
 
 if ($USER->get('id') != $annotationfeedback->get('author')) {
     throw new AccessDeniedException(get_string('canteditnotauthor', 'artefact.annotation'));

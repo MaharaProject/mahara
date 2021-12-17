@@ -115,7 +115,7 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
         $categories = $view->get('categorydata');
         $blocks = array();
         foreach ($categories as $c) {
-            $blocktypes = PluginBlockType::get_blocktypes_for_category($c['name'], $view);
+            $blocktypes = PluginBlocktype::get_blocktypes_for_category($c['name'], $view);
             if ($c['name'] == 'shortcut') {
                 foreach ($blocktypes as $key => $blocktype) {
                     if ($blocktype['name'] == 'placeholder') {

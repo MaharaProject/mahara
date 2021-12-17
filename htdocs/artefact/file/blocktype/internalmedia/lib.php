@@ -341,7 +341,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
 /**
  * Hierarchy of classes that hold the code for the different media players
- * we use. See BlocktypeInternalMedia::get_all_filetype_players() for how
+ * we use. See PluginBlocktypeInternalmedia::get_all_filetype_players() for how
  * we map mimetypes to media players.
  */
 abstract class MaharaMediaPlayer {
@@ -512,7 +512,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
      */
     public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = PluginBlocktypeInternalMedia::get_download_link($artefact, $block);
+        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
 
         require_once('file.php');
         $mimetype = $artefact->get('filetype');
@@ -567,7 +567,7 @@ class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
      */
     public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = PluginBlocktypeInternalMedia::get_download_link($artefact, $block);
+        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
 
         require_once('file.php');
         $mimetype = $artefact->get('filetype');

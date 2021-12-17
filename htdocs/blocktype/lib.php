@@ -976,7 +976,7 @@ EOF;
  * useful as a way of mapping the behavior of core blocks to theme items that are
  * not easily queried by the code.)
  */
-abstract class MaharaCoreBlocktype extends PluginBlockType {
+abstract class MaharaCoreBlocktype extends PluginBlocktype {
 
     /**
      * Use a css icon based on the name of the block
@@ -1002,7 +1002,7 @@ abstract class MaharaCoreBlocktype extends PluginBlockType {
  * in its blocktype.config field, then the default implementation of get_artefacts()
  * doesn't really matter.
  */
-abstract class SystemBlockType extends PluginBlockType {
+abstract class SystemBlockType extends PluginBlocktype {
     /**
      * Fetch the artefact associated with the block instance
      * @param BlockInstance $instance The block instance
@@ -2581,7 +2581,7 @@ class BlockInstance {
         //
         // Note for later: this is Blockinstance->allowed_in_view. This
         // determines whether this blockinstance should be copied into a view.
-        // This could be a different question from BlockType::allowed_in_view!
+        // This could be a different question from Blocktype::allowed_in_view!
         // But for now they use the same method.
         if (!call_static_method($blocktypeclass, 'allowed_in_view', $view)) {
             return false;
