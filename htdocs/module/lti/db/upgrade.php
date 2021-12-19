@@ -64,22 +64,5 @@ function xmldb_module_lti_upgrade($oldversion=0) {
 
     }
 
-    if ($oldversion < 2021102710) {
-        log_debug('Updating External Service label: LTI integration is now LTI 1.1.');
-        try {
-            $id = get_field('external_services', 'id', 'shortname', 'maharalti');
-            if ($id) {
-                $record = new stdClass;
-                $record->name = 'LTI 1.1';
-                $record->id = $id;
-                update_record('external_services', $record);
-            }
-        }
-        catch (Exception $e) {
-            log_debug($e->getMessage());
-            $status = false;
-        }
-    }
-
     return $status;
 }
