@@ -218,6 +218,11 @@ class dbTable extends dbObject {
 	var $name;
 
 	/**
+	 * @var object Data object
+	 */
+	var $data;
+
+	/**
 	* @var array Field specifier: Meta-information about each field
 	*/
 	var $fields = array();
@@ -461,6 +466,7 @@ class dbTable extends dbObject {
 			$this->fields[$this->FieldID( $field )]['OPTS'][] = array( $opt => $value );
 		}
 	}
+
 
 	/**
 	* Adds an option to the table
@@ -788,6 +794,11 @@ class dbData extends dbObject {
 	var $row;
 
 	/**
+	 * @var string Field index: Keeps track of which field is currently being processed
+	 */
+	var $current_field;
+
+	/**
 	* Initializes the new dbIndex object.
 	*
 	* @param object $parent Parent object
@@ -873,11 +884,11 @@ class dbData extends dbObject {
 	}
 
 	/**
-	* Adds options to the index
-	*
-	* @param string $opt Comma-separated list of index options.
-	* @return string Option list
-	*/
+	 * Adds options to the index
+	 *
+	 * @param string $cdata
+	 * @return void
+	 */
 	function addData( $cdata ) {
 		if( !isset( $this->data[$this->row] ) ) {
 			$this->data[$this->row] = array();
@@ -1616,7 +1627,9 @@ class adoSchema {
 		$fp = fopen( $filename, "w" );
 
 		foreach( $sqlArray as $key => $query ) {
-			fwrite( $fp, $query . ";\n" );
+			if (fwrite( $fp, $query . ";\n" ) === FALSE) {
+				return FALSE;
+			}
 		}
 		fclose( $fp );
 	}
