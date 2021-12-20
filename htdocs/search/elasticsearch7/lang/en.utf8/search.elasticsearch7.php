@@ -76,6 +76,7 @@ $string['monitorqueuehasolditems'] = [
   'Unprocessed items in the Elasticsearch 7 queue older than %s hours'
 ];
 $string['monitorunprocessedqueuesize'] = 'Total number of unprocessed records';
+$string['monitorunprocessedqueuerate'] = 'Unprocessed records as percentage of cron limit';
 $string['monitorqueuestatus'] = 'Elasticsearch 7 queue status';
 $string['monitorsubnavtitle'] = 'Elasticsearch 7';
 $string['none'] = 'none';

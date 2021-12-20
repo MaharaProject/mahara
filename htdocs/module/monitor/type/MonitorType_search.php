@@ -46,11 +46,27 @@ class MonitorType_search extends MonitorType {
      * Get the number of records in table search_elasticsearch_queue where status = 0 which means unprocessed.
      * Such return structure is needed for displaying stuff in UI by means of monitor.tpl.
      *
-     * @return array of [task, value] with 'task' saying this is unprocessed queue size and 'value' with amount of such records.
+     * @return array<string, string>|false The 'task' saying this is unprocessed queue size and 'value' with amount of such records.
      */
     public static function get_unprocessed_queue_size() {
         if ($search_class = does_search_plugin_have('monitor_get_unprocessed_queue_size')) {
             return $search_class::monitor_get_unprocessed_queue_size();
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Check if the number of unprocessed records in table search_elasticsearch_queue is getting to large.
+     * We compare the cron record limit per cron run versus the number of unprocessed records
+     * because if the limit is below unprocessed then the queue may never clear.
+     *
+     * @return array<string, string>|false The 'task' is unprocessed queue size and 'value' is the amount of such records.
+     */
+    public static function unprocessed_queue_rate() {
+        if ($search_class = does_search_plugin_have('monitor_get_unprocessed_queue_rate')) {
+            return $search_class::monitor_get_unprocessed_queue_rate();
         }
         else {
             return false;
@@ -63,7 +79,7 @@ class MonitorType_search extends MonitorType {
      * Here we just calculate how many of them we have.
      * Such return structure is needed for displaying stuff in UI by means of monitor.tpl.
      *
-     * @return array [task, value] with 'task' saying this is a failed queue size and 'value' designating amount of failed records.
+     * @return array<string, string>|false The 'task' saying this is a failed queue size and 'value' designating amount of failed records.
      */
     public static function get_failed_queue_size() {
         if ($search_class = does_search_plugin_have('monitor_get_failed_queue_size')) {
@@ -74,10 +90,16 @@ class MonitorType_search extends MonitorType {
         }
     }
 
-    // public static function get_hours_to_consider_elasticsearch_record_old() {
-    //     $hours = PluginModuleMonitor::get_config_value('hourstoconsiderelasticsearchrecordold');
-    //     return $hours;
-    // }
+    /**
+     * The hours to elapse before a non-indexed record is considered old
+     *
+     * @return integer
+     */
+    public static function get_hours_to_consider_elasticsearch_record_old() {
+        $hours = PluginModuleMonitor::get_config_value('hourstoconsiderelasticsearchrecordold');
+        return $hours;
+    }
+
     /**
      * Take a min record ID which has status = 0 and time we noticed it was there.
      * Then upon each refresh of stat we check if that record is still there with status = 0.
@@ -85,7 +107,7 @@ class MonitorType_search extends MonitorType {
      * If it is not there anymore.
      * Such return structure is needed for displaying stuff in UI by means of monitor.tpl.
      *
-     * @return array [task, value, status] with 'task' saying if queue is old and 'value' as Yes/No.
+     * @return array<string,mixed>|false A task with an additional 'status' and 'hours' key.
      */
     public static function is_queue_older_than() {
         if ($search_class = does_search_plugin_have('monitor_is_queue_older_than')) {
@@ -95,41 +117,6 @@ class MonitorType_search extends MonitorType {
             return false;
         }
     }
-
-    /**
-     * Save given record ID and timestamp in plugin's config table for later checking if this record still remains in queue.
-     *
-     * @param int $lastminsearchid ID of the last
-     */
-    // public static function set_last_minsearchid($rec=null, $time=null) {
-    //     set_config_plugin('module', 'monitor', 'lastminsearchid', $rec);
-    //     set_config_plugin('module', 'monitor', 'lastminsearchidtime', $time);
-    // }
-
-    /**
-     * Get the last unprocessed search record id from config. We always look for the minimal one.
-     * If there is no such thing in config, then we get it from the current elasticsearch queue and pretend it's the last one.
-     * And in this case we save it in config and return it.
-     *
-     * @return array of record ID and timestamp when it was set.
-     */
-    // public static function get_last_unprocessed_search_record_id() {
-    //     $result = array(
-    //         'id' => get_config_plugin('module', 'monitor', 'lastminsearchid'),
-    //         'timestamp' => get_config_plugin('module', 'monitor', 'lastminsearchidtime')
-    //     );
-
-    //     if ( $result['id'] && $result['timestamp'] ) {
-    //         return $result;
-    //     }
-    //     else {
-    //         // pick it from the current elasticsearch queue and save it for the next use.
-    //         if ($curminsearchid = get_field('search_elasticsearch_7_queue', 'min(id)', 'status', '0')) {
-    //             self::set_last_minsearchid($curminsearchid, time());
-    //         }
-    //         return false;
-    //     }
-    // }
 
     /**
      * Prepare the data for displaying in UI by means of monitor.tpl.

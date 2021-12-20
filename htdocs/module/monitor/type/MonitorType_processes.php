@@ -64,7 +64,7 @@ class MonitorType_processes extends MonitorType {
      * to be displayed on the screen.
      *
      * @param array $processes - result from get_long_running_cron_processes().
-     * @param int $limi - for pagination
+     * @param int $limit - for pagination
      * @param int $offset - for pgination
      * @return array $data
      */

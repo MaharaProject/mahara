@@ -66,6 +66,10 @@ $string['queuehasolditems'] = array(
     'Unprocessed items in the Elasticsearch queue older than %s hours'
 );
 $string['unprocessedqueuesize'] = 'Total number of unprocessed records';
+$string['unprocessedqueuerate'] = 'Unprocessed records as percentage of cron limit';
+$string['unprocessedqueueratecli'] = 'INFO: Unprocessed records as percentage of cron limit: %s%%';
+$string['unprocessedqueueratecliwarn'] = 'WARN: Unprocessed records as percentage of cron limit: %s%%. Queue having trouble clearing, try increasing the cron record limit.';
+$string['wrongsearchtype'] = 'Wrong search type to monitor "%s" - this CLI is to be used in conjuction with "%s"';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['clistatuscritical'] = 'CRITICAL';
