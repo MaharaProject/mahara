@@ -2283,6 +2283,7 @@ function addbook_validate(Pieform $form, $values) {
 }
 
 function compositeform_submit(Pieform $form, $values) {
+    $result = array();
     try {
         $result = call_static_method(generate_artefact_class_name($values['compositetype']),
             'process_compositeform', $form, $values);

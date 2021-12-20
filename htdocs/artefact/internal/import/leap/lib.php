@@ -287,6 +287,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * @param array            $otherentries
      */
     protected static function get_entry_data_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
+        $title = '';
         switch ($strategy) {
             case self::STRATEGY_IMPORT_AS_PROFILE_FIELD:
                 // Based on the mahara:type, we might be able to import it as

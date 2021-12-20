@@ -576,7 +576,9 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
             $type = 'website';
         }
         $classname = generate_artefact_class_name($field);
-        $profile = new $classname(0, array('owner' => $userid), $new);
+        $data = new stdClass();
+        $data->owner = $userid;
+        $profile = new $classname(0, $data, $new);
         $profile->set('title',       $value['socialprofile_profileurl']);
         $profile->set('description', $desc);
         $profile->set('note',        $type);
@@ -591,7 +593,9 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
     }
     else {
         $classname = generate_artefact_class_name($field);
-        $profile = new $classname(0, array('owner' => $userid), $new);
+        $data = new stdClass();
+        $data->owner = $userid;
+        $profile = new $classname(0, $data, $new);
         $profile->set('title', $value);
         $profile->commit();
     }

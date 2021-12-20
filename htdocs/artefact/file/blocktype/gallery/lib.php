@@ -75,6 +75,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
         $viewid = $instance->get('view');
         $style = isset($configdata['style']) ? intval($configdata['style']) : 2;
 
+        $artefactids = array();
         if ($style !== 1) {
             // If not the slideshow then render in normal way
             return self::render_instance($instance, $editing, $versioning);

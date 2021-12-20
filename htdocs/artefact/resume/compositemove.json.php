@@ -31,6 +31,7 @@ $ids = get_column_sql('
     WHERE a.id = r.artefact AND a.artefacttype = ? AND a.owner = ?
     ORDER BY r.displayorder', array($a->get('artefacttype'), $a->get('owner')));
 
+$oldorder = 0;
 foreach ($ids as $k => $v) {
     if ($v == $id) {
         $oldorder = $k;

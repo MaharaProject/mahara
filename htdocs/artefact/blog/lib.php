@@ -640,6 +640,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $viewid = $view->get('id');
         $groupid = $view->get('group');
         $institution = $view->get('institution');
+        $user = new stdClass();
         if ($groupid || $institution) {
             $SESSION->add_msg_once(get_string('copiedblogpoststonewjournal', 'collection'), 'ok', true, 'messages');
         }
@@ -961,6 +962,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public static function get_post_data($postid) {
         $post = new stdClass();
+        $rownum = 0;
 
         $post->blogid = get_field('artefact', 'parent', 'id', $postid, 'artefacttype', 'blogpost');
 
@@ -1346,6 +1348,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $blog->commit();
 
         $blogids[$viewid] = $blog->get('id');
+        $user = new stdClass();
         if (!empty($data->group) || !empty($data->institution)) {
             $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
         }

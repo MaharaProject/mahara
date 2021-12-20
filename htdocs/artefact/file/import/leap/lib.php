@@ -304,6 +304,7 @@ class LeapImportFile extends LeapImportArtefactPlugin {
         // UTF8 characters
         $pathname = false;
         $description = '';
+        $filetype = '';
         if (isset($entry->content['src'])) {
             $pathname = urldecode((string)$entry->content['src']);
             $filetype = (string)$entry->content['type'];

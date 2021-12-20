@@ -28,6 +28,7 @@ if (!PluginArtefactBlog::is_active()) {
  * be set to the blogpost's artefact id.
  */
 $blogpost = param_integer('blogpost', param_integer('id', 0));
+$blogpostobj = null;
 if (!$blogpost) {
 /*
  *  For a new post, a tag can be set from tagged blogpost block

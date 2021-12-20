@@ -109,6 +109,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
 
+        $blog = null;
         if (!empty($configdata['artefactid'])) {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
         }

@@ -80,6 +80,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         $blockid = ($instance->get('id'));
 
         $result = '';
+        $commentcount = 0;
         $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
         if ($artefactid) {
             $artefact = $instance->get_artefact_instance($configdata['artefactid']);

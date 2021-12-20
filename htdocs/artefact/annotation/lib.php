@@ -946,6 +946,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
     }
 
     public static function last_public_annotation_feedback($annotation, $onview=null, $onartefact=null) {
+        $where = '';
+        $values = array();
         if (!empty($onartefact)) {
             $where = 'an.artefact = ?';
             $values = array($onartefact);
@@ -1544,6 +1546,10 @@ function make_annotation_feedback_public_submit(Pieform $form, $values) {
     }
 
     $subject = 'makepublicrequestsubject';
+    $message = '';
+    $arg = '';
+    $userid = null;
+    $sessionmessage = '';
     if ($requester == $owner) {
         $annotationfeedback->set('requestpublic', 'owner');
         $message = 'makepublicrequestbyownermessage';
@@ -1621,6 +1627,7 @@ function delete_annotation_feedback_submit(Pieform $form, $values) {
     $view = new View($values['viewid']);
     $annotationid = $annotationfeedback->get('onannotation');
     $annotation = new ArtefactTypeAnnotation((int) $annotationid);
+    $deletedby = '';
 
     if ($USER->get('id') == $annotationfeedback->get('author')) {
         $deletedby = 'author';
@@ -1800,6 +1807,7 @@ function add_annotation_feedback_form_submit(Pieform $form, $values) {
     $viewid = $values['viewid'];
     $blockid = $values['blockid'];
 
+    $view = null;
     if ($artefactid) {
         $artefact = artefact_instance_from_id($artefactid);
         $data->artefact    = $artefactid;

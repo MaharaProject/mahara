@@ -31,8 +31,9 @@ if ($blogpost = param_integer('blogpost', null)) {
     $offset = $post->offset;
 }
 
-$institutionname = $groupid = null;
+$institutionname = $groupid = $group = null;
 $title = get_string('viewblog','artefact.blog');
+$s = array();
 if ($institution = param_alphanum('institution', null)) {
     if ($institution == 'mahara') {
         $institutionname = $institution;
@@ -88,6 +89,7 @@ if ($delete = param_integer('delete', null)) {
     ArtefactTypeBlogPost::delete_form($delete);
 }
 
+$blog = null;
 if (is_null($id)) {
     if ($institutionname) {
         $records = get_records_select_array('artefact', "artefacttype = 'blog' AND \"institution\" = ?", array($institutionname), 'id ASC');
