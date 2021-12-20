@@ -83,6 +83,7 @@ $string['faxnumber'] = 'Fax number';
 $string['feedbacknotify'] = 'Comment notifications allowed: ';
 $string['feedbacknotifyexplicit'] = 'Comment notifications';
 $string['filedescription'] = 'The description of file - eg Certificate for the 101 course, 2021';
+$string['fileid'] = 'ID of the newly created file artefact';
 $string['filetags'] = 'An array of optional tags - eg [2021,101,certificate]';
 $string['filetitle'] = 'The title for the file e.g. Certificate 101';
 $string['filetoupload'] = 'The name of the file';

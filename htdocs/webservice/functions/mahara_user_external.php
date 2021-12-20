@@ -1463,9 +1463,7 @@ class mahara_user_external extends external_api {
         }
 
         return array(
-            'userid' => $recipient_id,
-            'username' => $u->get('username'),
-            'filetoupload' => $filetoupload,
+            'fileid' => $result_artefact_id,
             'status' => $result_artefact_id ? get_string('fileuploadsuccess', WEBSERVICE_LANG) : get_string('fileuploadfail', WEBSERVICE_LANG)
         );
     }
@@ -1478,9 +1476,7 @@ class mahara_user_external extends external_api {
     public static function upload_file_returns() {
         return new external_single_structure(
         array(
-                'userid'       => new external_value(PARAM_INT, get_string('userid', WEBSERVICE_LANG)),
-                'username'     => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG)),
-                'filetoupload' => new external_value(PARAM_TEXT, get_string('filetoupload', WEBSERVICE_LANG)),
+                'fileid' => new external_value(PARAM_TEXT, get_string('fileid', WEBSERVICE_LANG)),
                 'status'       => new external_value(PARAM_TEXT, get_string('fileuploadstatus', WEBSERVICE_LANG)),
             )
         );
