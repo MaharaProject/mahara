@@ -617,6 +617,16 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021121600) {
+        $table = new XMLDBTable('external_tokens');
+        $field = new XMLDBField('authinstance');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+        if (!field_exists($table, $field)) {
+            log_debug('Add authinstance column into external_tokens for saving file_upload details');
+            add_field($table, $field);
+        }
+    }
+
     // sweep for webservice updates everytime
     $status = external_reload_webservices();
 
