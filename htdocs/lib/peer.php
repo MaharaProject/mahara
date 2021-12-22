@@ -21,16 +21,27 @@ class Peer {
     private $application;
     private $oldwwwroot;
     private $members = array(/* host table */
-                             'wwwroot' => '',
-                             'name' => '',
-                             'institution' => '',
-                             'ipaddress' => '',
-                             'publickey' => '',
-                             'publickeyexpires' => 0,
-                             'deleted' => 0,
-                             'lastconnecttime' => 0,
-                             'appname' => ''
-                             );
+                            'appname'         => '',
+                            'institution'     => '',
+                            'ipaddress'       => '',
+                            'name'            => '',
+                            'publickey'       => '',
+                            'wwwroot'         => '',
+                            'deleted'         => 0,
+                            'lastconnecttime' => 0,
+                            'publickeyexpires'=> 0,
+                        );
+
+    protected $appname;
+    protected $institution;
+    protected $ipaddress;
+    protected $name;
+    protected $publickey;
+    protected $wwwroot;
+    protected $deleted;
+    protected $lastconnecttime;
+    protected $publickeyexpires;
+    protected $certificate;
 
     public function __construct($result = null) {
 
@@ -43,10 +54,57 @@ class Peer {
         $this->initialized = self::PERSISTENT;
     }
 
+    public function get($field) {
+        if (!property_exists($this, $field)) {
+            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        if ($field == 'certificate') {
+            return $this->members['publickey']->certificate;
+        }
+        else if ($field == 'application') {
+            return $this->application;
+        }
+        else if ($field == 'publickeyexpires') {
+            $pubkeyexp = $this->get('publickey');
+            if (isset($this->publickey->expires)) {
+                return $this->publickey->expires;
+            }
+        }
+        return $this->members[$field];
+    }
+
+    public function __get($name) {
+        return $this->get($name);
+    }
+
+    public function set($field, $value) {
+        if (property_exists($this, $field)) {
+            $this->{$field} = $value;
+            if ($field == 'certificate') {
+                $this->members['publickey']->certificate = $value;
+            }
+            else if ($field == 'publickey') {
+                if (!is_object($this->publickey)) {
+                    $this->publickey = new stdClass();
+                }
+                $this->publickey->certificate = $value;
+            }
+            else if ($field == 'publickeyexpires') {
+                $this->publickey->expires = $value;
+            }
+
+            if (isset($this->members[$field])) {
+                $this->__set($field, $value);
+            }
+            return true;
+        }
+        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
+
     protected function populate($result) {
         $values = get_object_vars($result);
         foreach ($values as $key => $value) {
-            $this->__set($key, $value);
+            $this->set($key, $value);
         }
         $this->oldwwwroot = $result->wwwroot;
     }
@@ -60,7 +118,7 @@ class Peer {
             if ($name == 'appname') {
                 $this->application = Application::findByName($value);
             } elseif ($name == 'wwwroot') {
-                if (!empty($this->appname) && is_object($this->application) && !empty($this->application->xmlrpcserverurl)) {
+                if (!empty($this->get('appname')) && is_object($this->application) && !empty($this->application->xmlrpcserverurl)) {
 
                 }
             } elseif ($name == 'appname') {
@@ -70,13 +128,13 @@ class Peer {
             $this->changed = true;
         }
 
-        if (!empty($this->wwwroot) &&
-            !empty($this->name) &&
-            !empty($this->institution) &&
-            !empty($this->ipaddress) &&
-            !empty($this->appname) &&
-            !empty($this->publickey) &&
-            !empty($this->publickeyexpires)) {
+        if (!empty($this->get('wwwroot')) &&
+            !empty($this->get('name')) &&
+            !empty($this->get('institution')) &&
+            !empty($this->get('ipaddress')) &&
+            !empty($this->get('appname')) &&
+            !empty($this->get('publickey')) &&
+            !empty($this->get('publickeyexpires'))) {
 
             $this->initialized = self::INITIALIZED;
         }
@@ -97,35 +155,24 @@ class Peer {
         return false;
     }
 
-    public function __get($name) {
-        if ($name == 'certificate') {
-            return $this->members['publickey']->certificate;
-        } elseif ($name == 'application') {
-            return $this->application;
-        } elseif ($name == 'publickeyexpires') {
-            return $this->publickey->expires;
-        }
-        return $this->members[$name];
-    }
-
     public function delete() {
-        $this->deleted = 1;
-        $this->changed = true;
+        $this->set('deleted', 1);
+        $this->set('changed', true);
     }
 
     public function commit() {
         if ($this->initialized == self::UNINITIALIZED) return false;
         if (false == $this->changed) return true;
         $host = new stdClass();
-        $host->wwwroot          = $this->wwwroot;
-        $host->deleted          = $this->deleted;
-        $host->ipaddress        = $this->ipaddress;
-        $host->name             = $this->name;
-        $host->publickey        = $this->certificate;
-        $host->publickeyexpires = $this->publickeyexpires;
-        $host->lastconnecttime  = $this->lastconnecttime;
-        $host->appname          = $this->appname;
-        $host->institution      = $this->institution;
+        $host->wwwroot          = $this->get('wwwroot');
+        $host->deleted          = $this->get('deleted');
+        $host->ipaddress        = $this->get('ipaddress');
+        $host->name             = $this->get('name');
+        $host->publickey        = $this->get('certificate');
+        $host->publickeyexpires = $this->get('publickeyexpires');
+        $host->lastconnecttime  = $this->get('lastconnecttime');
+        $host->appname          = $this->get('appname');
+        $host->institution      = $this->get('institution');
 
         if ($this->initialized == self::INITIALIZED) {
             $this->initialized = self::PERSISTENT;
@@ -158,12 +205,12 @@ class Peer {
             }
 
             // Default the name to the wwwroot
-            $this->name = $wwwroot;
+            $this->set('name', $wwwroot);
 
             // Get a page from the remote host, and check its title.
             $homepage = file_get_contents($wwwroot);
             if (!empty($homepage) && $count = preg_match("@<title>(.*)</title>@siU", $homepage, $matches)) {
-                $this->name = $matches[1];
+                $this->set('name', $matches[1]);
             }
 
             $exists = get_record('application', 'name', $appname);
@@ -172,16 +219,16 @@ class Peer {
                 throw new ParamOutOfRangeException('Application '.addslashes($appname) .' does not exist.');
             }
 
-            $this->appname             = $appname;
-            $this->application         = Application::findByName($this->appname);
-            $this->wwwroot             = $wwwroot;
-            $this->ipaddress           = $ipaddress;
+            $this->set('appname', $appname);
+            $this->set('application', Application::findByName($this->get('appname')));
+            $this->set('wwwroot', $wwwroot);
+            $this->set('ipaddress', $ipaddress);
 
             require_once(get_config('libroot') .'institution.php');
 
             if (null == $institution) {
                 $institution = new Institution;
-                $institution->name = preg_replace('/[^a-zA-Z]/', '', $this->name);
+                $institution->name = preg_replace('/[^a-zA-Z]/', '', $this->get('name'));
 
                 // Check that the institution name has not already been taken.
                 // If it has, we change it until we find a name that works
@@ -203,23 +250,24 @@ class Peer {
                     }
                 }
 
-                $institution->displayname = $this->name;
+                $institution->displayname = $this->get('name');
                 $institution->commit();
-                $this->institution = $institution->name;
+                $this->set('institution', $institution->name);
             } else {
-                $this->institution = $institution;
+                $this->set('institution', $institution);
             }
 
             if (empty($pubkey)) {
                 try {
-                    $somekey = get_public_key($this->wwwroot, $this->appname);
-                    $this->publickey       = new PublicKey($somekey, $this->wwwroot);
+                    $somekey = get_public_key($this->get('wwwroot'), $this->get('appname'));
+                    $publickey = new PublicKey($somekey, $this->get('wwwroot'));
+                    $this->set('publickey', $publickey);
                 } catch (XmlrpcClientException $e) {
                     $errcode = $e->getCode();
                     if ($errcode == 404) {
                         throw new RemoteServerException('404: Incorrect WWWRoot or Application: file not found.');
                     } elseif($errcode == 704) {
-                        throw new RemoteServerException('Networking is disabled on the host at '.$this->wwwroot.'.');
+                        throw new RemoteServerException('Networking is disabled on the host at ' . $this->get('wwwroot') . '.');
                     }
                     else {
                         throw new RemoteServerException('Error retrieving public key, failed with error code ' . $errcode . ': ' . $e->getMessage());
@@ -228,14 +276,16 @@ class Peer {
                     throw new RemoteServerException('Error retrieving public key: ' . $e->getMessage());
                 }
             } else {
-                $this->publickey       = new PublicKey($pubkey, $this->wwwroot);
+                $publickey = new PublicKey($pubkey, $this->get('wwwroot'));
+                $this->set('publickey', $publickey);
             }
 
-            $this->lastconnecttime     = 0;
+            $this->set('lastconnecttime', 0);
             $this->initialized         = self::INITIALIZED;
             $this->changed             = true;
-            if (false == $this->publickey->expires) {
-                $this->publickey == null;
+            $pubkeyexp = $this->get('publickey');
+            if (false == $pubkeyexp->expires) {
+                $this->set('publickey', null);
                 return false;
             }
 

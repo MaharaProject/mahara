@@ -802,6 +802,7 @@ class Pieform {/*{{{*/
             $hidden_elements .= pieform_element_hidden($this, $element);
 
             ob_start();
+            $old_level = null;
 
             if ($this->get_property('ignoretemplatenotices')) {
                 $old_level = error_reporting(E_ALL & ~E_NOTICE);
@@ -1351,7 +1352,7 @@ EOF;
             throw new PieformException("The type \"$type\" is not allowed for an include plugin");
         }
 
-        if (!isset($name) || !preg_match('/^[a-z_][a-z0-9_]*$/', $name)) {
+        if (!$name || !preg_match('/^[a-z_][a-z0-9_]*$/', $name)) {
             throw new PieformException("The name \"$name\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
@@ -1392,11 +1393,11 @@ EOF;
             throw new PieformException("Invalid plugin name '$plugin'");
         }
 
-        if (!isset($pluginname) || !preg_match('/^[a-z_][a-z0-9_]*$/', $pluginname)) {
+        if (!$pluginname || !preg_match('/^[a-z_][a-z0-9_]*$/', $pluginname)) {
             throw new PieformException("The pluginname \"$pluginname\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
-        if (!isset($key) || !preg_match('/^[a-z_][a-z0-9_]*$/', $key)) {
+        if (!$key || !preg_match('/^[a-z_][a-z0-9_]*$/', $key)) {
             throw new PieformException("The key \"$key\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
@@ -1929,6 +1930,7 @@ function pieform_render_element(Pieform $form, $element) {/*{{{*/
  */
 function pieform_get_headdata() {/*{{{*/
     $htmlelements = array();
+    $form = null;
     foreach ($GLOBALS['_PIEFORM_REGISTRY'] as $form) {
         foreach ($form->get_elements() as $element) {
             $function = 'pieform_element_' . $element['type'] . '_get_headdata';

@@ -454,6 +454,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         return $langfile;
     }
 
+    $location = '';
     if ($plugintype == 'blocktype') { // these are a bit of a special case
         $bits = explode('/', $pluginname);
         if (count($bits) == 2) {
@@ -490,7 +491,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
 
     // if it's not found, try the parent language if there is one...
-    if (empty($data) && empty($trieden)) {
+    if (empty($trieden)) {
         $langfile = get_language_root($lang) . 'lang/' . $lang . '/langconfig.php';
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
             if ($parentlang == 'en.utf8') {
@@ -505,7 +506,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
 
     // if it's STILL not found, and we haven't already tried english ...
-    if (empty($data) && empty($trieden)) {
+    if (empty($trieden)) {
         $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $subdir . $file;
         $langfile = Path::getAbsolute($langfile);
         if (is_valid_help_page($langfile)) {
@@ -1558,6 +1559,7 @@ function get_user_institution_language($userid = null, &$sourceinst = null) {
         $userid = $USER->id;
     }
     $instlangs = get_configs_user_institutions('lang', $userid);
+    $instlang = 'default';
     // Every user belongs to at least one institution
     foreach ($instlangs as $name => $lang) {
         $sourceinst = $name;
@@ -1567,9 +1569,6 @@ function get_user_institution_language($userid = null, &$sourceinst = null) {
         if (!empty($instlang) && $instlang != 'default' && language_installed($instlang)) {
             break;
         }
-    }
-    if (!$instlang) {
-        $instlang = 'default';
     }
     return $instlang;
 }
@@ -1710,6 +1709,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         throw new SystemException ("File $fullpath was outside document root!");
     }
 
+    $isloaded = false;
     if ($function == 'require') { $isloaded = require($realpath); }
     if ($function == 'include') { $isloaded = include($realpath); }
     if ($function == 'require_once') { $isloaded = require_once($realpath); }
@@ -2163,6 +2163,7 @@ function handle_event($event, $data, $ignorefields = array()) {
         // we need to add a 'sharedcommenttogroup' event
         if (is_event_comment_shared_with_group($reftype, $logdata)) {
             $wheresql = '';
+            $commenttypeid = -1;
             if (!empty($logdata['onartefact'])) {
                 $commenttype = 'artefact';
                 $commenttypeid = $logdata['onartefact'];
@@ -4090,6 +4091,7 @@ function profile_sideblock() {
         $sort = $sortorder;
     }
     $grouplabels = (array)json_decode($USER->get_account_preference('groupsideblocklabels'));
+    $total = -1;
     if ($limitto === null) {
         $data['groups'] = group_get_user_groups($USER->get('id'), null, $sort, null, 0, true, $grouplabels);
         $total = count($data['groups']);
@@ -5015,6 +5017,7 @@ function portfolio_auto_copy() {
             $error = false;
             try {
                 $user->find_by_id($entry->usr);
+                $copied = array();
                 if ($user->get('deleted')) {
                     throw new UserNotFoundException();
                 }
@@ -5704,7 +5707,7 @@ function libxml_before($state = true) {
 function libxml_after() {
     if (function_exists('libxml_disable_entity_loader')) {
 
-        if (defined('MAHARA_LIBXML_ENTITY_LOADER_BEFORE')) {
+        if (defined('MAHARA_LIBXML_ENTITY_LOADER_BEFORE') && defined('MAHARA_LIBXML_USE_INTERNAL_ERRORS_BEFORE')) {
             $xmlerrors = MAHARA_LIBXML_USE_INTERNAL_ERRORS_BEFORE;
             $xmlstate = MAHARA_LIBXML_ENTITY_LOADER_BEFORE;
         }

@@ -29,6 +29,7 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
     }
     global $USER;
     $licenses = get_records_assoc('artefact_license', null, null, 'displayname');
+    $options = array();
     if ($licenses) {
         foreach ($licenses as $l) {
             $options[$l->name] = $l->displayname;
@@ -58,7 +59,7 @@ function license_form_el_basic($artefact, $always_allow_none=false) {
         $options[''] = get_string('licensenone1');
     }
 
-    if (empty($artefact)) {
+    if (!$artefact) {
         // Find the correct default license.
         $license = $USER->get_account_preference('licensedefault');
         // If the user is set to "institution default"

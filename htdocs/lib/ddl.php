@@ -449,6 +449,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
     $isfk = ($key->getType() == XMLDB_KEY_FOREIGN || $key->getType() == XMLDB_KEY_FOREIGN_UNIQUE);
 
     $fields = $key->getFields();
+    $reftable = $reffields = null;
     if ($isfk) {
         $reffields = $key->getRefFields();
         $reftable = get_config('dbprefix') . $key->getRefTable();

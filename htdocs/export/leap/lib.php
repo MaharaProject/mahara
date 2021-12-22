@@ -866,7 +866,7 @@ class LeapExportElement {
             // LeapExportElement and are using it to represent something more
             // than just one artefact. In this case, you must override this
             // method.
-            throw new ExportException($this, "LeapExportElement::assign_smarty_vars was called with null artefact. "
+            throw new ExportException("LeapExportElement::assign_smarty_vars was called with null artefact. "
                 . "If you are using LeapExportElement as a dummy class for exporting more than one artefact, "
                 . "you must override assign_smarty_vars yourself.");
         }

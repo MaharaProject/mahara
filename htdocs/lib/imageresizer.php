@@ -242,10 +242,10 @@ class ImageResizer {
             $channels = 4;
         }
 
+        $MB = 1048576;  // number of bytes in 1M
+        $K64 = 65536;   // number of bytes in 64K
+        $TWEAKFACTOR = 1.8;
         if (isset($imageinfo[0]) && isset($imageinfo[1]) && !empty($bits)) {
-            $MB = 1048576;  // number of bytes in 1M
-            $K64 = 65536;   // number of bytes in 64K
-            $TWEAKFACTOR = 1.8;
             $memoryneeded = round(( $imageinfo[0] * $imageinfo[1]
                                                   * $bits
                                                   * $channels / 8

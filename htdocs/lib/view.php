@@ -257,7 +257,7 @@ class View {
                 array($id['urlid'], $id['ownerurlid']),
                 ERROR_MULTIPLE
             );
-            if (empty($tempdata)) {
+            if (!$tempdata) {
                 throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['ownerurlid']));
             }
         }
@@ -268,7 +268,7 @@ class View {
                 WHERE v.urlid = ? AND g.urlid = ? AND g.deleted = 0',
                 array($id['urlid'], $id['groupurlid'])
             );
-            if (empty($tempdata)) {
+            if (!$tempdata) {
                 throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['groupurlid']));
             }
         }
@@ -279,7 +279,7 @@ class View {
                 WHERE v.id = ? AND (v.group IS NULL OR g.deleted = 0)',
                 array($id)
             );
-            if (empty($tempdata)) {
+            if (!$tempdata) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
         }
@@ -335,13 +335,13 @@ class View {
                 if ($this->columnsperrow === false || ($this->numrows > 0 && count($this->columnsperrow) != $this->numrows)) {
                     // if we are missing the info for some reason we will give the page it's layout back
                     // this can happen in MySQL when many users are copying the same page
+                    $default = array();
                     if ($this->layout) {
                         if ($rowscols = get_records_sql_array("
                             SELECT vlrc.row, vlc.columns
                             FROM {view_layout_rows_columns} vlrc
                             JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
                             WHERE viewlayout = ?", array($this->layout))) {
-                                $default = array();
                                 foreach ($rowscols as $row) {
                                     if ($this->get('id')) {
                                         $vrc = (object) array(
@@ -1097,11 +1097,12 @@ class View {
     public function process_access_records($data=array(), $timeformat=null) {
         $rolegroups = array();
         foreach ($data as &$item) {
-            if (isset($item->group) && $item->role && !isset($roledata[$item->group])) {
+            if (isset($item->group) && $item->role) {
                 $rolegroups[$item->group] = 1;
             }
         }
 
+        $grouptypes = array();
         if ($rolegroups) {
             $grouptypes = get_records_sql_assoc('
                 SELECT id, grouptype
@@ -2048,6 +2049,7 @@ class View {
         }
 
         $message = '';
+        $returndata = '';
         $success = false;
         try {
             $values['returndata'] = defined('JSON');
@@ -2496,7 +2498,7 @@ class View {
 
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
-            throw new UserException(get_string('cannotputblocktypeintoview', error, $values['blocktype']));
+            throw new UserException(get_string('cannotputblocktypeintoview', 'error', $values['blocktype']));
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
@@ -2617,7 +2619,7 @@ class View {
 
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
-            throw new UserException(get_string('cannotputblocktypeintoview', error, $values['blocktype']));
+            throw new UserException(get_string('cannotputblocktypeintoview', 'error', $values['blocktype']));
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
@@ -3753,6 +3755,7 @@ class View {
         // To also check tags
         $typecast = is_postgres() ? '::varchar' : '';
         $from .= " LEFT JOIN {tag} t ON t.resourcetype = 'artefact' AND a.id" . $typecast . " = t.resourceid ";
+        $ph = array();
 
         if ($group) {
             // Get group-owned artefacts that the user has view
@@ -4266,6 +4269,8 @@ class View {
                 $data['removable'] = self::can_remove_viewtype($data['type']);
                 if (!empty($data['submittedstatus'])) {
                     $status = $data['submittedstatus'];
+                    $name = '';
+                    $url = '';
                     if (!empty($data['submitgroupid'])) {
                         if ($haslti && $data['ltiassessment']) {
                             $url = '#';
@@ -4282,10 +4287,10 @@ class View {
 
                     $time = (!empty($data['submittedtime'])) ? format_date(strtotime($data['submittedtime'])) : null;
 
-                    if (!empty($status) && !empty($time)) {
+                    if ($status && !empty($time)) {
                         $data['submittedto'] = get_string('viewsubmittedtogroupon1', 'view', $url, $name, $time);
                     }
-                    else if (!empty($status)) {
+                    else if ($status) {
                         $data['submittedto'] = get_string('viewsubmittedtogroup1', 'view', $url, $name);
                     }
                     if ($status == self::PENDING_RELEASE) {
@@ -6093,6 +6098,8 @@ class View {
                 }
 
                 $views = $collection->views();
+                $firstview_id = $views['views'][0]->view;
+                $firstview = new View($firstview_id);
                 if (!empty($views)) {
                     $c['url'] = $collection->get_url(false);
                     $c['fullurl'] = $needsubdomain ? $collection->get_url(true, false, $firstview) : ($wwwroot . $c['url']);
@@ -6219,6 +6226,7 @@ class View {
             // translate layout
             $oldlayoutcontent = get_blocks_in_old_layout($template->get('id'));
             $newlayoutcontent = translate_to_new_layout($oldlayoutcontent, $newdescriptionblock);
+            $dimensions = array();
             foreach ($newlayoutcontent as $block) {
                 $dimensions[$block['block']] = $block;
             }
@@ -6442,7 +6450,7 @@ class View {
         $search->pagination = build_pagination(array(
             'id' => 'templatesearch_pagination',
             'class' => 'center',
-            'url' => get_config('wwwroot') . 'view/choosetemplate.php' . (!empty($params) ? ('?' . http_build_query($params)) : ''),
+            'url' => get_config('wwwroot') . 'view/choosetemplate.php' . (!$params ? ('?' . http_build_query($params)) : ''),
             'count' => $results->count,
             'limit' => $search->limit,
             'offset' => $search->offset,
@@ -7285,6 +7293,7 @@ class View {
         $userid = ($owner == null) ? $USER->get('id') : $owner;
         $sql = 'UPDATE {view} SET submittedtime = current_timestamp, submittedstatus = ' . self::SUBMITTED;
         $params = array();
+        $groupid = -1;
 
         if ($group) {
             $groupid = (int) $group->id;
@@ -7947,7 +7956,7 @@ function createview_submit(Pieform $form, $values) {
     global $SESSION;
 
     $values['template'] = !empty($values['istemplate']) ? 1 : 0; // Named 'istemplate' in the form to prevent confusion with 'usetemplate'
-
+    $view = null;
     // Collection copy
     if (!empty($values['submitcollection'])) {
         require_once(get_config('libroot') . 'collection.php');
@@ -8209,6 +8218,7 @@ function filter_isolated_view_access($view, $viewaccess) {
 
     $removerules = 0;
     foreach ($viewaccess as $k => $access) {
+        $viewinstitutions = array();
         if ($access['accesstype'] == 'loggedin') {
             unset($viewaccess[$k]);
             $removerules++;

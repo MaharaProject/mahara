@@ -1238,6 +1238,7 @@ class Theme {
         );
 
         // Then check each theme
+        $themedir = '';
         foreach ($this->inheritance as $themedir) {
             $searchloc = array();
             // Check in the /theme directory
@@ -2274,7 +2275,7 @@ function in_admin_section() {
  * See the function find_menu_children() in lib/web.php
  * for a description of the expected array structure.
  *
- * @return $adminnav a data structure containing the admin navigation
+ * @return array $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
     $menu = array(
@@ -3037,6 +3038,7 @@ function main_nav($type = null) {
     $cachemenu = false;
     // Get the first institution
     $institution = $USER->get_primary_institution();
+    $menu = array();
     $menutype = '';
     if ($type == 'adminnav') {
         global $USER, $SESSION;
@@ -3358,6 +3360,10 @@ function apps_get_menu_tabs() {
  *   weight: Where in the menu the item should be inserted. Larger number are to the right.
  *
  * Used by main_nav()
+ *
+ * @param  array $menu (pass by reference)
+ * @param  string $path
+ * @return array
  */
 function find_menu_children(&$menu, $path) {
     global $SELECTEDSUBNAV;
@@ -4428,6 +4434,7 @@ function build_pagination($params) {
 
              // add ellipsis if pages skipped
             $text = $i + 1;
+            $prevpagenum = 0;
             if ($k != 0 && $prevpagenum < $i - 1) {
                 $text = '<span class="metadata d-none d-md-inline-block">...</span>' . ($i + 1);
             }
@@ -5054,7 +5061,7 @@ function can_use_skins($userid = null, $managesiteskin=false, $issiteview=false)
  * @return string    An <img> tag of the icon we want
  */
 function display_icon($type, $id = false, $title = "") {
-    global $THEME;
+    $image = '';
     switch ($type) {
         case 'on':
         case 'yes':

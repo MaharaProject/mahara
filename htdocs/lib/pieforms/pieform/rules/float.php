@@ -30,11 +30,11 @@
  * @param Pieform $form      The form the rule is being applied to
  * @param string  $value     The value to check
  * @param array   $element   The element to check
- * @return string            The error message, if there is something wrong with
- *                           the address.
+ * @return string            The error message, if there is something wrong with the value.
  */
 function pieform_rule_float(Pieform $form, $value, $element) {/*{{{*/
     if (!is_numeric($value) || floatval($value) != $value) {
         return $form->i18n('rule', 'float', 'float', $element);
     }
+    return '';
 }/*}}}*/

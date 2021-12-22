@@ -57,7 +57,8 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
         if (!record_exists('activity_queue', 'type', $delayed->type, 'data', $delayed->data)) {
-            if ($views = isset($data->views) && $delayed->type == 4 && isset($views[0]['collection_id'])) {
+            $views = isset($data->views) ? $data->views : array();
+            if ($delayed->type == 4 && isset($views[0]['collection_id'])) {
                 // try to ensure we don't end up with multiple notifications when sharing collections
                 $sql = 'SELECT * FROM {activity_queue} WHERE type = ? AND data like ';
                 $sql .= "'%" . '"collection_id"' . ";s:%" . '"' . $views[0]['collection_id'] . '"' . ";%'";
@@ -68,7 +69,6 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
             else {
                 insert_record('activity_queue', $delayed);
             }
-
         }
     }
     else {
@@ -706,7 +706,7 @@ function get_notification_settings_elements($user = null, $sitedefaults = false)
         }
 
         // Create one maildisabled error message if applicable.
-        if (!$sitedefaults && $dv == 'email' && !isset($maildisabledmsg) && get_account_preference($user->get('id'), 'maildisabled')) {
+        if (!$sitedefaults && $dv == 'email' && !$maildisabledmsg && get_account_preference($user->get('id'), 'maildisabled')) {
             $SESSION->add_error_msg(get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/index.php'), false);
             $maildisabledmsg = true;
         }
@@ -810,7 +810,7 @@ function save_notification_settings($values, $user = null, $sitedefaults = false
  * @return array $activitytypes amended array of elements
  */
 function get_special_notifications($user, $activitytypes) {
-    if (empty($user)) {
+    if ($user === null) {
         return $activitytypes;
     }
     // Check if the non-admin is a group admin/moderator in any of their groups

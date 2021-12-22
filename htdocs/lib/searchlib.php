@@ -295,6 +295,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
     }
 
     // Filter by duplicate emails
+    $duplicateemailartefacts = array();
     if (!empty($search->duplicateemail)) {
         $duplicateemailartefacts = get_column_sql('
             SELECT id
@@ -693,6 +694,7 @@ function build_admin_export_queue_results($search, $offset, $limit) {
                 }
             }
             // To get the status we check if the starttime is set
+            $status = $statustype = '';
             if (empty($firstitem->starttime)) {
                 $status = get_string('exportpending', 'admin', format_date($firstitem->added));
                 $statustype = 'pending';
