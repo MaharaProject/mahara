@@ -91,6 +91,7 @@ if (!isset($view)) {
 
 $is_admin = $USER->get('admin') || $USER->is_institutional_admin();
 $is_owner = $view->get('owner') == $USER->get('id');
+$is_group_admin = false;
 
 // check if this is a group page and the user is group admin
 if ($groupid = $view->get('group')) {
@@ -209,6 +210,7 @@ else if ($user_logged_in && $access_via_group) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_group_by_id($submittedgroup, true);
+    $ltigradeform = '';
 
     // Form for LTI grading
     if (is_plugin_active('lti', 'module')) {
@@ -225,7 +227,7 @@ else if ($user_logged_in && $access_via_group) {
     $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id && empty($ltigradeform);
 
     if ($releasecollection) {
-        if (isset($ltigradeform) && $ltigradeform && $ctime = $collection->get('submittedtime')) {
+        if ($ltigradeform && $ctime = $collection->get('submittedtime')) {
             preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
             $lticoursename = hsc($matches[1]);
             $ltiassignmentname = hsc($matches[2]);
@@ -241,7 +243,7 @@ else if ($user_logged_in && $access_via_group) {
             $text = get_string('collectionsubmittedtogroup', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
         }
     }
-    else if (isset($ltigradeform) && $ltigradeform && $view->get('submittedtime')) {
+    else if ($ltigradeform && $view->get('submittedtime')) {
         preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
         $lticoursename = hsc($matches[1]);
         $ltiassignmentname = hsc($matches[2]);
@@ -325,6 +327,7 @@ function release_form($text, $releasecollection) {
 
 function releaseview_submit(Pieform $form, $values) {
     global $USER, $SESSION, $view, $collection, $submittedgroup, $submittedhost, $releasecollection;
+    $submission = array();
 
     if (is_plugin_active('submissions', 'module')) {
         /** @var \Submissions\Models\Submission $submission */
@@ -409,6 +412,8 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
 }
 $objectionform = false;
 $revokeaccessform = false;
+$notrudeform = array();
+$stillrudeform = array();
 if ($USER->is_logged_in()) {
     if (record_exists('view_access', 'view', $view->get('id'), 'usr', $USER->get('id'))) {
         $revokeaccessform = pieform(revokemyaccess_form($view->get('id')));
@@ -478,6 +483,8 @@ if ($owner && $owner == $USER->get('id')) {
         $ltisubmissionform = PluginModuleLti::submit_from_view_or_collection_form($view);
     }
 }
+
+$ownerobj = null;
 if ($owner) {
     $ownerobj = new User();
     $ownerobj = $ownerobj->find_by_id($owner);
@@ -754,6 +761,7 @@ EOF;
 }
 
 // collection top navigation
+$shownav = 0;
 if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {

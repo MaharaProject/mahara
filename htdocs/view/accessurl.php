@@ -259,7 +259,7 @@ $form['elements']['more']['elements']['startdate'] = array(
     'type'         => 'calendar',
     'title'        => get_string('startdate','view'),
     'description'  => get_string('datetimeformatguide1', 'mahara', pieform_element_calendar_human_readable_datetimeformat()),
-    'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
+    'defaultvalue' => $view ? strtotime($view->get('startdate')) : null,
     'caloptions'   => array(
         'showsTime'      => true,
     ),
@@ -268,7 +268,7 @@ $form['elements']['more']['elements']['stopdate'] = array(
     'type'         => 'calendar',
     'title'        => get_string('stopdate','view'),
     'description'  => get_string('datetimeformatguide1', 'mahara', pieform_element_calendar_human_readable_datetimeformat()),
-    'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
+    'defaultvalue' => $view ? strtotime($view->get('stopdate')) : null,
     'caloptions'   => array(
         'showsTime'      => true,
     ),

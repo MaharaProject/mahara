@@ -30,7 +30,10 @@ if ($artefactid && !artefact_in_view($artefactid, $viewid)) {
 }
 
 $html = '';
+$title = '';
 $quickedit = 0;
+$artefact = null;
+$block = null;
 if ($blockid) {
     $block = new BlockInstance($blockid);
     if ((int)$block->get('view') !== $viewid) {
@@ -60,6 +63,7 @@ if ($quickedit) {
 }
 else {
     // Render the artefact
+    $rendered = array();
     $options = array(
         'viewid' => $viewid,
         'details' => true,

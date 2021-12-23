@@ -1149,7 +1149,7 @@ class PluginImportLeap extends PluginImport {
                     'layout'      => null,
                     'tags'        => self::get_entry_tags($entry),
                     'numrows'     => 1,
-                    'ownerformat' => FORMAT_NAME_DISPLAYNAME,
+                    'ownerformat' => View::FORMAT_NAME_DISPLAYNAME,
                     'owner'       => $this->get('usr'),
                 );
                 if (isset($entry->coverimage)) {
@@ -1317,7 +1317,7 @@ class PluginImportLeap extends PluginImport {
                     'layout'      => null,
                     'tags'        => self::get_entry_tags($entry),
                     'numrows'     => 1,
-                    'ownerformat' => FORMAT_NAME_DISPLAYNAME,
+                    'ownerformat' => View::FORMAT_NAME_DISPLAYNAME,
                     'owner'       => $this->get('usr'),
                 );
                 if ($published = strtotime((string)$entry->published)) {
@@ -1442,7 +1442,7 @@ class PluginImportLeap extends PluginImport {
         }
         $ownerformat = intval($maharaattributes['ownerformat']);
         if (!$ownerformat) {
-            $ownerformat = FORMAT_NAME_DISPLAYNAME;
+            $ownerformat = View::FORMAT_NAME_DISPLAYNAME;
         }
 
         if (!$gridlayout) {

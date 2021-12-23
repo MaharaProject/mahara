@@ -78,6 +78,14 @@ class View {
     const USER_TEMPLATE = 1;
     const SITE_TEMPLATE = 2;
 
+    // display format for author names in views
+    const FORMAT_NAME_FIRSTNAME = 1;
+    const FORMAT_NAME_LASTNAME = 2;
+    const FORMAT_NAME_FIRSTNAMELASTNAME = 3;
+    const FORMAT_NAME_PREFERREDNAME = 4;
+    const FORMAT_NAME_STUDENTID = 5;
+    const FORMAT_NAME_DISPLAYNAME = 6;
+
     /**
      * Which view layout is considered the "default" for views with the given
      * number of columns. Must be present in $layouts of course.
@@ -2319,7 +2327,7 @@ class View {
      * @param boolean $versioning Whether we are in the process of view version
      * Returns the HTML for the rows of this view
      */
-    public function build_rows($editing=false, $exporting=false, $versioning=false) {
+    public function build_rows($editing=false, $exporting=false, $versioning=false): string {
         $numrows = $this->get('numrows');
 
         $result = '';
@@ -2335,7 +2343,7 @@ class View {
     * A view uses the new layout if has data on the new layout tables
     * or if doesn't have any blocks
     */
-    public function uses_new_layout() {
+    public function uses_new_layout(): bool {
         $viewid = $this->get('id');
 
         $sql = "SELECT DISTINCT view FROM {block_instance} bi
@@ -3077,22 +3085,22 @@ class View {
             $user = get_user_for_display($user);
 
             switch ($this->ownerformat) {
-            case FORMAT_NAME_FIRSTNAME:
+            case View::FORMAT_NAME_FIRSTNAME:
                 $name = $user->firstname;
                 break;
-            case FORMAT_NAME_LASTNAME:
+            case View::FORMAT_NAME_LASTNAME:
                 $name = $user->lastname;
                 break;
-            case FORMAT_NAME_FIRSTNAMELASTNAME:
+            case View::FORMAT_NAME_FIRSTNAMELASTNAME:
                 $name = $user->firstname . ' ' . $user->lastname;
                 break;
-            case FORMAT_NAME_PREFERREDNAME:
+            case View::FORMAT_NAME_PREFERREDNAME:
                 $name = $user->preferredname;
                 break;
-            case FORMAT_NAME_STUDENTID:
+            case View::FORMAT_NAME_STUDENTID:
                 $name = $user->studentid;
                 break;
-            case FORMAT_NAME_DISPLAYNAME:
+            case View::FORMAT_NAME_DISPLAYNAME:
             default:
                 $name = display_name($user);
                 break;
@@ -3939,17 +3947,17 @@ class View {
     public static function owner_name($ownerformat, $user) {
 
         switch ($ownerformat) {
-            case FORMAT_NAME_FIRSTNAME:
+            case View::FORMAT_NAME_FIRSTNAME:
                 return $user->firstname;
-            case FORMAT_NAME_LASTNAME:
+            case View::FORMAT_NAME_LASTNAME:
                 return $user->lastname;
-            case FORMAT_NAME_FIRSTNAMELASTNAME:
+            case View::FORMAT_NAME_FIRSTNAMELASTNAME:
                 return $user->firstname . ' ' . $user->lastname;
-            case FORMAT_NAME_PREFERREDNAME:
+            case View::FORMAT_NAME_PREFERREDNAME:
                 return $user->preferredname;
-            case FORMAT_NAME_STUDENTID:
+            case View::FORMAT_NAME_STUDENTID:
                 return $user->studentid;
-            case FORMAT_NAME_DISPLAYNAME:
+            case View::FORMAT_NAME_DISPLAYNAME:
             default:
                 return display_name($user);
         }
@@ -8193,36 +8201,6 @@ function install_system_portfolio_view() {
     )));
     return $view->get('id');
 }
-
-/**
- * display format for author names in views - firstname
- */
-define('FORMAT_NAME_FIRSTNAME', 1);
-
-/**
- * display format for author names in views - lastname
- */
-define('FORMAT_NAME_LASTNAME', 2);
-
-/**
- * display format for author names in views - firstname lastname
- */
-define('FORMAT_NAME_FIRSTNAMELASTNAME', 3);
-
-/**
- * display format for author names in views - preferred name
- */
-define('FORMAT_NAME_PREFERREDNAME', 4);
-
-/**
- * display format for author names in views - student id
-*/
-define('FORMAT_NAME_STUDENTID', 5);
-
-/**
- * display format for author names in views - obeys display_name
- */
-define('FORMAT_NAME_DISPLAYNAME', 6);
 
 function filter_isolated_view_access($view, $viewaccess) {
     global $SESSION;

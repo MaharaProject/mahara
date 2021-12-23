@@ -287,7 +287,7 @@ function notrude_form_submit(Pieform $form, $values) {
  * Returns a form for user to review objectionable content,
  * if the user is allowed to do that.
  *
- * @returns array Form elements.
+ * @return array|bool Form elements.
  */
 function stillrude_form() {
     global $USER, $view, $pview, $artefact;

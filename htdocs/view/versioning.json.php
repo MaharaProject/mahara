@@ -35,6 +35,7 @@ if ($versions->count > 0) {
     $lastkey = key($versions->data);
     reset($versions->data);
     $language = current_language();
+    $months = array();
     if ($language != 'en.utf8') {
         $langmonths = explode(',', get_string('element.date.monthnames', 'pieforms'));
         $engmonths = explode(',', get_string_from_language('en.utf8', 'element.date.monthnames', 'pieforms'));

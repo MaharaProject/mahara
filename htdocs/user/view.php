@@ -105,7 +105,9 @@ else if ($restrictedview && is_isolated()) {
 }
 
 $blocksjs = '';
+$viewcontent = '';
 $layoutjs = array();
+$newlayout = false;
 if (!$restrictedview) {
     if ($newlayout = $view->uses_new_layout()) {
         $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
@@ -376,7 +378,7 @@ if ($grouprequestedlistform) {
     $smarty->assign('addform',$grouprequestedlistform);
 }
 if ($remoteusermessage) {
-    $smarty->assign('message', $record->message);
+    $smarty->assign('message', $record->message ?? '');
 }
 if ($remoteuseracceptform) {
     $smarty->assign('acceptform', acceptfriend_form($userid, 'modal'));
@@ -385,7 +387,7 @@ if ($remoteusernewfriendform) {
     $smarty->assign('newfriendform', addfriend_form($userid, 'pageactions'));
 }
 if ($remoteuserfriendscontrol) {
-    $smarty->assign('friendscontrol', $friendscontrol);
+    $smarty->assign('friendscontrol', $friendscontrol ?? '');
 }
 if ($remoteuserrelationship) {
     $smarty->assign('relationship', $relationship);

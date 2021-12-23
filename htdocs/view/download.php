@@ -34,7 +34,7 @@ safe_require('export', 'leap');
 $user = new User();
 $user->find_by_id($view->get('owner'));
 
-if (isset($collection)) {
+if ($collection) {
     //get all views in collection
     require_once(get_config('libroot') . 'collection.php');
     $colltemplate = new Collection($collection);
@@ -49,8 +49,8 @@ else {
 }
 
 $exporter = new PluginExportLeap($user, $views, $artefacts);
-
 $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
+$zipfile = '';
 
 try {
     $exporter->export();

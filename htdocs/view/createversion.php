@@ -68,7 +68,7 @@ if ($blocks) {
                             unset($artefacts[$key]);
                         }
                     }
-                    if (!empty($artefacts)) {
+                    if ($artefacts) {
                         $bi->configdata['existing_artefacts'] = $artefacts;
                     }
                 }
