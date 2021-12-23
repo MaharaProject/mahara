@@ -33,7 +33,7 @@ services:
       - mahara-net
 
   web:
-    image: mahara
+    image: mahara:${DOCKER_UBUNTU_VERSION}
     # container_name: ${COMPOSE_PROJECT_NAME}-mahara-web
     # Inject any MAHARA environment variables from the host into the container.
     # This values could come from:

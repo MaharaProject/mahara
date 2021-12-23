@@ -6,6 +6,11 @@ services:
     tty: true
     volumes:
       - ../htdocs:/mahara/htdocs
+      - ../external:/mahara/external
+      - ../test:/mahara/test
+      - mahara-data:/mahara/data
+    expose:
+      - "9000"
   db:
     container_name: ${COMPOSE_PROJECT_NAME}-mahara-db
     tty: true

@@ -468,10 +468,9 @@ function die_info($message) {
  * @param string $message The message reported
  * @param string $file    The file the error was detected in
  * @param string $line    The line number the error was detected on
- * @param array  $vars    The contents of $GLOBALS at the time the error was detected
  * @access private
  */
-function error ($code, $message, $file, $line, $vars) {
+function error ($code, $message, $file, $line) {
     static $error_lookup = array(
         E_NOTICE => 'Notice',
         E_WARNING => 'Warning',

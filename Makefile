@@ -5,12 +5,26 @@ BEHAT_TESTS = null
 # ask for test reports to be generated possible values are <empty>, 'html', 'junit'
 BEHAT_REPORT =
 # The Ubuntu version that the Mahara base image will be based on
-DOCKER_UBUNTU_VERSION = bionic
 TEST_ADMIN_PASSWD = Kupuh1pa!
 TEST_ADMIN_EMAIL  = user@example.org
+DOCKER_PHP_MAJOR_VERSION ?=7
+ifeq "$(strip $(DOCKER_PHP_MAJOR_VERSION))" "8.1"
+DOCKER_UBUNTU_VERSION := jammy
+COMPOSE_PROJECT_NAME := $(shell basename $$(pwd))-81
+else ifeq  "$(strip $(DOCKER_PHP_MAJOR_VERSION))" "8"
+DOCKER_UBUNTU_VERSION := impish
+COMPOSE_PROJECT_NAME := $(shell basename $$(pwd))-8
+else ifeq "$(strip $(DOCKER_PHP_MAJOR_VERSION))" "7.4"
+DOCKER_UBUNTU_VERSION := focal
+COMPOSE_PROJECT_NAME := $(shell basename $$(pwd))-74
+else
+DOCKER_UBUNTU_VERSION := bionic
+COMPOSE_PROJECT_NAME := $(shell basename $$(pwd))
+endif
 
+export DOCKER_UBUNTU_VERSION
 # Export these so they are available in the docker-compose calls later.
-export COMPOSE_PROJECT_NAME = $(shell basename $$(pwd))
+export COMPOSE_PROJECT_NAME
 export MAHARA_DB_HOST = ${COMPOSE_PROJECT_NAME}-mahara-db
 export MAHARA_REDIS_SERVER = ${COMPOSE_PROJECT_NAME}-mahara-redis
 export MAHARA_DOCKER_PORT = 6142
@@ -28,7 +42,8 @@ CCEND=$(shell echo "\033[0m")
 # Refer to: https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
 .PHONY: css clean-css help imageoptim installcomposer initcomposer cleanssphp ssphp \
 		cleanpdfexport pdfexport install phpunit behat minaccept jenkinsaccept securitycheck \
-		push security docker-image docker-builder
+		push security docker-image docker-images docker-builder reload hard-reload \
+		docker-bash docker-bash-root
 
 all: css
 
@@ -229,21 +244,24 @@ security: minaccept
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
 
 # Builds Mahara server docker image
+docker-images: docker-image
 docker-image:
-	$(info Preparing images)
-	docker build --pull --file docker/Dockerfile.mahara-base \
+	$(info Preparing images for $(DOCKER_UBUNTU_VERSION))
+	docker build --pull --file docker/Dockerfile.mahara-base-$(DOCKER_UBUNTU_VERSION) \
 	  --build-arg BASE_VERSION=$(DOCKER_UBUNTU_VERSION) \
+		--no-cache \
 		--tag mahara-base:$(DOCKER_UBUNTU_VERSION) .
-	docker build --file docker/Dockerfile.mahara-web \
+	docker build --file docker/Dockerfile.mahara-web-$(DOCKER_UBUNTU_VERSION) \
 	  --build-arg BASE_IMAGE=mahara-base:$(DOCKER_UBUNTU_VERSION) \
-	  --tag mahara .
+		--no-cache \
+	  --tag mahara:$(DOCKER_UBUNTU_VERSION) .
 
 # Builds a docker image that is able to build Mahara. Useful if you don't want
 # to install dependencies on your system.
 # The builder is made for the user that will use it. This is so that the built
 # files are owned by the user and not some other user (eg not root)
 docker-builder:
-	docker build --pull --file docker/Dockerfile.mahara-base \
+	docker build --pull --file docker/Dockerfile.mahara-base-$(DOCKER_UBUNTU_VERSION) \
 	  --build-arg BASE_VERSION=$(DOCKER_UBUNTU_VERSION) \
 		--tag mahara-base:$(DOCKER_UBUNTU_VERSION) .
 	docker build --file docker/Dockerfile.mahara-builder \
@@ -282,13 +300,20 @@ endif
 ifeq (,$(wildcard ./docker/.env))
 	cp ./docker/.env-dist ./docker/.env
 endif
+	$(info Docker php version: ${DOCKER_PHP_MAJOR_VERSION})
 	$(MAKE) shared-up
 	$(MAKE) dev-up
 	$(MAKE) css
 
+# Reload a single development instance.
+reload: down up
+
+# Dev reload - shut it down, rebuild images, bring it back up.
+hard-reload: down docker-images up
+
 # Take down a single development instance. See `make shared-down`.
 down:
-	$(info Shutting down site containers.)
+	$(info Shutting down site containers: $(COMPOSE_PROJECT_NAME):$(DOCKER_UBUNTU_VERSION))
 	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml down
 
 # Spins up the shared containers. Has a static project name so that only one
@@ -306,7 +331,14 @@ shared-down:
 	$(shell export COMPOSE_PROJECT_NAME=shared-mahara && docker-compose -f docker/docker-compose.shared.yaml down)
 
 docker-bash:
+	$(info Docker php version: ${DOCKER_PHP_MAJOR_VERSION})
+	$(info Connected as the Webserver user)
 	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --user=www-data web /bin/bash
+
+docker-bash-root:
+	$(info Docker php version: ${DOCKER_PHP_MAJOR_VERSION})
+	$(info Connected as the root user)
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run web /bin/bash
 
 # Brings up a new development instance, that assumes the presense of shared
 # mailhog and nginx containers.

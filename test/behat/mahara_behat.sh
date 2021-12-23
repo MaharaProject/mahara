@@ -5,15 +5,24 @@ ACTION=$1
 REPORT=$3
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
-BEHATROOT=`php htdocs/testing/frameworks/behat/cli/util.php --behat-root`
+BEHATROOT=`php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --behat-root`
+BEHATCONFIGFILE=`php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --config`
 SERVER=0
 SERVERXVFB=
 test -z $SELENIUM_PORT && export SELENIUM_PORT=4444
 test -z $PHP_PORT && export PHP_PORT=8000
 test -z $XVFB_PORT && export XVFB_PORT=10
+if [ ! -f "$BEHATCONFIGFILE" ];
+then
+    # if BEHATCONFIGFILE is not a file it should contain the error message.
+    echo $BEHATCONFIGFILE
+    exit 1
+fi
 
-echo "S: $SELENIUM_PORT"
-echo "P: $PHP_PORT"
+echo "Selenium port: $SELENIUM_PORT"
+echo "Behat root:    ${BEHATROOT}"
+echo "PHP port:      $PHP_PORT"
+echo "PHP version:   $(php --version)"
 
 # Wait and check if the selenium server is running in maximum 15 seconds
 function is_selenium_running {
@@ -103,7 +112,7 @@ then
     # Wrap the util.php script
 
     PERFORM=$2
-    php htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
+    php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --$PERFORM
 
 elif [ "$ACTION" = "run" -o "$ACTION" = "runheadless" -o "$ACTION" = "rundebug" -o "$ACTION" = "runfresh" -o "$ACTION" = "rundebugheadless" ] && [ "$2" != "html" ]
 then
@@ -130,11 +139,11 @@ then
     if [ "$ACTION" = "runfresh" ]
     then
         echo "Drop the old test site if exist"
-        php htdocs/testing/frameworks/behat/cli/util.php --drop
+        php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --drop
     fi
 
     # Initialise the test site for behat (database, dataroot, behat yml config)
-    php htdocs/testing/frameworks/behat/cli/init.php $REPORT
+    php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/init.php $REPORT
 
     # Run the Behat tests themselves (after any intial setup)
     if is_selenium_running; then
@@ -160,6 +169,7 @@ then
         if [ $ACTION = 'runheadless' -o $ACTION = 'rundebugheadless' ]
         then
             # we want to run selenium headless on a different display - this allows for that ;)
+            echo "Spinning up Xvfb"
             run_xvfb
 
             DISPLAY=:${XVFB_PORT} nohup java -Dwebdriver.chrome.driver=$CHROMEDRIVER_PATH -jar $SELENIUM_PATH -port ${SELENIUM_PORT} -log /tmp/selenium-${SELENIUM_PORT}.log > /tmp/selenium-${SELENIUM_PORT}.log 2>&1 & echo $!
@@ -176,10 +186,8 @@ then
     fi
 
     echo "Start PHP server"
-    php --server localhost:${PHP_PORT} --docroot $MAHARAROOT/htdocs > /tmp/php-${PHP_PORT}.log 2>&1 &
+    php --server localhost:${PHP_PORT} --docroot ${MAHARAROOT}/htdocs > /tmp/php-${PHP_PORT}.log 2>&1 &
     SERVER=$!
-
-    BEHATCONFIGFILE=`php htdocs/testing/frameworks/behat/cli/util.php --config`
 
     echo "Run Behat..."
 

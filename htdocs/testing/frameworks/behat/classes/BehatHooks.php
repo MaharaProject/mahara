@@ -160,10 +160,10 @@ class BehatHooks extends BehatBase {
         }
         catch (CurlExec $e) {
             // Exception thrown by WebDriver, so only @javascript tests will be caugth; in
-            throw new Exception($driverexceptionmsg);
+            throw new Exception('CurlExec: ' . $driverexceptionmsg);
         }
         catch (DriverException $e) {
-            throw new Exception($driverexceptionmsg);
+            throw new Exception('DriverException: ' . $driverexceptionmsg);
         }
         catch (UnknownError $e) {
             // Generic 'I have no idea' Selenium error. Custom exception to provide more feedback about possible solutions.

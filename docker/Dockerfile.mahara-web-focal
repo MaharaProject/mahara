@@ -1,5 +1,5 @@
 # base image
-ARG BASE_IMAGE=mahara-base
+ARG BASE_IMAGE=mahara-base:focal
 FROM ${BASE_IMAGE}
 
 # enviroment variable as non interactive
