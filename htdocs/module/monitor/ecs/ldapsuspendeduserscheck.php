@@ -21,7 +21,7 @@ define('PUBLIC', 1);
 $MAHARA_ROOT = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 
 
-if (!isset($argv) && isset($_GET) && !empty($_GET)) {
+if (!isset($argv) && $_GET && !empty($_GET)) {
     // We need to turn URL params into argv params
     $argv = array(0 => '');
     $i = 1;

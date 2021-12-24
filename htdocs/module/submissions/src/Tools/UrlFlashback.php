@@ -125,7 +125,7 @@ class UrlFlashback {
      */
     public static function createNewInstance(array $destinationUrls = [], string $flashbackUrl = null, array $data = null, array $options = null) {
         $urlFlashback = new UrlFlashback(true);
-        if (isset($destinationUrls)) {
+        if ($destinationUrls) {
             $urlFlashback->destinationUrls = $destinationUrls;
         }
         if (isset($flashbackUrl)) {

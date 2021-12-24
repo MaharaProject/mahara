@@ -22,6 +22,8 @@ define('TITLE', get_string('submitportfolio', 'module.lti'));
 
 safe_require('module', 'lti');
 
+$form = '';
+
 if (PluginModuleLti::can_grade()) {
     $form = PluginModuleLti::config_form();
 }

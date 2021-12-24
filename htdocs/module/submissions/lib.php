@@ -179,6 +179,7 @@ class PluginModuleSubmissions extends PluginModule {
             if (is_mysql()) {
                 try {
                     db_begin();
+                    $viewIds = array();
                     switch (SubmissionTools::getPortfolioElementType($portfolioElement)) {
                         case 'view':
                             $viewIds = [$portfolioElement->get('id')];

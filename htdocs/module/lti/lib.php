@@ -60,7 +60,7 @@ class PluginModuleLti extends PluginModule {
         }
 
         require_once(get_config('docroot') . 'webservice/lib.php');
-        external_reload_component('module/lti', false);
+        external_reload_component('module/lti');
         return true;
     }
 
@@ -175,7 +175,7 @@ class PluginModuleLti extends PluginModule {
             set_config('webservice_provider_rest_enabled', true);
 
             require_once(get_config('docroot') . 'webservice/lib.php');
-            external_reload_component('module/lti', false);
+            external_reload_component('module/lti');
             set_field('external_services', 'enabled', 1, 'shortname', 'lti', 'component', 'module/lti');
         }
         return true;
@@ -782,6 +782,7 @@ class PluginModuleLti extends PluginModule {
     public function revokesubmission_submit(Pieform $form, $values) {
         global $USER;
 
+        $portfolio = null;
         if (!$sub = self::can_revokesubmission()) {
             return false;
         }
@@ -818,6 +819,9 @@ class ModuleLtiSubmission {
     public $timesubmitted;
 
     protected $submitted = false;
+    protected $timegraded;
+    protected $lisresultsourceid;
+    protected $lti_error;
 
     public function __construct($assessment, $userid = null, $collectionid = null, $viewid = null) {
 
@@ -928,6 +932,7 @@ class ModuleLtiSubmission {
         }
         db_commit();
 
+        $portfolio = null;
         // Archive/Unlock if required by settings
         if (!empty($this->collectionid)) {
             $portfolio = new Collection($this->collectionid);

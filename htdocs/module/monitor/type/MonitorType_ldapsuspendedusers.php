@@ -74,8 +74,9 @@ class MonitorType_ldapsuspendedusers extends MonitorType {
         if ($records) {
             foreach ($records as $index => $record) {
                 $percentage = 0;
+                $total_ldap_users = 0;
+                $total_ldap_suspended = 0;
                 if ($record->total_users > 0) {
-                    $total_ldap_suspended = 0;
                     if (isset($data[$record->instanceid])) {
                         $total_ldap_suspended = $data[$record->instanceid]['totalsuspendedusers'];
                     }

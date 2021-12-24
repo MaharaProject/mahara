@@ -32,7 +32,7 @@ function activitylistin($type='all', $limit=10, $offset=0) {
     $searchtext = param_variable('search', null);
     $searcharea = param_variable('searcharea', 'All_data');
 
-    if (isset($searchtext) AND $searchtext !== null) {
+    if ($searchtext && $searchtext !== null) {
         $type = param_variable('type', 'all');
         $searchresults = get_message_search($searchtext, $type, $offset, $limit, "inbox.php", $userid);
         $result->msgidrecords = $searchresults[$searcharea]['data'];
@@ -421,7 +421,7 @@ function activitylistout($type='all', $limit=10, $offset=0) {
     $searchtext = param_variable('search', null);
     $searcharea = param_variable('searcharea', 'All_data');
 
-    if (isset($searchtext) AND $searchtext !== null) {
+    if ($searchtext && $searchtext !== null) {
         $type = param_variable('type', 'all');
         $searchresults = get_message_search($searchtext, $type, $offset, $limit, "outbox.php", $userid);
         $result->msgidrecords = $searchresults[$searcharea]['data'];
@@ -506,6 +506,7 @@ function activitylistout_html($type='all', $limit=10, $offset=0) {
     global $USER;
     $userid = $USER->get('id');
     $activitylist = activitylistout($type, $limit, $offset);
+    $records = array();
 
     $pagination = build_pagination(array(
         'id'         => 'activitylist_pagination',

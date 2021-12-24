@@ -285,6 +285,7 @@ function get_message_ids_mr ($usr = null, $role = 'recipient', $type = null,
 function get_messages_mr ($usr = null, $role = 'recipient', $type = null,
         $sortby = null, $limit = 20, $offset = 0) {
 
+    $messages = array();
     $messageids = get_message_ids_mr($usr, $role, $type, $sortby, $limit, $offset);
     if (null === $usr) {
         global $USER;
@@ -412,6 +413,7 @@ function get_messages_by_ids_mr($usr, array $msgids) {
     if (false === $messages) {
         return array();
     }
+    $return = array();
     foreach ($messages as $msg) {
         $msg->userids = array();
         $return [$msg->id]= $msg;
