@@ -32,6 +32,17 @@ class User {
     protected $changed       = false;
     protected $attributes    = array();
 
+    protected $admininstitutions;
+    protected $authinstance;
+    protected $email;
+    protected $grouproles;
+    protected $id;
+    protected $institutions;
+    protected $institutiontheme;
+    protected $roles;
+    protected $staffinstitutions;
+    protected $urlid;
+
     /**
      * Sets defaults for the user object (only because PHP5 does not appear
      * to support private static const arrays), and resumes a session
@@ -86,14 +97,12 @@ class User {
             'probation'        => 0,
         );
         $this->attributes = array();
-
     }
 
     /**
      *
      */
     public function find_by_id($id) {
-
         if (!is_numeric($id) || $id < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
@@ -309,7 +318,7 @@ class User {
      */
     public function create() {
         $this->set('ctime', time());
-        if (get_config('cleanurls') && is_null($this->urlid)) {
+        if (get_config('cleanurls') && is_null($this->get('urlid'))) {
             $desiredurlid = generate_urlid(get_raw_user_urlid($this), get_config('cleanurluserdefault'), 3, 30);
             $this->set('urlid', get_new_profile_urlid($desiredurlid));
         }
@@ -412,9 +421,9 @@ class User {
             return;
         }
         $record = $this->to_stdclass();
-        if (is_numeric($this->id) && 0 < $this->id) {
+        if (is_numeric($this->get('id')) && 0 < $this->get('id')) {
             try {
-                update_record('usr', $record, array('id' => $this->id));
+                update_record('usr', $record, array('id' => $this->get('id')));
             } catch (Exception $e) {
                 throw $e;
                 //var_dump($e);
@@ -591,7 +600,7 @@ class User {
         $views = get_records_select_assoc(
             'view',
             '"owner" = ? AND type IN (' . join(',', array_map('db_quote', $types)) . ')',
-            array($this->id),
+            array($this->get('id')),
             '',
             'type,id'
         );
@@ -721,7 +730,7 @@ class User {
     public function leave_institution($institution) {
         if ($institution != 'mahara' && $this->in_institution($institution)) {
             // Make inactive any usr_roles for this institution
-            foreach ($this->roles as $inst => $roles) {
+            foreach ($this->get('roles') as $inst => $roles) {
                 if ($inst == $institution) {
                     foreach ($roles as $role) {
                         $this->update_role($role->id, 0);
@@ -907,7 +916,7 @@ class User {
     }
 
     public function reset_institutions($nocachecss=false) {
-        $institutions             = load_user_institutions($this->id);
+        $institutions             = load_user_institutions($this->get('id'));
         $admininstitutions = array();
         $staffinstitutions = array();
         $themename = get_config('theme');
@@ -926,8 +935,8 @@ class User {
                 $themeinstitution = $name;
             }
         }
-        if ($this->authinstance) {
-            $authobj = AuthFactory::create($this->authinstance);
+        if ($this->get('authinstance')) {
+            $authobj = AuthFactory::create($this->get('authinstance'));
             if (isset($institutions[$authobj->institution])) {
                 if ($institutions[$authobj->institution]->theme) {
                     $themeinstitution = $authobj->institution;
@@ -946,16 +955,16 @@ class User {
                 $stylesheets[] = $stylesheet;
             }
         }
-        $this->institutiontheme = (object) array(
+        $this->set('institutiontheme', (object) array(
             'basename'    => $themename,
             'headerlogo'  => $headerlogo,
             'headerlogosmall'  => $headerlogosmall,
             'stylesheets' => $stylesheets,
             'institutionname' => $themeinstitution,
-        );
-        $this->institutions       = $institutions;
-        $this->admininstitutions  = $admininstitutions;
-        $this->staffinstitutions  = $staffinstitutions;
+        ));
+        $this->set('institutions', $institutions);
+        $this->set('admininstitutions', $admininstitutions);
+        $this->set('staffinstitutions', $staffinstitutions);
     }
 
     public function get_themedata() {
@@ -966,7 +975,7 @@ class User {
             $list = (explode('/', $preftheme));
             if (count($list) > 1) {
                 $iid = $list[1];
-                $institutions = load_user_institutions($this->id);
+                $institutions = load_user_institutions($this->get('id'));
                 if (isset($institutions[$iid])) {
                     $institution = $institutions[$iid];
                     $stylesheets = array();
@@ -987,11 +996,11 @@ class User {
             }
             // Or the current preferred theme is not available
             // The system will pick one
-            return $this->institutiontheme;
+            return $this->get('institutiontheme');
         }
-        if ($this->institutiontheme) {
+        if ($this->get('institutiontheme')) {
             // No theme set so use 'sitedefault'
-            $instobj = $this->institutiontheme;
+            $instobj = $this->get('institutiontheme');
             $instobj->altname = 'sitedefault';
             $this->set('institutiontheme', $instobj);
         }
@@ -1041,7 +1050,7 @@ class User {
             $role = (object) $role;
             if (isset($role->role) && !empty($role->role)) {
                 $classname = 'UserRole' . ucfirst($role->role);
-                $role->usr = $this->id;
+                $role->usr = $this->get('id');
                 $r = new $classname($role);
                 $r->commit();
             }
@@ -1270,7 +1279,7 @@ class User {
         }
 
         require_once('group.php');
-        if (!$role = group_user_access($group, $this->id)) {
+        if (!$role = group_user_access($group, $this->get('id'))) {
             return false;
         }
         if ($role == 'admin') {
@@ -1279,7 +1288,7 @@ class User {
         if (!group_within_edit_window($group)) {
             return false;
         }
-        if ($this->id == $a->get('author')) {
+        if ($this->get('id') == $a->get('author')) {
             return true;
         }
 
@@ -1324,13 +1333,13 @@ class User {
         }
 
         require_once('group.php');
-        if (!$role = group_user_access($group, $this->id)) {
+        if (!$role = group_user_access($group, $this->get('id'))) {
             return false;
         }
         if ($role == 'admin') {
             return true;
         }
-        if ($this->id == $a->get('author')) {
+        if ($this->get('id') == $a->get('author')) {
             return true;
         }
 
@@ -1356,14 +1365,15 @@ class User {
         $group = $v->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if (!isset($this->grouproles[$group])) {
+            $grouproles = $this->get('grouproles');
+            if (!isset($grouproles[$group])) {
                 return false;
             }
-            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $this->grouproles[$group] != 'admin') {
+            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $grouproles[$group] != 'admin') {
                 return false;
             }
             require_once('group.php');
-            return group_role_can_edit_views($group, $this->grouproles[$group]);
+            return group_role_can_edit_views($group, $grouproles[$group]);
         }
         return false;
     }
@@ -1383,14 +1393,15 @@ class User {
         $group = $v->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if (!isset($this->grouproles[$group])) {
+            $grouproles = $this->get('grouproles');
+            if (!isset($grouproles[$group])) {
                 return false;
             }
-            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $this->grouproles[$group] != 'admin') {
+            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $grouproles[$group] != 'admin') {
                 return false;
             }
             require_once('group.php');
-            return group_role_can_moderate_views($group, $this->grouproles[$group]);
+            return group_role_can_moderate_views($group, $grouproles[$group]);
         }
         return false;
     }
@@ -1482,11 +1493,12 @@ class User {
         $group = $c->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if (!isset($this->grouproles[$group])) {
+            $grouproles = $this->get('grouproles');
+            if (!isset($grouproles[$group])) {
                 return false;
             }
             require_once('group.php');
-            return group_role_can_edit_views($group, $this->grouproles[$group]);
+            return group_role_can_edit_views($group, $grouproles[$group]);
         }
         return false;
     }
@@ -1551,24 +1563,26 @@ class User {
                                     get_config('wwwroot'));
 
         $fullname = display_name($this, null, true);
+        $emailsubject = '';
+        $emailmessage = '';
 
         switch ($type) {
             case 0:
                 $emailsubject = get_string('pendingdeletionadminemailsubject', 'account', get_config('sitename'));
                 $emailmessage = get_string('pendingdeletionadminemailtext', 'account',
-                            $fullname, $pendingdeletionslink, $fullname, $this->email,
+                            $fullname, $pendingdeletionslink, $fullname, $this->get('email'),
                             $message, get_config('sitename'));
                 break;
             case 1:
                 $emailsubject = get_string('resenddeletionadminemailsubject', 'account', get_config('sitename'));
                 $emailmessage = get_string('resenddeletionadminemailtext', 'account',
-                            $fullname, $pendingdeletionslink, $fullname, $this->email,
+                            $fullname, $pendingdeletionslink, $fullname, $this->get('email'),
                             $message, get_config('sitename'));
                 break;
             case 2:
                 $emailsubject = get_string('canceldeletionadminemailsubject', 'account', get_config('sitename'));
                 $emailmessage = get_string('canceldeletionadminemailtext', 'account',
-                            $fullname, $fullname, $this->email,
+                            $fullname, $fullname, $this->get('email'),
                             get_config('sitename'));
                 break;
         }
@@ -1805,7 +1819,7 @@ class User {
                     $where = new stdClass();
                     $where->view = $result->view;
                     $where->collection = $result->collection;
-                    $where->usr = $this->id;
+                    $where->usr = $this->get('id');
 
                     $record = clone $where;
                     $record->ctime = db_format_timestamp(time());
@@ -1820,7 +1834,7 @@ class User {
             foreach ($templateids as $id) {
                 $where = new stdClass();
                 $where->view = $id;
-                $where->usr = $this->id;
+                $where->usr = $this->get('id');
 
                 $record = clone $where;
                 $record->ctime = db_format_timestamp(time());
@@ -1843,6 +1857,25 @@ class User {
 class LiveUser extends User {
 
     protected $SESSION;
+
+    protected $accountprefs;
+    protected $active;
+    protected $activityprefs;
+    protected $deleted;
+    protected $expiry;
+    protected $expirymailsent;
+    protected $inactivemailsent;
+    protected $lastaccess;
+    protected $lastlastlogin;
+    protected $lastlogin;
+    protected $logout_time;
+    protected $quota;
+    protected $sessionid;
+    protected $sesskey;
+    protected $suspendedctime;
+    protected $suspendedcusr;
+    protected $suspendedreason;
+    protected $unread;
 
     public function __construct() {
 
@@ -2005,7 +2038,7 @@ class LiveUser extends User {
      * should be occasionally reloaded into the session.
      */
     public function reload_background_fields() {
-        if ($this->id == '0') {
+        if ($this->get('id') == '0') {
             return;
         }
         $reload = array(
@@ -2013,7 +2046,7 @@ class LiveUser extends User {
             'suspendedcusr', 'quota', 'unread',
         );
         $tsfields = array('expiry', 'suspendedctime');
-        $record = get_record('usr', 'id', $this->id);
+        $record = get_record('usr', 'id', $this->get('id'));
         foreach ($reload as $f) {
             if (!isset($record->$f)) {
                 continue;
@@ -2088,17 +2121,17 @@ class LiveUser extends User {
         $this->populate($user);
         $this->SESSION->regenerate_id();
         $time = time();
-        $this->lastlastlogin      = $this->lastlogin;
-        $this->lastlogin          = $time;
-        $this->lastaccess         = $time;
-        $this->sessionid          = session_id();
-        $this->logout_time        = $time + get_config('session_timeout');
-        $this->sesskey            = get_random_key();
+        $this->set('lastlastlogin', $this->lastlogin);
+        $this->set('lastlogin', $time);
+        $this->set('lastaccess', $time);
+        $this->set('sessionid', session_id());
+        $this->set('logout_time', $time + get_config('session_timeout'));
+        $this->set('sesskey', get_random_key());
 
         // We need a user->id before we load_c*_preferences
         if (empty($user->id)) $this->commit();
-        $this->activityprefs      = load_activity_preferences($user->id);
-        $this->accountprefs       = load_account_preferences($user->id);
+        $this->set('activityprefs', load_activity_preferences($user->id));
+        $this->set('accountprefs', load_account_preferences($user->id));
 
         // Record the successful login in the usr_login_data table
         insert_record('usr_login_data', (object) array('usr' => $user->id, 'ctime' => db_format_timestamp($time)));
@@ -2195,8 +2228,8 @@ class LiveUser extends User {
             $id = $this->get('id');
         }
         $this->find_by_id($id);
-        $this->activityprefs = load_activity_preferences($id);
-        $this->accountprefs = load_account_preferences($id);
+        $this->set('activityprefs', load_activity_preferences($id));
+        $this->set('accountprefs', load_account_preferences($id));
         $this->load_views();
     }
 

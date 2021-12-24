@@ -1362,7 +1362,7 @@ class AuthLdap extends Auth {
                             ($d2 = get_record('artefact_internal_profile_email', 'email', $todb->email))
                         )
                     ) {
-                        if (empty($d1)) {
+                        if (empty($d1) && !empty($d2)) {
                             $d1 = get_record('usr', 'id', $d2->owner);
                         }
                         if (get_config('auth_ldap_debug_sync_cron')) {
@@ -1499,6 +1499,7 @@ class AuthLdap extends Auth {
             // test whether this group exists within the institution
             // group.shortname is limited to 255 characters. Unlikely anyone will hit this, but why not?
             $shortname = substr($group, 0, 255);
+            $groupid = -1;
             if (!$dbgroup = get_record('group', 'shortname', $shortname, 'institution', $this->institution)) {
                 if (!$docreate) {
                     log_debug('autocreation is off so skipping Mahara not existing group ' . $group);

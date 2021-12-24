@@ -183,7 +183,6 @@ class PluginAuthWebservice extends PluginAuth {
     }
 
     public static function postinst($prevversion) {
-
         if ($prevversion == 0) {
         // force the upgrade to get the intial services loaded
             external_reload_webservices();
