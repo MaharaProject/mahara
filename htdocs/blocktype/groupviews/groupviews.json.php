@@ -66,7 +66,7 @@ foreach ($groupviews['data'] as &$view) {
         $view['form'] = pieform(create_view_form(null, null, $view['id'], $collid, $collid));
     }
 }
-if (!empty($configdata['showgroupviews']) && isset($groupviews)) {
+if (!empty($configdata['showgroupviews']) && $groupviews) {
     $baseurl = $group_homepage_view->get_url();
     $baseurl .= (strpos($baseurl, '?') === false ? '?' : '&') . 'group=' . $groupid;
     $pagination = array(

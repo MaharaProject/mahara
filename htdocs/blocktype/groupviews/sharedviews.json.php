@@ -69,7 +69,7 @@ else {
     );
     foreach ($sharedviews['data'] as &$view) {
         if (!$editing && isset($view['template']) && $view['template']) {
-            $view['form'] = pieform(create_view_form($group, null, $view->id));
+            $view['form'] = pieform(create_view_form($groupid, null, $view->id));
         }
     }
 }

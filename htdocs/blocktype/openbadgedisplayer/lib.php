@@ -184,7 +184,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
      * @return string HTML code
      */
     private static function get_badge_html($group, $fromcache=false) {
-        if (!isset($group) && !is_string($group)) {
+        if (!$group && !is_string($group)) {
             return '';
         }
 
@@ -736,7 +736,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
         if (!empty($values['badgegroup'])) {
             foreach ($values['badgegroup'] as $key => $badgegroup) {
                 list($host, $uid, $group) = explode(':', $badgegroup);
-                if (!isset($uid) || !in_array($uid, array_values($validbackpackids[$host]))) {
+                if (!$uid || !in_array($uid, array_values($validbackpackids[$host]))) {
                     unset($values['badgegroup'][$key]);
                 }
             }

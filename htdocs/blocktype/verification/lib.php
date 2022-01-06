@@ -290,7 +290,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         ';
         $params = array($instance->get('id'));
         if ($records = get_records_sql_array($sql, $params, 0, 1)) {
-            $data = array_map(function($item) use ($owner) {
+            $data = array_map(function($item) {
                 $item->displayname = display_name($item);
                 $item->text = clean_html($item->text);
                 $item->profileurl = profile_url($item);
@@ -364,6 +364,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             delete_records('blocktype_verification_undo', 'block', $instanceid);
         }
 
+        $newtext = null;
         if ($newid) {
             require_once('embeddedimage.php');
             $newtext = EmbeddedImage::prepare_embedded_images($values['comment'], 'verification_comment', $newid);
