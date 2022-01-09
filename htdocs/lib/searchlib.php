@@ -595,6 +595,12 @@ function build_admin_user_search_results($search, $offset, $limit) {
         }
     }
 
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+        }
+    }
+
     $smarty = smarty_core();
     $smarty->assign('results', $results);
     $smarty->assign('institutions', $institutions);
@@ -768,6 +774,12 @@ function build_admin_export_queue_results($search, $offset, $limit) {
         ),
     );
 
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+        }
+    }
+
     $smarty = smarty_core();
     $smarty->assign('results', $results);
     $smarty->assign('USER', $USER);
@@ -864,7 +876,7 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
         // Massage the results for the Current Submissions.
         if ($search['type'] == 'current') {
             // Format the date nicely.
-            $results['data'][$key]['submissiondate'] = format_date(strtotime($data['submittedtime']));
+            $results['data'][$key]['submittedtime'] = format_date(strtotime($data['submittedtime']));
         }
     }
 
@@ -899,7 +911,7 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
         'id'       => 'specialid',
         'name'     => get_string('ID', 'admin'),
         'sort'     => true,
-        'helplink' => get_help_icon('core', 'groups', 'submissions', 'specialid'),
+        'helplink' => param_exists('current') ? get_help_icon('core', 'groups', 'submissions', 'specialid') : get_help_icon('core', 'groups', 'submissions', 'archiveid'),
     ];
     $cols['icon'] = [
         'template' => 'admin/users/searchiconcolumn.tpl',
@@ -944,8 +956,8 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
             'template' => 'admin/groups/releasetitlecolumn.tpl',
         ];
 
-        // Submitted on "submissiondate".
-        $cols['submissiondate'] = [
+        // Submission date
+        $cols['submittedtime'] = [
             'name' => get_string('submittedon', 'admin'),
             'sort'     => true,
         ];
@@ -959,6 +971,12 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
             'class'    => 'nojs-hidden',
             'accessible' => get_string('bulkselect'),
         );
+    }
+
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+        }
     }
 
     $smarty = smarty_core();

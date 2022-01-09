@@ -34,7 +34,7 @@ require_once('user.php');
  * @return array Contains search results markup/pagination
  */
 function build_webservice_log_search_results($search) {
-    global $THEME;
+    global $THEME, $USER;
     $THEME->templatedirs[]= get_config('docroot') . 'auth/webservice/theme/raw/';
 
     $results = get_log_search_results($search);
@@ -67,6 +67,12 @@ function build_webservice_log_search_results($search) {
             'datatable' => 'searchresults',
             'jsonscript' => 'webservice/admin/logsearch.json.php',
     ));
+
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->is_admin_for_user((object)$result);
+        }
+    }
 
     $cols = array(
             'username'     => array('name'     => get_string('userauth', 'auth.webservice'),
