@@ -85,6 +85,7 @@ $string['managegroups'] = 'Manage groups';
 $string['Extensions']   = 'Extensions';
 $string['configextensions']   = 'Administer extensions';
 $string['manageinstitutions'] = 'Manage institutions';
+$string['embeddedurls'] = 'Embedded URLs';
 
 // Admin homepage strings
 $string['siteoptions']    = 'Site options';
@@ -220,7 +221,7 @@ $string['generatedviewurls'] = array(
 );
 $string['cleanurlsdescriptionshort'] = 'Configure site to use human-readable URLs';
 
-$string['embeddedurls'] = 'Update embedded URLs';
+$string['embeddedurlstitle'] = 'Update embedded URLs';
 $string['embeddedurlsdescription'] = '<p>If you change your URL, the existing links within embedded content on the site will point to the wrong place.</p><p>You can fix them up here by specifying the old URL domain.</p>';
 $string['nopotentialembeddedurls'] = '<p>There are no potential old URLs detected.</p>';
 $string['potentialembeddedurls'] = '<p>The following sections look to have old URLs.</p>';
