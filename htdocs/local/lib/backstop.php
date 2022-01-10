@@ -68,6 +68,9 @@ function doublecheck_people($token) {
             ),
             "fields" => array(
                 "id"
+            ),
+            "include" => array(
+                "practitioner"
             )
         )
     );
@@ -83,24 +86,37 @@ function doublecheck_people($token) {
         $data = json_decode($peopleinfo->data);
         if ($data) {
             foreach ($data as $person) {
-                $people[] = $person->id;
+                if (!empty($person->practitioner) && !empty($person->practitioner->practicingstatusid) && $person->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT) {
+                    $people[] = $person->id;
+                }
             }
         }
     }
+
+    // Find any of the Register IDs that do not yet exist in Mahara
+    $sql = "SELECT username FROM {usr} WHERE deleted = 0 AND id != 0";
+    $existing = get_column_sql($sql);
+    $valid1 = array_diff($people, $existing);
+
     // Find any of the Register IDs that are not listed as registered active in Mahara
-    $sql = "SELECT u.username, p.value
+    $sql = "SELECT u.username
             FROM {usr} u
             JOIN {usr_account_preference} p ON p.usr = u.id
             WHERE u.username IN (" . join(',', array_map('db_quote', $people)) . ")
             AND p.field = ? AND p.value != ?";
-    $valid = get_records_sql_assoc($sql, array('registerstatus', PCNZ_REGISTEREDCURRENT));
+    $valid2 = get_column_sql($sql, array('registerstatus', PCNZ_REGISTEREDCURRENT));
+
+    $valid = array_merge($valid1, $valid2);
+    sort($valid, SORT_NUMERIC);
     if (empty($valid)) {
         return array();
     }
     $validpeople = array();
     foreach ($valid as $k => $v) {
-        $validperson = get_person($token, $v->username);
-        $validpeople[$k]['personalinfo'] = $validperson;
+        $validperson = get_person($token, $v);
+        if ($validperson) {
+            $validpeople[$v]['personalinfo'] = $validperson;
+        }
     }
     return $validpeople;
 }
