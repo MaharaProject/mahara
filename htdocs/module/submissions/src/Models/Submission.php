@@ -109,6 +109,8 @@ class Submission extends AbstractModel {
             $selectArray[] = $dbField . ' AS "' . $property . '"';
         }
         $selectArray[] = 'evaluation.id AS "evaluationId"';
+        $selectArray[] = '(owner.deleted = 1)' . $pgBooleanConversion . ' AS "ownerDeleted"';
+        $selectArray[] = '(evaluator.deleted = 1) ' . $pgBooleanConversion . ' AS "evaluatorDeleted"';
         $selectArray[] = '(grouptyperoles.see_submitted_views = 1)' . $pgBooleanConversion . ' AS "liveUserIsAssessor"';
 
         return 'SELECT ' . implode(', ', $selectArray);
