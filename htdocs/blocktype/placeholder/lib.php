@@ -42,7 +42,7 @@ class PluginBlocktypePlaceholder extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
 
         $smarty = smarty_core();
-        $smarty->assign('placeholdertext', get_string('placeholdertext', 'blocktype.placeholder'));
+        $smarty->assign('placeholdertext', get_string('placeholdertext1', 'blocktype.placeholder'));
         return $smarty->fetch('blocktype:placeholder:body.tpl');
     }
 
