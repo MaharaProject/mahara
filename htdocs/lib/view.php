@@ -7184,7 +7184,8 @@ class View {
                                             'eventfor' => 'view',
                                             'name' => $this->title,
                                             'group' => ($group) ? $group->id : null,
-                                            'groupname' => ($group) ? $group->name : null));
+                                            'groupname' => ($group) ? $group->name : null,
+                                            'externalhost' => ($submittedhost) ? $submittedhost : null));
 
         if ($group && $sendnotification) {
             activity_occurred(
