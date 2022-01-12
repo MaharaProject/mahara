@@ -235,13 +235,13 @@ class LeapImportResume extends LeapImportArtefactPlugin {
         }
     }
 
-/**
- * Import from entry requests for Mahara user resume fields
- *
- * @param PluginImportLeap $importer
- * @return updated DB
- * @throw    ImportException
- */
+    /**
+     * Import from entry requests for Mahara user resume fields
+     *
+     * @param PluginImportLeap $importer
+     * @return void
+     * @throw    ImportException
+     */
     public static function import_from_requests(PluginImportLeap $importer) {
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND plugin = ?', array($importer->get('importertransport')->get('importid'), 'resume'))) {
             foreach ($entry_requests as $entry_request) {
@@ -951,7 +951,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                         $composite = new $class($artefactids[0],array('owner' => $importer->get('usr')));
                     }
                     if ($id = $importer->create_attachment($entry, $compositelink, $composite)) {
-                        $newartefactmapping[$link['href']][] = $id;
+                        $newartefactmapping[$compositelink['href']][] = $id;
                     }
                     if ($composite) {
                         $composite->commit();
@@ -998,8 +998,8 @@ class LeapImportResume extends LeapImportArtefactPlugin {
      * @param string $selectiontype      The type of selection we're checking to
      *                                   see if the entry is part of - one of the
      *                                   special Mahara resume selections
-     * @return int The display order of the element in the selection, should it
-     *             be in one - else null
+     * @return int|null The display order of the element in the selection, should it
+     *                  be in one - else null
      */
     private static function get_display_order_for_entry(SimpleXMLElement $entry, PluginImportLeap $importer, $selectiontype) {
         static $cache = array();
@@ -1031,6 +1031,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
             }
         }
+        return null;
     }
 
 }

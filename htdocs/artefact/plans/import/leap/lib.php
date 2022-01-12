@@ -51,13 +51,13 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         self::add_import_entry_request_plan($entry, $importer);
     }
 
-/**
- * Import from entry requests for Mahara plans and their tasks
- *
- * @param PluginImportLeap $importer
- * @return updated DB
- * @throw    ImportException
- */
+    /**
+     * Import from entry requests for Mahara plans and their tasks
+     *
+     * @param PluginImportLeap $importer
+     * @return void
+     * @throw    ImportException
+     */
     public static function import_from_requests(PluginImportLeap $importer) {
         $importid = $importer->get('importertransport')->get('importid');
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND plugin = ? AND entrytype = ?', array($importid, 'plans', 'plan'))) {
@@ -149,7 +149,7 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         else {
             $type = 'plan';
         }
-
+        $authorname = $author = null;
         if (isset($entry->author->name) && strlen($entry->author->name)) {
             $authorname = $entry->author->name;
         }

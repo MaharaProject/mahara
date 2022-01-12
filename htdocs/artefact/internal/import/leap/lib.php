@@ -363,7 +363,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * find and update existing artefacts of the imported entry
      *
      * @param SimpleXMLElement $entry
-     * @return updated DB table 'import_entry_requests'
+     * @return void
      */
     public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $entrydata = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
@@ -380,7 +380,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
      * Import from entry requests for Mahara user profile fields
      *
      * @param PluginImportLeap $importer
-     * @return updated DB
+     * @return void
      * @throw    ImportException
      */
     public static function import_from_requests(PluginImportLeap $importer) {

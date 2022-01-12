@@ -424,10 +424,13 @@ abstract class ImporterTransport {
     protected $relativepath;
 
     /** whether the tempdir has been set up already */
-    private $tempdirprepared = false;
+    protected $tempdirprepared = false;
 
     /** the file to import (sometimes a zip file) */
     protected $importfile;
+
+    /** the filename to import */
+    protected $importfilename;
 
     /** the manifest file, if there is one and we know about it */
     protected $manifestfile;
