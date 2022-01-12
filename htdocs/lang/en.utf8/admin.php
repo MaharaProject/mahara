@@ -1034,6 +1034,9 @@ $string['institutionshortnamedescription'] = 'The short name is generated automa
 $string['institutionexpirydescription'] = 'The date at which this institutions membership of %s will be suspended.';
 $string['institutionlanguage'] = 'Language';
 $string['institutionlanguagedescription'] = 'The default language for institution members.';
+$string['includedinstitutions'] = 'Included institutions (shortnames)';
+$string['excludedinstitutions'] = 'Excluded institutions (shortnames)';
+$string['noinstitution'] = 'Include accounts that are not members of any institution';
 $string['defaultlangforinstitution'] = '%s default';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully.';
 $string['registrationallowed'] = 'Registration allowed';
@@ -1470,12 +1473,16 @@ $string['cli_deleteinactiveusers_usercount'] = 'There are "%s" accounts to delet
 $string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to delete the account for "%s" (ID %s) fully.';
 $string['cli_deleteinactiveusers_userunabletodelete'] = 'Unable to delete the account for "%s" (ID %s).';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no accounts to delete.';
+$string['cli_deleteinactiveusers_problem'] = 'Too many institution parameters given, please use --institution OR --incl_inst OR --excl_inst to filter by institution';
 $string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings:
-Institution: %s
 Group: %s
 Before date: %s
 Delete accounts from "usr" table: %s
 Never logged in: %s';
+$string['cli_deleteinactiveusers_onlydryrun1_inst_params'] = '
+Included institution(s): %s
+Excluded institution(s): %s
+Include accounts not in an institution? %s';
 
 // Clean up old groups
 $string['cli_deleteinactivegroups_info'] = 'This command-line PHP script allows you to delete old groups. This will only work for groups that do not have any members. This will also include groups with only one owner / administrator if the "onlyadmins" flag is set.';

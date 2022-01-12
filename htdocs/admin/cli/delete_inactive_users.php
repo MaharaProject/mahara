@@ -24,12 +24,25 @@ $options['dryrun'] = (object) array(
         'required' => false,
         'defaultvalue' => true,
 );
-$options['institution'] = (object) array(
-        'shortoptions' => array('i'),
-        'description' => get_string('institutionshortname', 'admin'),
+$options['incl_inst'] = (object) array(
+        'shortoptions' => array('ii'),
+        'description' => get_string('includedinstitutions', 'admin'),
         'required' => false,
         'defaultvalue' => false,
-        'examplevalue' => 'mahara',
+        'examplevalue' => 'inst_one  OR  inst_one,inst_two',
+);
+$options['excl_inst'] = (object) array(
+        'shortoptions' => array('ix'),
+        'description' => get_string('excludedinstitutions', 'admin'),
+        'required' => false,
+        'defaultvalue' => false,
+        'examplevalue' => 'inst_one  OR  inst_one,inst_two',
+);
+$options['no_inst'] = (object) array(
+        'shortoptions' => array('ni'),
+        'description' => get_string('noinstitution', 'admin'),
+        'required' => false,
+        'defaultvalue' => true,
 );
 $options['group'] = (object) array(
         'shortoptions' => array('g'),
@@ -72,7 +85,16 @@ $settings = (object) array(
 $cli->setup($settings);
 
 $dryrun = $cli->get_cli_param_boolean('dryrun');
-$institution = $cli->get_cli_param('institution');
+$incl_inst = $cli->get_cli_param('incl_inst');
+$excl_inst = $cli->get_cli_param('excl_inst');
+$no_inst = $cli->get_cli_param_boolean('no_inst');
+
+// Check that only one of the institution params are used
+$inst_params = array_intersect(array(!empty($excl_inst), !empty($incl_inst)), array(true,true));
+$num_inst_params = count($inst_params);
+if ($num_inst_params > 1) {
+    $cli->cli_exit(get_string('cli_deleteinactiveusers_problem', 'admin'));
+}
 $group = $cli->get_cli_param('group');
 // Retrieve & validate the before date
 $beforedate = $cli->get_cli_param('beforedate');
@@ -111,10 +133,37 @@ $joinsql = "";
 $wheresql = " WHERE u.id != 0";
 $values = array();
 
-if ($institution) {
+// Do not include accounts that are not in an institution
+if (!$no_inst) {
     $joinsql .= " JOIN {usr_institution} ui ON ui.usr = u.id";
-    $wheresql .= " AND ui.institution = ?";
-    $values[] = $institution;
+}
+
+// Inclue accounts not in an institution when no institution params have been given
+if ($no_inst && $num_inst_params == 0) {
+    $joinsql .= " LEFT JOIN {usr_institution} ui ON ui.usr = u.id";
+}
+
+// Include accounts not in an institution when getting results including/excluding an institution(s)
+if ($no_inst && $num_inst_params == 1) {
+    $joinsql .= " LEFT JOIN {usr_institution} ui ON ui.usr = u.id";
+}
+if ($incl_inst) {
+    $insts = explode(',', $incl_inst);
+    if ($no_inst) {
+        $wheresql .= " AND (ui.institution IS NULL OR ui.institution IN (" . JOIN(',', array_map('db_quote', $insts)) . "))";
+    }
+    else {
+        $wheresql .= " AND ui.institution IN (" . JOIN(',', array_map('db_quote', $insts)) . ")";
+    }
+}
+if ($excl_inst) {
+    $insts = explode(',', $excl_inst);
+    if ($no_inst) {
+        $wheresql .= " AND (ui.institution IS NULL OR ui.institution NOT IN (" . JOIN(',', array_map('db_quote', $insts)) . "))";
+    }
+    else {
+        $wheresql .= " AND ui.institution NOT IN (" . JOIN(',', array_map('db_quote', $insts)) . ")";
+    }
 }
 if ($group) {
     $joinsql .= " JOIN {group_member} gm ON gm.member = u.id";
@@ -143,7 +192,8 @@ else if (!$cleanusers) {
 }
 
 if ($dryrun) {
-    $cli->cli_print(get_string('cli_deleteinactiveusers_onlydryrun1', 'admin', $institution, $group, $beforedate, $cleanusers, $neverloggedin));
+    $cli->cli_print(get_string('cli_deleteinactiveusers_onlydryrun1', 'admin', $group, $beforedate, $cleanusers, $neverloggedin));
+    $cli->cli_print(get_string('cli_deleteinactiveusers_onlydryrun1_inst_params', 'admin', $incl_inst, $excl_inst, $no_inst ? 'Yes' : 'No'));
 }
 
 if ($records = get_records_sql_array($selectsql . $joinsql . $wheresql, $values)) {
