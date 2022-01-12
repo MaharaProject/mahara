@@ -140,6 +140,8 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      */
     abstract public function is_diskspace_available();
 
+    abstract protected function collection_menu($collectionid);
+
     //  MAIN CLASS DEFINITION
 
     /**
@@ -1076,6 +1078,7 @@ class PluginExportAll extends PluginExport {
 
     public static function get_title() {}
     public static function get_description() {}
+    protected function collection_menu($collectionid) {}
 
     public function export() {
 

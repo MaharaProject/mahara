@@ -104,6 +104,8 @@ class PluginExportLeap extends PluginExport {
         return get_string('description1', 'export.leap');
     }
 
+    protected function collection_menu($collectionid) {}
+
     /**
      * Basic check to make sure all the files we are dealing with don't add
      * up to being greater in size than the space available on disk. This will be a ballpark figure
