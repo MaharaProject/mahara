@@ -20,6 +20,9 @@ class Client {
     private $timeout          = 60;
     private $params           = array();
     private $method           = '';
+    private $peer             = '';
+    private $response         = '';
+    private $rawresponse      = '';
 
     function __construct() {
         return true;
