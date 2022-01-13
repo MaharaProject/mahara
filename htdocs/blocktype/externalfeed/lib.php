@@ -39,6 +39,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
             $data = $instance->get_data('feed', $configdata['feedid']);
             return sanitize_url($data->link);
         }
+        return false;
     }
 
     public static function get_categories() {
@@ -55,14 +56,15 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                 $table = new XMLDBTable('blocktype_externalfeed_data');
                 $index = new XMLDBIndex('urlautautix');
                 $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('url', 'authuser', 'authpassword'));
-                add_index($table, $index);
+                return add_index($table, $index);
             }
             else if (is_mysql()) {
                 // MySQL needs size limits when indexing text fields
-                execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD INDEX
+                return execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD INDEX
                                {blocextedata_urlautaut_ix} (url(255), authuser(255), authpassword(255))');
             }
         }
+        return true;
     }
 
     public static function get_blocktype_type_content_types() {

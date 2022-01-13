@@ -428,7 +428,8 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
     public static function postinst($prevversion) {
         if ($prevversion < 2020020700) {
             // set the blocktype that have quickmode
-            set_field('blocktype_installed', 'quickedit', 1, 'name', 'text');
+            return set_field('blocktype_installed', 'quickedit', 1, 'name', 'text');
         }
+        return true;
     }
 }
