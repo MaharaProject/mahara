@@ -59,11 +59,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $limit       = param_integer('limit', 10);
         $offset      = param_integer('offset', 0);
         $showcomment = param_integer('showcomment', null);
-        // Create the "make assessment private form" now if it's been submitted
-        if (param_exists('make_public_submit')) {
-            pieform(ArtefactTypePeerassessment::make_public_form(param_integer('assessment')));
-        }
-        else if (param_exists('delete_assessment_submit')) {
+        if (param_exists('delete_assessment_submit')) {
             pieform(ArtefactTypePeerassessment::delete_assessment_form(param_integer('assessment'), param_integer('view'), param_integer('block')));
         }
         $view = new View($instance->get('view'));

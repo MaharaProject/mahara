@@ -161,7 +161,9 @@ class PluginArtefactResume extends PluginArtefact {
 
 class ArtefactTypeResume extends ArtefactType {
 
-    public static function get_icon($options=null) {}
+    public static function get_icon($options=null) {
+        return false;
+    }
 
     public function __construct($id=0, $data=array()) {
         if (empty($id)) {

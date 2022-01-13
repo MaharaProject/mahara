@@ -84,6 +84,7 @@ class PluginArtefactComment extends PluginArtefact {
 
             set_config_plugin('artefact', 'comment', 'maxindent', '5');
         }
+        return true;
     }
 
     public static function view_export_extra_artefacts($viewids) {
@@ -140,6 +141,7 @@ class PluginArtefactComment extends PluginArtefact {
                 return 'view/sharedviews.php';
                 break;
         }
+        return null;
     }
 
     public static function progressbar_additional_items() {
@@ -271,8 +273,7 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-        // global $THEME;
-        // return false;
+        return false;
     }
 
     public function delete() {

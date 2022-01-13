@@ -231,7 +231,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     public static function add_import_entry_request_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {
         $entrydata = self::get_entry_data_using_strategy($entry, $importer, $strategy, $otherentries);
         if (!empty($entrydata)) {
-            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, $strategy, 'resume', $entrydata);
+            return PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, $strategy, 'resume', $entrydata);
         }
     }
 
@@ -269,6 +269,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 }
             }
         }
+        return true;
     }
 
     public static function import_using_strategy(SimpleXMLElement $entry, PluginImportLeap $importer, $strategy, array $otherentries) {

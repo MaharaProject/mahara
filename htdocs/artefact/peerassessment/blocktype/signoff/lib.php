@@ -18,7 +18,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
     }
 
     public static function postinst($oldversion) {
-        set_config_plugin('blocktype', 'signoff', 'notretractable', true);
+        return set_config_plugin('blocktype', 'signoff', 'notretractable', true);
     }
 
     public static function single_only() {

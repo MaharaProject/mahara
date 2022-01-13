@@ -79,10 +79,11 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             // Otherwise, the Mahara installer will install everything.
             if (get_config('installed')) {
                 if ($upgrade = check_upgrades('blocktype.peerassessment/peerassessment')) {
-                    upgrade_plugin($upgrade);
+                    return upgrade_plugin($upgrade);
                 }
             }
         }
+        return true;
     }
 
     public static function view_export_extra_artefacts($viewids) {
@@ -152,6 +153,8 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             case 'verify':
                 return 'view/index.php';
                 break;
+            default:
+                return 'view/index.php';
         }
     }
 
