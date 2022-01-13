@@ -458,7 +458,8 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
 
     public static function postinst($fromversion) {
         if ($fromversion == 0) {
-            set_field('blocktype_installed', 'active', 0, 'artefactplugin', 'annotation');
+            return set_field('blocktype_installed', 'active', 0, 'artefactplugin', 'annotation');
         }
+        return true;
     }
 }

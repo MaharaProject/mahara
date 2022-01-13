@@ -114,6 +114,7 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 }
             }
         }
+        return true;
     }
 
     public static function view_export_extra_artefacts($viewids) {
@@ -163,6 +164,9 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 break;
             case 'annotationfeedback':
                 return 'view/sharedviews.php';
+                break;
+            default:
+                return 'view/index.php';
                 break;
         }
     }
@@ -1176,7 +1180,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param boolean $bystafforadmin TRUE - retrieve the count of feedback input by users who are staff and/or admin.
      *                                FALSE - retrieve the count of feedback input by users who are NOT staff or admin.
      *                                NULL - retrieve the count of feedback input by users irrespecitve of the staff/admin flags.
-     * @return array
+     * @return array|false objects returned by the generated SQL
      */
     public static function count_annotation_feedback($annotation, $viewids=null, $artefactids=null, $bystafforadmin = null) {
         $userwherearray = array();
@@ -1229,6 +1233,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     GROUP BY an.artefact';
             return get_records_sql_assoc($sql, array((int) $annotation));
         }
+        return false;
     }
 
     public function render_self($options) {
