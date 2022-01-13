@@ -280,12 +280,12 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
 
         if (method_exists($authobj, 'is_username_valid_admin')) {
-            if (!$authobj->is_username_valid_admin($username)) {
+            if (!get_class($authobj)::is_username_valid_admin($username)) {
                 $csverrors->add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
         else if (method_exists($authobj, 'is_username_valid')) {
-            if (!$authobj->is_username_valid($username)) {
+            if (!get_class($authobj)::is_username_valid($username)) {
                 $csverrors->add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }

@@ -378,12 +378,12 @@ function edituser_site_validate(Pieform $form, $values) {
     if (isset($values['username']) && !empty($values['username']) && $values['username'] != $userobj->username) {
         if (method_exists($authobj, 'change_username')) {
             if (method_exists($authobj, 'is_username_valid_admin')) {
-                if (!$authobj->is_username_valid_admin($values['username'])) {
+                if (!get_class($authobj)::is_username_valid_admin($values['username'])) {
                     $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
                 }
             }
             else if (method_exists($authobj, 'is_username_valid')) {
-                if (!$authobj->is_username_valid($values['username'])) {
+                if (!get_class($authobj)::is_username_valid($values['username'])) {
                     $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
                 }
             }

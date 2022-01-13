@@ -193,12 +193,12 @@ function adduser_validate(Pieform $form, $values) {
     }
 
     if (method_exists($authobj, 'is_username_valid_admin')) {
-        if (!$authobj->is_username_valid_admin($username)) {
+        if (!get_class($authobj)::is_username_valid_admin($username)) {
             $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
         }
     }
     else if (method_exists($authobj, 'is_username_valid')) {
-        if (!$authobj->is_username_valid($username)) {
+        if (!get_class($authobj)::is_username_valid($username)) {
             $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
         }
     }
