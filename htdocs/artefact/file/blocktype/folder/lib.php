@@ -148,8 +148,9 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
 
     public static function postinst($prevversion) {
         if ($prevversion < 2013120900) {
-            set_config_plugin('blocktype', 'folder', 'sortorder', 'asc');
+            return set_config_plugin('blocktype', 'folder', 'sortorder', 'asc');
         }
+        return true;
     }
 
     public static function has_instance_config(BlockInstance $instance) {

@@ -263,9 +263,11 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('blocktype', 'gallery', 'usefancybox', 1); // Use Fancybox 3 by default
-            set_config_plugin('blocktype', 'gallery', 'previewwidth', 1024); // Maximum photo width for fancybox preview
+            $setfancybox = set_config_plugin('blocktype', 'gallery', 'usefancybox', 1); // Use Fancybox 3 by default
+            $setpreviewwidth = set_config_plugin('blocktype', 'gallery', 'previewwidth', 1024); // Maximum photo width for fancybox preview
+            return $setfancybox && $setpreviewwidth;
         }
+        return true;
     }
 
     public static function has_instance_config(BlockInstance $instance) {

@@ -44,8 +44,9 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4')));
+            return set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4')));
         }
+        return true;
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {

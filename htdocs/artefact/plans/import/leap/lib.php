@@ -48,7 +48,7 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         if ($strategy != self::STRATEGY_IMPORT_AS_PLAN) {
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
-        self::add_import_entry_request_plan($entry, $importer);
+        return self::add_import_entry_request_plan($entry, $importer);
     }
 
     /**

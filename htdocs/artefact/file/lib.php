@@ -121,6 +121,7 @@ class PluginArtefactFile extends PluginArtefact {
         }
         set_config_plugin('artefact', 'file', 'commentsallowedimage', 1);
         self::resync_filetype_list();
+        return true;
     }
 
     public static function set_quota_triggers() {
@@ -465,7 +466,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-
+        return false;
     }
 
     public static function collapse_config() {
@@ -2957,7 +2958,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
             $archive_obj = new PharData($path);
         }
         catch (UnexpectedValueException $e) {
-            $path = self::delete_from_temp($path);
+            self::delete_from_temp($path);
             return false;
         }
 
