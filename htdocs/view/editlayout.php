@@ -643,7 +643,7 @@ function settings_validate(Pieform $form, $values) {
     if ($canuseskins && isset($values['skinid']) && $values['skinid']) {
         $skin = new Skin($values['skinid']);
         if (!$skin->can_use()) {
-            throw new AcessDeniedException();
+            throw new AccessDeniedException();
         }
     }
 }

@@ -57,8 +57,9 @@ class PluginSearchInternal extends PluginSearch {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('search', 'internal', 'exactusersearch', 1);
+            return set_config_plugin('search', 'internal', 'exactusersearch', 1);
         }
+        return true;
     }
 
     /**

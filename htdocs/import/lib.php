@@ -238,7 +238,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
      *     parent    ID of the parent entry (e.g. the blog entryid of the blogpost entry).
      *     content (required)
      *         - title  (required)
-     * @return updated DB table 'import_entry_requests'
+     * @return bool success/failure of creating an entry/updated DB table 'import_entry_requests'
      */
     public static function add_import_entry_request($importid, $entryid, $strategy, $plugin, $entrydata) {
         $duplicatedartefactids = array();

@@ -401,7 +401,7 @@ EOF;
     public static function postinst($prevversion) {
         // On a new installation, set post delay to 30 minutes
         if ($prevversion == 0) {
-            set_config_plugin('interaction', 'forum', 'postdelay', 30);
+            return set_config_plugin('interaction', 'forum', 'postdelay', 30);
         }
     }
 
@@ -1028,6 +1028,7 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     protected $postid;
     protected $temp;
     protected $attachments = array();
+    protected $customheaders = array();
 
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);

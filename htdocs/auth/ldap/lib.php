@@ -191,6 +191,7 @@ class AuthLdap extends Auth {
                             }
                         }
                     }
+                    unset($ldapdetails);
                 }
                 return true;
             }
@@ -1239,8 +1240,6 @@ class AuthLdap extends Auth {
                             set_field('usr_institution', 'studentid', $record['ldapstudentid'], 'usr', $record['id'], 'institution', $this->institution);
                         }
                     }
-
-                    unset($ldapdetails);
                     $nbupdated++;
 
                     // unsuspend if was suspended by me at a previous run
