@@ -132,7 +132,7 @@ function get_activity_type_classname($activitytype) {
  *
  * @param int $activitytype the id of the activity type
  * @param array $userids an array of userids to filter by
- * @param array $userobjs an array of user objects to filterby
+ * @param array $userobjs an array of user objects to filterby - the userobjs need to be converted to stdclass via ->to_stdClass()
  * @param bool $adminonly whether to filter by admin flag
  * @param array $admininstitutions list of institution names to get admins for
  * @param bool $includesuspendedusers whether to include suspended people in the results
@@ -166,7 +166,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         WHERE u.deleted = 0';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
-        $values = array_merge($values, array_to_fields($userobjs));
+        $values = array_merge($values, db_array_to_fields($userobjs, 'id'));
     }
     else if (!empty($userids) && is_array($userids)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userids)) . ')';

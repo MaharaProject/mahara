@@ -1821,9 +1821,33 @@ function mysql_get_type() {
  * with the right number of values
  *
  * @param array $array input array
+ * @return array
  */
 function db_array_to_ph(array $array) {
     return array_pad(array(), count($array), '?');
+}
+
+/**
+ * Function to convert an array of objects to
+ * an array of values
+ *
+ * @param array $objs input array of stdClass objects
+ * @param string $field the field you want
+ * @return array
+ */
+function db_array_to_fields($objs, $field) {
+    $fieldarray = array();
+    if (is_array($objs)) {
+        foreach ($objs as $obj) {
+            if (isset($obj->$field)) {
+                $fieldarray[] = $obj->$field;
+            }
+            else {
+                $fieldarray[] = null;
+            }
+        }
+    }
+    return $fieldarray;
 }
 
 // This is used by the SQLException, to detect if there is a transaction when

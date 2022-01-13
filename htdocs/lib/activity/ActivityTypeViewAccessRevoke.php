@@ -9,14 +9,16 @@ require_once('ActivityType.php');
  */
 class ActivityTypeViewAccessRevoke extends ActivityType {
 
-  protected $viewid;
-  protected $string; // this can be empty though
-  protected $fromid;
-  protected $toid;
   protected $destinationuser;
-  protected $originuser;
-  protected $viewinfo;
+  protected $fromid;
   protected $message;
+  protected $originuser;
+  protected $string; // this can be empty though
+  protected $toid;
+  protected $touser;
+  protected $viewid;
+  protected $viewinfo;
+  protected $viewtitle;
 
   /**
    * @param object $data Parameters:
