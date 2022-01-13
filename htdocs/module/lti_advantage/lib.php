@@ -312,6 +312,7 @@ class PluginModuleLti_advantage extends PluginModule {
      * @return bool|void
      */
     public static function postinst($prevversion) {
+        return true;
 
     }
 

@@ -337,6 +337,7 @@ class PluginModuleSubmissions extends PluginModule {
             // Clear the cache so that the new menu item appears
             clear_menu_cache();
         }
+        return true;
     }
 }
 

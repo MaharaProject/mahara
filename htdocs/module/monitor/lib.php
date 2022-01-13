@@ -195,6 +195,7 @@ class PluginModuleMonitor extends PluginModule {
             set_config_plugin('module', 'monitor', 'hourstoconsiderelasticsearchrecordold', self::get_default_config_value('hourstoconsiderelasticsearchrecordold'));
             set_config_plugin('module', 'monitor', 'ldapsuspendeduserspercentage', self::get_default_config_value('ldapsuspendeduserspercentage'));
         }
+        return true;
     }
 
     /**

@@ -95,9 +95,9 @@ function edit_framework_section() {
     if ($frameworks) {
         foreach ($frameworks as $framework) {
             $framework = new Framework($framework->id);
-            $framework->collections = count($framework->get_collectionids());
+            $framework_collections_count = count($framework->get_collectionids());
             $fw[$framework->get('id')] = $framework->get('name');
-            if (!$framework->get('active') && !$framework->collections) {
+            if (!$framework->get('active') && !$framework_collections_count) {
                 $fw_edit[$framework->get('id')] = $framework->get('name');
             }
         }
@@ -158,13 +158,11 @@ function edit_framework_section() {
         'collapse' => 'module.framework',
         'collapseform' => 'module.framework',
         'add' => 'mahara',
-        'addspecific' => 'mahara',
         'addstandard' => 'module.framework',
         'addstandardelement' => 'module.framework',
         'addspecific' => 'module.framework',
         'expand' => 'module.framework',
         'expandform' => 'module.framework',
-        'expand' => 'mahara',
         'expandspecific' => 'mahara',
         'delete' => 'mahara',
         'deletespecific' => 'mahara',
@@ -227,9 +225,9 @@ function management_section() {
                     'classes' => 'icon icon-lg icon-times text-danger displayicon'
                 );
             }
-            $framework->collections = count($fk->get_collectionids());
+            $framework_collections_count = count($fk->get_collectionids());
             $framework->delete = false;
-            if (empty($framework->collections)) {
+            if (empty($framework_collections_count)) {
                 $framework->delete = pieform(
                     array(
                         'name' => 'framework_delete_' . $framework->id,
@@ -257,7 +255,7 @@ function management_section() {
                     'name' => 'framework_config_' . $framework->id,
                     'successcallback' => 'framework_config_submit',
                     'renderer' => 'div',
-                    'class' => (empty($framework->collections) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
+                    'class' => (empty($framework_collections_count) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
