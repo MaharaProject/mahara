@@ -99,6 +99,7 @@ function pieform_element_submitcancel(Pieform $form, $element) {/*{{{*/
         }
         return pieform_element_button($form, $submitelement) . ' ' . pieform_element_cancel($form, $cancelelement);
     }
+    return '';
 }/*}}}*/
 
 function pieform_element_submitcancel_set_attributes($element) {/*{{{*/

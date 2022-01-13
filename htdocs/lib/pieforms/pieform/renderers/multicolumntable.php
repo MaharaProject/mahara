@@ -35,7 +35,7 @@ static $formrenderermct;
  *
  * @param Pieform $form   The form the element is being rendered for
  * @param array  $element The element to be rendered
- * @return string         The element rendered inside an appropriate container
+ * @return void
  */
 function pieform_renderer_multicolumntable(Pieform $form, $element) {/*{{{*/
     global $formrenderermct;

@@ -146,13 +146,18 @@ class Pieform {/*{{{*/
      * @var bool
      */
     private $submitted_by_dropzone = false;
-
     private $has_required_fields = false;
     private $all_required_field_labels_hidden = false;
-
     private $has_oneof_fields = false;
-
     private $submitvalue = 'submit';
+
+    protected $defaults;
+    protected $time;
+    protected $spamerror;
+    protected $error;
+
+    public $hashedfields = array();
+
 
     /*}}}*/
 

@@ -37,4 +37,5 @@ function pieform_rule_maxvalue(Pieform $form, $value, $element, $maxvalue) {/*{{
     if ($value !== '' && doubleval($value) > $maxvalue) {
         return sprintf($form->i18n('rule', 'maxvalue', 'maxvalue', $element), $maxvalue);
     }
+    return '';
 }/*}}}*/
