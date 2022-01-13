@@ -39,6 +39,7 @@ require_once(get_config('docroot') . 'testing/classes/TestLock.php');
 require_once(get_config('docroot') . 'testing/frameworks/behat/lib.php');
 require_once(get_config('docroot') . 'testing/frameworks/behat/classes/util.php');
 require_once(get_config('docroot') . 'testing/frameworks/behat/classes/BehatCommand.php');
+require_once(get_config('docroot') . 'testing/frameworks/behat/classes/BehatConfigManager.php');
 
 $cli = get_cli();
 
