@@ -40,6 +40,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Subfolder2" for "files_filebrowser_createfolder_name"
     And I press "Create folder"
+    And I wait "1" seconds
     And I follow "Subfolder2"
     And I attach the file "Image3.png" to "File"
     # Confirming upload was successful

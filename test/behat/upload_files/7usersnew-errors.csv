@@ -1,7 +1,7 @@
 username,password,email,firstname,lastname,expiry
-user0001,cH@ngeme1,user1@example.org,User0001,User0001,"today"
-user0002,cH@ngeme1,user2@example.org,User0002,User0002,2025-01--30
-user0003,cH@ngeme2,user3@example.org,User0003,User0003,2025/01-29
-user0004,cH@ngeme2,user4@example.org,User0004,User0004,"Marych 27, 2025"
-user0005,cH@ngeme3,user5@example.org,User0005,User0005,26-JUN-2025
-user0006,cH@ngeme3,user6@example.org,User0006,User0006,"Thu, May 8, 25"
+person0001,cH@ngeme1,person1@example.org,Person0001,Person0001,"today"
+person0002,cH@ngeme1,person2@example.org,Person0002,Person0002,2025-01--30
+person0003,cH@ngeme2,person3@example.org,Person0003,Person0003,2025/01-29
+person0004,cH@ngeme2,person4@example.org,Person0004,Person0004,"Marych 27, 2025"
+person0005,cH@ngeme3,person5@example.org,Person0005,Person0005,26-JUN-2025
+person0006,cH@ngeme3,person6@example.org,Person0006,Person0006,"Thu, May 8, 25"

@@ -1,21 +1,21 @@
 username,email,firstname,lastname,mobilenumber,town,studentid,occupation
-user0001,user1@example.org,User0001,User0001,0491 570 156,Weethalle,64000001,Referee
-user0002,user2@example.org,User0002,User0002,0491 570 157,Waratah,64000002,Chemist
-user0003,user3@example.org,User0003,User0003,0491 570 158,Morrison,64000003,Paralegal
-user0004,user4@example.org,User0004,User0004,0491 570 159,Oakwood,64000004,Insurance Agent
-user0005,user5@example.net,User0005,User0005,0491 570 110,Stewarts River,64000005,Hairdresser
-user0006,user6@example.org,User0006,User0006,0491 570 156,Benloch,64000006,High School Teacher
-user0007,user7@example.org,User0007,User0007,0491 570 157,Jimna,64000007,Radiologic Technologist
-user0008,user8@example.org,User0008,User0008,0491 570 158,Elizabeth,64000008,Automotive mechanic
-user0009,user9@example.org,User0009,User0009,0491 570 159,Kingsvale,64000009,Urban Planner
-user0010,user10@example.org,User0010,User0010,0491 570 110,Upper Tallebudgera,64000010,College Professor
-user0011,user11@example.org,User0011,User0011,0491 570 156,Oruanui,64000011,Interpreter & Translator
-user0012,user12@example.org,User0012,User0012,0491 570 157,Tokatoka,64000012,Landscape Architect
-user0013,user13@example.org,User0013,User0013,0491 570 158,Mangaroa,64000013,Loan Officer
-user0014,user14@example.org,User0014,User0014,0491 570 159,Waikakaho,64000014,Construction Manager
-user0015,user15@example.org,User0015,User0015,0491 570 110,Foxhill,64000015,Systems Analyst
-user0016,user16@example.org,User0016,User0016,0491 570 156,Tiroroa,64000016,Elementary School Teacher
-user0017,user17@example.org,User0017,User0017,0491 570 157,Overdale,64000017,Zoologist
-user0018,user18@example.org,User0018,User0018,0491 570 158,Ngapuna,64000018,Zoologist
-user0019,user19@example.org,User0019,User0019,0491 570 159,Kohekohe,64000019,Radiologic Technologist
-user0020,user20@example.org,User0020,User0020,0491 570 110,Rangiuru,64000020,Teacher
+person0001,person1@example.org,Whina,Cooper,0491 570 156,Weethalle,64000001,Community Leader
+person0002,person2@example.org,Willie,Apiata,0491 570 157,Waratah,64000002,Corporal
+person0003,person3@example.org,Erueti,Te Whiti-o-Rongomai III,0491 570 158,Morrison,64000003,Parihaka Leader
+person0004,person4@example.org,Hōne,Heke,0491 570 159,Oakwood,64000004,Ngāpuhi Chief
+person0005,person5@example.net,Apirana,Ngata,0491 570 110,Stewarts River,64000005,Minister for Māori Development
+person0006,person6@example.org,Rua,Kenana,0491 570 156,Benloch,64000006,Tūhoe Prophet
+person0007,person7@example.org,Koha,Ramai Hayward,0491 570 157,Jimna,64000007,Filmmaker
+person0008,person8@example.org,Te Puea,Hērangi,0491 570 158,Elizabeth,64000008,Kīngitanga Leader
+person0009,person9@example.org,Māui,Pōmare,0491 570 159,Kingsvale,64000009,Doctor
+person0010,person10@example.org,Tahupōtiki Wiremu,Rātana,0491 570 110,Upper Tallebudgera,64000010,Church Leader
+person0011,person11@example.org,Ada,Lovelace,0491 570 156,Oruanui,64000011,Mathematician
+person0012,person12@example.org,Grace,Hopper,0491 570 157,Tokatoka,64000012,Computer Scientist
+person0013,person13@example.org,Hedy,Lamarr,0491 570 158,Mangaroa,64000013,Inventor
+person0014,person14@example.org,Annie,Easley,0491 570 159,Waikakaho,64000014,Rocket Scientist
+person0015,person15@example.org,Mary,Wilkes,0491 570 110,Foxhill,64000015,Entrepreneur
+person0016,person16@example.org,Katherine,Johnson,0491 570 156,Tiroroa,64000016,Mathematician
+person0017,person17@example.org,Karen,Sparck Jones,0491 570 157,Overdale,64000017,Computer Scientist
+person0018,person18@example.org,Margereth,Hamilton,0491 570 158,Ngapuna,64000018,Systems Engineer
+person0019,person19@example.org,Henrietta,Swan Leavitt,0491 570 159,Kohekohe,64000019,Astronomer
+person0020,person20@example.org,Mary,Kenneth Keller,0491 570 110,Rangiuru,64000020,Computer Scientist
