@@ -845,6 +845,7 @@ function get_institution_themes($institution) {
  */
 function get_all_theme_objects() {
     static $themes = null;
+    static $theme = null;
 
     if (is_null($themes)) {
         $themes = array();

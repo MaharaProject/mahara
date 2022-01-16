@@ -524,12 +524,14 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * return all groups declared in LDAP
-     * DOES NOT SUPPORT PAGED RESULTS if more than 1000 (AD)
+     * Return all groups declared in LDAP.
+     *
+     * DOES NOT SUPPORT PAGED RESULTS if more than 1000 (ActiveDirectory)
+     *
      * @param string filter
      * @return array of strings
      */
-    private function ldap_get_grouplist($filter = "*", $searchsub) {
+    private function ldap_get_grouplist($filter = "*", $searchsub = array()) {
         /// returns all groups from ldap servers
         global $CFG;
 
@@ -1241,7 +1243,7 @@ class AuthLdap extends Auth {
                     unset($ldapdetails);
                     $nbupdated++;
 
-                    //unsuspend if was suspended by me at a previous run
+                    // unsuspend if was suspended by me at a previous run
                     if (!empty($record['suspendedreason']) && strstr($record['suspendedreason'], AUTH_LDAP_SUSPENDED_REASON) !== false) {
                         log_info('unsuspending user ' . $ldapusername);
 

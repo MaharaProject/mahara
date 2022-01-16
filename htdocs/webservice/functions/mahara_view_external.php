@@ -430,7 +430,7 @@ class mahara_view_external extends external_api {
                 list($apiname, $apinumber) = explode(':', $v['apilevel'], 2);
             }
             else {
-                throw new XmlrpcClientException('Invalid application level ' . hsc((string) $apilevel));
+                throw new XmlrpcClientException('Invalid application level ' . hsc((string) $v['apilevel']));
             }
 
             if ($apiname === 'moodle-assignsubmission-mahara' && ((int) $apinumber) >= 2) {
@@ -551,7 +551,7 @@ class mahara_view_external extends external_api {
                 safe_require('artefact', $plugin->name);
                 $classname = generate_class_name('artefact', $plugin->name);
                 if (is_callable($classname . '::view_submit_external_data')) {
-                    $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $viewid, $iscollection);
+                    $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $viewid, $v['iscollection']);
                 }
             }
             db_commit();

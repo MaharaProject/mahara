@@ -877,7 +877,7 @@ function create_temp_table($table, $continue=true, $feedback=true) {
 
 /**
  * This function will rename the table passed as argument
- * Before renaming the index, the function will check it exists
+ * Before renaming the table, the function will check it exists
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -904,7 +904,7 @@ function rename_table($table, $newname, $continue=true, $feedback=true) {
 
 /// Check newname isn't empty
     if (!$newname) {
-        debugging('New name for table ' . $index->getName() . ' is empty! Rename skipped', DEBUG_DEVELOPER);
+        debugging('New name for table ' . $table->getName() . ' is empty! Rename skipped', DEBUG_DEVELOPER);
         return true; //Table doesn't exist, nothing to do
     }
 

@@ -530,7 +530,7 @@ EOF;
 }
 
 function get_skin_elements() {
-    global $view, $USER, $pieformname;
+    global $view, $USER, $pieformname, $THEME;
     $issiteview = $view->get('institution') == 'mahara';
 
     if (!can_use_skins(null, false, $issiteview)) {

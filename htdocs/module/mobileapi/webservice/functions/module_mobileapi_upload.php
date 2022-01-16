@@ -167,7 +167,7 @@ class module_mobileapi_upload extends external_api {
                 $fileid = self::handle_file_upload(
                     'fileattachments',
                     $k,
-                    $blog->title,
+                    $title,
                     $v,
                     null,
                     $tags
