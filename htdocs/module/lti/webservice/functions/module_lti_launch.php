@@ -188,19 +188,27 @@ class module_lti_launch extends external_api {
                     throw new WebserviceInvalidParameterException(get_string('usernameexists2', 'module.lti', $user->username));
                 }
 
-                $userid = create_user($user, array(), $WEBSERVICE_INSTITUTION, true, $params['user_id']);
-
-                $updateremote = false;
-                $updateuser = false;
-
                 if ($parentauthid) {
+                    $authinstance = AuthFactory::create($parentauthid);
+                    $needremote = $authinstance->needs_remote_username();
+                    $remotevalue = $authinstance->needs_remote_username() ? $user->username : null;
+                    // We are creating the user with the parent authentication id as the one to save in the usr table
+                    // so we need to make the parent auth_remote_user row first via create_user()
+                    $userid = create_user($user, array(), $WEBSERVICE_INSTITUTION, $needremote, $remotevalue);
+                    // Then add the auth_remote_user row for this auth method second
                     $authremoteuser = new stdClass();
-                    $authremoteuser->authinstance = $parentauthid;
-                    $authremoteuser->remoteusername = $user->username;
+                    $authremoteuser->authinstance = $authinstanceid;
+                    $authremoteuser->remoteusername = $params['user_id'];
                     $authremoteuser->localusr = $user->id;
 
                     insert_record('auth_remote_user', $authremoteuser);
                 }
+                else {
+                    $userid = create_user($user, array(), $WEBSERVICE_INSTITUTION, true, $params['user_id']);
+                }
+
+                $updateremote = false;
+                $updateuser = false;
             }
             else {
                 $USER->logout();
