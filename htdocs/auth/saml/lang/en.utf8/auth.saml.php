@@ -153,3 +153,4 @@ $string['novalidauthinstanceprovided'] = 'Your selection is not possible. Please
 $string['identityprovider'] = 'Identity Provider';
 $string['selectmigrateto'] = 'Select institution to move to...';
 $string['samlneedtoremovephar'] = 'Unable to remove the file %s. Please delete the file and then run "make ssphp" again.';
+$string['instancename'] = 'Instance name';
