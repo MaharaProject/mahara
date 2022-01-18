@@ -1271,8 +1271,11 @@ function display_default_name($user) {
  * Currently a stub, will need to be improved and completed as demand arises.
  *
  * @param object $user The user object to make a full name out of. If empty,
- *                     the global $USER object is used*/
-function full_name($user=null) {
+ *                     the global $USER object is used
+ * @param string|null $reversedivider If we want to return the full name as lastname
+ *                                    then firstname and the divider to use
+ */
+function full_name($user=null, $reversedivider=null) {
     global $USER;
 
     if ($user === null) {
@@ -1291,7 +1294,13 @@ function full_name($user=null) {
        $userobj = $user;
     }
 
-   return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser1') : $userobj->firstname . ' ' . $userobj->lastname;
+    if ($reversedivider) {
+        $username_out = $userobj->lastname . $reversedivider . $userobj->firstname;
+    }
+    else {
+        $username_out = $userobj->firstname . ' ' . $userobj->lastname;
+    }
+    return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser1') : $username_out;
 }
 
 /**
