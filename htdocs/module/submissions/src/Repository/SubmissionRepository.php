@@ -328,8 +328,7 @@ class SubmissionRepository {
                 require_once(get_config('libroot') . 'collection.php');
 
                 $collection = new \Collection($portfolioElementId);
-                list ($comment, $viewid) = $collection->get_latest_comment(true);
-                $portfolioElementId = $viewid;
+                $portfolioElementId = $collection->get_viewids()[0];
                 break;
             default:
                 throw new \SystemException(get_string('unsupportedportfoliotype'), 'module.submissions');
