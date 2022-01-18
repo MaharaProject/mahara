@@ -1018,24 +1018,34 @@ class View {
                 }
             }
         }
-        // Delete any submission history
+        // Delete any submission related history
         delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
-
-        handle_event('deleteview', $eventdata);
-        delete_records('view_rows_columns', 'view', $this->id);
-        delete_records('view_copy_queue', 'view', $this->id);
+        $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'view', 'portfolioelementid', $this->id);
+        if ($submissionids) {
+            execute_sql("DELETE FROM {module_submissions_evaluation} WHERE submissionid IN (" . join(',', $submissionids) . ")");
+            execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
+        }
         if (is_plugin_active('lti', 'module')) {
             delete_records('lti_assessment_submission', 'viewid', $this->id);
         }
-        delete_records('view','id',$this->id);
+
+        // Delete view related material
+        delete_records('view_rows_columns', 'view', $this->id);
+        delete_records('view_copy_queue', 'view', $this->id);
+
         if (!empty($this->owner) && $this->is_submitted()) {
             // There should be no way to delete a submitted view,
             // but unlock its artefacts just in case.
             ArtefactType::update_locked($this->owner);
         }
+
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('description', $this->id);
         EmbeddedImage::delete_embedded_images('instructions', $this->id);
+
+        // Finally delete the view itself
+        delete_records('view', 'id', $this->id);
+        handle_event('deleteview', $eventdata);
         $this->deleted = true;
         db_commit();
     }
