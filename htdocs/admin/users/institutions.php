@@ -886,7 +886,7 @@ function institution_validate(Pieform $form, $values) {
     }
 
     // check that current group/member count is within new limit
-    if (!empty($institution)) {
+    if (!empty($institution && $institution !== 'mahara')) {
         $instarray = Institution::count_members(false, false, $institution);
         $thisinst = $instarray[$institution];
         if ($thisinst->members > $values['maxuseraccounts'] && !empty($values['maxuseraccounts'])) {
