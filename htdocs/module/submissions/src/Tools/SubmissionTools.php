@@ -317,9 +317,12 @@ class SubmissionTools {
         $limitedTitle = self::limitHtmlStringLengthByInsertingEllipses($portfolioElementTitle);
 
         if ($isNotReleased) {
+            $viewLink = '';
+            $deleted = false;
             switch ($portfolioElementType) {
                 case 'view':
                     $viewLink = get_config('wwwroot') . 'view/view.php?id=' . $portfolioElementId;
+                    $deleted = !get_field('view', 'id', 'id', $portfolioElementId);
                     break;
                 case 'collection':
                     require_once(get_config('docroot') . 'lib/collection.php');
@@ -330,13 +333,18 @@ class SubmissionTools {
                         // Should not happen, but who knows... :) To be sure, that the user gets the table
                     catch (\Exception $e) {
                         $portfolioElementTitleHtml = 'Collection is empty';
+                        $deleted = !get_field('collection', 'id', 'id', $portfolioElementId);
                     }
                     break;
                 default:
                     throw new \SystemException(get_string('unsupportedportfoliotype','module.submissions'));
             }
-            $portfolioElementTitleHtml = self::createPortfolioTitleHtml($viewLink, $limitedTitle, $portfolioElementTitle, $portfolioElementType, $showPortfolioButtons);
-
+            if ($deleted) {
+                $portfolioElementTitleHtml = $limitedTitle;
+            }
+            else {
+                $portfolioElementTitleHtml = self::createPortfolioTitleHtml($viewLink, $limitedTitle, $portfolioElementTitle, $portfolioElementType, $showPortfolioButtons);
+            }
         }
         else if (!is_null($exportArchiveId)) {
             $exportArchive = get_record('export_archive', 'id', $exportArchiveId);

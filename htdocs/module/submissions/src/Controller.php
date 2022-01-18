@@ -220,7 +220,7 @@ class Controller {
             $record->evaluatorName = null;
         }
 
-        $record->userElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->ownerId, $record->ownerName, '', '');
+        $record->userElementTitleHtml = (bool)$record->ownerDeleted ? $record->ownerName : SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->ownerId, $record->ownerName, '', '');
         if ($record->evaluatorId) {
             $record->evaluatorElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->evaluatorId, $record->evaluatorName, '', '');
         }
