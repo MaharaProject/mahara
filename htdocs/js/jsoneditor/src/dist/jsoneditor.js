@@ -3409,7 +3409,7 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     else {
       this.header = document.createElement('span');
       this.header.textContent = this.getTitle();
-      this.title = this.theme.getHeader(this.header);
+      this.title = this.theme.getHeader(this.header, 3);
       this.container.appendChild(this.title);
       this.container.style.position = 'relative';
 
@@ -3572,27 +3572,36 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       this.title_controls = this.theme.getHeaderButtonHolder();
       this.editjson_controls = this.theme.getHeaderButtonHolder();
       this.addproperty_controls = this.theme.getHeaderButtonHolder();
-      this.title.appendChild(this.title_controls);
-      this.title.appendChild(this.editjson_controls);
-      this.title.appendChild(this.addproperty_controls);
+      this.header_container = document.createElement('div');
+      this.container.appendChild(this.header_container);
+      this.title.setAttribute('style', 'display: inline-block');
+      this.title.after(this.title_controls);
+      this.title_controls.after(this.editjson_controls);
+      this.editjson_controls.after(this.addproperty_controls);
+
 
       // Show/Hide button
       this.collapsed = false;
-      this.toggle_button = this.getButton('', 'collapse', this.translate('button_collapse'));
+      this.toggle_button = this.getButton(this.translate('button_collapse'),'collapse',this.translate('button_collapse_title',[self.getTitle()]));
       this.toggle_button.classList.add('json-editor-btntype-toggle');
+      this.toggle_button.setAttribute('aria-expanded', 'true');
+      this.toggle_button.removeAttribute('title');
+      this.toggle_button.setAttribute('style', 'margin-bottom: 10px;')
       this.title_controls.appendChild(this.toggle_button);
       this.toggle_button.addEventListener('click',function(e) {
         e.preventDefault();
         e.stopPropagation();
         if(self.collapsed) {
+          self.toggle_button.setAttribute('aria-expanded', 'true');
           self.editor_holder.style.display = '';
           self.collapsed = false;
-          self.setButtonText(self.toggle_button,'','collapse',self.translate('button_collapse'));
+          self.setButtonText(this,self.translate('button_collapse'),'collapse',self.translate('button_collapse_title',[self.getTitle()]));
         }
         else {
+          self.toggle_button.setAttribute('aria-expanded', 'false');
           self.editor_holder.style.display = 'none';
           self.collapsed = true;
-          self.setButtonText(self.toggle_button,'','expand',self.translate('button_expand'));
+          self.setButtonText(this,self.translate('button_expand'),'expand',self.translate('button_expand_title',[self.getTitle()]));
         }
       });
 
@@ -4175,22 +4184,26 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     var self = this;
 
     if(!this.options.compact) {
+      this.header_container = document.createElement('div');
+      this.header_container.setAttribute('style', 'display:flex; align-items: center; padding: 20px 0;')
+      this.container.appendChild(this.header_container);
       this.header = document.createElement('span');
       this.header.textContent = this.getTitle();
-      this.title = this.theme.getHeader(this.header);
-      this.container.appendChild(this.title);
+      this.title = this.theme.getHeader(this.header, 2);
+      this.title.setAttribute('style', 'display: inline-block; margin: 0px;');
+      this.header_container.appendChild(this.title);
       this.title_controls = this.theme.getHeaderButtonHolder();
-      this.title.appendChild(this.title_controls);
+      this.header_container.appendChild(this.title_controls);
       if(this.schema.description) {
         this.description = this.theme.getDescription(this.schema.description);
-        this.container.appendChild(this.description);
+        this.header_container.after(this.description);
       }
       this.error_holder = document.createElement('div');
       this.container.appendChild(this.error_holder);
 
       if(this.schema.format === 'tabs-top') {
         this.controls = this.theme.getHeaderButtonHolder();
-        this.title.appendChild(this.controls);
+        this.header_container.appendChild(this.controls);
         this.tabs_holder = this.theme.getTopTabHolder(this.getValidId(this.getItemTitle()));
         this.container.appendChild(this.tabs_holder);
         this.row_holder = this.theme.getTopTabContentHolder(this.tabs_holder);
@@ -4551,7 +4564,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
       }
 
       if(!this.collapsed && controls_needed) {
-        this.controls.style.display = 'inline-block';
+        this.controls.style.display = '';
       }
       else {
         this.controls.style.display = 'none';
@@ -4589,7 +4602,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
 
     // Buttons to delete row, move row up, and move row down
     if(!self.hide_delete_buttons) {
-      self.rows[i].delete_button = this.getButton(self.getItemTitle(),'delete',this.translate('button_delete_row_title',[self.getItemTitle()]));
+      self.rows[i].delete_button = this.getButton(this.translate('button_delete_row_title_short'),'delete',this.translate('button_delete_row_title',[self.getItemTitle()]));
       self.rows[i].delete_button.classList.add('delete', 'json-editor-btntype-delete');
       self.rows[i].delete_button.setAttribute('data-i',i);
       self.rows[i].delete_button.addEventListener('click',function(e) {
@@ -4662,7 +4675,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
 
 
     if(i && !self.hide_move_buttons) {
-      self.rows[i].moveup_button = this.getButton('','moveup',this.translate('button_move_up_title'));
+      self.rows[i].moveup_button = this.getButton(this.translate('button_move_up'),'moveup',this.translate('button_move_up_title',[this.getItemTitle()]));
       self.rows[i].moveup_button.classList.add('moveup', 'json-editor-btntype-move');
       self.rows[i].moveup_button.setAttribute('data-i',i);
       self.rows[i].moveup_button.addEventListener('click',function(e) {
@@ -4691,7 +4704,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     }
 
     if(!self.hide_move_buttons) {
-      self.rows[i].movedown_button = this.getButton('','movedown',this.translate('button_move_down_title'));
+      self.rows[i].movedown_button = this.getButton(this.translate('button_move_down'),'movedown',this.translate('button_move_down_title', [this.getItemTitle()]));
       self.rows[i].movedown_button.classList.add('movedown', 'json-editor-btntype-move');
       self.rows[i].movedown_button.setAttribute('data-i',i);
       self.rows[i].movedown_button.addEventListener('click',function(e) {
@@ -4725,8 +4738,10 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     var self = this;
 
     this.collapsed = false;
-    this.toggle_button = this.getButton('','collapse',this.translate('button_collapse'));
+    this.toggle_button = this.getButton(self.translate('button_collapse'),'collapse',this.translate('button_collapse_title',[self.getTitle()]));
     this.toggle_button.classList.add('json-editor-btntype-toggle');
+    this.toggle_button.setAttribute('aria-expanded', 'true');
+    this.toggle_button.removeAttribute('title');
     this.title_controls.appendChild(this.toggle_button);
     var row_holder_display = self.row_holder.style.display;
     var controls_display = self.controls.style.display;
@@ -4735,19 +4750,21 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
       e.stopPropagation();
       if(self.collapsed) {
         self.collapsed = false;
+        self.toggle_button.setAttribute('aria-expanded', 'true');
         if(self.panel) self.panel.style.display = '';
         self.row_holder.style.display = row_holder_display;
         if(self.tabs_holder) self.tabs_holder.style.display = '';
         self.controls.style.display = controls_display;
-        self.setButtonText(this,'','collapse',self.translate('button_collapse'));
+        self.setButtonText(this,self.translate('button_collapse'),'collapse',self.translate('button_collapse_title',[self.getTitle()]));
       }
       else {
         self.collapsed = true;
+        self.toggle_button.setAttribute('aria-expanded', 'false');
         self.row_holder.style.display = 'none';
         if(self.tabs_holder) self.tabs_holder.style.display = 'none';
         self.controls.style.display = 'none';
         if(self.panel) self.panel.style.display = 'none';
-        self.setButtonText(this,'','expand',self.translate('button_expand'));
+        self.setButtonText(this,self.translate('button_expand'),'expand',self.translate('button_expand_title',[self.getTitle()]));
       }
     });
 
@@ -4765,7 +4782,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     }
 
     // Add "new row" and "delete last" buttons below editor
-    this.add_row_button = this.getButton(this.getItemTitle(),'add',this.translate('button_add_row_title',[this.getItemTitle()]));
+    this.add_row_button = this.getButton(this.translate('button_add_row'),'add',this.translate('button_add_row_title',[this.getItemTitle()]));
     this.add_row_button.classList.add('json-editor-btntype-add');
     this.add_row_button.addEventListener('click',function(e) {
       e.preventDefault();
@@ -4820,7 +4837,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     });
     self.controls.appendChild(this.delete_last_row_button);
 
-    this.remove_all_rows_button = this.getButton(this.translate('button_delete_all'),'delete',this.translate('button_delete_all_title'));
+    this.remove_all_rows_button = this.getButton(this.translate('button_delete_all'),'delete',this.translate('button_delete_all_title',[this.getHeaderText()]));
     this.remove_all_rows_button.classList.add('json-editor-btntype-deleteall');
     this.remove_all_rows_button.addEventListener('click',function(e) {
       e.preventDefault();
@@ -4935,7 +4952,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
     this.width = tmp.getNumColumns() + 2;
 
     if(!this.options.compact) {
-      this.title = this.theme.getHeader(this.getTitle());
+      this.title = this.theme.getHeader(this.getTitle(), 3);
       this.container.appendChild(this.title);
       this.title_controls = this.theme.getHeaderButtonHolder();
       this.title.appendChild(this.title_controls);
@@ -5214,7 +5231,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
 
     // Buttons to delete row, move row up, and move row down
     if(!this.hide_delete_buttons) {
-      self.rows[i].delete_button = this.getButton('','delete',this.translate('button_delete_row_title_short'));
+      self.rows[i].delete_button = this.getButton(this.translate('button_delete_row_title_short'),'delete',this.translate('button_delete_row_title', [this.getItemTitle()]));
       self.rows[i].delete_button.classList.add('delete','json-editor-btntype-delete');
       self.rows[i].delete_button.setAttribute('data-i',i);
       self.rows[i].delete_button.addEventListener('click',function(e) {
@@ -5242,7 +5259,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
 
 
     if(i && !this.hide_move_buttons) {
-      self.rows[i].moveup_button = this.getButton('','moveup',this.translate('button_move_up_title'));
+      self.rows[i].moveup_button = this.getButton(this.translate('button_move_up'),'moveup',this.translate('button_move_up_title',[this.getItemTitle()]));
       self.rows[i].moveup_button.classList.add('moveup','json-editor-btntype-move');
       self.rows[i].moveup_button.setAttribute('data-i',i);
       self.rows[i].moveup_button.addEventListener('click',function(e) {
@@ -5263,7 +5280,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
     }
 
     if(!this.hide_move_buttons) {
-      self.rows[i].movedown_button = this.getButton('','movedown',this.translate('button_move_down_title'));
+      self.rows[i].movedown_button = this.getButton(this.translate('button_move_down'),'movedown',this.translate('button_move_down_title', [this.getItemTitle()]));
       self.rows[i].movedown_button.classList.add('movedown','json-editor-btntype-move');
       self.rows[i].movedown_button.setAttribute('data-i',i);
       self.rows[i].movedown_button.addEventListener('click',function(e) {
@@ -5288,8 +5305,10 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
     var self = this;
 
     this.collapsed = false;
-    this.toggle_button = this.getButton('','collapse',this.translate('button_collapse'));
+    this.toggle_button = this.getButton(self.translate('button_collapse'),'collapse',this.translate('button_collapse_title',[self.getTitle()]));;
     this.toggle_button.classList.add('json-editor-btntype-toggle');
+    this.toggle_button.setAttribute('aria-expanded', 'true');
+    this.toggle_button.removeAttribute('title');
     if(this.title_controls) {
       this.title_controls.appendChild(this.toggle_button);
       this.toggle_button.addEventListener('click',function(e) {
@@ -5297,14 +5316,16 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
         e.stopPropagation();
 
         if(self.collapsed) {
+          self.toggle_button.setAttribute('aria-expanded', 'true');
           self.collapsed = false;
           self.panel.style.display = '';
-          self.setButtonText(this,'','collapse',self.translate('button_collapse'));
+          self.setButtonText(this,self.translate('button_collapse'),'collapse',self.translate('button_collapse_title',[self.getTitle()]));
         }
         else {
+          self.toggle_button.setAttribute('aria-expanded', 'false');
           self.collapsed = true;
           self.panel.style.display = 'none';
-          self.setButtonText(this,'','expand',self.translate('button_expand'));
+          self.setButtonText(this,self.translate('button_expand'),'expand',self.translate('button_expand_title',[self.getTitle()]));
         }
       });
 
@@ -5323,7 +5344,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
     }
 
     // Add "new row" and "delete last" buttons below editor
-    this.add_row_button = this.getButton(this.getItemTitle(),'add',this.translate('button_add_row_title',[this.getItemTitle()]));
+    this.add_row_button = this.getButton(this.translate('button_add_row'),'add',this.translate('button_add_row_title',[this.getItemTitle()]));
     this.add_row_button.classList.add('json-editor-btntype-add');
     this.add_row_button.addEventListener('click',function(e) {
       e.preventDefault();
@@ -5353,7 +5374,7 @@ JSONEditor.defaults.editors.table = JSONEditor.defaults.editors.array.extend({
     });
     self.controls.appendChild(this.delete_last_row_button);
 
-    this.remove_all_rows_button = this.getButton(this.translate('button_delete_all'),'delete',this.translate('button_delete_all_title'));
+    this.remove_all_rows_button = this.getButton(this.translate('button_delete_all'),'delete',this.translate('button_delete_all_title',[this.getItemTitle()]));
     this.remove_all_rows_button.classList.add('json-editor-btntype-deleteall');
     this.remove_all_rows_button.addEventListener('click',function(e) {
       e.preventDefault();
@@ -7783,15 +7804,14 @@ JSONEditor.AbstractTheme = Class.extend({
     el.style.fontWeight = 'normal';
     return el;
   },
-  getHeader: function(text) {
-    var el = document.createElement('h3');
+  getHeader: function(text, level) {
+    var el = document.createElement('h' + level);
     if(typeof text === "string") {
       el.textContent = text;
     }
     else {
       el.appendChild(text);
     }
-
     return el;
   },
   getCheckbox: function() {
@@ -7934,6 +7954,7 @@ JSONEditor.AbstractTheme = Class.extend({
     return el;
   },
   setButtonText: function(button, text, icon, title) {
+    button.setAttribute('aria-label', title)
     // Clear previous contents. https://jsperf.com/innerhtml-vs-removechild/37
     while (button.firstChild) {
       button.removeChild(button.firstChild);
@@ -7945,7 +7966,6 @@ JSONEditor.AbstractTheme = Class.extend({
     var spanEl = document.createElement('span');
     spanEl.appendChild(document.createTextNode(text));
     button.appendChild(spanEl);
-    if(title) button.setAttribute('title',title);
   },
   getTable: function() {
     return document.createElement('table');
@@ -9900,7 +9920,6 @@ JSONEditor.defaults.themes.materialize = JSONEditor.AbstractTheme.extend(
    * @returns {HTMLElement} The header element.
    */
   getHeader: function(text) {
-
       var el = document.createElement('h5');
 
       if (typeof text === 'string') {
@@ -10609,6 +10628,7 @@ JSONEditor.defaults.translate = function(key, variables) {
       // Mahara specific change - change button text to lc except first char.
       string = string.toLowerCase();
       string = string.charAt(0).toUpperCase() + string.slice(1);
+      string = string.replace(/smartevidence/i, 'SmartEvidence');
       // Mahara change end ---
     }
   }
@@ -10768,11 +10788,11 @@ JSONEditor.defaults.languages.en = {
   /**
    * Text on Delete All buttons
    */
-  button_delete_all: "All",
+  button_delete_all: "Delete all",
   /**
    * Title on Delete All buttons
    */
-  button_delete_all_title: "Delete All",
+  button_delete_all_title: "Delete all {{0}}",
   /**
     * Text on Delete Last buttons
     * @variable This key takes one variable: The title of object to delete
@@ -10788,6 +10808,7 @@ JSONEditor.defaults.languages.en = {
     * @variable This key takes one variable: The title of object to add
     */
   button_add_row_title: "Add {{0}}",
+  button_add_row: "Add",
   // Mahara customisation start ---
   /**
     * Title on Edit JSON buttons
@@ -10803,11 +10824,13 @@ JSONEditor.defaults.languages.en = {
   /**
     * Title on Move Down buttons
     */
-  button_move_down_title: "Move down",
+  button_move_down: "Move down",
+  button_move_down_title: "Move {{0}} down",
   /**
     * Title on Move Up buttons
     */
-  button_move_up_title: "Move up",
+  button_move_up: "Move up",
+  button_move_up_title: "Move {{0}} up",
   /**
     * Title on Delete Row buttons
     * @variable This key takes one variable: The title of object to delete
@@ -10821,10 +10844,13 @@ JSONEditor.defaults.languages.en = {
     * Title on Collapse buttons
     */
   button_collapse: "Collapse",
+  button_collapse_title: "Collapse {{0}}",
   /**
     * Title on Expand buttons
     */
   button_expand: "Expand",
+  button_expand_title: "Expand {{0}}",
+
   /**
     * Title on Flatpickr toggle buttons
     */

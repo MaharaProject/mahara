@@ -150,12 +150,27 @@ function edit_framework_section() {
         'invalidjsonineditor' => 'module.framework',
         'validjson' => 'module.framework',
         'moveright' => 'module.framework',
+        'moverightspecific' => 'module.framework',
         'moveleft' => 'module.framework',
+        'moveleftspecific' => 'module.framework',
         'deletelast' => 'module.framework',
-        'collapse' => 'mahara',
+        'collapsespecific' => 'mahara',
+        'collapse' => 'module.framework',
+        'collapseform' => 'module.framework',
         'add' => 'mahara',
+        'addspecific' => 'mahara',
+        'addstandard' => 'module.framework',
+        'addstandardelement' => 'module.framework',
+        'addspecific' => 'module.framework',
+        'expand' => 'module.framework',
+        'expandform' => 'module.framework',
         'expand' => 'mahara',
+        'expandspecific' => 'mahara',
+        'delete' => 'mahara',
+        'deletespecific' => 'mahara',
         'deleteall' => 'module.framework',
+        'deleteallspecific' => 'module.framework',
+        'deleteallstandardelements' => 'module.framework',
         'selfassesseddescription' => 'module.framework',
         'standardsdescription' => 'module.framework',
         'no' => 'mahara',
@@ -166,8 +181,7 @@ function edit_framework_section() {
         'all' => 'module.framework',
         'copyexistingframework' => 'module.framework',
         'editsavedframework' => 'module.framework',
-        'removestandardorelementconfirm' => 'module.framework',
-        'delete' => 'module.framework'
+        'removestandardorelementconfirm' => 'module.framework'
     );
 
     //set up variables for correct selection of framework from dropdowns
