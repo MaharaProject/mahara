@@ -16,7 +16,7 @@ Background:
 
 Scenario: Admin to add a person (Bug 1703721)
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Add a person" in "People" from administration menu
+  And I choose "Add a person" from administration menu
   And I set the following fields to these values:
   | First name | Bob |
   | Last name | One |
@@ -40,7 +40,7 @@ Scenario: Admin to add a person (Bug 1703721)
   And I follow "Log in as this person"
   And I should see "You are required to change your password before you can proceed."
   And I follow "log in anyway"
-  And I choose "People" from administration menu
+  And I choose "People search" from administration menu
   And I follow "Bob"
   And I wait "1" seconds
   And I should see "Administrator of Institution One"

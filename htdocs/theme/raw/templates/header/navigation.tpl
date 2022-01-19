@@ -1,34 +1,36 @@
 {if $MAINNAV}
 <nav aria-label="{str tag=mainmenu setction=mahara}">
-  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main" role="tabcard">
+  <div id="main-nav" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main">
     <ul id="nav" class="nav navbar-nav">
         {strip}
             {foreach from=$MAINNAV item=item name=menu}
             <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}">
-                <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
-                    {if $item.iconclass}
+                {if !$item.submenu}{* Create a link to the main page *}
+                <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if}">
+                {else}{* Otherwise, create list items as buttons to expand submenus *}
+                <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle navbar-toggle{if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#nav" data-target="#childmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+                {/if}
+                {if $item.iconclass}
                     <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
-                    {/if}
-
-                    {if $item.accessibletitle}
+                {/if}
+                {if $item.accessibletitle}
                     <span role="presentation" aria-hidden="true">
-                        {/if}
-                        {$item.title}
-                        {if $item.accessibletitle}
+                {/if}
+                {$item.title}
+                {if $item.accessibletitle}
                     </span>
                     <span class="accessible-hidden sr-only">
                         ({$item.accessibletitle})
                     </span>
-                    {/if}
+                {/if}
+                {if !$item.submenu}{* Close the link tag *}
                 </a>
-                {if $item.submenu}
-                <button type="button" class="navbar-showchildren navbar-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="#nav" data-target="#childmenu-{$dwoo.foreach.menu.index}">
-                    <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                    <span class="nav-title sr-only">{str tag="showmenu" section="mahara" arg1="$item.title"}</span>
+                {else}{* Close the button tag *}
+                    <span class="icon icon-chevron-down navbar-showchildren" role="presentation" aria-hidden="true"></span>
                 </button>
                 {/if}
                 {if $item.submenu}
-                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
+                <ul id="childmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav">
                 {strip}
                     {foreach from=$item.submenu item=subitem}
                     <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
@@ -58,35 +60,37 @@
   </div>
 </nav>
 <nav aria-label="{str tag=adminmenu section=mahara}">
-  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin" role="tabcard">
+  <div id="main-nav-admin" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}adminnav{/if} nav collapse navbar-collapse nav-main-admin">
     <ul id="navadmin" class="nav navbar-nav">
     {strip}
         {foreach from=$MAINNAVADMIN item=item name=menu}
         <li class="{if $item.path}{$item.path}{else}dashboard{/if}{if $item.selected} active{/if}">
-            <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if} {if $item.submenu}menu-dropdown-toggle{/if}">
-                {if $item.iconclass}
+            {if !$item.submenu}{* Create a link to the main page *}
+            <a href="{$WWWROOT}{$item.url}" class="{if $item.path}{$item.path}{else}dashboard{/if}">
+            {else}{* Otherwise, create list items as buttons to expand submenus *}
+            <button class="{if $item.path}{$item.path}{else}dashboard{/if} menu-dropdown-toggle navbar-toggle{if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#navadmin" data-target="#adminchildmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+            {/if}
+            {if $item.iconclass}
                 <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
-                {/if}
-
-                {if $item.accessibletitle}
+            {/if}
+            {if $item.accessibletitle}
                 <span aria-hidden="true" role="presentation">
-                    {/if}
-                    {$item.title}
-                    {if $item.accessibletitle}
+            {/if}
+            {$item.title}
+            {if $item.accessibletitle}
                 </span>
                 <span class="accessible-hidden sr-only">
-                ({$item.accessibletitle})
+                    ({$item.accessibletitle})
                 </span>
-                {/if}
+            {/if}
+            {if !$item.submenu}{* Close the link tag *}
             </a>
-            {if $item.submenu}
-            <button type="button" class="navbar-showchildren navbar-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="#navadmin" data-target="#adminchildmenu-{$dwoo.foreach.menu.index}">
-                <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                <span class="nav-title sr-only">{str tag="showmenu" section="mahara" arg1="$item.title"}</span>
+            {else}{* Close the button tag *}
+                <span class="icon icon-chevron-down navbar-showchildren" role="presentation" aria-hidden="true"></span>
             </button>
             {/if}
             {if $item.submenu}
-            <ul id="adminchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
+            <ul id="adminchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav">
             {strip}
                 {foreach from=$item.submenu item=subitem}
                 <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
@@ -119,25 +123,28 @@
 
 {if $RIGHTNAV}
 <nav aria-label="{str tag=usermenu1 section=mahara}">
-  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user" role="tabcard">
+  <div id="main-nav-user" class="{if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}{/if} nav collapse navbar-collapse nav-main-user">
     <ul id="navuser" class="nav navbar-nav">
       {strip}
         {foreach from=$RIGHTNAV item=item}
         <li class="{$item.path}{if $item.selected} active{/if}{if $item.class} {$item.class}{/if}  {if $item.iconclass}has-icon{/if} dropdown-item">
-            <a {if $item.linkid}id="{$item.linkid}"{/if} {if $item.aria}{foreach $item.aria key=key item=value}aria-{$key}="{$value}" {/foreach}{/if}href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}" class="{if $item.submenu}menu-dropdown-toggle{/if}">
+            {if !$item.submenu}{*if item is a link, create a link tag *}
+            <a {if $item.linkid}id="{$item.linkid}"{/if} {if $item.aria}{foreach $item.aria key=key item=value}aria-{$key}="{$value}" {/foreach}{/if}href="{if $item.wwwroot}{$item.wwwroot}{else}{$WWWROOT}{/if}{$item.url}" class="menu-dropdown-toggle">
+            {else} {* otherwise, create a button *}
+            <button type="button" class="navbar-toggle menu-dropdown-toggle{if !$item.selected} collapsed{/if}" data-toggle="collapse" data-parent="#navuser" data-target="#userchildmenu-{$dwoo.foreach.menu.index}" aria-expanded="false">
+            {/if}
                 {if $item.iconclass}
                 <span class="icon icon-{$item.iconclass}" role="presentation" aria-hidden="true"></span>
                 {/if}
                 <span class="nav-title">{$item.title}</span>
+            {if !$item.submenu}{* Close the link tag *}
             </a>
-            {if $item.submenu}
-            <button type="button" class="navbar-showchildren navbar-toggle {if !$item.selected}collapsed{/if}" data-toggle="collapse" data-parent="#navuser" data-target="#userchildmenu-{$dwoo.foreach.menu.index}">
-                 <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                 <span class="nav-title sr-only">{str tag="showmenu" section="mahara" arg1="$item.title"}</span>
+            {else}{* Close the button tag *}
+                 <span class="icon icon-chevron-down navbar-showchildren" role="presentation" aria-hidden="true"></span>
             </button>
             {/if}
             {if $item.submenu}
-            <ul id="userchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav" role="menu">
+            <ul id="userchildmenu-{$dwoo.foreach.menu.index}" class="{if $item.selected} show{/if} collapse child-nav">
                {foreach from=$item.submenu item=subitem}
                <li class="{if $subitem.selected}active {/if}{if $subitem.submenu}has-sub {/if}">
                    <a href="{$WWWROOT}{$subitem.url}">
@@ -160,7 +167,7 @@
             {/if}
         </li>
         {/foreach}
-        <li class="btn-logout has-icon">
+        <li class="btn-logout has-icon menu-dropdown-toggle">
             <a id="logoutbutton" href="{$WWWROOT}?logout">
                 <span class="icon icon-sign-out-alt" role="presentation" aria-hidden="true"></span>
                 <span class="nav-title">{str tag="logout"}</span>

@@ -148,69 +148,68 @@ textarea:focus {
   }
 }
 
-.navbar-main .navbar-nav > li > a {
+.navbar-main .navbar-nav > li > a,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle {
     color: {$data.navfg};
     background-color: {$data.navbg};
     border-color: transparent;
 }
-.navbar-main .navbar-nav > li > a .icon {
+.navbar-main .navbar-nav > li > a .icon,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle .icon {
     color: {$data.navfg};
 }
+.navbar-main .navbar-nav > li > a .icon.navbar-showchildren,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle .icon.navbar-showchildren {
+      color: {$data.navfg};
+}
 .navbar-main .navbar-nav > li > a:hover,
-.navbar-main .navbar-nav > li > a:focus {
+.navbar-main .navbar-nav > li > a:focus,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle:focus,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle:hover {
     color: #333;
     background-color: #F1F1F1;
 }
 
 .navbar-main .navbar-nav > li > a:hover .icon,
-.navbar-main .navbar-nav > li > a:focus .icon {
+.navbar-main .navbar-nav > li > a:focus .icon,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle:hover .icon,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle:focus .icon {
     color: #333;
 }
-.navbar-main .navbar-nav > li > a:hover .navbar-toggle .icon,
-.navbar-main .navbar-nav > li > a:focus .navbar-toggle .icon {
+.navbar-main .navbar-nav > li > a:hover .icon.navbar-showchildren,
+.navbar-main .navbar-nav > li > a:focus .icon.navbar-showchildren,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle:hover .icon.navbar-showchildren,
+.navbar-main .navbar-nav > li > button.menu-dropdown-toggle:focus .icon.navbar-showchildren {
     color: #333;
 }
 
-.navbar-main .navbar-nav > .active > a {
+.navbar-main .navbar-nav > .active > a,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle {
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
-.navbar-main .navbar-nav > .active > a .icon {
+.navbar-main .navbar-nav > .active > a .icon,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle .icon {
     color: {$data.navfg};
 }
 .navbar-main .navbar-nav > .active > a:focus,
-.navbar-main .navbar-nav > .active > a:hover {
+.navbar-main .navbar-nav > .active > a:hover,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle:focus,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle:hover {
     color: {$data.navfg};
     background-color: {$data.navbg};
 }
 .navbar-main .navbar-nav > .active > a:focus .icon,
-.navbar-main .navbar-nav > .active > a:hover .icon {
+.navbar-main .navbar-nav > .active > a:hover .icon,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle:focus .icon,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle:hover .icon {
     color: {$data.navfg};
 }
-.navbar-main .navbar-nav > .active > a:focus .navbar-toggle .icon,
-.navbar-main .navbar-nav > .active > a:hover .navbar-toggle .icon {
+.navbar-main .navbar-nav > .active > a:focus .icon.navbar-showchildren,
+.navbar-main .navbar-nav > .active > a:hover .icon.navbar-showchildren,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle:focus .icon.navbar-showchildren,
+.navbar-main .navbar-nav > .active > button.menu-dropdown-toggle:hover .icon.navbar-showchildren {
     ccolor: #333;
-}
-
-.nav .navbar-showchildren {
-    color: {$data.navfg};
-    background-color: {$data.navbg};
-}
-.nav .navbar-showchildren:hover,
-.nav .navbar-showchildren:focus {
-    color: #333;
-    background-color: #F1F1F1;
-}
-.nav .navbar-showchildren .icon,
-.nav .navbar-showchildren .icon {
-    color: {$data.navfg};
-}
-.nav .active .navbar-showchildren {
-    background-color: #F1F1F1;
-    color: #333;
-}
-.nav .active .navbar-showchildren .icon {
-    color: #333;
 }
 
 .navbar-main .child-nav > li > a {

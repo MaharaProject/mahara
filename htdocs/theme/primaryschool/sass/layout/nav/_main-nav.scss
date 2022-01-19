@@ -14,17 +14,19 @@ $groups-color: $theme-secondary-color; // green
 // 3) Main color (see colour value above)
 // 4) Lighter shade (can be specified in hex,rgba value)
 // 5) Darker shade (can be specified in hex,rgba value)
+// 6) Light focus shad (can be specified in hex,rgba value)
 $menu-styles: (
-  ("home", $home-color, scale-color($home-color, $lightness: -2%), scale-color($home-color, $lightness: -5%)),
-  ("create", $content-color, scale-color($content-color, $lightness: -10%), scale-color($content-color, $lightness: -10%)),
-  ("engage", $myportfolio-color, scale-color($myportfolio-color, $lightness: -2%), scale-color($myportfolio-color, $lightness: -5%)),
-  ("manage", $groups-color, scale-color($groups-color, $lightness: -2%), scale-color($groups-color, $lightness: -5%))
+  ("home", $home-color, scale-color($home-color, $lightness: -2%), scale-color($home-color, $lightness: -5%), scale-color($home-color, $lightness: 50%)),
+  ("create", $content-color, scale-color($content-color, $lightness: -10%), scale-color($content-color, $lightness: -10%), scale-color($content-color, $lightness: 50%)),
+  ("engage", $myportfolio-color, scale-color($myportfolio-color, $lightness: -2%), scale-color($myportfolio-color, $lightness: -5%), scale-color($myportfolio-color, $lightness: 50%)),
+  ("manage", $groups-color, scale-color($groups-color, $lightness: -2%), scale-color($groups-color, $lightness: -5%), scale-color($groups-color, $lightness: 50%))
 );
 
 .nav-main .navbar-nav {
     // Override basic style color specified in Bootstrap variables
     > li {
-        > a {
+        > a,
+        > button.menu-dropdown-toggle {
             font-weight: $font-weight-bold;
             color: $white;
             border-color: transparent;
@@ -54,14 +56,29 @@ $menu-styles: (
     }
     @each $section in $menu-styles {
         > .#{nth($section, 1)} {
-            > a {
+            > a,
+            > button.menu-dropdown-toggle {
                 background-color: #{nth($section, 2)};
                 &:focus,
                 &:hover {
                     background-color: #{nth($section, 3)};
+                    outline-color: #{nth($section, 5)};
+
+                    // navbar menu children toggles
+                    .icon.navbar-showchildren {
+                        background-color: #{nth($section, 4)};
+                    }
+                }
+
+                // navbar menu children toggles
+                .icon.navbar-showchildren {
+                    background-color: #{nth($section, 2)};
                 }
             }
-            &.active > a {
+
+            &.active > a,
+            &.active > button.menu-dropdown-toggle {
+                background-color: $white;
                 &:before {
                     color: #{nth($section, 2)};
                     &:focus,
@@ -75,20 +92,14 @@ $menu-styles: (
                     background-color: $white;
                 }
             }
-            .navbar-showchildren,
-            &.active .navbar-showchildren {
-                background-color: #{nth($section, 2)};
-                &:focus,
-                &:hover {
-                    background-color: #{nth($section, 4)};
-                }
-            }
+
             .child-nav li {
                 a {
                     background-color: #{nth($section, 4)};
                     &:focus,
                     &:hover {
                         background-color: #{nth($section, 2)};
+                        outline-color: #{nth($section, 5)};
                     }
                 }
                 &.active a {

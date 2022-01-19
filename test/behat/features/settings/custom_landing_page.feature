@@ -25,7 +25,7 @@ Background:
 
 Scenario: Set the custom landing page
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Configure site" from administration menu
+    And I choose "Site options" from administration menu
     # I set the custom landing option
     And I expand the section "Site settings"
     And I enable the switch "Custom landing page"
@@ -40,7 +40,7 @@ Scenario: Set the custom landing page
     And I log out
 
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Configure site" from administration menu
+    And I choose "Site options" from administration menu
     # I set the custom landing option
     And I expand the section "Site settings"
     # Check if we can use a page as landing page
@@ -55,7 +55,7 @@ Scenario: Set the custom landing page
     And I log out
 
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Configure site" from administration menu
+    And I choose "Site options" from administration menu
     # I set the custom landing option
     And I expand the section "Site settings"
     And I disable the switch "Custom landing page"
