@@ -77,6 +77,11 @@ function accessibilityReorder() {
 
 /*
  * Updates the gridstack dimensions in the DOM elements and saves the new dimensions to the DB
+ *
+ * Note: the use of unary plus operator in this function see
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Unary_plus
+ * for more information.
+ *
  * @param topBlock node that will be on top of the other block after the swap
  * @param bottomBlock node that will be below the other block after the swap
  * @param topBlockNewY int is the new gridstack value y for the block that will be on the top
@@ -85,9 +90,9 @@ function swapBlocks(topBlock, bottomBlock, topBlockNewY) {
     var topHeight, bottomY;
     topHeight = topBlock.getAttribute('data-gs-height');
     var bottomY = +topBlockNewY + +topHeight;
-
-    $('.grid-stack').data('gridstack').move(topBlock, +topBlock.getAttribute('data-gs-x'), +topBlockNewY);
-    $('.grid-stack').data('gridstack').move(bottomBlock, +bottomBlock.getAttribute('data-gs-x'), bottomY);
+    let grid = $('.grid-stack').data('gridstack');
+    grid.move(topBlock, +topBlock.getAttribute('data-gs-x'), +topBlockNewY);
+    grid.move(bottomBlock, +bottomBlock.getAttribute('data-gs-x'), bottomY);
 
     // save to DB new dimension values
     var id = topBlock.getAttribute('data-gs-id'),
@@ -97,7 +102,7 @@ function swapBlocks(topBlock, bottomBlock, topBlockNewY) {
         newwidth: "12",
         newheight: topBlock.getAttribute('data-gs-height'),
     }
-    moveBlock(id, dimensions);
+    moveBlock(id, dimensions, grid);
 
     id = bottomBlock.getAttribute('data-gs-id');
     dimensions = {
@@ -106,5 +111,5 @@ function swapBlocks(topBlock, bottomBlock, topBlockNewY) {
         newwidth: "12",
         newheight: bottomBlock.getAttribute('data-gs-height'),
     }
-    moveBlock(id, dimensions);
+    moveBlock(id, dimensions, grid);
 }
