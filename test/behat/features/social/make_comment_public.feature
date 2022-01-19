@@ -86,6 +86,8 @@ Background:
     And I choose "Pages and collections" in "Create" from main menu
     And I follow "Page UserA_03"
     And I click on "Make comment public" in the "This is comment 2" comment
+    And I press "Comments"
+    And I scroll to the id "view"
     And I should see "This comment is private" in the "This is comment 1" comment
     And I should see "This comment is private" in the "This is comment 9" comment
     And I should not see "This comment is private" in the "This is comment 2" comment

@@ -185,6 +185,7 @@ function updateTranslatedGridRows(blocks) {
       height[0][0] = 0;
       maxheight[0] = 0;
 
+      var grid = $('.grid-stack').data('gridstack');
       $.each(blocks, function(key, block) {
           var el, y;
 
@@ -243,7 +244,7 @@ function updateTranslatedGridRows(blocks) {
           maxheight[block.row] = Math.max.apply(null, allnumbers);
       });
       // update all blocks together
-      moveBlocks(updatedGrid);
+      moveBlocks(updatedGrid, grid);
 }
 
 function updateBlockSizes(grid) {
@@ -303,7 +304,7 @@ function addNewWidget(blockContent, blockId, dimensions, grid, blocktypeclass, m
 
 function moveBlockEnd(event, data) {
     var grid = $('.grid-stack').data('gridstack');
-    serializeWidgetMap(grid.grid.nodes);
+    serializeWidgetMap(grid);
 }
 
 function resizeStartBlock(event, data) {
@@ -322,32 +323,54 @@ function resizeStopBlock(event, data) {
     grid.minHeight($(this), heightgrid);
 
     // update dimesions in db
-    serializeWidgetMap(grid.grid.nodes);
+    let gridelement = $(data)[0].element;
+    var id = gridelement.attr('data-gs-id'),
+    dimensions = {
+        newx: gridelement.attr('data-gs-x'),
+        newy: gridelement.attr('data-gs-y'),
+        newwidth: widthgrid,
+        newheight: heightgrid,
+    }
+    moveBlock(id, dimensions, grid);
+    serializeWidgetMap(grid);
 }
 
-function moveBlock(id, whereTo) {
+function moveBlock(id, whereTo, grid) {
+    let isOneColumn = false;
+    // For explanation of the below line see htdocs/js/views.js line 493
+    if ((grid.container[0].clientWidth || grid.container[0].parentElement.clientWidth || window.innerWidth) <= grid.opts.minWidth) {
+        isOneColumn = true;
+    }
     var pd = {
         'id': $('#viewid').val(),
-        'change': 1
+        'change': 1,
+        'gridonecolumn': isOneColumn
     };
     pd['action_moveblockinstance_id_' + id + '_newx_' + whereTo['newx'] + '_newy_' + whereTo['newy'] + '_newheight_' + whereTo['newheight'] + '_newwidth_' + whereTo['newwidth']] = true;
 
     sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST');
 }
 
-function moveBlocks(grid) {
+function moveBlocks(gridblocks, grid) {
+    let isOneColumn = false;
+    // For explanation of the below line see htdocs/js/views.js line 493
+    if ((grid.container[0].clientWidth || grid.container[0].parentElement.clientWidth || window.innerWidth) <= grid.opts.minWidth) {
+        isOneColumn = true;
+    }
     var pd = {
         'id': $('#viewid').val(),
-        'blocks': JSON.stringify(grid),
+        'blocks': JSON.stringify(gridblocks),
+        'gridonecolumn': isOneColumn
     };
 
     sendjsonrequest(config['wwwroot'] + 'view/grid.json.php', pd, 'POST');
 }
 
-var serializeWidgetMap = function(items) {
+var serializeWidgetMap = function(grid) {
     // get the block id
     // json call to update new position and/or dimension
     var i;
+    let items = grid.grid.nodes;
     if (typeof(items) != 'undefined') {
         for (i=0; i<items.length; i++) {
             if (typeof(items[i].id) != 'undefined') {
@@ -359,7 +382,7 @@ var serializeWidgetMap = function(items) {
                         'newheight': items[i].height,
                         'newwidth': items[i].width,
                     }
-                moveBlock(blockid, destination);
+                moveBlock(blockid, destination, grid);
             }
         }
     }
