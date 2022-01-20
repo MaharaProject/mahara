@@ -642,8 +642,8 @@ function uploadcsv_submit(Pieform $form, $values) {
     $straccountcreatedtext = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordtext' : 'accountcreatedtext';
     $straccountcreatedhtml = ($values['forcepasswordchange']) ? 'accountcreatedchangepasswordhtml' : 'accountcreatedhtml';
     if ($values['emailusers'] && $addedusers) {
+        $failedusers = array();
         foreach ($addedusers as $user) {
-            $failedusers = array();
             try {
                 email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),
                     get_string($straccountcreatedtext, 'mahara', $user->firstname, get_config('sitename'), $user->username, $user->password, get_config('wwwroot'), get_config('sitename')),
