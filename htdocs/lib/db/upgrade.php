@@ -859,5 +859,31 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022051800) {
+        log_debug('Alter the "webservice" instances to match the external apps');
+        $externalapps = get_records_sql_array('SELECT * FROM {oauth_server_registry}');
+        $existingauth = get_records_sql_array('SELECT * FROM {auth_instance}');
+        if ($externalapps) {
+            foreach ($externalapps as $key => $app) {
+                foreach ($existingauth as $auth) {
+                    if ($app->application_title == $auth->instancename && $app->institution == $auth->institution) {
+                        unset($externalapps[$key]);
+                    }
+                }
+            }
+            foreach ($externalapps as $key => $app) {
+                $nextpriority = get_field_sql("SELECT MAX(priority) +1 FROM {auth_instance} WHERE institution = ?", array($app->institution));
+                $authinstance = (object)array(
+                    'instancename' => $app->application_title,
+                    'priority'     => $nextpriority,
+                    'institution'  => $app->institution,
+                    'authname'     => 'webservice',
+                    'active'       => 1,
+                );
+                insert_record('auth_instance', $authinstance);
+            }
+        }
+    }
+
     return $status;
 }

@@ -55,7 +55,7 @@ if (!$USER->get('admin')) {
 
 if ($institution || $add) {
     define('SECTION_PAGE', 'institutionedit');
-    $authinstances = auth_get_auth_instances_for_institution($institution);
+    $authinstances = auth_get_auth_instances_for_institution($institution); // currently added to institution
     if (false == $authinstances) {
         $authinstances = array();
     }
@@ -369,13 +369,14 @@ if ($institution || $add) {
             ),
         );
     }
+
     if ($USER->get('admin')) {
         $elements['authplugin'] = array(
             'type'    => 'authlist',
             'title'   => get_string('authplugin', 'admin'),
             'options' => $authinstances,
-            'instancearray' => $instancearray,
-            'instancestring' => $instancestring,
+            'instancearray' => $instancearray, // ids from auth_instance table
+            'instancestring' => $instancestring, // ids as a string with commas
             'institution' => $institution,
             'help'   => 'top',
             'ignore' => ($add)

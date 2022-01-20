@@ -21,11 +21,19 @@ $edit        = param_boolean('edit');
 $instanceid  = param_variable('id', 0);
 
 // IF WE'RE EDITING OR CREATING AN AUTHORITY:
+$webservice = false;
 if ($institution && $plugin) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
-    safe_require('auth', strtolower($plugin));
+    try {
+        safe_require('auth', strtolower($plugin));
+        $has_instance_config = call_static_method($classname, 'has_instance_config');
+    }
+    catch (Exception $e) {
+        // this is a custom webservice plugin without a defined class
+        $has_instance_config = false; // config handled in webservices section
+        $webservice = true;
+    }
 
-    $has_instance_config = call_static_method($classname, 'has_instance_config');
     if (false == $has_instance_config && $add) {
 
         // We've been asked to add an instance of an auth plugin that has no
@@ -46,10 +54,10 @@ if ($institution && $plugin) {
 
         $authinstance->instancename = $plugin;
         $authinstance->institution  = $institution;
-        $authinstance->authname     = $plugin;
+        $authinstance->authname     = $webservice ? 'webservice' : $plugin;
         $authinstance->active       = 1;
         $authinstance->id           = insert_record('auth_instance', $authinstance, 'id', true);
-        json_reply(false, array('id' => $authinstance->id, 'name' => ucfirst($authinstance->authname), 'authname' => $authinstance->authname));
+        json_reply(false, array('id' => $authinstance->id, 'name' => ucfirst($authinstance->instancename), 'authname' => $authinstance->authname));
         exit;
     }
 

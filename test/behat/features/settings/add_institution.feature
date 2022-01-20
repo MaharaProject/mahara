@@ -19,9 +19,17 @@ Scenario: Creating an institution (selenium test)
     Then I should see "Institution added successfully"
 
     # Adding some authentication options
-    And I select "webservice" from "authlistDummySelect"
+    And I select "ldap" from "authlistDummySelect"
     And I click on "Add" in the "Authentication" "Institutions" property
-    And I click on "Submit"
+    And I wait "1" seconds
+    And I should see "LDAP" in the "Modal header" "Modal" property
+    And I fill in the following:
+    | Authority name | Test Authority |
+    | Host URL | ldap://ldap.example.com |
+    | Contexts | ou=users,o=org;ou=other,o=org |
+    | User attribute | cn |
+    And I click on "Submit" in the "#auth_config_submit_container" "css_element"
+    And I click on "Submit" in the "#institution_submit_container" "css_element"
 
     # Moving authentication option upwards
     And I click on "Edit" in "Institution One" row
@@ -32,7 +40,7 @@ Scenario: Creating an institution (selenium test)
     # Removing the first authentication option
     And I click on "Edit" in "Institution One" row
     And I scroll to the base of id "authlistDummySelect"
-    And I click on "Delete" in "Web services" row
+    And I click on "Delete" in "Test Authority" row
 
     # Adding an institution logo
     And I attach the file "Image2.png" to "Logo"

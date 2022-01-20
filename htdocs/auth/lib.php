@@ -1184,14 +1184,43 @@ function auth_get_available_auth_types($institution=null) {
         return array();
     }
 
-    foreach ($result as &$row) {
-        $row->title       = get_string('title', 'auth.' . $row->name);
-        safe_require('auth', $row->name);
-        if ($row->is_usable = call_static_method('PluginAuth' . $row->name, 'is_usable')) {
-            $row->description = get_string('description', 'auth.' . $row->name);
+    $externalapps = get_records_sql_array('SELECT * FROM {oauth_server_registry} WHERE institution = ?', array($institution));
+    $existingauth = get_records_sql_array('SELECT * FROM {auth_instance} WHERE institution = ?', array($institution));
+    if ($externalapps) {
+        foreach ($externalapps as $key => $app) {
+            foreach ($existingauth as $auth) {
+                if ($app->application_title == $auth->instancename) {
+                    unset($externalapps[$key]);
+                }
+            }
         }
-        else {
-            $row->description = get_string('notusable', 'auth.' . $row->name);
+        foreach ($externalapps as $app) {
+            $app->requires_config = 0;
+            $app->externalapp = 1;
+            $app->is_usable = 1;
+            $app->description = get_string('externalservice', 'auth.webservice');
+            $app->title = $app->application_title;
+            $app->name = $app->application_title;
+        }
+
+        $result = array_merge($result, $externalapps);
+    }
+    // remove generic 'webservice' item from array
+    foreach ($result as $key => $row) {
+        if ($row->name == 'webservice') {
+            unset($result[$key]);
+        }
+    }
+    foreach ($result as &$row) {
+        if (!isset($row->externalapp)) {
+            $row->title       = get_string('title', 'auth.' . $row->name);
+            safe_require('auth', $row->name);
+            if ($row->is_usable = call_static_method('PluginAuth' . $row->name, 'is_usable')) {
+                $row->description = get_string('description', 'auth.' . $row->name);
+            }
+            else {
+                $row->description = get_string('notusable', 'auth.' . $row->name);
+            }
         }
     }
     usort($result, function($a, $b) {

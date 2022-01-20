@@ -144,11 +144,11 @@ function webservices_add_application_submit(Pieform $form, $values) {
         // Get auth priority we need for the ensure_record_exists function
         $priorities  = get_record_sql("SELECT MAX(priority) AS maxpriority, (
                                            SELECT priority FROM {auth_instance}
-                                           WHERE institution = ? AND authname = 'webservice') AS webservicepriority
-                                      FROM {auth_instance} WHERE institution = ?", array($values['institution'], $values['institution']));
+                                           WHERE institution = ? AND instancename = ?) AS webservicepriority
+                                      FROM {auth_instance} WHERE institution = ?", array($values['institution'], $new_app['application_title'], $values['institution']));
         $priority = is_null($priorities->webservicepriority) ? $priorities->maxpriority + 1 : $priorities->webservicepriority;
-        if (!ensure_record_exists('auth_instance', (object) array('institution' => $values['institution'], 'authname' => 'webservice'),
-                                                   (object) array('institution' => $values['institution'], 'authname' => 'webservice', 'active' => 1, 'priority' => $priority, 'instancename' => 'webservice'))) {
+        if (!ensure_record_exists('auth_instance', (object) array('institution' => $values['institution'], 'instancename' => $new_app['application_title']),
+                                                   (object) array('institution' => $values['institution'], 'authname' => 'webservice', 'active' => 1, 'priority' => $priority, 'instancename' => $new_app['application_title']))) {
             $form->reply(PIEFORM_ERR, array(
                 'message'  => get_string('setauthinstancefailed', 'auth.webservice', institution_display_name($values['institution'])),
                 'goto'     => $redirect . '?edit=' . $c->id,
@@ -158,8 +158,23 @@ function webservices_add_application_submit(Pieform $form, $values) {
     }
 }
 
+function webservices_server_validate(Pieform $form, $values) {
+    $redirect = get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php';
+    $dbserver = get_record('oauth_server_registry', 'id', $values['token']);
+    if ($dbserver) {
+        if ($values['action'] == 'delete') {
+            if (external_app_used_by_auth($dbserver)) {
+                $form->reply(PIEFORM_ERR, array(
+                    'message'  => get_string('cannotdelete', 'auth.webservice', $dbserver->application_title),
+                    'goto'     => $redirect,
+                ));
+            }
+        }
+    }
+}
+
 /**
- * Add webservice external application configuration
+ * Edit webservice external application configuration
  *
  * @param Pieform $form The pieform being validated
  * @param array $values data entered on pieform
@@ -170,9 +185,9 @@ function webservices_server_submit(Pieform $form, $values) {
     $store = OAuthStore::instance();
     $is_admin = ($USER->get('admin') ||defined('ADMIN') || defined('INSTITUTIONALADMIN') || $USER->is_institutional_admin() ? true : false);
     $dbserver = get_record('oauth_server_registry', 'id', $values['token']);
+
     if ($dbserver) {
         if ($values['action'] == 'delete') {
-
             list($moduletype, $module) = get_module_from_serverid($values['token']);
             safe_require_plugin($moduletype, $module);
             $classname = generate_class_name($moduletype, $module);
@@ -190,6 +205,7 @@ function webservices_server_submit(Pieform $form, $values) {
                                 DELETE FROM {oauth_server_token}
                                 WHERE osr_id_ref = ?
                                 ', array($dbserver->id));
+            delete_records_sql('DELETE FROM {auth_instance} WHERE instancename = ?', array($dbserver->application_title));
             if (db_table_exists('lti_assessment')) {
                 delete_records_sql('
                                    DELETE FROM {lti_assessment_submission} WHERE ltiassessment IN (
@@ -276,7 +292,7 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
             }
         }
 
-        $key = $store->updateConsumer($app, $USER->get('id'), true);
+        $key = $store->updateConsumer($app, $USER->get('id'), true, $dbserver->application_title);
         $c = (object) $store->getConsumer($key, $USER->get('id'), true);
 
         if (is_callable(array($classname, 'webservice_oauth_server_submit'))) {
@@ -679,6 +695,7 @@ function webservice_server_list_form($sopts, $iopts) {
                         'renderer' => 'div',
                         'class' => 'form-as-button float-start',
                         'elementclasses' => false,
+                        'validatecallback' => 'webservices_server_validate',
                         'successcallback' => 'webservices_server_submit',
                         'jsform' => false,
                         'elements' => array(
@@ -984,4 +1001,20 @@ function has_oauth($serviceid) {
         }
     }
     return $service_oauth;
+}
+
+/**
+ * Do not allow deletion if there are people still using this external app as their authentication method
+ * @param object db server information about the external app being deleted
+ * @return bool
+ */
+function external_app_used_by_auth($dbserver) {
+    // We normally would check people by the institution but because admins can assign the auth method
+    // via the admin user edit screen it means people outside the institution could have the auth method
+    $matchingauth = get_field('auth_instance', 'id', 'institution', $dbserver->institution, 'instancename', $dbserver->application_title);
+    $found = false;
+    if ($matchingauth) {
+        $found = (bool)count_records('usr', 'authinstance', $matchingauth);
+    }
+    return $found;
 }

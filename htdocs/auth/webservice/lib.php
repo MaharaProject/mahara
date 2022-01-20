@@ -253,4 +253,8 @@ class PluginAuthWebservice extends PluginAuth {
         }
         return true;
     }
+
+    public function needs_remote_username() {
+        return true;
+    }
 }

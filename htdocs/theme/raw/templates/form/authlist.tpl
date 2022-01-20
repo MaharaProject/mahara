@@ -9,7 +9,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
       <span class="authitem{{if $instance->active == 0}} inactive{{/if}}">
         <label class="authLabel">
             <a href="" onclick="PieformAuthlist.edit_auth({{$instance->id}},'{{$instance->authname}}'); return false;">
-            {{str tag="title" section="auth.`$instance->authname`"}}</a> {{if $instance->active == 0}} ({{get_string('off', 'mahara')}}){{/if}}
+        {{if $instance->authname == 'webservice'}}{{get_string('externalapp', 'auth.webservice')}}{{/if}}{{$instance->instancename}}</a> {{if $instance->active == 0}} ({{get_string('off', 'mahara')}}){{/if}}
         </label>
         <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}

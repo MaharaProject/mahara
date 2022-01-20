@@ -866,6 +866,12 @@ class Institution {
         }
     }
 
+    public function getMembers() {
+        return get_records_sql_array('
+            SELECT * FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0', array($this->name));
+    }
+
     public function countMembers() {
         return count_records_sql('
             SELECT COUNT(*) FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr

@@ -178,7 +178,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
      * @param boolean user_is_admin
      * @return string consumer key
      */
-    public function updateConsumer($consumer, $userid, $user_is_admin = false) {
+    public function updateConsumer($consumer, $userid, $user_is_admin = false, $oldname = '') {
         if (!$user_is_admin) {
             foreach (array('requester_name', 'requester_email') as $f) {
                 if (empty($consumer[$f])) {
@@ -337,6 +337,17 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                     )
                 );
         }
+        // update auth_instance table with new instancename if it has been provided and if there is a record to update
+        if ($oldname != '') {
+            $record = get_record('auth_instance', 'instancename', $oldname);
+            if ($record) {
+                $newname = new stdClass();
+                $newname->id = $record->id;
+                $newname->instancename = $consumer['application_title'];
+                update_record('auth_instance', $newname);
+            }
+        }
+
         return $consumer_key;
 
     }

@@ -311,6 +311,7 @@
      * @returns
      */
     function requiresConfig(authname) {
+        authname = '"' + authname + '"'; // account for authnames with spaces
         return Boolean(jQuery('#authlistDummySelect option[value=' + authname + ']').data('requires_config'));
     }
 
