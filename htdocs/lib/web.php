@@ -2605,6 +2605,12 @@ function admin_nav() {
             'title'  => get_string('styleguide', 'admin'),
             'weight' => 30,
         ),
+        'development/updateurls' => array(
+            'path'   => 'development/updateurls',
+            'url'    => 'admin/extensions/embeddedurls.php',
+            'title'  => get_string('embeddedurls', 'admin'),
+            'weight' => 40,
+        ),
     );
 
     // Add the menu items for skins, if that feature is enabled

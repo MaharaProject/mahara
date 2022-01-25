@@ -14,7 +14,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'configextensions/embddedurls');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('embeddedurls', 'admin'));
+define('TITLE', get_string('embeddedurlstitle', 'admin'));
 
 $checkurlraw = param_variable('checkurl', null);
 
