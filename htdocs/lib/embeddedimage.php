@@ -19,13 +19,17 @@ class EmbeddedImage {
     }
 
     /**
+     * Prepare/update embedded images
+     *
+     * These are generally artefacts inserted into a TinyMCE editor by clicking the 'Insert/edit image' button.
+     *
      * Format HTML content in a WYSIWYG text box to correctly serve an embedded image
      * which was added via the TinyMCE imagebrowser plugin.
      * Add a database reference to the embedded image if required, to set viewing permissions for it
      *
      * @param string $fieldvalue The HTML source of the text body added to the TinyMCE text editor
      * @param string $resourcetype The type of resource which the TinyMCE editor is used in, e.g. 'forum', 'topic', 'post' for forum text boxes
-     * @param int $resourceid The id of the resourcetype
+     * @param int $resourceid The resourcetype ID, e.g. the block instance using the resource (artefact)
      * @param int $groupid The id of the group the resource is in if applicable
      * @param int $userid The user trying to embed the image (current user if null)
      * @return string The updated $fieldvalue
