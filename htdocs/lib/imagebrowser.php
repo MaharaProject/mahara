@@ -26,6 +26,7 @@ class ImageBrowser {
     private $blocktype;
     private $selected;
     private $configdata = array();
+    private $dirty;
 
     public function __construct($data) {
         if (empty($data)) {

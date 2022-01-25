@@ -1913,8 +1913,8 @@ class View {
      * returned
      */
     private function get_category_data() {
-        if (isset($this->category_data)) {
-            return $this->category_data;
+        if (isset($this->categorydata)) {
+            return $this->categorydata;
         }
 
         require_once(get_config('docroot') . '/blocktype/lib.php');
@@ -1946,7 +1946,7 @@ class View {
             }
         }
 
-        return $this->category_data = $categories;
+        return $this->categorydata = $categories;
     }
 
     /**
@@ -5955,7 +5955,7 @@ class View {
      * Get more info for the collections: owner, url, tags, views
      *
      * @param array a list of collections $collectiondata
-     * @return array updated collection data
+     * @return void (pass by reference) updates the &$collectiondata
      */
     public static function get_extra_collection_info(&$collectiondata, $gettags=true, $useid = 'id') {
         if ($collectiondata) {

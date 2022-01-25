@@ -246,11 +246,11 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
                 $logfile_open_attempted = true;
                 $LOGFILE_FH = fopen($logfilename, 'wb');
                 if ($LOGFILE_FH !== false) {
-                    function _close_logfile() {
+                    register_shutdown_function(function() {
+                        // _close_logfile
                         global $LOGFILE_FH;
                         fclose($LOGFILE_FH);
-                    }
-                    register_shutdown_function('_close_logfile');
+                    });
                 }
                 else {
                     error_log("Could not open your custom log file ($logfilename)");
@@ -750,7 +750,7 @@ EOF;
  */
 class SystemException extends MaharaException {
 
-    public function __construct($message, $code=0) {
+    public function __construct($message='', $code=0) {
         parent::__construct($message, $code);
         $this->set_log();
     }

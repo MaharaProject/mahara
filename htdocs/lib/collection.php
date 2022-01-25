@@ -147,6 +147,21 @@ class Collection {
      */
     private $template;
 
+    /**
+     * @var string
+     */
+    private $fullurl;
+
+    /**
+     * @var string
+     */
+    private $progresscompletionurl;
+
+    /**
+     * @var string
+     */
+    private $frameworkurl;
+
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
     const PENDING_RELEASE = 2;
@@ -1582,7 +1597,7 @@ class Collection {
      * @param array $urlparams An array of extra url params to set on the redirect
      */
     public function post_edit_redirect($new=false, $copy=false, $urlparams=null) {
-        $redirecturl = post_edit_redirect_url($new, $copy, $urlparams);
+        $redirecturl = $this->post_edit_redirect_url($new, $copy, $urlparams);
         redirect($redirecturl);
     }
 
