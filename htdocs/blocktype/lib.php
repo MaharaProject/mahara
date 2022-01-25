@@ -2263,7 +2263,9 @@ class BlockInstance {
                 AND a.artefacttype NOT IN (' . join(',', array_map('db_quote', $ignore)) . ')', array($this->get('id')));
         }
         else {
-            $artefactids = get_column('view_artefact', 'artefact', 'block', $this->get('id'));
+            $view_artefacts_ids = get_column('view_artefact', 'artefact', 'block', $this->get('id'));
+            $embedded_artefacts_ids = get_column('artefact_file_embedded', 'fileid', 'resourceid', $this->get('id'));
+            $artefactids = array_merge($view_artefacts_ids, $embedded_artefacts_ids);
         }
 
         if (!empty($artefactids)
