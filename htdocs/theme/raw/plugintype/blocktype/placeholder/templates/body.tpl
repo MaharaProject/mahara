@@ -1,1 +1,1 @@
-<p class="content-text lead">{str tag=placeholdertext section=blocktype.placeholder}</p>
+<p class="content-text lead">{str tag=placeholdertext1 section=blocktype.placeholder}</p>
