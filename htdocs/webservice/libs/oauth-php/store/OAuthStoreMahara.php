@@ -239,7 +239,8 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                     application_type    = ?,
                     mtime               = NOW(),
                     institution         = ?,
-                    externalserviceid   = ?
+                    externalserviceid   = ?,
+                    enabled             = ?
                 WHERE id              = ?
                   AND consumer_key    = ?
                   AND consumer_secret = ?
@@ -254,6 +255,7 @@ class OAuthStoreMahara extends OAuthStoreAbstract {
                 (isset($consumer['application_type'])    ? $consumer['application_type']          : ''),
                 $consumer['institution'],
                 $consumer['externalserviceid'],
+                (int)$consumer['enabled'],
                 $consumer['id'],
                 $consumer['consumer_key'],
                 $consumer['consumer_secret'])
