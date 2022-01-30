@@ -803,6 +803,7 @@ function webservice_server_config_form($serverid) {
 
     list($moduletype, $module) = get_module_from_serverid($serverid);
 
+    $form = array();
     if (safe_require_plugin($moduletype, $module)) {
 
         $elements = call_static_method(generate_class_name($moduletype, $module), 'get_oauth_service_config_options', $serverid);
@@ -845,8 +846,8 @@ function webservice_server_config_form($serverid) {
             'elements' => $fieldset,
         );
 
-        return $form;
     }
+    return $form;
 }
 
 /**

@@ -358,6 +358,7 @@ class webservice_rest_server extends webservice_base_server {
             $single .= '</SINGLE>' . "\n";
             return $single;
         }
+        return '';
     }
 }
 

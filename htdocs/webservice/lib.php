@@ -1078,6 +1078,8 @@ abstract class webservice_server implements webservice_server_interface {
 
     /** @property string info to add to logging*/
     protected $info = null;
+
+    protected $oauth_token_details = null;
     /**
      * Contructor
      * @param integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_*

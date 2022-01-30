@@ -46,6 +46,10 @@ class webservice_soap_server extends webservice_base_server {
     /** @var \webservice_soap\wsdl The object for WSDL generation. */
     protected $wsdl;
 
+    protected $servicestructs;
+    protected $servicemethods;
+    protected $restricted_context;
+
     /**
      * Constructor
      * @param string $authmethod authentication method of the web service (WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN, ...)
@@ -431,7 +435,7 @@ EOD;
      * @param stdClass $function a record from external_function
      * @return string The PHP code of the virtual method.
      * @throws coding_exception
-     * @throws moodle_exception
+     * @throws MaharaException
      */
     protected function get_virtual_method_code($function) {
         $function = external_api::external_function_info($function);
@@ -449,7 +453,7 @@ EOD;
             $paramanddefault = $param;
             if ($keydesc->required == VALUE_OPTIONAL) {
                 // It does not make sense to declare a parameter VALUE_OPTIONAL. VALUE_OPTIONAL is used only for array/object key.
-                throw new moodle_exception('erroroptionalparamarray', 'webservice', '', $name);
+                throw new MaharaException('erroroptionalparamarray', 'webservice', '', $name);
             }
             else if ($keydesc->required == VALUE_DEFAULT) {
                 // Need to generate the default, if there is any.
