@@ -284,6 +284,9 @@ function addfontform_submit(Pieform $form, $values) {
     // Insert new record with font data into 'skin_fonts' table in database...
     // $foldername equals (only alphanumerical) font name, e.g. 'Nimbus Roman No.9' -> 'NimbusRomanNo9'
     // $foldername is also used as primary key in 'skin_fonts' table.
+    $font_style = '';
+    $font_variant = '';
+    $font_weight = '';
     switch ($values['fontstyle']) {
         case 'regular':
             $font_variant = 'regular';

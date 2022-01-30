@@ -1506,7 +1506,7 @@ abstract class ArtefactType implements IArtefactType {
         else {
             $newparent = get_record('artefact', 'id', $newparentid);
 
-            if ($this->is_child_of($newparent, $this->id) || empty($newparent)) {
+            if ($this->is_child_of($newparent) || empty($newparent)) {
                 // You can't move an item into its own child.
                 throw new NotFoundException(get_string('cantmoveitem', 'mahara'));
             }
@@ -1897,7 +1897,7 @@ function artefact_get_descendants(array $ids) {
     if (get_config('version') < 2014050901) {
         $seen = array();
         $new = $ids;
-        if (!empty($new)) {
+        if ($new) {
             $new = array_combine($new, $new);
         }
         while (!empty($new)) {

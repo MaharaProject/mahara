@@ -48,7 +48,7 @@ if (empty($institutionelement) || $notallowed) {
 if (!$institution || !$USER->can_edit_institution($institution, true)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
-else if (!empty($institution)) {
+else if ($institution) {
     $institutionelement['defaultvalue'] = $institution;
 }
 

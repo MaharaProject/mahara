@@ -122,6 +122,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 
     $num_lines = count($csvdata->data);
 
+    $i = null;
     foreach ($csvdata->data as $key => $line) {
         // If headers exists, increment i = key + 2 for actual line number
         $i = ($csvgroups->get('headerExists')) ? ($key + 2) : ($key + 1);

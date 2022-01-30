@@ -55,6 +55,8 @@ if (table_exists(new XMLDBTable('config'))) {
 }
 
 // Check initial password and e-mail address before we install
+$adminemail = '';
+$adminpassword = '';
 try {
     $adminpassword  = $cli->get_cli_param('adminpassword');
     $adminemail     = $cli->get_cli_param('adminemail');

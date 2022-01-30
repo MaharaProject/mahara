@@ -135,7 +135,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             $text = $artefact->get('description');
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($viewid);
-            list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
+            list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing);
             $smarty->assign('annotationfeedback', $annotationfeedback);
         }
         if ($versioning) {

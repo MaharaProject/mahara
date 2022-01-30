@@ -659,7 +659,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $userid = $USER->get('id');
 
         $canedit = false;
-        if (!empty($artefact)) {
+        if ($artefact) {
             // This is the artefact that the annotation is linked to.
             $artefactobj = artefact_instance_from_id($artefact);
             $canedit = $USER->can_edit_artefact($artefactobj);
@@ -667,7 +667,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             $isowner = $userid && $userid == $owner;
             $view = null;
         }
-        else if (!empty($view)) {
+        else if ($view) {
             // This is the view that the annotation is linked to.
             $viewobj = new View($view);
             $canedit = $USER->can_moderate_view($viewobj);
@@ -695,10 +695,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $wherearray[] = 'a.id = ' . (int) $annotation;
 
         // if artefact and view are not set, this annotation is not linked to anything.
-        if (!empty($artefact)) {
+        if ($artefact) {
             $wherearray[] = 'an.artefact = ' . (int) $artefact;
         }
-        else if (!empty($view)) {
+        else if ($view) {
             $wherearray[] = 'an.view = ' . (int) $view;
         }
         else {
@@ -755,7 +755,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 }
             }
 
-            $sortorder = (!empty($sort) && $sort == 'latest') ? 'af.ctime DESC' : 'af.ctime ASC';
+            $sortorder = ($sort && $sort == 'latest') ? 'af.ctime DESC' : 'af.ctime ASC';
             $sql = 'SELECT
                         af.id, af.author, af.authorname, af.ctime, af.mtime, af.description, af.group,
                         f.private, f.deletedby, f.requestpublic, f.lastcontentupdate,
@@ -1330,11 +1330,11 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         // What is this annotation feedback linked to? Store it in hidden fields.
         $form['elements']['viewid'] = array(
             'type'  => 'hidden',
-            'value' => (isset($view) ? $view->get('id') : null),
+            'value' => $view ? $view->get('id') : null,
         );
         $form['elements']['artefactid'] = array(
             'type'  => 'hidden',
-            'value' => (isset($artefact) ? $artefact->get('id') : null),
+            'value' => $artefact ? $artefact->get('id') : null,
         );
         // Save the artefactid of the annotation.
         $form['elements']['annotationid'] = array(

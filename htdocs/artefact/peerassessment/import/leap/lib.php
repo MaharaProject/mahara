@@ -129,7 +129,7 @@ class LeapImportPeerassessment extends LeapImportArtefactPlugin {
                 'allowcomments' => $allowcomments,
                 'ctime'        => (string) $entry->published,
                 'mtime'        => (string) $entry->updated,
-                'authorname'   => isset($authorname) ? $authorname : null,
+                'authorname'   => $authorname,
                 'author'       => isset($author) ? $author : null,
                 'tags'         => PluginImportLeap::get_entry_tags($entry),
             ),

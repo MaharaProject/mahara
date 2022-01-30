@@ -34,6 +34,7 @@ $ALLOWEDKEYS = array_merge($ALLOWEDKEYS, $specialcases);
 
 $UPDATES         = array(); // During validation, remember which users already exist
 $INSTITUTIONNAME = array(); // Mapping from institution id to display name
+$authinstanceelement = array();
 
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();

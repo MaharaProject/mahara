@@ -1573,7 +1573,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         if (!empty($filerecords)) {
             foreach ($filerecords as $filerecord) {
-                if (!empty($externalfilesystem)) {
+                if ($externalfilesystem) {
                     // We can't use artefact_instance_from_id() as we've removed all artefacts already
                     $classname = generate_artefact_class_name($filerecord->artefacttype);
                     $fileartefact = new $classname(0, $filerecord);
@@ -2753,7 +2753,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         );
 
         // User has a profile icon file selected. Use it.
-        if (!empty($data) && !empty($data->profileicon)) {
+        if ($data && !empty($data->profileicon)) {
             $id = $data->profileicon;
             $mimetype = $data->filetype;
 
@@ -2764,7 +2764,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
         // No profile icon file selected. Go through fallback icons.
         // Look for an appropriate image on gravatar.com if not 'root' user
-        $useremail = (!empty($data) && $userid !== 0) ? $data->email : false;
+        $useremail = ($data && $userid !== 0) ? $data->email : false;
         if ($useremail and $gravatarurl = remote_avatar_url($useremail, $size)) {
             redirect($gravatarurl);
         }

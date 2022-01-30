@@ -133,9 +133,10 @@ function migrateurls_validate(Pieform $form, $values) {
 
 function migrateurls_submit(Pieform $form, $values) {
     global $SESSION, $results;
+
+    $basiccount = 0;
+    $blockcount = 0;
     if (is_array($results)) {
-        $basiccount = 0;
-        $blockcount = 0;
         $fromurl = $values['fromurl'];
         $fromurl .= (substr($fromurl, -1) != '/') ? '/' : '';
         foreach ($results as $result) {
