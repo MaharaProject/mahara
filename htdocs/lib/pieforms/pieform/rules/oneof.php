@@ -57,6 +57,7 @@ function pieform_rule_oneof(Pieform $form, $value, $element, $check) {/*{{{*/
             return $form->i18n('rule', 'oneof', 'oneof', $element);
         }
     }
+    return '';
 }/*}}}*/
 
 /**

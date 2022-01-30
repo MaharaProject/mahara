@@ -46,4 +46,5 @@ function pieform_rule_requiredby(Pieform $form, $value, $element, $check) {
             return $form->i18n('rule', 'required', 'required', $element);
         }
     }
+    return '';
 }

@@ -39,4 +39,5 @@ function pieform_rule_safetext(Pieform $form, $value, $element, $check) {
             return $form->i18n('rule', 'safetext', 'invalidchars', $element);
         }
     }
+    return '';
 }

@@ -46,4 +46,5 @@ function pieform_rule_validateoptions(Pieform $form, $field, $element) {/*{{{*/
             return sprintf($form->i18n('rule', 'validateoptions', 'validateoptions', $element), Pieform::hsc($key));
         }
     }
+    return '';
 }/*}}}*/

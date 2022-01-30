@@ -40,4 +40,5 @@ function pieform_rule_email(Pieform $form, $value, $element) {/*{{{*/
     if (!sanitize_email($value)) {
         return $form->i18n('rule', 'email', 'email', $element);
     }
+    return '';
 }

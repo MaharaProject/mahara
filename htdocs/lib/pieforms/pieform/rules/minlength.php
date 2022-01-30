@@ -37,4 +37,5 @@ function pieform_rule_minlength(Pieform $form, $value, $element, $minlength) {/*
     if (strlen($value) < $minlength) {
         return sprintf($form->i18n('rule', 'minlength', 'minlength', $element), $minlength);
     }
+    return '';
 }/*}}}*/
