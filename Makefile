@@ -4,6 +4,19 @@ BEHAT_MODE = rundebugheadless
 BEHAT_TESTS = null
 # ask for test reports to be generated possible values are <empty>, 'html', 'junit'
 BEHAT_REPORT =
+
+# PHPStan options.
+ifeq ($(LEVEL),)
+	PHPSTAN_LEVEL =
+else
+	PHPSTAN_LEVEL = --level $(LEVEL)
+endif
+ifeq ($(TEST_PATH),)
+	PHPSTAN_PATH =
+else
+	PHPSTAN_PATH = -- $(TEST_PATH)
+endif
+
 # The Ubuntu version that the Mahara base image will be based on
 TEST_ADMIN_PASSWD = Kupuh1pa!
 TEST_ADMIN_EMAIL  = user@example.org
@@ -43,7 +56,7 @@ CCEND=$(shell echo "\033[0m")
 .PHONY: css clean-css help imageoptim installcomposer initcomposer cleanssphp ssphp \
 		cleanpdfexport pdfexport install phpunit behat minaccept jenkinsaccept securitycheck \
 		push security docker-image docker-images docker-builder reload hard-reload \
-		docker-bash docker-bash-root
+		docker-bash docker-bash-root phpstan-analyze psa
 
 all: css
 
@@ -93,6 +106,7 @@ help:
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
 	@echo "Run 'make docker-image' to build a Mahara docker image"
 	@echo "Run 'make docker-builder' builds the docker builder image required for docker-build"
+	@echo "Run 'make phpstan-analyze' to examine the PHP code using PHPStan"
 
 imageoptim:
 	find . -iname '*.png' -exec optipng -o7 -q {} \;
@@ -347,3 +361,14 @@ dev-up:
 	$(info Your site will be available at ${MAHARA_WWW_ROOT}/)
 	$(info You can view logs of the container you are interested in with the `docker logs <container-name>` command.)
 	$(info The `docker ps` will give you a list of running containers.)
+
+# PHPStan
+#
+# Run PHPStan with a specific level overriding phpstan.neon config.
+# make psa LEVEL=[n]
+#
+# Run PHPStan on a specific target.
+# make psa TEST_PATH=htdocs/lib
+psa: phpstan-analyze
+phpstan-analyze: initcomposer
+	external/vendor/bin/phpstan analyze $(PHPSTAN_LEVEL) $(PHPSTAN_PATH)
