@@ -61,6 +61,7 @@ class PluginModuleLti extends PluginModule {
 
         require_once(get_config('docroot') . 'webservice/lib.php');
         external_reload_component('module/lti', false);
+        return true;
     }
 
     public static function has_config() {

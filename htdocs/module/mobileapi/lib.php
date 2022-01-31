@@ -19,6 +19,7 @@ class PluginModuleMobileapi extends PluginModule {
     public static function postinst($fromversion) {
         require_once(get_config('docroot') . 'webservice/lib.php');
         external_reload_component('module/mobileapi', false);
+        return true;
     }
 
     public static function has_config() {

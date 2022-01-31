@@ -155,6 +155,6 @@ class PluginModuleAssessmentreport extends PluginModule {
      * @return bool|void
      */
     public static function postinst($prevversion) {
-
+        return true;
     }
 }

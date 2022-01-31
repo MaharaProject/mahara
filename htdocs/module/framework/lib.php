@@ -60,6 +60,7 @@ class PluginModuleFramework extends PluginModule {
                  set_field('blocktype_installed', 'active', 1, 'name', 'annotation');
             }
         }
+        return true;
     }
 
     public static function matrix_is_valid_json($filename) {
@@ -183,6 +184,8 @@ class Framework {
     private $active = 1; // active by default
     private $evidencestatuses;
     private $standards;
+    private $mtime;
+    private $collections;
 
     const EVIDENCE_BEGUN = 0;
     const EVIDENCE_INCOMPLETE = 1;
