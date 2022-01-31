@@ -3104,7 +3104,7 @@ function pieform_template_dir($file, $pluginlocation='') {
 
 /**
  * Given a view id, and a user id (defaults to currently logged in user if not
- * specified) will return wether this user is allowed to look at this view.
+ * specified) will return whether this user is allowed to look at this view.
  *
  * @param mixed $view           viewid or View to check
  * @param integer $user_id      User trying to look at the view (defaults to

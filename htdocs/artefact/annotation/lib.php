@@ -226,6 +226,7 @@ class ArtefactTypeAnnotation extends ArtefactType {
     protected $artefact;          // artefactid of the artefact this annotation is linked to.
     protected $view;              // viewid of the view this annotation is linked to.
     protected $lastcontentupdate; // last updated as a datetime.
+    protected $onartefact;        // the annotation is on an artefect
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
