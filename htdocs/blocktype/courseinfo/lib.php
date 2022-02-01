@@ -144,8 +144,9 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
     public static function postinst($fromversion) {
         if ($fromversion == 0) {
             // Have install disabled by default
-            set_field('blocktype_installed', 'active', 0, 'name', 'courseinfo');
+            return set_field('blocktype_installed', 'active', 0, 'name', 'courseinfo');
         }
+        return true;
     }
 
     public static function instance_config_form(BlockInstance $instance) {

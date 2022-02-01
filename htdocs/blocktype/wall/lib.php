@@ -113,10 +113,7 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', 1500); // 1500 characters
-        }
-
-        if ($prevversion < 2016011400) {
+            $setlimit = set_config_plugin('blocktype', 'wall', 'defaultpostsizelimit', 1500); // 1500 characters
             $status = ensure_record_exists(
                     'activity_type',
                     (object)array('name' => 'wallpost'),
@@ -130,20 +127,17 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
                         'pluginname' => 'wall'
                     )
             );
+            return $setlimit && $status;
         }
+        return true;
     }
 
     public static function delete_instance(BlockInstance $instance) {
         return delete_records('blocktype_wall_post', 'instance', $instance->get('id'));
     }
 
-    public static function wallpost_form(BlockInstance $instance, $replyto='', $replyuser='') {
-        if ($replyuser) {
-            $walltoreplyto = self::get_wall_id_for_user($replyuser);
-        }
-        else {
-            $walltoreplyto = $instance->get('id');
-        }
+    public static function wallpost_form(BlockInstance $instance) {
+        $walltoreplyto = $instance->get('id');
         return pieform(array(
             'name'      => 'wallpost_'.$instance->get('id'),
             'renderer'  => 'div',
@@ -182,7 +176,7 @@ class PluginBlocktypeWall extends MaharaCoreBlocktype {
                 ),
                 'replyto' => array(
                     'type' => 'hidden',
-                    'value' => $replyto,
+                    'value' => '',
                 ),
                 'submit' => array(
                     'type' => 'submit',

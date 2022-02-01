@@ -216,8 +216,9 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay', 20);
+            return set_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay', 20);
         }
+        return true;
     }
 
     public static function get_instance_config_javascript(BlockInstance $instance) {
@@ -384,21 +385,20 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
     private static function filter_views_by_owner($viewdata, $options) {
         $views = array();
 
-        // sort alphabetically by firstname and lastname
-        function compare_fullname($a, $b) {
-            if (!empty($a['owner']) && !empty($b['owner'])) {
-                // sort by owner last name
-                $retval = strnatcmp(no_accents($a['user']->lastname), no_accents($b['user']->lastname));
-                // if last names are identical, sort by first name
-                if (!$retval) {
-                    $retval = strnatcmp(no_accents($a['user']->firstname), no_accents($b['user']->firstname));
-                    return $retval;
-                }
-            }
-        }
 
         if (count($viewdata) > 1) {
-            usort($viewdata, __NAMESPACE__ . '\compare_fullname');
+            // Sort alphabetically by firstname and lastname by comparing fullname
+            usort($viewdata, function ($a, $b) {
+                if (!empty($a['owner']) && !empty($b['owner'])) {
+                    // sort by owner last name
+                    $retval = strnatcmp(no_accents($a['user']->lastname), no_accents($b['user']->lastname));
+                    // if last names are identical, sort by first name
+                    if (!$retval) {
+                        $retval = strnatcmp(no_accents($a['user']->firstname), no_accents($b['user']->firstname));
+                    }
+                    return $retval;
+                }
+            });
         }
         $count = 0;
         foreach ($viewdata as $v) {
