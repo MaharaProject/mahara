@@ -1895,7 +1895,7 @@ function group_format_editwindow($group) {
 /*
  * Used by admin/groups/groups.php and admin/groups/groups.json.php for listing groups.
  */
-function build_grouplist_html($query, $limit, $offset, &$count=null, $institution, $groupcategory='') {
+function build_grouplist_html($query, $limit, $offset, &$count=null, $institution='mahara', $groupcategory='') {
     global $USER;
 
     $groups = search_group($query, $limit, $offset, 'all', $groupcategory, $institution);

@@ -68,6 +68,7 @@ class View {
     private $accessibleview = 0;
     private $coverimage;
     private $locktemplate = 0;
+    private $blocks = array();
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -411,7 +412,7 @@ class View {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, &$artefactcopies) {
+    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, &$artefactcopies=array()) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -3907,7 +3908,7 @@ class View {
 
         if (!empty($data['artefacttypes'])) {
             $artefacts = (!$artefacts) ? array() : $artefacts;
-            list($customprofile, $customtotals) = self::get_custom_profiles($data['artefacttypes']);
+            list($customprofile, $customtotals) = self::get_custom_profiles($data['artefacttypes'], $user);
             $artefacts = array_merge($artefacts, $customprofile);
             $totalartefacts += $customtotals;
         }
@@ -3915,7 +3916,7 @@ class View {
         return array($artefacts, $totalartefacts);
     }
 
-    public static function get_custom_profiles($artefacttypes) {
+    public static function get_custom_profiles($artefacttypes, $user=null) {
         // If our profile artefact is saving it's data to a special place
         safe_require('artefact', 'internal');
         $customprofiles = array();
@@ -5306,7 +5307,7 @@ class View {
      * @param boolean $hidesubmitted Do not return pages submitted to the group
      * @throws AccessDeniedException
      */
-    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false, $orderby = null, $hidesubmitted = false) {
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid=0, $membersonly = false, $orderby = null, $hidesubmitted = false) {
         global $USER;
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
@@ -5685,7 +5686,7 @@ class View {
      * @param boolean $hidesubmitted Do not return collections submitted to the group
      * @return array of collections
      */
-    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false, $sort = null, $hidesubmitted = false) {
+    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid=0, $membersonly = false, $sort = null, $hidesubmitted = false) {
         global $USER;
 
         $userid = $USER->get('id');

@@ -591,7 +591,7 @@ function institution_statistics($institution, $full=false) {
     return($data);
 }
 
-function institution_verifier_graph_render($type = null, $extradata) {
+function institution_verifier_graph_render($type = null, $extradata=null) {
     global $SESSION;
 
     $data['graph'] = ($type) ? $type : 'pie';
@@ -631,7 +631,7 @@ function institution_verifier_graph_render($type = null, $extradata) {
     return $data;
 }
 
-function institution_current_verifiers_graph_render($type = null, $extradata) {
+function institution_current_verifiers_graph_render($type = null, $extradata=null) {
     global $SESSION;
 
     $data['graph'] = ($type) ? $type : 'line';
@@ -686,7 +686,7 @@ function institution_current_verifiers_graph_render($type = null, $extradata) {
     return $data;
 }
 
-function institution_verifier_load_graph_render($type = null, $extradata) {
+function institution_verifier_load_graph_render($type = null, $extradata=null) {
     global $SESSION;
 
     $data['graph'] = ($type) ? $type : 'pie';
@@ -4128,7 +4128,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     return $result;
 }
 
-function institution_view_type_graph($type = null, $institutiondata) {
+function institution_view_type_graph($type = null, $institutiondata=null) {
 
     $institution = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
     $values = array();
@@ -4179,7 +4179,7 @@ function institution_view_type_graph($type = null, $institutiondata) {
     }
 }
 
-function institution_view_type_graph_render($type = null, $extradata) {
+function institution_view_type_graph_render($type = null, $extradata=null) {
 
     $data['graph'] = ($type) ? $type : 'pie';
     if ($jsondata = json_decode(get_field('institution_data','value','type','view-type-graph','institution', $extradata->institution))) {
@@ -4188,7 +4188,7 @@ function institution_view_type_graph_render($type = null, $extradata) {
     }
 }
 
-function institution_user_type_graph($type = null, $institutiondata) {
+function institution_user_type_graph($type = null, $institutiondata=null) {
 
     $institution = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
     $usertypes = array();
@@ -5237,7 +5237,7 @@ function graph_site_data_daily() {
     view_type_graph();
 }
 
-function graph_institution_data_weekly($type = null, $institutiondata) {
+function graph_institution_data_weekly($type = null, $institutiondata=null) {
     $name = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
 
     if ($name == 'all') {
@@ -5410,7 +5410,7 @@ function institution_logins_stats_table($limit, $offset, $extra) {
  * @result int $count The total count of 'users per institution' rows
  * @result array $results The count of users per institution
  */
-function users_active_data($limit=0, $offset=0, $extra) {
+function users_active_data($limit=0, $offset=0, $extra=null) {
     if (empty($extra['start'])) {
         $extra['start'] = db_format_timestamp(strtotime("-1 months"));
     }

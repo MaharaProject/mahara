@@ -12,6 +12,19 @@
 defined('INTERNAL') || die();
 
 /**
+ * Recursive way to strip slashes from a value
+ *
+ * @param mixed $value
+ * @return mixed;
+ */
+function stripslashes_deep($value) {
+    $value = is_array($value) ?
+      array_map('stripslashes_deep', $value) :
+      stripslashes($value);
+    return $value;
+}
+
+/**
  * work around silly php settings
  * and broken setup stuff about the install
  * and raise a warning/fail depending on severity
@@ -82,12 +95,6 @@ function ensure_sanity() {
 
     // magic_quotes_gpc workaround
     if (!defined('CRON') && ini_get_bool('magic_quotes_gpc')) {
-        function stripslashes_deep($value) {
-            $value = is_array($value) ?
-                array_map('stripslashes_deep', $value) :
-                stripslashes($value);
-            return $value;
-        }
         $_POST = array_map('stripslashes_deep', $_POST);
         $_GET = array_map('stripslashes_deep', $_GET);
         $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
@@ -5580,6 +5587,7 @@ function get_installed_plugins_paths() {
 function get_all_versions_hash() {
     $versions = array();
     // Get core version
+    $config = null; // is set via version.php below
     require(get_config('libroot') . 'version.php');
     $versions['core'] = $config->version;
     // All installed plugins

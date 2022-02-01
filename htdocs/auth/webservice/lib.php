@@ -89,6 +89,7 @@ class PluginAuthWebservice extends PluginAuth {
 
     public static function get_config_options() {
         redirect('/webservice/admin/index.php');
+        return false;
     }
 
     public static function has_instance_config() {
@@ -203,6 +204,7 @@ class PluginAuthWebservice extends PluginAuth {
                 set_config('webservice_provider_' . $proto.'_enabled', 1);
             }
         }
+        return true;
     }
 
     public static function get_oauth_service_config_options($serverid) {

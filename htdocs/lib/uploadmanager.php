@@ -259,6 +259,7 @@ class upload_manager {
                 return $try;
             }
         }
+        return $filename;
     }
 
     public function original_filename_extension() {

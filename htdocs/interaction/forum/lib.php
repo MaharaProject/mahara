@@ -403,6 +403,7 @@ EOF;
         if ($prevversion == 0) {
             return set_config_plugin('interaction', 'forum', 'postdelay', 30);
         }
+        return true;
     }
 
     public static function get_activity_types() {
@@ -1347,7 +1348,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
 
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
 
         $this->temp = (object) array('post' => $post);
@@ -1467,7 +1468,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
             );
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
 
     }
@@ -1494,7 +1495,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
             );
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
         return $return;
     }
@@ -1522,7 +1523,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
             );
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
         return $return;
     }

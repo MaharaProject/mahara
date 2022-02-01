@@ -659,7 +659,7 @@ class MaharaException extends Exception {
         }
 
         if (defined('XMLRPC')) { // it's preferable to throw an XmlrpcServerException
-            echo xmlrpc_error($this->render_exception(), $this->getCode());
+            xmlrpc_error($this->render_exception(), $this->getCode());
             exit;
         }
 

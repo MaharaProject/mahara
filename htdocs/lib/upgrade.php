@@ -44,7 +44,7 @@ function check_upgrades($name=null) {
     $newinstallcount = 0;
     $installing = false;
     $newinstalls = array();
-
+    $config = null; // will be set via version.php below
     require('version.php');
     // check core first...
     if (empty($name) || $name == 'core') {

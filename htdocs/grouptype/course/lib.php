@@ -17,6 +17,7 @@ class PluginGrouptypeCourse extends PluginGrouptype {
         if ($prevversion == 0) {
             parent::installgrouptype('GroupTypeCourse');
         }
+        return true;
     }
 
 }

@@ -87,6 +87,7 @@ class PluginNotificationInternal extends PluginNotification {
     }
 
     public static function postinst($prevversion) {
+        return true;
     }
 
     public static function get_event_subscriptions() {
