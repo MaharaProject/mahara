@@ -1249,9 +1249,6 @@ class PluginSearchElasticsearch extends PluginSearch {
        }
        $smarty->assign('offset', $data['offset']);
 
-       $resultcounttextsingular = get_string('record', 'search.elasticsearch');
-       $resultcounttextplural = get_string('records', 'search.elasticsearch');
-
        if (isset($data['facets'])) {
            $smarty->assign('facets', $data['facets']);
        }
@@ -1289,8 +1286,7 @@ class PluginSearchElasticsearch extends PluginSearch {
                'offset' => $data['offset'],
                'jumplinks' => 6,
                'numbersincludeprevnext' => 2,
-               'resultcounttextsingular' => $resultcounttextsingular,
-               'resultcounttextplural' => $resultcounttextplural,
+               'resultcounttext' => get_string('nrecords', 'search.elasticsearch', $data['count']),
                'extradata' => array('page' => 'index'),
        ));
        $data['pagination'] = $pagination['html'];

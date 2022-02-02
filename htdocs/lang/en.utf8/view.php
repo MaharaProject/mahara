@@ -83,15 +83,27 @@ $string['accessbetweendates3'] = 'Nobody can see this page before %s or after %s
 $string['artefactsinthisview'] = 'Artefacts in this page';
 $string['whocanseethisview'] = 'Who can see this page';
 $string['pending'] = 'Portfolio under review';
-$string['view'] = 'page';
 $string['panelmenu'] = 'Menu';
 $string['vieworcollection'] = 'page or collection';
-$string['views'] = 'pages';
 $string['viewsandcollections'] = 'pages and collections';
+$string['nviewsandcollections'] = array(
+    '%s page or collection',
+    '%s pages and collections'
+);
+$string['view'] = 'page';
+$string['views'] = 'pages';
+$string['nviews1'] = array(
+    '%s page',
+    '%s pages'
+);
 $string['View'] = 'Page';
 $string['Views'] = 'Pages';
 $string['portfolio'] = 'portfolio';
 $string['portfolios'] = 'portfolios';
+$string['nportfolios'] = array(
+    '%s portfolio',
+    '%s portfolios'
+);
 $string['Viewscollections'] = 'Pages and collections';
 $string['viewsubmittedtogroup1'] = 'This portfolio has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon1'] = 'This portfolio was submitted to <a href="%s">%s</a> on %s.';
@@ -106,10 +118,6 @@ $string['collectionsubmittedtohoston'] = 'This collection was submitted on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
 $string['noviews1'] = 'No pages or collections.';
-$string['nviews'] = array(
-    '1 page',
-    '%s pages',
-);
 $string['youhavenoviews1'] = 'You don\'t have any pages or collections.';
 $string['youhaventcreatedanyviewsyet'] = "You have not created any pages yet.";
 $string['youhavenviews'] = array(

@@ -50,6 +50,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         $smarty->assign('options', $options);
         $smarty->assign('items', $items['data']);
         $items['tablerows'] = $smarty->fetch($template);
+        $resultcounttext = $pagination['resultcounttext'];
         if ($items['limit'] && $pagination) {
             $pagination = build_pagination(array(
                 'id' => $pagination['id'],
@@ -61,8 +62,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
                 'limit' => $items['limit'],
                 'offset' => $items['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+                'resultcounttext' => $resultcounttext ? $resultcounttext : null,
             ));
             $items['pagination'] = $pagination['html'];
             $items['pagination_js'] = $pagination['javascript'];
@@ -106,8 +106,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
             'id' => 'mygroups_pagination',
             'datatable' => 'usergroupstable',
             'jsonscript' => 'blocktype/mygroups/mygroups.json.php',
-            'resultcounttextsingular' => get_string('group', 'group'),
-            'resultcounttextplural' => get_string('groups', 'group'),
+            'resultcounttext' => get_string('ngroups', 'group', $groups['count']),
         );
         self::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
 

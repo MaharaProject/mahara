@@ -82,8 +82,7 @@ $pagination = build_pagination(array(
     'setlimit' => true,
     'jumplinks' => 6,
     'numbersincludeprevnext' => 2,
-    'resultcounttextsingular' => get_string('group', 'group'),
-    'resultcounttextplural' => get_string('groups', 'group'),
+    'resultcounttext' => get_string('ngroups', 'group', $groups['count']),
 ));
 
 $smarty = smarty_core();

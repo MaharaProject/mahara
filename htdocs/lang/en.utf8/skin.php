@@ -76,6 +76,10 @@ $string['modifieddate'] = 'Modified';
 $string['noskins'] = 'There are no skins';
 $string['skin'] = 'skin';
 $string['skins'] = 'skins';
+$string['nskins'] = array(
+    '%s skin',
+    '%s skins'
+);
 
 $string['allskins'] = 'All skins';
 $string['siteskins'] = 'Site skins';
@@ -204,6 +208,10 @@ Or you can install a Google font via the following steps:
 $string['nofonts'] = 'There are no fonts.';
 $string['font'] = 'font';
 $string['fonts'] = 'fonts';
+$string['nfonts'] = array(
+    '%s font',
+    '%s fonts'
+);
 
 $string['installfont'] = 'Install font';
 $string['fontinstalled'] = 'Font installed successfully';

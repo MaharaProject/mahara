@@ -15,6 +15,10 @@ $string['pluginname'] = 'Comment';
 $string['Comment'] = 'Comment';
 $string['Comments'] = 'Comments';
 $string['comment'] = 'comment';
+$string['ncomments'] = array(
+    '%s comment',
+    '%s comments'
+);
 $string['artefactcomments1'] = 'Comments for';
 $string['viewcomments'] = 'Page comments';
 $string['comments'] = 'comments';

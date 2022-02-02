@@ -17,6 +17,10 @@ $string['Blog'] = 'Journal';
 $string['Blogs'] = 'Journals';
 $string['blog'] = 'journal';
 $string['blogs'] = 'journals';
+$string['nblogs'] = array(
+    '%s journal',
+    '%s journals'
+);
 $string['siteblogs'] = 'Site journals';
 $string['siteblogsdesc'] = 'Create and administer site journals';
 $string['institutionblogs'] = 'Institution journals';

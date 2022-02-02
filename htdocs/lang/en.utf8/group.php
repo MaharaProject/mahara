@@ -151,8 +151,8 @@ $string['invites'] = "Invites";
 $string['member'] = 'member';
 $string['members'] = 'members';
 $string['Members'] = 'Members';
-$string['nmembers'] = array(
-    '1 member',
+$string['nmembers1'] = array(
+    '%s member',
     '%s members',
 );
 
@@ -229,6 +229,10 @@ $string['nogroupsfound'] = 'No groups found.';
 $string['group'] = 'group';
 $string['Group'] = 'Group';
 $string['groups'] = 'groups';
+$string['ngroups'] = array(
+    '%s group',
+    '%s groups'
+);
 $string['notamember'] = 'You are not a member of this group.';
 $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
 $string['declinerequestsuccess'] = 'Group membership request has been declined successfully.';
@@ -321,8 +325,16 @@ $string['existingfriend'] = 'existing friend';
 $string['nosearchresultsfound'] = 'No search results found';
 $string['friend'] = 'friend';
 $string['friends'] = 'friends';
+$string['nfriends'] = array(
+    '%s friend',
+    '%s friends'
+);
 $string['user'] = 'person';
 $string['users'] = 'persons';
+$string['nusers'] = array(
+    '%s person',
+    '%s people'
+);
 $string['Friends'] = 'Friends';
 $string['friendrequests'] = 'Friend requests';
 $string['Everyone'] = 'Everyone';

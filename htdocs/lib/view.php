@@ -5666,8 +5666,6 @@ class View {
                 'limit' => $views['limit'],
                 'offset' => $views['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
             ));
             $views['pagination'] = $pagination['html'];
             $views['pagination_js'] = $pagination['javascript'];
@@ -6448,8 +6446,7 @@ class View {
             'nexttext' => '',
             'lasttext' => '',
             'setlimit' => true,
-            'resultcounttextsingular' => get_string('view', 'view'),
-            'resultcounttextplural' => get_string('views', 'view'),
+            'resultcounttext' => get_string('nviews1', 'view', $results->count),
         ));
     }
 

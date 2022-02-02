@@ -453,8 +453,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'setlimit' => true,
             'jumplinks' => 6,
             'numbersincludeprevnext' => 2,
-            'resultcounttextsingular' => get_string('blog', 'artefact.blog'),
-            'resultcounttextplural' => get_string('blogs', 'artefact.blog'),
+            'resultcounttext' => get_string('nblogs', 'artefact.blog', $blogs->count)
         ));
         $blogs->pagination = $pagination['html'];
         $blogs->pagination_js = $pagination['javascript'];
@@ -1146,8 +1145,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'offset' => $posts['offset'],
                 'jumplinks' => 6,
                 'numbersincludeprevnext' => 2,
-                'resultcounttextsingular' => get_string('post', 'artefact.blog'),
-                'resultcounttextplural' => get_string('posts', 'artefact.blog'),
+                'resultcounttext' => get_string('nposts', 'artefact.blog', $posts['count']),
             ));
             $posts['pagination'] = $pagination['html'];
             $posts['pagination_js'] = $pagination['javascript'];

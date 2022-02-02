@@ -4298,8 +4298,6 @@ function build_pagination($params) {
     $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
     $params['nexttext']  = (isset($params['nexttext']))  ? $params['nexttext'] : get_string('next');
     $params['lasttext']  = (isset($params['lasttext']))  ? $params['lasttext'] : get_string('last');
-    $params['resultcounttextsingular'] = (isset($params['resultcounttextsingular'])) ? $params['resultcounttextsingular'] : get_string('result');
-    $params['resultcounttextplural'] = (isset($params['resultcounttextplural'])) ? $params['resultcounttextplural'] : get_string('results');
 
     if (!isset($params['numbersincludefirstlast'])) {
         $params['numbersincludefirstlast'] = true;
@@ -4322,10 +4320,10 @@ function build_pagination($params) {
     }
     $output .= '">';
     // Output the count of results
-    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
+    $resultsstr = isset($params['resultcounttext']) ? $params['resultcounttext'] : get_string('nresults', 'mahara', $params['count']);
     if ($params['count'] > 0) {
         if (!isset($params['hidecount'])) {
-            $output .= '<div class="lead text-small results float-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+            $output .= '<div class="lead text-small results float-right">' . $resultsstr . '</div>';
         }
     }
 

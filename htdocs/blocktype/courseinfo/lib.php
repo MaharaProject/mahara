@@ -323,8 +323,7 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
                 'limit'                   => $courses['limit'],
                 'offset'                  => $courses['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => get_string('course', 'blocktype.courseinfo'),
-                'resultcounttextplural'   => get_string('courses', 'blocktype.courseinfo'),
+                'resultcounttext' => get_string('ncourses', 'blocktype.courseinfo', $courses['count']),
             ));
             $courses['pagination']    = $pagination['html'];
             $courses['pagination_js'] = $pagination['javascript'];

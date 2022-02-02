@@ -2257,12 +2257,10 @@ function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $que
         $params['filter'] = $data['filter'];
     }
     if ($searchtype == 'myfriends') {
-        $resultcounttextsingular = get_string('friend', 'group');
-        $resultcounttextplural = get_string('friends', 'group');
+        $resultcounttext = get_string('nfriends', 'group', $data['count']);
     }
     else {
-        $resultcounttextsingular = get_string('user', 'group');
-        $resultcounttextplural = get_string('users', 'group');
+        $resultcounttext = get_string('nusers', 'group', $data['count']);
     }
 
     $smarty->assign('admingroups', $admingroups);
@@ -2281,8 +2279,7 @@ function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $que
         'offset' => $data['offset'],
         'jumplinks' => 6,
         'numbersincludeprevnext' => 2,
-        'resultcounttextsingular' => $resultcounttextsingular,
-        'resultcounttextplural' => $resultcounttextplural,
+        'resultcounttext' => $resultcounttext,
         'extradata' => array('searchtype' => $searchtype),
         'filter'    => $filter,
         'query' => $query,
@@ -2298,8 +2295,6 @@ function build_onlinelist_html(&$data, $page) {
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
     $smarty->assign('page', $page);
-    $resultcounttextsingular = get_string('user', 'group');
-    $resultcounttextplural = get_string('users', 'group');
     $data['tablerows'] = $smarty->fetch('user/onlineuserresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'onlinelist_pagination',
@@ -2310,8 +2305,7 @@ function build_onlinelist_html(&$data, $page) {
         'offset' => $data['offset'],
         'jsonscript' => 'user/online.json.php',
         'setlimit' => true,
-        'resultcounttextsingular' => $resultcounttextsingular,
-        'resultcounttextplural' => $resultcounttextplural,
+        'resultcounttext' => get_string('nusers', 'group', $data['count']),
         'extradata' => array('page' => $page),
     ));
     $data['pagination'] = $pagination['html'];

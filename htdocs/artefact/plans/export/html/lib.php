@@ -15,10 +15,11 @@ class HtmlExportPlans extends HtmlExportArtefactPlugin {
 
     public function pagination_data($artefact) {
         if ($artefact instanceof ArtefactTypePlan) {
+            $count = $artefact->count_children();
             return array(
                 'perpage'    => 10,
-                'childcount' => $artefact->count_children(),
-                'plural'     => get_string('plans', 'artefact.plans'),
+                'childcount' => $count,
+                'plural'     => get_string('nplans', 'artefact.plans', $count),
             );
         }
     }

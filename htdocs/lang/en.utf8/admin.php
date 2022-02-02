@@ -134,6 +134,10 @@ $string['settings']   = 'Settings';
 $string['institution']   = 'Institution';
 $string['institutions']   = 'institutions';
 $string['Institutions']   = 'Institutions';
+$string['ninstitutions'] = array(
+    '%s institution',
+    '%s institutions'
+);
 $string['institutiondetails']   = 'Institution details';
 $string['institutionauth']   = 'Institution authorities';
 $string['institutionsettingsdesc'] = 'Set up and manage institutions';

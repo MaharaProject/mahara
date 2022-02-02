@@ -280,8 +280,7 @@ $pagination = build_pagination(array(
     'offset' => $offset,
     'jumplinks' => 6,
     'numbersincludeprevnext' => 2,
-    'resultcounttextsingular' => get_string('topiclower', 'interaction.forum'),
-    'resultcounttextplural' => get_string('topicslower', 'interaction.forum')
+    'resultcounttext' => get_string('ntopicslower', 'interaction.forum', $forum->topiccount),
 ));
 
 $inlinejavascript = <<<EOF

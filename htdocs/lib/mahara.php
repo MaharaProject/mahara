@@ -5161,8 +5161,6 @@ function build_portfolio_search_html(&$data) {
         'jumplinks' => 6,
         'numbersincludeprevnext' => 2,
         'numbersincludefirstlast' => false,
-        'resultcounttextsingular' => get_string('result'),
-        'resultcounttextplural' => get_string('results'),
     ));
     $data->pagination = $pagination['html'];
     $data->pagination_js = $pagination['javascript'];

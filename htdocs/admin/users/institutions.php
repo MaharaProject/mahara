@@ -64,7 +64,7 @@ if ($institution || $add) {
         function delete_validate(Pieform $form, $values) {
             // Ensure the institution has no members left
             if ($members = get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
-                $form->set_error('submit', get_string('institutionstillhas', 'admin', get_string('nmembers', 'group', $members)));
+                $form->set_error('submit', get_string('institutionstillhas', 'admin', get_string('nmembers1', 'group', $members)));
             }
 
             // If some users are still using one of this institution's authinstances, it's okay if

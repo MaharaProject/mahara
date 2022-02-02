@@ -67,8 +67,7 @@ $pagination = array(
                     'id' => 'mygroups_pagination',
                     'datatable' => 'usergroupstable',
                     'jsonscript' => 'blocktype/mygroups/mygroups.json.php',
-                    'resultcounttextsingular' => get_string('group', 'group'),
-                    'resultcounttextplural' => get_string('groups', 'group'),
+                    'resultcounttext' => get_string('ngroups', 'group', $groups['count']),
                     );
 PluginBlocktypeMyGroups::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
 

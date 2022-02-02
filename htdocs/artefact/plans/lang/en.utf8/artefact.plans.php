@@ -31,6 +31,10 @@ $string['Plan'] = 'Plan';
 $string['Plans'] = 'Plans';
 $string['plan'] = 'plan';
 $string['plans'] = 'plans';
+$string['nplans'] = array(
+    '%s plan',
+    '%s plans'
+);
 $string['plandeletedsuccessfully'] = 'Plan deleted successfully.';
 $string['plannotdeletedsuccessfully'] = 'There was an error deleting this plan.';
 $string['plannotsavedsuccessfully'] = 'There was an error submitting this form. Please check the marked fields and try again.';
@@ -70,6 +74,10 @@ $string['Tasks'] = 'Tasks';
 // For counting tasks results, e.g. tasklist
 $string['task'] = 'task';
 $string['tasks'] = 'tasks';
+$string['ntasks'] = array(
+    '%s task',
+    '%s tasks'
+);
 
 $string['Grouptasks'] = 'Group tasks';
 $string['taskdeletedsuccessfully'] = 'Task deleted successfully.';

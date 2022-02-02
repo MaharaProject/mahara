@@ -65,8 +65,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
             'limit' => $friends['limit'],
             'offset' => $friends['offset'],
             'numbersincludefirstlast' => false,
-            'resultcounttextsingular' => get_string('friend', 'group'),
-            'resultcounttextplural' => get_string('friends', 'group'),
+            'resultcounttext' => get_string('nfriends', 'group',$friends['count']),
         ));
         $friends['pagination'] = $pagination['html'];
         $friends['pagination_js'] = $pagination['javascript'];

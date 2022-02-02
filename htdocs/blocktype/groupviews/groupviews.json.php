@@ -74,8 +74,7 @@ if (!empty($configdata['showgroupviews']) && isset($groupviews)) {
         'id'         => 'groupviews_pagination',
         'datatable'  => 'groupviewlist',
         'jsonscript' => 'blocktype/groupviews/groupviews.json.php',
-        'resultcounttextsingular' => get_string('view', 'view'),
-        'resultcounttextplural'   => get_string('views', 'view'),
+        'resultcounttext' => get_string('nviews1', 'view', $groupviews['count']),
     );
     PluginBlocktypeGroupViews::render_items($groupviews, 'blocktype:groupviews:groupviewssection.tpl', $configdata, $pagination);
 }

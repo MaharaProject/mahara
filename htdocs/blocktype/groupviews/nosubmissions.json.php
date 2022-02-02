@@ -68,8 +68,7 @@ else {
         'jsonscript' => 'blocktype/groupviews/nosubmissions.json.php',
         'jumplinks'  => 6,
         'numbersincludeprevnext' => 3,
-        'resultcounttextsingular' => get_string('member', 'group'),
-        'resultcounttextplural'   => get_string('members', 'group'),
+        'resultcounttext' => get_string('nmembers1', 'group', $nosubmissions['count']),
     );
     PluginBlocktypeGroupViews::render_items($nosubmissions, 'blocktype:groupviews:nosubmissions.tpl', $configdata, $pagination);
 }

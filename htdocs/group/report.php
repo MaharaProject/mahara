@@ -42,8 +42,7 @@ $pagination = array(
     'datatable'  => 'sharedviewsreport',
     'jsonscript' => 'group/participationsharedviews.json.php',
     'setlimit'   => true,
-    'resultcounttextsingular' => get_string('portfolio', 'view'),
-    'resultcounttextplural'   => get_string('portfolios', 'view'),
+    'resultcounttext' => get_string('nportfolios', 'view', $sharedviews['count']),
 );
 
 $sharedviews = View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);
@@ -56,8 +55,7 @@ $pagination = array(
     'datatable'  => 'groupviewsreport',
     'jsonscript' => 'group/participationgroupviews.json.php',
     'setlimit'   => true,
-    'resultcounttextsingular' => get_string('portfolio', 'view'),
-    'resultcounttextplural'   => get_string('portfolios', 'view'),
+    'resultcounttext' => get_string('nportfolios', 'view', $groupviews['count']),
 );
 
 $groupviews = View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);

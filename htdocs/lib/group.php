@@ -1965,8 +1965,7 @@ function build_grouplist_html($query, $limit, $offset, &$count=null, $institutio
                 'setlimit' => true,
                 'jumplinks' => 6,
                 'numbersincludeprevnext' => 2,
-                'resultcounttextsingular' => get_string('group', 'group'),
-                'resultcounttextplural' => get_string('groups', 'group'),
+                'resultcounttext' => get_string('ngroups', 'group', $count),
             ));
 
     $data['pagination'] = $pagination['html'];
@@ -2063,8 +2062,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
         'nexttext' => '',
         'lasttext' => '',
         'numbersincludefirstlast' => false,
-        'resultcounttextsingular' => get_string('member', 'group'),
-        'resultcounttextplural' => get_string('members', 'group'),
+        'resultcounttext' => get_string('nmembers1', 'group', $results['count']),
     ));
 
     return array($html, $pagination, $results['count'], $results['offset'], $membershiptype);

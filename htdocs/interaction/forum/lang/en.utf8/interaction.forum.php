@@ -205,6 +205,10 @@ $string['Topic'] = 'Topic';
 $string['Topics'] = 'Topics';
 $string['topiclower'] = 'topic';
 $string['topicslower'] = 'topics';
+$string['ntopicslower'] = array(
+        '%s topic',
+        '%s topics'
+);
 $string['topicclosedsuccess'] = 'Topics closed successfully';
 $string['topicisclosed'] = 'This topic is closed. Only moderators and the group administrators can post new replies.';
 $string['topicopenedsuccess'] = 'Topics opened successfully';

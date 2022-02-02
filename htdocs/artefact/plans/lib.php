@@ -517,8 +517,7 @@ class ArtefactTypePlan extends ArtefactType {
                                            'setlimit' => true,
                                            'jumplinks' => 6,
                                            'numbersincludeprevnext' => 2,
-                                           'resultcounttextsingular' => get_string('plan', 'artefact.plans'),
-                                           'resultcounttextplural' => get_string('plans', 'artefact.plans'),
+                                           'resultcounttext' => get_string('nplans', 'artefact.plans', $plans['count']),
                                        ]);
         $plans['pagination'] = $pagination['html'];
         $plans['pagination_js'] = $pagination['javascript'];
@@ -1651,8 +1650,7 @@ class ArtefactTypeTask extends ArtefactType {
             'setlimit' => true,
             'jumplinks' => 6,
             'numbersincludeprevnext' => 2,
-            'resultcounttextsingular' => get_string('task', 'artefact.plans'),
-            'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
+            'resultcounttext' => get_string('ntasks', 'artefact.plans', $tasks['count']),
         ]);
         $tasks['pagination'] = $pagination['html'];
         $tasks['pagination_js'] = $pagination['javascript'];
@@ -1708,8 +1706,7 @@ class ArtefactTypeTask extends ArtefactType {
                 'limit' => $tasks['limit'],
                 'offset' => $tasks['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => get_string('task', 'artefact.plans'),
-                'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
+                'resultcounttext' => get_string('ntasks', 'artefact.plans', $tasks['count']),
             ]);
             $tasks['pagination'] = $pagination['html'];
             $tasks['pagination_js'] = $pagination['javascript'];

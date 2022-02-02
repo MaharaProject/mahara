@@ -980,8 +980,7 @@ class ArtefactTypeComment extends ArtefactType {
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('comment', 'artefact.comment'),
-            'resultcounttextplural' => get_string('comments', 'artefact.comment'),
+            'resultcounttext' => get_string('ncomments', 'artefact.comment', $data->count),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];

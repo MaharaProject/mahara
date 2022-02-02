@@ -41,8 +41,7 @@ $pagination = array(
     'datatable'  => 'sharedviewsreport',
     'jsonscript' => 'group/participationsharedviews.json.php',
     'setlimit'   => true,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural'   => get_string('views', 'view'),
+    'resultcounttext' => get_string('nviews1', 'view', $sharedviews['count']),
 );
 
 $sharedviews = View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);

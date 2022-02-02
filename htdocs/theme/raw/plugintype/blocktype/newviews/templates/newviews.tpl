@@ -5,7 +5,7 @@
         <h3 class="list-group-item-heading text-inline">
             <a href="{$view.fullurl}">{$view.title}</a>
         </h3>
-        <span class="text-small text-midtone">{if $view.collid}({str tag=nviews section=view arg1=$view.numpages}){/if}</span>
+        <span class="text-small text-midtone">{if $view.collid}({str tag=nviews1 section=view arg1=$view.numpages}){/if}</span>
         {if $view.sharedby}
         <div class="groupuserdate text-small">
             {if $view.group && $loggedin}

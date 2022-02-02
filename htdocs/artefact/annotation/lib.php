@@ -936,9 +936,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'count' => $data->count,
             'limit' => $data->limit,
             'offset' => $data->offset,
+            'resultcounttext' => get_string('nannotationfeedback', 'artefact.annotation', $data->count),
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('annotationfeedback', 'artefact.annotation'),
-            'resultcounttextplural' => get_string('annotationfeedback', 'artefact.annotation'),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];

@@ -31,6 +31,10 @@ $string['hours'] = 'Hours';
 $string['totalhours'] = 'Total hours';
 $string['course'] = 'course';
 $string['courses'] = 'courses';
+$string['ncourses'] = array(
+    '%s course',
+    '%s courses'
+);
 $string['coursetype'] = 'Course type';
 $string['connectedwithexternalaccount'] = 'External account found';
 $string['coursesresultsfromto'] = 'Courses found between %s and %s';

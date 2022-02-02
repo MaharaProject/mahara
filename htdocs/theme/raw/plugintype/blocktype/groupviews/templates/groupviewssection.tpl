@@ -4,7 +4,7 @@
             <div class="flex-title">
                 <h4 class="list-group-item-heading text-inline">
                     <a href="{$view.fullurl}">{$view.displaytitle}</a>
-                    {if $view.collid}<span class="text-small text-midtone">({str tag=nviews section=view arg1=$view.numpages})</span>{/if}
+                    {if $view.collid}<span class="text-small text-midtone">({str tag=nviews1 section=view arg1=$view.numpages})</span>{/if}
                 </h4>
             </div>
             {if $view.template}

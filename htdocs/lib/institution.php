@@ -1179,8 +1179,7 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
                 'offset' => $offset,
                 'setlimit' => true,
                 'jumplinks' => 4,
-                'resultcounttextsingular' => get_string('institution', 'admin'),
-                'resultcounttextplural' => get_string('institutions', 'admin'),
+                'resultcounttext' => get_string('ninstitutions', 'admin', $count),
             ));
 
     $data['pagination'] = $pagination['html'];

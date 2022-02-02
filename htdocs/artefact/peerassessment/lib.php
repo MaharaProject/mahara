@@ -747,8 +747,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('assessment', 'artefact.peerassessment'),
-            'resultcounttextplural' => get_string('assessments', 'artefact.peerassessment'),
+            'resultcounttext' => get_string('nassessments', 'artefact.peerassessment', $data->count),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];

@@ -39,6 +39,10 @@ $string['collection'] = 'collection';
 $string['Collection'] = 'Collection';
 $string['collections'] = 'collections';
 $string['Collections'] = 'Collections';
+$string['ncollections'] = array(
+    '%s collection',
+    '%s collections'
+);
 $string['groupcollections'] = 'Group collections';
 $string['institutioncollections'] = 'Institution collections';
 $string['sitecollections'] = 'Site collections';

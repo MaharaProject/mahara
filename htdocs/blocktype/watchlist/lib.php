@@ -149,8 +149,6 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
             'id'         => 'watchlist_pagination',
             'datatable'  => 'watchlistblock',
             'jsonscript' => 'blocktype/watchlist/watchlist.json.php',
-            'resultcounttextsingular' => get_string('result'),
-            'resultcounttextplural'   => get_string('results'),
         );
 
         $smarty = smarty_core();
@@ -173,8 +171,6 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
                 'limit' => $views['limit'],
                 'offset' => $views['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
             ));
             $views['pagination'] = $pagination['html'];
             $views['pagination_js'] = $pagination['javascript'];

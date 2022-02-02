@@ -909,6 +909,10 @@ $string['query'] = 'Search';
 $string['querydescription'] = 'The words to be searched for';
 $string['result'] = 'result';
 $string['results'] = 'results';
+$string['nresults'] = array(
+    '%s result',
+    '%s results'
+);
 $string['Results'] = 'Results';
 $string['noresultsfound'] = 'No results found';
 $string['users'] = 'People';

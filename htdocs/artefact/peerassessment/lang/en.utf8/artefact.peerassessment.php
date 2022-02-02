@@ -16,6 +16,10 @@ $string['Assessment'] = 'Assessment';
 $string['Assessments'] = 'Assessments';
 $string['assessment'] = 'assessment';
 $string['assessments'] = 'assessments';
+$string['nassessments'] = array(
+    '%s assessment',
+    '%s assessments'
+);
 $string['makeassessmentpublic'] = 'Publish assessment';
 $string['attachfile'] = 'Attach file';
 $string['messageempty'] = 'Peer assessment is empty';
