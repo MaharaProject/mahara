@@ -87,6 +87,7 @@ class ActivityTypeInstitutionmessage extends ActivityType {
           return get_string_from_language($lang, 'institutioninvitesubject', 'activity',
             $this->institution->displayname);
       }
+      return '';
   }
 
   /**
@@ -103,6 +104,7 @@ class ActivityTypeInstitutionmessage extends ActivityType {
       else if ($this->messagetype == 'invite') {
           return $this->get_subject($user) .' '. get_string_from_language($lang, 'institutioninvitemessage', 'activity', $this->url);
       }
+      return '';
   }
 
   /**

@@ -25,6 +25,16 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist {
   protected $usr;
 
   /**
+   * @var string
+   */
+  protected $unsubscribelink;
+
+  /**
+   * @var string
+   */
+  protected $unsubscribetype;
+
+  /**
    * Watchlist notifications class
    * @param object $data Parameters:
    *                    - view (int)
@@ -63,7 +73,7 @@ class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist {
           }
       }
       catch(Exception $exc) {
-          var_log(var_export($exc, true));
+          log_warn(var_export($exc, true));
       }
 
       return $message;

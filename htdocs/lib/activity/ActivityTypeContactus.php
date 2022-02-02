@@ -24,6 +24,8 @@ class ActivityTypeContactus extends ActivityType {
    */
   protected $hideemail = false;
 
+  protected $customheaders;
+
   /**
    * Activity class for sending the contact us form messages.
    *
