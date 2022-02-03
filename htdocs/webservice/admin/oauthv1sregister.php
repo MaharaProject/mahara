@@ -37,9 +37,11 @@ $services = get_records_array('external_services', 'restrictedusers', 0);
 $disabledopts = array();
 $sopts = array();
 foreach ($services as $service) {
-    //check langstring exists before adding to list options
+    // Check langstring exists before adding to list options
     $displayname = get_string($service->shortname, preg_replace('/\//', '.', $service->component));
-    $sopts[$service->id] = string_exists($displayname) ? $displayname : $service->name;
+    if (has_oauth($service->id)) {
+        $sopts[$service->id] = string_exists($displayname) ? $displayname : $service->name;
+    }
     $disabledopts[$service->id] = array();
     if (substr_count($service->component, '/') > 0) {
         list($moduletype, $module) = explode("/", $service->component);
@@ -944,4 +946,27 @@ function get_module_from_external_service($serviceid) {
  */
 function translate_ids_to_names(array $ids) {
     return translate_user_ids_to_names($ids);
+}
+
+/**
+ * Check service has OAuth configured. This includes checking custom apps that may be
+ * using LTI functions.
+ * @param object $serviceid ID of the web service group that the external app is being registered with
+ * @return bool Whether or not the web service group has OAuth configured
+ */
+function has_oauth($serviceid) {
+    // Get the classname for each of the functions added to the service
+    $service_classnames = get_column_sql("
+        SELECT DISTINCT classname FROM {external_functions} WHERE name IN (
+            SELECT functionname FROM {external_services_functions} WHERE externalserviceid = ?
+    )", array($serviceid));
+
+    // Check if any of those classnames have OAuth configured
+    $service_oauth = false;
+    foreach ($service_classnames as $classname) {
+        if ($classname == 'module_lti_launch' || $classname == 'module_lti_advantage_launch') {
+            $service_oauth = true;
+        }
+    }
+    return $service_oauth;
 }
