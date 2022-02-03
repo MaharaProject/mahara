@@ -2043,5 +2043,66 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092116) {
+        // As this SQL query can be a little slow we bump the timeout limit to 5 minutes
+        set_time_limit(300);
+        log_debug('Fetching potential broken pre-gridstack layouts ...');
+        $results = get_records_sql_array("
+            SELECT f.view, f.row, f.columns, f.maxcolumn
+            FROM (
+                SELECT vrc.view, vrc.row, vrc.columns, (
+                    SELECT MAX(bi.column)
+                    FROM {block_instance} bi
+                    WHERE bi.view = vrc.view
+                    AND bi.row = vrc.row
+                ) AS maxcolumn,
+                CASE WHEN (
+                    SELECT width
+                    FROM {block_instance_dimension} bid
+                    JOIN {block_instance} bi ON bi.id = bid.block
+                    WHERE bi.view = vrc.view
+                    LIMIT 1
+                ) > 0 THEN 1 ELSE 0 END AS hasdimension
+                FROM {view_rows_columns} vrc
+                WHERE vrc.columns < (
+                    SELECT MAX(bi.column)
+                    FROM {block_instance} bi
+                    WHERE bi.view = vrc.view
+                    AND bi.row = vrc.row
+                )
+                ORDER BY vrc.view, vrc.row
+            ) AS f
+            WHERE f.hasdimension = 0"
+        );
+        if (!empty($results)) {
+            log_debug('Fixing up pre-gridstack layouts that have incorrect column information');
+            $count = 0;
+            $limit = 100;
+            $total = count($results);
+            foreach ($results as $r) {
+                // Because we can't tell which column they meant to put the block we will
+                // place it in the last column of that row
+                execute_sql("
+                    UPDATE {block_instance} bi SET bi.column = ?
+                    WHERE bi.column > ? AND bi.row = ? AND bi.view = ?",
+                    array($r->columns, $r->columns, $r->row, $r->view)
+                );
+                // Lets sort out any order problems
+                $blockcolumns = get_column_sql("SELECT DISTINCT bi.column FROM {block_instance} bi WHERE bi.view = ? AND bi.row = ?", array($r->view, $r->row));
+                foreach ($blockcolumns as $column) {
+                    $blocks = get_column_sql("SELECT bi.id FROM {block_instance} bi WHERE bi.view = ? AND bi.row = ? AND bi.column = ? ORDER BY bi.order", array($r->view, $r->row, $column));
+                    foreach ($blocks as $k => $blockid) {
+                        execute_sql("UPDATE {block_instance} bi SET bi.order = ? WHERE bi.id = ?", array($k + 1, $blockid));
+                    }
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
