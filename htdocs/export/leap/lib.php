@@ -1277,7 +1277,9 @@ class LeapExportOutputFilter {
             return '<' . $matches[1] . 'rel="leap2:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . ($matches[1] == 'img' ? '/' : '') . '>';
         }
 
-        log_debug("Not providing an export-relative link for $artefactid");
+        if (get_field('artefact', 'artefacttype', 'id', $artefactid)) {
+            log_debug("Not providing an export-relative link for $artefactid");
+        }
         return $matches[0];
     }
 

@@ -669,7 +669,7 @@ class PluginExportHtml extends PluginExport {
     }
 
     /**
-     * Get artefacts for blocktypes that hold nested child artefacts
+     * Get artefacts for blocktypes including nested child artefacts
      */
     public function get_block_artefacts($blocktype, &$idarray, BlockInstance $bi) {
         switch ($blocktype) {
@@ -971,20 +971,30 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                         $b->blocktype == 'filedownload'
                     ) {
                         if (isset($configdata['artefactids']) && !empty($configdata['artefactids'])) {
-                            $artefactidarray = $configdata['artefactids'];
+                            $artefactidarray = array_unique(array_merge($artefactidarray, $configdata['artefactids']));
                         }
                         else if (isset($configdata['artefactid']) && !empty($configdata['artefactid'])) {
-                            $artefactidarray = array($configdata['artefactid']);
+                            $artefactidarray = array_unique(array_merge($artefactidarray, (array)$configdata['artefactid']));
                         }
                     }
 
-                    //Create the modal content for each unique id found
+                    // Create the modal content for each unique id found
                     if (!empty($artefactidarray)) {
                         foreach ($artefactidarray as $artefactid) {
                             //prevent duplicate modals in same page
                             if (!in_array($artefactid, $uniqueids)) {
                                 array_push($uniqueids, $artefactid);
-                                $artefact = $bi->get_artefact_instance($artefactid);
+                                try {
+                                    $artefact = $bi->get_artefact_instance($artefactid);
+                                }
+                                catch (ArtefactNotFoundException $e) {
+                                    // artefact has been deleted but still referenced in embedded text
+                                    continue;
+                                }
+                                catch (Exception $e) {
+                                    log_debug('Problem with modal export: ' . $e->getMessage());
+                                    continue;
+                                }
                                 $options['blockid'] = $b->id;
                                 $rendered = $artefact->render_self($options);
                                 $html = '';
