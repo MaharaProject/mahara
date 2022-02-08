@@ -2083,8 +2083,8 @@ function xmldb_core_upgrade($oldversion=0) {
                 // Because we can't tell which column they meant to put the block we will
                 // place it in the last column of that row
                 execute_sql("
-                    UPDATE {block_instance} bi SET bi.column = ?
-                    WHERE bi.column > ? AND bi.row = ? AND bi.view = ?",
+                    UPDATE {block_instance} SET \"column\" = ?
+                    WHERE \"column\" > ? AND \"row\" = ? AND view = ?",
                     array($r->columns, $r->columns, $r->row, $r->view)
                 );
                 // Lets sort out any order problems
@@ -2092,7 +2092,7 @@ function xmldb_core_upgrade($oldversion=0) {
                 foreach ($blockcolumns as $column) {
                     $blocks = get_column_sql("SELECT bi.id FROM {block_instance} bi WHERE bi.view = ? AND bi.row = ? AND bi.column = ? ORDER BY bi.order", array($r->view, $r->row, $column));
                     foreach ($blocks as $k => $blockid) {
-                        execute_sql("UPDATE {block_instance} bi SET bi.order = ? WHERE bi.id = ?", array($k + 1, $blockid));
+                        execute_sql("UPDATE {block_instance} SET \"order\" = ? WHERE id = ?", array($k + 1, $blockid));
                     }
                 }
                 $count++;
