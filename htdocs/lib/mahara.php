@@ -3182,10 +3182,13 @@ function can_view_view($view, $user_id=null) {
         return false;
     }
 
-    // if the owner want to view the page, allow it
-    if ($view->get('owner') == $USER->get('id')) {
-        return true;
+    // if the owner wants to view their own page, allow it (user ID is 0 when logged out)
+    if (!empty($view->get('owner')) && $USER->get('id') > 0) {
+        if ($view->get('owner') === $USER->get('id')) {
+            return true;
+        }
     }
+
     if ($user_id && $user->can_edit_view($view)) {
         return true;
     }
