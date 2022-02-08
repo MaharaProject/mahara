@@ -477,9 +477,8 @@
         if (config.blockeditormaxwidth) {
             pd['cfheight'] = $(window).height() - 100;
         }
-
+        var grid = $('.grid-stack').data('gridstack');
         if (whereTo == 'bottom') {
-            var grid = $('.grid-stack').data('gridstack');
             pd['positiony'] = grid.grid.getGridHeight();
         }
         else {
@@ -490,8 +489,15 @@
                 pd['positiony'] = whereTo['positiony'];
             }
         }
-
-        pd['action_addblocktype_positionx_' + pd['positionx'] + '_positiony_' + pd['positiony'] + '_width_' + '4'+ '_height_' + '3'] = true;
+        let width = 4; // Default gridstack block width for desktop
+        // The following line works from left to right and returns the first set non-falsy value
+        // as the width value then compares that value to grid.opts.minWidth value and if smaller then treats layout as being in mobile view
+        // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR
+        if ((grid.container[0].clientWidth || grid.container[0].parentElement.clientWidth || window.innerWidth) <= grid.opts.minWidth) {
+            width = 1; // Default gridstack block width for mobile
+            pd['gridonecolumn'] = true;
+        }
+        pd['action_addblocktype_positionx_' + pd['positionx'] + '_positiony_' + pd['positiony'] + '_width_' + width + '_height_' + '3'] = true;
         sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
             var div = $('<div>').html(data.data.display.html),
                 blockinstance = div.find('div.grid-stack-item'),
