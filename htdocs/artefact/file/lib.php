@@ -748,22 +748,33 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     /**
      * Creates pieforms definition for forms on the my files, group files, etc. pages.
      */
-    public static function files_form($page='', $group=null, $institution=null, $folder=null, $highlight=null, $edit=null) {
+    public static function files_form($page='', $group=null, $institution=null) {
         global $USER;
         $resizeonuploaduserdefault = $USER->get_account_preference('resizeonuploaduserdefault');
 
         $folder = param_integer('folder', 0);
-        $edit = param_variable('edit', 0);
-        if (is_array($edit)) {
-            $edit = array_keys($edit);
-            $edit = $edit[0];
+        if ($folder) {
+            // Check the folder ID is valid for the place we are viewing files
+            // and if not set to the 'home' folder as all places have that
+            $folderobj = new ArtefactTypeFolder($folder);
+            if ($institution && $institution != $folderobj->get('institution')) {
+                $folder = 0;
+                header("HTTP/1.0 404 Not Found");
+            }
+            else if ($group && $group != $folderobj->get('group')) {
+                $folder = 0;
+                header("HTTP/1.0 404 Not Found");
+            }
+            else if ((!$group && !$institution) && $USER->get('id') != $folderobj->get('owner')) {
+                $folder = 0;
+                header("HTTP/1.0 404 Not Found");
+            }
         }
-        $edit = (int) $edit;
+
         $highlight = null;
         if ($file = param_integer('file', 0)) {
             $highlight = array($file); // todo convert to file1=1&file2=2 etc
         }
-
         // Check whether the user may upload files; either the group needs to
         // be within its edit window (if one is set) or the user needs to be
         // the group admin.
@@ -791,7 +802,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                     'type'         => 'filebrowser',
                     'folder'       => $folder,
                     'highlight'    => $highlight,
-                    'edit'         => $edit,
+                    'edit'         => false,
                     'page'         => $page,
                     'config'       => array(
                         'upload'          => $editfilesfolders,
