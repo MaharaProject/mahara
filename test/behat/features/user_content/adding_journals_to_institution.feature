@@ -136,6 +136,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     | Email * | UserA@example.org |
     | Username * | UserA |
     | Password * | KKJhh$$67686 |
+    And I scroll to the center of id "adduser_submit"
     And I press "Create account"
     # Logging in as new person
     And I follow "Log in as this person"
