@@ -1,3 +1,36 @@
+21.10.1 (2022-02-09)
+- Bug 1959733: Needing to respect the default layout mode of a page 
+- Bug 1959146: Private group, site, or institution portfolios can be accessed by the URL without logging in 
+- Bug 1926247: Group collection notifications are sent per page 
+- Bug 1943772: Potential LTI duplicating accounts with parent auth 
+- Bug 1949000: Change deployment ID fields to not be autocompleted 
+- Bug 1949333: Releasing a current submission produces warning 
+- Bug 1949421: Combine 'Current submissions' and 'Archived submissions' into 'Submissions' 
+- Bug 1949527: Avoid command injection when PDF bulk export is enabled  
+- Bug 1950067: Wrong language used when requesting sb else's comment to be made public 
+- Bug 1950068: Styles missing in new collapsed comments section 
+- Bug 1950199: SimpleSamlphp metadata refresh causing cron problems
+- Bug 1950220: Call to protected method webservice_base_server::session_cleanup() from context  
+- Bug 1950413: Problem with upgrade when LTI instance containing submissions exists 
+- Bug 1951016: Blocks are not hidden properly with Gridstack 
+- Bug 1951103: Submission page with french language pack 
+- Bug 1951464: Name is not displayed on shared pages and collections in a group 
+- Bug 1951482: LTI Advantage deep link stopped working in Brightspace 
+- Bug 1952359: Deleting institution that contains a collection using progress completion causes a error 
+- Bug 1952362: Unable to delete LTI external app if there is assessments associated with it 
+- Bug 1952493: Installing Mahara in German results in password error 
+- Bug 1952771: PHP warnings on menu->share->submissions and related issues 
+- Bug 1952808: Able to see name of another account holder's folder 
+- Bug 1952961: Refactor set_access process for efficiency 
+- Bug 1953086: Images in migrated page descriptions not displayed on a page 
+- Bug 1955607: Problems in HTML export 
+- Bug 1958499: Upload CSV Users Bug with Failed Emails 
+- Bug 1949337: Language string missing for portfolio release via external host 
+- Bug 1949533: Show the correct copyright value for Mahara README.md 
+- Bug 1952540: Issues with 'Current submissions' and 'Archived submissions' 
+- Bug 1953095: 'Submitted host' info not displayed for pages submitted via LTI 
+- Bug 1956900: Update externalfeed.feature
+
 21.10.0 (2021-10-28)
 - Bug 1930469: Need to kill web service authentication session at end of process
 - Bug 1930471: Exporting of CSV files needs to sanitize data
