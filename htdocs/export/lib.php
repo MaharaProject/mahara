@@ -118,18 +118,18 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             $options = array($this->leapfile, $this->filedir);
         }
         else {
-            $options = array($this->rootdir);
+            $options = array($this->rootdir ?? null);
         }
         // zip everything up
         $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
         try {
-            create_zip_archive($this->exportdir, $this->zipfile, $options);
+            create_zip_archive($this->exportdir ?? null, $this->zipfile, $options);
         }
         catch (SystemException $e) {
             throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
         }
         $this->notify_progress_callback(100, get_string('Done', 'export'));
-        return $this->zipfile;
+        return $this->zipfile ?? '';
     }
 
     /**

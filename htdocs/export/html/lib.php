@@ -69,9 +69,10 @@ class PluginExportHtml extends PluginExport {
      */
     private $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
 
-    protected $collections;
+    protected $collections = array();
     protected $collectionview;
     protected $viewcollection;
+    protected $viewexportmode = 0;
 
     /**
     * constructor.  overrides the parent class

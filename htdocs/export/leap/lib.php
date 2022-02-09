@@ -66,6 +66,26 @@ class PluginExportLeap extends PluginExport {
     protected $extrapersondata = array();
 
     /**
+     * Export directory
+     */
+    protected $exportdir = '';
+
+    /**
+     * Collections to export
+     */
+    protected $collections = array();
+
+    /**
+     * Export links
+     */
+    protected $links;
+
+    /**
+     * Error messages
+     */
+    protected $messages;
+
+    /**
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */

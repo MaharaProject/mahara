@@ -576,7 +576,7 @@ class PluginAuthSaml extends PluginAuth {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('auth', 'saml', 'keypass', get_config('sitename'));
+            return set_config_plugin('auth', 'saml', 'keypass', get_config('sitename'));
         }
     }
 

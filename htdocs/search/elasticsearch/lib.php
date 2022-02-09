@@ -636,6 +636,7 @@ class PluginSearchElasticsearch extends PluginSearch {
             $elasticsearchartefacttypesmap = file_get_contents(__DIR__ . '/elasticsearchartefacttypesmap.txt');
             set_config_plugin('search', 'elasticsearch', 'artefacttypesmap', $elasticsearchartefacttypesmap);
         }
+        return true;
     }
 
     public static function elasticsearchartefacttypesmap_to_array() {

@@ -313,7 +313,7 @@ class AuthXmlrpc extends Auth {
                         try {
                             $user->quota_add($filesize);
                         }
-                        catch (QuotaException $qe) {
+                        catch (Exception $qe) {
                             $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
                         }
 
