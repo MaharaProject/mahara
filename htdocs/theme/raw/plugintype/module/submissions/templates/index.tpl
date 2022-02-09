@@ -90,19 +90,19 @@
             processing: true,
             stateSave: true,
             language: {
-                decimal:        '{/literal}{str tag="decimal" section="module.submissions"}{literal}',
-                emptyTable:     '{/literal}{str tag="emptytable" section="module.submissions"}{literal}',
-                info:           '{/literal}{str tag="info" section="module.submissions"}{literal}',
-                infoEmpty:      '{/literal}{str tag="infoempty" section="module.submissions"}{literal}',
-                infoFiltered:   '{/literal}{str tag="infofiltered" section="module.submissions"}{literal}',
-                infoPostFix:    '{/literal}{str tag="infopostfix" section="module.submissions"}{literal}',
-                thousands:      '{/literal}{str tag="thousands" section="module.submissions"}{literal}',
-                lengthMenu:     '{/literal}{str tag="lengthmenu" section="module.submissions"}{literal}',
-                loadingRecords: '<span class="icon icon-spinner icon-pulse"></span> {/literal}{str tag="loading" section="module.submissions"}{literal}',
-                processing:     '<span class="icon icon-spinner icon-pulse"></span> {/literal}{str tag="processing" section="module.submissions"}{literal}',
-                search:         '{/literal}{str tag="search" section="module.submissions"}{literal}',
-                searchPlaceholder: '{/literal}{str tag="searchplaceholder" section="module.submissions"}{literal}',
-                zeroRecords:    '{/literal}{str tag="zerorecords" section="module.submissions"}{literal}',
+                decimal:        "{/literal}{str tag="decimal" section="module.submissions"}{literal}",
+                emptyTable:     "{/literal}{str tag="emptytable" section="module.submissions"}{literal}",
+                info:           "{/literal}{str tag="info" section="module.submissions"}{literal}",
+                infoEmpty:      "{/literal}{str tag="infoempty" section="module.submissions"}{literal}",
+                infoFiltered:   "{/literal}{str tag="infofiltered" section="module.submissions"}{literal}",
+                infoPostFix:    "{/literal}{str tag="infopostfix" section="module.submissions"}{literal}",
+                thousands:      "{/literal}{str tag="thousands" section="module.submissions"}{literal}",
+                lengthMenu:     "{/literal}{str tag="lengthmenu" section="module.submissions"}{literal}",
+                loadingRecords: "<span class=\"icon icon-spinner icon-pulse\"></span> {/literal}{str tag=loading section=module.submissions}{literal}",
+                processing:     "<span class=\"icon icon-spinner icon-pulse\"></span> {/literal}{str tag=processing section=module.submissions}{literal}",
+                search:         "{/literal}{str tag="search" section="module.submissions"}{literal}",
+                searchPlaceholder: "{/literal}{str tag="searchplaceholder" section="module.submissions"}{literal}",
+                zeroRecords:    "{/literal}{str tag="zerorecords" section="module.submissions"}{literal}",
                 paginate: {
                     'first':      '{/literal}{str tag="first" section="module.submissions"}{literal}',
                     'last':       '{/literal}{str tag="last" section="module.submissions"}{literal}',
@@ -738,10 +738,10 @@
 
                 var tableRow = submissionsTable.getRowOfTableElement(this);
                 var backupRowData = JSON.stringify(tableRow.data());
-                var confirmMessage = '{/literal}{str tag='releasesubmission' section='module.submissions'}{literal}';
+                var confirmMessage = "{/literal}{str tag='releasesubmission' section='module.submissions'}{literal}";
 
                 if (parseInt(tableRow.data().status) === 0) {
-                    confirmMessage = '{/literal}{str tag='fixsubmission' section='module.submissions'}{literal}';
+                    confirmMessage = "{/literal}{str tag='fixsubmission' section='module.submissions'}{literal}";
                 }
                 if (confirm(confirmMessage)) {
                     submissionsTable.sendData(tableRow.data(), function(success, newRowData) {

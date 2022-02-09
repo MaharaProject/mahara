@@ -162,7 +162,7 @@ class SubmissionTools {
 
         /** @var \User $user */
         foreach ($users as $user) {
-            $userArray[$user->get('id')] = ($showNameAsLastnameFirstname ? self::getUserNameAsLastNameFirstName($user) : self::getUserNameAsFirstNameLastName($user));
+            $userArray[$user->get('id')] = ($showNameAsLastnameFirstname ? self::getEvaluatorNameAsLastNameFirstName($user) : self::getEvaluatorNameAsFirstNameLastName($user));
         }
         asort($userArray);
 
@@ -181,7 +181,7 @@ class SubmissionTools {
 
         /** @var \User $user */
         foreach ($users as $user) {
-            $userArray[] = ['value' => $user->get('id'), 'text' => ($showNameAsLastnameFirstname ? self::getUserNameAsLastNameFirstName($user) : self::getUserNameAsFirstNameLastName($user))];
+            $userArray[] = ['value' => $user->get('id'), 'text' => ($showNameAsLastnameFirstname ? self::getEvaluatorNameAsLastNameFirstName($user) : self::getEvaluatorNameAsFirstNameLastName($user))];
         }
         asort($userArray);
 
@@ -554,7 +554,12 @@ class SubmissionTools {
         return param_integer($name);
     }
 
-    public static function concatFirstAndLastName($id, $fullname=false) {
+    /**
+     * @param int $id
+     * @param bool $fullname
+     * @return string
+     */
+    public static function concatFirstAndLastName(int $id, bool $fullname = false) {
         $user = get_user_for_display($id);
         if ($fullname) {
             return full_name($user);
@@ -562,23 +567,60 @@ class SubmissionTools {
         return empty($user->preferredname) ? full_name($user) : $user->preferredname;
     }
 
-    public static function concatLastAndFirstName($lastName, $firstName, $divider = ', ') {
-        return $lastName . $divider . $firstName;
+    /**
+     * @param int $id
+     * @param bool $fullname
+     * @param string $divider
+     * @return string
+     */
+    public static function concatLastAndFirstName(int $id, bool $fullname = false, string $divider = ', ') {
+        $user = get_user_for_display($id);
+        if ($fullname) {
+            return full_name($user, $divider);
+        }
+        return empty($user->preferredname) ? full_name($user, $divider) : $user->preferredname;
+    }
+
+    /**
+     * @param \stdClass $record
+     * @param bool $showNameAsLastnameFirstname
+     * @return string
+     */
+    public static function createOwnerName(\stdClass $record, bool $showNameAsLastnameFirstname) {
+        if ($showNameAsLastnameFirstname) {
+            return self::concatLastAndFirstName($record->ownerId, true);
+        }
+        return self::concatFirstAndLastName($record->ownerId, true);
+    }
+
+    /**
+     * @param \stdClass $record
+     * @param bool $showNameAsLastnameFirstname
+     * @return string
+     */
+    public static function createEvaluatorName(\stdClass $record, bool $showNameAsLastnameFirstname) {
+        if ($record->evaluatorPreferredName) {
+            return $record->evaluatorPreferredName;
+        }
+        if ($showNameAsLastnameFirstname) {
+            return self::concatLastAndFirstName($record->evaluatorId);
+        }
+        return self::concatFirstAndLastName($record->evaluatorId);
     }
 
     /**
      * @param \User $user
      * @return string
      */
-    public static function getUserNameAsLastNameFirstName(\User $user) {
-        return self::concatLastAndFirstName($user->get('lastname'), $user->get('firstname'));
+    public static function getEvaluatorNameAsLastNameFirstName(\User $user) {
+        return self::concatLastAndFirstName($user->get('id'));
     }
 
     /**
      * @param \User $user
      * @return string
      */
-    public static function getUserNameAsFirstNameLastName(\User $user) {
+    public static function getEvaluatorNameAsFirstNameLastName(\User $user) {
         return self::concatFirstAndLastName($user->get('id'));
     }
 

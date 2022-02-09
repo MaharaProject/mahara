@@ -63,7 +63,7 @@ class mobileapi_profileicon_webservice_server extends webservice_base_server {
             throw new WebserviceAccessException(get_string('servicenotallowed', 'module.mobileapi'));
         }
         $this->load_function_info();
-
+        $this->session_cleanup();
         // If it hasn't crashed by now, they're good!
         return true;
     }
@@ -77,7 +77,6 @@ class mobileapi_profileicon_webservice_server extends webservice_base_server {
 
 $server = new mobileapi_profileicon_webservice_server();
 $server->can_user_download_via_webservice();
-$server->session_cleanup();
 
 switch(param_alphanumext('wsfunction')) {
     case 'module_mobileapi_get_user_profileicon':

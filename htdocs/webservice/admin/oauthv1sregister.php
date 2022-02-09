@@ -139,6 +139,11 @@ function webservices_server_submit(Pieform $form, $values) {
                                 ', array($dbserver->id));
             if (db_table_exists('lti_assessment')) {
                 delete_records_sql('
+                                   DELETE FROM {lti_assessment_submission} WHERE ltiassessment IN (
+                                       SELECT id FROM {lti_assessment} WHERE oauthserver = ?
+                                   )
+                                   ', array($dbserver->id));
+                delete_records_sql('
                                     DELETE FROM {lti_assessment}
                                     WHERE oauthserver = ?
                                     ', array($dbserver->id));

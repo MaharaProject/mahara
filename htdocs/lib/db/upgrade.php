@@ -2266,5 +2266,126 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021042712) {
+        log_debug('Updating description text block image src attributes missing text parameter in url');
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        require_once(get_config('libroot') . 'embeddedimage.php');
+        // Find block instances which might need updating.
+        $sql = "SELECT b.id, b.configdata, v.group, v.owner
+                  FROM {block_instance} b
+            INNER JOIN {view} v on b.view = v.id
+                 WHERE blocktype = ?
+                   AND configdata LIKE CONCAT('%description=', b.view, '%')
+                 ORDER BY b.id";
+        // Find the total count of block instances (for logging purposes).
+        $sqlcount = "SELECT COUNT(b.id)
+                       FROM {block_instance} b
+                 INNER JOIN {view} v on b.view = v.id
+                      WHERE blocktype = ?
+                        AND configdata LIKE CONCAT('%description=', b.view, '%')";
+
+        $total = get_field_sql($sqlcount, array('text'));
+        $changes = 0;
+        $limit = 100;
+        $offset = 0;
+        while ($total > 0 && $records = get_records_sql_array($sql, array('text'), $offset, $limit)) {
+            $offset += count($records);
+            foreach($records as $record) {
+                $configdata = unserialize($record->configdata);
+                if (
+                    isset($configdata['text']) &&
+                    !empty($configdata['text']) &&
+                    $configdata['text'] !== (
+                        $newtext = EmbeddedImage::prepare_embedded_images(
+                            $configdata['text'],
+                            'text',
+                            $record->id,
+                            $record->group,
+                            $record->owner
+                        )
+                    )
+                ) {
+                    // Update the text block_instance with the $newtext.
+                    $bi = new BlockInstance($record->id);
+                    $configdata['text'] = $newtext;
+                    $bi->set('configdata', $configdata);
+                    $bi->commit();
+                    $changes++;
+                }
+            }
+
+            log_debug("$offset/$total");
+        }
+
+        // If we haven't found any results notify.
+        if ($total === 0) {
+            log_debug('Found no related block instances');
+        }
+        else {
+            log_debug("{$changes} of {$total} block_instances configdata text have been updated with a text parameter in src attribute");
+        }
+    }
+
+    if ($oldversion < 2021042713) {
+        // As this SQL query can be a little slow we bump the timeout limit to 5 minutes
+        set_time_limit(300);
+        log_debug('Fetching potential broken pre-gridstack layouts ...');
+        $results = get_records_sql_array("
+            SELECT f.view, f.row, f.columns, f.maxcolumn
+            FROM (
+                SELECT vrc.view, vrc.row, vrc.columns, (
+                    SELECT MAX(bi.column)
+                    FROM {block_instance} bi
+                    WHERE bi.view = vrc.view
+                    AND bi.row = vrc.row
+                ) AS maxcolumn,
+                CASE WHEN (
+                    SELECT width
+                    FROM {block_instance_dimension} bid
+                    JOIN {block_instance} bi ON bi.id = bid.block
+                    WHERE bi.view = vrc.view
+                    LIMIT 1
+                ) > 0 THEN 1 ELSE 0 END AS hasdimension
+                FROM {view_rows_columns} vrc
+                WHERE vrc.columns < (
+                    SELECT MAX(bi.column)
+                    FROM {block_instance} bi
+                    WHERE bi.view = vrc.view
+                    AND bi.row = vrc.row
+                )
+                ORDER BY vrc.view, vrc.row
+            ) AS f
+            WHERE f.hasdimension = 0"
+        );
+        if (!empty($results)) {
+            log_debug('Fixing up pre-gridstack layouts that have incorrect column information');
+            $count = 0;
+            $limit = 100;
+            $total = count($results);
+            foreach ($results as $r) {
+                // Because we can't tell which column they meant to put the block we will
+                // place it in the last column of that row
+                execute_sql("
+                    UPDATE {block_instance} SET \"column\" = ?
+                    WHERE \"column\" > ? AND \"row\" = ? AND view = ?",
+                    array($r->columns, $r->columns, $r->row, $r->view)
+                );
+                // Lets sort out any order problems
+                $blockcolumns = get_column_sql("SELECT DISTINCT bi.column FROM {block_instance} bi WHERE bi.view = ? AND bi.row = ?", array($r->view, $r->row));
+                foreach ($blockcolumns as $column) {
+                    $blocks = get_column_sql("SELECT bi.id FROM {block_instance} bi WHERE bi.view = ? AND bi.row = ? AND bi.column = ? ORDER BY bi.order", array($r->view, $r->row, $column));
+                    foreach ($blocks as $k => $blockid) {
+                        execute_sql("UPDATE {block_instance} SET \"order\" = ? WHERE id = ?", array($k + 1, $blockid));
+                    }
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }

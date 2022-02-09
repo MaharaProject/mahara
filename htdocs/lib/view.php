@@ -2032,6 +2032,8 @@ class View {
                 $values[$lastkey] = $bit;
             }
         }
+        $values['gridonecolumn'] = param_boolean('gridonecolumn', false);
+
         return $values;
     }
 
@@ -2125,11 +2127,12 @@ class View {
             SELECT bi.id, bi.view, bi.row, bi.column, bi.order,
             positionx, positiony, width, height, blocktype, title, configdata
             FROM {block_instance_dimension} bd
-            INNER JOIN {block_instance} bi
-            ON bd.block = bi.id
+            INNER JOIN {block_instance} bi ON bd.block = bi.id
+            INNER JOIN {blocktype_installed} bt ON bt.name = bi.blocktype
             WHERE bi.view = ?
+            AND bt.active = ?
             ORDER BY positiony, positionx';
-            $blocks = get_records_sql_array($sql, array($this->get('id')));
+            $blocks = get_records_sql_array($sql, array($this->get('id'), 1));
         }
         else {
             $blocks = $versioning->blocks;
@@ -2431,7 +2434,10 @@ class View {
 
         $blocktypeclass = generate_class_name('blocktype', $values['blocktype']);
         $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : call_static_method($blocktypeclass, 'get_title');
-
+        if ($values['gridonecolumn']) {
+            // We need to add the new block at the default width
+            $values['width'] = 4; // Default gridstack block width for desktop
+        }
         $bi = new BlockInstance(0,
             array(
                 'blocktype'  => $values['blocktype'],
@@ -2675,6 +2681,18 @@ class View {
         }
         $bi->set('positionx', $values['newx']);
         $bi->set('positiony', $values['newy']);
+        if ($values['gridonecolumn']) {
+            // Because we are about to save the block details while being in mobile mode
+            // we check here to see what the previous saved width/height values of the block are
+            $values['oldwidth'] = $bi->get('width');
+            $values['oldheight'] = $bi->get('height');
+            if ((int)$values['oldwidth'] !== 1) {
+                // If the previously saved width was not the size for mobile mode (eg 1) we use the old width
+                // as it was most likely saved in desktop mode
+                $values['newwidth'] = $values['oldwidth'];
+                $values['newheight'] = $values['oldheight'];
+            }
+        }
         $bi->set('width', $values['newwidth']);
         $bi->set('height', $values['newheight']);
         $bi->commit();
@@ -3296,6 +3314,29 @@ class View {
                         $bi->set('order', $blockinstance['order']);
                     }
                     $view->addblockinstance($bi);
+                    // Need to rewrite images links in configdata[text] if blocktype is text.
+                    if ($bi->get('blocktype') === 'text') {
+                        require_once(get_config('libroot') . 'embeddedimage.php');
+                        $configdata = $bi->get('configdata');
+                        if (
+                            isset($configdata['text']) &&
+                            !empty($configdata['text']) &&
+                            $configdata['text'] !== (
+                                $newtext = EmbeddedImage::prepare_embedded_images(
+                                    $configdata['text'],
+                                    'text',
+                                    $bi->get('id'),
+                                    $view->get('group'),
+                                    $view->get('owner')
+                                )
+                            )
+                        ) {
+                            // Update the text block_instance with the $newtext.
+                            $configdata['text'] = $newtext;
+                            $bi->set('configdata', $configdata);
+                            $bi->commit();
+                        }
+                    }
                 }
                 else {
                     log_debug("Blocktype {$blockinstance['type']}'s import_create_blockinstance did not give us a blockinstance, so not importing this block");
@@ -7460,6 +7501,23 @@ class View {
             (object) array('resourcetype' => 'text', 'resourceid' => $bi->get('id')),
             array('resourcetype' => 'description', 'resourceid' => $this->get('id'))
         );
+
+        require_once(get_config('libroot') . 'embeddedimage.php');
+        $newdescription = EmbeddedImage::prepare_embedded_images(
+            $description,
+            'text',
+            $bi->get('id'),
+            $this->get('group'),
+            $this->get('owner')
+        );
+        if ($description !== $newdescription) {
+            $bi->set('configdata', array(
+                'text' => $newdescription,
+                'retractable' => false,
+                'retractedonload' => false,
+            ));
+            $bi->commit();
+        }
     }
 
     public function has_signoff_block() {
