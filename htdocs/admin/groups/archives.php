@@ -27,12 +27,11 @@ $tabs = (object) [
     'archivedclass' => '',
 ];
 
+define('TITLE', get_string('submissions', 'admin'));
 if (param_exists('current')) {
-    define('TITLE', get_string('currentsubmissions', 'admin'));
     $tabs->currentclass = 'active';
 }
 else {
-    define('TITLE', get_string('archivedsubmissions', 'admin'));
     $tabs->archivedclass = 'active';
 }
 
@@ -63,38 +62,36 @@ if ($USER->get('admin') && param_exists('releaseids')) {
 
         // If we're a collection, release that.
         if ($collection) {
-            $msg = $collection->get('name') . ': ';
             try {
                 // Override the strings for the message keys.
                 $releasemessageoverrides = [
                     'host' => [
-                        'subjectkey' => 'portfolioreleasedmessage',
+                        'subjectkey' => 'portfolioreleasedsubject',
                         'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
                     ],
                 ];
                 $collection->release($USER, $releasemessageoverrides);
-                $msg .= get_string('portfolioreleasedsuccess', 'group');
+                $msg = get_string('portfolioreleasedsuccesswithname', 'group', $collection->get('name'));
             }
             catch (SystemException $e) {
-                $msg .= get_string('submissionreleasefailed', 'export');
+                $msg = get_string('portfolioreleasefailed', 'group', $collection->get('name'));
             }
             $SESSION->add_ok_msg($msg);
         }
         else {
-            $msg = $view->get('title') . ': ';
             try {
                 // Override the strings for the message keys.
                 $releasemessageoverrides = [
                     'host' => [
-                        'subjectkey' => 'portfolioreleasedmessage',
+                        'subjectkey' => 'portfolioreleasedsubject',
                         'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
                     ],
                 ];
                 $view->release($USER, $releasemessageoverrides);
-                $msg .= get_string('portfolioreleasedsuccess', 'group');
+                $msg = get_string('portfolioreleasedsuccesswithname', 'group', $view->get('title'));
             }
             catch (SystemException $e) {
-                $msg .= get_string('submissionreleasefailed', 'export');
+                $msg = get_string('portfolioreleasefailed', 'group', $view->get('title'));
             }
             $SESSION->add_ok_msg($msg);
         }

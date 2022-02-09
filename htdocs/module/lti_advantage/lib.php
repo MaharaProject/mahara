@@ -226,6 +226,7 @@ class PluginModuleLti_advantage extends PluginModule {
                     'title'        => $deployment_type['title'],
                     'description'  => $deployment_type['description'],
                     'rules'        => $deployment_type['rules'],
+                    'autocomplete' => 'off',
                 ];
             }
             // Populate the default values in the deployment id elements.

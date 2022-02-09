@@ -104,7 +104,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  Then I should see "Administer groups" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Group categories" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Default group settings" in the "Admin Groups sub-menu" "Nav" property
- And I should see "Archived submissions" in the "Admin Groups sub-menu" "Nav" property
+ And I should see "Submissions" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" "Nav" property
  # Checking the sub administration in Institutions
@@ -160,7 +160,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I press "Show menu for Groups" in the "Administration menu" "Nav" property
  Then I should not see "Administer groups" in the "Admin Groups sub-menu" "Nav" property
  And I should not see "Group categories" in the "Admin Groups sub-menu" "Nav" property
- And I should see "Archived submissions" in the "Admin Groups sub-menu" "Nav" property
+ And I should see "Submissions" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" "Nav" property
  # Checking the sub navigation in Institutions

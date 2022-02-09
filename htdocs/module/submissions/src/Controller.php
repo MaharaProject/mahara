@@ -80,6 +80,7 @@ class Controller {
                 if (!group_user_access($this->group->id, $this->user->get('id'))) {
                     throw new \AccessDeniedException(get_string('notamember', 'group'));
                 }
+                // We use Context::ContentUser here until Context::GroupSubmitter functionality is implemented
                 $this->context = Context::ContentUser; // Context::GroupSubmitter;
                 $this->group = null;
             }
@@ -210,14 +211,15 @@ class Controller {
         $record->portfolioElementTitleHtml = SubmissionTools::createPortfolioElementTitleHtmlForTableBySubmissionRecord($record, $this->settings->showPortfolioButtons);
         $record->isEditable = (bool)$record->liveUserIsAssessor && (int)$record->status === Submission::StatusSubmitted;
         $record->isFixable = (bool)$record->liveUserIsAssessor && (int)$record->status === Submission::StatusIncomplete;
-        if ($this->settings->showNameAsLastnameFirstname) {
-            $record->ownerName = SubmissionTools::concatLastAndFirstName($record->ownerLastName, $record->ownerFirstName);
-            $record->evaluatorName = ($record->evaluatorId ? SubmissionTools::concatLastAndFirstName($record->evaluatorLastName, $record->evaluatorFirstName) : null);
+
+        $record->ownerName = (bool)$record->ownerDeleted ? get_string('deleteduser1') : SubmissionTools::createOwnerName($record, $this->settings->showNameAsLastnameFirstname);
+        if ($record->evaluatorId) {
+            $record->evaluatorName = (bool)$record->evaluatorDeleted ? get_string('deleteduser1') : SubmissionTools::createEvaluatorName($record, $this->settings->showNameAsLastnameFirstname);
         }
         else {
-            $record->ownerName = ($record->ownerId ? SubmissionTools::concatFirstAndLastName($record->ownerId, true) : null);
-            $record->evaluatorName = ($record->evaluatorId ? SubmissionTools::concatFirstAndLastName($record->evaluatorId) : null);
+            $record->evaluatorName = null;
         }
+
         $record->userElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->ownerId, $record->ownerName, '', '');
         if ($record->evaluatorId) {
             $record->evaluatorElementTitleHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'user/view.php?id=' . $record->evaluatorId, $record->evaluatorName, '', '');
@@ -226,15 +228,15 @@ class Controller {
             $record->portfolioElementGroupHtml = SubmissionTools::createHtmlLinkWithTitle(get_config('wwwroot') . 'group/view.php?id=' . $record->groupId, $record->groupName, '', '');
         }
 
-        // If submission has not been released yet and so the comment field in the evaluation table is empty, get last comment of currently set evaluator or live user
-        $comment = SubmissionRepository::findLatestEvaluatorComment($record->portfolioElementType, $record->portfolioElementId, $record->evaluatorId, $record->submissionDate);
-        if (!is_null($comment)) {
-            $record->feedback = $comment->get('description');
-            $record->rating = $comment->get('rating');
-        }
-
         // If submission is not released yet
         if ((bool)$record->liveUserIsAssessor && ((int)$record->status === Submission::StatusSubmitted || (int)$record->status === Submission::StatusReleasing)) {
+            // If submission has not been released yet and so the comment field in the evaluation table is empty, get last comment of currently set evaluator or live user
+            $comment = SubmissionRepository::findLatestEvaluatorComment($record->portfolioElementType, $record->portfolioElementId, $record->evaluatorId, $record->submissionDate);
+            if (!is_null($comment)) {
+                $record->feedback = $comment->get('description');
+                $record->rating = $comment->get('rating');
+            }
+
             // Because we now use the new Mahara collection preview functionality, we provide the portfolio view id(s)
             // in the row data to the frontend
             if ($record->portfolioElementType === 'collection') {

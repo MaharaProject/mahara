@@ -439,7 +439,7 @@ $elements['viewnotify'] = array(
     'type' => 'select',
     'title' => get_string('viewnotify', 'group'),
     'options' => $notifyroles,
-    'description' => get_string('viewnotifydescription2', 'group'),
+    'description' => get_string('viewnotifydescription3', 'group'),
     'defaultvalue' => $group_data->viewnotify
 );
 $elements['feedbacknotify'] = array(

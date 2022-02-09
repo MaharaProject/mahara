@@ -2429,16 +2429,10 @@ function admin_nav() {
             'title'  => get_string('groupcategories', 'admin'),
             'weight' => 20,
         ),
-        'managegroups/current' => array(
-            'path'   => 'managegroups/archives',
-            'url'    => 'admin/groups/archives.php?current=1',
-            'title'  => get_string('currentsubmissions', 'admin'),
-            'weight' => 27,
-        ),
-        'managegroups/archives' => array(
+        'managegroups/submissions' => array(
             'path'   => 'managegroups/archives',
             'url'    => 'admin/groups/archives.php',
-            'title'  => get_string('archivedsubmissions', 'admin'),
+            'title'  => get_string('submissions', 'admin'),
             'weight' => 27,
         ),
         'managegroups/settings' => array(
@@ -2707,10 +2701,10 @@ function institutional_admin_nav() {
             'weight' => 20,
             'iconclass' => 'users',
         ),
-        'managegroups/archives' => array(
+        'managegroups/submissions' => array(
             'path'   => 'managegroups/archives',
             'url'    => 'admin/groups/archives.php',
-            'title'  => get_string('archivedsubmissions', 'admin'),
+            'title'  => get_string('submissions', 'admin'),
             'weight' => 5,
         ),
         'managegroups/uploadcsv' => array(

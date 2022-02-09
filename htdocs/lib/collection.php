@@ -580,7 +580,8 @@ class Collection {
                 'owner' => isset($data->owner) ? $data->owner : null,
                 'group' => isset($data->group) ? $data->group : null,
                 'institution' => isset($data->institution) ? $data->institution : null,
-                'usetemplate' => $v->view
+                'usetemplate' => $v->view,
+                'quiet_update' => 1,
             );
             if ($v->skin) {
                 // Keep the skin on the copy if person is allowed to use that skin
@@ -606,10 +607,32 @@ class Collection {
             $copyviews['view_' . $view->get('id')] = true;
             $numcopied['blocks'] += $copystatus['blocks'];
             $numcopied['artefacts'] += $copystatus['artefacts'];
+            $collection_view_ids[] = $view->get('id');
         }
         $numcopied['pages'] = count($views['views']);
 
         $collection->add_views($copyviews);
+
+        // Prep sending of notifications
+        if (!empty($collection_view_ids)) {
+            $accessdata = new stdClass();
+            $accessdata->view = $collection_view_ids[0];
+            // In the process of creating collections from templates, we notify users once
+            // the views are created by setting a quiet_update flag on each view-creation
+            $beforeusers[$userid] = get_record('usr', 'id', $userid);
+
+            // Don't send an activity notification to the person sharing the view
+            $accessdata->oldusers = $beforeusers;
+            $firstview = new View($collection_view_ids[0]);
+            $dataviews[] = array('id' => $firstview->get('id'),
+                                'title' => $firstview->get('title'),
+                                'collection_id' => $collection->get('id'),
+                                'collection_name' => $collection->get('name'),
+                                'collection_url' => $collection->get_url(),
+                            );
+            $accessdata->views = $dataviews;
+            activity_occurred('viewaccess', $accessdata);
+        }
 
         // Update all the navigation blocks referring to this collection
         if ($viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'))) {
@@ -1894,9 +1917,10 @@ class Collection {
     }
 
     /**
-     * Helper to find where collection is submitted
-     * @throws SystemException  Collection is not submitted
-     * @return object  Database record object
+     * Helper to find where collection is submitted.
+     *
+     * @throws SystemException Collection is not submitted
+     * @return object Info about what this was submitted to
      */
     public function submitted_to() {
         if ($this->submittedgroup) {
@@ -1907,6 +1931,7 @@ class Collection {
             if (!$hostconnection = get_field('host', 'name', 'wwwroot', $this->submittedhost)) {
                 $hostconnection = $this->submittedhost;
             }
+            $record = new stdClass;
             $record->url = $hostconnection;
         }
         else {

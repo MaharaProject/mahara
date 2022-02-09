@@ -74,7 +74,6 @@ $portfolio_title = $portfolio->get($link_text_field);
 $resource = LTI\LTI_Deep_Link_Resource::new()
   ->set_url(get_config('wwwroot') . 'module/lti_advantage/login.php')
   ->set_custom_params([
-    'LtiLinkId' => '',
     'PublicUrl' => $portfolio_url,
   ])
   ->set_title($portfolio_title);
