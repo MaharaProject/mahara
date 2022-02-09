@@ -234,7 +234,7 @@ interface IArtefactType {
      *                       'view' for the id of the view in which the icon is
      *                       being displayed.
      * @abstract
-     * @return string URL for the icon
+     * @return string|false URL for the icon
      */
     public static function get_icon($options=null);
 

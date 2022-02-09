@@ -372,7 +372,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
              $entrydata['content']['description'] = (string)$entry->summary;
         }
         if (!empty($entrydata)) {
-            PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, $strategy, 'internal', $entrydata);
+            return PluginImportLeap::add_import_entry_request($importer->get('importertransport')->get('importid'), (string)$entry->id, $strategy, 'internal', $entrydata);
         }
     }
 

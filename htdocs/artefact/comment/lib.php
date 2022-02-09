@@ -81,7 +81,6 @@ class PluginArtefactComment extends PluginArtefact {
             foreach(ArtefactTypeComment::deleted_types() as $type) {
                 insert_record('artefact_comment_deletedby', (object)array('name' => $type));
             }
-
             set_config_plugin('artefact', 'comment', 'maxindent', '5');
         }
         return true;
