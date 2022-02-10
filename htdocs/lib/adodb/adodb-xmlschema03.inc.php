@@ -935,11 +935,11 @@ class dbData extends dbObject {
 	}
 
 	/**
-	* Adds options to the index
-	*
-	* @param string $opt Comma-separated list of index options.
-	* @return string Option list
-	*/
+	 * Adds options to the index
+	 *
+	 * @param string $cdata XML cdata
+	 * @return void
+	 */
 	function addData( $cdata ) {
 		// check we're in a valid field
 		if ( isset( $this->data[$this->row][$this->current_field] ) ) {
@@ -1785,9 +1785,11 @@ class adoSchema {
 		$fp = fopen( $filename, "w" );
 
 		foreach( $sqlArray as $key => $query ) {
-			fwrite( $fp, $query . ";\n" );
+			if (fwrite( $fp, $query . ";\n" ) === FALSE) {
+				return FALSE;
+			}
 		}
-		fclose( $fp );
+		return fclose( $fp );
 	}
 
 	/**
