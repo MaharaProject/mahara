@@ -21,7 +21,7 @@ use Behat\Behat\Exception\PendingException as PendingException;
 class BehatDataGenerators extends BehatBase {
 
     /**
-     * @var testing_data_generator
+     * @var TestingDataGenerator
      */
     protected $datagenerator;
 

@@ -24,15 +24,15 @@ abstract class DataGeneratorBase {
     protected $instancecount = 0;
 
     /**
-     * @var testing_data_generator
+     * @var TestingDataGenerator
      */
     protected $datagenerator;
 
     /**
      * Constructor.
-     * @param testing_data_generator $datagenerator
+     * @param TestingDataGenerator $datagenerator
      */
-    public function __construct(testing_data_generator $datagenerator) {
+    public function __construct(TestingDataGenerator $datagenerator) {
         $this->datagenerator = $datagenerator;
     }
 

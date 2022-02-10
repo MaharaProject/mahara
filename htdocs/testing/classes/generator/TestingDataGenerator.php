@@ -83,7 +83,7 @@ EOD;
      * Return generator for given plugin.
      * @param string $plugintype the plugin type, e.g. 'artefact' or 'blocktype'.
      * @param string $pluginname the plugin name, e.g. 'blog' or 'file'.
-     * @return an instance of a plugin generator extending from CoreGenerator.
+     * @return array an instance of a plugin generator extending from CoreGenerator.
      */
     public function get_plugin_generator($plugintype, $pluginname) {
         $pluginfullname = "{$plugintype}.{$pluginname}";
@@ -95,7 +95,7 @@ EOD;
         $classname =  generate_generator_class_name($plugintype, $pluginname);
 
         if (!class_exists($classname)) {
-            throw new UndefinedException("The plugin $pluginfullname does not support " .
+            throw new SystemException("The plugin $pluginfullname does not support " .
                             "data generators yet. Class {$classname} not found.");
         }
 
@@ -333,10 +333,10 @@ EOD;
         $record['email']     = sanitize_email($record['email']);
 
         $authobj = AuthFactory::create($auth->id);
-        if (method_exists($authobj, 'is_username_valid_admin') && !$authobj->is_username_valid_admin($record['username'])) {
+        if (method_exists($authobj, 'is_username_valid_admin') && !AuthInternal::is_username_valid_admin($record['username'])) {
             throw new SystemException("New username'" . $record['username'] . "' is not valid.");
         }
-        if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($record['username'])) {
+        if (method_exists($authobj, 'is_username_valid') && !AuthInternal::is_username_valid($record['username'])) {
             throw new SystemException("New username'" . $record['username'] . "' is not valid.");
         }
         if (record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($record['username'])))) {
@@ -430,16 +430,14 @@ EOD;
     /**
      * Create a test group
      * @param array $record
-     * @throws ErrorException if creating failed
+     * @throws SystemException if creating failed
      * @return int new group id
      */
     public function create_group($record) {
         // Data validation
         $record['name'] = trim($record['name']);
         if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower($record['name'])))) {
-            if (count($ids) > 1 || $ids[0]->id != $group_data->id) {
                 throw new SystemException("Invalid group name '" . $record['name'] . "'. " . get_string('groupalreadyexists', 'group'));
-            }
         }
         $record['owner'] = trim($record['owner']);
         $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['owner'])));
@@ -684,6 +682,7 @@ EOD;
         }
 
         db_commit();
+        return $newinstitution->id;
     }
 
     /**
@@ -744,6 +743,7 @@ EOD;
 
         require_once('view.php');
         $view = View::create($record, $userid);
+        return $view->get('id');
     }
 
     /**
@@ -851,6 +851,7 @@ EOD;
         else {
             throw new SystemException("The blocktype {$record['type']} is not supported yet.");
         }
+        return $blockinstance->get('id');
     }
 
     /**
@@ -1099,6 +1100,7 @@ EOD;
                 }
             }
         }
+        return $configdata;
     }
 
     /**
@@ -1593,16 +1595,18 @@ EOD;
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_resumefield($sortedfields, $ownertype, $ownerid) {
+        $configdata = array();
         foreach ($sortedfields as $key => $value) {
             if ($key == 'artefacttype') {
                 if (!$artefactid = get_field('artefact', 'id', 'owner', $ownerid, 'artefacttype', $value)) {
                     throw new SystemException('The user ' . self::get_user_username($ownerid) . ' does not have a ' . $value);
                 }
                 else {
-                  return array('artefactid' => $artefactid);
+                  $configdata = array('artefactid' => $artefactid);
                 }
             }
         }
+        return $configdata;
     }
 
     /**
@@ -1624,12 +1628,13 @@ EOD;
                     $newprofile->set('title', $media);
                     $newprofile->set('description', $media);
                     $newprofile->set('note', $media);
-                    $id = $newprofile->commit(); //update the contents of the artefact table only
+                    $newprofile->commit(); //update the contents of the artefact table only
                     $artefactid[] = $newprofile->get('id');
                 }
                 return $configdata = array('artefactids' => $artefactid);
             }
         }
+        return array();
     }
 
     /**
@@ -1701,6 +1706,7 @@ EOD;
         $copynote = false;
         $existingtextboxfound = false;
         $htmlartefactid = null;
+        $values = array();
 
         foreach ($sortedfields as $key => $value) {
             if ($key == 'notetitle') {
@@ -2090,8 +2096,8 @@ EOD;
         if (!empty($addviews)) {
             $collection->add_views($addviews);
         }
+        return $collection->get('id');
     }
-
 
     /**
      * A fixture to set up journals in bulk.
@@ -2102,7 +2108,9 @@ EOD;
      * | owner   | ownertype | title      | description           | tags      |
      * | userA   | user      | Blog One   | This is my new blog   | cats,dogs |
      * | Group B | group     | Group Blog | This is my group blog |           |
-     * @param unknown $record
+     *
+     * @param  mixed $record
+     * @return void
      * @throws SystemException
      */
     public function create_blog($record) {
@@ -3079,8 +3087,8 @@ EOD;
      *
      * @param array $record an array representation of a row of the testing table
      * @param string $owner null variable passed in by reference for owner
-     * @param string $owner null variable passed in by reference for ownertype
-     * @return return type
+     * @param string $ownertype null variable passed in by reference for ownertype
+     * @return void (pass by reference) updates $ownertype and $owner
      */
     public function set_owner($record, &$owner, &$ownertype = null) {
       $ownertype = null;

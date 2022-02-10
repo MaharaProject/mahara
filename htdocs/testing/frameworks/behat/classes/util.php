@@ -58,7 +58,7 @@ class BehatTestingUtil extends TestingUtil {
     /**
      * Checks that the behat config vars are properly set.
      *
-     * @return errorCode. (see testing/frameworks/behat/lib.php)
+     * @return int (errorcode see testing/frameworks/behat/lib.php)
      */
     private static function check_test_site_config() {
         global $CFG;
@@ -96,6 +96,7 @@ class BehatTestingUtil extends TestingUtil {
         if (!is_dir($CFG->behat_dataroot) or !is_writable($CFG->behat_dataroot)) {
             return BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT;
         }
+        return 0;
     }
 
     /**

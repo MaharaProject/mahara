@@ -17,6 +17,7 @@ define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'behatsteps');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once(dirname(dirname(dirname(__DIR__))) . '/classes/util.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('behatvariables', 'admin'));
 
@@ -55,7 +56,7 @@ function read_dir_files(&$output, $dirpath) {
     }
     return $output;
 }
-$data = false;
+$data = null;
 if (file_exists($dirpath)) {
     read_dir_files($data, $dirpath);
     ksort($data);
@@ -72,7 +73,7 @@ if (get_config('behat_dataroot')) {
         if (is_writable(get_config('behat_dataroot') . '/behat')) {
             // If we need to update the config file we need this to call validate_plugin().
             require_once(get_config('docroot') . 'lib/upgrade.php');
-            $test = BehatConfigManager::update_config_file();
+            BehatConfigManager::update_config_file();
         }
     }
     if (is_readable($behatyml)) {

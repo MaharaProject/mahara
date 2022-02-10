@@ -30,7 +30,7 @@ abstract class TestingUtil {
     private static $dataroot = null;
 
     /**
-     * @var testing_data_generator
+     * @var TestingDataGenerator
      */
     protected static $generator = null;
 
@@ -147,7 +147,7 @@ abstract class TestingUtil {
     /**
      * Get data generator
      * @static
-     * @return testing_data_generator
+     * @return TestingDataGenerator
      */
     public static function get_data_generator() {
         if (is_null(self::$generator)) {
