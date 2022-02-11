@@ -117,8 +117,9 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
+            return set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
         }
+        return true;
     }
 
     public static function right_nav_menu_items() {
@@ -442,11 +443,13 @@ class ArtefactTypeProfile extends ArtefactType {
     public function __construct($id=0, $data=null, $new = FALSE) {
         $type = $this->get_artefact_type();
         if (!empty($id) || $type == 'email' || $type == 'socialprofile') {
-            return parent::__construct($id, $data);
+            parent::__construct($id, $data);
+            return;
         }
         if (!empty($data['owner'])) {
             if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
-                return parent::__construct($a->id, $a);
+                parent::__construct($a->id, $a);
+                return;
             }
             else {
                 $this->owner = $data['owner'];
@@ -477,7 +480,7 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-
+        return false;
     }
 
     public static function is_singular() {

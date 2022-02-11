@@ -89,6 +89,7 @@ $string['errorat'] = ' at ';
 $string['unrecoverableerror'] = 'A nonrecoverable error occurred. This probably means that you have encountered a bug in the system.';
 $string['unrecoverableerrortitle'] = '%s - Site unavailable';
 $string['parameterexception'] = 'A required parameter was missing.';
+$string['wrongparamtype'] = 'A function or method has been passed the wrong kind of argument.';
 
 $string['notfound'] = 'Not found';
 $string['notfoundexception'] = 'The page you are looking for could not be found.';

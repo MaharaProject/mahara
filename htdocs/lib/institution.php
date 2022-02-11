@@ -110,7 +110,7 @@ class Institution {
 
     public function __set($name, $value) {
         if (!is_string($name)) {
-            throw new ParamOutOfRangeException('');
+            throw new ParamOutOfRangeException(get_string('wrongparamtype', 'error'));
         }
 
         // Validate the DB fields
@@ -1286,6 +1286,7 @@ function plugin_institution_prefs_submit(Pieform $form, $values, Institution $in
         }
         call_static_method(generate_class_name($i->plugintype, $i->name), 'institutionprefs_submit', $form, $values, $institution);
     }
+    return true;
 }
 
 /**

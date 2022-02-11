@@ -231,8 +231,8 @@ class webservice_rest_server extends webservice_base_server {
                 $smarty->assign('version', get_config('version'));
                 $smarty->assign('updated', self::format_rfc3339_date(time()));
                 $function = get_record('external_functions', 'name', $this->functionname);
-                $smarty->assign('id', (isset($results->id) ? $reults->id : get_config('wwwroot').'webservice/wsdoc.php?id=' . $function->id));
-                $smarty->assign('title', (isset($results->title) ? $results->title : $function->name . ' by ' . $USER->username . ' at ' . self::format_rfc3339_date(time())));
+                $smarty->assign('id', get_config('wwwroot').'webservice/wsdoc.php?id=' . $function->id);
+                $smarty->assign('title', $function->name . ' by ' . $USER->username . ' at ' . self::format_rfc3339_date(time()));
                 $smarty->display('auth:webservice:atom.tpl');
             }
             else {

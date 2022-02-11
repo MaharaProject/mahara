@@ -2878,7 +2878,7 @@ function user_login_tries_to_zero() {
  * @param string $goto     The place to return after form is submitted
  * @return array $form and $registerconfirm options
  */
-function auth_generate_registration_form($formname, $authname='internal', $goto) {
+function auth_generate_registration_form($formname, $authname='internal', $goto='/') {
 
     $registerterms = get_config('registerterms');
     $strictprivacy = get_config('institutionstrictprivacy');

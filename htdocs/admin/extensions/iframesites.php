@@ -35,9 +35,6 @@ if ($iframedomains) {
         }
     }
 }
-else {
-    $data[$name] = array();
-}
 
 $newform = pieform(array(
     'name'     => 'newurl',
