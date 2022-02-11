@@ -197,7 +197,7 @@ class XMLDBStructure extends XMLDBObject {
     /// Recalculate the hash
         $this->calculateHash(true);
     /// We have one new table, so the structure has changed
-        $this->setVersion(userdate(time(), '%Y%m%d', 99, false));
+        $this->setVersion(format_date(time(), '%Y%m%d'));
         $this->setChanged(true);
     }
 
@@ -243,7 +243,7 @@ class XMLDBStructure extends XMLDBObject {
     /// Recalculate the hash
         $this->calculateHash(true);
     /// We have one new statement, so the structure has changed
-        $this->setVersion(userdate(time(), '%Y%m%d', 99, false));
+        $this->setVersion(format_date(time(), '%Y%m%d'));
         $this->setChanged(true);
     }
 
@@ -274,7 +274,7 @@ class XMLDBStructure extends XMLDBObject {
         /// Recalculate the hash
             $this->calculateHash(true);
         /// We have one deleted table, so the structure has changed
-            $this->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $this->setVersion(format_date(time(), '%Y%m%d'));
             $this->setChanged(true);
         }
     }
@@ -306,7 +306,7 @@ class XMLDBStructure extends XMLDBObject {
         /// Recalculate the hash
             $this->calculateHash(true);
         /// We have one deleted statement, so the structure has changed
-            $this->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $this->setVersion(format_date(time(), '%Y%m%d'));
             $this->setChanged(true);
         }
     }

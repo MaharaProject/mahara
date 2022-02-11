@@ -343,7 +343,7 @@ class XMLDBObject {
      * Returns one array of elements from one comma separated string,
      * supporting quoted strings containing commas and concat function calls
      */
-    function comma2array($string) {
+    public static function comma2array($string) {
 
         $arr = array();
 
