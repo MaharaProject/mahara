@@ -200,7 +200,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
 
     $initjs .= "jQuery({$prefix}.init);";
-    if ($form->is_submitted() && $form->has_errors()) {
+    if ($form->is_submitted()) {
         // need to reapply bootstrap file browser stuff
         $initjs .= "jQuery('.js-filebrowser').each(function() {";
         $initjs .= "  if (jQuery(this).find('.modal-filebrowser').length == 0) {";

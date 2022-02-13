@@ -1002,32 +1002,51 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
 var tableRenderers = {};
 
 function compositeSaveCallback(form, data) {
-    key = form.id.substr(3);
-
-    // Can't reset() the form here, because its values are what were just submitted,
-    // thanks to pieforms
-    \$j('#' + form.id + ' input:text, #' + form.id + ' textarea').each(function() {
-        \$j(this).attr('value', '');
-    });
-    // Also need to clear the innerHTML for textareas
-    \$j('#' + form.id + ' textarea').each(function() {
-        tinyMCE.get(\$(this).attr('id')).setContent('');
-    });
-
-    \$j('#' + key + 'form').collapse('hide');
-
-    tableRenderers[key].doupdate(null, { focusid: data['focusid'] });
-    \$j('#add' + key + 'button').trigger("focus");
-    // Do a double check to make sure the formchange checker for the submitted form is actually reset
-    tableRenderers[key].postupdatecallback = function(response) {
-        var checkers = formchangemanager.formcheckers;
-        for (var i=0; i < checkers.length; i ++) {
-            if (checkers[i].id == form.id) {
-                checkers[i].state = FORM_INIT;
-            }
+    if (typeof(data.formelement)!= 'undefined' && data.formelement.endsWith('_filebrowser')) {
+        if (data.formelement.startsWith('addbook')) {
+            addbook_filebrowser.callback(form, data);
+        }
+        else if (data.formelement.startsWith('addcertification')) {
+            addcertification_filebrowser.callback(form, data);
+        }
+        else if (data.formelement.startsWith('addmembership')) {
+            addmembership_filebrowser.callback(form, data);
+        }
+        else if (data.formelement.startsWith('addeducationhistory')) {
+            addeducationhistory_filebrowser.callback(form, data);
+        }
+        else if (data.formelement.startsWith('addemploymenthistory')) {
+            addemploymenthistory_filebrowser.callback(form, data);
         }
     }
-    formSuccess(form, data);
+    else {
+        key = form.id.substr(3);
+
+        // Can't reset() the form here, because its values are what were just submitted,
+        // thanks to pieforms
+        \$j('#' + form.id + ' input:text, #' + form.id + ' textarea').each(function() {
+            \$j(this).attr('value', '');
+        });
+        // Also need to clear the innerHTML for textareas
+        \$j('#' + form.id + ' textarea').each(function() {
+            tinyMCE.get(\$j(this).attr('id')).setContent('');
+        });
+
+        \$j('#' + key + 'form').collapse('hide');
+
+        tableRenderers[key].doupdate(null, { focusid: data['focusid'] });
+        \$j('#add' + key + 'button').trigger("focus");
+        // Do a double check to make sure the formchange checker for the submitted form is actually reset
+        tableRenderers[key].postupdatecallback = function(response) {
+            var checkers = formchangemanager.formcheckers;
+            for (var i=0; i < checkers.length; i ++) {
+                if (checkers[i].id == form.id) {
+                    checkers[i].state = FORM_INIT;
+                }
+            }
+        }
+        formSuccess(form, data);
+    }
 }
 
 function deleteComposite(type, id, artefact) {
@@ -1254,6 +1273,7 @@ EOF;
             $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
             $elements['submit'] = array(
                 'type' => 'submit',
+                'name' => 'submitbtn',
                 'class' => 'btn-primary',
                 'value' => get_string('save'),
             );
@@ -1335,6 +1355,15 @@ EOF;
     }
 
     public static function get_addform_elements() {
+        global $USER;
+
+        $folder = param_integer('folder', 0);
+        $browse = (int) param_variable('browse', 0);
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file);
+        }
+
         return array(
             'startdate' => array(
                 'type' => 'text',
@@ -1379,11 +1408,28 @@ EOF;
                 'rules' => array('maxlength' => 1000000),
                 'title' =>  get_string('positiondescription', 'artefact.resume'),
             ),
-            'attachments' => array(
-                'type'         => 'files',
+            'filebrowser' => array(
+                'type'         => 'filebrowser',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
                 'maxfilesize'  => get_max_upload_size(true),
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'browse'       => $browse,
+                'page'         => get_config('wwwroot') . 'artefact/resume/employment.php',
+                'browsehelp'   => 'browsemyfiles',
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                    'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                    'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                    'createfolder'    => false,
+                    'edit'            => false,
+                    'select'          => true,
+                ),
+                'selectlistcallback' => 'artefact_get_records_by_id',
+                'selectcallback'     => 'add_resume_attachment',
+                'unselectcallback'   => 'delete_resume_attachment',
             ),
         );
     }
@@ -1504,6 +1550,14 @@ EOF;
 
     public static function get_addform_elements() {
         global $USER;
+
+        $folder = param_integer('folder', 0);
+        $browse = (int) param_variable('browse', 0);
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file);
+        }
+
         return array(
             'startdate' => array(
                 'type' => 'text',
@@ -1549,11 +1603,28 @@ EOF;
                 'rules' => array('maxlength' => 1000000),
                 'title' => get_string('qualdescription', 'artefact.resume'),
             ),
-            'attachments' => array(
-                'type'         => 'files',
+            'filebrowser' => array(
+                'type'         => 'filebrowser',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
                 'maxfilesize'  => get_max_upload_size(true),
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'browse'       => $browse,
+                'page'         => get_config('wwwroot') . 'artefact/resume/employment.php',
+                'browsehelp'   => 'browsemyfiles',
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                    'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                    'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                    'createfolder'    => false,
+                    'edit'            => false,
+                    'select'          => true,
+                ),
+                'selectlistcallback' => 'artefact_get_records_by_id',
+                'selectcallback'     => 'add_resume_attachment',
+                'unselectcallback'   => 'delete_resume_attachment',
             ),
         );
     }
@@ -1663,6 +1734,15 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
     }
 
     public static function get_addform_elements() {
+        global $USER;
+
+        $folder = param_integer('folder', 0);
+        $browse = (int) param_variable('browse', 0);
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file);
+        }
+
         return array(
             'date' => array(
                 'type' => 'text',
@@ -1689,11 +1769,28 @@ class ArtefactTypeCertification extends ArtefactTypeResumeComposite {
                 'rules' => array('maxlength' => 1000000),
                 'title' => get_string('description'),
             ),
-            'attachments' => array(
-                'type'         => 'files',
+            'filebrowser' => array(
+                'type'         => 'filebrowser',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
                 'maxfilesize'  => get_max_upload_size(true),
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'browse'       => $browse,
+                'page'         => get_config('wwwroot') . 'artefact/resume/achievements.php',
+                'browsehelp'   => 'browsemyfiles',
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                    'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                    'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                    'createfolder'    => false,
+                    'edit'            => false,
+                    'select'          => true,
+                ),
+                'selectlistcallback' => 'artefact_get_records_by_id',
+                'selectcallback'     => 'add_resume_attachment',
+                'unselectcallback'   => 'delete_resume_attachment',
             ),
         );
     }
@@ -1791,6 +1888,15 @@ EOF;
     }
 
     public static function get_addform_elements() {
+        global $USER;
+
+        $folder = param_integer('folder', 0);
+        $browse = (int) param_variable('browse', 0);
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file);
+        }
+
         return array(
             'date' => array(
                 'type' => 'text',
@@ -1825,11 +1931,28 @@ EOF;
                 'rules' => array('maxlength' => 1000000),
                 'title' => get_string('detailsofyourcontribution', 'artefact.resume'),
             ),
-            'attachments' => array(
-                'type'         => 'files',
+            'filebrowser' => array(
+                'type'         => 'filebrowser',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
                 'maxfilesize'  => get_max_upload_size(true),
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'browse'       => $browse,
+                'page'         => get_config('wwwroot') . 'artefact/resume/achievements.php',
+                'browsehelp'   => 'browsemyfiles',
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                    'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                    'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                    'createfolder'    => false,
+                    'edit'            => false,
+                    'select'          => true,
+                ),
+                'selectlistcallback' => 'artefact_get_records_by_id',
+                'selectcallback'     => 'add_resume_attachment',
+                'unselectcallback'   => 'delete_resume_attachment',
             ),
             'url' => array(
                 'type' => 'text',
@@ -1924,6 +2047,15 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
     }
 
     public static function get_addform_elements() {
+        global $USER;
+
+        $folder = param_integer('folder', 0);
+        $browse = (int) param_variable('browse', 0);
+        $highlight = null;
+        if ($file = param_integer('file', 0)) {
+            $highlight = array($file);
+        }
+
         return array(
             'startdate' => array(
                 'type' => 'text',
@@ -1955,11 +2087,28 @@ class ArtefactTypeMembership extends ArtefactTypeResumeComposite {
                 'rules' => array('maxlength' => 1000000),
                 'title' => get_string('description', 'artefact.resume'),
             ),
-            'attachments' => array(
-                'type'         => 'files',
+            'filebrowser' => array(
+                'type'         => 'filebrowser',
                 'title'        => get_string('attachfile', 'artefact.resume'),
                 'defaultvalue' => array(),
                 'maxfilesize'  => get_max_upload_size(true),
+                'folder'       => $folder,
+                'highlight'    => $highlight,
+                'browse'       => $browse,
+                'page'         => get_config('wwwroot') . 'artefact/resume/achievements.php',
+                'browsehelp'   => 'browsemyfiles',
+                'config'       => array(
+                    'upload'          => true,
+                    'uploadagreement' => get_config_plugin('artefact', 'file', 'uploadagreement'),
+                    'resizeonuploaduseroption' => get_config_plugin('artefact', 'file', 'resizeonuploaduseroption'),
+                    'resizeonuploaduserdefault' => $USER->get_account_preference('resizeonuploaduserdefault'),
+                    'createfolder'    => false,
+                    'edit'            => false,
+                    'select'          => true,
+                ),
+                'selectlistcallback' => 'artefact_get_records_by_id',
+                'selectcallback'     => 'add_resume_attachment',
+                'unselectcallback'   => 'delete_resume_attachment',
             ),
         );
     }

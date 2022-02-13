@@ -1334,10 +1334,10 @@ jQuery(function($) {
  * with data-url from removing their existing on click functions
  */
 function findButtonDataUrls() {
-    $('[data-url]').each(function() {
-        if (!$(this).data('ignore')) {
-            $(this).off('click');
-            $(this).on('click', function(e) {
+    jQuery('[data-url]').each(function() {
+        if (!jQuery(this).data('ignore')) {
+            jQuery(this).off('click');
+            jQuery(this).on('click', function(e) {
                 e.preventDefault();
                 let btn = e.target.closest('button');
                 window.location.href = jQuery(btn).data('url');

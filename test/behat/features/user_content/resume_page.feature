@@ -82,7 +82,7 @@ Scenario: Editing Education and Employment info
     | addeducationhistory_startdate | 1 Jan 2017 |
     | addeducationhistory_institution | Mail-order PhD |
     | addeducationhistory_institutionaddress | 45 Empty St |
-    And I click on "addeducationhistory_submit"
+    And I click on "addeducationhistory_submitbtn"
     And I should see "Saved successfully"
     # Adding an Employment history
     And I press "Add employment history"
@@ -94,9 +94,11 @@ Scenario: Editing Education and Employment info
      | addemploymenthistory_jobtitle | Code Ninja |
      | addemploymenthistory_positiondescription | A programmer, computer programmer, developer, dev, coder, or software engineer is a person who creates computer software. The term computer programmer can refer to a specialist in one area of computer programming or to a generalist who writes code for many kinds of software. One who practices or professes a formal approach to programming may also be known as a programmer analyst. |
     And I scroll to the base of id "addemploymenthistory"
-    And I attach the file "Image2.png" to "addemploymenthistory_attachments_files_0"
+    And I click on "Add a file" in the "#addemploymenthistory_filebrowser_open_upload_browse_container" "css_element"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
     # Verifying it saved
-    And I click on "addemploymenthistory_submit"
+    And I click on "addemploymenthistory_submitbtn"
     Then I should see "Saved successfully"
     And I click on "Move down" in "Test Analyst" row
     And I wait "1" seconds
@@ -146,9 +148,12 @@ Scenario: Adding Achievements
     | addcertification_title | ISTQB Foundation Agile Tester Extension |
     | addcertification_description | Designed for testers holding the ISTQB® Foundation Certificate, this extension course provides an understanding of the fundamentals of testing in Agile projects. |
     And I scroll to the base of id "addcertification"
-    And I attach the file "Image2.png" to "Attach file"
+    And I click on "Add a file"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
+    And I scroll to the base of id "addcertification_submitbtn_container"
     And I wait "1" seconds
-    And I press "Save"
+    And I click on "Save" in the "#addcertification_submitbtn_container" "css_element"
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Scrum Master Certification" row
@@ -163,8 +168,12 @@ Scenario: Adding Achievements
     | addbook_contribution | asdgfasg |
     | addbook_description | details asdfsda |
     And I scroll to the base of id "addbook"
-    And I attach the file "Image2.png" to "addbook_attachments_files_0"
-    And I click on "addbook_submit"
+    And I click on "Add a file" in the "#addbook_filebrowser_open_upload_browse_container" "css_element"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
+    And I scroll to the base of id "addbook_submitbtn_container"
+    And I wait "1" seconds
+    And I click on "Save" in the "#addbook_submitbtn_container" "css_element"
     And I scroll to the id "main-nav"
     And I wait "1" seconds
     And I should see "Saved successfully"
@@ -181,8 +190,12 @@ Scenario: Adding Achievements
     | addmembership_title | sdrtyh |
     | addmembership_description | sdfh |
     And I scroll to the base of id "addmembership"
-    And I attach the file "Image2.png" to "addmembership_attachments_files_0"
-    And I click on "addmembership_submit"
+    And I click on "Add a file" in the "#addmembership_filebrowser_open_upload_browse_container" "css_element"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
+    And I scroll to the base of id "addmembership_submitbtn_container"
+    And I wait "1" seconds
+    And I click on "Save" in the "#addmembership_submitbtn_container" "css_element"
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Accredited Technologist" row
