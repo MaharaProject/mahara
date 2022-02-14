@@ -741,9 +741,13 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 'legend' => get_string('introduction', 'artefact.resume'),
                 'fields' => array('coverletter', 'personalinformation'),
             ),
+            'education' => array(
+                'legend' => get_string('education', 'artefact.resume'),
+                'fields' => array('educationhistory'),
+            ),
             'employment' => array(
-                'legend' => get_string('educationandemployment', 'artefact.resume'),
-                'fields' => array('educationhistory', 'employmenthistory'),
+                'legend' => get_string('employment', 'artefact.resume'),
+                'fields' => array('employmenthistory'),
             ),
             'achievements' => array(
                 'legend' => get_string('achievements', 'artefact.resume'),

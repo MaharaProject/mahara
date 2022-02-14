@@ -14,10 +14,10 @@ jQuery(function() {
     // to avoid any clashes with other javascript
     var j = jQuery.noConflict();
     // turn on the 'drop file here' area for browsers that can handle it.
-    j('#fileDropzone').hide();
+    j('.dropzone-previews').hide();
     if ('draggable' in document.createElement('span')) {
-        j('#fileDropzone').css('min-height', '50px');
-        j('#fileDropzone').show();
+        j('.dropzone-previews').css('min-height', '50px');
+        j('.dropzone-previews').show();
     }
 
     // Dropzone uploads it's file queue one at a time so to keep

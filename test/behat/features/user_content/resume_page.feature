@@ -71,7 +71,7 @@ Scenario: Editing Education and Employment info
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Education and employment"
+    And I follow "Education"
     # Adding Education history
     And I click on "Move down" in "North American Cultural Studies" row
     And I wait "1" seconds
@@ -84,6 +84,8 @@ Scenario: Editing Education and Employment info
     | addeducationhistory_institutionaddress | 45 Empty St |
     And I click on "addeducationhistory_submitbtn"
     And I should see "Saved successfully"
+    And I scroll to the top
+    And I follow "Employment"
     # Adding an Employment history
     And I press "Add employment history"
     And I set the following fields to these values:
@@ -104,9 +106,13 @@ Scenario: Editing Education and Employment info
     And I wait "1" seconds
     And I click on "Move up" in "Test Analyst" row
     # delete employment and education history  (Bug 1755669)
+    And I scroll to the top
+    And I follow "Education"
     And I scroll to the base of id "educationhistorylist"
     And I wait "1" seconds
     And I click on "Delete \"North American Cultural Studies (Masters of Arts) at University of Life\"" delete button
+    And I scroll to the top
+    And I follow "Employment"
     And I scroll to the base of id "employmenthistorylist"
     And I wait "1" seconds
     And I click on "Delete \"Code Ninja: Xero\"" delete button

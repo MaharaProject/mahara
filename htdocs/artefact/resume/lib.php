@@ -66,10 +66,15 @@ class PluginArtefactResume extends PluginArtefact {
                 'url'   => 'artefact/resume/index.php',
                 'title' => get_string('introduction', 'artefact.resume'),
             ),
+            'education' => array(
+                'page'  => 'education',
+                'url'   => 'artefact/resume/education.php',
+                'title' => get_string('education', 'artefact.resume'),
+            ),
             'employment' => array(
                 'page'  => 'employment',
                 'url'   => 'artefact/resume/employment.php',
-                'title' => get_string('educationandemployment', 'artefact.resume'),
+                'title' => get_string('employment', 'artefact.resume'),
             ),
             'achievements' => array(
                 'page'  => 'achievements',
@@ -103,7 +108,7 @@ class PluginArtefactResume extends PluginArtefact {
 
     public static function composite_tabs() {
         return array(
-            'educationhistory'  => 'employment',
+            'educationhistory'  => 'education',
             'employmenthistory' => 'employment',
             'certification'     => 'achievements',
             'book'              => 'achievements',
@@ -134,6 +139,8 @@ class PluginArtefactResume extends PluginArtefact {
                 return 'artefact/resume/index.php';
                 break;
             case 'educationhistory':
+                return 'artefact/resume/education.php';
+                break;
             case 'employmenthistory':
                 return 'artefact/resume/employment.php';
                 break;
@@ -684,8 +691,11 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         }
 
         // If there are any attachments, attach them to your Resume...
-        if ($compositetype == 'educationhistory' || $compositetype == 'employmenthistory') {
+        if ($compositetype == 'educationhistory') {
             $goto = get_config('wwwroot') . 'artefact/resume/employment.php';
+        }
+        else if ($compositetype == 'employmenthistory') {
+            $goto = get_config('wwwroot') . 'artefact/resume/education.php';
         }
         else {
             $goto = get_config('wwwroot') . 'artefact/resume/achievements.php';
@@ -1002,6 +1012,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
 var tableRenderers = {};
 
 function compositeSaveCallback(form, data) {
+    // TODO: currently no data.formelement coming through here, redo/fix resume submit functions to remove subm
+
     if (typeof(data.formelement)!= 'undefined' && data.formelement.endsWith('_filebrowser')) {
         if (data.formelement.startsWith('addbook')) {
             addbook_filebrowser.callback(form, data);
@@ -1043,6 +1055,12 @@ function compositeSaveCallback(form, data) {
                 if (checkers[i].id == form.id) {
                     checkers[i].state = FORM_INIT;
                 }
+            }
+            // turn on the 'drop file here' area for browsers that can handle it.
+            \$j('.dropzone-previews').hide();
+            if ('draggable' in document.createElement('span')) {
+                \$j('.dropzone-previews').css('min-height', '50px');
+                \$j('.dropzone-previews').show();
             }
         }
         formSuccess(form, data);
@@ -1221,6 +1239,7 @@ EOF;
     static function get_composite_js() {
         $attachmentsstr = json_encode(get_string('Attachments', 'artefact.resume'));
         $downloadstr = json_encode(get_string('Download', 'artefact.file'));
+        $at = get_string('at');
         return <<<EOF
 function formatSize(size) {
     size = parseInt(size, 10);
@@ -1263,6 +1282,20 @@ function listAttachments(attachments) {
         // No attachments
         return '';
     }
+}
+function formatQualification(name, type, institution) {
+    var qual = '';
+    if (name && type) {
+        qual = name + ' (' + type + ') {$at} ';
+    }
+    else if (type) {
+        qual = type + ' {$at} ';
+    }
+    else if (name) {
+        qual = name + ' {$at} ';
+    }
+    qual += institution;
+    return qual;
 }
 EOF;
     }
@@ -1611,7 +1644,7 @@ EOF;
                 'folder'       => $folder,
                 'highlight'    => $highlight,
                 'browse'       => $browse,
-                'page'         => get_config('wwwroot') . 'artefact/resume/employment.php',
+                'page'         => get_config('wwwroot') . 'artefact/resume/education.php',
                 'browsehelp'   => 'browsemyfiles',
                 'config'       => array(
                     'upload'          => true,
@@ -1627,26 +1660,6 @@ EOF;
                 'unselectcallback'   => 'delete_resume_attachment',
             ),
         );
-    }
-
-    static function get_composite_js() {
-        $at = get_string('at');
-        return <<<EOF
-function formatQualification(name, type, institution) {
-    var qual = '';
-    if (name && type) {
-        qual = name + ' (' + type + ') {$at} ';
-    }
-    else if (type) {
-        qual = type + ' {$at} ';
-    }
-    else if (name) {
-        qual = name + ' {$at} ';
-    }
-    qual += institution;
-    return qual;
-}
-EOF;
     }
 
     public static function bulk_delete($artefactids, $log=false) {
