@@ -567,6 +567,9 @@ class PluginAuthSaml extends PluginAuth {
                                            AND aic.field = 'metarefresh_metadata_url'
                                            AND (aic.value IS NOT NULL and aic.value != '')", array())) {
             Metarefresh::metadata_refresh_hook();
+            // Reset timezone back to what it should be
+            $timezone = get_mahara_timezone();
+            date_default_timezone_set($timezone);
         }
     }
 

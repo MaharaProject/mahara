@@ -1,3 +1,17 @@
+20.10.4 (2022-02-09)
+- Bug 1943772: Potential LTI duplicating accounts with parent auth
+- Bug 1949333: Releasing a current submission produces warning
+- Bug 1949527: Avoid command injection when PDF bulk export is enabled
+- Bug 1950068: Styles missing in new collapsed comments section
+- Bug 1950199: SimpleSamlphp metadata refresh causing cron problems
+- Bug 1950220: Call to protected method webservice_base_server::session_cleanup() from context
+- Bug 1951016: Blocks are not hidden properly with Gridstack
+- Bug 1952362: Unable to delete LTI external app if there is assessments associated with it
+- Bug 1952808: Able to see name of another account holder's folder
+- Bug 1958499: Upload CSV Users Bug with Failed Emails
+- Bug 1959733: Needing to respect the default layout mode of a page
+- Bug 1956900: Update externalfeed.feature
+
 20.10.3 (2021-10-29)
 - Bug 1930469: Need to kill web service authentication session at end of process
 - Bug 1926287: Locked submitted pages still allow quick editing of text blocks
