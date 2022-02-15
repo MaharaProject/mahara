@@ -15,6 +15,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 define('TITLE', get_string('bulkexporttitle1', 'admin'));
 
+$exportoptions = array();
 $exportplugins = plugins_installed('export');
 
 if (!$exportplugins) {

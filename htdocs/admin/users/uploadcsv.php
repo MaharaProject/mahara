@@ -247,6 +247,8 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $usernames = array();
+
     $existing_usernames = get_records_menu('usr', '', NULL, '', 'LOWER(username) AS username, 1 AS key2');
     $existing_usr_email_addresses = get_records_menu('usr', '', NULL, '', 'email, 1 AS key2');
     $existing_internal_email_addresses = get_records_menu('artefact_internal_profile_email', 'verified', 1, '', 'email, 1 AS key2');
@@ -276,6 +278,9 @@ function uploadcsv_validate(Pieform $form, $values) {
         $username = $line[$formatkeylookup['username']];
         $password = isset($formatkeylookup['password']) ? $line[$formatkeylookup['password']] : null;
         $email    = $line[$formatkeylookup['email']];
+
+        $remoteuser = '';
+
         if (isset($remoteusers)) {
             $remoteuser = strlen($line[$formatkeylookup['remoteuser']]) ? $line[$formatkeylookup['remoteuser']] : null;
         }

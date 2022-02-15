@@ -701,6 +701,9 @@ function edituser_site_submit(Pieform $form, $values) {
 
 // Suspension/deletion controls
 $suspended = $user->get('suspendedcusr');
+$suspendedtime = false;
+$suspender = '';
+
 if (!empty($user->get('suspendedreason')) && $suspended == 0) {
     $suspended = true;
 }

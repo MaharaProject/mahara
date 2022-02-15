@@ -37,6 +37,7 @@ foreach ($data as $key => $content) {
     $content->userdeleted = get_field('usr', 'deleted', 'id', $content->userid);
 }
 
+$form = array();
 $selectedtab = $fs;
 $pageoptions = array();
 
