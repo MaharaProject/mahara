@@ -1088,9 +1088,6 @@ class Collection {
      */
     public function can_have_progresscompletion() {
         $allowspc = false;
-        if (isset($this->group) && $this->group) {
-            return $allowspc;
-        }
         if (is_plugin_active('signoff', 'blocktype')) {
             require_once(get_config('docroot') . 'lib/institution.php');
             if ($this->institution) {
