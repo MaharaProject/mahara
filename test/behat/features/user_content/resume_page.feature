@@ -104,9 +104,11 @@ Scenario: Editing Education and Employment info
     And I wait "1" seconds
     And I click on "Move up" in "Test Analyst" row
     # delete employment and education history  (Bug 1755669)
-    And I scroll to the base of id "employmenthistorylist"
+    And I scroll to the base of id "educationhistorylist"
     And I wait "1" seconds
     And I click on "Delete \"North American Cultural Studies (Masters of Arts) at University of Life\"" delete button
+    And I scroll to the base of id "employmenthistorylist"
+    And I wait "1" seconds
     And I click on "Delete \"Code Ninja: Xero\"" delete button
 
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
