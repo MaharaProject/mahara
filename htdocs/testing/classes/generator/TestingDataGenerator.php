@@ -632,7 +632,7 @@ EOD;
         $newinstitution->expiry = !empty($record['expiry']) ? db_format_timestamp($record['expiry']) : null;
 
         $newinstitution->allowinstitutionpublicviews  = (isset($record['allowinstitutionpublicviews']) && $record['allowinstitutionpublicviews']) ? 1 : 0;
-
+        $newinstitution->progresscompletion =  (isset($record['progresscompletion']) && $record['progresscompletion']) ? 1 : 0;
         // Save the changes to the DB
         $newinstitution->commit();
 
@@ -2009,6 +2009,9 @@ EOD;
      * @return int new collection id
      */
     public function create_collection($record) {
+        $groupid = null;
+        $institutionid = null;
+
         // Validation
         $sqljoin = $sqlwhere = null;
         switch ($record['ownertype']) {
@@ -2085,7 +2088,14 @@ EOD;
         }
         $data->navigation = 1;
         $data->submittedstatus = 0;
-        $data->progresscompletion = 0;
+        $data->progresscompletion = isset($record['progresscompletion']) && $record['progresscompletion'] ? 1 : 0;
+
+        $institution = null;
+        if ($data->progresscompletion && $record['ownertype'] === 'group') {
+            $institution = get_field('group', 'institution', 'id', $groupid);
+            $institution = new Institution($institution);
+            $data->progresscompletion = $institution->progresscompletion ? 1 : 0;
+        }
         $data->autocopytemplate = 0;
         $data->template = 0;
         $data->lock = !empty($record['lock']) ? 1 : 0;
@@ -2095,6 +2105,9 @@ EOD;
         // Add views to the collection
         if (!empty($addviews)) {
             $collection->add_views($addviews);
+        }
+        if ($data->progresscompletion) {
+            $collection->add_progresscompletion_view();
         }
         return $collection->get('id');
     }

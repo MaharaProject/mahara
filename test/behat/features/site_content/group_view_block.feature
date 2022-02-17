@@ -6,9 +6,9 @@ Feature: Show the block "Group portfolios" in the group homepage
 
 Background:
     Given the following "institutions" exist:
-     | name | displayname | registerallowed | registerconfirm |
-     | instone | Institution One | ON | OFF |
-     | insttwo | Institution Two | ON | OFF |
+     | name    | displayname     | registerallowed | registerconfirm | progresscompletion |
+     | instone | Institution One | ON              | OFF             | ON                 |
+     | insttwo | Institution Two | ON              | OFF             | OFF                |
 
     And the following "users" exist:
      | username | password  | email             | firstname | lastname | institution | authname | role |
@@ -17,11 +17,11 @@ Background:
      | UserC    | Kupuh1pa! | UserC@example.org | Cecilia   | User | instone | internal | member |
 
     And the following "groups" exist:
-     | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members      | staff |
-     | GroupA | UserA | GroupA owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |       |
-     | GroupB | UserA | GroupB owned by UserA | standard  | ON   | OFF           | all       | OFF           | OFF           | UserB, UserC |       |
-     | GroupC | UserA | GroupC owned by UserA | course    | ON   | OFF           | all       | ON            | OFF           | UserC        | UserB |
-     | GroupD | UserA | GroupD owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |       |
+     | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members      | staff | institution |
+     | GroupA | UserA | GroupA owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |       |instone|
+     | GroupB | UserA | GroupB owned by UserA | standard  | ON   | OFF           | all       | OFF           | OFF           | UserB, UserC |       ||
+     | GroupC | UserA | GroupC owned by UserA | course    | ON   | OFF           | all       | ON            | OFF           | UserC        | UserB ||
+     | GroupD | UserA | GroupD owned by UserA | standard  | ON   | OFF           | all       | ON            | OFF           | UserB, UserC |       ||
 
     And the following "pages" exist:
      | title | description | ownertype | ownername |
@@ -69,6 +69,8 @@ Background:
      | Page UserC_14 | Page 14 | user | UserC |
      | Page UserC_15 | Page 15 | user | UserC |
      | Page UserC_16 | Page 16 | user | UserC |
+    # To test portfolio completion
+     | Page GroupA   | Page 01 | group| GroupA|
 
     And the following "collections" exist:
      | title | description | ownertype | ownername | pages |
@@ -87,6 +89,11 @@ Background:
      | Collection UserC_06 | Collection 06 | user | UserC | Page UserC_14 |
      | Collection UserC_07 | Collection 07 | user | UserC | Page UserC_15 |
      | Collection UserC_08 | Collection 08 | user | UserC | Page UserC_16 |
+
+     # To test portfolio completion in groups
+    And the following "collections" exist:
+     | title       | description | ownertype | ownername | pages | progresscompletion |
+     | Coll GroupA | Group PC    | group     | GroupA    | Page GroupA | ON |
 
 Scenario: The list of group pages, shared/submitted pages and collections should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
@@ -134,12 +141,11 @@ These list must take into account the sort option chosen in the block config (Bu
     And I scroll to the base of id "groups"
     And I follow "GroupA" in the "My groups box" "Groups" property
     # Group portfolios
-    And I should see "Page GroupA_05" in the "Group portfolios" "Groups" property
-    And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     #And I press "Next page" in the "div#groupviews_pagination" "css_element"
     And I jump to next page of the list "groupviews_pagination"
+    And I should see "Page GroupA_05" in the "Group portfolios" "Groups" property
     And I should see "Page GroupA_08" in the "Group portfolios" "Groups" property
-    And I should not see "Page GroupA_05" in the "Group portfolios" "Groups" property
+    And I should not see "Page GroupA_04" in the "Group portfolios" "Groups" property
     # Shared pages
     And I should see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     And I should see "Page UserA_05" in the "Pages shared with this group" "Groups" property
@@ -180,7 +186,6 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Page UserB_01"
     And I follow "Pages and collections (tab)"
     And I click on "Edit" in "Group homepage" card menu
-
     And I scroll to the id "column-container"
     And I configure the block "Group portfolios"
     And I set the following fields to these values:
@@ -405,3 +410,10 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Collection UserC_08" in the "Collections shared with this group" "Groups" property
     And I should see "Collection UserC_06" in the "Submissions to this group" "Groups" property
     And I should see "Collection UserC_07" in the "Submissions to this group" "Groups" property
+
+Scenario: Check progress completion is availble in group collections
+    Given I log in as "UserA" with password "Kupuh1pa!"
+    And I choose "Groups" in "Engage" from main menu
+    And I follow "GroupA"
+    And I follow "Coll GroupA"
+    And I should see "Portfolio completion"
