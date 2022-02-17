@@ -383,8 +383,12 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
 function is_valid_help_page($langfile) {
 
     $docroot = get_config('docroot');
-    if (substr($langfile, 0, strlen($docroot)) !== $docroot) {
-        // The real path endpoint is not within the webroot
+    $dataroot = get_config('dataroot') . 'langpacks/';
+    if (
+        (substr($langfile, 0, strlen($docroot)) !== $docroot) &&
+        (substr($langfile, 0, strlen($dataroot)) !== $dataroot)
+      ) {
+        // The real path endpoint is not within the webroot nor the dataroot /langpacks/ section
         return false;
     }
     if (!preg_match('#/help/#', $langfile)) {
