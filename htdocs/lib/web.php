@@ -1448,7 +1448,6 @@ function jsstrings() {
             'view' => array(
                 'confirmcloseblockinstance',
                 'confirmdeleteblockinstance',
-                'blocksinstructionajaxlive1',
             ),
         ),
         'viewmenu' => array(

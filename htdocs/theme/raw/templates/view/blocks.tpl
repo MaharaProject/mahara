@@ -1,9 +1,5 @@
 {include file="header.tpl"}
 
-{if $accessible}
-    <span class="sr-only">{str tag=accessibilitymodedescription section=view}</span>
-{/if}
-
 <div class="view-instructions blocks">
     <form action="{$formurl}" method="post" class="row">
         <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
@@ -27,9 +23,15 @@
             </fieldset>
             </div>
         {else}
-            <div id="blocksinstruction" class="lead view-description with-addblock">
-                {str tag='blocksintructionnoajax' section='view'}
-            </div>
+            {if $accessible}
+                <div id="blocksinstructionaccessible" class="lead view-description with-addblock">
+                    {str tag='accessibilitymodedescription1' section='view'}
+                </div>
+            {else}
+                <div id="blocksinstruction" class="lead view-description with-addblock">
+                    {str tag='blocksinstructionajaxlive2' section='view'}
+                </div>
+            {/if}
         {/if}
         </div>
         {include file="view/editviewpageactions.tpl" selected='content' ineditor=true}
