@@ -199,7 +199,8 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
 
         // This is block that contains embed/iframe code from embed_service
         if (isset($configdata['embed']) && !empty($configdata['embed'])) {
-            $service = $configdata['embed']['service'];
+            $embed = (array)$configdata['embed'];
+            $service = $embed['service'];
             include_once('embed_services/' . $service . '/embedservice.php');
             $servicename = 'Embed_' . $service;
             $embedservice = new $servicename;
