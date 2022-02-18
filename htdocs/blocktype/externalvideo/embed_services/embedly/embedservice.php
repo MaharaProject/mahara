@@ -135,6 +135,7 @@ class Embed_embedly implements EmbedBase {
      *  embedded into Mahara page.
      */
     public function embed_content($input) {
+        $input = (array) $input;
         $width  = isset($input['width'])  ? (int)$input['width']  : self::$default_width;
         $height = isset($input['height']) ? (int)$input['height'] : self::$default_height;
 
