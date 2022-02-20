@@ -446,13 +446,16 @@ class ArtefactTypeProfile extends ArtefactType {
             parent::__construct($id, $data);
             return;
         }
-        if (!empty($data['owner'])) {
-            if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
+        if (!empty($data) && !is_object($data)) {
+            throw new MaharaException('Data array supplied when object expected');
+        }
+        if (!empty($data->owner)) {
+            if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data->owner)) {
                 parent::__construct($a->id, $a);
                 return;
             }
             else {
-                $this->owner = $data['owner'];
+                $this->owner = $data->owner;
             }
         }
         $this->ctime = time();

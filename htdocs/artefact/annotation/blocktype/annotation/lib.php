@@ -261,7 +261,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             $standards = $framework->standards();
             $evidence = $framework->get_evidence($collection->get('id'), $instance->get('id'));
             $selectoptions = array();
-            $selectdesciptions = array();
+            $selectdescriptions = array();
             foreach ($standards['standards'] as $standard) {
                 if (isset($standard->options)) {
                     $selectoptions[$standard->id] = array(

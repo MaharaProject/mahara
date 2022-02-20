@@ -19,6 +19,7 @@ require_once(get_config('docroot') . 'blocktype/lib.php');
 require_once(get_config('docroot') . 'artefact/blog/blocktype/blog/lib.php');
 
 $offset = param_integer('offset', 0);
+$posts = array();
 
 if ($blockid = param_integer('block', null)) {
     $bi = new BlockInstance($blockid);

@@ -459,7 +459,9 @@ function profileform_submit(Pieform $form, $values) {
                     $values[$element] = $newintroduction;
                 }
                 $classname = generate_artefact_class_name($element);
-                $profile = new $classname(0, array('owner' => $USER->get('id')));
+                $data = new stdClass();
+                $data->owner = $USER->get('id');
+                $profile = new $classname(0, $data);
                 $profile->set('title', $values[$element]);
                 $profile->commit();
             }

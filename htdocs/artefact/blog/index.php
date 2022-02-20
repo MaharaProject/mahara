@@ -35,6 +35,7 @@ if ($groupid = param_alphanum('group', null)) {
 }
 
 $institutionname = $groupid = null;
+$s = array();
 if ($institution = param_alphanum('institution', null)) {
     define('TITLE', get_string('Blogs','artefact.blog'));
     if ($institution == 'mahara') {

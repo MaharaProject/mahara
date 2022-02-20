@@ -1324,7 +1324,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Processes a newly uploaded file, copies it to disk, and creates
      * a new artefact object.
      * Takes the name of a file input.
-     * Returns false for no errors, or a string describing the error.
+     * @throw UploadException when file fails to upload
+     * @throw QuotaExceededException when user has exceeded their file quota
+     * @return int File id
      */
     public static function save_uploaded_file($inputname, $data, $inputindex=null, $resized=false) {
         require_once('uploadmanager.php');
@@ -2890,6 +2892,11 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
             }
         }
     }
+
+    /**
+     * @throw UploadException
+     * @return void
+     */
 
     public static function save_uploaded_file($inputname, $data, $inputindex=null, $resized=false) {
         global $USER;

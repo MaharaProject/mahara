@@ -75,6 +75,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         $plans = array();
         $alltasks = array();
         $template = 'artefact:plans:view/plantasks.tpl';
+        $versionblock = null;
 
         if (($versioning && isset($configdata['existing_artefacts']) && !empty($configdata['existing_artefacts'])) ||
             (isset($configdata['artefactids']) && is_array($configdata['artefactids']) && count($configdata['artefactids']) > 0)) {

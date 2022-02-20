@@ -142,6 +142,8 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         $institution = $view->get('institution');
         $group = $view->get('group');
 
+
+        $blog = null;
         if (!empty($configdata['artefactid'])) {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
         }

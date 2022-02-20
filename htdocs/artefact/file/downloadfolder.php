@@ -192,7 +192,6 @@ zip_clean_temp_dir();
 // Home folder
 if ($folderid === 0) {
     if (function_exists('zip_open')) {
-        global $USER;
         $userid = $USER->get('id');
 
         $select = '

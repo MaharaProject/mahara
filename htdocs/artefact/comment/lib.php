@@ -401,7 +401,7 @@ class ArtefactTypeComment extends ArtefactType {
         $userid = $USER->get('id');
         $viewid = $view->get('id');
         // Make an artefact comment
-        if (!empty($artefact)) {
+        if ($artefact) {
             $canedit = $USER->can_edit_artefact($artefact);
             $owner = $artefact->get('owner');
             $isowner = $userid && $userid == $owner;
@@ -448,7 +448,7 @@ class ArtefactTypeComment extends ArtefactType {
         );
 
         $where = 'c.hidden = 0';
-        if (!empty($artefactid)) {
+        if ($artefactid) {
             $where .= ' AND c.onartefact = ' . (int)$artefactid;
         }
         else {
@@ -1495,9 +1495,9 @@ function make_public_submit(Pieform $form, $values) {
     $requester = $USER->get('id');
 
     if (($author == $owner && $requester == $owner)
-        || ($requester == $owner  && $comment->get('requestpublic') == 'author')
-        || (array_search($requester,$group_admins) !== false && $comment->get('requestpublic') == 'author')
-        || ($requester == $author && $comment->get('requestpublic') == 'owner')) {
+    || ($requester == $owner  && $comment->get('requestpublic') == 'author')
+    || (array_search($requester,$group_admins) !== false && $comment->get('requestpublic') == 'author')
+    || ($requester == $author && $comment->get('requestpublic') == 'owner')) {
         $comment->set('private', 0);
         $comment->set('requestpublic', null);
         $comment->commit();
@@ -1506,11 +1506,14 @@ function make_public_submit(Pieform $form, $values) {
     }
 
     $subject = 'makepublicrequestsubject';
+    $message = '';
+    $arg = '';
+    $sessionmessage = '';
+    $userid = $author;
     if ($requester == $owner) {
         $comment->set('requestpublic', 'owner');
         $message = 'makepublicrequestbyownermessage';
         $arg = display_name($owner, $author);
-        $userid = $author;
         $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($author));
     }
     else if ($requester == $author) {
@@ -1524,7 +1527,6 @@ function make_public_submit(Pieform $form, $values) {
         $comment->set('requestpublic', 'owner');
         $message = 'makepublicrequestbyownermessage';
         $arg = display_name($requester, $author);
-        $userid = $author;
         $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($author));
     }
     else {
@@ -1570,6 +1572,7 @@ function delete_comment_submit(Pieform $form, $values) {
 
     $comment = new ArtefactTypeComment((int) $values['comment']);
 
+    $deletedby = '';
     if ($USER->get('id') == $comment->get('author')) {
         $deletedby = 'author';
     }
@@ -1923,6 +1926,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
             ),
         );
 
+        $fileid = null;
         foreach ($values['attachments'] as $filesindex) {
 
             $originalname = $_FILES[$filesindex]['name'];

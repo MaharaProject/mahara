@@ -5838,7 +5838,7 @@ class View {
                     foreach ($artefacts as $artefactrec) {
                         safe_require('artefact', $artefactrec->plugin);
                         $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                        $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                        $artefactobj = new $classname(0, (object)array('title' => $artefactrec->title));
                         $artefactobj->set('dirty', false);
                         if (!$artefactobj->in_view_list()) {
                             continue;

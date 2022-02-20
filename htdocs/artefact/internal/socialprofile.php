@@ -85,6 +85,7 @@ else {
         $title = '';
         $description = '';
         $note = '';
+        $toedit = null;
     }
 
     $socialnetworkoptions = array();

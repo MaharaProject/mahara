@@ -2752,10 +2752,10 @@ EOD;
         foreach ($itemdata as $artefacttype => $title) {
             $classname = generate_artefact_class_name($artefacttype);
             $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
-            $artefact = new $classname(0, array(
-              'owner' => $userid,
-              'title' => $title,
-            ));
+            $data = new stdClass();
+            $data->owner = $userid;
+            $data->title = $title;
+            $artefact = new $classname(0, $data);
             $artefact->commit();
         }
     }

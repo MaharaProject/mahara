@@ -156,7 +156,8 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         else {
             $author = $importer->get('usr');
         }
-
+        $completiondate = null;
+        $completed = null;
         // Set completiondate and completed status if we can find them
         if ($type === 'task') {
 
@@ -187,8 +188,8 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
                 'author'      => isset($author) ? $author : null,
                 'ctime'       => (string)$entry->published,
                 'mtime'       => (string)$entry->updated,
-                'completiondate' => ($type === 'task') ? $completiondate : null,
-                'completed'   => ($type === 'task') ? $completed : null,
+                'completiondate' => $completiondate,
+                'completed'   => $completed,
                 'tags'        => PluginImportLeap::get_entry_tags($entry),
             ),
         ));

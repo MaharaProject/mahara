@@ -24,6 +24,9 @@ $editing = param_variable('editing', false);
 $artefactid = param_integer('artefact', null);
 $blockid = param_integer('block', null);
 
+$options = array();
+$pagination = array();
+$template = '';
 if ($blockid && !$artefactid) {
     $bi = new BlockInstance($blockid);
     if (!can_view_view($bi->get('view'))) {
