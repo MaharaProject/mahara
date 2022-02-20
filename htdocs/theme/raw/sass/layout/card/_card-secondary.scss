@@ -2,6 +2,7 @@
 
 .card.card-secondary {
     @include box-shadow(none);
+    padding: 0.2rem;
     border-color: transparent;
     .admin & {
         border-color: $card-border-color;
