@@ -150,7 +150,7 @@ abstract class Auth {
      * @param  int  $id   The unique ID of the auth instance
      * @return bool       Whether the create was successful
      */
-    public function __construct($id = null) {
+    public function __construct() {
         $this->ready = false;
     }
 
@@ -421,7 +421,7 @@ abstract class Auth {
      * @return int|false
      */
     public function get_parent_authority() {
-        return get_field('auth_instance_config', 'value', 'instance', $this->id, 'field', 'parent');
+        return get_field('auth_instance_config', 'value', 'instance', $this->instanceid, 'field', 'parent');
     }
 
 
@@ -685,6 +685,7 @@ function auth_setup () {
  * @throws AuthInstanceException
  */
 function auth_configure_session_handlers($sessiontype) {
+    $sessionhandler = '';
     if ($sessiontype == 'site') {
         $sessionhandler = get_config('sessionhandler');
     }
@@ -1228,6 +1229,7 @@ function privacy_form($ignoreagreevalue = false, $ignoreformswitch = false) {
         return '<div>' . get_string('noprivacystatementsaccepted', 'account') . '</div>';
     }
 
+    $elements = array();
     foreach ($latestversions as $privacy) {
         if ($privacy->type == 'privacy') {
             $title = get_string('institutionprivacystatement', 'admin');
@@ -1764,6 +1766,7 @@ function agreetoprivacy_submit(Pieform $form, $values) {
     $hasrefused = param_integer('hasrefused', 0);
     $reason = param_variable('reason', '');
     $whathasbeenrefused = array();
+    $institution = '';
 
     foreach ($institutions as $institution) {
         // check if the institution has a privacy statement

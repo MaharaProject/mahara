@@ -24,6 +24,9 @@ require_once(get_config('libroot') . 'institution.php');
  */
 class AuthXmlrpc extends Auth {
 
+    protected $parent;
+    protected $wwwroot;
+
     /**findByWwwroot
      * Get the party started with an optional id
      * TODO: appraise
@@ -104,7 +107,7 @@ class AuthXmlrpc extends Auth {
 
         $remoteuser = (object)$client->response;
 
-        if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
+        if (!$remoteuser or !property_exists($remoteuser, 'username')) {
             // Caught by land.php
             throw new AccessDeniedException();
         }
@@ -1067,6 +1070,8 @@ function localurl_to_jumpurl($url) {
 function auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid) {
     global $SESSION, $USER;
 
+    $coll = null;
+    $view = null;
     if ($mnetviewid) {
         $mnetitemid = $mnetviewid;
         $iscollection = false;
