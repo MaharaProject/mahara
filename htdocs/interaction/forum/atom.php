@@ -56,6 +56,11 @@ function error_post($message) {
 $feedtype = param_alpha('type'); //g = group, f = forum, t = topic
 $id = param_integer('id');
 
+$group = null;
+$link = '';
+$sql = '';
+$title = '';
+
 if ($feedtype == 'g') {
     if (!$group = get_group_by_id($id)) {
         generate_feed(error_feed(), error_post(get_string('groupnotfound', 'group', $id)));

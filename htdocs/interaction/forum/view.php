@@ -107,6 +107,8 @@ $moderators = get_column_sql(
 // updates the selected topics as subscribed/closed/sticky
 if ($membership && param_exists('checked')) {
     $checked = array_map('intval', array_keys(param_variable('checked')));
+    $type = null;
+
     // get type based on which button was pressed
     if (param_exists('updatetopics')) {
         $type = param_variable('type');

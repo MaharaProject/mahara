@@ -26,6 +26,8 @@ define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $postid = param_integer('id', 0);
 $page = get_config('wwwroot') . 'interaction/forum/editpost.php';
+$post = null;
+
 if ($postid == 0) { // post reply
     unset($postid);
     $parentid = param_integer('parent');
@@ -437,10 +439,7 @@ $smarty->assign('moderator', $moderator);
 $smarty->assign('parent', $parent);
 $smarty->assign('action', $action);
 $smarty->assign('groupadmins', group_get_admin_ids($parent->group));
-
-if (isset($inlinejs)) {
-    $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-}
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 
 if (!isset($timeleft)) {
     $timeleft = 0;
