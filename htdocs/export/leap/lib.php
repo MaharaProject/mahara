@@ -317,6 +317,7 @@ class PluginExportLeap extends PluginExport {
      * Export the views
      */
     private function export_views() {
+        require_once('view.php');
         $progressstart = 10;
         $progressend   = 50;
         $views = $this->get('views');
@@ -381,7 +382,7 @@ class PluginExportLeap extends PluginExport {
             }
 
             $this->smarty->assign('type',        $config['type']);
-            $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
+            $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : View::FORMAT_NAME_DISPLAYNAME;
             $this->smarty->assign('ownerformat', $ownerformat);
             $this->smarty->assign('leaptype',    'selection');
 

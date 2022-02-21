@@ -2905,7 +2905,7 @@ function install_system_profile_view() {
         'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
         'description' => get_string('profiledescription'),
     ), 0);
@@ -2956,7 +2956,7 @@ function install_system_progress_view() {
         'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('progresspage', 'collection'),
         'description' => get_string('progresspagedescription'),
     ), 0);
@@ -2984,7 +2984,7 @@ function install_system_dashboard_view() {
         'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('dashboardviewtitle', 'view'),
     ), 0);
     $view->set_access(array(array(

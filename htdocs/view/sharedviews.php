@@ -222,7 +222,7 @@ foreach ($data->data as $key => $item) {
 
 $pagination = build_pagination(array(
     'id' => 'sharedviews_pagination',
-    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (empty($queryparams) ? '' : ('?' . http_build_query($queryparams))),
+    'url' => get_config('wwwroot') . 'view/sharedviews.php' . (!$queryparams ? '' : ('?' . http_build_query($queryparams))),
     'jsonscript' => 'json/sharedviews.php',
     'datatable' => 'sharedviewlist',
     'count' => $data->count,

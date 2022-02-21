@@ -18,6 +18,7 @@ define('SECTION_PAGE', 'unsubscribe');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require('view.php');
 
+$type = '';
 $unsubscribed = false;
 $viewtitle = false;
 if (param_exists('a') && param_exists('t')) {

@@ -24,6 +24,7 @@ $profile = param_boolean('profile');
 $dashboard = param_boolean('dashboard');
 $progresspage = param_boolean('progress');
 
+$view = null;
 if (empty($id)) {
     if (!empty($profile)) {
         try {
