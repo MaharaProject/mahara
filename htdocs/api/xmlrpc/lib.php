@@ -202,6 +202,7 @@ function fetch_user_image($username) {
     }
 
     $ic = $user->profileicon;
+    $fi = false;
     if (!empty($ic)) {
         $filename = get_config('dataroot') . 'artefact/file/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
         $return = array();
@@ -819,6 +820,8 @@ function submit_view_for_assessment($username, $id, $iscollection = false, $apil
     require_once('view.php');
     $remotehost = $authinstance->config['wwwroot'];
     $userid = $user->get('id');
+    $token = null;
+    $url = '';
 
     db_begin();
     if ($iscollection) {
@@ -1250,7 +1253,7 @@ function xmlenc_envelope($message, $remote_certificate) {
     $symmetric_keys = array();
 
     //      passed by ref ->      &$encryptedstring &$symmetric_keys
-    $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey), "AES256");
+    $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey));
     $message = base64_encode($encryptedstring);
     $symmetrickey = base64_encode(array_pop($symmetric_keys));
     $zed = 'nothing';
@@ -1385,7 +1388,7 @@ class OpenSslRepo {
      */
     public function openssl_open($data, $key, $oldkeyok=false) {
         $payload = '';
-        $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey'], "AES256");
+        $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey']);
 
         if (!empty($isOpen)) {
             return $payload;
@@ -1395,7 +1398,7 @@ class OpenSslRepo {
             foreach($openssl_history as $keyset) {
                 if (isset($keyset['keypair_PEM'])) {
                     $keyresource = openssl_pkey_get_private($keyset['keypair_PEM']);
-                    $isOpen      = openssl_open($data, $payload, $key, $keyresource, "AES256");
+                    $isOpen      = openssl_open($data, $payload, $key, $keyresource);
                     if ($isOpen) {
                         // It's an older code, sir, but it checks out
                         if ($oldkeyok) {

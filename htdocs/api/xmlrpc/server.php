@@ -80,6 +80,8 @@ try {
 }
 
 // Cascading switch. Kinda.
+$REMOTEWWWROOT = '';
+
 try {
     if ($xml->getName() == 'encryptedMessage') {
         $payload_encrypted = true;
