@@ -7,7 +7,7 @@
     <tbody>
         {foreach from=$selectedlist item=file}
         {assign var=displaytitle value=$file->title|str_shorten_text:34|safe}
-        <tr class="active{if $highlight && $highlight == $file->id} highlight-file{/if}">
+        <tr class="{if $highlight && $highlight == $file->id} highlight-file{/if}">
             <td class="icon-container">
                 {if $file->artefacttype !== 'image'}
                     <span class="icon icon-{$file->artefacttype} icon-lg" role="presentation" aria-hidden="true"></span>
