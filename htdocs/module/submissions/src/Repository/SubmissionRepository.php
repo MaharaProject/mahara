@@ -206,7 +206,7 @@ class SubmissionRepository {
 
         try {
             $record = get_record_sql($sql, [$submission->get('portfolioElementId'), $submission->get('portfolioElementType')]);
-            if (empty($record)) {
+            if (!$record) {
                 return null;
             }
             require_once(get_config('docroot') . 'artefact/lib.php');

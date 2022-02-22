@@ -435,7 +435,7 @@ class PluginModuleLti_advantage extends PluginModule {
             set_config('webservice_provider_rest_enabled', true);
 
             require_once(get_config('docroot') . 'webservice/lib.php');
-            external_reload_component('module/lti_advantage', false);
+            external_reload_component('module/lti_advantage');
             set_field('external_services', 'enabled', 1, 'shortname', 'lti_advantage', 'component', 'module/lti_advantage');
         }
         return true;

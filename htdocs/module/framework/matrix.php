@@ -221,7 +221,7 @@ $smarty->assign('framework', $collection->get('framework'));
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewlocked', $view->get('locked'));
 $smarty->assign('viewcount', $views['count']);
-$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $view->get('id') . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $view->get('id') . (!$collection ? '&collection=' . $collection->get('id') : '' ));
 
 // Get the first view from the collection
 $firstview = $views['views'][0];

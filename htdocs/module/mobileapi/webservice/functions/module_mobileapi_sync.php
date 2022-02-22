@@ -487,6 +487,7 @@ class module_mobileapi_sync extends external_api {
         $blogreturn = array();
         foreach ($blogrecords as $blogrecord) {
             // TODO: Let the client deal with locked posts
+            $blog = array();
             if (!$blogrecord->locked) {
                 $blog = array(
                     'id' => $blogrecord->id,

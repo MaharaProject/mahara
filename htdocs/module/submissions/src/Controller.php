@@ -363,6 +363,7 @@ class Controller {
                 }
 
                 if ($this->requestMethod == 'POST') {
+                    $submission = null;
                     try {
                         /** @var Submission $submission */
                         /** @var Evaluation $evaluation */
@@ -395,6 +396,8 @@ class Controller {
                 if ($this->requestMethod == 'POST') {
                     $messageAction = get_string('actionreleased','module.submissions');
                     try {
+                        $submission = null;
+
                         /** @var Submission $submission */
                         /** @var Evaluation $evaluation */
                         list($submission, $evaluation) = SubmissionRepository::findSubmissionAndAssignedEvaluationBySubmissionId(param_integer('submissionId'));

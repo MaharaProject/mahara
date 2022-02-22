@@ -315,8 +315,9 @@ class SubmissionTools {
      */
     public static function createPortfolioElementTitleHtmlForTable(int $portfolioElementId, string $portfolioElementTitle, string $portfolioElementType, $exportArchiveId, bool $isNotReleased, bool $showPortfolioButtons) {
         $limitedTitle = self::limitHtmlStringLengthByInsertingEllipses($portfolioElementTitle);
-
+        $portfolioElementTitleHtml = '';
         if ($isNotReleased) {
+            $viewLink = '';
             switch ($portfolioElementType) {
                 case 'view':
                     $viewLink = get_config('wwwroot') . 'view/view.php?id=' . $portfolioElementId;

@@ -45,7 +45,7 @@ header('Access-Control-Allow-Credentials: false');
  * used for other webservices?
  */
 class mobileapi_profileicon_webservice_server extends webservice_base_server {
-    public function __construct($authmethod = null) {
+    public function __construct() {
         //authenticate the user
         parent::__construct(WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN);
         $this->token = param_alphanum('wstoken');
@@ -55,7 +55,7 @@ class mobileapi_profileicon_webservice_server extends webservice_base_server {
 
         // Check that the token is valid.
         // (This will also determine which service the token is for.)
-        $this->authenticate_user(EXTERNAL_TOKEN_USER);
+        $this->authenticate_user();
 
         // Make sure they're specifically accessing the maharamobile service.
         $maharamobileserviceid = get_field('external_services', 'id', 'shortname', 'maharamobile', 'component', 'module/mobileapi');
