@@ -3,7 +3,9 @@ Clipboard in Mahara
 
 Website: https://github.com/zenorocha/clipboard.js
 Website: https://clipboardjs.com/
-Version: 2.0.8
+Version: 2.0.10
+
+Download ZIP file, extract and then replace current clipboard.min.js with new clipboard.min.js file from the dist directory.
 
 Changes:
 
