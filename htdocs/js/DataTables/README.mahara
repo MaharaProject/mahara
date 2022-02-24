@@ -2,7 +2,7 @@ DataTables
 -----
 
 Website: https://datatables.net/
-Version: 1.10.25
+Version: 1.11.4
 
 Modifications:
 
@@ -15,7 +15,6 @@ Download setup for datatables.js and datatables.css:
 3. Select packages              Datatables
 4. Extensions                   Buttons
                                     Column visibility
-                                    Flash export
                                     HTML5 export
                                         JSZip
                                         pdfmake
