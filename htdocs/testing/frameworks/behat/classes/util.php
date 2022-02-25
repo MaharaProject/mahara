@@ -146,8 +146,10 @@ class BehatTestingUtil extends TestingUtil {
         // So each time we reset the dataroot before running a test, the default files are still installed.
         self::save_original_data_files();
 
-        // Disable some settings that are not wanted on test sites.
+        // Disable/enable some settings that are needed for test sites.
         set_config('sendemail', false);
+        set_config('isolatedinstitutions', false);
+        set_config('skins', true);
 
         // Keeps the current version of database and dataroot.
         self::store_versions_hash();

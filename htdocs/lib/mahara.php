@@ -1004,7 +1004,7 @@ function ini_get_bool($ini_get_arg) {
  * as not every page needs them
  * @return boolean false if the assignment fails (generally if the databse is not installed)
  */
-function load_config() {
+function load_config($behat=false) {
    global $CFG;
    global $OVERRIDDEN;    // array containing the config fields overridden by $CFG
 
@@ -1015,8 +1015,13 @@ function load_config() {
 
    $dbconfig = get_records_array('config', '', '', '', 'field, value');
    foreach ($dbconfig as $cfg) {
-       if (!isset($CFG->{$cfg->field})) {
+       if ($behat) {
            $CFG->{$cfg->field} = $cfg->value;
+       }
+       else {
+           if (!isset($CFG->{$cfg->field})) {
+               $CFG->{$cfg->field} = $cfg->value;
+           }
        }
    }
 
