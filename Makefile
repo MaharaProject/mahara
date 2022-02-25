@@ -85,6 +85,7 @@ ifdef simplesamlphp
 else
 	@echo "Pulling SimpleSAMLphp from download ..."
 	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.1/simplesamlphp-1.19.1.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
+	@php append_composer.php htdocs/auth/saml/extlib/simplesamlphp/composer.json simplesamlphp/composer-module-installer
 	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp require predis/predis
 	@echo "Copying www/resources/* files to sp/resources/ ..."
 	@cp -R htdocs/auth/saml/extlib/simplesamlphp/www/resources/ htdocs/auth/saml/sp/
@@ -112,6 +113,7 @@ endif
 else
 	@echo "Pulling chrome-0.11 from download ..."
 	@curl -sSL https://github.com/chrome-php/chrome/archive/0.11.zip -o pdf_tmp.zip && unzip pdf_tmp.zip -d htdocs/lib/chrome-php && rm pdf_tmp.zip
+	@php append_composer.php htdocs/lib/chrome-php/chrome-0.11/composer.json bamarni/composer-bin-plugin
 	@php external/composer.phar --working-dir=htdocs/lib/chrome-php/chrome-0.11 install
 	@find htdocs/lib/chrome-php/chrome-0.11 -type f -name composer.json -delete
 	@find htdocs/lib/chrome-php/chrome-0.11 -type f -name composer.lock -delete
