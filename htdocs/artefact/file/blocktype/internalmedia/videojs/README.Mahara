@@ -2,11 +2,11 @@ Video.js - HTML5 Video Player
 =============================
 
 Website: http://videojs.com/
-Version: 7.14.3
+Version: 7.17.0
 
 This html5 video player is used by the Mahara internal media blocktype.
 The distribution is downloaded from the latest release (https://github.com/videojs/video.js/releases).
 
 Modifications
 - keep only /font, /lang, video.js, video.min.js, and video-js.css
-- Move video-js.css into raw theme (htdocs/theme/raw/sass/plugin/blocktype/_internalmedia.scss)
+- Move video-js.css into raw theme (htdocs/theme/raw/sass/plugin/blocktype/_internalmedia.scss) Note: Be aware of $variables for styles that have been added by Evonne and do not over-write these with the hard-coded values from videojs, as well as the Mahara customisations at the bottom of the _internalmedia.css file.
