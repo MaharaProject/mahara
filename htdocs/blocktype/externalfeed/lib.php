@@ -39,7 +39,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
             $data = $instance->get_data('feed', $configdata['feedid']);
             return sanitize_url($data->link);
         }
-        return false;
+        return '';
     }
 
     public static function get_categories() {

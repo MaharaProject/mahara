@@ -363,12 +363,13 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
 
         $options->now = $now;
         $options->then = $then;
+        $count = 0;
 
-        if (isset($then) && !empty($then) && $options->orderby == 'owner') {
+        if ($then && $options->orderby == 'owner') {
             list($viewdata, $count) = self::filter_views_by_owner($filterbydata, $options);
         }
 
-        if (isset($then) && !empty($then) && $options->orderby == 'activity') {
+        if ($then && $options->orderby == 'activity') {
             list($viewdata, $count) = self::filter_views_by_activity($filterbydata, $options);
         }
 

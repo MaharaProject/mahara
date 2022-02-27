@@ -385,6 +385,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         $url = htmlspecialchars_decode($url); // convert &amp; back to &, etc.
         foreach ($embedsources as $source) {
             if (preg_match($source['match'], $url)) {
+                $apps_url = '';
                 if (is_string($source['url'])) {
                     $apps_url = preg_replace($source['match'], $source['url'], $url);
                 }

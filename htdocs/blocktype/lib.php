@@ -148,7 +148,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
      * To define a pluginwide configuration
      */
     public static function get_base_config_options() {
-        $type = array();
+        $types = array();
         $blocks = get_records_sql_array("SELECT b.name, b.artefactplugin, bc.sortorder,
                                    (SELECT COUNT(*) FROM {block_instance} bi WHERE bi.blocktype = b.name) AS blockcount
                                   FROM {blocktype_installed} b
@@ -1467,9 +1467,10 @@ class BlockInstance {
 
         $this->commit();
         $this->set('ineditconfig', false);
+        $rendered = array();
         try {
             if ($form->get_property('quickedit')) {
-                $rendered = array('html' => $this->render_viewing());
+                $rendered['html'] = $this->render_viewing();
             }
             else {
                 $rendered = $this->render_editing(false, false, $form->submitted_by_js());
