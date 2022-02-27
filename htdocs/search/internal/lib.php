@@ -1347,6 +1347,7 @@ class PluginSearchInternal extends PluginSearch {
                 c.owner, c.group, c.institution, NULL AS urlid
             FROM {collection} c
             JOIN {collection_view} cv ON cv.collection = c.id
+            JOIN {view} v ON (v.id = cv.view  AND v.type !='progress')
             LEFT JOIN {tag} ct ON (ct.resourcetype = 'collection' AND ct.resourceid = c.id" . $typecast . ")
             LEFT JOIN {tag} vt ON (vt.resourcetype = 'view' AND vt.resourceid = cv.view" . $typecast . ")
             WHERE c.owner = ? " . $collectionwhere . $collectionfilter . ")
