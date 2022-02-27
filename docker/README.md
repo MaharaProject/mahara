@@ -87,7 +87,7 @@ image with Apache, PHP, other dependencies, and of course Mahara.
 **Note**: Add Gerrit so you can `make push` later if you want to [contribute your changes](https://wiki.mahara.org/wiki/Developer_Area/Contributing_Code) to the Mahara project.
 
 * Run the command `make up` to start your Mahara Docker environment. This configures your environment automatically.
-* Open the URL that you see on screen. It starts with http://localhost:6142/. Mahara is available in a subdirectory, and the name of it is the name of the folder of your repository. If you installed Mahara in the folder 'mahara', then the URL is http://localhost:6142/mahara. If you installed it in the folder '20.10', the URL is http://localhost:6142/20.10.
+* Open the URL that you see on screen. It starts with http://localhost:6142/. Mahara is available in a subdirectory, and the name of it is the name of the folder of your repository. If you installed Mahara in the folder 'mahara', then the URL is http://localhost:6142/mahara/ (the slash is important or you won't see your site). If you installed it in the folder '20.10', the URL is http://localhost:6142/20.10/.
 
 Because the code is not part of the Docker image but is available on your computer, the CSS needs to be built outside of Docker. Follow the ['Set up npm and gulp' instructions](https://wiki.mahara.org/index.php/Developer_Area/Developer_Environment) on the Mahara wiki to set that up. Then run `make css` to build the CSS.
 
@@ -144,7 +144,7 @@ These commands are for wiping an existing database and restoring a database from
 1. Run `docker ps` to list the running containers.
 1. Get the container ID and port number of the PostreSQL container.
 1. Run `docker exec -it <container id> /bin/bash` to enter the container.
-1. Run `psql -h 127.0.0.1 -U mahara -W -p 5432 mahara` to connect to the Mahara database. You will be asked for the password. It is stated in the config.php file. 
+1. Run `psql -h 127.0.0.1 -U mahara -W -p 5432 mahara` to connect to the Mahara database. You will be asked for the password. It is stated in the config.php file.
 
 If you fail to connect at this point, check your `.env` file for the correct value in the `MAHARA_DB_*` value. If you don't have an `.env` file, check in the `config-environment.php` file.
 
