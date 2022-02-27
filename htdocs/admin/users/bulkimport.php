@@ -25,6 +25,7 @@ $EMAILUSERS = false;
 ini_set('auto_detect_line_endings', 1);
 
 $authinstances = auth_get_auth_instances();
+$authinstanceelement = null;
 
 if (count($authinstances) > 0) {
     $options = array();
@@ -292,8 +293,8 @@ function finish_import() {
     // Only send e-mail to users after we're sure they have been inserted
     // successfully
     if ($EMAILUSERS && $ADDEDUSERS) {
+        $noemailusers = array();
         foreach ($ADDEDUSERS as $user) {
-            $noemailusers = array();
             if ($user->email) {
                 try {
                     email_user($user, null, get_string('accountcreated', 'mahara', get_config('sitename')),

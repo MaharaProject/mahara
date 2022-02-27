@@ -33,10 +33,9 @@ else {
 }
 
 $authinstancecount = count($authinstances);
+$options = array();
 
 if ($authinstancecount) {
-    $options = array();
-
     $external = false;
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {

@@ -30,9 +30,8 @@ if ($pagenames = array_merge($corepagenames, $localpagenames)) {
         'site_content', 'name IN (' . join(',', array_fill(0, count($pagenames), '?')) . ')', $pagenames
     );
 }
+
 $pageoptions = array();
-
-
 $institutionelement = get_institution_selector(false);
 
 if (!empty($institutionelement['options']) && sizeof($institutionelement['options']) > 1) {
@@ -56,6 +55,7 @@ else if (empty($institutionelement['options'])) {
     exit;
 }
 
+$pagecontents = array();
 
 foreach ($sitepages as $page) {
     $section = in_array($page->name, $localpagenames) ? 'local' : 'admin';

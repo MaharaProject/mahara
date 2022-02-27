@@ -1282,6 +1282,7 @@ if ($institution && $institution != 'mahara') {
             }
             else {
                 // Need to logout any users that are using this institution's authinstance.
+                $loggedinarray = array();
                 if ($loggedin = get_records_sql_array("SELECT ui.usr FROM {usr_institution} ui
                     JOIN {usr} u ON u.id = ui.usr
                     JOIN {auth_instance} ai ON ai.id = u.authinstance
