@@ -18,7 +18,7 @@ table.dataTable {
         text-decoration: $link-hover-decoration;
       }
       &::before {
-        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+        font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
         font-weight: 900;
         content: "\f0d8";
         top: 2px;
@@ -27,7 +27,7 @@ table.dataTable {
         color: $theme-text-midtone-color;
       }
       &::after {
-        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+        font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
         font-weight: 900;
         content: "\f0d7";
         right: 4px;
@@ -104,13 +104,13 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
     border-color: $pagination-active-border-color;
   }
   .previous .page-link::before {
-    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+    font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
     font-weight: 900;
     content: "\f100";
     padding-right: 3px;
   }
   .next .page-link::after {
-    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+    font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
     font-weight: 900;
     content: "\f101";
     padding-left: 3px;
@@ -139,7 +139,7 @@ div.dt-button-collection div.dropdown-menu {
     padding: .357rem .715rem;
     color: $theme-text-color;
     &::before {
-      font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free";
+      font-family: "Font Awesome 6 Free Regular", "Font Awesome 6 Free";
       font-weight: 400;
       content: "\f0c8";
       padding-right: 5px;
@@ -154,7 +154,7 @@ div.dt-button-collection div.dropdown-menu {
       background-color: $custom-select-bg;
       font-weight: bold;
       &::before {
-        font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free";
+        font-family: "Font Awesome 6 Free Regular", "Font Awesome 6 Free";
         font-weight: 400;
         content: "\f14a";
         padding-right: 5px;
@@ -188,7 +188,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
   text-indent: 0 !important;
   line-height: 1;
   background-color: transparent;
-  font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
   font-weight: 900;
   padding-left: 0.25rem; // 4px;
   content: "\f107";
@@ -201,7 +201,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::befor
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before,
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control::before {
   background-color: transparent;
-  font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
   font-weight: 900;
   content: "\f106";
 }
