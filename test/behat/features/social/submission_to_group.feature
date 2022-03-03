@@ -51,8 +51,6 @@ Feature: Mahara users submit pages / colelctions to a group
     Then I should see "Collection submitted"
     And I follow "Collection UserA_01"
     And I click on "Details"
-    And I should see "Add comment" in the "Block header" "Blocks" property
-    And I should see "Details" in the "Block header" "Blocks" property
     And I should not see "Quick edit"
     And I log out
 
