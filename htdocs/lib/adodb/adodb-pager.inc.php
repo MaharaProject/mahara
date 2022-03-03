@@ -55,7 +55,7 @@ class ADODB_Pager {
 	//
 	function __construct(&$db,$sql,$id = 'adodb', $showPageLinks = false)
 	{
-	global $PHP_SELF, $SESSION;
+	global $PHP_SELF, $SESSION;;
 
 		$curr_page = $id.'_curr_page';
 		if (!empty($PHP_SELF)) $PHP_SELF = htmlspecialchars($_SERVER['PHP_SELF']); // htmlspecialchars() to prevent XSS attacks
