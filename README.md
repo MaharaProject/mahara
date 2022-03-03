@@ -110,7 +110,6 @@ The following PHP extensions are also required:
  * ldap
  * libxml
  * mbstring
- * mcrypt
  * mime_magic; or fileinfo
  * pgsql; or mysqli; or mysql
  * session
