@@ -80,7 +80,7 @@ $string['rule.before.before'] = 'This cannot be after the field "%s"';
 $string['rule.email.email'] = 'Email address is invalid';
 
 $string['rule.integer.integer'] = 'The field must be an integer';
-
+$string['rule.float.float'] = 'This field only accepts decimal number values';
 $string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long. Please revise it or try splitting this over multiple instances.';
 
 $string['rule.minlength.minlength'] = 'This field must be at least %d characters long.';
