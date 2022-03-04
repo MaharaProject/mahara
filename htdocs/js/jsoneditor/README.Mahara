@@ -2,7 +2,7 @@ JSONeditor in Mahara
 =================
 
 Website: https://github.com/json-editor/json-editor/
-Version: 1.3.5
+Version: 2.6.1
 
 This library is used by SmartEvidence, to provide a user-friendly way
 of editing a framework, without relying on a json upload.
@@ -11,7 +11,7 @@ of editing a framework, without relying on a json upload.
 In order to work, the JSONeditor needs a dist folder with jsoneditor.js and
 jsoneditor.js.map in it.
 It's not in the github repo for some reason, but can be found here:
-https://www.jsdelivr.com/package/npm/@json-editor/json-editor?path=dist&version=1.3.0
+https://cdnjs.com/libraries/json-editor
 
 Changes:
 

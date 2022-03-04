@@ -64,10 +64,6 @@ jQuery(function($) {
     JSONEditor.defaults.languages.en.button_delete_row_title_short = get_string('delete','module.framework');
     JSONEditor.defaults.languages.en.button_delete_row_title = get_string('deletespecific','mahara', '{{0}}');
 
-
-    // Enable select2
-    JSONEditor.plugins.select2.enable = true;
-
     var parent_array = [''];
 
     // standard ids from the Standards form
@@ -581,6 +577,11 @@ jQuery(function($) {
             // @TODO, check functionality
             // Get an array of errors from the validator
             var errors = editor.validate();
+            let isCopy = $('#copy option:selected').val();
+            let isEdit = $('#edit option:selected').val();
+            if (!(isCopy ^ isEdit)) {
+                return;
+            }
             // Not valid
             if (errors.length) {
                 $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjsonineditor', 'module.framework')}));
