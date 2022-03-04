@@ -1976,9 +1976,11 @@ class Metarefresh {
                 if (isset($url->value) && !empty($url->value)) {
                     if (isset($sites[$url->instance])) {
                         $finalarr[$sites[$url->instance]]['src'] = $url->value;
-                        foreach ($fingerprints as $fingerprint) {
-                            if (isset($fingerprint->instance) && $fingerprint->instance == $url->instance && isset($fingerprint->value) && !empty($fingerprint->value)) {
-                                $finalarr[$sites[$url->instance]]['validateFingerprint'] = $fingerprint->value;
+                        if ($fingerprints) {
+                            foreach ($fingerprints as $fingerprint) {
+                                if (isset($fingerprint->instance) && $fingerprint->instance == $url->instance && isset($fingerprint->value) && !empty($fingerprint->value)) {
+                                    $finalarr[$sites[$url->instance]]['validateFingerprint'] = $fingerprint->value;
+                                }
                             }
                         }
                     }
