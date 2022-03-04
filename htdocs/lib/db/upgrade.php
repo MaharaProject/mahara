@@ -2393,5 +2393,13 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2021080211) {
+        log_debug("Add the allow comments by default setting");
+        // Check that it is not alreay set in the database
+        if (get_field('config', 'value', 'field', 'allowcommentsbydefault') === false) {
+            set_config('allowcommentsbydefault', 1);
+        }
+    }
+
     return $status;
 }
