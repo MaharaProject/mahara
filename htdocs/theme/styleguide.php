@@ -10,6 +10,7 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'development/styleguide');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'styleguide');

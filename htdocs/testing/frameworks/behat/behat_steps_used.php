@@ -11,13 +11,13 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-//define('MENUITEM', 'configsite/behatsteps');
+define('MENUITEM', 'development/behatsteps');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'behatsteps');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require_once(dirname(dirname(dirname(__DIR__))) . '/classes/util.php');
+require_once(dirname(dirname(__DIR__)) . '/classes/util.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('behatvariables', 'admin'));
 
