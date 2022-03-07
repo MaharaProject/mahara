@@ -14,6 +14,7 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'development/componentmap');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'map');
