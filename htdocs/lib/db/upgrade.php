@@ -2273,5 +2273,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092125) {
+        log_debug('Set "verify" on all sign-off blocks to "No"');
+        execute_sql(
+            "UPDATE block_instance SET configdata = REPLACE (configdata,?,?)",
+             array('"verify";b:1', '"verify";b:0'));
+    }
+
     return $status;
 }
