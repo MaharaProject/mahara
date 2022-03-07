@@ -120,8 +120,8 @@ jQuery(function($) {
     $('.info-item').on("click", function(e) {
         e.preventDefault();
         infochosen = e.target;
-        if (!$(infochosen).is('A')) {
-            infochosen = $(infochosen).closest('A')[0].outerHTML;
+        if (!$(infochosen).is('A') && !$(infochosen).is('BUTTON')) {
+            infochosen = $(infochosen).closest('[data-plugintype]')[0].outerHTML;
         }
         $("#infomodal").modal("show");
     });
