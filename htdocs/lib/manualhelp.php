@@ -151,7 +151,7 @@ function _get_mahara_version() {
  * Return Mahara manual URL
  */
 function _get_manual_link_prefix() {
-    return "http://manual.mahara.org";
+    return "https://manual.mahara.org";
 }
 
 $manual_link_map = array(
