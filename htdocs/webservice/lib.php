@@ -1486,11 +1486,11 @@ abstract class WebserviceBaseServer extends WebserviceServer {
                                'protocol' => 'REST',
                                'auth' => $this->auth,
                                'functionname' => $this->functionname,
-                               'timetaken' => "" . $time_taken,
+                               'timetaken' => number_format($time_taken, 5, '.', ''),
                                'uri' => $_SERVER['REQUEST_URI'],
                                'info' => '',
                                'ip' => getremoteaddr());
-        insert_record('external_services_logs', $log, 'id', true);
+        self::log_webservice_call($log);
 
         // send the results back in correct format
         $this->send_response();
@@ -1525,11 +1525,11 @@ abstract class WebserviceBaseServer extends WebserviceServer {
                                'protocol' => 'REST',
                                'auth' => $this->auth,
                                'functionname' => ($WEBSERVICE_FUNCTION_RUN ? $WEBSERVICE_FUNCTION_RUN : $this->functionname),
-                               'timetaken' => '' . $time_taken,
+                               'timetaken' => number_format($time_taken, 5, '.', ''),
                                'uri' => $_SERVER['REQUEST_URI'],
                                'info' => 'exception: ' . get_class($ex) . ' message: ' . $ex->getMessage() . ' debuginfo: ' . (isset($ex->debuginfo) ? $ex->debuginfo : ''),
                                'ip' => getremoteaddr());
-        insert_record('external_services_logs', $log, 'id', true);
+        self::log_webservice_call($log);
 
         // some hacks might need a cleanup hook
         $this->session_cleanup($ex);
@@ -1539,6 +1539,16 @@ abstract class WebserviceBaseServer extends WebserviceServer {
 
         // not much else we can do now, add some logging later
         exit(1);
+    }
+
+    /**
+     * Record an external_services_logs entry for a web service function call.
+     *
+     * @param object $log The log object to insert
+     * @return int The id of the new log entry.
+     */
+    public static function log_webservice_call($log) {
+        return insert_record('external_services_logs', $log, 'id', true);
     }
 
     /**
