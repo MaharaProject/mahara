@@ -6910,12 +6910,14 @@ languages.en = {
   /**
   * Text on Delete All buttons
   */
-  button_delete_all: 'All',
+  // button_delete_all: 'All',
+  button_delete_all: 'Delete all', // Mahara: button text for sighted people
 
   /**
   * Title on Delete All buttons
   */
-  button_delete_all_title: 'Delete All',
+  // button_delete_all_title: 'Delete All',
+  button_delete_all_title: 'Delete all {{0}}', // Mahara: button title text for non-sighted people
 
   /**
   * Text on Delete Last buttons
@@ -6933,17 +6935,28 @@ languages.en = {
   * Title on Add Row buttons
   * @variable This key takes one variable: The title of object to add
   */
-  button_add_row_title: 'Add {{0}}',
+  button_add_row_title: 'Add {{0}}', // button title text for non-sighted people
+  button_add_row_text: 'Add', // button text for sighted people
+  /** Title on Edit JSON buttons
+  * TODO: enable copy/paste of json into the form directly.
+  * The current functionality overwrites the form customisations and
+  * creates a new form, so we're keeping the upload page for now.
+  */
+  button_edit: 'Edit raw', // Mahara
 
   /**
   * Title on Move Down buttons
   */
-  button_move_down_title: 'Move down',
+  // button_move_down_title: 'Move down',
+  button_move_down: 'Move down', // Mahara: button text for sighted people
+  button_move_down_title: 'Move {{0}} down', // Mahara: button title text for non-sighted people
 
   /**
   * Title on Move Up buttons
   */
-  button_move_up_title: 'Move up',
+   // button_move_up_title: 'Move up',
+   button_move_up: 'Move up', // Mahara: button text for sighted people
+   button_move_up_title: 'Move {{0}} up', // Mahara: button title text for non-sighted people
 
   /**
   * Text on Object Properties buttons
@@ -6965,12 +6978,12 @@ languages.en = {
   * Title on Delete Row buttons
   * @variable This key takes one variable: The title of object to delete
   */
-  button_delete_row_title: 'Delete {{0}}',
+  button_delete_row_title: 'Delete {{0}}', // Mahara: button title text for non-sighted people
 
   /**
   * Title on Delete Row buttons, short version (no parameter with the object title)
   */
-  button_delete_row_title_short: 'Delete',
+  button_delete_row_title_short: 'Delete', // Mahara: button text for sighted people
 
   /**
   * Title on Copy Row buttons, short version (no parameter with the object title)
@@ -6980,17 +6993,20 @@ languages.en = {
   /**
   * Title on Collapse buttons
   */
-  button_collapse: 'Collapse',
+  button_collapse: 'Collapse', // Mahara: button text for sighted people
+  button_collapse_title: "Collapse {{0}}", // Mahara: button title text for non-sighted people
 
   /**
   * Title on Expand buttons
   */
-  button_expand: 'Expand',
+  button_expand: 'Expand', // Mahara: button text for sighted people
+  button_expand_title: "Expand {{0}}", // Mahara: button title text for non-sighted people
 
   /**
   * Title on Edit JSON buttons
   */
-  button_edit_json: 'Edit JSON',
+  // button_edit_json: 'Edit JSON'
+  button_edit_json: 'Edit raw', // Mahara
 
   /**
   * Text/Title on Upload buttons
@@ -7018,9 +7034,9 @@ languages.en = {
   default_array_item_title: 'item',
 
   /**
-  * Warning when deleting a node
+  * Message to display when deleting a standard element
   */
-  button_delete_node_warning: 'Are you sure you want to remove this node?'
+   remove_element_message: 'Are you sure you want to remove this node?'
 };
 /* Default per-editor options */
 
@@ -7048,6 +7064,11 @@ function translate(key, variables) {
   if (variables) {
     for (var i = 0; i < variables.length; i++) {
       string = string.replace(new RegExp("\\{\\{".concat(i, "}}"), 'g'), variables[i]);
+      // Mahara specific change - change button text to lc except first char.
+      string = string.toLowerCase();
+      string = string.charAt(0).toUpperCase() + string.slice(1);
+      string = string.replace(/smartevidence/i, 'SmartEvidence');
+      // Mahara change end ---
     }
   }
 
@@ -8341,7 +8362,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     key: "askConfirmation",
     value: function askConfirmation() {
       if (this.jsoneditor.options.prompt_before_delete === true) {
-        if (window.confirm(this.translate('button_delete_node_warning')) === false) {
+        // Mahara custom message
+        if (window.confirm(this.translate('remove_element_message')) === false) {
           return false;
         }
       }
@@ -8454,7 +8476,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     key: "build",
     value: function build() {
       if (!this.options.compact) {
-        this.header = document.createElement('label');
+        // this.header = document.createElement('label');
+        this.header = document.createElement('span'); // Mahara
         this.header.textContent = this.getTitle();
         this.title = this.theme.getHeader(this.header, this.getPathDepth());
         this.container.appendChild(this.title);
@@ -8477,7 +8500,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
 
         if (this.schema.format === 'tabs-top') {
           this.controls = this.theme.getHeaderButtonHolder();
-          this.title.appendChild(this.controls);
+          // Mahara: add controls after h3 tag, not inside
+          this.title.after(this.controls);
           this.tabs_holder = this.theme.getTopTabHolder(this.getValidId(this.getItemTitle()));
           this.container.appendChild(this.tabs_holder);
           this.row_holder = this.theme.getTopTabContentHolder(this.tabs_holder);
@@ -8620,7 +8644,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
 
       if (!ret.title_controls) {
         ret.array_controls = this.theme.getButtonHolder();
-        holder.appendChild(ret.array_controls);
+        // Mahara: add controls after title
+        holder.insertBefore(ret.array_controls, holder.children[1]);
       }
 
       return ret;
@@ -8786,7 +8811,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
       var controlsNeeded = [];
 
       if (!this.value.length) {
-        this.delete_last_row_button.style.display = 'none';
+        // Mahara: show the delete button
+        // this.delete_last_row_button.style.display = 'none';
         this.remove_all_rows_button.style.display = 'none';
       } else if (this.value.length === 1) {
         this.remove_all_rows_button.style.display = 'none';
@@ -8917,8 +8943,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     key: "_createDeleteButton",
     value: function _createDeleteButton(i, holder) {
       var _this8 = this;
-
-      var button = this.getButton(this.getItemTitle(), 'delete', 'button_delete_row_title', [this.getItemTitle()]);
+      // Mahara: custom button text
+      var button = this.getButton('button_delete_row_title_short', 'delete', 'button_delete_row_title', [this.getItemTitle()]);
       button.classList.add('delete', 'json-editor-btntype-delete');
       button.setAttribute('data-i', i);
       button.addEventListener('click', function (e) {
@@ -8997,7 +9023,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     value: function _createMoveUpButton(i, holder) {
       var _this10 = this;
 
-      var button = this.getButton('', this.schema.format === 'tabs-top' ? 'moveleft' : 'moveup', 'button_move_up_title');
+      // Mahara: custom button title
+      var button = this.getButton(this.translate('button_move_up'),this.schema.format === 'tabs-top' ? 'moveleft' : 'moveup',this.translate('button_move_up_title',[this.getItemTitle()]));
       button.classList.add('moveup', 'json-editor-btntype-move');
       button.setAttribute('data-i', i);
       button.addEventListener('click', function (e) {
@@ -9034,7 +9061,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     value: function _createMoveDownButton(i, holder) {
       var _this11 = this;
 
-      var button = this.getButton('', this.schema.format === 'tabs-top' ? 'moveright' : 'movedown', 'button_move_down_title');
+      // Mahara: custom button text
+      var button = this.getButton(this.translate('button_move_down'),this.schema.format === 'tabs-top' ? 'moveright' : 'movedown',this.translate('button_move_down_title', [this.getItemTitle()]));
       button.classList.add('movedown', 'json-editor-btntype-move');
       button.setAttribute('data-i', i);
       button.addEventListener('click', function (e) {
@@ -9102,9 +9130,13 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     value: function _createToggleButton() {
       var _this12 = this;
 
-      var button = this.getButton('', 'collapse', 'button_collapse');
+      // Mahara: custom button text
+      var button = this.getButton(_this12.translate('button_collapse'),'collapse',this.translate('button_collapse_title',[_this12.getTitle()]));
       button.classList.add('json-editor-btntype-toggle');
-      this.title.insertBefore(button, this.title.childNodes[0]);
+      // Mahara: accessibility
+      button.setAttribute('aria-expanded', 'true'); // Mahara
+      button.removeAttribute('title'); // Mahara
+      this.title.after(button); // Mahara
       var rowHolderDisplay = this.row_holder.style.display;
       var controlsDisplay = this.controls.style.display;
       button.addEventListener('click', function (e) {
@@ -9114,17 +9146,17 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
         if (_this12.tabs_holder) _this12.setVisibility(_this12.tabs_holder, _this12.collapsed);
 
         if (_this12.collapsed) {
+          _this12.toggle_button.setAttribute('aria-expanded', 'true'); // Mahara
           _this12.collapsed = false;
           _this12.row_holder.style.display = rowHolderDisplay;
           _this12.controls.style.display = controlsDisplay;
-
-          _this12.setButtonText(e.currentTarget, '', 'collapse', 'button_collapse');
+          _this12.setButtonText(this,_this12.translate('button_collapse'),'collapse',_this12.translate('button_collapse_title',[_this12.getTitle()])); // Mahara
         } else {
+          _this12.toggle_button.setAttribute('aria-expanded', 'false'); // Mahara
           _this12.collapsed = true;
           _this12.row_holder.style.display = 'none';
           _this12.controls.style.display = 'none';
-
-          _this12.setButtonText(e.currentTarget, '', 'expand', 'button_expand');
+          _this12.setButtonText(this,_this12.translate('button_expand'),'expand',_this12.translate('button_expand_title',[_this12.getTitle()])); // Mahara
         }
       });
       return button;
@@ -9133,8 +9165,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     key: "_createAddRowButton",
     value: function _createAddRowButton() {
       var _this13 = this;
-
-      var button = this.getButton(this.getItemTitle(), 'add', 'button_add_row_title', [this.getItemTitle()]);
+      // Mahara: custom button text
+      var button = this.getButton(this.translate('button_add_row_text'),'add',this.translate('button_add_row_title',[this.getItemTitle()]));
       button.classList.add('json-editor-btntype-add');
       button.addEventListener('click', function (e) {
         e.preventDefault();
@@ -9211,8 +9243,8 @@ var ArrayEditor = /*#__PURE__*/function (_AbstractEditor) {
     key: "_createRemoveAllRowsButton",
     value: function _createRemoveAllRowsButton() {
       var _this15 = this;
-
-      var button = this.getButton('button_delete_all', 'delete', 'button_delete_all_title');
+      // Mahara: custom button text
+      var button = this.getButton(this.translate('button_delete_all'),'delete',this.translate('button_delete_all_title',[this.getItemTitle()]));
       button.classList.add('json-editor-btntype-deleteall');
       button.addEventListener('click', function (e) {
         e.preventDefault();
@@ -15089,7 +15121,7 @@ var ObjectEditor = /*#__PURE__*/function (_AbstractEditor) {
       });
     }
   }, {
-    key: "build",
+    key: "build", // Includes Mahara customisations, look for '// Mahara'
     value: function build() {
       var _this7 = this;
 
@@ -15131,16 +15163,17 @@ var ObjectEditor = /*#__PURE__*/function (_AbstractEditor) {
         this.header = '';
 
         if (!this.options.compact) {
-          this.header = document.createElement('label');
+          // this.header = document.createElement('label');
+          this.header = document.createElement('span');
           this.header.textContent = this.getTitle();
         }
-
         this.title = this.theme.getHeader(this.header, this.getPathDepth());
         this.title.classList.add('je-object__title');
+
         this.controls = this.theme.getButtonHolder();
         this.controls.classList.add('je-object__controls');
         this.container.appendChild(this.title);
-        this.container.appendChild(this.controls);
+        // this.container.appendChild(this.controls); // Mahara
         this.container.classList.add('je-object__container');
         /* Edit JSON modal */
 
@@ -15305,23 +15338,28 @@ var ObjectEditor = /*#__PURE__*/function (_AbstractEditor) {
 
 
         this.collapsed = false;
-        this.collapse_control = this.getButton('', 'collapse', 'button_collapse');
+        // Mahara custom
+        this.collapse_control = this.getButton(this.translate('button_collapse'), 'collapse', this.translate('button_collapse_title',[_this7.getTitle()]));
         this.collapse_control.classList.add('json-editor-btntype-toggle');
-        this.title.insertBefore(this.collapse_control, this.title.childNodes[0]);
+        this.collapse_control.setAttribute('aria-expanded', 'true'); // Mahara
+        this.collapse_control.removeAttribute('title'); // Mahara
+        this.title.after(this.collapse_control); // Mahara
         this.collapse_control.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
 
           if (_this7.collapsed) {
+            _this7.collapse_control.setAttribute('aria-expanded', 'true'); // Mahara
             _this7.editor_holder.style.display = '';
             _this7.collapsed = false;
 
-            _this7.setButtonText(_this7.collapse_control, '', 'collapse', 'button_collapse');
+            _this7.setButtonText(this,_this7.translate('button_collapse'),'collapse',_this7.translate('button_collapse_title',[_this7.getTitle()]));;
           } else {
+            _this7.collapse_control.setAttribute('aria-expanded', 'false'); // Mahara
             _this7.editor_holder.style.display = 'none';
             _this7.collapsed = true;
 
-            _this7.setButtonText(_this7.collapse_control, '', 'expand', 'button_expand');
+            _this7.setButtonText(this,_this7.translate('button_expand'),'expand',_this7.translate('button_expand_title',[_this7.getTitle()])); // Mahara
           }
         });
         /* If it should start collapsed */
@@ -15338,9 +15376,11 @@ var ObjectEditor = /*#__PURE__*/function (_AbstractEditor) {
           this.collapse_control.style.display = 'none';
         }
         /* Edit JSON Button */
+        // Mahara specific change - make translatable - or add ability to change title on button.
 
+        // this.editjson_control = this.getButton('JSON', 'edit', 'button_edit_json'); // original
+        this.editjson_control = this.getButton('', 'edit', this.translate('button_edit_json')); // Mahara
 
-        this.editjson_control = this.getButton('JSON', 'edit', 'button_edit_json');
         this.editjson_control.classList.add('json-editor-btntype-editjson');
         this.editjson_control.addEventListener('click', function (e) {
           e.preventDefault();
@@ -15433,7 +15473,7 @@ var ObjectEditor = /*#__PURE__*/function (_AbstractEditor) {
 
       this.disable();
       this.editjson_holder.style.display = '';
-      this.editjson_control.disabled = false;
+      this.editjson_control.disabled = false; // Mahara customisation - edit json button
       this.editing_json = true;
     }
   }, {
@@ -16696,6 +16736,17 @@ var SelectEditor = /*#__PURE__*/function (_AbstractEditor) {
       window.requestAnimationFrame(function () {
         if (_this2.input.parentNode) _this2.afterInputReady();
       });
+    }
+  }, {
+    // Mahara customisation: this postBuild method has been added here as a work around for upgrading from 1.3.5 to 2.6.1. It overrides the default postBuild function for the select dropdowns.
+    key: "postBuild",
+    value: function postBuild() {
+      // this.setupWatchListeners();
+      this.addLinks();
+      this.setValue(this.getDefault(), true);
+      this.updateHeaderText();
+      this.register();
+      // this.onWatchedFieldChange();
     }
   }, {
     key: "afterInputReady",
@@ -18985,7 +19036,8 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
       this.width = tmp.getNumColumns() + 2;
 
       if (!this.options.compact) {
-        this.header = document.createElement('label');
+        // this.header = document.createElement('label');
+        this.header = document.createElement('span');
         this.header.textContent = this.getTitle();
         this.title = this.theme.getHeader(this.header, this.getPathDepth());
         this.container.appendChild(this.title);
@@ -18996,7 +19048,8 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
         }
 
         this.title_controls = this.theme.getHeaderButtonHolder();
-        this.title.appendChild(this.title_controls);
+        // this.title.appendChild(this.title_controls);
+        this.title.after(this.title_controls); // Mahara
 
         if (this.schema.description) {
           this.description = this.theme.getDescription(this.translateProperty(this.schema.description));
@@ -19094,7 +19147,7 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
         ret.controls_cell = row.appendChild(this.theme.getTableCell());
         ret.row = row;
         ret.table_controls = this.theme.getButtonHolder();
-        ret.controls_cell.appendChild(ret.table_controls);
+        // ret.controls_cell.appendChild(ret.table_controls); // Mahara
         ret.table_controls.style.margin = 0;
         ret.table_controls.style.padding = 0;
       }
@@ -19286,11 +19339,11 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
       if (typeof value !== 'undefined') this.rows[i].setValue(value);
     }
   }, {
-    key: "_createDeleteButton",
+    key: "_createDeleteButton", // Includes Mahara customisations
     value: function _createDeleteButton(i, holder) {
       var _this4 = this;
-
-      var button = this.getButton('', 'delete', 'button_delete_row_title_short');
+      // var button = this.getButton('', 'delete', 'button_delete_row_title_short');
+      var button = this.getButton(this.translate('button_delete_row_title_short'),'delete',this.translate('button_delete_row_title', [this.getItemTitle()])); // Mahara
       button.classList.add('delete', 'json-editor-btntype-delete');
       button.setAttribute('data-i', i);
       button.addEventListener('click', function (e) {
@@ -19343,11 +19396,11 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
       return button;
     }
   }, {
-    key: "_createMoveUpButton",
+    key: "_createMoveUpButton", // TableEditor
     value: function _createMoveUpButton(i, holder) {
       var _this6 = this;
-
-      var button = this.getButton('', 'moveup', 'button_move_up_title');
+      // var button = this.getButton('', 'moveup', 'button_move_up_title');
+      var button = this.getButton(this.translate('button_move_up'),'moveup',this.translate('button_move_up_title',[this.getItemTitle()])); // Mahara
       button.classList.add('moveup', 'json-editor-btntype-move');
       button.setAttribute('data-i', i);
       button.addEventListener('click', function (e) {
@@ -19369,11 +19422,11 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
       return button;
     }
   }, {
-    key: "_createMoveDownButton",
+    key: "_createMoveDownButton", // TableEditor
     value: function _createMoveDownButton(i, holder) {
       var _this7 = this;
-
-      var button = this.getButton('', 'movedown', 'button_move_down_title');
+      // var button = this.getButton('', 'movedown', 'button_move_down_title');
+      var button = this.getButton(this.translate('button_move_down'),'movedown',this.translate('button_move_down_title', [this.getItemTitle()])); // Mahara
       button.classList.add('movedown', 'json-editor-btntype-move');
       button.setAttribute('data-i', i);
       button.addEventListener('click', function (e) {
@@ -19398,12 +19451,12 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
     key: "addControls",
     value: function addControls() {
       var _this8 = this;
-
       this.collapsed = false;
       this.toggle_button = this._createToggleButton();
 
       if (this.title_controls) {
-        this.title.insertBefore(this.toggle_button, this.title.childNodes[0]);
+        // this.title.insertBefore(this.toggle_button, this.title.childNodes[0]);
+        this.title.after(this.toggle_button); // Mahara
         this.toggle_button.addEventListener('click', function (e) {
           e.preventDefault();
           e.stopPropagation();
@@ -19412,12 +19465,14 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
 
           if (_this8.collapsed) {
             _this8.collapsed = false;
-
-            _this8.setButtonText(e.currentTarget, '', 'collapse', 'button_collapse');
+            _this8.toggle_button.setAttribute('aria-expanded', 'true'); // Mahara
+            // _this8.setButtonText(e.currentTarget, '', 'collapse', 'button_collapse');
+            _this8.setButtonText(this,_this8.translate('button_collapse'),'collapse',_this8.translate('button_collapse_title',[_this8.getTitle()])); // Mahara
           } else {
             _this8.collapsed = true;
-
-            _this8.setButtonText(e.currentTarget, '', 'expand', 'button_expand');
+            _this8.toggle_button.setAttribute('aria-expanded', 'false'); // Mahara
+            // _this8.setButtonText(e.currentTarget, '', 'expand', 'button_expand');
+            _this8.setButtonText(this,_this8.translate('button_expand'),'expand',_this8.translate('button_expand_title',[_this8.getTitle()])); // Mahara
           }
         });
         /* If it should start collapsed */
@@ -19446,14 +19501,16 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
     value: function _createToggleButton() {
       var button = this.getButton('', 'collapse', 'button_collapse');
       button.classList.add('json-editor-btntype-toggle');
+      button.setAttribute('aria-expanded', 'true'); // Mahara
+      button.removeAttribute('title'); // Mahara
       return button;
     }
   }, {
     key: "_createAddRowButton",
     value: function _createAddRowButton() {
       var _this9 = this;
-
-      var button = this.getButton(this.getItemTitle(), 'add', 'button_add_row_title', [this.getItemTitle()]);
+      // var button = this.getButton(this.getItemTitle(), 'add', 'button_add_row_title', [this.getItemTitle()]);
+      var button = this.getButton(this.translate('button_add_row_text'),'add',this.translate('button_add_row_title',[this.getItemTitle()])); // Mahara
       button.classList.add('json-editor-btntype-add');
       button.addEventListener('click', function (e) {
         e.preventDefault();
@@ -19504,8 +19561,8 @@ var TableEditor = /*#__PURE__*/function (_ArrayEditor) {
     key: "_createRemoveAllRowsButton",
     value: function _createRemoveAllRowsButton() {
       var _this11 = this;
-
-      var button = this.getButton('button_delete_all', 'delete', 'button_delete_all_title');
+      // var button = this.getButton('button_delete_all', 'delete', 'button_delete_all_title');
+      var button = this.getButton(this.translate('button_delete_all'),'delete',this.translate('button_delete_all_title',[this.getHeaderText()])); // Mahara
       button.classList.add('json-editor-btntype-deleteall');
       button.addEventListener('click', function (e) {
         e.preventDefault();
@@ -20602,7 +20659,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
-var iconPrefix = 'fa fa-';
+var iconPrefix = 'fa icon-'; // Mahara uses icon- instead of fa-
 var mapping = {
   collapse: 'caret-square-o-down',
   expand: 'caret-square-o-right',
@@ -20702,7 +20759,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 
-var iconPrefix = 'fas fa-';
+var iconPrefix = 'fas icon-'; // Mahara uses icon- instead of fa-
 var mapping = {
   collapse: 'caret-down',
   expand: 'caret-right',
@@ -22053,7 +22110,7 @@ var defaultTemplate = function defaultTemplate() {
           r = replacements[i];
           ret = ret.replace(r.s, r.r(vars));
         }
-
+        ret = ret.replace(/undefined\./gi, ''); // Mahara
         return ret;
       };
     }
@@ -22777,6 +22834,7 @@ var AbstractTheme = /*#__PURE__*/function () {
   }, {
     key: "setButtonText",
     value: function setButtonText(button, text, icon, title) {
+      button.setAttribute('aria-label', title); // Mahara
       /* Clear previous contents. https://jsperf.com/innerhtml-vs-removechild/37 */
       while (button.firstChild) {
         button.removeChild(button.firstChild);
@@ -22793,7 +22851,8 @@ var AbstractTheme = /*#__PURE__*/function () {
         button.appendChild(spanEl);
       }
 
-      if (title) button.setAttribute('title', title);
+      // if (title) button.setAttribute('title', title); // Mahara
+
     }
     /* Table functions */
 
@@ -24252,7 +24311,7 @@ var bootstrap4Theme = /*#__PURE__*/function (_AbstractTheme) {
     key: "getFormInputDescription",
     value: function getFormInputDescription(text) {
       var el = document.createElement('small');
-      el.classList.add('form-text');
+      el.classList.add('form-text', 'description'); // Mahara
 
       if (window.DOMPurify) {
         el.innerHTML = window.DOMPurify.sanitize(text);
@@ -24278,6 +24337,7 @@ var bootstrap4Theme = /*#__PURE__*/function (_AbstractTheme) {
         el.appendChild(text);
       }
 
+      el.setAttribute('style', 'margin-right: 10px;'); // Mahara
       el.style.display = 'inline-block';
       /* cardHeader.appendChild(el) */
 

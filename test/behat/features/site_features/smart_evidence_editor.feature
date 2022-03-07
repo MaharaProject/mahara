@@ -21,7 +21,6 @@ Scenario: Site administrator uploads and edits a SmartEvidence framework matrix
     And I click on "Save"
     Then I should see "Settings saved"
     When I click on "Editor" in the "Arrow-bar nav" "Nav" property
-    Then I should see "The current form contents are valid and ok to submit"
     When I select "Title of your framework" from "Edit saved framework"
     And I wait "1" seconds
     And the SE field "root.name" should contain "Title of your framework"
@@ -35,7 +34,7 @@ Scenario: Site administrator uploads and edits a SmartEvidence framework matrix
     And the SE field "root.description" should contain "You can write more in the description"
     And I set the SE field "root.description" to "This is my new description"
     And the SE field "root.selfassess" should contain "No"
-    And I click on "Add" in the "h2:contains('Standards') + div + div" "css_element"
+    And I click on "Add" in the "h3:contains('Standards') + button + span" "css_element"
     And the SE field "root.standards.4.shortname" should contain "Short name"
     And I set the SE field "root.standards.4.shortname" to "New standard"
     # Not working yet

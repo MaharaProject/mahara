@@ -13,28 +13,6 @@ jsoneditor.js.map in it.
 It's not in the github repo for some reason, but can be found here:
 https://cdnjs.com/libraries/json-editor
 
-Changes:
-
-Removed .github, tests and docs folders; Gruntfile.js, package.json,
-package-lock.json, .gitattributes, .gitignore, npmignore, .npmrc and travis.yml
-
-And removed following directories and files since they are included in jsoneditor.js
-editors/
-iconlibs/
-styles/
-templates/
-themes/
-class.js
-core.js
-defaults.js
-editor.js
-iconlib.js
-intro.js
-jquery.js
-outro.js
-theme.js
-utilities.js
-validator.js
 
 Customisations: 9aba1681dad74a10e61c07d3e0a60d3ad18e98e1
 To allow changing of the text on the Edit JSON button:
@@ -86,9 +64,11 @@ Added a check for the word 'SmartEvidence' to capitalise part way through string
         }
       }
 
-* Customized alert message in  askConfirmation function
+* Customized alert message in askConfirmation function
 js/jsoneditor/src/dist/jsoneditor.js line 4028 (b8d26c1fe073b7dc4c0f9f7c8ea8489308b879b8)
 
+
+Changes from Ib273c972fdd2f607eede0e097e69f6f409d5e8c0:
 * Included specific titles in collapse/expand buttons to indicate which section would be collapsed/expanded, by including [self.getTitle()] for each string instance. This is passed to the button function and set as an aria-label for screenreaders.
 
 * Included aria-expanded state for expand/collapsed buttons e.g. line 3583
@@ -102,3 +82,11 @@ js/jsoneditor/src/dist/jsoneditor.js line 4028 (b8d26c1fe073b7dc4c0f9f7c8ea84893
 * Added level parameter to getHeader function on line 7807 to allow us to select h1-6
 
 * Applied minor styling as a fix for DOM structural changes e.g. 4182, 4188, 3586
+
+
+Doris's patch from last upgrade: https://reviews.mahara.org/#/c/11591/9/htdocs/js/jsoneditor/src/dist/jsoneditor.js
+
+* Customisations from upgrade to 2.6.1: Change-Id: I62b921d3bcde0d3bfe8c0d01e05a5a601932677e
+  - Replaced removed postBuild function for select editor
+  - Adjusted button titles/aria labels
+  - Adjusted html for accessibility
