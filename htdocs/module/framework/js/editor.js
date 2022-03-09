@@ -1206,8 +1206,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_element_button_handlers() {
-        $('[data-schemaid="standardelement"] > div > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standardelement"] > div > div > button.json-editor-btn-delete').on('click', function() {
+        $('[data-schemaid="standardelement"] > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standardelement"] > div > button.json-editor-btn-delete').on('click', function() {
             var el_id = 0,
             parent_array_temp = parent_array;
 
