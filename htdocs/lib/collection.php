@@ -1283,7 +1283,7 @@ class Collection {
             $cv['displayorder'] = 0;
             insert_record('collection_view', (object)$cv);
             if (!empty($this->views())) {
-                $this->add_views(array($view->get('id')));
+                $this->add_views(array($view->get('id')), 1);
             }
         }
     }
@@ -1419,9 +1419,10 @@ class Collection {
      * Submits the selected views to the collection
      *
      * @param array values selected views
+     * @param integer index to base the first view off
      * @return integer count so we know what SESSION message to display
      */
-    public function add_views($values) {
+    public function add_views($values, $index=0) {
         require_once(get_config('libroot') . 'view.php');
 
         $count = 0; // how many views we are adding
@@ -1451,7 +1452,7 @@ class Collection {
 
         // Copy the whole view config from the first view to all the others
         if (count($viewids)) {
-            $firstview = new View($viewids[0]);
+            $firstview = new View($viewids[$index]);
             $viewconfig = array(
                 'startdate'       => $firstview->get('startdate'),
                 'stopdate'        => $firstview->get('stopdate'),
