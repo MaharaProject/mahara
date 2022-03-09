@@ -2,7 +2,7 @@ PDF.js in Mahara
 ==================
 
 Website: http://mozilla.github.io/pdf.js/getting_started/#download
-Version: 2.9.359
+Version: 2.13.216
 License: Apache License 2.0
 
 PDF.js is used in the Mahara to provide a javascript library for
@@ -39,22 +39,16 @@ viewing PDF file
 4. Copy and rename it to pdf.min.js
 5. Copy the new files in `build/minified/` to go in our version on the pdfjs/ directory
 
-**Checks** and file renames
+**Checks**:
 
-1. Make sure you can open and see a PDF via browser
+Make sure you can open and see a PDF via browser
     {WWWROOT}/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
-2. Update the template file htdocs/theme/raw/plugintype/artefact/file/blocktype/pdf/templates/pdf.tpl
-    based on htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
-    and htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
-
-3. Change the path of pdf.js to pdf.min.js
-    In htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html
-4. Change the path of pdf.worker.js to pdf.worker.min.js
-    In htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
 
 **Changes**:
-
+- Update our template file htdocs/theme/raw/plugintype/artefact/file/blocktype/pdf/templates/pdf.tpl
+based on the updated htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.html file
 - Add i18n to pdfjs matching current site lang
 (6ed9230e287ca4915cb52e92391750adbc1ec4d0)
 - Hide 'upload file' in the toolbar to avoid confusion of blocktype purpose
 (b315e71ff5a39f22573c1c53e68bf8e63f1250c3)
+- make paths to pdfjs directories in pdf.viewer.js absolute (I2a5eb907c8aa38799e2a40ae875efbace47cee59)
