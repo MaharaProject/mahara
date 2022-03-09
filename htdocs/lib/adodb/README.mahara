@@ -7,13 +7,14 @@ Version: 5.21.1
 
 Modifications:
 
-- RecordSet_postgres7->MoveNext() - remove expensive is_array() (04ef8a3b9770f93326a2ece31e4089368117faca)
-- Allow check for $okversion of Postgres or MySql: Minimum working version values should be in updated in Mahara's README.md file and in init.php
-- Check for valid columns in adodb postgres64 driver MetaIndexes fn (b87d9961020a8d52a2eaf709a9197520b3c6b65b)
+- Allow check for $okversion of Postgres or MySql: Minimum working version values should be updated in Mahara's README.md file and in init.php
+    -- if ADODB changes what min version it can work with we need to update the init.php file and the htdocs/README.md file 
+
 - Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed. (f9818ff606bbe6ec00b34eab23d1743870407b48)
-- Bug 1619036: Fix a bug when determine if an array is associative (606317195f8f3a8cdf9bc448c537b8c3708d75d7)
-- escaping names when showing table / index in adodb-mysqli.inc.php(08939ca25acddff39b132e4bd823668b98447947)
-- The lastest version comes with a Load balancer class and a tuning class which we don't use yet so they are not put in.
+See here for changes:
+https://reviews.mahara.org/#/c/7531/4/htdocs/lib/adodb/adodb-pager.inc.php
+
+- The latest version comes with a Load balancer class and a tuning class which we don't use yet so they are not put in.
 
 - Deleted many files/folders we're not using:
   - Removed files
