@@ -61,6 +61,10 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         return true;
     }
 
+    public static function default_copy_type(BlockInstance $instance, View $view) {
+        return 'fullinclself';
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER;
 
