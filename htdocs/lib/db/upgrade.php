@@ -2443,5 +2443,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022032200) {
+        log_debug("Make sure groups associated with LTI assessment have 'submittableto' set to true");
+        execute_sql("
+            UPDATE {group} SET submittableto = 1 WHERE id IN (
+                SELECT g1.id FROM {lti_assessment} l
+                JOIN {group} g1 ON g1.id = l.group
+                WHERE g1.submittableto = 0
+            )");
+    }
+
     return $status;
 }
