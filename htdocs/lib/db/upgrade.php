@@ -2280,5 +2280,20 @@ function xmldb_core_upgrade($oldversion=0) {
              array('"verify";b:1', '"verify";b:0'));
     }
 
+    if ($oldversion < 2020092126) {
+        log_debug("Fix up signoff blocks that are missing their db entry");
+        if ($results = get_records_sql_array("
+                SELECT DISTINCT(v.id) FROM {view} v
+                JOIN {block_instance} bi ON bi.view = v.id
+                LEFT JOIN {view_signoff_verify} vsv ON vsv.view = v.id
+                WHERE bi.blocktype = ?
+                AND vsv.view IS NULL", array('signoff')
+            )) {
+            foreach ($results as $result) {
+                ensure_record_exists('view_signoff_verify', (object) array('view' => $result->id), (object) array('view' => $result->id), 'id', true);
+            }
+        }
+    }
+
     return $status;
 }
