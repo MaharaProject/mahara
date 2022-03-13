@@ -243,7 +243,7 @@ function get_changes($token) {
                     if ($suspenduserid = get_field('usr', 'id', 'username', $person->personid)) {
                         if (!get_field('usr', 'suspendedctime', 'id', $suspenduserid)) {
                             // Not currently suspended so suspend them
-                            set_apc_status($person->personid, null);
+                            set_apc_status($suspenduserid, null);
                             // PCNZ Customisation WR356091
                             suspend_user($suspenduserid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
                             unset($people[$person->personid]);
