@@ -256,6 +256,8 @@ function get_changes($token) {
                     // We don't fetch personal info on these users but
                     // just make sure they are expired on our end too if they exist here
                     if ($expireuserid = get_field('usr', 'id', 'username', $person->personid)) {
+                        // As they are not available anymore we need to make sure they are deactivated
+                        execute_sql('UPDATE {usr} SET active = 0, inactivemailsent = 1 WHERE id = ?', array($expireuserid));
                         if (!get_field('usr', 'expiry', 'id', $expireuserid)) {
                             // Not currently expired so expire them, but don't alert them
                             $now = db_format_timestamp(time());
