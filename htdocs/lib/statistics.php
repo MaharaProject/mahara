@@ -1019,12 +1019,17 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
                 break;
             case 1:
             case 4:
-            case 9:
-            case 10:
-            case 11:
-                // All other statuses will be treated as suspended in Mahara
-                // As they've gone from registered to not registered
+                // Treat as suspended
                 $item->registrationstatus = get_string('registeredsuspended', 'admin');
+                break;
+            case 9:
+                $item->registrationstatus = get_string('registeredremoved', 'admin');
+                break;
+            case 10:
+                $item->registrationstatus = get_string('registeredstruckoff', 'admin');
+                break;
+            case 11:
+                $item->registrationstatus = get_string('registeredremoverequest', 'admin');
                 break;
             default:
                 // Internal account
