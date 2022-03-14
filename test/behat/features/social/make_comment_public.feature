@@ -11,6 +11,10 @@ Background:
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | user |
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | user |
 
+  And the following "groups" exist:
+   | name              | owner   | grouptype | editroles | members                |
+   | Vege Kingdom      | UserA | standard  | all       | UserB    |
+
   And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01| user | UserA |

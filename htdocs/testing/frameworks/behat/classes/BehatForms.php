@@ -280,6 +280,46 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Step to select from a previously hidden user search box where the result options
+     * are located below the <footer> element
+     * To be used when selecting a person who is a member of an existing institution.
+     *
+     * @When I select :user from select2 hidden search box in row number :row_num
+     * @param string $user
+     * @param int $row_num
+     */
+    public function select_from_hidden_search_box($user, $row_num) {
+        $row_num = $row_num -1;
+        // create xpath for correct search box
+        $search_xpath = "//*[@id=\"select2-hidden-user-search-$row_num-container\"]";
+        $this->i_click_on_element($search_xpath, 'xpath_element');
+        // create xpath for the user being searched for in the options located below <footer>
+        $user_xpath = "//*[@id[starts-with(., 'select2-hidden-user-search')]]/li/ul/li/div[contains(text(), \"$user\")]";
+        $this->i_click_on_element($user_xpath, 'xpath_element');
+    }
+
+    /**
+     * Step to select from a list of group options when sharing with a group
+     * Needed when selecting more than one option for sharing
+     *
+     * @When I select :group from select2 group search box in row number :row_num
+     * @param string $group
+     * @param int $row_num
+     */
+    public function select_from_group_search_box($group, $row_num) {
+        $row_num = $row_num -1;
+        // create xpath for correct search box
+        $search_xpath = "//*[@id=\"select2-hidden-user-search-$row_num-container\"]";
+        $this->i_click_on_element($search_xpath, 'xpath_element');
+        // create xpath for the group being searched for in the options
+        $group_xpath = "//*[@id[starts-with(., 'select2-hidden-user-search')]]/li[contains(text(), \"$group\")]";
+        $this->i_click_on_element($group_xpath, 'xpath_element');
+    }
+
+
+
+
+    /**
      * Select value in choice list
      *
      * @param DocumentElement $page

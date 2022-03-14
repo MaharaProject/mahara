@@ -815,6 +815,35 @@ EOF;
     }
 
     /**
+     * Check if text exists at particular matrix point
+     *
+     * @Then I should see :text at matrix point :matrix_point
+     * @param string $text
+     * @param string $matrix_point a column,row value
+     * @throws ExpectationException
+     * @throws Exception
+     */
+    public function i_should_see_text_at_matrix_point($text, $matrix_point) {
+        // Check that we have a valid matrix point
+        $point = explode(',', $matrix_point);
+        if (empty($point[0]) || empty($point[1]) ||
+            !is_numeric($point[0]) || !is_numeric($point[1])) {
+            throw new ExpectationException('"' . $matrix_point . '" is not valid. Needs to be like "3,5"', $this->getSession());
+        }
+
+        $element = $this->getSession()->getPage()->find(
+            'xpath',
+            '//table/tbody/tr[' . $point[1] . ']/td[' . $point[0] . ']');
+
+        if ($element->getText() != $text) {
+            throw new Exception($text . ' was not found at matrix point ' . $point[0] . ',' . $point[1]);
+        }
+
+        $this->should_be_visible('//table/tbody/tr[' . $point[1] . ']/td[' . $point[0] . ']', 'xpath_element');
+
+    }
+
+    /**
      * Click a matrix point by being given a column,row pair
      *
      * @When I click on the matrix point :matrix_point
