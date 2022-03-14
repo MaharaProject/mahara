@@ -79,7 +79,7 @@ Scenario: Create people by csv (Bug 1426983)
   And I should see "Accounts updated: 20."
   And I log out
   # Check that we update the fields, password change and email received
-  Given I log in as "user0005" with password "cH@ngeme3"
+  Given I log in as "person0005" with password "cH@ngeme3"
   And I should see "You are required to change your password before you can proceed."
   And I fill in "New password" with "dr@Gon123"
   And I fill in "Confirm password" with "dr@Gon123"
@@ -92,13 +92,13 @@ Scenario: Create people by csv (Bug 1426983)
   And the "Mobile phone" field should contain "0491 570 110"
   And I scroll to the center of id "profileform"
   And I follow "General"
-  And the "Occupation" field should contain "Hairdresser"
+  And the "Occupation" field should contain "Minister for Māori Development"
   And I log out
   # Login back as admin
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "People search" in "People" from administration menu
   # Check that we can delete an account after upload (Bug #1558864)
-  And I follow "user0005"
+  And I follow "person0005"
   And I follow "Suspend or delete this account"
   And I scroll to the id "delete"
   And I press and confirm "Delete account"
