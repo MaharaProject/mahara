@@ -1004,7 +1004,7 @@ class User {
             $instobj->altname = 'sitedefault';
             $this->set('institutiontheme', $instobj);
         }
-        return $this->institutiontheme;
+        return $this->get('institutiontheme');
     }
 
     public function get_roletypes() {
