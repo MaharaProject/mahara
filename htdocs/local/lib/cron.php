@@ -490,8 +490,8 @@ function process_changes($changes) {
             log_debug($e->getMessage());
             $oldapcstatus = false;
             // Create new user if they have the status 'Registered current' or 'Registered inactive'
-            if ($person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT ||
-                    $person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDINACTIVE) {
+            if (isset($person['personalinfo']->practitioner) && ($person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT ||
+                    $person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDINACTIVE)) {
                 safe_require('auth', 'internal');
                 $temp_password = AuthInternal::get_temp_password();
                 $new_user = new stdClass();
@@ -536,8 +536,11 @@ function process_changes($changes) {
                 set_active_status($user->get('id'), $person['personalinfo']->practitioner->practicingstatusid);
                 log_debug('Creating user with internal ID: ' . $user->get('id') . ' and external ID: ' . $user->get('username') . ' done');
             }
-            else {
+            else if (isset($person['personalinfo']->practitioner)) {
                 log_debug('Not creating user with external ID: ' . $user->get('username') . ' because status is ' . $person['personalinfo']->practitioner->practicingstatusid);
+            }
+            else {
+                log_debug('Not creating user with external ID: ' . $user->get('username') . ' because there is no practitioner details');
             }
         }
         // Do post create / update stuff
