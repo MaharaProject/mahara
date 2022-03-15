@@ -894,6 +894,8 @@ class Skin {
      * @return array
      */
     private static function imagebackgroundfillalign($dst_w, $dst_h, $tile_w, $tile_h, $align_fill) {
+        $tilepositionx = -1;
+        $tilepositiony = -1;
         switch ($align_fill) {
             case Skin::BACKGROUND_POS_LEFT_TOP:
                 $tilepositionx = 0;

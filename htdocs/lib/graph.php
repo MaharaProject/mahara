@@ -97,6 +97,7 @@ function get_bar_graph_json($data, $colours = null, $cron = false) {
         json_reply(false, array('data' => $data));
     }
     $data['colours'] = get_graph_colours($data, $colours);
+    $dataobj = array();
     $graphdata = array();
     $x = 0;
     $graphdata['labels'] = $data['labels'];

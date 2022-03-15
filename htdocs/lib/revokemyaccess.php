@@ -99,7 +99,7 @@ function revokemyaccess_form_submit(Pieform $form, $values) {
     $collection = $viewobj->get_collection();
     $owner = $viewobj->get_owner_object();
     if ($collection && $viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'))) {
-        if (!empty($viewids)) {
+        if ($viewids) {
             // The code will never reach this point unless at least one view exists. So it is safe.
             $insql = implode(",", $viewids);
             delete_records_sql("DELETE FROM {view_access} WHERE view IN (" . $insql . ") AND usr = ?", array($USER->id));

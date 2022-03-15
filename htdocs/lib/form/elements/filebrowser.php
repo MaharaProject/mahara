@@ -83,6 +83,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     }
 
     $config = array_map('intval', $element['config']);
+    $selectedliststr = '';
 
     if ($group && $config['edit']) {
         $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
@@ -927,9 +928,13 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
         $groups = group_get_user_groups($USER->get('id'));
         $ownerid = $groups[0]->id;
     }
-    $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
-    $institution      = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
-    $group            = !empty($element['group']) ? $element['group'] : $form->get_property('group');
+    $parentfolder = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
+    $institution = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
+    $group       = !empty($element['group']) ? $element['group'] : $form->get_property('group');
+    $license     = '';
+    $licensor    = '';
+    $licensorurl = '';
+
     // If allowed upload form on group tab + user tab
     $uploadplaces = !empty($element['config']['uploadplaces']) ? $element['config']['uploadplaces'] : array();
     if (empty($group) && $owner == 'group' && !empty($ownerid) && in_array('group', $uploadplaces)) {

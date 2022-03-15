@@ -317,7 +317,7 @@ function count_records_sql($sql, array $values=null) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @param string $fields Which fields to return (default '*')
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return mixed a fieldset object containing the first mathcing record, or false if none found.
@@ -337,7 +337,7 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  *
  * @param string $sql The SQL string you wish to be executed, should normally only return one record.
  * @param array $values When using prepared statements, this is the value array (optional).
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return Found record as object. False if not found
@@ -379,7 +379,7 @@ function get_record_sql($sql, array $values=null, $strictness=WARN_MULTIPLE) {
             case WARN_MULTIPLE:
                 log_debug($msg);
                 break;
-            case IGNORE_MULITPLE:
+            case IGNORE_MULTIPLE:
                 // Do nothing!
                 break;
         }
@@ -394,7 +394,7 @@ function get_record_sql($sql, array $values=null, $strictness=WARN_MULTIPLE) {
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
  * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return object Returns an array of found records (as objects)
@@ -757,6 +757,7 @@ function recordset_to_menu(ADORecordSet $rs) {
     if ($rs && $rs->RecordCount() > 0) {
         $keys = array_keys($rs->fields);
         $key0 = $keys[0];
+        $menu = array();
         if (isset($keys[1])) {
             $key1 = $keys[1];
         }
@@ -964,6 +965,7 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
     $select = db_quote_table_placeholders($select);
 
     $calllocal = false;
+    $ids = array();
     if ($type = table_need_trigger($table)) {
         // Need to find the ids
         $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
@@ -1282,7 +1284,7 @@ function table_need_trigger($table) {
         }
     }
     $localtables = array('notification_internal_activity', 'module_multirecipient_userrelation'); // @TODO have the working out of local tables be a function call
-    if (isset($localtables) && in_array($table, $localtables)) {
+    if ($localtables && in_array($table, $localtables)) {
         return 'local';
     }
     return false;
@@ -1319,7 +1321,7 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
  * @param array $dataobject A data object with values for one or more fields in the record (to be inserted or updated)
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @throws SQLException

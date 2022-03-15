@@ -217,6 +217,7 @@ function check_upgrades($name=null) {
         // Don't try to get the plugin info if we are installing - it will
         // definitely fail
         $pluginversion = 0;
+        $pluginrelease = 0;
         if (!$installing && table_exists(new XMLDBTable($plugintype . '_installed'))) {
             if ($plugintype == 'blocktype' && strpos($pluginname, '/')) {
                 $bits = explode('/', $pluginname);

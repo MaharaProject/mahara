@@ -75,6 +75,18 @@ class Institution {
     // Fields that have been updated and need to be saved on commit
     protected $dirtyfields = array();
 
+    protected $name;
+
+    protected $displayname;
+
+    protected $defaultmembership;
+
+    protected $defaultmembershipperiod;
+
+    protected $maxuseraccounts;
+
+    protected $lang;
+
     public function __construct($name = null) {
         $this->fields = self::$dbfields;
 
@@ -107,6 +119,14 @@ class Institution {
         return null;
     }
 
+    public function set($field, $value) {
+        if (property_exists($this, $field)) {
+            $this->{$field} = $value;
+            $this->__set($field, $value);
+            return true;
+        }
+        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
 
     public function __set($name, $value) {
         if (!is_string($name)) {
@@ -195,13 +215,13 @@ class Institution {
             return false;
         }
 
-        $this->name = $name;
+        $this->set('name', $name);
 
         if (empty($displayname) || !is_string($displayname)) {
             return false;
         }
 
-        $this->displayname = $displayname;
+        $this->set('displayname', $displayname);
         $this->initialized = max(self::INITIALIZED, $this->initialized);
         $this->dirtyfields = self::$dbfields;
         return true;
@@ -276,8 +296,14 @@ class Institution {
     }
 
     protected function populate($result) {
+
         foreach (array_keys(self::$dbfields) as $fieldname) {
-            $this->{$fieldname} = $result->{$fieldname};
+            if (in_array($fieldname, array('name', 'displayname'))) {
+                $this->set($fieldname, $result->{$fieldname});
+            }
+            else {
+                $this->{$fieldname} = $result->{$fieldname};
+            }
         }
         try {
             $this->configs = get_records_menu('institution_config', 'institution', $result->name, 'field', 'field, value');
@@ -289,6 +315,7 @@ class Institution {
         if (!$this->configs) {
             $this->configs = array();
         }
+
         $this->verifyReady();
     }
 
@@ -1104,7 +1131,7 @@ function institution_selector_for_page($institution, $page) {
     }
     $institutionelement = get_institution_selector(false);
 
-    if (empty($institutionelement)) {
+    if (!$institutionelement) {
         return array('institution' => false, 'institutionselector' => null, 'institutionselectorjs' => '');
     }
 
@@ -1274,18 +1301,17 @@ function plugin_institution_prefs_validate(Pieform $form, $values) {
  * @param Pieform $form
  * @param array $values
  * @param Institution $institution
- * @return bool is page need to be refreshed
  */
-function plugin_institution_prefs_submit(Pieform $form, $values, Institution $institution) {
+function plugin_institution_prefs_submit(Pieform $form, $values, Institution $institution): void {
     $elements = array();
     $installed = plugin_all_installed();
     foreach ($installed as $i) {
         if (!safe_require_plugin($i->plugintype, $i->name)) {
             continue;
         }
+
         call_static_method(generate_class_name($i->plugintype, $i->name), 'institutionprefs_submit', $form, $values, $institution);
     }
-    return true;
 }
 
 /**

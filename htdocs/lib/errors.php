@@ -1117,7 +1117,7 @@ class ImportException extends SystemException {
 */
 class ExportException extends SystemException {
 
-    public function __construct($exporter, $message=null, $code=0) {
+    public function __construct($message=null, $code=0) {
         parent::__construct($message, $code);
     }
 

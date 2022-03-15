@@ -85,6 +85,8 @@ $headers[] = '<meta name="robots" content="noindex">';
 $objectionform = false;
 $revokeaccessform = false;
 $undoverificationform = false;
+$notrudeform = null;
+$stillrudeform = null;
 if ($USER->is_logged_in()) {
     if (record_exists('view_access', 'view', $pview->get('id'), 'usr', $USER->get('id'))) {
         $revokeaccessform = pieform(revokemyaccess_form($pview->get('id')));
@@ -240,7 +242,7 @@ $owner = $collection->get('owner');
 $smarty->assign('usercaneditview', $can_edit);
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 $smarty->assign('showVerification', $showVerification);
-$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $viewobj->get('id') . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $viewobj->get('id') . ($collection ? '&collection=' . $collection->get('id') : '' ));
 $smarty->assign('views', $views['views']);
 $smarty->assign('viewlocked', $viewobj->get('locked'));
 // Is progress page editable?
@@ -260,6 +262,7 @@ $smarty->display('collection/progresscompletion.tpl');
  * @return array The Pieform array.
  */
 function undo_verification_form($ids) {
+    $options = array();
     $form = array(
         'name'              => 'undo_verification_form',
         'method'            => 'post',

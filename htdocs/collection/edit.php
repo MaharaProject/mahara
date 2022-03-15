@@ -132,8 +132,9 @@ $form = pieform(array(
 ));
 
 $autocopyjs = '';
+$onlyactivetemplatewarning = '';
+$updatingautocopytemplatewarning = null;
 if (isset($institutionname)) {
-    $updatingautocopytemplatewarning = null;
     // Check if there's another collection set up as the institution auto copy
     // template.
     $oldtemplate = get_active_collection_template($institutionname);

@@ -217,7 +217,7 @@ function group_within_edit_window($group, $admin_always=true, $tutor_always=true
 
     return (empty($start) && empty($end)) ||
         (!empty($start) && $now > $start && empty($end)) ||
-        (empty($start) && $now < $end && !empty($end)) ||
+        (empty($start) && $now < $end && $end) ||
         ($start < $now && $now < $end);
 }
 
@@ -680,10 +680,11 @@ function group_max_reached($inst, $creating=false) {
 /**
  * Update details of an existing group.
  *
- * @param array $new New values for the group table.
+ * @param array|object $new New values for the group table.
  * @param bool  $create Create the group if it doesn't exist yet
  */
 function group_update($new, $create=false) {
+    $old = null;
 
     if (!empty($new->id)) {
         $old = get_record_select('group', 'id = ? AND deleted = 0', array($new->id));
@@ -3009,7 +3010,7 @@ function group_sendnow($groupid) {
     if (!$sendnow = get_field('group', 'sendnow', 'id', $groupid)) {
         return false;
     }
-    return !empty($sendnow);
+    return (bool)$sendnow;
 }
 
 /**
@@ -3282,6 +3283,7 @@ function group_copy($groupid, $return) {
           AND cv.view IS NULL", array($groupid));
     if ($templates) {
         require_once(get_config('libroot') . 'view.php');
+        $duplicate_homepage = null;
         foreach ($templates as $template) {
             list($view) = View::create_from_template(array(
                 'group'       => $new_groupid,

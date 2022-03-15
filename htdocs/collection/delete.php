@@ -12,8 +12,8 @@
 
 define('INTERNAL', 1);
 
-define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PAGE', 'delete');
 
 require(dirname(dirname(__FILE__)) . '/init.php');

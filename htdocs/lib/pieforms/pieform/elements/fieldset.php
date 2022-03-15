@@ -258,6 +258,7 @@ function _render_elements_as_multicolumn($form, $element) {
 function pieform_is_collapsed(Pieform $form, $element) {
     $formname = $form->get_name();
     $iscollapsed = !empty($element['collapsed']);
+    $openparam = '';
 
     // if name element is not set, element should not be collapsed
     if(!isset($element['name'])){

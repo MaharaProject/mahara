@@ -623,7 +623,7 @@ function institution_verifier_graph_render($type = null, $extradata=null) {
     $data['title'] = get_string('verifierpercentage', 'admin');
     $data['labels'] = array(get_string('unallocated', 'admin'), get_string('allocated', 'admin'));
     $data['data'] = $dataarray;
-    if (!empty($dataarray)) {
+    if ($dataarray) {
         require_once(get_config('libroot') . 'graph.php');
         $graphdata = get_circular_graph_json($data, null, true);
         $data['jsondata'] = json_encode($graphdata[0]);
@@ -1496,6 +1496,7 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
 
     // Add in the elasticsearch data if needed
     $aggmap = array();
+    $aggregates = array();
     if (get_config('searchplugin') == 'elasticsearch') {
         safe_require('search', 'elasticsearch');
         $options = array(
@@ -3524,7 +3525,7 @@ function group_stats_table($limit, $offset, $extra) {
 
     if (!empty($sortdirection) && !empty($groupids)) {
         $groupidkeys = array_flip($groupids);
-        usort($groupdata, function ($a, $b) use ($groupidkeys) {
+        usort($groupdata, function ($a, $b) use ($groupidkeys, $extra) {
             if (!isset($groupidkeys[$a->id]) && !isset($groupidkeys[$b->id])) {
                 return 0;
             }
@@ -3706,6 +3707,7 @@ function view_statistics($limit, $offset, $extra) {
 function view_stats_table($limit, $offset, $extra) {
     global $USER, $SESSION;
 
+    $sqlwhere = '';
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     $users = $SESSION->get('usersforstats');
@@ -3966,6 +3968,8 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     $users = $SESSION->get('usersforstats');
+    $sqlwhere = '';
+    $values = array();
     if ($institutiondata['views'] != 0) {
         $where = 'v.id IN (' . $institutiondata['viewssql'] . ') AND v.type != ?';
         $values = array_merge($institutiondata['viewssqlparam'], array('dashboard'));
@@ -5476,7 +5480,7 @@ function display_statistics($institution, $type, $extra = null) {
     if (!in_array($type, $allowedtypes)) {
         $type = 'users';
     }
-
+    $data = array();
     if ($showall) {
         switch ($type) {
          case 'information':
@@ -5667,7 +5671,7 @@ function report_config_form($extra, $institutionelement) {
     if (!$institution || !$USER->can_edit_institution($institution, true)) {
         $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
     }
-    else if (!empty($institution)) {
+    else if ($institution) {
         $institutionelement['defaultvalue'] = $institution;
     }
     // make it a select2 element

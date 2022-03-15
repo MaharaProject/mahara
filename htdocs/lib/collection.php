@@ -470,17 +470,19 @@ class Collection {
                       $group,
                       $institution
                     );
+
+                    // move to cover image forlder
+                    $userobj = null;
+                    if ($owner) {
+                        $userobj = new User();
+                        $userobj->find_by_id($owner);
+                    }
+                    $newa = artefact_instance_from_id($newid);
+                    $folderid = ArtefactTypeImage::get_coverimage_folder($userobj, $group, $institution);
+                    $newa->move($folderid);
+                    return $newid;
                 }
-                // move to cover image forlder
-                $userobj = null;
-                if ($owner) {
-                    $userobj = new User();
-                    $userobj->find_by_id($owner);
-                }
-                $newa = artefact_instance_from_id($newid);
-                $folderid = ArtefactTypeImage::get_coverimage_folder($userobj, $group, $institution);
-                $newa->move($folderid);
-                return $newid;
+                return null;
             }
             catch (Exception $e) {
                 return null;
@@ -758,6 +760,8 @@ class Collection {
      * @return array (count: integer, data: array, offset: integer, limit: integer)
      */
     public static function get_mycollections_data($offset=0, $limit=10, $owner=null, $groupid=null, $institutionname=null) {
+        $wherestm = '';
+        $values = array();
         if (!empty($groupid)) {
             $wherestm = '"group" = ?';
             $values = array($groupid);
@@ -1460,7 +1464,7 @@ class Collection {
         $viewids = get_column_sql("SELECT view FROM {collection_view} WHERE collection = ? ORDER BY displayorder", array($this->id));
 
         // Set the most permissive access records on all views
-        View::combine_access($viewids, true);
+        View::combine_access($viewids);
 
         // Copy the whole view config from the first view to all the others
         if (count($viewids)) {
@@ -1556,6 +1560,7 @@ class Collection {
             }
         }
         else {
+            $oldorder = -1;
             $ids = get_column_sql('
                 SELECT view FROM {collection_view}
                 WHERE collection = ?
@@ -1567,16 +1572,17 @@ class Collection {
                     break;
                 }
             }
-
-            if ($direction == 'up' && $oldorder > 0) {
-                $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
-                                        array($id, $ids[$oldorder-1]),
-                                        array_slice($ids, $oldorder+1));
-            }
-            else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
-                $neworder = array_merge(array_slice($ids, 0, $oldorder),
-                                        array($ids[$oldorder+1], $id),
-                                        array_slice($ids, $oldorder+2));
+            if ($oldorder > -1) {
+                if ($direction == 'up' && $oldorder > 0) {
+                    $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
+                                            array($id, $ids[$oldorder-1]),
+                                            array_slice($ids, $oldorder+1));
+                }
+                else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
+                    $neworder = array_merge(array_slice($ids, 0, $oldorder),
+                                            array($ids[$oldorder+1], $id),
+                                            array_slice($ids, $oldorder+2));
+                }
             }
         }
         if (isset($neworder)) {

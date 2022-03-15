@@ -247,7 +247,7 @@ class upload_manager {
      * @param string $destination Destination directory (to check existing files against)
      * @param object $file Passed in by reference. The current file from $files we're processing.
      * @param string|null $format The printf style format to rename the file to (defaults to filename_number.extn)
-     * @return string The new filename.
+     * @return string $try The new filename.
      */
     public function rename_duplicate_file($destination, $filename, $format='%s_%d.%s') {
         // If there's no dot or more than one dot we get yucky stuff like 'foo_1.', 'foo_1.bar.baz'
@@ -330,7 +330,7 @@ function clam_handle_infected_file($file) {
  * @return false if no errors, or a string if there's an error.
  */
 function mahara_clam_scan_file($file, $inputindex=null) {
-
+    $tmpname = '';
     if (isset($inputindex)) {
         $tmpname = $file['tmp_name'][$inputindex];
     }

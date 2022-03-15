@@ -672,6 +672,7 @@ function set_user_primary_email($userid, $newemail) {
  * @todo, this needs to be better (fix email behaviour)
  */
 function get_profile_field($userid, $field) {
+    $value = null;
     if ($field == 'email') {
         $value = get_field_sql("
             SELECT a.title
@@ -723,7 +724,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         return true;
     }
 
-    if (empty($userto)) {
+    if (!$userto) {
         throw new InvalidArgumentException("empty user given to email_user");
     }
 
@@ -807,7 +808,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     if (get_config('bounces_handle') && !empty($userto->id) && empty($maildisabled)) {
         $mail->Sender = generate_email_processing_address($userto->id, $userto);
     }
-    if (empty($userfrom) || $userfrom->email == get_config('noreplyaddress')) {
+    if (!$userfrom || $userfrom->email == get_config('noreplyaddress')) {
         if (empty($mail->Sender)) {
             $mail->Sender = get_config('noreplyaddress');
         }
@@ -854,7 +855,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
 
     $mail->Subject = substr(stripslashes($subject), 0, 900);
-
+    $usertoname = null;
     try {
         if ($to = get_config('sendallemailto')) {
             // Admins can configure the system to send all email to a given address
@@ -2185,7 +2186,7 @@ function get_users_data($userids, $getviews=true) {
                         $cleanviews[$userindex][] = $vdata;
                     }
                     else {
-                        if ($collectionobject != $vdata->collection && isset($collectionobject)) {
+                        if ($collectionobject != $vdata->collection && $collectionobject) {
                           $collectionobject = $vdata->collection;
                           $cleanviews[$userindex][] = $vdata;
                         }
@@ -2343,7 +2344,7 @@ function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
         $smarty->assign('columnright', $columns[1]);
     }
     else {
-        $smarty->assign('data', isset($data) ? $data : null);
+        $smarty->assign('data', $data ?: null);
     }
     safe_require('module', 'multirecipientnotification');
     $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());
@@ -3301,6 +3302,8 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
     }
 
     $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false, 'showusers' => $showusers);
+    $sql = '';
+    $countsql = '';
     switch ($showusers) {
         case 0: // show none
             return $result;
