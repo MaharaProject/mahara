@@ -9,5 +9,8 @@
  *
  */
 
+defined('INTERNAL') || die();
+
+$config = new stdClass();
 $config->version = 2018121900;
 $config->release = '1.2.3';

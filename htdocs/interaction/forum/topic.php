@@ -109,8 +109,8 @@ if (!empty($postid)) {
     }
 
     // post being approved
-    $action = param_variable('action', null);
-    if (isset($action) && $action == 'approve') {
+    $action = param_variable('action', '');
+    if ($action == 'approve') {
         if (!$moderator && !$USER->get('admin')) {
             throw new GroupAccessDeniedException(get_string('cantapproveposts', 'interaction.forum'));
         }

@@ -28,10 +28,12 @@ define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
 $returnto = param_alpha('returnto', 'topic');
-
 $page = get_config('wwwroot') . 'interaction/forum/edittopic.php';
+
+$topic = null;
+
 if ($topicid == 0) { // new topic
-    unset($topicid);
+    $topidid = null;
     $forumid = param_integer('forum');
     $page .= '?forum=' . $forumid;
 }
@@ -80,7 +82,7 @@ if (!group_within_edit_window($forum->groupid)) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 
-if (!isset($topicid)) { // new topic
+if (empty($topicid)) { // new topic
     $topictype = get_string('addtopic','interaction.forum');
     define('TITLE', $forum->title . ' - ' . $topictype);
 }
@@ -434,11 +436,9 @@ $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $topictype);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('editform', $editform);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 if (!isset($timeleft)) {
     $timeleft = 0;
 }
 $smarty->assign('timeleft', $timeleft);
-if (isset($inlinejs)) {
-    $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-}
 $smarty->display('interaction:forum:edittopic.tpl');

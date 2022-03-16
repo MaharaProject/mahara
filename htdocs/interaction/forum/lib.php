@@ -672,6 +672,7 @@ EOF;
     public static function get_active_topics($limit, $offset, $category, $forumids = array()) {
         global $USER;
 
+        $lastposts = '';
         if (is_postgres()) {
             $lastposts = '
                     SELECT DISTINCT ON (topic) topic, id, poster, subject, body, ctime
