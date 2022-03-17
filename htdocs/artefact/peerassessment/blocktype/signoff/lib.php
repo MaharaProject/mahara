@@ -95,6 +95,9 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
     }
 
     public static function has_instance_config(BlockInstance $instance) {
+        if ($instance->get_view()->get_original_template()) {
+            return false;
+        }
         return true;
     }
 

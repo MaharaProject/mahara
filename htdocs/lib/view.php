@@ -47,6 +47,12 @@ class View {
     private $columns;
     private $tags;
     private $categorydata;
+
+    /**
+     * The type of template
+     *
+     * @var USER_TEMPLATE|SITE_TEMPLATE|0
+     */
     private $template;
     private $retainview;
     private $copynewuser = 0;
@@ -62,11 +68,17 @@ class View {
     private $anonymise = 0;
     private $lockblocks = 0;
     private $instructions;
-    private $instructionscollapsed=0;
+    private $instructionscollapsed = 0;
     private $newlayout = 1;
     private $grid;
     private $accessibleview = 0;
     private $coverimage;
+
+    /**
+     * Prevent edits to artefact and page instructions
+     *
+     * @var bool
+     */
     private $locktemplate = 0;
     private $blocks = array();
 
