@@ -9,7 +9,9 @@
                 <label for="blocktype-list-radio-{$blocktype.name}" class="blocktypetitle title">
                     <span class="hidden">{$blocktype.title}</span>
                 </label>
+                {if $blocktype.name != 'placeholder'}
                 <span class="sr-only">({$blocktype.description})</span>
+                {/if}
             </a>{/strip}
         {/foreach}
     {if $javascript}

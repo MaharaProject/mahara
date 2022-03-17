@@ -325,8 +325,7 @@ $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this bl
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 $string['blockconfigurationrenderingerror'] = 'Configuration failed because the block could not be rendered.';
 
-$string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your page. You can position a block using the arrow buttons in its titlebar.';
-$string['blocksinstructionajaxlive1'] = 'This area shows a preview of what your page looks like. Changes are saved automatically.<br>Drag \'Add a new block\' onto the page to add one. You can then choose what type of block it will be. You can then also drag blocks around the page to change their position.';
+$string['blocksinstructionajaxlive2'] = 'This is a preview of your page. Changes are saved automatically.<br>Drag the \'Plus\' button onto the page to create a new block. Choose what type of block it will be. Drag blocks around the page to change their position.';
 $string['blockchangedsuccess'] = "Changed the placeholder block to a '%s' block successfully.";
 $string['blockchangederror'] = "Changing the block to a '%s' block failed.";
 $string['blockchangedbacksuccess'] = "Changed the block back to a placeholder block.";
@@ -567,9 +566,8 @@ $string['itemgrabbed'] = 'Item grabbed: %s';
 $string['itemdropped'] = 'Item dropped: %s';
 $string['itemreorder'] = 'List has been reordered. Item %s is now in position %s of %s';
 $string['reordercancelled'] = 'The reordering was cancelled';
-$string['accessibilitymodedescription'] = 'This page has the accessible layout enabled.
- In this mode, the page blocks will have full page width and will be displayed one after the other.
- To change a block position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
+$string['accessibilitymodedescription1'] = 'This page has the accessible layout enabled. Click the \'Add new block\' button to add a block to the page.<br>
+In this mode, the page blocks will have full page width and will be displayed one after the other. To change a block\'s position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
 $string['blocktypeis'] = ' %s blocktype';
 
 
