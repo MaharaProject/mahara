@@ -30,8 +30,8 @@ $(function () {
 <div class="breadcrumbs collection">
    <ul>
      <li class="collectionname">{$collectionname}</li>
-      {foreach from=$collectionmenu item=item}
-     | <li{if $item.id == $viewid} class="selected" {/if}><a href="{$rootpath}HTML/views/{$item.url}">{$item.text}</a></li>
+{foreach from=$collectionmenu item=item}
+     | <li{if $item.id == $viewid} class="selected"{/if}><a href="{$rootpath}{$htmldir}views/{$item.url}">{$item.text}</a></li>
 {/foreach}
    </ul>
 </div>

@@ -2871,7 +2871,7 @@ abstract class Plugin implements IPlugin {
 
     /**
      * Fetch plugin's display name rather than plugin name that is based on dir name.
-     * @return $tring or null
+     * @return string|null
      */
     public static function get_plugin_display_name() {
         return null;
@@ -2880,7 +2880,7 @@ abstract class Plugin implements IPlugin {
     /**
      * Check if plugin's contains dependencies before installing it.
      * For example, it relies on an operating system package to be installed
-     * @return $tring or null
+     * @return string|null
      */
     public static function has_plugin_dependencies() {
         return null;

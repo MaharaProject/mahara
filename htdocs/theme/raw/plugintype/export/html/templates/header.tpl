@@ -4,7 +4,7 @@
         <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
         <title>{str tag=usersportfolio section=export.html args=$user|full_name|escape}</title>
 {foreach from=$stylesheets item=sheet}
-        <link rel="stylesheet" type="text/css" href="{$rootpath}{if !$exportingoneview}HTML/{/if}static/{$sheet}">
+        <link rel="stylesheet" type="text/css" href="{$rootpath}{$htmldir}static/{$sheet}">
 {/foreach}
         <script>
         var config = {literal}{{/literal}
@@ -16,20 +16,22 @@
 {/foreach}
     </head>
     <body>
+        {if !$htmllite}
         <header class="header fixed-top no-site-messages">
             <div class="navbar navbar-default navbar-main">
                 <div class="container">
                     <div id="logo-area" class="logo-area">
                         <a class="logo change-to-small" href="https://mahara.org/">
-                            <img src="{$rootpath}{if !$exportingoneview}HTML/{/if}{$maharalogo}" alt="Mahara">
+                            <img src="{$rootpath}{$htmldir}{$maharalogo}" alt="Mahara">
                         </a>
                         <a href="https://mahara.org/" class="logoxs change-to-small-default">
-                            <img src="{$rootpath}{if !$exportingoneview}HTML/{/if}{$maharalogosmall}" alt="Mahara">
+                            <img src="{$rootpath}{$htmldir}{$maharalogosmall}" alt="Mahara">
                         </a>
                     </div>
                 </div>
             </div>
         </header>
+        {/if}
         <div class="pageheader">
             <div class="container pageheader-content">
                 <div class="row">

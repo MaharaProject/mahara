@@ -67,7 +67,7 @@ class PluginExportHtml extends PluginExport {
      * These javascript files will be included in index.html via the
      * export/html/templates/header.tpl
      */
-    private $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
+    protected $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
 
     protected $collections = array();
     protected $collectionview;
@@ -150,6 +150,28 @@ class PluginExportHtml extends PluginExport {
         return get_string('description', 'export.html');
     }
 
+    /**
+     * Is the plugin activated or not?
+     *
+     * @return boolean
+     */
+    public static function is_active() {
+        $active = false;
+        if (get_field('export_installed', 'active', 'name', 'html')) {
+            $active = true;
+        }
+        return $active;
+    }
+
+    /**
+     * Fetch plugin's display name rather than plugin name that is based on dir name.
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return 'HTML';
+    }
+
     public function is_diskspace_available() {
         return true; // need to create a check here
     }
@@ -160,7 +182,7 @@ class PluginExportHtml extends PluginExport {
             return $parent . $this->get('infodir') . '/' . $type . '/';
         }
         else if ($this->exportingoneview) {
-            return $parent . 'HTML/';
+            return $parent . $this->rootdir . '/';
         }
         else if ($type) {
             return $parent . $type;
@@ -330,7 +352,8 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('sitename', get_config('sitename'));
         $smarty->assign('stylesheets', $stylesheets);
         $smarty->assign('WWWROOT', get_config('wwwroot'));
-        $htmldir = ($this->exportingoneview ? '' : 'HTML/');
+        $htmldir = ($this->exportingoneview ? '' : $this->rootdir . '/');
+        $smarty->assign('htmldir', $htmldir);
         $scripts = [];
         foreach($this->scripts as $i => $script) {
             // theme should be in theme folder use,
@@ -348,7 +371,7 @@ class PluginExportHtml extends PluginExport {
             $smarty->assign('scriptspath', $rootpath . $this->theme_path('js/'));
         }
         else {
-            $smarty->assign('scriptspath', $rootpath . 'HTML/' . $this->theme_path('js/'));
+            $smarty->assign('scriptspath', $rootpath . $this->rootdir . '/' . $this->theme_path('js/'));
         }
         $smarty->assign('maharalogo', $this->theme_path('images/site-logo.png'));
         $smarty->assign('maharalogosmall', $this->theme_path('images/site-logo-small.png'));
@@ -363,7 +386,7 @@ class PluginExportHtml extends PluginExport {
      *
      * This returns the path in the most appropriate theme.
      */
-    private function theme_path($path) {
+    protected function theme_path($path) {
         global $THEME;
         $themestaticdirs = $THEME->get_path('', true);
         foreach ($themestaticdirs as $theme => $dir) {
@@ -410,8 +433,7 @@ class PluginExportHtml extends PluginExport {
         return trim(substr(str_replace('/', '_', $path), 0, 255));
     }
 
-
-    private function build_index_page($summaries) {
+    protected function build_index_page($summaries) {
         $smarty = $this->get_smarty($this->get_root_path());
         $smarty->assign('page_heading', full_name($this->get('user')));
         $smarty->assign('summaries', $summaries);
@@ -447,7 +469,7 @@ class PluginExportHtml extends PluginExport {
     /**
      * Dumps all collections progress completion pages into the HTML export
      */
-    private function export_progresscompletion_pages() {
+    protected function export_progresscompletion_pages() {
         $rootpath = ($this->exportingoneview) ? $this->get_root_path() : $this->get_root_path(3);
         $smarty = $this->get_smarty($rootpath);
         foreach ($this->collections as $collection) {
@@ -947,7 +969,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
 * This will append to the index.html or any other relevant page created
 * previously that needs to contain a modal (including the profile page).
 */
-    private function export_artefact_metadata_modals() {
+    protected function export_artefact_metadata_modals() {
         foreach ($this->views as $view) {
             $content = '';
             $blocks = get_records_array('block_instance', 'view', $view->get('id'));
@@ -1624,7 +1646,7 @@ class HtmlExportOutputFilter {
                     return '';
                 }
                 $rootpath = ($this->exporter->get('exportingoneview')) ? $this->exporter->get_root_path(2) : $this->exporter->get_root_path(3);
-                return $rootpath . $this->get_export_path_for_file($icon, $options, 'HTML/static/profileicons/');
+                return $rootpath . $this->get_export_path_for_file($icon, $options, $this->rootdir . '/static/profileicons/');
             default:
                 return '';
             }

@@ -127,6 +127,28 @@ class PluginExportLeap extends PluginExport {
     protected function collection_menu($collectionid) {}
 
     /**
+     * Is the plugin activated or not?
+     *
+     * @return boolean
+     */
+    public static function is_active() {
+        $active = false;
+        if (get_field('export_installed', 'active', 'name', 'leap')) {
+            $active = true;
+        }
+        return $active;
+    }
+
+    /**
+     * Fetch plugin's display name rather than plugin name that is based on dir name.
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return 'Leap2A';
+    }
+
+    /**
      * Basic check to make sure all the files we are dealing with don't add
      * up to being greater in size than the space available on disk. This will be a ballpark figure
      * as it will not take into account a) the size of html/text and b) the data will be zipped up.

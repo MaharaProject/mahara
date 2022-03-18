@@ -443,3 +443,9 @@ $string['servicetype'] = 'Service type';
 $string['authtype'] = 'Auth type';
 $string['jsonenabled'] = 'JSON response';
 $string['customfields'] = 'Custom fields';
+
+$string['invalidviewid'] = 'Invalid %s ID: "%s"';
+$string['invalidviewiduser'] = 'Invalid %s ID: "%s". Portfolio in wrong institution';
+$string['viewnotsubmitted'] = 'The %s with ID "%s" not submitted';
+$string['viewnotsubmittedtothishost'] = 'The %s with ID "%s" not submitted to host "%s"';
+$string['exporttypenotavailable'] = 'The export method "%s" is not available. Please make sure it is active.';

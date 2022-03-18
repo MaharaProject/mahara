@@ -712,4 +712,175 @@ class mahara_view_external extends external_api {
     public static function release_submitted_view_returns() {
         return null;
     }
+
+    /**
+     * Webservice parameter definition for input of "generate_view_for_plagiarism_test" method
+     *
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function generate_view_for_plagiarism_test_parameters() {
+        return new external_function_parameters(
+            array(
+                'views' => new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'viewid'          => new external_value(PARAM_INTEGER, get_string('viewidtotest', WEBSERVICE_LANG), VALUE_REQUIRED),
+                            'iscollection'    => new external_value(PARAM_BOOL, get_string('iscollection', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'submittedhost'   => new external_value(PARAM_RAW, get_string('submittedhost', WEBSERVICE_LANG), VALUE_REQUIRED),
+                            'exporttype'      => new external_value(PARAM_TEXT, get_string('liteexporttype', WEBSERVICE_LANG), VALUE_REQUIRED),
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Check that the portfolio id supplied is a valid submitted portfolio
+     *
+     * @param array $v array of view webservice parameters
+     *
+     * @return array An array containing userobject, viewobject, portfoliotype, and portfolioid
+     */
+    private static function _check_valid_portfolio($v) {
+        global $WEBSERVICE_INSTITUTION;
+        $cid = $v['iscollection'];
+        if ($cid) {
+            $vid = get_field_sql("SELECT view FROM {collection_view} WHERE collection = ? ORDER BY displayorder LIMIT 1", array($v['viewid'])); // Make sure the collection is valid
+        }
+        else {
+            $vid = get_field('view', 'id', 'id', $v['viewid']); // Make sure viewid is valid
+            // doublecheck if view is part of a collection and if so return the collection export
+            if ($collectionid = get_field_sql("SELECT collection FROM {collection_view} WHERE view = ? ORDER BY displayorder LIMIT 1", array($v['viewid']))) {
+                $cid = true;
+                $v['viewid'] = $collectionid;
+            }
+        }
+        $portfoliotype = $cid ? 'collection' : 'view';
+        $portfolioid = $v['viewid'];
+        if (!$vid) {
+            throw new WebserviceInvalidParameterException(get_string('invalidviewid', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        else {
+            require_once('view.php');
+            $view = new View($vid);
+        }
+
+        if (empty($view->get('owner'))) {
+            throw new WebserviceInvalidParameterException(get_string('invalidviewid', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        $user = self::checkuser(array('id' => $view->get('owner')));
+        // check the institution
+        if (!mahara_external_in_institution($user, $WEBSERVICE_INSTITUTION)) {
+            throw new WebserviceInvalidParameterException(get_string('invalidviewiduser', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        // Check that the view has currently submitted
+        if (!$view->is_submitted()) {
+            throw new WebserviceInvalidParameterException(get_string('viewnotsubmitted', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        if ($view->get('submittedhost') != $v['submittedhost']) {
+            throw new WebserviceInvalidParameterException(get_string('viewnotsubmittedtothishost', 'auth.webservice', $portfoliotype, $portfolioid, $v['submittedhost']));
+        }
+        $userobj = new User();
+        $userobj->find_by_id($user->id);
+
+        return array($userobj, $view, $portfoliotype, $portfolioid);
+    }
+
+    /**
+     * Generate the export lite file for the view / collection id supplied
+     *
+     * @param array $views  array of views
+     * @return array An array of arrays describing generation outcome
+     */
+    public static function generate_view_for_plagiarism_test($views) {
+        global $USER, $exporter;
+
+        $params = self::validate_parameters(self::generate_view_for_plagiarism_test_parameters(),
+                array('views' => $views));
+        $result = array();
+        foreach ($params['views'] as $v) {
+            list($user, $view, $portfoliotype, $portfolioid) = self::_check_valid_portfolio($v);
+            $exporttype = $v['exporttype'];
+            safe_require('export', $exporttype);
+            $class = generate_class_name('export', $exporttype);
+            if (!call_static_method($class, 'is_active')) {
+                throw new WebserviceInvalidParameterException(get_string('exporttypenotavailable', 'auth.webservice', $exporttype));
+            }
+            // OK we are now looking good
+            if ($portfoliotype == 'collection') {
+                $views = get_column('collection_view', 'view', 'collection', $portfolioid);
+                $exporter = new $class($user, $views, PluginExport::EXPORT_LIST_OF_COLLECTIONS);
+            }
+            else {
+                $views = array($portfolioid);
+                $exporter = new $class($user, $views, PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS);
+            }
+            $exporter->includefeedback = true;
+
+            $errors = $info = array();
+            try {
+                $info = $exporter->export(false);
+                create_zip_archive($info['exportdir'], $info['zipfile'], $info['dirs']);
+            }
+            catch (SystemException $e) {
+                $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
+            }
+
+            // We need to move this to avoid it being deleted by the export_cleanup_old_exports cron
+            // so we need to put it somewhere safe
+            $exportlitedir = get_config('dataroot') . $exporttype . '/' . $portfoliotype . '/' . $portfolioid . '/';
+            $filetimestamp = '';
+            if (!check_dir_exists($exportlitedir)) {
+                $errors[] = get_string('exportlitenotwritable', 'export', $exportlitedir);
+            }
+            else {
+                copy($info['exportdir'] . $info['zipfile'], $exportlitedir . $info['zipfile']);
+                $filetimestamp = preg_replace('/.*?-(\d+)\.zip$/', '$1', $info['zipfile']);
+            }
+
+            if (!empty($errors)) {
+                throw new WebserviceInvalidParameterException(implode("\n", $errors));
+            }
+
+            // Return valid view id in $fileurl and get the download.php file to work out if a collection or not
+            $fileurl = get_config('wwwroot') . 'webservice/download.php?t=' . $exporttype . '&c=' . $filetimestamp . '&v=' . $views[0];
+            $data = array(
+                'id'           => $user->get('id'),
+                'username'     => $user->get('username'),
+                'viewid'       => $portfolioid,
+                'iscollection' => $v['iscollection'],
+                'fileurl'      => $fileurl,
+                'submittedhost' => $v['submittedhost'],
+            );
+
+            $result[]= $data;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Webservice parameter definition for output of "generate_view_for_plagiarism_test" method
+     *
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function generate_view_for_plagiarism_test_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id'            => new external_value(PARAM_INTEGER, get_string('releaserid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                    'username'      => new external_value(PARAM_RAW, get_string('releaserusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                    'viewid'        => new external_value(PARAM_INTEGER, get_string('viewid', WEBSERVICE_LANG)),
+                    'iscollection'  => new external_value(PARAM_BOOL, get_string('iscollection', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'fileurl'      => new external_value(PARAM_RAW, get_string('fileurl', WEBSERVICE_LANG)),
+                    'submittedhost' => new external_value(PARAM_RAW, get_string('submittedhost', WEBSERVICE_LANG)),
+                )
+            )
+        );
+    }
 }

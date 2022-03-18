@@ -27,6 +27,11 @@ interface IPluginExport {
      * A human-readable description for the export
      */
     public static function get_description();
+
+    /**
+     * Is the plugin activated or not?
+     */
+    public static function is_active();
 }
 
 /**
@@ -1078,6 +1083,7 @@ class PluginExportAll extends PluginExport {
 
     public static function get_title() {}
     public static function get_description() {}
+    public static function is_active() {}
     protected function collection_menu($collectionid) {}
 
     public function export() {
