@@ -1634,6 +1634,11 @@ class BlockInstance {
         $configdata = $this->get('configdata');
         $smarty->assign('draft', (isset($configdata['draft']) ? $configdata['draft'] : 0));
 
+        // For sign-off blocks that come from a template, prevent the editing/deletion of the block
+        if ($this->get_view()->get_original_template() && $this->blocktype ==='signoff') {
+            $smarty->assign('lockblocks', 1);
+        }
+
         if ( $title) {
             if (isset($configdata['retractable']) && $configdata['retractable']) {
                 $smarty->assign('retractable', true);
