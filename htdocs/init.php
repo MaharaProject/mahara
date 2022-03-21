@@ -192,7 +192,7 @@ catch (Exception $e) {
 }
 try {
     db_ignore_sql_exceptions(true);
-    load_config();
+    load_config(defined('BEHAT_TEST'));
     db_ignore_sql_exceptions(false);
 }
 catch (SQLException $e) {

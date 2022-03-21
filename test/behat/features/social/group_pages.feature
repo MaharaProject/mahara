@@ -19,6 +19,10 @@ Given the following "pages" exist:
      | title | description | ownertype | ownername |
      | Page GroupA_01 | Page 1 | group | GroupA |
 
+Given the following site settings are set:
+    | field | value |
+    | skins | 0 |
+
 Scenario: Copying a group page retains title (Bug 1519374)
  # Make the group page copyable
  Given I log in as "UserA" with password "Kupuh1pa!"
