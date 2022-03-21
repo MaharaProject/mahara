@@ -11,12 +11,21 @@
         "guzzlehttp/guzzle": "^6.3.0",
         "phpunit/phpunit": "^6.0",
         "behat/mink-browserkit-driver": "1.3.3",
-        "symfony/css-selector": "3.4.38"
+        "symfony/css-selector": "3.4.38",
+        "cweagans/composer-patches": "^1.7"
     },
 
     "autoload": {
         "psr-0": {
           "MaharaExtension": "../htdocs/testing/frameworks/behat/extension/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "cweagans/composer-patches": true
+        }
+    },
+    "extra": {
+        "patches-file": "composer.patches.json"
     }
 }
