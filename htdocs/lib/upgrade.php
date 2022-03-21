@@ -1045,6 +1045,7 @@ function core_install_firstcoredata_defaults() {
         'cron_clean_internal_activity_notifications'=> array(45, 22, '*', '*', '*'),
         'cron_sitemap_daily'                        => array(0, 1, '*', '*', '*'),
         'file_cleanup_old_cached_files'             => array(0, 1, '*', '*', '*'),
+        'file_cleanup_old_temp_files'               => array(0, 2, '*/2', '*', '*'),
         'user_login_tries_to_zero'                  => array('2-59/5', '*', '*', '*', '*'),
         'cron_institution_registration_data'        => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
         'cron_institution_data_weekly'              => array('0', '0', '*', '*', '1'),

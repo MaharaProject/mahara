@@ -2428,5 +2428,20 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022032100) {
+        if (!get_record('cron', 'callfunction', 'file_cleanup_old_temp_files')) {
+            log_debug('Add cron job for cleaning up older dataroot temp files');
+            // Every second day, clean out any older temp files from the dataroot
+            $cron = new stdClass();
+            $cron->callfunction = 'file_cleanup_old_temp_files';
+            $cron->minute       = '0';
+            $cron->hour         = '2';
+            $cron->day          = '*/2';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('cron', $cron);
+        }
+    }
+
     return $status;
 }
