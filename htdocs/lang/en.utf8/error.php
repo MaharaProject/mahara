@@ -25,6 +25,7 @@ $string['gdextensionnotloaded'] = 'Your server configuration does not include th
 $string['gdfreetypenotloaded'] = 'Your server configuration of the gd extension does not include Freetype support. Please make sure that gd is configured with it.';
 $string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. Mahara requires this in order to support people logging in. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['curllibrarynotinstalled'] = 'Your server configuration does not include the curl extension. Mahara requires this for Moodle integration and to retrieve external feeds. Please make sure that curl is loaded in php.ini or install it if it is not installed.';
+$string['intlextensionnotloaded'] = 'Your server configuration does not include the intl extension for PHP. Mahara requires this extension to parse information related to language locales.';
 $string['registerglobals'] = 'You have dangerous PHP settings: register_globals is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag register_globals off';
 $string['magicquotesgpc'] = 'You have dangerous PHP settings: magic_quotes_gpc is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:

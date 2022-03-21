@@ -2608,6 +2608,12 @@ function admin_nav() {
             'title'  => get_string('componentmap', 'admin'),
             'weight' => 20,
         ),
+        'development/langpacks' => array(
+            'path'   => 'development/langpacks',
+            'url'    => 'admin/site/langpacks.php',
+            'title'  => get_string('langpacks', 'langpacks'),
+            'weight' => 25,
+        ),
         'development/styleguide' => array(
             'path'   => 'development/styleguide',
             'url'    => 'theme/styleguide.php',

@@ -641,3 +641,14 @@ div.toolbarhtml {
         color: scale-color($gray-300, $lightness: 28%);
     }
 }
+
+#synclanguage .icon.icon-check-circle {
+    color: theme-color("success");
+}
+#add_language_addlangdesc_container {
+    margin-left: 0.5rem;
+}
+
+.form-inline .form-group.description {
+    padding-left: $spacing-sm;
+}
