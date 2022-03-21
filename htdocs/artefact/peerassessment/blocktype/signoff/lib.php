@@ -99,6 +99,12 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
     }
 
     public static function instance_config_form(BlockInstance $instance) {
+        // TODO: Customisation start: Remove when on 22.04
+        if ($instance->get_view()->get_original_template()) {
+            return array();
+        }
+        // Customisation end
+
         $configdata = $instance->get('configdata');
         $elements = array (
             'signoff' => array (
