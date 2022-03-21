@@ -34,8 +34,10 @@ catch (Exception $e) {
 
 $admins = $institution->admins();
 $staff = $institution->staff();
+$supportadmin = $institution->supportadmin();
 build_stafflist_html($admins, 'institution', 'admin', $inst);
 build_stafflist_html($staff, 'institution', 'staff', $inst);
+build_stafflist_html($supportadmin, 'institution', 'supportadmin', $inst);
 
 $displayname = $institution->name == 'mahara' ? get_config('sitename') : $institution->displayname;
 define('TITLE', $displayname);
@@ -43,5 +45,6 @@ define('TITLE', $displayname);
 $smarty = smarty();
 $smarty->assign('admins', $admins);
 $smarty->assign('staff', $staff);
+$smarty->assign('supportadmin', $supportadmin);
 $smarty->assign('PAGEHEADING', get_string('institutioncontacts', 'mahara', TITLE));
 $smarty->display('institution/staffadmin.tpl');

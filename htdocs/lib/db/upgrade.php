@@ -2416,5 +2416,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022031500) {
+        $table = new XMLDBTable('usr_institution');
+        if (table_exists($table)) {
+            log_debug('Adding supportadmin field to usr_institution table');
+            $field = new XMLDBField('supportadmin');
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+            }
+        }
+    }
+
     return $status;
 }

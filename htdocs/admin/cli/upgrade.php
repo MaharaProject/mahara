@@ -48,6 +48,8 @@ if (empty($upgrades['settings']['toupgradecount'])) {
     $cli->cli_exit(get_string('noupgrades', 'admin'), false);
 }
 
+log_info('---------- begin upgrade ' . date('r', time()) . ' ----------');
+
 // Check for issues which would pose problems during upgrade
 ensure_upgrade_sanity();
 
@@ -76,3 +78,4 @@ foreach ($upgrades as $name => $data) {
 }
 // upgrade completed so remove any upgrade holds
 delete_records('config', 'field', '_upgrade');
+log_info('---------- upgrade finished ' . date('r', time()) . ' ----------');

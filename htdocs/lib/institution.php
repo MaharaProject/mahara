@@ -319,7 +319,7 @@ class Institution {
         $this->verifyReady();
     }
 
-    public function addUserAsMember($user, $staff=null, $admin=null) {
+    public function addUserAsMember($user, $staff=null, $admin=null, $supportadmin=null, $authid=null) {
         global $USER;
         if ($this->isFull()) {
             $this->send_admin_institution_is_full_message();
@@ -333,7 +333,7 @@ class Institution {
         $userobj = new User();
         $userobj->find_by_id($user->id);
         $institutions = $userobj->get('institutions');
-        if (empty($institutions)) {
+        if (empty($institutions) && empty($authid)) {
             $oldauthmethod = get_field('auth_instance', 'authname', 'id', $userobj->get('authinstance'));
             // Return auth methods with the most relevant one first
             if ($authinstances = get_records_sql_array(
@@ -344,6 +344,10 @@ class Institution {
                 $user->authinstance = $authinstances[0]->id;
                 update_record('usr', array('id' => $user->id, 'authinstance' => $user->authinstance));
             }
+        }
+        else if (!empty($authid)) {
+            $user->authinstance = $authid;
+            update_record('usr', array('id' => $user->id, 'authinstance' => $user->authinstance));
         }
 
         $lang = get_account_preference($user->id, 'lang');
@@ -376,6 +380,9 @@ class Institution {
         }
         if ($admin) {
             $userinst->admin = true;
+        }
+        if ($supportadmin) {
+            $userinst->supportadmin = true;
         }
         $defaultexpiry = $this->defaultmembershipperiod;
         if (!empty($defaultexpiry)) {
@@ -430,14 +437,19 @@ class Institution {
         db_commit();
     }
 
-    public function addUserAsStaff($user) {
+    public function addUserAsStaff($user, $authid=null) {
         // Only to be used to add a member to an institution and bump ther permissions to staff
-        $this->addUserAsMember($user, true);
+        $this->addUserAsMember($user, true, null, null, $authid);
     }
 
-    public function addUserAsAdmin($user) {
+    public function addUserAsAdmin($user, $authid=null) {
         // Only to be used to add a member to an institution and bump ther permissions to admin
-        $this->addUserAsMember($user, null, true);
+        $this->addUserAsMember($user, null, true, null, $authid);
+    }
+
+    public function addUserAsSupportAdmin($user, $authid=null) {
+        // Only to be used to add a member to an institution and bump ther permissions to admin
+        $this->addUserAsMember($user, null, null, true, $authid);
     }
 
     public function add_members($userids) {
@@ -930,6 +942,20 @@ class Institution {
     }
 
     /**
+     * Returns the current institution support admin member records
+     *
+     * @return array  A data structure containing supportadmin
+     */
+    public function supportadmin() {
+        if ($results = get_records_sql_array('
+            SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0 AND i.supportadmin = 1', array($this->name))) {
+            return array_map('extract_institution_user_id', $results);
+        }
+        return array();
+    }
+
+    /**
      * Returns the list of institutions, implements institution searching
      *
      * @param array   Limit the output to only institutions in this array (used for institution admins).
@@ -1063,25 +1089,27 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
         }
     }
     else if ($USER->is_institutional_admin() && ($USER->is_institutional_staff() && $includeinstitutionstaff)) {
-        // if a user is both an admin for some institution and is a staff member for others
+        // if a user is both an admin for some institution and is a supportadmin / staff member for others
+        $supportstaff = array_merge($USER->get('staffinstitutions'), $USER->get('supportadmininstitutions'));
         $institutions = get_records_select_array(
             'institution',
-            'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) .
-                      ',' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
+            'name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) .
+                      ',' . join(',', array_map('db_quote', $supportstaff)) . ')',
             null, 'displayname'
         );
     }
     else if ($USER->is_institutional_admin()) {
         $institutions = get_records_select_array(
             'institution',
-            'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')',
+            'name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')',
             null, 'displayname'
         );
     }
     else if ($includeinstitutionstaff) {
+        $supportstaff = array_merge($USER->get('staffinstitutions'), $USER->get('supportadmininstitutions'));
         $institutions = get_records_select_array(
             'institution',
-            'name IN (' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
+            'name IN (' . join(',', array_map('db_quote', $supportstaff)) . ')',
             null, 'displayname'
         );
     }

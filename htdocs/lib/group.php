@@ -2019,7 +2019,7 @@ function group_get_membersearch_data($results, $group, $query, $membershiptype, 
             // sends them back here saying that the user has no roles they can
             // change to anyway.
             $r['canchangerole'] = !group_is_only_admin($group, $r['id']);
-            $r['canedituser'] = $USER->is_admin_for_user((object)$r);
+            $r['canedituser'] = $USER->can_masquerade_as((object)$r, array('supportadmin'));
         }
 
         if (!empty($membershiptype)) {

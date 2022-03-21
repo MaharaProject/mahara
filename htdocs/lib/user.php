@@ -1983,7 +1983,7 @@ function load_user_institutions($userid) {
     $tags = db_column_exists('institution', 'tags') ? ',i.tags' : '';
     if ($userid !== 0 && $institutions = get_records_sql_assoc('
         SELECT u.institution, ' . db_format_tsfield('ctime') . ',' . db_format_tsfield('u.expiry', 'membership_expiry') . ',
-               u.studentid, u.staff, u.admin, i.displayname, i.theme, i.registerallowed, i.showonlineusers,
+               u.studentid, u.staff, u.admin, u.supportadmin, i.displayname, i.theme, i.registerallowed, i.showonlineusers,
                i.allowinstitutionpublicviews, i.logo' . $logoxs . ', i.style, i.licensemandatory, i.licensedefault,
                i.dropdownmenu, i.skins, i.suspended' . $tags . '
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
@@ -2354,7 +2354,7 @@ function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
 function get_institution_strings_for_users($userids) {
     $userlist = join(',', $userids);
     if (!$records = get_records_sql_array('
-        SELECT ui.usr, i.displayname, ui.staff, ui.admin, i.name
+        SELECT ui.usr, i.displayname, ui.staff, ui.admin, ui.supportadmin, i.name
         FROM {usr_institution} ui JOIN {institution} i ON ui.institution = i.name
         WHERE ui.usr IN (' . $userlist . ')', array())) {
         return array();
@@ -2364,7 +2364,16 @@ function get_institution_strings_for_users($userids) {
         if (!isset($institutions[$ui->usr])) {
             $institutions[$ui->usr] = array();
         }
-        $key = ($ui->admin ? 'admin' : ($ui->staff ? 'staff' : 'member'));
+        $key = 'member';
+        if ($ui->admin) {
+            $key = 'admin';
+        }
+        else if ($ui->supportadmin) {
+            $key = 'supportadmin';
+        }
+        else if ($ui->staff) {
+            $key = 'staff';
+        }
         $institutions[$ui->usr][$key][$ui->name] = $ui->displayname;
     }
     foreach ($institutions as &$userinst) {
@@ -2377,6 +2386,9 @@ function get_institution_strings_for_users($userids) {
             switch ($key) {
                 case 'admin':
                     $value = get_string('adminofinstitutions', 'mahara', join(', ', $links));
+                    break;
+                case 'supportadmin':
+                    $value = get_string('supportadminofinstitutions', 'mahara', join(', ', $links));
                     break;
                 case 'staff':
                     $value = get_string('staffofinstitutions', 'mahara', join(', ', $links));

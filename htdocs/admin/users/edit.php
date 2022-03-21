@@ -1,5 +1,6 @@
 <?php
 /**
+ * Administration user edit page
  *
  * @package    mahara
  * @subpackage admin
@@ -10,7 +11,7 @@
  */
 
 define('INTERNAL', 1);
-define('INSTITUTIONALADMIN', 1);
+define('INSTITUTIONALSUPPORTADMIN', 1);
 define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('accountsettings', 'admin'));
@@ -30,7 +31,7 @@ $user = new User;
 $user->find_by_id($id);
 $authobj = AuthFactory::create($user->authinstance);
 
-if (!$USER->is_admin_for_user($user)) {
+if (!$USER->is_supportadmin_for_user($user)) {
     $SESSION->add_error_msg(get_string('youcannotadministerthisuser', 'admin'));
     redirect(profile_url($user));
 }
@@ -106,7 +107,7 @@ $elements['email'] = array(
         'email'    => true,
     ),
 );
-if ($user->roles && isset($user->roles['_site'])) {
+if ($USER->get('admin') && $user->roles && isset($user->roles['_site'])) {
     foreach ($user->roles['_site'] as $rk => $role) {
         $roleelements['userroles_' . $role->id] = array(
             'type'         => 'switchbox',
@@ -246,6 +247,36 @@ foreach ($authinstances as $authinstance) {
     }
 }
 
+function is_institute_admin($institution) {
+    return $institution->admin;
+}
+
+function is_institute_supportadmin($institution) {
+    return $institution->supportadmin;
+}
+
+$institutions = $user->get('institutions');
+if ( !$USER->get('admin') ) {
+    // If we are not a site admin we need to check if we are an institution admin or institution support admin
+    // and if we can edit the person
+    $viewer_institutions = $USER->get('institutions');
+    $admin_institutions = array_filter($viewer_institutions, "is_institute_admin");
+    $isadminfor = array_keys($admin_institutions); // Can act as administrator for these institutions
+    $supportadmin_institutions = array_filter($viewer_institutions, "is_institute_supportadmin");
+    $issupportadminfor = array_keys($supportadmin_institutions); // Can act as a support administrator for these institutions
+    $institutions = array_intersect_key($institutions, array_merge_recursive($admin_institutions, $supportadmin_institutions));
+}
+else {
+    // Otherwise, we are a site admin and therefore can edit anyone
+    $isadminfor = array_keys($institutions);
+    $issupportadminfor = array();
+}
+$supportonly = (!$USER->get('admin') && empty($isadminfor) && !empty($issupportadminfor));
+
+if ($supportonly) {
+    $onlyoption = $options[$user->authinstance];
+    $options = array($user->authinstance => $onlyoption);
+}
 $elements['authinstance'] = array(
     'type'         => 'select',
     'title'        => get_string('authenticatedby', 'admin'),
@@ -254,6 +285,7 @@ $elements['authinstance'] = array(
     'defaultvalue' => $user->authinstance,
     'help'         => true,
 );
+
 $un = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
 $elements['remoteusername'] = array(
     'type'         => 'text',
@@ -841,44 +873,44 @@ $elements = array(
      ),
 );
 
-function is_institute_admin($institution) {
-    return $institution->admin;
-}
-
-$institutions = $user->get('institutions');
-if ( !$USER->get('admin') ) { // for institution admins
-    $admin_institutions = $USER->get('institutions');
-    $admin_institutions = array_filter($admin_institutions, "is_institute_admin");
-    $institutions = array_intersect_key($institutions, $admin_institutions);
-}
-
 $allinstitutions = get_records_assoc('institution', '', '', 'displayname', 'name, displayname');
 $institutionloop = 0;
 $institutionlength = count($institutions);
 foreach ($institutions as $i) {
-    $roleelements = array(
-        $i->institution.'_staff' => array(
+    $roleelements = array();
+    if (in_array($i->institution, $isadminfor) || in_array($i->institution, $issupportadminfor)) {
+        $roleelements[$i->institution.'_staff'] = array(
             'name'         => $i->institution.'_staff',
             'type'         => 'switchbox',
             'title'        => get_string('institutionstaff','admin'),
             'defaultvalue' => $i->staff,
-        ),
-        $i->institution.'_admin' => array(
+        );
+    }
+    if (in_array($i->institution, $isadminfor)) {
+        $roleelements[$i->institution.'_supportadmin'] = array(
+            'name'         => $i->institution.'_supportadmin',
+            'type'         => 'switchbox',
+            'title'        => get_string('institutionsupportadmin','admin'),
+            'description'  => get_string('institutionsupportadmindescription','admin'),
+            'defaultvalue' => $i->supportadmin,
+        );
+        $roleelements[$i->institution.'_admin'] = array(
             'name'         => $i->institution.'_admin',
             'type'         => 'switchbox',
             'title'        => get_string('institutionadmin','admin'),
             'description'  => get_string('institutionadmindescription1','admin'),
             'defaultvalue' => $i->admin,
-        ),
-    );
-    if ($user->roles && isset($user->roles[$i->institution])) {
-        foreach ($user->roles[$i->institution] as $rk => $role) {
-            $roleelements[$i->institution . '_roles_' . $role->id] = array(
-                'name'         => $i->institution . '_roles_' . $role->id,
-                'type'         => 'switchbox',
-                'title'        => get_string($rk),
-                'defaultvalue' => $role->active,
-            );
+        );
+
+        if ($user->roles && isset($user->roles[$i->institution])) {
+            foreach ($user->roles[$i->institution] as $rk => $role) {
+                $roleelements[$i->institution . '_roles_' . $role->id] = array(
+                    'name'         => $i->institution . '_roles_' . $role->id,
+                    'type'         => 'switchbox',
+                    'title'        => get_string($rk),
+                    'defaultvalue' => $role->active,
+                );
+            }
         }
     }
     $elements[$i->institution.'_settings'] = array(
@@ -917,15 +949,17 @@ foreach ($institutions as $i) {
                 'type'  => 'submit',
                 'value' => get_string('update'),
                 'class' => 'btn-primary'
-            ),
-            $i->institution.'_remove' => array(
-                'type'  => 'submit',
-                'class' => 'btn-secondary',
-                'value' => get_string('removeuserfrominstitution1', 'admin'),
-                'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
             )
         )
     );
+    if (in_array($i->institution, $isadminfor)) {
+        $elements[$i->institution.'_settings']['elements'][$i->institution.'_remove'] = array(
+            'type'  => 'submit',
+            'class' => 'btn-secondary',
+            'value' => get_string('removeuserfrominstitution1', 'admin'),
+            'confirm' => get_string('confirmremoveuserfrominstitution', 'admin'),
+        );
+    }
     if ($institutionloop == $institutionlength - 1) {
         $elements[$i->institution.'_settings']['class'] = 'last';
     }
@@ -996,15 +1030,19 @@ function edituser_institution_submit(Pieform $form, $values) {
 
     global $USER, $SESSION;
     foreach ($userinstitutions as $i) {
-        if ($USER->can_edit_institution($i->institution)) {
+        if ($USER->can_edit_institution($i->institution, false, true)) {
+            $adminval = isset($values[$i->institution . '_admin']) ? (int) ($values[$i->institution . '_admin'] == 'on') : $i->admin;
+            $staffval = isset($values[$i->institution . '_staff']) ? (int) ($values[$i->institution . '_staff'] == 'on') : $i->staff;
+            $supportadminval = isset($values[$i->institution . '_supportadmin']) ? (int) ($values[$i->institution . '_supportadmin'] == 'on') : $i->supportadmin;
             if (isset($values[$i->institution.'_submit'])) {
                 $newuser = (object) array(
                     'usr'         => $user->id,
                     'institution' => $i->institution,
                     'ctime'       => db_format_timestamp($i->ctime),
                     'studentid'   => $values[$i->institution . '_studentid'],
-                    'staff'       => (int) ($values[$i->institution . '_staff'] == 'on'),
-                    'admin'       => (int) ($values[$i->institution . '_admin'] == 'on'),
+                    'staff'       => $staffval,
+                    'admin'       => $adminval,
+                    'supportadmin' => $supportadminval,
                 );
                 if ($values[$i->institution . '_expiry']) {
                     $newuser->expiry = db_format_timestamp($values[$i->institution . '_expiry']);
@@ -1066,6 +1104,8 @@ function edituser_institution_submit(Pieform $form, $values) {
     redirect('/admin/users/edit.php?id='.$user->id);
 }
 
+$loginas = $USER->can_masquerade_as($user, array('supportadmin'));
+
 $smarty = smarty();
 $smarty->assign('user', $user);
 $smarty->assign('expired', $expired);
@@ -1084,8 +1124,8 @@ $smarty->assign('deleteform', $deleteform);
 $smarty->assign('siteform', $siteform);
 $smarty->assign('institutions', count($allinstitutions));
 $smarty->assign('institutionform', $institutionform);
+$smarty->assign('loginas', $loginas);
 
-$smarty->assign('loginas', $USER->is_admin_for_user($user));
 $smarty->assign('PAGEHEADING', display_name($user));
 $smarty->assign('SUBSECTIONHEADING', TITLE);
 setpageicon($smarty, 'icon-user-cog');

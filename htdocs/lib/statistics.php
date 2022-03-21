@@ -5471,7 +5471,7 @@ function display_statistics($institution, $type, $extra = null) {
         $showall = true;
     }
     else {
-        if (!$USER->get('admin') && !$USER->get('staff') && !$USER->is_institutional_admin($institution) && !$USER->is_institutional_staff($institution)) {
+        if (!$USER->get('admin') && !$USER->get('staff') && !$USER->is_institutional_admin($institution)&& !$USER->is_institutional_supportadmin($institution) && !$USER->is_institutional_staff($institution)) {
             throw new AccessDeniedException("Institution::statistics | " . get_string('accessdenied', 'auth.webservice'));
         }
         $showall = false;
@@ -6021,7 +6021,10 @@ function get_report_types($institution = null) {
     $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
     if (!empty($institution)) {
         if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
-            $USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
+           ($USER->is_institutional_staff($institution) || $USER->is_institutional_supportadmin($institution)) && empty($allstaffstats) && !empty($userstaffstats)) {
+            $infooptions = array(
+                'information_information' => get_string('Overview', 'statistics')
+            );
             $usersoptions = array(
                 'users_accesslist' => get_string('reportaccesslist', 'statistics'),
                 'users_masquerading' => get_string('reportmasquerading', 'statistics'),
@@ -6030,6 +6033,10 @@ function get_report_types($institution = null) {
             );
             asort($usersoptions);
             $optgroups = array(
+                'information' => array(
+                    'label' => get_string('Institution', 'admin'),
+                    'options' => $infooptions,
+                ),
                 'users' => array(
                     'label' => get_string('People', 'admin'),
                     'options' => $usersoptions,
@@ -6075,12 +6082,11 @@ function userhasaccess($institution, $report) {
     }
     $allstaffstats = get_config('staffstats');
     $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
-    if ($USER->is_institutional_staff($institution) && !empty($allstaffstats)) {
+    if (($USER->is_institutional_staff($institution) || $USER->is_institutional_supportadmin($institution)) && !empty($allstaffstats)) {
         return true;
     }
-
-    if ($USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
-        if (in_array($report, array('accesslist', 'masquerading', 'userdetails'))) {
+    if (($USER->is_institutional_staff($institution) || $USER->is_institutional_supportadmin($institution)) && empty($allstaffstats) && !empty($userstaffstats)) {
+        if (in_array($report, array('accesslist', 'masquerading', 'userdetails', 'useragreement'))) {
             return true;
         }
     }

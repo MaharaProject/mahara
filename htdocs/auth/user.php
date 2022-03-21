@@ -86,6 +86,7 @@ class User {
             'institutiontheme' => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
+            'supportadmininstitutions' => array(),
             'parentuser'       => null,
             'loginanyway'       => false,
             'sesskey'          => '',
@@ -796,6 +797,14 @@ class User {
         return isset($a[$institution]);
     }
 
+    public function is_institutional_supportadmin($institution = null) {
+        $a = $this->get('supportadmininstitutions');
+        if (is_null($institution)) {
+            return !empty($a);
+        }
+        return isset($a[$institution]);
+    }
+
     public function is_institutional_staff($institution = null) {
         $a = $this->get('staffinstitutions');
         if (is_null($institution)) {
@@ -804,9 +813,12 @@ class User {
         return isset($a[$institution]);
     }
 
-    public function can_edit_institution($institution = null, $staff = false) {
+    public function can_edit_institution($institution = null, $staff = false, $supportadmin = false) {
         if ($staff) {
             return $this->get('admin') || $this->get('staff') || $this->is_institutional_admin($institution) || $this->is_institutional_staff($institution);
+        }
+        if ($supportadmin) {
+            return $this->get('admin') || $this->is_institutional_admin($institution) || $this->is_institutional_supportadmin($institution);
         }
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
@@ -885,6 +897,29 @@ class User {
         return false;
     }
 
+    public function is_supportadmin_for_user($user) {
+        if ($this->get('admin') || $this->get('staff')) {
+            return true;
+        }
+        if (!$this->is_institutional_admin() && !$this->is_institutional_staff() && !$this->is_institutional_supportadmin()) {
+            return false;
+        }
+        if ($user instanceof User) {
+            $userinstitutions = $user->get('institutions');
+        }
+        else {
+            $userinstitutions = load_user_institutions($user->id);
+        }
+
+        foreach ($userinstitutions as $i) {
+            if ($this->is_institutional_admin($i->institution)
+                || $this->is_institutional_supportadmin($i->institution)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function is_staff_for_user($user) {
         if ($this->get('admin') || $this->get('staff')) {
             return true;
@@ -899,6 +934,7 @@ class User {
         }
         foreach ($userinstitutions as $i) {
             if ($this->is_institutional_admin($i->institution)
+                || $this->is_institutional_supportadmin($i->institution)
                 || $this->is_institutional_staff($i->institution)) {
                 return true;
             }
@@ -919,6 +955,7 @@ class User {
         $institutions             = load_user_institutions($this->get('id'));
         $admininstitutions = array();
         $staffinstitutions = array();
+        $supportadmininstitutions = array();
         $themename = get_config('theme');
         $headerlogo = null;
         $headerlogosmall = null;
@@ -930,6 +967,9 @@ class User {
             }
             if ($i->staff) {
                 $staffinstitutions[$i->institution] = $i->institution;
+            }
+            if ($i->supportadmin) {
+                $supportadmininstitutions[$i->institution] = $i->institution;
             }
             if (is_null($themeinstitution)) {
                 $themeinstitution = $name;
@@ -965,6 +1005,7 @@ class User {
         $this->set('institutions', $institutions);
         $this->set('admininstitutions', $admininstitutions);
         $this->set('staffinstitutions', $staffinstitutions);
+        $this->set('supportadmininstitutions', $supportadmininstitutions);
     }
 
     public function get_themedata() {
@@ -2233,10 +2274,46 @@ class LiveUser extends User {
         $this->load_views();
     }
 
+    public function can_masquerade_as($user, $roles=array()) {
+        if (!$user instanceof User) {
+            $userobj = new User();
+            $userobj->find_by_id($user->id);
+            $user = $userobj;
+        }
+        // No point masquerading as yourself
+        if ($this->id === $user->get('id')) {
+            return false;
+        }
+        // Admins can masquerade no matter the $roles
+        if ($this->is_admin_for_user($user)) {
+            return true;
+        }
+        if (empty($roles)) {
+            return false;
+        }
+        if (in_array('staff', $roles)) {
+            $stafflogin = $this->is_staff_for_user($user) && !$user->get('staff');
+            $stafflogin = $stafflogin && !$user->is_admin_for_user($this);
+            $stafflogin = $stafflogin && !$user->is_institutional_admin();
+            if ($stafflogin && is_null($this->get('parentuser'))) {
+                return true;
+            }
+        }
+        if (in_array('supportadmin', $roles)) {
+            $supportadminlogin = $this->is_supportadmin_for_user($user) && !$user->get('staff');
+            $supportadminlogin = $supportadminlogin && !$user->is_admin_for_user($this);
+            $supportadminlogin = $supportadminlogin && !$user->is_institutional_admin();
+            if ($supportadminlogin && is_null($this->get('parentuser'))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function change_identity_to($userid) {
         $user = new User;
         $user->find_by_id($userid);
-        if (!$this->is_admin_for_user($user)) {
+        if (!$this->can_masquerade_as($user, array('supportadmin'))) {
             throw new AccessDeniedException(get_string('loginasdenied', 'admin'));
         }
         $olduser = $this->get('parentuser');

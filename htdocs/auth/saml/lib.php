@@ -95,10 +95,15 @@ class AuthSaml extends Auth {
         $this->config['authloginmsg'] = '';
         $this->config['role'] = '';
         $this->config['roleprefix'] = '';
+        $this->config['idaffiliations'] = '';
+        $this->config['emailaffiliations'] = '';
+        $this->config['roleaffiliations'] = '';
+        $this->config['roleaffiliationdelimiter'] = '';
         $this->config['rolesiteadmin'] = '';
         $this->config['rolesitestaff'] = '';
         $this->config['roleinstadmin'] = '';
         $this->config['roleinststaff'] = '';
+        $this->config['roleinstsupportadmin'] = '';
         $this->config['organisationname'] = '';
         $this->config['roleautogroups'] = '';
         $this->config['roleautogroupsall'] = false;
@@ -162,10 +167,15 @@ class AuthSaml extends Auth {
         $avatar          = isset($attributes[$this->config['avatar']][0]) ? $attributes[$this->config['avatar']][0] : null;
         $roles           = isset($attributes[$this->config['role']]) ? $attributes[$this->config['role']] : array();
         $roleprefix      = isset($this->config['roleprefix']) ? $this->config['roleprefix'] : null;
+        $idaffiliations = isset($attributes[$this->config['idaffiliations']]) ? $attributes[$this->config['idaffiliations']] : array();
+        $emailaffiliations = isset($attributes[$this->config['emailaffiliations']]) ? $attributes[$this->config['emailaffiliations']] : array();
+        $roleaffiliations = isset($attributes[$this->config['roleaffiliations']]) ? $attributes[$this->config['roleaffiliations']] : array();
+        $roleaffiliationdelimiter = isset($this->config['roleaffiliationdelimiter']) ? $this->config['roleaffiliationdelimiter'] : null;
         $rolesiteadmin   = isset($this->config['rolesiteadmin']) ? array_map('trim', explode(',', $this->config['rolesiteadmin'])) : array();
         $rolesitestaff   = isset($this->config['rolesitestaff']) ? array_map('trim', explode(',', $this->config['rolesitestaff'])) : array();
         $roleinstadmin   = isset($this->config['roleinstadmin']) ? array_map('trim', explode(',', $this->config['roleinstadmin'])) : array();
         $roleinststaff   = isset($this->config['roleinststaff']) ? array_map('trim', explode(',', $this->config['roleinststaff'])) : array();
+        $roleinstsupportadmin   = isset($this->config['roleinstsupportadmin']) ? array_map('trim', explode(',', $this->config['roleinstsupportadmin'])) : array();
         $roleautogroups  = isset($this->config['roleautogroups']) ? array_map('trim', explode(',', $this->config['roleautogroups'])) : array();
         $roleautogroupsall = isset($this->config['roleautogroupsall']) ? $this->config['roleautogroupsall'] : false;
         if (is_isolated()) {
@@ -188,9 +198,55 @@ class AuthSaml extends Auth {
                 return false;
             }
         }
+
+        $isremote = $this->config['remoteuser'] ? true : false;
+        $affiliations = array();
+        $remoteuserids = array();
+        if ($isremote) {
+            $remoteuserids[] = $remoteuser;
+        }
+        // Check if we have id affiliations
+        if (!empty($idaffiliations)) {
+            foreach ($idaffiliations as $idaffiliation) {
+                if ($roleaffiliationdelimiter) {
+                    list($myid, $myaffiliation) = explode($roleaffiliationdelimiter, $idaffiliation);
+                    $mymap = $this->get_affiliation_map($myaffiliation);
+                    if ($mymap) {
+                        $affiliations[$mymap]['id'] = $idaffiliation;
+                        if ($isremote) {
+                            $remoteuserids[] = $idaffiliation;
+                        }
+                    }
+                }
+            }
+        }
+        // Check if we have email affiliations
+        if (!empty($emailaffiliations)) {
+            foreach ($emailaffiliations as $emailaffiliation) {
+                if ($roleaffiliationdelimiter) {
+                    list($myrole, $myaffiliation) = explode($roleaffiliationdelimiter, $emailaffiliation);
+                    $mymap = $this->get_affiliation_map($myaffiliation);
+                    if ($mymap) {
+                        $affiliations[$mymap]['email'] = $emailaffiliation;
+                    }
+                }
+            }
+        }
+
+        // Check if we have role affiliations
+        if (!empty($roleaffiliations)) {
+            foreach ($roleaffiliations as $roleaffiliation) {
+                if ($roleaffiliationdelimiter) {
+                    list($myrole, $myaffiliation) = explode($roleaffiliationdelimiter, $roleaffiliation);
+                    $mymap = $this->get_affiliation_map($myaffiliation);
+                    if ($mymap) {
+                        $affiliations[$mymap]['roles'][] = $myrole;
+                    }
+                }
+            }
+        }
         // Retrieve a $user object. If that fails, create a blank one.
         try {
-            $isremote = $this->config['remoteuser'] ? true : false;
             $user = new User;
             if (get_config('usersuniquebyusername')) {
                 // When turned on, this setting means that it doesn't matter
@@ -234,10 +290,36 @@ class AuthSaml extends Auth {
                 $user->find_by_email_address($email);
             }
             else if ($isremote) {
-                $user->find_by_instanceid_username($this->instanceid, $remoteuser, $isremote);
+                $found = false;
+                foreach ($remoteuserids as $remoteuserid) {
+                    try {
+                        $user->find_by_instanceid_username($this->instanceid, $remoteuserid, $isremote);
+                        $found = true;
+                        break;
+                    }
+                    catch (AuthUnknownUserException $e) {
+                        // user not found
+                    }
+                }
+                if (!$found) {
+                    throw new AuthUnknownUserException("User not found by remote username for auth instance " . $this->instanceid);
+                }
             }
             else {
-                $user->find_by_username($remoteuser);
+                $found = false;
+                foreach ($remoteuserids as $remoteuserid) {
+                    try {
+                        $user->find_by_username($remoteuserid);
+                        $found = true;
+                        break;
+                    }
+                    catch (AuthUnknownUserException $e) {
+                        // user not found
+                    }
+                }
+                if (!$found) {
+                    throw new AuthUnknownUserException("User not found by remote username for auth instance " . $this->instanceid);
+                }
             }
 
             if ($user->get('suspendedcusr')) {
@@ -263,36 +345,17 @@ class AuthSaml extends Auth {
                 return false;
             }
         }
+        $roletypes = array(
+            'siteadmin' => $rolesiteadmin,
+            'sitestaff' => $rolesitestaff,
+            'instadmin' => $roleinstadmin,
+            'inststaff' => $roleinststaff,
+            'instsupportadmin' => $roleinstsupportadmin,
+            'autogroups' => $roleautogroups,
+            'autogroupsall' => $roleautogroupsall
+        );
 
-        /*******************************************/
-        $institutionrole = 'member'; // default role
-        $userroles = array();
-        $usr_is_siteadmin = 0;
-        $usr_is_sitestaff = 0;
-        if ($roles && is_array($roles)) {
-            foreach ($roles as $rk => $rv) {
-                if (in_array($rv, $rolesiteadmin)) {
-                    $user->admin = 1;
-                    $usr_is_siteadmin = 1;
-                }
-                if (in_array($rv, $rolesitestaff)) {
-                    $user->staff = 1;
-                    $usr_is_sitestaff = 1;
-                }
-                if (in_array($rv, $roleinstadmin)) {
-                    $institutionrole = 'admin';
-                }
-                if (in_array($rv, $roleinststaff)) {
-                    $institutionrole = 'staff';
-                }
-                if (in_array($rv, $roleautogroups)) {
-                    $userroles[] = array('role' => 'autogroupadmin',
-                                         'institution' => ($roleautogroupsall ? '_site' : $institutionname),
-                                         'active' => 1,
-                                         'provisioner' => 'saml');
-                }
-            }
-        }
+        list ($user, $usr_is_siteadmin, $usr_is_sitestaff, $userroles, $institutionrole) = $this->saml_map_roles($user, $roles, $institutionname, $roletypes);
 
         if ($create) {
 
@@ -379,34 +442,7 @@ class AuthSaml extends Auth {
             }
             // Double check that the user is in this institution and add them if allowed
             if (get_config('usersuniquebyusername')) {
-                if (!get_field('usr_institution', 'ctime', 'usr', $user->id, 'institution', $institutionname)) {
-                    require_once('institution.php');
-                    $institution = new Institution($institutionname);
-                    if (!empty($roles) && $institutionrole == 'admin') {
-                        $institution->addUserAsStaff($user);
-                    }
-                    else if (!empty($roles) && $institutionrole == 'staff') {
-                        $institution->addUserAsStaff($user);
-                    }
-                    else {
-                        // if no roles then always add as a normal member
-                        $institution->addUserAsMember($user);
-                    }
-                }
-                else {
-                    if (!empty($roles) && $institutionrole == 'admin') {
-                        set_field('usr_institution', 'admin', 1, 'usr', $user->id, 'institution', $institutionname);
-                        set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
-                    }
-                    else if (!empty($roles) && $institutionrole == 'staff') {
-                        set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
-                        set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $institutionname);
-                    }
-                    else if (!empty($roles) && $institutionrole == 'member') {
-                        set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
-                        set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
-                    }
-                }
+                saml_set_basic_role($user, $institutionname, $roles, $institutionrole, $roletypes);
             }
             if (!empty($roles) && empty($usr_is_siteadmin)) {
                 // make sure they are not site admin anymore
@@ -419,6 +455,38 @@ class AuthSaml extends Auth {
             $user->lastlastlogin      = $user->lastlogin;
             $user->lastlogin          = time();
         }
+
+        $oldaffiliations = get_records_sql_assoc("SELECT institution, staff, admin FROM {usr_institution} WHERE usr = ? AND institution != ?", array($user->id, $institutionname));
+        if (!empty($affiliations)) {
+            $primaryemail = '';
+            $maxrolevalue = 0;
+            foreach ($affiliations as $affiliation => $affiliationroles) {
+                list ($aff_user, $aff_usr_is_siteadmin, $aff_usr_is_sitestaff, $aff_userroles, $aff_institutionrole) = $this->saml_map_roles($user, $affiliationroles['roles'], $affiliation, $roletypes);
+                $this->saml_set_basic_role($aff_user, $affiliation, $affiliationroles['roles'], $aff_institutionrole, $roletypes);
+                // remove from old affiliations as we've dealt with this one now
+                if (!empty($affiliationroles['email']) && $create) {
+                    set_profile_field($user->id, 'email', $affiliationroles['email'], true);
+                    $currentrolevalue = $this->get_max_role_value($affiliationroles['roles'], $roletypes);
+                    if ($currentrolevalue > $maxrolevalue) {
+                        $primaryemail = $affiliationroles['email'];
+                        $maxrolevalue = $currentrolevalue;
+                    }
+                }
+                unset($oldaffiliations[$affiliation]);
+            }
+            if (!empty($primaryemail)) {
+                set_user_primary_email($user->id, $primaryemail);
+                $user->email = $primaryemail;
+            }
+        }
+        if (!empty($oldaffiliations)) {
+            foreach ($oldaffiliations as $oldaffid => $oldaffiliation) {
+                // Not affiliated with this institution anymore so need to remove them
+                $oldinstitution = new Institution($oldaffid);
+                $oldinstitution->removeMember($user->id);
+            }
+        }
+
         if (!empty($userroles)) {
             if ($create) {
                 $user->set_roles($userroles);
@@ -507,6 +575,164 @@ class AuthSaml extends Auth {
     public function needs_remote_username() {
         return $this->config['remoteuser'] || parent::needs_remote_username();
     }
+
+    private function saml_map_roles($user, $roles, $institutionname, $roletypes) {
+
+        $institutionrole = 'member'; // default role
+        $userroles = array();
+        $usr_is_siteadmin = 0;
+        $usr_is_sitestaff = 0;
+
+        if ($roles && is_array($roles)) {
+            foreach ($roles as $rk => $rv) {
+                if (in_array($rv, $roletypes['siteadmin'])) {
+                    $user->admin = 1;
+                    $usr_is_siteadmin = 1;
+                }
+                if (in_array($rv, $roletypes['sitestaff'])) {
+                    $user->staff = 1;
+                    $usr_is_sitestaff = 1;
+                }
+                if (in_array($rv, $roletypes['instadmin'])) {
+                    $institutionrole = 'admin';
+                }
+                if (in_array($rv, $roletypes['inststaff'])) {
+                    $institutionrole = 'staff';
+                }
+                if (in_array($rv, $roletypes['instsupportadmin'])) {
+                    $institutionrole = 'supportadmin';
+                }
+                if (in_array($rv, $roletypes['autogroups'])) {
+                    $userroles[] = array('role' => 'autogroupadmin',
+                                         'institution' => ($roletypes['autogroupsall'] ? '_site' : $institutionname),
+                                         'active' => 1,
+                                         'provisioner' => 'saml');
+                }
+            }
+        }
+        return array($user, $usr_is_siteadmin, $usr_is_sitestaff, $userroles, $institutionrole);
+    }
+
+    private function saml_set_basic_role($user, $institutionname, $roles, $institutionrole, $roletypes) {
+        if (!get_field('usr_institution', 'ctime', 'usr', $user->id, 'institution', $institutionname)) {
+            require_once('institution.php');
+            $institution = new Institution($institutionname);
+            if (!empty($roles) && $institutionrole == 'admin') {
+                $institution->addUserAsAdmin($user, $user->authinstance);
+            }
+            else if (!empty($roles) && $institutionrole == 'staff') {
+                $institution->addUserAsStaff($user, $user->authinstance);
+            }
+            else if (!empty($roles) && $institutionrole == 'supportadmin') {
+                $institution->addUserAsSupportAdmin($user, $user->authinstance);
+            }
+            else {
+                // if no roles then always add as a normal member
+                $institution->addUserAsMember($user, false, false, false, $user->authinstance);
+            }
+        }
+        else {
+            if (!empty($roles) && $institutionrole == 'admin') {
+                set_field('usr_institution', 'admin', 1, 'usr', $user->id, 'institution', $institutionname);
+                // Only turn off institution staff if we actually have it defined in our saml config
+                if (isset($roletypes['inststaff'][0]) && !empty($roletypes['inststaff'][0])) {
+                    set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution support admin if we actually have it defined in our saml config
+                if (isset($roletypes['instsupportadmin'][0]) && !empty($roletypes['instsupportadmin'][0])) {
+                    set_field('usr_institution', 'supportadmin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+            }
+            else if (!empty($roles) && $institutionrole == 'staff') {
+                // Only turn off institution admin if we actually have it defined in our saml config
+                if (isset($roletypes['instadmin'][0]) && !empty($roletypes['instadmin'][0])) {
+                    set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $institutionname);
+                // Only turn off institution support admin if we actually have it defined in our saml config
+                if (isset($roletypes['instsupportadmin'][0]) && !empty($roletypes['instsupportadmin'][0])) {
+                    set_field('usr_institution', 'supportadmin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+            }
+            else if (!empty($roles) && $institutionrole == 'member') {
+                // Only turn off institution admin if we actually have it defined in our saml config
+                if (isset($roletypes['instadmin'][0]) && !empty($roletypes['instadmin'][0])) {
+                    set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution staff if we actually have it defined in our saml config
+                if (isset($roletypes['inststaff'][0]) && !empty($roletypes['inststaff'][0])) {
+                    set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution support admin if we actually have it defined in our saml config
+                if (isset($roletypes['instsupportadmin'][0]) && !empty($roletypes['instsupportadmin'][0])) {
+                    set_field('usr_institution', 'supportadmin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+            }
+            else if (!empty($roles) && $institutionrole == 'supportadmin') {
+                // Only turn off institution admin if we actually have it defined in our saml config
+                if (isset($roletypes['instadmin'][0]) && !empty($roletypes['instadmin'][0])) {
+                    set_field('usr_institution', 'admin', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                // Only turn off institution staff if we actually have it defined in our saml config
+                if (isset($roletypes['inststaff'][0]) && !empty($roletypes['inststaff'][0])) {
+                    set_field('usr_institution', 'staff', 0, 'usr', $user->id, 'institution', $institutionname);
+                }
+                set_field('usr_institution', 'supportadmin', 1, 'usr', $user->id, 'institution', $institutionname);
+            }
+        }
+    }
+
+    private function get_affiliation_map($external) {
+        // If you need any affiliation mapping you can add it here
+        // For example:
+        // $map = array('example.com' => 'myinstitution',
+        //              'example2.com' => 'mytestinstitution');
+        // if (isset($map[$external]) && record_exists('institution', 'name', $map[$external])) {
+        //    return $map[$external];
+        // }
+        return false;
+    }
+
+    /**
+     * Get a numerical value for the roles
+     *
+     * So we can rank which is more important
+     * @return integer
+     */
+    private function get_max_role_value($roles, $roletypes) {
+        // Base role of member
+        $maxrolevalue = 0;
+        foreach ($roletypes as $rk => $roletype) {
+            $roletypes[$rk] = is_array($roletype) ? $roletype[0] : $roletype;
+        }
+        $myroles = array_intersect($roletypes, $roles);
+        if (isset($myroles['siteadmin'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 5;
+            }
+        }
+        else if (isset($myroles['sitestaff'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 4;
+            }
+        }
+        else if (isset($myroles['instadmin'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 3;
+            }
+        }
+        else if (isset($myroles['instsupportadmin'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 2;
+            }
+        }
+        else if (isset($myroles['inststaff'])) {
+            foreach ($myroles as $mk => $myrole) {
+                $maxrolevalue = 1;
+            }
+        }
+        return $maxrolevalue;
+    }
 }
 
 /**
@@ -521,10 +747,15 @@ class PluginAuthSaml extends PluginAuth {
         'surnamefield'           => '',
         'role'                   => '',
         'roleprefix'             => '',
+        'idaffiliations'         => '',
+        'emailaffiliations'      => '',
+        'roleaffiliations'       => '',
+        'roleaffiliationdelimiter' => '',
         'rolesiteadmin'          => '',
         'rolesitestaff'          => '',
         'roleinstadmin'          => '',
         'roleinststaff'          => '',
+        'roleinstsupportadmin'   => '',
         'organisationname'       => '',
         'roleautogroups'         => '',
         'roleautogroupsall'      => 0,
@@ -1523,6 +1754,30 @@ EOF;
                 'defaultvalue' => self::$default_config['roleprefix'],
                 'help' => true,
             ),
+            'idaffiliations' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforidaffiliations', 'auth.saml'),
+                'defaultvalue' => self::$default_config['idaffiliations'],
+                'help' => true,
+            ),
+            'emailaffiliations' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforemailaffiliations', 'auth.saml'),
+                'defaultvalue' => self::$default_config['emailaffiliations'],
+                'help' => true,
+            ),
+            'roleaffiliations' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleaffiliations', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleaffiliations'],
+                'help' => true,
+            ),
+            'roleaffiliationdelimiter' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleaffiliationdelimiter', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleaffiliationdelimiter'],
+                'help' => true,
+            ),
             'rolesiteadmin' => array(
                 'type' => 'text',
                 'title' => get_string('samlfieldforrolesiteadmin', 'auth.saml'),
@@ -1540,6 +1795,11 @@ EOF;
                 'title' => get_string('samlfieldforroleinstadmin', 'auth.saml'),
                 'defaultvalue' => self::$default_config['roleinstadmin'],
                 'help' => false,
+            ),
+            'roleinstsupportadmin' => array(
+                'type' => 'text',
+                'title' => get_string('samlfieldforroleinstsupportadmin', 'auth.saml'),
+                'defaultvalue' => self::$default_config['roleinstsupportadmin'],
             ),
             'roleinststaff' => array(
                 'type' => 'text',
@@ -1764,10 +2024,15 @@ EOF;
             'studentidfield' => $values['studentidfield'],
             'role' => $values['role'],
             'roleprefix' => trim($values['roleprefix']),
+            'idaffiliations' => $values['idaffiliations'],
+            'emailaffiliations' => $values['emailaffiliations'],
+            'roleaffiliations' => $values['roleaffiliations'],
+            'roleaffiliationdelimiter' => $values['roleaffiliationdelimiter'],
             'rolesiteadmin' => $values['rolesiteadmin'],
             'rolesitestaff' => $values['rolesitestaff'],
             'roleinstadmin' => $values['roleinstadmin'],
             'roleinststaff' => $values['roleinststaff'],
+            'roleinstsupportadmin' => $values['roleinstsupportadmin'],
             'organisationname' => $values['organisationname'],
             'roleautogroups' => $values['roleautogroups'],
             'roleautogroupsall' => $values['roleautogroupsall'],

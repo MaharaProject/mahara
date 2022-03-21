@@ -420,6 +420,9 @@ EOD;
             else if ($record['role'] == 'staff') {
                 set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $record['institution']);
             }
+            else if ($record['role'] == 'supportadmin') {
+                set_field('usr_institution', 'supportadmin', 1, 'usr', $user->id, 'institution', $record['institution']);
+            }
         }
 
         db_commit();
