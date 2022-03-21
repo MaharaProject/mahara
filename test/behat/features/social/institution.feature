@@ -28,6 +28,16 @@ Feature: Mahara account permissions in institutions
     Then I should see "Request membership of an institution"
     And I log out
 
+  Scenario: Edit an institution and change some options
+    Given I log in as "admin" with password "Kupuh1pa!"
+    And I choose "Settings" in "Institutions" from administration menu
+    And I press "Edit \"Institution One\""
+    And I set the following fields to these values:
+    | Institution name                   | Institution Three |
+    And I press "Submit"
+    Then I should see "Institution Three"
+    And I log out
+
   Scenario: Site admin vs institution admin when sharing institution page
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuh1pa!"

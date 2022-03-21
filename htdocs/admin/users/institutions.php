@@ -916,7 +916,7 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $newinstitution = new Institution($institution);
-        $newinstitution->displayname = $values['displayname'];
+        $newinstitution->set('displayname', $values['displayname']);
         $oldinstitution = get_record('institution', 'name', $institution);
     }
 
@@ -934,10 +934,10 @@ function institution_submit(Pieform $form, $values) {
 
     if (!empty($values['lang'])) {
         if ($values['lang'] == 'sitedefault') {
-            $newinstitution->lang = null;
+            $newinstitution->set('lang', null);
         }
         else {
-            $newinstitution->lang = $values['lang'];
+            $newinstitution->set('lang', $values['lang']);
         }
     }
 
@@ -1030,9 +1030,9 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
     }
     if ($institution != 'mahara') {
-        $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
+        $newinstitution->set('defaultmembershipperiod', ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null);
         if ($USER->get('admin')) {
-            $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+            $newinstitution->set('maxuseraccounts', ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null);
             $newinstitution->maxgroups            = ($values['maxgroups']) ? intval($values['maxgroups']) : null;
             $newinstitution->expiry               = db_format_timestamp($values['expiry']);
         }
