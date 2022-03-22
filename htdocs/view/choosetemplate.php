@@ -142,7 +142,7 @@ jQuery(function($) {
 EOF;
 
 $smarty = smarty(
-    array('js/preview.js', 'searchtable', 'paginator', 'js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js'),
+    array('js/preview.js', 'searchtable', 'paginator', 'js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js'),
     array(),
     array('stylesheets' => array('style/views.css'))
 );

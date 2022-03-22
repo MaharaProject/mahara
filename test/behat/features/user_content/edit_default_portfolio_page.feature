@@ -18,7 +18,7 @@ I can create a new page from the site default portfolio page
     And I click on "Edit" in "Page template" card menu
     And I should see "Drag the 'Plus' button onto the page to create a new block."
     # Add a text block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Text"
     And I set the following fields to these values:

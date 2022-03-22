@@ -26,7 +26,7 @@ Scenario:
   And I choose "Pages and collections" in "Create" from main menu
   And I follow "Collection UserA_01"
   And I press "Edit"
-  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Navigation"
   And I select "Collection UserA_02" from "Collection"

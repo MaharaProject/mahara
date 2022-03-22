@@ -2,12 +2,12 @@ gridstack
 -----
 
 Website: https://github.com/gridstack/gridstack.js
-Version: 0.6.4
+Version: 4.3.1
 
 Modifications:
 
-- Keep only gridstack.jQueryUI.js, gridstack.js, and gridstack.scss
-- Moved scss file from src/gridstack.scss to
-  theme/raw/sass/lib/_gridstack.scss
-- removed z-index:0 from grid-stack-content class css because it breaks
-the sign-off block modal
+- In a terminal ran `npm install --save gridstack` to generate the npm node_modules/gridstack folder
+- Copy the following contents of node_modules/gridstack/dist/ folder into htdocs/js/gridstack_modules/
+  - all files beginning with gridstack-h5*   (this is used for the display pages to allow scrolling correctly on mobile)
+  - all files beginning with gridstack-jq*   (this is for the block edit page to allow for moving blocks on mobile)
+- Copy scss file from node_modules/gridstack/dist/src/gridstack.scss to htdocs/theme/raw/sass/lib/_gridstack.scss

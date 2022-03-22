@@ -16,7 +16,7 @@ Scenario: Create a block and see comments and details modal and headers update a
     Given I log in as "UserA" with password "Kupuh1pa!"
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I set the field "Block title" to "Image Block"
     And I click on blocktype "Image"
@@ -72,7 +72,7 @@ Scenario: Add a block with multiple artefacts and see the comments and details h
     Given I log in as "UserA" with password "Kupuh1pa!"
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I set the field "Block title" to "File(s) to Download Block"
     And I click on blocktype "File(s) to download"

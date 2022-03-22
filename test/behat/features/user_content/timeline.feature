@@ -34,7 +34,7 @@ Scenario: Add blocks and create versions
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Text"
     And I set the field "Block title" to "Text block version 1"
@@ -63,7 +63,11 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     # User saves Page Two to the timeline
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Page Two"
+    # Need to visit the edit page to get correct block dimensions
+    # for a block added by background step so that when versioned
+    # it records the correct block dimensions in view_versioning table
+    And I click on "Edit" in "Page Two" card menu
+    And I display the page
     And I press "More options"
     And I follow "Save to timeline"
     # Check for the conformation message

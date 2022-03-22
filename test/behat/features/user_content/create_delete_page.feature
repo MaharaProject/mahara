@@ -42,22 +42,22 @@ Scenario: Creating a page with content in it (Bug 1426983)
     | Page description | This is the edited description |
     And I press "Save"
     # Adding media block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "File(s) to download"
     And I press "Save"
     # Adding Journal block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Recent journal entries"
     And I press "Save"
     # Adding profile info block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Profile information"
     And I press "Save"
     # Adding external media block - but remove it instead
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "External media"
     And I press "Remove"

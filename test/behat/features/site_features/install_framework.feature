@@ -85,7 +85,7 @@ Scenario: Installing framework module and activating for an institution
 
  # Add another compentency annotation block
  And I press "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Annotation"
  And I fill in "My three cents" in editor "Annotation"

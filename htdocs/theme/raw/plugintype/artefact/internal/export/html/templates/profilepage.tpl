@@ -4,14 +4,12 @@
 <script>
 $(function () {
     var options = {
-        verticalMargin: 5,
+        margin: 1,
         cellHeight: 10,
         float: true,
         ddPlugin: false,
     };
-    var grid = $('.grid-stack');
-    grid.gridstack(options);
-    grid = $('.grid-stack').data('gridstack');
+    var grid = GridStack.init(options);
     if (grid) {
         // should add the blocks one by one
         var blocks = {json_encode arg=$blocks};

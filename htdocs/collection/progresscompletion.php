@@ -33,9 +33,7 @@ $javascript = array(
     'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
     'tinymce',
     'viewmenu',
-    'js/jquery/jquery-ui/js/jquery-ui.min.js',
-    'js/lodash/lodash.js',
-    'js/gridstack/gridstack.js',
+    'js/gridstack/gridstack_modules/gridstack-h5.js',
     'js/gridlayout.js');
 
 $views = $collection->get('views');
@@ -60,14 +58,12 @@ else {
     $blocksjs = <<<EOF
 $(function () {
     var options = {
-        verticalMargin: 5,
+        margin: 1,
         cellHeight: 10,
         disableDrag : true,
         disableResize: true,
     };
-    var grid = $('.grid-stack');
-    grid.gridstack(options);
-    grid = $('.grid-stack').data('gridstack');
+    var grid = GridStack.init(options);
     // should add the blocks one by one
     var blocks = {$blocks};
     loadGrid(grid, blocks);

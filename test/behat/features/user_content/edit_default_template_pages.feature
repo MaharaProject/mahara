@@ -20,7 +20,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I should see "Page template"
     When I click on "Edit" in "Dashboard template" card menu
     # add "My friends" block and verify it is displayed on the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on "Show more"
     And I click on "Show more"
@@ -31,7 +31,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I click on "My friends" in the "Content types" "Blocks" property
     Then I should see "My friends" in the "Page content" "Views" property
     # add "My groups" block and verify it is displayed on the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "My groups"
     And I press "Save"
@@ -40,7 +40,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     Given I press "Return to site pages and collections"
     And I click on "Edit" in "Profile template" card menu
     # Verify that only one block of a certin type can be added to a template page  (ie only 1 Wall block)
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Wall"
     And I press "Save"

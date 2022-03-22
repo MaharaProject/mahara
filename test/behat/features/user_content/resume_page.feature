@@ -114,7 +114,7 @@ Scenario: Editing Education and Employment info
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Profile page" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "My entire résumé"
     And I set the field "Block title" to "My entire résumé"
@@ -280,7 +280,7 @@ Scenario: Adding interests
     And I should see "Saved successfully"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "One résumé field"
     And I select the radio "Interests"

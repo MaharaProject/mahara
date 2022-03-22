@@ -143,6 +143,9 @@ $card-secondary-header-color:               $theme-text-color !default;
 $card-secondary-border-color:               #ddd !default;
 $card-secondary-border-width:               2px !default;
 
+// Gridstack dotted line around blocks
+$draggable-border-color:                    #888 !default;
+
 // Tables
 $cursor-disabled:                           not-allowed !default; // Disabled cursor for form controls and buttons.
 

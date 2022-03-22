@@ -416,6 +416,20 @@ class BehatGeneral extends BehatBase {
     }
 
     /**
+     * Click on the add block button.
+     *
+     * @When /^I click on the add block button$/
+     * @When /^I click on the Add Block button$/
+     */
+    public function i_click_on_add_block() {
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the add block button');
+        $xpath = "//div[(contains(concat(' ', normalize-space(@id), ' '), concat(' ', 'content-editor-foldable', ' ')))]/div";
+        $node = $this->find('xpath', $xpath, $exception);
+        $this->ensure_node_is_visible($node);
+        $node->click();
+    }
+
+    /**
      * Click on the delete confirm link or button.
      *
      * @When /^I click on "(?P<link_or_button>(?:[^"]|\\")*)" delete button$/
