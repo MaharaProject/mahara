@@ -1,0 +1,7 @@
+{
+  "patches": {
+    "behat/mink": {
+      "Fix implode()": "escaper.patch"
+    }
+  }
+}
