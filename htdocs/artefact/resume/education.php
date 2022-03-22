@@ -1,6 +1,6 @@
 <?php
 /**
- * Add an employment record
+ * Add an education record
  *
  * @package    mahara
  * @subpackage artefact-resume
@@ -15,11 +15,11 @@ define('MENUITEM', 'create/resume');
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'resume');
 define('SECTION_PAGE', 'index');
-define('MENUITEM_SUBPAGE', 'employment');
+define('MENUITEM_SUBPAGE', 'education');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
-define('SUBSECTIONHEADING', get_string('employment', 'artefact.resume'));
+define('SUBSECTIONHEADING', get_string('education', 'artefact.resume'));
 safe_require('artefact', 'resume');
 safe_require('artefact', 'file');
 
@@ -27,7 +27,7 @@ if (!PluginArtefactResume::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('resume','artefact.resume')));
 }
 
-$compositetypes = array('employmenthistory');
+$compositetypes = array('educationhistory');
 $inlinejs = ArtefactTypeResumeComposite::get_js($compositetypes);
 $compositeforms = ArtefactTypeResumeComposite::get_forms($compositetypes);
 
@@ -36,4 +36,4 @@ setpageicon($smarty, 'icon-regular icon-address-book');
 $smarty->assign('compositeforms', $compositeforms);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('SUBPAGENAV', PluginArtefactResume::submenu_items());
-$smarty->display('artefact:resume:employment.tpl');
+$smarty->display('artefact:resume:education.tpl');

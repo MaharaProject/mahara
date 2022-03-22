@@ -20,7 +20,8 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I follow "About me"
     # Checking Resume submenu and tabs
     And I choose "Résumé" in "Create" from main menu
-    And I follow "Education and employment"
+    And I follow "Education"
+    And I follow "Employment"
     And I follow "Achievements"
     And I follow "Goals and skills"
     And I follow "Interests"
