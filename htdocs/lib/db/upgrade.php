@@ -825,5 +825,26 @@ function xmldb_core_upgrade($oldversion=0) {
             )");
     }
 
+    if ($oldversion < 2022041300) {
+        if ($records = get_records_sql_array("
+            SELECT a.id, ae.email FROM {artefact} a
+            JOIN {artefact_internal_profile_email} ae ON ae.artefact = a.id
+            WHERE a.artefacttype = ?
+            AND a.title != ae.email", array('email'))) {
+            log_debug('Need to fix up email info drift');
+            $count = 0;
+            $limit = 100;
+            $total = count($records);
+            foreach ($records as $record) {
+                execute_sql("UPDATE artefact SET title = ? WHERE id = ?", array($record->email, $record->id));
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
