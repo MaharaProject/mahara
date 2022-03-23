@@ -6110,9 +6110,9 @@ class View {
                 }
 
                 $views = $collection->views();
-                $firstview_id = $views['views'][0]->view;
-                $firstview = new View($firstview_id);
                 if (!empty($views)) {
+                    $firstview_id = $views['views'][0]->view;
+                    $firstview = new View($firstview_id);
                     $c['url'] = $collection->get_url(false);
                     $c['fullurl'] = $needsubdomain ? $collection->get_url(true, false, $firstview) : ($wwwroot . $c['url']);
 
