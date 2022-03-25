@@ -181,7 +181,7 @@ behat:
 revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
 whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
 mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/main)
-breakpoints := $(shell git diff-tree --diff-filter=ACM --no-commit-id -r -z -p $(mergebase) HEAD test/behat/features |  grep "I insert breakpoint")
+breakpoints := $(shell git diff-tree --diff-filter=ACM --no-commit-id -r -z -p $(mergebase) HEAD test/behat/features :^test/behat/features/manual_checks |  grep "I insert breakpoint")
 
 minaccept:
 	@echo "Running minimum acceptance test..."
