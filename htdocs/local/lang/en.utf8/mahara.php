@@ -66,7 +66,7 @@ $string['accountcreatedchangepasswordhtml'] = '<p>Dear %s</p>
 ';
 
 $string['youraccounthasbeensuspendedtextcron'] = 'Your account on %s has been suspended as a result of a change to your registration status on the Pharmacy Council public register.';
-$string['pcnz_youraccounthasbeensuspendedreasontextcron'] = 'Change to your registration status on the Pharmacy Council public register';
+$string['pcnz_youraccounthasbeensuspendedreasontextcron'] = 'Change to your registration status on the Pharmacy Council public register over the last year';
 
 $string['legal']              = 'Terms and conditions';
 
