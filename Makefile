@@ -204,17 +204,25 @@ securitycheck:
 push: securitycheck minaccept
 	@echo "Pushing the change upstream ..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/publish/main; \
+		git push gerrit HEAD:refs/for/main; \
 	else \
-		git push gerrit HEAD:refs/publish/main/$(TAG); \
+		git push gerrit HEAD:refs/for/main -o topic=$(TAG); \
+	fi
+
+wip: securitycheck
+	@echo "Pushing the change upstream as WIP ..."
+	@if test -z "$(TAG)"; then \
+		git push gerrit HEAD:refs/for/main%wip; \
+	else \
+		git push gerrit HEAD:refs/for/main%wip -o topic=$(TAG); \
 	fi
 
 security: minaccept
 	@echo "Pushing the SECURITY change upstream ..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/drafts/main; \
+		git push gerrit HEAD:refs/for/main%private; \
 	else \
-		git push gerrit HEAD:refs/drafts/main/$(TAG); \
+		git push gerrit HEAD:refs/for/main%private -o topic=$(TAG); \
 	fi
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
 
