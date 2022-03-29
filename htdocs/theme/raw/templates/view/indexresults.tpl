@@ -28,7 +28,7 @@
                             {if $view.type == 'profile'}
                             <div class="widget-detail"><p>{str tag=profiledescription}</p></div>
                             {elseif $view.type == 'dashboard'}
-                            <div class="widget-detail"><p>{str tag=dashboarddescription}</p></div>
+                            <div class="widget-detail"><p>{str tag=dashboarddescription1}</p></div>
                             {elseif $view.type == 'grouphomepage'}
                             <div class="widget-detail"><p>{str tag=grouphomepagedescription section=view}</p></div>
                             {elseif $view.description}
@@ -47,7 +47,7 @@
                                 {if $view.type == 'profile'}
                                     <p>{str tag=profiledescription}</p>
                                 {elseif $view.type == 'dashboard'}
-                                    <p>{str tag=dashboarddescription}</p>
+                                    <p>{str tag=dashboarddescription1}</p>
                                 {elseif $view.type == 'grouphomepage'}
                                     <p>{str tag=grouphomepagedescription section=view}</p>
                                 {elseif $view.description}

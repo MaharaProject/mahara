@@ -827,7 +827,7 @@ This card is used to show a page.
         </h2>
         <div class="card-body">
             <div class="detail">
-                <div class="detail">Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.</div>
+                <div class="detail">Your dashboard page is what you see on the homepage when you are logged in. Only you have access to it.</div>
             </div>
         </div>
         <div class="card-footer">
