@@ -5626,6 +5626,7 @@ function is_serialized_string($sstr) {
  * @param string $sobj
  */
 function is_valid_serialized_skin_attribute($sobj) {
+    $sobj = urldecode($sobj);
     if (is_string($sobj) && preg_match('/^O:8:"stdClass":\d+:{.*}$/s', $sobj)) {
         // Make sure each property is a string, integer or null.
         $pos = strpos($sobj, '{');
@@ -5660,6 +5661,10 @@ function is_valid_serialized_skin_attribute($sobj) {
                     return false;
             }
         }
+        return true;
+    }
+    else if (is_string($sobj) && !preg_match('/O:8:"stdClass"/', $sobj)) {
+        // we don't have an object in the string so is safe to unserialize
         return true;
     }
     return false;
