@@ -48,7 +48,8 @@ class mahara_institution_external extends external_api {
             $id = $user['userid'];
         }
         else if (isset($user['username'])) {
-            $dbuser = get_record('usr', 'username', $user['username']);
+            $username = strtolower($user['username']);
+            $dbuser = get_record('usr', 'username', $username);
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
@@ -79,8 +80,8 @@ class mahara_institution_external extends external_api {
                             'users'           => new external_multiple_structure(
                                                     new external_single_structure(
                                                         array(
-                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                                'username'        => new external_value(PARAM_RAW, 'Username of the favourites owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the person', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                                'username'        => new external_value(PARAM_RAW, 'Username of the person', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                                                                 )
                                                             )
                                                         )
@@ -116,10 +117,11 @@ class mahara_institution_external extends external_api {
             if (!$authinstance = get_record('auth_instance', 'id', $dbuser->authinstance, 'active', 1)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidauthtype', 'auth.webservice', $dbuser->authinstance));
             }
-            // check the institution is allowed
-            // basic check authorisation to edit for the current institution
-            if (!$USER->can_edit_institution($authinstance->institution)) {
-                throw new WebserviceInvalidParameterException('add_members | ' . get_string('accessdeniedforinstuser', 'auth.webservice', $authinstance->institution, $dbuser->id));
+            // As we are adding a member to a new institution we need to check
+            // the new institution has an auth method of the same type
+            $newinst_authmethods = get_column_sql("SELECT authname FROM {auth_instance} WHERE institution = ?", array($params['institution']));
+            if (!in_array($authinstance->authname, $newinst_authmethods)) {
+                throw new WebserviceInvalidParameterException('add_members | ' . get_string('accessdeniedforinstuserauth', 'auth.webservice', $params['institution'], $dbuser->id));
             }
             $userids[]= $dbuser->id;
         }
