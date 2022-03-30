@@ -883,7 +883,7 @@ EOF;
 
     if ($USER->get('parentuser')) {
         $smarty->assign('USERMASQUERADING', true);
-        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', display_name($USER)));
+        $smarty->assign('masqueradedetails', get_string('youaremasqueradingas', 'mahara', display_name($USER) . ' (' . $USER->get('studentid') . ')')); // WR 377327 customisation
         $smarty->assign('becomeyoulink', hsc($wwwroot) . 'admin/users/changeuser.php?restore=1');
         $smarty->assign('becomeyouagain', get_string('becomeadminagain', 'admin', $USER->get('parentuser')->name));
     }
