@@ -20,6 +20,9 @@ $string['registeredstatusinactive'] = 'Account status is \'Registered, inactive\
 $string['registeredstatusinactivefor'] = '%s has status \'Registered, inactive\'';
 $string['registeredstatussuspendedfor'] = '%s has status \'suspended\'';
 $string['registeredsuspended'] = 'Suspended';
+$string['registeredremoved'] = 'Removed';
+$string['registeredremoverequest'] = 'Remove request';
+$string['registeredstruckoff'] = 'Struck off';
 $string['legal']              = 'Terms and conditions';
 
 $string['statsmaxfriends1'] = array(

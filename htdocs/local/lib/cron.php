@@ -243,7 +243,7 @@ function get_changes($token) {
                     if ($suspenduserid = get_field('usr', 'id', 'username', $person->personid)) {
                         if (!get_field('usr', 'suspendedctime', 'id', $suspenduserid)) {
                             // Not currently suspended so suspend them
-                            set_apc_status($person->personid, null);
+                            set_apc_status($suspenduserid, null);
                             // PCNZ Customisation WR356091
                             suspend_user($suspenduserid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
                             unset($people[$person->personid]);
@@ -256,6 +256,8 @@ function get_changes($token) {
                     // We don't fetch personal info on these users but
                     // just make sure they are expired on our end too if they exist here
                     if ($expireuserid = get_field('usr', 'id', 'username', $person->personid)) {
+                        // As they are not available anymore we need to make sure they are deactivated
+                        execute_sql('UPDATE {usr} SET active = 0, inactivemailsent = 1 WHERE id = ?', array($expireuserid));
                         if (!get_field('usr', 'expiry', 'id', $expireuserid)) {
                             // Not currently expired so expire them, but don't alert them
                             $now = db_format_timestamp(time());
@@ -386,6 +388,10 @@ function set_active_status($userid, $status) {
         if (!get_field('usr', 'suspendedctime', 'id', $userid)) {
             // PCNZ Customisation WR356091
             suspend_user($userid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
+            if ($status == PCNZ_REMOVED || $status == PCNZ_STRUCKOFF || $status == PCNZ_REMOVING) {
+                // As they are not available anymore we need to make sure they are deactivated
+                execute_sql('UPDATE {usr} SET active = 0, inactivemailsent = 1 WHERE id = ?', array($userid));
+            }
         }
     }
 }
