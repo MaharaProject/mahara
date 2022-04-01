@@ -390,10 +390,10 @@ function set_active_status($userid, $status) {
         if (!get_field('usr', 'suspendedctime', 'id', $userid)) {
             // PCNZ Customisation WR356091
             suspend_user($userid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
-            if ($status == PCNZ_REMOVED || $status == PCNZ_STRUCKOFF || $status == PCNZ_REMOVING) {
-                // As they are not available anymore we need to make sure they are deactivated
-                execute_sql('UPDATE {usr} SET active = 0, inactivemailsent = 1 WHERE id = ?', array($userid));
-            }
+        }
+        if ($status == PCNZ_REMOVED || $status == PCNZ_STRUCKOFF || $status == PCNZ_REMOVING) {
+            // As they are not available anymore we need to make sure they are deactivated
+            execute_sql('UPDATE {usr} SET active = 0, inactivemailsent = 1 WHERE id = ?', array($userid));
         }
     }
 }
@@ -547,8 +547,13 @@ function process_changes($changes) {
         }
         // Do post create / update stuff
         $userid = $user->get('id');
-        if ($suspendeduserid = get_field_sql("SELECT id FROM {usr} WHERE username = ? AND suspendedctime IS NOT NULL", array($userid))) {
-            unsuspend_user($suspendeduserid); // un-suspend user
+        if ($person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT ||
+                $person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDINACTIVE) {
+            if ($suspendeduserid = get_field_sql("SELECT id FROM {usr} WHERE username = ? AND suspendedctime IS NOT NULL", array($userid))) {
+                unsuspend_user($suspendeduserid); // un-suspend user
+            }
+            // make sure they are active
+            execute_sql('UPDATE {usr} SET active = 1, inactivemailsent = 0 WHERE id = ?', array($userid));
         }
     }
 }
