@@ -26,7 +26,7 @@ define('PCNZ_STRUCKOFF', 10); // The 'Struck off' value
 define('PCNZ_REMOVING', 11); // The 'Removal request' value
 define('PCNZ_SCOPE_PHARMACIST', 2); // The 'Pharmacist' scope that excludes interns
 
-define('PCNZ_ROLLOVER', "040116"); // The month + day + hour for yearly rollover, eg 040116 = the 1st of April at 4pm
+define('PCNZ_ROLLOVER', "040120"); // The month + day + hour for yearly rollover, eg 040116 = the 1st of April at 4pm
 define('PCNZ_INTERVALCHECK', '-1 day'); // The number of 'whatever' in the past to fetch data for
                                           // - should be changed after testing to the interval period
                                           // of the cron, eg '-1 day'
@@ -214,6 +214,7 @@ function get_changes($token) {
             }
         }
     }
+/*    
     // Fetch any practising statuses that have changed since last run
     $practicingstatus_data = json_encode(
         array(
@@ -281,6 +282,7 @@ function get_changes($token) {
             }
         }
     }
+ */
     // Fetch any APC certificates that have been issued since last run
     $certificate_data = json_encode(
         array(
