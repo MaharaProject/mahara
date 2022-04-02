@@ -549,8 +549,8 @@ function process_changes($changes) {
         $userid = $user->get('id');
         if ($person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDCURRENT ||
                 $person['personalinfo']->practitioner->practicingstatusid == PCNZ_REGISTEREDINACTIVE) {
-            if (!get_field('usr', 'suspendedctime', 'id', $userid)) {
-                unsuspend_user($userid); // un-suspend user
+            if ($suspendeduserid = get_field_sql("SELECT id FROM {usr} WHERE id = ? AND suspendedctime IS NOT NULL", array($userid))) {
+                unsuspend_user($suspendeduserid); // un-suspend user
             }
             // make sure they are active
             execute_sql('UPDATE {usr} SET active = 1, inactivemailsent = 0 WHERE id = ?', array($userid));
