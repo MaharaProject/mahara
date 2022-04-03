@@ -26,7 +26,7 @@ define('PCNZ_STRUCKOFF', 10); // The 'Struck off' value
 define('PCNZ_REMOVING', 11); // The 'Removal request' value
 define('PCNZ_SCOPE_PHARMACIST', 2); // The 'Pharmacist' scope that excludes interns
 
-define('PCNZ_ROLLOVER', "040120"); // The month + day + hour for yearly rollover, eg 040116 = the 1st of April at 4pm
+define('PCNZ_ROLLOVER', "040116"); // The month + day + hour for yearly rollover, eg 040116 = the 1st of April at 4pm
 define('PCNZ_INTERVALCHECK', '-1 day'); // The number of 'whatever' in the past to fetch data for
                                           // - should be changed after testing to the interval period
                                           // of the cron, eg '-1 day'
@@ -387,7 +387,7 @@ function set_active_status($userid, $status) {
     else {
         // If we get here we should suspend the user
         set_account_preference($userid, 'registerstatus', $status);
-        if ($suspendeduserid = get_field_sql("SELECT id FROM {usr} WHERE id = ? AND suspendedctime IS NOT NULL", array($userid))) {
+        if ($suspendeduserid = get_field_sql("SELECT id FROM {usr} WHERE id = ? AND suspendedctime IS NULL", array($userid))) {
             // PCNZ Customisation WR356091
             suspend_user($suspendeduserid, get_string('pcnz_youraccounthasbeensuspendedreasontextcron', 'mahara'), 0); // suspend as cron
         }
@@ -469,6 +469,7 @@ function process_changes($changes) {
             $user->preferredname = $person['personalinfo']->nickname;
             $user->email = $person['personalinfo']->contactemailaddress;
             $user->commit();
+            set_user_primary_email($user->get('id'), $person['personalinfo']->contactemailaddress);
             $institution = get_field('auth_instance', 'institution', 'id', PCNZ_AUTHINSTANCE);
             if (isset($person['personalinfo']->apc)) {
                 if (
