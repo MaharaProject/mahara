@@ -467,8 +467,14 @@ function process_changes($changes) {
             $user->username = $person['personalinfo']->id;
             $user->studentid = $person['personalinfo']->id;
             $user->preferredname = $person['personalinfo']->nickname;
+            $new_user->email        = $person['personalinfo']->contactemailaddress;
             $user->commit();
-            set_user_primary_email($user->get('id'), $person['personalinfo']->contactemailaddress);
+            // Make sure their primary email is set to the right value
+            if ($primaryemail = get_field('artefact_internal_profile_email', 'artefact', 'owner', $user->get('id'), 'principal', 1)) {
+                execute_sql("UPDATE {artefact_internal_profile_email} SET email = ? WHERE artefact = ?", array($person['personalinfo']->contactemailaddress, $primaryemail));
+                execute_sql("UPDATE {artefact} SET title = ? WHERE artefact = ?", array($person['personalinfo']->contactemailaddress, $primaryemail));
+            }
+
             $institution = get_field('auth_instance', 'institution', 'id', PCNZ_AUTHINSTANCE);
             if (isset($person['personalinfo']->apc)) {
                 if (

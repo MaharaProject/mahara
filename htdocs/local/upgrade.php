@@ -116,4 +116,51 @@ function xmldb_local_upgrade($oldversion=0) {
         $cron->dayofweek    = '*';
         insert_record('cron', $cron);
     }
+
+    if ($oldversion < 2022040500) {
+        log_debug('Remove the collections that are not needed');
+        if ($collections = get_records_sql_array("
+            SELECT c.id FROM {collection} c
+            JOIN {collection_template} ct ON ct.collection = c.id
+            WHERE ct.originaltemplate = 4638 AND c.owner IN (
+                SELECT u.id FROM {usr} u WHERE u.username IN('3950','4077','4267','4397','4442','4476','4517','4558','4702','4761','4814','4875','4913','4916','4929','4981','5021','5030','5136','5153','5180','5220','5323','5370','5385','5409','5414','5427','5428','5444','5563','5598','5657','5698','5716','5782','5784','5819','5910','6039','6065','6130','6220','6244','6330','6332','6455','6527','6541','6553','6558','6751','6781','6803','6852','7069','7079','7126','7491','7698','7716','7788','7803','7845','7936','8053','8157','8176','8264','8287','8313','8328','8347','8357','8363','8458','8507','8613','8654','8672','8884','8928','8945','8949','8964','9020','9038','9110','9281','9282','9285','9376','9558','9768','9833','9834','9837','9859','9867','9880','9889','9896','9914','9917','9963','9993','10047','10055','10064','10099','10102','10118','10145','10152','10185','10192','10270','10325','10374','10395','10413','10419','10425','10443','10466','10479','10488','10491','10505','10515','10522','10526','10544','10620','10640','10660','10701','10717','10737','10743','10764','10765','10766','10774','10797','10805','10821','10874','10886','10912','10937','10946','11064','11070','11081','11202','11316','11384','11428','11518','11563','11564','11724','11730','11733','11748','11815','11922','11925','11928','11935','11948','12043','12065','12289','12403','12506','12805','12842')
+            )
+            ORDER BY c.owner")) {
+            require_once(get_config('libroot') . 'collection.php');
+            $count = 0;
+            $limit = 50;
+            $total = count($collections);
+            foreach ($collections as $collection) {
+                $c = new Collection($collection->id);
+                $c->delete();
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+        log_debug('Fix up the email address mismatch');
+        if ($artefacts = get_records_sql_array("
+            SELECT u.email, a.id
+            FROM {usr} u
+            JOIN {artefact} a ON (a.owner = u.id AND a.artefacttype = 'email')
+            JOIN {artefact_internal_profile_email} ai ON ai.artefact = a.id
+            WHERE ai.principal = ?
+            AND u.email != ai.email
+            AND u.email !=''", array(1))) {
+            $count = 0;
+            $limit = 50;
+            $total = count($artefacts);
+            foreach ($artefacts as $artefact) {
+                execute_sql("UPDATE {artefact_internal_profile_email} SET email = ? WHERE artefact = ?", array($artefact->email, $artefact->id));
+                execute_sql("UPDATE {artefact} SET title = ? WHERE id = ?", array($artefact->email, $artefact->id));
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
 }
