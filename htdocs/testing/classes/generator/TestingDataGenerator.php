@@ -2503,6 +2503,10 @@ EOD;
         $data->owner = $ownerid;
         $data->author = $this->get_user_id($record['user']);
         $data->private = !empty($record['private']) ? 1 : 0;
+        if (!empty($record['group'])) {
+            $group_id = get_field('group', 'id', 'name', $record['group']);
+            $data->group = $group_id ? $group_id : null;
+        }
         $data->title = 'Comment';
 
         $comment = new ArtefactTypeComment(0, $data);

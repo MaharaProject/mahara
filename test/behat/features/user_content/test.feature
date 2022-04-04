@@ -126,11 +126,12 @@ Background:
     | Page One Grp | Group Page 1 | group     | Group1    |
 
     And the following "pagecomments" exist:
-    # Available fields: user*, comment*, page*, attachment, private
-    | user  | page         | comment          | private |
-    | UserB | Page Two A | Comment by User B on page | false   |
-    | UserB | Page Three A | Hi, I am a comment by User B | false   |
-    | UserA | Page Three A | Hi, I am a comment by the owner | false   |
+    # Available fields: user*, comment*, page*, attachment, private, group (compulsory for group pages)
+    | user  | page         | comment                        | private |  group  |
+    | UserB | Page Two A   | Comment by User B on page      | false   |         |
+    | UserB | Page Three A | Hi, I am a comment by User B   | false   |         |
+    | UserA | Page Three A | Hi, I am a comment by the owner| false   |         |
+    | UserA | Page One Grp | Hi, I am a comment by UserA    | false   |  Group1 |
 
     And the following "collections" exist:
     # Available fields: title*, description, ownertype*, ownername*, pages

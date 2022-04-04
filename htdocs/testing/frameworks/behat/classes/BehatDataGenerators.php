@@ -388,7 +388,8 @@ class BehatDataGenerators extends BehatBase {
             'comment'                  => 'text',
             'attachment'               => 'text',
             'private'                  => 'bool',
-            'page'                     => 'text'
+            'page'                     => 'text',
+            'group'                    => 'text' // compulsory for comments on group pages
           ),
           'required' => array('user', 'comment', 'page')
         )
