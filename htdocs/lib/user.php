@@ -633,7 +633,7 @@ function set_user_primary_email($userid, $newemail, $ignore=false) {
             ),
             (object)array(
                 'owner' => $user->id,
-                'email' => $user->email,
+            //    'email' => $user->email,
             )
         );
         // If the new primary email address is to be verified, remove it
