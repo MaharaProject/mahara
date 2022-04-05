@@ -616,7 +616,7 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
  * @param int $userid The user ID
  * @param string $newemail The new valid email address
  */
-function set_user_primary_email($userid, $newemail) {
+function set_user_primary_email($userid, $newemail, $ignore=false) {
     safe_require('artefact', 'internal');
 
     $user = new User();
@@ -624,7 +624,7 @@ function set_user_primary_email($userid, $newemail) {
 
     db_begin();
     // Update user's primary email address
-    if ($newemail !== $user->email) {
+    if ($newemail !== $user->email || $ignore) {
         // Set the current email address to be secondary
         update_record(
             'artefact_internal_profile_email',

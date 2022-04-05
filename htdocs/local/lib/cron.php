@@ -467,9 +467,10 @@ function process_changes($changes) {
             $user->username = $person['personalinfo']->id;
             $user->studentid = $person['personalinfo']->id;
             $user->preferredname = $person['personalinfo']->nickname;
+            $user->email        = $person['personalinfo']->contactemailaddress;
             $user->commit();
             if (!empty($person['personalinfo']->contactemailaddress)) {
-                set_user_primary_email($user->get('id'), $person['personalinfo']->contactemailaddress);
+                set_user_primary_email($user->get('id'), $person['personalinfo']->contactemailaddress, true);
             }
             $institution = get_field('auth_instance', 'institution', 'id', PCNZ_AUTHINSTANCE);
             if (isset($person['personalinfo']->apc)) {
