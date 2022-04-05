@@ -142,7 +142,7 @@ function xmldb_local_upgrade($oldversion=0) {
         }
         log_debug('Fix up the email address mismatch');
         if ($artefacts = get_records_sql_array("
-            SELECT u.email, a.id
+            SELECT u.email, u.id
             FROM {usr} u
             JOIN {artefact} a ON (a.owner = u.id AND a.artefacttype = 'email')
             JOIN {artefact_internal_profile_email} ai ON ai.artefact = a.id
@@ -152,9 +152,8 @@ function xmldb_local_upgrade($oldversion=0) {
             $count = 0;
             $limit = 50;
             $total = count($artefacts);
-            foreach ($artefacts as $artefact) {
-                execute_sql("UPDATE {artefact_internal_profile_email} SET email = ? WHERE artefact = ?", array($artefact->email, $artefact->id));
-                execute_sql("UPDATE {artefact} SET title = ? WHERE id = ?", array($artefact->email, $artefact->id));
+            foreach ($artefacts as $user) {
+                set_user_primary_email($user->id, $user->email);
                 $count++;
                 if (($count % $limit) == 0 || $count == $total) {
                     log_debug("$count/$total");
