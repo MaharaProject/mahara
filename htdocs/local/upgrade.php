@@ -132,7 +132,7 @@ function xmldb_local_upgrade($oldversion=0) {
             $total = count($collections);
             foreach ($collections as $collection) {
                 $c = new Collection($collection->id);
-                $c->delete();
+                $c->delete(true);
                 $count++;
                 if (($count % $limit) == 0 || $count == $total) {
                     log_debug("$count/$total");
@@ -153,7 +153,7 @@ function xmldb_local_upgrade($oldversion=0) {
             $limit = 50;
             $total = count($artefacts);
             foreach ($artefacts as $user) {
-                set_user_primary_email($user->id, $user->email);
+                set_user_primary_email($user->id, $user->email, true);
                 $count++;
                 if (($count % $limit) == 0 || $count == $total) {
                     log_debug("$count/$total");
