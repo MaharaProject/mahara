@@ -2046,13 +2046,14 @@ function get_login_form_js($form) {
     $form = json_encode($form);
     $strcookiesnotenabled    = json_encode(get_string('cookiesnotenabled'));
     $cookiename = get_config('cookieprefix') . 'ctest';
+    $samesite = is_https() ? 'None;Secure' : 'Lax';
     $js = <<< EOF
 <script>
 var loginbox = jQuery('#loginform_container');
-document.cookie = "$cookiename=1";
+document.cookie = "$cookiename=1;samesite=$samesite";
 if (document.cookie) {
     loginbox.html($form);
-    document.cookie = '$cookiename=1;expires=1/1/1990 00:00:00';
+    document.cookie = '$cookiename=1;samesite=$samesite;expires=1/1/1990 00:00:00';
 }
 else {
     loginbox.empty().append(jQuery('<p>', { 'text': $strcookiesnotenabled }));
