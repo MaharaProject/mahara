@@ -356,7 +356,7 @@ class AuthSaml extends Auth {
         );
 
         list ($user, $usr_is_siteadmin, $usr_is_sitestaff, $userroles, $institutionrole) = $this->saml_map_roles($user, $roles, $institutionname, $roletypes);
-
+        $currentprincipalemail = null;
         if ($create) {
 
             $user->passwordchange     = 0;
@@ -433,6 +433,7 @@ class AuthSaml extends Auth {
                 $user->lastname = $lastname;
             }
             if (! empty($email)) {
+                $currentprincipalemail = $user->email;
                 set_profile_field($user->id, 'email', $email);
                 $user->email = $email;
             }
@@ -470,6 +471,19 @@ class AuthSaml extends Auth {
                     if ($currentrolevalue > $maxrolevalue) {
                         $primaryemail = $affiliationroles['email'];
                         $maxrolevalue = $currentrolevalue;
+                    }
+                }
+                else if (!empty($affiliationroles['email']) && !$create) {
+                    if (!get_field('artefact_internal_profile_email', 'artefact', 'email', $affiliationroles['email'], 'owner', $user->id)) {
+                        $newemail = new ArtefactTypeEmail(0, null, TRUE);
+                        $newemail->set('owner', $user->id);
+                        $newemail->set('title', $affiliationroles['email']);
+                        $newemail->commit();
+                    }
+                    if ($currentprincipalemail === $affiliationroles['email']) {
+                        // our principal email was an affiliated one so we want to mark
+                        // as principal again instead of the one passed in on 'email' variable
+                        set_user_primary_email($user->id, $affiliationroles['email']);
                     }
                 }
                 unset($oldaffiliations[$affiliation]);
