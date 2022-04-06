@@ -401,6 +401,7 @@ $string['nooauth'] = 'Not enabled for OAuth';
 $string['accessdenied'] = 'Access denied';
 $string['accessdeniedforinst'] = ' access denied for institution "%s"';
 $string['accessdeniedforinstuser'] = ' access denied to institution "%s" for account "%s"';
+$string['accessdeniedforinstuserauth'] = ' access denied to institution "%s" for account "%s" because there is no equivalent auth method';
 $string['accessdeniedforinstgroup'] = ' access denied for institution "%s" on group "%s"';
 $string['usernameexists2'] = 'Username "%s" is not valid.';
 $string['invalidauthtype'] = 'Invalid authentication type "%s"';
