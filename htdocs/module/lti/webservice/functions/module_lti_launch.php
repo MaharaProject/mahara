@@ -308,7 +308,6 @@ class module_lti_launch extends external_api {
                         'members'        => array($USER->get('id') => PluginModuleLti::can_grade() ? 'admin' : 'member'),
                         'allowarchives'  => true,
                         'hidden'         => true,
-                        'submittableto'  => false,
                     );
 
                     $groupid = group_create($group);
