@@ -236,7 +236,7 @@ jQuery(function($) {
                         if (feedbacktextarea.length && hastinymce) {
                             tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
                         }
-                        // hide_dock();
+                        hide_dock();
                         //focus on matrix annotation
                         $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
                     }
