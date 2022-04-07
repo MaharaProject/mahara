@@ -1,5 +1,6 @@
 <?php
 /**
+ * Atom feeds for group forums
  *
  * @package    mahara
  * @subpackage interaction-forum

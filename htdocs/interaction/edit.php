@@ -1,5 +1,6 @@
 <?php
 /**
+ * Interaction edits
  *
  * @package    mahara
  * @subpackage interaction

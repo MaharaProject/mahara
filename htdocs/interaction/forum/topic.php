@@ -1,5 +1,6 @@
 <?php
 /**
+ * Forum topic utils
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -254,7 +255,7 @@ $smarty->assign('posts', $posts);
 $smarty->assign('pagination', $pagination['html']);
 $smarty->display('interaction:forum:topic.tpl');
 
-/*
+/**
  * Render a page of posts
  *
  * @param array $posts list of posts
@@ -285,7 +286,7 @@ function buildpostlist($posts, $mode, $max_depth) {
 }
 
 
-/*
+/**
  * Renders a post
  *
  * @param object $post post object
@@ -378,6 +379,13 @@ function renderpost($post, $indent, $mode) {
     return $smarty->fetch('interaction:forum:post.tpl');
 }
 
+/**
+ * Validate the form for a topic subscription
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @throws AccessDeniedException
+ */
 function subscribe_topic_validate(Pieform $form, $values) {
     if (!is_logged_in()) {
         // This page is public, so the access denied exception will cause a
@@ -386,6 +394,13 @@ function subscribe_topic_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit the form for a topic subscription
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function subscribe_topic_submit(Pieform $form, $values) {
     global $USER;
     if ($values['type'] == 'subscribe') {
@@ -408,6 +423,13 @@ function subscribe_topic_submit(Pieform $form, $values) {
     redirect('/interaction/forum/topic.php?id=' . $values['topic']);
 }
 
+/**
+ * Check whether this post can be marked as not objectionable
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @throws AccessDeniedException
+ */
 function postnotobjectionable_validate(Pieform $form, $values) {
     global $moderator;
     if (!$moderator) {
@@ -415,6 +437,13 @@ function postnotobjectionable_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit the config to mark this post as not objectionable
+ *
+ * @param  Pieform $form
+ * @param array $values
+ * @return void
+ */
 function postnotobjectionable_submit(Pieform $form, $values) {
     global $SESSION, $USER, $topicid;
 
@@ -448,7 +477,8 @@ function postnotobjectionable_submit(Pieform $form, $values) {
     redirect($redirecturl);
 }
 
-/* Return the number of posts submitted by a poster
+/**
+ * Return the number of posts submitted by a poster
  *
  * @param int $posterid ID of the poster
  * @return int the number of posts
@@ -460,7 +490,8 @@ function get_postcount($posterid) {
         WHERE deleted != 1 AND poster = ?', array($posterid)));
 }
 
-/* Return the edit records of a post
+/**
+ * Return the edit records of a post
  *
  * @param int $postid ID of the post
  * @return array the edit records
@@ -494,7 +525,8 @@ function get_postedits($postid) {
     return $editrecs;
 }
 
-/* Check if the poster is the moderator of the forum in which the post is
+/**
+ *  Check if the poster is the moderator of the forum in which the post is
  *
  * @param int $postid ID of the post
  * @return true if yes, false if else
