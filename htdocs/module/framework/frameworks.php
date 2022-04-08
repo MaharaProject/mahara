@@ -226,6 +226,7 @@ function management_section() {
                 );
             }
             $framework_collections_count = count($fk->get_collectionids());
+            $framework->collections = $framework_collections_count;
             $framework->delete = false;
             if (empty($framework_collections_count)) {
                 $framework->delete = pieform(
