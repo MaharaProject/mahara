@@ -62,21 +62,6 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
 }
 
 /*
-*   The elastic search plug-in is for now only used in the "Universal Search" page.
-*   Search is performed using the internal plug-in in all other case.
-*   This might change in the future.
-*/
-function search_all($query_string, $limit, $offset = 0, $data = array(), $type = null) {
-    if (record_exists('search_installed', 'name', 'elasticsearch', 'active', 1)) {
-        safe_require('search', 'elasticsearch');
-        $plugin = 'elasticsearch';
-        $results = call_static_method(generate_class_name('search', $plugin), 'search_all', $query_string, $limit, $offset, $data, $type);
-        return $results;
-    }
-}
-
-
-/*
  * Institutional admin queries:
  *
  * These are only used to populate user lists on the Institution

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Elasticsearch PHP client
+ *
+ * @link      https://github.com/elastic/elasticsearch-php/
+ * @copyright Copyright (c) Elasticsearch B.V (https://www.elastic.co)
+ * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @license   https://www.gnu.org/licenses/lgpl-2.1.html GNU Lesser General Public License, Version 2.1
+ *
+ * Licensed to Elasticsearch B.V under one or more agreements.
+ * Elasticsearch B.V licenses this file to you under the Apache 2.0 License or
+ * the GNU Lesser General Public License, Version 2.1, at your option.
+ * See the LICENSE file in the project root for more information.
+ */
+
 
 declare(strict_types = 1);
 
@@ -7,32 +21,24 @@ namespace Elasticsearch\Serializers;
 use Elasticsearch\Common\Exceptions;
 use Elasticsearch\Common\Exceptions\Serializer\JsonErrorException;
 
-/**
- * Class SmartSerializer
- *
- * @category Elasticsearch
- * @package  Elasticsearch\Serializers\JSONSerializer
- * @author   Zachary Tong <zach@elastic.co>
- * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache2
- * @link     http://elastic.co
- */
+if (!defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+    //PHP < 7.2 Define it as 0 so it does nothing
+    define('JSON_INVALID_UTF8_SUBSTITUTE', 0);
+}
+
 class SmartSerializer implements SerializerInterface
 {
     /**
-     * Serialize assoc array into JSON string
-     *
-     * @param string|array $data Assoc array to encode into JSON
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function serialize($data)
+    public function serialize($data): string
     {
         if (is_string($data) === true) {
             return $data;
         } else {
-            $data = json_encode($data, JSON_PRESERVE_ZERO_FRACTION);
+            $data = json_encode($data, JSON_PRESERVE_ZERO_FRACTION + JSON_INVALID_UTF8_SUBSTITUTE);
             if ($data === false) {
-                throw new Exceptions\RuntimeException("Failed to JSON encode: ".json_last_error());
+                throw new Exceptions\RuntimeException("Failed to JSON encode: ".json_last_error_msg());
             }
             if ($data === '[]') {
                 return '{}';
@@ -43,16 +49,9 @@ class SmartSerializer implements SerializerInterface
     }
 
     /**
-     * Deserialize by introspecting content_type. Tries to deserialize JSON,
-     * otherwise returns string
-     *
-     * @param string $data JSON encoded string
-     * @param array  $headers Response Headers
-     *
-     * @throws JsonErrorException
-     * @return array
+     * {@inheritdoc}
      */
-    public function deserialize($data, $headers)
+    public function deserialize(?string $data, array $headers)
     {
         if (isset($headers['content_type']) === true) {
             if (strpos($headers['content_type'], 'json') !== false) {
@@ -75,20 +74,27 @@ class SmartSerializer implements SerializerInterface
      * @return array
      * @throws JsonErrorException
      */
-    private function decode($data)
+    private function decode(?string $data): array
     {
         if ($data === null || strlen($data) === 0) {
-            return "";
+            return [];
+        }
+
+        if (version_compare(PHP_VERSION, '7.3.0') >= 0) {
+            try {
+                $result = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+                return $result;
+            } catch (\JsonException $e) {
+                $result = $result ?? [];
+                throw new JsonErrorException($e->getCode(), $data, $result);
+            }
         }
 
         $result = @json_decode($data, true);
-
         // Throw exception only if E_NOTICE is on to maintain backwards-compatibility on systems that silently ignore E_NOTICEs.
         if (json_last_error() !== JSON_ERROR_NONE && (error_reporting() & E_NOTICE) === E_NOTICE) {
-            $e = new JsonErrorException(json_last_error(), $data, $result);
-            throw $e;
+            throw new JsonErrorException(json_last_error(), $data, $result);
         }
-
         return $result;
     }
 }

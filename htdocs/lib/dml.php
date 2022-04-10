@@ -161,10 +161,9 @@ function execute_sql($command, array $values=null, $use_trigger=true) {
                     $v->table = $table;
                 }
             }
-            if ($type == 'es') {
-                safe_require('search', 'elasticsearch');
-                ElasticsearchIndexing::bulk_add_to_queue($ids);
-            }
+
+            // Bulk add the IDs to search if appropriate.
+            bulk_add_to_search_queue($ids);
         }
     }
 
@@ -970,12 +969,13 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
         // Need to find the ids
         $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
         $ids = get_records_sql_array($sql, $values);
-        if ($type == 'es') {
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::bulk_add_to_queue($ids);
-        }
-        else if ($type == 'local') {
+
+        // Bulk add the IDs to search if appropriate.
+        if ($type == 'local') {
             $calllocal = true;
+        }
+        else {
+            bulk_add_to_search_queue($ids);
         }
     }
 
@@ -1033,10 +1033,8 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
         // Need to find the ids
         $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
         $ids = get_records_sql_array($sql, $values);
-        if ($type == 'es') {
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::bulk_add_to_queue($ids);
-        }
+
+        bulk_add_to_search_queue($ids);
     }
     $sql = 'DELETE FROM '. db_table_name($table) . ' ' . $select;
     try {
@@ -1141,10 +1139,8 @@ function delete_records_sql($sql, array $values=null) {
                         $v->table = $table;
                     }
                 }
-                if ($type == 'es') {
-                    safe_require('search', 'elasticsearch');
-                    ElasticsearchIndexing::bulk_add_to_queue($ids);
-                }
+
+                bulk_add_to_search_queue($ids);
             }
         }
         if (!empty($values) && is_array($values) && count($values) > 0) {
@@ -1266,23 +1262,34 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     return $replykey ? (integer)$id : true;
 }
 
+/**
+ * Does this table trigger a request to add to the search index queue
+ *
+ * @param string $table The table we are checking
+ *
+ * @return string|boolean Index or Local. Fall back to False.
+ */
 function table_need_trigger($table) {
+    // If you are wanting to have some saving option where you do not want to
+    // index your content you can define this constant to skip indexing.
+    // Useful for updates etc.
     if (defined('SKIP_TRIGGER') && SKIP_TRIGGER === true) {
         return false;
     }
+
     static $estables;
-    if (!defined('BEHAT_TEST') && isset($estables) && in_array($table, $estables)) {
-        return 'es';
+
+    if (empty($estables)) {
+        $search_plugin = get_config('searchplugin');
+        $tables = get_config_plugin('search', $search_plugin, 'types');
+        $estables = explode(',', $tables);
+        // Extra table to trigger queuing on.
+        $estables[] = 'view_artefact';
+    }
+    if (!defined('BEHAT_TEST') && !empty($estables) && in_array($table, $estables)) {
+        return 'indexable';
     }
 
-    if (!isset($estables) && get_config('searchplugin') == 'elasticsearch') {
-        $tables = get_config_plugin('search', 'elasticsearch', 'types');
-        $estables = explode(',', $tables);
-        $estables[] = 'view_artefact'; // special
-        if (in_array($table, $estables)) {
-            return 'es';
-        }
-    }
     $localtables = array('notification_internal_activity', 'module_multirecipient_userrelation'); // @TODO have the working out of local tables be a function call
     if ($localtables && in_array($table, $localtables)) {
         return 'local';
@@ -1292,12 +1299,7 @@ function table_need_trigger($table) {
 
 function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
     if ($type = table_need_trigger($table)) {
-        if ($type == 'es') {
-            $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue($id, $table, $artefacttype);
-        }
-        else if ($type == 'local') {
+        if ($type == 'local') {
             // Call the correct function / savetype
             $classname = generate_class_name_from_table($table);
             list($plugintype, $pluginname) = generate_plugin_type_from_table($table);
@@ -1307,6 +1309,10 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
                     call_static_method($classname, 'pseudo_trigger', $id, $savetype);
                 }
             }
+        }
+        else if ($type == 'indexable' && $search_class = does_search_plugin_have('add_to_queue')) {
+            $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
+            $search_class::add_to_queue($id, $table, $artefacttype);
         }
     }
 }
@@ -1506,9 +1512,10 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
                     $v->table = $table;
                 }
             }
-            if ($type == 'es') {
-                safe_require('search', 'elasticsearch');
-                ElasticsearchIndexing::bulk_add_to_queue($ids);
+
+            if ($type == 'indexable') {
+                // Bulk add the IDs to search if appropriate.
+                bulk_add_to_search_queue($ids);
             }
             else if ($type == 'local') {
                 $calllocal = true;
@@ -2247,4 +2254,16 @@ function db_table_exists($table) {
         )
         AND TABLE_NAME = $table
     ");
+}
+
+/**
+ * If a search plugin is enabled, add the IDs to its queue.
+ *
+ * @param array $ids
+ */
+function bulk_add_to_search_queue($ids) {
+    // Bulk add the IDs to search if appropriate.
+    if ($search_class = does_search_plugin_have('bulk_add_to_queue')) {
+        $search_class::bulk_add_to_queue($ids);
+    }
 }

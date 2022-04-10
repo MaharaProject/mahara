@@ -251,4 +251,51 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
                 )
         ));
     }
+
+    /**
+     * Return report results for group activity.
+     *
+     * @param string $start The date in YYY-mm-dd format.
+     * @param string $end The date in YYY-mm-dd format.
+     * @param string $sorttype What we are sorting on, if anything.
+     * @param int $count
+     * @param string $sortdesc The direction from the URL.
+     *
+     * @return array<int,array<mixed>> The $aggmap and $groupids.
+     */
+    public static function report_group_stats_table($start, $end, $sorttype, $count, $sortdesc) {
+        $aggmap = [];
+        $groupids = [];
+        return [$aggmap, $groupids];
+    }
+
+    /**
+     * Return report results for collaboration activity.
+     *
+     * @param array<int> $usrids The User IDs we may be filtering on.
+     * @param string $start The date in YYY-mm-dd format.
+     * @param string $end The date in YYY-mm-dd format.
+     *
+     * @return array<int,array<mixed>> The $aggmap and $aggregates.
+     */
+    public static function report_collaboration_stats_table($userids, $start, $end) {
+        return [];
+    }
+
+    /**
+     * Return report results for user activity.
+     *
+     * @param array<int> $usrids
+     * @param array<string,array<mixed>> $result
+     * @param string $sortdirection
+     * @param string $sortdesc The direction from the URL.
+     * @param string $sortorder
+     * @param string $sortname
+     * @param int $count
+     *
+     * @return array<int,array<mixed>> The $aggmap and $aggregates.
+     */
+    public static function report_useractivity_stats_table($usrids, $result, $sortdirection, $sortdesc, $sortorder, $sortname, $count) {
+        return [];
+    }
 }

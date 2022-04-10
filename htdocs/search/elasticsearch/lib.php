@@ -59,6 +59,14 @@ class PluginSearchElasticsearch extends PluginSearch {
     const queue_status_sent_individually = 2;
 
     /**
+     * Does this search plugin provide enhanced event log reports?
+     * @return bool
+     */
+    public static function provides_enhanced_event_log_reports() {
+        return true;
+    }
+
+    /**
      * This function indicates whether the plugin should take the raw $query string
      * when its group_search_user function is called, or whether it should get the
      * parsed query string.
@@ -1201,7 +1209,7 @@ class PluginSearchElasticsearch extends PluginSearch {
 
    /**
     * Builds the "results" table seen on the universal search results page
-    * @param unknown_type $data
+    * @param array<string,mixed> $data
     */
    public static function build_results_html(&$data) {
 
@@ -1292,6 +1300,289 @@ class PluginSearchElasticsearch extends PluginSearch {
        $data['pagination'] = $pagination['html'];
        $data['pagination_js'] = $pagination['javascript'];
    }
+
+   /**
+    * Return report results for group activity.
+    *
+    * @param string $start The date in YYY-mm-dd format.
+    * @param string $end The date in YYY-mm-dd format.
+    * @param string $sorttype What we are sorting on, if anything.
+    * @param int $count
+    * @param string $sortdesc The direction from the URL.
+    *
+    * @return array<int,array> The $aggmap and $groupids.
+    */
+   public static function report_group_stats_table($start, $end, $sorttype, $count, $sortdesc) {
+       $aggmap = [];
+       $groupids = [];
+       $sorttypeaggmap = '';
+
+       switch ($sorttype) {
+           case "groupcomments":
+               $sortdirection = array('EventTypeCount' => $sortdesc);
+               $sortorder = "(doc.event.value == 'saveartefact' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+               $sorttypeaggmap = '|saveartefact|comment|group';
+               break;
+
+           case "sharedviews":
+               $sortdirection = array('EventTypeCount' => $sortdesc);
+               $sortorder = "(doc.event.value == 'updateviewaccess' && doc.resourcetype.value == 'group' && doc.ownertype.value == 'user') ? 1 : 0";
+               $sorttypeaggmap = '|updateviewaccess|group|user';
+               break;
+
+           case "sharedcomments":
+               $sortdirection = array('EventTypeCount' => $sortdesc);
+               $sortorder = "(doc.event.value == 'sharedcommenttogroup' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
+               $sorttypeaggmap = '|sharedcommenttogroup|comment|group';
+               break;
+
+           default:
+               $sortdirection = [];
+               $sortorder = 1;
+       }
+
+       $params = array();
+
+       // Add in the elasticsearch data if needed
+        if (get_config('searchplugin') == 'elasticsearch' && get_config('eventlogenhancedsearch')) {
+            safe_require('search', 'elasticsearch');
+            $params = [
+                'query' => [
+                    'multi_match' => [
+                        'query' => 'group',
+                        'fields' => [
+                            'ownertype', 'resourcetype'
+                        ]
+                    ],
+                ],
+                'range' => [
+                    'range' => [
+                        'ctime' => [
+                            'gte' => $start . ' 00:00:00',
+                            'lte' => $end . ' 23:59:59'
+                        ]
+                    ]
+                ],
+                'aggs' => [
+                    'GroupId' => [
+                        'terms' => [
+                            'field' => 'ownerid',
+                            'order' => $sortdirection,
+                            'size' => $count,
+                        ],
+                        'aggs' => [
+                            'EventTypeCount' => [
+                                'sum' => [
+                                    'script' => [
+                                        'inline' => $sortorder,
+                                    ],
+                                ],
+                            ],
+                            'EventType' => [
+                                'terms' => [
+                                    'field' => 'event',
+                                    'min_doc_count' => 0,
+                                ],
+                                'aggs' => [
+                                    'ResourceType' => [
+                                        'terms' => [
+                                            'field' => 'resourcetype',
+                                        ],
+                                        'aggs' => [
+                                            'OwnerType' => [
+                                                'terms' => [
+                                                    'field' => 'ownertype',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+       if (empty($sortdirection)) {
+           unset($params['aggs']['GroupId']['terms']['order']);
+       }
+
+       $aggregates = PluginSearchElasticsearch::search_events($params, 0, 0);
+       if ($aggregates['totalresults'] > 0) {
+           ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
+           if (!empty($aggregates['aggregations']['GroupId']['buckets'])) {
+               $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], $offset, $limit, true);
+               foreach($groups as $k => $group) {
+                   if (isset($aggmap[$group['key'] . $sorttypeaggmap]) && $aggmap[$group['key'] . $sorttypeaggmap] > 0) {
+                       $groupids[$k] = $group['key'];
+                   }
+               }
+           }
+       }
+       return [$aggmap, $groupids];
+   }
+
+    /**
+     * Return report results for collaboration activity.
+     *
+     * @param array<int> $usrids The User IDs we may be filtering on.
+     * @param string $start The date in YYY-mm-dd format.
+     * @param string $end The date in YYY-mm-dd format.
+     *
+     * @return array<int,array> The $aggmap and $aggregates.
+     */
+    public static function report_collaboration_stats_table($userids, $start, $end) {
+        $options = [
+            'range' => [
+                'range' => [
+                    'ctime' => [
+                        'gte' => $start . ' 00:00:00',
+                        'lt' => $end . ' 00:00:00'
+                    ]
+                ]
+            ],
+            'sort' => [
+                'ctime' => 'desc'
+            ],
+            'aggs' => [
+                'YearWeek' => [
+                    'terms' => [
+                        'field' => 'yearweek',
+                    ],
+                    'aggs' => [
+                        'EventType' => [
+                            'terms' => [
+                                'field' => 'event',
+                            ],
+                            'aggs' => [
+                                'ResourceType' => [
+                                    'terms' => [
+                                        'field' => 'resourcetype',
+                                    ],
+                                    'aggs' => [
+                                        'ParentResourceType' => [
+                                            'terms' => [
+                                                'field' => 'parentresourcetype',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        if (!empty($usrids)) {
+            $options['query'] = [
+                'terms' => [
+                    'usr' => $usrids
+                ],
+            ];
+        }
+
+        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
+        $aggmap = [];
+        if ($aggregates['totalresults'] > 0) {
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('YearWeek', 'EventType', 'ResourceType', 'ParentResourceType'));
+        }
+        return [$aggmap, $aggregates];
+   }
+
+    /**
+     * Return report results for user activity.
+     *
+     * @param array<int> $usrids
+     * @param array<string,array> $result
+     * @param string $sortdirection
+     * @param string $sortdesc The direction from the URL.
+     * @param string $sortorder
+     * @param string $sortname
+     * @param int $count
+     *
+     * @return array<int,array> The $aggmap and $aggregates.
+     */
+    public static function report_useractivity_stats_table($usrids, $result, $sortdirection, $sortdesc, $sortorder, $sortname, $count) {
+        $aggmap = [];
+        $options = array(
+            'query' => array(
+                'terms' => array(
+                    'usr' => $usrids
+                ),
+            ),
+            'range' => array(
+                'range' => array(
+                    'ctime' => array(
+                        'gte' => $result['settings']['start'] . ' 00:00:00',
+                        'lte' => $result['settings']['end'] . ' 23:59:59'
+                    )
+                )
+            ),
+            'aggs' => array(
+                'UsrId' => array(
+                    'terms' => array(
+                        'field' => 'usr',
+                        'order' => $sortdirection,
+                        'size' => $count,
+                     ),
+                     'aggs' => array(
+                        'EventType' => array(
+                            'terms' => array(
+                                'field' => 'event',
+                                'min_doc_count' => 0,
+                            ),
+                        ),
+                        'EventTypeCount' => array(
+                            'sum' => array(
+                                'script' => array(
+                                    'inline' => $sortorder,
+                                ),
+                            ),
+                        ),
+                        'LastLogin' => array(
+                            'max' => array(
+                                'script' => array(
+                                    'inline' => "doc.ctime.value",
+                                ),
+                            ),
+                        ),
+                        'LastActivity' => array(
+                            'max' => array(
+                                'script' => array(
+                                    'inline' => "doc.id.value",
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        );
+        if (empty($sortdirection)) { unset($options['aggs']['UsrId']['terms']['order']); }
+        $aggregates = self::search_events($options, 0, 0);
+        if ($aggregates['totalresults'] > 0) {
+            foreach ($aggregates['aggregations']['UsrId']['buckets'] as $k => $usr) {
+                $user = new User();
+                $user->find_by_id($usr['key']);
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['firstname'] = $user->get('firstname');
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['lastname'] = $user->get('lastname');
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['username'] = $user->get('username');
+                $aggregates['aggregations']['UsrId']['buckets'][$k]['preferredname'] = $user->get('preferredname');
+            }
+            if (!empty($sortname)) {
+                usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
+                    return strnatcasecmp($a[$sortname], $b[$sortname]);
+                });
+                if ($sortdesc == 'desc') {
+                    $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
+                }
+            }
+            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('UsrId', 'EventType'));
+        }
+        return [$aggmap, $aggregates];
+    }
+
 }
 
 /**
@@ -1721,6 +2012,7 @@ class ElasticsearchPseudotype_all
                 'tagsonly' => (isset($options['tagsonly']) && ($options['tagsonly'] == true)) ? true : Null,
                 'sort' => (isset($options['sort']) && strlen($options['sort'])> 0) ? $options['sort'] : 'score',
                 'license' => (isset($options['license']) && strlen($options['license'])> 0) ? $options['license'] : 'all',
+                'pagination_js' => '',
         );
 
         // These access parameters will be applied to each ES query.
@@ -2129,7 +2421,7 @@ class ElasticsearchIndexing {
             $insert_sql .= ' WHERE id != 0';
         }
         else if ($type == 'block_instance') {
-            $insert_sql .= " WHERE blocktype = 'text'";
+            $insert_sql .= " WHERE id != 0";
         }
 
         if ($type == 'artefact') {

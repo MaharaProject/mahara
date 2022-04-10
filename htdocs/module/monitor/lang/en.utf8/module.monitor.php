@@ -16,6 +16,9 @@ $string['monitor'] = 'Monitor';
 
 // Configuration settings.
 $string['monitoringchecks'] = 'Monitoring checks';
+$string['configmonitortype_searchlegend'] = 'Search config';
+$string['configmonitortype_searchhoursuntiloldtitle'] = 'Hours when search queue old';
+$string['configmonitortype_searchhoursuntilolddescription'] = 'The number of hours that an search record can remain unprocessed before drawing attention to it.';
 $string['cronlockhours'] = 'Cron lock hours';
 $string['cronlockhoursdescription'] = 'The maximum number of hours a cron process should run.';
 $string['hourstoconsiderelasticsearchrecordold'] = 'Hours when Elasticsearch queue old';
@@ -65,6 +68,8 @@ $string['queuehasolditems'] = array(
 $string['unprocessedqueuesize'] = 'Total number of unprocessed records';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
+$string['clistatuscritical'] = 'CRITICAL';
+$string['clistatusok'] = 'OK';
 $string['checkingelasticsearcholdunprocesessedfail'] = array(
     'CRITICAL: There are unprocessed records in the Elasticsearch queue older than %s hour.',
     'CRITICAL: There are unprocessed records in the Elasticsearch queue older than %s hours.',
@@ -80,6 +85,17 @@ Options:
 
 Example:
 sudo -u www-data /usr/bin/php elasticsearchcheck.php /var/www/mymaharaproject
+';
+
+$string['searchcheckhelp'] = 'Check the search processing queue:
+
+searchcheck.php [options] mahara_path
+
+Options:
+-h, --help          Print this help
+
+Example:
+sudo -u www-data /usr/bin/php searchcheck.php /var/www/mymaharaproject
 ';
 
 // LDAP check

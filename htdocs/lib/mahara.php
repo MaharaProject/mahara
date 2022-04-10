@@ -2044,8 +2044,10 @@ function handle_event($event, $data, $ignorefields = array()) {
     // Set viewaccess rules for elasticsearch
     if ($event == 'updateviewaccess' && get_config('searchplugin') == 'elasticsearch' && is_array($data)) {
         if (isset($data['rules']) && isset($data['rules']->view)) {
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue($data['rules']->view, 'view');
+            $item = new stdClass;
+            $item->id = $data['rules']->view;
+            $item->table = 'view';
+            bulk_add_to_search_queue([$item]);
         }
     }
 
@@ -5951,6 +5953,7 @@ function sort_by_title($a, $b) {
  *  drop_elasticsearch_triggers();
  *  execute_sql("UPDATE {view} ... ");
  *  create_elasticsearch_triggers();
+ * @deprecated Retained for legacy upgrades.
  */
 function drop_elasticsearch_triggers() {
     if (get_config('searchplugin') == 'elasticsearch') {
@@ -5966,6 +5969,8 @@ function drop_elasticsearch_triggers() {
 
 /**
  * Paired with  drop_elasticsearch_triggers(); - see it's info for useage
+ *
+ * @deprecated Will be removed in the future.
  */
 function create_elasticsearch_triggers() {
     if (get_config('searchplugin') == 'elasticsearch') {
@@ -6309,4 +6314,23 @@ function get_mahara_timezone() {
         return 'UTC';
     }
     db_ignore_sql_exceptions(false);
+}
+
+/**
+ * Check if the current search plugin has the requested method.
+ *
+ * @param string $method The method we are checking for.
+ *
+ * @return string|false The search class if found, otherwise false.
+ */
+function does_search_plugin_have($method) {
+    $search_plugin = get_config('searchplugin');
+    if ($search_plugin) {
+        safe_require('search', $search_plugin);
+        $search_class = generate_class_name('search', $search_plugin);
+        if (method_exists($search_class, $method)) {
+            return $search_class;
+        }
+    }
+    return false;
 }

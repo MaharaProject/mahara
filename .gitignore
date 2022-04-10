@@ -46,4 +46,8 @@ htdocs/lib/chrome-php
 package-lock.json
 *\:Zone.Identifier\:\$DATA
 .phpdoc
+.vscode
+.phpunit*
+vendor
 /docs
+dev/elasticsearch7/.env
