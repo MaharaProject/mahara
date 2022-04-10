@@ -568,7 +568,7 @@ $string['itemdropped'] = 'Item dropped: %s';
 $string['itemreorder'] = 'List has been reordered. Item %s is now in position %s of %s';
 $string['reordercancelled'] = 'The reordering was cancelled';
 $string['accessibilitymodedescription1'] = 'This page has the accessible layout enabled. Click the \'Add new block\' button to add a block to the page.<br>
-In this mode, the page blocks will have full page width and will be displayed one after the other. To change a block\'s position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
+In this mode, the page blocks have full page width and are displayed one after the other. To change a block\'s position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys on your keyboard.';
 $string['blocktypeis'] = ' %s blocktype';
 
 

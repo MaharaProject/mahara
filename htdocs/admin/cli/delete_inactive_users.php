@@ -79,7 +79,7 @@ $options['neverloggedin'] = (object) array(
 );
 
 $settings = (object) array(
-        'info' => get_string('cli_deleteinactiveusers_info', 'admin'),
+        'info' => get_string('cli_deleteinactiveusers_info1', 'admin'),
         'options' => $options,
 );
 $cli->setup($settings);
