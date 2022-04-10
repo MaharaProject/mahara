@@ -1,5 +1,6 @@
 <?php
 /**
+ * Main library for the import file plugin
  *
  * @package    mahara
  * @subpackage import-file
@@ -13,14 +14,43 @@ defined('INTERNAL') || die();
 
 require_once('uploadmanager.php');
 
+/**
+ * The PluginImportFile class
+ */
 class PluginImportFile extends PluginImport {
 
+    /**
+     * Manifest
+     * @var mixed
+     */
     private $manifest;
+    /**
+     * Files
+     * @var mixed
+     */
     private $files;
+    /**
+     * zipfilesha1
+     * @var mixed
+     */
     private $zipfilesha1;
+    /**
+     * Artefacts
+     * @var mixed
+     */
     private $artefacts;
+    /**
+     * Import directory
+     * @var mixed
+     */
     private $importdir;
 
+    /**
+     * PluginImportFile constructor
+     *
+     * @param  int $id
+     * @param  mixed|null $record
+     */
     public function __construct($id, $record=null) {
         parent::__construct($id, $record);
         $data = $this->get('data');
@@ -28,16 +58,32 @@ class PluginImportFile extends PluginImport {
         $this->zipfilesha1 = $data['zipfilesha1'];
     }
 
+    /**
+     * Validate transported data
+     *
+     * @param  ImporterTransport $transport
+     * @return boolean
+     */
     public static function validate_transported_data(ImporterTransport $transport) {
         return true; // nothing to do , we're just importing files to the file artefact plugin
     }
 
+    /**
+     * Process file import
+     *
+     * @param  int $step
+     */
     public function process($step = PluginImport::STEP_NON_INTERACTIVE) {
     //    $this->importertransport->extract_file($this->importertransport->get('mimetype'), $this->zipfilesha1);
         $this->verify_file_contents();
         $this->add_artefacts();
     }
 
+    /**
+     * Verify file contents
+     *
+     * @throws ImportException
+     */
     public function verify_file_contents() {
         $uzd = $this->importertransport->get('tempdir') . 'extract/';
         $includedfiles = get_dir_contents($uzd);
@@ -79,6 +125,11 @@ class PluginImportFile extends PluginImport {
         $this->files = $okfiles;
     }
 
+    /**
+     * Add artefacts
+     *
+     * @throws ImportException
+     */
     public function add_artefacts() {
         // we're just adding them as files into an 'incoming' directory in the user's file area.
         safe_require('artefact', 'file');
@@ -123,6 +174,12 @@ class PluginImportFile extends PluginImport {
         $this->artefacts = $savedfiles;
     }
 
+    /**
+     * Get returun data: folder, file
+     * Keep track of what files we add and the new folder if any
+     *
+     * @return array
+     */
     public function get_return_data() {
         return array('folder' => $this->importdir, 'file' => (count($this->artefacts) == 1) ? $this->artefacts[0] : 0);
     }

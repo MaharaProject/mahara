@@ -265,7 +265,7 @@ class PluginImportLeap extends PluginImport {
     /**
      * Getter for `PluginImportLeap` fields
      *
-     * @param {@inheritDoc}
+     * @param  string $field
      */
     public function get($field) {
         if ($field == 'xml') {
