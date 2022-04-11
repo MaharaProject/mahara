@@ -560,7 +560,7 @@ class Framework {
         $ids = array();
         $data = $this->collections();
 
-        if (!$data) {
+        if ($data) {
             foreach ($data as $c) {
                 $ids[] = $c->get('id');
             }
