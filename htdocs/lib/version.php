@@ -19,5 +19,5 @@ $config = new stdClass();
 $config->version = 2022032200;
 $config->series = '22.04';
 $config->release = '22.04dev';
-$config->minupgradefrom = 2017031605;
-$config->minupgraderelease = '18.10.0 (release tag 18.10.0_RELEASE)';
+$config->minupgradefrom = 2020013006;
+$config->minupgraderelease = '20.04.0 (release tag 20.04.0_RELEASE)';

@@ -48,13 +48,17 @@ then/else upgrade version to 17.04
 
  * Upgrade version 'X' -> 17.04.X (latest 17.04 version)
 
-then/else
+then/else upgrade version to 18.04
 
- * Upgrade version 'X' -> 18.04.X
+ * Upgrade version 'X' -> 18.04.X (latest 18.04 version)
+
+then/else upgrade version to 20.04
+
+ * Upgrade version 'X' -> 20.04.X (latest 20.04 version)
 
 then
 
- * Upgrade version 18.04.X -> 'Y'
+ * Upgrade version 20.04.X -> 'Y'
 
 Note: Older versions of Mahara are not compatible with latest versions
 of PHP so you will need to do intermediate upgrade steps before
