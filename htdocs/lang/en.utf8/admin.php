@@ -711,7 +711,7 @@ $string['groupcsvfiledescription'] = 'The file containing groups to add';
 $string['groupmemberscsvfiledescription'] = 'The file containing group members to update';
 $string['csverroremptyfile'] = 'The CSV file is empty.';
 $string['invalidfilename'] = 'The file "%s" does not exist.';
-$string['invalidfilenameformatforcsv'] = 'The file format for "%s" is not valid. Please upload a valid comma-separated values (.csv) file';
+$string['invalidfilenameformatforcsv'] = 'The file format for "%s" is not valid. Please upload a valid comma-separated values (.csv) file.';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or you have more fields than your header row specifies.';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line.';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine).';
@@ -1462,25 +1462,25 @@ $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%
 $string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not writable.';
 $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
 
-// Fast index for elasticsearch
+// Fast index for Elasticsearch
 $string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead, it begins the next run immediately after first finishes.';
 $string['cli_unabletoupdatecron'] = 'Unable to update the search cron database record';
 $string['cli_problemindexing'] = 'A problem occurred while indexing';
 $string['cli_done'] = 'Indexing finished';
 
-// Clean up old users
+// Clean up old accounts
 $string['cli_param_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
 $string['cli_deleteinactiveusers_beforedate'] = 'Delete accounts where their last login date is earlier than this date. Date can be any datetime string, e.g. "2018-02-25" or "-6 months".';
 $string['cli_deleteinactiveusers_limit'] = 'Limit of accounts to work with for each delete run.';
 $string['cli_deleteinactiveusers_cleanusers'] = 'Try to delete account data from the "usr" table as well.';
-$string['cli_deleteinactiveusers_info'] = 'This command-line PHP script allows you to delete old accounts. This will only work for people who either have not logged in or have never made a forum post.';
+$string['cli_deleteinactiveusers_info1'] = 'This command-line PHP script allows you to delete old accounts based on certain settings, e.g. have not logged in since a certain date, belong to a particular group. You can only fully delete accounts from the database with the "cleanusers" flag if they have not participated in collaborative activities.';
 $string['cli_deleteinactiveusers_neverloggedin'] = 'Delete accounts that have never been logged into (were set up by an administrator).';
 $string['cli_param_baddate'] = 'The supplied date "%s" is not valid.';
 $string['cli_deleteinactiveusers_usercount'] = 'There are "%s" accounts to delete.';
 $string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to delete the account for "%s" (ID %s) fully.';
 $string['cli_deleteinactiveusers_userunabletodelete'] = 'Unable to delete the account for "%s" (ID %s).';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no accounts to delete.';
-$string['cli_deleteinactiveusers_problem'] = 'Too many institution parameters given, please use --institution OR --incl_inst OR --excl_inst to filter by institution';
+$string['cli_deleteinactiveusers_problem'] = 'Too many institution parameters given. Please use --institution OR --incl_inst OR --excl_inst to filter by institution.';
 $string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings:
 Group: %s
 Before date: %s

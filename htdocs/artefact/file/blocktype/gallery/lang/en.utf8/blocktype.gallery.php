@@ -32,7 +32,7 @@ $string['showdescriptionsdescription'] = 'Select to caption each image with its 
 $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 
 $string['gallerysettings'] = 'Gallery settings';
-$string['usefancybox1'] = 'Use bootstrap modal';
-$string['usefancyboxdesc1'] = 'Use bootstrap modal in your gallery. When you click on images in your gallery, they will open in an overlay.';
+$string['usefancybox1'] = 'Use Bootstrap modal';
+$string['usefancyboxdesc1'] = 'Use the Bootstrap modal in your gallery. When you click on images in your gallery, they will open in an overlay.';
 $string['previewwidth'] = 'Maximum photo width';
-$string['previewwidthdesc1'] = 'Set the maximum width to which the photos will be resized when viewed with bootstrap modal.';
+$string['previewwidthdesc1'] = 'Set the maximum width to which the photos will be resized when viewed with the Bootstrap modal.';

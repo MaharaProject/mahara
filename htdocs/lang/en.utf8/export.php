@@ -91,5 +91,5 @@ $string['submissionreleasefailed'] =  'Failed to release submission after archiv
 $string['deleteexportqueueitems'] = 'Failed to remove items from export queue items database table';
 $string['deleteexportqueuerow'] = 'Failed to remove items from export queue database table';
 $string['exportqueueerrorsadminsubject'] = 'Error running export queue';
-$string['exportqueueerrorsadminmessage'] = 'Unable to export row "%s" due to: %s';
+$string['exportqueueerrorsadminmessage'] = 'Unable to export row "%s": %s';
 $string['exportlitenotwritable'] = 'Export directory "%s" is not writable.';
