@@ -30,7 +30,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
     }
 
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         // The exporting for pdf
@@ -41,6 +41,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('files', $files);
         $smarty->assign('editing', $editing);
+        $smarty->assign('exporttype', $exporting);
         return $smarty->fetch('blocktype:filedownload:filedownload_pdfexport.tpl');
     }
 

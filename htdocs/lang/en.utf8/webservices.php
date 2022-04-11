@@ -227,5 +227,5 @@ $string['wwwroot'] = 'Client URN to distinguish remote lockers';
 $string['yahoochat'] = 'Yahoo chat';
 $string['viewidtotest'] = 'The submitted portfolio to export';
 $string['submittedhost'] = 'The external host it was submitted to';
-$string['liteexporttype'] = 'The export type to use. Valid options are \'htmllite\'.';
+$string['liteexporttype'] = 'The export type to use. Valid options are \'htmllite\' or \'pdflite\'.';
 $string['fileurl'] = 'The download URL to fetch the zip file. Note: You need to supply a valid web service token to be able to download the file.';

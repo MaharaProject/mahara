@@ -31,10 +31,7 @@ class PluginExportHtmlLite extends PluginExportHtml {
    protected $scripts = array();
 
     /**
-    * Constructor clas for working with HTML Lite exports.
-    *
-    * This class overrides the parent HTML class to set up smarty and the attachment directory
-    * @param {@inheritDoc}
+    * {@inheritDoc}
     */
     public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
         global $THEME;
@@ -111,7 +108,7 @@ class PluginExportHtmlLite extends PluginExportHtml {
      * @return string
      */
     public static function get_plugin_display_name() {
-        return 'HTML Lite';
+        return 'HTML lite';
     }
 
     /**

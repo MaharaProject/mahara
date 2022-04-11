@@ -11,7 +11,7 @@
 
         <h3 class="title list-group-item-heading text-inline">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}">
-                 {$file.title} [export_info/files/{$file.id}-{$file.title}]
+                 {$file.title} {if $exporttype == 'pdf'}[export_info/files/{$file.id}-{$file.title}]{/if}
                  <span class="sr-only">
                     {str tag=Details section=artefact.file}
                 </span>
@@ -19,7 +19,7 @@
         </h3>
         <span class="text-small text-midtone"> -
             {$file.ctime|format_date:'strftimedaydate'}
-            [{$file.size|display_size}]
+            {if $exporttype == 'pdf'}[{$file.size|display_size}]{/if}
         </span>
         {if $file.description}
         <div class="file-description text-small text-midtone">

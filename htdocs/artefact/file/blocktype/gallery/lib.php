@@ -115,7 +115,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                         if ($description) {
                             $html .= '<div class="card-body">' . $description . '</div>';
                         }
-                        $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+                        $html .= '<div class="text-midtone text-small">' . get_string('notrendertopdf', 'artefact.file');
                         $html .= '<br>' . get_string('notrendertopdffiles', 'artefact.file', count($artefactids));
                         $firstdone = true;
                     }

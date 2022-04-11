@@ -141,6 +141,8 @@ class BehatTestingUtil extends TestingUtil {
 
         // Stop PDF export from being active
         set_field('export_installed', 'active', 0, 'name', 'pdf');
+        // Stop PDFLite export from being active
+        set_field('export_installed', 'active', 0, 'name', 'pdflite');
 
         // We need to keep the installed dataroot artefact files.
         // So each time we reset the dataroot before running a test, the default files are still installed.

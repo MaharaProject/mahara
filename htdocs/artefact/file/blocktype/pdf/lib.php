@@ -38,7 +38,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
     }
 
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf' && $exporting != 'htmllite') {
+        if ($exporting != 'pdf' && $exporting != 'htmllite' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         else {
@@ -65,7 +65,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             if ($description) {
                 $html .= '<div class="card-body">' . $description . '</div>';
             }
-            $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+            $html .= '<div class="text-midtone text-small">' . get_string('notrendertopdf', 'artefact.file');
             $html .= '<br>' . get_string('notrendertopdffiles', 'artefact.file', 1);
             // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
             // We then override the link in the PDF pdf_view_export_data() function.
