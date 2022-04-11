@@ -554,6 +554,7 @@ class PluginModuleLti_advantage extends PluginModule {
             'consumer_key'      => $dbserver->consumer_key,
             'consumer_secret'   => $dbserver->consumer_secret,
             'id'                => $values['id'],
+            'enabled'           => $values['enabled'],
         );
     }
 

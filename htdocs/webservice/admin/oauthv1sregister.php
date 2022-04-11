@@ -90,11 +90,14 @@ else {
  */
 function webservices_add_application_submit(Pieform $form, $values) {
     global $SESSION, $USER, $services;
+    $redirect = get_config('wwwroot').'/webservice/admin/oauthv1sregister.php';
 
     $dbuser = get_record('usr', 'id', $USER->get('id'));
     if (empty($dbuser)) {
-        $SESSION->add_error_msg(get_string('erroruser', 'auth.webservice'));
-        redirect('/webservice/admin/oauthv1sregister.php');
+        $form->reply(PIEFORM_ERR, array(
+            'message'  => get_string('erroruser', 'auth.webservice'),
+            'goto'     => $redirect,
+        ));
     }
     $store = OAuthStore::instance();
 
@@ -131,8 +134,10 @@ function webservices_add_application_submit(Pieform $form, $values) {
     $c = (object) $store->getConsumer($key, $dbuser->id, true);
 
     if (empty($c)) {
-        $SESSION->add_error_msg(get_string('errorregister', 'auth.webservice'));
-        redirect('/webservice/admin/oauthv1sregister.php');
+        $form->reply(PIEFORM_ERR, array(
+            'message'  => get_string('errorregister', 'auth.webservice'),
+            'goto'     => $redirect,
+        ));
     }
     else {
         // New application added - now check that institution has 'webservices' auth
@@ -144,9 +149,12 @@ function webservices_add_application_submit(Pieform $form, $values) {
         $priority = is_null($priorities->webservicepriority) ? $priorities->maxpriority + 1 : $priorities->webservicepriority;
         if (!ensure_record_exists('auth_instance', (object) array('institution' => $values['institution'], 'authname' => 'webservice'),
                                                    (object) array('institution' => $values['institution'], 'authname' => 'webservice', 'active' => 1, 'priority' => $priority, 'instancename' => 'webservice'))) {
-            $SESSION->add_error_msg(get_string('setauthinstancefailed', 'auth.webservice', institution_display_name($values['institution'])));
+            $form->reply(PIEFORM_ERR, array(
+                'message'  => get_string('setauthinstancefailed', 'auth.webservice', institution_display_name($values['institution'])),
+                'goto'     => $redirect . '?edit=' . $c->id,
+            ));
         }
-        redirect('/webservice/admin/oauthv1sregister.php?edit=' . $c->id);
+        redirect($redirect . '?edit=' . $c->id);
     }
 }
 
@@ -234,6 +242,7 @@ function webservice_oauth_server_validate(Pieform $form, $values) {
  */
 function webservice_oauth_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
+    $redirect = get_config('wwwroot').'/webservice/admin/oauthv1sregister.php';
 
     $store = OAuthStore::instance();
     $dbserver = get_record('oauth_server_registry', 'id', $values['id']);
@@ -257,6 +266,7 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
                         'consumer_key'      => $dbserver->consumer_key,
                         'consumer_secret'   => $dbserver->consumer_secret,
                         'id'                => $values['id'],
+                        'enabled'           => $values['enabled']
             );
         }
         if ($USER->get('admin') && isset($values['user'])) {
@@ -274,16 +284,22 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
         }
 
         if (empty($c)) {
-            $SESSION->add_error_msg(get_string('errorregister', 'auth.webservice'));
-            redirect('/webservice/admin/oauthv1sregister.php');
+            $form->reply(PIEFORM_ERR, array(
+                'message'  => get_string('errorregister', 'auth.webservice'),
+                'goto'     => $redirect,
+            ));
         }
         else {
-            redirect('/webservice/admin/oauthv1sregister.php?edit=' . $c->id);
+            $form->reply(PIEFORM_OK, array(
+                'message'  => get_string('confirmupdate', 'auth.webservice', $app['application_title']),
+                'goto'     => $redirect,
+            ));
         }
     }
-
-    $SESSION->add_error_msg(get_string('errorupdate', 'auth.webservice'));
-    redirect('/webservice/admin/oauthv1sregister.php');
+    $form->reply(PIEFORM_ERR, array(
+        'message'  => get_string('errorupdate', 'auth.webservice'),
+        'goto'     => $redirect,
+    ));
 }
 
 $pieform = pieform_instance($form);
@@ -426,9 +442,8 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
 
     $server_details['elements']['enabled'] = array(
         'title'        => get_string('enabled'),
-        'defaultvalue' => (($dbserver->enabled == 1) ? 'checked' : ''),
+        'defaultvalue' => (($dbserver->enabled == 1) ? true : false),
         'type'         => 'switchbox',
-        'disabled'     => true,
     );
 
     $server_details['elements'] = array_merge($server_details['elements'], $extra);
