@@ -2403,7 +2403,7 @@ class LiveUser extends User {
         global $SESSION;
 
         $filename = get_random_key();
-        $dir = get_config('dataroot') . 'export/' . $this->id . '/';
+        $dir = get_config('dataroot') . 'export/' . $this->get('id') . '/';
         check_dir_exists($dir);
         file_put_contents($dir . $filename, $content);
         if ($suffix) {

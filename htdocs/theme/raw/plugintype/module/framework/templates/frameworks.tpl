@@ -36,6 +36,7 @@
             </script>
             <div class="float-right btn-group form-as-button">
             {$item->config|safe}
+            {$item->export|safe}
             {if $item->delete}
                 {$item->delete|safe}
             {else}
