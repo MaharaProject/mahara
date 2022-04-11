@@ -36,6 +36,7 @@ membership|Resume|Text
 mobilenumber|Profile|Text
 occupation|Profile|Text
 officialwebsite|Profile|Text
+peerassessment|Peerassessment|Text
 personalgoal|Resume|Text
 personalinformation|Resume|Text
 personalskill|Resume|Text

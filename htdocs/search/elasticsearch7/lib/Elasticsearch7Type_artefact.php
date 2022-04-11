@@ -447,10 +447,21 @@ class Elasticsearch7Type_artefact extends Elasticsearch7Type {
             WHERE   art.id = ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
                 AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
+            UNION
+            SELECT vac.view AS view_id, vac.accesstype, vac.group, vac.role, vac.usr, vac.institution
+            FROM {artefact} art
+            INNER JOIN {artefact_peer_assessment} aps
+                ON aps.assessment = art.id
+            INNER JOIN {view_access} vac
+                ON vac.view = aps.view
+            WHERE art.id = ?
+                AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
+                AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
             ',
             [
                 $artefactid,
                 $artefactid,
+                $artefactid
             ]
         );
 

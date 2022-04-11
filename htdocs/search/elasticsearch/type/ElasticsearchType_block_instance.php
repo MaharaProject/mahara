@@ -124,7 +124,7 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
         // As block_instances do not have certain fields we need to get their
         // info either from the view they are on or from their configdata
         $record->ctime = parent::checkctime ( $data->ctime );
-        $record->description = $data->description;
+        $record->description = isset($data->description) ? $data->description : '';
         $record->owner = $data->owner;
         $record->group = $data->group;
         $record->institution = $data->institution;
