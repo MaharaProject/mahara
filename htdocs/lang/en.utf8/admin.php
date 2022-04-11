@@ -861,6 +861,7 @@ $string['adminusersupdated'] = 'Administrators updated';
 // Institution support admin
 
 $string['institutionsupportadminpagedescription'] = 'Here you can choose which institution members shall be institution support administrators for your institution. The current support administrators are in the "Institution support administrator" field, and potentials are in the "Institution members" field.';
+$string['supportadminusersupdated'] = 'Supprt administrators updated';
 
 // Staff Users
 $string['staffuserspagedescription1'] = 'Here you can choose which people shall be staff for the site. The current staff are in the "Current staff" field, and potential staff are in the "Potential staff" field.';
