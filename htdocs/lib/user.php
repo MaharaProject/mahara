@@ -1981,9 +1981,13 @@ function load_user_institutions($userid) {
 
     $logoxs = db_column_exists('institution', 'logoxs') ? ',i.logoxs' : '';
     $tags = db_column_exists('institution', 'tags') ? ',i.tags' : '';
+    $supportadmin = '';
+    if (get_config('version') > 2022031500) {
+        $supportadmin = ' u.supportadmin,';
+    }
     if ($userid !== 0 && $institutions = get_records_sql_assoc('
         SELECT u.institution, ' . db_format_tsfield('ctime') . ',' . db_format_tsfield('u.expiry', 'membership_expiry') . ',
-               u.studentid, u.staff, u.admin, u.supportadmin, i.displayname, i.theme, i.registerallowed, i.showonlineusers,
+               u.studentid, u.staff, u.admin,' . $supportadmin . ' i.displayname, i.theme, i.registerallowed, i.showonlineusers,
                i.allowinstitutionpublicviews, i.logo' . $logoxs . ', i.style, i.licensemandatory, i.licensedefault,
                i.dropdownmenu, i.skins, i.suspended' . $tags . '
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
