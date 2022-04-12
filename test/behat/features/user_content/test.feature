@@ -15,13 +15,13 @@ Background:
     | licensemetadata | 0 |
 
     Given the following "users" exist:
-    # Available fields: username*, password*, email*, firstname*, lastname*, institution, role, authname, remoteusername, studentid, preferredname, town, country, occupation
+    # Available fields: username*, password*, email*, firstname*, lastname*, institution, role*, authname, remoteusername, studentid, preferredname, town, country, occupation
     | username | password | email             | firstname | lastname | institution | authname | role |
     | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | admin |
     | UserB    | Kupuh1pa!| UserB@example.org | Mechania  | Mahara   | mahara      | internal | member |
 
     And the following "groups" exist:
-    # Availble fields: name*, owner*, description, grouptype, open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
+    # Available fields: name*, owner*, description, grouptype*, editroles* open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
     #                 editwindowstart, editwindowstart, editwindowend, members, staff, admins, institution, public
     | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
     | Group1 | UserB | Group1 owned by UserB | standard  | ON   | OFF           | all       | ON            | OFF           | UserA   |       |
@@ -107,13 +107,13 @@ Background:
     And the following "forumposts" exist:
     # Available fields: group*, forum, topic, subject, message*, user*
     | group  | forum      | topic     | subject    | message                     | user  |
-    | Group1 | unicorns!  | topic one |            | mahara unicorns unite!      | UserB |
-    | Group1 | unicorns!  | topic one |            | yay! mahara unicorns unite! | UserB |
+    | Group1 | unicorns!  | topic one | hello      | mahara unicorns unite!      | UserB |
+    | Group1 | unicorns!  | topic one | whatsup    | yay! mahara unicorns unite! | UserB |
     | Group1 | unicorns!  | topic one | cheer on   | woo! mahara unicorns unite! | UserB |
     | Group1 |            | topic one | cheer on   | 10 papercranes, let's go!   | UserB |
     | Group1 | unicorns!  | topic one | extra subj | 100 papercranes, let's go!  | UserB |
     | Group1 | unicorns!  |           | origami    | 1000 papercranes, let's go! | UserB |
-    | Group1 |            |           |            | 1000 papercranes, let's go! | UserB |
+    | Group1 |            |           | postpost   | 1000 papercranes, let's go! | UserB |
 
     And the following "pages" exist:
     # Available fields: title*, description, ownertype*, ownername*, layout, tags

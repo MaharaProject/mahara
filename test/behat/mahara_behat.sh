@@ -117,7 +117,12 @@ then
         else
             FEATURE=`find test/behat/features -name $2 | head -n 1`
         fi
-        echo "Only run tests in file: $FEATURE"
+        if [[ $3 == @* ]]; then
+            TAGS=$3
+            echo "Only run tests in file: $FEATURE tagged with $TAGS"
+        else
+            echo "Only run tests in file: $FEATURE"
+        fi
     else
         echo "Run all tests"
     fi
@@ -210,7 +215,8 @@ then
 
     if [ "$TAGS" ]; then
         OPTIONS=$OPTIONS" --tags "$TAGS
-    elif [ "$FEATURE" ]; then
+    fi
+    if [ "$FEATURE" ]; then
         OPTIONS=$OPTIONS" "$FEATURE
     fi
 
@@ -233,11 +239,17 @@ else
     echo "# Run all tests:"
     echo "mahara_behat run"
     echo ""
-    echo "# Run tests in file \"example.feature\""
+    echo "# Run tests in the file \"example.feature\""
     echo "mahara_behat run example.feature"
+    echo ""
+    echo "Note: \"example.feature\" is a path in the features directory. An individual feature or all feature files in a directory can be run."
     echo ""
     echo "# Run tests with specific tag:"
     echo "mahara_behat run @tagname"
+    echo ""
+    echo "# Run tests in a folder *with* a tag:"
+    echo "mahara_behat run example/directory @tagname"
+    echo "Note: the @tagname must follow the feature file/directory"
     echo ""
     echo "# Run tests with extra debug output:"
     echo "mahara_behat rundebug"

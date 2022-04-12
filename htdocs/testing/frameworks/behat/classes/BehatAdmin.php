@@ -91,6 +91,8 @@ class BehatAdmin extends BehatBase {
                 'sitefilesaccess',
                 'watchlistnotification_delay',
             // Logging settings
+                'eventloglevel',
+                'eventlogenhancedsearch',
             // Experiment settings
                 'skins',
         );
