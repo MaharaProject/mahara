@@ -17,7 +17,7 @@ $config = new stdClass();
 // For upgrades on dev branches, increment the version by one. On main, use the date.
 
 $config->version = 2022032200;
-$config->series = '22.04';
-$config->release = '22.04dev';
+$config->series = '22.10';
+$config->release = '22.10dev';
 $config->minupgradefrom = 2020013006;
 $config->minupgraderelease = '20.04.0 (release tag 20.04.0_RELEASE)';
