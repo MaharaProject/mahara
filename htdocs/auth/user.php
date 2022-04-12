@@ -961,6 +961,13 @@ class User {
         $headerlogosmall = null;
         $stylesheets = array();
         $themeinstitution = null;
+        $supportadmin_exist = false;
+
+        // The support admin exists from 22.04
+        if (get_config('version') > 2022031500) {
+            $supportadmin_exist = true;
+        }
+
         foreach ($institutions as $name => $i) {
             if ($i->admin) {
                 $admininstitutions[$i->institution] = $i->institution;
@@ -968,7 +975,7 @@ class User {
             if ($i->staff) {
                 $staffinstitutions[$i->institution] = $i->institution;
             }
-            if ($i->supportadmin) {
+            if ($supportadmin_exist && $i->supportadmin) {
                 $supportadmininstitutions[$i->institution] = $i->institution;
             }
             if (is_null($themeinstitution)) {
