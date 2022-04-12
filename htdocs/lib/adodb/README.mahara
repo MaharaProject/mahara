@@ -3,12 +3,12 @@ adodb
 
 Website: https://adodb.org/dokuwiki/doku.php
 
-Version: 5.21.1
+Version: 5.22.0
 
 Modifications:
 
 - Allow check for $okversion of Postgres or MySql: Minimum working version values should be updated in Mahara's README.md file and in init.php
-    -- if ADODB changes what min version it can work with we need to update the init.php file and the htdocs/README.md file 
+    -- if ADODB changes what min version it can work with we need to update the init.php file and the htdocs/README.md file
 
 - Modified session variable setting from $_SESSION to $SESSION->set/get due to sessions now normally being closed. (f9818ff606bbe6ec00b34eab23d1743870407b48)
 See here for changes:
