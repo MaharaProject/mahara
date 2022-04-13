@@ -143,6 +143,15 @@
         }
     }
 
+    .matrixsumrow {
+        &.bottom-row {
+            background-color: $table-accent-bg;
+            td {
+                border-top: $table-border-width-heavy solid $table-border-color;
+                border-bottom: 0;
+            }
+        }
+    }
 }
 .assessment {
     color: $theme-text-color;

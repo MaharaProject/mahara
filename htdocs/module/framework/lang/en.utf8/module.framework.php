@@ -56,6 +56,7 @@ $string['frameworkmissing'] = 'Framework not found';
 $string['activeframework'] = 'Active framework';
 $string['displaystatusestitle'] = 'Display assessment statuses';
 $string['displaystatusestitledetail'] = 'Decide which of the assessment statuses you want to display.';
+$string['sumofstatuses'] = 'Sum of statuses';
 $string['upgradeplugin'] = 'The SmartEvidence plugin needs to be upgraded to enable these settings.';
 
 $string['noannotation'] = 'There are no annotations on page "%s" for standard element "%s".';

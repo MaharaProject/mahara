@@ -132,6 +132,12 @@ if (!$evidence) {
 
 $evidencematrix = array();
 $statuscounts = new stdClass();
+$statustotals = array(
+    'completed' => 0,
+    'readyforassessment' => 0,
+    'partiallycomplete' => 0,
+    'dontmatch' => 0,
+);
 $enabled = new stdClass();
 
 //completed should be always enabled
@@ -166,6 +172,7 @@ foreach ($evidence as $e) {
                     $statuscounts->completed[$e->element] = 0;
                 }
                 $statuscounts->completed[$e->element] ++;
+                $statustotals['completed']++;
             }
         break;
         case Framework::EVIDENCE_BEGUN:
@@ -174,6 +181,7 @@ foreach ($evidence as $e) {
                     $statuscounts->readyforassessment[$e->element] = 0;
                 }
                 $statuscounts->readyforassessment[$e->element] ++;
+                $statustotals['readyforassessment']++;
             }
         break;
         case Framework::EVIDENCE_PARTIALCOMPLETE:
@@ -182,6 +190,7 @@ foreach ($evidence as $e) {
                     $statuscounts->partiallycomplete[$e->element] = 0;
                 }
                 $statuscounts->partiallycomplete[$e->element] ++;
+                $statustotals['partiallycomplete']++;
             }
         break;
         case Framework::EVIDENCE_INCOMPLETE:
@@ -190,6 +199,7 @@ foreach ($evidence as $e) {
                     $statuscounts->dontmatch[$e->element] = 0;
                 }
                 $statuscounts->dontmatch[$e->element] ++;
+                $statustotals['dontmatch']++;
             }
         break;
     }
@@ -212,6 +222,7 @@ $smarty->assign('description', $framework->get('description'));
 $smarty->assign('standards', $standards['standards']);
 $smarty->assign('evidence', $evidencematrix);
 $smarty->assign('statuscounts', $statuscounts);
+$smarty->assign('statustotals', $statustotals);
 $smarty->assign('statusestodisplay', $statusestodisplay);
 $smarty->assign('enabled', $enabled);
 $smarty->assign('colspan', count((array)$enabled) * 2);
