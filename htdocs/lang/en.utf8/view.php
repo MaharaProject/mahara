@@ -278,6 +278,7 @@ $string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
 
 $string['viewcreatedsuccessfully'] = 'Page created successfully';
 $string['viewaccesseditedsuccessfully'] = 'Page access saved successfully';
+$string['accesssavedsuccessfully'] = 'Access settings saved successfully';
 $string['viewsavedsuccessfully'] = 'Page saved successfully';
 $string['savedtotimeline'] = 'Saved to timeline';
 $string['updatedaccessfornumviews1'] = array(
