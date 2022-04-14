@@ -79,7 +79,7 @@
                                         {foreach from=$view.manageaccess item=manageitem}
                                         <li class="dropdown-item">
                                             {if $manageitem->accesstype == 'managesharing'}
-                                            <a class="seperator" href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
+                                            <a class="seperator" href="{$WWWROOT}view/accessurl.php?return=index&id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                                 <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$manageitem->displayname}</span>
                                                 <span class="sr-only">{$manageitem->accessibilityname}</span>

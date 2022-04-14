@@ -32,7 +32,7 @@
     {/if}
     {if !$accesssuspended && ($edittitle || $viewtype == 'share') && !$issitetemplate}
         <button
-            data-url="{$WWWROOT}view/accessurl.php?id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"
+            data-url="{$WWWROOT}view/accessurl.php?return=edit&id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"
             class="btn btn-secondary editviews editshare {if $selected == 'share'}active{/if}" title="{str tag=shareview1 section=view}">
             <span class="icon icon-unlock icon-lg" aria-hidden="true" role="presentation"></span>
             <span class="btn-title sr-only">{str tag=shareview1 section=view}</span>
