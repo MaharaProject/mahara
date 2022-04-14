@@ -2190,7 +2190,7 @@ function mysql_get_variable($name) {
     if (empty($name) || preg_match('/[^a-z_]/', $name)) {
         throw new SQLException('mysql_get_variable: invalid variable name');
     }
-    $result = $db->Execute("SHOW VARIABLES LIKE ?", array($name));
+    $result = $db->Execute("SHOW VARIABLES WHERE Variable_name = ?", array($name));
     return $result->fields['Value'];
 }
 
