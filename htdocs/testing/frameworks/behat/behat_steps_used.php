@@ -109,7 +109,7 @@ if (get_config('behat_dataroot')) {
 }
 
 $smarty = smarty(array());
-setpageicon($smarty, 'icon-cogs');
+setpageicon($smarty, 'icon-vial');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('data', $data);
 $smarty->assign('hascore', $hascore);
