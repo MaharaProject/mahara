@@ -225,16 +225,16 @@ $string['generatedviewurls'] = array(
 );
 $string['cleanurlsdescriptionshort'] = 'Configure site to use human-readable URLs';
 
-$string['embeddedurlstitle'] = 'Update embedded URLs';
-$string['embeddedurlsdescription'] = '<p>If you change your URL, the existing links within embedded content on the site will point to the wrong place.</p><p>You can fix them up here by specifying the old URL domain.</p>';
-$string['nopotentialembeddedurls'] = '<p>There are no potential old URLs detected.</p>';
-$string['potentialembeddedurls'] = '<p>The following sections look to have old URLs.</p>';
+$string['embeddedurlstitle1'] = 'Embedded URLs';
+$string['embeddedurlsdescription1'] = '<p>If you change the URL to your site, existing links to content on the site within text, e.g. in page instructions, text blocks, and forums, will point to the wrong place.</p><p>If potentially old URLs are detected, you can fix them here by specifying the old URL domain and updating them.</p>';
+$string['nopotentialembeddedurls1'] = '<p>No potentially old URLs detected</p>';
+$string['potentialembeddedurls1'] = '<p>Old URLs detected</p>';
 $string['oldurl'] = 'Old site URL';
 $string['oldurldescription'] = 'Enter the URL path of the old site, e.g. "https://oldsite.com" to see if there is anything to update.';
 $string['checkurl'] = 'Check URL';
 $string['domigrateurls'] = 'Update URLs';
 $string['migrateurlsdescription'] = 'Change all embedded URLs that start with "%s" to now start with "%s"';
-$string['migrateurlsconfirm'] = 'Confirm migration';
+$string['migrateurlsconfirm1'] = 'Confirm the updating of the URLs';
 $string['migratedbasicurls'] = 'Updated %s content URLs';
 $string['migratedblockurls'] = 'Updated %s block content URLs';
 $string['section_view_instructions'] = 'Page instructions';
