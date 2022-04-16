@@ -2654,7 +2654,7 @@ function admin_nav() {
             'path'   => 'development/updateurls',
             'url'    => 'admin/extensions/embeddedurls.php',
             'title'  => get_string('embeddedurls', 'admin'),
-            'weight' => 40,
+            'weight' => 23,
         ),
     );
 
