@@ -14,7 +14,7 @@ define('ADMIN', 1);
 define('MENUITEM', 'development/updateurls');
 
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
-define('TITLE', get_string('embeddedurlstitle', 'admin'));
+define('TITLE', get_string('embeddedurlstitle1', 'admin'));
 
 $checkurlraw = param_variable('checkurl', null);
 
@@ -88,7 +88,7 @@ $migrateform = pieform(array(
             'title'        => get_string('migrateurls', 'admin'),
             'class'        => 'btn-primary',
             'description'  => get_string('migrateurlsdescription', 'admin', $checkurlraw, get_config('wwwroot')),
-            'confirm'      => get_string('migrateurlsconfirm', 'admin'),
+            'confirm'      => get_string('migrateurlsconfirm1', 'admin'),
             'value'        => get_string('domigrateurls', 'admin'),
             'hiddenlabel'    => true,
         ),
@@ -100,7 +100,7 @@ $migrateform = pieform(array(
 ));
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-cog');
+setpageicon($smarty, 'icon-link');
 
 $smarty->assign('potentialembeddedurls', $results);
 $smarty->assign('checkform', $checkform);

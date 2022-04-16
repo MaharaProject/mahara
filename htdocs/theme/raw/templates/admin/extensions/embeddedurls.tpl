@@ -4,13 +4,13 @@
     <div class="col-lg-9">
         <div class="card">
             <div class="card-body">
-                {str tag=embeddedurlsdescription section=admin}
+                {str tag=embeddedurlsdescription1 section=admin}
             </div>
         </div>
 
         {if $grandtotal}
         <div class="card">
-            <h2 class="card-header">{str tag=potentialembeddedurls section=admin}</h2>
+            <h2 class="card-header">{str tag=potentialembeddedurls1 section=admin}</h2>
             <div class="card-body">
                 {$checkform|safe}
             </div>
@@ -29,7 +29,7 @@
             {/if}
         </div>
         {else}
-            {str tag=nopotentialembeddedurls section=admin}
+            {str tag=nopotentialembeddedurls1 section=admin}
         {/if}
     </div>
 </div>
