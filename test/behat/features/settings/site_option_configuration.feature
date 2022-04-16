@@ -19,8 +19,8 @@ Scenario: Turning the switches on and off on the "Site options" page (Bug 143156
 | Never display usernames | 1 |
 | Show people in public search | 1 |
 | Anonymous comments | 0 |
-| Access reports for staff | 1 |
-| All reports for institution staff | 1 |
+| Access reports for staff and support administrators | 1 |
+| All reports for institution staff and support administrators | 1 |
 | Require reason for masquerading | 1 |
 | Notify people of masquerading | 1 |
 | Show profile completion | 1 |
