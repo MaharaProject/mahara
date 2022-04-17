@@ -56,6 +56,7 @@
                 <li>
                     <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionusers.php">{str tag="editmembers" section="admin"}</a>
                     <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionstaff.php">{str tag="editstaff" section="admin"}</a>
+                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionsupportadmins.php">{str tag="editsupportadmins" section="admin"}</a>
                     <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionadmins.php">{str tag="editadmins" section="admin"}</a>
                 </li>
             </div>

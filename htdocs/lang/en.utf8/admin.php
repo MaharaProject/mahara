@@ -1111,6 +1111,7 @@ $string['institutionusersinstructionsinvited2'] = 'The list in the "%1$s" field 
 
 $string['editmembers'] = 'Edit members';
 $string['editstaff'] = 'Edit staff';
+$string['editsupportadmins'] = 'Edit support administrators';
 $string['editadmins'] = 'Edit administrators';
 $string['membershipexpiry'] = 'Membership expires';
 $string['membershipexpirydescription'] = 'Date on which the person will be removed automatically from the institution.';
