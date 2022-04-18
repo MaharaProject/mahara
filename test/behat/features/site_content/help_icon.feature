@@ -102,7 +102,7 @@ Scenario: Showing correct external manual help file for mahara page
   And I follow "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "institution-pages"
-  And I should see "11.6.12. Institution pages and collections" in "h2" on the screen
+  And I should see "11.6.13. Institution pages and collections" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
   And I choose "Pages and collections" in "Configure site" from administration menu
