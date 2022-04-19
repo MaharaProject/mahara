@@ -1,14 +1,19 @@
 <div id="verifyform" class="toolbarhtml">
     {if $showsignoff}
     <div>
-        {str tag=signedoff section=blocktype.peerassessment/signoff}
+        <div class="signoff-title">
+            {str tag=signedoff section=blocktype.peerassessment/signoff}
+        </div>            
         {if $signable}
         <a href="#" id="signoff">
-            <span class="icon {if $signoff}icon-check-circle completed {else}icon-circle incomplete{/if} icon-lg"></span>
+            {$signoffbutton|safe}
             <span class="sr-only">{str tag=updatesignoff section=blocktype.peerassessment/signoff}</span>
         </a>
+            {if !$signoff}
+            <div class="progress-help text-small">{str tag=signoffhelppage section=blocktype.peerassessment/signoff}</div>
+            {/if}
         {elseif $signoff}
-        <span class="icon icon-check-circle completed icon-lg"></span>
+            {$signoffbutton|safe}
         {else}
         <span class="icon icon-circle dot disabled icon-lg"></span>
         {/if}
@@ -131,12 +136,14 @@ $(function() {
         sendjsonrequest('{$WWWROOT}artefact/peerassessment/completion.json.php', { 'view': '{$view}', 'signoff': 1 }, 'POST', function (data) {
             if (data.data) {
                 if (data.data.signoff_newstate) {
-                    $('#signoff span.icon').addClass('icon-check-circle completed').removeClass('icon-circle incomplete');
+                    $('#dummyform_signoff').prop('checked', true);
+                    $('.progress-help').addClass('hidden');
                     $('#signoff-info-icon').removeClass('hidden');
                     signedoff = '1';
                 }
                 else {
-                    $('#signoff span.icon').addClass('icon-circle incomplete').removeClass('icon-check-circle completed');
+                    $('#dummyform_signoff').prop('checked', false);
+                    $('.progress-help').removeClass('hidden');
                     signedoff = '';
                     $('#signoff-info-icon').addClass('hidden');
                 }
