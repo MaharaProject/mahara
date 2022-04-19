@@ -711,3 +711,30 @@ div.toolbarhtml {
 #maincontainer_register_server_container .table-responsive {
   margin-bottom: $spacing-xl;
 }
+
+.bt-signoff {
+    .signoff-title,
+    .verified-title {
+        margin-top: 0.25rem;
+        display: inline-block;
+        padding-right: 1rem;
+    }
+    .progress-help {
+        width: 14rem;
+        clear: right;
+    }
+    .help {
+        clear: right;
+    }
+    .clearright {
+        clear: right;
+    }
+}
+
+#verifyform {
+    div.switchbox {
+        padding: 0;
+        border-bottom: 0;
+        float: right;
+    }
+}

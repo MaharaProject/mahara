@@ -7855,7 +7855,7 @@ class ProgressAction {
 
     public function get_icon() {
         $notallowedicon = "icon icon-circle dot disabled";
-        $actionicon = "icon icon-circle action";
+        $actionicon = "icon icon-circle icon-regular action";
         $completedicon = "icon icon-check-circle completed";
         switch ($this->status) {
           case self::STATUS_NEEDSACTION:
