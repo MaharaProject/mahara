@@ -89,6 +89,16 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
             $smarty->assign('showsignoff', !empty($configdata['signoff']));
             $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view, false));
             $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view, false));
+
+            $element['signoff'] = array(
+                'type'         => 'switchbox',
+                'title'        => '',
+                'defaultvalue' => ArtefactTypePeerassessment::is_signed_off($view, false),
+                'readonly'     => !ArtefactTypePeerassessment::is_signable($view, false)
+            );
+            $form = array('name' => 'dummyform', 'elements' => $element);
+            $form = pieform_instance($form);
+            $smarty->assign('signoffbutton', $form->build(false));
             $html = $smarty->fetch('blocktype:signoff:verifyform.tpl');
         }
         return $html;

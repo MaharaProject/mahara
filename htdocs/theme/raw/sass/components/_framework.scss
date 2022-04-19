@@ -14,6 +14,12 @@
     tr.pages {
         background-color: $body-bg;
     }
+    tr.table-pager div.progress-help {
+        font-weight: normal !important;
+        width: 9rem;
+        text-align: center;
+        margin: auto;
+    }
     th.viewtab {
         text-align: center;
         max-width: 4.375rem; // 70px;
