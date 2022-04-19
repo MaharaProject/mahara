@@ -508,18 +508,29 @@ function accessurl_submit(Pieform $form, $values) {
         }
     }
     set_progress_done('copyviewexistingmembersprogress');
-
-    if ($collectionid && $shareurl) {
-        redirect($shareurl);
-    }
-    if ($view->get('owner')) {
+    $return = param_alpha('return', 'view');
+    if ($view->get('owner') && $return == 'edit') {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
         redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
     }
+    if ($view->get('owner') && $return == 'view') {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
+    }
+    if ($view->get('owner') && $return == 'index') {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
+        redirect(get_config('wwwroot') . 'view/index.php');
+    }
     if ($view->get('group')) {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
         redirect(get_config('wwwroot') . 'group/shareviews.php?group=' . $view->get('group'));
     }
     if ($view->get('institution')) {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
         redirect(get_config('wwwroot') . 'view/institutionshare.php?institution=' . $view->get('institution'));
+    }
+    if ($collectionid && $shareurl) {
+        redirect($shareurl);
     }
 }
 
