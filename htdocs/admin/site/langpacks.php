@@ -212,7 +212,7 @@ function get_syncform() {
                 'renderelementsonly' => true,
                 'confirm' => get_string('confirmsync', 'langpacks'),
                 'name'    => 'sync',
-                'value'   => get_string('synclangpacks', 'langpacks')
+                'value'   => get_string('updatelangpacks', 'langpacks')
             )
         )
     ));
