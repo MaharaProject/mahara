@@ -77,6 +77,7 @@ $csvfields = array('name', 'path', 'versions', 'websites');
 $USER->set_download_file(generate_csv($csv_array, $csvfields), 'thirdpartyplugins.csv', 'text/csv');
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-cubes');
 $smarty->assign('plugins', $plugins);
 $smarty->assign('SIDEBARS', false);
 $smarty->assign('wwwroot', get_config('wwwroot'));
