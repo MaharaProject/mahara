@@ -884,7 +884,7 @@ class Institution {
      * @return bool
      */
     public function isFull() {
-        return ($this->maxuseraccounts != '') && ($this->countMembers() >= $this->maxuseraccounts);
+        return (!empty($this->maxuseraccounts)) && ($this->countMembers() >= $this->maxuseraccounts);
     }
 
     /**
