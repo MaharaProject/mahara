@@ -30,3 +30,5 @@ $string['statsmaxfriends1'] = array(
     1 => 'Has %2$s contacts<br>(<a href="%3$s">%4$s has the most, with %1$d contacts</a>)',
 );
 $string['statsnofriends'] = 'Has 0 contacts';
+
+$string['cli_locking_no_review_block'] = ' portfolio completion page does not have a verification block.';
