@@ -1582,14 +1582,14 @@ $string['cli_locking_info'] = 'The batch CLI script
 This should be run listing a set of collection IDs
 e.g. -c=1234,5678,9102
 or a path to a CSV file
-e.g. -c=/tmp/myfile.csv  where the heading of the column is "collection"
+e.g. -c=/tmp/myfile.csv  where the heading of the column is "collectionid"
 and the process we are to do, either locking portfolios
 e.g. -l=lock
 or unlocking
 e.g. -l=unlock
 and if locking we need to supply the id of the verifier
 e.g. -v=21';
-$string['cli_locking_collection_header_error'] = 'Unable to find the "collection" header in the file from path: ';
+$string['cli_locking_collection_header_error'] = 'Unable to find the "collectionid" header in the file from path: ';
 $string['cli_locking_file_path_error'] = 'Unable to get file from path: ';
 $string['cli_locking_portfolio_number'] = 'Number of portfolios to %s: %s';
 $string['cli_locking_collection_ids'] = 'The collection ID numbers: ';
