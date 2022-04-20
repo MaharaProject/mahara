@@ -3869,7 +3869,7 @@ function view_stats_table($limit, $offset, $extra) {
             $orderby = " v.visits " . (!empty($extra['sortdesc']) ? 'ASC' : 'DESC') . ", v.title, v.id";
     }
 
-    $sql = "SELECT v.id, v.title, v.owner, v.group, v.institution, c.name,
+    $sql = "SELECT v.id, v.title, v.owner, v.group, v.institution, c.name, c.id AS collectionid,
             CASE
                 WHEN v.owner IS NOT NULL
                 THEN (SELECT CONCAT(firstname, ' ', lastname) FROM {usr} WHERE id = v.owner)
@@ -3920,7 +3920,7 @@ function view_stats_table($limit, $offset, $extra) {
     $daterange = array_map(function ($obj) { return $obj->ctime; }, $viewdata);
     $result['settings']['start'] = ($start) ? $start : min($daterange);
     if (!empty($extra['csvdownload'])) {
-        $csvfields = array('displaytitle', 'fullurl', 'collectiontitle','ownername', 'ownerurl',
+        $csvfields = array('displaytitle', 'fullurl', 'collectionid', 'collectiontitle','ownername', 'ownerurl',
                            'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
         $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
     }
@@ -5072,7 +5072,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
     }
 
     if (!empty($extra['csvdownload'])) {
-        $csvfields = array('displayname', 'userurl', 'title', 'views', 'hasaccessrules');
+        $csvfields = array('displayname', 'userurl', 'title', 'collectionid', 'views', 'hasaccessrules');
         $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv');
     }
     $result['csv'] = true;
