@@ -75,16 +75,16 @@ else if (is_string($collections)) {
         });
         // Remove the column headers and check for 'collection'
         $headers = array_shift($csv);
-        if (!in_array('collection', $headers)) {
+        if (!in_array('collectionid', $headers)) {
             $cli->cli_exit(get_string('cli_locking_collection_header_error', 'admin') . $collections);
         }
         foreach ($csv as $k => $v) {
-            $id = (int)$csv[$k]['collection'];
+            $id = (int)$csv[$k]['collectionid'];
             if ($id > 0) {
                 $collectionids[] = $id;
             }
             else {
-                $cli->cli_print(get_string('cli_locking_collection_bad_id', 'admin', $csv[$k]['collection']));
+                $cli->cli_print(get_string('cli_locking_collection_bad_id', 'admin', $csv[$k]['collectionid']));
             }
         }
     }
