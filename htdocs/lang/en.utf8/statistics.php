@@ -237,6 +237,17 @@ $string['reportdesctitle'] = 'This report includes:';
 
 // People reports
 
+$string['reportsmartevidence'] = 'SmartEvidence summary';
+$string['reportdescsmartevidence'] = '<ul>
+<li>SmartEvidence summary</li>
+<li>Personal information</li>
+<li>Email address</>
+<li>Title of the portfolio</li>
+<li>Number of pages in the portfolio</li>
+<li>Access list, i.e. who has permission to view the portfolio</li>
+<li>The sum of each status for the SmartEvidence assessment across the portfolio, no matter the individual standards</li>
+</ul><p>Listed are portfolios that were created during the selected time period. Their current access permissions are shown.</p>';
+
 $string['reportaccesslist'] = 'Portfolio access';
 $string['reportdescaccesslist'] = '<ul>
 <li>Portfolio owner</li>
@@ -500,6 +511,7 @@ $string['usersverifiersummaryreports'] = 'Reviewer summary';
 $string['userspageactivityreports'] = 'Page activity';
 $string['usersmasqueradingreports'] = 'Masquerading sessions';
 $string['usersaccesslistreports'] = 'Portfolio access';
+$string['userssmartevidencereports'] = 'SmartEvidence';
 $string['usersuseractivityreports'] = 'Account activity';
 $string['usersuserdetailsreports'] = 'Account details';
 $string['usersuseragreementreports'] = 'Legal consent';

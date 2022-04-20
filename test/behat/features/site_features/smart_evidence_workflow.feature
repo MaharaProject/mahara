@@ -1,5 +1,5 @@
 @javascript @core @core_portfolio
-Feature: Smart evidence work flow from Institution member submitting to Institution staff making
+Feature: SmartEvidence work flow from institution member submitting to Institution staff making
     and adding comments to collection submission.
 
 Background: Setting up test data for people and portfolio pages
@@ -20,16 +20,16 @@ Background: Setting up test data for people and portfolio pages
      | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
     # Background step required
-    # And the site has been made ready for smart evidence - Admin set up site ready for Smartevidence
+    # And the site has been made ready for SmartEvidence - Admin set up site ready for Smartevidence
     # annotations = enabled
     # Matrix config file is loaded
-    # Enable Institutions to allow Smart Evidence
+    # Enable Institutions to allow SmartEvidence
     # ********************************************************
      # Admin enables annotations module
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plugin administration" in "Extensions" from administration menu
     And I press "activate_blocktype_annotation_submit"
-    # confirm Smart evidence is also enabled
+    # confirm SmartEvidence is also enabled
     And I should see "Hide" in the "Smartevidence" "Smartevidence" property
     # Make sure we have a matrix config form
     And I choose "SmartEvidence" in "Extensions" from administration menu
@@ -38,7 +38,7 @@ Background: Setting up test data for people and portfolio pages
     And I press "Upload matrix"
     # Check that we have new framework
     Then I should see "Title of your framework"
-    # Enable Institutions to allow Smart Evidencelcd
+    # Enable Institutions to allow SmartEvidencelcd
     And I choose "Settings" in "Institutions" from administration menu
     And I press "Edit"
     And I enable the switch "Allow SmartEvidence"
@@ -55,8 +55,8 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I press "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:
-    | Collection name | Smart Evidence Collection 1 |
-    | Collection description | Smart Evidence Collection 1 description |
+    | Collection name | SmartEvidence Collection 1 |
+    | Collection description | SmartEvidence Collection 1 description |
     And I select "Title of your framework" from "SmartEvidence framework"
     # Adding page 1, 2 & 3 to the collection
     And I press "Next: Edit collection pages"
@@ -70,14 +70,14 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
 
     # Mahara member makes to page visible to public
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
+    And I click on "Manage access" in "SmartEvidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
     # Verify author is on correct page
-    And I should see "Smart Evidence Collection 1"
+    And I should see "SmartEvidence Collection 1"
 
     # Mahara member must make comment on a competencies before it can be accessed by admin/staff
-    When I follow "Smart Evidence Collection 1"
+    When I follow "SmartEvidence Collection 1"
     # click the standard group 3.1 to make an annotation for page 1 column
     And I click on the matrix point "3,22"
     And I fill in "First annotation description" in first editor
@@ -96,8 +96,8 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Log in as admin/staff grade the collection pages and make comments ( 3 pages 3.1sub level of the standard only)
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
-    And I should see "Smart Evidence Collection 1 "
-    And I follow "Smart Evidence Collection 1"
+    And I should see "SmartEvidence Collection 1 "
+    And I follow "SmartEvidence Collection 1"
     # Admin/staff selects the competencies ready for assessment and makes a Annotation
     And I click on the matrix point "3,22"
     And I fill in "Staff annotation description" in first editor
@@ -124,8 +124,8 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
 
     # Mahara member logs in, views annotations and confirms cannot delete annotations (Bug - 1781278)
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I should see "Smart Evidence Collection 1 "
-    And I follow "Smart Evidence Collection 1"
+    And I should see "SmartEvidence Collection 1 "
+    And I follow "SmartEvidence Collection 1"
     # Mahara member clicks the next to view next page
     And I press "Next page"
     # Mahara member places feedback

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="lib/db" VERSION="2013010705" COMMENT="XMLDB file for Smart Evidence Framework mahara tables"
+<XMLDB PATH="lib/db" VERSION="2013010705" COMMENT="XMLDB file for SmartEvidence Framework Mahara tables"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >

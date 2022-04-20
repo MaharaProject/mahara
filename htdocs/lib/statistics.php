@@ -4794,6 +4794,434 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
     return $result;
 }
 
+
+/**
+ * Returns the table data for the SmartEvidence report.
+ *
+ * @param int $limit The number of rows to return.
+ * @param int $offset The row to start at.
+ * @param array $extra Any additional options.
+ * @param string|null $institution The institution to filter by or all if null.
+ *
+ * @return array<string,mixed>
+ */
+function smartevidence_statistics($limit, $offset, $extra, $institution = null) {
+    userhasaccess($institution, 'accesslist');
+    $data = array();
+    $urllink = get_config('wwwroot') . 'admin/users/statistics.php?type=users&subtype=smartevidence';
+    if ($institution) {
+        $urllink .= '&institution=' . $institution;
+    }
+
+    // Fetch the header row.
+    $data['tableheadings'] = smartevidence_stats_headers($limit, $offset, $extra, $institution, $urllink);
+    $activeheadings = get_active_columns($data, $extra);
+    $extra['columns'] = array_keys($activeheadings);
+
+    // Fetch the data.
+    $data['table'] = smartevidence_stats_table($limit, $offset, $extra, $institution, $urllink);
+    $data['table']['activeheadings'] = $activeheadings;
+
+    $data['summary'] = $data['table']['count'] == 0 ? get_string('nostats', 'admin') : null;
+
+    return $data;
+}
+
+/**
+ * Returns the Columns for the SmartEvidence report config form.
+ *
+ * @param array $extra Any additional options.
+ * @param null $institution Needed for the function signature.
+ *
+ * @return array<array<string,string>> The report headers.
+ */
+function smartevidence_statistics_headers($extra = [], $institution = null) {
+    $extra['forconfigform'] = true;
+    return smartevidence_stats_headers(10, 0, $extra, $institution, null);
+}
+
+/**
+ * SmartEvidence report headers.
+ *
+ * Columns:
+ * • First name*
+ * • Last name*
+ * • Display name
+ * • User name
+ * • Email address
+ * • Collection (title of the collection that has a SmartEvidence overview page)*
+ * • Pages (number of pages in the portfolio)
+ * • Access list (list of entities who have access to the portfolio)
+ * • A column each for all available statuses with the sum showing for the entire collection*
+ *
+ * * required fields.
+ *
+ * @param int $limit The number of rows to return.
+ * @param int $offset The row to start at.
+ * @param array $extra Extra information about the report.
+ * @param string|null $institution The institution to filter by or all if null.
+ * @param string $urllink The URL to link to for the report.
+ *
+ * @return array<array<string,string>> The report headers
+ */
+function smartevidence_stats_headers($limit, $offset, $extra, $institution, $urllink) {
+    require_once(get_config('libroot') . 'collection.php');
+    safe_require('module', 'framework');
+    $headers = array(
+        array('id' => 'rownum', 'name' => '#'),
+        array(
+            'id' => 'firstname',
+            'required' => true,
+            'name' => get_string('firstname'),
+            'class' => format_class($extra, 'firstname'),
+            'link' => format_goto($urllink . '&sort=firstname', $extra, array('sort'), 'firstname'),
+        ),
+        array(
+            'id' => 'lastname',
+            'required' => true,
+            'name' => get_string('lastname'),
+            'class' => format_class($extra, 'lastname'),
+            'link' => format_goto($urllink . '&sort=lastname', $extra, array('sort'), 'lastname'),
+        ),
+        array(
+            'id' => 'displayname',
+            'required' => false,
+            'name' => get_string('displayname'),
+            'class' => format_class($extra, 'displayname'),
+            'link' => format_goto($urllink . '&sort=displayname', $extra, array('sort'), 'displayname'),
+        ),
+        array(
+              'id' => 'username',
+              'name' => get_string('username'),
+              'class' => format_class($extra, 'username'),
+              'link' => format_goto($urllink . '&sort=username', $extra, array('sort'), 'username')
+        ),
+        array(
+            'id' => 'email',
+            'required' => false,
+            'name' => get_string('email'),
+            'class' => format_class($extra, 'email'),
+        ),
+        array(
+            'id' => 'collection',
+            'required' => true,
+            'name' => get_string('Collection', 'collection'),
+            'class' => format_class($extra, 'collection'),
+            'link' => format_goto($urllink . '&sort=collection', $extra, array('sort'), 'collection'),
+            'helplink' => get_help_icon('core', 'reports', 'smartevidence', 'collection'),
+        ),
+        array(
+            'id' => 'pagecount',
+            'required' => false,
+            'name' => get_string('Views', 'view'),
+            'class' => format_class($extra, 'pagecount'),
+            'link' => format_goto($urllink . '&sort=pagecount', $extra, array('sort'), 'pagecount'),
+            'helplink' => get_help_icon('core', 'reports', 'smartevidence', 'pagecount'),
+        ),
+        array(
+            'id' => 'accessrules',
+            'required' => false,
+            'name' => get_string('accesslist', 'view'),
+            'class' => format_class($extra, 'accessrules'),
+            'helplink' => get_help_icon('core', 'reports', 'smartevidence', 'accessrules'),
+        ),
+    );
+
+    // Add the columns for each status.
+    list($count, $data) = smartevidence_stats_query($limit, $offset, $extra, $institution, $urllink);
+    if ($count < 1) {
+        return $headers;
+    }
+    $status_types = [];
+    foreach ($data as $item) {
+        // Extra detail from the collection.
+        $collection = new Collection($item->collectionid);
+        // Process SmartEvidence totals.
+        $framework = new Framework($collection->get('framework'));
+        $statuses = Framework::get_evidence_statuses_for_display($framework->get('id'));
+        foreach ($statuses as $key => $status) {
+            $status_types[$key] = $status;
+        }
+    }
+    foreach ($status_types as $key => $status) {
+        $classes = $status['classes'];
+        $id = $status['statisticsid'];
+        $title = $status['statisticstitle'];
+        $description = $status['headerdescription'];
+        $header = [
+            'id' => $id,
+            'required' => true,
+            'class' => 'assessment ' . format_class($extra, $id),
+        ];
+        if (isset($extra['forconfigform']) && $extra['forconfigform']) {
+            // The config form just needs the title string.
+            $header['name'] = get_string('smartevidence', 'collection') . ': ' . $title;
+        }
+        else {
+            // The statistics page uses the SmartEvidence status icon.
+            $header['name'] = '<span class="' . $classes . '" title="' . $title . '"></span>' .
+                '<span class="sr-only">' . $description . '</span>';
+            $header['headingishtml'] = true;
+        }
+        $headers[] = $header;
+    }
+    return $headers;
+}
+
+/**
+ * Fetch the data for the SmartEvidence report.
+ *
+ * @param int $limit The number of rows to return.
+ * @param int $offset The row to start at.
+ * @param array $extra Extra information about the report.
+ * @param string|null $institution The institution to filter by or all if null.
+ * @param string $urllink The URL to link to for the report.
+ *
+ * @return array<string,mixed>
+ */
+function smartevidence_stats_table($limit, $offset, $extra, $institution, $urllink) {
+    global $USER, $SESSION;
+
+    require_once(get_config('libroot') . 'collection.php');
+    safe_require('module', 'framework');
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
+    $users = $SESSION->get('usersforstats');
+    $framework_statuses = [];
+
+    list($count, $data) = smartevidence_stats_query($limit, $offset, $extra, $institution);
+
+    $pagination = build_pagination(array(
+        'id' => 'stats_pagination',
+        'url' => $urllink,
+        'jsonscript' => 'admin/users/statistics.json.php',
+        'datatable' => 'statistics_table',
+        'count' => $count,
+        'limit' => $limit,
+        'offset' => $offset,
+        'setlimit' => true,
+        'extradata' => $extra,
+    ));
+
+    $result = array(
+        'count'         => $count,
+        'tablerows'     => '',
+        'pagination'    => $pagination['html'],
+        'pagination_js' => $pagination['javascript'],
+    );
+    $result['settings']['start'] = ($start) ? $start : null;
+    $result['settings']['end'] = $end;
+    $result['settings']['users'] = !empty($users) ? count($users) : 0;
+    if ($count < 1) {
+        return $result;
+    }
+
+    $daterange = array_map(function ($obj) { return $obj->vctime; }, $data);
+    $result['settings']['start'] = ($start) ? $start : min($daterange);
+    $frameworks_checked = [];
+    foreach ($data as $item) {
+        $item->userurl = profile_url($item->userid);
+        if ($item->views < 1) {
+            $item->title = get_string('noviews1', 'view');
+        }
+        $item->access = get_records_sql_array("
+            SELECT *, 0 AS secreturls
+            FROM {view_access} WHERE view = ? AND token IS NULL
+            UNION
+            (SELECT *, (SELECT COUNT(*) FROM {view_access} va2 WHERE token IS NOT NULL AND va2.view = va.view) AS secreturls
+            FROM {view_access} va WHERE va.view = ? AND va.token IS NOT NULL LIMIT 1)",
+            array($item->viewid, $item->viewid));
+        $item->hasaccessrules = !empty($item->access);
+        $item->canbeviewed = $item->viewid ? can_view_view($item->viewid) : false;
+        $item->pending = is_view_suspended($item->viewid);
+        // Extra detail from the collection.
+        $collection = new Collection($item->collectionid);
+        $item->collectionurl = $collection->get_url();
+        // Process SmartEvidence totals.
+        $framework = new Framework($collection->get('framework'));
+        $evidence = $framework->get_evidence($collection->get('id'));
+        $item->evidence_begun = 0;
+        $item->evidence_incomplete = 0;
+        $item->evidence_partialcomplete = 0;
+        $item->evidence_completed = 0;
+        // If there are no evidences then $evidence will return false.
+        if ($evidence) {
+            // Each items in $evidence is a view. Each of these has a state and
+            // that state is the status
+            foreach ($evidence as $ev) {
+                switch ($ev->state) {
+                    case Framework::EVIDENCE_BEGUN:
+                        $item->evidence_begun++;
+                        break;
+
+                    case Framework::EVIDENCE_INCOMPLETE:
+                        $item->evidence_incomplete++;
+                        break;
+
+                    case Framework::EVIDENCE_PARTIALCOMPLETE:
+                        $item->evidence_partialcomplete++;
+                        break;
+
+                    case Framework::EVIDENCE_COMPLETED:
+                        $item->evidence_completed++;
+                        break;
+                }
+                if (!in_array($ev->framework, $frameworks_checked)) {
+                    $frameworks_checked[] = $ev->framework;
+                    $states = Framework::get_evidence_statuses_for_display($ev->framework);
+                    foreach ($states as $key => $state) {
+                        $framework_statuses[$key] = $state;
+                    }
+                }
+            }
+        }
+    }
+
+    if (!empty($extra['csvdownload'])) {
+        $csvfields = [
+            'firstname',
+            'lastname',
+            'displayname',
+            'username',
+            'email',
+            'title',
+            'collectionid',
+            'views',
+            'hasaccessrules',
+            'userurl',
+            'collectionurl',
+        ];
+        foreach ($framework_statuses as $key => $state) {
+            $csvfields[] = $state['statisticsid'];
+        }
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'smartevidencestatistics.csv', 'text/csv', true);
+    }
+    $result['csv'] = true;
+    $columnkeys = array();
+    foreach ($extra['columns'] as $column) {
+        $columnkeys[$column] = 1;
+    }
+
+    $smarty = smarty_core();
+    $smarty->assign('data', $data);
+    $smarty->assign('columns', $columnkeys);
+    $smarty->assign('offset', $offset);
+    $smarty->assign('statusestodisplay', $framework_statuses);
+    $result['tablerows'] = $smarty->fetch('admin/users/smartevidencereport.tpl');
+
+    return $result;
+}
+
+/**
+ * Run the query for the SmartEvidence report.
+ *
+ * @param int $limit The number of records to return.
+ * @param int $offset The offset of the first record to return.
+ * @param array $extra Extra information to pass to the query.
+ * @param string|null $institution The institution to restrict to.
+ *
+ * @return array<mixed>
+ */
+function smartevidence_stats_query($limit, $offset, $extra, $institution) {
+    global $SESSION;
+    $count = 0;
+    $data = [];
+
+    $start = !empty($extra['start']) ? $extra['start'] : null;
+    $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
+    $users = $SESSION->get('usersforstats');
+
+    // Construct the SQL.
+    $fromsql = " FROM (
+        SELECT
+            u.id AS userid,
+            u.username as username,
+            u.deleted AS udeleted,
+            u.email AS email,
+            u.firstname AS firstname,
+            u.lastname AS lastname,
+            CONCAT(u.firstname, ' ', u.lastname) AS displayname,
+            cv.view AS viewid,
+            c.id AS collectionid,
+            (SELECT COUNT(*) FROM {collection_view} WHERE collection = c.id) AS views,
+            c.name AS title,
+            c.ctime AS vctime
+        FROM {usr} u JOIN {collection} c ON c.owner = u.id
+        JOIN {collection_view} cv ON cv.collection = c.id
+        WHERE cv.displayorder = 0
+        AND c.framework IS NOT NULL
+    ) AS t";
+    $wheresql = " WHERE userid != 0 AND udeleted = 0 AND collectionid IS NOT NULL";
+    $where = [];
+    if ($institution) {
+        $fromsql .= " JOIN {usr_institution} ui ON (ui.usr = userid AND ui.institution = ?)";
+        $where[] = $institution;
+    }
+    if ($users) {
+        $wheresql .= " AND userid IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
+    }
+    if ($start) {
+        $wheresql .= " AND vctime >= DATE(?) AND vctime <= DATE(?)";
+        $where[] = $start;
+        $where[] = $end;
+    }
+    $count = count_records_sql("SELECT COUNT(*) " . $fromsql . $wheresql, $where);
+
+    if ($count < 1) {
+        // If there are no results, $data is never used.
+        return [$count, null];
+    }
+
+    // Build the SQL that will actually fetch the results.
+    $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
+    switch ($sorttype) {
+        case 'firstname':
+            $orderby = " firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", lastname";
+            break;
+        case 'lastname':
+            $orderby = " lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", firstname";
+            break;
+        case 'id':
+            $orderby = " collectionid " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case 'pagecount':
+            $orderby = " views " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "collection":
+            $orderby = " title " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", displayname";
+            break;
+        case 'displayname':
+        case 'username':
+            // Order by sort type.
+            $orderby = " $sorttype " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            break;
+        case "owner":
+        default:
+            $orderby = " displayname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", title, viewid";
+    }
+    $sql = "SELECT
+        userid,
+        username,
+        firstname,
+        lastname,
+        displayname,
+        email,
+        viewid,
+        collectionid,
+        views,
+        title,
+        vctime
+        " . $fromsql . $wheresql . "
+        ORDER BY " . $orderby;
+    if (empty($extra['csvdownload'])) {
+        $sql .= " LIMIT $limit OFFSET $offset";
+    }
+    $data = get_records_sql_array($sql, $where);
+
+    return [$count, $data];
+}
+
 function accesslist_statistics_headers($extra, $urllink) {
     return array(
         array('id' => 'rownum', 'name' => '#'),
@@ -5463,6 +5891,9 @@ function display_statistics($institution, $type, $extra = null) {
             if ($subtype == 'accesslist') {
                 $data = accesslist_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
+            else if ($subtype == 'smartevidence') {
+                $data = smartevidence_statistics($extra->limit, $extra->offset, $extra->extra);
+            }
             else if ($subtype == 'masquerading') {
                 if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
                     $data = array('notvalid_errorstring' => get_string('masqueradingnotloggedwarning', 'admin', get_config('wwwroot')));
@@ -5531,6 +5962,9 @@ function display_statistics($institution, $type, $extra = null) {
          default:
             if ($subtype == 'accesslist') {
                 $data = accesslist_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
+            }
+            else if ($subtype == 'smartevidence') {
+                $data = smartevidence_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
             else if ($subtype == 'masquerading') {
                 if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
@@ -5911,6 +6345,7 @@ function get_report_types($institution = null) {
         'users_users' => get_string('peoplereports', 'statistics'),
         'users_pageactivity' => get_string('reportpageactivity', 'statistics'),
         'users_accesslist' => get_string('reportaccesslist', 'statistics'),
+        'users_smartevidence' => get_string('reportsmartevidence', 'statistics'),
         'users_masquerading' => get_string('reportmasquerading', 'statistics'),
         'users_userdetails' => get_string('reportuserdetails', 'statistics'),
         'users_useragreement' => get_string('reportuseragreement', 'statistics'),
@@ -5978,6 +6413,7 @@ function get_report_types($institution = null) {
             );
             $usersoptions = array(
                 'users_accesslist' => get_string('reportaccesslist', 'statistics'),
+                'users_smartevidence' => get_string('reportsmartevidence', 'statistics'),
                 'users_masquerading' => get_string('reportmasquerading', 'statistics'),
                 'users_userdetails' => get_string('reportuserdetails', 'statistics'),
                 'users_useragreement' => get_string('reportuseragreement', 'statistics'),
