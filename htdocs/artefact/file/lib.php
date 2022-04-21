@@ -1,5 +1,6 @@
 <?php
 /**
+ * Artefact file class
  *
  * @package    mahara
  * @subpackage artefact-internal
@@ -13,12 +14,18 @@ defined('INTERNAL') || die();
 
 require_once('file.php');
 
+/**
+ * Plugin artefact file class
+ */
 class PluginArtefactFile extends PluginArtefact {
 
     public static function is_active() {
         return get_field('artefact_installed', 'active', 'name', 'file');
     }
 
+    /**
+     * {@inheritDoc} from the PluginArtefact class
+     */
     public static function get_artefact_types() {
         return array(
             'file',

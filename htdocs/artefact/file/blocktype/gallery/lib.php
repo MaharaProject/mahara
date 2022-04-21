@@ -13,16 +13,27 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Plugin for Gallery blocktype
+ */
 class PluginBlocktypeGallery extends MaharaCoreBlocktype {
 
+    /**
+     * {@inheritDoc}
+     */
     public static function get_title() {
         return get_string('title', 'blocktype.file/gallery');
     }
 
-    /** When the Image Gallery is displayed from a folder it will have a single
-    ** artefact and warrant a details block header. No header will display if
-    ** individual images (with multiple artefacts) were selected instead.
-    **/
+    /**
+     * single_artefact_per_block
+     *
+     * When the Image Gallery is displayed from a folder it will have a single
+     * artefact and warrant a details block header. No header will display if
+     * individual images (with multiple artefacts) were selected instead.
+     *
+     * @return boolean
+     */
     public static function single_artefact_per_block() {
         return true;
     }

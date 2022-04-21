@@ -1,5 +1,6 @@
 <?php
 /**
+ * Helper to adjust manage the state when extracting a file artefact
  *
  * @package    mahara
  * @subpackage artefact-file

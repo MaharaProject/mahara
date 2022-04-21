@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Version file for html blocktype to render html snippets from inside a view
  *
  * @package    mahara
  * @subpackage artefact-file

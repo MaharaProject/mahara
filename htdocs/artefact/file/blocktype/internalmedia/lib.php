@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utility for the internal media blocktype
  *
  * @package    mahara
  * @subpackage blocktype-internalmedia
@@ -11,6 +12,9 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Utility class for the internal media blocktype
+ */
 class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     /**

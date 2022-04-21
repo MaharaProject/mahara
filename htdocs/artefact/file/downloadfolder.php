@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Helper package to download folder as a zip file
  *
  * @package    mahara
  * @subpackage artefact-file
@@ -8,6 +9,7 @@
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
+
 
 define('INTERNAL', 1);
 define('PUBLIC', 1);
@@ -21,11 +23,16 @@ $viewid = param_integer('view', 0);
 $groupid = param_integer('group', 0);
 $institution = param_alphanum('institution', 0);
 
-/*
-* Function to check if the specified artefact should be downloadable
-* (ie. whether it or one of its parents is in the view and whether the
-* current user can view the view)
-*/
+/**
+ * Check if the given artefact should be downloadable
+ *
+ * Function to check if the specified artefact should be downloadable
+ * ie. whether it or one of its parents is in the view and whether the
+ * current user can view the view
+ *
+ * @param  mixed $artefact
+ * @return bool
+ */
 function can_download_artefact($artefact) {
     global $USER, $viewid;
 
@@ -47,9 +54,12 @@ function can_download_artefact($artefact) {
     return false;
 }
 
-/*
-* Function to clean up a string so that it can be used as a filename
-*/
+/**
+ * Clean up a string so that it can be used as a filename
+ *
+ * @param  string $name
+ * @return string
+ */
 function zip_filename_from($name) {
     $name = preg_replace('#\s+#', '_', strtolower($name));
     $name = get_string('zipfilenameprefix', 'artefact.file') . '-' . $name;
@@ -58,10 +68,9 @@ function zip_filename_from($name) {
     return $name . '.zip';
 }
 
-/*
-* Function to clean up zip file created by this script
-* from the temp directory in the dataroot.
-*/
+/**
+ * Clean up zip file created by this script from the temp directory in the dataroot.
+ */
 function zip_clean_temp_dir() {
     global $USER;
 
@@ -117,10 +126,14 @@ function zip_clean_temp_dir() {
     }
 }
 
-/*
-* Function to start the process of adding directories to the zip file
-* @returns an array of all files in the directory and subdirectories
-*/
+/**
+ * Start the process of adding directories to the zip file
+ *
+ * @param  mixed $zip
+ * @param  mixed $folderid
+ * @param  mixed $path
+ * @return array all files in the directory and subdirectories
+ */
 function zip_process_directory(&$zip, $folderid, $path) {
     $folderinfo = get_record('artefact', 'id', $folderid);
 
@@ -134,10 +147,14 @@ function zip_process_directory(&$zip, $folderid, $path) {
     return zip_process_contents($zip, $foldercontent, $path);
 }
 
-/*
-* Function to recursively add directories to the zip file
-* @returns an array of all files in this and subdirectories
-*/
+/**
+ * Recursively add directories to the zip file
+ *
+ * @param  mixed $zip
+ * @param  mixed $foldercontent
+ * @param  mixed $path
+ * @return array all files in this and subdirectories
+ */
 function zip_process_contents(&$zip, $foldercontent, $path) {
     $files = array();
 
@@ -163,11 +180,19 @@ function zip_process_contents(&$zip, $foldercontent, $path) {
     return $files;
 }
 
-/*
-* Function to write the given files to the zip file. This assumes all required directories have been created.
-* Writes files in chunks since ZipArchive doesn't unlock files until it's closed - large numbers of files could
-* exceed the maximum number of files allowed to be open at once (eg. ulimit on Linux)
-*/
+/**
+ * Write the given files to the zip file
+ *
+ * This assumes all required directories have been created.
+ * Writes files in chunks since ZipArchive doesn't unlock files until it's
+ * closed - large numbers of files could exceed the maximum number of files
+ * allowed to be open at once (eg. ulimit on Linux)
+ *
+ * @param  mixed $zip
+ * @param  mixed $filepath
+ * @param  mixed $allfiles
+ * @return void
+ */
 function zip_write_contents(&$zip, $filepath, $allfiles) {
     $chunks = array_chunk($allfiles, 500);
     foreach ($chunks as $chunk) {
