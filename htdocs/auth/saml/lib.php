@@ -442,9 +442,7 @@ class AuthSaml extends Auth {
                 $user->studentid = $studentid;
             }
             // Double check that the user is in this institution and add them if allowed
-            if (get_config('usersuniquebyusername')) {
-                saml_set_basic_role($user, $institutionname, $roles, $institutionrole, $roletypes);
-            }
+            $this->saml_set_basic_role($user, $institutionname, $roles, $institutionrole, $roletypes);
             if (!empty($roles) && empty($usr_is_siteadmin)) {
                 // make sure they are not site admin anymore
                 $user->admin = 0;
