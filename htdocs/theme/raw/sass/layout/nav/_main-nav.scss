@@ -109,8 +109,8 @@
 
             // navbar menu children toggles
             .icon.navbar-showchildren {
-                color: $navbar-inverse-toggle-color;
-                background: $navbar-inverse-toggle-bg;
+                color: $navbar-inverse-toggle-hover-color;
+                background: $navbar-inverse-toggle-hover-bg;
                 border-radius: 0;
                 border: 0;
                 position: absolute;
@@ -131,11 +131,6 @@
                 background-color: $navbar-default-link-hover-bg;
                 text-decoration:none;
                 color: $navbar-default-link-hover-color;
-
-                .icon.navbar-showchildren {
-                    background: $navbar-inverse-toggle-hover-bg;
-                    color: $navbar-inverse-toggle-hover-color;
-                }
             }
 
             &.disabled {
@@ -147,6 +142,8 @@
                 .icon.navbar-showchildren {
                     transform: rotate(0deg);
                     transition-duration: 0.3s;
+                    background: $navbar-inverse-toggle-bg;
+                    color: $navbar-inverse-toggle-color;
                 }
             }
         }
@@ -160,11 +157,6 @@
             &:focus {
                 background-color: $navbar-default-active-bg;
                 color: $navbar-default-active-color;
-            }
-
-            .icon.navbar-showchildren {
-                background-color: $navbar-inverse-toggle-active-bg;
-                color: $navbar-inverse-toggle-active-color;
             }
         }
     }
