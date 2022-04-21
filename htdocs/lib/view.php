@@ -6090,7 +6090,7 @@ class View {
 
                 if (isset($c->lockedcoll) && $c->lockedcoll) {
                     $unlockdate = get_field('collection_template', 'rolloverdate', 'collection', $c->{$useid});
-                    $c->unlockcoll = !empty($unlockdate) ? format_date(strtotime($unlockdate)) : null;
+                    $c->unlockcoll = !empty($unlockdate) ? format_date(strtotime("+6 months", strtotime($unlockdate))) : null;
                 }
 
                 $c = (array)$c;
