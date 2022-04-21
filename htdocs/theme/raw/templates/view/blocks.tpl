@@ -9,6 +9,15 @@
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
 
         <div class="col-with-collapse">
+        {if $accessible}
+            <div id="blocksinstructionaccessible" class="lead view-description with-addblock">
+                {str tag='accessibilitymodedescription1' section='view'}
+            </div>
+        {else}
+            <div id="blocksinstruction" class="lead view-description with-addblock">
+                {str tag='blocksinstructionajaxlive2' section='view'}
+            </div>
+        {/if}
         {if $instructions}
             <div id="viewinstructions" class="last form-group collapsible-group small-group">
             <fieldset  class="pieform-fieldset collapsible collapsible-small">
@@ -22,16 +31,6 @@
                 </div>
             </fieldset>
             </div>
-        {else}
-            {if $accessible}
-                <div id="blocksinstructionaccessible" class="lead view-description with-addblock">
-                    {str tag='accessibilitymodedescription1' section='view'}
-                </div>
-            {else}
-                <div id="blocksinstruction" class="lead view-description with-addblock">
-                    {str tag='blocksinstructionajaxlive2' section='view'}
-                </div>
-            {/if}
         {/if}
         </div>
         {include file="view/editviewpageactions.tpl" selected='content' ineditor=true}
