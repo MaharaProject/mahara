@@ -16,6 +16,7 @@ RUN apt-get update && \
         php-curl \
         php-dom \
         php-gd \
+        php-intl \
         php-json \
         php-ldap \
         php-mbstring \
