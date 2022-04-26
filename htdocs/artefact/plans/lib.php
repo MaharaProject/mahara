@@ -899,6 +899,7 @@ class ArtefactTypeTask extends ArtefactType {
         $new = empty($this->id);
 
         if ($new) {
+            require_once('tools/PlansTools.php');
             // Adjust title if parent plan has another task with the same title
             if (!empty($this->get('group'))) {
                 $ownerType = 'group';
@@ -908,7 +909,8 @@ class ArtefactTypeTask extends ArtefactType {
                 $ownerType = 'owner';
                 $ownerId = $this->get('owner');
             }
-            $this->set('title',
+            if ($this->get('parent')) {
+                $this->set('title',
                        PlansTools::createUniqueStringForDBField(
                            'artefact',
                            'title',
@@ -918,7 +920,19 @@ class ArtefactTypeTask extends ArtefactType {
                            'parent',
                            $this->get('parent')
                        )
-            );
+                );
+            }
+            else {
+                $this->set('title',
+                       PlansTools::createUniqueStringForDBField(
+                           'artefact',
+                           'title',
+                           $this->get('title'),
+                           $ownerType,
+                           $ownerId
+                       )
+                );
+            }
         }
 
         parent::commit();
