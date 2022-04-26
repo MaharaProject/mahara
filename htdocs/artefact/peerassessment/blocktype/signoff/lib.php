@@ -118,8 +118,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
                 'type' => 'switchbox',
                 'title' => get_string('verify', 'blocktype.peerassessment/signoff'),
                 'description' => get_string('verifydesc', 'blocktype.peerassessment/signoff'),
-                'defaultvalue' => 0, // WR #376749 Step 2/3: Revert back to => !empty($configdata['verify']) ? 1 : 0
-                'disabled' => true, // WR #376749 Step 2/3: Delete this line
+                'defaultvalue' => !empty($configdata['verify']) ? 1 : 0,
             ),
         );
         return $elements;
