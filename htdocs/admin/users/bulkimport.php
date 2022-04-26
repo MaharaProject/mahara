@@ -222,7 +222,7 @@ function import_next_user($filename, $username, $authinstance) {
                           'username'       => $username,
                           'firstname'      => 'Imported',
                           'lastname'       => 'User',
-                          'password'       => get_random_key(6),
+                          'password'       => get_random_key(16),
                           'passwordchange' => 1,
                           );
 
