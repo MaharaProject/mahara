@@ -319,11 +319,11 @@ class Institution {
         $this->verifyReady();
     }
 
-    public function addUserAsMember($user, $staff=null, $admin=null, $supportadmin=null, $authid=null) {
+    public function addUserAsMember($user, $staff=null, $admin=null, $supportadmin=null, $authid=null, $sendmessage=true) {
         global $USER;
         if ($this->isFull()) {
             $this->send_admin_institution_is_full_message();
-            die_info(get_string('institutionmaxusersexceeded', 'admin'));
+            throw new Exception(get_string('institutionmaxusersexceeded', 'admin'));
         }
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
@@ -411,7 +411,8 @@ class Institution {
         $userobj->find_by_id($user->id);
         $userobj->copy_institution_views_collections_to_new_member($this->name);
         require_once('activity.php');
-        if (empty($user->newuser)) {
+
+        if (empty($user->newuser) && $sendmessage) {
             // Only send the message if user is not being created at the same time
             activity_occurred('maharamessage', $message);
         }
@@ -721,7 +722,7 @@ class Institution {
         db_commit();
     }
 
-    public function removeMember($user) {
+    public function removeMember($user, $sendmessage = true) {
         global $USER;
 
         if (is_numeric($user)) {
@@ -752,11 +753,12 @@ class Institution {
             delete_records('auth_remote_user', 'authinstance', $oldauth, 'localusr', $user->id);
             // If the old authinstance was external, the user may need
             // to set a password
-            if ($user->password == '') {
+
+            if ($user->password == '' && $sendmessage) {
                 log_debug('resetting pw for '.$user->id);
                 $this->removeMemberSetPassword($user);
             }
-            else if ($authinstances[$oldauth]->authname != 'internal') {
+            else if ($authinstances[$oldauth]->authname != 'internal' && $sendmessage) {
                 $sitename = get_config('sitename');
                 $fullname = display_name($user, null, true);
                 email_user($user, null,

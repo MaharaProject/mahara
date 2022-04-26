@@ -1,6 +1,6 @@
 @javascript @core @core_administration
-Feature: Configuration changes on "Add a person" page
-In order to change configuration settings on the "Add a person" page
+Feature: Configuration changes on "Add an account" page
+In order to change configuration settings on the "Add an account" page
 As an admin
 So I can benefit from the use of different configuration changes
 
@@ -42,7 +42,7 @@ Scenario: Masquerading as a support admin
 
 Scenario: Admin to add a person (Bug 1703721)
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Add a person" from administration menu
+  And I choose "Add an account" from administration menu
   And I set the following fields to these values:
   | First name | Bob |
   | Last name | One |
@@ -89,18 +89,19 @@ Scenario: Admin to add a person (Bug 1703721)
 Scenario: Create people by csv (Bug 1426983)
   Given I log in as "admin" with password "Kupuh1pa!"
   # Adding 50 people by csv
-  And I choose "Add people by CSV" in "People" from administration menu
+  And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "50users_new.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
-  And I press "Add people by CSV"
+  And I press "Add or update accounts"
+  And I wait "3" seconds
   Then I should see "Your CSV file was processed successfully"
   And I should see "New accounts added: 50."
   # Upload 20 people by csv by choosing the switch update users
-  And I choose "Add people by CSV" in "People" from administration menu
+  And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "20users_update.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
   And I enable the switch "Update accounts"
-  And I press "Add people by CSV"
+  And I press "Add or update accounts"
   Then I should see "Your CSV file was processed successfully"
   And I should see "Accounts updated: 20."
   And I log out
@@ -135,10 +136,11 @@ Scenario: Check for error messages for the following expiry dates when uploading
           b) expire date is wrong format
   Given I log in as "admin" with password "Kupuh1pa!"
   # Adding 7 people by csv with expiry date errors
-  And I choose "Add people by CSV" in "People" from administration menu
+  And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "7usersnew-errors.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
-  And I press "Add people by CSV"
+  And I press "Add or update accounts"
+  And I wait "3" seconds
   Then I should see "There was an error with submitting this form. Please check the marked fields and try again."
   And I should see "Error on line 2: The expiry \"today\" cannot be in the past."
   And I should see "Error on line 3: The expiry \"2025-01--30\" is invalid. Please use a valid date format."
@@ -153,9 +155,10 @@ Scenario: Adding people using different expiry date formats via CSV upload
           e) Thu, May 8, 25 (day abbv and month written full)
   Given I log in as "admin" with password "Kupuh1pa!"
   # Adding 7 people by csv with corrected expiry date formats
-  And I choose "Add people by CSV" in "People" from administration menu
+  And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "7usersnew-correctdates.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
-  And I press "Add people by CSV"
+  And I press "Add or update accounts"
+  And I wait "3" seconds
   Then I should see "Your CSV file was processed successfully."
   And I should see "New accounts added: 6."

@@ -144,7 +144,8 @@ $string['institutionsettingsdesc'] = 'Set up and manage institutions';
 $string['lastinstitution'] = 'Previous institution';
 $string['adminnotifications'] = 'Admin notifications';
 $string['adminnotificationsdescription'] = 'Overview of how administrators receive system notifications';
-$string['uploadcsv'] = 'Add people by CSV';
+$string['uploadcsv1'] = 'Add or update accounts by CSV';
+$string['uploadcsvbutton'] = 'Add or update accounts';
 $string['uploadcsvdesc'] = 'Upload a CSV file containing details for new accounts or update existing ones';
 $string['uploadgroupcsv'] = 'Add groups by CSV';
 $string['uploadgroupmemberscsv'] = 'Update group members by CSV';
@@ -699,13 +700,13 @@ $string['notificationsettingsdescription'] = 'Here you can set the default optio
 
 // Upload CSV and CSV errors
 $string['csvfile'] = 'CSV file';
-$string['emailusersaboutnewaccount'] = 'Email people about their account';
-$string['emailusersaboutnewaccountdescription'] = 'If checked, an email will be sent to people informing them of their new account details.';
+$string['emailusersaboutnewaccount1'] = 'Email account details';
+$string['emailusersaboutnewaccountdescription1'] = 'Send an email to people informing them of their new or updated account details.';
 $string['forceuserstochangepassword'] = 'Force password change';
-$string['forceuserstochangepassworddescription'] = 'If checked, people will be forced to change their password when they log in for the first time.';
-$string['uploadcsvinstitution'] = 'The institution and authentication method for the new accounts.';
+$string['forceuserstochangepassworddescription1'] = 'Account holders will be forced to change their password when they log in next. This is especially recommended if an account holder is moved to a different institution and is given an "internal" authentication method. This option should not be set to "Yes" when an external authentication method is used.';
+$string['uploadcsvinstitution1'] = 'The institution and authentication method to assign to new or updated accounts.<br>Note: If you move accounts to a new institution, they will be removed from all other institutions and added to the one specified here.';
 $string['configureauthplugin'] = 'You must configure an authentication plugin before you can add people.';
-$string['csvfiledescription'] = 'The file containing the people to add.';
+$string['csvfiledescription1'] = 'The file that contains the accounts to add or update.';
 $string['csvmaxusersdescription'] = 'This file should not contain more than %s.';
 $string['groupcsvfiledescription'] = 'The file containing groups to add';
 $string['groupmemberscsvfiledescription'] = 'The file containing group members to update';
@@ -731,9 +732,9 @@ $string['uploadcsverroruserinaninstitution'] = 'Error on line %s: "%s" is a memb
 $string['uploadcsverrorinvalidexpirydate'] = 'Error on line %s: The expiry "%s" is invalid. Please use a valid date format.';
 $string['uploadcsverroruserrolemissing'] = 'Error on line %s: The class for the user role "%s" is missing. Please make sure the "UserRole%s" class exists and is accessible.';
 $string['uploadcsverrorexpirydateinpast'] = 'Error on line %s: The expiry "%s" cannot be in the past.';
-$string['uploadcsvpagedescription7'] = '<p>Here you can create new accounts by uploading them via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
+$string['uploadcsvpagedescription8'] = '<p>You can set up new accounts or update existing ones by uploading them via a <acronym title="Comma Separated Values">CSV</acronym> file.</p>
 
-<p>The first row of your CSV file should specify the format of your CSV data. For example, it should look like this:</p>
+<p>The first row of your CSV file should specify the format of your CSV data. It should look like this:</p>
 
 <pre>username,password,email,firstname,lastname,studentid</pre>
 
@@ -746,7 +747,7 @@ $string['uploadcsvpagedescription7'] = '<p>Here you can create new accounts by u
 <li>password</li>
 </ul>
 
-<p>You can leave out the "password" field when you update existing accounts.</p>
+<p>You do need the "password" field even when you set up accounts to use an external authentication method. In that case, make sure to not force a password change. You can leave out the "password" field when you update existing accounts.</p>
 
 <p>Your CSV file may include any other profile fields that you want to pre-fill. The optional fields are:</p>
 
@@ -804,7 +805,7 @@ $string['uploadgroupmemberscsvpagedescription3'] = '<p>You may use this facility
 $string['uploadcsvsomeuserscouldnotbeemailed'] = 'Some people could not be emailed. Their email addresses may be invalid, or the server Mahara is running on might not be configured to send email properly. The server error log has more details. For now, you may want to contact these people manually:';
 $string['uploadcsvfailedusersexceedmaxallowed'] = 'Nobody has been added because there are too many people in your file. The number of members in the institution would have exceeded the maximum number allowed.';
 $string['updateusers'] = 'Update accounts';
-$string['updateusersdescription'] = 'If your CSV file contains the usernames of people who are already members of the institution you have specified, their details will be overwritten with data from the file. Use with care.';
+$string['updateusersdescription1'] = 'If your CSV file contains the usernames of people who already exist, their details will be overwritten with the data from the CSV file. You must select this option if you wish to move accounts to a different institution as selected above.';
 $string['updategroups'] = 'Update groups';
 $string['updategroupsdescription2'] = 'The information in the CSV file will overwrite any details of groups whose group shortname is in the CSV file. Use with care.';
 $string['csvfileprocessedsuccessfully'] = 'Your CSV file was processed successfully.';
@@ -815,6 +816,9 @@ $string['numbernewgroupsadded'] = 'New groups added: %s.';
 $string['numberusersupdated'] = 'Accounts updated: %d.';
 $string['numbergroupsupdated'] = 'Groups updated: %d.';
 $string['showupdatedetails'] = 'Show update details';
+$string['uploadcsvemailingnewusers'] = 'Notifying new account holders';
+$string['uploadcsvemailingupdatedusers'] = 'Notifying updated account holders';
+$string['uploadcsvdone'] = 'Done processing';
 
 // Bulk Leap2A import
 $string['bulkleap2aimport'] = 'Import accounts from Leap2A files';
@@ -836,6 +840,7 @@ import.zip<br>
 <p>This ZIP file should normally be generated using the bulk export built into Mahara.</p>
 <p>If you are importing a lot of accounts, please be patient. The import process can take a long time.</p>';
 $string['importfile'] = 'Bulk export file';
+$string['emailimportedusersaboutnewaccountdescription'] = 'Send an email to people informing them of their new account details.';
 $string['importfilemissinglisting'] = 'The bulk export file is missing a file named usernames.csv. Did you use the Mahara bulk exporter to export these accounts?';
 $string['importfilenotafile'] = 'Error during form submission: file was not recognised.';
 $string['importfilenotreadable'] = 'Error during form submission: file was not readable.';
@@ -978,7 +983,7 @@ $string['exportdownloademailmessage1'] = '%s, your export for "%s" is ready for 
 $string['exportdownloadurl'] = 'Download exported file';
 
 // Add User
-$string['adduser'] = 'Add a person';
+$string['addaccount'] = 'Add an account';
 $string['adduserdescription'] = 'Create a new account';
 $string['basicinformationforthisuser'] = 'Basic information for this account.';
 $string['clickthebuttontocreatetheuser'] = 'Click the button to create the account.';

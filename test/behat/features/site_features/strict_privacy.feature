@@ -16,7 +16,7 @@ Scenario: Create account for which person logs in with strict privacy enabled
     And the field "Strict privacy" matches value "1"
     And I press "Update site options"
     # Background adding of acconut doesn't work for this test
-    And I choose "Add a person" in "People" from administration menu
+    And I choose "Add an account" in "People" from administration menu
     And I set the following fields to these values:
     | First name | Bob |
     | Last name | One |

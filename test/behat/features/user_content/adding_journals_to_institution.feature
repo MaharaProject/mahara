@@ -129,7 +129,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     | Copy into new accounts | 1 |
     And I press "Save"
     # Needs to add new people now to see if they get copy of page
-    And I choose "Add a person" in "People" from administration menu
+    And I choose "Add an account" in "People" from administration menu
     And I fill in the following:
     | First name * | Pete |
     | Last name * | Mc |
