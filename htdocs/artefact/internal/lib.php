@@ -434,11 +434,20 @@ class PluginArtefactInternal extends PluginArtefact {
 class ArtefactTypeProfile extends ArtefactType {
 
     /**
+     * Profile artefact constructor
+     *
      * overriding this because profile fields
      * are unique in that except for email, you only get ONE
      * so if we don't get an id, we still need to go look for it.
      * On the other hand, if our caller knows the artefact is new,
-     * we can skip the query.
+     * we can skip the query
+     *
+     * @param  integer $id
+     * @param  Object|array $data
+     *  On importing a leap2a: Array
+     *  On updating profile fields: Object
+     * @param  boolean $new
+     * @return void
      */
     public function __construct($id=0, $data=null, $new = FALSE) {
         $type = $this->get_artefact_type();
@@ -446,8 +455,9 @@ class ArtefactTypeProfile extends ArtefactType {
             parent::__construct($id, $data);
             return;
         }
-        if (!empty($data) && !is_object($data)) {
-            throw new MaharaException('Data array supplied when object expected');
+
+        if (!empty($data) && !is_object($data) && is_array($data)) {
+            $data = (object)$data;
         }
         if (!empty($data->owner)) {
             if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data->owner)) {
