@@ -89,6 +89,16 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
             $smarty->assign('showsignoff', !empty($configdata['signoff']));
             $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view, false));
             $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view, false));
+
+            $element['signoff'] = array(
+                'type'         => 'switchbox',
+                'title'        => '',
+                'defaultvalue' => ArtefactTypePeerassessment::is_signed_off($view, false),
+                'readonly'     => !ArtefactTypePeerassessment::is_signable($view, false)
+            );
+            $form = array('name' => 'dummyform', 'elements' => $element);
+            $form = pieform_instance($form);
+            $smarty->assign('signoffbutton', $form->build(false));
             $html = $smarty->fetch('blocktype:signoff:verifyform.tpl');
         }
         return $html;
@@ -99,6 +109,12 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
     }
 
     public static function instance_config_form(BlockInstance $instance) {
+        // TODO: Customisation start: Remove when on 22.04
+        if ($instance->get_view()->get_original_template()) {
+            return array();
+        }
+        // Customisation end
+
         $configdata = $instance->get('configdata');
         $elements = array (
             'signoff' => array (
@@ -112,8 +128,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
                 'type' => 'switchbox',
                 'title' => get_string('verify', 'blocktype.peerassessment/signoff'),
                 'description' => get_string('verifydesc', 'blocktype.peerassessment/signoff'),
-                'defaultvalue' => 0, // WR #376749 Step 2/3: Revert back to => !empty($configdata['verify']) ? 1 : 0
-                'disabled' => true, // WR #376749 Step 2/3: Delete this line
+                'defaultvalue' => !empty($configdata['verify']) ? 1 : 0,
             ),
         );
         return $elements;

@@ -46,7 +46,7 @@ $options['offset'] = (object) array(
 );
 $options['registernumbers'] = (object) array(
         'shortoptions' => array('r'),
-        'description' => 'A suuplied set of numbers',
+        'description' => 'A supplied set of numbers or a start and end id number like so "range_1000_2500"',
         'required' => false,
         'examplevalue' => '1234',
         'multiple' => true,
@@ -85,7 +85,14 @@ if (!empty($types) && !is_array($types)) {
 }
 $regids = $cli->get_cli_param('registernumbers');
 if (!empty($regids) && !is_array($regids)) {
-    $regids = explode(',', $regids);
+    if (preg_match('/^range_(\d+)_(\d+)/', $regids, $matches)) {
+        $regids = range($matches[1], $matches[2]);
+        $regidstr = 'in range from ' . $matches[1] . ' to ' .$matches[2];
+    }
+    else {
+        $regids = explode(',', $regids);
+        $regidstr = implode(',', $regids);
+    }
 }
 if (empty($regids) && !in_array('2', $types) && !in_array('3', $types) && !in_array('inactive', $types) && !in_array('active', $types)) {
     $cli->cli_exit('Need to specifiy "inactive" or "active" or both');
@@ -121,7 +128,7 @@ if ($token) {
         $cli->cli_print('================== Fetching records for types ' . implode(',', $types) . ' ==================');
     }
     else {
-        $cli->cli_print('================== Fetching records for people ' . implode(',', $regids) . ' ==================');
+        $cli->cli_print('================== Fetching records for people ' . $regidstr . ' ==================');
     }
     if ($dryrun) {
         $cli->cli_print('Only a dry run');
@@ -194,7 +201,12 @@ if ($token) {
             if ($verbose) {
                 $cli->cli_print(var_export($people));
             }
-            $cli->cli_print('A total of ' . count($people) . ' people matching your types within the records  ' . $offset . ' to ' . ($offset + $limit));
+            if (!empty($regids)) {
+                $cli->cli_print('A total of ' . count($people) . ' people matching your range within the records  ' . $regids[0] . ' to ' . $regids[count($regids)-1]);
+            }
+            else {
+                $cli->cli_print('A total of ' . count($people) . ' people matching your types within the records  ' . $offset . ' to ' . ($offset + $limit));
+            }
         }
         else {
             process_changes($people);

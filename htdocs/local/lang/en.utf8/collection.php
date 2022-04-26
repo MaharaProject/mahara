@@ -12,8 +12,8 @@
 defined('INTERNAL') || die();
 
 $string['overallcompletion'] = 'Overall completion of individual pages';
-$string['needssignedoff'] = 'Needs to be completed';
-$string['signedoff'] = 'Completed';
+$string['needssignedoff1'] = 'Needs to be completed: Click the icon to complete';
+$string['signedoff1'] = 'Completed: Click the icon to remove the completion';
 $string['verifiednotavailable'] = 'You cannot verify portfolio "%s" by %s';
 $string['rollovereventmessage'] = 'Removed access via yearly rollover';
 $string['undoverificationdescription'] = 'Select the statement that you want to reset. By continuing, whomever is allowed to reset the statement will be notified. The tick will be removed once they action the request, and you can verify it again.';

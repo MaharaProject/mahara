@@ -47,6 +47,12 @@ class View {
     private $columns;
     private $tags;
     private $categorydata;
+
+    /**
+     * The type of template
+     *
+     * @var USER_TEMPLATE|SITE_TEMPLATE|0
+     */
     private $template;
     private $retainview;
     private $copynewuser = 0;
@@ -62,11 +68,17 @@ class View {
     private $anonymise = 0;
     private $lockblocks = 0;
     private $instructions;
-    private $instructionscollapsed=0;
+    private $instructionscollapsed = 0;
     private $newlayout = 1;
     private $grid;
     private $accessibleview = 0;
     private $coverimage;
+
+    /**
+     * Prevent edits to artefact and page instructions
+     *
+     * @var bool
+     */
     private $locktemplate = 0;
 
     const UNSUBMITTED = 0;
@@ -7581,7 +7593,7 @@ class ProgressAction {
 
     public function get_icon() {
         $notallowedicon = "icon icon-circle dot disabled";
-        $actionicon = "icon icon-circle action";
+        $actionicon = "icon icon-circle icon-regular action";
         $completedicon = "icon icon-check-circle completed";
         switch ($this->status) {
           case self::STATUS_NEEDSACTION:
@@ -7622,10 +7634,10 @@ class ProgressAction {
         $title = '';
         if ($this->column == 'owner') {
             if ($this->status == self::STATUS_NEEDSACTION || $this->status == self::STATUS_ACTIONNOTALLOWED) {
-                $title = get_string('needssignedoff', 'collection');
+                $title = get_string('needssignedoff1', 'collection');
             }
             else if ($this->status == self::STATUS_COMPLETED) {
-                $title = get_string('signedoff', 'collection');
+                $title = get_string('signedoff1', 'collection');
             }
         }
         else if ($this->column == 'manager') {

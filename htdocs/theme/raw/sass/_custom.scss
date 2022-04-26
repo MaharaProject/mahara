@@ -602,3 +602,26 @@ div.toolbarhtml {
         color: scale-color($gray-300, $lightness: 28%);
     }
 }
+
+.bt-signoff {
+    .signoff-title {
+        margin-top: 0.25rem;
+        display: inline-block;
+        padding-right: 1rem;
+    }
+    .progress-help {
+        width: 14rem;
+        clear: right;
+    }
+    .help {
+        clear: right;
+    }
+}
+
+#signoff {
+    div.switchbox {
+        padding: 0;
+        border-bottom: 0;
+        float: right;
+    }
+}
