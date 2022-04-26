@@ -553,11 +553,22 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
     // specified one
     if ($field == 'email') {
         if (!$new) {
-            try {
-                $email = artefact_instance_from_type('email', $userid);
+            $is_already_secondary = get_field_sql("
+                SELECT a.id FROM {artefact} a
+                JOIN {artefact_internal_profile_email} ae ON ae.artefact = a.id
+                WHERE a.owner = ? AND ae.principal != 1 AND ae.email = ?", array($userid, $value));
+            if ($is_already_secondary) {
+                // Secondary email matches the value so lets set that one as primary
+                set_user_primary_email($userid, $value);
+                return;
             }
-            catch (ArtefactNotFoundException $e) {
-                // We'll create a new artefact then.
+            else {
+                try {
+                    $email = artefact_instance_from_type('email', $userid);
+                }
+                catch (ArtefactNotFoundException $e) {
+                    // We'll create a new artefact then.
+                }
             }
         }
         if (!isset($email)) {
@@ -602,10 +613,11 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
  * Update the primary email to an user
  * Add new if not exists
  *
- * @param int $userid The user ID
- * @param string $newemail The new valid email address
+ * @param int     $userid   The user ID
+ * @param string  $newemail The new valid email address
+ * @param boolean $ignore   Ignore the $user->email check
  */
-function set_user_primary_email($userid, $newemail) {
+function set_user_primary_email($userid, $newemail, $ignore=false) {
     safe_require('artefact', 'internal');
 
     $user = new User();
@@ -613,8 +625,8 @@ function set_user_primary_email($userid, $newemail) {
 
     db_begin();
     // Update user's primary email address
-    if ($newemail !== $user->email) {
-        // Set the current email address to be secondary
+    if ($newemail !== $user->email || $ignore) {
+        // Set the current primary email address to be secondary
         update_record(
             'artefact_internal_profile_email',
             (object)array(
@@ -622,7 +634,6 @@ function set_user_primary_email($userid, $newemail) {
             ),
             (object)array(
                 'owner' => $user->id,
-                'email' => $user->email,
             )
         );
         // If the new primary email address is to be verified, remove it

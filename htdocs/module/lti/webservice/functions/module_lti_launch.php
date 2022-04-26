@@ -337,27 +337,40 @@ class module_lti_launch extends external_api {
 
         // Redirect if the resource_link_id is a link to a view or collection
         $matches = [];
+        require_once(get_config('libroot') . 'view.php');
+        require_once('collection.php');
         if (preg_match('/\/view\/view\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
-            if ($collection_views = get_column_sql('
-                SELECT view FROM {collection_view}
-                WHERE collection = (
-                    SELECT collection FROM {collection_view}
-                    WHERE view = ?
-                )', array($matches[1]))) {
-                // all pages in the collection are allowed
-                $SESSION->set('lti.canviewview', $collection_views);
-            }
-            else {
-                $SESSION->set('lti.canviewview', array($matches[1]));
+            $view = new View($matches[1]);
+            if ($view) {
+                $collection = $view->get_collection();
+                if ($collection) {
+                    $canview = array();
+                    // Our view is part of a collection.
+                    if ($pid = $collection->has_progresscompletion()) {
+                        $canview[] = $pid;
+                    }
+                    $views = $collection->get('views');
+                    // Add all View IDs for views in the collection.
+                    foreach ($views['views'] as $views) {
+                        $canview[] = $views->id;
+                    }
+                    // all pages in the collection are allowed
+                    $SESSION->set('lti.canviewview', $canview);
+                }
+                else {
+                    $SESSION->set('lti.canviewview', array($matches[1]));
+                }
             }
             redirect($params['resource_link_id']);
         }
         else if (preg_match('/^\/collection\/progresscompletion\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
             $collectionid = (int)$matches[1];
-            require_once('collection.php');
             $collection = new Collection($collectionid);
-            $views = $collection->get('views');
             $canview = array();
+            if ($pid = $collection->has_progresscompletion()) {
+                $canview[] = $pid;
+            }
+            $views = $collection->get('views');
             foreach ($views['views'] as $view) {
                 $canview[] = $view->id;
             }

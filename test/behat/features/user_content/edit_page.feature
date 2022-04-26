@@ -25,6 +25,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block title | Ulysses |
  | Block content | <p>Stately, plump Buck Mulligan came from the stairhead, bearing a bowl of lather on which a mirror and a razor lay crossed ...</p> |
  And I press "Save"
+ And I wait "1" seconds
  Then I should see "Buck Mulligan"
  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"
@@ -33,6 +34,7 @@ Scenario: Clicking ID's (Bug 1428456)
  | Block title | The Sun Also Rises |
  | Block content | <p>Robert Cohn was once middleweight boxing champion of Princeton. Do not think that I am very much impressed by that as a boxing title, but it meant a lot to Cohn...</p> |
  And I press "Save"
+ And I wait "1" seconds
  Then I should see "Robert Cohn"
  When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
  And I press "Add"

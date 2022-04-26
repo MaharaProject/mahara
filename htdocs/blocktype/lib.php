@@ -2226,6 +2226,7 @@ class BlockInstance {
             return false;
         }
 
+        // Prepare the new block
         $newblock = new BlockInstance(0, array(
             'blocktype'  => $this->get('blocktype'),
             'title'      => $this->get('title'),
@@ -2240,6 +2241,7 @@ class BlockInstance {
             'height'     => $this->get('height'),
         ));
 
+        // If the original owner is making the copy, bring over previous configdata and tags and finish the copying here
         if (($sameowner && $copytype != 'fullinclself') || $copytype == 'reference') {
             $newblock->set('configdata', $configdata);
             $newblock->commit();
@@ -2255,6 +2257,9 @@ class BlockInstance {
             return true;
         }
 
+        // Track the artefact IDs associated to the block we are copying
+        $artefactids = array();
+        // If this block has artefacts ignored on block copy, only bring over artefacts not in that list
         if ($ignore = call_static_method($blocktypeclass, 'ignore_copy_artefacttypes', $view)) {
             $artefactids = (array)get_column_sql('
                 SELECT artefact FROM {view_artefact} va
@@ -2275,25 +2280,25 @@ class BlockInstance {
             // only for blogposts).  If we copy an artefact we must copy all its descendents & attachments too.
 
             require_once(get_config('docroot') . 'artefact/lib.php');
-            $descendants = artefact_get_descendants($artefactids);
+            $artefact_descendants = array_unique(artefact_get_descendants($artefactids));
 
             // We need the artefact instance before we can get its attachments
             $tocopy = array();
             $attachmentlists = array();
             $embedlists = array();
-            foreach ($descendants as $d) {
-                if (!isset($artefactcopies[$d])) {
-                    $tocopy[$d] = artefact_instance_from_id($d);
+            foreach ($artefact_descendants as $artefact_id) {
+                if (!isset($artefactcopies[$artefact_id])) {
+                    $tocopy[$artefact_id] = artefact_instance_from_id($artefact_id);
                     // Get attachments.
-                    $attachmentlists[$d] = $tocopy[$d]->attachment_id_list();
-                    foreach ($attachmentlists[$d] as $a) {
+                    $attachmentlists[$artefact_id] = $tocopy[$artefact_id]->attachment_id_list();
+                    foreach ($attachmentlists[$artefact_id] as $a) {
                         if (!isset($artefactcopies[$a]) && !isset($tocopy[$a])) {
                             $tocopy[$a] = artefact_instance_from_id($a);
                         }
                     }
                     // Get embedded file artefacts
-                    $embedlists[$d] = $tocopy[$d]->embed_id_list();
-                    foreach ($embedlists[$d] as $a) {
+                    $embedlists[$artefact_id] = $tocopy[$artefact_id]->embed_id_list();
+                    foreach ($embedlists[$artefact_id] as $a) {
                         if (!isset($artefactcopies[$a]) && !isset($tocopy[$a])) {
                             $tocopy[$a] = artefact_instance_from_id($a);
                         }
@@ -2325,10 +2330,12 @@ class BlockInstance {
             }
         }
         else {
+            // Use the blocktype's custom steps for copying and rewriting config for those without config artefacts but other types
             $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_config', $view, $configdata);
         }
 
         // Rewrite the extra configuration of block
+        $newblock->commit();
         $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_extra_config', $view, $newblock, $configdata, $artefactcopies);
 
         $newblock->set('configdata', $configdata);
