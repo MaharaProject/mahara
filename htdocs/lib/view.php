@@ -1086,7 +1086,7 @@ class View {
         }
         // Delete any submission history
         delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
-
+        delete_records('artefact_annotation', 'view', $this->id);
         handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
         delete_records('view_copy_queue', 'view', $this->id);

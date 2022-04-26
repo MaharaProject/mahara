@@ -953,9 +953,11 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 if (class_exists($class)) {
                     if (!$composite) {
                         $artefactids = $importer->get_artefactids_imported_by_entryid((string)$compositeentry->id);
-                        $composite = new $class($artefactids[0],array('owner' => $importer->get('usr')));
+                        if ($artefactids) {
+                            $composite = new $class($artefactids[0],array('owner' => $importer->get('usr')));
+                        }
                     }
-                    if ($id = $importer->create_attachment($entry, $compositelink, $composite)) {
+                    if ($composite && $id = $importer->create_attachment($entry, $compositelink, $composite)) {
                         $newartefactmapping[$compositelink['href']][] = $id;
                     }
                     if ($composite) {
