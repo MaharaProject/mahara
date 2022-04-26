@@ -1,2 +1,181 @@
+22.04.0 (2022-04-27)
+- Mahara 22.04
+- Bug  1922226: Group search list shows too many results from page 2 onwards
+- Bug  1930171: Strengthen the non-cryptographically random generated tokens
+- Bug  1961856: Upgrade markedjs from 2.1.3 to 4.0.12
+- Bug  1967000: Saving a skin doesn't look to sanitize the values before saving to a serialized object
+- Bug  1945709: Better handling of external apps when module is disabled
+- Bug  1959146: Private group, site, or institution portfolios can be accessed by the URL without logging in
+- Bug  1926247: Group collection notifications are sent per page
+- Bug  1943772: Potential LTI duplicating accounts with parent auth
+- Bug  1949000: Change deployment ID fields to not be autocompleted
+- Bug  1949333: Releasing a current submission produces warning
+- Bug  1949421: Combine 'Current submissions' and 'Archived submissions' into 'Submissions'
+- Bug  1949527: Avoid command injection when PDF bulk export is enabled
+- Bug  1949920: 'Static call to instance method' errors in Mahara
+- Bug  1949921: "Array with duplicate keys" errors in Mahara
+- Bug  1950067: Wrong language used when requesting sb else's comment to be made public
+- Bug  1950068: Styles missing in new collapsed comments section
+- Bug  1950199: SimpleSamlphp metadata refresh causing cron problems
+- Bug  1950220: Call to protected method webservice_base_server::session_cleanup() from context
+- Bug  1950413: Problem with upgrade when LTI instance containing submissions exists
+- Bug  1951016: Blocks are not hidden properly with Gridstack
+- Bug  1951103: Submission page with french language pack
+- Bug  1951464: Name is not displayed on shared pages and collections in a group
+- Bug  1951482: LTI Advantage deep link stopped working in Brightspace
+- Bug  1952359: Deleting institution that contains a collection using progress completion causes a error
+- Bug  1952362: Unable to delete LTI external app if there is assessments associated with it
+- Bug  1952493: Installing Mahara in German results in password error
+- Bug  1952771: PHP warnings on menu->share->submissions and related issues
+- Bug  1952808: Able to see name of another account holder's folder
+- Bug  1952961: Refactor set_access process for efficiency
+- Bug  1953086: Images in migrated page descriptions not displayed on a page
+- Bug  1954869: PHPStan errors in htdocs/lib/adodb - level 0
+- Bug  1954871: PHPStan Level 0 bugs
+- Bug  1954958: oauth-php not taking account of proxy setting
+- Bug  1955101: PHPStan Level 1 bugs
+- Bug  1955354: PHPStan Level 1 bugs in htdocs/artefact
+- Bug  1955364: Error updating institution settings
+- Bug  1955607: Problems in HTML export
+- Bug  1956550: PHPStan Level 1 bugs in htdocs/blocktype
+- Bug  1956891: PHPStan - single error type: "Undefined variable $SESSION"
+- Bug  1956892: PHPStan - errors in xmlrpc section
+- Bug  1956893: PHPStan - errors in the import section
+- Bug  1956894: PHPStan - errors in the export section
+- Bug  1956895: PHPStan - single error type : "undefined variable"
+- Bug  1957725: Embedded images not copied when page is copied
+- Bug  1958085: Translation issue when there is more than one plural form
+- Bug  1958499: Upload CSV Users Bug with Failed Emails
+- Bug  1959613: Problem with annotation feedback and draft feedback
+- Bug  1959733: Needing to respect the default layout mode of a page
+- Bug  1959860: Courseinfo blocktype plugin modal is blank
+- Bug  1960979: Language pack help files not showing - default to English version
+- Bug  1962792: Upgrade ADOdb from v5.21.1 to v5.22.0
+- Bug  1963552: Create floating point number rule for pieforms
+- Bug  1963608: Allow Comments by Default default value is not saved to the database on upgrade
+- Bug  1963840: Incorrect menu references in Admin development section
+- Bug  1964268: Sign-off and verification status not saved to database on copied portfolio
+- Bug  1964282: Error when deleting individual standard elements in SmartEvidence Editor
+- Bug  1964295: Upgrade step: add "progress" page overwrites the access config in the collection
+- Bug  1964416: Upgrade PHPMailer from v6.5.1 to v6.6.0
+- Bug  1964424: LTI submission groups should have 'submittableto' be true
+- Bug  1964835: Configurable theme not set properly for institution members
+- Bug  1965061: Portfolio completion page not accessible when coming via LTI
+- Bug  1965715: Unable to edit an institution and set new display name
+- Bug  1966138: The set_profile_field() function for email doesn't check for doubleups
+- Bug  1966140: Fix view bug created from phpstan fix
+- Bug  1966367: The webservice mahara_view_external.php looks to check for a user wrong
+- Bug  1966816: Uggrading causes an error around the supportadmin filed not being present
+- Bug  1967006: Make changes to the Makefile for new version of Gerrit
+- Bug  1967811: SQL vs MySQL on group table update
+- Bug  1968460: Language string review for Mahara 22.04
+- Bug  1968637: Updating the minimum upgrade point
+- Bug  1968668: Embedded images not displaying with MySQL
+- Bug  1968939: 'Archived submissions' export CSV doesn't contain all columns
+- Bug  1969257: General page instructions lost when there are specific instructions are set
+- Bug  1969258: Move 'Embedded URLs' into correct alphabetical position in 'Development' menu
+- Bug  1969385: Fix maximum number of allowed accounts
+- Bug  1969388: Fix manual healp feature to match new value in 22.04 manual
+- Bug  1969719: The php-intl extension is missing from docker
+- Bug  1824047: Menu buttons don't say they are going to collapse/expand a submenu to the screenreader
+- Bug  1824055: SmartEvidence labels need to be associated with their inputs
+- Bug  1824056: The collapse and expand buttons in the SmartEvidence editor are unclear to screenreaders
+- Bug  1864760: Disk usage calculation is very slow with NFS
+- Bug  1928273: Upgrade Gridstack to Gridstack 4.X
+- Bug  1929357: Adding annotation doesn't alert if you change page without saving - leaves empty block on the page
+- Bug  1949337: Language string missing for portfolio release via external host
+- Bug  1949528: Block placeholder text still says 'please configure this block'
+- Bug  1949533: Show the correct copyright value for Mahara README.md
+- Bug  1949914: SmartEvidence editor accessibility bug fixes for button alignment and heading levels
+- Bug  1949915: Updating htdocs/import documentation
+- Bug  1949917: Fixing documentation in lib/view.php
+- Bug  1949918: Update htdocs/interaction docs
+- Bug  1949919: Update documentation in the htdocs/artefact/file directory
+- Bug  1949933: Functions with missing return statements
+- Bug  1950069: Comment ratings have a link underline when they shouldn't
+- Bug  1950231: Refactor upload_file webservice API to allow a more generic purpose
+- Bug  1950695: Class referenced with incorrect case
+- Bug  1950696: PHPStan errors in the lib/xmldb section
+- Bug  1951901: Inaccurate modal heading when adding a block to a page
+- Bug  1952015: Get the folder id based on a file id that is stored inside it
+- Bug  1952540: Issues with 'Current submissions' and 'Archived submissions'
+- Bug  1952690: (auth/saml/lib.php:1975) Invalid argument supplied for foreach()
+- Bug  1953095: 'Submitted host' info not displayed for pages submitted via LTI
+- Bug  1953404: Allow behat to respect the settings set via feature file
+- Bug  1953559: Behat: Simplify test to check submitted collection's blocks disallow 'quick-edit'
+- Bug  1954326: readmefile has incorrect commands for db refresh and restore
+- Bug  1954344: Add scroll to 'nested_folders_images' test when unable to find 'Home' link in the viewport
+- Bug  1954712: Update to URL in the Docker readme to see instance
+- Bug  1954852: Change the keyboard focus to have four sides around the focussed element
+- Bug  1955363: Return only fileid on file_upload just as the mobile file_upload does for consistency
+- Bug  1955600: Simplify page creation instructions
+- Bug  1956900: Update externalfeed.feature
+- Bug  1957712: Some elasticsearch artefact mapping is missing on install
+- Bug  1957721: Cannot share portfolio after it has been submitted
+- Bug  1958509: Update the block id of embeddedurls when pages are copied
+- Bug  1959049: Cannot disable external apps & saving settings for External Apps does not give confirm message
+- Bug  1959155: Error thrown when accessing a group home page without logging in
+- Bug  1959634: Update SimpleSamlPhp in Mahara to 1.19.5
+- Bug  1960399: Embedly export format incorrect (stdClass vs array)
+- Bug  1960862: Split education and employment history to deal better with dropzone
+- Bug  1960997: Errors thrown when institution admin edits institution settings
+- Bug  1961845: Required PHP extensions list mcrypt but it's not needed anymore
+- Bug  1961862: Upgrade clipboardjs from 2.0.8 to 2.0.10
+- Bug  1962047: List of attachments in the resume shouldn't have yellow background
+- Bug  1962092: Update CSSTidy from 1.7.3 to 2.0.1
+- Bug  1962103: Update datatables from 1.10.20 to 1.11.4
+- Bug  1962118: Upgrade Chart.js from 2.9.4 to 3.7.1
+- Bug  1962218: Upgrade HTML Purifier from 4.13.0 to 4.14.0
+- Bug  1962224: Upgrade Javascript-Templates from 3.19.0 to 3.20.0
+- Bug  1962227: Upgrade jquery-ui from 1.12.1 to 1.13.1
+- Bug  1962246: Upgrade dropzone from 5.9.2 to 5.9.3
+- Bug  1962259: Upgrade JSColor from 2.4.5 to 2.4.7
+- Bug  1962416: Upgrade PDF.js from v2.9.359 to v2.13.216
+- Bug  1962420: Upgrade videojs from 7.14.3 to 7.17.0
+- Bug  1962805: Upgrade TinyMCE from 5.8.2 to 5.10.2
+- Bug  1964034: The Mahara Manual link still uses the http protocol instead of https
+- Bug  1964834: behat on php 7.2 vs 7.4
+- Bug  1965477: Unable to install some thirdparty plugins automatically due to composer prompts
+- Bug  1968241: SmartEvidence manage page collection error
+- Bug  1968517: Missing string for support admin
+- Bug  1968799: Position the draggable arrow correctly in Gridstack
+- Bug  1969259: Fix 'Embedded URLs' language strings
+- Bug  1969260: Add page icons to 'Development' options
+- Bug  1969261: Change 'Sync' to 'Update' on 'Languages' ad we refer to the updating of lang packs
+- Bug  1969288: Update lang strings that institution support admins can also access staff reports
+- Bug  1969295: Add 'Edit support administrators' to the 'Edit' button on institution overview page
+- Bug  1969298: Update Elasticsearch 7 language strings
+- Bug  1969538: Maroon theme menu highlight looks weird after accessibility improvements to html
+- Bug  1969702: Error in "Locked until" date on locked collections
+- Bug  1969722: 'Default' theme doesn't have background when dragging a block
+- Bug  1489256: Confusing description and title when adding or editing institution
+- Bug  1943525: Cookie “mahara” will be soon rejected because it has the “SameSite” attribute set to “None”
+- Bug  1949003: Error: cannot get $item->views of a collection with pages on 'Create' -> 'Tags'
+- Bug  1951344: Change 'account owner' to 'account holder' for webservices strings
+- Bug  1953432: Clean up Zend - remove obsolete tests directory
+- Bug  1960978: Behat test fix resume_page.feature
+- Bug  1960980: Behat test fix edit_page.feature
+- Bug  1967005: Dashboard page description change
+- Bug  1649433: Consolidate "Add file" buttons
+- Bug  1884717: Add language pack management into admin section
+- Bug  1890356: Implement Elasticsearch 7
+- Bug  1896683: Allow CSV, ZIP, and MATRIX files on certain screens when file extension restrictions are in place
+- Bug  1940346: Submit portfolios via Moodle through Ouriginal for similarity checking
+- Bug  1947533: Only display web services groups with OAuth1/OAuth2 in 'External apps'
+- Bug  1947643: Limit the number of groups that can be created in an institution
+- Bug  1950242: Add new File endpoint that contains ability to upload a file to files area
+- Bug  1950551: Gallery thumbnail popup has alternate slideshow but shouldn't have this
+- Bug  1950920: Export SmartEvidence from Mahara to json file
+- Bug  1952986: Add 'Embedded URLs' to the developer menu
+- Bug  1953411: Create a support admin role and add affiliated emails and roles via SAML
+- Bug  1954989: Save authinstance associated with file_upload webservice
+- Bug  1955431: Adding elasticsearch monitoring to the ecs directory of the monitor module
+- Bug  1957127: Allow inclusion and exclusion of more than one institution in cli script 'delete_inactive_users'
+- Bug  1960573: Institution admin and staff role should update on login via SAML
+- Bug  1960992: Enable Portfolio completion in collections on a group level
+- Bug  1964428: Prevent editing sign-off blocks and preserve config from a templates
+- Bug  1966363: Check for affiliated emails whenever logging in via SAML if option is set
+- Bug  1966366: Add group page comments in pagecomments behat step
+
 22.04rc1 (2022-04-12)
 
