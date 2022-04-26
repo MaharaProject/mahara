@@ -1573,3 +1573,31 @@ $string['savedgroupconfigsuccessfully'] = 'Saved default group settings.';
 $string['defaultreset'] = 'Reset to default';
 $string['defaultresetlabel'] = 'Reset';
 $string['defaultresetdesc'] = 'Reset all of the above options to their default values.';
+
+// CLI portfolio review bulk locking and unlocking script
+
+$string['cli_locking_collections'] = 'The list of collections to unlock or path to a CSV file containing the list';
+$string['cli_locking'] = 'To indicate whether portfolios are locked or unlocked [lock/unlock]';
+$string['cli_locking_info'] = 'The batch CLI script
+This should be run listing a set of collection IDs
+e.g. -c=1234,5678,9102
+or a path to a CSV file
+e.g. -c=/tmp/myfile.csv  where the heading of the column is "collectionid"
+and the process we are to do, either locking portfolios
+e.g. -l=lock
+or unlocking
+e.g. -l=unlock
+and if locking we need to supply the id of the verifier
+e.g. -v=21';
+$string['cli_locking_collection_header_error'] = 'Unable to find the "collectionid" header in the file from path: ';
+$string['cli_locking_file_path_error'] = 'Unable to get file from path: ';
+$string['cli_locking_portfolio_number'] = 'Number of portfolios to %s: %s';
+$string['cli_locking_collection_ids'] = 'The collection ID numbers: ';
+$string['cli_locking_collection_bad_id'] = 'The collection ID number %s is invalid so ignoring';
+$string['cli_locking_onlydryrun'] = '-- dryrun only - nothing changed --';
+$string['cli_locking_lockstate_error'] = 'Invalid lock state. It needs to be "lock" or "unlock".';
+$string['cli_locking_collection_id'] = 'Collection ID ';
+$string['cli_locking_no_review_block'] = ' portfolio completion page does not have a portfolio review block.';
+$string['cli_locking_no_portfolio_completion'] = ' does not match a collection that has a portfolio completion page.';
+$string['cli_locking_locked'] = ' is now locked.';
+$string['cli_locking_unlocked'] = ' is now unlocked.';
