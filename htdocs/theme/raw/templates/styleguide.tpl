@@ -2205,7 +2205,7 @@ Used as icon for a system notification.
             leadingws = text.match(/^\n?(\s*)/)[1].length,
             regex     = new RegExp('\\n?\\s{' + leadingws + '}','g'),
             md        = text.replace(regex,'\n'),
-            html      = marked(md);
+            html      = marked.parse(md);
 
         elem.innerHTML = html;
 
