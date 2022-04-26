@@ -71,6 +71,22 @@ class AuthInternal extends Auth {
     }
 
     /**
+     * Generate a valid password that can be used as a temp password
+     * which can be sent out by create_user()
+     * Originally this function returned a password that was compatible with
+     * the password style for the site.
+     * But as that is not cryptographically random it is a potential security
+     * hole so now we just return a cryptographically random value instead
+     */
+    public function get_temp_password() {
+        list($minlength, $format) = get_password_policy(true);
+        // make it long enough to take some time to bruteforce
+        $minlength = max(16, $minlength);
+        $password = get_random_key($minlength);
+        return $password;
+    }
+
+    /**
      * For internal authentication, passwords can contain a range of letters,
      * numbers and symbols. There is a minimum limit of eight characters allowed
      * for the password, and no upper limit

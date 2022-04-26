@@ -2155,5 +2155,15 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092122) {
+        log_debug('Alter the "usr_institution_migrate" table to allow for longer token value');
+        $table = new XMLDBTable('usr_institution_migrate');
+        if (table_exists($table)) {
+            $field = new XMLDBField('token');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 8);
+            change_field_precision($table, $field);
+        }
+    }
+
     return $status;
 }
