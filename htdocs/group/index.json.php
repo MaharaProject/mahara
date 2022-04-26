@@ -47,7 +47,20 @@ if ($searchmode == 'mygroups') {
     $groups['count'] = isset($results['count']) ? $results['count'] : 0;
 }
 else {
-    $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+    if (is_isolated()) {
+        if ($USER->get('admin') || $USER->get('staff')) {
+             // show all groups because admin or staff (isolation owerwrite)
+            $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+        }
+        else {
+            // isolated and NOT ADMIN or Staff
+            $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory, $USER->get('institutions'));
+        }
+    }
+    else {
+        // show all groups because of no isolation
+        $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
+    }
 }
 
 // gets more data about the groups found by search_group
