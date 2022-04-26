@@ -1454,7 +1454,7 @@
                 <FIELD NAME="new_username" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="key" TYPE="char" LENGTH="16" NOTNULL="false" />
-                <FIELD NAME="token" TYPE="char" LENGTH="6" NOTNULL="false" />
+                <FIELD NAME="token" TYPE="char" LENGTH="8" NOTNULL="false" />
                 <FIELD NAME="email" TYPE="char" LENGTH="255" NOTNULL="false" />
             </FIELDS>
             <KEYS>

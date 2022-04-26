@@ -2104,5 +2104,66 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2020092119) {
+        log_debug("Fix up signoff blocks that are missing their db entry");
+        if ($results = get_records_sql_array("
+                SELECT DISTINCT(v.id) FROM {view} v
+                JOIN {block_instance} bi ON bi.view = v.id
+                LEFT JOIN {view_signoff_verify} vsv ON vsv.view = v.id
+                WHERE bi.blocktype = ?
+                AND vsv.view IS NULL", array('signoff')
+            )) {
+            foreach ($results as $result) {
+                ensure_record_exists('view_signoff_verify', (object) array('view' => $result->id), (object) array('view' => $result->id), 'id', true);
+            }
+        }
+    }
+
+    if ($oldversion < 2020092120) {
+        log_debug("Make sure groups associated with LTI assessment have 'submittableto' set to true");
+        execute_sql("
+            UPDATE {group}
+            SET submittableto = 1
+            WHERE id IN (
+                SELECT foo.id FROM (
+                    SELECT g1.id
+                    FROM {lti_assessment} l
+                    JOIN {group} g1 ON g1.id = l.group
+                    WHERE g1.submittableto = 0
+                ) AS foo
+            )");
+    }
+
+    if ($oldversion < 2020092121) {
+        if ($records = get_records_sql_array("
+            SELECT a.id, ae.email FROM {artefact} a
+            JOIN {artefact_internal_profile_email} ae ON ae.artefact = a.id
+            WHERE a.artefacttype = ?
+            AND a.title != ae.email", array('email'))) {
+            log_debug('Need to fix up email info drift');
+            $count = 0;
+            $limit = 100;
+            $total = count($records);
+            foreach ($records as $record) {
+                execute_sql("UPDATE artefact SET title = ? WHERE id = ?", array($record->email, $record->id));
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
+    if ($oldversion < 2020092122) {
+        log_debug('Alter the "usr_institution_migrate" table to allow for longer token value');
+        $table = new XMLDBTable('usr_institution_migrate');
+        if (table_exists($table)) {
+            $field = new XMLDBField('token');
+            $field->setAttributes(XMLDB_TYPE_CHAR, 8);
+            change_field_precision($table, $field);
+        }
+    }
+
     return $status;
 }

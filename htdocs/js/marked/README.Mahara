@@ -3,11 +3,13 @@ Marked
 
 Name   : marked - a markdown parser
 Website: https://github.com/markedjs/marked
-Version: 1.1.1
+Version: 4.0.12
 Author : Christopher Jeffrey
 Licence: MIT
 
 Used in conjunction with clipboard.js for 'Copy x to the clipboard' buttons
+
+To update, download the zip file from the website and extract, replace current marked.min.js file with newly downloaded marked.min.js
 
 Changes:
 

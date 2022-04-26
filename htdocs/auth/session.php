@@ -36,6 +36,18 @@ Session::setup_response_settings();
 class Session {
 
     /**
+     * Extra settings to shoehorn into the path parameter in setcookie().
+     * @var string
+     */
+    protected $cookie_extra_path;
+
+    /**
+     * Should the cookie be secure or not?
+     * @var bool
+     */
+    protected $cookie_secure;
+
+    /**
      * Configures Session settings that affect server-side behavior. These
      * should be set up as soon as possible on page load, so that they'll
      * be ready in case some bad third-party code calls session_start()
@@ -140,6 +152,10 @@ class Session {
         ini_set('session.cookie_httponly', true);
         if (is_https()) {
             ini_set('session.cookie_secure', true);
+            ini_set('session.cookie_samesite', 'None');
+        }
+        else {
+            ini_set('session.cookie_samesite', 'Lax');
         }
         if ($domain = get_config('cookiedomain')) {
             ini_set('session.cookie_domain', $domain);
@@ -163,6 +179,10 @@ class Session {
      * Resumes an existing session, only if there is one
      */
     private function __construct() {
+        // Defaults.
+        $this->cookie_extra_path = '';
+        $this->cookie_secure = ini_get('session.cookie_secure');
+
         // Resume an existing session if required
         if (isset($_COOKIE[session_name()])) {
             @session_start();
@@ -464,15 +484,7 @@ class Session {
             // will be ignored, and instead the old session cookie will
             // be replaced by the new one.)
             if (isset($_COOKIE[session_name()])) {
-                setcookie(
-                    session_name(),
-                    '',
-                    1,
-                    ini_get('session.cookie_path'),
-                    ini_get('session.cookie_domain'),
-                    ini_get('session.cookie_secure'),
-                    ini_get('session.cookie_httponly')
-                );
+                $this->set_session_cookie(session_name(), '', 1);
             }
         }
     }
@@ -520,6 +532,115 @@ class Session {
         return $message;
     }
 
+    /**
+     * Set an extra parameter that will be shoehorned into the cookie.
+     *
+     * The setcookie() function we are using does not allow for extra cookie
+     * parameters to be set. Fortunately it is not too smart and we can use
+     * the path parameter to add these extra values.
+     *
+     * @todo We could check if $extra is a key/val pair and check for keys.
+     * @param string $extra
+     */
+    public function set_cookie_extra_path($extra) {
+        $path = $this->cookie_extra_path;
+        $path = explode('; ', $path);
+        $path[] = $extra;
+        // If $extra already exists, this will remove it.
+        $path = array_unique($path);
+        $this->cookie_extra_path = implode('; ', $path);
+        // Having set the extra path, ensure the session sticks.
+        $this->ensure_session();
+        // And set it back to Read Only.
+        $this->ro_session();
+    }
+
+    /**
+     * @return string The extra values to add to the path parameter.
+     */
+    public function get_cookie_extra_path() {
+        return $this->cookie_extra_path;
+    }
+
+    /**
+     * Allow us to force the secure parameter for the cookie.
+     *
+     * @param boolean $secure
+     */
+    public function set_cookie_secure($secure) {
+        $this->cookie_secure = $secure;
+        // Having set the secure state, ensure the session sticks.
+        $this->ensure_session();
+        // And set it back to Read Only.
+        $this->ro_session();
+    }
+
+    /**
+     * @return boolean Return the secure cookie preference.
+     */
+    public function get_cookie_secure() {
+        return (boolean) $this->cookie_secure;
+    }
+
+    /**
+     * Helper function to set SameSite and secure.
+     *
+     * This allows the cookies to be readable when in an iframe on a third
+     * party site.
+     */
+    public function allow_cookie_in_iframe() {
+        $this->set_cookie_extra_path('SameSite=None');
+        $this->set_cookie_secure(true);
+    }
+
+    /**
+     * Helper function to set session cookie depending on PHP version
+     *
+     * The way set_cookie works differs from PHP 7.3+
+     *
+     * @param string  $name    Name of cookie
+     * @param string  $value   Value for cookie
+     * @param integer $expires Timestamp for expiry of cookie
+     */
+    public function set_session_cookie($name, $value, $expires) {
+        global $SESSION;
+
+        $secure = $SESSION->get_cookie_secure();
+        $path = ini_get('session.cookie_path');
+        if (empty($path)) {
+            $path = '/';
+        }
+
+        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
+            setcookie(
+                $name,
+                $value,
+                array('expires' => $expires,
+                    'path' => $path,
+                    'domain' => ini_get('session.cookie_domain'),
+                    'secure' => $secure,
+                    'httponly' => ini_get('session.cookie_httponly'),
+                    'samesite' => ini_get('session.cookie_samesite')
+                )
+            );
+        }
+        else {
+            $path_extra = $SESSION->get_cookie_extra_path();
+            if (!empty($path_extra)) {
+                // We have things to add to path. Prepend it with the separator.
+                $path_extra = '; ' . $path_extra;
+            }
+            setcookie(
+                $name,
+                $value,
+                $expires,
+                $path . $path_extra,
+                ini_get('session.cookie_domain'),
+                $secure,
+                ini_get('session.cookie_httponly')
+            );
+        }
+    }
 }
 
 /**
@@ -653,17 +774,11 @@ function clear_duplicate_cookies() {
 
     // Now manually regenerate just ONE session cookie header.
     if ($SESSION->session_id()) {
-        setcookie(
-            $cookiename,
-            $SESSION->session_id(),
-            0,
-            ini_get('session.cookie_path'),
-            ini_get('session.cookie_domain'),
-            ini_get('session.cookie_secure'),
-            ini_get('session.cookie_httponly')
-        );
+        $SESSION->set_session_cookie($cookiename, $SESSION->session_id(), 0);
     }
 }
+
+
 
 class MemcachedSession extends SessionHandler {
     // we need to extend and override the read method to force it to return string value

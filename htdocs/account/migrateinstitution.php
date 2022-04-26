@@ -76,7 +76,7 @@ if ($SESSION->get('migrateresponse')) {
         execute_sql('UPDATE {usr} SET email = ? WHERE id = ?', array($oldemail, $USER->get('id')));
         // Save the token
         $key = get_random_key(16);
-        $token = get_random_key(6);
+        $token = get_random_key(8);
         $fordb = new StdClass();
         $fordb->usr = $USER->get('id');
         $wheredb = clone $fordb;

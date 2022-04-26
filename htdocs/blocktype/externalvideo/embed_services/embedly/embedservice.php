@@ -20,30 +20,33 @@ class Embed_embedly implements EmbedBase {
 
     private static $embed_sources  = array(
         array(
-            'match' => '#<a class="embedly-card".*href="(.*?)".*>(.*?)<\/a>.*#s',
-            'url'   => '$1',
-            'title' => '$2',
+            'match' => '#<a class="embedly-card".*href="(http:\/\/|https:\/\/|\/\/)(.*?)".*>(.*?)<\/a>.*#s',
+            'url'   => '$2',
+            'title' => '$3',
             'type'  => 'link',
         ),
         array(
-            'match' => '#<blockquote class="embedly-card" (.*?)>.*href="(.*?)".*>(.*?)<\/a>.*<p>(.*?)<\/p><\/blockquote>.*#s',
+            'match' => '#<blockquote class="embedly-card"(.*?)>.*href="(http:\/\/|https:\/\/|\/\/)(.*?)".*>(.*?)<\/a>.*<p>(.*?)<\/p><\/blockquote>.*#s',
             'data'  => '$1',
-            'url'   => '$2',
-            'title' => '$3',
-            'desc'  => '$4',
+            'url'   => '$3',
+            'title' => '$4',
+            'desc'  => '$5',
             'type'  => 'card',
         ),
         array(
-            'match'  => '#<div class="embedly-responsive".*style="(.*?)".*src="(.*?)".*style="(.*?)".*<\/div>.*#s',
-            'style1' => '$1',
-            'src'    => '$2',
-            'style2' => '$3',
-            'type'   => 'div', // responsive iframe
+            'match'    => '#<div class="embedly-responsive".*style="(.*?)".*src="(http:\/\/|https:\/\/|\/\/)(.*?)".*style="(.*?)".*<\/div>.*#s',
+            'style1'   => '$1',
+            'protocol' => '$2',
+            'src'      => '$3',
+            'style2'   => '$4',
+            'type'     => 'div',
         ),
+        // Responsive iframe.
         array(
-            'match'  => '#<iframe class="embedly-embed".*src="(.*?)".*<\/iframe>.*#s',
-            'src'    => '$1',
-            'type'   => 'iframe',
+            'match'    => '#<iframe class="embedly-embed".*src="(http:\/\/|https:\/\/|\/\/)(.*?)".*<\/iframe>.*#s',
+            'protocol' => '$1',
+            'src'      => '$2',
+            'type'     => 'iframe',
         ),
     );
 
@@ -111,7 +114,8 @@ class Embed_embedly implements EmbedBase {
                     $result['desc'] = preg_replace($source['match'], $source['desc'], $input);
                 }
                 if ($type == 'div' || $type == 'iframe') {
-                    $result['src'] = preg_replace($source['match'], $source['src'], $input);
+                    $protocol = preg_replace($source['match'], $source['protocol'], $input);
+                    $result['src'] = $protocol . preg_replace($source['match'], $source['src'], $input);
                     if (preg_match('#width="(\d+)"#', $input, $m)) {
                         $result['width'] = $m[1];
                     }
@@ -135,6 +139,7 @@ class Embed_embedly implements EmbedBase {
      *  embedded into Mahara page.
      */
     public function embed_content($input) {
+        $input = (array) $input;
         $width  = isset($input['width'])  ? (int)$input['width']  : self::$default_width;
         $height = isset($input['height']) ? (int)$input['height'] : self::$default_height;
 
