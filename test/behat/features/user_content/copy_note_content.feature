@@ -65,6 +65,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   | Block title | Note page2 block1 using original note content title |
   And I press "Save"
   And I scroll to the top
+  And I wait "1" seconds
   And I should see "This is page1 block1 original content" in the block "Note page2 block1 using original note content title"
 
 # 6. Create a Page2 note2 with the Page1 note1 content, edit the content of ALL Page1 note1s then CANCEL the changes
@@ -95,6 +96,7 @@ Scenario: Page1 - create note with content then use it to create another note (v
   | Block content | This is page1 block1 original content UPDATED NOW! |
   And I press "Save"
   And I scroll to the top
+  And I wait "1" seconds
   And I should see "This is page1 block1 original content UPDATED NOW!" in the block "Note page2 block1 using original note content title"
   And I should see "This is page1 block1 original content UPDATED NOW!" in the block "Note page2 block2 title AND update original title"
 

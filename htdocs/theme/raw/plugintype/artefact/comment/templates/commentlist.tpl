@@ -38,7 +38,7 @@
                         <span class="star-comment-rating">
                         {for i $item->ratingdata->min_rating $item->ratingdata->max_rating}
                             <div class="star-rating star-rating-readonly">
-                                <a class="icon icon-{$star} {if $i <= $item->ratingdata->value}icon-solid{else}icon-regular{/if}" {if $colour}style="color: {$colour}"{/if}>&nbsp;</a>
+                                <a class="icon-{$star} {if $i <= $item->ratingdata->value}icon{else}icon-regular{/if}" {if $colour}style="color: {$colour}"{/if}>&nbsp;</a>
                             </div>
                         {/for}
                         </span>

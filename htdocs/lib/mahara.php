@@ -381,8 +381,12 @@ function get_helpfile($plugintype, $pluginname, $form, $element, $page=null, $se
 function is_valid_help_page($langfile) {
 
     $docroot = get_config('docroot');
-    if (substr($langfile, 0, strlen($docroot)) !== $docroot) {
-        // The real path endpoint is not within the webroot
+    $dataroot = get_config('dataroot') . 'langpacks/';
+    if (
+        (substr($langfile, 0, strlen($docroot)) !== $docroot) &&
+        (substr($langfile, 0, strlen($dataroot)) !== $dataroot)
+      ) {
+        // The real path endpoint is not within the webroot nor the dataroot /langpacks/ section
         return false;
     }
     if (!preg_match('#/help/#', $langfile)) {
@@ -2949,30 +2953,19 @@ function format_timelapse($timestamp1, $timestamp2 = NULL) {
 
 /**
  * Returns a random string suitable for registration/change password requests
+ * and other places where we need a cryptographically secure random string
  *
  * @param int $length The length of the key to return
- * @param array $pool The pool to draw from (optional, will use A-Za-z0-9 as a default)
  * @return string
  */
-function get_random_key($length=16, $pool=null) {
-    if ($length < 1) {
-        throw new IllegalArgumentException('Length must be a positive number');
+function get_random_key($length=16) {
+    if ($length < 8) {
+        throw new IllegalArgumentException(get_string('randomkeyminlength', 'error'));
     }
-    if (empty($pool)) {
-        $pool = array_merge(
-            range('A', 'Z'),
-            range('a', 'z'),
-            range(0, 9)
-        );
-    }
-    shuffle($pool);
-    $result = '';
-    for ($i = 0; $i < $length; $i++) {
-        $result .= $pool[$i];
-    }
-    return $result;
+    // Length of bin2hex string is twice as long as passed in length
+    // so we halve it to get back the expected characters
+    return bin2hex(random_bytes($length / 2));
 }
-
 
 //
 // Pieform related functions
@@ -5765,6 +5758,7 @@ function is_serialized_string($sstr) {
  * @param string $sobj
  */
 function is_valid_serialized_skin_attribute($sobj) {
+    $sobj = urldecode($sobj);
     if (is_string($sobj) && preg_match('/^O:8:"stdClass":\d+:{.*}$/s', $sobj)) {
         // Make sure each property is a string, integer or null.
         $pos = strpos($sobj, '{');
@@ -5799,6 +5793,10 @@ function is_valid_serialized_skin_attribute($sobj) {
                     return false;
             }
         }
+        return true;
+    }
+    else if (is_string($sobj) && !preg_match('/O:8:"stdClass"/', $sobj)) {
+        // we don't have an object in the string so is safe to unserialize
         return true;
     }
     return false;

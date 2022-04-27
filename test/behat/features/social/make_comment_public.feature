@@ -85,7 +85,6 @@ Background:
     And I follow "Page UserA_03"
     And I press "Comments"
     And I click on "Make comment public" in the "This is comment 2" comment
-    And I press "Comments"
     And I scroll to the id "view"
     And I should see "This comment is private" in the "This is comment 1" comment
     And I should see "This comment is private" in the "This is comment 9" comment

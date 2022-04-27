@@ -90,6 +90,9 @@ class module_lti_advantage_launch extends external_api {
                     $collection = $view->get_collection();
                     if ($collection) {
                         // Our view is part of a collection.
+                        if ($pid = $collection->has_progresscompletion()) {
+                            $canview[] = $pid;
+                        }
                         $views = $collection->get('views');
                         // Add all View IDs for views in the collection.
                         foreach ($views['views'] as $view) {
@@ -108,6 +111,9 @@ class module_lti_advantage_launch extends external_api {
                 // The id on the URL is for a collection. Fetch the views.
                 $collectionid = (int) $mahara_url->get_param('id');
                 $collection = new Collection($collectionid);
+                if ($pid = $collection->has_progresscompletion()) {
+                    $canview[] = $pid;
+                }
                 $views = $collection->get('views');
                 foreach ($views['views'] as $view) {
                     $canview[] = $view->id;
@@ -122,6 +128,9 @@ class module_lti_advantage_launch extends external_api {
                     $collection = $view->get_collection();
                     if ($collection) {
                         // Our view is part of a collection.
+                        if ($pid = $collection->has_progresscompletion()) {
+                            $canview[] = $pid;
+                        }
                         $views = $collection->get('views');
                         // Add all View IDs for views in the collection.
                         foreach ($views['views'] as $view) {

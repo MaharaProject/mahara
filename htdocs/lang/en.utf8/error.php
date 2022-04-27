@@ -166,3 +166,4 @@ $string['fileuploadtoobig'] = 'A file you are trying to upload is bigger than %s
 $string['fileuploadtoomany'] = 'You are trying to upload too many files. You can upload up to %s.';
 $string['sideblockmenuclash'] = 'The sideblock name "%s" is already in use. Please choose a different one.';
 $string['isolatedinstitutionsremoverules'] = 'We have hidden %s access rules due to isolated institutions being in effect. The hidden rules will be removed once the form is saved.';
+$string['randomkeyminlength'] = 'Length must be a positive integer equal to or greater than 8';
