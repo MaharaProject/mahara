@@ -1,3 +1,35 @@
+21.10.2 (2022-04-27)
+- Bug 1922226: Group search list shows too many results from page 2 onwards
+- Bug 1930171: Strengthen the non-cryptographically random generated tokens
+- Bug 1957725: Embedded images not copied when page is copied
+- Bug 1959860: Courseinfo blocktype plugin modal is blank
+- Bug 1960979: Language pack help files not showing - default to English version
+- Bug 1961856: Upgrade markedjs from 2.1.3 to 4.0.12
+- Bug 1963608: Allow Comments by Default default value is not saved to the database on upgrade
+- Bug 1963840: Incorrect menu references in Admin development section
+- Bug 1964268: Sign-off and verification status not saved to database on copied portfolio
+- Bug 1964295: Upgrade step: add "progress" page overwrites the access config in the collection
+- Bug 1964424: LTI submission groups should have 'submittableto' be true
+- Bug 1965061: Portfolio completion page not accessible when coming via LTI
+- Bug 1966138: The set_profile_field() function for email doesn't check for doubleups
+- Bug 1966367: The webservice mahara_view_external.php looks to check for a user wrong
+- Bug 1967000: Saving a skin doesn't look to sanitize the values before saving to a serialized object
+- Bug 1967006: Make changes to the Makefile for new version of Gerrit
+- Bug 1967811: SQL vs MySQL on group table update
+- Bug 1968920: XSS exploit in 'External media' block
+- Bug 1968939: 'Archived submissions' export CSV doesn't contain all columns
+- Bug 1950069: Comment ratings have a link underline when they shouldn't
+- Bug 1957721: Cannot share portfolio after it has been submitted
+- Bug 1958509: Update the block id of embeddedurls when pages are copied
+- Bug 1960399: Embedly export format incorrect (stdClass vs array)
+- Bug 1961845: Required PHP extensions list mcrypt but it's not needed anymore
+- Bug 1964834: behat on php 7.2 vs 7.4
+- Bug 1965477: Unable to install some thirdparty plugins automatically due to composer prompts
+- Bug 1943525: Cookie “mahara” will be soon rejected because it has the “SameSite” attribute set to “None”
+- Bug 1960774: Behat test regression webservices.feature
+- Bug 1960978: Behat test fix resume_page.feature
+- Bug 1960980: Behat test fix edit_page.feature
+
 21.10.1 (2022-02-09)
 - Bug 1959733: Needing to respect the default layout mode of a page 
 - Bug 1959146: Private group, site, or institution portfolios can be accessed by the URL without logging in 
