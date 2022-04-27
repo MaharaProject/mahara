@@ -96,14 +96,16 @@ class mahara_view_external extends external_api {
             $id = $user['userid'];
         }
         else if (isset($user['username'])) {
-            $dbuser = get_record('usr', 'username', $user['username']);
+            $username = strtolower($user['username']);
+            $dbuser = get_record('usr', 'username', $username);
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
             $id = $dbuser->id;
         }
         else if (isset($user['email'])) {
-            $dbuser = get_record('usr', 'email', $user['email'], null, null, null, null, '*', 0);
+            $email = strtolower($user['email']);
+            $dbuser = get_record('usr', 'email', $email, null, null, null, null, '*', 0);
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['email']));
             }
@@ -114,7 +116,8 @@ class mahara_view_external extends external_api {
             $dbuser = false;
             foreach ($dbinstances as $dbinstance) {
                $user_factory = new User;
-               $dbuser = $user_factory->find_by_instanceid_username($dbinstance->id, $user['remoteuser'], true);
+               $remote_user = strtolower($user['remoteuser']);
+               $dbuser = $user_factory->find_by_instanceid_username($dbinstance->id, $remote_user, true);
                if ($dbuser) {
                    break;
                }
