@@ -2137,6 +2137,8 @@ function get_cookies($prefix) {
  * @param int    $expires The unix timestamp of the time the cookie should expire
  */
 function set_cookie($name, $value='', $expires=0, $access=false) {
+    global $SESSION;
+
     $name = get_config('cookieprefix') . $name;
     $url = parse_url(get_config('wwwroot'));
     if (!$domain = get_config('cookiedomain')) {
@@ -2144,7 +2146,35 @@ function set_cookie($name, $value='', $expires=0, $access=false) {
     }
     // If no headers are sent - to avoid CLI scripts calling logout() problems
     if (!headers_sent()) {
-        setcookie($name, $value, $expires, $url['path'], $domain, is_https(), true);
+        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
+            $samesite = is_https() ? 'None' : 'Lax';
+            setcookie($name, $value, array('expires' => $expires,
+                                           'path' => $url['path'],
+                                           'domain' => $domain,
+                                           'secure' => $SESSION->get_cookie_secure(),
+                                           'httponly' => true,
+                                           'samesite' => $samesite));
+        }
+        else {
+            $path = $url['path'];
+            if (empty($path)) {
+                $path = '/';
+            }
+            $path_extra = $SESSION->get_cookie_extra_path();
+            if (!empty($path_extra)) {
+                // We have things to add to path. Prepend it with the separator.
+                $path_extra = '; ' . $path_extra;
+            }
+            setcookie(
+                $name,
+                $value,
+                $expires,
+                $path . $path_extra,
+                $domain,
+                is_https(),
+                true
+            );
+        }
         if ($access) {  // View access cookies may be needed on this request
             $_COOKIE[$name] = $value;
         }

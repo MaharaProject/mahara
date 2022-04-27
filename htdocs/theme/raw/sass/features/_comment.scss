@@ -106,3 +106,16 @@
 .modal-docked:not(.active) .tinymce-mobile-ios-container {
     display: none;
 }
+
+// override the default link text-decoration
+.star-comment-rating a {
+    text-decoration: none;
+}
+
+// the solid and outline stars were not working with new fontawesome fonts
+.star-rating a.icon {
+    font-weight: 900;
+}
+.star-rating a.icon-regular {
+    @include fonttype(regular);
+}
