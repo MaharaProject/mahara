@@ -106,13 +106,37 @@ function doublecheck_people($token) {
             AND p.field = ? AND p.value != ?";
     $valid2 = get_column_sql($sql, array('registerstatus', PCNZ_REGISTEREDCURRENT));
 
-    $valid = array_merge($valid1, $valid2);
+    // Find any of the Register IDs that are already listed as registered active in Mahara
+    // and fetch their apc end date to check if it's older than now
+    $sql = "SELECT p.value AS enddate, u.username
+            FROM {usr} u
+            JOIN {usr_account_preference} p ON p.usr = u.id
+            WHERE p.field = ? AND p.usr IN (
+                SELECT u2.id
+                FROM {usr} u2
+                JOIN {usr_account_preference} p2 ON p2.usr = u2.id
+                WHERE u2.username IN (" . join(',', array_map('db_quote', $people)) . ")
+                AND p2.field = ? AND p2.value = ?
+            )";
+    $valid3 = array();
+    $valid3_raw = get_records_sql_array($sql, array('apcstatusdateend', 'registerstatus', PCNZ_REGISTEREDCURRENT));
+    // But their APC start/end dates are not correct
+    if ($valid3_raw) {
+        foreach ($valid3_raw as $apc) {
+            if (strtotime($apc->enddate) < time()) {
+                $valid3[] = $apc->username;
+            }
+        }
+    }
+
+    $valid = array_merge($valid1, $valid2, $valid3);
     sort($valid, SORT_NUMERIC);
     if (empty($valid)) {
         return array();
     }
     $validpeople = array();
     foreach ($valid as $k => $v) {
+        log_debug('Fetching person with Reg ID ' . $v);
         $validperson = get_person($token, $v);
         if ($validperson) {
             $validpeople[$v]['personalinfo'] = $validperson;
