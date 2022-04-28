@@ -1,0 +1,10 @@
+--- a/vendor/behat/mink/src/Selector/Xpath/Escaper.php   2022-03-15 10:30:18.902551052 +1300
++++ b/vendor/behat/mink/src/Selector/Xpath/Escaper.php    2022-03-15 10:31:41.315406073 +1300
+@@ -47,6 +47,6 @@
+             }
+         }
+ 
+-        return sprintf('concat(%s)', implode($parts, ','));
++        return sprintf('concat(%s)', implode(',', $parts));
+     }
+ }

@@ -103,7 +103,12 @@ class Skin {
             if (!$tempdata) {
                 throw new SkinNotFoundException("Skin with id $id not found");
             }
-            $tempdata->viewskin = unserialize($tempdata->viewskin);
+            if (is_valid_serialized_skin_attribute($tempdata->viewskin)) {
+                $tempdata->viewskin = unserialize($tempdata->viewskin);
+            }
+            else {
+                $tempdata->viewskin = array();
+            }
 
             if ($data !== null) {
                 $data = array_merge((array)$tempdata, $data);
@@ -772,6 +777,7 @@ class Skin {
      * @param unknown_type $color_hex
      */
     private static function get_rgb_from_hex($color_hex) {
+        $color_hex = !empty($color_hex) ? $color_hex : '#FFFFFF';
         return array_map('hexdec', explode('|', wordwrap(substr($color_hex, 1), 2, '|', 1)));
     }
 
