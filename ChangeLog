@@ -1,3 +1,8 @@
+21.10.3 (2022-05-02)
+- Bug 1971110: Adding block with underscore can cause problems
+- Bug 1970680: UBug 1971110: Adding block with underscore can cause problems
+- Bug 1970680: Upgrade fails when LTI not installed#
+
 21.10.2 (2022-04-27)
 - Bug 1922226: Group search list shows too many results from page 2 onwards
 - Bug 1930171: Strengthen the non-cryptographically random generated tokens
