@@ -1,3 +1,7 @@
+22.04.1 (2022-05-02)
+- Bug 1970680: Upgrade fails when LTI not installed
+- Bug 1971110: Adding block with underscore can cause problems
+
 22.04.0 (2022-04-27)
 - Mahara 22.04
 - Bug  1922226: Group search list shows too many results from page 2 onwards
