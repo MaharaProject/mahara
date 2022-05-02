@@ -28,6 +28,10 @@
     }
     .metadata {
         color: $site-footer-color;
+        a {
+            color: $site-footer-color;
+            text-decoration: underline;
+        }
     }
     .footer-inner {
         @extend .clearfix;

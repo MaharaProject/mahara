@@ -7,6 +7,7 @@
         min-width: 1.25rem; // 20px;
         max-width: 100%;
         border-radius: $input-border-radius;
+        text-align: left;
 
         &.input-short {
             max-width: 12.5rem; // 200px;
