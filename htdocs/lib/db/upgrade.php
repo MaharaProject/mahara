@@ -2296,18 +2296,21 @@ function xmldb_core_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2020092127) {
-        log_debug("Make sure groups associated with LTI assessment have 'submittableto' set to true");
-        execute_sql("
-            UPDATE {group}
-            SET submittableto = 1
-            WHERE id IN (
-                SELECT foo.id FROM (
-                    SELECT g1.id
-                    FROM {lti_assessment} l
-                    JOIN {group} g1 ON g1.id = l.group
-                    WHERE g1.submittableto = 0
-                ) AS foo
-            )");
+        $table = new XMLDBTable('lti_assessment');
+        if (table_exists($table)) {
+            log_debug("Make sure groups associated with LTI assessment have 'submittableto' set to true");
+            execute_sql("
+                UPDATE {group}
+                SET submittableto = 1
+                WHERE id IN (
+                    SELECT foo.id FROM (
+                        SELECT g1.id
+                        FROM {lti_assessment} l
+                        JOIN {group} g1 ON g1.id = l.group
+                        WHERE g1.submittableto = 0
+                    ) AS foo
+                )");
+        }
     }
 
     if ($oldversion < 2020092128) {
@@ -2331,7 +2334,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2020092129) {
+    if ($oldversion < 2020092130) {
         log_debug('Alter the "usr_institution_migrate" table to allow for longer token value');
         $table = new XMLDBTable('usr_institution_migrate');
         if (table_exists($table)) {
