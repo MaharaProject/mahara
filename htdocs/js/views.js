@@ -199,6 +199,7 @@
                 var option = $(ev.currentTarget).data('option');
                 var title = encodeURIComponent($('#instconf_title').val());
                 title = title.replace(/\./g, "%2E"); // Deal with . in the title
+                title = title.replace(/\_/g, "%5F"); // Deal with _ in the title clashing with action string
                 var isnew = $('#instconf_new').val() == '1' ? '1' : '0';
                 var pd = {
                     'id': $('#viewid').val(),
