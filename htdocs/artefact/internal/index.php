@@ -212,10 +212,17 @@ $profileform = pieform(array(
 
 function get_desired_fields(&$allfields, $section) {
     global $USER;
-    $desiredfields = array('about' => array('firstname', 'lastname', 'studentid', 'preferredname', 'userroles', 'introduction'),
-                           'contact' => array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'),
-                           'social' => array('socialprofile'),
-                           );
+
+    $fullname_format = get_string('fullname_format', 'langconfig');
+    if ($fullname_format == 'lastname_firstname') {
+         $about_array = array('about' => array('lastname', 'firstname', 'studentid', 'preferredname', 'userroles', 'introduction'));
+    }
+    else {
+         $about_array = array('about' => array('firstname', 'lastname', 'studentid', 'preferredname', 'userroles', 'introduction'));
+    }
+    $contact_array = array('contact' => array('email', 'maildisabled', 'officialwebsite', 'personalwebsite', 'blogaddress', 'address', 'town', 'city', 'country', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber'));
+    $social_array = array('social' => array('socialprofile'));
+    $desiredfields = $about_array + $contact_array + $social_array;
 
     if (is_callable(array('ArtefactTypeProfileLocal', 'get_desired_fields'))) {
         $localfields = call_static_method('ArtefactTypeProfileLocal', 'get_desired_fields');
