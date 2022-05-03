@@ -42,6 +42,7 @@ $string['strftimew3cdatetime'] = '%%Y-%%m-%%dT%%H:%%M:%%S%%z';
 $string['strftimew3cdate'] = '%%Y-%%m-%%d';
 $string['thislanguage'] = 'English';
 $string['locales'] = 'en_US.utf8,en_GB.utf8,en,english-us,english-uk,english';
+$string['fullname_format'] = 'firstname_lastname';
 
 // Rule to choose from the language's plural forms.
 // See the gettext manual, http://www.gnu.org/s/hello/manual/gettext/Plural-forms.html
