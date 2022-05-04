@@ -96,7 +96,8 @@ class mahara_view_external extends external_api {
         }
         else if (isset($user['username'])) {
             $username = strtolower($user['username']);
-            $dbuser = get_record('usr', 'username', $username);
+            $sql = 'SELECT * FROM {usr} WHERE LOWER(username) = ?';
+            $dbuser = get_record_sql($sql, array($username));
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
@@ -104,7 +105,8 @@ class mahara_view_external extends external_api {
         }
         else if (isset($user['email'])) {
             $email = strtolower($user['email']);
-            $dbuser = get_record('usr', 'email', $email, null, null, null, null, '*', 0);
+            $sql = 'SELECT * FROM {usr} WHERE LOWER(email) = ?';
+            $dbuser = get_record_sql($sql, array($email), 0);
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['email']));
             }
