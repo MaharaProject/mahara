@@ -48,7 +48,8 @@ class mahara_institution_external extends external_api {
         }
         else if (isset($user['username'])) {
             $username = strtolower($user['username']);
-            $dbuser = get_record('usr', 'username', $username);
+            $sql = 'SELECT * FROM {usr} WHERE LOWER(username) = ?';
+            $dbuser = get_record_sql($sql, array($username));
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
