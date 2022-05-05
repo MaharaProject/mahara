@@ -18,3 +18,8 @@ $string['needschromeheadless'] = 'Experimental export option that utilises Headl
 $string['needschromeheadlessphp'] = 'Requires "chrome-php". You can install this via "make pdfexport"';
 $string['needspdfcombiner'] = 'Requires either "pdfunite" or "ghostscript" to be able to combine pdfs. You can install "pdfunite" via "apt-get install poppler-utils".';
 $string['exportpdfdisabled'] = 'PDF export dependencies are missing. PDF export is disabled. For more information see <a href="%s">\'Plugin administration\'</a>.';
+$string['pdffoundcombiner'] = 'Using PDF combiner: %s';
+$string['beginpdfviewexport'] = 'Begin the PDF export process';
+$string['startuppdfchrome'] = 'Starting up Chrome browser headless ...';
+$string['pdfchromestarted'] = 'Starting up Chrome browser headless ... done';
+$string['pdfchromestartederror'] = 'Chrome browser unable to start - see error logs for more information';

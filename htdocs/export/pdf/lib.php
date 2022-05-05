@@ -196,6 +196,7 @@ class PluginExportPdf extends PluginExportHtml {
         static $browser;
         static $page;
 
+        $this->notify_progress_callback(81, get_string('beginpdfviewexport', 'export.pdf'));
         $progressstart = 85;
         $progressend   = 95;
         $i = 0;
@@ -209,6 +210,7 @@ class PluginExportPdf extends PluginExportHtml {
         }
 
         if (!isset($pdfrun) || $pdfrun == 'first' || $pdfrun == 'all') {
+            $this->notify_progress_callback(82, get_string('startuppdfchrome', 'export.pdf'));
             $browsertype = 'chromium-browser';
             system($command . ' | grep ' . $browsertype, $error);
             if ($error) {
@@ -221,15 +223,25 @@ class PluginExportPdf extends PluginExportHtml {
 
             $browserFactory = new BrowserFactory($browsertype);
             // starts headless chrome
-            $browser = $browserFactory->createBrowser(['windowSize' => [960,600],
-                                                       'ignoreCertificateErrors' => true,
-                                                       'connectionDelay' => 0.8]);
+            try {
+                $browser = $browserFactory->createBrowser(['windowSize' => [960,600],
+                                                           'ignoreCertificateErrors' => true,
+                                                           'connectionDelay' => 0.8]);
+            }
+            catch (Exception $e) {
+                $this->notify_progress_callback(83, get_string('pdfchromestartederror', 'export.pdf'));
+                throw new MaharaException('Chrome browser unable to start: ' . $e->getMessage());
+            }
 
-            // creates a new page and navigate to an url
+            // creates a new page
             $page = $browser->createPage();
+            $this->notify_progress_callback(83, get_string('pdfchromestarted', 'export.pdf'));
         }
 
         $combiner = self::has_pdf_combiner();
+        if ($combiner) {
+            $this->notify_progress_callback(84, get_string('pdffoundcombiner', 'export.pdf', $combiner));
+        }
 
         // Map the view id order to their collection order if applicable
         $viewids = array_keys($this->views);
