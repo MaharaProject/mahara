@@ -15,7 +15,7 @@ parameters:
         - htdocs/lib/elasticsearch/
         - htdocs/lib/htmlpurifier/
         - htdocs/lib/phpmailer/
-        - htdocs/lib/recaptcha/
+        - htdocs/vendor/google/recaptcha/
         - htdocs/lib/tests/phpunit/
         - htdocs/lib/xmldb/
         - htdocs/lib/xmldb/classes/
@@ -91,7 +91,7 @@ parameters:
         - htdocs/lib/htmlpurifier/*
         - htdocs/lib/phpmailer/*
         - htdocs/lib/phpunit.php
-        - htdocs/lib/recaptcha/*
+        - htdocs/vendor/*
         - htdocs/lib/redis/sentinel.php
         - htdocs/lib/tests/phpunit/*
         - htdocs/lib/xmldb/*
