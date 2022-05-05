@@ -650,20 +650,22 @@ class PluginExportHtml extends PluginExport {
         $blocks = get_records_array('block_instance', 'view', $view->get('id'));
         $viewartefactsids = array();
 
-        foreach ($blocks as $b) {
-            $configdata = unserialize($b->configdata);
+        if ($blocks) {
+            foreach ($blocks as $b) {
+                $configdata = unserialize($b->configdata);
 
-            // Get related artefacts
-            if (array_key_exists('artefactids', $configdata) && isset($configdata['artefactids'])) {
-                foreach ($configdata['artefactids'] as $artefactid) {
-                    $viewartefactsids[] = $artefactid;
+                // Get related artefacts
+                if (array_key_exists('artefactids', $configdata) && isset($configdata['artefactids'])) {
+                    foreach ($configdata['artefactids'] as $artefactid) {
+                        $viewartefactsids[] = $artefactid;
+                    }
                 }
+                if (array_key_exists('artefactid', $configdata) && isset($configdata['artefactid'])) {
+                    $viewartefactsids[] = $configdata['artefactid'];
+                }
+                // Clean doubled-up artefacts
+                $viewartefactsids = array_unique($viewartefactsids);
             }
-            if (array_key_exists('artefactid', $configdata) && isset($configdata['artefactid'])) {
-                $viewartefactsids[] = $configdata['artefactid'];
-            }
-            // Clean doubled-up artefacts
-            $viewartefactsids = array_unique($viewartefactsids);
         }
         return $viewartefactsids;
     }
