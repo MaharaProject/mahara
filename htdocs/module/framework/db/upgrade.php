@@ -67,7 +67,7 @@ function xmldb_module_framework_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2017101600) {
-        log_debug('Add new Smart Evidence framework_config table and status heading properties');
+        log_debug('Add new SmartEvidence framework_config table and status heading properties');
         $table = new XMLDBTable('framework_config');
         $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->addFieldInfo('framework', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);

@@ -1785,7 +1785,7 @@ EOF;
     }
 
     /**
-     * Investigate a Smart Evidence editor field via data schemepath attribute
+     * Investigate a SmartEvidence editor field via data schemepath attribute
      *
      * @Given the SE field :datavalue should contain :value
      */
@@ -1818,7 +1818,7 @@ EOF;
     }
 
     /**
-     * Investigate a Smart Evidence editor field via data schemepath attribute
+     * Investigate a SmartEvidence editor field via data schemepath attribute
      *
      * @Given the SE field :datavalue should not contain :value
      */
@@ -1851,7 +1851,7 @@ EOF;
     }
 
     /**
-     * Update a Smart Evidence editor field via data schemepath attribute
+     * Update a SmartEvidence editor field via data schemepath attribute
      *
      * @Given I set the SE field :datavalue to :value
      */

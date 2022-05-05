@@ -1,6 +1,6 @@
 @javascript @core @core_portfolio
 Feature: Work flow for institution member submitting collection with
-    smart evidence and institution staff leaving feedback on the
+    SmartEvidence and institution staff leaving feedback on the
     submission.
 
 Background:
@@ -47,8 +47,8 @@ Scenario: SmartEvidence interaction by member / staff
     And I press "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:
-    | Collection name | Smart Evidence Collection 1 |
-    | Collection description | Smart Evidence Collection 1 description |
+    | Collection name | SmartEvidence Collection 1 |
+    | Collection description | SmartEvidence Collection 1 description |
     And I select "Title of your framework" from "SmartEvidence framework"
     And I press "Next: Edit collection pages"
     And I follow "All"
@@ -57,11 +57,11 @@ Scenario: SmartEvidence interaction by member / staff
     Then I click on "Return to pages and collections"
 
     # Mahara member makes page visible to public
-    And I click on "Manage access" in "Smart Evidence Collection 1" card access menu
+    And I click on "Manage access" in "SmartEvidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
     # Mahara member must make comment on competencies before it can be accessed by admin/staff
-    When I follow "Smart Evidence Collection 1"
+    When I follow "SmartEvidence Collection 1"
     # click the standard group 3.1 to make an annotation for page 1 column
     And I click on the matrix point "3,22"
     And I fill in "First annotation description" in first editor
@@ -79,7 +79,7 @@ Scenario: SmartEvidence interaction by member / staff
     # Log in as admin/staff to assess the collection pages and make comments
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
-    And I follow "Smart Evidence Collection 1"
+    And I follow "SmartEvidence Collection 1"
     # Admin/staff selects the competencies ready for assessment and makes an annotation
     # And sets the standard status
     And I click on the matrix point "3,22"
@@ -101,7 +101,7 @@ Scenario: SmartEvidence interaction by member / staff
 
     # Mahara member logs in, views annotations and confirms cannot delete annotations (Bug - 1781278)
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I follow "Smart Evidence Collection 1"
+    And I follow "SmartEvidence Collection 1"
     # Mahara member clicks the next to view next page
     And I press "Next page"
     When I follow "Place feedback"

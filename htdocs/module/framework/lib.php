@@ -48,14 +48,14 @@ class PluginModuleFramework extends PluginModule {
                 $key->setAttributes(XMLDB_KEY_FOREIGN, array('framework'), 'framework', array('id'));
                 add_key($table, $key);
             }
-            // Add in any smart evidence framework data to the framework tables
+            // Add in any SmartEvidence framework data to the framework tables
             // based on any existing .matrix files in the matrices directory
             $matricesdir = get_config('docroot') . 'module/framework/matrices/';
             $files = glob($matricesdir . '*.matrix');
             foreach ($files as $file) {
                 self::add_matrix_to_db($file);
             }
-            // Activate annotation blocktype as it is used with smart evidence
+            // Activate annotation blocktype as it is used with SmartEvidence
             if (!is_plugin_active('annotation', 'blocktype')) {
                  set_field('blocktype_installed', 'active', 1, 'name', 'annotation');
             }
@@ -631,19 +631,19 @@ class Framework {
         $states = array(
             'begun' => array(
                 'state' => (int) $state === self::EVIDENCE_BEGUN ? 1 : 0,
-                'classes' => 'icon icon-regular icon-circle begun',
+                'classes' => 'assessmentfeedback icon icon-regular icon-circle begun',
             ),
             'incomplete' => array(
                 'state' => (int) $state === self::EVIDENCE_INCOMPLETE ? 1 : 0,
-                'classes' => 'icon icon-times-circle incomplete',
+                'classes' => 'assessmentfeedback icon icon-times-circle incomplete',
             ),
             'partialcomplete' => array(
                 'state' => (int) $state === self::EVIDENCE_PARTIALCOMPLETE ? 1 : 0,
-                'classes' => 'icon icon-adjust partial',
+                'classes' => 'assessmentfeedback icon icon-adjust partial',
             ),
             'completed' => array(
                 'state' => (int) $state === self::EVIDENCE_COMPLETED ? 1 : 0,
-                'classes' => 'icon icon-check-circle completed',
+                'classes' => 'assessmentfeedback icon icon-check-circle completed',
             ),
         );
         if ($current) {
@@ -1078,7 +1078,7 @@ class Framework {
 
         require_once(get_config('libroot') . 'institution.php');
         $institution = new Institution($institution);
-        // Check that smart evidence self assessment is enabled for the framework
+        // Check that SmartEvidence self assessment is enabled for the framework
         if ($framework) {
             $fmk = new Framework($framework);
             if ($fmk->selfassess) {
@@ -1122,6 +1122,57 @@ class Framework {
             }
         }
         return $statuses;
+    }
+
+    /**
+     * Get array of all status options with evidence state integer as key.
+     *
+     * The array either contains provided evidence status in db (via the
+     * .matrix file in the 'evidencestatuses' array) or uses the default
+     * strings if none provided.
+     *
+     * @param string $id The id of the framework
+     *
+     * @return array  Array containing the status names and class for display
+     */
+    public static function get_evidence_statuses_for_display($id) {
+        $ret = array(
+            self::EVIDENCE_BEGUN => [
+                'title' => get_string('begun','module.framework'),
+                'statisticsid' => 'evidence_begun',
+                'statisticstitle' => get_string('begun','module.framework'),
+                'headerdescription' => get_string('headerreadyforassessmentcount','module.framework'),
+            ],
+            self::EVIDENCE_INCOMPLETE => [
+                'title' => get_string('incomplete','module.framework'),
+                'statisticsid' => 'evidence_incomplete',
+                'statisticstitle' => get_string('incomplete','module.framework'),
+                'headerdescription' => get_string('headernotmatchcount','module.framework'),
+            ],
+            self::EVIDENCE_PARTIALCOMPLETE => [
+                'title' => get_string('partialcomplete','module.framework'),
+                'statisticsid' => 'evidence_partialcomplete',
+                'statisticstitle' => get_string('partialcomplete','module.framework'),
+                'headerdescription' => get_string('headerpartiallycompletecount','module.framework'),
+            ],
+            self::EVIDENCE_COMPLETED => [
+                'title' => get_string('completed','module.framework'),
+                'statisticsid' => 'evidence_completed',
+                'statisticstitle' => get_string('completed','module.framework'),
+                'headerdescription' => get_string('headercompletedcount','module.framework'),
+            ],
+        );
+        // $choices = self::get_evidence_statuses($id);
+        if ($records = get_records_array('framework_evidence_statuses', 'framework', $id)) {
+            foreach ($records as $record) {
+                $ret[$record->type]['title'] = $record->name;
+            }
+        }
+        foreach (array_keys($ret) as $key) {
+            $state = Framework::get_state_array($key, true);
+            $ret[$key]['classes'] = $state['classes'];
+        }
+        return $ret;
     }
 
     function get_config($value) {

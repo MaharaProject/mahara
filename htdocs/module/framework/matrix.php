@@ -27,7 +27,7 @@ pieform_setup_headdata();
 
 // This page should only be viewable if:
 // 1). The collection has_framework() return true
-// 2). The institution the collection owner belongs to has 'Smart Evidence' turned on.
+// 2). The institution the collection owner belongs to has 'SmartEvidence' turned on.
 // 3). The collection is able to be viewed by the user.
 
 $collectionid = param_integer('id');
