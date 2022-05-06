@@ -2180,6 +2180,7 @@ function get_users_data($userids, $getviews=true) {
             $record->institutions = $institutionstrings[$record->id];
         }
         $record->display_name = display_name($record, null, false, !$allowhidename || !$record->hidenamepref, $showusername);
+        $record->show_masquerade = $USER->is_supportadmin_for_user($record);
     }
 
     if (!$data || !$getviews || !$views = get_views(array_keys($data), null, null)) {

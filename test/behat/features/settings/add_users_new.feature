@@ -27,6 +27,11 @@ Scenario: Masquerading as a support admin
   And I follow "Alexei"
   And I press "Log in as StaffA"
   And I follow "Become Betty Support again"
+  # Check we can masquerade from the generic search for people results
+  And I press "usf_submit"
+  Then I should see "Masquerade" in the "Alexei Staff (StaffA)" row
+  And I click on "Masquerade" in "Alexei Staff (StaffA)" row
+  And I follow "Become Betty Support again"
   And I log out
   Given I log in as "StaffA" with password "Kupuh1pa!"
   And I choose "People search" from administration menu
