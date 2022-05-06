@@ -13,6 +13,11 @@
         </script>
 {foreach from=$scripts item=script}
         <script type='text/javascript' src='{$script}'></script>
+        <style>
+          .pageheader {
+            margin-bottom: -3.75rem;
+          }
+        </style>
 {/foreach}
     </head>
     <body>
@@ -33,6 +38,7 @@
         </header>
         {/if}
         <div id="header-content" class="pageheader">
+          <div class="pageheader-wrap">
             <div class="container pageheader-content">
                 <div class="row">
                     <div class="col-md-12 main">
@@ -58,6 +64,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </div>
 
         <div class="container main-content">

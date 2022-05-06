@@ -5,20 +5,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
-html {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 1.5em;
-}
-body {
-    margin: 0;
-    padding: 0;
-}
-
-/* Generic styles */
-a img {
-    border: none;
-}
 
 /* Breadcrumbs */
 .breadcrumbs ul {
@@ -75,8 +61,4 @@ a img {
 #summary-internal #profile-icon {
     float: left;
     padding: 0 1em 1em 0;
-}
-
-.footer p {
-    padding: 5px 15px;
 }
