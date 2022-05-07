@@ -21,11 +21,13 @@ define('IGNORE_FETCH_REMOTE_AVATAR', 1);
 require_once('searchlib.php');
 
 $SESSION->set('usersforstats', null);
+
+$fullname_format = get_string('fullname_format', 'langconfig');
 $search = (object) array(
     'query'          => trim(param_variable('query', '')),
     'f'              => param_alpha('f', null), // first initial
     'l'              => param_alpha('l', null), // last initial
-    'sortby'         => param_alpha('sortby', 'firstname'),
+    'sortby'         => param_alpha('sortby', ($fullname_format == 'lastname_firstname') ? 'lastname' : 'firstname'),
     'sortdir'        => param_alpha('sortdir', 'asc'),
     'loggedin'       => param_alpha('loggedin', 'any'),
     'loggedindate'   => param_variable('loggedindate', strftime(get_string('strftimedatetimeshort'))),

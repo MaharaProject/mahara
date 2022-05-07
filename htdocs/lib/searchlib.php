@@ -477,8 +477,6 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'jsonscript' => 'admin/users/search.json.php',
     ));
 
-
-
     $cols = array(
         'select' =>  array(
             'mergefirst' => true,
@@ -520,6 +518,11 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'template' => 'admin/users/searchemailcolumn.tpl',
         ),
     );
+
+    $fullname_format = get_string('fullname_format', 'langconfig');
+    if ($fullname_format == 'lastname_firstname') {
+        $cols = move_array_value($cols, 'lastname', 'firstname');
+    }
 
     $institutions = get_records_assoc('institution', '', '', '', 'name,displayname');
     if (count($institutions) > 1) {
@@ -760,6 +763,11 @@ function build_admin_export_queue_results($search, $offset, $limit) {
             'accessible' => get_string('bulkselect'),
         ),
     );
+
+    $fullname_format = get_string('fullname_format', 'langconfig');
+    if ($fullname_format == 'lastname_firstname') {
+        $cols = move_array_value($cols, 'lastname', 'firstname');
+    }
 
     if ($results['data']) {
         foreach ($results['data'] as &$result) {

@@ -6328,3 +6328,28 @@ function does_search_plugin_have($method) {
     }
     return false;
 }
+
+/**
+ * Move a key in an associated array to a new position
+ * Useful if we are looping thru an associated array and dealing with keys based
+ * on their relative positions in the array.
+ *
+ * @param array  $array The array we want to positional sort
+ * @param string $from  The index of the key we want to move
+ * @param string $to    The index of the key we want to move $from to
+ * @return  array       The sorted array - or unsorted if either of the indexes not found
+ */
+function move_array_value($array, $from, $to) {
+    $arraykeys = array_keys($array);
+    $fromkey = array_search($from, $arraykeys);
+    $tokey = array_search($to, $arraykeys);
+    if ($fromkey !== false && $tokey !== false) {
+        $out = array_splice($arraykeys, $fromkey, 1);
+        array_splice($arraykeys, $tokey, 0, $out);
+    }
+    $newarray = array();
+    foreach ($arraykeys as $ak => $av) {
+        $newarray[$av] = $array[$av];
+    }
+    return $newarray;
+}

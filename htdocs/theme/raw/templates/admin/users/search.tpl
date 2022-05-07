@@ -48,25 +48,13 @@
             <div id="initials" class="initials collapse{if $search->f || $search->l} show{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
                 <h2 class="filter-result-heading" tabindex="0">{str tag="filterresultsby"}</h2>
                 <div class="row">
-                    <div id="firstnamelist" class="col-md-4 userserach-filter">
-                        <span class="pseudolabel" id="firstname">{str tag="firstname"}:</span>
-                        <br/>
-                        <a class="badge first-initial{if !$search->f} badge-primary active{else} badge-default{/if} all" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
-
-                       {foreach from=$alphabet item=a}
-                        <a class="badge first-initial{if $a == $search->f} badge-primary active{else} badge-default{/if}" aria-describedby="firstname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;f={$a}{if $search->l}&amp;l={$search->l}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
-                       {/foreach}
-                    </div>
-
-                    <div id="lastnamelist" class="col-md-4 userserach-filter">
-                        <span class="pseudolabel" id="lastname">{str tag="lastname"}:</span>
-                        <br/>
-                        <a class="badge last-initial{if !$search->l} badge-primary active{else} badge-default{/if} all" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{str tag="All"}</a>
-
-                       {foreach from=$alphabet item=a}
-                        <a class="badge last-initial{if $a == $search->l} badge-primary active{else} badge-default{/if}" aria-describedby="lastname" href="{$WWWROOT}admin/users/search.php?query={$search->query}&amp;l={$a}{if $search->f}&amp;f={$search->f}{/if}{if $search->sortby}&amp;sortby={$search->sortby}{/if}{if $search->sortdir}&amp;sortdir={$search->sortdir}{/if}{if $limit}&amp;limit={$limit}{/if}">{$a}</a>
-                       {/foreach}
-                    </div>
+                {if get_string('fullname_format', 'langconfig') ==  'lastname_firstname'}
+                    {include file="admin/users/searchlastnameheader.tpl" search=$search limit=$limit alphabet=$alphabet}
+                    {include file="admin/users/searchfirstnameheader.tpl" search=$search limit=$limit alphabet=$alphabet}
+                {else}
+                    {include file="admin/users/searchfirstnameheader.tpl" search=$search limit=$limit alphabet=$alphabet}
+                    {include file="admin/users/searchlastnameheader.tpl" search=$search limit=$limit alphabet=$alphabet}
+                {/if}
 
                     <div id="lastlogin-filter" class="col-md-4 userserach-filter">
                         <form class="pieform" action="{$WWWROOT}admin/users/search.php" method="post">

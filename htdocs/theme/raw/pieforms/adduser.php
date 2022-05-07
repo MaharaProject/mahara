@@ -11,7 +11,8 @@ echo $form_tag;
                     <label for="createfromscratch"><?php echo get_string('createnewuserfromscratch', 'admin'); ?></label>
                 </div>
 
-                <?php foreach (array('firstname', 'lastname', 'email') as $field) { ?>
+                <?php $fullname_format = get_string('fullname_format', 'langconfig'); ?>
+                <?php foreach (($fullname_format == 'lastname_firstname') ? array('lastname', 'firstname', 'email') : array('firstname', 'lastname', 'email') as $field) { ?>
                 <div class="form-group">
                     <label><?php echo $elements[$field]['labelhtml']; ?></label>
                     <?php echo $elements[$field]['html']; ?>
