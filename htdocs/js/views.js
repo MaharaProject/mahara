@@ -66,12 +66,21 @@
             // check if block has header link for quick edit
             var oldheader = oldblock.find('.block-header.quick-edit');
             if (oldheader.length) {
+                var replaceheader = '';
+                if (data.data.blockheader.length) {
+                    replaceheader = $(data.data.blockheader);
+                    replaceheader.removeClass('d-none');
+                }
+                else {
+                    replaceheader = oldheader;
+                }
                 if (newblock.find('.block-header.quick-edit').length > 0) {
                     // remove new one as it's events are not present
                     newblock.find('.block-header.quick-edit').remove();
                 }
+
                 // add the wired up header to the new block
-                newblock.prepend(oldheader);
+                newblock.prepend(replaceheader);
             }
 
             swapNodes(oldblock.get()[0], newblock.get()[0]); // using DOM objects, not jQuery objects so we needn't worry about IDs
@@ -128,6 +137,10 @@
         if (typeof(window.dragonDrop) != 'undefined') {
             var list = $('.grid-stack')[0];
             window.dragonDrop.initElements(list);
+        }
+
+        if (data.data.blockheader && data.data.blockheader.length) {
+            activateModalLinks();
         }
     };
 

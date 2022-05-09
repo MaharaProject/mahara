@@ -544,6 +544,12 @@ else {
 }
 
 $blocktype_toolbar = $view->get_all_blocktype_toolbar();
+// To allow any blocktype that has config with calendar fields to work
+// as get_instance_config_javascript() loads the .js files via ajax
+// and so don't exist yet when the calendar wants to set the field
+$javascript[] = get_config('wwwroot') . 'js/momentjs/moment-with-locales.min.js';
+$javascript[] = get_config('wwwroot') . 'js/bootstrap-datetimepicker/tempusdominus-bootstrap-4.js';
+$headers[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 $smarty = smarty(
     $javascript,
     $headers,

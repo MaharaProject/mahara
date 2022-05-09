@@ -169,4 +169,19 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return 'full';
     }
 
+    public static function postinst($prevversion) {
+        if ($prevversion < 2022051000) {
+            // set the blocktype to have quickedit mode
+            set_field('blocktype_installed', 'quickedit', 1, 'name', 'filedownload');
+        }
+    }
+
+    public static function instance_quickedit_form(BlockInstance $instance) {
+        $elements = self::instance_config_form($instance);
+        $elements['quickedit'] = array(
+            'type' => 'hidden',
+            'value' => true
+        );
+        return $elements;
+    }
 }

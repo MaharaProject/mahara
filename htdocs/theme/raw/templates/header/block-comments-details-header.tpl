@@ -1,6 +1,6 @@
-<div class="block-header d-none {if $displayiconsonly}btn-top-right btn-group-top bh-displayiconsonly{/if}">
+<div class="block-header d-none details-comments {if $showquickedit}quick-edit {/if}{if $displayiconsonly}btn-top-right btn-group-top bh-displayiconsonly{/if}">
     {if $allowcomments}
-        <a class="commentlink {if $displayiconsonly}btn btn-secondary{/if}"
+        <a class="commentlink {if $displayiconsonly}btn btn-secondary{/if} {if $showquickedit}with-quickedit {/if}"
             data-toggle="modal-docked"
             data-target="#configureblock"
             href="#"
@@ -29,8 +29,11 @@
             {/if}
         {/if}
         </a>
+        {if $showquickedit}
+            {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
+        {/if}
     {elseif $justdetails}
-        <a class="modal_link list-group-heading {if $displayiconsonly}btn btn-secondary{/if}"
+        <a class="detailslink {if $showquickedit}with-quickedit {/if}modal_link list-group-heading {if $displayiconsonly}btn btn-secondary{/if}"
             data-toggle="modal-docked"
             data-target="#configureblock"
             href="#"
@@ -42,5 +45,12 @@
                 {str tag=Details section=mahara}
             {/if}
         </a>
+        {if $showquickedit}
+            {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
+        {/if}
+    {elseif $showquickedit}
+    <div class="block-header quick-edit d-none">
+        {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=false}
+    </div>
     {/if}
 </div>

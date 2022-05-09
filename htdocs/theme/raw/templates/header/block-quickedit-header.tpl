@@ -1,5 +1,4 @@
-<div class="block-header quick-edit d-none ">
-    <a class="modal_link list-group-heading "
+    <a class="quickeditlink {if $withdisplay}with-displaylink {/if}modal_link list-group-heading "
         data-toggle="modal-docked"
         data-target="#configureblock"
         href="#"
@@ -8,4 +7,3 @@
         <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true" title="{str tag=quickedit section=view}"></span>
         {str tag=quickedit section=view}
     </a>
-</div>

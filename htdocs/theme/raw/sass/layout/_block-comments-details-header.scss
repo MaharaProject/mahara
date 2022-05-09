@@ -14,11 +14,23 @@
        background-color: $theme-block-header-hover-bg-color;
        color: $theme-block-header-hover-color;
      }
+     &.with-displaylink {
+       width: 40%;
+       display: inline-block;
+     }
+     &.with-quickedit {
+       display: inline-block;
+       width: 59%;
+     }
    }
 
    &.active-block a {
       background-color: $theme-block-header-active-bg-color;
       color: $theme-block-header-active-color;
+   }
+
+   &.details-comments.quick-edit {
+     background-color: $theme-block-header-bg-color;
    }
 }
 
