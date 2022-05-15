@@ -36,16 +36,19 @@ else {
 }
 
 if ($USER->get('admin') && param_exists('releaseids')) {
-    $releaseids = array_map('intval', (array) param_variable('releaseids'));
+    $releaseids = param_variable('releaseids');
+    $releaseaction = param_variable('action');
+    $returntouser = false;
     // Release the locked items.
-    foreach ($releaseids as $releaseid) {
-        $view = new View($releaseid);
-        $collection = $view->get_collection();
-        if ($collection === false) {
-            $releasecollection = false;
+    foreach ($releaseids as $releaseid => $releasetype) {
+        $view = $collection = false;
+        if ($releasetype === 'collection') {
+            $collection = new Collection($releaseid);
+            $releasecollection = true;
         }
         else {
-            $releasecollection = true;
+            $view = new View($releaseid);
+            $releasecollection = false;
         }
 
         if (is_plugin_active('submissions', 'module')) {

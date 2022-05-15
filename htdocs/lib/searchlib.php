@@ -864,6 +864,9 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
         if ($search['type'] == 'current') {
             // Format the date nicely.
             $results['data'][$key]['submittedtime'] = format_date(strtotime($data['submittedtime']));
+            // If the archiving started but failed
+            require_once(get_config('docroot') . 'export/lib.php');
+            $results['data'][$key]['needrequeue'] = has_export_failed($data['releasetype'], $data['releaseid'], $data['id']);
         }
     }
 
@@ -963,6 +966,11 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
             $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
+            if (isset($result['releasetype']) && $result['releasetype'] == 'collection') {
+                // we need to find the first true page for the link
+                $collection = new Collection($result['releaseid']);
+                $result['url'] = $collection->get_url();
+            }
         }
     }
 

@@ -1047,6 +1047,22 @@ function is_content_in_export_queue($thing, $id) {
     return (bool) count_records('export_queue_items', $thing, $id);
 }
 
+/**
+ * Check if an export_queue item has failed to export
+ *
+ * @param string $type     Either 'view' or 'collection'
+ * @param string $id       The id for the $type
+ * @param string $ownerid  The id of the owner
+ *
+ * @return boolean  True if the thing is in the export queue and failed to export.
+ */
+function has_export_failed($type, $id, $ownerid) {
+    return (bool) record_exists_sql("
+        SELECT starttime FROM {export_queue} e
+        JOIN {export_queue_items} ei ON ei.exportqueueid = e.id
+        WHERE e.starttime IS NOT NULL AND e.usr = ? AND ei." . $type . " = ?", array($ownerid, $id));
+}
+
 class PluginExportAll extends PluginExport {
 
     protected $htmlexporter;
