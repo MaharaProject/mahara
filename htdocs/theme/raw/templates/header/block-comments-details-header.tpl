@@ -1,5 +1,8 @@
 <div class="block-header d-none details-comments {if $showquickedit}quick-edit {/if}{if $displayiconsonly}btn-top-right btn-group-top bh-displayiconsonly{/if}">
     {if $allowcomments}
+        {if $showquickedit}
+            {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
+        {/if}
         <a class="commentlink {if $displayiconsonly}btn btn-secondary{/if} {if $showquickedit}with-quickedit {/if}"
             data-toggle="modal-docked"
             data-target="#configureblock"
@@ -29,10 +32,10 @@
             {/if}
         {/if}
         </a>
+    {elseif $justdetails}
         {if $showquickedit}
             {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
         {/if}
-    {elseif $justdetails}
         <a class="detailslink {if $showquickedit}with-quickedit {/if}modal_link list-group-heading {if $displayiconsonly}btn btn-secondary{/if}"
             data-toggle="modal-docked"
             data-target="#configureblock"
@@ -45,9 +48,6 @@
                 {str tag=Details section=mahara}
             {/if}
         </a>
-        {if $showquickedit}
-            {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=true}
-        {/if}
     {elseif $showquickedit}
     <div class="block-header quick-edit d-none">
         {include file='header/block-quickedit-header.tpl' blockid=$blockid withdisplay=false}

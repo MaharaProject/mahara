@@ -14,13 +14,20 @@
        background-color: $theme-block-header-hover-bg-color;
        color: $theme-block-header-hover-color;
      }
-     &.with-displaylink {
-       width: 40%;
-       display: inline-block;
-     }
+     // display button with edit button
      &.with-quickedit {
        display: inline-block;
-       width: 59%;
+       float: right;
+     }
+     // edit button with display button
+     &.with-displaylink {
+       display: inline-block;
+       text-align: left;
+     }
+     // just the edit button itself
+     &.quickeditlink,
+     &.quick-edit {
+       text-align: left;
      }
    }
 
@@ -31,6 +38,9 @@
 
    &.details-comments.quick-edit {
      background-color: $theme-block-header-bg-color;
+     &.active-block {
+        background-color: $theme-block-header-active-bg-color;
+     }
    }
 }
 
