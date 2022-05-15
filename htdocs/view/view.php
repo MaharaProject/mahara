@@ -272,13 +272,33 @@ else if ($user_logged_in && $access_via_group) {
         $releaseform = $text;
     }
     else {
-        $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
+        $exporttype = $collection ? 'collection' : 'view';
+        $exporttypeid = $collection ? $collection->get('id') : $view->get('id');
+        $exporttypeowner = $collection ? $collection->get('owner') : $view->get('owner');
+        $failed = has_export_failed($exporttype, $exporttypeid, $exporttypeowner);
+        if (($USER->get('admin') || $USER->is_institutional_admin()) && $failed) {
+            $releaseform = $text . ' ' . get_string('submittedpendingreleasefailed', 'view', get_config('wwwroot') . 'admin/users/exportqueue.php');
+        }
+        else {
+            $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
+        }
     }
 
     if (!empty($ltigradeform)) {
         $releaseform .= $ltigradeform;
     }
 
+}
+else if ($is_owner) {
+    $releasecollection = !empty($collection);
+    $text = '';
+    if ($releasecollection && $ctime = $collection->get('submittedtime')) {
+        $text = get_string('collectionsubmittedtohoston', 'view', format_date(strtotime($ctime)));
+    }
+    else if ($ctime = $view->get('submittedtime')) {
+        $text = get_string('viewsubmittedtohoston', 'view', format_date(strtotime($ctime)));
+    }
+    $releaseform = $text;
 }
 else {
     $releaseform = '';
