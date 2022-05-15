@@ -111,6 +111,7 @@ $string['collectionsubmittedtogroupgrade'] = 'This collection was submitted to t
 $string['collectionsubmittedtohost'] = 'This collection has been submitted for assessment.';
 $string['collectionsubmittedtohoston'] = 'This collection was submitted on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
+$string['submittedpendingreleasefailed'] = 'Release failed to archive.<br>Go to <a href="%s">Export queue</a> to re-queue.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
 $string['noviews2'] = 'No portfolios';
 $string['youhavenoviews2'] = 'You don\'t have any portfolios.';
