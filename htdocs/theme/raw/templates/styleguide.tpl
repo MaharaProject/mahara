@@ -790,7 +790,7 @@ A attachment card.
 ```
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a class="text-left collapsed" aria-expanded="false" href="#attachment" data-bs-toggle="collapse">
+        <a class="text-start collapsed" aria-expanded="false" href="#attachment" data-bs-toggle="collapse">
             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">Attachments</span>
             <span class="metadata">(2)</span>

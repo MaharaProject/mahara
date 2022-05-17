@@ -38,7 +38,7 @@
                 {else}
                 <td class="owner text-small">-</td>
                 {/if}
-                <td class="action-list-copy text-right">
+                <td class="action-list-copy text-end">
                     <div class="btn-group">
                     {$row.form|safe}
                     </div>

@@ -3,8 +3,8 @@
 </a>
 {/if}
 
-    <div class="media forum-post">
-        <div class="forumpostleft media-left text-small">
+    <div class="d-flex forum-post">
+        <div class="forumpostleft flex-shrink-0 text-small">
             {if $deleteduser}
                 <span class="user-icon user-icon-40"><img src="{profile_icon_url user=null maxwidth=40 maxheight=40}" valign="middle" alt="{str tag=profileimagetextanonymous}" class="media-object"></span>
 
@@ -26,7 +26,7 @@
             </div>
             {/if}
         </div>
-        <div class="postedits media-body">
+        <div class="postedits flex-grow-1 ms-3">
             {if $post->subject && !$nosubject}
             <div class="forumsubject media-heading">
                 <h3 class="title h4">
@@ -49,7 +49,7 @@
             {if $post->attachments}
             <div class="has-attachment card collapsible">
                 <div class="card-header">
-                    <a class="text-left collapsed" data-bs-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
+                    <a class="text-start collapsed" data-bs-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
                         <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                         <span class="text-small"> {str tag="attachedfiles" section="artefact.blog"} </span>
                         <span class="metadata">({$post->filecount})</span>

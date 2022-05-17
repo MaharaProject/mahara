@@ -20,13 +20,13 @@
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
-                <button class="btn btn-link text-left" data-action="markasread">
+                <button class="btn btn-link text-start" data-action="markasread">
                     {str tag='markasread' section='activity'}
                 </button>
-                <button class="btn btn-link btn-link-danger text-left" data-action="deleteselected">
+                <button class="btn btn-link btn-link-danger text-start" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
-                <a class="btn btn-link btn-link-danger text-left" href="#delete_all_notifications_submit" data-bs-triggersubmit="delete_all_notifications_submit">
+                <a class="btn btn-link btn-link-danger text-start" href="#delete_all_notifications_submit" data-bs-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>

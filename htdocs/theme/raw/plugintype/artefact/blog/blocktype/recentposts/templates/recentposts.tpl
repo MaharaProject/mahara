@@ -41,7 +41,7 @@
     <div class="list-group-item flush-collapsible">
         <h3 class="list-group-item-heading title">
             {if !($editing)}
-                 <a class="modal_link text-left" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+                 <a class="modal_link text-start" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                      {$post->title}
                  </a>
             {else}

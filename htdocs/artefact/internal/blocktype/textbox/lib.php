@@ -439,7 +439,7 @@ EOF;
             ),
             'managenotes' => array(
                 'type'  => 'html',
-                'class' => 'd-none text-right',
+                'class' => 'd-none text-end',
                 'value' => '<a href="' . $manageurl . '" class="float-end">'
                     . get_string('managealltextboxcontent1', 'blocktype.internal/textbox') . ' <span class="icon icon-arrow-right right" role="presentation"></span></a>',
             ),

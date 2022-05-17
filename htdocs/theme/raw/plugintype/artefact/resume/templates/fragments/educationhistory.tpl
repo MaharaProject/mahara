@@ -55,7 +55,7 @@
     <div class="list-group-item flush-collapsible">
         {if $row->qualdescription || $row->attachments || $row->institutionaddress}
             <h3 class="list-group-item-heading">
-                <a href="#education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
+                <a href="#education-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-start collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
                     {$row->qualification}
                     <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>

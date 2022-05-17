@@ -55,7 +55,7 @@
     <div class="list-group-item flush-collapsible">
         {if $row->description || $row->attachments || $row->url}
             <h4 class="list-group-item-heading">
-            <a href="#book-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
+            <a href="#book-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-start collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
                 {$row->title}
                 <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
             </a>

@@ -14,7 +14,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right">
+                    <td colspan="4" class="text-end">
                         <button id="settings_default" type="submit" class="submit btn btn-secondary" name="default">
                             <span class="icon icon-check text-success left" role="presentation" aria-hidden="true"></span>
                             {str tag="setdefault" section=artefact.file}

@@ -18,7 +18,7 @@
 {/foreach}
 <div class="list-group-item">
     <div class="summaryhours">
-        <div class="text-right totalhours">
+        <div class="text-end totalhours">
             <strong>{str tag='totalhours' section='blocktype.courseinfo'}:</strong> {number_format($courses.grandtotalhours, 0)}
         </div>
     </div>

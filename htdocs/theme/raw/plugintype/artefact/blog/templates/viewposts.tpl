@@ -47,7 +47,7 @@
         {if $post->files}
         <div class="has-attachment card collapsible" id="blockpostfiles-{$post->id}">
             <div class="card-header">
-                <a class="text-left collapsed" data-bs-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
+                <a class="text-start collapsed" data-bs-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
                     <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                     <span class="metadata">({$post->files|count})</span>

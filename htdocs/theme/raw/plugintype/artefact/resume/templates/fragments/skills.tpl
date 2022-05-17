@@ -38,7 +38,7 @@
             {if $n->files}
             <div id="resume_{$n->id}" class="has-attachment">
                 <a class="card-footer collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-bs-toggle="collapse">
-                    <p class="text-left">
+                    <p class="text-start">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                         <span class="metadata">({$n->count})</span>

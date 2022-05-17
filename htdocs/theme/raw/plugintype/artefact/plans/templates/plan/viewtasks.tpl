@@ -36,7 +36,7 @@
             {if $task->tags}<span class="text-small text-midtone">{str tag=tags}: {list_tags owner=$task->owner tags=$task->tags}</span>{/if}
         </td>
 
-        <td class="planscontrols text-right">
+        <td class="planscontrols text-end">
             <div class="text-nowrap">
                 <div class="btn-group btn-tasks">
                     {if $task->taskview}
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     {elseif $task->outcomeiscurrentlysubmitted}
-                        <div class="text-right">
+                        <div class="text-end">
                             <span>{str tag=outcomeiscurrentlysubmitted section=artefact.plans}</span>
                         </div>
                     {/if}

@@ -29,7 +29,7 @@
                     </div>
                 {/if}
             </td>
-            <td class="text-right text-small">
+            <td class="text-end text-small">
                 <button id="{$prefix}_unselect_{$file->id}" name="{$prefix}_unselect[{$file->id}]" class="btn btn-secondary btn-sm text-small button submit unselect" title="{str tag=remove}" type="button">
                     <span class="icon icon-times text-danger left" role="presentation" aria-hidden="true"></span>
                     <span>{str tag=remove}</span>

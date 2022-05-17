@@ -61,7 +61,7 @@
 
         {if $row->description || $row->attachments}
             <h4 class="list-group-item-heading">
-                <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
+                <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-start collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
                     {$row->title}
                     <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>

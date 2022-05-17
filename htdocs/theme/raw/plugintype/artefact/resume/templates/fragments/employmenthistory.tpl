@@ -56,7 +56,7 @@
     <div class="list-group-item flush-collapsible">
         {if $row->positiondescription || $row->attachments || $row->employeraddress}
             <h4 class="list-group-item-heading">
-                <a href="#employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
+                <a href="#employment-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-start collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
                     {$row->jobtitle} {str tag="at"} {$row->employer}
                     <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>

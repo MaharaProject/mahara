@@ -4,7 +4,7 @@
 {if isset($attachments)}
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a class="text-left collapsed" aria-expanded="false" href="#cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" data-bs-toggle="collapse">
+        <a class="text-start collapsed" aria-expanded="false" href="#cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" data-bs-toggle="collapse">
             <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$count})</span>

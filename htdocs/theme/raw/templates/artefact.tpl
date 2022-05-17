@@ -11,7 +11,7 @@
 {if isset($attachments)}
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a href="#artefact-attach" class="text-left collapsed" aria-expanded="false" data-bs-toggle="collapse">
+        <a href="#artefact-attach" class="text-start collapsed" aria-expanded="false" data-bs-toggle="collapse">
             <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$attachments|count})</span>

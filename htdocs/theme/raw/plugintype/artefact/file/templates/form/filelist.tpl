@@ -104,7 +104,7 @@
             <td class="filedate text-small">{tif $file->mtime ?: ''}</td>
             {/if}
             {if $editmeta || $selectable}
-            <td class="text-right control-buttons text-small">
+            <td class="text-end control-buttons text-small">
                 <div class="btn-group">
                 {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
                     <button type="button" class="btn btn-sm btn-secondary" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" title="{str tag=select}">
@@ -133,7 +133,7 @@
             {/if}
             <!-- Ensure space for 3 buttons (in the case of a really long single line string in a user input field -->
             {if $editable && !$file->isparent}
-            <td class="text-right control-buttons {if $file->artefacttype == 'archive'}includes-unzip{/if}">
+            <td class="text-end control-buttons {if $file->artefacttype == 'archive'}includes-unzip{/if}">
                 {if $file->locked}
                     <span class="dull text-muted text-small">
                         {str tag=Submitted section=view}

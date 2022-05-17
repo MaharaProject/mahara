@@ -16,7 +16,7 @@
         {/if}
 
         {if !$post->approved && $moderator}
-            <div class="forum-post-btns text-right">
+            <div class="forum-post-btns text-end">
               <a href="{$WWWROOT}interaction/forum/topic.php?id={$topicid}&offset={$offset}&post={$post->id}&action=approve" id="approvepost_{$post->id}">
                   <span class="icon icon-check" role="presentation" aria-hidden="true"></span>
                   {str tag="approve" section=group}
@@ -37,7 +37,7 @@
             </div>
             {/if}
 
-            <div class="forum-post-btns text-right">
+            <div class="forum-post-btns text-end">
                 {if !$chronological && ($moderator || ($membership && !$closed)) && $ineditwindow}
                     {if !$moderator && !$post->approved }
                         <em>{str tag="awaitingapproval" section=interaction.forum}</em>

@@ -12,7 +12,7 @@
 {* @TODO: this could probably be a reusable template *}
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a class="text-left collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-bs-toggle="collapse">
+        <a class="text-start collapsed" aria-expanded="false" href="#note-attach-{$blockid}" data-bs-toggle="collapse">
             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$count})</span>

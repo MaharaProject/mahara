@@ -1,5 +1,5 @@
 {if $rows}
-<div class="text-right">
+<div class="text-end">
     <button class="btn btn-secondary" type="submit" data-url="{$WWWROOT}artefact/internal/socialprofile.php">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=newsocialprofile section=artefact.internal}

@@ -68,7 +68,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
                 <span class="icon icon-lg icon-times text-danger" title="{{str tag='disabled'}}"></span>
                 {{/if}}
             </td>
-            <td class="text-right">
+            <td class="text-end">
             <span class="authIcons" id="arrows{{$instance->id}}">
             {{if $instance->index + 1 < $instance->total}}
             <button class="btn text-default order-sort-control arrow-down text-midtone" onclick="move({{$instance->id}}, 'down'); return false;">
