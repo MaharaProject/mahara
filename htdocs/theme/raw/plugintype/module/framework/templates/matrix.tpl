@@ -63,8 +63,8 @@
     </th>
     {/foreach}
   </tr>
+  {include file="module:framework:matrixsumrow.tpl" location="top-row"}
   {foreach from=$standards key=sk item=standard}
-    {include file="module:framework:matrixsumrow.tpl" location="top-row"}
     <tr class="standard{if $standard->settingstate == 'closed'} collapsed{/if}" data-standard="{$standard->id}" data-collection="{$collectionid}"
         data-toggle="collapse" aria-expanded="{if $standard->settingstate == 'closed'}false{else}true{/if}">
         <td colspan="{$viewcount + $colspan}">
@@ -189,9 +189,9 @@
         </tr>
         {/if}
         {/foreach}
-        {include file="module:framework:matrixsumrow.tpl" location="bottom-row"}
     {/if}
   {/foreach}
+  {include file="module:framework:matrixsumrow.tpl" location="bottom-row"}
 </table>
 
 <div role="dialog" id="configureblock" class="modal modal-shown modal-docked-right modal-docked closed blockinstance configure">
