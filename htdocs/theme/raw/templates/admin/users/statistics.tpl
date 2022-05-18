@@ -62,7 +62,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                     <span class="times">×</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>

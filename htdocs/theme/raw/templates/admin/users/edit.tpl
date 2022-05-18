@@ -67,7 +67,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h1 id="suspenddeletemodaltitle" class="modal-title">{str tag=suspendordeletethisuser section=admin}</h1>

@@ -25,7 +25,7 @@
             <div class="modal-header gallery">
                 <div class="modal-header-title"></div>
                 <div class="modal-title gallery">
-                    <button class="deletebutton close gallery" data-dismiss="modal" aria-label="{str tag=Close}">
+                    <button class="deletebutton btn-close gallery" data-dismiss="modal" aria-label="{str tag=Close}">
                         <span class="times">×</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>

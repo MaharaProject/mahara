@@ -198,7 +198,7 @@
     <div class="modal-dialog modal-lg">
         <div data-height=".modal-body" class="modal-content">
             <div class="modal-header">
-                <button name="close_configuration" class="deletebutton close">
+                <button name="close_configuration" class="deletebutton btn-close">
                     <span class="times">×</span>
                     <span class="sr-only">{str tag='closeconfiguration' section='view'}</span>
                 </button>

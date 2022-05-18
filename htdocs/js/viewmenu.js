@@ -279,7 +279,7 @@ function open_modal(e) {
         });
 
         // Focus on the delete button for accessiblity
-        $('#configureblock').find('.close').trigger('focus');
+        $('#configureblock').find('.btn-close').trigger('focus');
     });
 }
 
@@ -525,7 +525,7 @@ jQuery(window).on('blocksloaded', {}, function() {
         $('input#add_feedback_form_replyto').val('');
 
         $('.modal').on('shown.bs.modal', function() {
-            $('#feedback-form').find('.close').trigger("focus");
+            $('#feedback-form').find('.btn-close').trigger("focus");
         });
     });
 

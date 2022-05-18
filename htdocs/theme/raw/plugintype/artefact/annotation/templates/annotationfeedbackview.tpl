@@ -18,7 +18,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header clearfix">
-                    <button class="deletebutton close" data-bs-dismiss="modal-docked">
+                    <button class="deletebutton btn-close" data-bs-dismiss="modal-docked">
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>
@@ -38,7 +38,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="close" data-bs-dismiss="modal-docked">
+                    <button class="btn-close" data-bs-dismiss="modal-docked">
                         <span class="times">&times;</span>
                         <span class="sr-only">{str tag=Close}</span>
                     </button>

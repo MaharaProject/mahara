@@ -9,7 +9,7 @@
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag="moreoptions"}</span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+    <ul class="dropdown-menu dropdown-menu-end" role="menu">
         <li class="dropdown-item">
             <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" type="submit">
                 <span class="icon icon-upload left" role="presentation" aria-hidden="true"></span>
@@ -112,7 +112,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                             <span aria-hidden="true">&times;</span>
                         </button>
 

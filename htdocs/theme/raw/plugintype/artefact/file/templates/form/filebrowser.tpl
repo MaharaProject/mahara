@@ -30,7 +30,7 @@
 {/if}
 
         {if $config.select && !$config.alwaysopen}
-            <button type="button" class="close" data-bs-dismiss="modal">
+            <button type="button" class="btn-close" data-bs-dismiss="modal">
                 <span class="sr-only">{str tag=Close}</span>
                 <span aria-hidden="true">&times;</span>
             </button>

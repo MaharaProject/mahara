@@ -2,7 +2,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="deletebutton close" name="action_objectionreview" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
+                    <button class="deletebutton btn-close" name="action_objectionreview" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                         <span class="times">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>

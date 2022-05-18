@@ -28,7 +28,7 @@
             <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
             <span class="sr-only">{str tag="moreoptions"}</span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <ul class="dropdown-menu dropdown-menu-end" role="menu">
 
             {if $copyurl}{strip}
                 <li class="dropdown-item">

@@ -234,7 +234,7 @@ jQuery(function ($) {
     $("#modal-configs").on('show.bs.modal', function () {
         show_stats_config();
     });
-    $("#modal-configs .close").on('click', function () {
+    $("#modal-configs .btn-close").on('click', function () {
         $("#modal-configs").modal("hide");
     });
 

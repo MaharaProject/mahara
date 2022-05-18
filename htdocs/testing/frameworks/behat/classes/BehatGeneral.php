@@ -1730,7 +1730,7 @@ EOF;
         // Find the dialog close button.
         $exception = new ElementNotFoundException($this->getSession(), 'dialog');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]" .
-                    "//button[contains(concat(' ', normalize-space(@class), ' '), ' close ')]";
+                    "//button[contains(concat(' ', normalize-space(@class), ' '), ' btn-close ')]";
         $dialogclosebuttons = $this->find_all('xpath', $xpath, $exception);
 
         foreach ($dialogclosebuttons as $closebutton) {
@@ -1754,7 +1754,7 @@ EOF;
         $exception = new ElementNotFoundException($this->getSession(), 'dialog');
         $xpath = "//div[@id='configureblock']" .
                  "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]" .
-                 "//button[contains(concat(' ', normalize-space(@class), ' '), ' close ')]";
+                 "//button[contains(concat(' ', normalize-space(@class), ' '), ' btn-close ')]";
         $closebutton = $this->find('xpath', $xpath, $exception);
         if ($closebutton->isVisible()) {
             $closebutton->click();

@@ -65,7 +65,7 @@
                         <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>
                         <span id="comment-section-title">{if $feedback->count}{str tag="Comments" section="artefact.comment"}{else}{str tag=addcomment section=artefact.comment}{/if}</span>
                         <span id="comment-section-count" class="text-small">{if $feedback->count}({$feedback->count}){/if}</span>
-                        <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"></span>
                     </button>
                 </legend>
                 <div class="fieldset-body comment-fieldset-body collapse" id="dropdown">
@@ -87,7 +87,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button class="close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
+                        <button class="btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                             <span class="times">&times;</span>
                             <span class="sr-only">{str tag=Close}</span>
                         </button>
@@ -110,7 +110,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=reportobjectionablematerial}
@@ -128,7 +128,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=objectionreview}
@@ -146,7 +146,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <h1 class="modal-title">
@@ -166,7 +166,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag=confirmcopytitle section=view}

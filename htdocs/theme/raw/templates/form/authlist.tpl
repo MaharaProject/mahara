@@ -51,7 +51,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
     <div class="modal-dialog modal-lg">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button id="authlist_modal_closer" class="deletebutton close" name="close_configuration">
+                <button id="authlist_modal_closer" class="deletebutton btn-close" name="close_configuration">
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=cancel section=mahara}</span>
                 </button>

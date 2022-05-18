@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button class="deletebutton close" name="action_removeimagebrowser">
+                <button class="deletebutton btn-close" name="action_removeimagebrowser">
                     <span class="times">×</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>

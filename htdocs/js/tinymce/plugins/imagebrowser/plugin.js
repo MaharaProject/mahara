@@ -168,7 +168,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 });
             }
 
-            var deletebutton = jQuery(browser).find('.deletebutton.close');
+            var deletebutton = jQuery(browser).find('.deletebutton.btn-close');
             if (deletebutton.length) {
                 deletebutton.off('click');
                 deletebutton.on('click', function(e) {

@@ -120,7 +120,7 @@ $width-sm: 90%;
       border-bottom: 0;
       max-width: calc(100% - 4rem);
     }
-    .close,
+    .btn-close,
     .mce-close {
         order: 1;
         padding: 0;
@@ -204,7 +204,7 @@ $width-sm: 90%;
         &.modal-section {
             margin: 0 0 $spacing-base 0;
         }
-        .close {
+        .btn-close {
            @include box-shadow(-2px 0 2px rgba(0,0,0,0.3));
             border-radius: $modal-content-border-radius 0 0 $modal-content-border-radius;
             opacity: 1;

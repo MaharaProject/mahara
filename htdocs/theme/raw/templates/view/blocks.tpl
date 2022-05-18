@@ -59,7 +59,7 @@
     <div class="modal-dialog">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button class="deletebutton close" name="action_removeblockinstance_id_{$id}">
+                <button class="deletebutton btn-close" name="action_removeblockinstance_id_{$id}">
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=Close}</span>
                 </button>
@@ -76,11 +76,11 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button class="deletebutton close" name="close_configuration">
+                <button class="deletebutton btn-close" name="close_configuration">
                     <span class="times">&times;</span>
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
-                <h1 class="modal-title blockinstance-header text-inline float-left"></h1>
+                <h1 class="modal-title blockinstance-header text-inline float-start"></h1>
                 <span class="icon icon-pencil-alt icon-2x float-end" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">

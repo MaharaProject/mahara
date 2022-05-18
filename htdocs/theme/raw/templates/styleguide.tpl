@@ -203,7 +203,7 @@ This button is used to show there are more options available. An example can be 
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
         <span class="sr-only">{str tag=moreoptions}</span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+    <ul class="dropdown-menu dropdown-menu-end" role="menu">
         <li class="dropdown-item">
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 <span class="icon icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
@@ -994,7 +994,7 @@ This card is used to show a page.
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
@@ -1065,7 +1065,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="sr-only">More options for "Dashboard page"</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
@@ -1137,7 +1137,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">More options for "collection"</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Manage pages">
                         <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
@@ -1241,7 +1241,7 @@ A slide-out modal. This is used to show a block's configuration for example.
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                   <span class="times">×</span>
                   <span class="sr-only">{str tag=Close}</span>
                 </button>
@@ -1267,7 +1267,7 @@ A fold down modal. This is typially used to report objectionable content.
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">×</span>
                 </button>
                 <h1 class="modal-title">
