@@ -14,7 +14,10 @@
         "symfony/css-selector": "3.4.38",
         "cweagans/composer-patches": "^1.7"
     },
-
+    "require-dev": {
+        "phan/phan": "^5.3",
+        "phpstan/phpstan": "^1.6"
+    },
     "autoload": {
         "psr-0": {
           "MaharaExtension": "../htdocs/testing/frameworks/behat/extension/"

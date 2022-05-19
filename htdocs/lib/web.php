@@ -3446,7 +3446,7 @@ function find_menu_children(&$menu, $path) {
 /**
  * Comparison function for sorting menu items
  */
-function menu_sort_items(&$a, &$b) {
+function menu_sort_items($a, $b) {
     !isset($a['weight']) && $a['weight'] = 0;
     !isset($b['weight']) && $b['weight'] = 0;
     return $a['weight'] > $b['weight'];

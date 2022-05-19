@@ -1,0 +1,101 @@
+# For how-to guide see https://phpstan.org/user-guide/getting-started
+parameters:
+    level: 1
+    phpVersion: 80100
+    paths:
+        - htdocs
+    scanDirectories:
+        - htdocs/auth/saml/
+        - htdocs/lib/
+        - htdocs/lib/adodb/
+        - htdocs/lib/antispam/
+        - htdocs/lib/csstidy/
+        - htdocs/lib/dwoo/
+        - htdocs/lib/elasticsearch/
+        - htdocs/lib/htmlpurifier/
+        - htdocs/lib/phpmailer/
+        - htdocs/lib/recaptcha/
+        - htdocs/lib/tests/phpunit/
+        - htdocs/lib/xmldb/
+        - htdocs/lib/xmldb/classes/
+        - htdocs/module/
+        - htdocs/search/
+        - htdocs/testing/
+        - htdocs/webservice/
+        - htdocs/webservice/libs/
+        - htdocs/webservice/libs/oauth-php/
+        - htdocs/webservice/rest
+        - htdocs/webservice/soap
+    scanFiles:
+        - htdocs/artefact/file/lib.php
+        - htdocs/artefact/internal/lib.php
+        - htdocs/artefact/lib.php
+        - htdocs/artefact/resume/lib.php
+        - htdocs/auth/saml/lib.php
+        - htdocs/auth/user.php
+        - htdocs/blocktype/lib.php
+        - htdocs/lib/adodb/adodb-exceptions.inc.php
+        - htdocs/lib/dml.php
+        - htdocs/lib/dwoo/dwoo/Dwoo/Core.php
+        - htdocs/lib/dwoo/mahara/Dwoo_Mahara.php
+        # Needed for Elasticsearch 7. Delete if it causes yours to crash
+        # - htdocs/lib/elasticsearch/elasticsearch/elasticsearch/src/Elasticsearch/ClientBuilder.php
+        - htdocs/lib/errors.php
+        - htdocs/lib/group.php
+        - htdocs/lib/htmlpurifier/HTMLPurifier.php
+        - htdocs/lib/htmlpurifier/HTMLPurifier/Config.php
+        - htdocs/lib/license.php
+        - htdocs/lib/mahara.php
+        - htdocs/lib/objectionable.php
+        - htdocs/lib/pieforms/pieform.php
+        - htdocs/lib/redis/sentinel.php
+        - htdocs/lib/xmldb/classes/XMLDBConstants.php
+        - htdocs/lib/xmldb/classes/XMLDBField.class.php
+        - htdocs/lib/xmldb/classes/XMLDBFile.class.php
+        - htdocs/lib/xmldb/classes/XMLDBIndex.class.php
+        - htdocs/lib/xmldb/classes/XMLDBKey.class.php
+        - htdocs/lib/xmldb/classes/XMLDBObject.class.php
+        - htdocs/lib/xmldb/classes/XMLDBStatement.class.php
+        - htdocs/lib/xmldb/classes/XMLDBStructure.class.php
+        - htdocs/lib/xmldb/classes/XMLDBTable.class.php
+        - htdocs/webservice/lib.php
+        - htdocs/webservice/libs/oauth-php/OAuthDiscovery.php
+        - htdocs/webservice/libs/oauth-php/OAuthException2.php
+        - htdocs/webservice/libs/oauth-php/OAuthRequester.php
+        - htdocs/webservice/libs/oauth-php/OAuthRequestLogger.php
+        - htdocs/webservice/libs/oauth-php/OAuthRequestVerifier.php
+        - htdocs/webservice/libs/oauth-php/OAuthServer.php
+        - htdocs/webservice/libs/oauth-php/OAuthSession.php
+        - htdocs/webservice/libs/oauth-php/OAuthStore.php
+        - htdocs/webservice/locallib.php
+        - htdocs/webservice/rest/locallib.php
+    excludePaths:
+        - htdocs/auth/saml/*
+        - htdocs/lib/adodb/*
+        - htdocs/lib/antispam/*
+        - htdocs/lib/csstidy/*
+        - htdocs/lib/dwoo/*
+        - htdocs/lib/elasticsearch/*
+        - htdocs/lib/form/elements/captcha.php
+        - htdocs/lib/htmlpurifier/*
+        - htdocs/lib/phpmailer/*
+        - htdocs/lib/phpunit.php
+        - htdocs/lib/recaptcha/*
+        - htdocs/lib/redis/sentinel.php
+        - htdocs/lib/tests/phpunit/*
+        - htdocs/lib/xmldb/*
+        - htdocs/module/lti_advantage/*
+        - htdocs/module/submissions/vendor/composer/autoload_static.php
+        - htdocs/testing/frameworks/behat/classes/*
+        - htdocs/webservice/admin/oauthv1sregister.php
+        - htdocs/webservice/libs/oauth-php
+        - htdocs/webservice/tests/exampleclients/lib/*
+        - htdocs/webservice/tests/phpunit/*
+        - htdocs/webservice/xmlrpc/*
+    ignoreErrors:
+        # PhpStan cannot see that we're pulling the init.php and so the following globals are seen as undefined
+        - '#Variable \$CFG might not be defined#'
+        - '#Variable \$SESSION might not be defined#'
+        - '#Variable \$THEME might not be defined.#'
+        - '#Variable \$USER might not be defined#'
+
