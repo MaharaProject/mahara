@@ -40,7 +40,7 @@ $rfs-factor: 10 !default;
 $rfs-mode: min-media-query !default;
 
 // Generate enable or disable classes. Possibilities: false, "enable" or "disable"
-$rfs-class: false !default;
+$rfs-class: enable !default;
 
 // 1 rem = $rfs-rem-value px
 $rfs-rem-value: 16 !default;
@@ -49,7 +49,7 @@ $rfs-rem-value: 16 !default;
 $rfs-safari-iframe-resize-bug-fix: false !default;
 
 // Disable RFS by setting $enable-rfs to false
-$enable-rfs: true !default;
+$enable-rfs: false;
 
 // Cache $rfs-base-value unit
 $rfs-base-value-unit: unit($rfs-base-value);
