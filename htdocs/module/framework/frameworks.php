@@ -261,7 +261,7 @@ function management_section() {
                                 'type'         => 'button',
                                 'class'        => 'btn-secondary btn-sm button',
                                 'usebuttontag' => true,
-                                'value'        => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
+                                'value'        => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="visually-hidden">'. get_string('delete') . '</span>',
                                 'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                             ),
                             'framework'  => array(
@@ -283,7 +283,7 @@ function management_section() {
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
-                            'value'        => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
+                            'value'        => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="visually-hidden">'. get_string('edit') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',
@@ -303,7 +303,7 @@ function management_section() {
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
-                            'value'        => '<span class="icon icon-download" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('Download', 'admin') . '</span>',
+                            'value'        => '<span class="icon icon-download" role="presentation" aria-hidden="true"></span><span class="visually-hidden">'. get_string('Download', 'admin') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',

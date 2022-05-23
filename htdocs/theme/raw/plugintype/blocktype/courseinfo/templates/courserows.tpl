@@ -1,7 +1,7 @@
 {foreach from=$courses.data item=course}
 <div class="list-group-item task-item">
     <a class="outer-link collapsed" href="#expand-course-{$course->uniqueid}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="expand-course-{$course->id}{if $block}-{$block}{/if}{if $versioning}-{$versioning->version}{/if}">
-        <span class="sr-only">{$course->title}</span>
+        <span class="visually-hidden">{$course->title}</span>
         <span class="icon icon-chevron-down right collapse-indicator float-end text-inline" role="presentation" aria-hidden="true"></span>
     </a>
     <span class="text-default course-task-heading">{$course->title}</span>

@@ -50,11 +50,11 @@
                             <div class="btn-action-list btn-top-right btn-group btn-group-top">
                                 <button id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-secondary btn-sm" type="button" title="{str tag=copytoclipboard}" href="#">
                                     <span class="icon icon-regular icon-copy" role="presentation" aria-hidden="true"></span>
-                                    <span class="sr-only">{str tag=copytoclipboard}</span>
+                                    <span class="visually-hidden">{str tag=copytoclipboard}</span>
                                 </button>
                                 <button id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-secondary btn-sm closed" type="button" title="{str tag=edit}" href="">
                                     <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                    <span class="sr-only">{str tag=edit}</span>
+                                    <span class="visually-hidden">{str tag=edit}</span>
                                 </button>
                                 {$item.deleteform|safe}
                             </div>

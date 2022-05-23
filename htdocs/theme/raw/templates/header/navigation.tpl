@@ -19,7 +19,7 @@
                 {$item.title}
                 {if $item.accessibletitle}
                     </span>
-                    <span class="accessible-hidden sr-only">
+                    <span class="accessible-hidden visually-hidden">
                         ({$item.accessibletitle})
                     </span>
                 {/if}
@@ -79,7 +79,7 @@
             {$item.title}
             {if $item.accessibletitle}
                 </span>
-                <span class="accessible-hidden sr-only">
+                <span class="accessible-hidden visually-hidden">
                     ({$item.accessibletitle})
                 </span>
             {/if}

@@ -9,12 +9,12 @@
                 <th>{str tag=containedin section=artefact.internal}</th>
                 <th>
                     <span class="icon icon-paperclip" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">
+                    <span class="visually-hidden">
                         {str tag=Attachments section=artefact.resume}
                     </span>
                 </th>
                 <th>
-                    <span class="accessible-hidden sr-only">
+                    <span class="accessible-hidden visually-hidden">
                         {str tag=edit}
                     </span>
                 </th>

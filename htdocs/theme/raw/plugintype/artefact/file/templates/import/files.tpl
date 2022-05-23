@@ -26,7 +26,7 @@
                     <label for="decision_{$file.id}_{$opt}">
                         <input id="decision_{$file.id}_{$opt}" class="filedecision" id="{$file.id}" type="radio" name="decision_{$file.id}" value="{$opt}"{if $file.decision == $opt} checked="checked"{/if}>
                         {$displayopt}
-                        <span class="accessible-hidden sr-only">({$file.title})</span>
+                        <span class="accessible-hidden visually-hidden">({$file.title})</span>
                     </label>
                     {/if}
                 {/foreach}

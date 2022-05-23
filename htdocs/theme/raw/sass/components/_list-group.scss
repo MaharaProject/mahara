@@ -205,7 +205,7 @@
     .btn-title {
         padding-left: 0.3125rem; // 5px
         @include media-breakpoint-down(lg) {
-            @include sr-only;
+            @include visually-hidden;
         }
     }
 

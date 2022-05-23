@@ -3,8 +3,8 @@
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
                 <button class="deletebutton btn-close" name="action_removeimagebrowser">
-                    <span class="times">×</span>
-                    <span class="sr-only">{str tag=Close}</span>
+                    <span class="times">&times;</span>
+                    <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline" id="addblock-heading">
                     {$title|default:"[$strnotitle]"}

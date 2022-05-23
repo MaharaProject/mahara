@@ -49,12 +49,12 @@ function pieform_element_radio(Pieform $form, $element) {
     $nolabels = isset($element['nolabels']) ? $element['nolabels'] : false;
     $classname = '';
     if (!empty($element['hiddenlabels'])) {
-        $classname = ' class="sr-only"';
+        $classname = ' class="visually-hidden"';
     }
 
     $titletext = '';
     if (!empty($element['title'])) {
-        $titletext = '<span class="accessible-hidden sr-only">' . Pieform::hsc($element['title']) . ': </span>';
+        $titletext = '<span class="accessible-hidden visually-hidden">' . Pieform::hsc($element['title']) . ': </span>';
     }
 
     $i = 0;

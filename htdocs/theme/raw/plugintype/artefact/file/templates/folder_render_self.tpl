@@ -17,7 +17,7 @@
 
 <div id="commentfiles" class="folder-card">
     {if (isset($children))}
-    <h3 class="sr-only">
+    <h3 class="visually-hidden">
         {str tag=foldercontents section=artefact.file}:
     </h3>
 

@@ -162,7 +162,7 @@
     .hide-label & {
         padding: 0;
         label {
-            @include sr-only;
+            @include visually-hidden;
         }
     }
 
@@ -518,7 +518,7 @@
         }
     }
 
-    label.sr-only ~ .errmsg {
+    label.visually-hidden ~ .errmsg {
         margin-left: 0px; // No margin if the label is hidden
     }
 

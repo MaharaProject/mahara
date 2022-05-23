@@ -175,7 +175,7 @@ $string['progresspagedescription'] = 'Set up the default layout for the portfoli
 $string['progressportfolios'] = 'Portfolio count';
 $string['progressverifiers'] = 'Reviewer percentage';
 
-//Verification checkbox sr-only text
+//Verification checkbox visually-hidden text
 $string['sharedviewverifiedunchecked'] = '%s by %s is not reviewed';
 $string['sharedviewverifiedchecked'] = '%s by %s has been reviewed';
 // access notifications
@@ -204,7 +204,7 @@ They gave the following reason:
 $string['accessdeniedundo'] = 'The statement has already been reset. You do not have access to the portfolio any longer.';
 $string['undonesubject'] = 'Review statement reset request was actioned';
 $string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who originally confirmed the statement.';
-//Portfolio review primary statement checkbox sr-only text
+//Portfolio review primary statement checkbox visually-hidden text
 $string['sharedviewverifiedunchecked'] = '%s by %s is not yet reviewed';
 $string['sharedviewverifiedchecked'] = '%s by %s is reviewed';
 // access notifications

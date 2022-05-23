@@ -89,7 +89,7 @@
                     <div class="modal-header">
                         <button class="btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                             <span class="times">&times;</span>
-                            <span class="sr-only">{str tag=Close}</span>
+                            <span class="visually-hidden">{str tag=Close}</span>
                         </button>
                         <h1 class="modal-title">
                         <span class="icon icon-comments left" role="presentation" aria-hidden="true"></span>

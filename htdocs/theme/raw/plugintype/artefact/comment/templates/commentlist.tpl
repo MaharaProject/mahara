@@ -52,7 +52,7 @@
                         {if $item->canedit}
                         <button data-url="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" type="button" class="btn btn-secondary btn-sm btn-group-item form-as-button float-start">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{str tag=edit}</span>
+                            <span class="visually-hidden">{str tag=edit}</span>
                         </button>
                         {/if}
                     {/if}
@@ -62,7 +62,7 @@
                     {if $item->canreply}
                     <button class="btn btn-secondary btn-sm float-start commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}" {if $blockid}data-blockid="{$blockid}"{/if}>
                         <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag=reply section=artefact.comment}</span>
+                        <span class="visually-hidden">{str tag=reply section=artefact.comment}</span>
                     </button>
                     {/if}
                     </div>
@@ -132,7 +132,7 @@
                                 </span>
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}" class="download-link">
                                     <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}"></span>
-                                    <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}</span>
+                                    <span class="visually-hidden">{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}</span>
                                 </a>
                             </li>
                             {/foreach}

@@ -44,7 +44,7 @@
                                         <label for="decision_{$fieldvalue.id}_{$opt}">
                                             <input id="decision_{$fieldvalue.id}_{$opt}" class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
                                             {$displayopt}
-                                            <span class="accessible-hidden sr-only">({$fieldname})</span>
+                                            <span class="accessible-hidden visually-hidden">({$fieldname})</span>
                                         </label>
                                         {/if}
                                     {/foreach}

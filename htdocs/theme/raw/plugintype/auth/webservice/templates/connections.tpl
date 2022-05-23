@@ -73,7 +73,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             {{if $instance->index + 1 < $instance->total}}
             <button class="btn text-default order-sort-control arrow-down text-midtone" onclick="move({{$instance->id}}, 'down'); return false;">
                 <span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=moveitemdown}}</span>
+                <span class="visually-hidden">{{str tag=moveitemdown}}</span>
             </button>
             {{else}}
                 <span class="emptybtnspace"></span>
@@ -81,7 +81,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             {{if $instance->index != 0 }}
             <button class="btn text-default order-sort-control arrow-up text-midtone" onclick="move({{$instance->id}}, 'up'); return false;">
                 <span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=moveitemup}}</span>
+                <span class="visually-hidden">{{str tag=moveitemup}}</span>
             </button>
             {{else}}
                 <span class="emptybtnspace"></span>
@@ -89,11 +89,11 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             <div class="btn-group btn-tasks">
             <button class="btn btn-secondary btn-sm" onclick="editinstance({{$instance->id}},'{{$instance->name}}'); return false;" title="{{str tag=edit}}">
                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=editspecific section=mahara arg1="$instance->name"}}</span>
+                <span class="visually-hidden">{{str tag=editspecific section=mahara arg1="$instance->name"}}</span>
             </button>
             <button class="btn btn-secondary btn-sm" onclick="removeConnection({{$instance->id}}); return false;" title="{{str tag=delete}}">
                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=deletespecific section=mahara arg1="$instance->name"}}</span>
+                <span class="visually-hidden">{{str tag=deletespecific section=mahara arg1="$instance->name"}}</span>
             </button>
             </div>
             </td>

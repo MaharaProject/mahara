@@ -5,7 +5,7 @@
             <label class="card-control">
                 <span class="control {if !$item->read}unread{/if}">
                     <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">
-                    <span class="sr-only">{str tag='select' section='mahara'}</span>
+                    <span class="visually-hidden">{str tag='select' section='mahara'}</span>
 
                 </span>
             </label>
@@ -14,7 +14,7 @@
                 <h2 class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
                         <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+                        <span class="visually-hidden">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {else}
                         {if $item->type == 'usermessage'}
                             <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
@@ -30,13 +30,13 @@
                             <span class="icon icon-wrench type-icon" role="presentation" aria-hidden="true"></span>
                         {/if}
 
-                        <span class="sr-only">{$item->strtype}</span>
+                        <span class="visually-hidden">{$item->strtype}</span>
                     {/if}
 
 
-                    <span class="sr-only">{str section='activity' tag='subject'}</span>
+                    <span class="visually-hidden">{str section='activity' tag='subject'}</span>
                     {if !$item->read}
-                        <span class="accessible-hidden sr-only">
+                        <span class="accessible-hidden visually-hidden">
                             {str tag='unread' section='activity'}:
                         </span>
                     {/if}
@@ -45,7 +45,7 @@
                     </span>
 
                     <span class="text-small">
-                        <span class="sr-only">
+                        <span class="visually-hidden">
                             {str section='module.multirecipientnotification 'tag='fromuser'}:
                         </span>
                         {if ($item->fromusr != 0)}

@@ -5,7 +5,7 @@
         {if $signable}
         <a href="#" id="signoff">
             <span class="icon {if $signoff}icon-check-circle completed {else}icon-circle incomplete{/if} icon-lg"></span>
-            <span class="sr-only">{str tag=updatesignoff section=blocktype.peerassessment/signoff}</span>
+            <span class="visually-hidden">{str tag=updatesignoff section=blocktype.peerassessment/signoff}</span>
         </a>
         {elseif $signoff}
         <span class="icon icon-check-circle completed icon-lg"></span>
@@ -20,7 +20,7 @@
         {if $verifiable && $signoff}
         <a href="#" id="verify">
             <span class="icon {if $verified}icon-check-circle completed {else}icon-circle incomplete{/if} icon-lg"></span>
-            <span class="sr-only">{str tag=updateverify section=blocktype.peerassessment/signoff}</span>
+            <span class="visually-hidden">{str tag=updateverify section=blocktype.peerassessment/signoff}</span>
         </a>
         {elseif $verified}
         <span class="icon icon-check-circle completed icon-lg"></span>
@@ -33,7 +33,7 @@
     <div class="help">
         <a href="#" id="signoff-info-icon" class="hidden" title="{str tag=viewsignoffdetails section=blocktype.peerassessment/signoff}">
             <span class="icon icon-info-circle"></span>
-            <span class="sr-only">{str tag=viewsignoffdetails section=blocktype.peerassessment/signoff}</span>
+            <span class="visually-hidden">{str tag=viewsignoffdetails section=blocktype.peerassessment/signoff}</span>
         </a>
     </div>
 </div>
@@ -84,9 +84,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-check-circle left" role="presentation" aria-hidden="true"></span>
                         {str tag=signoffdetails section=blocktype.peerassessment/signoff}

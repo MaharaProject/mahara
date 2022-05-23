@@ -41,14 +41,14 @@
 }
 
 .modal-tinymce .hidden-xs {
-    @extend .sr-only;
+    @extend .visually-hidden;
 }
 
 .tinymce-large iframe{
     min-height: 300px;
 }
 
-label.sr-only + div.tox-tinymce {
+label.visually-hidden + div.tox-tinymce {
     max-width: 100%;
     width: 99%;
 }

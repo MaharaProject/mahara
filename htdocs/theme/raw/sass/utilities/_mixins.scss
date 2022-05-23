@@ -1,6 +1,6 @@
-// sr-only (a workaround for including sr-only in media query)
+// visually-hidden (a workaround for including visually-hidden in media query)
 // Note: Maybe bootstrap will add this to their mixins in the future
-@mixin sr-only() {
+@mixin visually-hidden() {
     position: absolute;
     width: 1px;
     height: 1px;

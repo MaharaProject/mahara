@@ -163,14 +163,14 @@ function changepoststatus_success(form, data) {
         jQuery('#posttitle_' + data.id).addClass('published');
         jQuery('#poststatus' + data.id).html({$strpublished});
         jQuery('#changepoststatus_' + data.id + '_submit').html('<span class="icon icon-times icon-lg left text-danger" role="presentation" aria-hidden="true"></span> ' + {$strchangepoststatusunpublish} +
-          '<span class="sr-only">' + {$strchangepoststatusunpublish} + ' "' + data.title + '"</span>');
+          '<span class="visually-hidden">' + {$strchangepoststatusunpublish} + ' "' + data.title + '"</span>');
     }
     else {
         jQuery('#posttitle_' + data.id).removeClass('published');
         jQuery('#posttitle_' + data.id).addClass('draft');
         jQuery('#poststatus' + data.id).html({$strdraft});
         jQuery('#changepoststatus_' + data.id + '_submit').html('<span class="icon icon-check icon-lg left text-success" role="presentation" aria-hidden="true"></span>' + {$strchangepoststatuspublish} +
-        '<span class="sr-only">' + {$strchangepoststatuspublish} + ' "' + data.title + '"</span>');
+        '<span class="visually-hidden">' + {$strchangepoststatuspublish} + ' "' + data.title + '"</span>');
     }
 }
 function delete_success(form, data) {

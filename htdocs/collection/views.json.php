@@ -174,7 +174,7 @@ if ($views) {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => '<span class="icon icon-times text-danger" role="presentation" aria-hidden="true"><span class="sr-only">' . get_string('remove') . '</span></span>'                ),
+                    'value' => '<span class="icon icon-times text-danger" role="presentation" aria-hidden="true"><span class="visually-hidden">' . get_string('remove') . '</span></span>'                ),
             ),
         ));
     }

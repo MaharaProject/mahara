@@ -8,7 +8,7 @@
                 <span class="icon icon-{$blocktype.cssicon} {$blocktype.cssicontype} icon-lg" title="{$blocktype.title}" role="presentation" aria-hidden="true"></span>
                 <span class="labelspan hidden">{$blocktype.title}</span>
                 {if $blocktype.name != 'placeholder'}
-                    <span class="sr-only">({$blocktype.description})</span>
+                    <span class="visually-hidden">({$blocktype.description})</span>
                 {/if}
               </div>
             </div>{/strip}

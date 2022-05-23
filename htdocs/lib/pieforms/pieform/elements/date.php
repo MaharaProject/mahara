@@ -79,7 +79,7 @@ EOF;
 
     // Year
     $value = pieform_element_date_get_timeperiod_value('year', $element['minyear'], $element['maxyear'], $element, $form);
-    $year = '<label for="' . $name . '_year" class="accessible-hidden sr-only">' . get_string('year') . '</label>';
+    $year = '<label for="' . $name . '_year" class="accessible-hidden visually-hidden">' . get_string('year') . '</label>';
     $year .= '<span class="picker first"><select class="form-control select" name="' . $name . '_year" id="' . $name . '_year"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
@@ -94,7 +94,7 @@ EOF;
 
     // Month
     $value = pieform_element_date_get_timeperiod_value('month', 1, 12, $element, $form);
-    $month = '<label for="' . $name . '_month" class="accessible-hidden sr-only">' . get_string('month') . '</label>';
+    $month = '<label for="' . $name . '_month" class="accessible-hidden visually-hidden">' . get_string('month') . '</label>';
     $month .= '<span class="picker"><select class="form-control select" name="' . $name . '_month" id="' . $name . '_month"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
@@ -110,7 +110,7 @@ EOF;
 
     // Day
     $value = pieform_element_date_get_timeperiod_value('day', 1, 31, $element, $form);
-    $day = '<label for="' . $name . '_day" class="accessible-hidden sr-only">' . get_string('day') . '</label>';
+    $day = '<label for="' . $name . '_day" class="accessible-hidden visually-hidden">' . get_string('day') . '</label>';
     $day .= '<span class="picker"><select class="form-control select" name="' . $name . '_day" id="' . $name . '_day"'
         . (!$required && !$dateisset ? ' disabled="disabled"' : '')
         . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
@@ -127,7 +127,7 @@ EOF;
         // Hour
         $value = pieform_element_date_get_timeperiod_value('hour', 0, 23, $element, $form);
         $label = get_string('datepicker_hourText');
-        $hour = '<label for="' . $name . '_hour" class="accessible-hidden sr-only">' . $label . '</label>';
+        $hour = '<label for="' . $name . '_hour" class="accessible-hidden visually-hidden">' . $label . '</label>';
         $hour .= '<span class="picker"><select class="form-control select" name="' . $name . '_hour" id="' . $name . '_hour"'
             . (!$required && !$dateisset ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
@@ -143,7 +143,7 @@ EOF;
         // Minute
         $value = pieform_element_date_get_timeperiod_value('minute', 0, 59, $element, $form);
         $label = get_string('datepicker_minuteText');
-        $minute = '<label for="' . $name . '_minute" class="accessible-hidden sr-only">' . $label . '</label>';
+        $minute = '<label for="' . $name . '_minute" class="accessible-hidden visually-hidden">' . $label . '</label>';
         $minute .= '<span class="picker date"><select class="form-control select" name="' . $name . '_minute" id="' . $name . '_minute"'
             . (!$required && !$dateisset ? ' disabled="disabled"' : '')
             . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';

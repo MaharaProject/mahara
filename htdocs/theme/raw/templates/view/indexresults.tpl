@@ -70,7 +70,7 @@
                                 {if $view.accesslist || $view.manageaccess}
                                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock{/if} close-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
+                                        <span class="visually-hidden">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                       {if $view.manageaccesssuspended}
@@ -82,7 +82,7 @@
                                             <a class="seperator" href="{$WWWROOT}view/accessurl.php?return=index&id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                                 <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$manageitem->displayname}</span>
-                                                <span class="sr-only">{$manageitem->accessibilityname}</span>
+                                                <span class="visually-hidden">{$manageitem->accessibilityname}</span>
                                             </a>
                                             {/if}
                                         </li>
@@ -125,7 +125,7 @@
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                                    <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
+                                    <span class="visually-hidden">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
@@ -133,7 +133,7 @@
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
                                             <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
                                             <span class="link-text">{str tag="manage" section="collection"}</span>
-                                            <span class="sr-only">{str(tag=manageviewsspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
+                                            <span class="visually-hidden">{str(tag=manageviewsspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
                                 {/if}
@@ -146,7 +146,7 @@
                                     {/if}
                                             <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                                             <span class="link-text">{str tag="edit" section="mahara"}</span>
-                                            <span class="sr-only">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                                            <span class="visually-hidden">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
                                 {/if}
@@ -159,7 +159,7 @@
                                     {/if}
                                              <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                                              <span class="link-text">{str tag="delete" section="mahara"}</span>
-                                             <span class="sr-only">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                                             <span class="visually-hidden">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
                                 {/if}

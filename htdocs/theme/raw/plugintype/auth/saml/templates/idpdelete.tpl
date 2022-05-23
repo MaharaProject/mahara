@@ -1,7 +1,7 @@
 {if $r.delete}
     <button type="button" onclick="deleteidp(this, '{$r.idpentityid}')" name="delete" value="{$r.idpentityid}" class="deletebutton btn btn-secondary btn-sm" alt='{str tag=deletespecific section=mahara arg1=$r.name}'>
         <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">
+        <span class="visually-hidden">
             {str tag=delete section=mahara}
         </span>
     </button>

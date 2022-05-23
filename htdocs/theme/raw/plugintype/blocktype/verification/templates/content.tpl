@@ -14,7 +14,7 @@
             <a href="#" id="verify-{$blockid}">
             {/if}
                 <span class="verificationicon icon icon-check-square float-end"></span>
-                <span class="sr-only">{str tag='verifiedspecific' section='blocktype.verification' arg1=$title}</span>
+                <span class="visually-hidden">{str tag='verifiedspecific' section='blocktype.verification' arg1=$title}</span>
             {if $canunverify && !$inedit}
             </a>
             {/if}
@@ -23,7 +23,7 @@
             <a href="#" id="verify-{$blockid}">
             {/if}
                 <span class="verificationicon icon icon-square icon-regular float-end"></span>
-                <span class="sr-only">{str tag='toverifyspecific' section='blocktype.verification' arg1=$title}</span>
+                <span class="visually-hidden">{str tag='toverifyspecific' section='blocktype.verification' arg1=$title}</span>
             {if !$inedit}
             </a>
             {/if}

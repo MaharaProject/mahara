@@ -33,7 +33,7 @@ function pieform_element_checkboxes(Pieform $form, $element) {/*{{{*/
 
     $elementtitle = '';
     if (isset($element['title'])) {
-        $elementtitle = '<span class="accessible-hidden sr-only">' . Pieform::hsc($element['title']) . ': </span>';
+        $elementtitle = '<span class="accessible-hidden visually-hidden">' . Pieform::hsc($element['title']) . ': </span>';
     }
 
     foreach ($element['elements'] as $e) {

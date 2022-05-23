@@ -18,7 +18,7 @@
                                 <a class="btn-display" href="{$WWWROOT}admin/site/font/specimen.php?font={$font.urlencode}">
                                     <span class="icon icon-tv left" role="presentation" aria-hidden="true"></span>
                                     {str tag="viewfontspecimen" section="skin"}
-                                    <span class="accessible-hidden sr-only">
+                                    <span class="accessible-hidden visually-hidden">
                                         {str tag=viewfontspecimenfor section=skin arg1=$font.title}
                                     </span>
                                 </a>
@@ -28,7 +28,7 @@
                                 <a class="btn-display" href="{$WWWROOT}admin/site/font/specimen.php?font={$font.name}">
                                     <span class="icon icon-tv left" role="presentation" aria-hidden="true"></span>
                                     {str tag="viewfontspecimen" section="skin"}
-                                    <span class="accessible-hidden sr-only">
+                                    <span class="accessible-hidden visually-hidden">
                                         {str tag=viewfontspecimenfor section=skin arg1=$font.title}
                                     </span>
                                 </a>
@@ -39,7 +39,7 @@
                                 <a href="{$WWWROOT}admin/site/font/edit.php?font={$font.name}">
                                     <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                                     {str tag="editproperties" section="skin"}
-                                    <span class="accessible-hidden sr-only">
+                                    <span class="accessible-hidden visually-hidden">
                                         {str tag=viewfontspecimenfor section=skin arg1=$font.title}
                                     </span>
                                 </a>
@@ -50,7 +50,7 @@
                                 <a class="btn-add" href="{$WWWROOT}admin/site/font/add.php?font={$font.name}">
                                     <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
                                     {str tag="addfontvariant" section="skin"}
-                                    <span class="accessible-hidden sr-only">
+                                    <span class="accessible-hidden visually-hidden">
                                         {str tag=viewfontspecimenfor section=skin arg1=$font.title}
                                     </span>
                                 </a>
@@ -60,7 +60,7 @@
                             <a class="btn-del text-danger" href="{$WWWROOT}admin/site/font/delete.php?font={$font.name}">
                                 <span class="icon icon-trash-alt left" role="presentation" aria-hidden="true"></span>
                                 {str tag=deletefont section=skin}
-                                <span class="accessible-hidden sr-only">
+                                <span class="accessible-hidden visually-hidden">
                                     {$font.title}
                                 </span>
                             </a>

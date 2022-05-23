@@ -18,12 +18,12 @@
                             {* {if $ownwall}
                                 <a href="{$WWWROOT}blocktype/wall/wall.php?instance={$instanceid}&amp;replyto={$wallpost->id}" class="btn btn-secondary btn-sm btn-group-item form-as-button float-start">
                                     <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
-                                    <span class="sr-only">{str tag='reply' section='blocktype.wall'}</span>
+                                    <span class="visually-hidden">{str tag='reply' section='blocktype.wall'}</span>
                                 </a>
                             {/if}*}
                             <a href="{$WWWROOT}blocktype/wall/deletepost.php?postid={$wallpost->postid}&return={if $wholewall}wall{else}profile{/if}" class="btn btn-secondary btn-sm btn-group-item form-as-button float-start">
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str tag='delete' section='blocktype.wall'}</span>
+                                <span class="visually-hidden">{str tag='delete' section='blocktype.wall'}</span>
                             </a>
                         </div>
                     </div>

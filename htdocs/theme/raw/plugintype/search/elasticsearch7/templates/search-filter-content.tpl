@@ -11,7 +11,7 @@
 <div id="results_filter" class="search-filter-content btn-group">
     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">{str tag=filterresultsby section=search.elasticsearch7}</span>
+        <span class="visually-hidden">{str tag=filterresultsby section=search.elasticsearch7}</span>
         {foreach from=$contentfilter item=term}
             <span {if $term.term != $contentfilterselected} class="d-none"{/if}>{$term.display} ({$term.count})</span>
         {/foreach}

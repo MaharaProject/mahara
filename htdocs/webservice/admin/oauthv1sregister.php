@@ -731,7 +731,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                             'type' => 'button',
                                             'usebuttontag' => true,
                                             'class' => 'btn-secondary btn-sm',
-                                            'value' => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('managespecific', 'mahara', $consumer->application_title).'</span>',
+                                            'value' => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="visually-hidden">'.get_string('managespecific', 'mahara', $consumer->application_title).'</span>',
                                             'elementtitle' => get_string('managespecific', 'mahara', $consumer->application_title),
                                         ),
                                     ),

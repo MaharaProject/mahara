@@ -36,7 +36,7 @@
                     {if $item->canedit}
                     <button data-url="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" type="button" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag=edit}</span>
+                        <span class="visually-hidden">{str tag=edit}</span>
                     </button>
                     {/if}
                     {if $item->deleteform}

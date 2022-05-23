@@ -840,7 +840,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     'type'  => 'button',
                     'usebuttontag' => true,
                     'class' => 'btn-secondary btn-sm',
-                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span> <span class="sr-only">' . get_string('delete') . '</span>',
+                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span> <span class="visually-hidden">' . get_string('delete') . '</span>',
                     'confirm' => get_string('reallydeletethisassessment', 'artefact.peerassessment'),
                     'name'  => 'delete_assessment_submit',
                 ),

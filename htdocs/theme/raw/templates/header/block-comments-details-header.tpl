@@ -13,7 +13,7 @@
         {if $commentcount > 0}
             <span class="comment_count" role="presentation" aria-hidden="true"></span>
             <span class="icon icon-comments" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{str tag=Comments section=artefact.comment} {str tag=anddetails section=artefact.comment}</span>
+            <span class="visually-hidden">{str tag=Comments section=artefact.comment} {str tag=anddetails section=artefact.comment}</span>
             {if $displayiconsonly}
                 ({$commentcount})
                 <span class="bh-margin-left icon icon-search-plus" role="presentation" aria-hidden="true"></span>

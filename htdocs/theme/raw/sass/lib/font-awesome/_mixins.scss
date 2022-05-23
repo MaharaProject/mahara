@@ -22,7 +22,7 @@
 // only display content to screen readers
 // see: https://www.a11yproject.com/posts/2013-01-11-how-to-hide-content/
 // see: https://hugogiraudel.com/2016/10/13/css-hide-and-seek/
-@mixin fa-sr-only() {
+@mixin fa-visually-hidden() {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -34,10 +34,10 @@
   border-width: 0;
 }
 
-// use in conjunction with .sr-only to only display content when it's focused
-@mixin fa-sr-only-focusable() {
+// use in conjunction with .visually-hidden to only display content when it's focused
+@mixin fa-visually-hidden-focusable() {
   &:not(:focus) {
-    @include fa-sr-only();
+    @include fa-visually-hidden();
   }
 }
 

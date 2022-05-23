@@ -20,7 +20,7 @@
                     <label for="decision_{$view.id}_{$opt}">
                         <input id="decision_{$view.id}_{$opt}" class="viewdecision" id="{$view.id}" type="radio" name="decision_{$view.id}" value="{$opt}"{if $view.decision == $opt} checked="checked"{/if}>
                         {$displayopt}
-                        <span class="accessible-hidden sr-only">({$view.title})</span>
+                        <span class="accessible-hidden visually-hidden">({$view.title})</span>
                     </label>
                     {/if}
                 {/foreach}

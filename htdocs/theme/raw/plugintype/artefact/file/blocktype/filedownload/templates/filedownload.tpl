@@ -35,7 +35,7 @@
             {if !$editing}
             <a class="modal_link" title="{$child->hovertitle}" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$file.id}">
                 {$file.title}
-                <span class="sr-only">{str tag=Details section=artefact.file}</span>
+                <span class="visually-hidden">{str tag=Details section=artefact.file}</span>
             </a>
             {else}
                 <span>{$file.title}</span>
@@ -44,7 +44,7 @@
 
             <a href="{$file.downloadurl}" class="download-link">
                 <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file.title arg2=$file.size|display_size}"></span>
-                <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$file.title arg2=$file.size|display_size}}</span>
+                <span class="visually-hidden">{str tag=downloadfilesize section=artefact.file arg1=$file.title arg2=$file.size|display_size}}</span>
             </a>
 
             {if $file.description}

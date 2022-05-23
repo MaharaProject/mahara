@@ -11,7 +11,7 @@
                 {if $feedlink}
                     <a href="{$feedlink}" class="secondary-link inner-link">
                         <span class="icon-rss icon icon-lg mahara-rss-icon right" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">RSS</span>
+                        <span class="visually-hidden">RSS</span>
                     </a>
                 {/if}
             </span>
@@ -31,7 +31,7 @@
 
     <div class="{if !$title}no-heading {/if}block{if $retractable} collapse{if $retractedonload}{else} show{/if}{/if}{if $draft} draft{/if}"  id="blockinstance_{$id}_target{if $versioning}_{$versioning->version}{/if}" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
         {if $draft}
-        <span class="sr-only">{str tag='draft' section='artefact.blog'}</span>
+        <span class="visually-hidden">{str tag='draft' section='artefact.blog'}</span>
         {/if}
         {if !$loadbyajax}
             {$content|safe}

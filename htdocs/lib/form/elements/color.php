@@ -48,7 +48,7 @@ EOF;
 
         $title = '';
         if (!empty($element['title'])) {
-            $title = '<span class="accessible-hidden sr-only">' . Pieform::hsc($element['title']) . ':</span>';
+            $title = '<span class="accessible-hidden visually-hidden">' . Pieform::hsc($element['title']) . ':</span>';
         }
 
         $optional .= ' <input type="checkbox" '

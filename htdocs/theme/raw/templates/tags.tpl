@@ -7,7 +7,7 @@
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
-        <li><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab {if $selectedsort} active{/if}"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
+        <li><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab {if $selectedsort} active{/if}"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden visually-hidden">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
     {/foreach}
     </ul>
     <div class="mytags">
@@ -36,7 +36,7 @@
             <div class="btn-group dropright">
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-hidden="true" aria-haspopup="true" aria-expanded="false">
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=filterresultsby}</span>
+                    <span class="visually-hidden">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
                         <span id="currentfilter" {if $results->filter != $filtername} class="d-none"{/if}>{$filterdisplay}</span>
                     {/foreach}

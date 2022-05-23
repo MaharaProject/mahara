@@ -12,7 +12,7 @@
             <tr>
                 {if $controls}
                 <th class="resumecontrols">
-                    <span class="accessible-hidden sr-only">{str tag=move}</span>
+                    <span class="accessible-hidden visually-hidden">{str tag=move}</span>
                 </th>{/if}
 
                 <th>{str tag='title' section='artefact.resume'}</th>
@@ -23,7 +23,7 @@
 
                 {if $controls}
                 <th class="resumecontrols">
-                    <span class="accessible-hidden sr-only">{str tag=edit}</span>
+                    <span class="accessible-hidden visually-hidden">{str tag=edit}</span>
                 </th>
                 {/if}
             </tr>
@@ -40,7 +40,7 @@
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
-                <span class="accessible-hidden sr-only">{str tag='addmembership' section='artefact.resume'}</span>
+                <span class="accessible-hidden visually-hidden">{str tag='addmembership' section='artefact.resume'}</span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}

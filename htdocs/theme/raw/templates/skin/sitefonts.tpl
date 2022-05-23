@@ -9,7 +9,7 @@
 <p class="lead">{str tag=sitefontsdescription section=skin}</p>
 {if $sitefonts}
     {if $query}
-        <h2 id="searchresultsheading" class="accessible-hidden sr-only">{str tag=Results}</h2>
+        <h2 id="searchresultsheading" class="accessible-hidden visually-hidden">{str tag=Results}</h2>
     {/if}
     <div id="fontlist" class="card fullwidth listing">
         {$sitefontshtml|safe}

@@ -1173,7 +1173,7 @@ class PluginSearchElasticsearch7 extends PluginSearch {
                     'type' => 'button',
                     'class' => 'btn-secondary input-group-append',
                     'usebuttontag' => true,
-                    'value' => '<span class="icon icon-search" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('go') . '</span>',
+                    'value' => '<span class="icon icon-search" role="presentation" aria-hidden="true"></span><span class="visually-hidden">'. get_string('go') . '</span>',
                 )
             )
         ));

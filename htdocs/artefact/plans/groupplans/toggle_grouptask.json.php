@@ -100,7 +100,7 @@ try {
             if ($outcomesubmissionurl) {
                 $buttons .= '<a href="' . $outcomesubmissionurl . '" title="' . get_string('submitassignedoutcome', 'artefact.plans') . '" class="btn btn-secondary btn-sm">
                                  <span class="icon icon-file-upload" role="presentation" aria-hidden="true"></span>
-                                 <span class="sr-only">' . get_string('submitassignedoutcome', 'artefact.plans') . '</span>
+                                 <span class="visually-hidden">' . get_string('submitassignedoutcome', 'artefact.plans') . '</span>
                              </a>';
             }
             $outcome['buttons'] = $buttons;

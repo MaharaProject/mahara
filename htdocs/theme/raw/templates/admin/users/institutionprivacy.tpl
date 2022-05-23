@@ -75,7 +75,7 @@
                     <th>{str tag="author" section="admin"}</th>
                     <th>{str tag="content" section="admin"}</th>
                     <th>{str tag="creationdate" section="admin"}</th>
-                    <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+                    <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
                 </tr>
                 </thead>
                     <tbody id="privacy" class="tab">

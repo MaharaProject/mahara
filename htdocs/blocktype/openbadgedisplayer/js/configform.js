@@ -74,7 +74,7 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
                             '<div class="checkboxes-option checkbox">' +
                                 '<input type="checkbox" id="instconf_' + checkboxid + '"name="' + data["host"] + '[]" value="' + checkboxvalue + '" ' + selected + ' class="checkboxes">' +
                                     '<label class="checkbox" for="instconf_' + checkboxid + '">' +
-                                        '<span class="accessible-hidden sr-only">' + data["hosttitle"] + ': </span>' +
+                                        '<span class="accessible-hidden visually-hidden">' + data["hosttitle"] + ': </span>' +
                                          badgegroupname +
                                     '</label>' +
                             '</div>';

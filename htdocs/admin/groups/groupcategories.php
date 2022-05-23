@@ -103,7 +103,7 @@ jQuery(function($) {
         'alt':{$getstring['editspecific']}.replace('%s', item.name)
       });
       edit.append($('<span>', {'class':'icon icon-pencil-alt', 'role':'presentation'}));
-      edit.append($('<span class="sr-only">' + {$getstring['editspecific']}.replace('%s', item.name) + '</span>'));
+      edit.append($('<span class="visually-hidden">' + {$getstring['editspecific']}.replace('%s', item.name) + '</span>'));
 
       edit.on('click', function (e) { e.preventDefault(); edititem(item); });
 
@@ -116,7 +116,7 @@ jQuery(function($) {
         'alt':{$getstring['deletespecific']}.replace('%s', item.name)
       });
       del.append($('<span>', {'class':'icon icon-trash-alt text-danger', 'role':'presentation'}));
-      del.append($('<span class="sr-only">' + {$getstring['deletespecific']}.replace('%s', item.name) + '</span>'));
+      del.append($('<span class="visually-hidden">' + {$getstring['deletespecific']}.replace('%s', item.name) + '</span>'));
 
       del.on('click', function (e) { e.preventDefault(); delitem(item.id); });
 

@@ -26,7 +26,7 @@
     <div class="card-footer has-form">
         <button data-url="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-secondary btn-sm">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
+            <span class="visually-hidden">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
             {str tag=addpost section=artefact.blog}
         </button>
 
@@ -36,7 +36,7 @@
             {else}
             <button data-url="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" type="button" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
+                <span class="visually-hidden">{str tag=editspecific arg1=$blog->title}</span>
             </button>
             {$blog->deleteform|safe}
             {/if}

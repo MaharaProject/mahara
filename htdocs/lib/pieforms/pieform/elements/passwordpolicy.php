@@ -41,7 +41,7 @@ function pieform_element_passwordpolicy(Pieform $form, $element) {/*{{{*/
 
     // Number dropdown
     $label = get_string('passwordpolicylength', 'admin');
-    $number = '<label for="' . $name . '_number" class="accessible-hidden sr-only">' . $label . '</label>';
+    $number = '<label for="' . $name . '_number" class="accessible-hidden visually-hidden">' . $label . '</label>';
     $number .= '<span class="picker"><select class="form-control select" ';
     $number .= 'name="' . $name . '_number" id="' . $name . '_number"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
@@ -55,7 +55,7 @@ function pieform_element_passwordpolicy(Pieform $form, $element) {/*{{{*/
 
     // Format dropdown
     $label = get_string('passwordpolicytype', 'admin');
-    $format = '<label for="' . $name . '_format" class="accessible-hidden sr-only">' . $label . '</label>';
+    $format = '<label for="' . $name . '_format" class="accessible-hidden visually-hidden">' . $label . '</label>';
     $format .= '<span class="picker"><select class="form-control select" ';
     $format .= 'name="' . $name . '_format" id="' . $name . '_format"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {

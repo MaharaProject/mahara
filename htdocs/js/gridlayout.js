@@ -123,7 +123,7 @@ function loadGrid(grid, blocks) {
         }
         if (typeof(block.draft) != 'undefined' && block.draft) {
             draftclass = 'draft';
-            srelement = '<span class="sr-only">' + get_string('draft') + '</span>';
+            srelement = '<span class="visually-hidden">' + get_string('draft') + '</span>';
         }
         var blockContent = '<div id="block_' + block.id + '" class="grid-stack-item" >'
             + srelement +

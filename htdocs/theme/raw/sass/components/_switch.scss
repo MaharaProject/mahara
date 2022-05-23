@@ -28,7 +28,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         overflow: hidden;
         width: 3.75rem; // 60px; // Overridden with inline styles
         input {
-            @extend .sr-only;
+            @extend .visually-hidden;
 
             &:focus {
                 + .switch-label {

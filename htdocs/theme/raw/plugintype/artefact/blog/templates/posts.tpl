@@ -33,7 +33,7 @@
                         <div class="first">
                             <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
                                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
+                                <span class="visually-hidden">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
                             </button>
                         </div>
                     </form>

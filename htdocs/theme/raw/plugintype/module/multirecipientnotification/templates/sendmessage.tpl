@@ -13,7 +13,7 @@
 
                 {if ($message->fromusrlink != 0)}
                 <a href="{$message->fromusrlink}">
-                    <span class="accessible-hidden sr-only">
+                    <span class="accessible-hidden visually-hidden">
                         {str tag='From' section='mahara'}
                     </span>
                     {$message->fromusrname}

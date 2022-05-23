@@ -61,7 +61,7 @@
             <div class="modal-header">
                 <button class="deletebutton btn-close" name="action_removeblockinstance_id_{$id}">
                     <span class="times">&times;</span>
-                    <span class="sr-only">{str tag=Close}</span>
+                    <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h1>
             </div>
@@ -78,7 +78,7 @@
             <div class="modal-header">
                 <button class="deletebutton btn-close" name="close_configuration">
                     <span class="times">&times;</span>
-                    <span class="sr-only">{str tag=closeconfiguration section=view}</span>
+                    <span class="visually-hidden">{str tag=closeconfiguration section=view}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline float-start"></h1>
                 <span class="icon icon-pencil-alt icon-2x float-end" role="presentation" aria-hidden="true"></span>

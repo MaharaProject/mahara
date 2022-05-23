@@ -9,7 +9,7 @@
       <tr>
         <th>{str tag=displayname}</th>
         <th>{str tag=Site}</th>
-        <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+        <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
       </tr>
     </thead>
     <tbody>

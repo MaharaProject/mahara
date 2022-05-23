@@ -4,7 +4,7 @@
     <div class="input-group form-group" id="searchpages">
         <fieldset class="pieform-fieldset input-group">
             <div class="form-group text">
-                <label class="sr-only" for="viewquery">{str tag="Search" section="view"}:</label>
+                <label class="visually-hidden" for="viewquery">{str tag="Search" section="view"}:</label>
                 <input type="text" name="viewquery" id="viewquery" class="query form-control text" value="{$views->query}">
             </div>
 

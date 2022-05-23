@@ -201,7 +201,7 @@ This button is used to show there are more options available. An example can be 
 <div class="btn-group" style="margin-left: 200px;">
     <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">{str tag=moreoptions}</span>
+        <span class="visually-hidden">{str tag=moreoptions}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-end" role="menu">
         <li class="dropdown-item">
@@ -261,12 +261,12 @@ section .navbar-form.navbar-collapse.search-form {
         <div class="nav-toggle-area">
             <!-- Nav One Button -->
             <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
-                <span class="sr-only">Show nav one</span>
+                <span class="visually-hidden">Show nav one</span>
                 <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Two Button -->
             <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
-                <span class="sr-only">Show nav two</span>
+                <span class="visually-hidden">Show nav two</span>
                 <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Three Button and icon -->
@@ -275,14 +275,14 @@ section .navbar-form.navbar-collapse.search-form {
                     <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
                 </a>
                 <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
-                    <span class="sr-only">Show nav three</span>
+                    <span class="visually-hidden">Show nav three</span>
                     <span class="icon icon-chevron-down collapsed"></span>
                 </button>
             </div>
             <!-- Hide Search When on Desktop -->
             <button class="search-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
                 <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
-                <span class="nav-title sr-only">{str tag=showsearch}</span>
+                <span class="nav-title visually-hidden">{str tag=showsearch}</span>
             </button>
         </div>
         <!-- Nav One -->
@@ -295,7 +295,7 @@ section .navbar-form.navbar-collapse.search-form {
                  <a href="">Link 2</a>
                  <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavone">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                     <span class="nav-title sr-only">Link 2</span>
+                     <span class="nav-title visually-hidden">Link 2</span>
                  </button>
                  <ul id="subnavone" class=" collapse child-nav" role="menu">
                     <li><a href="">Sublink 2</a></li>
@@ -306,7 +306,7 @@ section .navbar-form.navbar-collapse.search-form {
                  <a href="">Link 2</a>
                  <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavtwo">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                     <span class="nav-title sr-only">Link 2</span>
+                     <span class="nav-title visually-hidden">Link 2</span>
                  </button>
                  <ul id="subnavtwo" class=" collapse child-nav" role="menu">
                     <li><a href="">Sublink 1</a></li>
@@ -317,7 +317,7 @@ section .navbar-form.navbar-collapse.search-form {
                  <a href="">Link 4</a>
                  <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavthree">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                     <span class="nav-title sr-only">Link 4</span>
+                     <span class="nav-title visually-hidden">Link 4</span>
                  </button>
                  <ul id="subnavthree" class=" collapse child-nav" role="menu">
                     <li><a href="">Sublink 1</a></li>
@@ -333,7 +333,7 @@ section .navbar-form.navbar-collapse.search-form {
                     <a href="">Link 1</a>
                     <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavfour">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 1</span>
+                        <span class="nav-title visually-hidden">Link 1</span>
                     </button>
                     <ul id="subnavfour" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -344,7 +344,7 @@ section .navbar-form.navbar-collapse.search-form {
                     <a href="">Link 2</a>
                     <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavfive">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 2</span>
+                        <span class="nav-title visually-hidden">Link 2</span>
                     </button>
                     <ul id="subnavfive" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -355,7 +355,7 @@ section .navbar-form.navbar-collapse.search-form {
                     <a href="">Link 3</a>
                     <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavsix">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 3</span>
+                        <span class="nav-title visually-hidden">Link 3</span>
                     </button>
                     <ul id="subnavsix" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -380,7 +380,7 @@ section .navbar-form.navbar-collapse.search-form {
                     </a>
                     <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navuser" data-bs-target="#subnavseven">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 2</span>
+                        <span class="nav-title visually-hidden">Link 2</span>
                     </button>
                     <ul id="subnavseven" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -411,10 +411,10 @@ section .navbar-form.navbar-collapse.search-form {
 The pagination has "Previous" and "Next" buttons.
 ```
 <ul class="pagination pagination-sm">
-    <li class="page-item"><span class="page-link">«<span class="sr-only">{str tag=prevpage section=collection}</span></span></li>
+    <li class="page-item"><span class="page-link">«<span class="visually-hidden">{str tag=prevpage section=collection}</span></span></li>
     <li class="active page-item"><span class="page-link">1</span></li>
     <li class="page-item"><a class="page-link" title="" href="link">2</a></li>
-    <li class="page-item"><a class="page-link" title="Next page" href="link"> »<span class="sr-only">{str tag=nextpage section=collection}</span></a></li>
+    <li class="page-item"><a class="page-link" title="Next page" href="link"> »<span class="visually-hidden">{str tag=nextpage section=collection}</span></a></li>
 </ul>
 ```
 </section>
@@ -430,7 +430,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
         </div>
         <ul class="pagination pagination-sm">
             <li class="page-item">
-                <span class="page-link">«<span class="sr-only">{str tag=prevpage section=collection}</span></span>
+                <span class="page-link">«<span class="visually-hidden">{str tag=prevpage section=collection}</span></span>
             </li>
             <li class="active page-item">
                 <span class="page-link">1</span>
@@ -441,7 +441,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
             <li class="page-item">
                 <a class="page-link" href="" title="Next page">
                     »
-                    <span class="sr-only">{str tag=nextpage section=collection}</span>
+                    <span class="visually-hidden">{str tag=nextpage section=collection}</span>
                 </a>
             </li>
         </ul>
@@ -502,25 +502,25 @@ This style of tabs is used for third-level navigation in areas where each page w
             <li class=" current-tab active">
                 <a class=" current-tab" href="#">
                     Tab 1
-                    <span class="accessible-hidden sr-only">({str tag=tab} {str tag=selected})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab} {str tag=selected})</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 2
-                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab})</span>
                 </a>
             </li>
             <li class=" current-tab ">
                 <a class=" current-tab" href="#">
                     Tab 3
-                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab})</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 4
-                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab})</span>
                 </a>
             </li>
         </ul>
@@ -992,14 +992,14 @@ This card is used to show a page.
                 <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">More options for "Dashboard page"</span>
+                    <span class="visually-hidden">More options for "Dashboard page"</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
-                        <span class="sr-only">Edit "Dashboard page"</span>
+                        <span class="visually-hidden">Edit "Dashboard page"</span>
                         </a>
                     </li>
                     <li class="view-details dropdown-item">
@@ -1041,14 +1041,14 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">Access rules for "Unnamed page"</span>
+                    <span class="visually-hidden">Access rules for "Unnamed page"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a class="seperator" href="">
                             <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
                             <span class="link-text">Manage access</span>
-                            <span class="sr-only">Manage access for "Unnamed page"</span>
+                            <span class="visually-hidden">Manage access for "Unnamed page"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
@@ -1063,14 +1063,14 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">More options for "Dashboard page"</span>
+                    <span class="visually-hidden">More options for "Dashboard page"</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
-                        <span class="sr-only">Edit "Unnamed page"</span>
+                        <span class="visually-hidden">Edit "Unnamed page"</span>
                         </a>
                     </li>
                     <li class="view-details dropdown-item">
@@ -1113,14 +1113,14 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">Access rules for "collection"</span>
+                <span class="visually-hidden">Access rules for "collection"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a class="seperator" href="">
                         <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage access</span>
-                        <span class="sr-only">Manage access for "collection"</span>
+                        <span class="visually-hidden">Manage access for "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
@@ -1135,28 +1135,28 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">More options for "collection"</span>
+                <span class="visually-hidden">More options for "collection"</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Manage pages">
                         <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage</span>
-                        <span class="sr-only">Manage pages in "collection"</span>
+                        <span class="visually-hidden">Manage pages in "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
                         <a href="" title="Edit title and description">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
-                        <span class="sr-only">Edit "collection"</span>
+                        <span class="visually-hidden">Edit "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
                         <a href="" title="Delete collection">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Delete</span>
-                        <span class="sr-only">Delete "collection"</span>
+                        <span class="visually-hidden">Delete "collection"</span>
                         </a>
                     </li>
                     <li class="view-details dropdown-item">
@@ -1243,7 +1243,7 @@ A slide-out modal. This is used to show a block's configuration for example.
             <div class="modal-header">
                 <button class="deletebutton btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                   <span class="times">×</span>
-                  <span class="sr-only">{str tag=Close}</span>
+                  <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline modal-docks-title">Modal heading</h1>
             </div>
@@ -1268,7 +1268,7 @@ A fold down modal. This is typially used to report objectionable content.
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
-                    <span aria-hidden="true">×</span>
+                    <span aria-hidden="true">&times;</span>
                 </button>
                 <h1 class="modal-title">
                     <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
@@ -1348,7 +1348,7 @@ A striped table is most frequently found in the administration area where tables
             <th class="center">Column 3</th>
             <th>Column 4</th>
             <th>Column 5</th>
-            <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+            <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
         </tr>
     </thead>
     <tbody>
@@ -1361,10 +1361,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
-                        <span class="icon icon-cog"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
+                        <span class="icon icon-cog"></span><span class="visually-hidden">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash-alt text-danger"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
+                        <span class="icon icon-trash-alt text-danger"></span><span class="visually-hidden">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
                     </a>
                 </div>
             </td>
@@ -1378,10 +1378,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
-                        <span class="icon icon-cog"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
+                        <span class="icon icon-cog"></span><span class="visually-hidden">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash-alt text-danger"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
+                        <span class="icon icon-trash-alt text-danger"></span><span class="visually-hidden">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
                     </a>
                 </div>
             </td>

@@ -26,7 +26,7 @@
 </div>
 
 <table class="fullwidth table tablematrix progresscompletion" id="tablematrix">
-    <caption class="sr-only">{str tag="tabledesc" section="module.framework"}</caption>
+    <caption class="visually-hidden">{str tag="tabledesc" section="module.framework"}</caption>
     <tr class="table-pager">
         <th>{str tag="view"}</th>
         <th class="userrole">{str tag="signoff" section="blocktype.peerassessment/signoff"}</th>

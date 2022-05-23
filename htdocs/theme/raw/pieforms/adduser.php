@@ -85,7 +85,7 @@ echo $form_tag;
                   <div class="modal-header">
                       <button class="deletebutton btn-close" name="action_removeblockinstance_id_80" data-dismiss="modal-docked" aria-label="<?php echo get_string('Close'); ?>">
                           <span class="times">&times;</span>
-                          <span class="sr-only">Close</span>
+                          <span class="visually-hidden">Close</span>
                       </button>
                     <h1 class="modal-title blockinstance-header  text-inline general-account-options-title" id="general-account-options-label"><?php echo get_string('accountoptionsdesc', 'account'); ?></h1>
                   </div>

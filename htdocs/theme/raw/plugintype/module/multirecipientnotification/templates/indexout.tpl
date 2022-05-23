@@ -12,7 +12,7 @@
         <div class="btn-group bulk-actions" role="group">
             <label class="btn btn-secondary" for="selectall">
                 <input type="checkbox" name="selectall" id="selectall" data-bs-togglecheckbox="tocheck">
-                <span class="sr-only">{str section='activity' tag='selectall'}</span>
+                <span class="visually-hidden">{str section='activity' tag='selectall'}</span>
             </label>
 
             <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -31,7 +31,7 @@
         </div>
         <form method="post" class="form-inline form-select-filter pieform">
             <div class="form-group">
-                <label for="notifications_type" class="sr-only">{str section='activity' tag='type'}:</label>
+                <label for="notifications_type" class="visually-hidden">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
                     <div class="input-group-prepend" id="icon-addon-filter">
                         <span class="icon icon-filter" role="presentation" aria-hidden="true"></span>

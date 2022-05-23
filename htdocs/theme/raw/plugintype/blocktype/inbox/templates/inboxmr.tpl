@@ -21,7 +21,7 @@
                     {else}
                         <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     {/if}
-                    <span class="sr-only">{$i->strtype}</span>
+                    <span class="visually-hidden">{$i->strtype}</span>
                     <span class="subject">{$i->subject|str_shorten_html:50:true|safe}</span>
                     <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                 </a></h3>

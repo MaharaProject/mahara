@@ -41,7 +41,7 @@
                         <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder-icon:{$file->id}" class="changefolder">
                             <span class="icon-level-up-alt icon icon-lg text-default" role="presentation" aria-hidden="true">
                             </span>
-                            <span class="sr-only">
+                            <span class="visually-hidden">
                                 {str tag=folder section=artefact.file}:{$displaytitle}
                             </span>
                         </a>
@@ -49,7 +49,7 @@
                 {else}
                     {if $editable}
                     <div class="icon-drag" id="drag:{$file->id}" tabindex="0">
-                        <span class="sr-only">{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}</span>
+                        <span class="visually-hidden">{str tag=clickanddragtomovefile section=artefact.file arg1=$file->title}</span>
                     {/if}
                     {if $file->artefacttype == 'folder'}
                         {if $selectable}
@@ -74,7 +74,7 @@
             <td class="filename">
                 {if $file->artefacttype == 'folder'}
                     <a href="{$querybase|safe}folder={$file->id}{if $owner}&owner={$owner}{if $ownerid}&ownerid={$ownerid}{/if}{/if}" id="changefolder:{$file->id}" class="changefolder">
-                        <span class="sr-only">{str tag=folder section=artefact.file}:</span>
+                        <span class="visually-hidden">{str tag=folder section=artefact.file}:</span>
                         <span class="display-title {if $file->isparent}accessible-hidden{/if}">{$displaytitle}</span>
                     </a>
                 {elseif !$publishable}
@@ -109,7 +109,7 @@
                 {if $selectable && ($file->artefacttype != 'folder' || $selectfolders) && $publishable && !$file->isparent}
                     <button type="button" class="btn btn-sm btn-secondary" name="{$prefix}_select[{$file->id}]" id="{$prefix}_select_{$file->id}" title="{str tag=select}">
                         <span class="icon icon-check" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag=selectspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
+                        <span class="visually-hidden">{str tag=selectspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
                     </button>
                 {/if}
                 {if $editmeta}
@@ -120,9 +120,9 @@
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-secondary btn-sm editable" title="{str tag=edit}">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                             {if $file->artefacttype == 'folder'}
-                                <span class="sr-only">{str tag=editfolderspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
+                                <span class="visually-hidden">{str tag=editfolderspecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
                             {else}
-                                <span class="sr-only">{str tag=editfilespecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
+                                <span class="visually-hidden">{str tag=editfilespecific section=artefact.file arg1=$displaytitle|escape:html|safe}</span>
                             {/if}
                         </button>
                         {/if}
@@ -143,7 +143,7 @@
                         {if $file->artefacttype == 'archive'}
                         <a href="{$WWWROOT}artefact/file/extract.php?file={$file->id}" title="{str tag=Decompress section=artefact.file}" class="btn btn-secondary btn-sm">
                             <span class="icon icon-regular icon-file-archive" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">
+                            <span class="visually-hidden">
                                 {str(tag=decompressspecific section=artefact.file arg1=$displaytitle)|escape:html|safe}
                             </span>
                         </a>
@@ -159,12 +159,12 @@
 
                         <button name="{$prefix}_edit[{$file->id}]" class="btn btn-secondary btn-sm">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{$edittext|escape:html|safe}</span>
+                            <span class="visually-hidden">{$edittext|escape:html|safe}</span>
                         </button>
 
                         <button name="{$prefix}_delete[{$file->id}]" class="btn btn-secondary btn-sm">
                             <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{$deletetext|escape:html|safe}</span>
+                            <span class="visually-hidden">{$deletetext|escape:html|safe}</span>
                         </button>
                     </div>
                 {/if}

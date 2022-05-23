@@ -76,7 +76,7 @@ function pieform_element_bytes(Pieform $form, $element) {/*{{{*/
     $numberinput .= "></div>\n";
 
     $uselect = '<div class="dropdown-connect js-dropdown-connect select">';
-    $uselect .= '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden sr-only">' . get_string('units') . '</label>';
+    $uselect .= '<label for="' . $formname . '_' . $name . '_units" class="accessible-hidden visually-hidden">' . get_string('units') . '</label>';
     $uselect .= '<span class="picker"><select class="form-control dropdown-connect js-dropdown-connect select" name="' . $name . '_units" id="' . $formname . '_' . $name . '_units"' . ' tabindex="' . Pieform::hsc($element['tabindex']) . '"';
     if (isset($element['description'])) {
         $uselect .= ' aria-describedby="' . $form->element_descriptors($element) . '"';

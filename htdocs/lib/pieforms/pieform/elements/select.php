@@ -167,7 +167,7 @@ function pieform_element_select(Pieform $form, $element) {
             $other_attrib['class'] = 'text form-control secondary-textbox d-none';
             $other_value = '';
         }
-        $result .= '<label for="' . $form->make_id($other_attrib, true) . '" class="accessible-hidden sr-only">' . get_string('licenseotherurl') . '</label>'
+        $result .= '<label for="' . $form->make_id($other_attrib, true) . '" class="accessible-hidden visually-hidden">' . get_string('licenseotherurl') . '</label>'
                 . '<input type="text" '
                 . $form->element_attributes($other_attrib)
                 . $other_value

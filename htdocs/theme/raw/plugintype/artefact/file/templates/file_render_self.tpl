@@ -57,7 +57,7 @@
     </tr>
     {/if}
     <tr>
-        <th class="sr-only">{str tag=Download section=artefact.file}:</th>
+        <th class="visually-hidden">{str tag=Download section=artefact.file}:</th>
         <td>
             <a class="btn btn-secondary btn-sm" href="{$downloadpath}">{str tag=Download section=artefact.file}</a>
         </td>

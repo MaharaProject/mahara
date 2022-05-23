@@ -416,12 +416,12 @@ jQuery(function($) {
             var description = data.settings.description;
             var container = section.find('.shortname-container');
             if (state == 'closed') {
-                container.find('.sr-only.action').html(description.close);
-                container.find('.sr-only.status').html(description.sectioncollapsed);
+                container.find('.visually-hidden.action').html(description.close);
+                container.find('.visually-hidden.status').html(description.sectioncollapsed);
             }
             else {
-                container.find('.sr-only.action').html(description.open);
-                container.find('.sr-only.status').html('');
+                container.find('.visually-hidden.action').html(description.open);
+                container.find('.visually-hidden.status').html('');
             }
         });
         $('tr.examplefor' + id).toggle('600', 'swing').removeClass('d-none');

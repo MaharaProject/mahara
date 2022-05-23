@@ -146,7 +146,7 @@ jQuery(function($) {
 
 $deleteall = pieform(array(
     'name'        => 'delete_all_notifications',
-    'class'       => 'form-deleteall sr-only',
+    'class'       => 'form-deleteall visually-hidden',
     'method'      => 'post',
     'plugintype'  => 'core',
     'pluginname'  => 'account',

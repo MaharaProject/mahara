@@ -79,7 +79,7 @@
         <div id="user_myviewlist" class="list-group">
                 <div class="list-group-item">
         <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25" class="outer-link">
-            <span class="sr-only">Portfolio page Alice 1</span>
+            <span class="visually-hidden">Portfolio page Alice 1</span>
         </a>
 
         <h4 class="title list-group-item-heading text-inline">
@@ -304,7 +304,7 @@
         <div id="user_myviewlist" class="list-group">
                 <div class="list-group-item">
         <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25" class="outer-link">
-            <span class="sr-only">Portfolio page Alice 1</span>
+            <span class="visually-hidden">Portfolio page Alice 1</span>
         </a>
 
         <h4 class="title list-group-item-heading text-inline">
@@ -357,7 +357,7 @@
                             <a class="collapsed link-block" href="#message_content_maharamessage_16">
                                             <span class="icon icon-wrench text-default left"></span>
                     
-                    <span class="sr-only"></span>
+                    <span class="visually-hidden"></span>
                     Institution membership confirmation
                     <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
                 </a>
@@ -373,7 +373,7 @@
                             <a class="collapsed link-block" href="#message_content_institutionmessage_1">
                                             <span class="icon icon-university text-default left"></span>
                     
-                    <span class="sr-only"></span>
+                    <span class="visually-hidden"></span>
                     You have been invited to join the institution...
                     <span class="icon icon-chevron-down collapse-indicator pull-right text-small"></span>
                 </a>

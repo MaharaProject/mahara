@@ -8,26 +8,26 @@
             {/if}
         </span>
         <span class="blockinstance-controls">
-            <button class="keyboardmovebutton btn btn-secondary d-none sr-only" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
+            <button class="keyboardmovebutton btn btn-secondary d-none visually-hidden" name="action_moveblockinstance_id_{$id}" alt="{$strmovetitletext}"  data-id="{$id}">
                 {$strmovetitletext}
             </button>
             <span class="float-end btn-group btn-group-top">
                 {if $retractable && !$configure}
                 <a data-bs-toggle="collapse" href="#blockinstance_{$id}_target" aria-expanded="{if $retractedonload}false{else}true{/if}" aria-controls="blockinstance_{$id}_target" class="collapse-arrow{if $retractedonload} collapsed{/if}">
                     <span class="icon icon-chevron-up collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=retractable section=view}</span>
+                    <span class="visually-hidden">{str tag=retractable section=view}</span>
                 </a>
                 {/if}
                 {if $configurable && !$configure}
                 <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
                     <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
-                    <span class="sr-only">{$strconfigtitletext}</span>
+                    <span class="visually-hidden">{$strconfigtitletext}</span>
                 </button>
                 {/if}
                 {if !$lockblocks}
                 <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
                     <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true" title="{$strremovetitletexttooltip}"></span>
-                    <span class="sr-only">{$strremovetitletext}</span>
+                    <span class="visually-hidden">{$strremovetitletext}</span>
                 </button>
                 {/if}
 
@@ -35,7 +35,7 @@
 
         </span>
     </h2>
-    <span class="sr-only">{str tag=blocktypeis section=view arg1=$blocktype}</span>
+    <span class="visually-hidden">{str tag=blocktypeis section=view arg1=$blocktype}</span>
     <div class="block blockinstance-content js-blockinstance-content {if $draft} draft{/if}{if $retractable} collapse{if $retractedonload} {else} show{/if}{/if}" id="blockinstance_{$id}_target" {if $loadbyajax}data-blocktype-ajax="{$id}"{else}data-blocktype-noajax="{$id}"{/if}>
         {$content|safe}
     </div>

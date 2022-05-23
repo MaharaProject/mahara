@@ -11,14 +11,14 @@
         <thead>
             <tr>
                 <th class="resumecontrols">
-                    <span class="accessible-hidden sr-only">{str tag=move}</span>
+                    <span class="accessible-hidden visually-hidden">{str tag=move}</span>
                 </th>
                 <th>{str tag='qualification' section='artefact.resume'}</th>
                 <th class="resumeattachments">
                     <span class="">{str tag=Attachments section=artefact.resume}</span>
                 </th>
                 <th class="resumecontrols">
-                    <span class="accessible-hidden sr-only">{str tag=edit}</span>
+                    <span class="accessible-hidden visually-hidden">{str tag=edit}</span>
                 </th>
             </tr>
         </thead>
@@ -34,7 +34,7 @@
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
-                <span class="accessible-hidden sr-only">{str tag='addeducationhistory' section='artefact.resume'}</span>
+                <span class="accessible-hidden visually-hidden">{str tag='addeducationhistory' section='artefact.resume'}</span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}

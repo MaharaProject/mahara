@@ -2274,7 +2274,7 @@ function get_help_icon($plugintype, $pluginname, $form, $element, $page='', $sec
             json_encode($pluginname) . ',' . json_encode($page) . ',' .
             json_encode($section)
             . ',this); return false;'
-        ) . '"><span class="icon icon-info-circle" role="presentation"></span><span class="sr-only">'. $content . '</span></a></span>';
+        ) . '"><span class="icon icon-info-circle" role="presentation"></span><span class="visually-hidden">'. $content . '</span></a></span>';
 }
 
 function pieform_get_help(Pieform $form, $element) {
@@ -2288,7 +2288,7 @@ function get_block_help(Pieform $form, $element) {
     $helplink = get_manual_help_link_array(array('blocktype', 'blocks'));
     $manualhelplink = $helplink['prefix'] . '/' . $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
     $content = get_string('helpfor', 'mahara', $element['legend']);
-    return ' <span class="help"><a href="' . $manualhelplink . '" title="' . get_string('Help') . '" target="_blank"><span class="icon icon-info-circle" role="presentation"></span><span class="sr-only">'. $content . '</span></a></span>';
+    return ' <span class="help"><a href="' . $manualhelplink . '" title="' . get_string('Help') . '" target="_blank"><span class="icon icon-info-circle" role="presentation"></span><span class="visually-hidden">'. $content . '</span></a></span>';
 }
 
 
@@ -4669,7 +4669,7 @@ function build_pagination_pagelink($class, $text, $title, $disabled=false, $url=
     $result = "<li class='page-item $class'>";
 
     if (!empty($title)) {
-        $text .= '<span class="sr-only">' . $title . '</span>';
+        $text .= '<span class="visually-hidden">' . $title . '</span>';
     }
 
     if ($disabled) {

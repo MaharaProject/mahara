@@ -13,7 +13,7 @@
             <th>{str tag='socialprofile' section='artefact.internal'}</th>
             <th>{str tag='profileurl' section='artefact.internal'}</th>
             {if $controls}<th class="control-buttons">
-                <span class="accessible-hidden sr-only">{str tag=edit}</span>
+                <span class="accessible-hidden visually-hidden">{str tag=edit}</span>
             </th>{/if}
         </tr>
     </thead>
@@ -43,12 +43,12 @@
                 <div class="btn-group">
                     <button data-url="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}" type="button" title="{str tag='edit'}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag='edit'}</span>
+                        <span class="visually-hidden">{str tag='edit'}</span>
                     </button>
                     {if $candelete}
                     <button data-url="{$WWWROOT}artefact/internal/socialprofile.php?id={$row->id}&delete=1" type="button" title="{str tag='delete'}" class="btn btn-secondary btn-sm">
                         <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag='delete'}</span>
+                        <span class="visually-hidden">{str tag='delete'}</span>
                     </button>
                     {/if}
                 </div>

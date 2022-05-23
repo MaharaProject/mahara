@@ -5,7 +5,7 @@
                     <h2>
                         <a class="notetitle" href="" id="n{$n->id}">
                             {$n->title}
-                            <span class="accessible-hidden sr-only">
+                            <span class="accessible-hidden visually-hidden">
                             {str tag=clickformore}
                             </span>
                         </a>
@@ -14,7 +14,7 @@
                     <h2>
                         <a class="notetitle" href="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" id="n{$n->id}">
                             {$n->title}
-                            <span class="accessible-hidden sr-only">
+                            <span class="accessible-hidden visually-hidden">
                             {str tag=clickformore}
                             </span>
                         </a>
@@ -93,7 +93,7 @@
                     <div class="btn-group">
                         <button data-url="{$WWWROOT}artefact/internal/editnote.php?id={$n->id}" type="button" title="{str tag=edit}" class="btn btn-secondary btn-sm">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">
+                            <span class="visually-hidden">
                                 {str(tag=editspecific arg1=$n->title)|escape:html|safe}
                             </span>
                         </button>

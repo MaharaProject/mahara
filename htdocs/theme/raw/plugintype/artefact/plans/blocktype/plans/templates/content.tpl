@@ -7,15 +7,15 @@
             <div class="float-end btn-group">
                 <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/plan/edit.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=editspecific arg1=$plan.title)|escape:html|safe}">
                     <span class="icon icon-pencil-alt"></span>
-                    <span class="sr-only">{str tag='edit'}</span>
+                    <span class="visually-hidden">{str tag='edit'}</span>
                 </button>
                 <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/task/new.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=addtaskspecific section='artefact.plans' arg1=$plan.title)|escape:html|safe}">
                     <span class="icon icon-plus"></span>
-                    <span class="sr-only">{str tag='addtask' section='artefact.plans'}</span>
+                    <span class="visually-hidden">{str tag='addtask' section='artefact.plans'}</span>
                 </button>
                 <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/plan/delete.php?id={$plan.id}{if $plan.view}&view={$plan.view}{/if}" title="{str(tag=deletespecific arg1=$plan.title)|escape:html|safe}">
                     <span class="icon icon-trash-alt text-danger"></span>
-                    <span class="sr-only">{str tag='Delete'}</span>
+                    <span class="visually-hidden">{str tag='Delete'}</span>
                 </button>
             </div>
         {/if}

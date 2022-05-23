@@ -16,7 +16,7 @@
                 <th class="text-center">{{str tag=To}}</th>
                 {{if  $viewtype !== "profile" }}
                 <th class="text-center commentcolumn"><div class="th-shared-wrap"><span class="th-shared-heading">{{str tag=comments section=view}}</span> <span class="th-shared-title">{{str tag=allow section=view}}</span></div></th>
-                <th class="text-center commentcolumn"><span class="sr-only">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
+                <th class="text-center commentcolumn"><span class="visually-hidden">{{str tag=Comments}}</span> <span class="th-shared-title">{{str tag=moderate section=view}}</span></th>
                 {{/if}}
             </tr>
         </thead>
@@ -41,7 +41,7 @@
     <td class="text-center with-icon tiny">
         <a class="{% if (o.presets.locked || o.presets.empty) { %}icon-placeholder{% } %} text-block" data-bind="remove-share" href="#" id="remove-share{%=o.id%}">
             <span class="text-danger icon icon-trash-alt" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{%={{jstr tag=remove section=view}}%}</span>
+            <span class="visually-hidden">{%={{jstr tag=remove section=view}}%}</span>
         </a>
     </td>
     <td>
@@ -98,7 +98,7 @@
     <td class="text-center js-date short" data-name='from'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
             <div class="hasDatepickerwrapperacl">
-                <label for="accesslist{%=o.id%}_startdate" class="accessible-hidden sr-only">{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})</label>
+                <label for="accesslist{%=o.id%}_startdate" class="accessible-hidden visually-hidden">{{str tag=element.calendar.datefrom section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})</label>
                 <input type="text" id="accesslist{%=o.id%}_startdate" name="accesslist[{%=o.id%}][startdate]" class="form-control float-start datetimepicker-input" data-setmin="true" setdatatarget="to" value="{%=o.presets.startdate%}" {% if (o.presets.locked) { %}disabled{% } %} data-bs-toggle="datetimepicker" data-bs-target="#accesslist{%=o.id%}_startdate" autocomplete="off">
             </div>
         </div>
@@ -106,7 +106,7 @@
     <td class="text-center js-date short" data-name='to'>
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
             <div class="hasDatepickerwrapperacl">
-                <label for="accesslist{%=o.id%}_stopdate" class="accessible-hidden sr-only">{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})</label>
+                <label for="accesslist{%=o.id%}_stopdate" class="accessible-hidden visually-hidden">{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})</label>
                 <input type="text" id="accesslist{%=o.id%}_stopdate" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-start datetimepicker-input" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %} data-bs-toggle="datetimepicker" data-bs-target="#accesslist{%=o.id%}_stopdate" autocomplete="off">
             </div>
         </div>

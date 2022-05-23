@@ -27,15 +27,15 @@
                         {if $canedit}
                             <button data-url="{$WWWROOT}artefact/plans/plan/edit.php?{$groupurlquery}id={$plan->id}" title="{str(tag=editspecific arg1=$plan->title)|escape:html|safe}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str tag=edit}</span>
+                                <span class="visually-hidden">{str tag=edit}</span>
                             </button>
                             <button data-url="{$WWWROOT}artefact/plans/plan/view.php?{$groupurlquery}id={$plan->id}" title="{str tag=managetasks section=artefact.plans}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str tag=managetasks section=artefact.plans}</span>
+                                <span class="visually-hidden">{str tag=managetasks section=artefact.plans}</span>
                             </button>
                             <button data-url="{$WWWROOT}artefact/plans/plan/delete.php?{$groupurlquery}id={$plan->id}" title="{str(tag=deletespecific arg1=$plan->title)|escape:html|safe}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str tag=delete}</span>
+                                <span class="visually-hidden">{str tag=delete}</span>
                             </button>
                         {/if}
                     </div>

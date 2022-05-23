@@ -3,7 +3,7 @@
     <li>
         <a class="changeowner {if $tabs.owner == $name} active{/if}" href="{$querybase|safe}owner={$name}" role="tab">
             {$displayname}
-            <span class="accessible-hidden sr-only">
+            <span class="accessible-hidden visually-hidden">
                 ({str tag=tab}
                 {if $tabs.owner == $name}
                 {str tag=selected}{/if})

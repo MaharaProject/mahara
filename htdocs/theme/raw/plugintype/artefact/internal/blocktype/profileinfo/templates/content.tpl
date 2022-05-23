@@ -18,7 +18,7 @@
         </ul>
     {/if}
     {if $profileinfo.socialprofiles}
-        <h3 class="sr-only">{str tag=socialprofiles section=artefact.internal}</h3>
+        <h3 class="visually-hidden">{str tag=socialprofiles section=artefact.internal}</h3>
         <ul class="unstyled profile-info">
         {foreach from=$profileinfo.socialprofiles item=item}
             <li><strong>{$item.description}:</strong>

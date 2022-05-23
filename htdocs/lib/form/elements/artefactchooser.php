@@ -148,20 +148,20 @@ jQuery(function($) {
           // Need to make sure the accessible hidden <span> is present
           // If loaded via ajax it may not be present
           if (a.childNodes.length < 2) {
-              $(a).append('<span class="sr-only">(' + get_string_ajax('tab', 'mahara') + ')</span>');
+              $(a).append('<span class="visually-hidden">(' + get_string_ajax('tab', 'mahara') + ')</span>');
           }
 
           if (!doneBrowse) {
               browseA = a;
-              $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
+              $(browseA).find('.visually-hidden').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
               doneBrowse = true;
 
               // Hide the search form
               $(a).on('click', function(e) {
                   $('#artefactchooser-searchform').addClass('d-none');
                   $(searchA).removeClass('active');
-                  $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
-                  $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
+                  $(browseA).find('.visually-hidden').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
+                  $(searchA).find('.visually-hidden').html('(' + get_string_ajax('tab', 'mahara') + ')');
                   $(browseA).addClass('active');
                   $(browseA).trigger("blur");
                   $('#artefactchooser-searchfield').val(''); // forget the search for now, easier than making the tabs remember it
@@ -180,8 +180,8 @@ jQuery(function($) {
                   $('#artefactchooser-searchform').show();
                   $('#artefactchooser-searchform').removeClass('d-none');
                   $(browseA).removeClass('active');
-                  $(searchA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
-                  $(browseA).find('.sr-only').html('(' + get_string_ajax('tab', 'mahara') + ')');
+                  $(searchA).find('.visually-hidden').html('(' + get_string_ajax('tab', 'mahara') + ' ' + get_string_ajax('selected', 'mahara') + ')');
+                  $(browseA).find('.visually-hidden').html('(' + get_string_ajax('tab', 'mahara') + ')');
                   $(searchA).addClass('active');
 
                   $('#artefactchooser-searchfield').on('keypress', function(e) {

@@ -15,13 +15,13 @@
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
                 <span class="icon icon-pencil-alt float-end" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=edit}</span>
+                <span class="visually-hidden">{str tag=edit}</span>
                 </a>
                 {else}
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
                 <span class="icon icon-pencil-alt float-end" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=edit}</span>
+                <span class="visually-hidden">{str tag=edit}</span>
                 </a>
                 {/if}
             </h3>

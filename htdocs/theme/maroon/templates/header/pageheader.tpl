@@ -39,7 +39,7 @@
                             <h1 id="viewh1" class="page-header">
                                 {if $title}
                                     <span class="subsection-heading">{$title|safe}</span>
-                                    {if $collectiontitle}<span class="sr-only">{str tag=pageincollectiontitle section=collection arg1=$collectiontitle|safe}</span>{/if}
+                                    {if $collectiontitle}<span class="visually-hidden">{str tag=pageincollectiontitle section=collection arg1=$collectiontitle|safe}</span>{/if}
                                 {else}
                                     <span class="section-heading">{$maintitle|safe}</span>
                                 {/if}
@@ -62,7 +62,7 @@
                                     {if $moretags}
                                         <a href="#" class="moretags">
                                         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
-                                        <span class="sr-only">{str tag="more..."}</span>
+                                        <span class="visually-hidden">{str tag="more..."}</span>
                                         </a>
                                     {/if}
                                 </div>
