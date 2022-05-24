@@ -15,7 +15,10 @@ require_once('activity.php');
 require_once('license.php');
 
 define('MIN_RATING', 1);
-$maxrating = get_config_plugin('artefact', 'comment', 'ratinglength');
+$maxrating = false;
+if (get_config('installed')) {
+    $maxrating = get_config_plugin('artefact', 'comment', 'ratinglength');
+}
 define('MAX_RATING', $maxrating ? $maxrating : 5);
 
 function valid_rating($ratingstr) {

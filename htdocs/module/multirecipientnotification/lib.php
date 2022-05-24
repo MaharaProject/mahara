@@ -194,11 +194,13 @@ class PluginModuleMultirecipientnotification extends PluginModule {
      */
     public static function sanity_check() {
         try {
-            $installed = get_field('artefact_installed', 'name', 'name', self::get_plugin_name());
-            if (false != $installed) {
-                throw new InstallationException("The artefact plugin multiRecipientArtefact is "
-                        . "installed which prevents the installation of this module, "
-                        . "that offers the identical functionality");
+            if (get_config('installed')) {
+                $installed = get_field('artefact_installed', 'name', 'name', self::get_plugin_name());
+                if (false != $installed) {
+                    throw new InstallationException("The artefact plugin multiRecipientArtefact is "
+                            . "installed which prevents the installation of this module, "
+                            . "that offers the identical functionality");
+                }
             }
         }
         catch(Exception $exc) {

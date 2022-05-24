@@ -924,7 +924,10 @@ class PluginSearchElasticsearch7 extends PluginSearch {
      */
     public static function config_value_or_default($key, $fetch_default = false) {
         $default = null;
-        $val = get_config_plugin('search', self::plugin_name, $key);
+        $val = false;
+        if (get_config('installed')) {
+            $val = get_config_plugin('search', self::plugin_name, $key);
+        }
         if (array_key_exists($key, self::default_config)) {
             $default = self::default_config[$key];
         }

@@ -1045,6 +1045,10 @@ function load_config($behat=false) {
 function get_config($key, $default = null) {
     global $CFG;
     if (isset($CFG->$key)) {
+        // Double check if $key == 'installed' in case they accidentially set it in their config.php file
+        if ($key === 'installed') {
+            return db_table_exists('config');
+        }
         return $CFG->$key;
     }
     return $default;
@@ -1857,8 +1861,9 @@ function plugins_installed($plugintype, $all=false, $reset=false) {
     if (defined('INSTALLER') || defined('TESTSRUNNING') || !isset($records[$plugintype][true])) {
 
         $sort = $plugintype == 'blocktype' ? 'artefactplugin,name' : 'name';
-
-        if ($rs = get_records_assoc($plugintype . '_installed', '', '', $sort)) {
+        // Need to assert does the config table exist intsead of asserting that site is installed
+        // because we need the value of $rs on a partially installed site at the lastcoredata install step
+        if (db_table_exists('config') && $rs = get_records_assoc($plugintype . '_installed', '', '', $sort)) {
             $records[$plugintype][true] = $rs;
         }
         else {

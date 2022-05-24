@@ -1306,7 +1306,7 @@ class Theme {
         else if ($name) {
             return $this->get_image_url('site-logo-' . $name);
         }
-        else {
+        else if (get_config('installed')) {
             try {
                 $sitelogoid = get_field('institution', 'logo', 'name', 'mahara');
                 if ($sitelogoid) {

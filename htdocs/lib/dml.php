@@ -2244,7 +2244,7 @@ function db_table_exists($table) {
     // not using db_table_name here because it uses double quotes that break the query
     $table = db_quote(get_config('dbprefix') . $table);
 
-    return get_column_sql("
+    return (bool) get_column_sql("
         SELECT 1
         FROM INFORMATION_SCHEMA.TABLES
         WHERE (
