@@ -1471,6 +1471,7 @@ class BlockInstance {
         try {
             if ($form->get_property('quickedit')) {
                 $rendered['html'] = $this->render_viewing();
+                $rendered['blockheader'] = $this->render_viewing(false, false, true);
             }
             else {
                 $rendered = $this->render_editing(false, false, $form->submitted_by_js());
@@ -1720,13 +1721,14 @@ class BlockInstance {
     /**
      * To render the html of a block for viewing
      *
-     * @param boolean $exporting  Indicate the rendering is for an export
-     *                            If we are doing an export we can't render the block to be loaded via ajax
-     * @param boolean $versioning Indicate the rendering is for an older view version
+     * @param boolean $exporting   Indicate the rendering is for an export
+     *                             If we are doing an export we can't render the block to be loaded via ajax
+     * @param boolean $versioning  Indicate the rendering is for an older view version
+     * @param boolean $headingonly Indicate if we just return the details headings bar of the block
      *
      * @return the rendered block
      */
-    public function render_viewing($exporting=false, $versioning=false) {
+    public function render_viewing($exporting=false, $versioning=false, $headingonly=false) {
         global $USER;
 
         if (!safe_require_plugin('blocktype', $this->get('blocktype'))) {
@@ -1867,7 +1869,11 @@ class BlockInstance {
             $viewsubmitted = $this->get_view()->is_submitted();
             $smarty->assign('showquickedit', $canedit && !$viewsubmitted);
         }
-
+        $blockheaderhtml = $smarty->fetch('header/block-header.tpl');
+        if ($headingonly) {
+            return $blockheaderhtml;
+        }
+        $smarty->assign('blockheaderhtml', $blockheaderhtml);
         $smarty->assign('peerroleonly', $USER->has_peer_role_only($this->get_view()));
         $smarty->assign('draft', (isset($configdata['draft']) ? $configdata['draft'] : 0));
 

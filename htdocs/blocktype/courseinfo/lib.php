@@ -146,6 +146,10 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
             // Have install disabled by default
             return set_field('blocktype_installed', 'active', 0, 'name', 'courseinfo');
         }
+        if ($fromversion < 2022051000) {
+            // set the blocktype to have quickedit mode
+            set_field('blocktype_installed', 'quickedit', 1, 'name', 'courseinfo');
+        }
         return true;
     }
 
@@ -411,5 +415,14 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
             return array('error' => true,
                          'errormsg' => get_string('novalidconnectionauthtype', 'blocktype.courseinfo') . ' - ' . $e->getMessage());
         }
+    }
+
+    public static function instance_quickedit_form(BlockInstance $instance) {
+        $elements = self::instance_config_form($instance);
+        $elements['quickedit'] = array(
+            'type' => 'hidden',
+            'value' => true
+        );
+        return $elements;
     }
 }

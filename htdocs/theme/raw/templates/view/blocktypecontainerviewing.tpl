@@ -1,10 +1,5 @@
 <div class="bt-{$blocktype} gridstackblock card card-secondary {$cardicontype} clearfix {if $retractable}collapsible{/if}" id="blockinstance_{$id}">
-    {if !$editing && $blockheader && !$versioning && !$peerroleonly}
-        {include file='header/block-comments-details-header.tpl' artefactid=$artefactid blockid=$blockid commentcount=$commentcount}
-    {/if}
-    {if $showquickedit}
-        {include file='header/block-quickedit-header.tpl' blockid=$blockid}
-    {/if}
+    {$blockheaderhtml|safe}
     {if $title}
         <h2 class="title card-header js-heading">
             {if $retractable}

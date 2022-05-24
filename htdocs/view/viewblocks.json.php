@@ -42,7 +42,7 @@ if ($blockid) {
     $view = $block->get_view();
 
     $quickedit = get_field('blocktype_installed', 'quickedit', 'name', $block->get('blocktype'));
-    if ($artefactid && !$quickedit) {
+    if ($artefactid) {
         $artefact = $block->get_artefact_instance($artefactid);
     }
 }
@@ -56,7 +56,7 @@ if ($USER->has_peer_role_only($view)) {
 }
 
 
-if ($quickedit) {
+if ($quickedit && !$artefactid) {
     $data = $block->render_editing_quickedit();
     $html = $data['html'];
     $title = $data['title'];

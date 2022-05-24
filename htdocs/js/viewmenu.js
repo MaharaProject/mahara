@@ -64,7 +64,9 @@ function addFeedbackSuccess(form, data) {
     // Clear add feedback form TinyMCE
     if (isTinyMceUsed()) {
         var currentMCE = tinyMCE.get('add_feedback_form_message');
-        currentMCE.setContent('');
+        if (currentMCE) {
+            currentMCE.setContent('');
+        }
     }
     // Clear the textarea (in case TinyMCE is disabled)
     var messageid = 'message';
@@ -167,7 +169,7 @@ function set_up_modal_events() {
     $('#configureblock .submitcancel.submit').off('click');
     $('#configureblock .submitcancel.submit').on('click', function(e) {
 
-        if (isTinyMceUsed()) {
+        if (isTinyMceUsed() && tinymce.activeEditor) {
             if (tinymce.activeEditor.getContent()) {
                 $('#configureblock').find('textarea.wysiwyg').each(function() {
                     modal_textarea_id = $(this).attr('id');
@@ -215,7 +217,7 @@ function set_up_modal_events() {
 
     $('#configureblock .submitcancel.cancel').off('click');
     $('#configureblock .submitcancel.cancel').on('click', function(e) {
-        if (isTinyMceUsed()) {
+        if (isTinyMceUsed() && tinymce.activeEditor) {
             if (tinymce.activeEditor.getContent()) {
                 $('#configureblock').find('textarea.wysiwyg').each(function() {
                     modal_textarea_id = $(this).attr('id');
