@@ -3,7 +3,7 @@
 
 /* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
 readers do not read off random characters that represent icons */
-@import 'variables';
+
 @each $name, $icon in $fa-icons {
-    .#{$fa-css-prefix}-#{$name}::before { content: fa-content($icon); }
-  }
+  .#{$fa-css-prefix}-#{$name}::before { content: unquote("\"#{ $icon }\""); }
+}
