@@ -108,7 +108,7 @@
             {str tag="groupadminlist" section="interaction.forum"}
         </p>
         {foreach from=$groupadmins item=groupadmin}
-            <a href="{profile_url($groupadmin)}" class="badge badge-default">
+            <a href="{profile_url($groupadmin)}" class="badge bg-default">
                 <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$groupadmin maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></span> {$groupadmin|display_name}
             </a>
         {/foreach}

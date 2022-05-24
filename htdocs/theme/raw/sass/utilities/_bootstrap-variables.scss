@@ -277,18 +277,6 @@ $transition-base:                           all .2s ease-in-out !default;
 $transition-fade:                           opacity .15s linear !default;
 $transition-collapse:                       height .35s ease !default;
 
-$embed-responsive-aspect-ratios: () !default;
-// stylelint-disable-next-line scss/dollar-variable-default
-$embed-responsive-aspect-ratios: join(
-  (
-    (21 9),
-    (16 9),
-    (3 4),
-    (1 1),
-  ),
-  $embed-responsive-aspect-ratios
-);
-
 // Fonts
 //
 // Font, line-height, and color for body text, headings, and more.
@@ -381,6 +369,7 @@ $table-active-bg:                           #faf5e4 !default;
 $table-border-width:                        $border-width !default;
 $table-border-width-heavy:                  0.25rem !default;
 $table-border-color:                        $border-color !default;
+$table-group-separator-color:               $border-color !default;
 
 $table-head-bg:                             $gray-200 !default;
 $table-head-color:                          $gray-700 !default;
@@ -394,6 +383,7 @@ $table-dark-border-color:                   scale-color($gray-900, $lightness: 8
 $table-dark-color:                          $body-bg !default;
 
 $table-striped-order:                       odd !default;
+$table-striped-bg:                          $table-accent-bg !default;
 
 $table-caption-color:                       $text-muted !default;
 
@@ -538,6 +528,7 @@ $form-check-inline-input-margin-x:      .3125rem !default;
 
 $form-grid-gutter-width:                .625 !default;
 $form-group-margin-bottom:              1rem !default;
+$form-switch-padding-start:             0 !default;
 
 $input-group-addon-color:               $input-color !default;
 $input-group-addon-bg:                  $gray-200 !default;
@@ -939,6 +930,9 @@ $badge-pill-padding-x:              .6em !default;
 // customizing padding or font-size on labels.
 $badge-pill-border-radius:          10rem !default;
 
+// Override Bootstrap 5 badge rule that sets badge color
+$badge-color:                       $link-color;
+
 
 // Modals
 
@@ -1102,10 +1096,10 @@ $spinner-border-width-sm:   .125em !default;
 
 // Close
 
-$close-font-size:                   $font-size-base * 1.5 !default;
-$close-font-weight:                 $font-weight-bold !default;
-$close-color:                       $black !default;
-$close-text-shadow:                 0 1px 0 $white !default;
+$btn-close-font-size:               $font-size-base * 1.5 !default;
+$btn-close-font-weight:             $font-weight-bold !default;
+$btn-close-color:                   $black !default;
+$btn-close-text-shadow:             0 1px 0 $white !default;
 
 
 // Code

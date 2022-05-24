@@ -408,6 +408,7 @@
     .form-control {
         display: inline-block;
         max-width: calc(100% - 1.875rem); //calc(100% - 30px);
+        width: 100%;
         @include media-breakpoint-up(md) {
             width: 23.125rem; // 370px;
             .columns3 &,

@@ -14,7 +14,7 @@
         {if $sbdata.invitedgroups}
             <div id="invitedgroups" class="list-group-item list-group-item-warning list-group-item-profile-notification">
                 <a href="{$WWWROOT}group/index.php?filter=invite">
-                    <span id="invitedgroupscount" class="badge badge-warning">{$sbdata.invitedgroups}</span>
+                    <span id="invitedgroupscount" class="badge bg-warning">{$sbdata.invitedgroups}</span>
                     <span id="invitedgroupsmessage">{$sbdata.invitedgroupsmessage}</span>
                 </a>
             </div>
@@ -22,7 +22,7 @@
         {if $sbdata.pendingfriends}
             <div id="pendingfriends" class="list-group-item list-group-item-warning list-group-item-profile-notification">
                 <a href="{$WWWROOT}user/index.php?filter=pending">
-                    <span id="pendingfriendscount" class="badge badge-warning">{$sbdata.pendingfriends}</span>
+                    <span id="pendingfriendscount" class="badge bg-warning">{$sbdata.pendingfriends}</span>
                     <span id="pendingfriendsmessage">{$sbdata.pendingfriendsmessage}</span>
                 </a>
             </div>

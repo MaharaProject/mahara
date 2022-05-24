@@ -14,9 +14,14 @@ button {
 }
 
 .form-control {
+    display: inline-block;
   &:focus {
     outline: medium solid $input-focus-border-color;
   }
+}
+
+.form-text {
+    display: block;
 }
 
 input[type=text],
@@ -259,6 +264,14 @@ textarea {
     // buttons that follow an input in the same line need to inherit the same border radius as input
     .btn-secondary {
         border-radius: $input-border-radius-sm;
+    }
+
+    @include media-breakpoint-up(sm) {
+        .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+          }
     }
 }
 

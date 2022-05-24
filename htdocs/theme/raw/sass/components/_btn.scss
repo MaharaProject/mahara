@@ -144,6 +144,54 @@
     }
 }
 
+// Block button (from Bootstrap 4)
+//
+
+.btn-block {
+    display: block;
+    width: 100%;
+  
+    // Vertically space out multiple block buttons
+    + .btn-block {
+      margin-top: $btn-block-spacing-y;
+    }
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+.btn-close {
+    width: auto;
+    height: auto;
+    float: right;
+    background: transparent;
+    @include font-size($btn-close-font-size);
+    font-weight: $btn-close-font-weight;
+    line-height: 1;
+    color: $btn-close-color;
+    text-shadow: $btn-close-text-shadow;
+    opacity: .5;
+
+    // Override <a>'s hover style
+    &:hover {
+      color: $btn-close-color;
+      text-decoration: none;
+    }
+
+    &:not(:disabled):not(.disabled) {
+        &:hover,
+        &:focus {
+            opacity: .75;
+        }
+    }
+}
+
 // like the Compose button on Inbox page
 h1 + div > .btn-top-left,
 .page-header + div.btn-top-left {
