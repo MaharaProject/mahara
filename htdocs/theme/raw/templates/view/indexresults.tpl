@@ -100,7 +100,7 @@
                                                 <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{str tag="friends" section="view"}</span>
                                             {elseif $accessitem->group}
-                                                <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+                                                <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$accessitem->displayname}</span>
                                             {elseif $accessitem->institution}
                                                 <span class="icon icon-university left" role="presentation" aria-hidden="true"></span>

@@ -480,7 +480,7 @@ $siteoptionform = array(
                 $notificationelements),
         ),
         'groupsettings' => array(
-            'iconclass' => 'users',
+            'iconclass' => 'people-group',
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => true,

@@ -2402,7 +2402,7 @@ function admin_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('people'),
             'weight' => 30,
-            'iconclass' => 'users',
+            'iconclass' => 'people-group',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2716,7 +2716,7 @@ function institutional_admin_nav() {
             'url'    => 'admin/users/search.php',
             'title'  => get_string('people'),
             'weight' => 10,
-            'iconclass' => 'users',
+            'iconclass' => 'people-group',
         ),
         'configusers/usersearch' => array(
             'path'   => 'configusers/usersearch',
@@ -2754,7 +2754,7 @@ function institutional_admin_nav() {
             'title'  => get_string('groups', 'admin'),
             'accessibletitle' => get_string('administergroups', 'admin'),
             'weight' => 20,
-            'iconclass' => 'users',
+            'iconclass' => 'people-group',
         ),
         'managegroups/submissions' => array(
             'path'   => 'managegroups/archives',
@@ -2999,7 +2999,7 @@ function mahara_standard_nav() {
             'url' => null,
             'title' => get_string('Engage'),
             'weight' => 40,
-            'iconclass' => 'users',
+            'iconclass' => 'people-group',
         ),
         'create/views' => array(
             'path' => 'create/views',

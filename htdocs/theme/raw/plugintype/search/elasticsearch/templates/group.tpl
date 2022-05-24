@@ -1,12 +1,12 @@
 {if $record->deleted}
     <h2 class="list-group-item-heading">
-        <span class="icon icon-users left text-midtone" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-people-group left text-midtone" role="presentation" aria-hidden="true"></span>
         {$record->name} ({str tag=deleted section=search.elasticsearch})
     </h2>
 {else}
     <div class="groupsdetails">
         <h2 class="list-group-item-heading">
-            <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span>
             <a href="{$WWWROOT}group/view.php?id={$record->id}">
                 {$record->name}
             </a>

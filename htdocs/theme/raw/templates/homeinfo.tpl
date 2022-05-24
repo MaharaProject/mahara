@@ -58,7 +58,7 @@
             <div id="home-info-engage" class="widget home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
-                        <span class="icon icon-users" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-people-group" role="presentation" aria-hidden="true"></span>
                     </div>
                     <div class="widget-content">
                         <h2 class="title">

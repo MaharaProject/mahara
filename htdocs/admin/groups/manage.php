@@ -168,7 +168,7 @@ function groupadminsform_submit(Pieform $form, $values) {
 }
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-users');
+setpageicon($smarty, 'icon-people-group');
 
 $smarty->assign('quotasform', $quotasform);
 $smarty->assign('institutionform', $institutionform);
