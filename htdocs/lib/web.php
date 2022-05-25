@@ -529,7 +529,7 @@ EOF;
             $strings[$k] = get_raw_string($k, $v);
         }
     }
-
+    $javascript_array[] = $jsroot . 'mahara.js';
     $jsstrings = jsstrings();
     $themepaths = themepaths();
 
@@ -611,7 +611,6 @@ EOF;
         }
     }
 
-    $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'formchangechecker.js';
     $javascript_array[] = $jsroot . 'textareamaxlengthchecker.js';
 
