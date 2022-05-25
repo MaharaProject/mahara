@@ -440,7 +440,9 @@ class Session {
             );
         }
         else {
-            @session_start();
+            if (session_status() == PHP_SESSION_NONE) {
+                @session_start();
+            }
             $this->sessionid = session_id();
         }
         // Anytime you call session_start() more than once, PHP will usually

@@ -34,7 +34,7 @@ class PluginDateFormat extends Plugin
     /**
      * @param mixed  $value
      * @param string $format
-     * @param null   $default
+     * @param mixed  $default
      *
      * @return string
      */

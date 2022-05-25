@@ -140,7 +140,7 @@ class LeapImportComment extends LeapImportArtefactPlugin {
                 'ctime'       => (string)$entry->published,
                 'mtime'       => (string)$entry->updated,
                 'private'     => (int)PluginImportLeap::is_correct_category_scheme($entry, $importer, 'audience', 'Private'),
-                'authorname'  => isset($authorname) ? $authorname : null,
+                'authorname'  => $authorname,
                 'author'      => null,
                 'tags'        => PluginImportLeap::get_entry_tags($entry),
             ),

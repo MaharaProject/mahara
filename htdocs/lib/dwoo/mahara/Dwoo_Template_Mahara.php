@@ -40,13 +40,13 @@ class Dwoo_Template_Mahara extends File {
      * @param array $includePath The paths to look in.
      * @throws MaharaException
      */
-    public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = null) {
+    public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = null) { // @phpstan-ignore-line
         global $THEME;
 
         $parts = explode(':', $file, 3);
 
         if (count($parts) !== 3) {
-            throw new SystemException("Invalid template path \"{$file}\"");
+            throw new \SystemException("Invalid template path \"{$file}\"");
         }
 
         // Keep the original string for logging purposes
@@ -56,12 +56,13 @@ class Dwoo_Template_Mahara extends File {
         // Since we use $plugintype as part of a file path, we should whitelist it
         $plugintype = strtolower($plugintype);
         if (!in_array($plugintype, plugin_types())) {
-            throw new SystemException("Invalid plugintype in Dwoo template \"{$dwooref}\"");
+            throw new \SystemException("Invalid plugintype in Dwoo template \"{$dwooref}\"");
         }
 
         // Get the relative path for this particular plugin
         require_once(get_config('docroot') . $plugintype . '/lib.php');
-        $pluginpath = call_static_method(generate_class_name($plugintype), 'get_theme_path', $pluginname);
+        $pluginclass = generate_class_name($plugintype);
+        $pluginpath = $pluginclass::get_theme_path($pluginname);
 
         // Because this is a plugin template file, we don't want to include any accidental matches against
         // core template files with the same name.

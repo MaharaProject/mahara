@@ -32,11 +32,13 @@ parameters:
         - htdocs/artefact/internal/lib.php
         - htdocs/artefact/lib.php
         - htdocs/artefact/resume/lib.php
+        - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Auth/Simple.php
         - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Configuration.php
         - htdocs/auth/saml/lib.php
         - htdocs/auth/user.php
         - htdocs/blocktype/lib.php
         - htdocs/lib/adodb/adodb-exceptions.inc.php
+        - htdocs/lib/adodb/adodb.inc.php
         - htdocs/lib/dml.php
         - htdocs/lib/dwoo/dwoo/Dwoo/Core.php
         - htdocs/lib/dwoo/mahara/Dwoo_Mahara.php
@@ -84,7 +86,6 @@ parameters:
         - htdocs/lib/adodb/*
         - htdocs/lib/antispam/*
         - htdocs/lib/csstidy/*
-        - htdocs/lib/dwoo/*
         - htdocs/lib/elasticsearch/*
         - htdocs/lib/form/elements/captcha.php
         - htdocs/lib/htmlpurifier/*

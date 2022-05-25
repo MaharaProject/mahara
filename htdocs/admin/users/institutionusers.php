@@ -21,6 +21,7 @@ define('SECTION_PAGE', 'institutionusers');
 define('MENUITEM', 'manageinstitutions/institutionusers');
 require_once('institution.php');
 $institutionelement = get_institution_selector(false);
+$lastinstitution = false;
 
 if (!$institutionelement) {
     $smarty = smarty();
@@ -73,6 +74,7 @@ $usertypeselector = pieform(array(
     'elements' => $usertypeselectorelements,
 ));
 
+$submittext = '';
 if ($usertype == 'requesters') {
     // LHS shows users who have requested membership, RHS shows users to be added
     $userlistelement = array(

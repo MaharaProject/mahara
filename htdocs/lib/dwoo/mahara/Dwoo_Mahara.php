@@ -41,6 +41,13 @@ class Dwoo_Mahara extends Core {
     protected $includePath;
 
     /**
+     * Stores the template dir we are using.
+     *
+     * @var string
+     */
+    protected $template_dir;
+
+    /**
      * stores the template delimiters since some code relies on that
      */
     public $left_delimiter = '{';

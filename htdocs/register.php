@@ -60,8 +60,7 @@ if (!empty($_SESSION['registrationcancelled'])) {
 }
 
 // Step three of registration - given a key register the user
-if (isset($key)) {
-
+if (!empty($key)) {
     // Begin the registration form building
     if (!$registration = get_record_select('usr_registration', '"key" = ? AND pending != 1', array($key))) {
         die_info(get_string('registrationnosuchkey1', 'auth.internal'));

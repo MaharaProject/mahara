@@ -329,6 +329,53 @@ class BehatHooks extends BehatBase {
                 }
             }
         }
+        else {
+            // We have passed this step.
+            try {
+                // If we do not have a JS alert we can check the page for "Call stack" non-fatal errors.
+                $callstackxpath = "//*[text()[contains(., 'Call stack')]]";
+                if ($this->getSession()->getDriver()->find($callstackxpath)) {
+                    // if (!empty($CFG->behat_faildump_path)) {
+                    $this->take_afterstep_screenshot($scope);
+                    // }
+                    throw new \Exception('A non-fatal Call Stack was found on the page.');
+                }
+            }
+            catch (UnexpectedAlertOpen $e) {
+                // There is an open JS alert. We can silently ignore this.
+            }
+        }
+    }
+
+    /**
+     * Take a screenshot of the current page and save it to the behat_faildump_path.
+     *
+     * @param AfterStepScope $scope
+     */
+    protected function take_afterstep_screenshot($scope) {
+        global $CFG;
+        // create filename string
+        preg_match('|test/behat/features/(.*)\.feature|', $scope->getFeature()->getFile(), $matches);
+        $featureFolder = preg_replace('/\W/', '', preg_replace('/\//', '__', $matches[1]));
+        $scenarioName = $this->currentScenario->getTitle();
+        $scenarioLine = $scope->getStep()->getLine();
+
+        $fileName = preg_replace('/\W/', '', $scope->getStep()->getText()) . '_line' . $scenarioLine . '.png';
+
+        // create screenshots directory if it doesn't exist
+        if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder)) {
+            mkdir($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder, $CFG->directorypermissions, true);
+        }
+
+        // For Selenium2 Driver you can use:
+        $screenshotfile = $CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder . '/' . $fileName;
+        $out = file_put_contents($screenshotfile, $this->getSession()->getDriver()->getScreenshot());
+
+        if (!empty($CFG->behat_view_screenshots) && $out !== false && $eog = exec('apt-cache policy eog | grep Installed')) { // Ubuntu
+            if (!preg_match('/Installed\: \(none\)/', $eog)) {
+                exec('eog ' . $screenshotfile . " > /dev/null 2>/dev/null &");
+            }
+        }
     }
 
     /**

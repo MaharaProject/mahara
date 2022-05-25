@@ -1,10 +1,10 @@
 {foreach from=$topics item=topic}
 {cycle assign='objectionableclass' values='r0,r1'}
 {if $topic->containsobjectionable}
-{$objectionableclass .= ' containobjectionable'}
+{assign var=objectionableclass value=$objectionableclass + ' containobjectionable'}
 {/if}
 {if !$topic->approved}
-{$objectionableclass .= ' warning'}
+{assign var=objectionableclass value=$objectionableclass + ' warning'}
 {/if}
 
 {if $sticky}

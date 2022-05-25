@@ -9,7 +9,7 @@
         {* Get the current page index *}
         {foreach from=$collection item=view name=page}
             {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid)}
-              {$currentindex = $dwoo.foreach.page.index}
+              {assign var="currentindex" value=$dwoo.foreach.page.index}
             {/if}
         {/foreach}
 
@@ -23,7 +23,7 @@
             {if ($viewid && $view->view == $viewid)
             || ($view->progresscompletion && $progresscompletion && !$viewid)
             || ($view->framework && $framework && !$viewid)}
-              {$currentindex = $dwoo.foreach.page.index}
+              {assign var="currentindex" value=$dwoo.foreach.page.index}
               <li class="dropdown-item">
                 <a class="active" href="{$view->fullurl}">{$view->title}</a>
               </li>

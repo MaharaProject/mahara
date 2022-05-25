@@ -83,6 +83,7 @@ if ($group->invitefriends) {
 $editwindow = group_format_editwindow($group);
 
 $view = group_get_homepage_view($group->id);
+$viewcontent = '';
 if ($newlayout = $view->uses_new_layout()) {
     $layoutjs = array('js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js');
     $blocks = $view->get_blocks();

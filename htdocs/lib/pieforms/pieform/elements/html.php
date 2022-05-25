@@ -19,7 +19,11 @@
  * @return string           The HTML for the element
  */
 function pieform_element_html(Pieform $form, $element) {/*{{{*/
-    return $element['value'];
+    // Return $element['value'] if we have the key.
+    if (isset($element['value'])) {
+        return $element['value'];
+    }
+    return '';
 }/*}}}*/
 
 function pieform_element_html_set_attributes($element) {/*{{{*/

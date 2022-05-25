@@ -128,7 +128,7 @@
                 <td class="completedcount readyforassessment text-center">
                     <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->readyforassessment.title}</span>
                     <span>
-                        {if $statuscounts->readyforassessment[$option->id]}{$count = $statuscounts->readyforassessment[$option->id]}{else}{$count = 0}{/if}
+                        {if $statuscounts->readyforassessment[$option->id]}{assign var="count" value=$statuscounts->readyforassessment[$option->id]}{else}{assign var="count" value=0}{/if}
                         {$count}
                     </span>
                 </td>
@@ -138,7 +138,7 @@
                 <td class="completedcount dontmatch text-center">
                     <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->dontmatch.title}</span>
                     <span>
-                        {if $statuscounts->dontmatch[$option->id]}{$count = $statuscounts->dontmatch[$option->id]}{else}{$count = 0}{/if}
+                        {if $statuscounts->dontmatch[$option->id]}{assign var="count" value=$statuscounts->dontmatch[$option->id]}{else}{assign var="count" value=0}{/if}
                         {$count}
                     </span>
                 </td>
@@ -148,7 +148,7 @@
                 <td class="completedcount partiallycomplete text-center">
                     <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->partiallycomplete.title}</span>
                     <span>
-                        {if $statuscounts->partiallycomplete[$option->id]}{$count = $statuscounts->partiallycomplete[$option->id]}{else}{$count = 0}{/if}
+                        {if $statuscounts->partiallycomplete[$option->id]}{assign var="count" value=$statuscounts->partiallycomplete[$option->id]}{else}{assign var="count" value=0}{/if}
                         {$count}
                     </span>
                 </td>
@@ -158,7 +158,7 @@
                 <td class="completedcount completed text-center">
                     <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->completed.title}</span>
                     <span>
-                        {if $statuscounts->completed[$option->id]}{$count = $statuscounts->completed[$option->id]}{else}{$count = 0}{/if}
+                        {if $statuscounts->completed[$option->id]}{assign var="count" value=$statuscounts->completed[$option->id]}{else}{assign var="count" value=0}{/if}
                         {$count}
                     </span>
                 </td>

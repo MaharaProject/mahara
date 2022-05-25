@@ -1613,10 +1613,13 @@ class Core
     /**
      * Assign the value to the given variable.
      *
+     * There are places in the compiled code where the return is echoed, so this method returns an
+     * empty string on success.
+     *
      * @param mixed  $value the value to assign
      * @param string $scope the variable string, using dwoo variable syntax (i.e. "var.subvar[subsubvar]->property")
      *
-     * @return bool true if assigned correctly or false if a problem occured while parsing the var string
+     * @return string|bool empty string if assigned correctly or false if a problem occured while parsing the var string
      */
     public function assignInScope($value, $scope)
     {
@@ -1665,6 +1668,8 @@ class Core
                 return false;
             }
         }
+        // Default to returning an empty string.
+        return '';
     }
 
     /**
