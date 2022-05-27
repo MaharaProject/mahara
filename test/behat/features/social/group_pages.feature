@@ -27,25 +27,25 @@ Scenario: Copying a group page retains title (Bug 1519374)
  # Make the group page copyable
  Given I log in as "UserA" with password "Kupuh1pa!"
  When I go to group "GroupA"
- And I follow "Share" in the "Arrow-bar nav" "Nav" property
+ And I click on "Share" in the "Arrow-bar nav" "Nav" property
  And I click on "Edit access" in "Page GroupA_01" row
- And I press "Advanced options"
+ And I click on "Advanced options"
  And I set the following fields to these values:
  | Allow copying | 1 |
- And I press "Save"
+ And I click on "Save"
  And I log out
 
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I am on homepage
- When I follow "Page GroupA_01"
- And I press "More options"
- And I follow "Copy"
+ When I click on "Page GroupA_01"
+ And I click on "More options"
+ And I click on "Copy"
  And the following fields match these values:
  | Page title | Page GroupA_01 |
- Then I press "Save"
+ Then I click on "Save"
 
 Scenario: Group homepage basic settings and skins can't be edited ($cfg->skins must not be set) - Bug 1718806
  Given I log in as "UserC" with password "Kupuh1pa!"
  When I go to group "GroupA"
- And I press "Edit"
+ And I click on "Edit"
  And I should not see "Settings"

@@ -31,46 +31,46 @@ Background:
     When I click on "Send friend request" in "Bob UserB" row
     Then I should see "Send Bob UserB a friendship request"
     When I fill in "Would you like to be my friend?" for "Message"
-    And I press "Request friendship"
+    And I click on "Request friendship"
     Then I should see "Sent a friendship request to Bob UserB"
     When I click on "Send friend request" in "Cecilia UserC" row
     Then I should see "Send Cecilia UserC a friendship request"
     When I fill in "Would you like to be my friend Cecilia?" for "Message"
-    And I press "Request friendship"
+    And I click on "Request friendship"
     Then I should see "Sent a friendship request to Cecilia UserC"
     When I select "Everyone" from "Filter"
-    And I press "Search"
+    And I click on "Search"
     And I click on "Send friend request" in "Dave UserD" row
     Then I should see "Send Dave UserD a friendship request"
     When I fill in "Would you like to be my friend Dave?" for "Message"
-    And I press "Request friendship"
+    And I click on "Request friendship"
     Then I should see "Sent a friendship request to Dave UserD"
     And I log out
 
     # User B accepts the friendship request
     Given I log in as "UserB" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I click on "pending friend"
     Then I should see "Angela UserA (UserA)"
-    When I press "Approve"
+    When I click on "Approve"
     Then I should see "Accepted friend request"
     And I log out
     Given I log in as "UserC" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I click on "pending friend"
     Then I should see "Angela UserA (UserA)"
-    When I press "Approve"
+    When I click on "Approve"
     Then I should see "Accepted friend request"
     And I log out
     Given I log in as "UserD" with password "Kupuh1pa!"
-    When  I follow "pending friend"
+    When  I click on "pending friend"
     Then I should see "Angela UserA (UserA)"
-    When I press "Approve"
+    When I click on "Approve"
     Then I should see "Accepted friend request"
     And I log out
 
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I press "Edit \"The Avengers\" Settings"
+    And I click on "Edit \"The Avengers\""
     # Checking all the switches can all be changed
     And I set the following fields to these values:
     | Open | 0 |
@@ -87,8 +87,8 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Participation report | 1 |
     | Auto-add people | 1 |
     | Send forum posts immediately | 1 |
-    And I press "Save group"
-    And I press "Edit \"The Avengers\" Settings"
+    And I click on "Save group"
+    And I click on "Edit \"The Avengers\""
     # Checking all the switches can all be changed back
     And I set the following fields to these values:
     | Open | 1 |
@@ -109,36 +109,36 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     And the "Recommendations" checkbox should not be checked
     And I enable the switch "Recommendations"
     And the "Friend invitations" checkbox should not be checked
-    And I press "Save group"
+    And I click on "Save group"
     And I log out
     # group user recommend group to another user
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     And I select "All groups" from "filter"
-    And I press "Search"
+    And I click on "Search"
     And I wait "1" seconds
     When I click on "Join this group" in "The Avengers" row
     Then I should see "You are now a group member."
-    When I press "Recommend to friends"
+    When I click on "Recommend to friends"
     Then I should see "Bob UserB"
     And I should see "Cecilia UserC"
     And I should see "Dave UserD"
     When I select "Bob UserB" from "Potential members"
-    And I press "rightarrow"
+    And I click on "Turn selected recommended people into potential members"
     And I select "Cecilia UserC" from "Potential members"
-    And I press "rightarrow"
+    And I click on "Turn selected recommended people into potential members"
     And I select "Dave UserD" from "Potential members"
-    And I press "rightarrow"
-    And I press "Submit"
+    And I click on "Turn selected recommended people into potential members"
+    And I click on "Submit"
     Then I should see "3 recommendations sent"
     And I log out
     # Friend logs in and should see notification to join group
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "2" seconds
     Then I should see "Angela UserA suggested you join a group"
-    When I follow "Angela UserA suggested you join a group"
+    When I click on "Angela UserA suggested you join a group"
     Then I should see "Angela UserA suggested that you join the group \"The Avengers\" on Mahara - Acceptance test site"
     When I go to group "The Avengers"
     Then I should see "About | The Avengers"
-    When I press "Join this group"
+    When I click on "Join this group"
     Then I should see "You are now a group member."

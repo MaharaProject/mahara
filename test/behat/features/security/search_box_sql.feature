@@ -9,5 +9,5 @@ Scenario: sql injection attempt on search field
   Given I log in as "admin" with password "Kupuh1pa!"
   When I set the following fields to these values:
    | Search for people | 'or 1=1;-- |
-  And I press "Go"
+  And I click on "Go"
   Then I should see "No search results found"

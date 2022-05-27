@@ -34,11 +34,11 @@ Scenario: Testing functions for general search
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     And I set the following fields to these values:
     | Search | Page |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Angela"
     And I should see "Page UserA_01"
 
@@ -46,5 +46,5 @@ Scenario: Testing functions for general search
     Then I choose "Site options" in "Configure site" from administration menu
     And I expand the section "Search settings"
     And I select "internal" from "Search plugin"
-    And I press "Update site options"
+    And I click on "Update site options"
     And I log out

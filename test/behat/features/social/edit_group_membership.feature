@@ -27,7 +27,7 @@ And the following "groups" exist:
 Scenario: User view members page, verify user list displayed and sorted by selection in sorted by field
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I go to group "GroupA"
-    And I follow "Members"
+    And I click on "Members"
     Then I should see "Admin first" in the "Sorted by dropdown" "Groups" property
     And the "sorted by:" select box should contain "Admin first"
     And I should see "Admin Account" in the "Search results heading row 1" "Groups" property
@@ -36,7 +36,7 @@ Scenario: User view members page, verify user list displayed and sorted by selec
     And I should see "Angela User" in the "Search results heading row 4" "Groups" property
     And I should see "Dmitri User" in the "Search results heading row 6" "Groups" property
     When I select "Name Z to A" from "sorted by:"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "Kristina User" in the "Search results heading row 1" "Groups" property
     And I should see "Julius User" in the "Search results heading row 2" "Groups" property
     And I should see "Iria User" in the "Search results heading row 3" "Groups" property
@@ -47,11 +47,11 @@ Scenario: Check modal is working for the "Edit group memebership" on find people
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
-    And I follow "2" in the "Find people results" "People" property
+    And I click on "2" in the "Find people results" "People" property
     And I click on "Edit group membership" in "Liam User" row
     # allow the modal to open
     And I wait "1" seconds
     And I check "GroupA"
-    And I press "Apply changes"
+    And I click on "Apply changes"
     And I scroll to the top
     Then I should see "Invite sent"

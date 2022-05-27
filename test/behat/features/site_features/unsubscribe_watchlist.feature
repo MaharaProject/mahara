@@ -2,7 +2,7 @@
 Feature: Unsubscribing from watchlist via link in email
 In order to unsubscribe from watchlist for page I am watching
 As a user
-I follow unsubscription link in email
+I click on unsubscription link in email
 
 Background:
 Given the following "users" exist:
@@ -27,11 +27,11 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Notifications" in "Settings" from account menu
  And I select "Email" from "Watchlist"
- And I press "Save"
+ And I click on "Save"
  And I am on homepage
- And I follow "Page UserA_01"
- And I press "More options"
- And I follow "Add page to watchlist"
+ And I click on "Page UserA_01"
+ And I click on "More options"
+ And I click on "Add page to watchlist"
 
  And I should see "This page has been added to your watchlist."
  And I trigger cron
@@ -39,6 +39,6 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  And I unsubscribe from "Page UserA_01" owned by "UserB"
  And I should see "You have unsubscribed successfully"
  And I am on homepage
- And I follow "Page UserA_01"
- And I press "More options"
+ And I click on "Page UserA_01"
+ And I click on "More options"
  And I should see "Add page to watchlist"

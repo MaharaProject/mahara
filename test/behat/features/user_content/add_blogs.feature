@@ -18,54 +18,54 @@ Feature: Mahara users can create their blogs
     When I choose "Journals" in "Create" from main menu
     Then I should see "No entries yet."
     # Confirm page contains link "Add one" that links to Create new Journal page. (Bug 1017785)
-    When I follow "Add one"
+    When I click on "Add one"
     Then I should see "New journal entry in journal"
     And I move backward one page
     And I choose "Preferences" in "Setting" from account menu
     And I fill in the following:
     | tagssideblockmaxtags | 10 |
     And I enable the switch "Multiple journals"
-    And I press "Save"
+    And I click on "Save"
     When I go to "artefact/blog/index.php"
     And I should see "Journals"
     # check that settings can be changed by change the title of your default journal, add a description and tags
     And I wait "1" seconds
     When I click on "Angela User's Journal"
-    And I press "Settings" in the "Top right button group" "Nav" property
+    And I click on "Settings" in the "Top right button group" "Nav" property
     When I fill in the following:
     | Title | Angela User's Best Journal |
     And I fill in "This is the edited description" in first editor
     And I fill in select2 input "editblog_tags" with "Angela" and select "Angela"
-    And I press "Save settings"
+    And I click on "Save settings"
     Then I should see "Angela User's Best Journal"
     When I choose "Journals" in "Create" from main menu
     And  I click on "Create journal"
     And I fill in the following:
     | title | My new journal |
     And I fill in select2 input "newblog_tags" with "blog" and select "blog"
-    And I press "Create journal"
+    And I click on "Create journal"
     Then I should see "My new journal"
 
     # Check that we can add the blog to tagged blogs block
-    Given I follow "My new journal"
-    And I press "New entry"
+    Given I click on "My new journal"
+    And I click on "New entry"
     And I set the following fields to these values:
     | Title | Journal entry 1 |
     | Entry | This is a test |
     And I scroll to the base of id "editpost_tags_container"
     And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
-    And I press "Save entry"
+    And I click on "Save entry"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "blogentry" and select "blogentry"
-    And I press "Save"
+    And I click on "Save"
     And I wait "1" seconds
     Then I should see "Journal entries with tag \"blogentry\""
     And I choose "Journals" in "Create" from main menu
-    And I follow "My new journal"
+    And I click on "My new journal"
     And I click on "Delete \"Journal entry 1\""
     And I choose "Journals" in "Create" from main menu
     And I should see "My new journal No entries yet."

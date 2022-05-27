@@ -10,5 +10,5 @@ Scenario: Turning swtitches on and off on Networking page (Bug 1431569)
  And I set the following fields to these values:
  | Enable networking | 1 |
  | Auto-register all hosts | 1 |
- And I press "Save changes"
+ And I click on "Save changes"
  Then I should see "Networking has been enabled. Auto-register has been enabled."

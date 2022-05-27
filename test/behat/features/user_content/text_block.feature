@@ -18,16 +18,16 @@ Scenario: Create and delete text block
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    When I press "Add"
+    When I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Text"
     And I set the field "Block title" to "Text block 1"
     And I set the field "Block content" to "Here is a new block."
-    And I press "Save"
+    And I click on "Save"
     And I should see "Text block 1" in the "Main content" "Views" property
     And I display the page
     Then I should see "Here is a new block"
     # delete block
-    And I press "Edit"
+    And I click on "Edit"
     And I delete the block "Text block 1"
     And I display the page
     Then I should not see "Text block 1"

@@ -18,13 +18,13 @@ Scenario:Injecting sql in groups search field
     | Group description | <script>alert(1);</script> |
     | Open| Off |
     | Hide group | Off |
-    And I press "Save group"
+    And I click on "Save group"
     And I should see "Group saved successfully"
     And I choose "Administer groups" in "Groups" from administration menu
     When I set the following fields to these values:
     | search_query | <script>alert(1);</script> |
-    And I press "search_search"
-    And I follow "About"
+    And I click on "Search"
+    And I click on "About"
     And I should see "About us"
     Then I go to "homepage"
 
@@ -37,7 +37,7 @@ Scenario: Skin title not escaped in page settings form (Bug 1707076)
     | Skin title | <script>alert(1);</script> |
     | Skin description | <script>alert(1);</script> |
     | Skin access | This is a private skin |
-    And I press "Save"
+    And I click on "Save"
     And I should see "Skin saved successfully"
     And I should not see a popup
 
@@ -46,6 +46,6 @@ Scenario: I should see a popup
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Files" in "Create" from main menu
     And I attach the file "Image2.png" to "File"
-    And I press "Delete"
+    And I click on "Delete"
     And I should see "Are you sure you want to delete this file?" in popup
     And I accept the confirm popup

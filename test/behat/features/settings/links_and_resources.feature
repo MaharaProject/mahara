@@ -13,14 +13,15 @@ Scenario: Creating and deleting both types of external links (Selenium 1426983 -
     When I select "Logged-in links and resources" from "Edit"
     And I fill in "namenew" with "Dashboard: test external resource link"
     And I fill in "linkedtonew" with "https://mahara.org/"
-    And I press "Add"
+    And I click on "Add" in the "Menus" "Administration" property
+
     # Verifying item was saved
     Then I should see "Item saved"
      # Creating an external link on the Homepage (i.e. public link)
     When I select "Public links and resources" from "Edit"
     And I fill in "namenew" with "Homepage: test external resource link"
     And I fill in "linkedtonew" with "https://mahara.org/"
-    And I press "Add"
+    And I click on "Add" in the "Menus" "Administration" property
     # Verifying item was saved
     Then I should see "Item saved"
 
@@ -55,7 +56,7 @@ Scenario: Creating and deleting both types of internal/'site file' links
     # I upload both types of site files
     And I choose "Files" in "Configure site" from administration menu
     And I attach the file "testvid3.mp4" to "File"
-    And I follow "public"
+    And I click on "public"
     And I attach the file "mahara_about.pdf" to "File"
 
     # Create file resource link on Homepage (for public use)
@@ -66,7 +67,7 @@ Scenario: Creating and deleting both types of internal/'site file' links
     Then the "linkedtonew" select box should contain "mahara_about.pdf"
     And the "linkedtonew" select box should not contain "testvid3.mp4"
     When I fill in "namenew" with "Homepage: test file resource link"
-    And I press "Add"
+    And I click on "Add" in the "Menus" "Administration" property
     Then I should see "Item saved"
 
     # Create file resource link on Dashboard page (for Mahara account holder use)
@@ -76,7 +77,7 @@ Scenario: Creating and deleting both types of internal/'site file' links
     Then the "linkedtonew" select box should not contain "mahara_about.pdf"
     And the "linkedtonew" select box should contain "testvid3.mp4"
     When I fill in "namenew" with "Dashboard: test file resource link"
-    And I press "Add"
+    And I click on "Add" in the "Menus" "Administration" property
     Then I should see "Item saved"
 
     # Verifying both types of file links have been added successfully
@@ -108,9 +109,9 @@ Scenario: Make sure blogs (ie site journals) do not show in site file link optio
     Given I log in as "admin" with password "Kupuh1pa!"
     # I create a site journal
     And I choose "Journals" in "Configure site" from administration menu
-    And I press "Create journal"
+    And I click on "Create journal"
     And I fill in "Title" with "Site blog"
-    And I press "Create journal"
+    And I click on "Create journal"
     # I upload some site files
     And I choose "Files" in "Configure site" from administration menu
     And I attach the file "Image1.jpg" to "File"
@@ -120,4 +121,4 @@ Scenario: Make sure blogs (ie site journals) do not show in site file link optio
     And I set the following fields to these values:
     | Site file | 1 |
     And the "linkedtonew" select box should not contain "Site blog"
-    And I press "Add"
+    And I click on "Add" in the "Menus" "Administration" property

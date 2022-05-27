@@ -14,7 +14,7 @@ Scenario: Create account for which person logs in with strict privacy enabled
     And I enable the switch "Strict privacy"
     # Check this worked as otherwise there is no point in continuing
     And the field "Strict privacy" matches value "1"
-    And I press "Update site options"
+    And I click on "Update site options"
     # Background adding of acconut doesn't work for this test
     And I choose "Add an account" in "People" from administration menu
     And I set the following fields to these values:
@@ -24,21 +24,21 @@ Scenario: Create account for which person logs in with strict privacy enabled
     | Username | bob |
     | password | Kupuh1pa! |
     And I scroll to the top
-    And I press "Create account"
+    And I click on "Create account"
     And I disable the switch "Force password change on next login"
     And I enable the switch "Disable email"
-    And I press "Save changes"
+    And I click on "Save changes"
     And I log out
     Given I log in as "bob" with password "Kupuh1pa!"
     Then I should see "Before entering your account, please read the information displayed below."
     # Try to ignore privacy statement
     And I choose "Pages and collections" in "Create" from main menu
     Then I should see "Before entering your account, please read the information displayed below."
-    And I press "Save changes"
+    And I click on "Save changes"
     Then I should see "If you do not consent to the privacy statement(s) or terms and conditions, your account will be suspended."
-    Then I press "Cancel"
+    Then I click on "Cancel"
     # consent to privacy statement
     And I enable the switch "I consent to the privacy statement"
     And I enable the switch "I consent to the terms and conditions"
-    And I press "Save changes"
+    And I click on "Save changes"
     Then I should see "Welcome"

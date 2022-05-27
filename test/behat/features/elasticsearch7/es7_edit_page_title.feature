@@ -33,11 +33,11 @@ Scenario: Testing edited data appears in search
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     When I set the following fields to these values:
     | Search | Page |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Angela"
     And I should see "Page UserA_01"
     And I log out
@@ -47,7 +47,7 @@ Scenario: Testing edited data appears in search
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the following fields to these values:
     | Page title | Different title |
-    And I press "Save"
+    And I click on "Save"
     And I log out
     When I log in as "admin" with password "Kupuh1pa!"
     And I set the following fields to these values:

@@ -113,7 +113,7 @@ var table = new TableRenderer(
             }
             var label = jQuery('<label>', {'class': 'accessible-hidden visually-hidden', 'for': 'setdefault_' + rowdata.id, 'text': rowdata.default_str});
             return jQuery('<td>', {'class': 'defaultcell'})
-                .append(jQuery('<input>', options).append(label))[0];
+                .append(jQuery('<input>', options), label)[0];
         },
         function(rowdata) {
             var options = {

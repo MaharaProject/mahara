@@ -105,17 +105,17 @@ Scenario: Testing search for resume artefacts
    Given I log in as "admin" with password "Kupuh1pa!"
    And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
    And I click on "Select all"
-   And I press "Save"
-   And I press "Reset"
+   And I click on "Save"
+   And I click on "Reset"
    Then I should see "Settings saved"
    When I set the following fields to these values:
    | Search | painterio |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "UserA"
 
    When I set the following fields to these values:
    | Search | fantastic |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Fantastic Five"
    And I log out
 
@@ -123,69 +123,69 @@ Scenario: Testing search for resume artefacts
 # Place of birth not indexed in ES5
    # And I set the following fields to these values:
    # | Search | italy |
-   # And I press "Go"
+   # And I click on "Go"
    # Then I should see "Personal information"
 
    When I set the following fields to these values:
    | Search | bag |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Academic goals"
 
    When I set the following fields to these values:
    | Search | meow |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Career goals"
 
    When I set the following fields to these values:
    | Search | gym |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Personal goals"
 
    When I set the following fields to these values:
    | Search | alphabet |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Academic skills"
 
    When I set the following fields to these values:
    | Search | whistle |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Personal skills"
 
    When I set the following fields to these values:
    | Search | axe |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Work skills"
 
 # Search by name of interest
    When I set the following fields to these values:
    | Search | kite |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Interests"
 
 # Search by text in cover letter
    When I set the following fields to these values:
    | Search | te reo |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Cover letter"
 
 # TODO: Search by name of education institution (Currently only appears when searching with "Education")
     When I set the following fields to these values:
   # | Search | catalystonia |
     | Search | Education |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Education history"
 
 # TODO: Search by name of employer (Currently only appears when searching with "Employment")
     When I set the following fields to these values:
     # | Search | eggman |
     | Search | Employment |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Employment history"
 
 # TODO: Search by address (Currently only appears when searching with "Contact")
     When I set the following fields to these values:
     # | Search | hutt |
     | Search | Contact |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Contact information"
     And I log out

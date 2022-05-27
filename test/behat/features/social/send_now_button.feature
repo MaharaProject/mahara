@@ -22,7 +22,7 @@ Background:
  And I click on "Configuration for interaction forum"
  And I should see "Post delay"
  And I fill in "Post delay" with "1"
- And I press "Save"
+ And I click on "Save"
  Then I log out
 
 Scenario:  Checking the "Send Message Now" forum post option is disabled after time expired to send it (Bug 1396897)
@@ -30,12 +30,12 @@ Scenario:  Checking the "Send Message Now" forum post option is disabled after t
  # Navigate to the Forums page
  And I choose "Groups" in "Engage" from main menu
  And I should see "GroupA"
- And I follow "GroupA"
- And I follow "Forums"
+ And I click on "GroupA"
+ And I click on "Forums"
 
  # Create new topic
- When I follow "General discussion"
- And I press "New topic"
+ When I click on "General discussion"
+ And I click on "New topic"
  And I set the following fields to these values:
  | Subject | Testing subject 1 |
  | Message | message for testing subject 1 |
@@ -43,11 +43,11 @@ Scenario:  Checking the "Send Message Now" forum post option is disabled after t
  And the "edittopic_sendnow" checkbox should not be checked
  # Turning the checkbox to send now
  And I enable the switch "Send message now"
- Then I press "Post"
+ Then I click on "Post"
  # Verifying post has been created
- And I follow "Forums"
- And I follow "General discussion"
+ And I click on "Forums"
+ And I click on "General discussion"
 
  # Checking the send message is disabled once a message has sent
- Then I press "Edit topic"
+ Then I click on "Edit topic"
  Then I should not see "Send message now"

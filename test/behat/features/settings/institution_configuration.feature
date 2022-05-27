@@ -15,7 +15,7 @@ Background:
 Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Settings" in "Institutions" from administration menu
- And I press "Add institution"
+ And I click on "Add institution"
  And I set the following fields to these values:
  | Institution name * | Team Awesome |
  | First name | 1 |
@@ -39,7 +39,7 @@ Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  | Industry | 1 |
  | Email disabled | 1 |
  | Social media | 1 |
-And I press "Submit"
+And I click on "Submit"
 
 Scenario: Set an institution theme
  Given I log in as "UserA" with password "Kupuh1pa!"

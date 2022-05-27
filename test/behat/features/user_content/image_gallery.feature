@@ -14,8 +14,8 @@ Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
   When I choose "Files" in "Create" from main menu
   And I fill in "Folder1" for "files_filebrowser_createfolder_name"
-  And I press "Create folder"
-  And I follow "Folder1"
+  And I click on "Create folder"
+  And I click on "Folder1"
   And I attach the file "Image1.jpg" to "File"
   And I attach the file "Image2.png" to "File"
   And I attach the file "Image3.png" to "File"
@@ -26,12 +26,12 @@ Scenario:
   Given I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Image gallery"
   And I set the field "Block title" to "Image gallery"
   And I select the radio "Image selection: Display all images from a folder including images uploaded later"
   And I click on the "Select" "Files" property
   And I select the radio "Style: Thumbnails (square)"
-  And I press "Save"
+  And I click on "Save" in the "Submission" "Modal" property
   And I display the page
   Then I should see images within the block "Image gallery"

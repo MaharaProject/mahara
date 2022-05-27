@@ -18,5 +18,5 @@ Scenario: Social media credentials upon logging in as student (Bug 1432988)
  And I set the following fields to these values:
  | Social media | Facebook URL |
  | Your URL or username | https://www.facebook.com |
- And I press "Submit"
+ And I click on "Submit"
  Then I should see "Portfolios shared with me"

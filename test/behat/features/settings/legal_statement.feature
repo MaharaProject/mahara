@@ -22,7 +22,7 @@ Scenario: Admin user log in and confirm Legal templates are correct for
     And I click on the "Privacy statement Edit icon" "Legal" property
     And I fill in "Version" with "V2.0"
     And I fill in "V 2.0 privacy statement for the site " in first editor
-    And I press "Save changes"
+    And I click on "Save changes"
     Then I should see "V2.0" in the "Admin Account" row
     And I should see "1.0" in the "System User" row
     And I wait "1" seconds
@@ -32,10 +32,10 @@ Scenario: Admin user log in and confirm Legal templates are correct for
     And I click on the "Terms and conditions Edit icon" "Legal" property
     And I fill in "Version" with "V2.0"
     And I fill in "V 2.0 terms and conditions for the site" in first editor
-    And I press "Save changes"
+    And I click on "Save changes"
     Then I should see "V2.0" in the "Admin Account" row
     And I should see "1.0" in the "System User" row
     And I should see "Page saved"
-    When I click on "Legal" in the "Footer" "Footer" property
+    When I click on "Legal" in the "Footer menu" "Footer" property
     And I should see "V 2.0 terms and conditions for the site"
     Then I should see "V 2.0 privacy statement for the site"

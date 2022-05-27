@@ -251,6 +251,10 @@ $string['potentialmembers'] = 'Potential members';
 $string['sendinvitations'] = 'Send invitations';
 $string['userstobeadded'] = 'People to be added';
 $string['userstobeinvited'] = 'People to be invited';
+$string['potentialmemberstorecommend'] = 'Turn selected potential members into people to send a recommendation';
+$string['recommendedtopotentialmembers'] = 'Turn selected recommended people into potential members';
+$string['potentialmoderatorstomoderators'] = 'Turn selected potential moderators into moderators';
+$string['moderatorstopotentialmoderators'] = 'Turn selected moderators into potential moderators';
 
 // friendslist
 $string['reasonoptional'] = 'Reason (optional)';

@@ -30,22 +30,22 @@ Scenario: Check share page with friends
  And I choose "People" in "Engage" from main menu
  And I click on "Send friend request" in "Bob User" row
  And I set the field "Message" to "Love me, love me, say you do!"
- And I press "Request friendship"
+ And I click on "Request friendship"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
- And I follow "pending friend"
+ And I click on "pending friend"
  And I click on "Approve"
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserB_02" card access menu
  And I select "Friends" from "General" in shared with select2 box
- And I press "Save"
+ And I click on "Save"
  And I log out
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Shared with me" in "Share" from main menu
  And I check "Friends"
  And I uncheck "Me"
  And I uncheck "My groups"
- And I press "Search"
+ And I click on "Search"
  Then I should see "Page UserB_02"
 
 Scenario: Check share page with Registered Users
@@ -55,7 +55,7 @@ Scenario: Check share page with Registered Users
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Manage access" in "Page UserA_03" card access menu
  And I select "Registered people" from "General" in shared with select2 box
- And I press "Save"
+ And I click on "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Shared with me" in "Share" from main menu
@@ -64,7 +64,7 @@ Scenario: Check share page with Registered Users
  And I uncheck "Friends"
  And I uncheck "My groups"
  And I uncheck "Public"
- And I press "Search"
+ And I click on "Search"
  Then I should see "Page UserA_03"
 
 Scenario: Check share page with groups and that copy options works
@@ -79,15 +79,15 @@ Scenario: Check share page with groups and that copy options works
  # enable copy switch
  And I enable the switch "Allow copying"
  And I should see "Retain view access on copied pages or collections"
- And I press "Save"
+ And I click on "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Shared with me" in "Share" from main menu
  And I check "My groups"
  And I uncheck "Me"
  And I uncheck "Friends"
- And I press "Search"
- And I follow "Page UserA_03"
+ And I click on "Search"
+ And I click on "Page UserA_03"
  # check copy option is available
- And I press "More options"
+ And I click on "More options"
  Then I should see "Copy"

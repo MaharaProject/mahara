@@ -46,10 +46,10 @@ Feature: Mahara users submit pages / colelctions to a group
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
     And I select "Collection UserA_01" from "Submit for assessment"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     Then I should see "Collection submitted"
-    And I follow "Collection UserA_01"
+    And I click on "Collection UserA_01"
     And I click on "Details"
     And I should not see "Quick edit"
     And I log out
@@ -60,8 +60,8 @@ Feature: Mahara users submit pages / colelctions to a group
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
     And I select "Page UserB_02" from "Submit for assessment"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     Then I should see "Page submitted"
     And I log out
 

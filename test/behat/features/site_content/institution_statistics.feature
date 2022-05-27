@@ -75,14 +75,14 @@ Scenario: Viewing account details statistics
     Given I log in as "admin" with password "Kupuh1pa!"
     # Users without an institution
     When I choose "Reports" from administration menu
-    And I press "Configure report"
+    And I click on "Configure report"
     And I set the select2 value "All institutions" for "reportconfigform_institution"
     And I wait "1" seconds
     And I set the select2 value "Account details" for "reportconfigform_typesubtype"
     And I fill in "To:" with "tomorrow" date in the format "Y/m/d"
     And I expand the section "Columns"
     And I check "Quota used"
-    And I press "Submit"
+    And I click on "Submit"
     Then I should see "Account details | All institutions"
     And I should see "42%" in the "Angela" row
     And I should see "57%" in the "Bob" row

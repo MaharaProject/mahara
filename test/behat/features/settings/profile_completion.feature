@@ -21,7 +21,7 @@ Background:
     And I choose "Site options" in "Configure site" from administration menu
     And I expand the section "Side block settings"
     And I enable the switch "Show profile completion"
-    And I press "Update site options"
+    And I click on "Update site options"
 
 Scenario Outline: 1) Site admin enables the side block 'Profile completion' in Admin menu > Configure site > Site options > Side block settings
     2) site admin verify sections on the profile completion page
@@ -68,7 +68,7 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     And I enable the switch "Last name"
     And I enable the switch "Student ID"
     And I enable the switch "City/region"
-    And I press "Submit"
+    And I click on "Submit"
     Then I should see "Progress bar saved successfully."
     Then I log out
     # No institution user verify that the Profile completion side block is displayed on the Dashboard
@@ -78,9 +78,9 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     And I should see "50%" in the "Progressbar" "Misc" property
     When I choose "Profile" from account menu
     Then I should see "Profile"
-    And I follow "About me"
+    And I click on "About me"
     When I fill in "Student ID" with "123456"
-    And I press "Save profile"
+    And I click on "Save profile"
     Then I should see "Profile saved successfully"
     # Verify progress bar has gone from 50% to 75%
     And I should see "75%" in the "Progressbar" "Misc" property

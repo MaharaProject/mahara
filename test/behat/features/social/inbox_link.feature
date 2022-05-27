@@ -30,7 +30,7 @@ Scenario: Clicking on the Inbox link on the right menu (Bug 1427019)
    Given I log in as "UserA" with password "Kupuh1pa!"
    # Navigating to the Inbox via the 'more' link in the Inbox block
    And I scroll to the base of id "column-container"
-   And I follow "More"
+   And I click on "More"
    # Verifying that you do not see a page full of error messages
    And I should not see "Call stack"
    And I should see "Notifications"

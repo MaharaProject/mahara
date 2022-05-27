@@ -8,5 +8,5 @@
    Given I set the following fields to these values:
    | Username | admin |
    | Password | ' OR 1=1;-- |
-   When I press "Login"
+   When I click on "Login"
    Then I should see "You have not provided the correct credentials to log in. Please check your username and password are correct."

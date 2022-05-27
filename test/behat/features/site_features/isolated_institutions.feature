@@ -76,7 +76,7 @@ Scenario: Users from different institutions cannot see other institution users i
     And I should not see "Jake User"
     # Selecting everyone should not display Users from other institutions
     When I select "Everyone" from "Filter"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "Alice User"
     And I should not see "Jake User"
 
@@ -88,28 +88,28 @@ Scenario: Users from different institutions cannot see other institution users i
     And I should not see "GroupF"
     # User selects Groups I'm in
     When I select "Groups I'm in" from "Filter"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "GroupA"
     And I should not see "GroupB"
     And I should not see "GroupF"
     # User selects Groups I own
     When I select "Groups I own" from "Filter"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "No groups found"
     # User selects Groups I can join
     When I select "Groups I can join" from "Filter"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "GroupB"
     And I should not see "GroupF"
     # User selects Groups I'm not in
     When I select "Groups I'm not in" from "Filter"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "GroupB"
     And I should not see "GroupF"
 
     # Users can not send messages via the inbox to people outside their institution
-    When I follow "Inbox"
-    And I press "Compose"
+    When I click on "Inbox"
+    And I click on "Compose"
     # Check we can select user in institution
     And I fill in select2 input "sendmessage_recipients" with "UserB" and select "Bob User"
     # Check we cannot select user not institution

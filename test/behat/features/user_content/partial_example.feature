@@ -8,35 +8,35 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I am on homepage
     And I choose "Profile" from account menu
-    And I follow "About me"
+    And I click on "About me"
     And I set the following fields to these values:
     | First name | test first name |
     | Last name | test last name |
-    And I press "Save profile"
+    And I click on "Save profile"
     And I choose "Pages and collections" in "Create" from main menu
     # Creating a page
-    And I press "Add"
+    And I click on "Add" in the ".btn-top-right" "css_element"
     And I click on "Page" in the dialog
     And I fill in "Page title" with "test page name 1"
-    And I press "Save"
+    And I click on "Save"
     # Verifying it saved
     And I should see "Page saved successfully"
     # Creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
+    And I click on "Add" in the ".btn-top-right" "css_element"
     And I click on "Collection" in the dialog
     And I fill in "Collection name" with "test collection name"
     And the "Page navigation bar" checkbox should be checked
-    And I press "Next: Edit collection pages"
+    And I click on "Next: Edit collection pages"
     # Adding pages to the collection
-    And I press "Add pages"
+    And I click on "Add pages"
     # Verifying it added
     And I should see "You need to select a page to add to the collection."
     And the checkbox "test page name 1" should be unchecked
     And I check "test page name 1"
     And the "test page name 1" checkbox should be checked
-    And I press "Add pages"
-    And I press "Next: Edit access"
+    And I click on "Add pages"
+    And I click on "Next: Edit access"
     And I click on "Return to pages and collections"
     And I click on "test collection name" card menu
     And I should see "Delete"

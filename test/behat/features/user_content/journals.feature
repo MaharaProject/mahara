@@ -25,20 +25,20 @@ Background:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Celeste's Page" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
 
 Scenario: Add Journal block to the page
     Given I click on blocktype "Journal"
     And I select the radio "Mars journal"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     And I wait "1" seconds
     Then I should see "Spacefood is kind of gross"
 
 # Adding a journal entry from a journal block on a portfolio page
-    Given I press "Edit"
+    Given I click on "Edit"
     Then I should see "New entry"
-    When I follow "New entry"
+    When I click on "New entry"
     Then I should see "New journal entry in journal \"Mars journal\""
     When I fill in "Title *" with "Journal entry Added from Block"
     And I set the following fields to these values:
@@ -53,8 +53,8 @@ Scenario: Add Journal block to the page
 
 Scenario: Add specific Journal entry to the page
     Given I click on blocktype "Journal entry"
-    And I select the radio "I'm going to Mars! (Mars journal)"
-    And I press "Save"
+    And I select the radio "I'm going to Mars!"
+    And I click on "Save"
     And I display the page
     Then I should see "I just passed my exam"
     And I should not see "Spacefood is kind of gross"
@@ -62,13 +62,13 @@ Scenario: Add specific Journal entry to the page
 Scenario: Add a recent journal entries block to the page
     Given I click on blocktype "Recent journal entries"
     And I select the radio "Mars journal"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     Then I should see "Spacefood"
 
 Scenario: Add a tagged journal entry block to the page
     Given I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "food" and select "food"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     Then I should see "Journal entries with tag \"food\""

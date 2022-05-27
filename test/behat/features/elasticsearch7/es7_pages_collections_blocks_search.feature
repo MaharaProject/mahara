@@ -114,8 +114,8 @@ Scenario: Testing search functions for pages and collections
    Given I log in as "admin" with password "Kupuh1pa!"
    And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
    And I click on "Select all"
-   And I press "Save"
-   And I press "Reset"
+   And I click on "Save"
+   And I click on "Reset"
    And I should see "Settings saved"
    And I log out
 
@@ -123,42 +123,42 @@ Scenario: Testing search functions for pages and collections
    When I log in as "UserA" with password "Kupuh1pa!"
    And I set the following fields to these values:
    | Search | tangaroa |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "God of the sea"
 
  # Search by description
    When I set the following fields to these values:
    | Search | earth |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Papatūānuku"
 
  # Search by collection title
   When I set the following fields to these values:
    | Search | indescribable |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Amazing"
 
  # Search by collection description
    When I set the following fields to these values:
    | Search | indescribable |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Amazing"
 
  # Search by text block text
    When I set the following fields to these values:
    | Search | howdy |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Tangaroa"
 
  # TODO: Search by block title within collection (Currently ES7 does not fetch collections from block titles, only pages)
   # When I set the following fields to these values:
   # | Search | whacky |
-  # And I press "Go"
+  # And I click on "Go"
   # Then I should see "Amazing"
 
  # Search by block title not in collection
    When I set the following fields to these values:
    | Search | sneaky |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Sneaky text block"
    And I log out

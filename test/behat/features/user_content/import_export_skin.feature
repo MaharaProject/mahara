@@ -31,7 +31,7 @@ Scenario: Import and check the two exported Release 20-10 skins
     And I click on "More options"
     And I click on "Import" in the "Dropdown" "Misc" property
     And I attach the file "20-10_2ExportedSkins.xml" to "Valid XML file "
-    And I press "Import"
+    And I click on "Import" in the "#importskinform_submit_container" "css_element"
     Then I should see "Skin imported successfully"
     And I should see "2 skins"
     And I should see "20-10 SimplePersonalSkin (created Dan)"
@@ -41,26 +41,26 @@ Scenario: Import and check the two exported Release 20-10 skins
     # have been changed, the other options should retain the correct default values.
     # Note: the export was created using the Raw theme thus default colours will relate to those values.
     # The following value is
-    When I click on "Preview of \"20-10 SimplePersonalSkin (created Dan)\" - click to edit"
+    When I click on "Edit \"20-10 SimplePersonalSkin (created Dan)\""
     Then the following fields match these values:
     | Skin title | 20-10 SimplePersonalSkin (created Dan) |
     | Skin description | Dan's simple skin (private) - retain all default values except header and page background colours. |
     | Skin access | This is a private skin |
     And I set the following fields to these values:
     | Skin title | A fabulous new skin |
-    When I follow "Page"
+    When I click on "Page" in the "Share tabs" "Misc" property
     Then the "Header background colour" field should contain "#CBF706"
-    When I follow "Text"
+    When I click on "Text" in the "Share tabs" "Misc" property
     And I select "This is a private skin" from "designskinform_viewskin_access"
-    And I follow "Page"
-    And I press "Add a file"
-    And I press "Select \"sunset-1645103_1920by655.jpg\""
+    And I click on "Page" in the "Share tabs" "Misc" property
+    And I click on "Add a file"
+    And I click on "Select \"sunset-1645103_1920by655.jpg\""
     And I select "Repeat both directions" from "designskinform_body_background_repeat"
     And I scroll to the top
-    And I follow "Text"
+    And I click on "Text" in the "Share tabs" "Misc" property
     And I uncheck "designskinform_view_text_heading_color_optional"
     And I fill in "Header text colour" with "DEB6D5"
     And I select "Century Gothic" from "designskinform_view_block_header_font"
     And I select "Theme default" from "designskinform_view_text_font_family"
-    And I press "Save"
+    And I click on "Save"
     And I should see "A fabulous new skin"

@@ -18,19 +18,19 @@ Scenario: Create and delete image block
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I set the field "Block title" to "Image Block 1"
     And I click on blocktype "Image"
     Then I should see "Image Block 1: Edit"
-    And I press "Image"
+    And I expand the section "Image"
     And I attach the file "Image1.jpg" to "File"
     Then I should see "Image - Image1.jpg"
     And I enable the switch "Show description"
-    And I press "Save"
+    And I click on "Save" in the "Submission" "Modal" property
     And I display the page
     And I should see "Image1.jpg"
     # delete image block
-    And I press "Edit"
+    And I click on "Edit"
     And I delete the block "Image Block 1"
     And I display the page
     Then I should not see "Image Block 1"

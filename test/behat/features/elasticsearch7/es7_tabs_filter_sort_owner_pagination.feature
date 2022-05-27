@@ -64,18 +64,18 @@ Scenario: Testing filter, sort, owner and pagination functions for general searc
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
-    And I press "Go"
+    And I click on "Save"
+    And I click on "Reset"
+    And I click on "Go"
 
 # Testing tabs 
-    When I follow "Media (1)"
+    When I click on "Media (1)"
     Then I should see "Coriander"
-    When I follow "Portfolio (24)"
+    When I click on "Portfolio (24)"
     Then I should see "Potato"
-    When I follow "People (3)"
+    When I click on "People (3)"
     Then I should see "Tony Soprano"
-    When I follow "Group (4)"
+    When I click on "Group (4)"
     Then I should see "Vege Kingdom"
 
 # TODO: Filter by owner (Administrator = Others is currently not working)
@@ -89,7 +89,7 @@ Scenario: Testing filter, sort, owner and pagination functions for general searc
     # And I should not see "Fruit Fraternity"
 
 # Filter by owner
-    When I follow "Portfolio (24)"
+    When I click on "Portfolio (24)"
     And I set the following fields to these values:
     | Owner: | Me |
     Then I should not see "Beans"
@@ -99,22 +99,22 @@ Scenario: Testing filter, sort, owner and pagination functions for general searc
     And I should not see "Coriander"
 
 # TODO: Testing filter functions (Working in ES7 but need to write steps that target filter functions)
-   # When I follow "Text (44)"
-   # And I follow "Document (40)"
+   # When I click on "Text (44)"
+   # And I click on "Document (40)"
    # Then I should not see "Carbo Kids"
    # And I should see "Images of coriander?"
-   # When I press "Document (40)"
-   # And I press "Forum (3)"
+   # When I click on "Document (40)"
+   # And I click on "Forum (3)"
    # Then I should not see "Document"
    # And I should see "Carbo Kids"
-   # When I press "Forum (3)"
-   # And I press "Journal (1)"
+   # When I click on "Forum (3)"
+   # And I click on "Journal (1)"
    # Then I should not see "Document"
    # And I should see "Journal"
 
 
 # Testing pagination and sort
-    When I follow "Portfolio (24)"
+    When I click on "Portfolio (24)"
     When I set the following fields to these values:
     | Sort by: | A to Z |
     Then "Apple" "text" should appear before "Apricot" "text"

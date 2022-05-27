@@ -29,26 +29,26 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Tagged journal entries"
   And I fill in select2 input "instconf_tagselect" with "blog" and select "blog"
   And I fill in select2 input "instconf_tagselect" with "one" and select "one"
   And I fill in select2 input "instconf_tagselect" with "-two" and select "two"
   And I select "Others will get a copy of the block configuration" from "Block copy permission"
-  And I press "Save"
+  And I click on "Save"
   And I scroll to the id "main-nav"
-  And I press "Share" in the "Toolbar buttons" "Nav" property
-  And I press "Advanced options"
+  And I click on "Share" in the "Toolbar buttons" "Nav" property
+  And I click on "Advanced options"
   And I enable the switch "Allow copying"
   And I select "Public" from "accesslist[0][searchtype]"
-  And I press "Save"
+  And I click on "Save"
 
   # Copy the page as same user
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Page UserA_01"
-  And I press "More options"
-  And I follow "Copy"
-  And I press "Save"
+  And I click on "Page UserA_01"
+  And I click on "More options"
+  And I click on "Copy"
+  And I click on "Save"
   Then I should see "Journal entries with tags \"blog\", \"one\" but not tag \"two\""
   And I should see "Entry one"
 
@@ -56,9 +56,9 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I log out
   Given I log in as "UserB" with password "Kupuh1pa!"
   And I scroll to the id "editdashboard"
-  And I follow "Page UserA_01"
-  And I press "More options"
-  And I follow "Copy"
-  And I press "Save"
+  And I click on "Page UserA_01"
+  And I click on "More options"
+  And I click on "Copy"
+  And I click on "Save"
   Then I should see "Journal entries with tags \"blog\", \"one\" but not tag \"two\""
   And I should see "UserB entry"

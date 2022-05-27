@@ -17,21 +17,21 @@ Given the following "users" exist:
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I fill in "Bob" for "usf_query"
  #click on the search icon
- And I press "usf_submit"
+ And I click on "Go" in the "#usf_submit_container" "css_element"
  #Verifying if UserA can see User B in the search results
  And I should see "UserB"
  #Change the display name of "UserA"
  And I choose "Profile" from account menu
- And I follow "About me"
+ And I click on "About me"
  And I fill in the following:
  | Display name  | Alpha |
- And I press "Save profile"
+ And I click on "Save profile"
  #Log out as UserA
  And I log out
  #Log in as UserB and verify the display names
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I fill in "Alpha" for "usf_query"
- And I press "usf_submit"
+ And I click on "Go" in the "#usf_submit_container" "css_element"
  And I should see "Angela"
  #Log out as UserB
  And I log out
@@ -41,11 +41,11 @@ Given the following "users" exist:
  And I expand all fieldsets
  And I set the following fields to these values:
  | Never display usernames | 1 |
- And I press "Update site options"
+ And I click on "Update site options"
  #Log out as admin user
  And I log out
  #Verify if the never display username functionality works
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I fill in "UserB" for "usf_query"
- And I press "usf_submit"
+ And I click on "Go" in the "#usf_submit_container" "css_element"
  And I should see "No search results found"

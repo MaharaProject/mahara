@@ -31,10 +31,10 @@ Scenario: User checks pagination on profile page for shared portfolio pages
     And I click on "Edit access" in "Page UserA_01" row
     And I set the select2 value "Page UserA_01, Page UserA_02, Page UserA_03, Page UserA_04, Page UserA_05, Page UserA_06, Page UserA_07, Page UserA_08, Page UserA_09, Page UserA_10, Page UserA_11, Page UserA_12" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I click on "Edit access" in "Profile page" row
     And I select "Public" from "accesslist[1][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I log out
 
     # Go to UserA's prrofile page when logged out

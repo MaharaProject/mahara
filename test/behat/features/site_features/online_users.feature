@@ -70,7 +70,7 @@ Scenario: log in as the latest person and check the following
     # 2) Person should see all people online within the last 10 minutes
     # 3) Pagination occurs when there are more than 10 people in the table
     # 4) The table is ordered in Alphabetical order
-    When I follow "Show people online"
+    When I click on "Show people online"
     Then I am on "/user/online.php"
     And I should see "People online" in the "H1 heading" "Common" property
     And I should see "Earl User"
@@ -82,7 +82,7 @@ Scenario: log in as the latest person and check the following
     When I jump to page "2" of the list "onlinelist_pagination"
     Then I should see "Olive User (UserO)"
     # Person can click a person's name and be redirected to their profile page
-    When I follow "Olive User (UserO)"
+    When I click on "Olive User (UserO)"
     Then I should see "Olive User"
     And I should see "About me"
     And I log out
@@ -92,7 +92,7 @@ Scenario: Site adminsets Inst setting to show only Inst members instone member l
     And I choose "Settings" in "Institutions" from administration menu
     And I click on "Edit" in "instone" row
     And I select "Institution only" from "Show who is online"
-    When I press "Submit"
+    When I click on "Submit"
     Then I should see "Institution updated successfully."
     And I log out
     # Institution member logs in - Verify person only sees other institution members

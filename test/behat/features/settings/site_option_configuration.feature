@@ -46,7 +46,7 @@ Scenario: Turning the switches on and off on the "Site options" page (Bug 143156
 | Registration agreement | 1 |
 | License metadata | 1 |
 | Custom licenses | 1 |
-And I press "Update site options"
+And I click on "Update site options"
 
 Scenario: Setting default account lifetime
  Given I log in as "admin" with password "Kupuh1pa!"
@@ -54,4 +54,4 @@ Scenario: Setting default account lifetime
  And I expand all fieldsets
  And I select "weeks" from "siteoptions_defaultaccountlifetime_units"
  And I fill in "10" for "siteoptions_defaultaccountlifetime"
- And I press "Update site options"
+ And I click on "Update site options"

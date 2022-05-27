@@ -12,15 +12,15 @@ Background:
 Scenario: Testing functions for people search page (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "People search" in "People" from administration menu
- And I press "Advanced options"
- And I follow "A" in the "Filter by first name" "People" property
- And I follow "UserA"
+ And I click on "Advanced options"
+ And I click on "A" in the "Filter by first name" "People" property
+ And I click on "UserA"
  And I should see "Account settings | Angela User (UserA)"
  # Flicking the switches to new settings
  And I set the following fields to these values:
  | Force password change on next login  | 1 |
  | Disable email | 1 |
- And I press "Save changes"
+ And I click on "Save changes"
 
  # Check that I can do a people search when 'Email address' option is on
  Given the following plugin settings are set:
@@ -28,5 +28,5 @@ Scenario: Testing functions for people search page (Bug 1431569)
  | artefact | internal | profilepublic | email |
  And I set the following fields to these values:
  | Search for people | UserA@example.org |
- And I press the key "Enter" in the "Search for people" field
+ And I click on the key "Enter" in the "Search for people" field
  Then I should see "UserA"

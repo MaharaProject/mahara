@@ -24,7 +24,7 @@ Scenario: Find users in your institution and outside your institution
     And I select "My institutions" from "Filter"
     And I fill in "Search" with "User"
     And I scroll to the id "main-nav"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "Bob User"
     And I should not see "Cecilia User"
 
@@ -32,7 +32,7 @@ Scenario: Find users in your institution and outside your institution
     When I select "Everyone" from "Filter"
     And I fill in "Search" with "smith"
     And I scroll to the id "main-nav"
-    And I press "Search"
+    And I click on "Search"
     # I should find everyone
     Then I should see "Cecilia User"
     And I should see "Bob User"

@@ -182,7 +182,10 @@ class BehatForms extends BehatBase {
         if (!$choice) {
             throw new \Exception(sprintf('No select2 choice found for "%s"', $field));
         }
-        $choice->press();
+        $text = $inputField->getParent()->find('css', 'label')->getText();
+        $parent = $inputField->getParent()->find('css', 'label');
+        $this->ensure_node_is_in_viewport($parent, $text);
+        $choice->click();
     }
     /**
      * Fill Select2 search field
@@ -811,6 +814,7 @@ class BehatForms extends BehatBase {
                 $textliteral === '"' . $label->getText() . '"' ||
                 $textliteral === $this->escaper->escapeLiteral(preg_replace('/"/', '\"', $label->getHtml()))) {
                 $radioButton = $page->find('css', '#' . $label->getAttribute('for'));
+                $this->ensure_node_is_in_viewport($radioButton, $fieldlabel);
                 $radioButton->click();
                 return;
             }

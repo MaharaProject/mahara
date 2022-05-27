@@ -18,13 +18,13 @@ When I click on "New entry"
 And I set the following fields to these values:
  | Title | My new journal |
  | Entry | blog |
-And I press "Save entry"
+And I click on "Save entry"
 Then I should see "Journal entry saved"
 # Editing the Journal
 And I click on "Edit" in "My new journal" row
 And I set the following fields to these values:
  | Title | My new journal |
  | Entry | Jinelle was here Nov 2015 |
- And I press "Save entry"
+ And I click on "Save entry"
  And I should see "Jinelle was here Nov 2015"
  And I should see "Last updated:"

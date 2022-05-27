@@ -30,9 +30,7 @@ Scenario: As administrator I can
     And I enable the switch "REST:"
     And I expand the section "Manage service groups"
     And I set the field "service" to "Test service"
-    And I press "Add"
-    And I scroll to the top
-    And I wait "1" seconds
+    And I click on "Add" in the "#webservices_function_groups_add" "css_element"
     And I click on "Edit" in "Test service" row
     And I set the field "Short name" to "testservice"
     And I enable the switch "Service"
@@ -40,14 +38,14 @@ Scenario: As administrator I can
     And I enable the switch in "mahara_group_get_groups_by_id" row
     And I enable the switch in "mahara_group_create_groups" row
     And I enable the switch in "mahara_group_update_groups" row
-    And I press "Save"
+    And I click on "Save"
     # Verify service group was made
     And I should see "mahara_group_create_groups"
     And I collapse "Manage service groups" node
     And I wait "1" seconds
     And I expand the section "Manage service access tokens"
     And I fill in select2 input "webservices_token_generate_userid" with "Service" and select "Service Admin (serviceadmin)"
-    And I press "Generate token"
+    And I click on "Generate token"
     And I select "Institution 1" from "Institution"
     And I select "Test service" from "Service"
     # Verify I should see the xmlrpc specific fields  when Enable web services security (XML-RPC Only) is toggled to yes
@@ -56,19 +54,19 @@ Scenario: As administrator I can
     # Hide the xmlrpc specific fields when not using them In the add/edit webservice users/tokens screens
     And I disable the switch "Enable web services security (XML-RPC Only)"
     Then I should not see "Public key expires"
-    And I press "Save"
+    And I click on "Save"
     # Verify token was made and Test the token
-    And I scroll to the id "webservices_token_edit_1_submit_container"
+    And I scroll to the id "webservices_token_pseudofieldset"
     And I should see "Edit" in the "Manage service access tokens" "Webservices" property
     And I choose "Test client" in "Web services" from administration menu
     Then I should see "This is the interactive test client facility for web services."
     # Verify Text on Web service test client | Web services configuration page with and without a protocol
     And I should not see "The web service authentication plugin is disabled."
-    And I press "Next"
+    And I click on "Next"
     And I select "Test service (Token)" from "Service"
-    And I press "Next"
+    And I click on "Next"
     And I select "mahara_group_get_groups_by_id" from "Functions"
-    And I press "Next"
+    And I click on "Next"
     And I fill in "groupa" for "shortname"
     And I select "Institution 1" from "Institution"
     And I fill in the wstoken for "Test service" owned by "Service Admin"
@@ -76,14 +74,14 @@ Scenario: As administrator I can
     # NOTE: Pressing "Execute" here fails as behat is not set up to handle webservice calls
     ###
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I press "Configuration for module mobileapi"
+    And I click on "Configuration for module mobileapi"
     And I enable the switch "Manual token generation"
-    And I press "Save"
+    And I click on "Save"
     When I choose "Connected apps" in "Settings" from account menu
-    And I follow "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
+    And I click on "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
     And I click on "Generate"
     Then I should see "Manually created"
-    When I press "Delete \"Manually created\""
+    When I click on "Delete"
     Then I should see "You have not granted access to any applications"
 
  Scenario: As a student I can
@@ -91,17 +89,17 @@ Scenario: As administrator I can
   2) Generate a manual token once administrator has allowed this
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I press "Configuration for module mobileapi"
+    And I click on "Configuration for module mobileapi"
     And I enable the switch "Auto-configure mobile apps API"
     And I enable the switch "Manual token generation"
-    And I press "Save"
+    And I click on "Save"
     And I log out
     When I log in as "UserA" with password "Kupuh1pa!"
     And I go to "webservice/admin/index.php"
     Then I should see "You are forbidden from accessing the administration section."
     When I choose "Connected apps" in "Settings" from account menu
-    And I follow "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
+    And I click on "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
     And I click on "Generate"
     Then I should see "Manually created"
-    When I press "Delete \"Manually created\""
+    When I click on "Delete"
     Then I should see "You have not granted access to any applications"

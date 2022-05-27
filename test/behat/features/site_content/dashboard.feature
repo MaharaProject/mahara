@@ -21,12 +21,12 @@ Scenario: Check default blocks are displayed
     Then I should see "Groups" in the "H1 heading" "Common" property
     And I choose "Preferences" in "Settings" from account menu
     And I disable the switch "Dashboard information"
-    And I press "Save"
+    And I click on "Save"
     And I am on homepage
     And I should not see "Find people and join groups"
     And I choose "Preferences" in "Settings" from account menu
     And I enable the switch "Dashboard information"
-    And I press "Save"
+    And I click on "Save"
     And I am on homepage
     Then I should see "Find people and join groups"
 
@@ -51,14 +51,14 @@ Scenario: Check default blocks are displayed
     When I configure the block "Portfolios shared with me"
     And I click on "Set a block title"
     And I set the field "Block title" to "Latest change: Cats are cool!"
-    And I press "Save"
+    And I click on "Save"
     # Check that a different block can be added
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Text"
     And I set the field "Block title" to "Favourite quote"
     And I set the field "Block content" to "A four word quote.  A.Anon"
-    And I press "Save"
+    And I click on "Save"
     # Check that the edited changes persist
     And I choose "Dashboard" from main menu
     Then I should not see "Portfolios shared with me"

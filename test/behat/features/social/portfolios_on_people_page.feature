@@ -28,35 +28,35 @@ Scenario: Create friends and portfolios for each to see portfolios on People pag
     When I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "CollectionA" card access menu
     And I select "friends" from "General" in shared with select2 box
-    And I press "Save"
+    And I click on "Save"
 
     Then I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "PageA single" card access menu
     And I select "friends" from "General" in shared with select2 box
-    And I press "Save"
+    And I click on "Save"
 
     # Let UserA add UserB as a friend
     Then I choose "People" in "Engage" from main menu
     And I click on "Send friend request" in "Benjamin Bobby" row
     And I set the field "Message" to "Love me, love me, say you do!"
-    And I press "Request friendship"
+    And I click on "Request friendship"
     And I log out
 
     # Log in as UserB, accept UserA's friend request
     Then I log in as "UserB" with password "Kupuh1pa!"
-    And I follow "pending friend"
+    And I click on "pending friend"
     And I click on "Approve"
 
     # Change sharing permissions
     When I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "CollectionB" card access menu
     And I select "friends" from "General" in shared with select2 box
-    And I press "Save"
+    And I click on "Save"
 
     Then I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "PageB single" card access menu
     And I select "friends" from "General" in shared with select2 box
-    Then I press "Save"
+    Then I click on "Save"
 
     # UserB should now be able to see UserA's Portfolio on the People page
     When I choose "People" in "Engage" from main menu
@@ -68,5 +68,5 @@ Scenario: Create friends and portfolios for each to see portfolios on People pag
     Given I log in as "UserA" with password "Kupuh1pa!"
     And  I choose "People" in "Engage" from main menu
     And I select "Friends" from "filter"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "CollectionB, PageB single"

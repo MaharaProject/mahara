@@ -19,24 +19,24 @@ Scenario: Masquerading as a support admin
   Given I log in as "SupportAdminB" with password "Kupuh1pa!"
   And I choose "People search" from administration menu
   # Check they can get to the user edit admin page from the people list
-  And I follow "StaffA"
-  And I follow "Log in as this person"
-  And I follow "Become Betty Support again"
+  And I click on "StaffA"
+  And I click on "Log in as this person"
+  And I click on "Become Betty Support again"
   And I choose "People search" from administration menu
   # Check they can get to the user edit admin page via the person's profile page
-  And I follow "Alexei"
-  And I press "Log in as StaffA"
-  And I follow "Become Betty Support again"
+  And I click on "Alexei"
+  And I click on "Log in as StaffA"
+  And I click on "Become Betty Support again"
   # Check we can masquerade from the generic search for people results
   And I press "usf_submit"
   Then I should see "Masquerade" in the "Alexei Staff (StaffA)" row
   And I click on "Masquerade" in "Alexei Staff (StaffA)" row
-  And I follow "Become Betty Support again"
+  And I click on "Become Betty Support again"
   And I log out
   Given I log in as "StaffA" with password "Kupuh1pa!"
   And I choose "People search" from administration menu
   # Check they can not get to the user edit admin page via the person's profile page
-  And I follow "Betty"
+  And I click on "Betty"
   Then I should not see "Log in as SupportAdminB"
   # Need to have a step to check that a link is not present on the page
 
@@ -52,22 +52,21 @@ Scenario: Admin to add a person (Bug 1703721)
   | Institution administrator | 1 |
   And I select "Institution One" from "adduser_authinstance"
   And I scroll to the top
-  And I press "General account options"
+  And I click on "General account options"
   And I set the following fields to these values:
   | Multiple journals | 1 |
-  And I press "×" in the "Options dialog" "Modal" property
-  And I press "Create account"
+  And I click on "×" in the "Options dialog" "Modal" property
+  And I click on "Create account"
   Then I should see "New account created successfully"
   And I expand "Institution settings - Institution One" node
   And the field "Institution administrator" matches value "1"
   # Login as Institution admin
   And I should see "Log in as this person"
-  And I scroll to the top
-  And I follow "Log in as this person"
+  And I click on "Log in as this person"
   And I should see "You are required to change your password before you can proceed."
-  And I follow "log in anyway"
+  And I click on "log in anyway"
   And I choose "People search" from administration menu
-  And I follow "Bob"
+  And I click on "Bob"
   And I wait "1" seconds
   And I should see "Administrator of Institution One"
   And I click on "Show administration menu"
@@ -92,8 +91,7 @@ Scenario: Create people by csv (Bug 1426983)
   And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "50users_new.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
-  And I press "Add or update accounts"
-  And I wait "3" seconds
+  And I click on "Add or update accounts" in the "CSV submit" "Misc" property
   Then I should see "Your CSV file was processed successfully"
   And I should see "New accounts added: 50."
   # Upload 20 people by csv by choosing the switch update users
@@ -101,7 +99,7 @@ Scenario: Create people by csv (Bug 1426983)
   And I attach the file "20users_update.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
   And I enable the switch "Update accounts"
-  And I press "Add or update accounts"
+  And I click on "Add or update accounts" in the "CSV submit" "Misc" property
   Then I should see "Your CSV file was processed successfully"
   And I should see "Accounts updated: 20."
   And I log out
@@ -110,23 +108,23 @@ Scenario: Create people by csv (Bug 1426983)
   And I should see "You are required to change your password before you can proceed."
   And I fill in "New password" with "dr@Gon123"
   And I fill in "Confirm password" with "dr@Gon123"
-  And I press "Submit"
+  And I click on "Submit"
   And I should see "Your new password has been saved"
   And I choose "Profile" from account menu
   And the "Student ID" field should contain "64000005"
-  And I follow "Contact information"
+  And I click on "Contact information"
   And the "Town" field should contain "Stewarts River"
   And the "Mobile phone" field should contain "0491 570 110"
   And I scroll to the center of id "profileform"
-  And I follow "General"
+  And I click on "General"
   And the "Occupation" field should contain "Minister for Māori Development"
   And I log out
   # Login back as admin
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "People search" in "People" from administration menu
   # Check that we can delete an account after upload (Bug #1558864)
-  And I follow "person0005"
-  And I follow "Suspend or delete this account"
+  And I click on "person0005"
+  And I click on "Suspend or delete this account"
   And I scroll to the id "delete"
   And I press and confirm "Delete account"
   And I should see "Account deleted successfully"
@@ -139,8 +137,7 @@ Scenario: Check for error messages for the following expiry dates when uploading
   And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "7usersnew-errors.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
-  And I press "Add or update accounts"
-  And I wait "3" seconds
+  And I click on "Add or update accounts" in the "CSV submit" "Misc" property
   Then I should see "There was an error with submitting this form. Please check the marked fields and try again."
   And I should see "Error on line 2: The expiry \"today\" cannot be in the past."
   And I should see "Error on line 3: The expiry \"2025-01--30\" is invalid. Please use a valid date format."
@@ -158,7 +155,6 @@ Scenario: Adding people using different expiry date formats via CSV upload
   And I choose "Add or update accounts by CSV" in "People" from administration menu
   And I attach the file "7usersnew-correctdates.csv" to "CSV file"
   And I select "Institution One" from "uploadcsv_authinstance"
-  And I press "Add or update accounts"
-  And I wait "3" seconds
+  And I click on "Add or update accounts" in the "CSV submit" "Misc" property
   Then I should see "Your CSV file was processed successfully."
   And I should see "New accounts added: 6."

@@ -13,7 +13,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to notification settings
     And I choose "Site options" in "Configure site" from administration menu
-    And I press "Notification settings"
+    And I click on "Notification settings"
     # Verifying "None" option is not available for these notifications
     And the "System message" field should not contain "None"
     And the "Message from other people" field should not contain "None"
@@ -38,7 +38,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I select "Email digest" from "Objectionable content in forum"
     And I select "Inbox" from "Objectionable content in forum"
     And I select "None" from "Objectionable content in forum"
-    And I press "Update site options"
+    And I click on "Update site options"
     # Log out as "Admin Account"
     And I log out
     # Logging in as user1
@@ -80,7 +80,7 @@ Scenario: Confirm that multiple notification choices are available (Bug #1299993
     And I select "Email digest" from "New forum post"
     And I select "Inbox" from "New forum post"
     And I select "None" from "New forum post"
-    And I press "Save"
+    And I click on "Save"
     And I should see "Preferences saved"
 
 Scenario: Admin logs in and checks notification settings (Bug 1388682)

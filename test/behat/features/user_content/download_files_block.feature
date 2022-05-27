@@ -18,13 +18,13 @@ Scenario: Add Files to download block
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "File(s) to download"
     And I expand "Files" node in the "File download modal" "Modal" property
 
     And I attach the file "mahara_about.pdf" to "File"
     And I attach the file "Image1.jpg" to "File"
-    And I press "Save"
+    And I click on "Save" in the "Submission" "Modal" property
     And I display the page
     # we don't want to actually download, so need to specify the inner link, not the download link
     And I click on "mahara_about.pdf" in the "File download heading 1" "Files" property
@@ -41,13 +41,13 @@ Scenario: Add Files to download block
     And I set the field "Name" to "renamed.pdf"
     And I set the field "Description" to "I hope I can see my saved changes"
     And I fill in select2 input "files_filebrowser_edit_tags" with "&red" and select "&red"
-    When I press "Save changes"
+    When I click on "Save changes"
     Then I should see "renamed.pdf"
     And I should see "I hope I can see my saved changes"
     When I reload the page
     Then I should not see "mahara_about.pdf"
     # Check to see if changes were updated on Portfolio page
     When I choose "Pages and collections" in "Create" from main menu
-    And I follow "Page UserA_01"
+    And I click on "Page UserA_01"
     Then I should see "renamed.pdf"
     Then I should not see "mahara_about.pdf"

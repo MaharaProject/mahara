@@ -9,7 +9,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Updating Profile
     When I choose "Profile" from account menu
-    And I follow "About me"
+    And I click on "About me"
     And I fill in the following:
     | First name | Test     |
     | Last name | Admin     |
@@ -17,8 +17,8 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Display name  | Test Admin   |
     # Updating Contact information tab
     And I scroll to the top
-    And I follow "Contact information"
-    And I press "Add email address"
+    And I click on "Contact information"
+    And I click on "Add email address"
     And I fill in the following:
     | addnewemail | example22@example.org |
     | Official website address | www.catalyst.net.nz   |
@@ -32,22 +32,22 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Mobile phone | 0272093875482 |
     | Fax number   | 09237842 |
     And I select "South Sudan" from "Country"
-    And I press "Save profile"
+    And I click on "Save profile"
     # Verifying the settings saved
     And I should see "Profile saved successfully"
     # Updating Social media tab
-    And I follow "Social media"
-    And I press "New social media account"
+    And I click on "Social media"
+    And I click on "New social media account"
     And I fill in the following:
     | Enter URL | http://github.com/MaharaProject |
     | Your URL or username | https://twitter.com/MaharaProject |
-    And I press "Save"
+    And I click on "Save"
     # Verifying the settings held, navitgating to dashboard page to check
     And I choose "Dashboard" from main menu
     And I should see "Test Admin"
     # Resetting/Editing details
     And I choose "Profile" from account menu
-    And I follow "About me"
+    And I click on "About me"
     # check that Student ID saved
     And the following fields match these values:
     | Student ID | jk74020n |
@@ -56,12 +56,12 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Last name | User  |
     | Student ID ||
     |  Display name   | Admin Account|
-    And I press "Save profile"
+    And I click on "Save profile"
     # Verifing settings saved
     And I should see "Profile saved successfully"
     # Editing contact information
-    And I follow "Contact information"
-    And I press "Add email address"
+    And I click on "Contact information"
+    And I click on "Add email address"
     And I fill in the following:
     | Official website address ||
     | Personal website address ||
@@ -73,7 +73,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Business phone ||
     | Mobile phone ||
     | Fax number   ||
-    And I press "Save profile"
+    And I click on "Save profile"
     And I should see "Profile saved successfully"
     # Verifying changes has been made navigating to dashboard page to checked
     And I choose "Dashboard" from main menu

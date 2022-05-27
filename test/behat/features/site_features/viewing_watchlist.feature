@@ -28,9 +28,9 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Then I should see "Pages I am watching"
  And I should see "There are no pages on your watchlist."
  # Viewing last updated time on watchlist items (Bug 1444784)
- And I follow "Page UserA_01"
- And I press "More options"
- And I follow "Add page to watchlist"
+ And I click on "Page UserA_01"
+ And I click on "More options"
+ And I click on "Add page to watchlist"
  And I should see "This page has been added to your watchlist."
  # Check we can see watched page and not an un-watched page
  And I am on homepage

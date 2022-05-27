@@ -36,152 +36,152 @@ Scenario: In the participation report pages should be seen in a collection
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
  And I choose "Shared by me" in "Share" from main menu
- And I follow "Pages"
+ And I click on "Pages" in the "Share tabs" "Misc" property
  And I click on "Edit access" in "Page 03" row
  And I select "Group one" from "accesslist[0][searchtype]"
  And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
- And I press "Save"
+ And I click on "Save"
  # Edit access for Collection 01
  And I click on "Edit access" in "Collection 01" row
  And I set the select2 value "Collection 01" for "editaccess_collections"
  And I select "Group one" from "accesslist[0][searchtype]"
  And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
- And I press "Save"
+ And I click on "Save"
  # Enable the participation report and make the group public
  And I choose "Groups" in "Engage" from main menu
  And I click on "Settings" in "Group one" row
  And I enable the switch "Participation report"
  And I enable the switch "Publicly viewable group"
- And I press "Save group"
+ And I click on "Save group"
  # Making group page 01 public
  When I click on "Group one"
  And I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
  And I click on "Manage access" in "Group collection 01" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
- And I press "Save"
+ And I click on "Save"
  # Making group page 03 public
  When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
  And I click on "Manage access" in "Group page 03" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
- And I press "Save"
+ And I click on "Save"
  # Making group page 04 public
  When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
  And I click on "Manage access" in "Group page 04" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
- And I press "Save"
+ And I click on "Save"
  # UserA comments on group page 01
  When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
- And I follow "Group collection 01"
- And I press "Add comment"
+ And I click on "Group collection 01"
+ And I click on "Add comment"
  And I fill in "Adding a comment to group page 01!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserA comments on group page 02
- And I press "Next page"
- And I press "Add comment"
+ And I click on "Next page"
+ And I click on "Add comment"
  And I fill in "Adding a comment to group page 02!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserA comments on group page 03
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group one"
+ And I click on "Group one"
  And I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
- And I follow "Group page 03"
- And I press "Add comment"
+ And I click on "Group page 03"
+ And I click on "Add comment"
  And I fill in "Adding a comment to group page 03!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserA comments on group page 04
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group one"
+ And I click on "Group one"
  And I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
- And I follow "Group page 04"
- And I press "Add comment"
+ And I click on "Group page 04"
+ And I click on "Add comment"
  And I fill in "Adding a comment to group page 04!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # Log out as UserA
  And I log out
  # Log in as UserB
  Given I log in as "UserB" with password "Kupuh1pa!"
  # UserB comments on the group page 01
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group one"
- And I follow "Pages and collections (tab)"
- And I follow "Group collection 01"
- And I press "Comments"
+ And I click on "Group one"
+ And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Group collection 01"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 01!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserB comments on group page 02
- And I press "Next page"
- And I press "Comments"
+ And I click on "Next page"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 02!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserB comments on group page 03
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group one"
- And I follow "Pages and collections (tab)"
- And I follow "Group page 03"
- And I press "Comments"
+ And I click on "Group one"
+ And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Group page 03"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 03!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserB comments on group page 04
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group one"
- And I follow "Pages and collections (tab)"
- And I follow "Group page 04"
- And I press "Comments"
+ And I click on "Group one"
+ And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Group page 04"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 04!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # Log out as USer B
  And I log out
  # UserC comments on group page 01
  Given I log in as "UserC" with password "Kupuh1pa!"
  And I choose "Groups" in "Engage" from main menu
- And I follow "searching for groups"
- And I follow "Group one"
- And I follow "Pages and collections (tab)"
- And I follow "Group collection 01"
- And I press "Comments"
+ And I click on "searching for groups"
+ And I click on "Group one"
+ And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Group collection 01"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserC to group page 01!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserC comments on group page 02
- And I press "Next page"
- And I press "Comments"
+ And I click on "Next page"
+ And I click on "Comments"
  And I fill in "Adding a comment to group page 02!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserC comments on group page 03
  And I choose "Groups" in "Engage" from main menu
- And I follow "searching for groups"
- And I follow "Group one"
- And I follow "Pages and collections (tab)"
- And I follow "Group page 03"
- And I press "Comments"
+ And I click on "searching for groups"
+ And I click on "Group one"
+ And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Group page 03"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserC to group page 03!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # UserC comments on group page 04
  And I choose "Groups" in "Engage" from main menu
- And I follow "searching for groups"
- And I follow "Group one"
- And I follow "Pages and collections (tab)"
- And I follow "Group page 04"
- And I press "Comments"
+ And I click on "searching for groups"
+ And I click on "Group one"
+ And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Group page 04"
+ And I click on "Comments"
  And I fill in "Adding a comment as UserC to group page 04!" in editor "Comment"
  And I enable the switch "Make comment public"
- And I press "Comment"
+ And I click on "Comment" in the "Comment button" "Comment" property
  # Log out as User C
  And I log out
  # Log in as UserA
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group one"
+ And I click on "Group one"
  And I click on "Report" in the "Arrow-bar nav" "Nav" property
  # Check elements in Pages and collections shared with this group table
  And I should see "Collection 01" in the "Shared with this group report" "Report" property

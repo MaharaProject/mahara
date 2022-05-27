@@ -21,7 +21,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     When I click on "Edit" in "Dashboard template" card menu
     # add "My friends" block and verify it is displayed on the page
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on "Show more"
     And I click on "Show more"
     And I click on "Show more"
@@ -32,16 +32,16 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     Then I should see "My friends" in the "Page content" "Views" property
     # add "My groups" block and verify it is displayed on the page
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "My groups"
-    And I press "Save"
+    And I click on "Save"
 
     # Site admin Site admin set up "Profile template" to include the following:
-    Given I press "Return to site pages and collections"
+    Given I click on "Return to site pages and collections"
     And I click on "Edit" in "Profile template" card menu
     # Verify that only one block of a certin type can be added to a template page  (ie only 1 Wall block)
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Wall"
-    And I press "Save"
+    And I click on "Save"
     Then I should see "Cannot put more than one \"Wall\" block type into a page."

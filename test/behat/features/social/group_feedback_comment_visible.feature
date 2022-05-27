@@ -25,23 +25,23 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     And I click on "Settings" in "Group A" row
     And I set the following fields to these values:
     | Comment notifications | None |
-    And I press "Save group"
+    And I click on "Save group"
     When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
-    And I follow "Page GroupA_01"
-    And I press "Add comment"
+    And I click on "Page GroupA_01"
+    And I click on "Add comment"
     And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Comment"
     # Checking that the make public is on
     And I enable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment"
     # Verifying that it saves
     Then I should see "Comment submitted"
     And I log out
     And I log in as "UserB" with password "Kupuh1pa!"
     # Needs to navigate to see the comment and check it can be seen publicly
-    When I follow "GroupA"
-    When I follow "Pages and collections (tab)"
+    When I click on "GroupA" in the "My groups box" "Groups" property
+    When I click on "Pages and collections" in the "Navigation" "Groups" property
     And I click the card "Page GroupA_01"
-    And I press "Comments"
+    And I click on "Comments"
     Then I should see "Adding a comment to this field. Student = Awesome!" in the "Comment text" "Comment" property
 
 # As part of consolidating behat tests, this scenario has been added.
@@ -49,13 +49,12 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
 Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notification message.
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "GroupA"
-    And I follow "Pages and collections (tab)"
-    # And I click on "Pages"
-    And I follow "Page GroupA_01"
-    And I press "Add comment"
+    And I click on "GroupA" in the "My groups box" "Groups" property
+    And I click on "Pages and collections" in the "Navigation" "Groups" property
+    And I click on "Page GroupA_01"
+    And I click on "Add comment"
     And I fill in "Testing comment notifications" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment"
     # Log out as user 1
     And I log out
     # Log in as  admin
@@ -65,5 +64,5 @@ Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notif
     Then I should see "New comment on Page GroupA_01"
     # Checking notifications also appear in my inbox
     And I choose inbox
-    And I follow "New comment on Page GroupA_01"
+    And I click on "New comment on Page GroupA_01"
     And I should see "Testing comment notifications"

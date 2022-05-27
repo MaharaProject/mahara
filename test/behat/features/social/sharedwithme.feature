@@ -46,21 +46,21 @@ Scenario: Testing that views & collections are collated properly
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" in "Collection UserA_01" card collection
-    And I press "Add comment"
+    And I click on "Add comment"
     And I fill in "I am on UserA_01 page" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
 
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_02" in "Collection UserA_01" card collection
-    And I press "Add comment"
+    And I click on "Add comment"
     And I fill in "I am on UserA_02 page" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
 
     And I choose "Pages and collections" in "Create" from main menu
     And I click the card "Page UserA_03"
-    And I press "Add comment"
+    And I click on "Add comment"
     And I fill in "I am on Page UserA_03" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
 
     When I log out
     And I log in as "UserB" with password "Kupuh1pa!"
@@ -77,7 +77,7 @@ Scenario: Testing that views & collections are collated properly
 
     # Allow people to see institution/group pages
     When I check "Registered people"
-    And I press "Search"
+    And I click on "Search"
     Then I should see "Page mahara_01"
     And I should see "Page GroupA_01"
     # Part1: Check the initial order of the shared items - display order is most recent first/top (Bug 1890973)
@@ -91,21 +91,21 @@ Scenario: Testing that views & collections are collated properly
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Page UserA_01" in "Collection UserA_01" card collection
-    And I press "Comments"
+    And I click on "Comments"
     And I fill in "I am on only the UserA_01 page again" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I choose "Dashboard" from main menu
     And I click on "Page mahara_01"
-    And I press "Add comment"
+    And I click on "Add comment"
     And I fill in "I am on the site page" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
 
     # Part3: make some more comments (Bug 1890973) - check new shared item display order
     When I log out
     And I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Shared with me" in "Share" from main menu
     And I check "Registered people"
-    And I press "Search"
+    And I click on "Search"
     And "I am on the site page" "text" should appear before "I am on only the UserA_01 page again" "text"
     And "I am on only the UserA_01 page again" "text" should appear before "I am on Page UserA_03" "text"
     And I should not see "I am on UserA_02 page"

@@ -30,7 +30,7 @@ Scenario: Verify that those who are not members of Private group cannot see its 
     When I set the following fields to these values:
     | Username | UserB |
     | Password | Kupuh1pa! |
-    When I press "Login"
+    When I click on "Login"
     Then I should see "Group page"
 
 Scenario: Verify that those without shared access to an institution's pages cannot see them
@@ -39,7 +39,7 @@ Scenario: Verify that those without shared access to an institution's pages cann
     When I set the following fields to these values:
     | Username | UserA |
     | Password | Kupuh1pa! |
-    When I press "Login"
+    When I click on "Login"
     Then I should see "Institution page"
 
 Scenario: Verify that those without access cannot see site portfolios
@@ -48,5 +48,5 @@ Scenario: Verify that those without access cannot see site portfolios
     When I set the following fields to these values:
     | Username | UserC |
     | Password | Kupuh1pa! |
-    When I press "Login"
+    When I click on "Login"
     Then I should see "Site page"

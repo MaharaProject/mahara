@@ -31,7 +31,7 @@ Scenario: Set the custom landing page
     And I enable the switch "Custom landing page"
     # Check if we can use forum topic as landing page
     When I fill in select2 input "siteoptions_homepageredirecturl" with "General" and select "General discussion (GroupX)"
-    And I press "Update site options"
+    And I click on "Update site options"
     And I log out
 
     # Now see if we land on forum page
@@ -46,7 +46,7 @@ Scenario: Set the custom landing page
     # Check if we can use a page as landing page
     And I clear value "General discussion (GroupX)" from select2 field "siteoptions_homepageredirecturl"
     When I fill in select2 input "siteoptions_homepageredirecturl" with "Page admin_01" and select "Page admin_01 (Admin Account)"
-    And I press "Update site options"
+    And I click on "Update site options"
     And I log out
 
     # Now see if we land on user page
@@ -59,7 +59,7 @@ Scenario: Set the custom landing page
     # I set the custom landing option
     And I expand the section "Site settings"
     And I disable the switch "Custom landing page"
-    And I press "Update site options"
+    And I click on "Update site options"
     And I log out
 
     # Now see if we land on dashboard page

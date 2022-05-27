@@ -13,7 +13,7 @@ Scenario: Create a page and secret URLs to copy (Bug 1426983)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit secret URL access" in "Page admin A" row
-    And I press "New secret URL"
+    And I click on "New secret URL"
     And I should see "Copy secret URL to the clipboard"
     And I choose "Shared by me" in "Share" from main menu
     Then I should see "1" in the "Page admin A" row

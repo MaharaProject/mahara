@@ -19,12 +19,12 @@ I can create a new page from the site default portfolio page
     And I should see "Drag the 'Plus' button onto the page to create a new block."
     # Add a text block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Text"
     And I set the following fields to these values:
      | Block title | Sample text block |
      | Block content | <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p> |
-    And I press "Save"
+    And I click on "Save"
     And I should see "Sample text block"
     And I log out
 
@@ -32,8 +32,8 @@ I can create a new page from the site default portfolio page
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I should see "Pages and collections"
-    And I press "Add"
+    And I click on "Add"
     And I click on "Page" in the dialog
     And I should see "Settings"
-    And I press "Edit"
+    And I click on "Edit"
     Then I should see "Lorem Ipsum is simply dummy text of the printing and typesetting industry."

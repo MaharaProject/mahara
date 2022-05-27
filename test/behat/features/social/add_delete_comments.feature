@@ -17,19 +17,19 @@ Background:
 Scenario: Adding and deleting public comments
     # Adding
     Given I go to portfolio page "Page UserA_01"
-    And I press "Add comment"
+    And I click on "Add comment"
     # The label for message text area - anonymous people
     And I fill in "Name" with "Joe Anonymous"
     # No TinyMCE editor for anonymous people
     And I fill in "Comment" with "Public comment by anonymous person"
     And I enable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_01"
     # The label for message text area - logged in people
-    And I press "Comments"
+    And I click on "Comments"
     And I fill in "Comment by page owner" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     Then I should see "Joe Anonymous"
     And I should see "Public comment by anonymous person"
     And I should see "Comment by page owner"
@@ -55,20 +55,20 @@ Scenario: Adding and deleting public comments
 
 Scenario: Add comments block to page
     Given I go to portfolio page "Page UserA_01"
-    And I press "Add comment"
+    And I click on "Add comment"
     # The label for message text area - anonymous people
     And I fill in "Name" with "Joe Anonymous"
     # No TinyMCE editor for anonymous people
     And I fill in "Comment" with "Public comment by anonymous person"
     And I enable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Comments"
     Then I should see "Comments for this page will be displayed here rather than at the bottom of the page."
     And I display the page
@@ -79,18 +79,18 @@ Scenario: Comments update the page's mtime
     Given I log in as "admin" with password "Kupuh1pa!"
 
     # Set New Views to only show me the most recently updated page
-    And I press "Edit dashboard"
+    And I click on "Edit dashboard"
     And I configure the block "Portfolios shared with me"
     And I set the field "Maximum number of results to show" to "1"
     And I enable the switch "Public"
     And I enable the switch "Registered people"
-    And I press "Save"
+    And I click on "Save"
 
     # Public comment updates page last updated
     And I go to portfolio page "Page UserA_01"
-    And I press "Add comment"
+    And I click on "Add comment"
     And I fill in "Public comment" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I choose "Dashboard" from main menu
     And I scroll to the base of id "column-container"
     Then I should see "Page UserA_01" in the "Portfolios shared with me" "Blocks" property
@@ -98,10 +98,10 @@ Scenario: Comments update the page's mtime
 
     # Private comment updates page last updated
     And I go to portfolio page "Page UserA_02"
-    And I press "Add comment"
+    And I click on "Add comment"
     And I fill in "Private comment" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I choose "Dashboard" from main menu
     And I scroll to the id "column-container"
     And I wait "1" seconds

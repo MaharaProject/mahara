@@ -31,13 +31,13 @@ Background:
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating Institution tags
     And I choose "Tags" in "Institutions" from administration menu
-    And I follow "Create tag"
+    And I click on "Create tag"
     And I set the field "Institution tag" to "One tag"
-    And I press "Save"
+    And I click on "Save"
     Then I should see "Institution tag saved"
-    And I follow "Create tag"
+    And I click on "Create tag"
     And I set the field "Institution tag" to "Two tag"
-    And I press "Save"
+    And I click on "Save"
     And I click on "Delete institution tag" in "Two tag" row
     Then I should see "Institution tag deleted successfully"
     And I log out
@@ -48,19 +48,19 @@ Scenario: Mahara member can use Institution tags in their content
     And I click on "Mars journal"
     And I click on "Edit" in "Mars party" row
     And I fill in select2 input "editpost_tags" with "One tag" and select "Institution One: One tag"
-    And I press "Save entry"
+    And I click on "Save entry"
 
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I press "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"
-    And I press "Save"
+    And I click on "Save"
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add"
     And I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "One tag" and select "Institution One: One tag"
-    And I press "Save"
+    And I click on "Save"
     And I wait "1" seconds
     Then I should see "Journal entries with tag \"Institution One: One tag\""
 
@@ -72,32 +72,32 @@ Scenario: Mahara member can use Institution tags in their content
     And I click on "Edit" in "Image2.png" row
     And I fill in select2 input "files_filebrowser_edit_tags" with "One tag" and select "Institution One: One tag (2)"
     And I fill in select2 input "files_filebrowser_edit_tags" with "Image" and select "Image"
-    And I press "Save changes"
+    And I click on "Save changes"
 
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Tags" in the "Tags block" "Blocks" property
-    And I press "Edit tags"
+    And I click on "Edit tags"
     Then I should see "Test" in the "My tags list" "Tags" property
     Then I should not see "Institution One: One tag" in the "My tags list" "Tags" property
 
 Scenario: Inst admin can use Institution tags when creating Institution pages
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I press "Add"
+    And I click on "Add" in the "Add" "Institutions" property
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Test view |
     And I fill in "First description" in first editor
     And I fill in select2 input "settings_tags" with "One" and select "Institution One: One tag"
-    And I press "Save"
+    And I click on "Save"
 
     # Inst admin put an institution tag on a text block artefact on an institution page
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Text"
     And I set the field "Block title" to "Text Block 1"
     And I set the field "Block content" to "Here is a new block."
     And I fill in select2 input "instconf_tags" with "One" and select "Institution One: One tag"
-    And I press "Save"
+    And I click on "Save"
     And I go to portfolio page "Test view"
     Then I should see "Institution One: One tag"

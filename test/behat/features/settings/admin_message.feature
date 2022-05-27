@@ -22,7 +22,7 @@ Background:
     And I choose "Preferences" in "Settings" from account menu
     And I set the following fields to these values:
     | Do not allow anyone to send me messages | 1 |
-    And I press "Save"
+    And I click on "Save"
     Then I should see "Preferences saved"
     And I log out
 
@@ -30,7 +30,7 @@ Scenario: Site admin can send messages to anyone even if
  a person "Does not allow anyone to send me messages"
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People search" in "People" from administration menu
-    When I follow "Dave"
+    When I click on "Dave"
     Then I should see "Send message"
     When I choose "People" in "Engage" from main menu
     Then I should see "Send message" in the "Dave User (UserD)" row
@@ -41,6 +41,6 @@ Scenario: Site admin can send messages to anyone even if
     Given I log in as "UserC" with password "Kupuh1pa!"
     When I choose "People" in "Engage" from main menu
     #Then I should not see "Send message" in the "Dave User (UserD)" row
-    When I follow "Dave"
+    When I click on "Dave"
     Then I should not see "Send message"
     And I log out

@@ -24,24 +24,24 @@ Background:
 Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Collection UserA_01"
-  And I press "Edit"
+  And I click on "Collection UserA_01"
+  And I click on "Edit"
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Navigation"
   And I select "Collection UserA_02" from "Collection"
   And I set the field "Block title" to "Nav for collection B"
   And I enable the switch "Add to all pages"
   And I select "Automatically retract" from "Retractable"
-  And I press "Save"
+  And I click on "Save"
   And I display the page
   # test retractable setting
   Then I should see "Nav for collection B"
-  And I press "Next page"
+  And I click on "Next page"
   And I should not see "Page UserA_04"
   When I expand "Nav for collection B" node
   # test link works
-  And I follow "Page UserA_04"
+  And I click on "Page UserA_04"
   And I expand "Instructions" node
   Then I should see "Instructions for page 4"
   And I should see "You are on page 2/2"

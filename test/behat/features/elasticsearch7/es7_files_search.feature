@@ -41,48 +41,48 @@ Scenario: Testing file search function
     And I choose "Files" in "Create" from main menu
 # pdf
     When I scroll to the base of id "files_filebrowser_filelist_container"
-    And I press "Edit \"mahara_about.pdf\""
+    And I click on "Edit \"mahara_about.pdf\""
     And I set the field "Name" to "camelia.pdf"
     And I set the field "Description" to "This is not a picture of a flower"
-    And I press "Save changes"
+    And I click on "Save changes"
 # jpg
     When I scroll to the id "files_filebrowser_filelist_container"
-    And I press "Edit \"Image1.jpg\""
+    And I click on "Edit \"Image1.jpg\""
     And I set the field "Name" to "lavender.jpg"
     And I set the field "Description" to "This smells wonderful"
-    And I press "Save changes"
+    And I click on "Save changes"
 # png
     When I scroll to the id "files_filebrowser_filelist_container"
-    And I press "Edit \"Image2.png\""
+    And I click on "Edit \"Image2.png\""
     And I set the field "Name" to "daisy.png"
     And I set the field "Description" to "Loves me, loves me not"
-    And I press "Save changes"
+    And I click on "Save changes"
 # mp3
     When I scroll to the id "files_filebrowser_filelist_container"
-    And I press "Edit \"mahara.mp3\""
+    And I click on "Edit \"mahara.mp3\""
     And I set the field "Name" to "music.mp3"
     And I set the field "Description" to "The sound of music"
-    And I press "Save changes"
+    And I click on "Save changes"
 # mp4
-    When I press "Edit \"testvid3.mp4\""
+    When I click on "Edit \"testvid3.mp4\""
     And I set the field "Name" to "watchme.mp4"
     And I set the field "Description" to "Look at this incredible thing I can do"
-    And I press "Save changes"
+    And I click on "Save changes"
 
 # Share page
     When I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "Proud Mary" card access menu
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Tony Soprano" from select2 nested search box in row number "1"
-    And I press "Save"
+    And I click on "Save"
     And I log out
 
 # Indexing search results
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     And I log out
 
 # Search as Tina Turner by filename
@@ -90,16 +90,16 @@ Scenario: Testing file search function
    And I scroll to the top
    # And I set the following fields to these values:
    # | Search | camelia |
-   # And I press "Go"
+   # And I click on "Go"
    # Then I should see "camelia.pdf"
 
 # Search as Tina Turner by file description
     When I set the following fields to these values:
     | Search | loves |
-    And I press "Go"
+    And I click on "Go"
     And I should see "daisy.png"
     Then I should see "Used on page:"
-    When I follow "Proud Mary"
+    When I click on "Proud Mary"
     Then I should see "Picture"
     And I log out
 
@@ -109,9 +109,9 @@ Scenario: Testing file search function
     Given I log in as "tonysop" with password "Kupuh1pa!"
     And I set the following fields to these values:
     | Search | smells |
-    When I press "Go"
+    When I click on "Go"
     Then I should see "lavender.jpg"
     And I should see "Used on page:"
-    When I follow "Proud Mary"
+    When I click on "Proud Mary"
     Then I should see "Tina's Stuff"
     And I log out

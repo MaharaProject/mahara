@@ -41,13 +41,13 @@ Scenario: Installing framework module and activating for an institution
  Then I should see "smartevidence"
  And I should see "Hide" in the "Smartevidence" "Smartevidence" property
  # Also make sure the annotation blocktype plugin is active
- And I press "Show" in the "Annotation" "Smartevidence" property
+ And I click on "Show" in the "Annotation" "Smartevidence" property
 
  # Make sure we have a matrix config form
  And I choose "SmartEvidence" in "Extensions" from administration menu
- And I follow "Import" in the "Arrow-bar nav" "Nav" property
+ And I click on "Import" in the "Arrow-bar nav" "Nav" property
  And I attach the file "example.matrix" to "Matrix file"
- And I press "Upload matrix"
+ And I click on "Upload matrix"
 
  # Check that we have new framework
  Then I should see "Title of your framework"
@@ -56,14 +56,14 @@ Scenario: Installing framework module and activating for an institution
  And I choose "Settings" in "Institutions" from administration menu
  And I click on "Edit" in "No Institution" row
  And I enable the switch "Allow SmartEvidence"
- And I press "Submit"
+ And I click on "Submit"
  Then I should see "Institution updated successfully."
 
  # Adding framework to existing collection
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Collection admin_01" card menu
  And I select "Title of your framework" from "SmartEvidence framework"
- And I press "Save"
+ And I click on "Save"
  Then I should see "Collection saved successfully."
 
  # Testing the collection navigation and matrix carousel
@@ -71,33 +71,33 @@ Scenario: Installing framework module and activating for an institution
  And I click the card "Collection admin_01"
  And I should see "You are on page 1/9"
  And I should see "by Admin Account (admin)"
- And I press "Next" in the "matrix table" "Smartevidence" property
+ And I click on "Next" in the "matrix table" "Smartevidence" property
  Then I should see "Page admin_06"
- And I press "Prev" in the "matrix table" "Smartevidence" property
+ And I click on "Prev" in the "matrix table" "Smartevidence" property
  Then I should not see "Page admin_06"
 
  # Click on a matrix point to add an annotation
  And I click on the matrix point "4,5"
  And I fill in "My two cents" in editor "Annotation"
- And I press "Save"
+ And I click on "Save"
  And I go to portfolio page "Page admin_02"
  Then I should see "Annotation"
 
  # Add another compentency annotation block
- And I press "Edit"
+ And I click on "Edit"
  When I click on the add block button
- And I press "Add"
+ And I click on "Add" in the "Add new block" "Blocks" property
  And I click on blocktype "Annotation"
  And I fill in "My three cents" in editor "Annotation"
  And I set the select2 value "1.1 - Sub level of the standard" for "instconf_smartevidence"
- And I press "Save"
+ And I click on "Save"
 
  # Re-click a matrix point to add some feedback
  And I choose "Pages and collections" in "Create" from main menu
  And I click the card "Collection admin_01"
  And I click on the matrix point "4,5"
  And I fill in "This is annotation feedback" in editor "Feedback"
- And I press "Place feedback"
+ And I click on "Place feedback"
  # And change assessment status
  And I should not see the field "Assessment"
  And I close the dialog
@@ -106,9 +106,9 @@ Scenario: Installing framework module and activating for an institution
  # Try as another admin
  Given  I log in as "UserA" with password "Kupuh1pa!"
  And I wait "1" seconds
- And I follow "Collection admin_01"
+ And I click on "Collection admin_01"
  And I click on the matrix point "4,5"
  And I wait "1" seconds
  And I select "Partially meets the standard" from "Assessment"
- And I press "Save"
+ And I click on "Save"
  Then I should see "SmartEvidence updated"

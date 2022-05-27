@@ -16,23 +16,23 @@ And the following "pages" exist:
 
 Scenario: Page1 - create note with content then use it to create another note (via copy)
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I follow "Page UserA_01"
+  And I click on "Page UserA_01"
 
 # 1. Create an original Page1 note1 with content on Page1
-  And I press "Edit"
+  And I click on "Edit"
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Note"
   And I set the following fields to these values:
   | Block title | Note page1 block1 original title |
   | Block content | This is page1 block1 original content |
-  And I press "Save"
+  And I click on "Save" in the "Submission" "Modal" property
 
 # 2.1 Create a second Page1 note2 with content COPIED from note1 and edited
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Note"
-  And I press "Use content from another note"
+  And I click on "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 1 other block(s) where it appears. Make a copy"
   And I click on "Make a copy"
@@ -46,32 +46,32 @@ Scenario: Page1 - create note with content then use it to create another note (v
   And I set the following fields to these values:
   | Block title | Note page1 block2 title |
   | Block content | This is only a COPY of page1 block1 original content |
-  And I press "Save"
+  And I click on "Save" in the "Submission" "Modal" property
   And I should see "This is page1 block1 original content" in the block "Note page1 block1 original title"
   And I should see "This is only a COPY of page1 block1 original content" in the block "Note page1 block2 title"
 
 # 4. Set up Page2
   When I am on homepage
-  And I follow "Page UserA_02"
+  And I click on "Page UserA_02"
 # 5. Create a Page2 note1 with the (original, unedited) Page1 note1 content
-  And I press "Edit"
+  And I click on "Edit"
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Note"
-  And I press "Use content from another note"
+  And I click on "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 1 other block(s) where it appears. Make a copy"
   And I set the following fields to these values:
   | Block title | Note page2 block1 using original note content title |
-  And I press "Save"
+  And I click on "Save" in the "Submission" "Modal" property
   And I scroll to the top
   And I should see "This is page1 block1 original content" in the block "Note page2 block1 using original note content title"
 
 # 6. Create a Page2 note2 with the Page1 note1 content, edit the content of ALL Page1 note1s then CANCEL the changes
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Note"
-  And I press "Use content from another note"
+  And I click on "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 2 other block(s) where it appears. Make a copy"
   And I scroll to the base of id "instconf_edit_container"
@@ -85,21 +85,21 @@ Scenario: Page1 - create note with content then use it to create another note (v
 
 # 7. Create a Page2 note2 with the Page1 note1 content, edit & Save the content of ALL Page1 note1s (ie Page1 note1, Page2 note1 and this one, Page 2 note2)
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Note"
-  And I press "Use content from another note"
+  And I click on "Use content from another note"
   And I select the radio "Note page1 block1 original title"
   And I should see "If you edit the text of this block, it will also be changed in 2 other block(s) where it appears. Make a copy"
   And I set the following fields to these values:
   | Block title | Note page2 block2 title AND update original title |
   | Block content | This is page1 block1 original content UPDATED NOW! |
-  And I press "Save"
+  And I click on "Save" in the "Submission" "Modal" property
   And I scroll to the top
   And I should see "This is page1 block1 original content UPDATED NOW!" in the block "Note page2 block1 using original note content title"
   And I should see "This is page1 block1 original content UPDATED NOW!" in the block "Note page2 block2 title AND update original title"
 
 # 8. Check that the original Page1 note1 content has been updated but the copied Page1 note2 content remains unchanged
   When I am on homepage
-  And I follow "Page UserA_01"
+  And I click on "Page UserA_01"
   And I should see "This is page1 block1 original content UPDATED NOW!" in the block "Note page1 block1 original title"
   And I should see "This is only a COPY of page1 block1 original content" in the block "Note page1 block2 title"

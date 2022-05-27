@@ -21,24 +21,24 @@ Scenario: Testing that views & collections are collated properly
     # Turn on anonymous pages
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to "admin/site/options.php"
-    And I press "Account settings"
+    And I click on "Account settings"
     And I set the following fields to these values:
     | Allow anonymous pages | 1 |
-    And I press "Update site options"
+    And I click on "Update site options"
     And I log out
 
     # Make page anonymous
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Page UserA_01"
+    And I click on "Page UserA_01"
     And I click on "Edit"
-    And I press "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the following fields to these values:
     | Anonymise | 1 |
-    And I press "Save"
+    And I click on "Save"
     And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I log out
 
     Given I log in as "UserB" with password "Kupuh1pa!"
@@ -50,5 +50,5 @@ Scenario: Testing that views & collections are collated properly
     Given I log in as "admin" with password "Kupuh1pa!"
     And I am on homepage
     Then should see "(Author's name hidden)"
-    And I follow "(Author's name hidden)"
+    And I click on "(Author's name hidden)"
     Then I should see "UserA"

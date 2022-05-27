@@ -31,10 +31,10 @@ Feature: Mahara account permissions in institutions
   Scenario: Edit an institution and change some options
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Settings" in "Institutions" from administration menu
-    And I press "Edit \"Institution One\""
+    And I click on "Edit" in "Institution One" row
     And I set the following fields to these values:
     | Institution name                   | Institution Three |
-    And I press "Submit"
+    And I click on "Submit"
     Then I should see "Institution Three"
     And I log out
 
@@ -42,23 +42,23 @@ Feature: Mahara account permissions in institutions
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I follow "Page InstOne_01"
-    And I press "Edit"
-    And I press "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Page InstOne_01"
+    And I click on "Edit"
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
     And I choose "People search" in "People" from administration menu
-    And I follow "UserB"
-    And I press "Add to institution"
+    And I click on "UserB"
+    And I click on "Add to institution"
     Then I should see "Person added to institution \"Institution Two\"."
     And I log out
 
     # Institution admin can share institution page with any of the institutions they belong to
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I follow "Page InstOne_01"
-    And I press "Edit"
-    And I press "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Page InstOne_01"
+    And I click on "Edit"
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should contain "Institution Two"
     And I log out
@@ -68,6 +68,6 @@ Feature: Mahara account permissions in institutions
     And I choose "Members" in "Institutions" from administration menu
     And I select "People who have not requested institution membership yet" from "People to display:"
     And I select "UserC" from "Non-members"
-    And I press "Turn selected non-members into invited"
-    And I press "Add members"
+    And I click on "Turn selected non-members into invited"
+    And I click on "Add members"
     And I should see "People added"

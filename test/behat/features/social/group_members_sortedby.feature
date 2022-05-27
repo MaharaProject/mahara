@@ -20,9 +20,9 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Joining Testing group 1
     And I choose "Groups" in "Engage" from main menu
     And I select "All groups" from "filter"
-    And I press "Search"
+    And I click on "Search"
     And I wait "1" seconds
-    And I press "Join this group"
+    And I click on "Join this group"
     # Log out as user 1
     And I log out
     # Log in as user 2
@@ -30,20 +30,20 @@ Scenario: Creating a group and adding members to it (Bug 1426983)
     # Joining Testing group 1
     And I choose "Groups" in "Engage" from main menu
     And I select "All groups" from "filter"
-    And I press "Search"
+    And I click on "Search"
     And I wait "1" seconds
-    And I press "Join this group"
+    And I click on "Join this group"
     # Log out as user 2
     And I log out
     # Log in as "Admin" user
     And I log in as "admin" with password "Kupuh1pa!"
     # Going to Groups and setting it to sort by
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Testing Group 1"
-    And I follow "Members" in the "Arrow-bar nav" "Nav" property
+    And I click on "Testing Group 1"
+    And I click on "Members" in the "Arrow-bar nav" "Nav" property
     # Verifying they are out of order first
     And "Angela User (UserA)" "link" should appear before "Bob User (UserB)" "link"
     And I select "Name Z to A" from "sorted by:"
-    And I press the key "Enter" in the "Search:" field
+    And I click on the key "Enter" in the "Search:" field
     # Verifying I see them in order
     And "Bob User (UserB)" "link" should appear before "Angela User (UserA)" "link"

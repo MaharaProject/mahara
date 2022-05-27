@@ -20,7 +20,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  # Checking the main menu navigation headings
  When I click on "Show main menu"
  And I wait "1" seconds
- And I follow "Dashboard"
+ And I click on "Dashboard"
  Then I should not see "Administration" in the "Administration menu" "Nav" property
  And I should not see "Site information" in the "Administration menu" "Nav" property
  And I click on "Show main menu"
@@ -28,7 +28,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  And I should see "Engage" in the "Main menu" "Nav" property
  And I should see "Manage" in the "Main menu" "Nav" property
  # Checking the sub navigation in Create
- When I press "Create"
+ When I click on "Create"
  Then I should see "Pages and collections" in the "Create sub-menu" "Nav" property
  And I should see "Files" in the "Create sub-menu" "Nav" property
  And I should see "Journals" in the "Create sub-menu" "Nav" property
@@ -36,17 +36,17 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  And I should see "Plans" in the "Create sub-menu" "Nav" property
  And I should see "Notes" in the "Create sub-menu" "Nav" property
  # Checking the sub navigation in Share
- When I press "Share"
+ When I click on "Share"
  And I should see "Shared by me" in the "Share sub-menu" "Nav" property
  And I should see "Shared with me" in the "Share sub-menu" "Nav" property
  # Checking the sub navigation in Engage
- When I press "Engage"
+ When I click on "Engage"
  Then I should see "Groups" in the "Engage sub-menu" "Nav" property
  And I should see "People" in the "Engage sub-menu" "Nav" property
  And I should see "Discussion topics" in the "Engage sub-menu" "Nav" property
 
  # Checking the sub navigation in Manage
- When I press "Manage"
+ When I click on "Manage"
  And I should see "Export" in the "Manage sub-menu" "Nav" property
  And I should see "Import" in the "Manage sub-menu" "Nav" property
 
@@ -56,9 +56,9 @@ Scenario: Checking menu items are available as site staff (Bug 1467368)
  # The one major difference a site staff has is site info link that leads to other links
  And I click on "Show administration menu"
  And I wait "1" seconds
- And I follow "People search"
+ And I click on "People search"
  And I click on "Show administration menu"
- Then I follow "Reports"
+ Then I click on "Reports"
 
 Scenario: Checking menu items are available as site admin (Bug 1467368)
  Given I log in as "admin" with password "Kupuh1pa!"
@@ -73,11 +73,11 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Extensions" in the "Administration menu" "Nav" property
  And I should see "Web services" in the "Administration menu" "Nav" property
  # Checking the sub navigation in Admin home
- When I press "Admin home"
+ When I click on "Admin home"
  Then I should see "Overview" in the "Admin home sub-menu" "Nav" property
  And I should see "Register" in the "Admin home sub-menu" "Nav" property
  # Checking the sub navigation in Configure site
- When I press "Configure site"
+ When I click on "Configure site"
  Then I should see "Site options" in the "Configure site sub-menu" "Nav" property
  And I should see "Static pages" in the "Configure site sub-menu" "Nav" property
  And I should see "Menus" in the "Configure site sub-menu" "Nav" property
@@ -91,7 +91,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Files" in the "Configure site sub-menu" "Nav" property
  And I should see "Cookie Consent" in the "Configure site sub-menu" "Nav" property
  # Checking the sub navigation in People
- When I press "People"
+ When I click on "People" in the "Administration menu" "Nav" property
  Then I should see "People search" in the "Users sub-menu" "Nav" property
  And I should see "Suspended and expired accounts" in the "Users sub-menu" "Nav" property
  And I should see "Site staff" in the "Users sub-menu" "Nav" property
@@ -100,7 +100,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Add an account" in the "Users sub-menu" "Nav" property
  And I should see "Add or update accounts by CSV" in the "Users sub-menu" "Nav" property
  # Checking the sub navigation in Groups
- When I press "Groups" in the "Administration menu" "Nav" property
+ When I click on "Groups" in the "Administration menu" "Nav" property
  Then I should see "Administer groups" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Group categories" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Default group settings" in the "Admin Groups sub-menu" "Nav" property
@@ -108,7 +108,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" "Nav" property
  # Checking the sub administration in Institutions
- When I press "Institutions"
+ When I click on "Institutions"
  Then I should see "Settings" in the "Institutions sub-menu" "Nav" property
  And I should see "Static pages" in the "Institutions sub-menu" "Nav" property
  And I should see "Legal" in the "Institutions sub-menu" "Nav" property
@@ -126,14 +126,14 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  # Checking Reports menu
  And I should see "Reports"
  # Checking the sub navigation in Extensions
- When I press "Extensions"
+ When I click on "Extensions"
  Then I should see "Plugin administration" in the "Extensions sub-menu" "Nav" property
  And I should see "HTML filters" in the "Extensions sub-menu" "Nav" property
  And I should see "Allowed iframe sources" in the "Extensions sub-menu" "Nav" property
  And I should see "Clean URLs" in the "Extensions sub-menu" "Nav" property
  And I should see "SmartEvidence" in the "Extensions sub-menu" "Nav" property
  # Checking the sub navigation in Web services
- When I press "Web services"
+ When I click on "Web services"
  Then I should see "Configuration" in the "Web services sub-menu" "Nav" property
  And I should see "Application connections" in the "Web services sub-menu" "Nav" property
  And I should see "Connection manager" in the "Web services sub-menu" "Nav" property
@@ -148,7 +148,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should not see "Configure site" in the "Administration menu" "Nav" property
  And I should not see "Extensions" in the "Administration menu" "Nav" property
  # Checking the sub navigation in People
- And I press "People"
+ And I click on "People" in the "Administration menu" "Nav" property
  Then I should not see "Site staff" in the "Users sub-menu" "Nav" property
  And I should not see "Site administrators" in the "Users sub-menu" "Nav" property
  And I should see "People search" in the "Users sub-menu" "Nav" property
@@ -157,14 +157,14 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Add an account" in the "Users sub-menu" "Nav" property
  And I should see "Add or update accounts by CSV" in the "Users sub-menu" "Nav" property
  # Checking the sub navigation in Groups
- And I press "Groups" in the "Administration menu" "Nav" property
+ And I click on "Groups" in the "Administration menu" "Nav" property
  Then I should not see "Administer groups" in the "Admin Groups sub-menu" "Nav" property
  And I should not see "Group categories" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Submissions" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Add groups by CSV" in the "Admin Groups sub-menu" "Nav" property
  And I should see "Update group members by CSV" in the "Admin Groups sub-menu" "Nav" property
  # Checking the sub navigation in Institutions
- And I press "Institutions"
+ And I click on "Institutions"
  Then I should see "Profile completion" in the "Institutions sub-menu" "Nav" property
  And I should see "Settings" in the "Institutions sub-menu" "Nav" property
  And I should see "Static pages" in the "Institutions sub-menu" "Nav" property
@@ -188,7 +188,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  Then I should see "Profile"
  And I should see "Profile pictures"
  And I should see "Settings"
- When I press "Settings"
+ When I click on "Settings"
  Then I should see "Preferences"
  And I should see "Legal"
  And I wait "1" seconds

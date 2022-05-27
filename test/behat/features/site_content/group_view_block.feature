@@ -106,19 +106,19 @@ These list must take into account the sort option chosen in the block config (Bu
     # Share pages and collections to the "GroupA"
     # Edit access for Page UserA_01
     And I choose "Shared by me" in "Share" from main menu
-    And I follow "Pages"
+    And I click on "Pages" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Page UserA_01" row
     And I set the select2 value "Page UserA_01, Page UserA_02, Page UserA_03, Page UserA_04, Page UserA_05" for "editaccess_views"
     And I select "GroupA" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     # Edit access for Collection UserA_01
     And I choose "Shared by me" in "Share" from main menu
-    And I follow "Collections"
+    And I click on "Collections" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Collection UserA_01" row
     And I should not see "Collection UserA_02" in the "Collections text-box" "Views" property
     And I set the select2 value "Collection UserA_01, Collection UserA_02, Collection UserA_03, Collection UserA_04, Collection UserA_05, Collection UserA_06" for "editaccess_collections"
     And I select "GroupA" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I log out
     # Log in as a normal user
     Given I log in as "UserB" with password "Kupuh1pa!"
@@ -131,7 +131,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Edit access" in "Page UserB_01" row
     And I set the select2 value "Page UserB_01, Page UserB_02, Page UserB_03, Page UserB_04, Page UserB_05, Page UserB_06, Page UserB_07" for "editaccess_views"
     And I select "GroupA" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I log out
     # Check the list of shared pages to group "GroupA"
     Given I log in as "UserC" with password "Kupuh1pa!"
@@ -139,9 +139,9 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Cecilia"
     And I should see "GroupA"
     And I scroll to the base of id "groups"
-    And I follow "GroupA" in the "My groups box" "Groups" property
+    And I click on "GroupA" in the "My groups box" "Groups" property
     # Group portfolios
-    #And I press "Next page" in the "div#groupviews_pagination" "css_element"
+    #And I click on "Next page" in the "Group" "Pagination" property
     And I jump to next page of the list "groupviews_pagination"
     And I should see "Page GroupA_05" in the "Group portfolios" "Groups" property
     And I should see "Page GroupA_08" in the "Group portfolios" "Groups" property
@@ -150,18 +150,18 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     And I should see "Page UserA_05" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserB_01" in the "Pages shared with this group" "Groups" property
-    #And I follow "2" in the "div#sharedviews_pagination" "css_element"
+    #And I click on "2" in the "Shared" "Pagination" property
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should see "Page UserB_05" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserA_05" in the "Pages shared with this group" "Groups" property
-    #And I follow "3" in the "div#sharedviews_pagination" "css_element"
+    #And I click on "3" in the "Shared" "Pagination" property
     And I jump to page "3" of the list "sharedviews_pagination"
     And I should see "Page UserB_06" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserB_01" in the "Pages shared with this group" "Groups" property
     # Shared collections
     And I should see "Collection UserA_05" in the "Collections shared with this group" "Groups" property
     And I should not see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
-    #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
+    #And I click on "2" in the "div#sharedcollections_pagination" "css_element"
     And I jump to page "2" of the list "sharedcollections_pagination"
     And I should see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
     And I should not see "Collection UserA_05" in the "Collections shared with this group" "Groups" property
@@ -171,20 +171,20 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "GroupA"
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
-    And I follow "GroupA"
+    And I click on "GroupA"
     And I select "Page UserB_01" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Page UserB_02" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I log out
     # Change the sort options in the "Group pages" block
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I follow "GroupA (Administrator)"
+    And I click on "GroupA (Administrator)"
     And I wait "1" seconds
     And I should see "Page UserB_01"
-    And I follow "Pages and collections (tab)"
+    And I click on "Pages and collections" in the "Navigation" "Groups" property
     And I click on "Edit" in "Group homepage" card menu
     And I scroll to the id "column-container"
     And I configure the block "Group portfolios"
@@ -192,43 +192,43 @@ These list must take into account the sort option chosen in the block config (Bu
     | Sort group pages and collections by | Most recently updated |
     | Sort shared pages and collections by | Most recently updated |
     | Sort submitted pages and collections by | Most recently submitted |
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     # Update the group page "Page GroupA_06"
-    And I follow "Pages and collections (tab)"
+    And I click on "Pages and collections" in the "Navigation" "Groups" property
     And I click on "Edit" in "Page GroupA_06" card menu
-    And I press "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     #add test for group button lang string (Bug 1772327)
-    And I press "Edit"
+    And I click on "Edit"
     And I click on "Return to group pages and collections"
     And I should see "Pages and collections | GroupA"
     # Check if it is now in the first page of the list of group pages
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
-    And I follow "GroupA"
+    And I click on "GroupA"
     And I should see "Page GroupA_06" in the "Group portfolios" "Groups" property
-    #And I press "Next" in the "div#groupviews_pagination" "css_element"
+    #And I click on "Next" in the "Group" "Pagination" property
     And I jump to next page of the list "groupviews_pagination"
     And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     # Update the shared page "Page UserA_01"
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "showmorebtn"
     And I click on "Edit" in "Page UserA_01" card menu
-    And I press "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     # Check if it is now in the first page of the list of shared pages
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
-    And I follow "GroupA"
+    And I click on "GroupA"
     And I should see "Page UserA_01" in the "Pages shared with this group" "Groups" property
-    #And I follow "2" in the "div#sharedviews_pagination" "css_element"
+    #And I click on "2" in the "Shared" "Pagination" property
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     # Update the shared collection "Collection UserA_06"
@@ -236,39 +236,39 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "Edit" in "Collection UserA_06" card menu
     And I fill in "Collection description" with "Collection 06 (updated)"
     And I scroll to the base of id "edit_submitform"
-    And I press "Save"
+    And I click on "Save"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
-    And I follow "GroupA"
+    And I click on "GroupA"
     And I should see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
-    #And I follow "2" in the "div#sharedcollections_pagination" "css_element"
+    #And I click on "2" in the "div#sharedcollections_pagination" "css_element"
     And I jump to page "2" of the list "sharedcollections_pagination"
     And I should not see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
     # Submit some pages and collections to the group "GroupA"
     And I select "Page UserA_01" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Page UserA_02" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Page UserA_03" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Collection UserA_01" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Collection UserA_02" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Collection UserA_03" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     # Check the list of submitted pages/collections
     And I should see "Page UserA_03" in the "Submissions to this group" "Groups" property
     And I should see "Collection UserA_03" in the "Submissions to this group" "Groups" property
     And I should not see "Page UserB_01" in the "Submissions to this group" "Groups" property
-    #And I follow "2" in the "div#allsubmitted_pagination" "css_element"
+    #And I click on "2" in the "div#allsubmitted_pagination" "css_element"
     And I jump to page "2" of the list "allsubmitted_pagination"
     And I should see "Page UserA_01" in the "Submissions to this group" "Groups" property
     And I should not see "Page UserA_02" in the "Submissions to this group" "Groups" property
@@ -283,44 +283,44 @@ These list must take into account the sort option chosen in the block config (Bu
     # Share pages and collections to the standard "GroupD"
     # Edit access for Page UserC_01, Page UserC_03, Page UserC_04
     And I choose "Shared by me" in "Share" from main menu
-    And I follow "Pages"
+    And I click on "Pages" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Page UserC_01" row
     And I set the select2 value "Page UserC_01, Page UserC_03, Page UserC_04" for "editaccess_views"
     And I select "GroupD" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     # Edit access for Collection UserC_01, Collection UserC_03, Collection UserC_04
     And I choose "Shared by me" in "Share" from main menu
-    And I follow "Collections"
+    And I click on "Collections" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Collection UserC_01" row
     And I set the select2 value "Collection UserC_01, Collection UserC_03, Collection UserC_04" for "editaccess_collections"
     And I select "GroupD" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     # Submit pages and collections to the "GroupD" and "GroupA"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "GroupD"
+    And I click on "GroupD"
     And I scroll to the base of id "group_view_submission_form_4_options_container"
     And I select "Page UserC_03" from "group_view_submission_form_4_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I scroll to the base of id "group_view_submission_form_4_options_container"
     And I select "Collection UserC_03" from "group_view_submission_form_4_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
-    And I follow "GroupA"
+    And I click on "GroupA"
     And I select "Page UserC_04" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Collection UserC_04" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I log out
     #Check cases
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Angela"
-    And I follow "GroupD"
+    And I click on "GroupD"
     And I should not see "Page UserC_03" in the "Pages shared with this group" "Groups" property
     And I should see "Page UserC_03" in the "Submissions to this group" "Groups" property
     And I should see "Collection UserC_01" in the "Collections shared with this group" "Groups" property
@@ -332,7 +332,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupD"
-    And I follow "GroupD"
+    And I click on "GroupD"
     And I should see "Page UserC_01" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserC_02" in the "Pages shared with this group" "Groups" property
     And I should see "Page UserC_03" in the "Pages shared with this group" "Groups" property
@@ -351,53 +351,53 @@ These list must take into account the sort option chosen in the block config (Bu
     # Share pages and collections to the "GroupC"
     # Edit access for Page UserC_09, Page UserC_11, Page UserC_12
     And I choose "Shared by me" in "Share" from main menu
-    And I follow "Pages"
+    And I click on "Pages" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Page UserC_09" row
     And I set the select2 value "Page UserC_09, Page UserC_11, Page UserC_12" for "editaccess_views"
     And I select "GroupC" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     # Edit access for Collection UserC_05, Collection UserC_07, Collection UserC_08
     And I choose "Shared by me" in "Share" from main menu
-    And I follow "Collections"
+    And I click on "Collections" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Collection UserC_05" row
     And I set the select2 value "Collection UserC_05, Collection UserC_07, Collection UserC_08" for "editaccess_collections"
     And I select "GroupC" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     # Submit pages and collections to the "GroupC" and "GroupA"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "GroupC"
+    And I click on "GroupC"
     And I scroll to the base of id "group_view_submission_form_3_options_container"
     And I select "Page UserC_10" from "group_view_submission_form_3_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I scroll to the base of id "group_view_submission_form_3_options_container"
     And I select "Page UserC_11" from "group_view_submission_form_3_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I scroll to the base of id "group_view_submission_form_3_options_container"
     And I select "Collection UserC_06" from "group_view_submission_form_3_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I scroll to the base of id "group_view_submission_form_3_options_container"
     And I select "Collection UserC_07" from "group_view_submission_form_3_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
-    And I follow "GroupA"
+    And I click on "GroupA"
     And I select "Page UserC_12" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I select "Collection UserC_08" from "group_view_submission_form_1_options"
-    And I press "Submit"
-    And I press "Yes"
+    And I click on "Submit"
+    And I click on "Yes"
     And I log out
     #Check cases
     Given I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupC"
-    And I follow "GroupC"
+    And I click on "GroupC"
     And I should see "Page UserC_09" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserC_10" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserC_11" in the "Pages shared with this group" "Groups" property
@@ -414,6 +414,6 @@ These list must take into account the sort option chosen in the block config (Bu
 Scenario: Check progress completion is availble in group collections
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "GroupA"
-    And I follow "Coll GroupA"
+    And I click on "GroupA"
+    And I click on "Coll GroupA"
     And I should see "Portfolio completion"

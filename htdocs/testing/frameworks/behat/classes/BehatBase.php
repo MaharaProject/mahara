@@ -50,7 +50,12 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      */
     const EXTENDED_TIMEOUT = 10;
 
-/**
+    /**
+     * Timeout in milliseconds for the getSession->wait() function when 2nd option is false
+     */
+    const WAIT_TIMEOUT = 250;
+
+    /**
      * Number of retries to wait for the editor to be ready.
      */
     const WAIT_FOR_EDITOR_RETRIES = 10;
@@ -558,6 +563,64 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     }
 
     /**
+     * Helper functio to make sure the node to be clicked is within the viewport
+     *
+     * @throws ExpectationException
+     * @param NodeElement $node
+     * @param string $text
+     * @param string $parenttype
+     * @param string $parentelement
+     * @return void Throws an exception if it times out without the element being visible in viewport
+     */
+    public function ensure_node_is_in_viewport($node, $text, $parenttype=null, $parentelement=null) {
+        $element = $node->getTagName();
+        $hasvalue = $node->getValue();
+        $hastitle = $node->getAttribute('title');
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $textliteraljs = $this->escapeDoubleQuotes($textliteral);
+        if ($element == 'input') {
+            if ($node->getAttribute('type') == 'radio' || $node->getAttribute('type') == 'checkbox') {
+                $jquerystr = $element . " + label:contains($textliteraljs)";
+            }
+            else {
+                $jquerystr = $element . '[value=' . $textliteraljs . ']';
+            }
+        }
+        else if ($hasvalue) {
+            $jquerystr = $element . '[value=' . $textliteraljs . '], ' . "$element:contains($textliteraljs)";
+        }
+        else if ($hastitle) {
+            $jquerystr = $element . '[title=' . $textliteraljs . '], ' . "$element:contains($textliteraljs)";
+        }
+        else {
+            $jquerystr = "$element:contains($textliteraljs)";
+        }
+        if ($parenttype == 'css_element') {
+            $jquerystr = $parentelement . ' ' . $jquerystr;
+        }
+        // Need to single escape the double escaped doublequotes
+        $jquerystr = str_replace("\\\\\"", "\\\"", $jquerystr);
+        $function = <<<JS
+          (function(){
+              var elem = jQuery("$jquerystr")[0];
+              var elementRect = elem.getBoundingClientRect();
+              var absoluteElementTop = elementRect.top + window.pageYOffset;
+              var middle = absoluteElementTop - (window.innerHeight / 2);
+              window.scrollTo(0, middle);
+              return 1;
+          })()
+JS;
+        try {
+            $this->getSession()->wait(5000, $function);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollIntoView failed for clicking");
+        }
+        // Add small delay to allow scrolling to finish
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
+    }
+
+    /**
      * Ensures that the provided element is visible and we can interact with it.
      *
      * Returns the node in case other actions are interested in using it.
@@ -741,7 +804,8 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
        if (empty($element)) {
            throw new Exception("No html element found for the selector ('$element')");
        }
-
+       $this->ensure_node_is_visible($element);
+       $this->getSession()->wait(self::WAIT_TIMEOUT, false);
        $element->click();
    }
 

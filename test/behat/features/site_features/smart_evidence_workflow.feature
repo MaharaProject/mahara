@@ -28,21 +28,21 @@ Background: Setting up test data for people and portfolio pages
      # Admin enables annotations module
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I press "activate_blocktype_annotation_submit"
+    And I click on "Show" in the "#activate_blocktype_annotation_submit_container" "css_element"
     # confirm SmartEvidence is also enabled
     And I should see "Hide" in the "Smartevidence" "Smartevidence" property
     # Make sure we have a matrix config form
     And I choose "SmartEvidence" in "Extensions" from administration menu
-    And I follow "Import" in the "Arrow-bar nav" "Nav" property
+    And I click on "Import" in the "Arrow-bar nav" "Nav" property
     And I attach the file "example.matrix" to "Matrix file"
-    And I press "Upload matrix"
+    And I click on "Upload matrix"
     # Check that we have new framework
     Then I should see "Title of your framework"
     # Enable Institutions to allow SmartEvidencelcd
     And I choose "Settings" in "Institutions" from administration menu
-    And I press "Edit"
+    And I click on "Edit"
     And I enable the switch "Allow SmartEvidence"
-    And I press "Submit"
+    And I click on "Submit"
     Then I log out
 
 Scenario: 1) Mahara member creates a collection of 3 pages and submits for marking
@@ -52,20 +52,20 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Creating a collection AND adding pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
+    And I click on "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:
     | Collection name | SmartEvidence Collection 1 |
     | Collection description | SmartEvidence Collection 1 description |
     And I select "Title of your framework" from "SmartEvidence framework"
     # Adding page 1, 2 & 3 to the collection
-    And I press "Next: Edit collection pages"
-    And I follow "All"
-    And I press "Add pages"
+    And I click on "Next: Edit collection pages"
+    And I click on "All"
+    And I click on "Add pages"
     # Verifying that the pages were added
     Then I should see "Page UserA_01"
     And I should see "Page UserA_03"
-    When I press "Next: Edit access"
+    When I click on "Next: Edit access"
     Then I should see "Edit access"
 
     # Mahara member makes to page visible to public
@@ -77,7 +77,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I should see "SmartEvidence Collection 1"
 
     # Mahara member must make comment on a competencies before it can be accessed by admin/staff
-    When I follow "SmartEvidence Collection 1"
+    When I click on "SmartEvidence Collection 1"
     # click the standard group 3.1 to make an annotation for page 1 column
     And I click on the matrix point "3,22"
     And I fill in "First annotation description" in first editor
@@ -97,7 +97,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
     And I should see "SmartEvidence Collection 1 "
-    And I follow "SmartEvidence Collection 1"
+    And I click on "SmartEvidence Collection 1"
     # Admin/staff selects the competencies ready for assessment and makes a Annotation
     And I click on the matrix point "3,22"
     And I fill in "Staff annotation description" in first editor
@@ -125,15 +125,15 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Mahara member logs in, views annotations and confirms cannot delete annotations (Bug - 1781278)
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I should see "SmartEvidence Collection 1 "
-    And I follow "SmartEvidence Collection 1"
+    And I click on "SmartEvidence Collection 1"
     # Mahara member clicks the next to view next page
-    And I press "Next page"
+    And I click on "Next page"
     # Mahara member places feedback
-    When I follow "Place feedback"
+    When I click on "Place feedback"
     And I fill in "Mahara member placing feedback" in editor "Feedback"
-    And I press "Place feedback"
+    And I click on "Place feedback" in the "Feedback modal content" "Modal" property
     And I wait "1" seconds
-    When I follow "Feedback (4)"
+    When I click on "Feedback (4)"
     # Mahara member should see 3 feedback annotations
     Then I should see "Staff annotation description"
     And I should see "Assessment: Partially meets the standard "

@@ -20,16 +20,16 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   # Add profile image
   And I attach the file "Image2.png" to "Profile picture"
   And I set the field "Image title" to "Angela"
-  And I press "Upload"
+  And I click on "Upload"
   And I select the radio "Set default for \"Angela\""
-  And I press "Set default"
+  And I click on "Set default"
   Then I should see "Default profile picture set successfully"
   # Add profile block to page
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Page UserA_01"
-  And I press "Edit"
+  And I click on "Page UserA_01"
+  And I click on "Edit"
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Profile information"
   And I set the field "Block title" to "Profile information"
   # Choose information to display
@@ -37,7 +37,7 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   And I check "Last name"
   And I set the field "Angela" to "1"
   And I set the field "UserA@example.org" to "1"
-  And I press "Save"
+  And I click on "Save"
   # Confirm information displays on page
   And I display the page
   Then I should see "First name: Angela"
@@ -48,5 +48,5 @@ Scenario: Profile block displays my information correctly (Bug 1677929)
   # Delete the profile picture
   And I choose "Profile pictures" from account menu
   And I select the radio "Mark \"Angela\" for deletion"
-  And I press "Delete"
+  And I click on "Delete"
   Then I should see "Profile picture deleted"

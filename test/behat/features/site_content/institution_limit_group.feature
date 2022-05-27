@@ -32,28 +32,28 @@ Scenario: Set group limit for an institution
     And I click on "Edit" in "Institution One" row
     And I set the following fields to these values:
     | Maximum number of groups allowed | 5 |
-    And I press "Submit"
+    And I click on "Submit"
     And I choose "Add groups by CSV" in "Groups" from administration menu
     # Attaching the groups via CSV
     And I set the following fields to these values:
     | Institution | Institution One |
     And I attach the file "groups.csv" to "CSV file"
-    When I press "Add groups by CSV"
+    When I click on "Add groups by CSV" in the "CSV submit" "Misc" property
     Then I should see "Adding this many groups exceeds the group limit for your institution"
     And I log out
 
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Create group"
+    And I click on "Create group"
     And I set the following fields to these values:
     | Group name        | GroupE                |
     | Group description | GroupE owned by UserA |
-    And I press "Save group"
+    And I click on "Save group"
     And I should see "Group saved successfully"
-    And I press "Edit \"GroupE\" Settings"
+    And I click on "Edit \"GroupE\""
     And I set the following fields to these values:
     | Group description | This is GroupE owned by UserA |
-    And I press "Save group"
+    And I click on "Save group"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Create group"
+    And I click on "Create group"
     Then I should see "Groups cannot be added to this institution because the maximum number of groups allowed in the institution has been reached"

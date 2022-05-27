@@ -33,7 +33,7 @@ Given the following "users" exist:
      | About |
      | Contact us |
      | External manual |
-  And I press "Save changes"
+  And I click on "Save changes"
   And I log out
   #Go back to homepage as UserA and check if settings saved
   Given I log in as "UserA" with password "Kupuh1pa!"

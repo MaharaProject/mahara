@@ -18,73 +18,73 @@ Background:
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
-  And I press "Copy"
-  And I follow "Collection admin_01"
+  And I click on "Copy"
+  And I click on "Collection admin_01"
   And I should see "Collection admin_01 by admin"
-  And I press "Close"
+  And I click on "Close"
   Then I should not see "Collection admin_01 by admin"
 
   # Add a block to the page
   When I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page admin_02" card menu
   When I click on the add block button
-  And I press "Add"
+  And I click on "Add" in the "Add new block" "Blocks" property
   And I click on blocktype "Text"
   And I set the field "Block title" to "Text Block 1"
   And I set the field "Block content" to "Here is a new block."
   And I fill in select2 input "instconf_tags" with "block" and select "block"
-  And I press "Save"
+  And I click on "Save"
 
   # Copy a page directly from its location
   And I display the page
-  And I press "More options"
-  And I follow "Copy"
-  And I press "Save"
+  And I click on "More options"
+  And I click on "Copy"
+  And I click on "Save"
   And I display the page
   And I should see "Page admin_02 v.2"
   And I should see "Tags: block, page, two"
 
   # Copy a page
   And I choose "Pages and collections" in "Create" from main menu
-  And I press "Copy"
+  And I click on "Copy"
   And I click on "Copy page" in "Page admin_02" row
-  And I press "Save"
+  And I click on "Save"
   And I should see "Here is a new block."
 
   # Add the page to the collection which has block
   When I choose "Pages and collections" in "Create" from main menu
   And I click on "Manage" in "Collection admin_01" card menu
   And I check "Page admin_02"
-  And I press "Add pages"
+  And I click on "Add pages"
   And I should see "1 page added to collection"
-  And I press "Next: Edit access"
+  And I click on "Next: Edit access"
 
   # Copy a collection directly from its location
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01"
-  And I press "More options"
-  And I follow "Copy"
-  And I press "Collection"
-  And I press "Next: Edit collection pages"
-  And I press "Next: Edit access"
+  And I click on "More options"
+  And I click on "Copy"
+  And I click on "Collection" in the "#copyview-form" "css_element"
+  And I click on "Next: Edit collection pages"
+  And I click on "Next: Edit access"
 
   # Copy a collection
   And I choose "Pages and collections" in "Create" from main menu
-  And I press "Copy"
+  And I click on "Copy"
   And I click on "Copy collection" in "Collection admin_01" row
-  And I press "Next: Edit collection pages"
-  And I press "Next: Edit access"
+  And I click on "Next: Edit collection pages"
+  And I click on "Next: Edit access"
 
   #veryfying if the collection is copied directly from its location
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01 v.2"
-  And I press "Next page"
-  And I press "Next page"
+  And I click on "Next page"
+  And I click on "Next page"
   Then I should see "Text Block 1"
 
   #Veryfying if the page that has block been copied to collection
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Collection admin_01 v.3"
-  And I press "Next page"
-  And I press "Next page"
+  And I click on "Next page"
+  And I click on "Next page"
   Then I should see "Text Block 1"

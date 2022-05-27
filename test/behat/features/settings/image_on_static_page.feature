@@ -19,10 +19,10 @@ Scenario: Admin user can add an image to the "Logged -out home" static page and 
     When I click the "Insert/edit image" button in the editor
     And I expand the section "Image"
     And I wait "1" seconds
-    And I press "Select \"Image2.png\""
-    And I press "Submit"
+    And I click on "Select \"Image2.png\""
+    And I click on "Submit"
     And I wait "1" seconds
-    And I press "Save changes"
+    And I click on "Save changes"
     And I choose "Dashboard" from main menu
     # check that the image uploaded is the image being seen on the page
     Then I should see image 'Image2.png' on the page
@@ -37,10 +37,10 @@ Scenario: Admin user can add an image to the "Home (Dashboard)" static page and 
     When I click the "Insert/edit image" button in the editor
     And I expand the section "Image"
     And I wait "1" seconds
-    And I press "Select \"Image2.png\""
-    And I press "Submit"
+    And I click on "Select \"Image2.png\""
+    And I click on "Submit"
     And I wait "1" seconds
-    And I press "Save changes"
+    And I click on "Save changes"
     And I log out
     And I am on homepage
     # check that the image uploaded is the image being seen on the page

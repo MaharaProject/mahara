@@ -72,6 +72,7 @@ class BehatAdmin extends BehatBase {
                 'isolatedinstitutions',
             // Account settings
             // Security settings
+                'antispam',
             // Proxy settings
             // Email settings
             // Notification settings

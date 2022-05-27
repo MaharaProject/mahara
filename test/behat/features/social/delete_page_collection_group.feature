@@ -32,11 +32,11 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I should see "GroupA" in the page
     # Share page to the group
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Collection UserA_01"
-    And I press "Edit"
-    And I press "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Collection UserA_01"
+    And I click on "Edit"
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "GroupA" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     # Delete a page from the collection
     Then I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage" in "Collection UserA_01" card menu
@@ -47,6 +47,6 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     # Log in as UserB
     And I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "GroupA"
-    And I follow "Collection UserA_01"
+    And I click on "GroupA"
+    And I click on "Collection UserA_01"
     And I should see "Page UserA_02" in the page

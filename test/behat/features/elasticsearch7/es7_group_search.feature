@@ -47,24 +47,24 @@ Scenario: Testing functions for group search
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     And I log out
     When I log in as "PersonB" with password "Kupuh1pa!"
     And I set the following fields to these values:
     | Search | alpha |
-    And I press "Go"
-    When I follow "Group (3)"
+    And I click on "Go"
+    When I click on "Group (3)"
     Then I should see "GroupA owned by PersonA"
     When I set the following fields to these values:
     | Search | believe |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "yellow?"
     And I log out
     When I log in as "PersonD" with password "Kupuh1pa!"
     And I set the following fields to these values:
     | Search | believe |
-    And I press "Go"
+    And I click on "Go"
     Then I should not see "yellow?"
     And I log out
 
@@ -73,15 +73,15 @@ Scenario: Testing functions for group search
     And I choose "Administer groups" in "Groups" from administration menu
     And I set the following fields to these values:
     | search_query | alpha |
-    And I press "Search"
+    And I click on "Search"
     Then I should see "3 groups"
     When I choose "People search" in "People" from administration menu
     And I set the following fields to these values:
     | Search: | Person |
-    And I press "Search"
+    And I click on "Search"
     Then I should see "5 results"
     When I set the following fields to these values:
     | Search | Person |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "People (5)"
     And I log out

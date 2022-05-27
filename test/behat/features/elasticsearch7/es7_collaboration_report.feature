@@ -92,29 +92,29 @@ Scenario: Testing collaboration report generation
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     Then I should see "Settings saved"
     And I log out
 
 # Add annotation block and share page and collection with specified person, group, institution, registered people, public and Friends
     Given I log in as "teeny" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Greatest Hits"
-    And I press "Edit"
+    And I click on "Greatest Hits"
+    And I click on "Edit"
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I set the field "Block title" to "Annotation"
     And I click on blocktype "Annotation"
     And I fill in "You are simply the best" in editor "Annotation"
-    And I press "Save"
-    And I press "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "Save"
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Tony Soprano" from select2 hidden search box in row number "1"
     And I select "Group" from "accesslist[1][searchtype]"
     And I select "League of Legumes" from select2 group search box in row number "2"
     And I select "Hall of Fame" from "accesslist[2][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "Proud Mary" card access menu
     And I select "Person" from "accesslist[0][searchtype]"
@@ -122,43 +122,43 @@ Scenario: Testing collaboration report generation
     And I select "Registered people" from "accesslist[1][searchtype]"
     And I select "Public" from "accesslist[2][searchtype]"
     And I select "Friends" from "accesslist[3][searchtype]"
-    And I press "Save"
-    And I press "Share" in the "Toolbar buttons" "Nav" property
-    And I press "New secret URL"
+    And I click on "Save"
+    And I click on "Share" in the "Toolbar buttons" "Nav" property
+    And I click on "New secret URL"
     And I accept the confirm popup
     And I log out
 
 # Add comment to block on page
     Given I log in as "brucey" with password "Kupuh1pa!"
-    And I follow "Proud Mary"
+    And I click on "Proud Mary"
     And I click on "Details"
-    When I follow "Add comment"
+    When I click on "Add comment"
     And I fill in "Just dancing in the dark" in editor "Comment"
     And I click on "Comment"
     Then I should see "Comment submitted"
     And I log out
 # Add annotation feedback
     Given I log in as "tonysop" with password "Kupuh1pa!"
-    And I follow "Greatest Hits"
+    And I click on "Greatest Hits"
     And I click on "Place feedback"
     And I fill in "Better than all the rest" in first editor
-    And I press "Place feedback"
+    And I click on "Place feedback"
     And I log out
 
 # Reindex search results
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
-    And I press "Reset"
+    And I click on "Reset"
     Then I should see "Settings saved"
 # Generate report
     When I choose "Reports" from administration menu
-    And I press "Configure report"
+    And I click on "Configure report"
     And I set the following fields to these values:
     | Report type | Collaboration |
-    And I press "Columns"
+    And I click on "Columns"
     And I check "Annotations"
     And I check "Friends"
-    And I press "Submit"
+    And I click on "Submit"
 # Comments:
     Then I should see "2" at matrix point "6,2"
 # Annotations:

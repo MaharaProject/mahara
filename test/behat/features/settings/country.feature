@@ -21,11 +21,11 @@ Scenario: Admin user sets country to be mandatory
     And I click on "Configuration for artefact internal"
     # And I check "Country"
     And I click on the "Country mandatory field" "Profile" property
-    And I press "Save"
+    And I click on "Save"
     And I log out
     # click submit and verify user is logged in with no error messages
     When I log in as "UserA" with password "Kupuh1pa!"
     Then I should see "Fields marked by '*' are required."
     And I should see "New Zealand"
-    When I press "Submit"
+    When I click on "Submit"
     Then I should see "Required profile fields set"

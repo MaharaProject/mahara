@@ -14,20 +14,20 @@ Scenario: Selection options to filter messages (Bug 1433342)
  # Log in as "Admin"
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "People search" from administration menu
- And I follow "Angela"
- And I press "Send message"
+ And I click on "Angela"
+ And I click on "Send message"
  And I fill in the following:
  | Subject   | Hi there |
  | Message   | This is a test message |
- And I press "Send message"
+ And I click on "Send message"
  And I log out
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose inbox
- And I follow "Hi there"
- And I follow "Reply"
+ And I click on "Hi there"
+ And I click on "Reply"
  And I fill in the following:
  | Reply   | Hi yourself |
- And I press "Reply"
+ And I click on "Reply"
  And I log out
 
  # First check what options an admin has
@@ -39,8 +39,8 @@ Scenario: Selection options to filter messages (Bug 1433342)
  # Then check what options a normal person has
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Groups" in "Engage" from main menu
- And I follow "Create group"
+ And I click on "Create group"
  And I fill in "Group name" with "Jurassic Park"
- And I press "Save group"
+ And I click on "Save group"
  And I choose inbox
  And the "Activity type:" select box should contain all "Comment | Feedback on annotations | Group message | Institution message | Message from other people | New forum post | New page access | Objectionable content in forum | System message | Watchlist"

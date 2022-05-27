@@ -20,14 +20,14 @@ Scenario: Open badges block
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Open Badges"
-    And I press "Save"
+    And I click on "Save"
 
     # Need to add delays as Mahara needs to talk to external site.
     # unreliable connection to server produces errors
     # And I wait "2" seconds
     # Then I should see "Your email UserA@example.org is not found in the service"
-    # And I press "Save"
+    # And I click on "Save"
     # And I wait "5" seconds
     # Then I should see "No public badge collections / badges found."

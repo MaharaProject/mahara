@@ -20,13 +20,13 @@ Scenario:
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "PDF"
     And I fill in the following:
     | Block title | Mahara about PDF |
 
-    And I press "File"
+    And I click on "File" in the "#instconf" "css_element"
     And I attach the file "mahara_about.pdf" to "File"
-    And I press "Save"
+    And I click on "Save" in the "Submission" "Modal" property
     And I display the page
     Then I should see "Mahara about PDF"

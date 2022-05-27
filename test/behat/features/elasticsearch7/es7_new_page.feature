@@ -20,20 +20,20 @@ Scenario: Testing search functions with new data
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
-    And I press "Add"
+    And I click on "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Ziggy Stardust |
     | Page description | Amazing, beautiful |
-    And I press "Save"
+    And I click on "Save"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
-    And I press "Reset"
+    And I click on "Reset"
     When I set the following fields to these values:
     | Search | Ziggy |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Ziggy Stardust"
     And I log out

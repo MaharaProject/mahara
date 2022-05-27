@@ -18,7 +18,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  # Create draft entry
  Given I log in as "UserA" with password "Kupuh1pa!"
  When I choose "Journals" in "Create" from main menu
- And I press "New entry"
+ And I click on "New entry"
  And I fill in the following:
  | Title * | My diary entry one |
  And I set the following fields to these values:
@@ -27,16 +27,16 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  | Allow comments | 0 |
  And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "mildred" and select "mildred"
- And I press "Save entry"
+ And I click on "Save entry"
  Then I should see "Journal entry saved"
  And I should see "Draft"
 
  # Make entry public
- Given I press "Publish"
+ Given I click on "Publish"
  Then I should see "Published"
 
  # Add another entry
- And I press "New entry"
+ And I click on "New entry"
  And I fill in the following:
  | Title * | My diary entry two |
  And I set the following fields to these values:
@@ -45,29 +45,29 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  | Allow comments | 0 |
  And I scroll to the base of id "editpost_tags_container"
  And I fill in select2 input "editpost_tags" with "george" and select "george"
- And I press "Save entry"
+ And I click on "Save entry"
 
  # Remove tag from first journal and save
  Given I click on "Edit" in "My diary entry one" row
  And I clear value "mildred (1)" from select2 field "editpost_tags"
- And I press "Save entry"
+ And I click on "Save entry"
  And I should not see "mildred"
 
  # Display tagged journals in block
  And I choose "Pages and collections" in "Create" from main menu
  And I click on "Edit" in "Page UserA_01" card menu
  When I click on the add block button
- And I press "Add"
+ And I click on "Add" in the "Add new block" "Blocks" property
  And I click on blocktype "Tagged journal entries"
  And I fill in select2 input "instconf_tagselect" with "george" and select "george"
- And I press "Save"
+ And I click on "Save"
  And I wait "1" seconds
  Then I should see "My diary entry two"
  And I go to portfolio page "Page UserA_01"
- And I press "Edit"
- And I press "Share" in the "Toolbar buttons" "Nav" property
+ And I click on "Edit"
+ And I click on "Share" in the "Toolbar buttons" "Nav" property
  And I select "Public" from "accesslist[0][searchtype]"
- And I press "Save"
+ And I click on "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"
  And I go to portfolio page "Page UserA_01"

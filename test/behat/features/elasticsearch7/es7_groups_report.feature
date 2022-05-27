@@ -79,8 +79,8 @@ Scenario: Testing report generation
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     Then I should see "Settings saved"
     And I log out
 
@@ -89,44 +89,44 @@ Scenario: Testing report generation
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "Greatest Hits" card access menu
     And I select "Carbo Kids" from "Groups" in shared with select2 box
-    And I press "Save"
+    And I click on "Save"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage access" in "Proud Mary" card access menu
     And I select "League of Legumes" from "Groups" in shared with select2 box
-    And I press "Save"
+    And I click on "Save"
     And I log out
 
 # Add comments to pages and page artefacts that have been shared with group
     And I log in as "brucey" with password "Kupuh1pa!"
     And I scroll to the base of id "blockinstance_55"
-    And I follow "Proud Mary"
-    And I press "Add comment"
+    And I click on "Proud Mary"
+    And I click on "Add comment"
     And I fill in "Keep on burnin" in editor "Comment"
-    And I press "Comment"
-    And I follow "Mahara"
+    And I click on "Comment"
+    And I click on "Mahara"
     And I scroll to the base of id "blockinstance_55"
-    And I follow "Greatest Hits"
-    And I press "Add comment"
+    And I click on "Greatest Hits"
+    And I click on "Add comment"
     And I fill in "Born in the USA" in editor "Comment"
-    And I press "Comment"
+    And I click on "Comment"
     And I log out
 
 # Reindex search results
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
-    And I press "Reset"
+    And I click on "Reset"
     Then I should see "Settings saved"
 
 # Generate Groups report
     When I choose "Reports" from administration menu
-    And I press "Configure report"
+    And I click on "Configure report"
     And I set the following fields to these values:
     | Report type | Groups |
-    And I press "Columns"
+    And I click on "Columns"
     And I check "Group page comments"
     And I check "Shared pages"
     And I check "Shared page comments"
-    And I press "Submit"
+    And I click on "Submit"
 
 # Group page comments
     Then I should see "4" at matrix point "4,4"

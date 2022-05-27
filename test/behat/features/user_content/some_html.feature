@@ -20,12 +20,12 @@ Scenario:
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Some HTML"
     And I set the field "Block title" to "Some HTML"
-    And I press "File"
+    And I expand the section "File"
     And I attach the file "test_html.html" to "File"
-    And I press "Save"
+    And I click on "Save" in the "Submission" "Modal" property
     #give time for the block to resize
     And I wait "1" seconds
     And I display the page
@@ -33,7 +33,7 @@ Scenario:
     And I should see "Mahara does HTML"
     And I should not see "<h1>Mahara does HTML</h1>"
     And I should see images within the block "Some HTML"
-    And I follow "mahara manual"
+    And I click on "mahara manual"
     And I switch to the new window
     And I wait "2" seconds
     Then I should see "This is the manual for Mahara"

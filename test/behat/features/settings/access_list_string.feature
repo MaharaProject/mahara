@@ -19,7 +19,7 @@ Background:
 Scenario: Verifying a person's authentication method only displays institutions they are associated with
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People search" in "People" from administration menu
-    When I follow "Angela"
+    When I click on "Angela"
     And I click on "Account settings"
     Then I should see "Authentication method"
     And the "Authentication method" select box should contain "Institution One: internal"
@@ -31,6 +31,6 @@ Scenario: Accessing people reports
     And I choose "People search" in "People" from administration menu
     And I check "selectusers_2"
     And I check "selectusers_3"
-    And I press "Get reports"
+    And I click on "Get reports"
     Then I should see "Account details"
     And I should see "2 persons selected"

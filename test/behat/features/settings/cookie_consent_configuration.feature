@@ -9,6 +9,6 @@ Scenario: Turning the switches on and off on Cookie consent page (Bug 1431569)
  And I choose "Cookie Consent" in "Configure site" from administration menu
  And I set the following fields to these values:
  | Enable Cookie Consent | 1 |
- And I press "Save changes"
+ And I click on "Save changes"
  And I should see "Cookie Consent enabled"
  And I should see "Got it!"

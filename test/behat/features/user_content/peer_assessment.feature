@@ -53,61 +53,61 @@ Background:
     # Add signoff block to Page UserA_00
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
-    And I press "Edit"
+    And I click on "Edit"
     # Author adds sign off block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
-    And I press "Save"
+    And I click on "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I press "Return to pages and collections"
+    And I click on "Return to pages and collections"
     And I go to portfolio page "Page UserA_01"
-    And I press "Edit"
+    And I click on "Edit"
     # Author adds sign off block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
-    And I press "Save"
+    And I click on "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I press "Return to pages and collections"
+    And I click on "Return to pages and collections"
     # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
-    And I press "Edit"
+    And I click on "Edit"
     # Author adds sign off block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Sign-off"
     And I enable the switch "Verify"
-    And I press "Save"
+    And I click on "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I press "Return to pages and collections"
+    And I click on "Return to pages and collections"
     # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
-    And I follow "Pages"
+    And I click on "Pages" in the "Share tabs" "Misc" property
     And I click on "Edit access" in "Page UserA_03" row
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Dmitri User" from select2 nested search box in row number "1"
     And I select "Peer and manager" from "accesslist[0][role]"
-    And I press "Save"
+    And I click on "Save"
     And I log out
 
 Scenario: Log in as UserB with role of Peer and Interact with a peer assessment / signoff combo for a single page
     # Add peer assessmentimage jpg
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
-    And I follow "Add peer assessment"
+    And I click on "Add peer assessment"
     And I expand "Instructions" node
     Then I should see "This is the custom peer assessment instructions"
     And I set the field "Assessment" to "UserB first assessment - draft"
-    And I press "Save draft"
-    And I follow "Add peer assessment"
+    And I click on "Save draft"
+    And I click on "Add peer assessment"
     And I set the field "Assessment" to "UserB second assessment - published"
-    And I press "Publish"
+    And I click on "Publish"
     And I log out
 
     # Verify owner can only see published assessment
@@ -151,21 +151,21 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     Given I log in as "UserD" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_03"
     And I should see "This is some text"
-    And I follow "Add peer assessment"
+    And I click on "Add peer assessment"
     And I expand "Instructions" node
     Then I should see "This is the custom peer assessment instructions"
     And I set the field "Assessment" to "UserB first assessment - draft"
-    And I press "Save draft"
-    And I follow "Add peer assessment"
+    And I click on "Save draft"
+    And I click on "Add peer assessment"
     And I set the field "Assessment" to "UserD second assessment - published"
-    And I press "Publish"
+    And I click on "Publish"
     And I log out
 
 Scenario: Log in as UserB with the role of Peer and Interact with a peer assessment / signoff combo on a collection page that has no peer assessment block
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
-    And I follow "Collection UserA_01"
+    And I click on "Collection UserA_01"
     And I should see "Add peer assessment"
-    When I press "Next page"
+    When I click on "Next page"
     Then I should see "You cannot see the content on this page because it does not require a peer assessment."
     And I log out

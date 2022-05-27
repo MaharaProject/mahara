@@ -26,6 +26,7 @@
  */
 
 define('LOCATORS', array(
+    'ADMINISTRATION',
     'NAV',
     'BLOCKS',
     'HEADER',
@@ -50,6 +51,7 @@ define('LOCATORS', array(
     'PEERASSESSMENT',
     'LEGAL',
     'WEBSERVICES',
+    'PAGINATION',
 ));
 
 /**
@@ -73,6 +75,10 @@ define('ACCOUNT', array(
     'System message' => '#activityprefs_activity_maharamessage',
 ));
 
+define('ADMINISTRATION', array(
+    'Menus' => '#rownew',
+));
+
 define('BLOCKS', array(
     'Content types' => '#placeholderlist',
     //in edit mode, the class has '-editor', so we use 'class^='
@@ -86,12 +92,14 @@ define('BLOCKS', array(
     'Block header' => '.block-header',
     'Tags block' => '#sb-tags',
     'Group info' => '.bt-groupinfo',
+    'Add new block' => '#newblock',
 ));
 
 define('COMMENT', array(
     'Comment preview' => '.commentreplyview',
     'Comment text' => '.comment-text',
     'Comment feedbacktable' => '.feedbacktable',
+    'Comment button' => '#add_feedback_form',
     'Make comment public status' => '#add_feedback_form_ispublic_container',
 ));
 
@@ -123,7 +131,7 @@ define('FOOTER', array(
 
 define('GROUPS', array(
     'Submissions to this group' => '#allsubmissionlist',
-    'My groups box' => '#groups',
+    'My groups box' => '#groups .list-group-item-text',
     'Group portfolios' => '#groupviewlist',
     'Members without a submission to the group' => '#nosubmissionslist',
     'Collections shared with this group' => '#sharedcollectionlist',
@@ -135,6 +143,7 @@ define('GROUPS', array(
     'Search results heading row 3' => '#membersearchresults .list-group-item:nth-of-type(3) .list-group-item-heading',
     'Search results heading row 4' => '#membersearchresults .list-group-item:nth-of-type(4) .list-group-item-heading',
     'Search results heading row 6' => '#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading',
+    'Navigation' => '.nav-inpage',
 ));
 
 define('HEADER', array(
@@ -148,6 +157,8 @@ define('HEADER', array(
 define ('INSTITUTIONS', array(
     'Expires column' => 'tbody tr td:nth-of-type(3)',
     'Submenu' => '.manageinstitutions ul',
+    'Add' => '#main-column-container div.btn-group-top',
+    'Authentication' => '#institution_authplugin_container',
 ));
 
 define('LEGAL', array(
@@ -163,8 +174,10 @@ define('MODAL', array(
     'Options dialog' => '.modal-header',
     'Modal header' => '.modal-header',
     'Modal content' => '.modal-body',
+    'Feedback modal content' => '.feedbacktable.modal',
     'Message' => 'div#modal_messages',
     'File download modal' => '#instconf_artefactfieldset_container',
+    'Submission' => 'div[id^=instconf_action].submitcancel',
 ));
 
 define('MISC', array(
@@ -182,6 +195,8 @@ define('MISC', array(
     'Multirecipientnotification' => "//li[@id='module.multirecipientnotification']",
     'Current skin' => '.col-md-3',
     'Dropdown' => '.dropdown-menu',
+    'Share tabs' => '.nav.nav-tabs',
+    'CSV submit' => '#uploadcsv_submit_container',
 ));
 
 define('NAV', array(
@@ -203,6 +218,11 @@ define('NAV', array(
     'Web services sub-menu' => '.webservices',
     'Toolbar buttons' => '#toolbar-buttons',
     'Account menu' => '.icon-chevron-down.collapsed',
+));
+
+define('PAGINATION', array(
+    'Group' => 'div#groupviews_pagination',
+    'Shared' => 'div#sharedviews_pagination',
 ));
 
 define('PEERASSESSMENT', array(

@@ -35,26 +35,26 @@ Scenario: Add blocks and create versions
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "Text"
     And I set the field "Block title" to "Text block version 1"
     And I set the field "Block content" to "Here is the first version of the block."
-    And I press "Save"
+    And I click on "Save"
     And I display the page
-    And I press "More options"
-    And I follow "Save to timeline"
+    And I click on "More options"
+    And I click on "Save to timeline"
     And I should see "Saved to timeline"
-    And I press "Edit"
+    And I click on "Edit"
     And I configure the block "Text block version 1"
     And I set the field "Block title" to "Text block version 2"
     And I set the field "Block content" to "Here is the second version of the block."
-    And I press "Save"
+    And I click on "Save"
     And I display the page
-    And I press "More options"
-    And I follow "Save to timeline"
-    And I press "More options"
-    And I follow "Timeline"
-    And I follow "Go to the next version"
+    And I click on "More options"
+    And I click on "Save to timeline"
+    And I click on "More options"
+    And I click on "Timeline"
+    And I click on "Go to the next version"
     And I wait "1" seconds
     Then I should see "Here is the second version of the block"
 
@@ -68,22 +68,22 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     # it records the correct block dimensions in view_versioning table
     And I click on "Edit" in "Page Two" card menu
     And I display the page
-    And I press "More options"
-    And I follow "Save to timeline"
+    And I click on "More options"
+    And I click on "Save to timeline"
     # Check for the conformation message
     And I should see "Saved to timeline"
     # Check that the timeline is updated correctly
-    When I press "More options"
-    And I follow "Timeline"
+    When I click on "More options"
+    And I click on "Timeline"
     Then I should see "Task One"
     And I should see "Task Two"
     And I should see "Task 2c"
     And I should see "Task 2b"
     And I should see "Task 2a"
     # User creates new task via the plan block on the page
-    When I press "Display page"
+    When I click on "Display page"
     And I click on "Edit"
-    And I press "Add task"
+    And I click on "Add task"
     # check user is now on New task page
     Then I should see " New task"
     When I fill in the following:
@@ -91,14 +91,14 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     | Description | Space Task - hold breath for a really long time |
     And I fill in "Completion date" with "tomorrow" date in the format "Y/m/d"
     And I enable the switch "Completed"
-    And I press "Save task"
+    And I click on "Save task"
     # confirm user taken back to Plan block on page and new task is displayed
     Then I should see " Page Two"
     And I should see "New Space Task" in the block "my plan"
     # confirm that plan blocks on timeline are not automatically updated when new tasks are added
-    When I press "Display page"
-    And I press "More options"
-    And I follow "Timeline"
+    When I click on "Display page"
+    And I click on "More options"
+    And I click on "Timeline"
     # confirm all the previous tasks are still displayed
     Then I should see "Task One"
     And I should see "Task Two"

@@ -42,8 +42,8 @@ Background:
 Scenario: Creating a Cover letter
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Introduction"
-    And I press "Edit"
+    And I click on "Introduction"
+    And I click on "Edit"
     And I fill in "A whole bunch of Texty text" in first editor
     And I click on "Save"
     Then I should see "Saved successfully"
@@ -53,7 +53,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Introduction"
+    And I click on "Introduction"
     And I fill in the following:
     | Date of birth   | 1970/01/07 |
     | Place of birth | Wellington |
@@ -64,30 +64,30 @@ Scenario: Editing admin resume page (Bug 1426983)
     And I fill in the following:
     | Marital status | It's complicated |
     # Saving the information
-    And I press "personalinformation_save"
+    And I click on "Save" in the "#personalinformation_save_container" "css_element"
     And I should see "Résumé saved"
 
 Scenario: Editing Education and Employment info
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Education"
+    And I click on "Education"
     # Adding Education history
     And I click on "Move down" in "North American Cultural Studies" row
     And I wait "1" seconds
     And I click on "Move up" in "North American Cultural Studies" row
     And I scroll to the id "main-nav"
-    And I press "Add education history"
+    And I click on "Add education history"
     And I set the following fields to these values:
     | addeducationhistory_startdate | 1 Jan 2017 |
     | addeducationhistory_institution | Mail-order PhD |
     | addeducationhistory_institutionaddress | 45 Empty St |
-    And I click on "addeducationhistory_submitbtn"
+    And I click on "Save"
     And I should see "Saved successfully"
     And I scroll to the top
-    And I follow "Employment"
+    And I click on "Employment"
     # Adding an Employment history
-    And I press "Add employment history"
+    And I click on "Add employment history"
     And I set the following fields to these values:
      | addemploymenthistory_startdate | 1 Jan 2009  |
      | addemploymenthistory_enddate | 02 Dec 2010 |
@@ -100,19 +100,19 @@ Scenario: Editing Education and Employment info
     And I attach the file "Image2.png" to "File"
     And I close the dialog
     # Verifying it saved
-    And I click on "addemploymenthistory_submitbtn"
+    And I click on "Save"
     Then I should see "Saved successfully"
     And I click on "Move down" in "Test Analyst" row
     And I wait "1" seconds
     And I click on "Move up" in "Test Analyst" row
     # delete employment and education history  (Bug 1755669)
     And I scroll to the top
-    And I follow "Education"
+    And I click on "Education"
     And I scroll to the base of id "educationhistorylist"
     And I wait "1" seconds
     And I click on "Delete \"North American Cultural Studies (Masters of Arts) at University of Life\"" delete button
     And I scroll to the top
-    And I follow "Employment"
+    And I click on "Employment"
     And I scroll to the base of id "employmenthistorylist"
     And I wait "1" seconds
     And I click on "Delete \"Code Ninja: Xero\"" delete button
@@ -121,35 +121,35 @@ Scenario: Editing Education and Employment info
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Profile page" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "My entire résumé"
     And I set the field "Block title" to "My entire résumé"
     And I select "Automatically retract" from "Retractable"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     And I expand "My entire résumé" node
     # Check employment and education history deleted successfully (Bug 1755669)
     Then I should not see "Code Ninja"
     And I should not see "North American Cultural Studies"
     # Test whether Employment history shows address
-    When I follow "Test Analyst at Catalyst IT"
+    When I click on "Test Analyst at Catalyst IT"
     And I wait "1" seconds
     Then I should see "Address: 150 Willis St"
     # Test whether Education history shows address
-    When I follow "Machine Learning - Creation 2.1 (Masters of Philosophy) at University College"
+    When I click on "Machine Learning - Creation 2.1 (Masters of Philosophy) at University College"
     And I wait "1" seconds
     And I scroll to the base of id "bottom-pane"
     Then I should see "Address: 23a O'Dell Boulevard"
     # Test whether a qualification with just start date and title also shows address
     When I scroll to the id beginning with "educationhistorylist"
-    And I follow "Mail-order PhD"
+    And I click on "Mail-order PhD"
     Then I should see "45 Empty St"
 
 Scenario: Adding Achievements
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Achievements"
+    And I click on "Achievements"
     And I click on "Add certifications, accreditations and awards"
     And I set the following fields to these values:
     | addcertification_date | 13/07/2017 |
@@ -191,7 +191,7 @@ Scenario: Adding Achievements
 
     # Adding Professional memberships
     And I scroll to the base of id "addmembershipbutton"
-    And I press "Add professional membership"
+    And I click on "Add professional membership"
     And I set the following fields to these values:
     | addmembership_startdate | 15/07/2017 |
     | addmembership_enddate | 29/09/2018 |
@@ -218,79 +218,79 @@ Scenario: Adding Goals and Skills
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Goals and skills"
+    And I click on "Goals and skills"
     And I should see "My goals"
     And I should see "My skills"
-    And I follow "Personal goals"
+    And I click on "Personal goals"
     And I set the field "Description" to "Become a certified diver"
-    And I press "Add a file"
+    And I click on "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" "Modal" property
-    And I press "Save"
+    And I click on "Close" in the "Upload dialog" "Modal" property
+    And I click on "Save"
     And I should see "Saved successfully"
     And I scroll to the top
-    And I follow "Academic goals"
+    And I click on "Academic goals"
     And I set the following fields to these values:
     | Description | Become tenured professor |
-    And I press "Add a file"
+    And I click on "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" "Modal" property
-    And I press "Save"
+    And I click on "Close" in the "Upload dialog" "Modal" property
+    And I click on "Save"
     And I should see "Saved successfully"
     And I scroll to the top
-    And I follow "Career goals"
+    And I click on "Career goals"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
-    And I press "Add a file"
+    And I click on "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" "Modal" property
-    And I press "Save"
+    And I click on "Close" in the "Upload dialog" "Modal" property
+    And I click on "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_personalskill"
-    And I follow "Personal skills"
+    And I click on "Personal skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
-    And I press "Add a file"
+    And I click on "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" "Modal" property
-    And I press "Save"
+    And I click on "Close" in the "Upload dialog" "Modal" property
+    And I click on "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_academicskill"
-    And I follow "Academic skills"
+    And I click on "Academic skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
-    And I press "Add a file"
+    And I click on "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" "Modal" property
-    And I press "Save"
+    And I click on "Close" in the "Upload dialog" "Modal" property
+    And I click on "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_workskill"
-    And I follow "Work skills"
+    And I click on "Work skills"
     And I set the following fields to these values:
     | Description | whateve ry askdf |
-    And I press "Add a file"
+    And I click on "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" "Modal" property
-    And I press "Save"
+    And I click on "Close" in the "Upload dialog" "Modal" property
+    And I click on "Save"
     And I should see "Saved successfully"
 
 Scenario: Adding interests
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Interests"
-    And I press "Edit"
+    And I click on "Interests"
+    And I click on "Edit"
     And I set the following fields to these values:
     | Interest | running, swimming, skydiving, clarinet |
-    And I press "Save"
+    And I click on "Save"
     And I should see "Saved successfully"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "One résumé field"
     And I select the radio "Interests"
-    And I press "Save"
+    And I click on "Save"
     And I display the page
     And I should see "clarinet" in the "Resume field block" "Blocks" property
 
@@ -298,12 +298,12 @@ Scenario: Adding license info
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "License"
+    And I click on "License"
     And I fill in the following:
     | License | http://creativecommons.org/licenses/by/4.0/ |
-    And I press "Advanced licensing"
+    And I click on "Advanced licensing"
     And I fill in the following:
     | Licensor| test1 |
     | Original URL | something here |
-    And I press "Save"
+    And I click on "Save"
     And I should see "Résumé saved"

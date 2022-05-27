@@ -13,17 +13,17 @@ Scenario: Wall post notifications
 The wall post must generate a notification (Bug 547333)
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
-    And I follow "Angela User"
+    And I click on "Angela User"
     And I scroll to the base of id "wall"
     And I set the field "Post" to "Hello"
-    And I press "Post"
+    And I click on "Post"
     And I log out
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose inbox
     Then I should see "Wall post" in the "Inbox message icon" "Misc" property
     When I click on "New post on your wall"
     Then I should see "Hello"
-    When I follow "View whole wall"
+    When I click on "View whole wall"
     Then I should see "Angela User: Wall"
     And I should see "Bob User"
     And I should see "Hello"

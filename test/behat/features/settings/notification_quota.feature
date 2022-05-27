@@ -14,13 +14,13 @@ Scenario: When quota notification threshold is changed, send notifications to us
     Given I log in as "admin" with password "Kupuh1pa!"
     # Modifying account quota to 2MB
     And I go to the "artefact" plugin "file" configuration "file" type
-    And I press "Default account quota"
+    And I click on "Default account quota"
     And I fill in "Default quota" with "2"
     # Update already existing accounts
     And I enable the switch "Update account quotas"
     # Modifying quota notification threshold to fifty
     And I fill in "Quota notification threshold" with "50"
-    And I press "Save"
+    And I click on "Save"
     # Verifying changes were made
     And I should see "Settings saved"
     # Log out as "Admin user"
@@ -33,12 +33,12 @@ Scenario: When quota notification threshold is changed, send notifications to us
     And I should see "You have used 0.0MB of your 2.0MB quota."
     # Verify folder shows content size
     When I fill in "Folder1" for "files_filebrowser_createfolder_name"
-    And I press "Create folder"
-    And I follow "Folder1"
+    And I click on "Create folder"
+    And I click on "Folder1"
     And I attach the file "Image1.jpg" to "File"
     And I attach the file "Image2.png" to "File"
     And I attach the file "Image3.png" to "File"
-    And I follow "Parent folder"
+    And I click on "Parent folder"
     Then I should see "1.5M"
     And I should see "You have used 1.5MB of your 2.0MB quota."
     # Verifying notification for reaching account quota threshold have been received

@@ -55,7 +55,12 @@ class BehatGeneral extends BehatBase {
             "login_login_password",
             $password
         );
-        $this->getSession()->getPage()->pressButton("Login");
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the login button');
+        $xpath = "//input[@id='login_submit']";
+        $node = $this->find('xpath', $xpath, $exception);
+        $this->ensure_node_is_visible($node);
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
+        $node->click();
     }
 
     /**
@@ -103,7 +108,7 @@ class BehatGeneral extends BehatBase {
         }
         else {
             // Just wait then.
-            $waittime = $content;
+            $waittime = self::WAIT_TIMEOUT;
         }
 
 
@@ -367,13 +372,9 @@ class BehatGeneral extends BehatBase {
         // Gets the node based on the requested selector type and locator.
         $node = $this->get_selected_node('link_or_button', $link_or_button);
         $this->ensure_node_is_visible($node);
-//         if ($node->getTagName() === 'a') {
-//             $path = $node->getAttribute('href');
-//             $this->visitPath($path);
-//         }
-//         else {
-            $node->click();
-//         }
+        $this->ensure_node_is_in_viewport($node, $link_or_button);
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
+        $node->click();
     }
 
     /**
@@ -448,6 +449,7 @@ class BehatGeneral extends BehatBase {
      * Press the key.
      *
      * @When /^I press the key "(?P<key>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" field$/
+     * @When /^I click on the key "(?P<key>(?:[^"]|\\")*)" in the "(?P<element_container_string>(?:[^"]|\\")*)" field$/
      * @param string $key_press want to simulate pressing
      * @param string $nodeelement Element we focus on
      */
@@ -474,6 +476,8 @@ class BehatGeneral extends BehatBase {
 
         $node = $this->get_node_in_container('link_or_button', $link_or_button, $nodeselectortype, $nodeelement);
         $this->ensure_node_is_visible($node);
+        $this->ensure_node_is_in_viewport($node, $link_or_button, $nodeselectortype, $nodeelement);
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
         $node->click();
     }
 
@@ -489,6 +493,8 @@ class BehatGeneral extends BehatBase {
 
         $node = $this->get_node_in_container('link', $link, $nodeselectortype, $nodeelement);
         $this->ensure_node_is_visible($node);
+        $this->ensure_node_is_in_viewport($node, $link);
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
         $node->click();
     }
 
@@ -616,6 +622,9 @@ EOF;
         list($selector, $locator) = $this->transform_selector('link_or_button', $link_or_button);
         $elementnode = $this->find($selector, $locator, false, $rownode);
         $this->ensure_node_is_visible($elementnode);
+
+        $textliteraljs = $this->escapeDoubleQuotes($rowtextliteral);
+        $this->ensure_node_is_in_viewport($elementnode, $link_or_button, 'css_element', ".list-group-item:contains(" . $textliteraljs . "),.authitem:contains(" . $textliteraljs . "),TR:contains(" . $textliteraljs . ")");
         $this->i_accept_confirm_popup();
         $this->avoidStaleClick($selector, $locator, $rownode);
     }
@@ -1687,6 +1696,8 @@ EOF;
         $section_heading_link = $this->find('xpath', $xpath, $exception);
 
         $this->ensure_node_is_visible($section_heading_link);
+        $this->ensure_node_is_in_viewport($section_heading_link, $text);
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
         $section_heading_link->click();
 
     }

@@ -41,7 +41,7 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
         {{/foreach}}
         </select>
     </span>
-    <button id="authlistDummyButton" class="btn btn-secondary" type="button" onclick="PieformAuthlist.create_auth(); return false;" name="button" value="foo">{{str tag=Add section=admin}}</button>
+    <button id="authlistDummyButton" class="btn btn-secondary" type="button" onclick="PieformAuthlist.create_auth(); return false;" name="button">{{str tag=Add section=admin}}</button>
 </div>
 
 <input type="hidden" id="instancePriority" name="instancePriority" value="{{$instancestring}}" />

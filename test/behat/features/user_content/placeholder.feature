@@ -22,10 +22,10 @@ Scenario: Adding a placeholder block to the page
     And I click on "Edit" in "Page UserA_01" card menu
     # Add a placeholder block
     When I click on the add block button
-    And I press "Add"
+    And I click on "Add" in the "Add new block" "Blocks" property
     And I fill in the following:
     | Block title | Mahara placeholder block |
-    And I press "Save"
+    And I click on "Save"
     Then I should see "Please edit this block to choose its type."
 
     # Edit placeholder block and check we can see more options
@@ -38,7 +38,7 @@ Scenario: Adding a placeholder block to the page
     | Block title | Mahara text block title |
     And I click on blocktype "Text"
     And I set the field "Block content" to "Mahara text block content"
-    And I press "Save"
+    And I click on "Save"
     Then I should see "Mahara text block title"
     Then I should see "Mahara text block content"
 

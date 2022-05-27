@@ -29,13 +29,13 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Help"
   And I should see "A page contains a selection of artefacts"
   And I should see "A collection is a set of pages that are linked to one another and have the same access permissions."
-  And I follow "Close help"
+  And I click on "Close help"
   # Pages
-  And I follow "Page 01"
-  And I press "Edit"
+  And I click on "Page 01"
+  And I click on "Edit"
   And I click on "Help"
   Then I should see "You can move blocks around the page either by dragging them or using your keyboard controls."
-  And I follow "Close help"
+  And I click on "Close help"
   Given I click on "Settings" in the "Toolbar buttons" "Nav" property
   And I click on "Help"
   # Tags
@@ -47,12 +47,12 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   # Edit collection settings
   And I click on "Help" in the "H1 heading" "Common" property
   Then I should see "Here you may give your collection a title and description to give people an idea of what your collection is about."
-  And I follow "Help" in the "Tags section" "Tags" property
+  And I click on "Help" in the "Tags section" "Tags" property
   Then I should see "You can add tags to artefacts, pages and collections you create. Tags are descriptive labels that allow you to find your content later on more easily."
   And I set the field "Collection name" to "Collection 01"
-  And I press "Next: Edit collection pages"
+  And I click on "Next: Edit collection pages"
   # Edit collection pages
-  And I follow "Help"
+  And I click on "Help"
   Then I should see "Here you can add pages to your collection and set the order in which they will be displayed in the collection navigation."
   # Shared by me
   And I choose "Shared by me" in "Share" from main menu
@@ -66,15 +66,15 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I choose "Skins" in "Create" from main menu
   And I click on "Help"
   Then I should see "Skins help you customise the look of your portfolio pages to give them a personal touch."
-  And I follow "Close help"
+  And I click on "Close help"
   # Create skin
-  And I press "Create skin"
+  And I click on "Create skin"
   And I click on "Help"
   Then I should see "You can design your own skin"
   # Import skin
   And I choose "Skins" in "Create" from main menu
-  And I press "More options"
-  And I follow "Import" in the "Top right button group" "Nav" property
+  And I click on "More options"
+  And I click on "Import" in the "Top right button group" "Nav" property
   And I click on "Help"
   And I should see "You can import skins from other Mahara sites."
   # Export
@@ -99,7 +99,7 @@ Scenario: Showing correct external manual help file for mahara page
   And I switch to the main window
   When I am on homepage
   And I choose "Pages and collections" in "Institutions" from administration menu
-  And I follow "Help" in the "Footer" "Footer" property
+  And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "institution-pages"
   And I should see "11.6.13. Institution pages and collections" in "h2" on the screen
@@ -112,8 +112,8 @@ Scenario: Showing correct external manual help file for mahara page
   And I should see "11.3.7. Site pages and collections" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
-  And I follow "GroupA"
-  And I follow "Pages and collections (tab)"
+  And I click on "GroupA"
+  And I click on "Pages and collections" in the "Navigation" "Groups" property
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "pages-and-collections"

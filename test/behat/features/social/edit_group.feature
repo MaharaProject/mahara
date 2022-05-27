@@ -19,36 +19,36 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  And I choose "Add groups by CSV" in "Groups" from administration menu
  # Attaching the groups via CSV
  And I attach the file "groups.csv" to "CSV file"
- When I press "Add groups by CSV"
+ When I click on "Add groups by CSV" in the "CSV submit" "Misc" property
  And I should see "Your CSV file was processed successfully."
  And I choose "Update group members by CSV" in "Groups" from administration menu
  # Verify the warnings there
  And I should see "Every CSV file upload removes all existing group members, including group administrators, completely. Ensure that you have at least one administrator for each group in your CSV file."
  # Attaching the group members via CSV
  And I attach the file "groupmembers.csv" to "CSV file"
- And I press "Update group members by CSV"
+ And I click on "Update group members by CSV" in the "CSV submit" "Misc" property
  And I log out
  # Logging back in as a user
  And I log in as "UserA" with password "Kupuh1pa!"
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group Two"
+ And I click on "Group Two"
  # Editing the group
- And I press "Edit \"Group Two\" Settings"
+ And I click on "Edit \"Group Two\""
  And I fill in the following:
  | Group name | Group awesome sauce |
- Then I press "Save group"
+ Then I click on "Save group"
  And I should not see "Invalid argument supplied for foreach()"
  And I should see "Group saved successfully"
 
  Scenario: Editing groups as a user not via CSV
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I choose "Groups" in "Engage" from main menu
- And I follow "GroupA"
+ And I click on "GroupA"
  # Editing the group
- And I press "Edit \"GroupA\" Settings"
+ And I click on "Edit \"GroupA\""
  And I fill in the following:
  | Group name | Group awesome sauce |
- Then I press "Save group"
+ Then I click on "Save group"
  # Checking for regression errors
  And I should not see "Invalid argument supplied for foreach()"
  And I should see "Group saved successfully"
@@ -56,6 +56,6 @@ Scenario: Uploading groups via CSV and editing as an admin (Bug 1420590)
  # Logging in as Admin
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Groups" in "Engage" from main menu
- And I follow "Group awesome sauce"
+ And I click on "Group awesome sauce"
  # Making sure I can't edit a group I am not owner of
  And I should not see "Edit"

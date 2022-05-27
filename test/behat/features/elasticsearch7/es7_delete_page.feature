@@ -33,11 +33,11 @@ Scenario: Testing search functions with deleted data
     Given I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
     And I click on "Select all"
-    And I press "Save"
-    And I press "Reset"
+    And I click on "Save"
+    And I click on "Reset"
     When I set the following fields to these values:
     | Search | Page |
-    And I press "Go"
+    And I click on "Go"
     Then I should see "Page UserA_01"
     And I log out
 
@@ -45,15 +45,15 @@ Scenario: Testing search functions with deleted data
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Delete" in "Page UserA_01" card menu
-    And I press "Yes"
+    And I click on "Yes"
     And I log out
 
 # Reindex and search
     When I log in as "admin" with password "Kupuh1pa!"
     And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
-    And I press "Reset"
+    And I click on "Reset"
     And I set the following fields to these values:
     | Search | Page |
-    And I press "Go"
+    And I click on "Go"
     Then I should not see "Page UserA_01"
     And I log out

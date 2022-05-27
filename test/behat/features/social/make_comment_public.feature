@@ -38,93 +38,93 @@ Background:
 
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I scroll to the base of id 'bottom-pane'
-    And I follow "Page UserA_03"
-    And I press "Add comment"
+    And I click on "Page UserA_03"
+    And I click on "Add comment"
     And I fill in "This is comment 1" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 2" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 3" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 4" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 5" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 6" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 7" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 8" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 9" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 10" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 11" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 12" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
-    And I follow "Previous page"
+    And I click on "Comment" in the "Comment button" "Comment" property
+    And I click on "Previous page"
     And I click on "Edit" in "This is comment 2" row
     And I enable the switch "Make comment public"
-    And I press "Save"
+    And I click on "Save"
     And I should see "A message has been sent to Angela User to request that the comment be made public."
     And I log out
 
     # log in as page owner to authorise the above comments to be public, make some private/public comments against a collection
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Page UserA_03"
-    And I press "Comments"
+    And I click on "Page UserA_03"
+    And I click on "Comments"
     And I click on "Make comment public" in the "This is comment 2" comment
     And I scroll to the id "view"
     And I should see "This comment is private" in the "This is comment 1" comment
     And I should see "This comment is private" in the "This is comment 9" comment
     And I should not see "This comment is private" in the "This is comment 2" comment
-    And I follow "Next page"
+    And I click on "Next page"
     And I click on "Make comment public" in the "This is comment 11" comment
-    And I press "Comments"
+    And I click on "Comments"
     And I should see "A message has been sent to Bob User to request that the comment be made public."
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Collection UserA_01"
-    And I press "Add comment"
+    And I click on "Collection UserA_01"
+    And I click on "Add comment"
     And I fill in "This is comment 1" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 2" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I fill in "This is comment 3" in editor "Comment"
     And I disable the switch "Make comment public"
-    And I press "Comment"
+    And I click on "Comment" in the "Comment button" "Comment" property
     And I click on "Make comment public" in the "This is comment 3" comment
     And I log out
 
     # log in as authorised viewer and see only the public comments
     And I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
-    And I follow "Collection UserA_01"
-    And I press "Comments"
+    And I click on "Collection UserA_01"
+    And I click on "Comments"
     And I should see "This is comment 3"
     And I should not see "This is comment 2"
     And I should not see "This is comment 1"
     And I choose "Shared with me" in "Share" from main menu
-    And I follow "Page UserA_03"
-    And I press "Comments"
+    And I click on "Page UserA_03"
+    And I click on "Comments"
     And I should not see "This comment is private" in the "This is comment 2" comment
-    And I follow "Next page"
+    And I click on "Next page"
     And I should see "This comment is private" in the "This is comment 11" comment
     And I click on "Make comment public"
     And I should not see "This comment is private" in the "This is comment 11" comment

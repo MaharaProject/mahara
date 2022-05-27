@@ -192,6 +192,8 @@ class BehatNavigation extends BehatBase {
             // We just want to expand the parent node as this doesn't align top left to the outer-link a link.
             $node = $node->getParent();
         }
+        $this->ensure_node_is_in_viewport($node, $element);
+        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
         $node->click();
         if ($node->getParent()->hasAttribute('id')) {
             $id = $node->getParent()->getAttribute('id');

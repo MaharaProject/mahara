@@ -23,15 +23,15 @@ Scenario: Creating a collection AND adding pages
     # Create Test collection
     # This is the test for manually creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
+    And I click on "Add"
     And I click on "Collection" in the dialog
     And I fill in the following:
         | Collection name | Test Collection |
         | Collection description | Test |
     # Adding page 1, 2 & 3 to the collection
-    And I press "Next: Edit collection pages"
-    And I follow "All"
-    Then I press "Add pages"
+    And I click on "Next: Edit collection pages"
+    And I click on "All"
+    Then I click on "Add pages"
     # Verifying that the pages were added
     And I should see "Page UserA_01"
     And I should see "Page UserA_04"
@@ -51,23 +51,23 @@ Scenario: Creating a collection AND adding pages
     # Check that the Collection tab opens by default etc. (Bug 1890971)
     And I should see "Collection name"
     And I should not see "Page title"
-    And I follow "Pages"
+    And I click on "Pages" in the "Share tabs" "Misc" property
     And I should not see "Collection name"
     And I should see "Page title"
-    And I follow "Collections"
+    And I click on "Collections"
     # Continue initial test
-    And I follow "Edit access"
+    And I click on "Edit access"
     And I select "Registered people" from "accesslist[0][searchtype]"
-    And I press "Save"
+    And I click on "Save"
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
+    And I click on "Add"
     And I click on "Page" in the dialog
     And I set the following fields to these values:
     | Page title | New page |
     | Page description | testing |
-    And I press "Save"
+    And I click on "Save"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Manage" in "Test Collection" card menu
-    And I follow "All"
-    And I press "Add pages"
+    And I click on "All"
+    And I click on "Add pages"
     And I should see "1 page added to collection"

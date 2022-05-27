@@ -20,7 +20,7 @@
 
     </div><!-- container -->
 
-<footer class="{if $editing == true}editcontent{/if} footer">
+<footer class="{if $editing == true}editcontent {/if}footer">
     <div class="footer-inner container">
         <div id="powered-by" class="float-start mahara-logo">
             <a href="https://mahara.org/">

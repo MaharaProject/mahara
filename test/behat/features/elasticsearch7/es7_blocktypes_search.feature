@@ -103,224 +103,224 @@ Scenario: Testing search with different blocktypes
    Given I log in as "admin" with password "Kupuh1pa!"
    And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
    And I click on "Select all"
-   And I press "Save"
-   And I press "Reset"
+   And I click on "Save"
+   And I click on "Reset"
    And I log out
    And I log in as "meryl" with password "Kupuh1pa!"
 
 # Blocktype: text
    Given I set the following fields to these values:
    | Search | adaptation |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "orchids"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: image
    Given I set the following fields to these values:
    | Search | hours |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Hours"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: filedownload
    Given I set the following fields to these values:
    | Search | devil |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Devil Wears Prada"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: folder
    Given I set the following fields to these values:
    | Search | mamma |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Mamma Mia!"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: gallery
    Given I set the following fields to these values:
    | Search | africa |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Out of Africa"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: internalmedia
    Given I set the following fields to these values:
    | Search | choice |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Sophie's Choice"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: pdf
    Given I set the following fields to these values:
    | Search | look |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Don't Look Up"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: html
    Given I set the following fields to these values:
    | Search | women |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Little Women"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: blog
    Given I set the following fields to these values:
    | Search | talk |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Let Them All Talk"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: blogpost
    Given I set the following fields to these values:
    | Search | laundromat |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Laundromat"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: recentposts
    Given I set the following fields to these values:
    | Search | poppins |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Mary Poppins Returns"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: taggedposts
    Given I set the following fields to these values:
    | Search | post |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Post"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: comment
    Given I set the following fields to these values:
    | Search | suffragette |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Suffragette City"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: peerassessment
    Given I set the following fields to these values:
    | Search | ricki |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Ricki and the Flash"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: creativecommons
    Given I set the following fields to these values:
    | Search | giver |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Giver"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: navigation
    Given I set the following fields to these values:
    | Search | homesman |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Homesman"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: plans
    Given I set the following fields to these values:
    | Search | hope |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Hope Springs"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: recentforumposts
    Given I set the following fields to these values:
    | Search | iron |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Iron Lady"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: textbox (note)
    Given I set the following fields to these values:
    | Search | complicated |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "It's Complicated"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: profileinfo
    Given I set the following fields to these values:
    | Search | fox |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Fantastic Mr. Fox"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: socialprofile
    Given I set the following fields to these values:
    | Search | julie |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Julie & Julia"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: entireresume
    Given I set the following fields to these values:
    | Search | unfortunate |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "A Series of Unfortunate Events"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: resumefield
    Given I set the following fields to these values:
    | Search | lambs |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Lions for Lambs"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: externalfeed
    Given I set the following fields to these values:
    | Search | candidate |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Manchurian Candidate"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: externalvideo
    Given I set the following fields to these values:
    | Search | stuck |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Stuck on You"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: googleapps
    Given I set the following fields to these values:
    | Search | dark |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Dark Matter"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
 
 # Blocktype: openbadgedisplayer
    Given I set the following fields to these values:
    | Search | bully |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "The Ant Bully"
-   When I follow "Films"
+   When I click on "Films"
    Then I should see "Adaptation"
    And I log out

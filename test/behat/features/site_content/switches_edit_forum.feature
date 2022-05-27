@@ -15,12 +15,12 @@ And the following "groups" exist:
 Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Turtles"
-    And I follow "Forums"
-    And I follow "General discussion"
+    And I click on "Turtles"
+    And I click on "Forums"
+    And I click on "General discussion"
     And I click on "Edit forum"
     # There are 2 settings links on the page and it needs to identify which one to follow
-    And I press "Forum settings"
+    And I click on "Forum settings"
     # Checking "Automatically subscribe group members" switchbox is on by default
     And the "edit_interaction_autosubscribe" checkbox should be checked
     # Checking it can be turned off
@@ -35,29 +35,29 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     And I enable the switch "Close new topics"
     # Checking it turns back off
     And I disable the switch "Close new topics"
-    And I press "Save"
+    And I click on "Save"
     # And I add another forum
-    And I follow "Forums"
+    And I click on "Forums"
     And I click on "New forum"
     And I set the following fields to these values:
     | Title | Freshwater turtles |
     | Description | All about freshwater turtles |
-    And I press "Forum settings"
+    And I click on "Forum settings"
     # Checking "Automatically subscribe people" switchbox is on by default
     And the "edit_interaction_autosubscribe" checkbox should be checked
-    And I press "Save"
+    And I click on "Save"
     And I log out
 
 # Person joins group and unsubscribes from forums via two ways
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Turtles"
-    And I follow "Forums (tab)"
+    And I click on "Turtles"
+    And I click on "Forums" in the "Navigation" "Groups" property
     And I should see "Unsubscribe" in the "General discussion" row
     And I should see "Unsubscribe" in the "Freshwater turtles" row
     When I click on "Unsubscribe" in "Freshwater turtles" row
     Then I should see "Forum unsubscribed successfully"
     And I should see "Subscribe" in the "Freshwater turtles" row
-    And I follow "General discussion"
+    And I click on "General discussion"
     And I click on "Unsubscribe from forum"
     Then I should see "Subscribe to forum"

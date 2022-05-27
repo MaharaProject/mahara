@@ -9,10 +9,10 @@ Scenario: Creating an institution assigning members and changing their passwords
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating an Institution
     And I choose "Settings" in "Institutions" from administration menu
-    And I press "Add institution"
+    And I click on "Add institution"
     And I fill in the following:
     | Institution name   | Institution One  |
-    And I press "Submit"
+    And I click on "Submit"
     # Creating account 1
     And I choose "Add an account" in "People" from administration menu
     And I fill in the following:
@@ -24,7 +24,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     And I select "Institution One" from "Institution"
     And I enable the switch "Institution administrator"
     And I scroll to the base of id "adduser_submit"
-    And I press "Create account"
+    And I click on "Create account"
     # Creating account 2
     And I choose "Add an account" in "People" from administration menu
     And I fill in the following:
@@ -35,7 +35,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     | password    | Mahara#1  |
     And I select "Institution One" from "Institution"
     And I scroll to the base of id "adduser_submit"
-    And I press "Create account"
+    And I click on "Create account"
     # Log out as admin
     And I log out
     # Log in as account 1
@@ -44,7 +44,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     | New password | Mahara1sGreat@  |
     | Confirm password | Mahara1sGreat@ |
     | Primary email | bob@example.com |
-    And I press "Submit"
+    And I click on "Submit"
     # Verifying password was changed successfully
     And I should see "Your new password has been saved"
     # Changing password
@@ -53,7 +53,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     | Current password   | Mahara1sGreat@ |
     | New password   | MaharaIsC00l! |
     | Confirm password   | MaharaIsC00l! |
-    When I press "Save"
+    When I click on "Save"
     # Verifying password was changed
     And I should see "Preferences saved"
     # Log out as account 1
@@ -64,7 +64,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     | New password | Mahara1sGreat@ |
     | Confirm password | Mahara1sGreat@ |
     | Primary email | jen@example.com |
-    And I press "Submit"
+    And I click on "Submit"
     # Verifying password was changed
     And I should see "Your new password has been saved"
     # Changing password
@@ -73,6 +73,6 @@ Scenario: Creating an institution assigning members and changing their passwords
     | Current password   | Mahara1sGreat@ |
     | New password   | MaharaIsC00l! |
     | Confirm password   | MaharaIsC00l! |
-    And I press "Save"
+    And I click on "Save"
     # Verifying password was changed
     And I should see "Preferences saved"

@@ -14,7 +14,7 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Send a message
     And I choose inbox
-    And I press "Compose"
+    And I click on "Compose"
     Then I should see "Recipients *"
     And I should see "Subject *"
     And I should see "Message *"
@@ -22,11 +22,11 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     And I set the following fields to these values:
     | Subject | Test message with < & > |
     | Message | This is a test with > & < |
-    And I press "Send message"
+    And I click on "Send message"
     Then I should see "Message sent"
 
     # Checking message
-    When I follow "Sent"
-    And I follow "Test message"
+    When I click on "Sent"
+    And I click on "Test message"
     Then I should see "Test message with < & >"
     And I should see "This is a test with > & <"

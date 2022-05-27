@@ -109,7 +109,9 @@ class PluginInteractionForum extends PluginInteraction {
             'group' => $group->id,
             'includeadmins' => false,
             'lefttitle' => get_string('potentialmoderators', 'interaction.forum'),
-            'righttitle' => get_string('currentmoderators', 'interaction.forum')
+            'righttitle' => get_string('currentmoderators', 'interaction.forum'),
+            'leftarrowlabel' => get_string('moderatorstopotentialmoderators', 'group'),
+            'rightarrowlabel' => get_string('potentialmoderatorstomoderators', 'group')
         );
         $fieldsetelements['createtopicusers'] = array(
             'type'         => 'select',

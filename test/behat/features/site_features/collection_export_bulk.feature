@@ -32,18 +32,18 @@ Scenario: Export collections in bulk
   When I select the radio "Just some of my collections"
   Then I should see "Select all"
   And I should see "Reverse selection"
-  When I follow "selection_all_collections"
+  When I click on "Select all" in the "#whatcollections" "css_element"
   Then the "Collection UserA_01" checkbox should be checked
   And the "Collection UserA_02" checkbox should be checked
   And the "Collection UserA_03" checkbox should be checked
-  When I follow "selection_reverse_collections"
+  When I click on "Reverse selection" in the "#whatcollections" "css_element"
   Then the "Collection UserA_01" checkbox should not be checked
   And the "Collection UserA_02" checkbox should not be checked
   And the "Collection UserA_03" checkbox should not be checked
   When I click on "Generate export"
   Then I should see "You must select at least one collection to export"
   And I should see "There was an error with submitting this form. Please check the marked fields and try again."
-  When I follow "selection_all_collections"
+  When I click on "Select all" in the "#whatcollections" "css_element"
   Then the "Collection UserA_01" checkbox should be checked
   And the "Collection UserA_02" checkbox should be checked
   And the "Collection UserA_03" checkbox should be checked
@@ -68,13 +68,13 @@ Scenario: Institution One admin locks First name, Last name fields
     And I enable the switch "First name"
     And I enable the switch "Last name"
     And I enable the switch "Email address"
-    And I press "Submit"
+    And I click on "Submit"
     Then I log out
     Given I log in as "UserB" with password "Kupuh1pa!"
     When I choose "Import" in "Manage" from main menu
     # Upload the file "UserA.xml"  Leap2A file
     And I attach the file "leap2a.xml" to "import_leap2afile"
-    And I press "Import"
+    And I click on "Import" in the "#import" "css_element"
     Then I should see "Choose the way to import your portfolio items"
     When I expand "About me" node
     # user should see ignore for all of the Locked fields for inst

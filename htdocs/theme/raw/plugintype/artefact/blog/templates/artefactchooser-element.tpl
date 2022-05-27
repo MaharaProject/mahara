@@ -5,8 +5,8 @@
         {if $artefact->draft}
         [{str tag=draft section=artefact.blog}]
         {/if}
-        <span class="text-midtone text-small">{if $artefact->blog}({$artefact->blog}){/if}</span>
     </label>
+    <span class="text-midtone text-small">{if $artefact->blog}({$artefact->blog}){/if}</span>
     {if $artefact->group}({str tag="bygroup" section="artefact.blog" arg1="$artefact->groupurl" arg2="$artefact->groupname"}){/if}
     {if $artefact->institution}({str tag="byinstitution" section="artefact.blog" arg1="$artefact->institutionurl" arg2="$artefact->institutionname"}){/if}
     {if $artefact->description}

@@ -10,8 +10,8 @@ So I can benefit from the use of group categories
  # Flicking the switch to the opposite setting
  And I set the following fields to these values:
  | Enable group categories | 1 |
- And I press "Submit"
+ And I click on "Submit"
  # Changing it back to the original setting
  And I set the following fields to these values:
  | Enable group categories | 0 |
- And I press "Submit"
+ And I click on "Submit"

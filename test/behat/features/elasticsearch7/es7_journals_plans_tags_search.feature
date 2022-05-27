@@ -68,83 +68,83 @@ Scenario: Testing search functions
    Given I log in as "admin" with password "Kupuh1pa!"
    And I go to the "search" plugin "elasticsearch7" configuration "elasticsearch7" type
    And I click on "Select all"
-   And I press "Save"
-   And I press "Reset"
+   And I click on "Save"
+   And I click on "Reset"
    And I log out
 
  # Check tags are included in search results
    When I log in as "UserA" with password "Kupuh1pa!"
    And I set the following fields to these values:
    | Search | cats |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "13"
 
  # Check tagsonly option is working (these steps are incorrect but manual testing works)
    When I set the following fields to these values:
    | search_tagsonly | Tags only |
    | search_query | cats |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Tags only"
    And I should see "12"
 
  # Search by journal title
    When I set the following fields to these values:
    | Search | narnia |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Journal"
-   When I follow "Chronicles of Narnia"
+   When I click on "Chronicles of Narnia"
    Then I should see "Lions and tigers and bears"
 
  # Search by journal description
    When I set the following fields to these values:
    | Search | cool |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "David Byrne's Diary"
 
  # Search by journal entry title
    When I set the following fields to these values:
    | Search | wardrobes |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Journal entry"
-   When I follow "Wardrobes"
+   When I click on "Wardrobes"
    Then I should see "Chronicles of Narnia"
 
  # Search by journal entry content
    When I set the following fields to these values:
    | Search | broomstick |
-   And I press "Go"
-   And I follow "Witches"
+   And I click on "Go"
+   And I click on "Witches"
    Then I should see "Chronicles of Narnia"
 
  # Search by plan title
    When I set the following fields to these values:
    | Search | april |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "April Fools Day"
-   # And I follow "April Fools Day"
+   # And I click on "April Fools Day"
    # Then I should see "Salt in the sugar bowl"
 
  # Search by plan description
    When I set the following fields to these values:
    | Search | break |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Plan"
-   When I follow "Rest"
+   When I click on "Rest"
    Then I should see "New task"
 
  # Search by task title
    When I set the following fields to these values:
    | Search | finance |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Plan"
-   When I follow "Finance"
+   When I click on "Finance"
    Then I should see "Take over the world"
 
  # Seach by task description
    When I set the following fields to these values:
    | Search | president |
-   And I press "Go"
+   And I click on "Go"
    Then I should see "Plan"
-   When I follow "Power"
+   When I click on "Power"
    Then I should see "Take over the world"
    And I log out

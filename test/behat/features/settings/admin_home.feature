@@ -11,12 +11,12 @@ Scenario: Closing the site
  # Verifying I'm on the right page
  And I should see "Site registration"
  And I scroll to the base of id "close_site"
- And I press "Close"
+ And I click on "Close"
  And I should see "Reopen site"
  And I scroll to the base of id "close_site"
- And I press "Open"
+ And I click on "Open"
  And I should see "Close site"
  # Checking that the caches can be emptied
  And I scroll to the base of id "clear_caches"
- And I press "Clear caches"
+ And I click on "Clear caches"
  And I should see "All caches were cleared"

@@ -109,7 +109,7 @@ function pieform_element_select(Pieform $form, $element) {
         return $result;
     }
 
-    $result = '<span class="' . $wrapperclass . '"><select'
+    $result = ($wrapperclass ? '<span class="' . $wrapperclass . '">' : '') . '<select'
         . $form->element_attributes($element)
         . (!empty($element['multiple']) ? ' multiple="multiple"' : '')
         . (!empty($element['allowother']) ? ' onChange="pieform_select_other(this);"' : '')
@@ -118,7 +118,7 @@ function pieform_element_select(Pieform $form, $element) {
         . (!empty($element['height']) ? ' height: ' . $element['height'] . 'px;"' : '"')
         . ">\n";
     if (!$optionsavailable) {
-        $result .= "\t<option></option>\n</select></span>";
+        $result .= "\t<option></option>\n</select>" . ($wrapperclass ? "</span>" : '');
         return $result;
     }
 
@@ -152,7 +152,7 @@ function pieform_element_select(Pieform $form, $element) {
         Pieform::info('Invalid value for select "' . $element['name'] .'"');
     }
 
-    $result .= '</select></span>';
+    $result .= '</select>' . ($wrapperclass ? "</span>" : '');
 
     if (!empty($element['allowother'])) {
         $other_attrib = array(
