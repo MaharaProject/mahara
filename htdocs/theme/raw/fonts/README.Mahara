@@ -2,13 +2,16 @@ FontAwesome
 ===========
 
 Website: https://fontawesome.com
-Version: 5.8.1
+Version: 6.1.1
 License: http://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
 See also: theme/raw/sass/lib/font-awesome/ for CSS license information
 
-This library is for the Font awesome icon glyphs. Note
-that it also includes content in theme/raw/sass/lib/font-awesome.
+This library is for the Font awesome icon glyphs.
+Note that it also includes content in theme/raw/sass/lib/font-awesome.
 
+To update the font files part go to their git repo
+and copy the contents of their /webfonts/ directory to our
+htdocs/theme/raw/fonts/font-awesome/ directory.
 
 Open Sans
 =========

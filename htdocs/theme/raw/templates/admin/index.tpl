@@ -225,7 +225,7 @@
 
 
     <div class="card">
-        <h2 class="card-header">{str tag=managegroups section=admin} <span class="icon icon-users float-right" role="presentation" aria-hidden="true"></span></h2>
+        <h2 class="card-header">{str tag=managegroups section=admin} <span class="icon icon-people-group float-right" role="presentation" aria-hidden="true"></span></h2>
         <ul class="list-group">
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/groups/groups.php">{str tag=administergroups section=admin}</a>

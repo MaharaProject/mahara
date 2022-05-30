@@ -19,7 +19,7 @@
             <button class="btn btn-secondary btn-sm" title="{str tag="groupmanage" section="admin"}" type="button" data-url="{$WWWROOT}admin/groups/manage.php?id={$group->id}">
                 <span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=groupmanagespecific section=admin arg1=$group->name)|escape:html|safe}</span>
             <button class="btn btn-secondary btn-sm" title="{str tag="exportgroupmembershipscsv" section="admin"}" type="button" data-url="{$WWWROOT}download.php?type=groupmembership&groupid={$group->id}">
-                <span class="icon icon-users" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=exportgroupmembershipscsvspecific section=admin arg1=$group->name)|escape:html|safe}</span>
+                <span class="icon icon-people-group" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=exportgroupmembershipscsvspecific section=admin arg1=$group->name)|escape:html|safe}</span>
             </button>
             <button class="btn btn-secondary btn-sm" title="{str tag="copy"}" type="button" data-url="{$WWWROOT}group/copy.php?id={$group->id}&return=adminlist">
                 <span class="icon icon-regular icon-clone" role="presentation" aria-hidden="true"></span><span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>

@@ -897,7 +897,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                     </li>
                     <li class="dropdown-item">
                         <a href="">
-                            <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span>
                             <span class="link-text">group (Submitted)</span>
                         </a>
                     </li>
@@ -1759,7 +1759,7 @@ Shows the secret URL button.
 ### Group
 As used for the "Group portfolios" block.
 ```
-<div class="icon icon-users" role="presentation"></div>
+<div class="icon icon-people-group" role="presentation"></div>
 ```
 </section>
 

@@ -27,14 +27,14 @@
                     {/if}
                     {if $invitedlist}
                     <div>
-                        <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span>
                         {str tag=groupinvitesfrom section=group}
                         {$invitedlist}
                     </div>
                     {/if}
                     {if $requestedlist}
                     <div>
-                        <span class="icon icon-users left" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span>
                         {str tag=requestedmembershipin section=group}
                         {$requestedlist}
                     </div>

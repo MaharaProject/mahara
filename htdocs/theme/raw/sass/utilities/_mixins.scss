@@ -58,15 +58,15 @@
 
 @mixin fonttype($type: solid) {
     @if $type == regular {
-        font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free";
+        font-family: "Font Awesome 6 Free Regular", "Font Awesome 6 Free";
         font-weight: 400;
     }
     @else if $type == brands {
-        font-family: "Font Awesome 5 Brands", "Font Awesome 5 Free";
+        font-family: "Font Awesome 6 Brands", "Font Awesome 6 Free";
         font-weight: 400;
     }
     @else {
-        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+        font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
         font-weight: 900;
     }
 }
