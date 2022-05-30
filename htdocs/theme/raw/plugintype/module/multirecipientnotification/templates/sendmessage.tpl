@@ -25,9 +25,6 @@
                     - {$message->ctime|strtotime|format_date}
                 </span>
                 <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
-                <span class="content-preview">
-                    <p class="content">{$message->message}</p>
-                </span>
             </a>
         </h2>
 
