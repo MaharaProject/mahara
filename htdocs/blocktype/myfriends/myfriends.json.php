@@ -17,7 +17,7 @@ safe_require('blocktype', 'myfriends');
 require_once('user.php');
 
 $offset = param_integer('offset');
-$limit  = param_integer('limit', MAXFRIENDDISPLAY);
+$limit  = param_integer('limit', PluginBlocktypeMyfriends::MAXFRIENDDISPLAY);
 $bi = new BlockInstance(param_integer('block'));
 if (!can_view_view($bi->get('view'))) {
     json_reply(true, get_string('accessdenied', 'error'));

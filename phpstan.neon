@@ -44,6 +44,7 @@ parameters:
         - htdocs/lib/group.php
         - htdocs/lib/htmlpurifier/HTMLPurifier.php
         - htdocs/lib/htmlpurifier/HTMLPurifier/Config.php
+        - htdocs/lib/htmlpurifier/HTMLPurifier/Exception.php
         - htdocs/lib/license.php
         - htdocs/lib/mahara.php
         - htdocs/lib/objectionable.php

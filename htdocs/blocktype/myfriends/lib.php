@@ -11,9 +11,12 @@
 
 defined('INTERNAL') || die();
 
-define('MAXFRIENDDISPLAY', 16);
-
 class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
+
+    /**
+     * The maximum number of friends to display in the block
+     */
+    const MAXFRIENDDISPLAY = 16;
 
     public static function get_title() {
         return get_string('title', 'blocktype.myfriends');
@@ -80,7 +83,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
             return '';
         }
 
-        $limit = isset($exporter) ? false : MAXFRIENDDISPLAY;
+        $limit = isset($exporter) ? false : self::MAXFRIENDDISPLAY;
 
         $friends = get_friends($userid, $limit, 0);
         if ($friends['count']) {

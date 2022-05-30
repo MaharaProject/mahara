@@ -1697,9 +1697,9 @@ function execute_sql_arr(array $sqlarr, $continue=true, $feedback=true) {
  *
  * Returns the timestamp as a quoted string.
  *
- * @param ts	a timestamp in Unix date time format.
+ * @param int|null $ts A timestamp in Unix date time format or null.
  *
- * @return  timestamp string in database timestamp format
+ * @return string|null A timestamp string in database timestamp format.
  */
 function db_format_timestamp($ts) {
     global $db;
