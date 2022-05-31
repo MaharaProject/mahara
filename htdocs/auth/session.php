@@ -781,9 +781,19 @@ function clear_duplicate_cookies() {
 
 
 class MemcachedSession extends SessionHandler {
-    // we need to extend and override the read method to force it to return string value
-    // in order to comply with PHP 7's more strict type checking
-    public function read($session_id) {
-        return (string)parent::read($session_id);
+
+    /**
+     * Return the session serialised as a string or an empty string.
+     *
+     * We need to override the read method to force it to return a string value
+     * in order to comply with the more strict type checking in PHP 7+.
+     *
+     * @param string $session_id
+     *
+     * @return string The session ID
+     */
+    public function read($session_id) : string {
+        return (string) parent::read($session_id);
     }
+
 }

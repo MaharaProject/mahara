@@ -104,10 +104,10 @@ class AuthXmlrpc extends Auth {
         }
 
         $client = new Client();
-        $client->set_method('auth/mnet/auth.php/user_authorise')
-               ->add_param($token)
-               ->add_param(sha1($_SERVER['HTTP_USER_AGENT']))
-               ->send($remotewwwroot);
+        $client->set_method('auth/mnet/auth.php/user_authorise');
+        $client->add_param($token);
+        $client->add_param(sha1($_SERVER['HTTP_USER_AGENT']));
+        $client->send($remotewwwroot);
 
         $remoteuser = (object)$client->response;
 
@@ -162,7 +162,7 @@ class AuthXmlrpc extends Auth {
             }
 
             if ($user->get('suspendedcusr')) {
-                die_info(get_string('accountsuspended', 'mahara', strftime(get_string('strftimedaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
+                die_info(get_string('accountsuspended', 'mahara', date(get_string('datetimeclassdaydate'), $user->get('suspendedctime')), $user->get('suspendedreason')));
             }
 
         } catch (AuthUnknownUserException $e) {
@@ -265,9 +265,9 @@ class AuthXmlrpc extends Auth {
         // See if we need to create/update a profile Icon image
         if ($create || $update) {
 
-            $client->set_method('auth/mnet/auth.php/fetch_user_image')
-                   ->add_param($remoteuser->username)
-                   ->send($remotewwwroot);
+            $client->set_method('auth/mnet/auth.php/fetch_user_image');
+            $client->add_param($remoteuser->username);
+            $client->send($remotewwwroot);
 
             $imageobject = (object)$client->response;
 
@@ -501,10 +501,10 @@ class AuthXmlrpc extends Auth {
         // not a problem on the Mahara site
         try {
             $client = new Client();
-            $client->set_method('auth/mnet/auth.php/kill_children')
-                   ->add_param($username)
-                   ->add_param(sha1($_SERVER['HTTP_USER_AGENT']))
-                   ->send($this->get('wwwroot'));
+            $client->set_method('auth/mnet/auth.php/kill_children');
+            $client->add_param($username);
+            $client->add_param(sha1($_SERVER['HTTP_USER_AGENT']));
+            $client->send($this->get('wwwroot'));
         }
         catch (XmlrpcClientException $e) {
             log_debug("XMLRPC error occurred while calling MNET method kill_children on " . $this->get('wwwroot'));
@@ -1100,12 +1100,12 @@ function auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid) {
 
         $client = new Client();
         // This method returns boolean
-        $client->set_method(MNET_MDL_ASSIGN_SUBMISSION_MAHARA_PATH . 'can_view_view')
-               ->add_param($mnetitemid)
-               ->add_param($remoteusername)
-               ->add_param($mnetassignmentid)
-               ->add_param($iscollection)
-               ->send($auth->wwwroot);
+        $client->set_method(Mahara_MNET_Moodle::MNET_MDL_ASSIGN_SUBMISSION_MAHARA_PATH . 'can_view_view');
+        $client->add_param($mnetitemid);
+        $client->add_param($remoteusername);
+        $client->add_param($mnetassignmentid);
+        $client->add_param($iscollection);
+        $client->send($auth->wwwroot);
 
         if ((boolean)$client->response) {
 
