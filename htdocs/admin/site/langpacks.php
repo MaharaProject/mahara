@@ -118,7 +118,7 @@ function get_languages_need_updating($languages) {
     $toupdate = array();
     foreach ($languages as $lang) {
         $filename = $lang['code'] . '-' . $seriesfilesuffix;
-        $etag = fetch_etag($lang['code'], $seriesfilesuffix);
+        $etag = fetch_etag($lang['code']);
 
         $needupdate = true;
         $localetagstr = get_config('lang_' . $lang['code'] . '_etag');
@@ -153,6 +153,7 @@ function get_languages_need_updating($languages) {
 
 /**
  * Fetch the etag headers information about language file
+ *
  * See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
  *
  * @param string $langcode
@@ -254,7 +255,7 @@ function update_langpacks($codes, $dobackup=true, $new=null) {
     $options = $dobackup ? ' -b' : '';
     foreach($codes as $code) {
         if (isset($langstoupdate[$code]) || $code == $new) {
-            $etag = fetch_etag($code, $seriesfilesuffix);
+            $etag = fetch_etag($code);
             // do a backup, always if on admin section
             $result = shell_exec('php ' . get_config('docroot') . 'admin/cli/sync_langpacks.php -l=' . escapeshellarg($code) . $options);
             if ($result) {

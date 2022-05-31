@@ -640,7 +640,8 @@ EOF;
 
     // Allow us to set the HTML lang attribute
     $smarty->assign('LANGUAGE', substr(current_language(), 0, 2));
-
+    // Allow us to set default headingclass value - can be overridden
+    $smarty->assign('headingclass', null);
     $smarty->assign('STRINGJS', $stringjs);
 
     if ($langdirection == 'rtl') {
