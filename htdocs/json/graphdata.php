@@ -19,7 +19,7 @@ if (!defined('CRON')) {
 
     json_headers();
 
-    $validtypes = array('Line', 'Bar', 'HorizontalBar', 'Radar', 'PolarArea', 'Pie', 'Doughnut');
+    $validtypes = array('Line', 'Bar', 'Radar', 'PolarArea', 'Pie', 'Doughnut');
     $search_array = array_combine(array_map('strtolower', $validtypes), $validtypes);
     $type = strtolower(param_alphanum('type', false));
     if (empty($search_array[$type])) {
@@ -76,7 +76,8 @@ if (!defined('CRON')) {
 
             $data['datastr'] = json_encode($jsondata);
             $data['configstr'] = json_encode($data['configs']);
-            $data['graphsafe'] = strtolower($data['graph']) == 'horizontalbar' ? 'horizontalBar' : strtolower($data['graph']);
+            // graph type names need to be converted to camelcase for Chart.js (in this case, only polarArea needs changing)
+            $data['graphsafe'] = strtolower($data['graph']) == 'polararea' ? 'polarArea' : strtolower($data['graph']);
 
             json_reply(false, array('data' => $data));
         }
@@ -91,7 +92,6 @@ if (!defined('CRON')) {
             list($graphdata, $configs) = get_circular_graph_json($data, $colours);
             break;
          case 'Bar':
-         case 'HorizontalBar':
             list($graphdata, $configs) = get_bar_graph_json($data, $colours);
             break;
          case 'Line':
@@ -101,7 +101,8 @@ if (!defined('CRON')) {
         }
         $data['datastr'] = json_encode($graphdata);
         $data['configstr'] = json_encode($configs);
-        $data['graphsafe'] = strtolower($data['graph']) == 'horizontalbar' ? 'horizontalBar' : strtolower($data['graph']);
+        // graph type names need to be converted to camelcase for Chart.js (in this case, only polarArea needs changing)
+        $data['graphsafe'] = strtolower($data['graph']) == 'polararea' ? 'polarArea' : strtolower($data['graph']);
         json_reply(false, array('data' => $data));
     }
 }

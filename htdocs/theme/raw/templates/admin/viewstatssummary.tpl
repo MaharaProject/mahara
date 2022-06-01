@@ -8,7 +8,11 @@
         <script>
         {literal}
         jQuery(function() {
-            fetch_graph_data({'id':'sitestatsblocktypesgraph','type':'horizontalbar','graph':'block_type_graph',
+            fetch_graph_data({
+                'id':'sitestatsblocktypesgraph',
+                'type':'bar',
+                'direction': 'horizontal',
+                'graph':'block_type_graph',
                 'extradata': {
                     'configs': {
                         'showlegendcallback': false
