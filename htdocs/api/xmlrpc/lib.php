@@ -1252,8 +1252,8 @@ function xmlenc_envelope($message, $remote_certificate) {
     $encryptedstring = '';
     $symmetric_keys = array();
 
-    //      passed by ref ->      &$encryptedstring &$symmetric_keys
-    $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey));
+    // passed by ref -> &$encryptedstring &$symmetric_keys
+    $bool = openssl_seal($message, $encryptedstring, $symmetric_keys, array($publickey), OpenSslRepo::SSL_CYPHER_ALGORITHM);
     $message = base64_encode($encryptedstring);
     $symmetrickey = base64_encode(array_pop($symmetric_keys));
     $zed = 'nothing';
@@ -1357,6 +1357,8 @@ class OpenSslRepo {
 
     private $keypair = array();
 
+    const SSL_CYPHER_ALGORITHM = 'RC4';
+
     /**
      * Sign a message with our private key so that peers can verify that it came
      * from us.
@@ -1388,7 +1390,7 @@ class OpenSslRepo {
      */
     public function openssl_open($data, $key, $oldkeyok=false) {
         $payload = '';
-        $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey']);
+        $isOpen = openssl_open($data, $payload, $key, $this->keypair['privatekey'], self::SSL_CYPHER_ALGORITHM);
 
         if (!empty($isOpen)) {
             return $payload;
@@ -1398,7 +1400,7 @@ class OpenSslRepo {
             foreach($openssl_history as $keyset) {
                 if (isset($keyset['keypair_PEM'])) {
                     $keyresource = openssl_pkey_get_private($keyset['keypair_PEM']);
-                    $isOpen      = openssl_open($data, $payload, $key, $keyresource);
+                    $isOpen      = openssl_open($data, $payload, $key, $keyresource, self::SSL_CYPHER_ALGORITHM);
                     if ($isOpen) {
                         // It's an older code, sir, but it checks out
                         if ($oldkeyok) {
