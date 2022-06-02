@@ -211,3 +211,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control::befor
   border: none;
   padding: 0.25rem 1rem 0.25rem 0;
 }
+
+// override BS5 make-col-ready() function
+.dataTables_filter {
+  width: auto;
+}
