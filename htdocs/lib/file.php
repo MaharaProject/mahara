@@ -1085,5 +1085,13 @@ function xml_filter_regex() {
  * @return bool
  */
 function is_using_external_filesystem() {
-    return get_config('externalfilesystem', false);
+    if (!is_plugin_active('objectfs', 'module')) {
+        return false;
+    }
+
+    if (!get_config('externalfilesystem', false)) {
+        return false;
+    }
+
+    return (bool)get_config_plugin('module', 'objectfs', 'enabletasks');
 }
