@@ -395,13 +395,14 @@ class ArtefactTypeComment extends ArtefactType {
         $showcomment = null;
         $onview = null;
 
-        $allowedoptions = self::get_comment_options();
+        $allowedoptions = (array) self::get_comment_options();
         // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
             if (array_key_exists($key, $allowedoptions));
             $$key = $option;
         }
         $userid = $USER->get('id');
+        // phpstan-ignore-next-line The $view object comes from $options->view.
         $viewid = $view->get('id');
         // Make an artefact comment
         if ($artefact) {
@@ -412,6 +413,7 @@ class ArtefactTypeComment extends ArtefactType {
         }
         // Make a page comment
         else {
+            // phpstan-ignore-next-line The $view object comes from $options->view.
             if ($group = $view->get('group')) {
                 $group_admins = group_get_admin_ids($group);
                 $canedit = (array_search($userid, $group_admins) !== false) ? true : false;
@@ -420,6 +422,7 @@ class ArtefactTypeComment extends ArtefactType {
             }
             else {
                 $canedit = $USER->can_moderate_view($view);
+                // phpstan-ignore-next-line The $view object comes from $options->view.
                 $owner = $view->get('owner');
                 $isowner = $userid && $userid == $owner;
             }
@@ -2117,7 +2120,9 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         $title = $onartefact ? $artefactinstance->get('title') : $viewrecord->title;
         $this->urltext = $title;
         $body = $comment->get('description');
-        $posttime = strftime(get_string('strftimedaydatetime'), $comment->get('ctime'));
+        $d = new \DateTime();
+        $d->setTimestamp($comment->get('ctime'));
+        $posttime = $d->format(get_string('datetimeclassdaydatetime', 'langconfig'));
 
         // Internal
         $this->message = strip_tags(str_shorten_html($body, 200, true));

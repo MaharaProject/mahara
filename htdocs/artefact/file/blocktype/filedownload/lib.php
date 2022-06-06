@@ -81,6 +81,8 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                 $view = new View($viewid);
                 list($commentcount, $comments) = ArtefactTypeComment::get_artefact_comments_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
 
+                $artefacttypeclass = generate_artefact_class_name($artefact->get('artefacttype'));
+                $iconoptions = ['id' => $artefactid, 'viewid' => $viewid];
                 $file = array(
                     'id' => $artefactid,
                     'title' => $artefact->get('title'),
@@ -88,11 +90,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
                     'size' => $artefact->get('size'),
                     'ctime' => $artefact->get('ctime'),
                     'artefacttype' => $artefact->get('artefacttype'),
-                    'iconsrc' => call_static_method(
-                        generate_artefact_class_name($artefact->get('artefacttype')),
-                        'get_icon',
-                        array('id' => $artefactid, 'viewid' => $viewid)
-                    ),
+                    'iconsrc' => $artefacttypeclass::get_icon($iconoptions),
                     'downloadurl' => $wwwroot,
                     'commentcount' => $commentcount,
                     'allowcomments' => $artefact->get('allowcomments'),
@@ -174,6 +172,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
             // set the blocktype to have quickedit mode
             set_field('blocktype_installed', 'quickedit', 1, 'name', 'filedownload');
         }
+        return true;
     }
 
     public static function instance_quickedit_form(BlockInstance $instance) {
