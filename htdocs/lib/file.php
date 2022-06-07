@@ -585,7 +585,7 @@ function get_dataroot_image_path($path, $id, $size=null, $orientation = 0, $gene
         }
         $resizedimagefile = "{$resizedimagedir}{$md5}.{$orientation}.$id";//.$sizestr";
 
-        if (is_readable($resizedimagefile) || !$generateifpossible) {
+        if (is_readable($resizedimagefile)) {
             return $resizedimagefile;
         }
 
