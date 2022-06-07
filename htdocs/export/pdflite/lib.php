@@ -100,6 +100,7 @@ class PluginExportPdfLite extends PluginExportPdf {
         if ($fromversion == 0) {
             set_field('export_installed', 'active', 0, 'name', 'pdflite');
         }
+        return true;
     }
 
     /**
@@ -202,6 +203,7 @@ class PluginExportPdfLite extends PluginExportPdf {
                 }
             }
 
+            // @phpstan-ignore-next-line
             $browserFactory = new BrowserFactory($browsertype);
             // starts headless chrome
             $browser = $browserFactory->createBrowser(['windowSize' => [960,600],

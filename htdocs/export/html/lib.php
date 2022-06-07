@@ -69,7 +69,6 @@ class PluginExportHtml extends PluginExport {
      */
     protected $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'gridstack_modules/gridstack-h5', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
 
-    protected $collections = array();
     protected $collectionview;
     protected $viewcollection;
     protected $viewexportmode = 0;
@@ -559,11 +558,17 @@ class PluginExportHtml extends PluginExport {
             }
 
             // Collection menu data
+            $exportingcollections = ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS);
+            $exportingviews = ($this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS);
             if (isset($this->viewcollection[$viewid])
-                && ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS
-                    || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS)) {
-                $smarty->assign('collectionname', $this->collections[$this->viewcollection[$viewid]]->get('name'));
-                $smarty->assign('collectionmenu', $this->collection_menu($this->viewcollection[$viewid]));
+                && ($exportingcollections || $exportingviews)
+                ) {
+                $thisviewcollection = $this->viewcollection[$viewid];
+                // @phpstan-ignore-next-line
+                $thiscollectionname = $this->collections[$thisviewcollection]->get('name');
+                $smarty->assign('collectionname', $thiscollectionname);
+                // @phpstan-ignore-next-line
+                $smarty->assign('collectionmenu', $this->collection_menu($thisviewcollection));
                 $smarty->assign('viewid', $viewid);
             }
             else {
@@ -572,7 +577,7 @@ class PluginExportHtml extends PluginExport {
                 $smarty->assign('viewid', false);
             }
 
-            $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
+            $outputfilter = new HtmlExportOutputFilter($this);
 
             // Include comments
             if ($this->includefeedback) {
@@ -1053,7 +1058,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
             }
             if (!empty($content)) {
                 $rootpath = ($this->exportingoneview) ? $this->get_root_path() : $this->get_root_path(3, $this->infodir . '/');
-                $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
+                $outputfilter = new HtmlExportOutputFilter($this);
                 $content = $outputfilter->filter($content);
                 // The directories should already exist (see dump_view_export_data())
                 if ($this->exportingoneview) {
@@ -1079,6 +1084,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
     protected function copy_static_files() {
         global $THEME, $SESSION;
         require_once('file.php');
+        $theme = '';
         $staticdir = $this->get('exportdir') . $this->get('rootdir') . '/static/';
         $directoriestocopy = array();
         $themestaticdirs = $THEME->get_path('', true);
@@ -1179,6 +1185,8 @@ abstract class HtmlExportArtefactPlugin {
     abstract public function pagination_data($artefact);
 
     public function paginate($artefact) {
+        // Declare here for static analysis.
+        $exportedmodals = '';
 
         // Create directory for storing the artefact
         $dirname = PluginExportHtml::text_to_filename(trim($artefact->get('title')));
@@ -1198,14 +1206,13 @@ abstract class HtmlExportArtefactPlugin {
         ));
         $rendered = $artefact->render_self(array('hidetitle' => true));
 
-        $outputfilter = new HtmlExportOutputFilter($this->exporter->get_root_path(3), $this->exporter);
+        $outputfilter = new HtmlExportOutputFilter($this->exporter);
         $smarty->assign('rendered', $outputfilter->filter($rendered['html']));
         $content = $smarty->fetch('export:html:page.tpl');
 
         if ($artefact instanceof ArtefactTypeBlog && get_config('licensemetadata')) {
             $blogid = $artefact->get('id');
             $idarray = array();
-            $exportedmodals = '';
             $renderoptions = array(
                 'details' => true,
                 'metadata' => 1,
@@ -1312,9 +1319,9 @@ class HtmlExportOutputFilter {
     private $owner = null;
 
     /**
-     * @param string $basepath The relative path to the root of the generated export
+     * @param object $exporter
      */
-    public function __construct($basepath, &$exporter=null) {
+    public function __construct(&$exporter=null) {
         $this->htmlexportcopyproxy = HtmlExportCopyProxy::singleton();
         $this->exporter = $exporter;
         $this->owner = $exporter->get('user')->get('id');
@@ -1577,7 +1584,7 @@ class HtmlExportOutputFilter {
         }
 
         if ($artefact instanceof ArtefactTypeFolder) {
-            return $this->get_folder_path_for_file($artefact, $options);
+            return $this->get_folder_path_for_file($artefact);
         }
 
         $filterpath = $this->exporter->get('exportingoneview') ? $this->exporter->get_root_path(1, 'files') : $this->exporter->get_root_path(3, $this->exporter->get('filedir'));
@@ -1632,6 +1639,7 @@ class HtmlExportOutputFilter {
                 if (!$options['id'] = get_field_sql('SELECT profileicon FROM {usr} WHERE id = ?', array($options['id']))) {
                     // No profile icon, get the default one
                     list($size, $prefix) = $this->get_size_from_options($options);
+                    $to = '';
                     if ($from = get_dataroot_image_path('artefact/file/profileicons/no_userphoto/' . get_config('theme'), 0, $size)) {
                         $to = '/static/profileicons/0-' . $prefix . 'no_userphoto.png';
                         $this->htmlexportcopyproxy->add($from, $to);
@@ -1649,7 +1657,7 @@ class HtmlExportOutputFilter {
                     return '';
                 }
                 $rootpath = ($this->exporter->get('exportingoneview')) ? $this->exporter->get_root_path(2) : $this->exporter->get_root_path(3);
-                return $rootpath . $this->get_export_path_for_file($icon, $options, $this->rootdir . '/static/profileicons/');
+                return $rootpath . $this->get_export_path_for_file($icon, $options, $this->exporter->get('rootdir') . '/static/profileicons/');
             default:
                 return '';
             }
@@ -1759,6 +1767,12 @@ class HtmlExportOutputFilter {
      */
     private function get_size_from_options($options) {
         $prefix = '';
+        $size = null;
+        $width = null;
+        $height = null;
+        $maxsize = null;
+        $maxwidth = null;
+        $maxheight = null;
         foreach (array('size', 'width', 'height', 'maxsize', 'maxwidth', 'maxheight') as $param) {
             if (isset($options[$param])) {
                 $$param = $options[$param];

@@ -260,6 +260,7 @@ class PluginExportLeap extends PluginExport {
         $this->smarty->assign('export_time', $this->exporttime);
         $this->smarty->assign('export_time_rfc3339', PluginExportLeap::format_rfc3339_date($this->exporttime));
         require(get_config('docroot') . 'export/leap/version.php');
+        // @phpstan-ignore-next-line $config comes from export/leap/version.php
         $this->smarty->assign('leap_export_version', $config->version);
         $this->xml .= $this->smarty->fetch('export:leap:header.tpl');
     }
