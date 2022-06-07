@@ -2288,7 +2288,7 @@ class LiveUser extends User {
             $user = $userobj;
         }
         // No point masquerading as yourself
-        if ($this->id === $user->get('id')) {
+        if ($this->get('id') === $user->get('id')) {
             return false;
         }
         // Admins can masquerade no matter the $roles

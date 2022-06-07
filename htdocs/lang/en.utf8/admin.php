@@ -1374,6 +1374,7 @@ $string['masqueradingnotified'] = 'Notify people of masquerading';
 $string['masqueradingnotifielddescription'] = 'Notify people when an administrator masqueraded as them. The notification will include who, when, and - if enabled under "Require reason for masquerading" - why. The logging of masquerading sessions needs to be turned on in the "Logging settings" for this to work.';
 
 $string['masquerade'] = 'Continue';
+$string['masqueradeas'] = 'Masquerade';
 $string['masqueradereason'] = 'Reason';
 $string['masqueradereasondescription'] = 'Please enter a reason for logging in as this person. Note: They will not be notified of this reason, but it will be logged.';
 $string['masqueradenotificationdone'] = 'The person has been notified of this masquerading session.';
@@ -1387,6 +1388,7 @@ $string['masqueradingnotloggedwarning'] = '<strong>Note</strong>: Logging of mas
 $string['masqueradenotificationsubject'] = 'An administrator logged in as you';
 $string['masqueradenotificationnoreason'] = 'The administrator %s logged into your account on %s.';
 $string['masqueradenotificationreason'] = 'The administrator %s logged into your account on %s. The reason was: %s';
+$string['nomasqueradeasself'] = 'You cannot masquerade as yourself';
 
 // Progress bar / Profile completion
 $string['progressbar'] = 'Profile completion';

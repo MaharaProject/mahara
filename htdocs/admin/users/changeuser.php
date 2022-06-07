@@ -24,6 +24,13 @@ if (param_integer('restore', 0)) {
     redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);
 }
 
+// Check that we are not trying to masquerade as ourself
+$id = param_integer('id');
+if ($id === (int)$USER->get('id')) {
+    $SESSION->add_error_msg(get_string('nomasqueradeasself', 'admin'));
+    redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);
+}
+
 /**
  * Notify user (if configured), do the masquerading and emit event. Called when
  * no (further) interaction with the admin is needed before the loginas.

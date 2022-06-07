@@ -195,14 +195,17 @@ class ElasticsearchType_usr extends ElasticsearchType {
 
         return $record;
     }
+
     public static function getRecordDataById($type, $id) {
+        global $USER;
         $record = get_record ( 'usr', 'id', $id );
         if (! $record || $record->deleted) {
             return false;
         }
 
         $record->display_name = display_name ( $record );
-        $record->introduction = get_field ( 'artefact', 'title', 'owner', $id, 'artefacttype', 'introduction' );
+        $record->introduction = get_field ( 'artefact', 'description', 'owner', $id, 'artefacttype', 'introduction' );
+        $record->show_masquerade = $USER->is_supportadmin_for_user($record);
 
         return $record;
     }

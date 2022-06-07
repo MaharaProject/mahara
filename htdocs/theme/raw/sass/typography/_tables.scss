@@ -266,6 +266,14 @@ table.table tr {
             margin-top: 0.75rem; // 12px;
             margin-right: $spacing-xs;
             float: left;
+            &.selectusers {
+                margin-top: 0.5rem;
+            }
+        }
+        & .search-masquerade {
+            margin-top: 1.5rem;
+            margin-left: -1rem;
+            float: left;
         }
     }
     .with-selectall {

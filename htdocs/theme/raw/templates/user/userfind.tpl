@@ -125,6 +125,14 @@
                     </a>
                 </li>
                 {/if}
+                {if $user->show_masquerade}
+                <li class="masquerade">
+                    <span class="icon text-default icon-user-secret left" role="presentation" aria-hidden="true"></span>
+                    <a class="js-masquerade" href="{$WWWROOT}admin/users/changeuser.php?id={$user->id}">
+                        {str tag='masqueradeas' section='admin'}
+                    </a>
+                </li>
+                {/if}
             </ul>
         </div>
     </div>
