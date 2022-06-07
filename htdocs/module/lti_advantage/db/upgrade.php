@@ -52,10 +52,17 @@ function xmldb_module_lti_advantage_upgrade($oldversion=0) {
     if (table_exists($table)) {
       $field = new XMLDBField('deployment_key');
       if (!field_exists($table, $field)) {
-        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
         if (!add_field($table, $field)) {
           log_debug('Could not add deployment_key to lti_advantage_deployment');
           return false;
+        }
+        if ($records = get_records_assoc('lti_advantage_deployment', 'deployment_key', 0)) {
+            $x = 0;
+            foreach ($records as $record) {
+                $x++;
+                execute_sql("UPDATE {lti_advantage_deployment} SET deployment_key = ? WHERE registration_id = ?", array($x, $record->registration_id));
+            }
         }
       }
     }
@@ -67,7 +74,7 @@ function xmldb_module_lti_advantage_upgrade($oldversion=0) {
     if (table_exists($table)) {
       $field = new XMLDBField('display_name');
       if (!field_exists($table, $field)) {
-        $field->setAttributes(XMLDB_TYPE_CHAR, 32, null, XMLDB_NOTNULL);
+        $field->setAttributes(XMLDB_TYPE_CHAR, 32, null, XMLDB_NOTNULL, null, null, null, '');
         if (!add_field($table, $field)) {
           log_debug('Could not add display_name to lti_advantage_registration');
           return false;
@@ -83,7 +90,7 @@ function xmldb_module_lti_advantage_upgrade($oldversion=0) {
     if (table_exists($table)) {
       $field = new XMLDBField('platform_vendor_key');
       if (!field_exists($table, $field)) {
-        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL);
+        $field->setAttributes(XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, null, '');
         if (!add_field($table, $field)) {
           log_debug('Could not add platform_vendor_key to lti_advantage_registration');
           return false;
