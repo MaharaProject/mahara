@@ -9,5 +9,6 @@
  *
  */
 
+$config = new stdClass();
 $config->version = 2009021800;
 $config->release = '1.0.0';
