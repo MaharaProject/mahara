@@ -348,7 +348,7 @@ function check_upgrades($name=null) {
     }
 
     // If we get here, it's because we have an array of objects to return
-    uksort($toupgrade, 'sort_upgrades');
+    $toupgrade = sort_upgrade_order($toupgrade);
     $settings['newinstallcount'] = $newinstallcount;
     $settings['newinstalls'] = $newinstalls;
     $settings['toupgradecount'] = $toupgradecount;
@@ -1151,6 +1151,46 @@ function validate_plugin($plugintype, $pluginname, $pluginpath='') {
     if (function_exists($funname)) {
         $funname($pluginname);
     }
+}
+
+/**
+ * Sorting upgrade order and allowing for priority
+ *
+ * @param array $upgrades   List of core and plugins to upgrade
+ * @return array            Sorted $upgrades list
+ */
+function sort_upgrade_order($upgrades) {
+    $floaters = array();
+    uksort($upgrades, 'sort_upgrades');
+
+    // We check here if any special reordering needs to be done.
+    // Some plugins need to run before others if they are both present.
+    // We set up a $floaters array if there are any matches.
+    if (isset($upgrades['auth.webservice']) && isset($upgrades['module.lti_advantage'])) {
+        $floaters['auth.webservice'] = 'module.lti_advantage';
+    }
+
+    if ($floaters) {
+        // A $floater, for example, can look like key ='auth.webservice', value='lti.advantage' and the value is the item
+        // we want to float up the $upgrades list but we do this by sinking
+        // the key down the list. So the key 'auth.webservice' needs to exist as a key in $upgrades higher in the list
+        // than the value 'lti.advantage' exists as a key in $upgrades list before reaching this part.
+        // After this part the 'lti.advantage' key should appear highter than 'auth.webservice' in the $upgrades list.
+        uksort($upgrades, function($k1, $k2) use (&$floaters) {
+            if (isset($floaters[$k1]) && $k2 == $floaters[$k1]) {
+                unset($floaters[$k1]);
+                return 1;
+            }
+            else if (isset($floaters[$k1])) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+    }
+
+    return $upgrades;
 }
 
 /*

@@ -243,7 +243,12 @@ function upgrade_mahara($upgrades) {
     else {
         $install = false;
     }
-    uksort($upgrades, 'sort_upgrades');
+    if ($install) {
+        uksort($upgrades, 'sort_upgrades');
+    }
+    else {
+        $upgrades = sort_upgrade_order($upgrades);
+    }
     foreach ($upgrades as $name => $data) {
         if ($name == 'settings') {
             continue;

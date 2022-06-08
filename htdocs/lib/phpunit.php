@@ -99,7 +99,12 @@ class UnitTestBootstrap {
         db_ignore_sql_exceptions(false);
         $upgrades['firstcoredata'] = true;
         $upgrades['lastcoredata'] = true;
-        uksort($upgrades, 'sort_upgrades');
+        if (!empty($upgrades['core']->install)) {
+            uksort($upgrades, 'sort_upgrades');
+        }
+        else {
+            $upgrades = sort_upgrade_order($upgrades);
+        }
         foreach ($upgrades as $name => $data) {
             if ($name == 'settings') {
                 continue;

@@ -41,6 +41,7 @@ if (!is_cli() && get_config('urlsecret') !== null) {
 }
 
 $upgrades = check_upgrades();
+
 // Remove the "settings" component, which is not a real component (see check_upgrades())
 unset($upgrades['settings']);
 
@@ -200,7 +201,12 @@ jQuery(function($) {
 });
 EOJS;
 
-uksort($upgrades, 'sort_upgrades');
+if (!empty($upgrades['core']->install)) {
+    uksort($upgrades, 'sort_upgrades');
+}
+else {
+    $upgrades = sort_upgrade_order($upgrades);
+}
 $js .= "\n" . 'var todo = ' . json_encode(array_keys($upgrades)) . ";\n";
 $smarty->assign('INLINEJAVASCRIPT', $js);
 
