@@ -180,6 +180,8 @@ class PluginImportLeap extends PluginImport {
      */
     private $snapshots = array();
 
+    private $DOIMPORT_ACT;
+
     const LOG_LEVEL_STANDARD = 1;
     const LOG_LEVEL_VERBOSE  = 2;
 
@@ -443,11 +445,14 @@ class PluginImportLeap extends PluginImport {
     /**
      * Build the import entry requests form.
      *
+     * @param int $doimport_act Pass in the DOIMPORT_ACT constant from the system.
+     *
      * @return  string HTML list of import entries and their existing artefacts
      */
-    public function build_import_entry_requests_form() {
+    public function build_import_entry_requests_form($doimport_act) {
         global $USER;
 
+        $this->DOIMPORT_ACT = $doimport_act;
         $html = '<form name="ier" method="POST" action="">';
         $installedplugins = array_map(function($a) { return $a->name; }, plugins_installed('artefact'));
         $orderedimportplugins = array('internal', 'file', 'blog', 'resume', 'plans', 'annotation');
@@ -467,7 +472,7 @@ class PluginImportLeap extends PluginImport {
         $html .= self::render_import_entry_requests();
         $html .=
             '<div class="submitcancel form-group">'.
-            '<input type="hidden" value="' . DOIMPORT_ACT . '" name="action">
+            '<input type="hidden" value="' . $this->DOIMPORT_ACT . '" name="action">
             <input type="submit" value="' . get_string('Import', 'import') . '" name="import_submit" id="import_submit" class="btn btn-primary submitcancel submit">
             <input type="submit" value="' . get_string('cancel') . '" name="cancel_import_submit" id="cancel_import_submit" class="submitcancel cancel"></div>
         </form>';
@@ -1416,6 +1421,8 @@ class PluginImportLeap extends PluginImport {
         static $blocktypes_installed = null;
         static $columnlayouts = null;
         static $viewtypes = null;
+        $columns = [];
+        $columnwidths = [];
         $viewelement = $entry->xpath('mahara:view[1]');
 
         $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], PluginImportLeap::NS_MAHARA);

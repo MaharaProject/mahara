@@ -286,9 +286,9 @@ function print_import_items_form() {
     global $IMPORTER;
 
     safe_require('import', 'leap');
-
+    $form = [];
     try {
-        $form = $IMPORTER->build_import_entry_requests_form();
+        $form = $IMPORTER->build_import_entry_requests_form(DOIMPORT_ACT);
     }
     catch (ImportException $e) {
         log_info("Leap2A import failed: " . $e->getMessage());
@@ -343,6 +343,7 @@ function do_import() {
     global $IMPORTER;
 
     safe_require('import', 'leap');
+    $result = '';
     try {
         $result = $IMPORTER->do_import_from_requests();
     }
