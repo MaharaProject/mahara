@@ -13,6 +13,12 @@
 defined('INTERNAL') || die();
 require_once(get_config('docroot') . 'auth/lib.php');
 
+// Load local customisations if there are any.
+if (file_exists(get_config('docroot') . 'local/lib/AuthSamlLocal.php')) {
+    // Provides the LocalAuthSamlLib class.
+    include_once(get_config('docroot') . 'local/lib/AuthSamlLocal.php');
+}
+
 /**
  * Authenticates users with SAML 2.0
  */
@@ -694,15 +700,19 @@ class AuthSaml extends Auth {
         }
     }
 
+    /**
+     * Maps an external institution name to a Mahara institution name.
+     *
+     * @see local/lib/AuthSamlLocal.api.php
+     * @param string $external The institution name
+     * @return string The Mahara institution name or an empty string if no match
+     */
     private function get_affiliation_map($external) {
-        // If you need any affiliation mapping you can add it here
-        // For example:
-        // $map = array('example.com' => 'myinstitution',
-        //              'example2.com' => 'mytestinstitution');
-        // if (isset($map[$external]) && record_exists('institution', 'name', $map[$external])) {
-        //    return $map[$external];
-        // }
-        return false;
+        if (class_exists('AuthSamlLocal')) {
+            // @phpstan-ignore-next-line For local modifications.
+            return AuthSamlLocal::get_affiliation_map($external);
+        }
+        return '';
     }
 
     /**
