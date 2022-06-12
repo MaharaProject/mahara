@@ -30,7 +30,7 @@ require_once(get_config('docroot') . 'export/lib.php');
 
 // Used by the Mahara assignment submission plugin for Moodle, to indicate that a user
 // coming over from mnet should be able to view a certain page (i.e. a teacher viewing
-// an assignmnet submission)
+// an assignment submission)
 $mnetviewid = param_integer('mnetviewid', false);
 $mnetcollid = param_integer('mnetcollid', false);
 if (
@@ -231,7 +231,14 @@ else if ($user_logged_in && $access_via_group) {
             preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
             $lticoursename = hsc($matches[1]);
             $ltiassignmentname = hsc($matches[2]);
-            $text = get_string('collectionsubmittedtogroupgrade', 'view', group_homepage_url($submittedgroup), $ltiassignmentname, $lticoursename, format_date(strtotime($ctime)));
+            $text = get_string(
+                'collectionsubmittedtogroupgrade',
+                'view',
+                group_homepage_url($submittedgroup),
+                $ltiassignmentname,
+                $lticoursename,
+                format_date(strtotime($ctime))
+            );
         }
         else if ($ctime = $collection->get('submittedtime')) {
             $text = get_string(
