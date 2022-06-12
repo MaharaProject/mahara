@@ -490,6 +490,10 @@ function build_admin_user_search_results($search, $offset, $limit) {
             'template' => 'admin/users/searchiconcolumn.tpl',
             'accessible' => get_string('profileicon'),
         ),
+        'masquerade' => array(
+            'template' => 'admin/users/searchmasqueradecolumn.tpl',
+            'accessible' => get_string('masqueradeas', 'admin'),
+        ),
         'firstname' => array(
             'name'     => get_string('firstname'),
             'sort'     => true,

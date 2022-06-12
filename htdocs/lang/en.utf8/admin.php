@@ -1375,6 +1375,7 @@ $string['masqueradingnotifielddescription'] = 'Notify people when an administrat
 
 $string['masquerade'] = 'Continue';
 $string['masqueradeas'] = 'Masquerade';
+$string['masqueradeasperson'] = 'Masquerade as %s %s';
 $string['masqueradereason'] = 'Reason';
 $string['masqueradereasondescription'] = 'Please enter a reason for logging in as this person. Note: They will not be notified of this reason, but it will be logged.';
 $string['masqueradenotificationdone'] = 'The person has been notified of this masquerading session.';
