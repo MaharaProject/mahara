@@ -60,7 +60,7 @@ if ($postattachments = get_records_sql_array("
 }
 $post->attachments = $postattachments;
 $membership = user_can_access_forum((int)$post->forum);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 
 if (!$membership && !get_field('group', 'public', 'id', $post->group)) {
     throw new GroupAccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
@@ -144,7 +144,7 @@ function rejectpost_submit(Pieform $form, $values) {
     $data->poster       = $postinfo->poster;
     $data->postedtime   = $postinfo->ctime;
     $data->reason       = $values['message'];
-    $data->event        = POST_REJECTED;
+    $data->event        = PluginInteractionForum::POST_REJECTED;
     activity_occurred('postmoderation', $data, 'interaction', 'forum');
 
     $SESSION->add_ok_msg(get_string('rejectpostsuccess', 'interaction.forum'));

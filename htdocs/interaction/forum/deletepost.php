@@ -49,7 +49,7 @@ if (!$post) {
 }
 
 $membership = user_can_access_forum((int)$post->forum);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 
 if (!$moderator || ($post->group && !group_within_edit_window($post->group))) {
     throw new AccessDeniedException(get_string('cantdeletepost', 'interaction.forum'));
@@ -112,7 +112,7 @@ function deletepost_submit(Pieform $form, $values) {
         $data->message    = '';
         $data->reporter   = $USER->get('id');
         $data->ctime      = time();
-        $data->event      = DELETE_OBJECTIONABLE_POST;
+        $data->event      = PluginInteractionForum::DELETE_OBJECTIONABLE_POST;
         activity_occurred('reportpost', $data, 'interaction', 'forum');
     }
 

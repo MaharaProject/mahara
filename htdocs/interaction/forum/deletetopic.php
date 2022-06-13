@@ -55,7 +55,7 @@ define('GROUP', $topic->group);
 
 $membership = user_can_access_forum((int)$topic->forumid);
 
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 
 $topic->ctime = relative_date(get_string('strftimerecentfullrelative', 'interaction.forum'), get_string('strftimerecentfull'), $topic->ctime);
 
@@ -105,7 +105,7 @@ function deletetopic_submit(Pieform $form, $values) {
         $data->message    = '';
         $data->reporter   = $USER->get('id');
         $data->ctime      = time();
-        $data->event      = DELETE_OBJECTIONABLE_TOPIC;
+        $data->event      = PluginInteractionForum::DELETE_OBJECTIONABLE_TOPIC;
         activity_occurred('reportpost', $data, 'interaction', 'forum');
     }
     // mark topic as deleted

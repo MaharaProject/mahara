@@ -46,7 +46,7 @@ if (!$post) {
 }
 
 $membership = user_can_access_forum((int)$post->forum);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 
 if (!$membership && !get_field('group', 'public', 'id', $post->group)) {
     throw new GroupAccessDeniedException(get_string('cantviewtopic', 'interaction.forum'));
@@ -99,7 +99,7 @@ function reportpost_submit(Pieform $form, $values) {
     $data->message    = $values['message'];
     $data->reporter   = $USER->get('id');
     $data->ctime      = $ctime;
-    $data->event      = REPORT_OBJECTIONABLE;
+    $data->event      = PluginInteractionForum::REPORT_OBJECTIONABLE;
     activity_occurred('reportpost', $data, 'interaction', 'forum');
 
     $SESSION->add_ok_msg(get_string('reportpostsuccess', 'interaction.forum'));

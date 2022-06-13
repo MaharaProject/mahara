@@ -92,7 +92,7 @@ if ($parent) {
 define('GROUP', $parent->group);
 
 $membership = user_can_access_forum((int)$parent->forum);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 $admintutor = (bool) group_get_user_admintutor_groups();
 $poster = new User();
 
@@ -401,7 +401,7 @@ function addpost_submit(Pieform $form, $values) {
         $data->poster       = $USER->get('id');
         $data->postedtime   = time();
         $data->reason       = '';
-        $data->event        = POST_NEEDS_APPROVAL;
+        $data->event        = PluginInteractionForum::POST_NEEDS_APPROVAL;
         activity_occurred('postmoderation', $data, 'interaction', 'forum');
     }
 

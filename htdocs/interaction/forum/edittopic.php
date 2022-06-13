@@ -72,7 +72,7 @@ $forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $
 
 define('GROUP', $forum->groupid);
 $membership = user_can_access_forum((int)$forumid);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 $admintutor = (bool) group_get_user_admintutor_groups();
 
 if (!$membership || (isset($forumconfig['createtopicusers']) && $forumconfig['createtopicusers']->value == 'moderators' && !$moderator)) {
@@ -344,7 +344,7 @@ function addtopic_submit(Pieform $form, $values) {
         $data->poster       = $USER->get('id');
         $data->postedtime   = time();
         $data->reason       = '';
-        $data->event        = POST_NEEDS_APPROVAL;
+        $data->event        = PluginInteractionForum::POST_NEEDS_APPROVAL;
         activity_occurred('postmoderation', $data, 'interaction', 'forum');
     }
 
