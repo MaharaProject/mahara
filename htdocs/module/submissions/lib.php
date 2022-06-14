@@ -22,6 +22,15 @@ require(dirname(__FILE__) . '/vendor/autoload.php');
 
 class PluginModuleSubmissions extends PluginModule {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'module.submissions');
+    }
+
     public static function get_plugin_name() {
         return 'submissions';
     }

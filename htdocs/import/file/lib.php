@@ -59,6 +59,15 @@ class PluginImportFile extends PluginImport {
     }
 
     /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'import.file');
+    }
+
+    /**
      * Validate transported data
      *
      * @param  ImporterTransport $transport

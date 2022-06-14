@@ -15,6 +15,7 @@ defined('INTERNAL') || die();
  * module plugin class. Used for registering the plugin and functions.
  */
 class PluginModuleFramework extends PluginModule {
+
     /**
      * Is the plugin activated or not?
      *
@@ -34,7 +35,7 @@ class PluginModuleFramework extends PluginModule {
      * @return string ShortName of the plugin
      */
     public static function get_plugin_display_name() {
-        return 'smartevidence';
+        return get_string('frameworknav', 'module.framework');
     }
 
     public static function postinst($prevversion) {
