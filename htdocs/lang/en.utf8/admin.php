@@ -62,6 +62,9 @@ $string['clisitename'] = 'The site name';
 $string['cliupdatesitenamefailed'] = 'Updating site name failed.';
 $string['cliinstallerdescription'] = 'Install Mahara and create required data directories';
 $string['cliinstallingmahara'] = 'Installing Mahara';
+$string['versionnumber'] = 'Version: %s';
+$string['plugintype'] = 'Plugin: %s';
+
 // CLI upgrade script
 $string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed.';
 $string['cli_upgrade_title'] = 'Upgrading Mahara';
@@ -1567,3 +1570,14 @@ $string['savedgroupconfigsuccessfully'] = 'Saved default group settings.';
 $string['defaultreset'] = 'Reset to default';
 $string['defaultresetlabel'] = 'Reset';
 $string['defaultresetdesc'] = 'Reset all of the above options to their default values.';
+
+$string['pluginartefact'] = 'Plugin type: Artefact';
+$string['pluginauth'] = 'Plugin type: Authentication';
+$string['pluginblocktype'] = 'Plugin type: Block type';
+$string['pluginexport'] = 'Plugin type: Export';
+$string['plugingrouptype'] = 'Plugin type: Group type';
+$string['pluginimport'] = 'Plugin type: Import';
+$string['plugininteraction'] = 'Plugin type: Interaction';
+$string['pluginmodule'] = 'Plugin type: Module';
+$string['pluginnotification'] = 'Plugin type: Notification';
+$string['pluginsearch'] = 'Plugin type: Search';

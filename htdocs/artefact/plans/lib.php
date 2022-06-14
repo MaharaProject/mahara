@@ -34,6 +34,15 @@ class PluginArtefactPlans extends PluginArtefact {
         return 'plans';
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'artefact.plans');
+    }
+
     public static function is_active() {
         return get_field('artefact_installed', 'active', 'name', 'plans');
     }

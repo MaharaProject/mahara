@@ -544,6 +544,15 @@ class PluginAuthSaml extends PluginAuth {
         'metarefresh_metadata_url'         => '',
     );
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.saml');
+    }
+
     public static function get_cron() {
         return array(
             (object)array(
