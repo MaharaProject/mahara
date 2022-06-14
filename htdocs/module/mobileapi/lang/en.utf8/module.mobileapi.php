@@ -15,6 +15,7 @@ $string['autoconfiguredesc'] = 'Automatically enable settings and configurations
 $string['autoconfiguretitle'] = 'Auto-configure mobile apps API';
 $string['configstep'] = 'Configuration item';
 $string['configstepstatus'] = 'Status';
+$string['maharamobile'] = 'Mahara Mobile API';
 $string['manualtokensdesc'] = 'people can generate web service access tokens manually in order to copy and paste them into an app. Normally, an app should be able to generate the tokens automatically. However, some authentication plugins may not allow for that.';
 $string['manualtokenstitle'] = 'Manual token generation';
 $string['mobileapiserviceexists'] = 'Mobile API service group is registered';

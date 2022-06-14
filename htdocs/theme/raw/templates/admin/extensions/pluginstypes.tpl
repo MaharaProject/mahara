@@ -8,16 +8,16 @@
             {$type}
             {/if}
             {if $config.info}
-                <button class="btn btn-secondary btn-sm btn-group float-right" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $typedata.name}{$typedata.name}{else}{$plugin}{/if}" type="button" data-plugintype='{$plugintype}' data-pluginname='{$plugin}' data-type='{$type}'>
+                <a class="btn btn-secondary btn-sm btn-group float-right" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $typedata.name}{$typedata.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}' data-type='{$type}'>
                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $typedata.name}{$typedata.name}{else}{$plugin}{/if}</span>
-                </button>
+                </a>
             {/if}
             {if $config.config}
-                <button class="btn btn-secondary btn-sm btn-group float-right" title="{str tag='configfor'} {$plugintype} {if $typedata.name}{$typedata.name}{else}{$plugin}{/if}" type="button" data-url="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
+                <a class="btn btn-secondary btn-sm btn-group float-right" title="{str tag='configfor'} {$plugintype} {if $typedata.name}{$typedata.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
                     <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
                     <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $typedata.name}{$typedata.name}{else}{$plugin}{/if}</span>
-                </button>
+                </a>
             {/if}
             {if $typedata.typeswithconfig > 1}
             </li>
