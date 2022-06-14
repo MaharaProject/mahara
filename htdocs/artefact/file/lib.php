@@ -2605,15 +2605,62 @@ class ArtefactTypeImage extends ArtefactTypeFile {
      * Render's the cover image thumbnail and exits
      */
     public static function download_coverimage_thumbnail($artefactid, $type=null) {
-        global $USER;
+        global $USER, $THEME;
         $id = $artefactid;
         $size = get_imagesize_parameters();
         $earlyexpiry = param_boolean('earlyexpiry', false);
+        $canviewcoverimage = false;
+        // Check we have a coverimage and that we can see it in at least one place
+        $usedin = get_records_sql_array("SELECT c.id AS cid, (
+                                             SELECT v.id FROM {collection_view} cv
+                                             JOIN {view} v ON cv.view = v.id
+                                             WHERE cv.collection = c.id
+                                             LIMIT 1) AS vid, c.owner AS ownerid, c.group AS groupid, c.institution
+                                         FROM {collection} c
+                                         WHERE c.coverimage = ?
+                                         UNION
+                                         SELECT NULL AS cid, v.id AS vid, v.owner AS ownerid, v.group AS groupid, v.institution
+                                         FROM {view} v WHERE v.coverimage = ?", array($id, $id));
+        if ($usedin) {
+            foreach ($usedin as $place) {
+                if ($place->vid && can_view_view($place->vid)) {
+                    $canviewcoverimage = true;
+                    break;
+                }
+                // For collections without any pages they can't be shared so we need to check if
+                // we can view them like we were looking at the pages and collection index page
+                if (empty($place->vid) && !empty($place->cid)) {
+                    if ($place->ownerid === $USER->get('id')) {
+                        $canviewcoverimage = true;
+                        break;
+                    }
+                    if ($place->groupid && get_field('group_member', 'role', 'group', $place->groupid, 'member', $USER->get('id'))) {
+                        $canviewcoverimage = true;
+                        break;
+                    }
+                    if ($place->institution) {
+                        if ($place->institution == 'mahara' && $USER->get('admin')) {
+                            $canviewcoverimage = true;
+                            break;
+                        }
+                        else if ($USER->is_institutional_admin($place->institution)) {
+                            $canviewcoverimage = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $filedata = get_record_sql("SELECT aff.filetype, aff.fileid, afi.orientation, a.*
+                                    FROM {artefact_file_files} aff
+                                    JOIN {artefact} a ON a.id = aff.artefact
+                                    JOIN {artefact_file_image} afi ON afi.artefact = aff.artefact
+                                    WHERE aff.artefact = ? AND artefacttype = ?", array($id, 'image'));
+        if ($canviewcoverimage && $filedata) {
 
-        $mimetype = get_field('artefact_file_files', 'filetype', 'artefact', $id);
-
-        if ($id && $fileid = get_field('artefact_file_files', 'fileid', 'artefact', $id)) {
-            $orientation = get_field('artefact_file_image', 'orientation', 'artefact', $id);
+            $mimetype = $filedata->filetype;
+            $fileid = $filedata->fileid;
+            $orientation = $filedata->orientation;
 
             if ($path = get_dataroot_image_path('artefact/file', $fileid, $size, $orientation)) {
                 if ($mimetype) {
@@ -2634,6 +2681,11 @@ class ArtefactTypeImage extends ArtefactTypeFile {
                 }
             }
         }
+        // Emergency fallback
+        header('Content-type: ' . 'image/png');
+        readfile($THEME->get_path('images/no_thumbnail.png'));
+        perf_to_log();
+        exit();
     }
 
 
