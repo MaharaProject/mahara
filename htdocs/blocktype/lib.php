@@ -988,6 +988,15 @@ abstract class MaharaCoreBlocktype extends PluginBlockType {
     public static function get_css_icon($blocktypename) {
         return $blocktypename;
     }
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return static::get_title();
+    }
 }
 
 /**
@@ -1010,6 +1019,15 @@ abstract class SystemBlockType extends PluginBlockType {
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();
+    }
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return static::get_title();
     }
 
     /**

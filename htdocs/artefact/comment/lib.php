@@ -51,6 +51,15 @@ class PluginArtefactComment extends PluginArtefact {
         return 'comment';
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'artefact.comment');
+    }
+
     public static function menu_items() {
         return array();
     }

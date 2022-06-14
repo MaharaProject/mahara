@@ -55,6 +55,15 @@ class PluginArtefactAnnotation extends PluginArtefact {
         return 'annotation';
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'artefact.annotation');
+    }
+
     public static function menu_items() {
         return array();
     }
