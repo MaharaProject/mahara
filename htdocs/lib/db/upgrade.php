@@ -864,6 +864,18 @@ function xmldb_core_upgrade($oldversion=0) {
             set_config('eventloglevel', 'masquerade');
             log_warn(get_string('updateeventlogconfigoption', 'admin'), true, false);
         }
+        log_warn(get_string('registrationisoptout', 'admin'), true, false);
+        set_config('new_registration_policy', true);
+        if (!get_config('registration_sendweeklyupdates')) {
+            require_once('registration.php');
+            list($status, $message) = register_again(true);
+            if ($status == 'error') {
+                log_warn($message, true, false);
+            }
+            else {
+                log_info($message);
+            }
+        }
     }
 
     return $status;

@@ -75,7 +75,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  # Checking the sub navigation in Admin home
  When I press "Admin home"
  Then I should see "Overview" in the "Admin home sub-menu" "Nav" property
- And I should see "Register" in the "Admin home sub-menu" "Nav" property
+ And I should see "Registration" in the "Admin home sub-menu" "Nav" property
  # Checking the sub navigation in Configure site
  When I press "Configure site"
  Then I should see "Site options" in the "Configure site sub-menu" "Nav" property
