@@ -11,6 +11,7 @@
 
 defined('INTERNAL') || die();
 
+$string['title'] = 'Web services';
 $string['webservice'] = 'Web services';
 $string['externalapp'] = 'External app: ';
 $string['description'] = 'Web services-only users authenticated against Mahara\'s database';

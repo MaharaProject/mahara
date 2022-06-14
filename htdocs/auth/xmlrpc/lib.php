@@ -598,6 +598,15 @@ class PluginAuthXmlrpc extends PluginAuth {
         'active'                => 1
     );
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.xmlrpc');
+    }
+
     public static function has_config() {
         return false;
     }

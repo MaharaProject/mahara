@@ -13,6 +13,15 @@ defined('INTERNAL') || die();
 
 class PluginGrouptypeCourse extends PluginGrouptype {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('name', 'grouptype.course');
+    }
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             parent::installgrouptype('GroupTypeCourse');

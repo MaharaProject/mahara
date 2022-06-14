@@ -17,6 +17,15 @@ class PluginNotificationEmail extends PluginNotification {
 
     static $userdata = array('htmlmessage', 'emailmessage');
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('name', 'notification.email');
+    }
+
     public static function notify_user($user, $data) {
 
         $messagehtml = null;

@@ -16,6 +16,16 @@ defined('INTERNAL') || die();
  * required by the Mahara Mobile app.
  */
 class PluginModuleMobileapi extends PluginModule {
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('maharamobile', 'module.mobileapi');
+    }
+
     public static function postinst($fromversion) {
         require_once(get_config('docroot') . 'webservice/lib.php');
         return external_reload_component('module/mobileapi');

@@ -18,7 +18,7 @@ Scenario: Admin user sets country to be mandatory
     Then I should see "No country selected"
     # Enable country in Mandatory fields and save
     When I choose "Plugin administration" in "Extensions" from administration menu
-    And I click on "Configuration for artefact internal"
+    And I click on "Configuration for artefact Profile"
     # And I check "Country"
     And I click on the "Country mandatory field" "Profile" property
     And I click on "Save"

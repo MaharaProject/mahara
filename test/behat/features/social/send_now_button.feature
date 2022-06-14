@@ -19,7 +19,7 @@ Background:
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Plugin administration" in "Extensions" from administration menu
  And I scroll to the center of id "interaction.installed"
- And I click on "Configuration for interaction forum"
+ And I click on "Configuration for interaction Forum"
  And I should see "Post delay"
  And I fill in "Post delay" with "1"
  And I click on "Save"
