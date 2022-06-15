@@ -5509,7 +5509,7 @@ function display_statistics($institution, $type, $extra = null) {
                 $data = accesslist_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
             else if ($subtype == 'masquerading') {
-                if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
+                if (!in_array(get_config('eventloglevel'), array('masquerade', 'all'))) {
                     $data = array('notvalid_errorstring' => get_string('masqueradingnotloggedwarning', 'admin', get_config('wwwroot')));
                 }
                 else {
@@ -5578,7 +5578,7 @@ function display_statistics($institution, $type, $extra = null) {
                 $data = accesslist_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
             else if ($subtype == 'masquerading') {
-                if (!in_array(get_config('eventloglevel'), array('masq', 'all'))) {
+                if (!in_array(get_config('eventloglevel'), array('masquerade', 'all'))) {
                     $data = array('notvalid_errorstring' => get_string('masqueradingnotloggedwarning', 'admin', get_config('wwwroot')));
                 }
                 else {

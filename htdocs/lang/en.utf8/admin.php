@@ -64,6 +64,7 @@ $string['cliinstallerdescription'] = 'Install Mahara and create required data di
 $string['cliinstallingmahara'] = 'Installing Mahara';
 $string['versionnumber'] = 'Version: %s';
 $string['plugintype'] = 'Plugin: %s';
+$string['updateeventlogconfigoption'] = 'The value for $cfg->eventloglevel may need to be updated from "masq" to "masquerade" in your config.php file.';
 
 // CLI upgrade script
 $string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed.';
