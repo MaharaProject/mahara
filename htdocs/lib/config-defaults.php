@@ -1717,11 +1717,11 @@ $cfg->saml_log_attributes = false;
  * a page. This log is kept in the event_log table in the database.
  *
  * Valid values:
- *  - none : Nothing is logged in the database.
- *  - masq : Only masquerading sessions are logged. This setting needs to be
- *           turned on if you wish to report on administrator masquerading of
- *           account holders.
- *  - all  : All events that can be logged in the database are logged.
+ *  - none       : Nothing is logged in the database.
+ *  - masquerade : Only masquerading sessions are logged. This setting needs to be
+ *                 turned on if you wish to report on administrator masquerading of
+ *                 account holders.
+ *  - all        : All events that can be logged in the database are logged.
  *
  * @var string $cfg->eventloglevel
  */
