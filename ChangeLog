@@ -1,3 +1,11 @@
+22.04.2 (2022-06-16)
+- Bug 1978520: Files are accessible publicly through thumb.php
+- Bug 1971517: Can't submit portfolio via LTI 1.1
+- Bug 1971639: webservices need to check match in lowecase at both ends
+- Bug 1971651: PDF export gives foreach error if page has no blocks on it
+- Bug 1968758: Typo in a support admin lang string
+- Bug 1970693: module_submissions: Missing language string
+
 22.04.1 (2022-05-02)
 - Bug 1970680: Upgrade fails when LTI not installed
 - Bug 1971110: Adding block with underscore can cause problems
