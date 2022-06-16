@@ -37,18 +37,24 @@ switch ($type) {
         ArtefactTypeImage::download_coverimage_thumbnail($artefactid, $type);
         exit();
     case 'logobyid':
-        $filedata = get_record('artefact_file_files', 'artefact', param_integer('id'));
-        if ($path = get_dataroot_image_path('artefact/file/profileicons', $filedata->fileid, get_imagesize_parameters())) {
-            if ($filedata->filetype) {
-                header('Content-type: ' . $filedata->filetype);
-                if (!get_config('nocache')) {
-                    $maxage = 604800;
-                    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
-                    header('Cache-Control: max-age=' . $maxage);
-                    header('Pragma: public');
-                }
+        $filedata = get_record_sql("SELECT aff.*, a.artefacttype, a.institution
+                                    FROM {artefact_file_files} aff
+                                    JOIN {artefact} a ON a.id = aff.artefact
+                                    WHERE aff.artefact = ?", array(param_integer('id')));
+        // Check that the logo is the right type of file
+        if (!empty($filedata->institution) && $filedata->artefacttype == 'profileicon') {
+            if ($path = get_dataroot_image_path('artefact/file/profileicons', $filedata->fileid, get_imagesize_parameters())) {
+                if ($filedata->filetype) {
+                    header('Content-type: ' . $filedata->filetype);
+                    if (!get_config('nocache')) {
+                        $maxage = 604800;
+                        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $maxage) .' GMT');
+                        header('Cache-Control: max-age=' . $maxage);
+                        header('Pragma: public');
+                    }
 
-                readfile_exit($path);
+                    readfile_exit($path);
+                }
             }
         }
 
@@ -57,6 +63,9 @@ switch ($type) {
         readfile_exit($THEME->get_path('images/site-logo.png'));
 
     case 'blocktype':
+        // This options was used when plugins supplied their own thumb.png file for the icon.
+        // We now use font-awesome icons instead via get_css_icon().
+        // Still here for legacy 3rd party plugins.
         $bt = param_alpha('bt'); // blocktype
         $ap = param_alpha('ap', null); // artefact plugin (optional)
 
@@ -80,6 +89,12 @@ switch ($type) {
             readfile_exit($path);
         }
         readfile_exit($THEME->get_path('images/no_thumbnail.png'));
+     default:
+        // Emergency fallback
+        header('Content-type: ' . 'image/png');
+        readfile($THEME->get_path('images/no_thumbnail.png'));
+        perf_to_log();
+        exit;
 }
 
 function readfile_exit($path) {
