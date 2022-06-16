@@ -1,3 +1,9 @@
+21.04.6 (2022-06-16)
+- Bug 1978520: Only allow images to be served by thumb.php
+- Bug 1971639: webservices need to check match in lowecase at both ends
+- Bug 1970693: module_submissions: Missing language string
+- 
+
 21.04.5 (2022-05-02)
 
 21.04.4 (2022-04-27)
