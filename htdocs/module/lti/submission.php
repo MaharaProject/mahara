@@ -67,10 +67,10 @@ else if (PluginModuleLti::can_submit_for_grading()) {
 
         $smarty->assign('title', $info->title);
         $smarty->assign('link', $info->link);
-        $smarty->assign('timesubmitted', $sub->timesubmitted);
-        $smarty->assign('grade', $sub->grade);
+        $smarty->assign('timesubmitted', $sub->get('timesubmitted'));
+        $smarty->assign('grade', $sub->get('grade'));
         $smarty->assign('gradedby', empty($grader) ? '' : display_name($grader));
-        $smarty->assign('timegraded', $sub->timegraded);
+        $smarty->assign('timegraded', $sub->get('timegraded'));
         $smarty->assign('revokeform', $revokeform);
 
         $smarty->display('module:lti:submittedforgrading.tpl');

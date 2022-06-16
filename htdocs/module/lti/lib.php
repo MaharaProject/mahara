@@ -256,7 +256,16 @@ class PluginModuleLti extends PluginModule {
     }
 
     /**
-     * Form for submitting collections/pages for lti assessessment
+     * Form for submitting collections/pages for LTI
+     *
+     * Collections are submittable when these DB collection fields are empty
+     * - submittedgroup
+     * - submittedhost
+     *
+     * Views that are submittable when these DB view fields are empty
+     * - submittedgroup
+     * - submittedhost
+     * - AND their view type is not 'profile'
      */
     public static function submit_for_grading_form() {
         global $USER;
@@ -856,6 +865,19 @@ class ModuleLtiSubmission {
         }
 
         return true;
+    }
+
+    /**
+     * ModuleLtiSubmission getter function
+     *
+     * @param  string $field
+     * @return mixed
+     */
+    public function get($field) {
+        if (!property_exists($this, $field)) {
+            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        return $this->{$field};
     }
 
     /**
