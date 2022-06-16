@@ -83,6 +83,7 @@ if (!defined('CRON')) {
         }
 
         $graphdata = array();
+        $configs = (object) array();
 
         // Now covert it to something Chart.js can understand
         switch ($data['graph']) {

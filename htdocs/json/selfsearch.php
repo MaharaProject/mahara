@@ -15,6 +15,8 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('searchlib.php');
 
+$query = '';
+
 try {
     $query = param_variable('query');
 }
