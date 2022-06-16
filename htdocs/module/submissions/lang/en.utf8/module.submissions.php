@@ -112,6 +112,8 @@ $string['unsupportedportfoliotype'] = 'Unsupported submission portfolio element 
 $string['submissionstatuschangedexternally'] = 'Submission status has been changed externally.';
 $string['eventgroupnotfound'] = 'Group "%s" from event data not found.';
 $string['eventgroupidnotfound'] = 'Group with ID "%s" from event data not found.';
+$string['submissionexceptiontitle'] = 'Could not submit portfolio for assessment';
+$string['submissionexceptionmessage'] = 'This portfolio cannot be submitted for assessment due to the following reason:';
 
 // Submission released message
 $string['actionreleased'] = 'released';
