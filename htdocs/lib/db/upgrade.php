@@ -2445,7 +2445,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $limit = 100;
             $total = count($records);
             foreach ($records as $record) {
-                execute_sql("UPDATE artefact SET title = ? WHERE id = ?", array($record->email, $record->id));
+                execute_sql("UPDATE {artefact} SET title = ? WHERE id = ?", array($record->email, $record->id));
                 $count++;
                 if (($count % $limit) == 0 || $count == $total) {
                     log_debug("$count/$total");
