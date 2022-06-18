@@ -21,6 +21,7 @@ $theme->overrideparentcss = true;
 $theme->themelinkcolor = '#0162a7'; // $view_link_normal_color
 $theme->themefocusedlinkcolor = '#01528c'; // $view_link_hover_color
 $theme->themeblockheadingfontcolor = '#FFFFFF'; // $theme-block-header-color
+$theme->themeaddressbar = '#0162A7';
 
 /**
  * The following themeconfig options are available. If you make new themeconfig

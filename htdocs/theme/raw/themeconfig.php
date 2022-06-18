@@ -14,6 +14,8 @@ $theme->displayname  = 'Raw';
 $theme->formrenderer = 'div';
 $theme->parent      = false;
 
+$theme->themeaddressbar = '#ffffff';
+
 /**
  * There are more themeconfig options available. For an explanation of
  * all the themeconfig options please look in theme/default/themeconfig.php
