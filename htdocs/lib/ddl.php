@@ -68,7 +68,7 @@ $CFG->prefix = (isset($CFG->dbprefix)) ? $CFG->dbprefix : '';
 
 /// Based on $CFG->dbtype, add the proper generator class
     if (!file_exists($CFG->libdir . '/xmldb/classes/generators/' . $CFG->dbtype . '/' . $CFG->dbtype . '.class.php')) {
-        error (E_WARNING, 'DB Type: ' . $CFG->dbtype . ' not supported by XMLDDB', null, null, null);
+        error (E_WARNING, 'DB Type: ' . $CFG->dbtype . ' not supported by XMLDDB', null, null);
     }
     require_once($CFG->libdir . '/xmldb/classes/generators/' . $CFG->dbtype . '/' . $CFG->dbtype . '.class.php');
 

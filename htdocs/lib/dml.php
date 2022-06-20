@@ -600,6 +600,7 @@ function recordset_to_assoc(ADORecordSet $rs) {
         $firstcolumn = $rs->FetchField(0);
         // Get the whole associative array
         if ($records = $rs->GetAssoc(true)) {
+            $objects = [];
             foreach ($records as $key => $record) {
                 $record[$firstcolumn->name] = $key;
                 $objects[$key] = (object) $record;
@@ -997,7 +998,7 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
             safe_require($plugintype, $pluginname);
             if (method_exists($classname, 'pseudo_trigger')) {
                 foreach ($ids as $id) {
-                    call_static_method($classname, 'pseudo_trigger', $id->id, 'update');
+                    $classname::pseudo_trigger($id->id, 'update');
                 }
             }
         }
@@ -1286,7 +1287,7 @@ function table_need_trigger($table) {
         // Extra table to trigger queuing on.
         $estables[] = 'view_artefact';
     }
-    if (!defined('BEHAT_TEST') && !empty($estables) && in_array($table, $estables)) {
+    if (!defined('BEHAT_TEST') && in_array($table, $estables)) {
         return 'indexable';
     }
 
@@ -1306,7 +1307,7 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
             if ($plugintype && $pluginname) {
                 safe_require($plugintype, $pluginname);
                 if (method_exists($classname, 'pseudo_trigger')) {
-                    call_static_method($classname, 'pseudo_trigger', $id, $savetype);
+                    $classname::pseudo_trigger($id, $savetype);
                 }
             }
         }
@@ -1546,7 +1547,7 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
             safe_require($plugintype, $pluginname);
             if (method_exists($classname, 'pseudo_trigger')) {
                 foreach ($ids as $id) {
-                    call_static_method($classname, 'pseudo_trigger', $id->id, 'update');
+                    $classname::pseudo_trigger($id->id, 'update');
                 }
             }
         }
@@ -2033,7 +2034,9 @@ function db_replace(array $replacearray) {
     /// Turn off time limits, sometimes upgrades can be slow.
     @set_time_limit(0);
     @ob_implicit_flush(true);
-    while(@ob_end_flush());
+    while (count(ob_get_status()) > 0) {
+        ob_end_flush();
+    }
 
     if (!$tables = $db->Metatables() ) {    // No tables yet at all.
         return false;

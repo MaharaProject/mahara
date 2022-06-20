@@ -44,7 +44,8 @@ function check_upgrades($name=null) {
     $newinstallcount = 0;
     $installing = false;
     $newinstalls = array();
-    $config = null; // will be set via version.php below
+    // This will be set in version.php below.
+    $config = new stdClass();
     require('version.php');
     // check core first...
     if (empty($name) || $name == 'core') {
@@ -238,7 +239,7 @@ function check_upgrades($name=null) {
         $classname = generate_class_name($plugintype, $pluginname);
         safe_require($plugintype, $pluginname);
         // Check if there is a displayname
-        $plugindisplayname = call_static_method($classname, 'get_plugin_display_name');
+        $plugindisplayname = $classname::get_plugin_display_name();
 
         if (empty($pluginversion)) {
             $newinstall = false;
@@ -489,7 +490,7 @@ function upgrade_plugin($upgrade) {
     safe_require($plugintype, $pluginname);
     $pcname = generate_class_name($plugintype, $installed->name);
 
-    if ($crons = call_static_method($pcname, 'get_cron')) {
+    if ($crons = $pcname::get_cron()) {
         foreach ($crons as $cron) {
             $cron = (object)$cron;
             if (empty($cron->callfunction)) {
@@ -516,7 +517,7 @@ function upgrade_plugin($upgrade) {
         }
     }
 
-    if ($events = call_static_method($pcname, 'get_event_subscriptions')) {
+    if ($events = $pcname::get_event_subscriptions()) {
         foreach ($events as $event) {
             $event = (object)$event;
 
@@ -545,7 +546,7 @@ function upgrade_plugin($upgrade) {
         }
     }
 
-    if ($activities = call_static_method($pcname, 'get_activity_types')) {
+    if ($activities = $pcname::get_activity_types()) {
         foreach ($activities as $activity) {
             $classname = 'ActivityType' . ucfirst($plugintype) . ucfirst($pluginname) . ucfirst($activity->name);
             if (!class_exists($classname)) {
@@ -571,7 +572,7 @@ function upgrade_plugin($upgrade) {
         if (!is_callable(array($pcname, 'get_artefact_types'))) {
             throw new InstallationException("Artefact plugin $pcname must implement get_artefact_types and doesn't");
         }
-        $types = call_static_method($pcname, 'get_artefact_types');
+        $types = $pcname::get_artefact_types();
         $ph = array();
         if (is_array($types)) {
             // Check for missing plugins - don't try to remove their data.
@@ -619,7 +620,7 @@ function upgrade_plugin($upgrade) {
     }
 
     $prevversion = (empty($upgrade->install)) ? $upgrade->from : 0;
-    call_static_method($pcname, 'postinst', $prevversion);
+    $pcname::postinst($prevversion);
 
     db_commit();
     return true;
@@ -1109,8 +1110,9 @@ function local_xmldb_contents_sub(&$contents) {
 
             // perform any additional once off substitutions
             require_once(get_config('docroot') . $plugin . '/lib.php');
-            if (method_exists(generate_class_name($plugin), 'extra_xmldb_substitution')) {
-                $replaced  .= call_static_method(generate_class_name($plugin), 'extra_xmldb_substitution', $plugintables);
+            $classname = generate_class_name($plugin);
+            if (method_exists($classname, 'extra_xmldb_substitution')) {
+                $replaced  .= $classname::extra_xmldb_substitution($plugintables);
             }
             else {
                 $replaced .= $plugintables;
@@ -1207,8 +1209,10 @@ function install_blocktype_categories_for_plugin($blocktype) {
     $catsinstalled = get_column('blocktype_category', 'name');
     db_begin();
     delete_records('blocktype_installed_category', 'blocktype', $blocktype);
-    if ($cats = call_static_method(generate_class_name('blocktype', $blocktype), 'get_categories')) {
-        foreach ($cats as $k=>$v) {
+    $classname = generate_class_name('blocktype', $blocktype);
+    $categories = $classname::get_categories();
+    if ($categories) {
+        foreach ($categories as $k=>$v) {
             if (is_string($k) && is_int($v)) {
                 // New block with name => sortorder array.
                 $cat = $k;
@@ -1240,7 +1244,9 @@ function install_blocktype_viewtypes_for_plugin($blocktype) {
     $vtinstalled = get_column('view_type', 'type');
     db_begin();
     delete_records('blocktype_installed_viewtype', 'blocktype', $blocktype);
-    if ($viewtypes = call_static_method(generate_class_name('blocktype', $blocktype), 'get_viewtypes')) {
+    $classname = generate_class_name('blocktype', $blocktype);
+    $viewtypes = $classname::get_viewtypes();
+    if ($viewtypes) {
         foreach($viewtypes as $vt) {
             if (in_array($vt, $vtinstalled)) {
                 insert_record('blocktype_installed_viewtype', (object)array(
@@ -1362,7 +1368,7 @@ function set_antispam_defaults() {
 function activate_plugin_form($plugintype, $plugin) {
     // Check if there is a displayname
     $classname = generate_class_name($plugintype, $plugin->name);
-    $plugin->displayname = call_static_method($classname, 'get_plugin_display_name');
+    $plugin->displayname = $classname::get_plugin_display_name();
 
     return pieform(array(
         'name'            => 'activate_' . $plugintype . '_' . $plugin->name,
@@ -1430,7 +1436,8 @@ function site_warnings() {
     }
 
     // Check if the host returns a usable value for the timezone identifier %z
-    $tz_count = preg_match("/[\+\-][0-9]{4}/", strftime("%z"));
+    $tz_count_date = new DateTime();
+    $tz_count = preg_match("/[\+\-][0-9]{4}/", $tz_count_date->format('O'));
     if ($tz_count == 0 || $tz_count == FALSE) {
         $warnings[] = get_string('timezoneidentifierunusable', 'error');
     }

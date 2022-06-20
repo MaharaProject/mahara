@@ -582,7 +582,7 @@ class Collection {
         $data->lock = (isset($data->owner) && $data->owner == $colltemplate->owner) ? 0 : $colltemplate->get('lock');
         $data->autocopytemplate = 0;
         $data->template = 0;
-        $collection = self::save($data);
+        $collection = self::save((array)$data);
         if ($trackoriginal) {
             $collection->track_template($templateid);
         }

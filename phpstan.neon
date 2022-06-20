@@ -31,6 +31,7 @@ parameters:
         - htdocs/artefact/internal/lib.php
         - htdocs/artefact/lib.php
         - htdocs/artefact/resume/lib.php
+        - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Configuration.php
         - htdocs/auth/saml/lib.php
         - htdocs/auth/user.php
         - htdocs/blocktype/lib.php
@@ -45,9 +46,14 @@ parameters:
         - htdocs/lib/htmlpurifier/HTMLPurifier.php
         - htdocs/lib/htmlpurifier/HTMLPurifier/Config.php
         - htdocs/lib/htmlpurifier/HTMLPurifier/Exception.php
+        - htdocs/lib/htmlpurifier/HTMLPurifier/Filter.php
+        - htdocs/lib/htmlpurifier/HTMLPurifier/URIFilter.php
+        - htdocs/lib/htmlpurifier/HTMLPurifier/AttrDef/Enum.php
         - htdocs/lib/license.php
         - htdocs/lib/mahara.php
         - htdocs/lib/objectionable.php
+        - htdocs/lib/phpmailer/src/Exception.php
+        - htdocs/lib/phpmailer/src/PHPMailer.php
         - htdocs/lib/pieforms/pieform.php
         - htdocs/lib/redis/sentinel.php
         - htdocs/lib/xmldb/classes/XMLDBConstants.php

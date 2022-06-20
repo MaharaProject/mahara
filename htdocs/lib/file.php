@@ -165,7 +165,10 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
         }
     }
     header('Content-Length: ' . $filesize);
-    while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
+    while (count(ob_get_status()) > 0) {
+        // Flush the buffers - save memory and disable sid rewrite.
+        ob_end_flush();
+    }
     readfile_chunked($path);
     perf_to_log();
     exit;
@@ -215,7 +218,10 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
         header('Content-Length: ' . $length);
         header('Content-Range: bytes ' . $ranges[0][1] . '-' . $ranges[0][2] . '/' . filesize($filename));
         header('Content-Type: ' . $mimetype);
-        while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
+        while (count(ob_get_status()) > 0) {
+            // Flush the buffers - save memory and disable sid rewrite.
+            ob_end_flush();
+        }
         $buffer = '';
         fseek($handle, $ranges[0][1]);
         while (!feof($handle) && $length > 0) {
@@ -238,7 +244,10 @@ function byteserving_send_file($filename, $mimetype, $ranges) {
         header('Content-Length: ' . $totallength);
         header('Content-Type: multipart/byteranges; boundary=' . BYTESERVING_BOUNDARY);
         //TODO: check if "multipart/x-byteranges" is more compatible with current readers/browsers/servers
-        while (@ob_end_flush()); //flush the buffers - save memory and disable sid rewrite
+        while (count(ob_get_status()) > 0) {
+            // Flush the buffers - save memory and disable sid rewrite.
+            ob_end_flush();
+        }
         foreach($ranges as $range) {
             $length = $range[2] - $range[1] + 1;
             echo $range[0];
@@ -970,8 +979,7 @@ function file_cleanup_old_temp_files($paths=array()) {
 
     $cachepaths = $validpaths;
     // check that the paths supplied are valid
-    if (is_array($paths) && !empty($paths) && $paths[0] != 'all') {
-        $paths = array_flip($paths);
+    if (is_array($paths) && count($paths) > 0 && $paths[0] != 'all') {
         $cachepaths = array_intersect_key($validpaths, $paths);
     }
     $files = array();

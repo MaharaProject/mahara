@@ -851,8 +851,10 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
         // Massage the results regardless of type.
         if (is_plugin_active('lti_advantage', 'module')) {
             // Use the short name if set for the Submitted to column.
+            // @phpstan-ignore-next-line LTI_Advantage_Database is available if the plugin is active.
             $results['data'][$key]['submittedto'] = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['submittedto']);
             // Use the short name if set for the ID column.
+            // @phpstan-ignore-next-line LTI_Advantage_Database is available if the plugin is active.
             $results['data'][$key]['specialid'] = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['specialid']);
         }
         // Make the deleted group name more human readable.

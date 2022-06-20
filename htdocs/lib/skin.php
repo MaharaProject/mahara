@@ -850,10 +850,12 @@ class Skin {
 
     /**
      * Converts 6-digit hex color #RRGGBB to rgb(RRR, GGG, BBB)
-     * @param unknown_type $color_hex
+     *
+     * @param string $color_hex
+     * @return array The RGB code.
      */
     private static function get_rgb_from_hex($color_hex) {
-        $color_hex = !empty($color_hex) ? $color_hex : '#FFFFFF';
+        $color_hex = $color_hex?:'#FFFFFF';
         return array_map('hexdec', explode('|', wordwrap(substr($color_hex, 1), 2, '|', 1)));
     }
 

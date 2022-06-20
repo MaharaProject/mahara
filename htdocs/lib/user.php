@@ -492,8 +492,9 @@ function plugin_account_prefs_form_elements(stdClass $prefs) {
         if (!safe_require_plugin($i->plugintype, $i->name)) {
             continue;
         }
-        $elements = array_merge($elements, call_static_method(generate_class_name($i->plugintype, $i->name),
-                'get_accountprefs_elements', $prefs));
+        $classname = generate_class_name($i->plugintype, $i->name);
+        $classelements = $classname::get_accountprefs_elements($prefs);
+        $elements = array_merge($elements, $classelements);
     }
     return $elements;
 }
@@ -511,7 +512,8 @@ function plugin_account_prefs_validate(Pieform $form, $values) {
         if (!safe_require_plugin($i->plugintype, $i->name)) {
             continue;
         }
-        call_static_method(generate_class_name($i->plugintype, $i->name), 'accountprefs_validate', $form, $values);
+        $classname = generate_class_name($i->plugintype, $i->name);
+        $classname::accountprefs_validate($form, $values);
     }
 }
 
@@ -530,7 +532,8 @@ function plugin_account_prefs_submit(Pieform $form, $values) {
         if (!safe_require_plugin($i->plugintype, $i->name)) {
             continue;
         }
-        $reload = call_static_method(generate_class_name($i->plugintype, $i->name), 'accountprefs_submit', $form, $values) || $reload;
+        $classname = generate_class_name($i->plugintype, $i->name);
+        $reload = $classname::accountprefs_submit($form, $values) || $reload;
     }
     return $reload;
 }
@@ -2694,9 +2697,9 @@ function create_user($user, $profile=array(), $institution=null, $remoteauth=nul
             }
             $user->quota = $quota;
         }
-        if (isset($profile->expiry)) {
+        if (isset($profile['expiry'])) {
             //set the expiry date from the csv upload
-            $user->expiry = $profile->expiry;
+            $user->expiry = $profile['expiry'];
         }
         else if (get_config('defaultaccountlifetime')) {
             // we need to set the user expiry to the site default one

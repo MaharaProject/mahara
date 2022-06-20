@@ -1226,14 +1226,15 @@ function set_config_plugin($plugintype, $pluginname, $key, $value) {
 function get_config_plugin_instance($plugintype, $instanceid, $key) {
     global $CFG;
 
+    $value = '';
+
     // Must be unlikely to exist as a config option for any plugin
     $instance = '_i_n_s_t' . $instanceid;
 
     // Suppress NOTICE with @ in case $key is not yet cached
     $configname = "plugin_{$plugintype}_{$instance}_{$key}";
-    @$value = $CFG->{$configname};
-    if (isset($value)) {
-        return $value;
+    if (isset($CFG->{$configname})) {
+        return $CFG->{$configname};
     }
 
     $instancefield = $plugintype == 'interaction_forum' ? 'forum' : 'instance';
@@ -2667,6 +2668,7 @@ abstract class Plugin implements IPlugin {
 
                 case WEBSERVICE_TYPE_XMLRPC:
                     require_once(get_config('docroot') . "webservice/xmlrpc/lib.php");
+                    // @phpstan-ignore-next-line
                     $client = new webservice_xmlrpc_client($c->url, $auth);
                     if ($c->authtype == WEBSERVICE_AUTH_CERT) {
                         $client->setCertificate($c->certificate);
@@ -2991,7 +2993,7 @@ function format_timelapse($timestamp1, $timestamp2 = NULL) {
  */
 function get_random_key($length=16) {
     if ($length < 8) {
-        throw new IllegalArgumentException(get_string('randomkeyminlength', 'error'));
+        throw new InvalidArgumentException(get_string('randomkeyminlength', 'error'));
     }
     // Length of bin2hex string is twice as long as passed in length
     // so we halve it to get back the expected characters
@@ -4021,19 +4023,23 @@ function get_max_upload_size($is_user) {
 }
 
 /**
- * Converts bytes into display form
+ * Converts bytes into display form.
  *
- * @param string $size  ?
+ * Due to nested processing there is the possibility that $size may already
+ * have been processed.  If so, it will be returned as is.
+ *
+ * @param string $size The size to be converted
+ *
  * @return string
- * @staticvar string $gb Localized string for size in gigabytes
- * @staticvar string $mb Localized string for size in megabytes
- * @staticvar string $kb Localized string for size in kilobytes
- * @staticvar string $b Localized string for size in bytes
- * @todo Finish documenting this function. Verify return type.
  */
 function display_size($size) {
 
     static $gb, $mb, $kb, $b;
+
+    // If $size is not a number, return it as is
+    if (!is_numeric($size)) {
+        return $size;
+    }
 
     if (empty($gb)) {
         $gb = get_string('sizegb');
@@ -4820,8 +4826,16 @@ function cron_site_data_daily() {
 
     // Process log file containing view visits
     $viewlog = get_config('dataroot') . 'log/views.log';
-    if (@rename($viewlog, $viewlog . '.temp') and $fh = @fopen($viewlog . '.temp', 'r')) {
-
+    $viewlogtemp = $viewlog . '.temp';
+    $rename = false;
+    $fh = false;
+    if (file_exists($viewlog)) {
+        $rename = rename($viewlog, $viewlog . '.temp');
+        if (file_exists($viewlogtemp)) {
+            $fh = fopen($viewlogtemp, 'r');
+        }
+    }
+    if ($fh) {
         // Read the new stuff out of the file
         $latest = get_config('viewloglatest');
 

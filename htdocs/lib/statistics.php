@@ -743,11 +743,11 @@ function institution_verifier_load_graph_render($type = null, $extradata=null) {
                             get_string('nine', 'statistics'),
                             get_string('tenormore', 'statistics'));
     $data['data'] = $dataarray;
-    if (!empty($dataarray)) {
-        require_once(get_config('libroot') . 'graph.php');
-        $graphdata = get_circular_graph_json($data, null, true);
-        $data['jsondata'] = json_encode($graphdata[0]);
-    }
+
+    require_once(get_config('libroot') . 'graph.php');
+    $graphdata = get_circular_graph_json($data, null, true);
+    $data['jsondata'] = json_encode($graphdata[0]);
+
     return $data;
 }
 
@@ -1516,94 +1516,16 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
         }
     }
 
-    // $aggmap = array();
-    // if (get_config('searchplugin') == 'elasticsearch') {
-    //     safe_require('search', 'elasticsearch');
-    //     $options = array(
-    //         'query' => array(
-    //             'terms' => array(
-    //                 'usr' => $usrids
-    //             ),
-    //         ),
-    //         'range' => array(
-    //             'range' => array(
-    //                 'ctime' => array(
-    //                     'gte' => $result['settings']['start'] . ' 00:00:00',
-    //                     'lte' => $result['settings']['end'] . ' 23:59:59'
-    //                 )
-    //             )
-    //         ),
-    //         'aggs' => array(
-    //             'UsrId' => array(
-    //                 'terms' => array(
-    //                     'field' => 'usr',
-    //                     'order' => $sortdirection,
-    //                     'size' => $count,
-    //                  ),
-    //                  'aggs' => array(
-    //                     'EventType' => array(
-    //                         'terms' => array(
-    //                             'field' => 'event',
-    //                             'min_doc_count' => 0,
-    //                         ),
-    //                     ),
-    //                     'EventTypeCount' => array(
-    //                         'sum' => array(
-    //                             'script' => array(
-    //                                 'inline' => $sortorder,
-    //                             ),
-    //                         ),
-    //                     ),
-    //                     'LastLogin' => array(
-    //                         'max' => array(
-    //                             'script' => array(
-    //                                 'inline' => "doc.ctime.value",
-    //                             ),
-    //                         ),
-    //                     ),
-    //                     'LastActivity' => array(
-    //                         'max' => array(
-    //                             'script' => array(
-    //                                 'inline' => "doc.id.value",
-    //                             ),
-    //                         ),
-    //                     ),
-    //                 ),
-    //             ),
-    //         ),
-    //     );
-    //     if (empty($sortdirection)) { unset($options['aggs']['UsrId']['terms']['order']); }
-    //     $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
-    //     if ($aggregates['totalresults'] > 0) {
-    //         foreach ($aggregates['aggregations']['UsrId']['buckets'] as $k => $usr) {
-    //             $user = new User();
-    //             $user->find_by_id($usr['key']);
-    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['firstname'] = $user->get('firstname');
-    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['lastname'] = $user->get('lastname');
-    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['username'] = $user->get('username');
-    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['preferredname'] = $user->get('preferredname');
-    //         }
-    //         if (!empty($sortname)) {
-    //             usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
-    //                 return strnatcasecmp($a[$sortname], $b[$sortname]);
-    //             });
-    //             if ($sortdesc == 'desc') {
-    //                 $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
-    //             }
-    //         }
-    //         ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('UsrId', 'EventType'));
-    //     }
-    // }
-
     $data = array();
     // Get timezone we are in.
     $timezone = new DateTimeZone(date_default_timezone_get());
     // Work out offset in seconds.
     $offsettime = $timezone->getOffset(new DateTime("now"));
 
+    $have_results = false;
+
     // Allow for the differences between ES6 and ES7.
     if (array_key_exists('totalresults', $aggregates)) {
-        $have_results = false;
         if (array_key_exists('value', $aggregates['totalresults'])) {
             $have_results = ($aggregates['totalresults']['value'] > 0);
         }
@@ -3342,6 +3264,7 @@ function group_stats_table($limit, $offset, $extra) {
     $aggmap = [];
     $aggregates = [];
     $groupids = [];
+    $sortdirection = [];
 
     $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
@@ -3421,15 +3344,6 @@ function group_stats_table($limit, $offset, $extra) {
     }
 
     $elasticselect = $elasticfrom = '';
-    if (!empty($sortdirection) && !empty($groupids)) {
-        $elasticselect = ", CASE WHEN ggc.elastic IS NULL THEN 0 ELSE ggc.elastic END AS elastic";
-        $elasticfrom = " LEFT JOIN (
-                            SELECT g.id, 1 AS elastic
-                            FROM {group} g
-                            WHERE g.id IN (" . implode(',', $groupids) . ")
-                        ) ggc on g.id = ggc.id";
-        $ordersql = " elastic  " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", " . $ordersql;
-    }
 
     $sql = "SELECT
             g.id, g.name, g.urlid, g.ctime, mc.members, vc.views, fc.forums,
@@ -3474,23 +3388,6 @@ function group_stats_table($limit, $offset, $extra) {
         $groupdata = get_records_sql_array($sql, $rangewhere, $offset, $limit);
     }
 
-    if (!empty($sortdirection) && !empty($groupids)) {
-        $groupidkeys = array_flip($groupids);
-        usort($groupdata, function ($a, $b) use ($groupidkeys, $extra) {
-            if (!isset($groupidkeys[$a->id]) && !isset($groupidkeys[$b->id])) {
-                return 0;
-            }
-            else if (!isset($groupidkeys[$a->id]) || !isset($groupidkeys[$b->id])) {
-                return empty($extra['sortdesc']) ? -1 : 1;
-            }
-            $posA = $groupidkeys[$a->id];
-            $posB = $groupidkeys[$b->id];
-            if ($posA == $posB) {
-                return 0;
-            }
-            return ($posA < $posB) ? -1 : 1;
-        });
-    }
     foreach ($groupdata as $key => $group) {
         if (!empty($aggmap)) {
             $group->groupcomments = !empty($aggmap[$group->id . '|saveartefact|comment|group']) ? $aggmap[$group->id . '|saveartefact|comment|group'] : 0;
@@ -4928,7 +4825,7 @@ function smartevidence_stats_headers($limit, $offset, $extra, $institution, $url
     );
 
     // Add the columns for each status.
-    list($count, $data) = smartevidence_stats_query($limit, $offset, $extra, $institution, $urllink);
+    list($count, $data) = smartevidence_stats_query($limit, $offset, $extra, $institution);
     if ($count < 1) {
         return $headers;
     }
@@ -5597,7 +5494,7 @@ function graph_site_data_weekly($type = null) {
 
     $dataarray = array();
     foreach ($weekly as &$r) {
-        $dataarray[$r->type][strftime("%d %b", $r->ts)] = $r->value;
+        $dataarray[$r->type][date("d M", $r->ts)] = $r->value;
     }
     foreach ($dataarray as &$t) {
         // The graph will look nasty until we have 2 points to plot.
@@ -5640,7 +5537,7 @@ function graph_institution_data_weekly($type = null, $institutiondata=null) {
 
     $dataarray = array();
     foreach ($weekly as &$r) {
-        $dataarray[$r->type][strftime("%d %b", $r->ts)] = $r->value;
+        $dataarray[$r->type][date("d M", $r->ts)] = $r->value;
     }
     foreach ($dataarray as &$t) {
         // The graph will look nasty until we have 2 points to plot.

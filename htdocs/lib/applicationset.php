@@ -12,6 +12,11 @@
 defined('INTERNAL') || die();
 require_once(get_config('libroot') . 'application.php');
 
+/**
+ * This class is used to represent an iterator for a set of applications.
+ *
+ * @todo Code coverage. No phpunit or behat tests cover this.
+ */
 class ApplicationSet implements Iterator {
 
     protected $resultset                  = array();
@@ -22,11 +27,11 @@ class ApplicationSet implements Iterator {
 
     /////////////////////////////////////////////////////////
     // Iterator stuff
-    public function rewind() {
+    public function rewind(): void {
         reset($this->resultset);
     }
 
-    public function current() {
+    public function current(): mixed {
         if (false === current($this->resultset)) {
             return false;
         }
@@ -40,16 +45,15 @@ class ApplicationSet implements Iterator {
         return current($this->resultset);
     }
 
-    public function key() {
+    public function key(): mixed {
         return key($this->resultset);
     }
 
-    public function next() {
+    public function next(): void {
         next($this->resultset);
-        return $this->current();
     }
 
-    public function valid() {
+    public function valid(): bool {
         return $this->current() !== false;
     }
 

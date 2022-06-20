@@ -581,7 +581,7 @@ EOF;
                 $pluginclass = generate_class_name($plugintype, $pluginname);
                 $name = substr($jsfilename, 0, strpos($jsfilename, '.js'));
                 if (is_callable(array($pluginclass, 'jsstrings'))) {
-                    $tempstrings = call_static_method($pluginclass, 'jsstrings', $name);
+                    $tempstrings = $pluginclass::jsstrings($name);
                     foreach ($tempstrings as $section => $tags) {
                         foreach ($tags as $tag) {
                             $strings[$tag] = get_raw_string($tag, $section);
@@ -589,7 +589,7 @@ EOF;
                     }
                 }
                 if (is_callable(array($pluginclass, 'jshelp'))) {
-                    $tempstrings = call_static_method($pluginclass, 'jshelp', $name);
+                    $tempstrings = $pluginclass::jshelp($name);
                     foreach ($tempstrings as $section => $tags) {
                         foreach ($tags as $tag) {
                             $strings[$tag . '.help'] = get_help_icon($plugintype, $pluginname, null, null,
@@ -598,7 +598,7 @@ EOF;
                     }
                 }
                 if (is_callable(array($pluginclass, 'themepaths'))) {
-                    $tmpthemepaths = call_static_method($pluginclass, 'themepaths', $name);
+                    $tmpthemepaths = $pluginclass::themepaths($name);
                     foreach ($tmpthemepaths as $themepath) {
                         $theme_list[$themepath] = $THEME->get_url($themepath);
                     }
@@ -786,7 +786,8 @@ EOF;
     $searchplugin = get_config('searchplugin');
     if ($searchplugin) {
         safe_require('search', $searchplugin);
-        $publicsearchallowed = (call_static_method(generate_class_name('search', $searchplugin), 'publicform_allowed') && get_config('publicsearchallowed'));
+        $classname = generate_class_name('search', $searchplugin);
+        $publicsearchallowed = ($classname::publicform_allowed() && get_config('publicsearchallowed'));
     }
     $smarty->assign('publicsearchallowed', $publicsearchallowed);
     if ($USER->is_logged_in()) {
@@ -1081,6 +1082,8 @@ class Theme {
 
     /**
      * Given a theme name, retrieves the $theme variable in the themeconfig.php file
+     *
+     * @return object|false The theme object, or false if the theme doesn't exist.
      */
     public static function get_theme_config($themename) {
         $theme = null;
@@ -2690,7 +2693,8 @@ function admin_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'admin_menu_items');
+                    $classname = generate_class_name($plugintype,$plugin->name);
+                    $plugin_menu = $classname::admin_menu_items();
                     $menu = array_merge($menu, $plugin_menu);
                 }
             }
@@ -2884,7 +2888,8 @@ function institutional_admin_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'institution_menu_items');
+                    $classname = generate_class_name($plugintype,$plugin->name);
+                    $plugin_menu = $classname::institution_menu_items();
                     $ret = array_merge($ret, $plugin_menu);
                 }
             }
@@ -2925,7 +2930,8 @@ function staff_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'institution_staff_menu_items');
+                    $classname = generate_class_name($plugintype,$plugin->name);
+                    $plugin_menu = $classname::institution_staff_menu_items();
                     $menu = array_merge($menu, $plugin_menu);
                 }
             }
@@ -3130,7 +3136,8 @@ function main_nav($type = null) {
             if ($plugins = plugins_installed($plugintype)) {
                 foreach ($plugins as &$plugin) {
                     if (safe_require_plugin($plugintype, $plugin->name)) {
-                        $plugin_menu = call_static_method(generate_class_name($plugintype,$plugin->name), 'menu_items');
+                        $classname = generate_class_name($plugintype,$plugin->name);
+                        $plugin_menu = $classname::menu_items();
                         $menu = array_merge($menu, $plugin_menu);
                     }
                 }
@@ -3180,8 +3187,8 @@ function message_nav() {
     );
 
     if (safe_require_plugin('module', 'multirecipientnotification')) {
-        $plugin_nav_menu = call_static_method(generate_class_name('module', 'multirecipientnotification'),
-                                              'messages_menu_items');
+        $classname = generate_class_name('module', 'multirecipientnotification');
+        $plugin_nav_menu = $classname::messages_menu_items();
         $menu = array_merge($menu, $plugin_nav_menu);
     }
     return $menu;
@@ -3249,8 +3256,8 @@ function right_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $plugin_nav_menu = call_static_method(generate_class_name($plugintype, $plugin->name),
-                        'right_nav_menu_items');
+                    $classname = generate_class_name($plugintype, $plugin->name);
+                    $plugin_nav_menu = $classname::right_nav_menu_items();
                     $menu = array_merge($menu, $plugin_nav_menu);
                 }
             }
@@ -3368,10 +3375,8 @@ function apps_get_menu_tabs() {
         foreach (plugins_installed($plugin_type_installed) as $plugin) {
             safe_require($plugin_type_installed, $plugin->name);
             if (method_exists(generate_class_name($plugin_type_installed, $plugin->name), 'app_tabs')) {
-                $plugin_menu = call_static_method(
-                    generate_class_name($plugin_type_installed, $plugin->name),
-                    'app_tabs'
-                );
+                $classname = generate_class_name($plugin_type_installed, $plugin->name);
+                $plugin_menu = $classname::app_tabs();
                 $menu = array_merge($menu, $plugin_menu);
             }
         }
@@ -3630,10 +3635,8 @@ function hsc ($text) {
 function header_search_form() {
     $plugin = get_config('searchplugin');
     safe_require('search', $plugin);
-    return call_static_method(
-        generate_class_name('search', $plugin),
-        'header_search_form'
-    );
+    $classname = generate_class_name('search', $plugin);
+    return $classname::header_search_form();
 }
 
 
@@ -4904,7 +4907,7 @@ function sanitize_url($url) {
 function clean_email_headers($headertext) {
 
     $decoloned = str_replace(':', '', $headertext);
-    $filtered = filter_var($decoloned, FILTER_SANITIZE_STRING, array(FILTER_FLAG_STRIP_LOW, FILTER_FLAG_STRIP_HIGH));
+    $filtered = htmlspecialchars($decoloned);
     return substr($filtered, 0, 100);
 
 }

@@ -168,6 +168,15 @@ function registration_store_data() {
         'time' => db_format_timestamp(time()),
     ), 'id', true);
     foreach ($data as $key => $value) {
+        // The new registration_data() has the values as an array. For this process
+        // we only want the 'info' on the $value.
+        if (is_array($value) && array_key_exists('info', $value)) {
+            $value = $value['info'];
+        }
+        // The value has to be a string.
+        if ($value == null) {
+            $value = '';
+        }
         insert_record('site_registration_data', (object)array(
             'registration_id' => $registration_id,
             'field'           => $key,
