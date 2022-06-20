@@ -3,7 +3,7 @@
     @include border-top-radius(0);
     border-bottom: 0;
     background-color: $theme-primary-color;
-    color: $white;
+    color: $white !important;
 
     .help a .icon {
         color: $white;

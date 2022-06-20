@@ -28,7 +28,7 @@ h6, .h6 { @include font-size($h6-font-size); }
 h1 {
     @extend .page-header;
     padding-bottom: $line-height-computed * 0.5;
-    margin-bottom: $spacing-xl;
+    margin-bottom: $spacing-xl !important;
     border-bottom: $h1heading-border-width solid $h1heading-border-color;
     @include media-breakpoint-down(lg) {
       border-bottom: 0;

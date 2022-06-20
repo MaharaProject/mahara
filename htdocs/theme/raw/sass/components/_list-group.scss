@@ -104,7 +104,7 @@
     margin-top: 0;
     margin-bottom: 0;
     font-size: $font-size-lg; // 18px
-    font-weight: $font-weight-normal;
+    font-weight: $font-weight-normal !important;
 }
 
 .list-group-item.draft,

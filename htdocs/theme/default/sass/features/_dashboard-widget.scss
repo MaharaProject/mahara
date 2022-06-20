@@ -58,12 +58,12 @@
             }
 
             h2 {
-                text-align: center;
-                margin: 0;
-                color: $dashboard-widget-title-color;
+                text-align: center !important;
+                margin: 0 !important;
+                color: $dashboard-widget-title-color !important;
 
                 @include media-breakpoint-down(lg) {
-                    font-size: 1.125rem; // 18px;
+                    font-size: 1.125rem !important; // 18px;
                 }
             }
 
