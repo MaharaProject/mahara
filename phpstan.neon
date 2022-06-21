@@ -67,6 +67,7 @@ parameters:
         - htdocs/lib/xmldb/classes/XMLDBStructure.class.php
         - htdocs/lib/xmldb/classes/XMLDBTable.class.php
         - htdocs/testing/frameworks/behat/lib.php
+        - htdocs/webservice/admin/oauthv1sregister.php
         - htdocs/webservice/lib.php
         - htdocs/webservice/libs/oauth-php/OAuthDiscovery.php
         - htdocs/webservice/libs/oauth-php/OAuthException2.php

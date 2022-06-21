@@ -15,7 +15,7 @@ defined('INTERNAL') || die();
 
 require_once('lib/lti-1-3-php-library/lti/lti.php');
 require_once('database.php');
-require_once(dirname(dirname(dirname(__FILE__))) . '/lib/institution.php');
+require_once(get_config('libroot') . 'institution.php');
 
 /**
  * Supporting the LTI Advantage webservice.
