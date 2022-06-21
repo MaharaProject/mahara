@@ -356,10 +356,6 @@ abstract class Auth {
         return true;
     }
 
-    public function get_temp_password() {
-        return null;
-    }
-
     /**
      * Return the temporary password
      *
