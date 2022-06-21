@@ -42,6 +42,8 @@ if ($tagsonly === true) {
     $options['tagsonly'] = true;
 }
 
+$query = '';
+
 try {
     $query = param_variable('query');
 }

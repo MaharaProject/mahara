@@ -41,7 +41,7 @@ parameters:
         - htdocs/lib/dwoo/dwoo/Dwoo/Core.php
         - htdocs/lib/dwoo/mahara/Dwoo_Mahara.php
         # Needed for Elasticsearch 7. Delete if it causes yours to crash
-        # - htdocs/lib/elasticsearch/elasticsearch/elasticsearch/src/Elasticsearch/ClientBuilder.php
+        - htdocs/lib/elasticsearch/elasticsearch/elasticsearch/src/Elasticsearch/ClientBuilder.php
         - htdocs/lib/errors.php
         - htdocs/lib/group.php
         - htdocs/lib/htmlpurifier/HTMLPurifier.php

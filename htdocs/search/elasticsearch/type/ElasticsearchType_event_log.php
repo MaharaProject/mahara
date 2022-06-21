@@ -293,8 +293,6 @@ class ElasticsearchType_event_log extends ElasticsearchType {
      * @param bool     $all      To also return a total count key called 'all'
      * @param array    $buckets  Names of buckets in their nested order
      * @param string   $key      The name of the key to display in $aggmap
-     *
-     * @return array   $aggmap
      */
     public static function process_aggregations(&$aggmap, $data, $all = false, $buckets=array(), $key='') {
 
@@ -310,9 +308,6 @@ class ElasticsearchType_event_log extends ElasticsearchType {
                     self::process_aggregations($aggmap, $value, $all, $buckets, $key . $value['key'] . '|');
                 }
             }
-        }
-        if ($all) {
-            $tmp['all'] = $countall;
         }
     }
 }

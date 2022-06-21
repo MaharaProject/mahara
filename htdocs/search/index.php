@@ -23,6 +23,7 @@ require_once(get_config('docroot') . 'artefact/lib.php');
 require_once(get_config('docroot') . 'artefact/file/lib.php');
 require_once(get_config('libroot') . 'group.php');
 
+$search_plugin = get_config('searchplugin');
 define('TITLE', get_string('pagetitle', 'search.' . $search_plugin));
 
 safe_require('search', $search_plugin);

@@ -2806,7 +2806,15 @@ class PluginSearchElasticsearch7 extends PluginSearch {
         }
     }
 
-    public static function timer($timestamp = 0, $label) {
+    /**
+     * Rudimentary timer.
+     *
+     * @param int $timestamp The timestamp to work from.
+     * @param string $label The label to display.
+     *
+     * @return int The new timestamp.
+     */
+    public static function timer($timestamp, $label) {
         $now = time();
         if ($timestamp) {
             $time_passed = $now - $timestamp;

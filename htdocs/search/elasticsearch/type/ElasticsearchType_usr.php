@@ -183,7 +183,12 @@ class ElasticsearchType_usr extends ElasticsearchType {
             }
         }
         else {
-            $record->access ['general'] = (! empty ( $profileviewaccess )) ? $profileviewaccess [0]->accesstype : 'none';
+            if (!empty($profileviewaccess[0]->accesstype)) {
+                $record->access ['general'] = $profileviewaccess[0]->accesstype;
+            }
+            else {
+                $record->access ['general'] = 'none';
+            }
         }
         // always allow user to search themselves for vanity reasons
         // and allow all site admins to search them also
