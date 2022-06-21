@@ -1,5 +1,6 @@
 <?php
 /**
+ * Leap import/exports
  *
  * @package    mahara
  * @subpackage export-leap
@@ -12,9 +13,12 @@
 defined('INTERNAL') || die();
 
 /**
-* LEAP export plugin.  See http://wiki.cetis.ac.uk/2009-03/Leap2A_specification and
-* https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export
-*/
+ * LEAP export plugin
+ *
+ * See pages:
+ * - http://wiki.cetis.ac.uk/2009-03/Leap2A_specification
+ * -  https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Export
+ */
 class PluginExportLeap extends PluginExport {
 
     /**
@@ -66,6 +70,26 @@ class PluginExportLeap extends PluginExport {
     protected $extrapersondata = array();
 
     /**
+     * Export directory
+     */
+    protected $exportdir = '';
+
+    /**
+     * Collections to export
+     */
+    protected $collections = array();
+
+    /**
+     * Export links
+     */
+    protected $links;
+
+    /**
+     * Error messages
+     */
+    protected $messages;
+
+    /**
     * constructor.  overrides the parent class
     * to set up smarty and the attachment directory
     */
@@ -102,6 +126,30 @@ class PluginExportLeap extends PluginExport {
 
     public static function get_description() {
         return get_string('description1', 'export.leap');
+    }
+
+    protected function collection_menu($collectionid) {}
+
+    /**
+     * Is the plugin activated or not?
+     *
+     * @return boolean
+     */
+    public static function is_active() {
+        $active = false;
+        if (get_field('export_installed', 'active', 'name', 'leap')) {
+            $active = true;
+        }
+        return $active;
+    }
+
+    /**
+     * Fetch plugin's display name rather than plugin name that is based on dir name.
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return 'Leap2A';
     }
 
     /**
@@ -295,6 +343,7 @@ class PluginExportLeap extends PluginExport {
      * Export the views
      */
     private function export_views() {
+        require_once('view.php');
         $progressstart = 10;
         $progressend   = 50;
         $views = $this->get('views');
@@ -359,7 +408,7 @@ class PluginExportLeap extends PluginExport {
             }
 
             $this->smarty->assign('type',        $config['type']);
-            $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : FORMAT_NAME_DISPLAYNAME;
+            $ownerformat = ($config['ownerformat']) ? $config['ownerformat'] : View::FORMAT_NAME_DISPLAYNAME;
             $this->smarty->assign('ownerformat', $ownerformat);
             $this->smarty->assign('leaptype',    'selection');
 
@@ -471,7 +520,9 @@ class PluginExportLeap extends PluginExport {
             if (is_callable($classname . '::setup_links')) {
                 call_user_func_array(
                     array($classname, 'setup_links'),
-                    array(&$this->links, array_keys($this->views), array_keys($this->artefacts))
+                    array(
+                            &$this->links,
+                            array_keys($this->views), array_keys($this->artefacts), $this->includefeedback, $this->includeprivatefeedback)
                 );
             }
         }
@@ -641,6 +692,16 @@ class PluginExportLeap extends PluginExport {
                     continue;
                 }
                 try {
+                    if (in_array($artefact->get('artefacttype'), array('annotationfeedback', 'comment', 'peerassessment'))) {
+                        if ($this->includefeedback) {
+                            if (!$this->includeprivatefeedback && $artefact->get('private')) {
+                                continue;
+                            }
+                        }
+                        else {
+                            continue;
+                        }
+                    }
                     $element->add_attachments();
                     $element->assign_smarty_vars();
                     $this->xml .= $element->get_export_xml();
@@ -831,7 +892,7 @@ class LeapExportElement {
             // LeapExportElement and are using it to represent something more
             // than just one artefact. In this case, you must override this
             // method.
-            throw new ExportException($this, "LeapExportElement::assign_smarty_vars was called with null artefact. "
+            throw new ExportException("LeapExportElement::assign_smarty_vars was called with null artefact. "
                 . "If you are using LeapExportElement as a dummy class for exporting more than one artefact, "
                 . "you must override assign_smarty_vars yourself.");
         }
@@ -1265,7 +1326,9 @@ class LeapExportOutputFilter {
             return '<' . $matches[1] . 'rel="leap2:has_part" href="portfolio:artefact' . hsc($artefactid) . '"' . $matches[5] . ($matches[1] == 'img' ? '/' : '') . '>';
         }
 
-        log_debug("Not providing an export-relative link for $artefactid");
+        if (get_field('artefact', 'artefacttype', 'id', $artefactid)) {
+            log_debug("Not providing an export-relative link for $artefactid");
+        }
         return $matches[0];
     }
 

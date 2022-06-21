@@ -202,6 +202,7 @@ function fetch_user_image($username) {
     }
 
     $ic = $user->profileicon;
+    $fi = false;
     if (!empty($ic)) {
         $filename = get_config('dataroot') . 'artefact/file/profileicons/' . ($user->profileicon % 256) . '/'.$user->profileicon;
         $return = array();
@@ -819,6 +820,8 @@ function submit_view_for_assessment($username, $id, $iscollection = false, $apil
     require_once('view.php');
     $remotehost = $authinstance->config['wwwroot'];
     $userid = $user->get('id');
+    $token = null;
+    $url = '';
 
     db_begin();
     if ($iscollection) {
@@ -1090,7 +1093,7 @@ function get_public_key($uri, $application=null) {
  *
  * @param  string   $message              The error message
  * @param  int      $code                 Unique identifying integer
- * @return string                         An XMLRPC error doc
+ * @return void
  */
 function xmlrpc_error($message, $code) {
     echo <<<EOF

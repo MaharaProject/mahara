@@ -30,17 +30,22 @@ Background:
     | title | accesstype |
     | Collection admin_01 | public |
 
+  And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Portfolios shared with me | newviews | Dashboard page: admin  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+    | Portfolios shared with me | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
 Scenario: Installing framework module and activating for an institution
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Plugin administration" in "Extensions" from administration menu
  Then I should see "smartevidence"
- And I should see "Hide" in the "smartevidence" property
+ And I should see "Hide" in the "Smartevidence" "Smartevidence" property
  # Also make sure the annotation blocktype plugin is active
- And I press "Show" in the "annotation" property
+ And I press "Show" in the "Annotation" "Smartevidence" property
 
  # Make sure we have a matrix config form
  And I choose "SmartEvidence" in "Extensions" from administration menu
- And I follow "Import" in the "Arrow-bar nav" property
+ And I follow "Import" in the "Arrow-bar nav" "Nav" property
  And I attach the file "example.matrix" to "Matrix file"
  And I press "Upload matrix"
 
@@ -66,9 +71,9 @@ Scenario: Installing framework module and activating for an institution
  And I click the card "Collection admin_01"
  And I should see "You are on page 1/9"
  And I should see "by Admin Account (admin)"
- And I press "Next" in the "matrix table" property
+ And I press "Next" in the "matrix table" "Smartevidence" property
  Then I should see "Page admin_06"
- And I press "Prev" in the "matrix table" property
+ And I press "Prev" in the "matrix table" "Smartevidence" property
  Then I should not see "Page admin_06"
 
  # Click on a matrix point to add an annotation
@@ -79,8 +84,8 @@ Scenario: Installing framework module and activating for an institution
  Then I should see "Annotation"
 
  # Add another compentency annotation block
- And I follow "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ And I press "Edit"
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Annotation"
  And I fill in "My three cents" in editor "Annotation"

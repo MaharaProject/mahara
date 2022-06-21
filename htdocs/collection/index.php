@@ -1,5 +1,6 @@
 <?php
 /**
+ * Redirect the user to the actual area that processes collections.
  *
  * @package    mahara
  * @subpackage core
@@ -12,8 +13,8 @@
 define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 
-// We relocated this file to view/index.php now that we have merged the pages and collections list.
-// Redirect to the new URL.
+// We relocated this file to view/index.php now that we have merged the pages
+// and collections list. Redirect to the new URL.
 $groupid = param_integer('group', 0);
 $institutionname = param_alphanum('institution', false);
 if ($groupid) {

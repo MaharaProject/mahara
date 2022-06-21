@@ -2,18 +2,18 @@ Chart.js in Mahara
 ==================
 
 Website: http://www.chartjs.org
-Version: 2.9.3
+Version: 3.7.1
 
+Old instructions:
 To update:
 - Go to https://github.com/chartjs/Chart.js and choose the
   latest (non master) branch
 - Download zip file to some local folder and unzip
-- Go to the Chart.js directory and run the following (note you made
-  need to use sudo)
+- Go to the Chart.js directory and run the following
 
-npm install
-npm install -g gulp-cli
-gulp build
+sudo npm install
+sudo npm install -g gulp-cli
+sudo gulp build
 
 This builds the 'dist' folder
 
@@ -21,6 +21,14 @@ copy the LICENSE.md, MAINTAINING.md, and README.md files to htdocs/js/chartjs/ f
 copy the dist/Chart.min.js to htdocs/js/chartjs/dist/ folder
 copy the dist/Chart.css to the bottom of htdocs/theme/raw/sass/lib/_graph.scss
 
+New instructions:
+Chart.js built files are available on CDNJS
+- Go to https://cdnjs.com/libraries/Chart.js
+- Go to the URL for chart.min.js in your browser to view the minified code
+- Replace the Mahara Chart.min.js code with the new chart.min.js code
+- Test by generating a report in Mahara and viewing reports overview page
+
+#
 Changes:
 
-* None
+* Chart.js no longer creates .css files. Styles are applied via JS.

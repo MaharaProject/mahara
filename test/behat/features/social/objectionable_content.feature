@@ -2,12 +2,12 @@
 Feature: objectionable content functionality
 
 Background:
-Given the following "users" exist:
+  Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuhipa1! | UserA@example.org | Angela | User | mahara | internal | member |
      | UserB | Kupuhipa1! | UserB@example.org | Bob    | User | mahara | internal | member |
 
-Given the following "pages" exist:
+  Given the following "pages" exist:
      | title | description| ownertype | ownername |
      | Page UserA_01 | Page 01 description Aliquam eu nunc. In dui magna, posuere eget, vestibulum et, tempor auctor, justo. Nullam vel sem. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Aliquam erat volutpat. | user | UserA |
      | Page UserA_02 | Page 02 | user | UserA |
@@ -17,10 +17,16 @@ Given the following "pages" exist:
      | Page UserA_01 | public |
      | Page UserA_02 | public |
 
-    Given I log in as "admin" with password "Kupuh1pa!"
+  And the following "blocks" exist:
+     | title                     | type     | page                   | retractable | updateonly | data                                                |
+     | Portfolios shared with me | newviews | Dashboard page: admin  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Portfolios shared with me | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
+  Given I log in as "admin" with password "Kupuh1pa!"
     # Navigating to notification settings
     And I choose "Site options" in "Configure site" from administration menu
-    And I follow "Notification settings"
+    And I press "Notification settings"
     And I select "Inbox" from "Objectionable content"
     And I select "Inbox" from "Objectionable content in forum"
     And I press "Update site options"

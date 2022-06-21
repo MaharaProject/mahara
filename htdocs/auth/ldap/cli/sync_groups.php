@@ -210,8 +210,8 @@ try {
 // we catch missing parameter and unknown institution
 catch (Exception $e) {
     $USER->logout(); // important
-    cli::cli_exit($e->getMessage(), true);
+    $cli->cli_exit($e->getMessage(), true);
 }
 
 $USER->logout(); // important
-cli::cli_exit('---------- ended at ' . date('r', time()) . ' ----------', true);
+$cli->cli_exit('---------- ended at ' . date('r', time()) . ' ----------', true);

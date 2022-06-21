@@ -1,5 +1,6 @@
 <?php
 /**
+ * JSON helper file for turning profile icons into file artefacts
  *
  * @package    mahara
  * @subpackage core

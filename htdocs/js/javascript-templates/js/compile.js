@@ -10,6 +10,9 @@
  * https://opensource.org/licenses/MIT
  */
 
+/* eslint-disable strict */
+/* eslint-disable no-console */
+
 ;(function () {
   'use strict'
   var path = require('path')
@@ -18,7 +21,8 @@
   // Retrieve the content of the minimal runtime:
   var runtime = fs.readFileSync(path.join(__dirname, 'runtime.js'), 'utf8')
   // A regular expression to parse templates from script tags in a HTML page:
-  var regexp = /<script( id="([\w-]+)")? type="text\/x-tmpl"( id="([\w-]+)")?>([\s\S]+?)<\/script>/gi
+  var regexp =
+    /<script( id="([\w-]+)")? type="text\/x-tmpl"( id="([\w-]+)")?>([\s\S]+?)<\/script>/gi
   // A regular expression to match the helper function names:
   var helperRegexp = new RegExp(
     tmpl.helper.match(/\w+(?=\s*=\s*function\s*\()/g).join('\\s*\\(|') +
@@ -60,6 +64,7 @@
         return
       }
       content = fs.readFileSync(file, 'utf8')
+      // eslint-disable-next-line no-constant-condition
       while (true) {
         // Find templates in script tags:
         result = regexp.exec(content)

@@ -10,23 +10,18 @@
         .blockinstance {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: scale-color($theme-primary-color, $lightness: 10%);
-                color: $white;
             }
             &:nth-child(5n+2) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color;
-                color: $white;
             }
             &:nth-child(5n+3) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-two;
-                color: $white;
             }
             &:nth-child(5n+4) > .card-header, .card-header-nested {
                 background-color: $theme-secondary-color;
-                color: $white;
             }
             &:nth-child(5n+5) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-three;
-                color: $white;
             }
         }
     }
@@ -35,23 +30,18 @@
         .blockinstance {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-two;
-                color: $white;
             }
             &:nth-child(5n+2) > .card-header, .card-header-nested {
                 background-color: $theme-secondary-color;
-                color: $white;
             }
             &:nth-child(5n+3) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-three;
-                color: $white;
             }
             &:nth-child(5n+4) > .card-header, .card-header-nested {
                 background-color: scale-color($theme-primary-color, $lightness: 10%);
-                color: $white;
             }
             &:nth-child(5n+5) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color;
-                color: $white;
             }
         }
     }
@@ -60,23 +50,18 @@
         .blockinstance {
             &:nth-child(5n+1) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-three;
-                color: $white;
             }
             &:nth-child(5n+2) > .card-header, .card-header-nested {
                 background-color: scale-color($theme-primary-color, $lightness: 10%);
-                color: $white;
             }
             &:nth-child(5n+3) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color;
-                color: $white;
             }
             &:nth-child(5n+4) > .card-header, .card-header-nested {
                 background-color: $theme-accent-color-two;
-                color: $white;
             }
             &:nth-child(5n+5) > .card-header, .card-header-nested {
                 background-color: $theme-secondary-color;
-                color: $white;
             }
         }
     }
@@ -87,32 +72,32 @@
     &:nth-child(5n+1) .card-header,
     &:nth-child(5n+1) .card.card-secondary.blockinstance.card .card-header {
         background-color: scale-color($theme-primary-color, $lightness: 10%);
-        color: $white;
+        color: $card-secondary-header-color;
     }
     &:nth-child(5n+2) .card-header,
     &:nth-child(5n+2) .card.card-secondary.blockinstance.card .card-header  {
         background-color: $theme-accent-color;
-        color: $white;
+        color: $card-secondary-header-color;
     }
     &:nth-child(5n+3) .card-header,
     &:nth-child(5n+3) .card.card-secondary.blockinstance.card .card-header  {
         background-color: $theme-accent-color-two;
-        color: $white;
+        color: $card-secondary-header-color;
     }
     &:nth-child(5n+4) .card-header,
     &:nth-child(5n+4) .card.card-secondary.blockinstance.card .card-header  {
         background-color: $theme-secondary-color;
-        color: $white;
+        color: $card-secondary-header-color;
     }
     &:nth-child(5n+5) .card-header,
     &:nth-child(5n+5) .card.card-secondary.blockinstance.card .card-header  {
         background-color: $theme-accent-color-three;
-        color: $white;
+        color: $card-secondary-header-color;
     }
     .has-attachment .card-header,
     .card.card-secondary.blockinstance.card .has-attachment .card-header {
         background-color: $card-header-bg;
-        color: $theme-text-color;
+        color: $card-header-color;
         &:hover,
         &:focus {
           background-color: $card-bg;

@@ -23,6 +23,7 @@
 .tag-results .selected {
     font-weight: $font-weight-bold;
     color: $theme-text-midtone-color;
+    text-decoration: none;
     .badge {
         border: 1px solid transparent;
         color: $white;
@@ -31,12 +32,12 @@
 }
 .tag-results .btn-top-right {
     margin-right: -0.0625rem; // -1px;
-    margin-top: -2.625rem; // -42px;
-    height: 2.5rem; // 40px;
+    margin-top: -2.9375rem; // -47px;
+    height: 2.9375rem; // 47px;
     margin-left: 70%;
     margin-bottom: 0;
 
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         margin: 0;
         height: auto;
     }

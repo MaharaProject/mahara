@@ -1,5 +1,6 @@
 <?php
 /**
+ * Valid users be delivered to a Select2 field via ajax
  *
  * @package    mahara
  * @subpackage webservices

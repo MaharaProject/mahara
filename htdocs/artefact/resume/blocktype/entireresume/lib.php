@@ -25,6 +25,10 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return array('internal' => 29000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function get_blocktype_type_content_types() {
         return array('entireresume' => array('resume'));
     }
@@ -60,7 +64,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:entireresume:content.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -164,7 +168,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         return $return;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

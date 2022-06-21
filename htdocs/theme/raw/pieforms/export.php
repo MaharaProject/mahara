@@ -91,10 +91,18 @@ if ($body) {
     echo '</div></div>';
 }
 
+// feedback switch
 echo '<div id="includefeedback" class="form-group switchbox last">';
 echo $elements['includefeedback']['labelhtml'] . $elements['includefeedback']['html'];
 echo '<div class="description">' . $elements['includefeedback']['description'] . '</div>';
 echo '</div>';
+
+// private feedback switch
+echo '<div id="includeprivatefeedback" class="form-group switchbox last">';
+echo $elements['includeprivatefeedback']['labelhtml'] . $elements['includeprivatefeedback']['html'];
+echo '<div class="description">' . $elements['includeprivatefeedback']['description'] . '</div>';
+echo '</div>';
+
 echo '<div id="export_submit_container" class="form-group last">';
 echo $elements['submit']['html'];
 echo '</div>';

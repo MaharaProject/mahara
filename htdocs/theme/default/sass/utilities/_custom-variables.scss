@@ -82,13 +82,13 @@ $btn-primary-color:                         $white;
 $btn-primary-bg:                            $theme-primary-color;
 $btn-primary-border:                        $theme-primary-color;
 
-// cards
-//** Border color for elements within cards
+// cardss
 $card-border-color:                         #d9d9d9;
 $card-header-bg:                            $white;
+$card-header-color:                         $link-color;
 $card-footer-bg:                            scale-color($theme-primary-color, $lightness: 90%);
 
-$card-secondary-border:                     scale-color($theme-primary-color, $lightness: 70%);
+$card-secondary-border-color:               scale-color($theme-primary-color, $lightness: 70%);
 
 // Collapse/expand indicator
 $collapse-indicator-color:                  scale-color($theme-primary-color, $lightness: 16%);

@@ -82,7 +82,7 @@
 .footer {
   @include angle(before, true);
   &:before {
-    top: -2.25rem;
+    top: 0;
   }
 }
 

@@ -30,7 +30,7 @@ abstract class TestingUtil {
     private static $dataroot = null;
 
     /**
-     * @var testing_data_generator
+     * @var TestingDataGenerator
      */
     protected static $generator = null;
 
@@ -147,7 +147,7 @@ abstract class TestingUtil {
     /**
      * Get data generator
      * @static
-     * @return testing_data_generator
+     * @return TestingDataGenerator
      */
     public static function get_data_generator() {
         if (is_null(self::$generator)) {
@@ -550,8 +550,8 @@ abstract class TestingUtil {
         foreach ($characters as $c1) {
             foreach ($characters as $c2) {
                 foreach ($characters as $c3) {
-                    $content = scandir("$sessionpath/$c1/$c2/$c3");
-                    if (count($content) > 2) {
+                    $content = @scandir("$sessionpath/$c1/$c2/$c3");
+                    if (is_array($content) && count($content) > 2) {
                         foreach($content as $file) {
                             if (!in_array($file, $ignore)) {
                                 unlink("$sessionpath/$c1/$c2/$c3/$file");
@@ -683,6 +683,8 @@ abstract class TestingUtil {
      */
     public static function drop_database($displayprogress = false) {
         global $CFG;
+        error_log("\n");
+        error_log("Uninstalling site database...");
         // Drop triggers
         try {
             db_drop_trigger('update_unread_insert', 'notification_internal_activity');
@@ -745,7 +747,7 @@ abstract class TestingUtil {
                 $pluginpath = 'artefact' . DIRECTORY_SEPARATOR . $bits[0] . DIRECTORY_SEPARATOR . 'blocktype' . DIRECTORY_SEPARATOR . $bits[1];
             }
 
-            log_info("Uninstalling $plugintype.$pluginname");
+            // log_info("Uninstalling $plugintype.$pluginname");
             $location = get_config('docroot') . $pluginpath . DIRECTORY_SEPARATOR . 'db';
             if (is_readable($location . DIRECTORY_SEPARATOR . 'install.xml')) {
                 if ($plugintype == 'auth' && $pluginname == 'webservice') {
@@ -755,6 +757,13 @@ abstract class TestingUtil {
                     }
                     else {
                         execute_sql('ALTER TABLE {lti_assessment} DROP CONSTRAINT {ltiasse_oau_fk}');
+                    }
+                    // This module has a lit_advantage_registration.connectionid as a foreign key
+                    if (is_mysql()) {
+                        execute_sql('ALTER TABLE {lti_advantage_registration} DROP FOREIGN KEY {ltiadvaregi_con_fk}');
+                    }
+                    else {
+                        execute_sql('ALTER TABLE {lti_advantage_registration} DROP CONSTRAINT {ltiadvaregi_con_fk}');
                     }
                 }
                 if ($plugintype == 'module' && $pluginname == 'framework') {
@@ -787,7 +796,7 @@ abstract class TestingUtil {
         if (is_mysql()) {
             execute_sql('SET foreign_key_checks = 0');
         }
-        log_info('Uninstalling core');
+        // log_info('Uninstalling core');
         uninstall_from_xmldb_file(get_config('docroot') . 'lib'.DIRECTORY_SEPARATOR.'db'.DIRECTORY_SEPARATOR.'install.xml');
         if (is_mysql()) {
             execute_sql('SET foreign_key_checks = 1');
@@ -795,6 +804,7 @@ abstract class TestingUtil {
         // Reset info so we install rather than update if calling install_site straight after
         $CFG->installed = false;
         $CFG->version = 0;
+        error_log("Done");
     }
 
     /**

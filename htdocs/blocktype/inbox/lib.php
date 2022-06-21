@@ -77,7 +77,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:inbox:inboxmr.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -132,7 +132,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
         return $elements;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -173,7 +173,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

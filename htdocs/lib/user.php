@@ -240,7 +240,6 @@ function expected_account_preferences() {
                  'showprogressbar' => 1,
                  'theme' => '',
                  'resizeonuploaduserdefault' => 1,
-                 'devicedetection' => 1,
                  'licensedefault' => '',
                  'viewsperpage' => 20,
                  'itemsperpage' => 10,
@@ -465,15 +464,6 @@ function general_account_prefs_form_elements($prefs) {
         );
     }
 
-    if (get_config('userscandisabledevicedetection')) {
-        $elements['devicedetection'] = array(
-            'type'         => 'switchbox',
-            'title'        => get_string('devicedetection', 'account'),
-            'description'  => get_string('devicedetectiondescription', 'account'),
-            'defaultvalue' => $prefs->devicedetection,
-        );
-    }
-
     $elements['showlayouttranslatewarning'] = array(
         'type' => 'switchbox',
         'defaultvalue' => $prefs->showlayouttranslatewarning,
@@ -599,7 +589,9 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
             $type = 'website';
         }
         $classname = generate_artefact_class_name($field);
-        $profile = new $classname(0, array('owner' => $userid), $new);
+        $data = new stdClass();
+        $data->owner = $userid;
+        $profile = new $classname(0, $data, $new);
         $profile->set('title',       $value['socialprofile_profileurl']);
         $profile->set('description', $desc);
         $profile->set('note',        $type);
@@ -614,7 +606,9 @@ function set_profile_field($userid, $field, $value, $new = FALSE) {
     }
     else {
         $classname = generate_artefact_class_name($field);
-        $profile = new $classname(0, array('owner' => $userid), $new);
+        $data = new stdClass();
+        $data->owner = $userid;
+        $profile = new $classname(0, $data, $new);
         $profile->set('title', $value);
         $profile->commit();
     }
@@ -691,6 +685,7 @@ function set_user_primary_email($userid, $newemail, $ignore=false) {
  * @todo, this needs to be better (fix email behaviour)
  */
 function get_profile_field($userid, $field) {
+    $value = null;
     if ($field == 'email') {
         $value = get_field_sql("
             SELECT a.title
@@ -742,7 +737,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
         return true;
     }
 
-    if (empty($userto)) {
+    if (!$userto) {
         throw new InvalidArgumentException("empty user given to email_user");
     }
 
@@ -826,7 +821,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     if (get_config('bounces_handle') && !empty($userto->id) && empty($maildisabled)) {
         $mail->Sender = generate_email_processing_address($userto->id, $userto);
     }
-    if (empty($userfrom) || $userfrom->email == get_config('noreplyaddress')) {
+    if (!$userfrom || $userfrom->email == get_config('noreplyaddress')) {
         if (empty($mail->Sender)) {
             $mail->Sender = get_config('noreplyaddress');
         }
@@ -873,7 +868,7 @@ function email_user($userto, $userfrom, $subject, $messagetext, $messagehtml='',
     }
 
     $mail->Subject = substr(stripslashes($subject), 0, 900);
-
+    $usertoname = null;
     try {
         if ($to = get_config('sendallemailto')) {
             // Admins can configure the system to send all email to a given address
@@ -1294,8 +1289,11 @@ function display_default_name($user) {
  * Currently a stub, will need to be improved and completed as demand arises.
  *
  * @param object $user The user object to make a full name out of. If empty,
- *                     the global $USER object is used*/
-function full_name($user=null) {
+ *                     the global $USER object is used
+ * @param string|null $reversedivider If we want to return the full name as lastname
+ *                                    then firstname and the divider to use
+ */
+function full_name($user=null, $reversedivider=null) {
     global $USER;
 
     if ($user === null) {
@@ -1314,7 +1312,13 @@ function full_name($user=null) {
        $userobj = $user;
     }
 
-   return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser1') : $userobj->firstname . ' ' . $userobj->lastname;
+    if ($reversedivider) {
+        $username_out = $userobj->lastname . $reversedivider . $userobj->firstname;
+    }
+    else {
+        $username_out = $userobj->firstname . ' ' . $userobj->lastname;
+    }
+    return isset($userobj->deleted) && $userobj->deleted ? get_string('deleteduser1') : $username_out;
 }
 
 /**
@@ -1469,7 +1473,7 @@ function optional_userobj($user) {
         if ($user = get_record('usr', 'id', $user)) {
             return $user;
         }
-        throw new InvalidArgumentException("optional_userobj given id $id no db match found");
+        throw new InvalidArgumentException("optional_userobj given id $user no db match found");
     }
 
     if (!is_logged_in()) {
@@ -1726,6 +1730,8 @@ function delete_user($userid) {
     delete_records('usr_agreement', 'usr', $userid);
     delete_records('existingcopy', 'usr', $userid);
     delete_records('artefact_internal_profile_email', 'owner', $userid);
+    delete_records('blocktype_verification_undo', 'usr', $userid);
+    delete_records('blocktype_verification_undo', 'reporter', $userid);
     // Delete any submission history
     delete_records('module_assessmentreport_history', 'userid', $userid);
     delete_records('module_assessmentreport_history', 'markerid', $userid);
@@ -1992,9 +1998,13 @@ function load_user_institutions($userid) {
 
     $logoxs = db_column_exists('institution', 'logoxs') ? ',i.logoxs' : '';
     $tags = db_column_exists('institution', 'tags') ? ',i.tags' : '';
+    $supportadmin = '';
+    if (get_config('version') > 2022031500) {
+        $supportadmin = ' u.supportadmin,';
+    }
     if ($userid !== 0 && $institutions = get_records_sql_assoc('
         SELECT u.institution, ' . db_format_tsfield('ctime') . ',' . db_format_tsfield('u.expiry', 'membership_expiry') . ',
-               u.studentid, u.staff, u.admin, i.displayname, i.theme, i.registerallowed, i.showonlineusers,
+               u.studentid, u.staff, u.admin,' . $supportadmin . ' i.displayname, i.theme, i.registerallowed, i.showonlineusers,
                i.allowinstitutionpublicviews, i.logo' . $logoxs . ', i.style, i.licensemandatory, i.licensedefault,
                i.dropdownmenu, i.skins, i.suspended' . $tags . '
         FROM {usr_institution} u INNER JOIN {institution} i ON u.institution = i.name
@@ -2197,7 +2207,7 @@ function get_users_data($userids, $getviews=true) {
                         $cleanviews[$userindex][] = $vdata;
                     }
                     else {
-                        if ($collectionobject != $vdata->collection && isset($collectionobject)) {
+                        if ($collectionobject != $vdata->collection && $collectionobject) {
                           $collectionobject = $vdata->collection;
                           $cleanviews[$userindex][] = $vdata;
                         }
@@ -2273,12 +2283,10 @@ function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $que
         $params['filter'] = $data['filter'];
     }
     if ($searchtype == 'myfriends') {
-        $resultcounttextsingular = get_string('friend', 'group');
-        $resultcounttextplural = get_string('friends', 'group');
+        $resultcounttext = get_string('nfriends', 'group', $data['count']);
     }
     else {
-        $resultcounttextsingular = get_string('user', 'group');
-        $resultcounttextplural = get_string('users', 'group');
+        $resultcounttext = get_string('nusers', 'group', $data['count']);
     }
 
     $smarty->assign('admingroups', $admingroups);
@@ -2297,8 +2305,7 @@ function build_userlist_html(&$data, $searchtype, $admingroups, $filter='', $que
         'offset' => $data['offset'],
         'jumplinks' => 6,
         'numbersincludeprevnext' => 2,
-        'resultcounttextsingular' => $resultcounttextsingular,
-        'resultcounttextplural' => $resultcounttextplural,
+        'resultcounttext' => $resultcounttext,
         'extradata' => array('searchtype' => $searchtype),
         'filter'    => $filter,
         'query' => $query,
@@ -2314,8 +2321,6 @@ function build_onlinelist_html(&$data, $page) {
     $smarty = smarty_core();
     $smarty->assign('data', isset($userdata) ? $userdata : null);
     $smarty->assign('page', $page);
-    $resultcounttextsingular = get_string('user', 'group');
-    $resultcounttextplural = get_string('users', 'group');
     $data['tablerows'] = $smarty->fetch('user/onlineuserresults.tpl');
     $pagination = build_pagination(array(
         'id' => 'onlinelist_pagination',
@@ -2324,11 +2329,9 @@ function build_onlinelist_html(&$data, $page) {
         'count' => $data['count'],
         'limit' => $data['limit'],
         'offset' => $data['offset'],
-        'datatable' => 'onlinelist',
         'jsonscript' => 'user/online.json.php',
         'setlimit' => true,
-        'resultcounttextsingular' => $resultcounttextsingular,
-        'resultcounttextplural' => $resultcounttextplural,
+        'resultcounttext' => get_string('nusers', 'group', $data['count']),
         'extradata' => array('page' => $page),
     ));
     $data['pagination'] = $pagination['html'];
@@ -2362,7 +2365,7 @@ function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
         $smarty->assign('columnright', $columns[1]);
     }
     else {
-        $smarty->assign('data', isset($data) ? $data : null);
+        $smarty->assign('data', $data ?: null);
     }
     safe_require('module', 'multirecipientnotification');
     $smarty->assign('mrmoduleactive', PluginModuleMultirecipientnotification::is_active());
@@ -2372,7 +2375,7 @@ function build_stafflist_html(&$data, $page, $listtype, $inst='mahara') {
 function get_institution_strings_for_users($userids) {
     $userlist = join(',', $userids);
     if (!$records = get_records_sql_array('
-        SELECT ui.usr, i.displayname, ui.staff, ui.admin, i.name
+        SELECT ui.usr, i.displayname, ui.staff, ui.admin, ui.supportadmin, i.name
         FROM {usr_institution} ui JOIN {institution} i ON ui.institution = i.name
         WHERE ui.usr IN (' . $userlist . ')', array())) {
         return array();
@@ -2382,7 +2385,16 @@ function get_institution_strings_for_users($userids) {
         if (!isset($institutions[$ui->usr])) {
             $institutions[$ui->usr] = array();
         }
-        $key = ($ui->admin ? 'admin' : ($ui->staff ? 'staff' : 'member'));
+        $key = 'member';
+        if ($ui->admin) {
+            $key = 'admin';
+        }
+        else if ($ui->supportadmin) {
+            $key = 'supportadmin';
+        }
+        else if ($ui->staff) {
+            $key = 'staff';
+        }
         $institutions[$ui->usr][$key][$ui->name] = $ui->displayname;
     }
     foreach ($institutions as &$userinst) {
@@ -2395,6 +2407,9 @@ function get_institution_strings_for_users($userids) {
             switch ($key) {
                 case 'admin':
                     $value = get_string('adminofinstitutions', 'mahara', join(', ', $links));
+                    break;
+                case 'supportadmin':
+                    $value = get_string('supportadminofinstitutions', 'mahara', join(', ', $links));
                     break;
                 case 'staff':
                     $value = get_string('staffofinstitutions', 'mahara', join(', ', $links));
@@ -2925,7 +2940,7 @@ function install_system_profile_view() {
         'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('profileviewtitle', 'view'),
         'description' => get_string('profiledescription'),
     ), 0);
@@ -2976,7 +2991,7 @@ function install_system_progress_view() {
         'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('progresspage', 'collection'),
         'description' => get_string('progresspagedescription'),
     ), 0);
@@ -3004,7 +3019,7 @@ function install_system_dashboard_view() {
         'template'    => View::SITE_TEMPLATE,
         'numrows'     => 1,
         'columnsperrow' => array((object)array('row' => 1, 'columns' => 2)),
-        'ownerformat' => FORMAT_NAME_PREFERREDNAME,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
         'title'       => get_string('dashboardviewtitle', 'view'),
     ), 0);
     $view->set_access(array(array(
@@ -3036,7 +3051,7 @@ function install_system_dashboard_view() {
         array(
             'blocktype' => 'inbox',
             'title' => '',
-            'positionx' => 6,
+            'positionx' => 0,
             'positiony' => 0,
             'config' => array(
                 'feedback' => true,
@@ -3047,24 +3062,37 @@ function install_system_dashboard_view() {
                 'wallpost' => true,
                 'viewaccess' => true,
                 'watchlist' => true,
+                'newpost' => true,
                 'maxitems' => '5',
             ),
         ),
         array(
-            'blocktype' => 'inbox',
+            'blocktype' => 'myviews',
+            'title' => '',
+            'positionx' => 0,
+            'positiony' => 3,
+            'config' => null,
+        ),
+        array(
+            'blocktype' => 'newviews',
             'title' => '',
             'positionx' => 6,
-            'positiony' => 3,
+            'positiony' => 0,
             'config' => array(
-                'newpost' => true,
-                'maxitems' => '5',
+                'limit'       => 10,
+                'user'        => 1,
+                'group'       => 1,
+                'friend'      => 1,
+                'institution' => 0,
+                'loggedin'    => 0,
+                'public'      => 0,
             ),
         ),
         array(
             'blocktype' => 'watchlist',
             'title' => '',
             'positionx' => 6,
-            'positiony' => 6,
+            'positiony' => 3,
             'config' => array(
                 'count' => '10',
             ),
@@ -3330,6 +3358,8 @@ function get_onlineusers($limit=10, $offset=0, $orderby='firstname,lastname') {
     }
 
     $result = array('count' => 0, 'limit' => $limit, 'offset' => $offset, 'data' => false, 'showusers' => $showusers);
+    $sql = '';
+    $countsql = '';
     switch ($showusers) {
         case 0: // show none
             return $result;

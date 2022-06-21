@@ -44,7 +44,7 @@ function check_upgrades($name=null) {
     $newinstallcount = 0;
     $installing = false;
     $newinstalls = array();
-
+    $config = null; // will be set via version.php below
     require('version.php');
     // check core first...
     if (empty($name) || $name == 'core') {
@@ -217,6 +217,7 @@ function check_upgrades($name=null) {
         // Don't try to get the plugin info if we are installing - it will
         // definitely fail
         $pluginversion = 0;
+        $pluginrelease = 0;
         if (!$installing && table_exists(new XMLDBTable($plugintype . '_installed'))) {
             if ($plugintype == 'blocktype' && strpos($pluginname, '/')) {
                 $bits = explode('/', $pluginname);
@@ -633,7 +634,7 @@ function core_postinst() {
     // Set default search plugin
     set_config('searchplugin', 'internal');
 
-    set_config('lang', 'en.utf8');
+    set_config('lang', get_accept_lang());
     set_config('installation_key', get_random_key());
     set_config('installation_time', $now);
     set_config('stats_installation_time', $now);
@@ -903,7 +904,7 @@ function core_install_firstcoredata_defaults() {
     set_config('dropdownmenu', 0);
     // Set this to a random starting number to make minor version slightly harder to detect
     set_config('cacheversion', rand(1000, 9999));
-    set_config('watchlistnotification_delay', 20);
+    set_config('allowcommentsbydefault', 1);
 
     // install the applications
     $app = new stdClass();
@@ -1044,6 +1045,7 @@ function core_install_firstcoredata_defaults() {
         'cron_clean_internal_activity_notifications'=> array(45, 22, '*', '*', '*'),
         'cron_sitemap_daily'                        => array(0, 1, '*', '*', '*'),
         'file_cleanup_old_cached_files'             => array(0, 1, '*', '*', '*'),
+        'file_cleanup_old_temp_files'               => array(0, 2, '*/2', '*', '*'),
         'user_login_tries_to_zero'                  => array('2-59/5', '*', '*', '*', '*'),
         'cron_institution_registration_data'        => array(rand(0, 59), rand(0, 23), '*', '*', rand(0, 6)),
         'cron_institution_data_weekly'              => array('0', '0', '*', '*', '1'),
@@ -1054,6 +1056,7 @@ function core_install_firstcoredata_defaults() {
         'cron_email_reset_rebounce'                 => array(rand(0, 59), rand(0, 23), '*', '*', '*'),
         'auth_clean_expired_migrations'             => array('0', '2,14', '*', '*', '*'),
         'portfolio_auto_copy'                       => array('*', '*', '*', '*', '*'),
+        'unlock_collections_by_rollover'            => array('0', '3', '*', '*', '*'),
     );
     foreach ($cronjobs as $callfunction => $times) {
         $cron = new stdClass();
@@ -1290,6 +1293,12 @@ function reload_html_filters() {
     log_info('Enabled ' . count($filters) . ' HTML filters.');
 }
 
+/**
+ * Update safe iframe regex
+ *
+ * @return bool
+ * @throws SystemException
+ */
 function update_safe_iframe_regex() {
     $prefixes = get_column('iframe_source', 'prefix');
     if (!empty($prefixes)) {
@@ -1311,7 +1320,7 @@ function update_safe_iframe_regex() {
         // prefaced by http:// or https:// or just // (which is a protocol-relative URL)
         $iframeregexp = '%^(http:|https:|)//(' . str_replace('.', '\.', implode('|', $prefixes)) . ')%';
     }
-    set_config('iframeregexp', isset($iframeregexp) ? $iframeregexp : null);
+    return set_config('iframeregexp', isset($iframeregexp) ? $iframeregexp : null);
 }
 
 function update_safe_iframes(array $iframesources, array $iframedomains) {

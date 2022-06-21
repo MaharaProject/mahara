@@ -10,7 +10,13 @@
         {/if}
 {elseif $record->artefacttype == 'socialprofile'}
     <h2 class="title list-group-item-heading text-inline">
-        <img src="{$record->icon}" alt="{$record->note}" class="artefact-img">
+        {if $record->faicon}
+            {$record->faicon|safe}
+        {else}
+            {if $record->deleted != true}
+                <img src="{$record->icon}" alt="{$record->note}" class="artefact-img">
+            {/if}
+        {/if}
         {if $record->link}
             <a href="{$record->link}">
                 {$record->title|str_shorten_html:50:true|safe}

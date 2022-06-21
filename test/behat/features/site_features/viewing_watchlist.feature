@@ -18,10 +18,14 @@ And the following "permissions" exist:
     | title | accesstype |
     | Page UserA_01 | public |
 
+And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Portfolios shared with me | newviews | Dashboard page: admin  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
 Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  Given I log in as "admin" with password "Kupuh1pa!"
  When I am on homepage
- Then I should see "Watched pages"
+ Then I should see "Pages I am watching"
  And I should see "There are no pages on your watchlist."
  # Viewing last updated time on watchlist items (Bug 1444784)
  And I follow "Page UserA_01"
@@ -31,4 +35,4 @@ Scenario: Viewing a list of pages I watch from the dashboard (Bug 1444784)
  # Check we can see watched page and not an un-watched page
  And I am on homepage
  Then I should not see "Page UserA_02"
- And I should see "Page UserA_01" in the "Watched pages" property
+ And I should see "Page UserA_01" in the "Pages I am watching" "Blocks" property

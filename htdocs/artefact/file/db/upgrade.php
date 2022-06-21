@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Upgrade util for artefacts
  *
  * @package    mahara
  * @subpackage artefact-file
@@ -11,6 +12,12 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Upgrade steps for file artefacts
+ *
+ * @param  integer $oldversion
+ * @return boolean $status
+ */
 function xmldb_artefact_file_upgrade($oldversion=0) {
 
     $status = true;
@@ -216,7 +223,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
             foreach ($fileiter as $file) {
                 if ($file->isDot()) continue;
                 if (!$file->isFile()) {
-                    log_error("Something was wrong about the dataroot in artefact/file/originals/$dir. Unexpected folder $file");
+                    log_warn("Something was wrong about the dataroot in artefact/file/originals/$dir. Unexpected folder $file");
                     continue;
                 }
                 chmod($file->getPathname(), $file->getPerms() & 0666);

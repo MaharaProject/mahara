@@ -61,7 +61,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         $smarty->assign('items', $items['data']);
 
         $items['tablerows'] = $smarty->fetch($template);
-
+        $resultcounttext = $pagination['resultcounttext'];
         if ($items['limit'] && $pagination) {
             $pagination = build_pagination(array(
                 'id' => $pagination['id'],
@@ -75,8 +75,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'jumplinks'  => (!empty($pagination['jumplinks']) ? $pagination['jumplinks'] : 0),
                 'numbersincludeprevnext' => (!empty($pagination['numbersincludeprevnext']) ? $pagination['numbersincludeprevnext'] : 1),
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+                'resultcounttext' => $resultcounttext ? $resultcounttext : null,
             ));
             $items['pagination'] = $pagination['html'];
             $items['pagination_js'] = $pagination['javascript'];
@@ -120,8 +119,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'id'         => 'groupviews_pagination',
                 'datatable'  => 'groupviewlist',
                 'jsonscript' => 'blocktype/groupviews/groupviews.json.php',
-                'resultcounttextsingular' => get_string('view', 'view'),
-                'resultcounttextplural'   => get_string('views', 'view'),
+                'resultcounttext' => get_string('nviews1', 'view', $groupviews['count']),
             );
             self::render_items($groupviews, 'blocktype:groupviews:groupviewssection.tpl', $configdata, $pagination);
             $dwoo->assign('groupviews', $groupviews);
@@ -134,8 +132,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'id'         => 'sharedviews_pagination',
                 'datatable'  => 'sharedviewlist',
                 'jsonscript' => 'blocktype/groupviews/sharedviews.json.php',
-                'resultcounttextsingular' => get_string('view', 'view'),
-                'resultcounttextplural'   => get_string('views', 'view'),
+                'resultcounttext' => get_string('nviews1', 'view', $sharedviews['count']),
             );
             self::render_items($sharedviews, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
             $dwoo->assign('sharedviews', $sharedviews);
@@ -147,8 +144,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'id'         => 'sharedcollections_pagination',
                 'datatable'  => 'sharedcollectionlist',
                 'jsonscript' => 'blocktype/groupviews/sharedcollections.json.php',
-                'resultcounttextsingular' => get_string('collection', 'collection'),
-                'resultcounttextplural'   => get_string('collections', 'collection'),
+                'resultcounttext' => get_string('ncollections', 'collection', $sharedcollections['count']),
             );
             self::render_items($sharedcollections, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
             $dwoo->assign('sharedcollections', $sharedcollections);
@@ -160,8 +156,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'id'         => 'allsubmitted_pagination',
                 'datatable'  => 'allsubmissionlist',
                 'jsonscript' => 'blocktype/groupviews/allsubmissions.json.php',
-                'resultcounttextsingular' => get_string('vieworcollection', 'view'),
-                'resultcounttextplural'   => get_string('viewsandcollections', 'view'),
+                'resultcounttext' => get_string('nviewsandcollections', 'view', $allsubmitted['count']),
             );
             self::render_items($allsubmitted, 'blocktype:groupviews:allsubmissions.tpl', $configdata, $pagination);
             $dwoo->assign('allsubmitted', $allsubmitted);
@@ -172,7 +167,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         if (!$editing && isset($data['group_view_submission_form'])) {
             $dwoo->assign('group_view_submission_form', $data['group_view_submission_form']);
         }
-        // Get members who have no submitted work - only show to those allowed to see submitted work
+        // Get regular group members who have no submitted work - only show to those allowed to see submitted work
         if ($USER->is_logged_in() && !empty($configdata['showsubmitted']) && group_user_can_assess_submitted_views($groupid, $USER->get('id')) && isset($data['nosubmissions'])) {
             $nosubmissions = $data['nosubmissions'];
             $pagination = array(
@@ -182,8 +177,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'jsonscript' => 'blocktype/groupviews/nosubmissions.json.php',
                 'jumplinks'  => 6,
                 'numbersincludeprevnext' => 3,
-                'resultcounttextsingular' => get_string('member', 'group'),
-                'resultcounttextplural'   => get_string('members', 'group'),
+                'resultcounttext' => get_string('nmembers1', 'group', $nosubmissions['count']),
             );
             self::render_items($nosubmissions, 'blocktype:groupviews:nosubmissions.tpl', $configdata, $pagination);
             $dwoo->assign('nosubmissions', $nosubmissions);
@@ -192,7 +186,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         return $dwoo->fetch('blocktype:groupviews:groupviews.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -279,7 +273,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         );
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -437,7 +431,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     }
 
     /**
-     * Return list of members that have not submitted any pages/collections to the group
+     * Return list of regular group members that have not submitted any pages/collections to the group
      *
      * @param integer $groupid The group to check
      *
@@ -445,7 +439,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
      */
     public static function find_members_without_submissions($groupid) {
         if ($nosubmissions = get_records_sql_array("SELECT u.id FROM {usr} u JOIN {group_member} gm ON gm.member = u.id
-                                                    WHERE gm.group = ? AND u.deleted = 0 AND gm.member NOT IN (
+                                                    WHERE gm.group = ? AND u.deleted = 0 AND gm.role = 'member' AND gm.member NOT IN (
                                                         SELECT DISTINCT m.member FROM {group} g
                                                         JOIN {group_member} m ON m.group = g.id
                                                         JOIN {view} v ON v.owner = m.member
@@ -470,7 +464,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

@@ -2,6 +2,7 @@
     padding-left: 0 !important;
     margin-bottom: 0 !important;
     border-bottom: $nav-tabs-border-width solid $nav-tabs-border-color;
+
     &.nav {
         li > a {
             margin-right: 0.125rem; // 2px;
@@ -12,7 +13,7 @@
             padding: $nav-link-padding-y $nav-link-padding-x;
             font-size: $font-size-lg;
             text-decoration: none;
-            border-radius: $nav-tabs-border-radius;
+            border-radius: $nav-tabs-border-radius $nav-tabs-border-radius 0 0;
 
             &:hover,
             &:focus {

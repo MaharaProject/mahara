@@ -34,9 +34,14 @@ class PluginExportHtml extends PluginExport {
     protected $infodir = 'export_info';
 
     /**
-    * The name of the directory where files will be placed in the export
-    **/
+     * The name of the directory where files will be placed in the export
+     */
     protected $filedir = 'export_info/files/';
+
+    /**
+     * The name of the export directory
+     */
+    protected $exportdir = '';
 
     /**
      * List of directories of static files provided by artefact plugins
@@ -62,7 +67,12 @@ class PluginExportHtml extends PluginExport {
      * These javascript files will be included in index.html via the
      * export/html/templates/header.tpl
      */
-    private $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'lodash', 'gridstack', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
+    protected $scripts = array('jquery', 'popper.min', 'bootstrap.min', 'dock', 'modal', 'gridstack_modules/gridstack-h5', 'gridlayout', 'masonry.min', 'select2.full', 'theme');
+
+    protected $collections = array();
+    protected $collectionview;
+    protected $viewcollection;
+    protected $viewexportmode = 0;
 
     /**
     * constructor.  overrides the parent class
@@ -140,6 +150,28 @@ class PluginExportHtml extends PluginExport {
         return get_string('description', 'export.html');
     }
 
+    /**
+     * Is the plugin activated or not?
+     *
+     * @return boolean
+     */
+    public static function is_active() {
+        $active = false;
+        if (get_field('export_installed', 'active', 'name', 'html')) {
+            $active = true;
+        }
+        return $active;
+    }
+
+    /**
+     * Fetch plugin's display name rather than plugin name that is based on dir name.
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return 'HTML';
+    }
+
     public function is_diskspace_available() {
         return true; // need to create a check here
     }
@@ -150,7 +182,7 @@ class PluginExportHtml extends PluginExport {
             return $parent . $this->get('infodir') . '/' . $type . '/';
         }
         else if ($this->exportingoneview) {
-            return $parent . 'HTML/';
+            return $parent . $this->rootdir . '/';
         }
         else if ($type) {
             return $parent . $type;
@@ -244,7 +276,6 @@ class PluginExportHtml extends PluginExport {
         $this->export_progresscompletion_pages();
 
         $this->export_artefact_metadata_modals();
-
         if (!$this->exportingoneview) {
             $viewcollectionsumary = $this->get_view_collection_summary();
             $summaries['view'] = array(100, $viewcollectionsumary['view']);
@@ -321,7 +352,8 @@ class PluginExportHtml extends PluginExport {
         $smarty->assign('sitename', get_config('sitename'));
         $smarty->assign('stylesheets', $stylesheets);
         $smarty->assign('WWWROOT', get_config('wwwroot'));
-        $htmldir = ($this->exportingoneview ? '' : 'HTML/');
+        $htmldir = ($this->exportingoneview ? '' : $this->rootdir . '/');
+        $smarty->assign('htmldir', $htmldir);
         $scripts = [];
         foreach($this->scripts as $i => $script) {
             // theme should be in theme folder use,
@@ -339,7 +371,7 @@ class PluginExportHtml extends PluginExport {
             $smarty->assign('scriptspath', $rootpath . $this->theme_path('js/'));
         }
         else {
-            $smarty->assign('scriptspath', $rootpath . 'HTML/' . $this->theme_path('js/'));
+            $smarty->assign('scriptspath', $rootpath . $this->rootdir . '/' . $this->theme_path('js/'));
         }
         $smarty->assign('maharalogo', $this->theme_path('images/site-logo.png'));
         $smarty->assign('maharalogosmall', $this->theme_path('images/site-logo-small.png'));
@@ -354,7 +386,7 @@ class PluginExportHtml extends PluginExport {
      *
      * This returns the path in the most appropriate theme.
      */
-    private function theme_path($path) {
+    protected function theme_path($path) {
         global $THEME;
         $themestaticdirs = $THEME->get_path('', true);
         foreach ($themestaticdirs as $theme => $dir) {
@@ -401,8 +433,7 @@ class PluginExportHtml extends PluginExport {
         return trim(substr(str_replace('/', '_', $path), 0, 255));
     }
 
-
-    private function build_index_page($summaries) {
+    protected function build_index_page($summaries) {
         $smarty = $this->get_smarty($this->get_root_path());
         $smarty->assign('page_heading', full_name($this->get('user')));
         $smarty->assign('summaries', $summaries);
@@ -412,7 +443,7 @@ class PluginExportHtml extends PluginExport {
         }
     }
 
-    private function collection_menu($collectionid) {
+    protected function collection_menu($collectionid) {
         static $menus = array();
         if (!isset($menus[$collectionid])) {
             $menus[$collectionid] = array();
@@ -438,7 +469,7 @@ class PluginExportHtml extends PluginExport {
     /**
      * Dumps all collections progress completion pages into the HTML export
      */
-    private function export_progresscompletion_pages() {
+    protected function export_progresscompletion_pages() {
         $rootpath = ($this->exportingoneview) ? $this->get_root_path() : $this->get_root_path(3);
         $smarty = $this->get_smarty($rootpath);
         foreach ($this->collections as $collection) {
@@ -488,7 +519,7 @@ class PluginExportHtml extends PluginExport {
 
                 $content = $smarty->fetch('export:html:progresscompletion.tpl');
                 if (!file_put_contents("$directory/index.html", $content)) {
-                    throw new SystemException("Could not write view page for view $viewid");
+                    throw new SystemException("Could not write view page for view " . $firstview->id);
                 }
             }
         }
@@ -508,7 +539,9 @@ class PluginExportHtml extends PluginExport {
             $this->notify_progress_callback(intval($progressstart + (++$i / $viewcount) * ($progressend - $progressstart)), get_string('exportingviewsprogresshtml', 'export', $i, $viewcount));
             $smarty->assign('page_heading', $view->get('title'));
             $smarty->assign('viewdescription', $view->get('description'));
-            $smarty->assign('viewinstructions', $view->get('instructions'));
+            if ($this->exporttype != 'pdflite') {
+                $smarty->assign('viewinstructions', $view->get('instructions'));
+            }
 
             if ($this->exportingoneview) {
                 $smarty->assign('nobreadcrumbs', true);
@@ -547,13 +580,16 @@ class PluginExportHtml extends PluginExport {
                 $commentoptions->view = $view;
                 $commentoptions->limit = 0;
                 $commentoptions->export = true;
+                if (!$this->includeprivatefeedback) {
+                    $commentoptions->privatefeedback = false;
+                }
                 if ($feedback = ArtefactTypeComment::get_comments($commentoptions)) {
                     $feedback->tablerows = $outputfilter->filter($feedback->tablerows);
                 }
-                $smarty->assign('feedback', $feedback);
-            }
-            else {
-                $smarty->assign('feedback', false);
+                $smarty->assign('viewfeedback', $feedback);
+                if ($this->exporttype === 'pdf') {
+                    $smarty->assign('viewartefactsfeedback', $this->get_blocks_artefacts_feedback($view, $commentoptions, $outputfilter));
+                }
             }
 
             if (!$view->uses_new_layout()) {
@@ -583,17 +619,135 @@ class PluginExportHtml extends PluginExport {
     }
 
     /**
+     * Get comments for each artefact used in the blocks of a view
+     *
+     * @param  mixed $view
+     * @param  mixed $commentoptions
+     * @param  mixed $outputfilter
+     * @return array
+     */
+    function get_blocks_artefacts_feedback($view, $commentoptions, $outputfilter) {
+        // include artefact comments
+        $viewartefactsids = $this->get_view_artefacts_ids($view);
+        $viewartefactsfeedback = array();
+        foreach ($viewartefactsids as $id) {
+            $artefactobj =  artefact_instance_from_id($id);
+            $artefacttype = $artefactobj->get('artefacttype');
+
+            $plugin = get_field('artefact_installed_type', 'plugin', 'name', $artefacttype);
+            $headingtext = get_string($artefacttype, 'artefact.' . $plugin);
+
+            // Prep comment config
+            $commentoptions->artefact = $artefactobj;
+            $commentoptions->onview = 1;
+            $comments = ArtefactTypeComment::get_comments($commentoptions);
+
+            // Don't continue if no comments found
+            if (isset($comments->count) && $comments->count == 0) {
+                continue;
+            }
+
+            // Prep info
+            $viewartefactsfeedback[$id] = new stdClass();
+            $viewartefactsfeedback[$id]->type = $artefacttype;
+            $viewartefactsfeedback[$id]->heading = $headingtext;
+            $viewartefactsfeedback[$id]->title = $artefactobj->get('title');
+
+            // Assign comment count
+            $commentcount = isset($comments->count) ? $comments->count : 0;
+            if (!isset($viewartefactsfeedback[$id]->commentcount)) {
+                $viewartefactsfeedback[$id]->commentcount = 0;
+            }
+            $viewartefactsfeedback[$id]->commentcount += $commentcount;
+
+            // Assign comments
+            $comments->tablerows = $outputfilter->filter($comments->tablerows);
+            $viewartefactsfeedback[$id]->comments[] = $comments;
+
+            // Display the image for image artefacts
+            if (get_parent_class($artefactobj) == 'ArtefactTypeFile') {
+                $viewartefactsfeedback[$id]->file = $id . '-' . $artefactobj->get('title');
+            }
+
+        }
+        return $viewartefactsfeedback;
+    }
+
+    /**
+     * Get a unique list of all the artefacts used across the blocks on the view
+     *
+     * @param  View $view
+     * @return array of blockid => artefact ids
+     */
+    function get_view_artefacts_ids($view) {
+        // Get all the block info on given view id
+        $blocks = get_records_array('block_instance', 'view', $view->get('id'));
+        $viewartefactsids = array();
+
+        if ($blocks) {
+            foreach ($blocks as $b) {
+                $configdata = unserialize($b->configdata);
+
+                // Get related artefacts
+                if (array_key_exists('artefactids', $configdata) && isset($configdata['artefactids'])) {
+                    foreach ($configdata['artefactids'] as $artefactid) {
+                        $viewartefactsids[] = $artefactid;
+                    }
+                }
+                if (array_key_exists('artefactid', $configdata) && isset($configdata['artefactid'])) {
+                    $viewartefactsids[] = $configdata['artefactid'];
+                }
+                // Clean doubled-up artefacts
+                $viewartefactsids = array_unique($viewartefactsids);
+            }
+        }
+        return $viewartefactsids;
+    }
+
+    /**
+     * Get artefacts for blocktypes including nested child artefacts
+     */
+    public function get_block_artefacts($blocktype, &$idarray, BlockInstance $bi) {
+        switch ($blocktype) {
+            case 'blog':
+                $this->get_blog_posts_modals($idarray, $bi);
+                break;
+            case 'recentposts':
+                $this->get_recent_posts_modals($idarray, $bi);
+                break;
+            case 'taggedposts':
+                $this->get_tagged_posts_modals($idarray, $bi);
+                break;
+            case 'entireresume':
+                $this->get_entire_resume_modals($idarray, $bi);
+                break;
+            case 'resumefield':
+                $this->get_resume_field_modals($idarray, $bi);
+                break;
+            case 'folder':
+                $this->get_folder_modals($idarray, $bi);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
      * Returns a summary about views and/or collections
      *
-     * @return array(
-     *      'view' => array(
-     *          'title' => ...
-     *          'description' => ...
-     *      )
-     *      'collection' => array(
-     *          'title' => ...
-     *          'description' => ...
-     *      )
+     * Returns an array
+     * $ret = [
+     *     'view' => [
+     *         'title' => string
+     *         'description' => string
+     *     ],
+     *     'collection' => [
+     *         'title' => string
+     *         'description' => string
+     *     ]
+     * ]
+     *
+     * @return array
      */
     protected function get_view_collection_summary() {
 
@@ -685,7 +839,9 @@ class PluginExportHtml extends PluginExport {
          $commentoptions = ArtefactTypeComment::get_comment_options();
          $commentoptions->view = $view;
          $commentoptions->artefact = $artefact;
-
+         if (!$this->includeprivatefeedback) {
+            $commentoptions->privatefeedback = false;
+        }
          $owner = $artefact->get('owner');
          $threaded = $owner ? $threaded = get_user_institution_comment_threads($owner) : false;
          $commentoptions->threaded = $threaded;
@@ -697,8 +853,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for blogs posts (Journal block)
-*  @param BlockInstance $bi  The journal block containing the posts
 *  @param array &$idarray     Existing array that stores ids of modals to be created
+*  @param BlockInstance $bi  The journal block containing the posts
 */
     private function get_blog_posts_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/blog/blocktype/blog/lib.php');
@@ -710,8 +866,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *   Creates the hard-coded modals for tagged posts (Tagged journal entries)
-*  @param BlockInstance $bi  The tagged journal entries block containing the posts
 *  @param array &$idarray     Existing array that stores ids of modals to be created
+*  @param BlockInstance $bi  The tagged journal entries block containing the posts
 */
     private function get_tagged_posts_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/blog/blocktype/taggedposts/lib.php');
@@ -727,8 +883,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for recent posts (Recent journal entries)
-* @param BlockInstance $bi     The recent journal entries block containing the posts
 * @param array &$idarray       Exisiting array that stores ids of modals to be created
+* @param BlockInstance $bi     The recent journal entries block containing the posts
 */
     private function get_recent_posts_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/blog/blocktype/recentposts/lib.php');
@@ -744,8 +900,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for all attachments in the entire resume block
-* @param BlockInstance $bi     The entire resume block containing the attachments
 * @param array &$idarray       The exisiting array that stores modal ids to be created
+* @param BlockInstance $bi     The entire resume block containing the attachments
 */
     private function get_entire_resume_modals(&$idarray, BlockInstance $bi) {
         require_once(get_config('docroot') . 'artefact/resume/blocktype/entireresume/lib.php');
@@ -766,8 +922,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for all attachments in the one resume field block
-* @param BlockInstance $bi      The resume field block containing the attachments
 * @param array &$idarray        The exisiting array that stores modal ids to be created
+* @param BlockInstance $bi      The resume field block containing the attachments
 */
     private function get_resume_field_modals(&$idarray, BlockInstance $bi) {
         $configdata = $bi->get('configdata');
@@ -787,8 +943,8 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for File(s) to download block
-* @param BlockInstance $bi      The File(s) to download block
 * @param array  &$idarray       The exisiting array that stores modal ids to be created
+* @param BlockInstance $bi      The File(s) to download block
 */
 private function get_folder_modals(&$idarray, BlockInstance $bi) {
     $artefacts = PluginBlocktypeFolder::get_current_artefacts($bi);
@@ -817,7 +973,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
 * This will append to the index.html or any other relevant page created
 * previously that needs to contain a modal (including the profile page).
 */
-    private function export_artefact_metadata_modals() {
+    protected function export_artefact_metadata_modals() {
         foreach ($this->views as $view) {
             $content = '';
             $blocks = get_records_array('block_instance', 'view', $view->get('id'));
@@ -835,53 +991,46 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                     $type = $bi->get('artefactplugin');
                     $configdata = unserialize($b->configdata);
                     $artefactidarray = array();
-                    if ($b->blocktype == 'blog') {
-                        $this->get_blog_posts_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'recentposts') {
-                        $this->get_recent_posts_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'taggedposts') {
-                        $this->get_tagged_posts_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'entireresume') {
-                        $this->get_entire_resume_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'resumefield') {
-                        $this->get_resume_field_modals($artefactidarray, $bi);
-                    }
-                    else if ($b->blocktype == 'folder') {
-                        $this->get_folder_modals($artefactidarray, $bi);
-                    }
-                    else if (
+                    $this->get_block_artefacts($b->blocktype, $artefactidarray, $bi);
+                    if (
                         //block contains any of these types or matches blocktype
-                         $type == 'image' ||
-                         $type == 'blog' ||
-                         $type == 'audio' ||
-                         $type == 'video' ||
-                         $type == 'html' ||
-                         $type == 'plans' ||
-                         $type == 'file' ||
-                         $type == 'internal' && $b->blocktype != 'profileinfo'||
-                         $b->blocktype == 'image' ||
-                         $b->blocktype == 'internalmedia' ||
-                         $b->blocktype == 'filedownload'
-                     ) {
+                        $type == 'image' ||
+                        $type == 'blog'  ||
+                        $type == 'audio' ||
+                        $type == 'video' ||
+                        $type == 'html'  ||
+                        $type == 'plans' ||
+                        $type == 'file'  ||
+                        $type == 'internal' && $b->blocktype != 'profileinfo'||
+                        $b->blocktype == 'image' ||
+                        $b->blocktype == 'internalmedia' ||
+                        $b->blocktype == 'filedownload'
+                    ) {
                         if (isset($configdata['artefactids']) && !empty($configdata['artefactids'])) {
-                            $artefactidarray = $configdata['artefactids'];
+                            $artefactidarray = array_unique(array_merge($artefactidarray, $configdata['artefactids']));
                         }
                         else if (isset($configdata['artefactid']) && !empty($configdata['artefactid'])) {
-                            $artefactidarray = array($configdata['artefactid']);
+                            $artefactidarray = array_unique(array_merge($artefactidarray, (array)$configdata['artefactid']));
                         }
                     }
 
-                    //Create the modal content for each unique id found
+                    // Create the modal content for each unique id found
                     if (!empty($artefactidarray)) {
                         foreach ($artefactidarray as $artefactid) {
                             //prevent duplicate modals in same page
                             if (!in_array($artefactid, $uniqueids)) {
                                 array_push($uniqueids, $artefactid);
-                                $artefact = $bi->get_artefact_instance($artefactid);
+                                try {
+                                    $artefact = $bi->get_artefact_instance($artefactid);
+                                }
+                                catch (ArtefactNotFoundException $e) {
+                                    // artefact has been deleted but still referenced in embedded text
+                                    continue;
+                                }
+                                catch (Exception $e) {
+                                    log_debug('Problem with modal export: ' . $e->getMessage());
+                                    continue;
+                                }
                                 $options['blockid'] = $b->id;
                                 $rendered = $artefact->render_self($options);
                                 $html = '';
@@ -889,7 +1038,10 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
                                     $html = '<script>' . $rendered['javascript'] . '</script>';
                                 }
                                 $html .= $rendered['html'];
-                                $html .= $this->get_comments_for_modal($artefact, $view);
+                                if ($this->includefeedback) {
+                                    $html .= $this->get_comments_for_modal($artefact, $view);
+
+                                }
                                 $smarty->assign('artefactid', $artefactid);
                                 $smarty->assign('content', $html);
                                 $smarty->assign('title', $artefact->get('title'));
@@ -962,8 +1114,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
         $directoriestocopy[get_config('docroot') . 'js/popper/popper.min.js'] = $jsdir . 'popper.min.js';
         $directoriestocopy[get_config('docroot') . 'lib/bootstrap/assets/javascripts/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
         $directoriestocopy[get_config('docroot') . 'js/jquery/jquery.js'] = $jsdir . 'jquery.js';
-        $directoriestocopy[get_config('docroot') . 'js/lodash/lodash.js'] = $jsdir . 'lodash.js';
-        $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack.js'] = $jsdir . 'gridstack.js';
+        $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack_modules'] = $jsdir . 'gridstack_modules';
         $directoriestocopy[get_config('docroot') . 'js/gridlayout.js'] = $jsdir . 'gridlayout.js';
         $directoriestocopy[get_config('docroot') . 'js/masonry/masonry.min.js'] = $jsdir . 'masonry.min.js';
         $directoriestocopy[get_config('docroot') . 'js/select2/select2.full.js'] = $jsdir . 'select2.full.js';
@@ -994,6 +1145,8 @@ abstract class HtmlExportArtefactPlugin {
 
     protected $fileroot;
 
+    protected $extrafileroot;
+
     public function __construct(PluginExportHTML $exporter) {
         $this->exporter = $exporter;
 
@@ -1022,6 +1175,8 @@ abstract class HtmlExportArtefactPlugin {
     abstract public function get_summary();
 
     abstract public function get_summary_weight();
+
+    abstract public function pagination_data($artefact);
 
     public function paginate($artefact) {
 
@@ -1234,7 +1389,7 @@ class HtmlExportOutputFilter {
 
         // Links to pdf block files
         $html = preg_replace_callback(
-            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/blocktype/pdf/viewer\.php\?.*?file=(\d+)(?:&amp;|&|%26).*?(?=[\'"])#',
+            '#(?<=[\'"])(' . $wwwroot . ')?/?artefact/file/blocktype/pdf/viewer\.php\?.*?artefactid=(\d+)(?:&amp;|&|%26).*?(?=[\'"])#',
             array($this, 'replace_pdf_link'),
             $html
         );
@@ -1494,7 +1649,7 @@ class HtmlExportOutputFilter {
                     return '';
                 }
                 $rootpath = ($this->exporter->get('exportingoneview')) ? $this->exporter->get_root_path(2) : $this->exporter->get_root_path(3);
-                return $rootpath . $this->get_export_path_for_file($icon, $options, 'HTML/static/profileicons/');
+                return $rootpath . $this->get_export_path_for_file($icon, $options, $this->rootdir . '/static/profileicons/');
             default:
                 return '';
             }

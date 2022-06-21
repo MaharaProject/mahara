@@ -1,5 +1,6 @@
 <?php
 /**
+ * Group member list.
  *
  * @package    mahara
  * @subpackage core

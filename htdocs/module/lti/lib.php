@@ -60,7 +60,8 @@ class PluginModuleLti extends PluginModule {
         }
 
         require_once(get_config('docroot') . 'webservice/lib.php');
-        external_reload_component('module/lti', false);
+        external_reload_component('module/lti');
+        return true;
     }
 
     public static function has_config() {
@@ -174,7 +175,7 @@ class PluginModuleLti extends PluginModule {
             set_config('webservice_provider_rest_enabled', true);
 
             require_once(get_config('docroot') . 'webservice/lib.php');
-            external_reload_component('module/lti', false);
+            external_reload_component('module/lti');
             set_field('external_services', 'enabled', 1, 'shortname', 'lti', 'component', 'module/lti');
         }
         return true;
@@ -255,7 +256,16 @@ class PluginModuleLti extends PluginModule {
     }
 
     /**
-     * Form for submitting collections/pages for lti assessessment
+     * Form for submitting collections/pages for LTI
+     *
+     * Collections are submittable when these DB collection fields are empty
+     * - submittedgroup
+     * - submittedhost
+     *
+     * Views that are submittable when these DB view fields are empty
+     * - submittedgroup
+     * - submittedhost
+     * - AND their view type is not 'profile'
      */
     public static function submit_for_grading_form() {
         global $USER;
@@ -578,7 +588,7 @@ class PluginModuleLti extends PluginModule {
     }
 
 
-    public function get_grade_dialogue($collectionid, $viewid) {
+    public static function get_grade_dialogue($collectionid, $viewid): string {
         global $SESSION;
 
         if (empty($SESSION->get('lti.assessment'))) {
@@ -781,6 +791,7 @@ class PluginModuleLti extends PluginModule {
     public function revokesubmission_submit(Pieform $form, $values) {
         global $USER;
 
+        $portfolio = null;
         if (!$sub = self::can_revokesubmission()) {
             return false;
         }
@@ -817,6 +828,9 @@ class ModuleLtiSubmission {
     public $timesubmitted;
 
     protected $submitted = false;
+    protected $timegraded;
+    protected $lisresultsourceid;
+    protected $lti_error;
 
     public function __construct($assessment, $userid = null, $collectionid = null, $viewid = null) {
 
@@ -851,6 +865,19 @@ class ModuleLtiSubmission {
         }
 
         return true;
+    }
+
+    /**
+     * ModuleLtiSubmission getter function
+     *
+     * @param  string $field
+     * @return mixed
+     */
+    public function get($field) {
+        if (!property_exists($this, $field)) {
+            throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+        }
+        return $this->{$field};
     }
 
     /**
@@ -927,6 +954,7 @@ class ModuleLtiSubmission {
         }
         db_commit();
 
+        $portfolio = null;
         // Archive/Unlock if required by settings
         if (!empty($this->collectionid)) {
             $portfolio = new Collection($this->collectionid);

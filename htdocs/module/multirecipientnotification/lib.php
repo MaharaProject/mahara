@@ -140,6 +140,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
     }
 
     public static function postinst($prevversion) {
+        return true;
     }
 
     /**
@@ -189,7 +190,7 @@ class PluginModuleMultirecipientnotification extends PluginModule {
      * installation should be converted into the module plugin on mahara system
      * upgrade
      *
-     * @return type
+     * @return void
      */
     public static function sanity_check() {
         try {

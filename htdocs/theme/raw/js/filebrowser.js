@@ -18,7 +18,7 @@ jQuery(function($) {
     function updateFileLegend(e) {
         // Get collapsible element with select-file class and
         // title of the file from filebrowser.js
-        var selectfileTitle = $('.select-file legend a'),
+        var selectfileTitle = $('.select-file legend button'),
             title = e.originalEvent.data.title;
 
         // Display the file name

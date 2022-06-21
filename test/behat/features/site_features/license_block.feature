@@ -17,7 +17,7 @@ Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
   And  I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Creative Commons license"
   And I set the field "Block title" to "Creative Commons license"
@@ -33,7 +33,7 @@ Scenario:
   # Open the block and check it has the correct text
   And I expand "Creative Commons license" node
   Then I should see "Page UserA_01 by Angela User is licensed under a Creative Commons Attribution-Share Alike 4.0 Unported license."
-  When I follow "Edit"
+  When I press "Edit"
   # change to noncommercial and check message
   And I configure the block "Creative Commons license"
   And I disable the switch "Allow commercial uses of your work?"

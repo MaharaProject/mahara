@@ -36,9 +36,12 @@ This button has padding on the right of the icon due to the plus class.
 <section data-markdown data-category="buttons">
 ### Add button (small)
 This button is used for adding items to a list or table, e.g. URLs and users.
+When relying on icons, make sure they are universal symbols, e.g. magnifying glass for search.
+When button does not display any text, include title attribute for sighted people and screen readers.
+For button icon images, add the aria-hidden="true" attribute.
 ```
-<button class="btn-secondary btn-sm btn">
-    <span class="icon icon-plus" role="presentation"></span>
+<button class="btn-secondary btn-sm btn" title="{str tag=addspecific}">
+    <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
 </button>
 ```
 </section>
@@ -81,7 +84,8 @@ This pair of buttons is used for deleting or editing an item.
 This pair of buttons is used for editing or deleting a block item on a page.
 ```
 <div class="blockinstance card card-secondary clearfix">
-    <div class="card-header">
+    <h2 class="card-header">
+      <span class="blockinstance-header">Context</span>
       <span class="blockinstance-controls">
           <span class="float-right btn-group btn-group-top">
               <button class="configurebutton btn btn-inverse btn-sm">
@@ -92,7 +96,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
               </button>
           </span>
       </span>
-    </div>
+    </h2>
 </div>
 ```
 </section>
@@ -101,7 +105,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
 ### Button group
 A group of buttons.
 ```
-<div class=" btn-group">
+<div class="btn-group">
     <a href="#" class="btn btn-secondary">
         Button group
     </a>
@@ -127,6 +131,35 @@ A group of buttons aligned at the top. Note: The box around the buttons is only 
     </div>
     <div class="col-md-4">
         <h3>Context</h3>
+    </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="buttons">
+### Button group top in list group
+A group of buttons aligned at the top within a list-group-item. Note: This utilises flex so titles can wrap properly with the buttons in the same position
+```
+<div class="list-group list-group-top-border">
+    <div class="list-group-item">
+        <div class="flex-row">
+            <div class="flex-title">
+                <h4 class="list-group-item-heading text-inline">List group item heading</h4>
+            </div>
+            <div class="flex-controls">
+                <span class="btn-group btn-group-top">
+                    <button class="btn btn-secondary btn-sm">
+                        <span class="icon icon-cog"></span>
+                    </button>
+                    <button class="deletebutton btn btn-secondary btn-sm">
+                        <span class="icon icon-trash-alt text-danger"></span>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="detail text-small">
+            <p>Context</p>
+        </div>
     </div>
 </div>
 ```
@@ -237,13 +270,15 @@ section .navbar-form.navbar-collapse.search-form {
                 <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Three Button and icon -->
-            <a href="" class="user-icon" title="Profile page">
-                <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
-            </a>
-            <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
-                <span class="sr-only">Show nav three</span>
-                <span class="icon icon-chevron-down collapsed"></span>
-            </button>
+            <div class="user-icon-wrap-toggle navbar-toggle">
+                <a href="" class="user-icon user-icon-25" title="Profile page">
+                    <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
+                </a>
+                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+                    <span class="sr-only">Show nav three</span>
+                    <span class="icon icon-chevron-down collapsed"></span>
+                </button>
+            </div>
             <!-- Hide Search When on Desktop -->
             <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
                 <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
@@ -251,7 +286,7 @@ section .navbar-form.navbar-collapse.search-form {
             </button>
         </div>
         <!-- Nav One -->
-        <nav id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabcard">
+        <nav aria-label="Nav one" id="nav-one" class="nav collapse navbar-collapse nav-one" role="tabcard">
            <ul id="navone" class="nav navbar-nav">
               <li>
                   <a href="">Link 1</a>
@@ -292,7 +327,7 @@ section .navbar-form.navbar-collapse.search-form {
            </ul>
         </nav>
         <!-- Nav Two -->
-        <nav id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabcard" aria-expanded="false">
+        <nav aria-label="Nav two" id="nav-two" class="nav navbar-collapse nav-two collapse" role="tabcard" aria-expanded="false">
             <ul id="navtwo" class="nav navbar-nav">
                 <li>
                     <a href="">Link 1</a>
@@ -330,7 +365,7 @@ section .navbar-form.navbar-collapse.search-form {
             </ul>
         </nav>
         <!-- Nav Three -->
-        <nav id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabcard">
+        <nav aria-label="Nav three" id="nav-three" class=" nav collapse navbar-collapse nav-three" role="tabcard">
             <ul id="navthree" class="nav navbar-nav">
                 <li class="has-icon">
                     <a href="">
@@ -712,7 +747,7 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 
 <section data-markdown data-category="cards">
 ### Block layout
-This is the general layout of blocks. An example of this being used is the 'Latest changes I can view' block on the dashboard.
+This is the general layout of blocks. An example of this being used is the 'Portfolios shared with me' block on the dashboard.
 ```
 <div class="bt-newviews card clearfix">
     <h2 class="title card-header js-heading">Block</h2>
@@ -760,7 +795,7 @@ This is the general layout of blocks. An example of this being used is the 'Late
     </button>
     <h2>{str tag=Collection section=collection}: Collection 1</h2>
     <p class="navlabel">{str tag=navtopage section=collection}</p>
-    <nav class="custom-dropdown dropdown">
+    <nav aria-label="{str tag=Collection section=collection}" class="custom-dropdown dropdown">
         <ul id="pagelist" class="collapse">
             <li>
                 <a href="" data-index="0">Page 1</a>
@@ -772,10 +807,10 @@ This is the general layout of blocks. An example of this being used is the 'Late
                 <a href="" data-index="2">Page 3</a>
             </li>
         </ul>
-        <span class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
+        <button class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
             <span id="currentindex" data-currentindex="1">2</span>
             /3
-        </span>
+        </button>
     </nav>
 </div>
 ```
@@ -792,7 +827,7 @@ This card is used to show a page.
         </h2>
         <div class="card-body">
             <div class="detail">
-                <div class="detail">Your dashboard page is what you see on the homepage when you first log in. Only you have access to it.</div>
+                <div class="detail">Your dashboard page is what you see on the homepage when you are logged in. Only you have access to it.</div>
             </div>
         </div>
         <div class="card-footer">

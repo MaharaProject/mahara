@@ -28,7 +28,7 @@
 /// It extends XMLDBgenerator so everything can be
 /// overriden as needed to generate correct SQL.
 
-class XMLDBmysql extends XMLDBGenerator {
+class XMLDBmysql extends XMLDBgenerator {
 
 /// Only set values that are different from the defaults present in XMLDBgenerator
 

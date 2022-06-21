@@ -60,6 +60,7 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
 
     if ($mimetype == 'text/html'
         || $mimetype == 'text/xml'
+        || $mimetype == 'application/json'
         || $mimetype == 'application/xml'
         || $mimetype == 'application/xhtml+xml'
         || $mimetype == 'image/svg+xml') {
@@ -943,6 +944,62 @@ function file_cleanup_old_cached_files() {
             if (sizeof(scandir($dir1path)) <= 2) {   // first 2 entries are . and ..
                 rmdir($dir1path);
             }
+        }
+    }
+}
+
+/**
+ * Clean up temporary files
+ *
+ * This function will deal with the removing of temp files
+ * that live outside the dataroot/artefact/ sub directory
+ * - use file_cleanup_old_cached_files() for files in dataroot/artefact/
+ *
+ * @param array $paths  Array of valid relative dataroot paths or 'all'
+ */
+function file_cleanup_old_temp_files($paths=array()) {
+    $validpaths = array(
+        'export' => time() - (2 * 24 * 60 * 60),               // 2 days
+        'htmllite' => time() - (2 * 24 * 60 * 60),             // 2 days
+        'pdflite' => time() - (2 * 24 * 60 * 60),              // 2 days
+        'import' => time() - (3 * 24 * 60 * 60),               // 3 days
+        'temp' => time() - (1 * 7 * 24 * 60 * 60),             // 1 week
+        'langpacks_backup' => time() - (6 * 7 * 24 * 60 * 60), // 6 weeks
+        'quarantine' => time() - (12 * 7 * 24 * 60 * 60),      // 12 weeks
+    );
+
+    $cachepaths = $validpaths;
+    // check that the paths supplied are valid
+    if (is_array($paths) && $paths[0] != 'all') {
+        $cachepaths = array_intersect_key($validpaths, $paths);
+    }
+
+    $files = array();
+    $dirs = array();
+    foreach ($cachepaths as $cpath => $mintime) {
+        $basedir = get_config('dataroot') . $cpath . '/';
+        if (!check_dir_exists($basedir, false)) {
+            continue;
+        }
+        $rii = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($basedir));
+        foreach ($rii as $file) {
+            if ($file->isDir() && $file->getCTime() < $mintime) {
+                $dirs[$file->getPath()] = $file->getCTime();
+                continue;
+            }
+            $files[] = $file->getPathname();
+            if ($file->getCTime() < $mintime) {
+                unlink($file->getPathname());
+            }
+        }
+    }
+
+    // Clean up any empty directories that are older than the mintime
+    krsort($dirs, SORT_FLAG_CASE);
+    foreach ($dirs as $dir => $ctime) {
+        $isdirempty = !(new \FilesystemIterator($dir))->valid();
+        if ($isdirempty) {
+            rmdirr($dir);
         }
     }
 }

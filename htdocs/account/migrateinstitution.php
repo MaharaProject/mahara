@@ -19,6 +19,7 @@ safe_require('auth', 'saml');
 define('TITLE', get_string('institutionmembership'));
 define('SUBSECTIONHEADING', get_string('selfmigration', 'mahara'));
 $postformresponse = false;
+$clashinstitutionname = '';
 
 if ($SESSION->get('migrateresponse')) {
     // we are returning from the SAMl check

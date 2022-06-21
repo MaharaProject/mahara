@@ -88,6 +88,7 @@ if (!empty($function)) {
     $params[]= 'function=' . $function;
 }
 
+$problem = false;
 if (!empty($authtype)) {
     // add service group
     $dbservices = get_records_select_array('external_services', 'enabled = ? AND restrictedusers = ?', array(1, ($authtype == 'token' ? 0 : 1)));
@@ -99,14 +100,22 @@ if (!empty($authtype)) {
     }
     $sopts_keys = array_keys($sopts);
     $default_service = ($service == 0 ? array_shift($sopts_keys) : $service);
-    $elements['service'] = array(
-        'type'         => 'select',
-        'title'        => get_string('servicename', 'auth.webservice'),
-        'options'      => $sopts,
-        'defaultvalue' => $default_service,
-        'disabled'     => (!empty($service)),
-    );
-
+    if (!empty($sopts)) {
+        $elements['service'] = array(
+            'type'         => 'select',
+            'title'        => get_string('servicename', 'auth.webservice'),
+            'options'      => $sopts,
+            'defaultvalue' => $default_service,
+            'disabled'     => (!empty($service)),
+        );
+    }
+    else {
+        $problem = true;
+        $elements['service'] = array(
+            'type' => 'html',
+            'value' => get_string('servicenamemissing', 'auth.webservice'),
+        );
+    }
 
     // finally add function choice
     if ($service != 0 && !empty($dbs)) {
@@ -236,13 +245,14 @@ if (!empty($authtype)) {
         $nextaction = get_string('execute', 'auth.webservice');
     }
 }
-
-$elements['submit'] = array(
+if (!$problem) {
+    $elements['submit'] = array(
             'type'  => 'submitcancel',
             'value' => array($nextaction, get_string('cancel')),
             'subclass' => array('btn-primary'),
             'goto'  => get_config('wwwroot') . 'webservice/testclient.php',
-        );
+    );
+}
 if (!empty($elements['protocol']['options'])) {
     $form = pieform(array(
         'name'            => 'testclient',
@@ -305,6 +315,10 @@ function testclient_parameters_desc($fdesc, $name, $type='desc') {
         else if (count($name) == 3) {
             $result = $fdesc->parameters_desc->keys[$name[0]]->content->keys[$name[1]]->content->keys[$name[2]]->$type;
         }
+        return $result;
+    }
+    else if (count($name) === 1 && isset($fdesc->parameters_desc->keys[$name[0]])) {
+        $result = $fdesc->parameters_desc->keys[$name[0]]->$type;
         return $result;
     }
     return null;

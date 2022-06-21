@@ -183,7 +183,7 @@ EOD;
      *
      * @return void
      */
-    protected function setUp() {
+    protected function setUp(): void {
         configure_dbconnection();
     }
 
@@ -286,7 +286,7 @@ EOD;
      *
      * <b>always</b> call this, even if you override it.
      */
-    protected function tearDown() {
+    protected function tearDown(): void {
         foreach ($this->testusers as $userid) {
             delete_user($userid);
         }

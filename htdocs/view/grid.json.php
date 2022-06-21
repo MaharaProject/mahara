@@ -33,6 +33,7 @@ try {
         if ($bi->get('view') != $view->get('id')) {
           throw new AccessDeniedException(get_string('blocknotinview', 'view', $bi->get('id')));
         }
+
         $bi->set('positionx', $dimensions->newx);
         $bi->set('positiony', $dimensions->newy);
         $bi->set('width', $dimensions->newwidth);

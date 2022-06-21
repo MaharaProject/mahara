@@ -17,7 +17,7 @@ Scenario: Turning on and of switches in Journal configuration block (Bug 1431569
  Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Create" from main menu
- And I follow "New entry"
+ And I press "New entry"
  And I press "Save entry"
  And I should see "There was an error with submitting this form. Please check the marked fields and try again."
 
@@ -26,7 +26,7 @@ Scenario: Creating a Journal entry
  Given I log in as "admin" with password "Kupuh1pa!"
  # Navigating to switchbox in Journal block
  And I choose "Journals" in "Create" from main menu
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "Story of my life"
  And I set the following fields to these values:
  | Allow comments | 0 |
@@ -38,7 +38,7 @@ Scenario: Creating a Journal entry
 
  And I press "Save entry"
 
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "Story of my life, part 2"
  And I set the following fields to these values:
  | Allow comments | 0 |
@@ -49,7 +49,7 @@ Scenario: Creating a Journal entry
  And I fill in select2 input "editpost_tags" with "test" and select "test"
  And I press "Save entry"
 
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "Story of my life, part 3"
  And I set the following fields to these values:
  | Allow comments | 0 |
@@ -63,17 +63,17 @@ Scenario: Creating a Journal entry
  # Adding journal entry to group 'GroupA'
  When I choose "Groups" in "Engage" from main menu
  And I follow "GroupA"
- And I follow "Journals" in the "Arrow-bar nav" property
+ And I follow "Journals" in the "Arrow-bar nav" "Nav" property
  # Confirm page contains text "There are no journals in this group" (Bug 1017785)
  Then I should see "There are no journals in this group."
  # Confirm page contains link "Add one" that links to Create new Journal page. (Bug 1017785)
  When I follow "Add one"
  Then I should see "New journal | GroupA"
  And I move backward one page
- And I follow "Create journal"
+ And I press "Create journal"
  And I fill in "Title *" with "My group journal"
  And I press "Create journal"
- And I follow "New entry"
+ And I press "New entry"
  And I fill in "Title *" with "My group entry one"
  And I set the following fields to these values:
  | Entry | I love my mum |
@@ -82,8 +82,8 @@ Scenario: Creating a Journal entry
  # Adding journal blocks to a page
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Page admin_01"
- And I follow "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ And I press "Edit"
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Tagged journal entries"
  And I set the field "Block title" to "Tagged journal entries"
@@ -97,7 +97,7 @@ Scenario: Creating a Journal entry
  And I wait "1" seconds
  And I clear value "one" from select2 field "instconf_tagselect"
  And I press "Save"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Recent journal entries"
  And I check "Admin Account's Journal"

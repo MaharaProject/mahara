@@ -15,6 +15,11 @@ And the following "pages" exist:
     | Page UserA_02 | Page 02 | user | UserA |
     | Page UserA_03 | Page 02 | user | UserA |
 
+   And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Portfolios shared with me | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+    | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
     # Background step requires an activation of a plugin
     # we are looking to simplify this
     # see - https://reviews.mahara.org/#/c/9032/
@@ -25,7 +30,7 @@ And the following "pages" exist:
     And I press "activate_blocktype_annotation_submit"
     # Make sure we have a matrix config form
     And I choose "SmartEvidence" in "Extensions" from administration menu
-    And I follow "Import" in the "Arrow-bar nav" property
+    And I follow "Import" in the "Arrow-bar nav" "Nav" property
     And I attach the file "example.matrix" to "Matrix file"
     And I press "Upload matrix"
     # Enable Institutions to allow SmartEvidence
@@ -39,7 +44,7 @@ Scenario: SmartEvidence interaction by member / staff
     # Creating a collection of existing pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Add"
+    And I press "Add"
     When I click on "Collection" in the dialog
     And I fill in the following:
     | Collection name | Smart Evidence Collection 1 |
@@ -48,7 +53,7 @@ Scenario: SmartEvidence interaction by member / staff
     And I press "Next: Edit collection pages"
     And I follow "All"
     And I press "Add pages"
-    When I follow "Next: Edit access"
+    When I press "Next: Edit access"
     Then I click on "Return to pages and collections"
 
     # PCNZ customisation WR349184
@@ -111,5 +116,5 @@ Scenario: SmartEvidence interaction by member / staff
     And I should see "Assessment: Doesn't meet the standard"
     And I should see "Mahara member placing feedback"
     # verify that user cannot delete Other user's annotations.
-    And I should see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[3]/div[1]/div" "xpath_element"
-    And I should not see "Edit" in the "//*[starts-with(@id,'annotation_feedbacktable')]/div/div/div[2]/li[2]/div[1]/div" "xpath_element"
+    And I should see "Edit" in the "Feedback annotation row 3" "Smartevidence" property
+    And I should not see "Edit" in the "Feedback annotation row 2" "Smartevidence" property

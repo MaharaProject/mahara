@@ -26,14 +26,14 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
     Then I should see "New site journal: Journal settings"
     And I move backward one page
     # Make sure more than one site journal can be created
-    And I follow "Create journal"
+    And I press "Create journal"
     And I should see "New site journal:"
     And I fill in "Title" with "Site Journal 1"
     And I set the following fields to these values:
     | Description | The first mahara institution journal |
     And I click on "Create journal"
     Then I should see "Site journal 1"
-    And I follow "Create journal"
+    And I press "Create journal"
     And I fill in "Title" with "Site Journal 2"
     And I set the following fields to these values:
     | Description | The second mahara institution journal |
@@ -48,14 +48,14 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
     When I follow "Add one"
     Then I should see "New \"Institution One\" journal: Journal settings"
     And I move backward one page
-    And I follow "Create journal"
+    And I press "Create journal"
     And I should see "New \"Institution One\" journal:"
     And I fill in "Title" with "Institution One Journal 1"
     And I set the following fields to these values:
     | Description | The Institution One journal |
     And I click on "Create journal"
     Then I should see "Institution One Journal 1"
-    And I follow "Create journal"
+    And I press "Create journal"
     And I fill in "Title" with "Institution One Journal 2"
     And I set the following fields to these values:
     | Description | Another Institution One journal |
@@ -65,7 +65,7 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
     # try making a journal for another institution
     And I select "Institution Two" from "institutionselect_institution"
     And I should not see "Institution One Journal 1"
-    And I follow "Create journal"
+    And I press "Create journal"
     And I should see "New \"Institution Two\" journal:"
     And I fill in "Title" with "Institution Two Journal 1"
     And I set the following fields to these values:
@@ -74,14 +74,14 @@ Scenario: Clicking on the journal sub menu headings and adding first journal (Bu
     Then I should see "Institution Two Journal 1"
 
     # Try adding some journal entries to the journal
-    And I follow "New entry"
+    And I press "New entry"
     And I should see "New journal entry in journal \"Institution Two Journal 1\""
     And I fill in "Title *" with "Journal entry 1"
     And I set the following fields to these values:
     | Entry * | The contents of this entry |
     And I click on "Save entry"
     Then I should see "Journal entry saved"
-    And I follow "New entry"
+    And I press "New entry"
     And I fill in "Title *" with "Journal entry 2"
     And I set the following fields to these values:
     | Entry * | The contents of this entry |
@@ -99,12 +99,12 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Creating a site wide journal
     And I choose "Journals" in "Configure site" from administration menu
-    And I follow "Create journal"
+    And I press "Create journal"
     And I set the following fields to these values:
     | Title * | Site journal 1 |
     | Description | Contents of site journal 1 |
     And I press "Create journal"
-    And I follow "New entry"
+    And I press "New entry"
     And I fill in "Title *" with "Spongebob"
     And I set the following fields to these values:
     | Entry * | *)_4442)&@*#&^%%!+_()**&gha~gsd |
@@ -114,16 +114,16 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     And I choose "Pages and collections" in "Configure site" from administration menu
     And I click on "Edit" in "Page mahara_01" card menu
     # Adding journal block to the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Journal"
     And I select the radio "Site journal 1"
     And I select "Others will get their own copy of your journal" from "Block copy permission"
     And I press "Save"
     And I scroll to the id "main-nav"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I press "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "accesslist[0][searchtype]"
-    And I follow "Advanced options"
+    And I press "Advanced options"
     And I set the following fields to these values:
     | Allow copying | 1 |
     | Copy into new accounts | 1 |

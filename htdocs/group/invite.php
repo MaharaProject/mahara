@@ -1,5 +1,6 @@
 <?php
 /**
+ * The page for inviting people to a group.
  *
  * @package    mahara
  * @subpackage core
@@ -77,6 +78,13 @@ $smarty->assign('subheading', TITLE);
 $smarty->assign('form', $form);
 $smarty->display('group/invite.tpl');
 
+/**
+ * Submit group invitation.
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function invitetogroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $group, $user;
     group_invite_user($group, $user->id, $USER, isset($values['role']) ? $values['role'] : null);

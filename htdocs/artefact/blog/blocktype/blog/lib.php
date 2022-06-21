@@ -37,6 +37,9 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
     public static function get_categories() {
         return array('blog' => 10000);
     }
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
 
     public static function get_link(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
@@ -44,6 +47,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             $data = get_config('wwwroot') . 'view/view.php?id=' . $instance->get('view') . '&modal=1&block=' . $instance->get('id') . '&artefact=' . $configdata['artefactid'];
             return sanitize_url($data);
         }
+        return false;
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
@@ -67,7 +71,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
 
             $limit = isset($configdata['count']) ? intval($configdata['count']) : 5;
             $limit = ($exporter || $versioning) ? 0 : $limit;
-            $posts = ArtefactTypeBlogpost::get_posts($blog->get('id'), $limit, 0, $configdata);
+            $posts = ArtefactTypeBlogPost::get_posts($blog->get('id'), $limit, 0, $configdata);
             $template = 'artefact:blog:viewposts.tpl';
             if ($exporter || $versioning) {
                 $pagination = false;
@@ -84,7 +88,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
             }
             $configdata['blockid'] = $instance->get('id');
             $configdata['editing'] = $editing;
-            ArtefactTypeBlogpost::render_posts($posts, $template, $configdata, $pagination);
+            ArtefactTypeBlogPost::render_posts($posts, $template, $configdata, $pagination);
 
             $smarty = smarty_core();
             if (isset($configdata['viewid'])) {
@@ -124,7 +128,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         return $result;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -138,6 +142,8 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         $institution = $view->get('institution');
         $group = $view->get('group');
 
+
+        $blog = null;
         if (!empty($configdata['artefactid'])) {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
         }
@@ -260,7 +266,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
         );
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'nocopy';
     }
 

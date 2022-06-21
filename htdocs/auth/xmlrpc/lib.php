@@ -24,6 +24,9 @@ require_once(get_config('libroot') . 'institution.php');
  */
 class AuthXmlrpc extends Auth {
 
+    protected $parent;
+    protected $wwwroot;
+
     /**findByWwwroot
      * Get the party started with an optional id
      * TODO: appraise
@@ -61,6 +64,10 @@ class AuthXmlrpc extends Auth {
     public function init($id = null) {
         $this->ready = parent::init($id);
         return $this->ready;
+    }
+
+    public function get($name) {
+        return $this->__get($name);
     }
 
     public function __get($name) {
@@ -104,7 +111,7 @@ class AuthXmlrpc extends Auth {
 
         $remoteuser = (object)$client->response;
 
-        if (empty($remoteuser) or !property_exists($remoteuser, 'username')) {
+        if (!$remoteuser or !property_exists($remoteuser, 'username')) {
             // Caught by land.php
             throw new AccessDeniedException();
         }
@@ -313,7 +320,7 @@ class AuthXmlrpc extends Auth {
                         try {
                             $user->quota_add($filesize);
                         }
-                        catch (QuotaException $qe) {
+                        catch (Exception $qe) {
                             $error =  get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot'));
                         }
 
@@ -497,10 +504,10 @@ class AuthXmlrpc extends Auth {
             $client->set_method('auth/mnet/auth.php/kill_children')
                    ->add_param($username)
                    ->add_param(sha1($_SERVER['HTTP_USER_AGENT']))
-                   ->send($this->wwwroot);
+                   ->send($this->get('wwwroot'));
         }
         catch (XmlrpcClientException $e) {
-            log_debug("XMLRPC error occurred while calling MNET method kill_children on $this->wwwroot");
+            log_debug("XMLRPC error occurred while calling MNET method kill_children on " . $this->get('wwwroot'));
             log_debug("This means that single-signout probably didn't work properly, but the problem "
                 . "is at the remote application");
             log_debug("If the remote application is Moodle, you are likely a victim of "
@@ -543,17 +550,17 @@ class AuthXmlrpc extends Auth {
         if (param_exists('logout')) {
             // Explicit logout request
             $this->kill_parent($remoteusername);
-            redirect($this->wwwroot);
+            redirect($this->get('wwwroot'));
         }
         elseif (!$this->parent) {
             $this->kill_parent($remoteusername);
             if ($sessionlogouttime == 0 || $sessionlogouttime > time()) {
                 // Redirect back to their IDP if they don't have a parent auth method set
                 // (aka: they can't log in at Mahara's log in form)
-                $peer = get_peer($this->wwwroot);
+                $peer = get_peer($this->get('wwwroot'));
                 // TODO: This should be stored in the application config table
                 $jumpurl = str_replace('land', 'jump', $peer->application->ssolandurl);
-                redirect($this->wwwroot . $jumpurl . '?hostwwwroot=' . dropslash(get_config('wwwroot')) . '&wantsurl=' . urlencode($_SERVER['REQUEST_URI']));
+                redirect($this->get('wwwroot') . $jumpurl . '?hostwwwroot=' . dropslash(get_config('wwwroot')) . '&wantsurl=' . urlencode($_SERVER['REQUEST_URI']));
             }
         }
 
@@ -1067,6 +1074,8 @@ function localurl_to_jumpurl($url) {
 function auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid) {
     global $SESSION, $USER;
 
+    $coll = null;
+    $view = null;
     if ($mnetviewid) {
         $mnetitemid = $mnetviewid;
         $iscollection = false;
@@ -1126,7 +1135,7 @@ function auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid) {
     }
     catch (XmlrpcClientException $e) {
         // The Moodle plugin shouldn't be using the new params unless it publishes the can_view_view service, but who knows
-        log_debug("The moodle at ".$auth->wwwroot." needs to PUBLISH the Assign Submission Mahara services in MNet settings.");
+        log_debug("The moodle at " . $auth->wwwroot . " needs to PUBLISH the Assign Submission Mahara services in MNet settings.");
         log_debug($e->getMessage());
     }
 

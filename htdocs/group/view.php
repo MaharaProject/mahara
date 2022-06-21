@@ -1,5 +1,6 @@
 <?php
 /**
+ * The group 'About' page.
  *
  * @package    mahara
  * @subpackage core
@@ -83,21 +84,18 @@ $editwindow = group_format_editwindow($group);
 
 $view = group_get_homepage_view($group->id);
 if ($newlayout = $view->uses_new_layout()) {
-    $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
+    $layoutjs = array('js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js');
     $blocks = $view->get_blocks();
     $blocks = json_encode($blocks);
     $blocksjs =   <<<EOF
     $(function () {
         var options = {
-            verticalMargin: 5,
+            margin: 1,
             cellHeight: 10,
             disableDrag : true,
             disableResize: true,
         };
-        var grid = $('.grid-stack');
-        grid.gridstack(options);
-        grid = $('.grid-stack').data('gridstack');
-
+        var grid = GridStack.init(options);
         // should add the blocks one by one
         var blocks = {$blocks};
         loadGrid(grid, blocks);
@@ -163,7 +161,7 @@ if (!$newlayout) {
 $smarty->assign('group', $group);
 $smarty->assign('editwindow', $editwindow);
 $smarty->assign('cancopy', group_can_create_groups());
-$smarty->assign('SUBPAGETOP', 'group/groupuserstatus.tpl');
+$smarty->assign('SUBPAGETOP', 'group/groupuseractions.tpl');
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());

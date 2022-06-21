@@ -168,6 +168,9 @@ function addvariantform_submit(Pieform $form, $values) {
     libxml_after();
 
     // Update variants column in database record...
+    $font_style = '';
+    $font_variant = '';
+    $font_weight = '';
     switch ($values['fontstyle']) {
         case 'regular':
             $font_variant = 'regular';

@@ -28,6 +28,10 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return array('external' => 36000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function get_css_icon_type($blockname) {
         return 'icon-brand';
     }
@@ -68,7 +72,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return get_string('badurlerror', 'blocktype.googleapps', $url);
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -381,6 +385,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         $url = htmlspecialchars_decode($url); // convert &amp; back to &, etc.
         foreach ($embedsources as $source) {
             if (preg_match($source['match'], $url)) {
+                $apps_url = '';
                 if (is_string($source['url'])) {
                     $apps_url = preg_replace($source['match'], $source['url'], $url);
                 }
@@ -414,7 +419,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:googleapps:supported.tpl');
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
@@ -422,7 +427,7 @@ class PluginBlocktypeGoogleApps extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

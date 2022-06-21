@@ -108,7 +108,11 @@ if (isset($key)) {
         $user->firstname        = $registration->firstname;
         $user->lastname         = $registration->lastname;
         $user->email            = $registration->email;
-        $user->username         = get_new_username($user->firstname . $user->lastname);
+
+        //remove spaces from firstname and lastname before concatenating
+        $newusername = preg_replace('/\s+/', '', $user->firstname . $user->lastname);
+
+        $user->username         = get_new_username($newusername);
         $user->passwordchange   = 1;
 
         // Points that indicate the user is a "new user" who should be restricted from spammy activities.

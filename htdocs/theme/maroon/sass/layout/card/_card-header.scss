@@ -91,7 +91,7 @@
     &.bt-googleapps .card-header:before {
         content: fa-content($fa-var-google);
     }
-    &.bt-wall h3.card-header:before {
+    &.bt-wall .card-header:before {
         content: fa-content($fa-var-quote-left);
     }
     &.bt-myfriends .card-header:before {

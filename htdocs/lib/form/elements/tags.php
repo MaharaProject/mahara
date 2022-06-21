@@ -97,7 +97,7 @@ function translate_tags_to_names(array $ids) {
  * @return $tag Formatted tag
  */
 function display_tag($name, $alltags, $showcount = false) {
-    if ($alltags[$name]->prefix && !empty($alltags[$name]->prefix)) {
+    if ($alltags[$name]->prefix) {
         $prefix = $alltags[$name]->prefix;
         $tag = $prefix . ': '. $alltags[$name]->tag;
     }
@@ -241,8 +241,8 @@ function get_all_tags_for_user($query = null, $limit = null, $offset = null, $in
     return $return;
 }
 
-function pieform_element_tags_get_headdata($element) {
-    return pieform_element_autocomplete_get_headdata($element);
+function pieform_element_tags_get_headdata() {
+    return pieform_element_autocomplete_get_headdata();
 }
 
 function pieform_element_tags_get_value(Pieform $form, $element) {

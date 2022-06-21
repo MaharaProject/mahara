@@ -2,10 +2,10 @@
 
 {if $admin}
 <div id="forumbtn" class="btn-top-right btn-group btn-group-top">
-    <a href="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum" class="btn btn-secondary newforum">
+    <button class="btn btn-secondary" type="submit" data-url="{$WWWROOT}interaction/edit.php?group={$groupid}&amp;plugin=forum">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag="newforum" section=interaction.forum}
-    </a>
+    </button>
 </div>
 {/if}
 
@@ -84,15 +84,14 @@
                 {if $admin}
                 <td class="right control-buttons">
                     <div class="btn-group">
-                        <a href="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index" class="btn btn-secondary btn-sm" title="{str tag=edit}">
+                        <button class="btn btn-secondary btn-sm" type="submit" data-url="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=editspecific arg1=$forum->title}</span>
-                        </a>
-
-                        <a href="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index" class="btn btn-secondary btn-sm" title="{str tag=delete}">
+                        </button>
+                        <button class="btn btn-secondary btn-sm" type="submit" data-url="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index">
                             <span class="text-danger icon icon-trash-alt" role="presentation" aria-hidden="true"></span>
                             <span class="sr-only">{str tag=deletespecific arg1=$forum->title}</span>
-                        </a>
+                        </button>
                     </div>
                 </td>
                 {/if}

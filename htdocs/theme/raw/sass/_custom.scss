@@ -173,6 +173,12 @@
 .editgroup-container {
     padding-bottom: $spacing-xl;
     margin-bottom: $spacing-xl;
+    @include media-breakpoint-down(sm) {
+        .column-list {
+            column-count: 1;
+            column-gap: 0;
+        }
+    }
     &:last-child {
         border-bottom-width: 0;
         margin-bottom: 0;
@@ -184,6 +190,20 @@
     }
     .checkbox {
         display: inline-block;
+    }
+    .form-check.group-invite {
+        white-space: nowrap;
+        margin-bottom: $spacing-base;
+        padding-left: 0;
+
+        label {
+            white-space: normal;
+        }
+        @include media-breakpoint-up(sm) {
+            label {
+                min-width: 1rem;
+            }
+        }
     }
 }
 
@@ -228,10 +248,10 @@
 
 .secreturls .list-group-item {
     .secret-url {
-        word-wrap: break-word;
-    }
-    .btn-group-top .btn-sm {
-      border-top-width: 0;
+        word-wrap: anywhere;
+        font-size: $font-size-base;
+        font-family: $font-family-base;
+        font-weight: $font-weight-bold;
     }
 }
 .iframesources .buttonscell a {
@@ -431,6 +451,21 @@ div.toolbarhtml {
     div.fieldset-body {
         background-color: $accent-bg !important;
     }
+    // move instructions down to avoid overlap with link
+    div.fieldset-body {
+        margin-top: 1px !important;
+        margin-bottom: 1px !important;
+    }
+
+    // put the link underline option back in the legend link for instructions
+    legend a {
+        text-decoration: $link-decoration !important;
+
+        &:hover,
+        &:focus {
+           text-decoration: $link-hover-decoration !important;
+        }
+    }
 }
 .peerinstructions {
     div.fieldset-body {
@@ -446,6 +481,9 @@ div.toolbarhtml {
 .releaseviewform {
     position: relative;
     top: $spacing-lg;
+    div {
+        padding-right: 5px !important;
+    }
 }
 
 #pendinglist {
@@ -578,6 +616,7 @@ div.toolbarhtml {
         border-bottom-right-radius: 0;
     }
     input.submit {
+        border-radius: $input-border-radius;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
@@ -624,4 +663,13 @@ div.toolbarhtml {
         border-bottom: 0;
         float: right;
     }
+#synclanguage .icon.icon-check-circle {
+    color: theme-color("success");
+}
+#add_language_addlangdesc_container {
+    margin-left: 0.5rem;
+}
+
+.form-inline .form-group.description {
+    padding-left: $spacing-sm;
 }

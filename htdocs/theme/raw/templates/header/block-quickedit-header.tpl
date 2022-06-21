@@ -5,7 +5,7 @@
         href="#"
         data-blockid="{$blockid}"
         title="{str tag=quickedit section=view}">
-        <span class="icon icon-cog" role="presentation" aria-hidden="true" title="{str tag=quickedit section=view}"></span>
+        <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true" title="{str tag=quickedit section=view}"></span>
         {str tag=quickedit section=view}
     </a>
 </div>

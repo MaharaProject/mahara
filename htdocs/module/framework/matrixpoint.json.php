@@ -30,7 +30,6 @@ $viewid       = param_integer('view');
 $action     = param_alphanum('action', 'form');
 form_validate(param_variable('sesskey', null));
 $evidence = get_record('framework_evidence', 'framework', $framework, 'element', $option, 'view', $viewid);
-
 if ($action == 'update') {
     // When we click a dot on the matrix and add an annotation
     require_once(get_config('docroot') . 'blocktype/lib.php');

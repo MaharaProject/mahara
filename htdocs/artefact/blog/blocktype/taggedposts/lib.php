@@ -28,12 +28,17 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
         return array('blog' => 13000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function get_instance_javascript(BlockInstance $bi) {
         $blockid = $bi->get('id');
+        $viewid = $bi->get('view');
         return array(
             array(
                 'file'   => 'js/taggedposts.js',
-                'initjs' => "addNewTaggedPostShortcut($blockid);",
+                'initjs' => "taggedPostsAddNewPostShortcut($blockid, $viewid);",
             )
         );
     }
@@ -241,7 +246,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
                     $result->updateddate= format_date(strtotime($result->mtime));
                 }
 
-                $artefact = new ArtefactTypeBlogpost($result->id);
+                $artefact = new ArtefactTypeBlogPost($result->id);
                 // get comments for this post
                 $result->commentcount = count_records_select('artefact_comment_comment', "onartefact = {$result->id} AND private = 0 AND deletedby IS NULL AND hidden=0");
                 $allowcomments = $artefact->get('allowcomments');
@@ -362,7 +367,7 @@ class PluginBlocktypeTaggedposts extends MaharaCoreBlocktype {
             ", array($USER->id));
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -551,7 +556,7 @@ EOF;
         return $artefacts;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'nocopy';
     }
 

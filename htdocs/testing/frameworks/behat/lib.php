@@ -122,7 +122,7 @@ function behat_error_handler($errno, $errstr, $errfile, $errline, $errcontext) {
     }
 
     // Using the default one in case there is a fatal catchable error.
-    default_error_handler($errno, $errstr, $errfile, $errline, $errcontext);
+    error($errno, $errstr, $errfile, $errline, $errcontext);
 
     switch ($errno) {
         case E_USER_ERROR:

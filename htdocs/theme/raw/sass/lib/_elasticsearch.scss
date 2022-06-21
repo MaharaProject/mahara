@@ -23,6 +23,9 @@
         @include media-breakpoint-up(md) {
             float: left;
         }
+        &.btn-group > .btn:not(:last-child) {
+            border-radius: $input-border-radius;
+        }
     }
     .search-results-sort,
     .search-filter-owner {

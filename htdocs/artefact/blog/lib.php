@@ -220,7 +220,7 @@ class ArtefactTypeBlog extends ArtefactType {
         return $title;
     }
 
-    public function display_postedby($date, $by) {
+    public static function display_postedby($date, $by) {
         global $USER;
 
         if (!is_numeric($date)) {
@@ -339,7 +339,7 @@ class ArtefactTypeBlog extends ArtefactType {
             $options['countcomments'] = (!empty($options['viewid']));
         }
 
-        $posts = ArtefactTypeBlogpost::get_posts($this->id, $limit, $offset, $options);
+        $posts = ArtefactTypeBlogPost::get_posts($this->id, $limit, $offset, $options);
 
         $template = 'artefact:blog:viewposts.tpl';
 
@@ -351,7 +351,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'jsonscript' => 'artefact/blog/posts.json.php',
         );
 
-        ArtefactTypeBlogpost::render_posts($posts, $template, $options, $pagination);
+        ArtefactTypeBlogPost::render_posts($posts, $template, $options, $pagination);
         $smarty = smarty_core();
         if (isset($options['viewid'])) {
             $smarty->assign('view', $options['viewid']);
@@ -453,8 +453,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'setlimit' => true,
             'jumplinks' => 6,
             'numbersincludeprevnext' => 2,
-            'resultcounttextsingular' => get_string('blog', 'artefact.blog'),
-            'resultcounttextplural' => get_string('blogs', 'artefact.blog'),
+            'resultcounttext' => get_string('nblogs', 'artefact.blog', $blogs->count)
         ));
         $blogs->pagination = $pagination['html'];
         $blogs->pagination_js = $pagination['javascript'];
@@ -585,6 +584,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'name' => 'delete_' . $id,
             'successcallback' => 'delete_blog_submit',
             'renderer' => 'div',
+            'autofocus' => false,
             'class' => 'form-as-button float-left btn-group-item',
             'elements' => array(
                 'submit' => array(
@@ -639,6 +639,7 @@ class ArtefactTypeBlog extends ArtefactType {
         $viewid = $view->get('id');
         $groupid = $view->get('group');
         $institution = $view->get('institution');
+        $user = new stdClass();
         if ($groupid || $institution) {
             $SESSION->add_msg_once(get_string('copiedblogpoststonewjournal', 'collection'), 'ok', true, 'messages');
         }
@@ -960,6 +961,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      */
     public static function get_post_data($postid) {
         $post = new stdClass();
+        $rownum = 0;
 
         $post->blogid = get_field('artefact', 'parent', 'id', $postid, 'artefacttype', 'blogpost');
 
@@ -1065,8 +1067,8 @@ class ArtefactTypeBlogPost extends ArtefactType {
             // Format dates properly
             if (is_null($viewoptions)) {
                 // My Blogs area: create forms for changing post status & deleting posts.
-                $post->changepoststatus = ArtefactTypeBlogpost::changepoststatus_form($post->id, $post->published, $post->title);
-                $post->delete = ArtefactTypeBlogpost::delete_form($post->id, $post->title);
+                $post->changepoststatus = ArtefactTypeBlogPost::changepoststatus_form($post->id, $post->published, $post->title);
+                $post->delete = ArtefactTypeBlogPost::delete_form($post->id, $post->title);
             }
             else {
                 $by = $post->author ? display_default_name($post->author) : $post->authorname;
@@ -1121,7 +1123,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
      * @param array options
      * @param array pagination
      */
-    public function render_posts(&$posts, $template, $options, $pagination) {
+    public static function render_posts(&$posts, $template, $options, $pagination) {
         $smarty = smarty_core();
         $smarty->assign('options', $options);
         $smarty->assign('posts', $posts['data']);
@@ -1145,8 +1147,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                 'offset' => $posts['offset'],
                 'jumplinks' => 6,
                 'numbersincludeprevnext' => 2,
-                'resultcounttextsingular' => get_string('post', 'artefact.blog'),
-                'resultcounttextplural' => get_string('posts', 'artefact.blog'),
+                'resultcounttext' => get_string('nposts', 'artefact.blog', $posts['count']),
             ));
             $posts['pagination'] = $pagination['html'];
             $posts['pagination_js'] = $pagination['javascript'];
@@ -1345,6 +1346,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
         $blog->commit();
 
         $blogids[$viewid] = $blog->get('id');
+        $user = new stdClass();
         if (!empty($data->group) || !empty($data->institution)) {
             $SESSION->add_ok_msg(get_string('copiedblogpoststonewjournal', 'collection'));
         }

@@ -26,3 +26,14 @@ $string['ownerhasremovedaccesssubject'] = '%s has unlinked you from their MyRece
 $string['ownerhasremovedaccess'] = '%s has unlinked you from their MyRecert portfolio "%s" as a verifier. The Pharmacy Council thanks you for being a verifier.';
 $string['undonesubject'] = 'Portfolio statement reset request actioned';
 $string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who made the statement.';
+$string['progressverifiers'] = 'Verifier percentage';
+
+//Verification checkbox sr-only text
+$string['sharedviewverifiedunchecked'] = '%s by %s is not verified';
+$string['sharedviewverifiedchecked'] = '%s by %s has been verified';
+
+$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been confirmed. However, the approver, %s, wishes to reset it.
+
+They gave the following reason:
+
+%s';

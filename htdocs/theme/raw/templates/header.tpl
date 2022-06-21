@@ -3,7 +3,7 @@
 <!--[if IE 9 ]><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}" class="ie ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}"><!--<![endif]-->
 {include file="header/head.tpl"}
-<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
+<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
     <div class="skiplink btn-group btn-group-top">
         <a class="sr-only sr-only-focusable btn btn-secondary" {if $headertype=='page'}href="#header-target-main"{else}href="#header-main"{/if}>{str tag=skipmenu}</a>
     </div>
@@ -66,7 +66,7 @@
                             <img src="{$sitelogosmall}" alt="{$sitename}">
                         </a>
                     {/if}
-                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF}
+                    {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}
                         <div class="admin-title">
                             <a href="{$WWWROOT}admin/" class="admin-site">{str tag="administration"}</a>
                         </div>

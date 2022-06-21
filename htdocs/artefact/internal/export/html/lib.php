@@ -71,6 +71,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
         // Export all 'socialprofile' entries
         $socialprofiles = get_column_sql('SELECT id FROM {artefact} WHERE "owner" = ? AND artefacttype = ?', array($this->exporter->get('user')->get('id'), 'socialprofile'));
         $profiles = array();
+        $artefact = null;
         foreach ($socialprofiles as $id) {
             $artefact = artefact_instance_from_id($id);
             $rendered = $artefact->render_self(array('link' => true));
@@ -122,6 +123,9 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
 
     public function get_summary_weight() {
         return 0;
+    }
+
+    public function pagination_data($artefact) {
     }
 
     private function get_category_for_artefacttype($artefacttype) {

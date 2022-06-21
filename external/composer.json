@@ -9,7 +9,7 @@
         "emuse/behat-html-formatter": "^0.1",
         "fabpot/goutte": "3.2.3",
         "guzzlehttp/guzzle": "^6.3.0",
-        "phpunit/phpunit": "^6.0",
+        "phpunit/phpunit": "^8",
         "behat/mink-browserkit-driver": "1.3.3",
         "symfony/css-selector": "3.4.38",
         "cweagans/composer-patches": "^1.7"

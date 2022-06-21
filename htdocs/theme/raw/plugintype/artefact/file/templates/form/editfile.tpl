@@ -5,13 +5,16 @@
                 {if $fileinfo && $fileinfo->artefacttype == 'folder'}{str tag=editfolder section=artefact.file}{else}{str tag=editfile section=artefact.file}{/if}
             </h3>
             <div class="form-group requiredmarkerdesc">{str tag='requiredfields' section='pieforms' arg1='*'}</div>
+
+            {* Rotate image *}
             <div id="{$prefix}_rotator" class="form-group image-rotator">
-                <span class="image-rotator-inner">
+                <div class="image-rotator-inner">
                     <img role="presentation" aria-hidden="true" src="{$WWWROOT}theme/raw/images/no_userphoto25.png" title="" alt="">
-                </span>
-                <span class="icon icon-redo btn btn-secondary"></span>
+                </div>
+                <button class="icon icon-redo btn btn-secondary" id="rotate_img" type="button" title="{str tag='rotate90img' section='artefact.file'}"></button>
                 <input type="hidden" id="{$prefix}_edit_orientation" name="{$prefix}_edit_orientation" value="0">
             </div>
+
             <div class="required form-group">
                 <label for="{$prefix}_edit_title">{str tag=name}<span class="requiredmarker"> *</span>
                 </label>

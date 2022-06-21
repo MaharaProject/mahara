@@ -1,5 +1,8 @@
 <?php
 /**
+ * Service functions to be delivered to a Select2 field via ajax
+ *
+ * Used in the webservice logs page to help find errors for a particular function easier
  *
  * @package    mahara
  * @subpackage webservices
@@ -52,6 +55,14 @@ echo json_encode(array(
     'results' => $tmpitem,
 ));
 
+/**
+ * Find the active webservice functions via query
+ *
+ * @param string  $request The query from user input
+ * @param integer $limit   The number of lines to return
+ * @param integer $offset  The offset in database
+ * @return array containing count and data for the rows found
+ */
 function search_functions($request, $limit, $offset) {
     $data = array('count' => 0, 'data' => false);
     $sql = "SELECT * FROM {external_functions} WHERE name LIKE ?";

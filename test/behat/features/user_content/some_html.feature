@@ -19,11 +19,11 @@ Scenario:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Some HTML"
     And I set the field "Block title" to "Some HTML"
-    And I follow "File"
+    And I press "File"
     And I attach the file "test_html.html" to "File"
     And I press "Save"
     #give time for the block to resize

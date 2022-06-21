@@ -1,5 +1,8 @@
 <?php
 /**
+ * View artefact
+ *
+ * Utilities for managing pages in portfolios
  *
  * @package    mahara
  * @subpackage core
@@ -11,6 +14,11 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * View artefact class
+ *
+ * Associated with collections, artefacts, etc.
+ */
 class View {
     private $dirty;
     private $deleted;
@@ -49,9 +57,9 @@ class View {
     private $categorydata;
 
     /**
-     * The type of template
+     * The type of template (integer = 0 if neither USER_TEMPLATE nor SITE_TEMPLATE)
      *
-     * @var USER_TEMPLATE|SITE_TEMPLATE|0
+     * @var USER_TEMPLATE|SITE_TEMPLATE|integer
      */
     private $template;
     private $retainview;
@@ -80,6 +88,7 @@ class View {
      * @var bool
      */
     private $locktemplate = 0;
+    private $blocks = array();
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -88,6 +97,14 @@ class View {
     // constansts view templates
     const USER_TEMPLATE = 1;
     const SITE_TEMPLATE = 2;
+
+    // display format for author names in views
+    const FORMAT_NAME_FIRSTNAME = 1;
+    const FORMAT_NAME_LASTNAME = 2;
+    const FORMAT_NAME_FIRSTNAMELASTNAME = 3;
+    const FORMAT_NAME_PREFERREDNAME = 4;
+    const FORMAT_NAME_STUDENTID = 5;
+    const FORMAT_NAME_DISPLAYNAME = 6;
 
     /**
      * Which view layout is considered the "default" for views with the given
@@ -260,7 +277,7 @@ class View {
                 array($id['urlid'], $id['ownerurlid']),
                 ERROR_MULTIPLE
             );
-            if (empty($tempdata)) {
+            if (!$tempdata) {
                 throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['ownerurlid']));
             }
         }
@@ -271,7 +288,7 @@ class View {
                 WHERE v.urlid = ? AND g.urlid = ? AND g.deleted = 0',
                 array($id['urlid'], $id['groupurlid'])
             );
-            if (empty($tempdata)) {
+            if (!$tempdata) {
                 throw new ViewNotFoundException(get_string('viewnotfoundbyname', 'error', $id['urlid'], $id['groupurlid']));
             }
         }
@@ -282,7 +299,7 @@ class View {
                 WHERE v.id = ? AND (v.group IS NULL OR g.deleted = 0)',
                 array($id)
             );
-            if (empty($tempdata)) {
+            if (!$tempdata) {
                 throw new ViewNotFoundException(get_string('viewnotfound', 'error', $id));
             }
         }
@@ -338,13 +355,13 @@ class View {
                 if ($this->columnsperrow === false || ($this->numrows > 0 && count($this->columnsperrow) != $this->numrows)) {
                     // if we are missing the info for some reason we will give the page it's layout back
                     // this can happen in MySQL when many users are copying the same page
+                    $default = array();
                     if ($this->layout) {
                         if ($rowscols = get_records_sql_array("
                             SELECT vlrc.row, vlc.columns
                             FROM {view_layout_rows_columns} vlrc
                             JOIN {view_layout_columns} vlc ON vlc.id = vlrc.columns
                             WHERE viewlayout = ?", array($this->layout))) {
-                                $default = array();
                                 foreach ($rowscols as $row) {
                                     if ($this->get('id')) {
                                         $vrc = (object) array(
@@ -423,7 +440,7 @@ class View {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, &$artefactcopies) {
+    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, &$artefactcopies=array()) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -445,6 +462,14 @@ class View {
         }
         else if ($checkaccess && !can_view_view($templateid, $userid)) {
             throw new SystemException("View::create_from_template: User $userid is not permitted to copy View $templateid");
+        }
+        if ($skinid = $template->get('skin')) {
+            // Keep the skin on the copy if person is allowed to use that skin
+            require_once('skin.php');
+            $skin = new Skin($skinid);
+            if ($skin->can_use()) {
+                $viewdata['skin'] = $skinid;
+            }
         }
 
         $view = self::_create($viewdata, $userid);
@@ -550,6 +575,11 @@ class View {
      *                        $view->set_access() after retrieving the $view
      *                        object.
      *
+     *                        quiet_update - a flag to skip notifying users
+     *                        on view-creation. When a view is part of a
+     *                        collection, notify users once views are added
+     *                        i.e. creating from a collection template.
+     *
      * @param int $userid The user who has issued the command to create the
      *                    View (note: this is different from the "owner" of the
      *                    View - a group or institution could be the "owner",
@@ -624,7 +654,7 @@ class View {
             require_once('activity.php');
 
             // Although group views are owned by the group, the view creator is treated as owner here.
-            // So we need to ignore them from the activity_occured email.
+            // So we need to ignore them from the activity_occurred email.
             $beforeusers[$userid] = get_record('usr', 'id', $userid);
 
             // By default, group views should be visible to the group
@@ -641,13 +671,16 @@ class View {
                 'parenttype' => 'view',
                 'rules' => $newaccess)
             );
-            // Notify group members
+
             $accessdata = new stdClass();
             $accessdata->view = $view->get('id');
             $accessdata->oldusers = $beforeusers;
-            activity_occurred('viewaccess', $accessdata);
-        }
 
+            // Only send out a notification if this view is not part of a collection in the making.
+            if (!isset($viewdata['quiet_update'])) {
+                activity_occurred('viewaccess', $accessdata);
+            }
+        }
         return new View($view->get('id')); // Reread to ensure defaults are set
     }
 
@@ -795,6 +828,11 @@ class View {
         return array($count, $alltags);
     }
 
+    /**
+     * Get the associated collection
+     *
+     * @return false|object Collection object
+     */
     public function get_collection() {
         if (!isset($this->collection)) {
             require_once(get_config('libroot') . 'collection.php');
@@ -803,6 +841,11 @@ class View {
         return $this->collection;
     }
 
+    /**
+     * Get the columns per row of this view
+     *
+     * @return integer
+     */
     public function get_columnsperrow() {
         if (!isset($this->columnsperrow)) {
             $this->columnsperrow = get_records_sql_assoc('SELECT "row", columns
@@ -813,6 +856,11 @@ class View {
         return $this->columnsperrow;
     }
 
+    /**
+     * Get the collection ID of this view
+     *
+     * @return false|integer
+     */
     public function collection_id() {
         if ($collection = $this->get_collection()) {
             return $collection->get('id');
@@ -820,6 +868,12 @@ class View {
         return false;
     }
 
+    /**
+     * Get the group ID corresponding to the group tasks
+     * associated with this view
+     *
+     * @return false|integer Group ID
+     */
     public function get_group_id_of_corresponding_group_task() {
         $collection = $this->get_collection();
         if ($collection) {
@@ -1003,6 +1057,7 @@ class View {
         delete_records('view_instructions_lock', 'view', $this->id);
         // Remove institution lock references to this view if it's a template.
         set_field('view_instructions_lock', 'originaltemplate', null, 'originaltemplate', $this->id);
+        delete_records('blocktype_verification_undo', 'view', $this->id);
         $eventdata = array('id' => $this->id, 'eventfor' => 'view');
         if ($collection = $this->get_collection()) {
             $eventdata['collection'] = $collection->get('id');
@@ -1031,7 +1086,7 @@ class View {
         }
         // Delete any submission history
         delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
-
+        delete_records('artefact_annotation', 'view', $this->id);
         handle_event('deleteview', $eventdata);
         delete_records('view_rows_columns', 'view', $this->id);
         delete_records('view_copy_queue', 'view', $this->id);
@@ -1083,11 +1138,12 @@ class View {
     public function process_access_records($data=array(), $timeformat=null) {
         $rolegroups = array();
         foreach ($data as &$item) {
-            if (isset($item->group) && $item->role && !isset($roledata[$item->group])) {
+            if (isset($item->group) && $item->role) {
                 $rolegroups[$item->group] = 1;
             }
         }
 
+        $grouptypes = array();
         if ($rolegroups) {
             $grouptypes = get_records_sql_assoc('
                 SELECT id, grouptype
@@ -1283,36 +1339,20 @@ class View {
     }
 
     /**
-     * Set the view access rules
-     * @param  $accessdata     array  For each view access row
-                                      Can contain id, type, startdate, stopdate, allowcomments, approvecomments
-     * @param  $viewids        array  Contains ids of the views getting the access rules
-     * @param  $allowcomments  bool   Holding the view wide allowcomments option
-                                      Needed when changing this and saving page at same time
-                                      as the views are not saved at this point.
+     * Set the access rules
+     * Given some accessdata, fills in the object and updates/inserts it in the db
      *
-     * @return  $accessdata_added  array  The added access rows
+     * @param array  $accessdata       For each view access row
+     *                                 Can contain id, type, startdate, stopdate, allowcomments,
+     *                                 approvecomments
+     * @param array  $viewids          Contains ids of the views getting the access rules
+     * @param bool   $allowcomments    Holds the view wide allowcomments option
+     *                                 Needed when changing this and saving page at same time
+     *                                 as the views are not saved at this point.
+     *
+     * @return array $accessdata_added A list of access data added to the db table
      */
-    public function set_access($accessdata, $viewids = null, $allowcomments = true) {
-        global $USER;
-        require_once('activity.php');
-        require_once('group.php');
-        require_once('institution.php');
-
-        $beforeusers = activity_get_viewaccess_users($this->get('id'));
-        $beforeusrids = get_column_sql('SELECT usr FROM {view_access} WHERE view = ? AND usr IS NOT NULL', array($this->id));
-
-        $select = 'view = ? AND visible = 1 AND token IS NULL';
-        $beforerules = get_records_select_array('view_access', $select, array($this->id));
-        if (get_config('searchplugin') == 'elasticsearch' && !empty($beforerules) && empty($accessdata) && $viewids != null) {
-            // We are removing access rules and none are left so we need to let elasticsearch know
-            // as it won't be picked up by the add_to_queue_access() function
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue_access(null, null, $viewids);
-        }
-        db_begin();
-        delete_records_select('view_access', $select, array($this->id));
-
+    public function manage_view_access($accessdata, $allowcomments) {
         // View access
         $accessdata_added = array();
         if ($accessdata) {
@@ -1425,35 +1465,106 @@ class View {
                 }
             }
         }
+        return $accessdata_added;
+    }
 
+    /**
+     * Delete view access
+     *
+     * @param  array $accessdata
+     * @param  mixed $viewids for if there is elasticsearch is on, there are $beofrerules
+     * @return array (
+     *                  $beforeusers - the people who have access this this view
+     *                  $beforeuserids - the ids of people who have access to this view
+     *               )
+     */
+    public function delete_view_access($accessdata, $viewids) {
+        $beforeusers = activity_get_viewaccess_users($this->get('id'));
+        $beforeusrids = get_column_sql('SELECT usr FROM {view_access} WHERE view = ? AND usr IS NOT NULL', array($this->id));
+
+        $select = 'view = ? AND visible = 1 AND token IS NULL';
+        $beforerules = get_records_select_array('view_access', $select, array($this->id));
+
+        if (
+            $search_class = does_search_plugin_have('add_to_queue_access') &&
+            !empty($beforerules) &&
+            empty($accessdata) &&
+            $viewids != null
+        ) {
+            $search_class::add_to_queue_access(null, null, $viewids);
+        }
+
+        delete_records_select('view_access', $select, array($this->id));
+        return array($beforeusers, $beforeusrids);
+    }
+
+    /**
+     * Set the view access rules
+     *
+     * @param  array $accessdata       For each view access row. Can contain id, type, startdate,
+     *                                 stopdate, allowcomments, approvecomments
+     * @param  array $viewids          Contains ids of the views getting the access rules
+     * @param  bool  $allowcomments    Holding the view wide allowcomments option (Needed when changing
+     *                                 this and saving page at same time as the views are not saved
+     *                                 at this point.
+     *
+     * @return array $accessdata_added The added access rows
+     */
+    public function set_access($accessdata, $viewids = null, $allowcomments = true) {
+        global $USER;
+        require_once('activity.php');
+        require_once('group.php');
+        require_once('institution.php');
+
+       db_begin();
+       list($beforeusers, $beforeusrids) = $this->delete_view_access($accessdata, $viewids);
+
+        // view access
+        $accessdata_added = $this->manage_view_access($accessdata, $allowcomments);
+
+        // updated access
         $data = new stdClass();
         $data->view = $this->get('id');
         $data->oldusers = $beforeusers;
-        if (!empty($viewids) && sizeof($viewids) > 1) {
+        // more than one page
+        if (!empty($viewids)) {
             $views = array();
+            $viewobjs = array();
+
+            // create all the view objects
             foreach ($viewids as $viewid) {
-                $view = new View($viewid);
-                $views[] = array('id' => $view->get('id'),
-                                 'title' => $view->get('title'),
-                                 'collection_id' => $view->get_collection() ? $view->get_collection()->get('id') : null,
-                                 'collection_name' => $view->get_collection() ? $view->get_collection()->get('name') : null,
-                                 'collection_url' => $view->get_collection() ? $view->get_collection()->get_url() : null,
-                             );
+                $viewobjs[] = new View($viewid);
+            }
+
+
+            // collection data about the view's collection
+            $vc = $viewobjs[0]->get_collection();
+            $collection_id = $vc ? $vc->get('id') : null;
+            $collection_name = $vc ? $vc->get('name') : null;
+            $collection_url = $vc ? $vc->get_url() : null;
+
+            // multipage collection
+            if (sizeof($viewids) > 1) {
+                foreach ($viewobjs as $view) {
+                    $views[] = array('id' => $view->get('id'),
+                                    'title' => $view->get('title'),
+                                    'collection_id' => $collection_id,
+                                    'collection_name' => $collection_name,
+                                    'collection_url' => $collection_url
+                                );
+                }
+            }
+            // one page collection
+            else if (sizeof($viewids) === 1) {
+                $views[] = array('id' => $viewobjs[0]->get('id'),
+                                 'title' => $viewobjs[0]->get('title'),
+                                 'collection_id' => $collection_id,
+                                 'collection_name' => $collection_name,
+                                 'collection_url' => $collection_url
+                            );
+
             }
             $data->views = $views;
-        }
-        else if (!empty($viewids) && sizeof($viewids) == 1) {
-            // dealing with a one page collection
-            $view = new View($viewids[0]);
-            if ($view->get_collection()) {
-                $views [] = array('id' => $view->get('id'),
-                                 'title' => $view->get('title'),
-                                 'collection_id' => $view->get_collection() ? $view->get_collection()->get('id') : null,
-                                 'collection_name' => $view->get_collection() ? $view->get_collection()->get('name') : null,
-                                 'collection_url' => $view->get_collection() ? $view->get_collection()->get_url() : null,
-                             );
-                $data->views = $views;
-            }
         }
 
         activity_occurred('viewaccess', $data);
@@ -1697,21 +1808,70 @@ class View {
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
-        db_begin();
-        self::_db_pendingrelease(array($this->get('id')));
-        require_once(get_config('docroot') . 'export/lib.php');
-        add_submission_to_export_queue($this, $releaseuser, $externalid);
-        db_commit();
+        try {
+            db_begin();
+            self::_db_pendingrelease(array($this->get('id')));
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup')) {
+                PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            }
+            require_once(get_config('docroot') . 'export/lib.php');
+            add_submission_to_export_queue($this, $releaseuser, $externalid);
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
     }
 
-    public function release($releaseuser=null) {
+    /**
+     * Release a locked Portfolio with a message to the user.
+     *
+     * The optional $releasemessageoverrides is of the form:
+     * $releasemessageoverrides [
+     *   'group' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ],
+     *   'host' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ]
+     * ]
+     *
+     * Only the ovrridden strings need to be supplied.  The strings need to be
+     * present in htdocs/lang/en.utf8/group.php.
+     *
+     * The strings can take up to 3 replacement parameters. These are:
+     * * Title - the title of what is being released.
+     * * Released from - the group name or submittedhost.
+     * * Released by - the display name of the user releasing the portfolio.
+     *
+     * @param LiveUser|null $releaseuser The Account releasing the Portfolio.
+     * @param array $releasemessageoverrides Optional array of string keys to use rather than the defaults.
+     *
+     * @return void
+     */
+    public function release($releaseuser=null, $releasemessageoverrides = []) {
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
         }
         $releaseuser = optional_userobj($releaseuser);
-
-        self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+        try {
+            db_begin();
+            self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup')) {
+                PluginModuleSubmissions::release_submission($this, $releaseuser);
+            }
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
 
         $ownerlang = get_user_language($this->get('owner'));
         $url = $this->get_url(false);
@@ -1724,11 +1884,32 @@ class View {
         $releaseuserid = ($releaseuser instanceof User) ? $releaseuser->get('id') : $releaseuser->id;
         if ((int)$releaseuserid !== (int)$this->get('owner')) {
             require_once('activity.php');
-            activity_occurred('maharamessage',
+            $title = $this->get('title');
+            $releaseuserdisplay = display_name($releaseuser, $this->get_owner_object());
+            $subjectkey = 'portfolioreleasedsubject';
+            $messagekey = 'portfolioreleasedmessage';
+            if ($submitinfo['type'] == 'group') {
+                if (!empty($releasemessageoverrides['group']['subjectkey'])) {
+                    $subjectkey = $releasemessageoverrides['group']['subjectkey'];
+                }
+                if (!empty($releasemessageoverrides['group']['messagekey'])) {
+                    $messagekey = $releasemessageoverrides['group']['messagekey'];
+                }
+            }
+            else if ($submitinfo['type'] == 'host') {
+                if (!empty($releasemessageoverrides['host']['subjectkey'])) {
+                    $subjectkey = $releasemessageoverrides['host']['subjectkey'];
+                }
+                if (!empty($releasemessageoverrides['host']['messagekey'])) {
+                    $messagekey = $releasemessageoverrides['host']['messagekey'];
+                }
+            }
+            activity_occurred(
+                'maharamessage',
                 array(
                     'users' => array($this->get('owner')),
-                    'subject' => get_string_from_language($ownerlang, 'portfolioreleasedsubject', 'group', $this->get('title')),
-                    'message' => get_string_from_language($ownerlang, 'portfolioreleasedmessage', 'group', $this->get('title'),
+                    'subject' => get_string_from_language($ownerlang, $subjectkey, 'group', $this->get('title')),
+                    'message' => get_string_from_language($ownerlang, $messagekey, 'group', $this->get('title'),
                         $submitinfo['name'], display_name($releaseuser, $this->get_owner_object())),
                     'url' => $url,
                     'urltext' => $this->get('title'),
@@ -1778,48 +1959,6 @@ class View {
     }
 
     /**
-     * Returns HTML for the category list
-     *
-     * @param string $category The currently selected category
-    */
-    public function build_category_list($category, $new=0) {
-        $categories = $this->get_category_data();
-        $flag = false;
-        foreach ($categories as $i => &$cat) {
-            // The "shortcut" category should be treated special.
-            if ($cat['name'] == 'shortcut') {
-                unset($categories[$i]);
-                continue;
-            }
-            $classes = array();
-            if (!$flag) {
-                $flag = true;
-                $classes[] = 'first';
-            }
-            if ($category == $cat['name']) {
-                $classes[] = 'current';
-            }
-            if (!empty($classes)) {
-                $cat['class'] = hsc(implode(' ', $classes));
-            }
-        }
-
-        // Because of the reference in the above loop, $cat refers to the last item
-        $cat['class'] = (isset($cat['class'])) ? $cat['class'] . ' last' : 'last';
-        $helplink = get_manual_help_link_array(array('blocktype', 'blocks'));
-        $manualhelplink = $helplink['prefix'] . '/' . $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
-        $blocktypelist = $this->build_blocktype_list($category);
-        $smarty = smarty_core();
-        $smarty->assign('categories', $categories);
-        $smarty->assign('selectedcategory', $category);
-        $smarty->assign('blocktypelist', $blocktypelist);
-        $smarty->assign('manualhelpblock', $manualhelplink);
-        $smarty->assign('viewid', $this->get('id'));
-        $smarty->assign('new', $new);
-        return $smarty->fetch('view/blocktypecategorylist.tpl');
-    }
-
-    /**
      * Gets the name of the first blocktype category for this View.
      *
      * This can change based on what blocktypes allow themselves to be in what
@@ -1843,8 +1982,8 @@ class View {
      * returned
      */
     private function get_category_data() {
-        if (isset($this->category_data)) {
-            return $this->category_data;
+        if (isset($this->categorydata)) {
+            return $this->categorydata;
         }
 
         require_once(get_config('docroot') . '/blocktype/lib.php');
@@ -1876,7 +2015,7 @@ class View {
             }
         }
 
-        return $this->category_data = $categories;
+        return $this->categorydata = $categories;
     }
 
     /**
@@ -1889,7 +2028,7 @@ class View {
      */
     public function build_blocktype_list($category, $javascript=false) {
         require_once(get_config('docroot') . 'blocktype/lib.php');
-        $blocktypes = PluginBlockType::get_blocktypes_for_category($category, $this);
+        $blocktypes = PluginBlocktype::get_blocktypes_for_category($category, $this);
         $smarty = smarty_core();
         $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);
@@ -1969,6 +2108,7 @@ class View {
         }
 
         $message = '';
+        $returndata = '';
         $success = false;
         try {
             $values['returndata'] = defined('JSON');
@@ -2248,7 +2388,7 @@ class View {
      * @param boolean $versioning Whether we are in the process of view version
      * Returns the HTML for the rows of this view
      */
-    public function build_rows($editing=false, $exporting=false, $versioning=false) {
+    public function build_rows($editing=false, $exporting=false, $versioning=false): string {
         $numrows = $this->get('numrows');
 
         $result = '';
@@ -2264,7 +2404,7 @@ class View {
     * A view uses the new layout if has data on the new layout tables
     * or if doesn't have any blocks
     */
-    public function uses_new_layout() {
+    public function uses_new_layout(): bool {
         $viewid = $this->get('id');
 
         $sql = "SELECT DISTINCT view FROM {block_instance} bi
@@ -2417,7 +2557,7 @@ class View {
 
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
-            throw new UserException(get_string('cannotputblocktypeintoview', error, $values['blocktype']));
+            throw new UserException(get_string('cannotputblocktypeintoview', 'error', $values['blocktype']));
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
@@ -2472,7 +2612,7 @@ class View {
             $result = array(
                 'display' => $display,
             );
-            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
+            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config', $bi)) {
                 $result['configure'] = $bi->render_editing(true, true);
             }
             return $result;
@@ -2538,7 +2678,7 @@ class View {
 
         safe_require('blocktype', $values['blocktype']);
         if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
-            throw new UserException(get_string('cannotputblocktypeintoview', error, $values['blocktype']));
+            throw new UserException(get_string('cannotputblocktypeintoview', 'error', $values['blocktype']));
         }
 
         if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
@@ -2600,7 +2740,7 @@ class View {
             // Return new block rendered in both configure mode and (editing) display mode
             $isnew = (bool)$values['new'];
             $result['display'] = $bi->render_editing(false, $isnew);
-            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config')) {
+            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config', $bi)) {
                 $result['configure'] = $bi->render_editing(true, $isnew);
             }
             else {
@@ -2654,15 +2794,16 @@ class View {
     }
 
     /**
-    * moves a block instance to a specified location
-    *
-    * @param array $values parameters for this function
-    *                      id     => int of block instance to move
-    *                      newx   => int x position to move to
-    *                      newy   => int y position to move to
-    *                      newheight  => int height of the block
-    *                      newwidth   => int width of the block
-    */
+     * Moves a block instance to a specified location
+     *
+     * @param array $values parameters for this function
+     *                  id     => int of block instance to move
+     *                  newx   => int x position to move to
+     *                  newy   => int y position to move to
+     *                  newheight  => int height of the block
+     *                  newwidth   => int width of the block
+     * @return array An array holding the new html after the block move
+     */
     public function moveblockinstance($values) {
         $requires = array('id', 'newx', 'newy', 'newheight', 'newwidth');
         foreach ($requires as $require) {
@@ -2692,6 +2833,7 @@ class View {
         }
         $bi->set('width', $values['newwidth']);
         $bi->set('height', $values['newheight']);
+        $bi->set('quietupdate', 1);
         $bi->commit();
 
         //TODO: check if code down here is still needed
@@ -3004,22 +3146,22 @@ class View {
             $user = get_user_for_display($user);
 
             switch ($this->ownerformat) {
-            case FORMAT_NAME_FIRSTNAME:
+            case View::FORMAT_NAME_FIRSTNAME:
                 $name = $user->firstname;
                 break;
-            case FORMAT_NAME_LASTNAME:
+            case View::FORMAT_NAME_LASTNAME:
                 $name = $user->lastname;
                 break;
-            case FORMAT_NAME_FIRSTNAMELASTNAME:
+            case View::FORMAT_NAME_FIRSTNAMELASTNAME:
                 $name = $user->firstname . ' ' . $user->lastname;
                 break;
-            case FORMAT_NAME_PREFERREDNAME:
+            case View::FORMAT_NAME_PREFERREDNAME:
                 $name = $user->preferredname;
                 break;
-            case FORMAT_NAME_STUDENTID:
+            case View::FORMAT_NAME_STUDENTID:
                 $name = $user->studentid;
                 break;
-            case FORMAT_NAME_DISPLAYNAME:
+            case View::FORMAT_NAME_DISPLAYNAME:
             default:
                 $name = display_name($user);
                 break;
@@ -3311,6 +3453,29 @@ class View {
                         $bi->set('order', $blockinstance['order']);
                     }
                     $view->addblockinstance($bi);
+                    // Need to rewrite images links in configdata[text] if blocktype is text.
+                    if ($bi->get('blocktype') === 'text') {
+                        require_once(get_config('libroot') . 'embeddedimage.php');
+                        $configdata = $bi->get('configdata');
+                        if (
+                            isset($configdata['text']) &&
+                            !empty($configdata['text']) &&
+                            $configdata['text'] !== (
+                                $newtext = EmbeddedImage::prepare_embedded_images(
+                                    $configdata['text'],
+                                    'text',
+                                    $bi->get('id'),
+                                    $view->get('group'),
+                                    $view->get('owner')
+                                )
+                            )
+                        ) {
+                            // Update the text block_instance with the $newtext.
+                            $configdata['text'] = $newtext;
+                            $bi->set('configdata', $configdata);
+                            $bi->commit();
+                        }
+                    }
                 }
                 else {
                     log_debug("Blocktype {$blockinstance['type']}'s import_create_blockinstance did not give us a blockinstance, so not importing this block");
@@ -3649,6 +3814,7 @@ class View {
         // To also check tags
         $typecast = is_postgres() ? '::varchar' : '';
         $from .= " LEFT JOIN {tag} t ON t.resourcetype = 'artefact' AND a.id" . $typecast . " = t.resourceid ";
+        $ph = array();
 
         if ($group) {
             // Get group-owned artefacts that the user has view
@@ -3812,7 +3978,7 @@ class View {
 
         if (!empty($data['artefacttypes'])) {
             $artefacts = (!$artefacts) ? array() : $artefacts;
-            list($customprofile, $customtotals) = self::get_custom_profiles($data['artefacttypes']);
+            list($customprofile, $customtotals) = self::get_custom_profiles($data['artefacttypes'], $user);
             $artefacts = array_merge($artefacts, $customprofile);
             $totalartefacts += $customtotals;
         }
@@ -3820,7 +3986,7 @@ class View {
         return array($artefacts, $totalartefacts);
     }
 
-    public static function get_custom_profiles($artefacttypes) {
+    public static function get_custom_profiles($artefacttypes, $user=null) {
         // If our profile artefact is saving it's data to a special place
         safe_require('artefact', 'internal');
         $customprofiles = array();
@@ -3843,17 +4009,17 @@ class View {
     public static function owner_name($ownerformat, $user) {
 
         switch ($ownerformat) {
-            case FORMAT_NAME_FIRSTNAME:
+            case View::FORMAT_NAME_FIRSTNAME:
                 return $user->firstname;
-            case FORMAT_NAME_LASTNAME:
+            case View::FORMAT_NAME_LASTNAME:
                 return $user->lastname;
-            case FORMAT_NAME_FIRSTNAMELASTNAME:
+            case View::FORMAT_NAME_FIRSTNAMELASTNAME:
                 return $user->firstname . ' ' . $user->lastname;
-            case FORMAT_NAME_PREFERREDNAME:
+            case View::FORMAT_NAME_PREFERREDNAME:
                 return $user->preferredname;
-            case FORMAT_NAME_STUDENTID:
+            case View::FORMAT_NAME_STUDENTID:
                 return $user->studentid;
-            case FORMAT_NAME_DISPLAYNAME:
+            case View::FORMAT_NAME_DISPLAYNAME:
             default:
                 return display_name($user);
         }
@@ -3902,22 +4068,27 @@ class View {
             v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage';
         $collselect = '
             UNION
-            SELECT (SELECT view FROM {collection_view} cvid WHERE cvid.collection = c.id AND displayorder = 0 ORDER BY view LIMIT 1) as id,
-            null AS vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
-            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null AS vvisits,
-                   (SELECT COUNT(*) FROM {collection_view} cv JOIN {view} v ON v.id = cv.view WHERE cv.collection = c.id AND v.type != \'progress\') AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage';
+            SELECT cvid.view AS id, null AS vid, c.name as title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
+            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits,
+            numviews.numviews AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage';
         $emptycollselect = '
             UNION
-            SELECT null as id, null as vid, c.name as title, c.name AS vtitle, c.description, null as type, c.ctime as vctime, c.mtime as vmtime, c.mtime as vatime,
-            c.owner, c.group, c.institution, null as locked, null as ownerformat, null as urlid, null as vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage';
-
+            SELECT null AS id, null AS vid, c.name AS title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
+            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage';
         $from = '
             FROM {view} v
-            LEFT OUTER JOIN {collection_view} cv on cv.view = v.id';
+            LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id';
         $collfrom = '
             FROM {view} v
             LEFT OUTER JOIN {collection_view} cv ON cv.view = v.id
-            LEFT OUTER JOIN {collection} c ON cv.collection = c.id';
+            LEFT OUTER JOIN {collection} c ON cv.collection = c.id
+            INNER JOIN {collection_view} cvid on cvid.collection = c.id AND cvid.displayorder = 0
+            INNER JOIN (SELECT COUNT(*) AS numviews, numcv.collection
+                        FROM {collection_view} numcv
+                        INNER JOIN {collection} numc ON numcv.collection = numc.id
+                        INNER JOIN {view} numv ON numv.id = numcv.view
+                        WHERE numv.type != \'progress\'
+                        GROUP BY numcv.collection) AS numviews ON numviews.collection = cv.collection';
         $emptycollfrom = '
             FROM {collection} c';
 
@@ -3963,7 +4134,7 @@ class View {
                     $from .= $mcfromstr;
                     $collfrom .= $mcfromstr;
                     $groupby = ' GROUP BY v.id';
-                    $collgroupby = ' GROUP BY c.id';
+                    $collgroupby = ' GROUP BY cvid.view, numviews.numviews, c.id';
                     $emptycollgroupby = ' GROUP BY c.id';
                     $order = 'commentcount DESC,';
                     break;
@@ -4164,6 +4335,8 @@ class View {
                 $data['removable'] = self::can_remove_viewtype($data['type']);
                 if (!empty($data['submittedstatus'])) {
                     $status = $data['submittedstatus'];
+                    $name = '';
+                    $url = '';
                     if (!empty($data['submitgroupid'])) {
                         if ($haslti && $data['ltiassessment']) {
                             $url = '#';
@@ -4180,10 +4353,10 @@ class View {
 
                     $time = (!empty($data['submittedtime'])) ? format_date(strtotime($data['submittedtime'])) : null;
 
-                    if (!empty($status) && !empty($time)) {
+                    if ($status && !empty($time)) {
                         $data['submittedto'] = get_string('viewsubmittedtogroupon1', 'view', $url, $name, $time);
                     }
-                    else if (!empty($status)) {
+                    else if ($status) {
                         $data['submittedto'] = get_string('viewsubmittedtogroup1', 'view', $url, $name);
                     }
                     if ($status == self::PENDING_RELEASE) {
@@ -4295,11 +4468,30 @@ class View {
         return $url;
     }
 
-    public static function views_by_owner($group=null, $institution=null) {
+    /**
+     * Return Views that belong to the current $USER.
+     *
+     * This is makes use of the information on the URL that pieform() would
+     * provide. It can also be called with $fetch_all set to true to return
+     * everything the owner has.  Accessing index 1 of the returned array gives
+     * you this data.
+     *
+     * @param string|null $group Limit to the group.
+     * @param string|null $institution Limit to the institution
+     * @param boolean $fetch_all Ignore $limit and return all results.
+     *
+     * @return array The $searchform, $data, $pagination information.
+     */
+    public static function views_by_owner($group=null, $institution=null, $fetch_all=false) {
         global $USER;
 
         // 'Show more' pagination configuration
-        $limit = param_integer('limit', 12);
+        if ($fetch_all) {
+            $limit = 0;
+        }
+        else {
+            $limit = param_integer('limit', 12);
+        }
         $offset = param_integer('offset', 0);
         // load default page order from user settings as default and overwrite, if changed
         $usersettingorderby = get_account_preference($USER->get('id'), 'orderpagesby');
@@ -4411,7 +4603,7 @@ class View {
     }
 
 
-    public function get_site_template_views() {
+    public static function get_site_template_views() {
         $views = get_records_sql_array(
             "SELECT v.*
                FROM {view} v
@@ -5194,7 +5386,7 @@ class View {
      * @param boolean $hidesubmitted Do not return pages submitted to the group
      * @throws AccessDeniedException
      */
-    public static function get_sharedviews_data($limit=10, $offset=0, $groupid, $membersonly = false, $orderby = null, $hidesubmitted = false) {
+    public static function get_sharedviews_data($limit=10, $offset=0, $groupid=0, $membersonly = false, $orderby = null, $hidesubmitted = false) {
         global $USER;
         $userid = $USER->get('id');
         require_once(get_config('libroot') . 'group.php');
@@ -5319,12 +5511,12 @@ class View {
      * @param int $limit
      * @param int $offset
      * @throws AccessDeniedException if the logged-in user is not the group admin or member
-     * @return array(
-            'data'   => array(),
-            'count'  => $count,
-            'limit'  => $limit,
-            'offset' => $offset,
-        );
+     * @return array [
+     *     'data'   => array(),
+     *     'count'  => int,
+     *     'limit'  => int,
+     *     'offset' => int,
+     * ];
      */
     public static function get_participation_groupviews_data($groupid, $sort, $direction, $limit=10, $offset=0) {
         global $USER;
@@ -5380,12 +5572,12 @@ class View {
      * @param int $limit
      * @param int $offset
      * @throws AccessDeniedException if the logged-in user is not the group admin or member
-     * @return array(
-            'data'   => array(),
-            'count'  => $count,
-            'limit'  => $limit,
-            'offset' => $offset,
-        );
+     * @return array [
+     *      'data'   => array(),
+     *      'count'  => int,
+     *      'limit'  => int,
+     *      'offset' => int,
+     *  ];
      */
     public static function get_participation_sharedviews_data($groupid, $sort, $direction, $limit=10, $offset=0) {
     global $USER;
@@ -5534,7 +5726,7 @@ class View {
      * @param array options
      * @param array pagination
      */
-    public function render_participation_views($views, $template, $pagination) {
+    public static function render_participation_views($views, $template, $pagination) {
         $smarty = smarty_core();
         $smarty->assign('itemcount', (!empty($views['data']) ? count($views['data']) : false));
         $smarty->assign('items', $views['data']);
@@ -5553,8 +5745,6 @@ class View {
                 'limit' => $views['limit'],
                 'offset' => $views['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
             ));
             $views['pagination'] = $pagination['html'];
             $views['pagination_js'] = $pagination['javascript'];
@@ -5573,7 +5763,7 @@ class View {
      * @param boolean $hidesubmitted Do not return collections submitted to the group
      * @return array of collections
      */
-    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid, $membersonly = false, $sort = null, $hidesubmitted = false) {
+    public static function get_sharedcollections_data($limit=10, $offset=0, $groupid=0, $membersonly = false, $sort = null, $hidesubmitted = false) {
         global $USER;
 
         $userid = $USER->get('id');
@@ -5727,7 +5917,7 @@ class View {
                     foreach ($artefacts as $artefactrec) {
                         safe_require('artefact', $artefactrec->plugin);
                         $classname = generate_artefact_class_name($artefactrec->artefacttype);
-                        $artefactobj = new $classname(0, array('title' => $artefactrec->title));
+                        $artefactobj = new $classname(0, (object)array('title' => $artefactrec->title));
                         $artefactobj->set('dirty', false);
                         if (!$artefactobj->in_view_list()) {
                             continue;
@@ -5846,6 +6036,7 @@ class View {
                 }
                 if ($view->get('coverimage') && ($coverimage = get_record('artefact', 'id', $view->get('coverimage')))) {
                     safe_require('artefact', 'file');
+                    $v['coverimage'] = $view->get('coverimage');
                     $v['coverimageurl'] = ArtefactTypeImage::get_coverimage_url(array('id' => $coverimage->id));
                     if ($coverimage->description) {
                         $v['coverimagedescription'] = $coverimage->description;
@@ -5859,7 +6050,7 @@ class View {
      * Get more info for the collections: owner, url, tags, views
      *
      * @param array a list of collections $collectiondata
-     * @return array updated collection data
+     * @return void (pass by reference) updates the &$collectiondata
      */
     public static function get_extra_collection_info(&$collectiondata, $gettags=true, $useid = 'id') {
         if ($collectiondata) {
@@ -5946,6 +6137,11 @@ class View {
                     $c->sharedby = $institutions[$c->institution]->displayname;
                 }
 
+                if (isset($c->lockedcoll) && $c->lockedcoll) {
+                    $unlockdate = get_field('collection_template', 'rolloverdate', 'collection', $c->{$useid});
+                    $c->unlockcoll = !empty($unlockdate) ? format_date(strtotime("+6 months", strtotime($unlockdate))) : null;
+                }
+
                 $c = (array)$c;
 
                 // Now that we have the owner & group records, create a temporary Collection object
@@ -5960,6 +6156,7 @@ class View {
                 }
                 if ($collection->get('coverimage') && ($coverimage = get_record('artefact', 'id', $collection->get('coverimage')))) {
                     safe_require('artefact', 'file');
+                    $c['coverimage'] = $collection->get('coverimage');
                     $c['coverimageurl'] = ArtefactTypeImage::get_coverimage_url(array('id' => $coverimage->id));
                     if ($coverimage->description) {
                         $c['coverimagedescription'] = $coverimage->description;
@@ -5968,6 +6165,8 @@ class View {
 
                 $views = $collection->views();
                 if (!empty($views)) {
+                    $firstview_id = $views['views'][0]->view;
+                    $firstview = new View($firstview_id);
                     $c['url'] = $collection->get_url(false);
                     $c['fullurl'] = $needsubdomain ? $collection->get_url(true, false, $firstview) : ($wwwroot . $c['url']);
 
@@ -6093,6 +6292,7 @@ class View {
             // translate layout
             $oldlayoutcontent = get_blocks_in_old_layout($template->get('id'));
             $newlayoutcontent = translate_to_new_layout($oldlayoutcontent, $newdescriptionblock);
+            $dimensions = array();
             foreach ($newlayoutcontent as $block) {
                 $dimensions[$block['block']] = $block;
             }
@@ -6316,7 +6516,7 @@ class View {
         $search->pagination = build_pagination(array(
             'id' => 'templatesearch_pagination',
             'class' => 'center',
-            'url' => get_config('wwwroot') . 'view/choosetemplate.php' . (!empty($params) ? ('?' . http_build_query($params)) : ''),
+            'url' => get_config('wwwroot') . 'view/choosetemplate.php' . (!$params ? ('?' . http_build_query($params)) : ''),
             'count' => $results->count,
             'limit' => $search->limit,
             'offset' => $search->offset,
@@ -6328,8 +6528,7 @@ class View {
             'nexttext' => '',
             'lasttext' => '',
             'setlimit' => true,
-            'resultcounttextsingular' => get_string('view', 'view'),
-            'resultcounttextplural' => get_string('views', 'view'),
+            'resultcounttext' => get_string('nviews1', 'view', $results->count),
         ));
     }
 
@@ -6715,9 +6914,12 @@ class View {
      * @param integer $submittedgroup return only views & collections submitted to this group
      * @param $string $sort Order to sort by (defaults to 'c.name, v.title')
      *
-     * @return array, array
+     * @return array [
+     *  0 => array(),  // collections
+     *  1 => array()   // views
+     * ];
      */
-    function get_views_and_collections($owner=null, $group=null, $institution=null, $obsoleteparam=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
+    public static function get_views_and_collections($owner=null, $group=null, $institution=null, $obsoleteparam=null, $includeprofile=true, $submittedgroup=null, $sort=null) {
 
         $excludelocked = $group && group_user_access($group) != 'admin';
         $sql = "
@@ -7068,17 +7270,45 @@ class View {
             throw new SystemException('Attempting to submit a submitted view');
         }
 
+        if (is_plugin_active('plans', 'artefact') && !get_config_plugin('artefact', 'plans', 'allowselectiontaskportfoliosubmissionafterenddate')) {
+            safe_require('artefact', 'plans');
+            safe_require('artefact', 'plans/tools', 'PlansTools.php', 'require_once', true);
+
+            $groupTask = \artefact\plans\tools\PlansTools::findCorrespondingGroupTaskByPortfolioElement($this);
+
+            if ($groupTask) {
+                $completionDate = $groupTask->get('completiondate');
+                if ($completionDate && $completionDate - time() < 0) {
+                    throw new SubmissionException(get_string('submissionaftercompletiondate', 'artefact.plans'));
+                }
+            }
+        }
+
         if ($group) {
             $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
         }
 
-        self::_db_submit(array($this->id), $group, $submittedhost, $owner);
+        try {
+            db_begin();
+            self::_db_submit(array($this->id), $group, $submittedhost, $owner);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $group) {
+                // We have a Group.  Add the Submissions using the Submissions module as well.
+                PluginModuleSubmissions::add_submission($this, $group);
+            }
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
 
         handle_event('addsubmission', array('id' => $this->id,
                                             'eventfor' => 'view',
                                             'name' => $this->title,
                                             'group' => ($group) ? $group->id : null,
-                                            'groupname' => ($group) ? $group->name : null));
+                                            'groupname' => ($group) ? $group->name : null,
+                                            'externalhost' => ($submittedhost) ? $submittedhost : null));
 
         if ($group && $sendnotification) {
             activity_occurred(
@@ -7132,6 +7362,7 @@ class View {
         $userid = ($owner == null) ? $USER->get('id') : $owner;
         $sql = 'UPDATE {view} SET submittedtime = current_timestamp, submittedstatus = ' . self::SUBMITTED;
         $params = array();
+        $groupid = -1;
 
         if ($group) {
             $groupid = (int) $group->id;
@@ -7240,7 +7471,7 @@ class View {
      * @param $todate date of the newest version we want to retrieve
      * @return object $views an object containing the count and data of the versions
      */
-    public function get_versions($view, $fromdate = null, $todate = null) {
+    public static function get_versions($view, $fromdate = null, $todate = null) {
         if (!is_numeric($view)) {
             throw new InvalidArgumentException(get_string('noaccesstoview', 'view'));
         }
@@ -7283,7 +7514,7 @@ class View {
         return $versions;
     }
 
-    public function get_timeline_form($view, $from = null, $to = null) {
+    public static function get_timeline_form($view, $from = null, $to = null) {
         if (is_numeric($from)) {
             $from = db_format_timestamp($from);
         }
@@ -7447,6 +7678,23 @@ class View {
             (object) array('resourcetype' => 'text', 'resourceid' => $bi->get('id')),
             array('resourcetype' => 'description', 'resourceid' => $this->get('id'))
         );
+
+        require_once(get_config('libroot') . 'embeddedimage.php');
+        $newdescription = EmbeddedImage::prepare_embedded_images(
+            $description,
+            'text',
+            $bi->get('id'),
+            $this->get('group'),
+            $this->get('owner')
+        );
+        if ($description !== $newdescription) {
+            $bi->set('configdata', array(
+                'text' => $newdescription,
+                'retractable' => false,
+                'retractedonload' => false,
+            ));
+            $bi->commit();
+        }
     }
 
     public function has_signoff_block() {
@@ -7728,8 +7976,8 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
         $form['elements']['submitcollection'] = array(
             'type'  => 'button',
             'usebuttontag' => true,
-            'class' => 'btn-secondary btn-sm btn-group-item',
-            'value' => get_string('copycollection', 'collection'),
+            'class' => 'btn-secondary btn-sm btn-group-item text-inline',
+            'value' => '<span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>' . get_string('copycollection', 'collection'),
         );
     }
     if ($template !== null) {
@@ -7737,7 +7985,7 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
             'type'  => 'hidden',
             'value' => $template,
         );
-        $form['elements']['submit']['value'] = get_string('copyview', 'view');
+        $form['elements']['submit']['value'] = '<span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>' . get_string('copyview', 'view');
         $form['elements']['submit']['class'] = 'btn-secondary btn-sm btn-group-item text-inline';
         $form['name'] .= $template;
     }
@@ -7747,11 +7995,45 @@ function create_view_form($group=null, $institution=null, $template=null, $colle
     return $form;
 }
 
+/**
+ * Generate the copying success messages of portfolios.
+ *
+ * @param  string $templatename
+ * @param  int $numblocks
+ * @param  int $numartefacts
+ * @param  int $numpages
+ * @return string success message.
+ */
+function get_ok_copy_msg($templatename, $numblocks=0, $numartefacts=0, $numpages=0) {
+    $pages = get_string('countpages', 'collection', $numpages);
+    $blocks = get_string('countblocks', 'collection', $numblocks);
+    $art = get_string('countartefacts', 'collection', $numartefacts);
+    $from = get_string('fromtemplate', 'collection', $templatename);
+
+    // Collection copy
+    if ($numpages > 0) {
+        $msg = $pages . ', '. $blocks . ', ' . get_string('andparticle', 'collection', $art) . ' ' . $from;
+    }
+    // View copy
+    else {
+        $msg = $blocks . ' ' . get_string('andparticle', 'collection', $art) . ' ' . $from;
+    }
+    return get_string('copiedparticle' , 'collection', $msg);
+}
+
+/**
+ * Form submission for creating views
+ *
+ * @param  Pieform $form
+ * @param  array   $values
+ * @return void
+ */
 function createview_submit(Pieform $form, $values) {
     global $SESSION;
 
     $values['template'] = !empty($values['istemplate']) ? 1 : 0; // Named 'istemplate' in the form to prevent confusion with 'usetemplate'
-
+    $view = null;
+    // Collection copy
     if (!empty($values['submitcollection'])) {
         require_once(get_config('libroot') . 'collection.php');
         $templateid = $values['copycollection'];
@@ -7762,15 +8044,12 @@ function createview_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
             redirect(get_config('wwwroot') . 'view/choosetemplate.php');
         }
-        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
-            $copystatus['pages'],
-            $copystatus['blocks'],
-            $copystatus['artefacts'],
-            $template->get('name'))
-        );
 
+        $msg = get_ok_copy_msg($template->get('name'), $copystatus['blocks'], $copystatus['artefacts'], $copystatus['pages']);
+        $SESSION->add_ok_msg($msg);
         redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
+    // Template copy
     else if (isset($values['usetemplate'])) {
         $templateid = $values['usetemplate'];
         unset($values['usetemplate']);
@@ -7780,11 +8059,9 @@ function createview_submit(Pieform $form, $values) {
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
             redirect(get_config('wwwroot') . 'view/choosetemplate.php');
         }
-        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
-            $copystatus['blocks'],
-            $copystatus['artefacts'],
-            $template->get('title'))
-        );
+
+        $msg = get_ok_copy_msg($template->get('title'), $copystatus['blocks'], $copystatus['artefacts']);
+        $SESSION->add_ok_msg($msg);
     }
     else {
         // Use the site default portfolio page to create a new page
@@ -7842,12 +8119,8 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
             redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
         }
-        $SESSION->add_ok_msg(get_string('copiedpagesblocksandartefactsfromtemplate', 'collection',
-                                        $copystatus['pages'],
-                                        $copystatus['blocks'],
-                                        $copystatus['artefacts'],
-                                        $template->get('name'))
-                             );
+        $msg = get_ok_copy_msg( $template->get('name'), $copystatus['blocks'], $copystatus['artefacts'],$copystatus['pages']);
+        $SESSION->add_ok_msg($msg);
         redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
     }
     else {
@@ -7857,15 +8130,19 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
             redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
         }
-        $SESSION->add_ok_msg(get_string('copiedblocksandartefactsfromtemplate', 'view',
-                                        $copystatus['blocks'],
-                                        $copystatus['artefacts'],
-                                        $template->get('title'))
-                             );
+        $msg = get_ok_copy_msg( $template->get('title'), $copystatus['blocks'], $copystatus['artefacts']);
+        $SESSION->add_ok_msg($msg);
         redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
     }
 }
 
+/**
+ * Form cancellation for creating a view
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function createview_cancel_submit(Pieform $form, $values) {
     if (isset($values['group'])) {
         redirect(get_config('wwwroot') . 'view/groupviews.php?group=' . $values['group']);
@@ -7876,6 +8153,13 @@ function createview_cancel_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'view/index.php');
 }
 
+/**
+ * Form submission for view search
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function searchviews_submit(Pieform $form, $values) {
     $tag = $query = null;
     if ($values['query'] != '') {
@@ -7977,6 +8261,13 @@ function view_group_submission_form($view, $tutorgroupdata, $returnto=null) {
     return pieform($form);
 }
 
+/**
+ * Form submission for creating a view in a group
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function view_group_submission_form_submit(Pieform $form, $values) {
     $params = array(
         'group' => $values['options'],
@@ -8015,35 +8306,14 @@ function install_system_portfolio_view() {
 }
 
 /**
- * display format for author names in views - firstname
+ * Filter isolated view access
+ *
+ * Restricting access users
+ *
+ * @param  View $view
+ * @param  array $viewaccess
+ * @return array $viewaccess
  */
-define('FORMAT_NAME_FIRSTNAME', 1);
-
-/**
- * display format for author names in views - lastname
- */
-define('FORMAT_NAME_LASTNAME', 2);
-
-/**
- * display format for author names in views - firstname lastname
- */
-define('FORMAT_NAME_FIRSTNAMELASTNAME', 3);
-
-/**
- * display format for author names in views - preferred name
- */
-define('FORMAT_NAME_PREFERREDNAME', 4);
-
-/**
- * display format for author names in views - student id
-*/
-define('FORMAT_NAME_STUDENTID', 5);
-
-/**
- * display format for author names in views - obeys display_name
- */
-define('FORMAT_NAME_DISPLAYNAME', 6);
-
 function filter_isolated_view_access($view, $viewaccess) {
     global $SESSION;
 
@@ -8054,6 +8324,7 @@ function filter_isolated_view_access($view, $viewaccess) {
 
     $removerules = 0;
     foreach ($viewaccess as $k => $access) {
+        $viewinstitutions = array();
         if ($access['accesstype'] == 'loggedin') {
             unset($viewaccess[$k]);
             $removerules++;
@@ -8103,9 +8374,13 @@ function filter_isolated_view_access($view, $viewaccess) {
 /**
  * Checks if the tinymce text has any tags other than <p> or <br>
  * if it doesn't have extra tags, then it will remove them and return only the text
+ *
+ *
+ * @param  mixed $description
+ * @return false|string $cleandescription
  */
 function can_extract_description_text($description) {
-    //remove html tags form the text but leaving only the tags that can be translated to text
+    // remove html tags from the text but leaving only the tags that can be translated to text
     $texttagsonly_description = strip_tags($description, '<p><br><span><em><strong>');
     $cleandescription = strip_tags($description);
 

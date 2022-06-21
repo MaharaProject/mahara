@@ -39,6 +39,10 @@ $string['collection'] = 'collection';
 $string['Collection'] = 'Collection';
 $string['collections'] = 'collections';
 $string['Collections'] = 'Collections';
+$string['ncollections'] = array(
+    '%s collection',
+    '%s collections'
+);
 $string['groupcollections'] = 'Group collections';
 $string['institutioncollections'] = 'Institution collections';
 $string['sitecollections'] = 'Site collections';
@@ -124,7 +128,23 @@ $string['viewnavigationdesc'] = 'Add a horizontal navigation bar to every page i
 $string['viewstobeadded'] = 'Pages to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this page from the collection?';
 $string['collectioncopywouldexceedquota'] = 'Copying this collection would exceed your file quota.';
-$string['copiedpagesblocksandartefactsfromtemplate'] = 'Copied %d pages, %d blocks and %d artefacts from %s';
+
+$string['copiedparticle'] = 'Copied %s';
+$string['andparticle'] = 'and %s';
+$string['countpages'] = array (
+    0 => '%d page',
+    1 => '%d pages'
+);
+$string['countblocks'] = array (
+    0 => '%d block',
+    1 => '%d blocks'
+);
+$string['countartefacts'] = array (
+    0 => '%d artefact',
+    1 => '%d artefacts'
+);
+$string['fromtemplate'] = 'from "%s"';
+
 $string['copiedblogpoststonewjournal'] = 'Copied journal posts have been put into a new separate journal.';
 $string['by'] = 'by';
 $string['copycollection'] = 'Copy collection';
@@ -153,39 +173,16 @@ $string['progresspage'] = 'Portfolio completion';
 $string['progresspagedescription'] = 'Set up the default layout for the portfolio completion page for a collection.';
 
 $string['progressportfolios'] = 'Portfolio count';
-$string['progressverifiers'] = 'Verifier percentage';
+$string['progressverifiers'] = 'Reviewer percentage';
 
 //Verification checkbox sr-only text
-$string['sharedviewverifiedunchecked'] = '%s by %s is unverified';
-$string['sharedviewverifiedchecked'] = '%s by %s is verified';
+$string['sharedviewverifiedunchecked'] = '%s by %s is not reviewed';
+$string['sharedviewverifiedchecked'] = '%s by %s has been reviewed';
 // access notifications
 $string['userhasremovedaccesssubject'] = '%s has removed their access to "%s"';
 $string['ownerhasremovedaccesssubject'] = '%s has removed your access to "%s"';
 $string['revokedbyowner'] = 'Owner has revoked access';
 $string['youhavebeengivenaccess'] = "You have been given access to the following";
-$string['userhasremovedaccess'] = '%s does not have access to the portfolio "%s" any more.';
-$string['userrevokereason'] = "They added the following note:";
-$string['removemyaccess'] = "Remove my access";
-$string['ownerhasremovedaccess'] = '%s revoked your access to their portfolio "%s".';
-$string['completionpercentage'] = "Completion";
-// Revoke my access modal
-$string['revokemyaccessformtitle'] = "Remove portfolio access";
-$string['revokemyaccessdescription'] = "By continuing, you will remove your access to this entire portfolio. You will not be able to view it any more or engage with it. The owner of this portfolio will recieve a notification that you no longer have access.
-<br>You can add an additonal note.";
-$string['revokemyaccessreasontextbox'] ="Note";
-$string['removemyaccesssubmit'] = "Continue";
-$string['revokemyaccessconfirm'] = "You will lose access to: ";
-$string['revokemyaccessreason'] = "Note";
-$string['revokemessagesent'] = "Access revoked";
-$string['removemyaccessiconaria'] = 'Remove my access to "%s" owned by %s';
-
-// Tool tips for the shared page
-$string['progressnotavailable'] = 'Progress completion for the portfolio "%s" by %s cannot yet be displayed';
-$string['verifiednotavailable'] = 'You cannot review the primary statement for the portfolio "%s" by %s';
-$string['verifiednotavailabledate'] = 'Statement for the portfolio "%s" by %s cannot be made before %s';
-$string['verificationtobedone'] = 'Complete statement for the portfolio "%s" by %s';
-$string['verificationdone'] = 'Completed statement for the portfolio "%s" by %s';
-$string['removeaccess'] = 'Remove my access from the portfolio "%s" by %s';
 
 // Statement block reset information
 $string['undoverification'] = 'Reset statement';
@@ -198,10 +195,45 @@ $string['undoreportnotsent'] = 'Reset request not sent. There is nobody to whom 
 $string['verifiedbyme'] = 'My statements';
 $string['verifiedbymedescription'] = 'Choose a statement to reset. Then provide in a reason for this change.';
 $string['undoreportsubject'] = 'Request to reset portfolio statement';
-$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been approved. However, the approver, %s, wishes to reset it.
+$string['undoreportmessage'] = 'The statement "%s" in portfolio "%s" has been confirmed. However, the reviewer, %s, wishes to reset it.
 
 They gave the following reason:
 
 %s';
 
 $string['accessdeniedundo'] = 'The statement has already been reset. You do not have access to the portfolio any longer.';
+$string['undonesubject'] = 'Review statement reset request was actioned';
+$string['undonemessage'] = '%s reset the statement "%s" in the portfolio "%s" as requested by the person who originally confirmed the statement.';
+//Portfolio review primary statement checkbox sr-only text
+$string['sharedviewverifiedunchecked'] = '%s by %s is not yet reviewed';
+$string['sharedviewverifiedchecked'] = '%s by %s is reviewed';
+// access notifications
+$string['userhasremovedaccesssubject'] = '%s has removed their access to "%s"';
+$string['ownerhasremovedaccesssubject'] = '%s has revoked your access to "%s"';
+$string['revokedbyowner'] = 'Owner has revoked access';
+$string['youhavebeengivenaccess'] = "You have been given access to the following";
+$string['userhasremovedaccess'] = '%s does not have access to the portfolio "%s" any more.';
+$string['userrevokereason'] = "They gave the following reason:";
+$string['removemyaccess'] = "Remove my access";
+$string['ownerhasremovedaccess'] = '%s revoked your access to their portfolio "%s".';
+$string['completionpercentage'] = "Completion";
+// Revoke my access modal
+$string['revokemyaccessformtitle'] = "Remove portfolio access";
+$string['revokemyaccessdescription'] = "By continuing, you will remove your access to this entire portfolio. You will not be able to view it any more or engage with it. The owner of this portfolio will receive a notification that you no longer have access.
+<br>You can add an additional message.";
+$string['revokemyaccessreasontextbox'] ="Message";
+$string['removemyaccesssubmit'] = "Continue";
+$string['revokemyaccessconfirm'] = "You will lose access to: ";
+$string['revokemyaccessreason'] = "Message";
+$string['revokemessagesent'] = "Access revoked";
+$string['removemyaccessiconaria'] = 'Remove my access to "%s" owned by %s';
+
+// Tool tips for the shared page
+$string['progressnotavailable'] = 'Progress completion for the portfolio "%s" by %s cannot yet be displayed';
+$string['verifiednotavailable'] = 'You cannot confirm the primary statement for the portfolio "%s" by %s';
+$string['verifiednotavailabledate'] = 'Statement for the portfolio "%s" by %s cannot be confirmed before %s';
+$string['verificationtobedone'] = 'Confirm statement for the portfolio "%s" by %s';
+$string['verificationdone'] = 'Confirmed statement for the portfolio "%s" by %s';
+$string['removeaccess'] = 'Remove my access from the portfolio "%s" by %s';
+
+$string['lockedcollection'] = 'Locked until %s';

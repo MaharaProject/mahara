@@ -7,18 +7,18 @@ These font files are generally only used for generating preview images of skins.
 
 Font: AurulentSans.ttf
 License: Aurulent-OFL.txt
-Website: http://www.fontsquirrel.com/fonts/Aurulent-Sans
+Website: https://www.fontsquirrel.com/fonts/Aurulent-Sans
 Version: n/a
 
 Font: CharisSILR.ttf
 License: Charis SIL Open Font License.txt
-Website: http://scripts.sil.org/cms/scripts/page.php?item_id=CharisSIL
+Website: https://software.sil.org/charis/
 Version: 5.000
 
 Font: DejaVuSans.ttf
 License: DejaVu Fonts License.txt
-Website: http://www.fontsquirrel.com/fonts/DejaVu-Sans
-Version: 2.29
+Website: https://www.fontsquirrel.com/fonts/DejaVu-Sans
+Version: 2.37
 
 Font: GhostScript fonts (converted to ttf)
 - CenturySchoolbookL.ttf
@@ -30,5 +30,5 @@ Font: GhostScript fonts (converted to ttf)
 - URWGothicL.ttf
 - URWPalladioL.ttf
 License: GPL3 (via the GPL2 "any later version" clause)
-Website: http://sourceforge.net/projects/gs-fonts/
+Website: https://sourceforge.net/projects/gs-fonts/
 Version: 8.11

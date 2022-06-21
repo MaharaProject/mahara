@@ -25,6 +25,10 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         return array('general' => 22000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     /**
      * Optional method. If exists, allows this class to decide the title for
      * all blockinstances of this type
@@ -71,6 +75,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
         $plans = array();
         $alltasks = array();
         $template = 'artefact:plans:view/plantasks.tpl';
+        $versionblock = null;
 
         if (($versioning && isset($configdata['existing_artefacts']) && !empty($configdata['existing_artefacts'])) ||
             (isset($configdata['artefactids']) && is_array($configdata['artefactids']) && count($configdata['artefactids']) > 0)) {
@@ -158,7 +163,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
     }
 
     // My Plans blocktype only has 'title' option so next two functions return as normal
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 

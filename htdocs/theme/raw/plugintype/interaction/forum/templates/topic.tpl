@@ -5,15 +5,15 @@
     {$topic->subscribe|safe}
     {/if}
     {if $topic->canedit}
-    <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn btn-secondary editforum">
+    <button data-url="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}" class="btn btn-secondary editforum">
         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
         {str tag=edittopic section=interaction.forum}
-    </a>
+    </button>
     {if $moderator}
-    <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}" class="btn btn-secondary deletetopic">
+    <button data-url="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}" class="btn btn-secondary deletetopic">
         <span class="icon icon-trash-alt left text-danger" role="presentation" aria-hidden="true"></span>
         {str tag=deletetopic section=interaction.forum}
-    </a>
+    </button>
     {/if}
     {/if}
 

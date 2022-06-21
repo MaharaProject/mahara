@@ -1,5 +1,6 @@
 <?php
 /**
+ * Activity classes for notification types
  *
  * @package    mahara
  * @subpackage core
@@ -9,6 +10,23 @@
  *
  */
 
+// Base activity type classes.
+require_once(get_config('libroot') . '/activity/ActivityType.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeAdmin.php');
+require_once(get_config('libroot') . '/activity/ActivityTypePlugin.php');
+// Specific activity types.
+require_once(get_config('libroot') . '/activity/ActivityTypeContactus.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeGroupMessage.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeInstitutionmessage.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeMaharamessage.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeObjectionable.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeUsermessage.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeViewAccess.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeViewAccessRevoke.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeVirusRelease.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeVirusRepeat.php');
+require_once(get_config('libroot') . '/activity/ActivityTypeWatchlistnotification.php');
+
 defined('INTERNAL') || die();
 
 /**
@@ -16,7 +34,7 @@ defined('INTERNAL') || die();
  * that is going to end up on a user's activity page.
  *
  * @param string $activitytype type of activity
- * @param array $data must contain the fields specified by get_required_parameters of the activity type subclass.
+ * @param object $data must contain the fields specified by get_required_parameters of the activity type subclass.
  * @param string $plugintype
  * @param string $pluginname
  * @param bool $delay
@@ -39,7 +57,18 @@ function activity_occurred($activitytype, $data, $plugintype=null, $pluginname=n
         $delayed->data = serialize($data);
         $delayed->ctime = db_format_timestamp(time());
         if (!record_exists('activity_queue', 'type', $delayed->type, 'data', $delayed->data)) {
-            insert_record('activity_queue', $delayed);
+            $views = isset($data->views) ? $data->views : array();
+            if ($delayed->type == 4 && isset($views[0]['collection_id'])) {
+                // try to ensure we don't end up with multiple notifications when sharing collections
+                $sql = 'SELECT * FROM {activity_queue} WHERE type = ? AND data like ';
+                $sql .= "'%" . '"collection_id"' . ";s:%" . '"' . $views[0]['collection_id'] . '"' . ";%'";
+                if (!record_exists_sql($sql, array($delayed->type))) {
+                    insert_record('activity_queue', $delayed);
+                }
+            }
+            else {
+                insert_record('activity_queue', $delayed);
+            }
         }
     }
     else {
@@ -74,7 +103,6 @@ function handle_activity($activitytype, $data, $cron=false, $queuedactivity=null
     if (!$activity->any_users()) {
         return 0;
     }
-
     return $activity->notify_users();
 }
 
@@ -99,14 +127,15 @@ function get_activity_type_classname($activitytype) {
 }
 
 /**
- * this function returns an array of users who subsribe to a particular activitytype
+ * This function returns an array of users who subscribe to a particular activitytype
  * including the notification method they are using to subscribe to it.
  *
  * @param int $activitytype the id of the activity type
  * @param array $userids an array of userids to filter by
- * @param array $userobjs an array of user objects to filterby
+ * @param array $userobjs an array of user objects to filterby - the userobjs need to be converted to stdclass via ->to_stdClass()
  * @param bool $adminonly whether to filter by admin flag
  * @param array $admininstitutions list of institution names to get admins for
+ * @param bool $includesuspendedusers whether to include suspended people in the results
  * @return array of users
  */
 function activity_get_users($activitytype, $userids=null, $userobjs=null, $adminonly=false,
@@ -137,7 +166,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
         WHERE u.deleted = 0';
     if (!empty($userobjs) && is_array($userobjs)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userobjs)) . ')';
-        $values = array_merge($values, array_to_fields($userobjs));
+        $values = array_merge($values, db_array_to_fields($userobjs, 'id'));
     }
     else if (!empty($userids) && is_array($userids)) {
         $sql .= ' AND u.id IN (' . implode(',',db_array_to_ph($userids)) . ')';
@@ -152,7 +181,7 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
             u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email, u.admin, u.staff,
             u.suspendedctime,
             p.method, ap.value, apm.value, aic.value, h.appname
-        HAVING (u.admin = 1 OR SUM(ui.admin) > 0)';
+        HAVING (SUM(ui.admin) > 0)';
     } else if ($adminonly) {
         $sql .= ' AND u.admin = 1';
     }
@@ -161,8 +190,8 @@ function activity_get_users($activitytype, $userids=null, $userobjs=null, $admin
 
 
 /**
- * this function inserts a default set of activity preferences for a given user
- * id
+ * This function inserts a default set of activity preferences for a given user
+ * @param mixed $eventdata  List of event types and their settings
  */
 function activity_set_defaults($eventdata) {
     $user_id = is_object($eventdata) ? $eventdata->id : $eventdata['id'];
@@ -177,6 +206,10 @@ function activity_set_defaults($eventdata) {
     }
 }
 
+/**
+ * This function inserts the default set of administrator activity preferences for the given people
+ * @param array $userids  List of people's IDs
+ */
 function activity_add_admin_defaults($userids) {
     $activitytypes = get_records_array('activity_type', 'admin', 1);
 
@@ -193,7 +226,9 @@ function activity_add_admin_defaults($userids) {
     }
 }
 
-
+/**
+ * Process the queue of delayed activity notifications
+ */
 function activity_process_queue() {
 
     if ($toprocess = get_records_array('activity_queue')) {
@@ -235,15 +270,14 @@ function activity_process_queue() {
 }
 
 /**
- * event-listener is called when an artefact is changed or a block instance
- * is commited. Saves the view, the block instance, user and time into the
+ * The event-listener is called when an artefact is changed or a block instance
+ * is committed. Saves the view, the block instance, user and time into the
  * database
  *
  * @global User $USER
- * @param string $event
- * @param object $eventdata
+ * @param string|BlockInstance|ArtefactType $event
  */
-function watchlist_record_changes($event){
+function watchlist_record_changes($event) {
     global $USER;
 
     // don't catch root's changes, especially not when installing...
@@ -255,6 +289,8 @@ function watchlist_record_changes($event){
         if ($viewid) {
             set_field('view', 'mtime', db_format_timestamp(time()), 'id', $viewid);
         }
+
+        // Check if someone has added this view to their watchlist
         if (record_exists('usr_watchlist_view', 'view', $viewid)) {
             $whereobj = new stdClass();
             $whereobj->block = $event->get('id');
@@ -319,10 +355,10 @@ function watchlist_record_changes($event){
 }
 
 /**
- * is triggered when a blockinstance is deleted. Deletes all watchlist_queue
+ * Is triggered when a blockinstance is deleted. Deletes all watchlist_queue
  * entries that refer to this blockinstance
  *
- * @param BlockInstance $blockinstance
+ * @param BlockInstance $block
  */
 function watchlist_block_deleted(BlockInstance $block) {
     global $USER;
@@ -353,6 +389,7 @@ function watchlist_process_notifications() {
     $delayMin = get_config('watchlistnotification_delay');
     $comparetime = time() - $delayMin * 60;
 
+    // Get the latest changes on views being watched
     $sql = "SELECT usr, view, MAX(changed_on) AS time
             FROM {watchlist_queue}
             GROUP BY usr, view";
@@ -478,6 +515,11 @@ function watchlist_process_notifications() {
     }
 }
 
+/**
+ * Get the people that have access to the view which the activity is related to
+ * @param integer $view  The view ID
+ * @return array The database array of people based on view access rules
+ */
 function activity_get_viewaccess_users($view) {
     require_once(get_config('docroot') . 'lib/group.php');
     $sql = "SELECT userlist.userid, usr.*, actpref.method, accpref.value AS lang,
@@ -565,6 +607,14 @@ function activity_get_viewaccess_user_dates($viewid, $userid) {
                  'maxdate' => null);
 }
 
+/**
+ * Find a valid activity type record
+ * @param mixed $activitytype  The type of activity we want to send the notification for
+ * @param string|null $plugintype Find the activity type by plugin type
+ * @param string|null $pluginname Find the activity type by plugin name
+ * @throws SystemException
+ * @return object A Database row object
+ */
 function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname=null) {
     if (is_object($activitytype)) {
         return $activitytype;
@@ -588,1181 +638,19 @@ function activity_locate_typerecord($activitytype, $plugintype=null, $pluginname
     return $at;
 }
 
-function generate_activity_class_name($name, $plugintype, $pluginname) {
-    if (!empty($plugintype)) {
-        safe_require($plugintype, $pluginname);
-        return 'ActivityType' .
-            ucfirst($plugintype) .
-            ucfirst($pluginname) .
-            ucfirst($name);
-    }
-    return 'ActivityType' . $name;
-}
-
 /**
- * To implement a new activity type, you must subclass this class. Your subclass
- * MUST at minimum include the following:
- *
- * 1. Override the __construct method with one which first calls parent::__construct
- *    and then populates $this->users with the list of recipients for this activity.
- *
- * 2. Implement the get_required_parameters method.
+ * Format the notification so that it displays ok in both inbox and email
+ * @param string $message    The body message of the notification
+ * @param string|null $type  The message type
+ * @return string            The formatted message
  */
-abstract class ActivityType {
-
-    /**
-     * NOTE: Child classes MUST call the parent constructor, AND populate
-     * $this->users with a list of user records which should receive the message!
-     *
-     * @param array $data The data needed to send the notification
-     * @param boolean $cron Indicates whether this is being called by the cron job
-     */
-    public function __construct($data, $cron=false) {
-        $this->cron = $cron;
-        $this->set_parameters($data);
-        $this->ensure_parameters();
-        $this->activityname = strtolower(substr(get_class($this), strlen('ActivityType')));
-    }
-
-    /**
-     * This method should return an array which names the fields that must be present in the
-     * $data that was passed to the class's constructor. It should include all necessary data
-     * to determine the recipient(s) of the notification and to determine its content.
-     *
-     * @return array
-     */
-    abstract function get_required_parameters();
-
-    /**
-     * The number of users in a split chunk to notify
-     */
-    const USERCHUNK_SIZE = 1000;
-
-    /**
-     * Who any notifications about this activity should appear to come from
-     */
-    protected $fromuser;
-
-    /**
-     * When sending notifications, should the email of the person sending it be
-     * hidden? (Almost always yes, will cause the email to appear to come from
-     * the 'noreply' address)
-     */
-    protected $hideemail = true;
-
-    protected $subject;
-    protected $message;
-    protected $strings;
-    protected $users = array();
-    protected $url;
-    protected $urltext;
-    protected $id;
-    protected $type;
-    protected $activityname;
-    protected $cron;
-    protected $last_processed_userid;
-    protected $activity_queue_id;
-    protected $overridemessagecontents;
-    protected $parent;
-    protected $defaultmethod;
-
-    public function get_id() {
-        if (!isset($this->id)) {
-            $tmp = activity_locate_typerecord($this->get_type());
-            $this->id = $tmp->id;
-        }
-        return $this->id;
-    }
-
-    public function get_default_method() {
-        if (!isset($this->defaultmethod)) {
-            $tmp = activity_locate_typerecord($this->get_id());
-            $this->defaultmethod = $tmp->defaultmethod;
-        }
-        return $this->defaultmethod;
-    }
-
-    public function get_type() {
-        $prefix = 'ActivityType';
-        return strtolower(substr(get_class($this), strlen($prefix)));
-    }
-
-    public function any_users() {
-        return (is_array($this->users) && count($this->users) > 0);
-    }
-
-    public function get_users() {
-        return $this->users;
-    }
-
-    private function set_parameters($data) {
-        foreach ($data as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->{$key} = $value;
-            }
-        }
-    }
-
-    private function ensure_parameters() {
-        foreach ($this->get_required_parameters() as $param) {
-            if (!isset($this->{$param})) {
-                // Allow some string parameters to be specified in $this->strings
-                if (!in_array($param, array('subject', 'message', 'urltext')) || empty($this->strings->{$param}->key)) {
-                    throw new ParamOutOfRangeException(get_string('missingparam', 'activity', $param, $this->get_type()));
-                }
-            }
-        }
-    }
-
-    public function to_stdclass() {
-       return (object)get_object_vars($this);
-    }
-
-    public function get_string_for_user($user, $string) {
-        if (empty($string) || empty($this->strings->{$string}->key)) {
-            return;
-        }
-        $args = array_merge(
-            array(
-                $user->lang,
-                $this->strings->{$string}->key,
-                empty($this->strings->{$string}->section) ? 'mahara' : $this->strings->{$string}->section,
-            ),
-            empty($this->strings->{$string}->args) ? array() : $this->strings->{$string}->args
-        );
-        return call_user_func_array('get_string_from_language', $args);
-    }
-
-    // Optional string to use for the link text.
-    public function add_urltext(array $stringdef) {
-        $def = $stringdef;
-        if (!is_object($this->strings)) {
-            $this->strings = new stdClass();
-        }
-        $this->strings->urltext = (object) $def;
-    }
-
-    public function get_urltext($user) {
-        if (empty($this->urltext)) {
-            return $this->get_string_for_user($user, 'urltext');
-        }
-        return $this->urltext;
-    }
-
-    public function get_message($user) {
-        if (empty($this->message)) {
-            return $this->get_string_for_user($user, 'message');
-        }
-        return $this->message;
-    }
-
-    public function get_subject($user) {
-        if (empty($this->subject)) {
-            return $this->get_string_for_user($user, 'subject');
-        }
-        return $this->subject;
-    }
-
-    /**
-     * Rewrite $this->url with the ID of the internal notification record for this activity.
-     * (Generally so that you can make a URL that sends the user to the Mahara inbox page
-     * for this message.)
-     *
-     * @param int $internalid
-     * @return boolean True if $this->url was updated, False if not.
-     */
-    protected function update_url($internalid) {
-        return false;
-    }
-
-    public function notify_user($user) {
-        $changes = new stdClass();
-
-        $userdata = $this->to_stdclass();
-        // some stuff gets overridden by user specific stuff
-        if (!empty($user->url)) {
-            $userdata->url = $user->url;
-        }
-        if (empty($user->lang) || $user->lang == 'default') {
-            $user->lang = get_config('lang');
-        }
-        if (empty($user->method)) {
-            // If method is not set then either the user has selected 'none' or their setting has not been set (so use default).
-            if ($record = get_record('usr_activity_preference', 'usr', $user->id, 'activity', $this->get_id())) {
-                $user->method = $record->method;
-                if (empty($user->method)) {
-                    // The user specified 'none' as their notification type.
-                    return;
-                }
-            }
-            else {
-                $user->method = $this->get_default_method();
-                if (empty($user->method)) {
-                    // The default notification type is 'none' for this activity type.
-                    return;
-                }
-            }
-        }
-
-        // always do internal
-        foreach (PluginNotificationInternal::$userdata as &$p) {
-            $function = 'get_' . $p;
-            $userdata->$p = $this->$function($user);
-        }
-
-        $userdata->internalid = PluginNotificationInternal::notify_user($user, $userdata);
-        if ($this->update_url($userdata->internalid)) {
-            $changes->url = $userdata->url = $this->url;
-        }
-
-        if ($user->method != 'internal' || isset($changes->url)) {
-            $changes->read = (int) ($user->method != 'internal');
-            $changes->id = $userdata->internalid;
-            update_record('notification_internal_activity', $changes);
-        }
-
-        if ($user->method != 'internal') {
-            $method = $user->method;
-            safe_require('notification', $method);
-            $notificationclass = generate_class_name('notification', $method);
-            $classvars = get_class_vars($notificationclass);
-            if (!empty($classvars['userdata'])) {
-                foreach ($classvars['userdata'] as &$p) {
-                    $function = 'get_' . $p;
-                    if (!isset($userdata->$p) && method_exists($this, $function)) {
-                        $userdata->$p = $this->$function($user);
-                    }
-                }
-            }
-            try {
-                call_static_method($notificationclass, 'notify_user', $user, $userdata);
-            }
-            catch (MaharaException $e) {
-                static $badnotification = false;
-                static $adminnotified = array();
-                // We don't mind other notification methods failing, as it'll
-                // go into the activity log as 'unread'
-                $changes->read = 0;
-                update_record('notification_internal_activity', $changes);
-                if (!$badnotification && !($e instanceof EmailDisabledException || $e instanceof InvalidEmailException)) {
-                    // Admins should probably know about the error, but to avoid sending too many similar notifications,
-                    // save an initial prefix of the message being sent and throw away subsequent exceptions with the
-                    // same prefix.  To cut down on spam, it's worth missing out on a few similar messages.
-                    $k = substr($e, 0, 60);
-                    if (!isset($adminnotified[$k])) {
-                        $message = (object) array(
-                            'users' => get_column('usr', 'id', 'admin', 1),
-                            'subject' => get_string('adminnotificationerror1', 'activity'),
-                            'message' => $e,
-                        );
-                        $adminnotified[$k] = 1;
-                        $badnotification = true;
-                        activity_occurred('maharamessage', $message);
-                        $badnotification = false;
-                    }
-                }
-            }
-        }
-
-        // The user's unread message count does not need to be updated from $changes->read
-        // because of the db trigger on notification_internal_activity.
-    }
-
-    /**
-     * Sound out notifications to $this->users.
-     * Note that, although this has batching properties built into it with USERCHUNK_SIZE,
-     * it's also recommended to update a bulk ActivityType's constructor to limit the total
-     * number of records pulled from the database.
-     */
-    public function notify_users() {
-        safe_require('notification', 'internal');
-        $this->type = $this->get_id();
-
-        if ($this->cron) {
-            // Sort the list of users to notify by userid
-            uasort($this->users, function($a, $b) {return $a->id > $b->id;});
-            // Notify a chunk of users
-            $num_processed_users = 0;
-            $last_processed_userid = 0;
-            foreach ($this->users as $user) {
-                if ($this->last_processed_userid && ($user->id <= $this->last_processed_userid)) {
-                    continue;
-                }
-                if ($num_processed_users < ActivityType::USERCHUNK_SIZE) {
-                    // Immediately update the last_processed_userid in the activity_queue
-                    // to prevent duplicated notifications
-                    $last_processed_userid = $user->id;
-                    update_record('activity_queue', array('last_processed_userid' => $last_processed_userid), array('id' => $this->activity_queue_id));
-                    $this->notify_user($user);
-                    $num_processed_users++;
-                }
-                else {
-                    break;
-                }
-            }
-            return $last_processed_userid;
-        }
-        else {
-            while (!empty($this->users)) {
-                $user = array_shift($this->users);
-                $this->notify_user($user);
-            }
-        }
-        return 0;
-    }
-}
-
-abstract class ActivityTypeAdmin extends ActivityType {
-
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-        $this->users = activity_get_users($this->get_id(), null, null, true);
-    }
-}
-
-class ActivityTypeContactus extends ActivityTypeAdmin {
-
-    protected $fromname;
-    protected $fromemail;
-    protected $hideemail = false;
-
-    /**
-     * @param array $data Parameters:
-     *                    - message (string)
-     *                    - subject (string) (optional)
-     *                    - fromname (string)
-     *                    - fromaddress (email address)
-     *                    - fromuser (int) (if a logged in user)
-     */
-    function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-        if (!empty($this->fromuser)) {
-            $this->url = profile_url($this->fromuser, false);
-        }
-        else {
-            $this->customheaders = array(
-                'Reply-to: ' . $this->fromname . ' <' . $this->fromemail . '>',
-            );
-        }
-    }
-
-    function get_subject($user) {
-        return get_string_from_language($user->lang, 'newcontactus', 'activity');
-    }
-
-    function get_message($user) {
-        return get_string_from_language($user->lang, 'newcontactusfrom', 'activity') . ' ' . $this->fromname
-            . ' <' . $this->fromemail .'>' . (isset($this->subject) ? ': ' . $this->subject : '')
-            . "\n\n" . $this->message;
-    }
-
-    public function get_required_parameters() {
-        return array('message', 'fromname', 'fromemail');
-    }
-}
-
-class ActivityTypeObjectionable extends ActivityTypeAdmin {
-
-    protected $view;
-    protected $artefact;
-    protected $reporter;
-    protected $ctime;
-    protected $review;
-
-    /**
-     * @param array $data Parameters:
-     *                    - message (string)
-     *                    - view (int)
-     *                    - artefact (int) (optional)
-     *                    - reporter (int)
-     *                    - ctime (int) (optional)
-     *                    - review (int) (optional)
-     */
-    function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-
-        require_once('view.php');
-        $this->view = new View($this->view);
-
-        if (!empty($this->artefact)) {
-            require_once(get_config('docroot') . 'artefact/lib.php');
-            $this->artefact = artefact_instance_from_id($this->artefact);
-        }
-        // Notify institutional admins of the view owner
-        $adminusers = array();
-        if ($owner = $this->view->get('owner')) {
-            if ($institutions = get_column('usr_institution', 'institution', 'usr', $owner)) {
-                $adminusers = activity_get_users($this->get_id(), null, null, null, $institutions);
-            }
-        }
-        if (isset($data->touser) && !empty($data->touser)) {
-            // Notify user when admin updates objection
-            $owneruser = activity_get_users($this->get_id(), array($data->touser));
-            $this->users = array_merge($owneruser, $adminusers);
-        }
-        else if ($owner = $this->view->get('owner')) {
-            if (!empty($adminusers)) {
-                $this->users = $adminusers;
-            }
-        }
-
-        if (empty($this->artefact)) {
-            $this->url = $this->view->get_url(false, true) . '&objection=1';
-        }
-        else {
-            $this->url = 'view/view.php?id=' . $this->view->get('id') . '&modal=1&artefact=' .  $this->artefact->get('id') . '&objection=1';
-        }
-
-        if (empty($this->strings->subject)) {
-            $this->overridemessagecontents = true;
-            $viewtitle = $this->view->get('title');
-            $this->strings = new stdClass();
-            if (empty($this->artefact)) {
-                $this->strings->subject = (object) array(
-                    'key'     => ($this->review ? 'objectionablereviewview' : 'objectionablecontentview'),
-                    'section' => 'activity',
-                    'args'    => array($viewtitle, display_default_name($this->reporter)),
-                );
-            }
-            else {
-                $title = $this->artefact->get('title');
-                $this->strings->subject = (object) array(
-                    'key'     => ($this->review ? 'objectionablereviewviewartefact' : 'objectionablecontentviewartefact'),
-                    'section' => 'activity',
-                    'args'    => array($viewtitle, $title, display_default_name($this->reporter)),
-                );
-            }
-        }
-    }
-
-    public function get_emailmessage($user) {
-        $reporterurl = profile_url($this->reporter);
-        $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
-        if (empty($this->artefact)) {
-            $key = ($this->review ? 'objectionablereviewviewtext' : 'objectionablecontentviewtext');
-            return get_string_from_language(
-                $user->lang, $key, 'activity',
-                $this->view->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, $this->view->get_url(true, true) . "&objection=1", $reporterurl
-            );
-        }
-        else {
-            $key = ($this->review ? 'objectionablereviewviewartefacttext' : 'objectionablecontentviewartefacttext');
-            return get_string_from_language(
-                $user->lang, $key, 'activity',
-                $this->view->get('title'), $this->artefact->get('title'), display_default_name($this->reporter), $ctime,
-                $this->message, get_config('wwwroot') . "view/view.php?id=" . $this->view->get('id') . '&modal=1&artefact=' . $this->artefact->get('id') . "&objection=1", $reporterurl
-            );
-        }
-    }
-
-    public function get_htmlmessage($user) {
-        $viewtitle = hsc($this->view->get('title'));
-        $reportername = hsc(display_default_name($this->reporter));
-        $reporterurl = profile_url($this->reporter);
-        $ctime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->ctime);
-        $message = format_whitespace($this->message);
-        if (empty($this->artefact)) {
-            $key = ($this->review ? 'objectionablereviewviewhtml' : 'objectionablecontentviewhtml');
-            return get_string_from_language(
-                $user->lang, $key, 'activity',
-                $viewtitle, $reportername, $ctime,
-                $message, $this->view->get_url(true, true) . "&objection=1", $viewtitle,
-                $reporterurl, $reportername
-            );
-        }
-        else {
-            $key = ($this->review ? 'objectionablereviewviewartefacthtml' : 'objectionablecontentviewartefacthtml');
-            return get_string_from_language(
-                $user->lang, $key, 'activity',
-                $viewtitle, hsc($this->artefact->get('title')), $reportername, $ctime,
-                $message, get_config('wwwroot') . "view/view.php?id=" . $this->view->get('id') . '&modal=1&artefact=' . $this->artefact->get('id') . "&objection=1", hsc($this->artefact->get('title')),
-                $reporterurl, $reportername
-            );
-        }
-    }
-
-    public function get_required_parameters() {
-        return array('message', 'view', 'reporter');
-    }
-
-}
-
-class ActivityTypeVirusRepeat extends ActivityTypeAdmin {
-
-    protected $username;
-    protected $fullname;
-    protected $userid;
-
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-    }
-
-    public function get_subject($user) {
-        $userstring = $this->username . ' (' . $this->fullname . ') (userid:' . $this->userid . ')' ;
-        return get_string_from_language($user->lang, 'virusrepeatsubject', 'mahara', $userstring);
-    }
-
-    public function get_message($user) {
-        return get_string_from_language($user->lang, 'virusrepeatmessage');
-    }
-
-    public function get_required_parameters() {
-        return array('username', 'fullname', 'userid');
-    }
-}
-
-class ActivityTypeVirusRelease extends ActivityTypeAdmin {
-
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-    }
-
-    public function get_required_parameters() {
-        return array();
-    }
-}
-
-class ActivityTypeMaharamessage extends ActivityType {
-
-    /**
-     * @param array $data Parameters:
-     *                    - subject (string)
-     *                    - message (string)
-     *                    - users (list of user ids)
-     */
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-        $includesuspendedusers = isset($data->includesuspendedusers) && $data->includesuspendedusers;
-        $this->users = activity_get_users($this->get_id(), $this->users, null, false, array(), $includesuspendedusers);
-    }
-
-    public function get_required_parameters() {
-        return array('message', 'subject', 'users');
-    }
-}
-
-class ActivityTypeInstitutionmessage extends ActivityType {
-
-    protected $messagetype;
-    protected $institution;
-    protected $username;
-    protected $fullname;
-
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-        if ($this->messagetype == 'request') {
-            $this->url = 'admin/users/institutionusers.php';
-            $this->users = activity_get_users($this->get_id(), null, null, null,
-                                              array($this->institution->name));
-            $this->add_urltext(array('key' => 'institutionmembers', 'section' => 'admin'));
-        } else if ($this->messagetype == 'invite') {
-            $this->url = 'account/institutions.php';
-            $this->users = activity_get_users($this->get_id(), $this->users);
-            $this->add_urltext(array('key' => 'institutionmembership', 'section' => 'mahara'));
-        }
-    }
-
-    private function get_language($user) {
-        $userlang = get_account_preference($user->id, 'lang');
-        if ($userlang === 'default') {
-            if (!isset($this->institution->language) || $this->institution->language === '' || $this->institution->language === 'default') {
-                return get_config('lang');
-            }
-            else {
-                return $this->institution->language;
-            }
-        }
-        else {
-            return $userlang;
-        }
-    }
-
-    public function get_subject($user) {
-        $lang = $this->get_language($user);
-        if ($this->messagetype == 'request') {
-            $userstring = $this->fullname . ' (' . $this->username . ')';
-            return get_string_from_language($lang, 'institutionrequestsubject', 'activity', $userstring,
-              $this->institution->displayname);
-        }
-        else if ($this->messagetype == 'invite') {
-            return get_string_from_language($lang, 'institutioninvitesubject', 'activity',
-              $this->institution->displayname);
-        }
-    }
-
-    public function get_message($user) {
-        $lang = $this->get_language($user);
-        if ($this->messagetype == 'request') {
-            return $this->get_subject($user) .' '. get_string_from_language($lang, 'institutionrequestmessage', 'activity', $this->url);
-        }
-        else if ($this->messagetype == 'invite') {
-            return $this->get_subject($user) .' '. get_string_from_language($lang, 'institutioninvitemessage', 'activity', $this->url);
-        }
-    }
-
-    public function get_required_parameters() {
-        return array('messagetype', 'institution');
-    }
-}
-
-class ActivityTypeUsermessage extends ActivityType {
-
-    protected $userto;
-    protected $userfrom;
-
-    /**
-     * @param array $data Parameters:
-     *                    - userto (int)
-     *                    - userfrom (int)
-     *                    - subject (string)
-     *                    - message (string)
-     *                    - parent (int)
-     */
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-        if ($this->userfrom) {
-            $this->fromuser = $this->userfrom;
-        }
-        $this->users = activity_get_users($this->get_id(), array($this->userto));
-        $this->add_urltext(array(
-            'key'     => 'Reply',
-            'section' => 'group',
-        ));
-    }
-
-    public function get_subject($user) {
-        if (empty($this->subject)) {
-            return get_string_from_language($user->lang, 'newusermessage', 'group',
-                                            display_name($this->userfrom));
-        }
-        return $this->subject;
-    }
-
-    protected function update_url($internalid) {
-        $this->url = 'user/sendmessage.php?id=' . $this->userfrom . '&replyto=' . $internalid . '&returnto=inbox';
-        return true;
-    }
-
-    public function get_required_parameters() {
-        return array('message', 'userto', 'userfrom');
-    }
-
-}
-
-class ActivityTypeWatchlist extends ActivityType {
-
-    protected $view;
-
-    protected $ownerinfo;
-    protected $viewinfo;
-
-    /**
-     * @param array $data Parameters:
-     *                    - view (int)
-     */
-    public function __construct($data, $cron) {
-        parent::__construct($data, $cron);
-
-        require_once('view.php');
-        if ($this->viewinfo = new View($this->view)) {
-            $this->ownerinfo = hsc($this->viewinfo->formatted_owner());
-        }
-        if (empty($this->ownerinfo)) {
-            if (!empty($this->cron)) { // probably deleted already
-                return;
-            }
-            throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
-        }
-        $viewurl = $this->viewinfo->get_url(false);
-
-        // mysql compatibility (sigh...)
-        $casturl = 'CAST(? AS TEXT)';
-        if (is_mysql()) {
-            $casturl = '?';
-        }
-        $sql = 'SELECT u.*, wv.unsubscribetoken, p.method, ap.value AS lang, ' . $casturl . ' AS url
-                    FROM {usr_watchlist_view} wv
-                    JOIN {usr} u
-                        ON wv.usr = u.id
-                    LEFT JOIN {usr_activity_preference} p
-                        ON p.usr = u.id
-                    LEFT OUTER JOIN {usr_account_preference} ap
-                        ON (ap.usr = u.id AND ap.field = \'lang\')
-                    WHERE (p.activity = ? OR p.activity IS NULL)
-                    AND wv.view = ?
-               ';
-        $this->users = get_records_sql_array(
-            $sql,
-            array($viewurl, $this->get_id(), $this->view)
-        );
-
-        // Remove the view from the watchlist of users who can no longer see it
-        if ($this->users) {
-            $userstodelete = array();
-            foreach($this->users as $k => &$u) {
-                if (!can_view_view($this->view, $u->id)) {
-                    $userstodelete[] = $u->id;
-                    unset($this->users[$k]);
-                }
-            }
-            if ($userstodelete) {
-                delete_records_select(
-                    'usr_watchlist_view',
-                    'view = ? AND usr IN (' . join(',', $userstodelete) . ')',
-                    array($this->view)
-                );
-            }
-        }
-
-        $this->add_urltext(array('key' => 'View', 'section' => 'view'));
-    }
-
-    public function get_subject($user) {
-        return get_string_from_language($user->lang, 'newwatchlistmessage', 'activity');
-    }
-
-    public function get_message($user) {
-        return get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
-                                        $this->viewinfo->get('title'), $this->ownerinfo);
-    }
-
-    public function get_required_parameters() {
-        return array('view');
-    }
-}
-
-/**
- * extending ActivityTypeWatchlist to reuse the funcinality and structure
- */
-class ActivityTypeWatchlistnotification extends ActivityTypeWatchlist{
-    protected $view;
-    protected $blocktitles = array();
-    protected $usr;
-
-    /**
-     * @param array $data Parameters:
-     *                    - view (int)
-     *                    - blocktitles (array: int)
-     *                    - usr (int)
-     */
-    public function __construct($data, $cron) {
-        parent::__construct($data, $cron);
-
-        $this->blocktitles = $data->blocktitles;
-        $this->usr = $data->usr;
-        $this->unsubscribelink = get_config('wwwroot') . 'view/unsubscribe.php?a=watchlist&t=';
-        $this->unsubscribetype = 'watchlist';
-    }
-
-    /**
-     * override function get_message to add information about the changed
-     * blockinstances
-     *
-     * @param type $user
-     * @return type
-     */
-    public function get_message($user) {
-        $message = get_string_from_language($user->lang, 'newwatchlistmessageview1', 'activity',
-                                        $this->viewinfo->get('title'), $this->ownerinfo);
-
-        try {
-            foreach ($this->blocktitles as $blocktitle) {
-                $message .= "\n" . get_string_from_language($user->lang, 'blockinstancenotification', 'activity', $blocktitle);
-            }
-        }
-        catch(Exception $exc) {
-            var_log(var_export($exc, true));
-        }
-
-        return $message;
-    }
-
-    /**
-     * overwrite get_type to obfuscate that we are not really an Activity_type
-     */
-    public function get_type() {
-        return('watchlist');
-    }
-}
-
-class ActivityTypeViewAccess extends ActivityType {
-
-    protected $view;
-    protected $oldusers; // this can be empty though
-    protected $views; // optional array of views by id being changed
-
-    private $title, $ownername;
-
-    /**
-     * @param array $data Parameters:
-     *                    - view (int)
-     *                    - oldusers (array of user IDs)
-     */
-    public function __construct($data, $cron=false) {
-        parent::__construct($data, $cron);
-        if (!$viewinfo = new View($this->view)) {
-            if (!empty($this->cron)) { // probably deleted already
-                return;
-            }
-            throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->view));
-        }
-        if ($this->views && $this->views[0] && $this->views[0]['collection_id']) {
-            require_once('collection.php');
-            if (!$collectioninfo = new Collection($this->views[0]['collection_id'])) {
-                if (!empty($this->cron)) { // probably deleted already
-                    return;
-                }
-                throw new ViewNotFoundException(get_string('collectionnotfound', 'error', $this->views[0]['collection_id']));
-            }
-        }
-
-        // default url
-        $this->url = 'view/sharedviews.php';
-        // if we are dealing with one portfolio update url to go to that portfolio page
-        if (!$this->views) {
-            //we are dealing with a single page
-            $this->url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
-            $this->add_urltext(array('key' => 'Portfolio', 'section' => 'view'));
-        }
-        else {
-            // check to see if it's just one collection
-            if ($collectionids = array_column($this->views, 'collection_id')) {
-                if (count(array_unique($collectionids)) === 1) {
-                    if ($this->views[0]['collection_url']) {
-                        $this->url = $this->views[0]['collection_url'];
-                        $this->add_urltext(array('key' => 'Collection', 'section' => 'view'));
-                    }
-                }
-            }
-        }
-
-        $this->users = array_diff_key(
-            activity_get_viewaccess_users($this->view),
-            $this->oldusers
-        );
-        if (!$viewinfo->get_collection()) {
-            $this->title = $viewinfo->get('title');
-        }
-        $this->ownername = $viewinfo->formatted_owner();
-        $this->overridemessagecontents = true;
-    }
-
-    public function get_subject($user) {
-        $subject = get_string('newaccessubjectdefault', 'activity');
-        if ($titles = $this->get_view_titles_urls($user)) {
-            //covers collection(s), page(s) and combination of both
-            if ($this->ownername) {
-                $subject = get_string('newaccesssubjectname1', 'activity', count($titles), $this->ownername);
-            }
-            else {
-                $subject = get_string('newaccesssubject', 'activity', count($titles));
-            }
-        }
-        else {
-            //dealing with a single page
-            if ($this->ownername) {
-                $subject = get_string('newaccesssubjectname1', 'activity', 1, $this->ownername);
-            }
-            else {
-                $subject = get_string('newaccesssubject', 'activity', 1);
-            }
-        }
-        return $subject;
-    }
-
-    public function get_view_access_message($user) {
-        $accessdates = activity_get_viewaccess_user_dates($this->view, $user->id);
-        $accessdatemessage = '';
-        $fromdate = format_date(strtotime($accessdates['mindate']), 'strftimedate');
-        $todate = format_date(strtotime($accessdates['maxdate']), 'strftimedate');
-        if (!empty($accessdates['mindate']) && !empty($accessdates['maxdate'])) {
-            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfromto1', 'activity', $fromdate, $todate);
-        }
-        else if (!empty($accessdates['mindate'])) {
-            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessfrom1', 'activity', $fromdate);
-        }
-        else if (!empty($accessdates['maxdate'])) {
-            $accessdatemessage .= get_string_from_language($user->lang, 'messageaccessto1', 'activity', $todate);
-        }
-        else {
-            $accessdatemessage = false;
-        }
-        return $accessdatemessage;
-    }
-
-    public function get_view_titles_urls($user) {
-        $items = array();
-        if (!empty($this->views)) {
-            //handle collection(s), page(s) and combination of both
-            $views = $this->views;
-            foreach ($views as $view) {
-                if ($view['collection_id']) {
-                    //collections
-                    $url = $view['collection_url'];
-                    if (get_config('emailexternalredirect')) {
-                        $url = append_email_institution($user, $url);
-                    }
-                    $items[$view['collection_id']] = [
-                        'name' => $view['collection_name'],
-                        'url'  => $url,
-                    ];
-                }
-                else {
-                    //pages outside of collections
-                    $url = get_config('wwwroot') . 'view/view.php?id=' . $view['id'];
-                    if (get_config('emailexternalredirect')) {
-                        $url = append_email_institution($user, $url);
-                    }
-                    $items[$view['id']] = [
-                        'name' => $view['title'],
-                        'url' => $url,
-                    ];
-               }
-            }
-            return $items;
-        }
-        return false;
-    }
-
-    /** Customisation for WR 349183 PCNZ
-    ** @param string type   needed to discern which type of template should be used
-    ** message = internal, emailmessage = plain text, htmlmessage = html email message
-    **/
-    public function _getmessage($user, $template, $type=null) {
-        $accessitems = array();
-        if ($items = $this->get_view_titles_urls($user)) {
-            $accessitems = $items;
-        }
-        else {
-            //we are dealing with a single page
-            $url = get_config('wwwroot') . 'view/view.php?id=' . $this->view;
-            if (get_config('emailexternalredirect')) {
-                $url = append_email_institution($user, $url);
-            }
-            $accessitems[$this->view] = [
-                'name' => $this->title,
-                'url' => $url,
-            ];
-        }
-
-        $accessdatemessage = ($this->view && $user->id) ? $this->get_view_access_message($user) : null;
-        $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
-        if (get_config('emailexternalredirect')) {
-            $prefurl = append_email_institution($user, $prefurl);
-        }
-        $sitename = get_config('sitename');
-
-        $smarty = smarty_core();
-        $smarty->assign('accessitems', $accessitems);
-        $smarty->assign('accessdatemsg', $accessdatemessage . "\n");
-        $smarty->assign('url', (get_config('emailexternalredirect') ? append_email_institution($user, $this->url) : $this->url));
-        $smarty->assign('sitename', $sitename);
-        $smarty->assign('prefurl', $prefurl);
-
-        // Customisation for WR 349183 PCNZ
-        require_once(get_config('libroot') . 'view.php');
-        $view = new View($this->view);
-        if ((($view->get('type') == 'portfolio') || ($view->get('type') == 'progress')) && $view->get('owner')) {
-           $this->ownername ? $smarty->assign('pharmacistname', $this->ownername) : $smarty->assign('pharmacistname', get_string('apharmacist', 'accessvierfier'));
-           return $smarty->fetch('account/activity/accessverifier' . $type . '.tpl');
-           // End customisations
-        }
-        $messagebody = $smarty->fetch($template);
-
-        return $messagebody;
-    }
-
-    public function get_message($user) {
-        return strip_tags($this->_getmessage($user, 'account/activity/accessinternal.tpl', 'internal')); // Customisation for WR 349183 PCNZ
-    }
-
-    public function get_emailmessage($user) {
-        return strip_tags($this->_getmessage($user, 'account/activity/accessemail.tpl', 'email')); // Customisation for WR 349183 PCNZ
-    }
-
-    public function get_htmlmessage($user) {
-        return $this->_getmessage($user, 'account/activity/accessemail.tpl', 'html'); // Customisation for WR 349183 PCNZ
-    }
-
-    public function get_required_parameters() {
-        return array('view', 'oldusers');
-    }
-}
-
-
-/**
- * Extends ActivityType to handle the notification when removing
- * access from a view. The access needs to be a 1 to 1 share to user
- */
-class ActivityTypeViewAccessRevoke extends ActivityType {
-
-    protected $viewid;
-    protected $string; // this can be empty though
-    protected $fromid;
-    protected $toid;
-    protected $destinationuser;
-    protected $originuser;
-    protected $viewinfo;
-    protected $message;
-
-    /**
-     * @param array $data Parameters:
-     *                    - viewid (int)
-     *                    - Message (Text)
-     *                    - Fromid (int)
-     *                    - toid (int)
-     */
-    public function __construct($data, $cron=false) {
-        $this->message = $data->message;
-        parent::__construct($data, $cron);
-        if (!$this->viewinfo = new View($this->viewid)) {
-            if (!empty($this->cron)) { // probably deleted already
-                  return;
-            }
-            throw new ViewNotFoundException(get_string('viewnotfound', 'error', $this->viewid));
-        }
-        if (!$this->destinationuser = get_user($this->toid)) {
-            if (!empty($this->cron)) { // probably deleted already
-                  return;
-            }
-            throw new UserNotFoundException(get_string('usernotfound', 'error', $this->touser));
-        }
-        if (!$this->originuser = get_user($this->fromid)) {
-            if (!empty($this->cron)) { // probably deleted already
-                  return;
-            }
-            throw new UserNotFoundException(get_string('usernotfound', 'error', $this->fromid));
-        }
-        $this->url = 'view/share.php';
-        $this->users = array($this->destinationuser);
-        if ($this->viewinfo->get('collection')) {
-            $this->viewtitle = $this->viewinfo->get('collection')->get('name');
-        }
-        else {
-            $this->viewtitle = $this->viewinfo->display_title(true, false, false);
-        }
-        //Required for html emails to function.
-        $this->overridemessagecontents = true;
-    }
-
-    public function _getmessage($user, $template) {
-        $prefurl = get_config('wwwroot') . 'account/activity/preferences/index.php';
-        if (get_config('emailexternalredirect')) {
-            $prefurl = append_email_institution($user, $prefurl);
-        }
-
-        $sitename = get_config('sitename');
-        $fullname = display_name($this->originuser, $user);
-        $smarty = smarty_core();
-        $smarty->assign('url', (get_config('emailexternalredirect') ? append_email_institution($user, $this->url) : $this->url));
-        $smarty->assign('viewtitle', htmlspecialchars_decode($this->viewtitle)); //The htmlspecialcharacters encoding of the title and the message is done in the template.
-        $smarty->assign('message', $this->message);
-        $smarty->assign('fullname', $fullname);
-        $smarty->assign('sitename', $sitename);
-        $smarty->assign('prefurl', $prefurl);
-        $smarty->assign('revokedbyowner',  $this->is_revoked_by_owner());
-        $messagebody = $smarty->fetch($template);
-        return $messagebody;
-    }
-
-    public function get_message($user) {
-        return strip_tags($this->_getmessage($user, 'account/activity/accessrevokeinternal.tpl'));
-    }
-
-    public function get_emailmessage($user) {
-        return strip_tags($this->_getmessage($user, 'account/activity/accessrevokeemail.tpl'));
-    }
-
-    public function get_htmlmessage($user) {
-        return $this->_getmessage($user, 'account/activity/accessrevokeemailhtml.tpl');
-    }
-
-    public function get_subject($user) {
-        // revoked by owner
-        if ($this->is_revoked_by_owner()) {
-            $subject = get_string(
-                'ownerhasremovedaccesssubject',
-                'collection',
-                display_name($this->originuser, $user),
-                hsc($this->viewtitle)
-            );
-        } else {
-             // self revoked by other/verifier
-            $subject = get_string(
-                'userhasremovedaccesssubject',
-                'collection',
-                display_name($this->originuser, $user),
-                hsc($this->viewtitle)
-            );
-        }
-        return $subject;
-    }
-
-    public function get_required_parameters() {
-        return array('viewid', 'message', 'fromid', 'toid');
-    }
-
-    function is_revoked_by_owner() {
-        $portfolioowner = $this->viewinfo->get('owner');
-        return $portfolioowner === $this->originuser->id;
-    }
-}
-
-class ActivityTypeGroupMessage extends ActivityType {
-
-    protected $group;
-    protected $roles;
-    protected $deletedgroup;
-
-    /**
-     * @param array $data Parameters:
-     *                    - group (integer)
-     *                    - roles (list of roles)
-     */
-    public function __construct($data, $cron=false) {
-        require_once('group.php');
-
-        parent::__construct($data, $cron);
-        $members = group_get_member_ids($this->group, isset($this->roles) ? $this->roles : null, $this->deletedgroup);
-        if (!empty($members)) {
-            $this->users = activity_get_users($this->get_id(), $members);
-        }
-    }
-
-    public function get_required_parameters() {
-        return array('group');
-    }
-}
-
-abstract class ActivityTypePlugin extends ActivityType {
-
-    abstract public function get_plugintype();
-
-    abstract public function get_pluginname();
-
-    public function get_type() {
-        $prefix = 'ActivityType' . $this->get_plugintype() . $this->get_pluginname();
-        return strtolower(substr(get_class($this), strlen($prefix)));
-    }
-
-    public function get_id() {
-        if (!isset($this->id)) {
-            $tmp = activity_locate_typerecord($this->get_type(), $this->get_plugintype(), $this->get_pluginname());
-            $this->id = $tmp->id;
-        }
-        return $this->id;
-    }
-}
-
-
 function format_notification_whitespace($message, $type=null) {
     $message = preg_replace('/<br( ?\/)?>/', '', $message);
     $message = preg_replace('/^(\s|&nbsp;|\xc2\xa0)*/', '', $message);
     // convert any htmlspecialchars back so we don't double escape as part of format_whitespace()
     $message = htmlspecialchars_decode($message);
     $message = format_whitespace($message);
-    // @todo: Sensibly distinguish html notifications, notifications where the full text
+    // @todo Sensibly distinguish html notifications, notifications where the full text
     // appears on another page and this is just an abbreviated preview, and text-only
     // notifications where the entire text must appear here because there's nowhere else
     // to see it.
@@ -1818,7 +706,7 @@ function get_notification_settings_elements($user = null, $sitedefaults = false)
         }
 
         // Create one maildisabled error message if applicable.
-        if (!$sitedefaults && $dv == 'email' && !isset($maildisabledmsg) && get_account_preference($user->get('id'), 'maildisabled')) {
+        if (!$sitedefaults && $dv == 'email' && !$maildisabledmsg && get_account_preference($user->get('id'), 'maildisabled')) {
             $SESSION->add_error_msg(get_string('maildisableddescription', 'account', get_config('wwwroot') . 'account/index.php'), false);
             $maildisabledmsg = true;
         }
@@ -1922,7 +810,7 @@ function save_notification_settings($values, $user = null, $sitedefaults = false
  * @return array $activitytypes amended array of elements
  */
 function get_special_notifications($user, $activitytypes) {
-    if (empty($user)) {
+    if ($user === null) {
         return $activitytypes;
     }
     // Check if the non-admin is a group admin/moderator in any of their groups
@@ -1948,15 +836,25 @@ function get_special_notifications($user, $activitytypes) {
         }
     }
 
-    // If user is an institution admin, should receive objectionable material notifications
+    // If user is an institution admin, should receive objectionable material and contactus notifications
     if ($user->is_institutional_admin()) {
         $objectionable = get_records_array('activity_type', 'name', 'objectionable', 'id');
-        $activitytypes = array_merge($activitytypes, $objectionable);
+        $contactus = get_records_array('activity_type', 'name', 'contactus', 'id');
+        $activitytypes = array_merge($activitytypes, $objectionable, $contactus);
     }
 
     return $activitytypes;
 }
 
+/**
+ * Append the authentication method ID to the URL in the email
+ * if the authentication method for the person has external login
+ * so that they get redirected to the external login page if not
+ * currently logged into Mahara
+ * @param object $user A database object of a usr row
+ * @param string $url  A URL string to update
+ * @return string An updated URL
+ */
 function append_email_institution($user, $url) {
     if (!isset($user->id) || (isset($user->id) && empty($user->id))) {
         return $url;

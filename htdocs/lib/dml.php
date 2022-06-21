@@ -161,10 +161,9 @@ function execute_sql($command, array $values=null, $use_trigger=true) {
                     $v->table = $table;
                 }
             }
-            if ($type == 'es') {
-                safe_require('search', 'elasticsearch');
-                ElasticsearchIndexing::bulk_add_to_queue($ids);
-            }
+
+            // Bulk add the IDs to search if appropriate.
+            bulk_add_to_search_queue($ids);
         }
     }
 
@@ -317,7 +316,7 @@ function count_records_sql($sql, array $values=null) {
  * @param string $field3 the third field to check (optional).
  * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @param string $fields Which fields to return (default '*')
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return mixed a fieldset object containing the first mathcing record, or false if none found.
@@ -337,7 +336,7 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  *
  * @param string $sql The SQL string you wish to be executed, should normally only return one record.
  * @param array $values When using prepared statements, this is the value array (optional).
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return Found record as object. False if not found
@@ -379,7 +378,7 @@ function get_record_sql($sql, array $values=null, $strictness=WARN_MULTIPLE) {
             case WARN_MULTIPLE:
                 log_debug($msg);
                 break;
-            case IGNORE_MULITPLE:
+            case IGNORE_MULTIPLE:
                 // Do nothing!
                 break;
         }
@@ -394,7 +393,7 @@ function get_record_sql($sql, array $values=null, $strictness=WARN_MULTIPLE) {
  * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
  * @param array $values When using prepared statements, this is the value array (optional).
  * @param string $fields A comma separated list of fields to be returned from the chosen table.
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @return object Returns an array of found records (as objects)
@@ -757,6 +756,7 @@ function recordset_to_menu(ADORecordSet $rs) {
     if ($rs && $rs->RecordCount() > 0) {
         $keys = array_keys($rs->fields);
         $key0 = $keys[0];
+        $menu = array();
         if (isset($keys[1])) {
             $key1 = $keys[1];
         }
@@ -964,16 +964,18 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
     $select = db_quote_table_placeholders($select);
 
     $calllocal = false;
+    $ids = array();
     if ($type = table_need_trigger($table)) {
         // Need to find the ids
         $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
         $ids = get_records_sql_array($sql, $values);
-        if ($type == 'es') {
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::bulk_add_to_queue($ids);
-        }
-        else if ($type == 'local') {
+
+        // Bulk add the IDs to search if appropriate.
+        if ($type == 'local') {
             $calllocal = true;
+        }
+        else {
+            bulk_add_to_search_queue($ids);
         }
     }
 
@@ -1031,10 +1033,8 @@ function delete_records($table, $field1=null, $value1=null, $field2=null, $value
         // Need to find the ids
         $sql = "SELECT *, '" . $table . "' AS " . db_quote_identifier('table') . " FROM " . db_table_name($table) . ' ' . $select;
         $ids = get_records_sql_array($sql, $values);
-        if ($type == 'es') {
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::bulk_add_to_queue($ids);
-        }
+
+        bulk_add_to_search_queue($ids);
     }
     $sql = 'DELETE FROM '. db_table_name($table) . ' ' . $select;
     try {
@@ -1139,10 +1139,8 @@ function delete_records_sql($sql, array $values=null) {
                         $v->table = $table;
                     }
                 }
-                if ($type == 'es') {
-                    safe_require('search', 'elasticsearch');
-                    ElasticsearchIndexing::bulk_add_to_queue($ids);
-                }
+
+                bulk_add_to_search_queue($ids);
             }
         }
         if (!empty($values) && is_array($values) && count($values) > 0) {
@@ -1169,6 +1167,7 @@ function delete_records_sql($sql, array $values=null) {
  * @param array $dataobject A data object with values for one or more fields in the record
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
+ * @return true|int if $returnpk is given, then the ID of the new entry is given, otherwise true is returned
  * @throws SQLException
  */
 global $INSERTRECORD_TABLE_COLUMNS;
@@ -1263,25 +1262,36 @@ function insert_record($table, $dataobject, $primarykey=false, $returnpk=false) 
     return $replykey ? (integer)$id : true;
 }
 
+/**
+ * Does this table trigger a request to add to the search index queue
+ *
+ * @param string $table The table we are checking
+ *
+ * @return string|boolean Index or Local. Fall back to False.
+ */
 function table_need_trigger($table) {
+    // If you are wanting to have some saving option where you do not want to
+    // index your content you can define this constant to skip indexing.
+    // Useful for updates etc.
     if (defined('SKIP_TRIGGER') && SKIP_TRIGGER === true) {
         return false;
     }
+
     static $estables;
-    if (!defined('BEHAT_TEST') && isset($estables) && in_array($table, $estables)) {
-        return 'es';
+
+    if (empty($estables)) {
+        $search_plugin = get_config('searchplugin');
+        $tables = get_config_plugin('search', $search_plugin, 'types');
+        $estables = explode(',', $tables);
+        // Extra table to trigger queuing on.
+        $estables[] = 'view_artefact';
+    }
+    if (!defined('BEHAT_TEST') && !empty($estables) && in_array($table, $estables)) {
+        return 'indexable';
     }
 
-    if (!isset($estables) && get_config('searchplugin') == 'elasticsearch') {
-        $tables = get_config_plugin('search', 'elasticsearch', 'types');
-        $estables = explode(',', $tables);
-        $estables[] = 'view_artefact'; // special
-        if (in_array($table, $estables)) {
-            return 'es';
-        }
-    }
     $localtables = array('notification_internal_activity', 'module_multirecipient_userrelation'); // @TODO have the working out of local tables be a function call
-    if (isset($localtables) && in_array($table, $localtables)) {
+    if ($localtables && in_array($table, $localtables)) {
         return 'local';
     }
     return false;
@@ -1289,12 +1299,7 @@ function table_need_trigger($table) {
 
 function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
     if ($type = table_need_trigger($table)) {
-        if ($type == 'es') {
-            $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue($id, $table, $artefacttype);
-        }
-        else if ($type == 'local') {
+        if ($type == 'local') {
             // Call the correct function / savetype
             $classname = generate_class_name_from_table($table);
             list($plugintype, $pluginname) = generate_plugin_type_from_table($table);
@@ -1304,6 +1309,10 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
                     call_static_method($classname, 'pseudo_trigger', $id, $savetype);
                 }
             }
+        }
+        else if ($type == 'indexable' && $search_class = does_search_plugin_have('add_to_queue')) {
+            $artefacttype = ($table == 'artefact' && isset($data->artefacttype)) ? $data->artefacttype : null;
+            $search_class::add_to_queue($id, $table, $artefacttype);
         }
     }
 }
@@ -1318,7 +1327,7 @@ function pseudo_trigger($table, $data, $id, $savetype = 'insert') {
  * @param array $dataobject A data object with values for one or more fields in the record (to be inserted or updated)
  * @param string $primarykey The primary key of the table we are inserting into (almost always "id")
  * @param bool $returnpk Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
- * @param int $strictness IGNORE_MULITPLE means no special action if multiple records found
+ * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
  * @throws SQLException
@@ -1503,9 +1512,10 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
                     $v->table = $table;
                 }
             }
-            if ($type == 'es') {
-                safe_require('search', 'elasticsearch');
-                ElasticsearchIndexing::bulk_add_to_queue($ids);
+
+            if ($type == 'indexable') {
+                // Bulk add the IDs to search if appropriate.
+                bulk_add_to_search_queue($ids);
             }
             else if ($type == 'local') {
                 $calllocal = true;
@@ -1820,9 +1830,33 @@ function mysql_get_type() {
  * with the right number of values
  *
  * @param array $array input array
+ * @return array
  */
 function db_array_to_ph(array $array) {
     return array_pad(array(), count($array), '?');
+}
+
+/**
+ * Function to convert an array of objects to
+ * an array of values
+ *
+ * @param array $objs input array of stdClass objects
+ * @param string $field the field you want
+ * @return array
+ */
+function db_array_to_fields($objs, $field) {
+    $fieldarray = array();
+    if (is_array($objs)) {
+        foreach ($objs as $obj) {
+            if (isset($obj->$field)) {
+                $fieldarray[] = $obj->$field;
+            }
+            else {
+                $fieldarray[] = null;
+            }
+        }
+    }
+    return $fieldarray;
 }
 
 // This is used by the SQLException, to detect if there is a transaction when
@@ -2156,7 +2190,7 @@ function mysql_get_variable($name) {
     if (empty($name) || preg_match('/[^a-z_]/', $name)) {
         throw new SQLException('mysql_get_variable: invalid variable name');
     }
-    $result = $db->Execute("SHOW VARIABLES LIKE ?", array($name));
+    $result = $db->Execute("SHOW VARIABLES WHERE Variable_name = ?", array($name));
     return $result->fields['Value'];
 }
 
@@ -2220,4 +2254,16 @@ function db_table_exists($table) {
         )
         AND TABLE_NAME = $table
     ");
+}
+
+/**
+ * If a search plugin is enabled, add the IDs to its queue.
+ *
+ * @param array $ids
+ */
+function bulk_add_to_search_queue($ids) {
+    // Bulk add the IDs to search if appropriate.
+    if ($search_class = does_search_plugin_have('bulk_add_to_queue')) {
+        $search_class::bulk_add_to_queue($ids);
+    }
 }

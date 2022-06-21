@@ -33,6 +33,8 @@ class XMLDBStatement extends XMLDBObject {
     var $table;     // Table we are handling
     var $type;      // XMLDB_STATEMENT_TYPE
     var $sentences; // Collection of sentences in the statement
+    var $unique;
+    var $fields;
 
     /**
      * Creates one new XMLDBStatement
@@ -340,7 +342,7 @@ class XMLDBStatement extends XMLDBObject {
         if (isset($matches[1])) {
             $part = $matches[1];
         /// Convert the comma separated string to an array
-            $arr = $this->comma2array($part);
+            $arr = self::comma2array($part);
             if ($arr) {
                 $fields = $arr;
             }
@@ -361,7 +363,7 @@ class XMLDBStatement extends XMLDBObject {
         if (isset($matches[1])) {
             $part = $matches[1];
         /// Convert the comma separated string to an array
-            $arr = $this->comma2array($part);
+            $arr = self::comma2array($part);
             if ($arr) {
                 $values = $arr;
             }

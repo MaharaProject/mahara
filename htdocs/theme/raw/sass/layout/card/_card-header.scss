@@ -1,10 +1,23 @@
 .collapsible legend,
 .card-header {
     background-color: $card-header-bg;
+    color: $card-header-color;
     position: relative;
     display: block;
     font-family: $font-family-base;
     font-weight: $font-weight-light;
+
+    a,
+    button[data-toggle="collapse"] {
+        text-decoration: none;
+        color: $card-header-color;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+            color: $card-header-color;
+        }
+    }
 
     p {
         margin: 0;
@@ -24,16 +37,26 @@
 
     .secondary-link {
         color: $link-color;
+        text-decoration: $link-decoration;
+
+        &:hover,
+        &:focus {
+          text-decoration: $link-hover-decoration;
+        }
+    }
+
+    button[data-toggle="collapse"] {
+        width: 100%;
+        text-align: left;
     }
     // by default links in headings get display: block and padding.
     // Use .secondary-link if you don't want this behaviour
-    a:not(.secondary-link) {
+    a:not(.secondary-link),
+    button[data-toggle="collapse"] {
         display: block;
-        color: inherit;
+        color: $card-header-color;
         padding: $card-spacer-y $card-spacer-x;
         border: $card-border-width solid $card-border-color;
-        border-bottom: 0;
-        font-size: $font-size-base * 1.25; // 20px
         .card-secondary > & {
             padding: $card-spacer-y ($card-spacer-x / 2); // 10px 8px
             border-width: 0;
@@ -54,6 +77,7 @@
         &:hover, &:focus {
             background: none;
             text-decoration: none;
+            color: scale-color($card-header-color, $lightness: -15%);
         }
         .pieform > .collapsible-group:first-child &,
         .card.first & {
@@ -113,6 +137,7 @@ h3 {
                 a {
                     border-width: 0;
                     line-height: 1;
+                    text-decoration: none;
 
                     .icon-paperclip,
                     .collapse-indicator {
@@ -155,4 +180,5 @@ h3 {
 // remove border-bottom for attachments list card-header
 .has-attachment .card-header {
     border-bottom: 0;
+    font-weight: $font-weight-normal;
 }

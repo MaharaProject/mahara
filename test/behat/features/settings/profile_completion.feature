@@ -73,9 +73,9 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     Then I log out
     # No institution user verify that the Profile completion side block is displayed on the Dashboard
     Given I log in as "<user>" with password "Kupuh1pa!"
-    Then I should see "Profile completion" in the "Progressbar block" property
+    Then I should see "Profile completion" in the "Progressbar block" "Misc" property
     And I should see "Profile completion tips"
-    And I should see "50%" in the "Progressbar" property
+    And I should see "50%" in the "Progressbar" "Misc" property
     When I choose "Profile" from account menu
     Then I should see "Profile"
     And I follow "About me"
@@ -83,7 +83,7 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     And I press "Save profile"
     Then I should see "Profile saved successfully"
     # Verify progress bar has gone from 50% to 75%
-    And I should see "75%" in the "Progressbar" property
+    And I should see "75%" in the "Progressbar" "Misc" property
     And I log out
 
     Examples:

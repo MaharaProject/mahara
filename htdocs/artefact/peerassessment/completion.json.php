@@ -23,6 +23,7 @@ $signoff = param_integer('signoff', null);
 $verify = param_integer('verify', null);
 $signoffstatus = param_integer('signoffstatus', null);
 
+$bi = null;
 if (empty($viewid) && !empty($blockid)) {
     // try to find view from blockid
     $bi = new BlockInstance($blockid);

@@ -252,7 +252,8 @@ class PlansTools {
                                                                         'name' => get_string('targetgroupplancollectiontitleprefix', 'artefact.plans') . $targetGroupPlan->get('title'),
                                                                         'description' => get_string('taskviewsfortemplateplan', 'artefact.plans', $targetGroupPlan->get('title')),
                                                                         'navigation' => 1,
-                                                                        'submittedstatus' => 0
+                                                                        'submittedstatus' => 0,
+                                                                        'progresscompletion' => 0
                                                                     ]
                                                                 );
                     $targetTaskViewCollection->commit();
@@ -577,6 +578,29 @@ class PlansTools {
         }
 
         $portfolioSelectElement['optgroups'] = $optGroups;
+    }
+
+    /**
+     * @param \View|\Collection $portfolioElement
+     * @return ArtefactTypeTask|false
+     * @throws \ArtefactNotFoundException
+     * @throws \SQLException
+     * @throws \SystemException
+     */
+    public static function findCorrespondingGroupTaskByPortfolioElement($portfolioElement) {
+
+        $portfolioElementType = strtolower(get_class($portfolioElement));
+
+        $sql = 'SELECT gt.artefact AS id FROM {artefact_plans_task} AS pt
+                    INNER JOIN {artefact_plans_task} gt ON gt.artefact = pt.rootgrouptask
+                    WHERE pt.outcometype = ? AND pt.outcome = ?';
+
+        $result = get_record_sql($sql, [$portfolioElementType, $portfolioElement->get('id')]);
+
+        if ($result) {
+            return new ArtefactTypeTask($result->id);
+        }
+        return false;
     }
 
     /**

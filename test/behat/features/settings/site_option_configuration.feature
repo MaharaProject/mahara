@@ -19,9 +19,8 @@ Scenario: Turning the switches on and off on the "Site options" page (Bug 143156
 | Never display usernames | 1 |
 | Show people in public search | 1 |
 | Anonymous comments | 0 |
-| Access reports for staff | 1 |
-| All reports for institution staff | 1 |
-| People can disable device detection | 1 |
+| Access reports for staff and support administrators | 1 |
+| All reports for institution staff and support administrators | 1 |
 | Require reason for masquerading | 1 |
 | Notify people of masquerading | 1 |
 | Show profile completion | 1 |
@@ -53,6 +52,6 @@ Scenario: Setting default account lifetime
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Site options" in "Configure site" from administration menu
  And I expand all fieldsets
- And I select "Weeks" from "siteoptions_defaultaccountlifetime_units"
+ And I select "weeks" from "siteoptions_defaultaccountlifetime_units"
  And I fill in "10" for "siteoptions_defaultaccountlifetime"
  And I press "Update site options"

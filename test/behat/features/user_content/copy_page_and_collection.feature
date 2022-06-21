@@ -18,7 +18,7 @@ Background:
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Copy"
+  And I press "Copy"
   And I follow "Collection admin_01"
   And I should see "Collection admin_01 by admin"
   And I press "Close"
@@ -27,7 +27,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   # Add a block to the page
   When I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page admin_02" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Text"
   And I set the field "Block title" to "Text Block 1"
@@ -46,7 +46,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
 
   # Copy a page
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Copy"
+  And I press "Copy"
   And I click on "Copy page" in "Page admin_02" row
   And I press "Save"
   And I should see "Here is a new block."
@@ -57,7 +57,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I check "Page admin_02"
   And I press "Add pages"
   And I should see "1 page added to collection"
-  And I follow "Next: Edit access"
+  And I press "Next: Edit access"
 
   # Copy a collection directly from its location
   And I choose "Pages and collections" in "Create" from main menu
@@ -66,14 +66,14 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I follow "Copy"
   And I press "Collection"
   And I press "Next: Edit collection pages"
-  And I follow "Next: Edit access"
+  And I press "Next: Edit access"
 
   # Copy a collection
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Copy"
+  And I press "Copy"
   And I click on "Copy collection" in "Collection admin_01" row
   And I press "Next: Edit collection pages"
-  And I follow "Next: Edit access"
+  And I press "Next: Edit access"
 
   #veryfying if the collection is copied directly from its location
   And I choose "Pages and collections" in "Create" from main menu

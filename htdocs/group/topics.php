@@ -1,5 +1,6 @@
 <?php
 /**
+ * Recent topics in group.
  *
  * @package    mahara
  * @subpackage core

@@ -17,7 +17,7 @@ safe_require('blocktype', 'openbadgedisplayer');
 
 $host = param_variable('host', null);
 $email = param_variable('email', null);
-if (!isset($host) || !isset($email)) {
+if (!$host || !$email) {
     json_reply('local', get_string('parameterexception', 'error'));
 }
 

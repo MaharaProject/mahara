@@ -81,9 +81,9 @@ class PluginArtefactComment extends PluginArtefact {
             foreach(ArtefactTypeComment::deleted_types() as $type) {
                 insert_record('artefact_comment_deletedby', (object)array('name' => $type));
             }
-
             set_config_plugin('artefact', 'comment', 'maxindent', '5');
         }
+        return true;
     }
 
     public static function view_export_extra_artefacts($viewids) {
@@ -140,6 +140,7 @@ class PluginArtefactComment extends PluginArtefact {
                 return 'view/sharedviews.php';
                 break;
         }
+        return null;
     }
 
     public static function progressbar_additional_items() {
@@ -271,8 +272,7 @@ class ArtefactTypeComment extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-        // global $THEME;
-        // return false;
+        return false;
     }
 
     public function delete() {
@@ -342,6 +342,8 @@ class ArtefactTypeComment extends ArtefactType {
      * bool   $export          Determines if comments are fetched for html export purposes
      * bool   $onview          Optional - is viewing artefact comments on view page so don't show edit buttons
      * string $sort            Optional - the sort order of the comments. Valid options are 'earliest' and 'latest'.
+     * bool   $threaded        Optional - allows threaded comments.
+     * book   $privatefeedback Optional - show private comments.
      * @return object $options Default comments data object
      */
     public static function get_comment_options() {
@@ -358,6 +360,7 @@ class ArtefactTypeComment extends ArtefactType {
         $options->threaded = null;
         $options->blockid = null;
         $options->versioning = false;
+        $options->privatefeedback = true;
         return $options;
     }
 
@@ -371,6 +374,24 @@ class ArtefactTypeComment extends ArtefactType {
     public static function get_comments($options) {
         global $USER;
 
+        // Vars from $options.
+        $view = null;
+        $limit = null;
+        $offset = null;
+        $viewid = null;
+        $artefact = null;
+        $artefactid = null;
+        $canedit = null;
+        $owner = null;
+        $isowner = null;
+        $export = null;
+        $sort = null;
+        $threaded = null;
+        $versioning = null;
+        $privatefeedback = null;
+        $showcomment = null;
+        $onview = null;
+
         $allowedoptions = self::get_comment_options();
         // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
@@ -379,12 +400,14 @@ class ArtefactTypeComment extends ArtefactType {
         }
         $userid = $USER->get('id');
         $viewid = $view->get('id');
-        if (!empty($artefact)) {
+        // Make an artefact comment
+        if ($artefact) {
             $canedit = $USER->can_edit_artefact($artefact);
             $owner = $artefact->get('owner');
             $isowner = $userid && $userid == $owner;
             $artefactid = $artefact->get('id');
         }
+        // Make a page comment
         else {
             if ($group = $view->get('group')) {
                 $group_admins = group_get_admin_ids($group);
@@ -409,26 +432,30 @@ class ArtefactTypeComment extends ArtefactType {
         }
 
         $result = (object) array(
-            'limit'    => $limit,
-            'offset'   => $offset,
-            'view'     => $viewid,
-            'artefact' => $artefactid,
-            'canedit'  => $canedit,
-            'owner'    => $owner,
-            'isowner'  => $isowner,
-            'export'   => $export,
-            'sort'     => $sort,
-            'threaded' => $threaded,
-            'data'     => array(),
-            'versioning' => $versioning,
+            'limit'           => $limit,
+            'offset'          => $offset,
+            'view'            => $viewid,
+            'artefact'        => $artefactid,
+            'canedit'         => $canedit,
+            'owner'           => $owner,
+            'isowner'         => $isowner,
+            'export'          => $export,
+            'sort'            => $sort,
+            'threaded'        => $threaded,
+            'data'            => array(),
+            'versioning'      => $versioning,
+            'privatefeedback' => $privatefeedback,
         );
 
         $where = 'c.hidden = 0';
-        if (!empty($artefactid)) {
+        if ($artefactid) {
             $where .= ' AND c.onartefact = ' . (int)$artefactid;
         }
         else {
             $where .= ' AND c.onview = ' . (int)$viewid;
+        }
+        if ($privatefeedback == false) {
+            $where .= ' AND c.private = 0';
         }
         if (!$canedit) {
             $where .= ' AND (';
@@ -690,11 +717,12 @@ class ArtefactTypeComment extends ArtefactType {
      * @param   bool    $html     Whether to return the information rendered as html or not
      * @param   bool    $editing  Whether we are view edit mode or not
      * @param   bool    $versioning  Whether we are view versioning mode or not
+     * @param   bool    $privatefeedback Whether to retrieve private comments or not
      *
      * @return  array   $commentcount, $comments   The count of comments and either the comments
      *                                             or the html to render them.
      */
-    public function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false, $versioning = false) {
+    public static function get_artefact_comments_for_view(ArtefactType $artefact, $view, $blockid, $html = true, $editing = false, $versioning = false) {
         global $USER;
 
         if (!is_object($artefact) || !is_object($view)) {
@@ -780,7 +808,7 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
             if ($item->private) {
-                $item->pubmessage = get_string('thiscommentisprivate', 'artefact.comment');
+                $item->pubmessage = get_string('thiscommentisprivate1', 'artefact.comment');
             }
 
             if (isset($data->showcomment) && $data->showcomment == $item->id) {
@@ -811,30 +839,60 @@ class ArtefactTypeComment extends ArtefactType {
                 }
             }
 
-            // Form to make private comment public, or request that a
-            // private comment be made public
-            if (!$item->deletedby && $item->private && $item->author && $data->owner
-                && ($item->isauthor || $data->isowner)) {
-                if ((empty($item->requestpublic) && $data->isowner)
-                    || $item->isauthor && $item->requestpublic == 'owner'
-                    || $data->isowner && $item->requestpublic == 'author') {
+            // Helper vars for readability
+            $view_owner = $data->owner;
+            $comment_author = $item->author;
+            $usr_is_view_owner = $data->isowner;
+            $usr_is_commenter = $item->isauthor;
+            $is_private_comment = $item->private;
+            $is_deleted_comment = $item->deletedby;
+            $make_public_requested = $item->requestpublic;
+
+            // If comment is not deleted and is private
+            if (!$is_deleted_comment && $is_private_comment
+                && $comment_author && $view_owner
+                && ($usr_is_commenter || $usr_is_view_owner)) {
+
+                // Show the 'Make comment public' form on private comments (4 scenarios)
+                // 1. when usr is view owner && it's their own comment i.e. they are the commenter
+                // 2. when usr is view owner && it's sb else's comment they want to make public
+                // 3. when usr is the commenter && there is a request to make it public ...
+                //    requested by the view owner
+                //    OR
+                //    auto-requested by commenter making a public comment on a moderated view
+                // 4. when usr is the commenter && it's their own p comment
+
+                if (($usr_is_view_owner && empty($make_public_requested))    // Sc. 1
+                || ($usr_is_commenter && empty($make_public_requested)       // Sc. 4
+                || ($usr_is_view_owner && !$usr_is_commenter)                // Sc. 2
+                || ($usr_is_commenter && $make_public_requested)             // Sc. 3
+                )) {
                     if (!$is_export_preview) {
                         $item->makepublicform = pieform(self::make_public_form($item->id));
+                        $item->makepublicrequested = $make_public_requested;
+                        $item->usr_is_view_owner = $usr_is_view_owner;
+
+                        // Message is from you when you request sb else's private comment (on your page) to be public
+                        if ($usr_is_view_owner && !$usr_is_commenter && $make_public_requested === 'owner') {
+                            $item->requested_by_usr = true;
+                        }
+                        // Message is from you when you make a public comment on a moderated view, you requested it
+                        if ($usr_is_commenter && !$usr_is_view_owner && $make_public_requested === 'author') {
+                            $item->requested_by_usr = true;
+                        }
                     }
                 }
-                else if ($item->isauthor && $item->requestpublic == 'author'
-                         || $data->isowner && $item->requestpublic == 'owner') {
-                    $item->makepublicrequested = 1;
-                }
             }
-            else if (!$item->deletedby && $item->private && !$item->author
-                && $data->owner && $data->isowner && $item->requestpublic == 'author' && !$is_export_preview) {
+            // Anonymous comments (must be moderated)
+            else if (!$is_deleted_comment && $is_private_comment && !$comment_author && $view_owner
+                    && $usr_is_view_owner && $make_public_requested  === 'author' && !$is_export_preview) {
                 $item->makepublicform = pieform(self::make_public_form($item->id));
+                $item->makepublicrequested = $make_public_requested;
             }
-            else if (!$item->deletedby && $item->private && !$data->owner
-                && $item->group && $item->requestpublic == 'author') {
+            else if (!$is_deleted_comment && $is_private_comment && !$view_owner
+                && $item->group && $make_public_requested  === 'author') {
                 // no owner as comment is on a group view / artefact
-                if ($item->isauthor) {
+                if ($usr_is_commenter) {
                     $item->makepublicrequested = 1;
                 }
                 else {
@@ -895,6 +953,7 @@ class ArtefactTypeComment extends ArtefactType {
 
         $smarty = smarty_core();
         $smarty->assign('data', $data->data);
+        $smarty->assign('isowner', $data->isowner);
         $smarty->assign('canedit', $data->canedit);
         $smarty->assign('position', $data->position);
         $smarty->assign('viewid', $data->view);
@@ -917,11 +976,11 @@ class ArtefactTypeComment extends ArtefactType {
             'jsonscript' => $data->jsonscript,
             'datatable' => $datatable,
             'count' => $data->count,
+            'hidecount' => true,
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('comment', 'artefact.comment'),
-            'resultcounttextplural' => get_string('comments', 'artefact.comment'),
+            'resultcounttext' => get_string('ncomments', 'artefact.comment', $data->count),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];
@@ -1032,6 +1091,7 @@ class ArtefactTypeComment extends ArtefactType {
         $snippet = smarty_core();
         $form['elements']['replytoview'] = array(
             'type' => 'html',
+            'class' => 'last',
             'value' => $snippet->fetch('artefact:comment:replyplaceholder.tpl')
         );
         // This is a placeholder for the parent comment's ID. It'll be populated by Javascript if needed.
@@ -1435,9 +1495,9 @@ function make_public_submit(Pieform $form, $values) {
     $requester = $USER->get('id');
 
     if (($author == $owner && $requester == $owner)
-        || ($requester == $owner  && $comment->get('requestpublic') == 'author')
-        || (array_search($requester,$group_admins) !== false && $comment->get('requestpublic') == 'author')
-        || ($requester == $author && $comment->get('requestpublic') == 'owner')) {
+    || ($requester == $owner  && $comment->get('requestpublic') == 'author')
+    || (array_search($requester,$group_admins) !== false && $comment->get('requestpublic') == 'author')
+    || ($requester == $author && $comment->get('requestpublic') == 'owner')) {
         $comment->set('private', 0);
         $comment->set('requestpublic', null);
         $comment->commit();
@@ -1446,11 +1506,14 @@ function make_public_submit(Pieform $form, $values) {
     }
 
     $subject = 'makepublicrequestsubject';
+    $message = '';
+    $arg = '';
+    $sessionmessage = '';
+    $userid = $author;
     if ($requester == $owner) {
         $comment->set('requestpublic', 'owner');
         $message = 'makepublicrequestbyownermessage';
         $arg = display_name($owner, $author);
-        $userid = $author;
         $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($author));
     }
     else if ($requester == $author) {
@@ -1464,7 +1527,6 @@ function make_public_submit(Pieform $form, $values) {
         $comment->set('requestpublic', 'owner');
         $message = 'makepublicrequestbyownermessage';
         $arg = display_name($requester, $author);
-        $userid = $author;
         $sessionmessage = get_string('makepublicrequestsent', 'artefact.comment', display_name($author));
     }
     else {
@@ -1510,6 +1572,7 @@ function delete_comment_submit(Pieform $form, $values) {
 
     $comment = new ArtefactTypeComment((int) $values['comment']);
 
+    $deletedby = '';
     if ($USER->get('id') == $comment->get('author')) {
         $deletedby = 'author';
     }
@@ -1835,32 +1898,6 @@ function add_feedback_form_submit(Pieform $form, $values) {
     $url = $comment->get_view_url($view->get('id'), true, false);
     $goto = get_config('wwwroot') . $url;
 
-    if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
-        $arg = $author ? display_name($USER, null, true) : $data->authorname;
-        $moderatemsg = (object) array(
-            'subject'   => false,
-            'message'   => false,
-            'strings'   => (object) array(
-                'subject' => (object) array(
-                    'key'     => 'makepublicrequestsubject',
-                    'section' => 'artefact.comment',
-                    'args'    => array(),
-                ),
-                'message' => (object) array(
-                    'key'     => 'makepublicrequestbyauthormessage',
-                    'section' => 'artefact.comment',
-                    'args'    => array(hsc($arg)),
-                ),
-                'urltext' => (object) array(
-                    'key'     => 'Comment',
-                    'section' => 'artefact.comment',
-                ),
-            ),
-            'users'     => array($data->owner),
-            'url'       => $url,
-        );
-    }
-
     if (!empty($values['attachments']) && is_array($values['attachments']) && !empty($data->author)) {
 
         require_once(get_config('libroot') . 'uploadmanager.php');
@@ -1889,6 +1926,7 @@ function add_feedback_form_submit(Pieform $form, $values) {
             ),
         );
 
+        $fileid = null;
         foreach ($values['attachments'] as $filesindex) {
 
             $originalname = $_FILES[$filesindex]['name'];
@@ -1937,12 +1975,8 @@ function add_feedback_form_submit(Pieform $form, $values) {
         $updatelink .= ($artefact) ? get_string('removefromwatchlistartefact', 'view', hsc($view->get('title'))) : get_string('removefromwatchlist', 'view');
     }
 
+    // Notification of comment made
     activity_occurred('feedback', $data, 'artefact', 'comment');
-
-    if (isset($moderatemsg)) {
-        activity_occurred('maharamessage', $moderatemsg);
-    }
-
     db_commit();
 
     $commentoptions = ArtefactTypeComment::get_comment_options();
@@ -2125,15 +2159,21 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             return;
         }
 
+        // Moderate a comment request by someone to be made public
+        $moderatingcomment = $comment->get('requestpublic');
+
         $this->strings = (object) array(
             'subject' => (object) array(
-                'key'     => 'newcommentnotificationsubject',
+                'key'     => $moderatingcomment ? 'commentmoderatenotificationsubject':'newcommentnotificationsubject',
                 'section' => 'artefact.comment',
-                'args'    => array($title),
+                'args'    => $moderatingcomment ? null : array($title),
             ),
         );
 
         $this->url .= '&showcomment=' . $comment->get('id');
+        if ($onartefact) {
+            $this->url .= '&modal=1&artefact='. $artefactinstance->get('id');
+        }
 
         // Email
         $author = $comment->get('author');
@@ -2154,14 +2194,30 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
             else {
                 $lang = $user->lang;
             }
-            $this->users[$key]->htmlmessage = get_string_from_language(
-                $lang, 'feedbacknotificationhtml', 'artefact.comment',
-                hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
-            );
-            $this->users[$key]->emailmessage = get_string_from_language(
-                $lang, 'feedbacknotificationtext', 'artefact.comment',
-                $authorname, $title, $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
-            );
+
+            if ($moderatingcomment) {
+                $htmlmessage = get_string_from_language(
+                    $lang, 'feedbackmoderationnotificationhtml', 'artefact.comment',
+                    hsc($title), hsc($authorname), clean_html($body), get_config('wwwroot') . $this->url
+                );
+                $textmessage = get_string_from_language(
+                    $lang, 'feedbackmoderationnotificationtext', 'artefact.comment',
+                    hsc($title), hsc($authorname), trim(html2text($body)), get_config('wwwroot') . $this->url
+                );
+            }
+            else {
+                $htmlmessage = get_string_from_language(
+                    $lang, 'feedbacknotificationhtml', 'artefact.comment',
+                    hsc($authorname), hsc($title), $posttime, clean_html($body), get_config('wwwroot') . $this->url
+                );
+                $textmessage = get_string_from_language(
+                    $lang, 'feedbacknotificationtext', 'artefact.comment',
+                    hsc($authorname), hsc($title), $posttime, trim(html2text($body)), get_config('wwwroot') . $this->url
+                );
+            }
+
+            $this->users[$key]->htmlmessage =  $htmlmessage;
+            $this->users[$key]->emailmessage = $textmessage;
         }
     }
 

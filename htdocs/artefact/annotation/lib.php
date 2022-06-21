@@ -114,6 +114,7 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 }
             }
         }
+        return true;
     }
 
     public static function view_export_extra_artefacts($viewids) {
@@ -163,6 +164,9 @@ class PluginArtefactAnnotation extends PluginArtefact {
                 break;
             case 'annotationfeedback':
                 return 'view/sharedviews.php';
+                break;
+            default:
+                return 'view/index.php';
                 break;
         }
     }
@@ -218,9 +222,11 @@ class PluginArtefactAnnotation extends PluginArtefact {
 
 class ArtefactTypeAnnotation extends ArtefactType {
 
-    protected $annotation;  // artefactid of the annotation artefact.
-    protected $artefact;    // artefactid of the artefact this annotation is linked to.
-    protected $view;        // viewid of the view this annotation is linked to.
+    protected $annotation;        // artefactid of the annotation artefact.
+    protected $artefact;          // artefactid of the artefact this annotation is linked to.
+    protected $view;              // viewid of the view this annotation is linked to.
+    protected $lastcontentupdate; // last updated as a datetime.
+    protected $onartefact;        // the annotation is on an artefect
 
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
@@ -636,6 +642,21 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      */
     public static function get_annotation_feedback($options) {
         global $USER;
+
+        // Vars populated from $options.
+        $limit = null;
+        $offset = null;
+        $annotation = null;
+        $view = null;
+        $artefact = null;
+        $block = null;
+        $canedit = null;
+        $owner = null;
+        $isowner = null;
+        $export = null;
+        $sort = null;
+        $showcomment = null;
+
         // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
             $$key = $option;
@@ -643,7 +664,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $userid = $USER->get('id');
 
         $canedit = false;
-        if (!empty($artefact)) {
+        if ($artefact) {
             // This is the artefact that the annotation is linked to.
             $artefactobj = artefact_instance_from_id($artefact);
             $canedit = $USER->can_edit_artefact($artefactobj);
@@ -651,7 +672,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             $isowner = $userid && $userid == $owner;
             $view = null;
         }
-        else if (!empty($view)) {
+        else if ($view) {
             // This is the view that the annotation is linked to.
             $viewobj = new View($view);
             $canedit = $USER->can_moderate_view($viewobj);
@@ -679,10 +700,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $wherearray[] = 'a.id = ' . (int) $annotation;
 
         // if artefact and view are not set, this annotation is not linked to anything.
-        if (!empty($artefact)) {
+        if ($artefact) {
             $wherearray[] = 'an.artefact = ' . (int) $artefact;
         }
-        else if (!empty($view)) {
+        else if ($view) {
             $wherearray[] = 'an.view = ' . (int) $view;
         }
         else {
@@ -739,7 +760,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 }
             }
 
-            $sortorder = (!empty($sort) && $sort == 'latest') ? 'af.ctime DESC' : 'af.ctime ASC';
+            $sortorder = ($sort && $sort == 'latest') ? 'af.ctime DESC' : 'af.ctime ASC';
             $sql = 'SELECT
                         af.id, af.author, af.authorname, af.ctime, af.mtime, af.description, af.group,
                         f.private, f.deletedby, f.requestpublic, f.lastcontentupdate,
@@ -916,9 +937,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             'count' => $data->count,
             'limit' => $data->limit,
             'offset' => $data->offset,
+            'resultcounttext' => get_string('nannotationfeedback', 'artefact.annotation', $data->count),
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('annotationfeedback', 'artefact.annotation'),
-            'resultcounttextplural' => get_string('annotationfeedback', 'artefact.annotation'),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];
@@ -926,6 +946,8 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
     }
 
     public static function last_public_annotation_feedback($annotation, $onview=null, $onartefact=null) {
+        $where = '';
+        $values = array();
         if (!empty($onartefact)) {
             $where = 'an.artefact = ?';
             $values = array($onartefact);
@@ -958,7 +980,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   boolean $listonly Only return the list and not the form
      *
      */
-    public function get_annotation_feedback_for_matrix($annotationartefact, $view, $blockid, $listonly = false) {
+    public static function get_annotation_feedback_for_matrix($annotationartefact, $view, $blockid, $listonly = false) {
         $options = ArtefactTypeAnnotationfeedback::get_annotation_feedback_options();
         $options->limit = 0;
         $options->view = $view->get('id');
@@ -1011,7 +1033,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   string  $message   The feedback message
      * @param   boolean $ispublic  Whether it is a public message or not
      */
-    public function save_matrix_feedback($annotationartefact, $view, $blockid, $message, $ispublic = true) {
+    public static function save_matrix_feedback($annotationartefact, $view, $blockid, $message, $ispublic = true) {
         global $USER;
         if (!is_object($annotationartefact) || !is_object($view) || empty($message)) {
             throw new MaharaException(get_string('annotationinformationerror', 'artefact.annotation'));
@@ -1027,15 +1049,10 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         $data->owner       = $view->get('owner');
         $data->group       = $view->get('group');
         $data->institution = $view->get('institution');
+        $data->author      = $USER->get('id');
 
-        if ($author = $USER->get('id')) {
-            $anonymous = false;
-            $data->author = $author;
-        }
-        else {
-            $anonymous = true;
-            $data->authorname = $values['authorname'];
-        }
+        $relativeurl = $annotationartefact->get_view_url($view->get('id'), true, false);
+        $url = get_config('wwwroot') . $relativeurl;
 
         // @TODO deal with moderation
         // if (isset($values['moderate']) && $values['ispublic'] && !$USER->can_edit_view($view)) {
@@ -1058,7 +1075,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         db_commit();
 
         if (isset($data->requestpublic) && $data->requestpublic === 'author' && $data->owner) {
-            $arg = $author ? display_name($USER, null, true) : $data->authorname;
+            $arg = display_name($USER, null, true);
             $moderatemsg = (object) array(
                 'subject'   => false,
                 'message'   => false,
@@ -1108,7 +1125,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   bool    $html     Whether to return the information rendered as html or not
      * @param   bool    $editing  Whether we are view edit mode or not
      */
-    public function get_annotation_feedback_for_view($annotationartefact, $view, $blockid, $html = true, $editing = false) {
+    public static function get_annotation_feedback_for_view($annotationartefact, $view, $blockid, $html = true, $editing = false) {
         global $USER;
         if (!is_object($annotationartefact) || !is_object($view)) {
             throw new MaharaException(get_string('annotationinformationerror', 'artefact.annotation'));
@@ -1165,7 +1182,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param boolean $bystafforadmin TRUE - retrieve the count of feedback input by users who are staff and/or admin.
      *                                FALSE - retrieve the count of feedback input by users who are NOT staff or admin.
      *                                NULL - retrieve the count of feedback input by users irrespecitve of the staff/admin flags.
-     * @return array
+     * @return array|false objects returned by the generated SQL
      */
     public static function count_annotation_feedback($annotation, $viewids=null, $artefactids=null, $bystafforadmin = null) {
         $userwherearray = array();
@@ -1218,6 +1235,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                     GROUP BY an.artefact';
             return get_records_sql_assoc($sql, array((int) $annotation));
         }
+        return false;
     }
 
     public function render_self($options) {
@@ -1225,15 +1243,17 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
     }
 
     /**
-     * Create a form so the user can enter feedback for an annotation that is linked to
-     * a view or an artefact.
-     * @param object $annotation the annotation artefact object.
-     * @param object $view the view object that the annotation is linked to.
-     * @param object $artefact the artefact object that the annotation is linked to.
-     * @param string $blockid the id of the block instance
-     * @param boolean $defaultprivate set the private setting. Default is false.
-     * @param boolean $moderate if moderating feedback. Default is false.
-     * @return multitype:string multitype:NULL string
+     * Create a form so the user can enter feedback for an annotation.
+     *
+     * The annotation feedback is linked to a view or an artefact.
+     *
+     * @param object $annotation The annotation artefact object.
+     * @param object $view The view object that the annotation is linked to.
+     * @param object $artefact The artefact object that the annotation is linked to.
+     * @param string $blockid The id of the block instance
+     * @param boolean $defaultprivate Set the private setting. Default is false.
+     * @param boolean $moderate If moderating feedback. Default is false.
+     * @return array A Pieform form array.
      */
     public static function add_annotation_feedback_form($annotation, $view, $artefact, $blockid, $defaultprivate=false, $moderate=false) {
         global $USER;
@@ -1317,11 +1337,11 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         // What is this annotation feedback linked to? Store it in hidden fields.
         $form['elements']['viewid'] = array(
             'type'  => 'hidden',
-            'value' => (isset($view) ? $view->get('id') : null),
+            'value' => $view ? $view->get('id') : null,
         );
         $form['elements']['artefactid'] = array(
             'type'  => 'hidden',
-            'value' => (isset($artefact) ? $artefact->get('id') : null),
+            'value' => $artefact ? $artefact->get('id') : null,
         );
         // Save the artefactid of the annotation.
         $form['elements']['annotationid'] = array(
@@ -1456,7 +1476,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
  */
 function make_annotation_feedback_public_validate(Pieform $form, $values) {
     global $USER;
-    $annotationfeedback = new ArtefactTypeAnnotationFeedback((int) $values['annotationfeedbackid']);
+    $annotationfeedback = new ArtefactTypeAnnotationfeedback((int) $values['annotationfeedbackid']);
 
     if (!empty($values['viewid']) && !can_view_view($values['viewid'])) {
         // The user does not access to this view.
@@ -1492,7 +1512,7 @@ function make_annotation_feedback_public_validate(Pieform $form, $values) {
 function make_annotation_feedback_public_submit(Pieform $form, $values) {
     global $USER;
 
-    $annotationfeedback = new ArtefactTypeAnnotationFeedback((int) $values['annotationfeedbackid']);
+    $annotationfeedback = new ArtefactTypeAnnotationfeedback((int) $values['annotationfeedbackid']);
     $annotationid = $annotationfeedback->get('onannotation');
     $annotation = new ArtefactTypeAnnotation((int) $annotationid);
 
@@ -1526,6 +1546,10 @@ function make_annotation_feedback_public_submit(Pieform $form, $values) {
     }
 
     $subject = 'makepublicrequestsubject';
+    $message = '';
+    $arg = '';
+    $userid = null;
+    $sessionmessage = '';
     if ($requester == $owner) {
         $annotationfeedback->set('requestpublic', 'owner');
         $message = 'makepublicrequestbyownermessage';
@@ -1603,6 +1627,7 @@ function delete_annotation_feedback_submit(Pieform $form, $values) {
     $view = new View($values['viewid']);
     $annotationid = $annotationfeedback->get('onannotation');
     $annotation = new ArtefactTypeAnnotation((int) $annotationid);
+    $deletedby = '';
 
     if ($USER->get('id') == $annotationfeedback->get('author')) {
         $deletedby = 'author';
@@ -1782,6 +1807,7 @@ function add_annotation_feedback_form_submit(Pieform $form, $values) {
     $viewid = $values['viewid'];
     $blockid = $values['blockid'];
 
+    $view = null;
     if ($artefactid) {
         $artefact = artefact_instance_from_id($artefactid);
         $data->artefact    = $artefactid;

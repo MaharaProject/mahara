@@ -31,6 +31,7 @@ $default_group_data = (object) array(
    'hidemembers'    => GROUP_HIDE_NONE,
    'hidemembersfrommembers'  => GROUP_HIDE_NONE,
    'groupparticipationreports' => 0,
+   'grouparchivereports' => 0,
    'editwindowstart'  => null,
    'editwindowend'    => null,
    'category'       => 0,
@@ -133,6 +134,12 @@ $optionform = pieform(array(
             'defaultvalue' => $group_data->allowarchives,
             'disabled'     => !$group_data->submittableto,
         ),
+        'grouparchivereports' => array(
+            'type'         => 'switchbox',
+            'title'        => get_string('grouparchivereports', 'group'),
+            'description'  => get_string('grouparchivereportsdesc', 'group'),
+            'defaultvalue' => $group_data->grouparchivereports,
+        ),
         'visibility' => array(
             'type'         => 'html',
             'value'        => '<h2>' . get_string('Visibility') . '</h2>',
@@ -221,7 +228,7 @@ $optionform = pieform(array(
             'type'         => 'select',
             'title'        => get_string('viewnotify', 'group'),
             'options'      => array(get_string('none', 'admin')) + $notifyroles,
-            'description'  => get_string('viewnotifydescription2', 'group'),
+            'description'  => get_string('viewnotifydescription3', 'group'),
             'defaultvalue' => $group_data->viewnotify,
             'disabled'     => !$notifyroles,
         ),
@@ -288,10 +295,13 @@ jQuery(function($) {
     $("#groupsettings_submittableto").on("click", function() {
         if (this.checked) {
             $("#groupsettings_allowarchives").prop("disabled", false);
+            $("#groupsettings_grouparchivereports").prop("disabled", false);
         }
         else {
             $("#groupsettings_allowarchives").prop("checked", false);
             $("#groupsettings_allowarchives").prop("disabled", true);
+            $("#groupsettings_grouparchivereports").prop("checked", false);
+            $("#groupsettings_grouparchivereports").prop("disabled", true);
         }
     });
     $("#groupsettings_request").on("click", function() {
@@ -327,15 +337,6 @@ jQuery(function($) {
             $("#groupsettings_hidemembers").prop("disabled", false);
         }
     });
-    $("#groupsettings_submittableto").on("click", function() {
-        if (this.checked) {
-            $("#groupsettings_allowarchives").prop("disabled", false);
-        }
-        else {
-            $("#groupsettings_allowarchives").prop("checked", false);
-            $("#groupsettings_allowarchives").prop("disabled", true);
-        }
-    });
 });
 EOF;
 
@@ -357,6 +358,9 @@ function groupsettings_validate(Pieform $form, $values) {
         }
         if (!empty($values['allowarchives']) && empty($values['submittableto'])) {
             $form->set_error('allowarchives', get_string('allowsarchiveserror', 'group'));
+        }
+        if (!empty($values['grouparchivereports']) && empty($values['submittableto'])) {
+            $form->set_error('grouparchivereports', get_string('grouparchivereportserror', 'group'));
         }
     }
 }

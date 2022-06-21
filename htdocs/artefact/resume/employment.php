@@ -1,5 +1,6 @@
 <?php
 /**
+ * Add an employment record
  *
  * @package    mahara
  * @subpackage artefact-resume
@@ -18,14 +19,15 @@ define('MENUITEM_SUBPAGE', 'employment');
 
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('resume', 'artefact.resume'));
-define('SUBSECTIONHEADING', get_string('educationandemployment', 'artefact.resume'));
+define('SUBSECTIONHEADING', get_string('employment', 'artefact.resume'));
 safe_require('artefact', 'resume');
+safe_require('artefact', 'file');
 
 if (!PluginArtefactResume::is_active()) {
     throw new AccessDeniedException(get_string('plugindisableduser', 'mahara', get_string('resume','artefact.resume')));
 }
 
-$compositetypes = array('employmenthistory', 'educationhistory');
+$compositetypes = array('employmenthistory');
 $inlinejs = ArtefactTypeResumeComposite::get_js($compositetypes);
 $compositeforms = ArtefactTypeResumeComposite::get_forms($compositetypes);
 

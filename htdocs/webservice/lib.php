@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Web services utility functions and classes
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -53,9 +54,21 @@ define('EXTERNAL_TOKEN_USER', 3);
  */
 define('EXTERNAL_TOKEN_USER_EXPIRES', (12 * 7 * 24 * 60 * 60));
 
+/**
+ * Username/password authentication (also called simple authentication)
+ */
 define('WEBSERVICE_AUTHMETHOD_USERNAME', 0);
+
+/**
+ * The most common token authentication (external app, mobile app...)
+ */
 define('WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN', 1);
+
+/**
+ * The token for embedded application (requires Moodle session)
+ */
 define('WEBSERVICE_AUTHMETHOD_SESSION_TOKEN', 2);
+
 define('WEBSERVICE_AUTHMETHOD_OAUTH_TOKEN', 3);
 define('WEBSERVICE_AUTHMETHOD_USER_TOKEN', 4);
 
@@ -69,7 +82,8 @@ define('GETREMOTEADDR_SKIP_HTTP_CLIENT_IP', '1');
 /** Get remote addr constant */
 define('GETREMOTEADDR_SKIP_HTTP_X_FORWARDED_FOR', '2');
 
-
+/** Webservice language file */
+define('WEBSERVICE_LANG', 'webservices');
 /**
  * What debugging state is Web Services in
  *
@@ -817,6 +831,77 @@ class external_api {
 
         return $function;
     }
+
+       /**
+     * Internal function to upload a file using the same logic whether
+     * it's a standalone file or an attachment to a blog post.
+     *
+     * This function can deal with files that are in an array param,
+     * but it will only do one of them at a time.
+     *
+     * @param string $inputname Name of the parameter the file is in
+     * @param int $inputindex NULL if there's just one file; index of particular file if it's an array
+     * @param string $foldername Folder to put the files in (or create if it doesn't exist yet.)
+     * @param string $title
+     * @param string $description
+     * @param array $tags
+     * @param int $recipient ID, if null, upload to self
+     * @return ID of newly created file
+     * @throws WebserviceInvalidParameterException
+     */
+    protected static function handle_file_upload($inputname, $inputindex = null, $foldername = null, $title = null, $description = null, $tags = array(), $recipient = null) {
+        global $USER;
+        if (!$_FILES[$inputname]) {
+            throw new WebserviceInvalidParameterException('No uploaded files found in request');
+        }
+        safe_require('artefact', 'file');
+
+        $data = new stdClass();
+        $data->owner = $recipient ? $recipient : $USER->get('id'); // id of owner
+
+        // See if a folder by this name already exists.
+        // Create a folder by this name if it doesn't exist yet.
+        $artefact = ArtefactTypeFolder::get_folder_by_name($foldername, null, $data->owner);
+        if ($artefact) {
+            $data->parent = $artefact->id;
+            if ($data->parent == 0) {
+                $data->parent = null;
+            }
+        }
+        else {
+            $fd = (object) array(
+                'owner' => $data->owner,
+                'title' => $foldername,
+                'parent' => null,
+            );
+            $f = new ArtefactTypeFolder(0, $fd);
+            $f->commit();
+            $data->parent = $f->get('id');
+        }
+
+        if (!$title) {
+            if ($inputindex) {
+                $rawname = $_FILES[$inputname]['name'][$inputindex];
+            }
+            else {
+                $rawname = $_FILES[$inputname]['name'];
+            }
+            $title = basename($rawname);
+        }
+        $data->title = ArtefactTypeFileBase::get_new_file_title($title, $data->parent, $data->owner);
+        if ($description) {
+            $data->description = $description;
+        }
+        if ($tags) {
+            $data->tags = $tags;
+        }
+
+        // This will throw a QuotaExceededException or UploadExceptoin if there's
+        // a problem.
+        $artefact_id = ArtefactTypeFile::save_uploaded_file($inputname, $data, $inputindex);
+
+        return $artefact_id;
+    }
 }
 
 /**
@@ -993,6 +1078,8 @@ abstract class webservice_server implements webservice_server_interface {
 
     /** @property string info to add to logging*/
     protected $info = null;
+
+    protected $oauth_token_details = null;
     /**
      * Contructor
      * @param integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_*
@@ -1119,7 +1206,7 @@ abstract class webservice_server implements webservice_server_interface {
      * @return $user object
      */
     public function authenticate_by_token($tokentype) {
-        global $WEBSERVICE_INSTITUTION;
+        global $WEBSERVICE_INSTITUTION, $WEBSERVICE_AUTH_METHOD;
 
         if ($tokentype == EXTERNAL_TOKEN_OAUTH1) {
             $user = get_record('usr', 'id', $this->oauth_token_details['user_id']);
@@ -1181,6 +1268,7 @@ abstract class webservice_server implements webservice_server_interface {
 
         // set the global for the web service users defined institution
         $WEBSERVICE_INSTITUTION = $token->institution;
+        $WEBSERVICE_AUTH_METHOD = $token->authinstance;
 
         return $user;
     }
@@ -1821,6 +1909,7 @@ class WebserviceException extends MaharaException {
 
     /**
      * Constructor
+     *
      * @param string $errorcode The name of the string to print
      * @param string $debuginfo optional debugging information
      * @param integer $errornumber A numerical identifier for the error (optional)
@@ -1838,6 +1927,7 @@ class WebserviceException extends MaharaException {
             }
         }
         else {
+            $count = 0;
             $message = $errorcode;
         }
 
@@ -1880,6 +1970,7 @@ class WebserviceParameterException extends WebserviceException {}
 class WebserviceCodingException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo optional debugging information
      */
     function __construct($debuginfo='') {
@@ -1896,6 +1987,7 @@ class WebserviceCodingException extends WebserviceException {
 class WebserviceInvalidParameterException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo='') {
@@ -1912,6 +2004,7 @@ class WebserviceInvalidParameterException extends WebserviceException {
 class WebserviceInvalidResponseException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo='') {
@@ -1925,10 +2018,25 @@ class WebserviceInvalidResponseException extends WebserviceException {
 class WebserviceAccessException extends WebserviceException {
     /**
      * Constructor
+     *
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo='') {
         parent::__construct('accessexception', $debuginfo);
+    }
+}
+
+/**
+ * Exception indicating missing file problem in web service call
+ */
+class WebserviceFileNotFoundException extends WebserviceException {
+    /**
+     * Constructor
+     *
+     * @param string $debuginfo some detailed information
+     */
+    function __construct($debuginfo='') {
+        parent::__construct('filenotfoundexception', $debuginfo);
     }
 }
 

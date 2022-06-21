@@ -26,12 +26,17 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
         return array('blog' => 12000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function get_instance_javascript(BlockInstance $bi) {
         $blockid = $bi->get('id');
+        $viewid = $bi->get('view');
         return array(
             array(
                 'file'   => 'js/recentposts.js',
-                'initjs' => "addNewPostShortcut($blockid);",
+                'initjs' => "recentPostsAddNewPostShortcut($blockid, $viewid);",
             )
         );
     }
@@ -167,7 +172,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
         return $result;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -202,7 +207,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
         );
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'nocopy';
     }
 

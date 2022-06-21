@@ -70,6 +70,8 @@
             float: left;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
+            border-top-right-radius: $input-border-radius;
+            border-bottom-right-radius: $input-border-radius;
             border-left: $btn-border-width solid $btn-secondary-border;
             margin-left: -$btn-border-width;
             @include media-breakpoint-up(md) {

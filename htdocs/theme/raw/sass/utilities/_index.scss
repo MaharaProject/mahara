@@ -3,6 +3,7 @@
 // Libraries (Please, do not amend content of these folders)
 @import "../lib/font-awesome/fontawesome";
 @import "../lib/select2/core";
+@import "../lib/datatables";
 
 @import "mixins";
 @import "classes"; // Custom utility classes
@@ -17,7 +18,6 @@
 // General customisation and component files go here...
 @import "../layout/layout";
 @import "../layout/col-collapse";
-@import "../layout/columns";
 @import "../layout/footer";
 @import "../layout/header";
 @import "../layout/profile-block";
@@ -104,6 +104,7 @@
 @import "../plugin/blocktype/openbadgedisplayer";
 @import "../plugin/blocktype/internalmedia";
 @import "../plugin/blocktype/verification";
+@import "../plugin/module/lti_advantage/deeplinkportfoliolist";
 
 // Supporting sass for library code
 @import "../lib/meter.scss"; // progress bar (old/ported)

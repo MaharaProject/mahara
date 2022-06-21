@@ -385,25 +385,48 @@ class BehatGeneral extends BehatBase {
     public function i_click_on_blocktype($blocktype) {
         $show_more_button = "Show more";
         $property = "Content types";
+        $location = "Blocks";
         // get the blocktypes container
-        $css_locator = get_property($property);
+        $css_locator = get_property($property, $location);
 
-        $found = false;
-        while (!$found) {
-            try {
-                //check if the blocktype is there
-                $node = $this->get_node_in_container('link_or_button', $blocktype, 'css_element', '#placeholderlist');
-                $this->ensure_node_is_visible($node);
-                $found = true;
-            }
-            catch(Exception $e) {
-                // do nothing, keep looking
-                $this->i_click_on($show_more_button);
-            }
+        if (!$css_locator) {
+            throw new ExpectationException(
+                '"A property called "' . $property . '" was not found in the properties.php file."',
+                $this->getSession()
+            );
         }
+        else {
+            $found = false;
+            while (!$found) {
+                try {
+                    //check if the blocktype is there
+                    $node = $this->get_node_in_container('link_or_button', $blocktype, 'css_element', '#placeholderlist');
+                    $this->ensure_node_is_visible($node);
+                    $found = true;
+                }
+                catch (Exception $e) {
+                    // do nothing, keep looking
+                    $this->i_click_on($show_more_button);
+                }
+            }
 
-        $this->i_click_on_in_the($blocktype, $css_locator[0], $css_locator[1]);
-        $this->wait_until_the_page_is_ready();
+            $this->i_click_on_in_the($blocktype, $css_locator[0], $css_locator[1]);
+            $this->wait_until_the_page_is_ready();
+        }
+    }
+
+    /**
+     * Click on the add block button.
+     *
+     * @When /^I click on the add block button$/
+     * @When /^I click on the Add Block button$/
+     */
+    public function i_click_on_add_block() {
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the add block button');
+        $xpath = "//div[(contains(concat(' ', normalize-space(@id), ' '), concat(' ', 'content-editor-foldable', ' ')))]/div";
+        $node = $this->find('xpath', $xpath, $exception);
+        $this->ensure_node_is_visible($node);
+        $node->click();
     }
 
     /**
@@ -792,6 +815,35 @@ EOF;
     }
 
     /**
+     * Check if text exists at particular matrix point
+     *
+     * @Then I should see :text at matrix point :matrix_point
+     * @param string $text
+     * @param string $matrix_point a column,row value
+     * @throws ExpectationException
+     * @throws Exception
+     */
+    public function i_should_see_text_at_matrix_point($text, $matrix_point) {
+        // Check that we have a valid matrix point
+        $point = explode(',', $matrix_point);
+        if (empty($point[0]) || empty($point[1]) ||
+            !is_numeric($point[0]) || !is_numeric($point[1])) {
+            throw new ExpectationException('"' . $matrix_point . '" is not valid. Needs to be like "3,5"', $this->getSession());
+        }
+
+        $element = $this->getSession()->getPage()->find(
+            'xpath',
+            '//table/tbody/tr[' . $point[1] . ']/td[' . $point[0] . ']');
+
+        if ($element->getText() != $text) {
+            throw new Exception($text . ' was not found at matrix point ' . $point[0] . ',' . $point[1]);
+        }
+
+        $this->should_be_visible('//table/tbody/tr[' . $point[1] . ']/td[' . $point[0] . ']', 'xpath_element');
+
+    }
+
+    /**
      * Click a matrix point by being given a column,row pair
      *
      * @When I click on the matrix point :matrix_point
@@ -984,8 +1036,7 @@ EOF;
     * Then uses a switch to get the correct function.
     *
     * @Then /^I (?P<step_funct>.*) "(?P<text_string>(?:[^"]|\\")*)" in the "(?P<property_string>(?:[^"]|\\")*)" property$/
-    * @Then /^I (?P<step_funct>.*) "(?P<text_string>(?:[^"]|\\")*)" in the
-    * "(?P<property_string>(?:[^"]|\\")*)" property in "(?P<location_string>(?:[^"]|\\")*)"$/
+    * @Then /^I (?P<step_funct>.*) "(?P<text_string>(?:[^"]|\\")*)" in the "(?P<property_string>(?:[^"]|\\")*)" "(?P<location_string>(?:[^"]|\\")*)" property$/
     * @param string $step_funct
     * @param string $text
     * @param string $property
@@ -1008,33 +1059,153 @@ EOF;
 
     /**
     * @Given I click on the :property property
+    * @Given I click on the :property :location property
     * @param string $property
+    * @param string $location
     */
-    public function click_on_property($property) {
-        $property = get_property($property);
-        $this->i_click_on_element($property[0], $property[1]);
-    }
-
-    /**
-     * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)" in the
-     * "(?P<property_string>(?:[^"]|\\")*)" property in "(?P<location_string>(?:[^"]|\\")*)"$/
-     * @param string $text
-     * @param string $property
-     * @param string $location
-     */
-    public function should_see_property_in_location($text, $property, $location) {
-
-        $css_locator = get_property_in_location($property, $location);
+    public function click_on_property($property, $location=null) {
+        $css_locator = get_property($property, $location);
         if (!$css_locator) {
-            throw new ExpectationException('"A property called $property was not found in the properties.php file. Check that file or try passing a css locator directly"',
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."',
             $this->getSession());
         }
         else {
-            $this->assert_element_contains_text($text, $css_locator[0], $css_locator[1]);
+            $this->i_click_on_element($css_locator[0], $css_locator[1]);
         }
     }
 
     /**
+     * Call the Mink WebAssert function elementExists using info from
+     * properties.php
+     *
+     * NOTE: Other than using the properties file, this function
+     * bypasses Mahara custom behat functions.
+     *
+     * @Then a :property property should exist
+     * @Then a :property :location property should exist
+     * @param string $property
+     * @param string $location
+     */
+    public function property_should_exist($property, $location=null) {
+        $css_locator = get_property($property, $location);
+
+        if (!$css_locator) {
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."',
+            $this->getSession());
+        }
+        else {
+            //because behat doesn't use '_element', remove it
+            $css_locator[1] = str_replace('_element', '', $css_locator[1]);
+            $this->assertSession()->elementExists($css_locator[1], $css_locator[0]);
+        }
+    }
+
+        /**
+     * Call the Mink WebAssert function elementContains using info from
+     * properties.php
+     *
+     * NOTE: Other than using the properties file, this function
+     * bypasses Mahara custom behat functions.
+     *
+     * @Then /^"(?P<text_string>(?:[^"]|\\")*)" should be in the "(?P<property_string>(?:[^"]|\\")*)" property$/
+    * @Then /^"(?P<text_string>(?:[^"]|\\")*)" should be in the "(?P<property_string>(?:[^"]|\\")*)" "(?P<location_string>(?:[^"]|\\")*)" property$/
+     * @param string $html - something in the html, e.g. the title attribute
+     * @param string $property
+     * @param string $location (optional)
+     */
+    public function property_should_contain($html, $property, $location=null) {
+        $css_locator = get_property($property, $location);
+
+        if (!$css_locator) {
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."',
+            $this->getSession());
+        }
+        else {
+            //because behat doesn't use '_element', remove it
+            $css_locator[1] = str_replace('_element', '', $css_locator[1]);
+            $this->assertSession()->elementContains($css_locator[1], $css_locator[0], $html);
+        }
+    }
+
+
+    /**
+     * Call the Mink WebAssert function elementContains using info from
+     * properties.php
+     *
+     * NOTE: Other than using the properties file, this function
+     * bypasses Mahara custom behat functions.
+     *
+     * @Then /^"(?P<text_string>(?:[^"]|\\")*)" should not be in the "(?P<property_string>(?:[^"]|\\")*)" property$/
+    * @Then /^"(?P<text_string>(?:[^"]|\\")*)" should not be in the "(?P<property_string>(?:[^"]|\\")*)" "(?P<location_string>(?:[^"]|\\")*)" property$/
+     * @param string $html - something in the html, e.g. the title attribute
+     * @param string $property
+     * @param string $location (optional)
+     */
+    public function property_should_not_contain($html, $property, $location=null) {
+        $css_locator = get_property($property, $location);
+
+        if (!$css_locator) {
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."',
+            $this->getSession());
+        }
+        else {
+            //because behat doesn't use '_element', remove it
+            $css_locator[1] = str_replace('_element', '', $css_locator[1]);
+            $this->assertSession()->elementNotContains($css_locator[1], $css_locator[0], $html);
+        }
+    }
+
+    /**
+     * Wrapper using properties file, not css, for in_the_should_not_be_visible()
+     *
+     * @Then :element :selectortype in the :property :location property should not be visible
+     *
+     * @param $element - thing we shouldn't see
+     * @param $selectortype - mahara selectortype (see BehatSelectors.php)
+     * @param $property - name of the css/xpath to fetch from properites.php
+     * @param $location (optional) - array constant to look in for $property
+     */
+
+    public function element_in_property_should_not_exist($element,$selectortype, $property, $location=null) {
+        $css_locator = get_property($property, $location);
+
+        if (!$css_locator) {
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."',
+            $this->getSession());
+        }
+        else {
+            $this->in_the_should_not_be_visible($element, $selectortype, $css_locator[0], $css_locator[1]);
+        }
+    }
+
+    /**
+     * Wrapper using properties file for should_appear_before_within($preelement, $preselectortype, $postelement, $postselectortype, $containelement, $containselectortype)
+     *
+     * @Given :preelement :preselectortype should appear before :postelement :postselectortype within the :property :location property
+     * @throws ExpectationException
+     * @param string $preelement The locator of the preceding element
+     * @param string $preselectortype The locator of the preceding element
+     * @param string $postelement The locator of the following element
+     * @param string $postselectortype The selector type of the following element
+     * @param string $property The name of the property we want
+     * @param string $location (optional) The array constant of the property
+     * @throws ExpectationException if property not found
+     *
+     */
+     public function should_appear_before_within_property($preelement, $preselectortype, $postelement, $postselectortype, $property, $location=null) {
+        $css_locator = get_property($property, $location);
+        //@TODO add exception
+        if (!$css_locator) {
+            throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."',
+            $this->getSession());
+        }
+        else {
+            $this->should_appear_before_within($preelement, $preselectortype, $postelement, $postselectortype, $css_locator[0], $css_locator[1]);
+        }
+    }
+
+    /**
+     * @And  "option" in the "#activityprefs_activity_usermessage" "Message from other people" should not be visible
      * Checks, that the specified element contains the specified text. When running Javascript tests it also considers that texts may be hidden.
      *
      * @Then /^I should see "(?P<text_string>(?:[^"]|\\")*)" in the "(?P<element_string>(?:[^"]|\\")*)" "(?P<text_selector_string>[^"]*)"$/
@@ -1507,6 +1678,11 @@ EOF;
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
                     "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]" .
+                 " | " .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//button[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
         $section_heading_link = $this->find('xpath', $xpath, $exception);
 
@@ -1529,6 +1705,11 @@ EOF;
         $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the uncollapsed section heading containing the text "' . $text . '"');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
                     "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]" .
+                 " | " .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//button[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]";
         $section_heading_link = $this->find('xpath', $xpath, $exception);
@@ -1690,7 +1871,7 @@ EOF;
  *
  */
     public function i_display_page() {
-        $this->getSession()->executeScript('jQuery("#displaypagebtn:contains(\'Display page\')")[0].click();');
+        $this->getSession()->executeScript('jQuery("#displaypagebtn").click();');
     }
 
 /**
@@ -1826,6 +2007,27 @@ JS;
         }
     }
 
+/**
+ * Scroll element into view and align top of element with the top of the visible area.
+ *
+ * @When I scroll to the id beginning with :id
+ * @When I scroll to the id beginning with :id instance :instance
+ */
+    public function i_scroll_into_id_like($id, $instance = 0) {
+        $jscode = <<<JS
+          (function() {
+              var elem = jQuery('[id^="$id"]')[$instance];
+              elem.scrollIntoView(true);
+              return 1;
+          })();
+JS;
+        try {
+            $this->getSession()->wait(5000, $jscode);
+        }
+        catch(Exception $e) {
+            throw new \Exception("scrollIntoViewLike failed");
+        }
+    }
 
 /**
  * Check if images exist in the block given its title
@@ -2063,6 +2265,29 @@ JS;
       $this->assertSession()->elementTextContains('css', $element, $date);
     }
 
+          /**
+      * Takes a date in a format strtotime() can take and looks for it
+      * in the specified css element. You can pass a date format as a string
+      * defined in langconfig.php or directly as a php date() format.
+      *
+      * @Then I should see the date :date in the :property :location property with the format :format
+      */
+      public function should_see_date_in_property($date, $property, $location=null, $format=null) {
+          if (string_exists($format, 'langconfig')) {
+              $date = format_date(strtotime($date), $format);
+          }
+          else {
+              $date = date($format, strtotime($date));
+          }
+          $css_locator = get_property($property, $location);
+          if (!$css_locator) {
+              throw new ExpectationException('"A property called "' . $property . '" was not found in the properties.php file."', $this->getSession());
+          }
+          else {
+              $this->assertSession()->elementTextContains('css', $css_locator[0], $date);
+          }
+      }
+
     /**
     * Takes a date in a format strtotime() can take and adds it to a field
     * in the specified css element. You can pass a date format as a string
@@ -2208,9 +2433,11 @@ JS;
      */
     public function iSelectTheSkinFrom($skinname, $skinsection) {
         $skinnameliteral = $this->escaper->escapeLiteral($skinname);
-        $xpath = "//div[contains(@id, $skinsection)]" .
+        $skinsectionliteral = $this->escaper->escapeLiteral($skinsection);
+        $xpath = "//div[@id=$skinsectionliteral]" .
                 "/div[contains(concat(' ', normalize-space(@class), ' '), ' skin ')]" .
-                "/a/div";
+                "/a/div[contains(text(), $skinnameliteral)]";
+
         try {
             $skin = $this->find('xpath', $xpath);
             $this->ensure_node_is_visible($skin);
@@ -2263,6 +2490,26 @@ JS;
         }
         if ($found) {
             throw new ExpectationException('The display button with title ' . $textliteral . ' in row ' . $rowname . ' was found', $this->getSession());
+        }
+    }
+
+    /**
+     * This works for Selenium and other real browsers that support screenshots.
+     *
+     * @Then show me a screenshot named :shot
+     */
+    public function show_me_a_screenshot($shot) {
+        global $CFG;
+        $image_data = $this->getSession()->getDriver()->getScreenshot();
+        $file_and_path = $CFG->behat_dataroot . '/behat/html_results/screenshots/custom/' . $shot . '.png';
+        if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/custom/')) {
+            mkdir($CFG->behat_dataroot . '/behat/html_results/screenshots/custom/', $CFG->directorypermissions, true);
+        }
+        $out = file_put_contents($file_and_path, $image_data);
+        if (!empty($CFG->behat_view_screenshots) && $out !== false && $eog = exec('apt-cache policy eog | grep Installed')) { // Ubuntu
+            if (!preg_match('/Installed\: \(none\)/', $eog)) {
+                exec('eog ' . $file_and_path . " > /dev/null 2>/dev/null &");
+            }
         }
     }
 }

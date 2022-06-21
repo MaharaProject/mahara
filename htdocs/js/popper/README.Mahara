@@ -2,7 +2,7 @@ Popper.js for bootstrap
 =======================
 
 Website: https://popper.js.org/
-Version: 1.16.0
+Version: 1.16.1 LTS
 
 A library used to position poppers in web applications.
 
@@ -11,7 +11,7 @@ page/collection card on view/index.php.
 
 It's a requirement of Bootstrap 4 dropdowns and tooltips
 
-It was fetched from https://unpkg.com/popper.js@1.16.0/dist/umd/popper.min.js
+It was fetched from https://unpkg.com/popper.js@1.16.1/dist/umd/popper.min.js
 
 Changes:
 - Removed the last line of popper.min.js file:

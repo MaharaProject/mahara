@@ -270,9 +270,9 @@ function institution_data_verifier_current($institution) {
     $current = institution_data_current($institution);
 
     // How many portfolios are currently for the current rollover year
-    $data['verifierportfolios'] = count_records_sql("SELECT COUNT(*) FROM {collection_template} ct
+    $data['verifierportfolios'] = count_records_sql("SELECT COUNT(*) AS count FROM {collection_template} ct
                                                      JOIN {collection} c ON c.id = ct.collection
-                                                     WHERE ct.rolloverdate IS NULL
+                                                     WHERE ct.rolloverdate IS NULL // PCNZ customisation
                                                      AND c.owner IN (" . $current['memberssql'] . ")", $current['memberssqlparams']);
 
     // How many of those collections currently have a verifier assigned
@@ -286,7 +286,7 @@ function institution_data_verifier_current($institution) {
                                                                     AND v.type = 'progress' AND va.role = 'verifier'", $current['memberssqlparams']);
 
     // How many portfolios each verifier has
-    $portfoliosperverifier = get_records_sql_array("SELECT va.usr, ct.originaltemplate, COUNT(*) FROM {collection_template} ct
+    $portfoliosperverifier = get_records_sql_array("SELECT va.usr, ct.originaltemplate, COUNT(*) AS count FROM {collection_template} ct
                                                     JOIN {collection} c ON c.id = ct.collection
                                                     JOIN {collection_view} cv ON cv.collection = c.id
                                                     JOIN {view} v ON v.id = cv.view
@@ -298,7 +298,7 @@ function institution_data_verifier_current($institution) {
                                                     ORDER BY COUNT(*)", $current['memberssqlparams']);
 
     // How many people have a copy of which template
-    $ownerspertemplate = get_records_sql_array("SELECT COUNT (ct.originaltemplate), ct.originaltemplate
+    $ownerspertemplate = get_records_sql_array("SELECT COUNT (ct.originaltemplate) AS count, ct.originaltemplate
                                                 FROM {collection_template} ct
                                                 JOIN {collection} c on c.id = ct.collection
                                                 WHERE ct.rolloverdate is NULL
@@ -595,7 +595,7 @@ function institution_statistics($institution, $full=false) {
     return($data);
 }
 
-function institution_verifier_graph_render($type = null, $extradata) {
+function institution_verifier_graph_render($type = null, $extradata=null) {
     global $SESSION;
 
     $data['graph'] = ($type) ? $type : 'pie';
@@ -627,7 +627,7 @@ function institution_verifier_graph_render($type = null, $extradata) {
     $data['title'] = get_string('verifierpercentage', 'admin');
     $data['labels'] = array(get_string('unallocated', 'admin'), get_string('allocated', 'admin'));
     $data['data'] = $dataarray;
-    if (!empty($dataarray)) {
+    if ($dataarray) {
         require_once(get_config('libroot') . 'graph.php');
         $graphdata = get_circular_graph_json($data, null, true);
         $data['jsondata'] = json_encode($graphdata[0]);
@@ -635,7 +635,7 @@ function institution_verifier_graph_render($type = null, $extradata) {
     return $data;
 }
 
-function institution_current_verifiers_graph_render($type = null, $extradata) {
+function institution_current_verifiers_graph_render($type = null, $extradata=null) {
     global $SESSION;
 
     $data['graph'] = ($type) ? $type : 'line';
@@ -690,7 +690,7 @@ function institution_current_verifiers_graph_render($type = null, $extradata) {
     return $data;
 }
 
-function institution_verifier_load_graph_render($type = null, $extradata) {
+function institution_verifier_load_graph_render($type = null, $extradata=null) {
     global $SESSION;
 
     $data['graph'] = ($type) ? $type : 'pie';
@@ -998,7 +998,7 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
 
     foreach ($data as $item) {
         $item->profileurl = profile_url($item->id);
-        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : ' ';
+        $item->lastlogin = $item->lastlogin ? format_date(strtotime($item->lastlogin)) : '';
         $item->quotapercent_format = round($item->quotapercent * 100);
         $item->quota_format = display_size($item->quota);
         $item->quotaused_format = !empty($item->quotaused) ? display_size($item->quotaused) : 0;
@@ -1036,9 +1036,14 @@ function userdetails_stats_table($limit, $offset, $extra, $institution, $urllink
         }
     }
     if (!empty($extra['csvdownload'])) {
-        $csvfields = array('firstname', 'lastname', 'email', 'registrationnumber',
-                           'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin', 'probation', 'registrationstatus', 'apc_startdate');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv');
+        $csvfields = array('firstname', 'lastname', 'email', 'registrationnumber', 'preferredname', 'username', 'remoteuser', 'quotapercent_format', 'lastlogin', 'probation', 'registrationstatus', 'apc_startdate');
+        // Make the lastlogin a data friendly value.
+        for ($i = 0; $i < count($data); $i++) {
+            if (!empty($data[$i]->lastlogin)) {
+                $data[$i]->lastlogin = format_date(strtotime($data[$i]->lastlogin), 'strftimew3cdatetime');
+            }
+        }
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'userdetailsstatistics.csv', 'text/csv', true);
     }
         // End customisation
     $result['csv'] = true;
@@ -1320,7 +1325,7 @@ function useragreement_stats_table($limit, $offset, $extra, $institution, $urlli
                            'siteprivacy', 'siteprivacyconsentdate', 'siteterms', 'sitetermsconsentdate',
                            'institutionprivacy', 'institutionprivacyconsentdate', 'institutionterms', 'institutiontermsconsentdate',
                            'instname');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useragreementsstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useragreementsstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -1447,12 +1452,23 @@ function useractivity_statistics($limit, $offset, $extra, $institution = null) {
     return $data;
 }
 
+/**
+ * @param int $limit                 How many results to return.
+ * @param int $offset                Where to start.
+ * @param array<string,mixed> $extra Extra search parameters.
+ * @param string|null $institution   The Instituion key, or null.
+ * @param string $urllink            The base URL for links in the results.
+ *
+ * @return array<string,mixed> The search results and supporting elements.
+ */
 function useractivity_stats_table($limit, $offset, $extra, $institution, $urllink) {
     global $USER, $SESSION;
 
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     $users = $SESSION->get('usersforstats');
+    $aggregates = [];
+    $aggmap = [];
 
     $fromsql = " FROM {usr} u";
     $wheresql = " WHERE id != 0 AND u.lastlogin IS NOT NULL";
@@ -1518,6 +1534,8 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     $sortdirection = '';
     $sortname = null;
 
+    // @TODO: these $sortorder values are scripts. These differ between ES6
+    // and ES7.  We're going to have to rework how these are handled.
     switch ($sorttype) {
         case "lastlogin":
             $sortdirection = array('LastActivity' => $sortdesc);
@@ -1564,91 +1582,121 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
 
     $result['settings']['start'] = $start;
 
-    // Add in the elasticsearch data if needed
-    $aggmap = array();
-    if (get_config('searchplugin') == 'elasticsearch') {
-        safe_require('search', 'elasticsearch');
-        $options = array(
-            'query' => array(
-                'terms' => array(
-                    'usr' => $usrids
-                ),
-            ),
-            'range' => array(
-                'range' => array(
-                    'ctime' => array(
-                        'gte' => $result['settings']['start'] . ' 00:00:00',
-                        'lte' => $result['settings']['end'] . ' 23:59:59'
-                    )
-                )
-            ),
-            'aggs' => array(
-                'UsrId' => array(
-                    'terms' => array(
-                        'field' => 'usr',
-                        'order' => $sortdirection,
-                        'size' => $count,
-                     ),
-                     'aggs' => array(
-                        'EventType' => array(
-                            'terms' => array(
-                                'field' => 'event',
-                                'min_doc_count' => 0,
-                            ),
-                        ),
-                        'EventTypeCount' => array(
-                            'sum' => array(
-                                'script' => array(
-                                    'inline' => $sortorder,
-                                ),
-                            ),
-                        ),
-                        'LastLogin' => array(
-                            'max' => array(
-                                'script' => array(
-                                    'inline' => "doc.ctime.value",
-                                ),
-                            ),
-                        ),
-                        'LastActivity' => array(
-                            'max' => array(
-                                'script' => array(
-                                    'inline' => "doc.id.value",
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
-        if (empty($sortdirection)) { unset($options['aggs']['UsrId']['terms']['order']); }
-        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
-        if ($aggregates['totalresults'] > 0) {
-            foreach ($aggregates['aggregations']['UsrId']['buckets'] as $k => $usr) {
-                $user = new User();
-                $user->find_by_id($usr['key']);
-                $aggregates['aggregations']['UsrId']['buckets'][$k]['firstname'] = $user->get('firstname');
-                $aggregates['aggregations']['UsrId']['buckets'][$k]['lastname'] = $user->get('lastname');
-                $aggregates['aggregations']['UsrId']['buckets'][$k]['username'] = $user->get('username');
-                $aggregates['aggregations']['UsrId']['buckets'][$k]['preferredname'] = $user->get('preferredname');
-            }
-            if (!empty($sortname)) {
-                usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
-                    return strnatcasecmp($a[$sortname], $b[$sortname]);
-                });
-                if ($sortdesc == 'desc') {
-                    $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
-                }
-            }
-            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('UsrId', 'EventType'));
+    // Add in the search data if needed.
+    if ($search_class = does_search_plugin_have('report_useractivity_stats_table')) {
+        $search_result = $search_class::report_useractivity_stats_table($usrids, $result, $sortdirection, $sortdesc, $sortorder, $sortname, $count);
+        if (!empty($search_result)) {
+            $aggmap = $search_result[0];
+            $aggregates = $search_result[1];
         }
     }
 
+    // $aggmap = array();
+    // if (get_config('searchplugin') == 'elasticsearch') {
+    //     safe_require('search', 'elasticsearch');
+    //     $options = array(
+    //         'query' => array(
+    //             'terms' => array(
+    //                 'usr' => $usrids
+    //             ),
+    //         ),
+    //         'range' => array(
+    //             'range' => array(
+    //                 'ctime' => array(
+    //                     'gte' => $result['settings']['start'] . ' 00:00:00',
+    //                     'lte' => $result['settings']['end'] . ' 23:59:59'
+    //                 )
+    //             )
+    //         ),
+    //         'aggs' => array(
+    //             'UsrId' => array(
+    //                 'terms' => array(
+    //                     'field' => 'usr',
+    //                     'order' => $sortdirection,
+    //                     'size' => $count,
+    //                  ),
+    //                  'aggs' => array(
+    //                     'EventType' => array(
+    //                         'terms' => array(
+    //                             'field' => 'event',
+    //                             'min_doc_count' => 0,
+    //                         ),
+    //                     ),
+    //                     'EventTypeCount' => array(
+    //                         'sum' => array(
+    //                             'script' => array(
+    //                                 'inline' => $sortorder,
+    //                             ),
+    //                         ),
+    //                     ),
+    //                     'LastLogin' => array(
+    //                         'max' => array(
+    //                             'script' => array(
+    //                                 'inline' => "doc.ctime.value",
+    //                             ),
+    //                         ),
+    //                     ),
+    //                     'LastActivity' => array(
+    //                         'max' => array(
+    //                             'script' => array(
+    //                                 'inline' => "doc.id.value",
+    //                             ),
+    //                         ),
+    //                     ),
+    //                 ),
+    //             ),
+    //         ),
+    //     );
+    //     if (empty($sortdirection)) { unset($options['aggs']['UsrId']['terms']['order']); }
+    //     $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
+    //     if ($aggregates['totalresults'] > 0) {
+    //         foreach ($aggregates['aggregations']['UsrId']['buckets'] as $k => $usr) {
+    //             $user = new User();
+    //             $user->find_by_id($usr['key']);
+    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['firstname'] = $user->get('firstname');
+    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['lastname'] = $user->get('lastname');
+    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['username'] = $user->get('username');
+    //             $aggregates['aggregations']['UsrId']['buckets'][$k]['preferredname'] = $user->get('preferredname');
+    //         }
+    //         if (!empty($sortname)) {
+    //             usort($aggregates['aggregations']['UsrId']['buckets'], function ($a, $b) use ($sortname) {
+    //                 return strnatcasecmp($a[$sortname], $b[$sortname]);
+    //             });
+    //             if ($sortdesc == 'desc') {
+    //                 $aggregates['aggregations']['UsrId']['buckets'] = array_reverse($aggregates['aggregations']['UsrId']['buckets']);
+    //             }
+    //         }
+    //         ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('UsrId', 'EventType'));
+    //     }
+    // }
+
     $data = array();
-    $timezone = new DateTimeZone(date_default_timezone_get()); // get timezone we are in
-    $offsettime = $timezone->getOffset(new DateTime("now")); // work out offset in seconds
-    if ($aggregates['totalresults'] > 0) {
+    // Get timezone we are in.
+    $timezone = new DateTimeZone(date_default_timezone_get());
+    // Work out offset in seconds.
+    $offsettime = $timezone->getOffset(new DateTime("now"));
+
+    // Allow for the differences between ES6 and ES7.
+    if (array_key_exists('totalresults', $aggregates)) {
+        $have_results = false;
+        if (array_key_exists('value', $aggregates['totalresults'])) {
+            $have_results = ($aggregates['totalresults']['value'] > 0);
+        }
+        else {
+            $have_results = ($aggregates['totalresults'] > 0);
+        }
+    }
+    if ($have_results) {
         foreach ($aggregates['aggregations']['UsrId']['buckets'] as $item) {
+            // Convert from UTC milliseconds.
+            $date = $item['LastLogin']['value'] / 1000;
+            if ($offsettime < 0) {
+                $date += $offsettime;
+            }
+            if ($offsettime > 0) {
+                $date -= $offsettime;
+            }
+
             $obj = new stdClass();
             $obj->id = $item['key'];
             $obj->firstname = $item['firstname'];
@@ -1664,13 +1712,6 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
             $lastactivity = get_field('event_log', 'event', 'id', $item['LastActivity']['value']);
             $obj->lastactivity = ($lastactivity) ? get_string($lastactivity, 'statistics') : '';
             $obj->profileurl = profile_url($item['key']);
-            $date = $item['LastLogin']['value'] / 1000; // convert from UTC milliseconds
-            if ($offsettime < 0) {
-                $date += $offsettime;
-            }
-            if ($offsettime > 0) {
-                $date -= $offsettime;
-            }
             $obj->lastlogin = $item['LastLogin']['value'] ? date('d F Y, H:i a', $date) : '';
             $obj->actions = $item['doc_count'];
             $data[] = $obj;
@@ -1681,10 +1722,23 @@ function useractivity_stats_table($limit, $offset, $extra, $institution, $urllin
     }
 
     if (!empty($extra['csvdownload'])) {
-        $csvfields = array('firstname', 'lastname', 'displayname', 'username',
-                           'artefacts', 'pages', 'collections', 'groups', 'logins',
-                          'actions', 'lastlogin', 'lastactivity');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'useractivitystatistics.csv', 'text/csv');
+        $csvfields = [
+            'firstname',
+            'lastname',
+            'displayname',
+            'username',
+            'artefacts',
+            'pages',
+            'collections',
+            'groups',
+            'logins',
+            'actions',
+            'lastlogin',
+            'lastactivity',
+        ];
+        $csv_string = generate_csv($data, $csvfields);
+        $csv_filename = $institution . 'useractivitystatistics.csv';
+        $USER->set_download_file($csv_string, $csv_filename, 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -1800,6 +1854,17 @@ function collaboration_statistics($limit, $offset, $extra, $institution = null) 
     return $data;
 }
 
+/**
+ * Returns the Collaboration Stats report.
+ *
+ * @param int $limit
+ * @param int $offset
+ * @param array<string,mixed> $extra
+ * @param string|null $institution
+ * @param string $urllink
+ *
+ * @return array<string,mixed>
+ */
 function collaboration_stats_table($limit, $offset, $extra, $institution, $urllink) {
     global $USER;
 
@@ -1807,16 +1872,19 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     $from = strtotime($start);
     $to = strtotime($end);
-    $daterange = array();
+    $daterange = [];
+    $usrids = [];
+    $aggmap = [];
     while ($from < $to) {
         $daterange[date("Y_W", $from)] = date('Y-m-d', $from);
-        $from = $from + (7 * 24 * 60 * 60); // Break down the range by weeks
+        // Break down the range by weeks.
+        $from = $from + (7 * 24 * 60 * 60);
     }
     $daterange[date("Y_W", $to)] = date('Y-m-d', $to);
 
     $count = count($daterange);
 
-    $pagination = build_pagination(array(
+    $pagination = build_pagination([
         'id' => 'stats_pagination',
         'url' => $urllink,
         'jsonscript' => 'admin/users/statistics.json.php',
@@ -1826,14 +1894,14 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
         'offset' => $offset,
         'setlimit' => true,
         'extradata' => $extra,
-    ));
+    ]);
 
-    $result = array(
+    $result = [
         'count'         => $count,
         'tablerows'     => '',
         'pagination'    => $pagination['html'],
         'pagination_js' => $pagination['javascript'],
-    );
+    ];
 
     $result['settings']['start'] = ($start) ? $start : null;
     $result['settings']['end'] = $end;
@@ -1842,88 +1910,50 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     }
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
-    $aggmap = array();
-    if (get_config('searchplugin') == 'elasticsearch') {
-        safe_require('search', 'elasticsearch');
-        $options = array(
-            'range' => array(
-                'range' => array(
-                    'ctime' => array(
-                        'gte' => $start . ' 00:00:00',
-                        'lt' => $end . ' 00:00:00'
-                    )
-                )
-            ),
-            'sort' => array(
-                'ctime' => 'desc'
-            ),
-            'aggs' => array(
-                'YearWeek' => array(
-                    'terms' => array(
-                        'field' => 'yearweek',
-                    ),
-                    'aggs' => array(
-                        'EventType' => array(
-                            'terms' => array(
-                                'field' => 'event',
-                            ),
-                            'aggs' => array(
-                                'ResourceType' => array(
-                                    'terms' => array(
-                                        'field' => 'resourcetype',
-                                    ),
-                                    'aggs' => array(
-                                        'ParentResourceType' => array(
-                                            'terms' => array(
-                                                'field' => 'parentresourcetype',
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
+
+    // Add in the data from search if available.
+    if ($search_class = does_search_plugin_have('report_collaboration_stats_table')) {
         if ($institution) {
             // restrict results to users from the institution
             if ($institution == 'mahara') {
-                $usrids = get_records_sql_assoc("SELECT u.id, u.username FROM {usr} u
-                                                 LEFT JOIN {usr_institution} ui ON ui.usr = u.id
-                                                 JOIN {event_log} el ON el.usr = u.id
-                                                 WHERE ui.institution IS NULL
-                                                 AND el.event = 'login'
-                                                 AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
-                                                 GROUP BY u.id", array($start, $end));
-            }
-            else {
-                $usrids = get_records_sql_assoc("SELECT u.id, u.username FROM {usr} u
-                                                 JOIN {usr_institution} ui ON ui.usr = u.id
-                                                 JOIN {event_log} el ON el.usr = u.id
-                                                 WHERE ui.institution = ?
-                                                 AND el.event = 'login'
-                                                 AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
-                                                 GROUP BY u.id", array($institution, $start, $end));
-            }
-            if (!empty($usrids)) {
-                $usrids = array_keys($usrids);
-                $options['query'] = array(
-                    'terms' => array(
-                        'usr' => $usrids
-                    ),
+                $usrids = get_records_sql_assoc(
+                    "
+                    SELECT u.id, u.username FROM {usr} u
+                    LEFT JOIN {usr_institution} ui ON ui.usr = u.id
+                    JOIN {event_log} el ON el.usr = u.id
+                    WHERE ui.institution IS NULL
+                        AND el.event = 'login'
+                        AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
+                    GROUP BY u.id
+                    ",
+                    [$start, $end]
                 );
             }
             else {
+                $usrids = get_records_sql_assoc(
+                    "
+                    SELECT u.id, u.username FROM {usr} u
+                    JOIN {usr_institution} ui ON ui.usr = u.id
+                    JOIN {event_log} el ON el.usr = u.id
+                    WHERE ui.institution = ?
+                        AND el.event = 'login'
+                        AND el.ctime >= DATE(?) AND el.ctime <= DATE(?)
+                    GROUP BY u.id
+                    ",
+                    [$institution, $start, $end]
+                );
+            }
+            if (empty($usrids)) {
                 $result['pagination'] = null;
                 return $result;
             }
+            else {
+                $usrids = array_keys($usrids);
+            }
         }
-        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
-        if ($aggregates['totalresults'] > 0) {
-            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('YearWeek', 'EventType', 'ResourceType', 'ParentResourceType'));
-        }
+        list($aggmap, $aggregates) = $search_class::report_collaboration_stats_table($usrids, $start, $end);
     }
+
     $result['settings']['start'] = ($start) ? $start : min($daterange);
 
     $rawdata = array();
@@ -1976,10 +2006,21 @@ function collaboration_stats_table($limit, $offset, $extra, $institution, $urlli
     }
     else {
         $data = $rawdata;
-        $csvfields = array('date', 'comments', 'annotations', 'usershare', 'groupshare',
-                           'institutionshare', 'loggedinshare', 'publicshare', 'secretshare',
-                           'friendshare');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'collaborationstatistics.csv', 'text/csv');
+        $csvfields = [
+            'date',
+            'comments',
+            'annotations',
+            'usershare',
+            'groupshare',
+            'institutionshare',
+            'loggedinshare',
+            'publicshare',
+            'secretshare',
+            'friendshare',
+        ];
+        $csv_data = generate_csv($data, $csvfields);
+        $csv_filename = $institution . 'collaborationstatistics.csv';
+        $USER->set_download_file($csv_data, $csv_filename, 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -2177,7 +2218,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     if ($users) {
         $wheresql .= " AND u.id IN (" . join(',', array_map('db_quote', array_values((array)$users))) . ")";
     }
-
+    $intcast = is_postgres() ? '::int' : '';
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
     switch ($sorttype) {
         case "username":
@@ -2187,7 +2228,7 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
             $orderby = " u.email " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "registration_number":
-            $orderby = " u.studentid::int " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $orderby = " u.studentid" . $intcast . " " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
             break;
         case "displayname":
             $orderby = " u.preferredname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
@@ -2223,17 +2264,19 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
         default:
             $orderby = " u.firstname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC') . ", u.lastname " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
     }
+    $crossjoin = is_mysql() ? '' : ' CROSS JOIN json_to_record(el.data::json) AS x(rules text)
+                                     CROSS JOIN json_to_record(x.rules::json) AS y(usr int, role text) ';
 
     $joinsql = " JOIN {collection} c ON (c.owner = u.id)
             JOIN {collection_view} cv ON (cv.collection = c.id)
             JOIN {view} v ON (v.id = cv.view AND cv.displayorder = 0)
             LEFT JOIN {event_log} el ON (cv.view = el.parentresourceid AND el.parentresourcetype = 'view' AND el.event = 'updateviewaccess')
-            CROSS JOIN json_to_record(el.data::json) AS x(rules text)
-            CROSS JOIN json_to_record(x.rules::json) AS y(usr int, role text)
+            " . $crossjoin . "
             LEFT JOIN {collection_template} ct ON (ct.collection = cv.collection)
     ";
 
     if (isset($extra['verifierfilter']) && !empty($extra['verifierfilter'])) {
+<<<<<<< HEAD
         $configdatasql = ",
          (SELECT el2.ctime AS verifieddate
          FROM {event_log} el2, json_to_record(el2.data::json)
@@ -2262,6 +2305,53 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1),
     (SELECT el2.ctime AS accessrevokedbysystemdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.event = 'removeviewaccess' AND z.removedby = 'system') ORDER BY el2.ctime LIMIT 1) ";
 
+=======
+        if (is_mysql()) {
+            $configdatasql = ",
+             (SELECT el2.ctime AS verifieddate
+             FROM {event_log} el2
+             WHERE el2.parentresourceid = c.id
+             AND el2.parentresourcetype = 'collection'
+             AND el2.event = 'verifiedprogress'
+             AND el2.data->>'$.block.verified' = 1
+             AND el2.data->>'$.block.primary' IS TRUE
+             ORDER BY el2.ctime LIMIT 1) ";
+        }
+        else {
+            $configdatasql = ",
+             (SELECT el2.ctime AS verifieddate
+             FROM {event_log} el2, json_to_record(el2.data::json)
+             AS z(block text), json_to_record(z.block::json)
+             AS w(verified int, " . '"primary"' . " boolean)
+             WHERE el2.parentresourceid = c.id
+             AND el2.parentresourcetype = 'collection'
+             AND el2.event = 'verifiedprogress'
+             AND w.verified = 1
+             AND w.primary IS TRUE
+             ORDER BY el2.ctime LIMIT 1) ";
+        }
+        $rolekey = is_mysql() ? "el.data->>'$.rules.role'" : "y.role";
+        if ($extra['verifierfilter'] == 'none') {
+            $wheresql .= " AND NOT EXISTS (SELECT data FROM {event_log} WHERE cv.view = parentresourceid AND parentresourcetype = 'view' AND event = 'updateviewaccess' AND " . $rolekey . " = 'verifier') ";
+            $configdatasql = '';
+        }
+        else if ($extra['verifierfilter'] == 'current') {
+            $wheresql .= " AND (el.resourcetype = 'user' AND " . $rolekey . " = 'verifier') ";
+        }
+    }
+    if (is_mysql()) {
+        $customsql = "
+        el.ctime AS accessfromdate,
+        (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el.data->>'$.rules.usr' = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'accessor' ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyaccessordate,
+        (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'owner') ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyauthordate ";
+    }
+    else {
+        $customsql = "
+        el.ctime AS accessfromdate,
+        (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
+        (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1) ";
+    }
+>>>>>>> merge_helper_branch
     if (!empty($configdatasql)) {
         $customsql .= $configdatasql;
     }
@@ -2280,13 +2370,15 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
         $where[] = $end;
     }
 
-    $verifiersql = " y.role, ";
-    $sql ="SELECT u.id AS user_id, u.firstname, u.lastname, u.username, u.preferredname AS displayname, y.usr AS verifierid,
-            (SELECT username FROM {usr} WHERE id = y.usr) AS verifierusername,
-            (SELECT firstname FROM {usr} WHERE id = y.usr) AS verifierfirstname,
-            (SELECT lastname FROM {usr} WHERE id = y.usr) AS verifierlastname,
-            (SELECT studentid FROM {usr} WHERE id = y.usr) AS verifierstudentid,
-            (SELECT preferredname FROM {usr} WHERE id = y.usr) AS verifierdisplayname,
+    $verifiersql = is_mysql() ? " el.data->>'$.rules.role', " : " y.role, ";
+    $usrkey = is_mysql() ? "el.data->>'$.rules.usr'" : "y.usr";
+    $sql ="SELECT u.id AS user_id, u.firstname, u.lastname, u.username, u.preferredname AS displayname,
+           " . $usrkey . " AS verifierid,
+            (SELECT username FROM {usr} WHERE id = " . $usrkey . ") AS verifierusername,
+            (SELECT firstname FROM {usr} WHERE id = " . $usrkey . ") AS verifierfirstname,
+            (SELECT lastname FROM {usr} WHERE id = " . $usrkey . ") AS verifierlastname,
+            (SELECT studentid FROM {usr} WHERE id = " . $usrkey . ") AS verifierstudentid,
+            (SELECT preferredname FROM {usr} WHERE id = " . $usrkey . ") AS verifierdisplayname,
         u.email, u.studentid AS registration_number, " . $verifiersql . "
         c.id as collection_id, c.name, c.ctime AS collection_ctime, ct.originaltemplate,  (SELECT name FROM {collection} WHERE id = ct.originaltemplate) AS templatetitle,
         " . $customsql .
@@ -2529,9 +2621,10 @@ function portfolioswithverifiers_stats_table($limit, $offset, $extra, $instituti
         $typesql = " type LIKE 'owners-per-template_%' ";
         $verifiersportfoliosql = " type = 'verifierportfolios-verifier-count'";
     }
+    $intcast = is_postgres() ? '::int' : '';
     $sql = "SELECT $day AS date, institution,
-            (SELECT SUM (value::int) FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS hasverifier,
-            SUM(value::int) - (SELECT SUM (value::int) FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS noverifier
+            (SELECT SUM (value" . $intcast . ") FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS hasverifier,
+            SUM(value" . $intcast . ") - (SELECT SUM (value" . $intcast . ") FROM {institution_data} WHERE ($day = $iday) AND $verifiersportfoliosql $instsql GROUP BY $iday) AS noverifier
             FROM {institution_data} i
             WHERE " . $typesql.
             " AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")"
@@ -2597,7 +2690,7 @@ function portfolioswithverifiers_stats_table($limit, $offset, $extra, $instituti
                 $data[$i]->date = format_date(strtotime($data[$i]->date), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'portfolioswithverifiersummarystatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'portfolioswithverifiersummarystatistics.csv', 'text/csv', true);
     }
 
     $smarty = smarty_core();
@@ -2787,7 +2880,7 @@ function user_stats_table($limit, $offset, $extra) {
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('date', 'loggedin', 'created', 'total');
-        $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), 'userstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -2991,17 +3084,18 @@ function verifiersummary_stats_table($limit, $offset, $extra, $institution, $url
         $typesql9 = $typesql . " 'verifierportfolios-verifier-load-9%'";
         $typesql10 = $typesql . " 'verifierportfolios-verifier-load-10%'";
     }
+    $intcast = is_postgres() ? '::int' : '';
     $customsql = "SELECT \"value\" AS count, ctime, $day AS date,
-                  (SELECT SUM (value::int) AS count_1 FROM {institution_data} WHERE ($day = $iday) $typesql1 $instsql),
-                  (SELECT SUM (value::int) AS count_2 FROM {institution_data} WHERE ($day = $iday) $typesql2 $instsql),
-                  (SELECT SUM (value::int) AS count_3 FROM {institution_data} WHERE ($day = $iday) $typesql3 $instsql),
-                  (SELECT SUM (value::int) AS count_4 FROM {institution_data} WHERE ($day = $iday) $typesql4 $instsql),
-                  (SELECT SUM (value::int) AS count_5 FROM {institution_data} WHERE ($day = $iday) $typesql5 $instsql),
-                  (SELECT SUM (value::int) AS count_6 FROM {institution_data} WHERE ($day = $iday) $typesql6 $instsql),
-                  (SELECT SUM (value::int) AS count_7 FROM {institution_data} WHERE ($day = $iday) $typesql7 $instsql),
-                  (SELECT SUM (value::int) AS count_8 FROM {institution_data} WHERE ($day = $iday) $typesql8 $instsql),
-                  (SELECT SUM (value::int) AS count_9 FROM {institution_data} WHERE ($day = $iday) $typesql9 $instsql),
-                  (SELECT SUM (value::int) AS count_10 FROM {institution_data} WHERE ($day = $iday) $typesql10 $instsql)
+                  (SELECT SUM (value" . $intcast . ") AS count_1 FROM {institution_data} WHERE ($day = $iday) $typesql1 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_2 FROM {institution_data} WHERE ($day = $iday) $typesql2 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_3 FROM {institution_data} WHERE ($day = $iday) $typesql3 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_4 FROM {institution_data} WHERE ($day = $iday) $typesql4 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_5 FROM {institution_data} WHERE ($day = $iday) $typesql5 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_6 FROM {institution_data} WHERE ($day = $iday) $typesql6 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_7 FROM {institution_data} WHERE ($day = $iday) $typesql7 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_8 FROM {institution_data} WHERE ($day = $iday) $typesql8 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_9 FROM {institution_data} WHERE ($day = $iday) $typesql9 $instsql),
+                  (SELECT SUM (value" . $intcast . ") AS count_10 FROM {institution_data} WHERE ($day = $iday) $typesql10 $instsql)
                   FROM {institution_data} i" . $wheresql . "
                   AND $day IN (" . join(',', array_map('db_quote', $daterange)) . ")" . $ordersql;
 
@@ -3081,7 +3175,7 @@ function verifiersummary_stats_table($limit, $offset, $extra, $institution, $url
                 $data[$i]->date = format_date(strtotime($data[$i]->date), 'strftimew3cdatetime');
             }
         }
-        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'verifiersummarystatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields, $csvheaders), $institution . 'verifiersummarystatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -3246,7 +3340,7 @@ function institution_user_stats_table($limit, $offset, &$institutiondata, $extra
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('date', 'loggedin', 'created', 'total');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institutiondata['name'] . 'userstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institutiondata['name'] . 'userstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
 
@@ -3376,6 +3470,10 @@ function group_statistics($limit, $offset, $extra) {
 function group_stats_table($limit, $offset, $extra) {
     global $USER;
 
+    $aggmap = [];
+    $aggregates = [];
+    $groupids = [];
+
     $start = !empty($extra['start']) ? $extra['start'] : date('Y-m-d', strtotime("-1 months"));
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     if ($start) {
@@ -3413,126 +3511,38 @@ function group_stats_table($limit, $offset, $extra) {
 
     $sorttype = !empty($extra['sort']) ? $extra['sort'] : '';
     $sortdesc = !empty($extra['sortdesc']) ? 'desc' : 'asc';
-    $sorttypeaggmap = '';
-    switch ($sorttype) {
-        case "groupcomments":
-            $sortdirection = array('EventTypeCount' => $sortdesc);
-            $sortorder = "(doc.event.value == 'saveartefact' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
-            $sorttypeaggmap = '|saveartefact|comment|group';
-            break;
-        case "sharedviews":
-            $sortdirection = array('EventTypeCount' => $sortdesc);
-            $sortorder = "(doc.event.value == 'updateviewaccess' && doc.resourcetype.value == 'group' && doc.ownertype.value == 'user') ? 1 : 0";
-            $sorttypeaggmap = '|updateviewaccess|group|user';
-            break;
-        case "sharedcomments":
-            $sortdirection = array('EventTypeCount' => $sortdesc);
-            $sortorder = "(doc.event.value == 'sharedcommenttogroup' && doc.resourcetype.value == 'comment' && doc.ownertype.value == 'group') ? 1 : 0";
-            $sorttypeaggmap = '|sharedcommenttogroup|comment|group';
-            break;
-        default:
-            $sortdirection = '';
-            $sortorder = "1";
-    }
 
-    $aggmap = array();
-    // Add in the elasticsearch data if needed
-    if (get_config('searchplugin') == 'elasticsearch' && get_config('eventlogenhancedsearch')) {
-        safe_require('search', 'elasticsearch');
-        $options = array(
-            'query' => array(
-                'multi_match' => array(
-                    'query' => 'group',
-                    'fields' => array(
-                        'ownertype', 'resourcetype'
-                    )
-                ),
-            ),
-            'range' => array(
-                'range' => array(
-                    'ctime' => array(
-                        'gte' => $start . ' 00:00:00',
-                        'lte' => $end . ' 23:59:59'
-                    )
-                )
-            ),
-            'aggs' => array(
-                'GroupId' => array(
-                    'terms' => array(
-                        'field' => 'ownerid',
-                        'order' => $sortdirection,
-                        'size' => $count,
-                    ),
-                    'aggs' => array(
-                        'EventTypeCount' => array(
-                            'sum' => array(
-                                'script' => array(
-                                    'inline' => $sortorder,
-                                ),
-                            ),
-                        ),
-                        'EventType' => array(
-                            'terms' => array(
-                                'field' => 'event',
-                                'min_doc_count' => 0,
-                            ),
-                            'aggs' => array(
-                                'ResourceType' => array(
-                                    'terms' => array(
-                                        'field' => 'resourcetype',
-                                    ),
-                                    'aggs' => array(
-                                        'OwnerType' => array(
-                                            'terms' => array(
-                                                'field' => 'ownertype',
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        );
-        if (empty($sortdirection)) {
-            unset($options['aggs']['GroupId']['terms']['order']);
-        }
-        $aggregates = PluginSearchElasticsearch::search_events($options, 0, 0);
-        $groupids = array();
-        if ($aggregates['totalresults'] > 0) {
-            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
-            $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], $offset, $limit, true);
-            foreach($groups as $k => $g) {
-                if (isset($aggmap[$g['key'] . $sorttypeaggmap]) && $aggmap[$g['key'] . $sorttypeaggmap] > 0) {
-                    $groupids[$k] = $g['key'];
-                }
-            }
-        }
+    // Add in the data from search if available.
+    if ($search_class = does_search_plugin_have('report_group_stats_table')) {
+        list($aggmap, $groupids) = $search_class::report_group_stats_table($start, $end, $sorttype, $count, $sortdesc);
     }
 
     switch ($sorttype) {
         case "members":
-            $ordersql = " mc.members " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " mc.members " . $sortdesc;
             break;
+
         case "views":
-            $ordersql = " vc.views " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " vc.views " . $sortdesc;
             break;
+
         case "forums":
-            $ordersql = " fc.forums " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " fc.forums " . $sortdesc;
             break;
+
         case "posts":
-            $ordersql = " posts " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " posts " . $sortdesc;
             break;
+
         case "id":
-            $ordersql = " g.id " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
+            $ordersql = " g.id " . $sortdesc;
             break;
+
         case "group":
         default:
-            $ordersql = " g.name " . (!empty($extra['sortdesc']) ? 'DESC' : 'ASC');
-
-
+            $ordersql = " g.name " . $sortdesc;
     }
+
     $rangesql = '';
     $rangewhere = array();
     if ($start) {
@@ -3597,7 +3607,7 @@ function group_stats_table($limit, $offset, $extra) {
 
     if (!empty($sortdirection) && !empty($groupids)) {
         $groupidkeys = array_flip($groupids);
-        usort($groupdata, function ($a, $b) use ($groupidkeys) {
+        usort($groupdata, function ($a, $b) use ($groupidkeys, $extra) {
             if (!isset($groupidkeys[$a->id]) && !isset($groupidkeys[$b->id])) {
                 return 0;
             }
@@ -3634,7 +3644,7 @@ function group_stats_table($limit, $offset, $extra) {
                             'views' => 'pages',
                             'groupcomments' => 'group_comments',
                             'sharedcomments' => 'shared_page_comments');
-        $USER->set_download_file(generate_csv($groupdata, $csvfields, $csvheaders), 'groupstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($groupdata, $csvfields, $csvheaders), 'groupstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
 
@@ -3779,6 +3789,7 @@ function view_statistics($limit, $offset, $extra) {
 function view_stats_table($limit, $offset, $extra) {
     global $USER, $SESSION;
 
+    $sqlwhere = '';
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     $users = $SESSION->get('usersforstats');
@@ -3922,7 +3933,7 @@ function view_stats_table($limit, $offset, $extra) {
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displaytitle', 'fullurl', 'collectionid', 'collectiontitle','ownername', 'ownerurl',
                            'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
-        $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($viewdata, $csvfields), 'viewstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4039,6 +4050,8 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     $start = !empty($extra['start']) ? $extra['start'] : null;
     $end = !empty($extra['end']) ? $extra['end'] : date('Y-m-d', strtotime('+1 day'));
     $users = $SESSION->get('usersforstats');
+    $sqlwhere = '';
+    $values = array();
     if ($institutiondata['views'] != 0) {
         $where = 'v.id IN (' . $institutiondata['viewssql'] . ') AND v.type != ?';
         $values = array_merge($institutiondata['viewssqlparam'], array('dashboard'));
@@ -4184,7 +4197,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displaytitle', 'fullurl', 'collectiontitle', 'ownername', 'ownerurl',
                            'ctime', 'mtime', 'atime', 'blocks', 'visits', 'comments');
-        $USER->set_download_file(generate_csv($viewdata, $csvfields), $institutiondata['name'] . 'viewstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($viewdata, $csvfields), $institutiondata['name'] . 'viewstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4201,7 +4214,7 @@ function institution_view_stats_table($limit, $offset, &$institutiondata, $extra
     return $result;
 }
 
-function institution_view_type_graph($type = null, $institutiondata) {
+function institution_view_type_graph($type = null, $institutiondata=null) {
 
     $institution = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
     $values = array();
@@ -4252,7 +4265,7 @@ function institution_view_type_graph($type = null, $institutiondata) {
     }
 }
 
-function institution_view_type_graph_render($type = null, $extradata) {
+function institution_view_type_graph_render($type = null, $extradata=null) {
 
     $data['graph'] = ($type) ? $type : 'pie';
     if ($jsondata = json_decode(get_field('institution_data','value','type','view-type-graph','institution', $extradata->institution))) {
@@ -4261,7 +4274,7 @@ function institution_view_type_graph_render($type = null, $extradata) {
     }
 }
 
-function institution_user_type_graph($type = null, $institutiondata) {
+function institution_user_type_graph($type = null, $institutiondata=null) {
 
     $institution = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
     $usertypes = array();
@@ -4439,7 +4452,7 @@ function content_stats_table($limit, $offset, $extra) {
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('field', 'modified', 'value');
-        $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($contentdata, $csvfields), 'contentstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4601,7 +4614,7 @@ function objectionable_stats_table($limit, $offset, $extra, $institution, $urlli
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('objectname', 'reporter', 'reportedtime', 'report', 'status');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'objectionablestatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'objectionablestatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -4739,7 +4752,7 @@ function institution_content_stats_table($limit, $offset, &$institutiondata, $ex
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('field', 'modified', 'value');
-        $USER->set_download_file(generate_csv($contentdata, $csvfields), $institutiondata['name'] . 'contentstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($contentdata, $csvfields), $institutiondata['name'] . 'contentstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
 
@@ -4895,7 +4908,7 @@ function masquerading_stats_table($limit, $offset, $extra, $institution, $urllin
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('user', 'reason', 'masquerader', 'masqueraderurl', 'date');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'masqueradingstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'masqueradingstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -5073,7 +5086,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('displayname', 'userurl', 'title', 'collectionid', 'views', 'hasaccessrules');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'accessstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -5253,7 +5266,7 @@ function institution_comparison_stats_table($limit, $offset, $extra, $urllink) {
     }
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('name', 'count_members', 'count_views', 'count_blocks', 'count_artefacts', 'count_interaction_forum_post');
-        $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'institutionstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($registrationdata, $csvfields), 'institutionstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -5310,7 +5323,7 @@ function graph_site_data_daily() {
     view_type_graph();
 }
 
-function graph_institution_data_weekly($type = null, $institutiondata) {
+function graph_institution_data_weekly($type = null, $institutiondata=null) {
     $name = is_object($institutiondata) ? $institutiondata->institution : $institutiondata['name'];
 
     if ($name == 'all') {
@@ -5454,7 +5467,7 @@ function institution_logins_stats_table($limit, $offset, $extra) {
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('name', 'displayname', 'count_logins', 'count_active');
-        $USER->set_download_file(generate_csv($rawdata, $csvfields), 'userloginstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($rawdata, $csvfields), 'userloginstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();
@@ -5483,7 +5496,7 @@ function institution_logins_stats_table($limit, $offset, $extra) {
  * @result int $count The total count of 'users per institution' rows
  * @result array $results The count of users per institution
  */
-function users_active_data($limit=0, $offset=0, $extra) {
+function users_active_data($limit=0, $offset=0, $extra=null) {
     if (empty($extra['start'])) {
         $extra['start'] = db_format_timestamp(strtotime("-1 months"));
     }
@@ -5540,7 +5553,7 @@ function display_statistics($institution, $type, $extra = null) {
         $showall = true;
     }
     else {
-        if (!$USER->get('admin') && !$USER->get('staff') && !$USER->is_institutional_admin($institution) && !$USER->is_institutional_staff($institution)) {
+        if (!$USER->get('admin') && !$USER->get('staff') && !$USER->is_institutional_admin($institution)&& !$USER->is_institutional_supportadmin($institution) && !$USER->is_institutional_staff($institution)) {
             throw new AccessDeniedException("Institution::statistics | " . get_string('accessdenied', 'auth.webservice'));
         }
         $showall = false;
@@ -5549,7 +5562,7 @@ function display_statistics($institution, $type, $extra = null) {
     if (!in_array($type, $allowedtypes)) {
         $type = 'users';
     }
-
+    $data = array();
     if ($showall) {
         switch ($type) {
          case 'information':
@@ -5604,14 +5617,11 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, null);
             }
-
             else if ($subtype == 'verifiersummary') {
                 $data = verifiersummary_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
-
             else if ($subtype == 'completionverification') {
                 $data = completionverification_statistics($extra->limit, $extra->offset, $extra->extra, null);
-
             }
             else if ($subtype == 'portfolioswithverifiers') {
                 $data = portfolioswithverifiers_statistics($extra->limit, $extra->offset, $extra->extra, null);
@@ -5676,14 +5686,11 @@ function display_statistics($institution, $type, $extra = null) {
             else if ($subtype == 'collaboration') {
                 $data = collaboration_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
-
             else if ($subtype == 'verifiersummary') {
                 $data = verifiersummary_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
             }
-
             else if ($subtype == 'completionverification') {
                 $data = completionverification_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
-
             }
             else if ($subtype == 'portfolioswithverifiers') {
                 $data = portfolioswithverifiers_statistics($extra->limit, $extra->offset, $extra->extra, $institution);
@@ -5746,7 +5753,7 @@ function report_config_form($extra, $institutionelement) {
     if (!$institution || !$USER->can_edit_institution($institution, true)) {
         $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
     }
-    else if (!empty($institution)) {
+    else if ($institution) {
         $institutionelement['defaultvalue'] = $institution;
     }
     // make it a select2 element
@@ -5812,9 +5819,9 @@ function report_config_form($extra, $institutionelement) {
     );
 
     $verifierfilteroptions = array(
-        'all' => 'Show all',
-        'current' => 'Show authors with current verifiers',
-        'none' => 'Show authors without a current verifier',
+        'all' => get_string('verifieroptions_all', 'statistics'),
+        'current' => get_string('verifieroptions_current', 'statistics'),
+        'none' => get_string('verifieroptions_none', 'statistics'),
     );
 
     if ($extra->subtype == 'completionverification' || $extra->subtype == 'verifiersummary' || $extra->subtype == 'portfolioswithverifiers') {
@@ -6096,7 +6103,10 @@ function get_report_types($institution = null) {
     $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
     if (!empty($institution)) {
         if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
-            $USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
+           ($USER->is_institutional_staff($institution) || $USER->is_institutional_supportadmin($institution)) && empty($allstaffstats) && !empty($userstaffstats)) {
+            $infooptions = array(
+                'information_information' => get_string('Overview', 'statistics')
+            );
             $usersoptions = array(
                 'users_accesslist' => get_string('reportaccesslist', 'statistics'),
                 'users_masquerading' => get_string('reportmasquerading', 'statistics'),
@@ -6105,6 +6115,10 @@ function get_report_types($institution = null) {
             );
             asort($usersoptions);
             $optgroups = array(
+                'information' => array(
+                    'label' => get_string('Institution', 'admin'),
+                    'options' => $infooptions,
+                ),
                 'users' => array(
                     'label' => get_string('People', 'admin'),
                     'options' => $usersoptions,
@@ -6150,12 +6164,11 @@ function userhasaccess($institution, $report) {
     }
     $allstaffstats = get_config('staffstats');
     $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
-    if ($USER->is_institutional_staff($institution) && !empty($allstaffstats)) {
+    if (($USER->is_institutional_staff($institution) || $USER->is_institutional_supportadmin($institution)) && !empty($allstaffstats)) {
         return true;
     }
-
-    if ($USER->is_institutional_staff($institution) && empty($allstaffstats) && !empty($userstaffstats)) {
-        if (in_array($report, array('accesslist', 'masquerading', 'userdetails'))) {
+    if (($USER->is_institutional_staff($institution) || $USER->is_institutional_supportadmin($institution)) && empty($allstaffstats) && !empty($userstaffstats)) {
+        if (in_array($report, array('accesslist', 'masquerading', 'userdetails', 'useragreement'))) {
             return true;
         }
     }
@@ -6472,7 +6485,7 @@ function assessment_statistics_table($limit, $offset, $extra, $institution, $url
 
     if (!empty($extra['csvdownload'])) {
         $csvfields = array('type', 'viewname', 'owner', 'groupname',  'submitted', 'released', 'marker');
-        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'assessmentstatistics.csv', 'text/csv');
+        $USER->set_download_file(generate_csv($data, $csvfields), $institution . 'assessmentstatistics.csv', 'text/csv', true);
     }
     $result['csv'] = true;
     $columnkeys = array();

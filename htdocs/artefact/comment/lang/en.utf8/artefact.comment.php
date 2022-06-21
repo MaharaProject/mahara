@@ -15,10 +15,17 @@ $string['pluginname'] = 'Comment';
 $string['Comment'] = 'Comment';
 $string['Comments'] = 'Comments';
 $string['comment'] = 'comment';
+$string['ncomments'] = array(
+    '%s comment',
+    '%s comments'
+);
+$string['artefactcomments1'] = 'Comments for';
+$string['viewcomments'] = 'Page comments';
 $string['comments'] = 'comments';
 $string['Details'] = 'Details';
 $string['anddetails'] = 'and details';
 $string['addcomment'] = 'Add comment';
+$string['addyourcomment'] = 'Add your comment';
 $string['commentsanddetails'] = 'Comments (%d) and details';
 $string['Allow'] = 'Allow';
 $string['allowcomments'] = 'Allow comments';
@@ -40,7 +47,6 @@ $string['commentupdated'] = 'Comment updated';
 $string['editcomment'] = 'Edit comment';
 $string['editcommentdescription'] = 'You can update your comments if they are less than %d minutes old and have had no newer replies added. After this time you may still be able to delete your comments and add new ones.';
 $string['entriesimportedfromleapexport'] = 'Entries imported from a Leap2A export that were not able to be imported elsewhere';
-$string['feedback'] = 'Feedback';
 $string['feedbackattachdirname'] = 'commentfiles';
 $string['feedbackattachdirdesc'] = 'Files attached to comments on your portfolio';
 $string['feedbackattachmessage'] = 'The attached file(s) have been added to your %s folder';
@@ -63,6 +69,7 @@ $string['messageempty'] = 'Your message is empty. Please enter a message or atta
 $string['Moderate'] = 'Moderate';
 $string['moderatecomments'] = 'Moderate comments';
 $string['moderatecommentsdescription2'] = 'Comments on pages and artefacts remain private until you approve them. Comments by people not logged into their accounts always go into a moderation queue and need to be approved.';
+$string['commentmoderatenotificationsubject'] = 'Moderate a new comment';
 $string['newcommentnotificationsubject'] = 'New comment on %s';
 $string['progress_feedback'] = array(
     'Comment on another person\'s page',
@@ -75,11 +82,36 @@ $string['replyto'] = 'Reply to:';
 $string['replytonoaccess'] = 'You are not allowed to post a reply to this comment.';
 $string['replytonoprivatereplyallowed'] = 'You are not allowed to post a private reply to this comment.';
 $string['replytonopublicreplyallowed'] = 'You are not allowed to post a public reply to this comment.';
-$string['thiscommentisprivate'] = 'This comment is private';
+$string['thiscommentisprivate1'] = 'This comment is private.';
 $string['typefeedback'] = 'Comment';
 $string['viewcomment'] = 'View comment';
+$string['moderatecomment'] = 'The comment author requested that you make their comment public.';
+$string['privatetopubliccomment'] = 'The portfolio owner requested that you make your comment public.';
 $string['youhaverequestedpublic'] = 'You have requested that this comment be made public.';
-$string['commentsnotincluded'] = 'Comments were not included in this export';
+$string['commentsnotincluded'] = 'Comments were not included in this export.';
+
+$string['feedbackmoderationnotificationhtml'] = "
+<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\">
+    <strong>You have turned on comment moderation on page \"%s'\"</strong><br>
+    %s asked that you make their comment public. They wrote:
+</div>
+<div style=\"margin: 1em 0;\">%s</div>
+    <div style=\"font-size: smaller; border-top: 1px solid #999;\">
+    <p>You can <a href=\"%s\">make this comment public</a>.</p>
+</div>
+";
+
+$string['feedbackmoderationnotificationtext'] = "
+<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\">
+    <strong>You have turned on comment moderation on page %s</strong><br>
+    %s asked that you make their comment public. They wrote:
+</div>
+<div style=\"margin: 1em 0;\">%s</div>
+    <div style=\"font-size: smaller; border-top: 1px solid #999;\">
+    <p>You can make this comment public at <a href=\"%s\">.
+    </a></p>
+</div>
+";
 
 $string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s commented on %s</strong><br>%s</div>
 

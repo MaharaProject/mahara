@@ -106,7 +106,9 @@
                         </span>
 
                         <span id="{$prefix}_userfile_maxuploadsize" class="text-small text-midtone">
-                            ({str tag=maxuploadsize section=artefact.file} {$maxuploadsize})
+                            ({str tag=maxuploadsizeis section=artefact.file arg1=$maxuploadsize}, {$maxfileuploadstext})
+                        </span>
+
                         </span>
 
                         {if $config.uploadagreement}

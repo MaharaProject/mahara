@@ -19,7 +19,7 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Note"
     And I set the following fields to these values:
@@ -29,10 +29,10 @@ Scenario: Adding and deleting a Note block (Bug 1424512)
     And I attach the file "Image2.png" to "userfile[]"
     And I press "Save"
     # Add a second note to the page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Note"
-    And I follow "Use content from another note"
+    And I press "Use content from another note"
     And I select the radio "Note block 1"
     # Set title after selection as selection updates the title with original one
     And I set the following fields to these values:

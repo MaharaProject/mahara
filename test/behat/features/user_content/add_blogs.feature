@@ -31,7 +31,7 @@ Feature: Mahara users can create their blogs
     # check that settings can be changed by change the title of your default journal, add a description and tags
     And I wait "1" seconds
     When I click on "Angela User's Journal"
-    And I follow "Settings" in the "Top right button group" property
+    And I press "Settings" in the "Top right button group" "Nav" property
     When I fill in the following:
     | Title | Angela User's Best Journal |
     And I fill in "This is the edited description" in first editor
@@ -48,7 +48,7 @@ Feature: Mahara users can create their blogs
 
     # Check that we can add the blog to tagged blogs block
     Given I follow "My new journal"
-    And I follow "New entry"
+    And I press "New entry"
     And I set the following fields to these values:
     | Title | Journal entry 1 |
     | Entry | This is a test |
@@ -57,7 +57,7 @@ Feature: Mahara users can create their blogs
     And I press "Save entry"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "blogentry" and select "blogentry"

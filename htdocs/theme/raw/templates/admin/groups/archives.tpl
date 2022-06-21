@@ -1,4 +1,19 @@
 {include file="header.tpl"}
+
+<ul class="nav nav-tabs">
+    <li class="nav-item" aria-hidden="true">
+        <a href="{$WWWROOT}admin/groups/archives.php" class="nav-link {$tabs->archivedclass}">
+            <span class="icon icon-compressed left" role="presentation" aria-hidden="true"></span>
+            {str tag=archivedsubmissions section=admin}
+        </a>
+    </li>
+    <li class="nav-item" aria-hidden="true">
+        <a href="{$WWWROOT}admin/groups/archives.php?current=1" class="nav-link {$tabs->currentclass}">
+            <span class="icon icon-level-up left" role="presentation" aria-hidden="true"></span>
+            {str tag=currentsubmissions section=admin}
+        </a>
+    </li>
+</ul>
 <form class="form-inline pieform form with-heading" action="{$WWWROOT}admin/groups/archives.php" method="post">
     {if $search->sortby}
     <input type="hidden" name="sortby" id="sortby" value="{$search->sortby}">
@@ -9,6 +24,8 @@
     {if $limit}
     <input type="hidden" name="limit" id="limit" value="{$limit}">
     {/if}
+    <input type="hidden" name="current" id="current" value="{$search->type}">
+
     <div class="admin-user-search">
         {if count($institutions) > 1}
         <div class="dropdown-group js-dropdown-group form-group">
@@ -46,20 +63,38 @@
         {/if}
     </div>
     <script>
+    // Append a querystring to the URL.
+    var buildUrl = function(base, key, value) {
+        var glue = (base.indexOf('?') > -1) ? '&' : '?';
+        return base + glue + key + '=' + value;
+    }
+    // Handle institution onclick.
     jQuery(function($) {
         var csvlink = '{$WWWROOT}admin/groups/archivescsvdownload.php';
+        {if $tabs->currentclass == 'active'}
+            csvlink = buildUrl(csvlink, 'current', '1');
+        {/if}
         $('#institution').on('change', function() {
             if ($(this).val() != 'all') {
-                $('#csvlink').attr('href', csvlink + '?institution=' + $j(this).val());
+                thisUrl = buildUrl(csvlink, 'institution', $j(this).val());
+                $('#csvlink').attr('href', thisUrl);
             }
             else {
                 $('#csvlink').attr('href', csvlink);
             }
         });
+        // Update the link on page load as well.
+        var selectedInstitution = $('#institution').find(":selected").val();
+        if (selectedInstitution == undefined) {
+            selectedInstitution = 'all';
+        }
+        thisUrl = buildUrl(csvlink, 'institution', selectedInstitution);
+        $('#csvlink').attr('href', thisUrl);
     });
     </script>
 </form>
 
+{if $query}<h5>{str tag="searchresultsfor" section="mahara"} {$query}</h5>{/if}
 
 <div id="results" class="card view-container">
     <h2 class="card-header" id="resultsheading">{str tag="Results"}</h2>
@@ -71,7 +106,7 @@
                     <th class="{if $c.sort}search-results-sort-column{if $f == $sortby} {$sortdir}{/if}{/if}{if $c.class} {$c.class}{/if}">
                         {if $c.sort}
                             <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
-                                {$c.name}
+                                <span>{$c.name}</span>
                                 <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
                             </a>
                         {else}
@@ -80,10 +115,10 @@
                                 <span class="accessible-hidden sr-only">{$c.accessible}</span>
                             {/if}
                         {/if}
-                        {if $c.help}
+                        {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
+                        {if $c.helplink}
                             {$c.helplink|safe}
                         {/if}
-                        {if $c.headhtml}<div class="headhtml">{$c.headhtml|safe}</div>{/if}
                     </th>
                     {/foreach}
                 </tr>
@@ -91,6 +126,21 @@
             <tbody>
                 {$results|safe}
             </tbody>
+            {if $searchtypecurrent}
+            <tfoot>
+                <tr id="buttonsrow">
+                    <td colspan="{math equation="x-1" x=count($columns)}">
+                        <div id="nocontentselected" class="d-none error">{str tag=nocontentselected section=admin}</div>
+                    </td>
+                    <td>
+                        <form class="nojs-hidden-inline" id="releaseform" action="{$WWWROOT}admin/groups/archives.php?current=1" method="post">
+                            <label class="accessible-hidden sr-only" for="releasebtn">{str tag=withselectedcontentrelease section=admin}</label>
+                            <input type="button" class="button btn btn-secondary btn-sm" name="releasesubmissions" id="releasebtn" value="{str tag=release section=statistics}">
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
+            {/if}
         </table>
         <div class="card-body">
             {$pagination|safe}

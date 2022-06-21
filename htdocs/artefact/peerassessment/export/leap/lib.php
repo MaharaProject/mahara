@@ -13,15 +13,25 @@ defined('INTERNAL') || die();
 
 class LeapExportElementPeerassessment extends LeapExportElement {
 
-    public static function setup_links(&$links, $viewids, $artefactids) {
+    public static function setup_links(&$links, $viewids, $artefactids, $includefeedback, $includeprivatefeedback) {
         $viewlist = join(',', array_map('intval', $viewids));
         $artefactlist = join(',', array_map('intval', $artefactids));
+        if ($includeprivatefeedback && $includefeedback) {
+            $feedback = 1;
+        }
+        else if ($includefeedback) {
+            $feedback = 0;
+        }
+        else {
+            $feedback = -1;
+        }
 
         // Get the peer assessments that are on these views.
+        // and are not in draft status
         $records = get_records_select_array(
             'artefact_peer_assessment',
-            "view IN ($viewlist)",
-            array(),
+            "view IN ($viewlist) AND private <= ?",
+            array($feedback),
             '',
             'assessment,view'
         );
@@ -69,4 +79,9 @@ class LeapExportElementPeerassessment extends LeapExportElement {
             ),
         );
     }
+
+    public function get_entry_author() {
+        return get_string('importedassessment', 'artefact.peerassessment');
+    }
+
 }

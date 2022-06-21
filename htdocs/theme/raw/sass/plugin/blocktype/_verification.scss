@@ -2,7 +2,6 @@
     padding: $spacing-xxxl;
     box-shadow: $box-shadow;
     border: $border-width solid $border-color;
-
     h2 {
         font-size: $font-size-base * 1.5;
         margin-top: 0;
@@ -23,12 +22,10 @@
             &.icon-check-square {
                 color: $progresscompletion-verified-color;
             }
-
             &.action,
             &.icon-square {
                 color: $theme-text-color;
             }
-
             &.dot.disabled {
                 color: $theme-text-midtone-color;
                 cursor: $cursor-disabled;
@@ -37,7 +34,6 @@
                     content: "\f068";
                 }
             }
-
             a {
                 cursor: pointer;
             }
@@ -61,7 +57,6 @@
         p {
             margin-top: $spacing-base;
         }
-        
         i {
             display: block;
             margin-top: $spacing-base;

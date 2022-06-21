@@ -68,7 +68,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
         $triggerclass = $iscollapsed ? 'collapsed': '';
         $ariaexpanded = $iscollapsed ? 'false' : 'true';
 
-        $legendcontent = '<a href="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$ariaexpanded.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
+        $legendcontent = '<button type="button" data-target="#' . $openparam . '" data-toggle="collapse" aria-expanded="'.$ariaexpanded.'" aria-controls="' . $openparam . '" class="'.$triggerclass.'">';
 
         if (!empty($element['iconclass'])){
             $legendcontent .= '<span class="icon-fieldset icon icon-'.$element['iconclass'].'" role="presentation" aria-hidden="true"> </span>';
@@ -76,7 +76,7 @@ function pieform_element_fieldset(Pieform $form, $element) {
         $legendcontent .= Pieform::hsc($element['legend']);
         $legendcontent .= '<span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"> </span> ';
 
-        $legendcontent .= '</a>';
+        $legendcontent .= '</button>';
     }
 
 
@@ -258,6 +258,7 @@ function _render_elements_as_multicolumn($form, $element) {
 function pieform_is_collapsed(Pieform $form, $element) {
     $formname = $form->get_name();
     $iscollapsed = !empty($element['collapsed']);
+    $openparam = '';
 
     // if name element is not set, element should not be collapsed
     if(!isset($element['name'])){

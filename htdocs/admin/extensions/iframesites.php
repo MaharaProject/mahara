@@ -35,9 +35,6 @@ if ($iframedomains) {
         }
     }
 }
-else {
-    $data[$name] = array();
-}
 
 $newform = pieform(array(
     'name'     => 'newurl',
@@ -103,6 +100,7 @@ if ($iframesources) {
             'url'        => $url,
             'name'       => $name,
             'icon'       => $data[$name],
+            'elementtitle'  => hsc(get_string('editspecificfrom', 'mahara', $name, $url)),
             'editform'   => pieform(array(
                 'name'             => 'editurl_' . $i,
                 'successcallback'  => 'editurl_submit',
@@ -117,15 +115,15 @@ if ($iframesources) {
                     'submit' => array(
                         'type'         => 'button',
                         'class'        => 'btn-secondary btn-sm',
+                        'elementtitle' => get_string('deletespecificfrom', 'mahara', $name, $url),
                         'usebuttontag' => true,
-                        'value'          => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('delete') . '</span>',
-
+                        'value'          => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>',
                         'confirm'      => get_string('confirmdeletemenuitem', 'admin'),
                     ),
                     'url'  => array(
                         'type'         => 'hidden',
                         'value'        => $url,
-                    )
+                    ),
                 ),
             )),
         );

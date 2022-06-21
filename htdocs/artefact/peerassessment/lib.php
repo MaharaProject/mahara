@@ -79,10 +79,11 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             // Otherwise, the Mahara installer will install everything.
             if (get_config('installed')) {
                 if ($upgrade = check_upgrades('blocktype.peerassessment/peerassessment')) {
-                    upgrade_plugin($upgrade);
+                    return upgrade_plugin($upgrade);
                 }
             }
         }
+        return true;
     }
 
     public static function view_export_extra_artefacts($viewids) {
@@ -90,7 +91,7 @@ class PluginArtefactPeerassessment extends PluginArtefact {
         if (!$artefacts = get_column_sql("
             SELECT assessment
             FROM {artefact_peer_assessment}
-            WHERE view IN (" . join(',', array_map('intval', $viewids)) . ')', array())) {
+            WHERE private = 0 AND view IN (" . join(',', array_map('intval', $viewids)) . ')', array())) {
             return array();
         }
         if ($attachments = get_column_sql('
@@ -105,16 +106,27 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             JOIN {artefact_peer_assessment} apa ON apa.assessment = afe.resourceid
             WHERE afe.resourcetype IN (?)
             AND apa.view IN (" . join(',', array_map('intval', $viewids)) . ")
+            AND apa.private = 0
             UNION
             SELECT afe.fileid
             FROM {artefact_file_embedded} afe
             JOIN {artefact_peer_assessment} apa ON apa.block = afe.resourceid
             WHERE afe.resourcetype in(?)
-            AND apa.view IN (" . join(',', array_map('intval', $viewids)) . ")"
+            AND apa.view IN (" . join(',', array_map('intval', $viewids)) . ")
+            AND apa.private = 0"
             , array('assessment', 'peerinstruction'))) {
             $artefacts = array_merge($artefacts, $embeds);
         }
+        return $artefacts;
+    }
 
+    public static function exclude_artefacts_in_export($userid) {
+        $sql = " SELECT a.id
+            FROM {artefact} a
+            JOIN {artefact_peer_assessment} apa
+            ON a.id = apa.assessment
+            WHERE a.owner = ? AND a.artefacttype='peerassessment' AND apa.private = 1";
+        $artefacts = get_column_sql($sql, array($userid));
         return $artefacts;
     }
 
@@ -141,6 +153,8 @@ class PluginArtefactPeerassessment extends PluginArtefact {
             case 'verify':
                 return 'view/index.php';
                 break;
+            default:
+                return 'view/index.php';
         }
     }
 
@@ -228,7 +242,9 @@ class ArtefactTypePeerassessment extends ArtefactType {
     }
 
     public static function get_links($id) {
-        $v = $this->get_view();
+        $artefact = new ArtefactTypePeerassessment($id);
+        require_once(get_config('libroot') . 'view.php');
+        $v = new View($artefact->get('view'));
         return array(
             '_default' => $v->get_url(),
         );
@@ -369,15 +385,27 @@ class ArtefactTypePeerassessment extends ArtefactType {
      *
      * @param   object  $options  Object of assessment options
      *                            - defaults can be retrieved from get_assessment_options()
+     * @param   object  $versioning Object with data for the timeline view versions
+     * @param   PluginExport    $exporter object used when exporting the portfolios
      * @return  object $result    Assessment data object
      */
-    public static function get_assessments($options, $versioning=null) {
+    public static function get_assessments($options, $versioning=null, $exporter=null) {
         global $USER;
-        $allowedoptions = self::get_assessment_options();
-        // set the object's key/val pairs as variables
 
+        $allowedoptions = self::get_assessment_options();
+
+        // vars populated from $options
+        $limit = null;
+        $offset = null;
+        $block = null;
+        $export = null;
+        $sort = null;
+        $showcomment = null;
+        $view = (object) null;
+
+        // set the object's key/val pairs as variables
         foreach ($options as $key => $option) {
-            if (array_key_exists($key, $allowedoptions));
+            if (property_exists($allowedoptions, $key));
             $$key = $option;
         }
         $userid = $USER->get('id');
@@ -487,7 +515,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
         }
 
         $result->position = 'blockinstance';
-        self::build_html($result, $versioning);
+        self::build_html($result, $versioning, $exporter);
         return $result;
     }
 
@@ -509,18 +537,23 @@ class ArtefactTypePeerassessment extends ArtefactType {
                           $assessment->view = $viewid;
                           $assessment->block = $blockversion->originalblockid;
 
-                          $user = new User();
-                          $user->find_by_id($assessment->author);
-                          $assessment->username = $user->get('username');
-                          $assessment->firstname = $user->get('firstname');
-                          $assessment->lastname = $user->get('lastname');
-                          $assessment->preferredname = $user->get('preferredname');
-                          $assessment->email = $user->get('email');
-                          $assessment->admin = $user->get('admin');
-                          $assessment->staff = $user->get('staff');
-                          $assessment->deleted = $user->get('deleted');
-                          $assessment->profileicon = $user->get('profileicon');
-
+                          if (!$assessment->private && !$assessment->author) {
+                                // the assessment has been imported and is not link to an author
+                                $assessment->authorname = get_string('importedassessment', 'artefact.peerassessment');
+                          }
+                          else {
+                                $user = new User();
+                                $user->find_by_id($assessment->author);
+                                $assessment->username = $user->get('username');
+                                $assessment->firstname = $user->get('firstname');
+                                $assessment->lastname = $user->get('lastname');
+                                $assessment->preferredname = $user->get('preferredname');
+                                $assessment->email = $user->get('email');
+                                $assessment->admin = $user->get('admin');
+                                $assessment->staff = $user->get('staff');
+                                $assessment->deleted = $user->get('deleted');
+                                $assessment->profileicon = $user->get('profileicon');
+                          }
                           $assessmentsversion[] = $assessment;
                       }
                   }
@@ -607,7 +640,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
         }
     }
 
-    public static function build_html(&$data, $versioning=null) {
+    public static function build_html(&$data, $versioning=null, $exporter=null) {
         global $USER, $THEME;
 
         $deletedmessage = array();
@@ -665,7 +698,10 @@ class ArtefactTypePeerassessment extends ArtefactType {
                     $item->editlink = $smarty->fetch('artefact:peerassessment:editlink.tpl');
                 }
             }
-
+            if ($exporter) {
+                // Don't export the author of the assessment
+                $item->author = null;
+            }
             if ($item->author) {
                 if (isset($authors[$item->author])) {
                     $item->author = $authors[$item->author];
@@ -711,8 +747,7 @@ class ArtefactTypePeerassessment extends ArtefactType {
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttextsingular' => get_string('assessment', 'artefact.peerassessment'),
-            'resultcounttextplural' => get_string('assessments', 'artefact.peerassessment'),
+            'resultcounttext' => get_string('nassessments', 'artefact.peerassessment', $data->count),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];

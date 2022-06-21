@@ -89,7 +89,12 @@ class webservice_rest_server extends webservice_base_server {
         $oauth_token = null;
         if (webservice_protocol_is_enabled('oauth')) {
             OAuthStore::instance('Mahara');
-            $this->oauth_server = new OAuthServer();
+            // Instantiating OAuthServer() with get_full_script_path() ensures that
+            // the locally generated signature will contain a URI using the correct
+            // protocol if this server is behind an sslproxy.
+            // Otherwise OAuthServer() determines the protocol based only on a
+            // check for $_SERVER['HTTPS'] and signature verification will fail.
+            $this->oauth_server = new OAuthServer(get_full_script_path());
             $headers = OAuthRequestLogger::getAllHeaders();
             // try 2 Legged
             if (OAuthRequestVerifier::requestIsSigned()) {
@@ -231,8 +236,8 @@ class webservice_rest_server extends webservice_base_server {
                 $smarty->assign('version', get_config('version'));
                 $smarty->assign('updated', self::format_rfc3339_date(time()));
                 $function = get_record('external_functions', 'name', $this->functionname);
-                $smarty->assign('id', (isset($results->id) ? $reults->id : get_config('wwwroot').'webservice/wsdoc.php?id=' . $function->id));
-                $smarty->assign('title', (isset($results->title) ? $results->title : $function->name . ' by ' . $USER->username . ' at ' . self::format_rfc3339_date(time())));
+                $smarty->assign('id', get_config('wwwroot').'webservice/wsdoc.php?id=' . $function->id);
+                $smarty->assign('title', $function->name . ' by ' . $USER->username . ' at ' . self::format_rfc3339_date(time()));
                 $smarty->display('auth:webservice:atom.tpl');
             }
             else {
@@ -358,6 +363,7 @@ class webservice_rest_server extends webservice_base_server {
             $single .= '</SINGLE>' . "\n";
             return $single;
         }
+        return '';
     }
 }
 

@@ -28,7 +28,6 @@ class HtmltoText {
         $this->body = $doc->getElementsByTagName('html')->item(0)->getElementsByTagName('body')->item(0);
         $this->lines = array();
         $this->line = (object) array('text' => '', 'wrap' => true, 'prefix' => "\n");
-        $this->pre = 0;
         $this->indent = array();
         $this->baseurl = $baseurl;
         $this->links = array();

@@ -60,7 +60,7 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
         if ($this->regexp === null) {
             return false;
         }
-        // actually check the whitelists
+        // actually check the whitelists (Mahara customisation)
         if (!preg_match($this->regexp, $uri->toString())) {
             return false;
         }

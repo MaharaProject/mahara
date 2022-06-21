@@ -1,5 +1,6 @@
 <?php
 /**
+ * The portfolio collection class
  *
  * @package    mahara
  * @subpackage core
@@ -11,34 +12,167 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Collection class for working with portfolio collection objects
+ */
 class Collection {
 
+    /**
+     * The unique ID of the collection
+     * @var integer
+     */
     private $id;
+
+    /**
+     * Name (title) of the collection
+     * @var string
+     */
     private $name;
+
+    /**
+     * Short description to mention what the collection is for
+     * @var string
+     */
     private $description;
+
+    /**
+     * The user id if the collection is owned by a person
+     * @var integer|null
+     */
     private $owner;
+
+    /**
+     * The group id if the collection is owned by a group
+     * @var integer|null
+     */
     private $group;
+
+    /**
+     * The institution name (short name) if the collection is owned by an institution
+     * @var string|null
+     */
     private $institution;
+
+    /**
+     * Unix timestamp of collection last modification
+     * @var integer
+     */
     private $mtime;
+
+    /**
+     * Unix timestamp of collection creation
+     * @var integer
+     */
     private $ctime;
+
+    /**
+     * Whether to show navigation bar or not
+     * @var boolean
+     */
     private $navigation;
+
+    /**
+     * The group ID if the collection is submitted to a group
+     * @var integer|null
+     */
     private $submittedgroup;
+
+    /**
+     * The host URL if the collection is submitted to an external host
+     * @var string|null
+     */
     private $submittedhost;
+
+    /**
+     * Unix timestamp of submission
+     * @var string|null
+     */
     private $submittedtime;
+
+    /**
+     * The current status of the collection in the submission process
+     * Where 0 = not submitted, 1 = submitted, 2 = pending submission release
+     * @var integer
+     */
     private $submittedstatus;
+
+    /**
+     * An array of view objects that are associated with this collection
+     * Initialise via $this->views();
+     * @var array
+     */
     private $views;
+
+    /**
+     * An array of tags that are associated with this collection
+     * Initialise via $this->get_tags();
+     * @var array
+     */
     private $tags;
+
+    /**
+     * ID of the framework used with this collection
+     * @var integer|null
+     */
     private $framework;
+
+    /**
+     * The artefact ID of the image being used as the cover image
+     * Initialise via $this->get_coverimage();
+     * @var integer|null
+     */
     private $coverimage;
+
+    /**
+     * Whether the collection needs to show a progress completion page
+     * @var boolean
+     */
     private $progresscompletion;
+
+    /**
+     * Whether the collection is locked for editing
+     * @var boolean
+     */
     private $lock;
+
+    /**
+     * Whether the collection can get automatically copied to people
+     * @var boolean
+     */
     private $autocopytemplate;
+
+    /**
+     * Whether the collection is a template
+     * @var boolean
+     */
     private $template;
+
+    /**
+     * @var string
+     */
+    private $fullurl;
+
+    /**
+     * @var string
+     */
+    private $progresscompletionurl;
+
+    /**
+     * @var string
+     */
+    private $frameworkurl;
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
     const PENDING_RELEASE = 2;
 
+    /**
+     * Collection constructor takes either an ID number or an array of data to initialise it with
+     *
+     * @param integer $id
+     * @param array $data
+     *
+     */
     public function __construct($id=0, $data=null) {
 
         if (!empty($id)) {
@@ -73,6 +207,11 @@ class Collection {
         }
     }
 
+    /**
+     * Helper method to return value of private variables
+     * @param string $field  Name of the property
+     * @return mixed Value of the property
+     */
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
@@ -89,6 +228,13 @@ class Collection {
         return $this->{$field};
     }
 
+    /**
+     * Helper method to set value of private variables
+     * @param string $field  Name of the property
+     * @param mixed $value   New value of the property
+     * @throws InvalidArgumentException  If the $field is not a property of the class
+     * @return true
+     */
     public function set($field, $value) {
         if (property_exists($this, $field)) {
             $this->{$field} = $value;
@@ -102,7 +248,7 @@ class Collection {
      * Helper function to create or update a Collection from the supplied data.
      *
      * @param array $data
-     * @return collection           The newly created/updated collection
+     * @return Collection           The newly created/updated collection object
      */
     public static function save($data) {
         if (array_key_exists('id', $data)) {
@@ -176,7 +322,6 @@ class Collection {
         }
         delete_records('existingcopy', 'collection', $this->id);
         delete_records('collection_template', 'collection', $this->id);
-        delete_records('collection_template', 'originaltemplate', $this->id);
         delete_records('view_copy_queue', 'collection', $this->id);
         delete_records('collection', 'id', $this->id);
         // Delete any submission history
@@ -268,6 +413,12 @@ class Collection {
 
     /**
      * Generates a name for a newly created Collection
+     *
+     * Takes a supplied name and returns a unique one for this person/group/institution
+     *
+     * @param string $name  The supplied name
+     * @param object $ownerdata Object containing information on ownership
+     * @return string Unique name
      */
     private static function new_name($name, $ownerdata) {
         $extText = get_string('version.', 'mahara');
@@ -319,17 +470,19 @@ class Collection {
                       $group,
                       $institution
                     );
+
+                    // move to cover image forlder
+                    $userobj = null;
+                    if ($owner) {
+                        $userobj = new User();
+                        $userobj->find_by_id($owner);
+                    }
+                    $newa = artefact_instance_from_id($newid);
+                    $folderid = ArtefactTypeImage::get_coverimage_folder($userobj, $group, $institution);
+                    $newa->move($folderid);
+                    return $newid;
                 }
-                // move to cover image forlder
-                $userobj = null;
-                if ($owner) {
-                    $userobj = new User();
-                    $userobj->find_by_id($owner);
-                }
-                $newa = artefact_instance_from_id($newid);
-                $folderid = ArtefactTypeImage::get_coverimage_folder($userobj, $group, $institution);
-                $newa->move($folderid);
-                return $newid;
+                return null;
             }
             catch (Exception $e) {
                 return null;
@@ -388,7 +541,6 @@ class Collection {
             $data->name = $username . ' ' . $colltemplate->get('name');
 
         }
-        // PCNZ customisation WR 349175 end
         else if ($titlefromtemplate) {
             $data->name = $colltemplate->get('name');
         }
@@ -446,12 +598,25 @@ class Collection {
                 'owner' => isset($data->owner) ? $data->owner : null,
                 'group' => isset($data->group) ? $data->group : null,
                 'institution' => isset($data->institution) ? $data->institution : null,
-                'usetemplate' => $v->view
+                'usetemplate' => $v->view,
+                'quiet_update' => 1,
             );
+            if ($v->skin) {
+                // Keep the skin on the copy if person is allowed to use that skin
+                require_once('skin.php');
+                $skin = new Skin($v->skin);
+                if ($skin->can_use()) {
+                    $values['skin'] = $v->skin;
+                }
+            }
+
             list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate, $artefactcopies);
             // Check to see if we need to re-map any framework evidence
-            if (!empty($data->framework) && $userid == $data->owner && count_records('framework_evidence', 'view', $v->view)) {
-                $evidenceviews[$v->view] = $view->get('id');
+            // and if a personal collection will be copied as another personal collection (copying to groups/institutions/site porttfolios will have no owner field)
+            if (!empty($data->owner)) {
+                if (!empty($data->framework) && $userid == $data->owner && count_records('framework_evidence', 'view', $v->view)) {
+                    $evidenceviews[$v->view] = $view->get('id');
+                }
             }
             if (isset($copystatus['quotaexceeded'])) {
                 $SESSION->clear('messages');
@@ -460,10 +625,32 @@ class Collection {
             $copyviews['view_' . $view->get('id')] = true;
             $numcopied['blocks'] += $copystatus['blocks'];
             $numcopied['artefacts'] += $copystatus['artefacts'];
+            $collection_view_ids[] = $view->get('id');
         }
         $numcopied['pages'] = count($views['views']);
 
         $collection->add_views($copyviews);
+
+        // Prep sending of notifications
+        if (!empty($collection_view_ids)) {
+            $accessdata = new stdClass();
+            $accessdata->view = $collection_view_ids[0];
+            // In the process of creating collections from templates, we notify users once
+            // the views are created by setting a quiet_update flag on each view-creation
+            $beforeusers[$userid] = get_record('usr', 'id', $userid);
+
+            // Don't send an activity notification to the person sharing the view
+            $accessdata->oldusers = $beforeusers;
+            $firstview = new View($collection_view_ids[0]);
+            $dataviews[] = array('id' => $firstview->get('id'),
+                                'title' => $firstview->get('title'),
+                                'collection_id' => $collection->get('id'),
+                                'collection_name' => $collection->get('name'),
+                                'collection_url' => $collection->get_url(),
+                            );
+            $accessdata->views = $dataviews;
+            activity_occurred('viewaccess', $accessdata);
+        }
 
         // Update all the navigation blocks referring to this collection
         if ($viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'))) {
@@ -488,44 +675,69 @@ class Collection {
         // If there are views with framework evidence to re-map
         if (!empty($evidenceviews)) {
             // We need to get how the old views/artefacts/blocks/evidence fit together
-            $evidences = get_records_sql_array('
-                SELECT va.view, va.artefact, va.block, fe.*
-                FROM {view} v
-                JOIN {view_artefact} va ON va.view = v.id
-                JOIN {artefact} a ON a.id = va.artefact
-                JOIN {framework_evidence} fe ON fe.view = v.id
-                WHERE v.id IN (' . join(',', array_keys($evidenceviews)) . ')
-                AND a.id IN (' . join(',', array_keys($artefactcopies)) . ')
-                AND fe.annotation = va.block', array());
-            $newartefactcopies = array();
-            foreach ($artefactcopies as $ac) {
-                $newartefactcopies[$ac->newid] = 1;
-            }
-            // And get how the new views/artefacts/blocks fit together
-            $newblocks = get_records_sql_assoc('
-                SELECT va.artefact, va.view, va.block
-                FROM {view} v
-                JOIN {view_artefact} va ON va.view = v.id
-                JOIN {artefact} a ON a.id = va.artefact
-                WHERE v.id IN (' . join(',', array_values($evidenceviews)) . ')
-                AND a.id IN (' . join(',', array_keys($newartefactcopies)) . ')
-                AND artefacttype = ?', array('annotation'));
-
-            foreach ($evidences as $evidence) {
-                if (key_exists($evidence->artefact, $artefactcopies) && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)) {
-                    $newartefact = $artefactcopies[$evidence->artefact]->newid;
-                    $newevidence = new stdClass();
-                    $newevidence->view = $newblocks[$newartefact]->view;
-                    $newevidence->artefact = $newartefact;
-                    $newevidence->annotation = $newblocks[$newartefact]->block;
-                    $newevidence->framework = $evidence->framework;
-                    $newevidence->element = $evidence->element;
-                    $newevidence->state = 0;
-                    $newevidence->reviewer = null;
-                    $newevidence->ctime = $evidence->ctime;
-                    $newevidence->mtime = $evidence->mtime;
-                    insert_record('framework_evidence', $newevidence);
+            if (!empty($artefactcopies)) {
+                $evidences = get_records_sql_array('
+                    SELECT va.view, va.artefact, va.block, fe.*
+                    FROM {view} v
+                    JOIN {view_artefact} va ON va.view = v.id
+                    JOIN {artefact} a ON a.id = va.artefact
+                    JOIN {framework_evidence} fe ON fe.view = v.id
+                    WHERE v.id IN (' . join(',', array_keys($evidenceviews)) . ')
+                    AND a.id IN (' . join(',', array_keys($artefactcopies)) . ')
+                    AND fe.annotation = va.block', array());
+                $newartefactcopies = array();
+                foreach ($artefactcopies as $ac) {
+                    $newartefactcopies[$ac->newid] = 1;
                 }
+                // And get how the new views/artefacts/blocks fit together
+                $newblocks = get_records_sql_assoc('
+                    SELECT va.artefact, va.view, va.block
+                    FROM {view} v
+                    JOIN {view_artefact} va ON va.view = v.id
+                    JOIN {artefact} a ON a.id = va.artefact
+                    WHERE v.id IN (' . join(',', array_values($evidenceviews)) . ')
+                    AND a.id IN (' . join(',', array_keys($newartefactcopies)) . ')
+                    AND artefacttype = ?', array('annotation'));
+
+                if (!empty($evidences)) {
+                    foreach ($evidences as $evidence) {
+                        if (key_exists($evidence->artefact, $artefactcopies) && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)) {
+                            $newartefact = $artefactcopies[$evidence->artefact]->newid;
+                            $newevidence = new stdClass();
+                            $newevidence->view = $newblocks[$newartefact]->view;
+                            $newevidence->artefact = $newartefact;
+                            $newevidence->annotation = $newblocks[$newartefact]->block;
+                            $newevidence->framework = $evidence->framework;
+                            $newevidence->element = $evidence->element;
+                            $newevidence->state = 0;
+                            $newevidence->reviewer = null;
+                            $newevidence->ctime = $evidence->ctime;
+                            $newevidence->mtime = $evidence->mtime;
+                            insert_record('framework_evidence', $newevidence);
+                        }
+                    }
+                }
+            }
+        }
+        if ($colltemplate->has_progresscompletion()) {
+            $values['type'] = 'progress';
+            list($view, $template, $copystatus) = View::create_from_template($values, $colltemplate->has_progresscompletion(), $userid, false, false, $artefactcopies);
+            $numcopied['blocks'] += $copystatus['blocks'];
+            $numcopied['artefacts'] += $copystatus['artefacts'];
+
+            // Update any existing pages sortorder
+            execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($collection->id));
+            // Add progress page as first page of collection
+            $id_of_oldfirstview = $collection->first_view()->get('id');
+            $cv = array();
+            $cv['view'] = $view->get('id');
+            $cv['collection'] = $collection->id;
+            $cv['displayorder'] = 0;
+            $sql = "DELETE FROM {activity_queue} WHERE type = 4 AND data LIKE ? ";
+            execute_sql($sql,  array('%"view";%"' . $id_of_oldfirstview . '"%'));
+            insert_record('collection_view', (object)$cv);
+            if (!empty($collection->views())) {
+                $collection->add_views(array($view->get('id')));
             }
         }
         if ($colltemplate->has_progresscompletion()) {
@@ -562,13 +774,16 @@ class Collection {
     /**
      * Returns a list of the current user, group, or institution collections
      *
-     * @param offset current page to display
-     * @param limit how many collections to display per page
-     * @param groupid current group ID
-     * @param institutionname current institution name
+     * @param integer $offset current page to display
+     * @param integer $limit how many collections to display per page
+     * @param integer $owner current person ID
+     * @param integer $groupid current group ID
+     * @param string  $institutionname current institution name
      * @return array (count: integer, data: array, offset: integer, limit: integer)
      */
     public static function get_mycollections_data($offset=0, $limit=10, $owner=null, $groupid=null, $institutionname=null) {
+        $wherestm = '';
+        $values = array();
         if (!empty($groupid)) {
             $wherestm = '"group" = ?';
             $values = array($groupid);
@@ -617,6 +832,10 @@ class Collection {
         return $result;
     }
 
+    /**
+     * Add any submission info to the array of collections
+     * @param array &$data modified parameter array of collections
+     */
     private static function add_submission_info(&$data) {
         global $CFG;
         require_once($CFG->docroot . 'lib/group.php');
@@ -772,7 +991,7 @@ class Collection {
             );
         }
 
-        // populate the fields with the existing values if any
+        // Populate the fields with the existing values if any
         if (!empty($this->id)) {
             foreach ($elements as $k => $element) {
                 if ($k === 'tags') {
@@ -821,7 +1040,7 @@ class Collection {
 
         if (!isset($this->views)) {
 
-            $sql = "SELECT v.id, cv.*, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid
+            $sql = "SELECT v.id, cv.*, v.title, v.owner, v.group, v.institution, v.ownerformat, v.urlid, v.skin
                 FROM {collection_view} cv JOIN {view} v ON cv.view = v.id
                 WHERE cv.collection = ?
                 AND v.type != 'progress'
@@ -895,9 +1114,6 @@ class Collection {
      */
     public function can_have_progresscompletion() {
         $allowspc = false;
-        if (isset($this->group) && $this->group) {
-            return $allowspc;
-        }
         if (is_plugin_active('signoff', 'blocktype')) {
             require_once(get_config('docroot') . 'lib/institution.php');
             if ($this->institution) {
@@ -946,9 +1162,6 @@ class Collection {
      */
      public function get_framework_institution() {
         require_once('institution.php');
-        if (!empty($this->group)) {
-            return false;
-        }
 
         if (!is_plugin_active('framework', 'module')) {
             return false;
@@ -960,9 +1173,16 @@ class Collection {
             $allowsmartevidence = ($institution->allowinstitutionsmartevidence) ? array($institution) : false;
         }
         else {
-            $user = new User();
-            $user->find_by_id($this->owner);
-            $institutionids = array_keys($user->get('institutions'));
+            $institutionids = array();
+            if (!empty($this->group)) {
+                $group =  get_group_by_id($this->group);
+                $institutionids[] = $group->institution;
+            }
+            else {
+                $user = new User();
+                $user->find_by_id($this->owner);
+                $institutionids = array_keys($user->get('institutions'));
+            }
             if (!empty($institutionids)) {
                 foreach ($institutionids as $institution) {
                     $institution = new Institution($institution);
@@ -1137,16 +1357,16 @@ class Collection {
             $artefactcopies = array();
             list($view) = View::create_from_template($viewdata, $systemprogressviewid, $author, false, false, $artefactcopies);
 
-            // update any existing pages sortorder
+            // Update any existing pages sortorder
             execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($this->id));
-            // add progress page as first page of collection
+            // Add progress page as first page of collection
             $cv = array();
             $cv['view'] = $view->get('id');
             $cv['collection'] = $this->id;
             $cv['displayorder'] = 0;
             insert_record('collection_view', (object)$cv);
             if (!empty($this->views())) {
-                $this->add_views(array($view->get('id')));
+                $this->add_views(array($view->get('id')), 1);
             }
         }
     }
@@ -1241,6 +1461,9 @@ class Collection {
      * - each view can only belong to one collection
      * - locked/submitted views can't be added to collections
      *
+     * @param integer|null $owner The ID of the person
+     * @param integer|null $groupid The ID of the group
+     * @param string|null $institutionname The name of the institution
      * @return array $views
      */
     public static function available_views($owner=null, $groupid=null, $institutionname=null) {
@@ -1279,9 +1502,10 @@ class Collection {
      * Submits the selected views to the collection
      *
      * @param array values selected views
+     * @param integer index to base the first view off
      * @return integer count so we know what SESSION message to display
      */
-    public function add_views($values) {
+    public function add_views($values, $index=0) {
         require_once(get_config('libroot') . 'view.php');
 
         $count = 0; // how many views we are adding
@@ -1307,11 +1531,11 @@ class Collection {
         $viewids = get_column_sql("SELECT view FROM {collection_view} WHERE collection = ? ORDER BY displayorder", array($this->id));
 
         // Set the most permissive access records on all views
-        View::combine_access($viewids, true);
+        View::combine_access($viewids);
 
         // Copy the whole view config from the first view to all the others
         if (count($viewids)) {
-            $firstview = new View($viewids[0]);
+            $firstview = new View($viewids[$index]);
             $viewconfig = array(
                 'startdate'       => $firstview->get('startdate'),
                 'stopdate'        => $firstview->get('stopdate'),
@@ -1329,6 +1553,9 @@ class Collection {
         $this->mtime = db_format_timestamp(time());
         $this->commit();
         db_commit();
+        // Unset the current views and then reset it again
+        $this->set('views', null);
+        $this->views();
 
         return $count;
     }
@@ -1390,16 +1617,17 @@ class Collection {
      */
     public function set_viewdisplayorder($id, $direction) {
         if (is_array($direction)) {
-            // we already have new sort order
+            // We already have new sort order
             $neworder = $direction;
             if ($pid = $this->has_progresscompletion()) {
                 if (!in_array($pid, $neworder)) {
-                    // we need to add the progress page to be displayorder = 0
+                    // We need to add the progress page to be displayorder = 0
                     array_unshift($neworder, $pid);
                 }
             }
         }
         else {
+            $oldorder = -1;
             $ids = get_column_sql('
                 SELECT view FROM {collection_view}
                 WHERE collection = ?
@@ -1411,16 +1639,17 @@ class Collection {
                     break;
                 }
             }
-
-            if ($direction == 'up' && $oldorder > 0) {
-                $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
-                                        array($id, $ids[$oldorder-1]),
-                                        array_slice($ids, $oldorder+1));
-            }
-            else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
-                $neworder = array_merge(array_slice($ids, 0, $oldorder),
-                                        array($ids[$oldorder+1], $id),
-                                        array_slice($ids, $oldorder+2));
+            if ($oldorder > -1) {
+                if ($direction == 'up' && $oldorder > 0) {
+                    $neworder = array_merge(array_slice($ids, 0, $oldorder - 1),
+                                            array($id, $ids[$oldorder-1]),
+                                            array_slice($ids, $oldorder+1));
+                }
+                else if ($direction == 'down' && ($oldorder + 1 < count($ids))) {
+                    $neworder = array_merge(array_slice($ids, 0, $oldorder),
+                                            array($ids[$oldorder+1], $id),
+                                            array_slice($ids, $oldorder+2));
+                }
             }
         }
         if (isset($neworder)) {
@@ -1433,15 +1662,22 @@ class Collection {
     }
 
     /**
-     * after editing the collection, redirect back to the appropriate place
+     * After editing the collection, redirect back to the appropriate place
+     * @param boolean $new  Whether the collection has just been created
+     * @param boolean $copy Whether the collection is a copy
+     * @param array $urlparams An array of extra url params to set on the redirect
      */
     public function post_edit_redirect($new=false, $copy=false, $urlparams=null) {
-        $redirecturl = post_edit_redirect_url($new, $copy, $urlparams);
+        $redirecturl = $this->post_edit_redirect_url($new, $copy, $urlparams);
         redirect($redirecturl);
     }
 
     /**
-     * returns the url that we need to redirect to sfter editing a collection
+     * Returns the url that we need to redirect to after editing a collection
+     * @param boolean $new  Whether the collection has just been created
+     * @param boolean $copy Whether the collection is a copy
+     * @param array $urlparams An array of extra url params to set on the redirect
+     * @return string  URL for redirection
      */
     public function post_edit_redirect_url($new=false, $copy=false, $urlparams=null) {
         $redirecturl = get_config('wwwroot');
@@ -1475,6 +1711,11 @@ class Collection {
         return $redirecturl;
     }
 
+    /**
+     * Fetch a collection based on the ID of a view it contains
+     * @param integer $viewid ID of a view
+     * @return Collection|false
+     */
     public static function search_by_view_id($viewid) {
         $record = get_record_sql('
             SELECT c.*
@@ -1514,6 +1755,7 @@ class Collection {
      *
      * @param bool $full return a full url
      * @param bool $useid ignore clean url settings and always return a url with an id in it
+     * @param View|null &$firstview Finds the first view of the collection
      *
      * @return string
      */
@@ -1572,32 +1814,68 @@ class Collection {
      *
      * @param object $releaseuser The user releasing the collection
      * @param string $externalid  An external ID that the archive relates to
+     * @param bool $checkhost Verify a record is in the host table
      */
-    public function pendingrelease($releaseuser=null, $externalid=null) {
-        $submitinfo = $this->submitted_to();
+    public function pendingrelease($releaseuser=null, $externalid=null, $checkhost=true) {
+        if ($checkhost) {
+            // While not used, the absence of a record will throw an exception.
+            $submitinfo = $this->submitted_to();
+        }
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
         }
-        $viewids = $this->get_viewids();
-        db_begin();
-        execute_sql("UPDATE {collection}
+        $viewids = $this->get_viewids(true);
+        try {
+            db_begin();
+            execute_sql("UPDATE {collection}
                      SET submittedstatus = " . self::PENDING_RELEASE . "
                      WHERE id = ?",
-                     array($this->id)
-        );
-        View::_db_pendingrelease($viewids);
-        db_commit();
-
-        require_once(get_config('docroot') . 'export/lib.php');
-        add_submission_to_export_queue($this, $releaseuser, $externalid);
+                        array($this->id)
+            );
+            View::_db_pendingrelease($viewids);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $this->submittedgroup) {
+                PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
+            }
+            require_once(get_config('docroot') . 'export/lib.php');
+            add_submission_to_export_queue($this, $releaseuser, $externalid);
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
     }
 
     /**
-     * Release a submitted collection
+     * Release a submitted collection with a message to the user.
      *
-     * @param object $releaseuser The user releasing the collection
+     * The optional $releasemessageoverrides is of the form:
+     * $releasemessageoverrides [
+     *   'group' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ],
+     *   'host' => [
+     *     'subjectkey' => STRING,
+     *     'messagekey' => STRING,
+     *   ]
+     * ]
+     *
+     * Only the ovrridden strings need to be supplied.  The strings need to be
+     * present in htdocs/lang/en.utf8/group.php.
+     *
+     * The strings can take up to 3 replacement parameters. These are:
+     * * Title - the title of what is being released.
+     * * Released from - the group name or submittedhost.
+     * * Released by - the display name of the user releasing the portfolio.
+     *
+     * @param LiveUser|null $releaseuser The Account releasing the Portfolio.
+     * @param array $releasemessageoverrides Optional array of string keys to use rather than the defaults.
+     *
+     * @return void
      */
-    public function release($releaseuser=null) {
+    public function release($releaseuser=null, $releasemessageoverrides = []) {
 
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
@@ -1608,20 +1886,30 @@ class Collection {
             throw new ParameterException("Collection with id " . $this->id . " has no owner");
         }
 
-        $viewids = $this->get_viewids();
+        $viewids = $this->get_viewids(true);
 
-        db_begin();
-        execute_sql('
+        try {
+            db_begin();
+            execute_sql('
             UPDATE {collection}
             SET submittedgroup = NULL,
                 submittedhost = NULL,
                 submittedtime = NULL,
                 submittedstatus = ' . self::UNSUBMITTED . '
             WHERE id = ?',
-            array($this->id)
-        );
-        View::_db_release($viewids, $this->owner, $this->submittedgroup);
-        db_commit();
+                        array($this->id)
+            );
+            View::_db_release($viewids, $this->owner, $this->submittedgroup);
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $this->submittedgroup) {
+                PluginModuleSubmissions::release_submission($this, $releaseuser);
+            }
+            db_commit();
+        }
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
+        }
 
         $releaseuser = optional_userobj($releaseuser);
         handle_event('releasesubmission', array('releaseuser' => $releaseuser,
@@ -1640,18 +1928,37 @@ class Collection {
 
             if ((int)$releaseuserid !== (int)$this->get('owner')) {
                 require_once('activity.php');
+                $subjectkey = 'portfolioreleasedsubject';
+                $messagekey = 'portfolioreleasedmessage';
+                if ($this->submittedgroup) {
+                    $submitinfo = $this->submitted_to();
+                    if (!empty($releasemessageoverrides['group']['subjectkey'])) {
+                        $subjectkey = $releasemessageoverrides['group']['subjectkey'];
+                    }
+                    if (!empty($releasemessageoverrides['group']['messagekey'])) {
+                        $messagekey = $releasemessageoverrides['group']['messagekey'];
+                    }
+                }
+                else if ($this->submittedhost) {
+                    if (!empty($releasemessageoverrides['host']['subjectkey'])) {
+                        $subjectkey = $releasemessageoverrides['host']['subjectkey'];
+                    }
+                    if (!empty($releasemessageoverrides['host']['messagekey'])) {
+                        $messagekey = $releasemessageoverrides['host']['messagekey'];
+                    }
+                }
                 activity_occurred(
                     'maharamessage',
                     array(
                         'users' => array($this->get('owner')),
                         'strings' => (object) array(
                             'subject' => (object) array(
-                                'key'     => 'portfolioreleasedsubject',
+                                'key'     => $subjectkey,
                                 'section' => 'group',
                                 'args'    => array($this->name),
                             ),
                             'message' => (object) array(
-                                'key'     => 'portfolioreleasedmessage',
+                                'key'     => $messagekey,
                                 'section' => 'group',
                                 'args'    => array($this->name, $submitinfo->name, $releaseuserdisplay),
                             ),
@@ -1664,7 +1971,13 @@ class Collection {
         }
     }
 
-    public function get_viewids() {
+    /**
+     * Quick way to find the view IDs of the collection
+     *
+     * @param boolean $includeprogress  Whether the progress page id is returned as well
+     * @return array View IDs
+     */
+    public function get_viewids($includeprogress = false) {
         $ids = array();
         $viewdata = $this->views();
 
@@ -1674,9 +1987,17 @@ class Collection {
             }
         }
 
+        if ($includeprogress && $this->has_progresscompletion()) {
+            $ids[] = $this->has_progresscompletion();
+        }
+
         return $ids;
     }
 
+    /**
+     * Helper to check if collection is submitted
+     * @return integer|string
+     */
     public function is_submitted() {
         return $this->submittedgroup || $this->submittedhost;
     }
@@ -1684,7 +2005,7 @@ class Collection {
     /**
      * Helper to find where collection is submitted.
      *
-     * @throws SystemException  Collection is not submitted
+     * @throws SystemException Collection is not submitted
      * @return object Info about what this was submitted to
      */
     public function submitted_to() {
@@ -1710,8 +2031,10 @@ class Collection {
      * Submit this collection to a group or a remote host (but only one or the other!)
      * @param object $group
      * @param string $submittedhost
-     * @param int $owner The owner of the collection (if not just $USER)
-     * @throws SystemException
+     * @param integer $owner The owner of the collection (if not just $USER)
+     * @param boolean $sendnotification
+     * @throws CollectionSubmissionException
+     * @return void|false
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
@@ -1724,7 +2047,7 @@ class Collection {
             return false;
         }
 
-        $viewids = $this->get_viewids();
+        $viewids = $this->get_viewids(true);
         if (!$viewids) {
             throw new CollectionSubmissionException(get_string('cantsubmitemptycollection', 'view'));
         }
@@ -1753,21 +2076,30 @@ class Collection {
             $group->roles = get_column('grouptype_roles', 'role', 'grouptype', $group->grouptype, 'see_submitted_views', 1);
         }
 
-        db_begin();
-        View::_db_submit($viewids, $group, $submittedhost, $owner);
-        if ($group) {
-            $this->set('submittedgroup', $group->id);
-            $this->set('submittedhost', null);
+        try {
+            db_begin();
+            View::_db_submit($viewids, $group, $submittedhost, $owner);
+            if ($group) {
+                $this->set('submittedgroup', $group->id);
+                $this->set('submittedhost', null);
+            }
+            else {
+                $this->set('submittedgroup', null);
+                $this->set('submittedhost', $submittedhost);
+            }
+            $this->set('submittedtime', time());
+            $this->set('submittedstatus', self::SUBMITTED);
+            $this->commit();
+            safe_require('module', 'submissions');
+            if (PluginModuleSubmissions::is_active() && $group) {
+                PluginModuleSubmissions::add_submission($this, $group);
+            }
+            db_commit();
         }
-        else {
-            $this->set('submittedgroup', null);
-            $this->set('submittedhost', $submittedhost);
+        catch (Exception $e) {
+            db_rollback();
+            throw $e;
         }
-        $this->set('submittedtime', time());
-        $this->set('submittedstatus', self::SUBMITTED);
-        $this->commit();
-        db_commit();
-
         handle_event('addsubmission', array('id' => $this->id,
                                             'eventfor' => 'collection',
                                             'name' => $this->name,
@@ -1806,6 +2138,10 @@ class Collection {
         }
     }
 
+    /**
+     * Helper function to get ID of image artefact
+     * @return integer|null ID of image artefact
+     */
     public function get_coverimage() {
         if ($this->coverimage && get_field('artefact', 'id', 'id', $this->coverimage)) {
             return $this->coverimage;
@@ -1838,12 +2174,12 @@ class Collection {
 
     /**
      * Creates a new secret url for this collection
-     * @param int $collectionid
-     * @param false $visible
-     * @return object The view_access record for the first view's secret URL
+     * @param boolean $visible
+     * @return object|false The view_access record for the first view's secret URL
      */
-    public function new_token($visible=1) {
-        $viewids = $this->get_viewids();
+    public function new_token($visible=true) {
+        $viewids = get_column('collection_view', 'view', 'collection', $this->id);
+
         // It's not possible to add a secret key to a collection with no pages
         if (!$viewids) {
             return false;
@@ -1939,6 +2275,12 @@ class Collection {
         return array(round(($numberofcompletedactions/$numberofactions)*100), $numberofactions);
     }
 
+    /**
+     * Track parent and child template
+     *
+     * @param integer Collection ID of parent
+     * @return integer Row ID
+     */
     public function track_template($id) {
         if (!get_field('collection', 'id', 'id', $id)) {
             throw new CollectionNotFoundException("Collection with id $id not found");
@@ -1954,22 +2296,24 @@ class Collection {
 
     /**
      * Given an institution name we set this collection to be the auto copy template for the institution
+     *
      * If setting to autocopy and there is another collection with the auto copy template set
      * to true, then we call unset_active_collection_template on that one
+     * @param string $institution ID of institution
      */
     public function set_active_collection_template($institution) {
         $collectionid = $this->get('id');
         $oldtemplate = get_field('collection', 'id', 'autocopytemplate', 1, 'institution', $institution);
-        // if the collection is already the auto copy, then do nothing
+        // If the collection is already the auto copy, then do nothing
         if ($collectionid && $oldtemplate != $collectionid) {
-            // remove the auto copy setting from the old collection
+            // Remove the auto copy setting from the old collection
             if ($oldtemplate) {
                 $this->unset_active_collection_template($oldtemplate, $institution, true);
             }
 
-            // set new collection to be auto copy template
+            // Set new collection to be auto copy template
             set_field('collection', 'autocopytemplate', 1, 'id', $collectionid);
-            // share collection with the institution
+            // Share collection with the institution
             $viewids = get_column('collection_view', 'view', 'collection', $collectionid);
             if ($viewids) {
                 $time = db_format_timestamp(time());
@@ -1987,9 +2331,14 @@ class Collection {
     }
 
     /**
+     * Unset the auto copy for a collection
+     *
      * Given an institution name and a collection id
      * We set that collection to be auto copy false
      * and remove the sharing permission to the institution specified
+     * @param integer $id Collection ID
+     * @param string $collection Collection ID
+     * @param boolean $keeptemplate Whether to keep the template setting
      */
     public function unset_active_collection_template($id, $institution, $keeptemplate) {
         set_field('collection', 'autocopytemplate', 0, 'id', $id);
@@ -2008,19 +2357,17 @@ class Collection {
     }
 
     /**
-     * Set this collection's views to templates
+     * Set all the views in the collection to be templates
      *
-     * The $autocopy argument only needs to be used upon creation of a collection to set
+     * The $autocopy argument only needs to be used when creating/updating collection config to
      * give the `autocopytemplate` field a value. When adding pages to a collection,
      * this value is already set, hence we look here instead of at the argument.
      *
-     * @param  mixed $autocopyupdate The autocopy value when creating/updating the collection setting
+     * @param  boolean|null $autocopyupdate The autocopy value when creating/updating the collection setting
      */
     public function set_views_as_template($autocopyupdate=null) {
         $autocopy = $autocopyupdate;
-
-        if (is_null($autocopy)) {
-            // previously set autocopytemplate - on creation/previous update of this collection
+        if (is_null($autocopyupdate)) {
             if ($this->get('autocopytemplate')) {
                 $autocopy = 1;
             }
@@ -2031,7 +2378,7 @@ class Collection {
             foreach($viewids as $vid) {
                 set_field('view', 'locktemplate', 1, 'id', $vid);
                 set_field('view', 'lockblocks', 1, 'id', $vid);
-                if ($autocopy == 1) {
+                if (!is_null($autocopy)) {
                     if ($autocopy) {
                         set_field('view', 'template', 1, 'id', $vid);
                         set_field('view', 'copynewuser', 1, 'id', $vid);
@@ -2044,24 +2391,34 @@ class Collection {
         }
     }
 
+
+    /**
+     * Lock the collection and all of the views
+     */
     public function lock_collection() {
         // Lock the collection
         $collectionid = $this->get('id');
-        execute_sql("UPDATE {collection} SET lock = 1 WHERE id = ?", array($collectionid));
-        // lock all views in that collection
+        execute_sql("UPDATE {collection} SET " . db_quote_identifier('lock') . " = 1 WHERE id = ?", array($collectionid));
+        // Lock all views in that collection
         $sql = "UPDATE {view} SET locked = 1
             WHERE id IN (
                 SELECT view FROM {collection_view}
                 WHERE collection = ?
             )";
         execute_sql($sql, array($collectionid));
+        // Set the rollover / unlock date
+        // TODO - get this to be an institution / block setting rather than hard code for 6 months
+        execute_sql("UPDATE {collection_template} SET rolloverdate = ? WHERE collection = ?", array(db_format_timestamp(time()), $collectionid));
     }
 
+    /**
+     * Unlock the collection and all of the views
+     */
     public function unlock_collection() {
-        // Lock the collection
+        // Unlock the collection
         $collectionid = $this->get('id');
-        execute_sql("UPDATE {collection} SET lock = 0 WHERE id = ?", array($collectionid));
-        // lock all views in that collection
+        execute_sql("UPDATE {collection} SET " . db_quote_identifier('lock') . " = 0 WHERE id = ?", array($collectionid));
+        // Unlock all views in that collection
         $sql = "UPDATE {view} SET locked = 0
             WHERE id IN (
                 SELECT view FROM {collection_view}
@@ -2069,15 +2426,53 @@ class Collection {
             )";
         execute_sql($sql, array($collectionid));
     }
+
+    /**
+     * Get latest comment on a collection
+     *
+     * @param boolean $includedraft  Whether the latest comment can be a draft comment
+     *
+     * @return mixed|null comment object and view id
+     */
+    public function get_latest_comment($includedraft=false) {
+        $viewids = $this->get_viewids();
+        $sql = 'SELECT a.id, acc.onview FROM {artefact_comment_comment} acc
+                JOIN {artefact} a ON a.id = acc.artefact
+                WHERE acc.onview IN (' . join(',', array_fill(0, count($viewids), '?')) . ')';
+        if (!$includedraft) {
+            $sql .= ' AND acc.private != 1';
+        }
+        $sql .= ' ORDER BY a.mtime DESC
+                  LIMIT 1';
+        if ($viewids && $data = get_records_sql_array($sql, $viewids)) {
+            safe_require('artefact', 'comment');
+            $comment = new ArtefactTypeComment($data[0]->id);
+            $viewid = $data[0]->onview;
+            return array($comment, $viewid);
+        }
+        return null;
+    }
 }
 
+/**
+ * CollectionSubmissionException - something has gone wrong submitting a collection.
+ * Generally these will be the fault with trying to submit an empty collection or one already submitted
+ */
 class CollectionSubmissionException extends UserException {
 
-    // For a CollectionSubmissionException, the error message is mandatory
+    /**
+     * For a CollectionSubmissionException, the error message is mandatory
+     *
+     * @param string $message
+     */
     public function __construct($message) {
         parent::__construct($message);
     }
 
+    /**
+     * Return the error strings for the exception
+     * @return array Title and message strings for exception
+     */
     public function strings() {
         return array_merge(
             parent::strings(),
@@ -2092,9 +2487,8 @@ class CollectionSubmissionException extends UserException {
 /**
  * Find the collection that is the current active template for autocopy
  *
- * @param $institution The internal name for the institution. Defaults to site.
- *
- * @return the Collection object for the active autocopy template or null
+ * @param string $institution The internal name for the institution. Defaults to site.
+ * @return Collection|null The Collection object for the active autocopy template or null
  */
 function get_active_collection_template($institution='mahara') {
     if ($collectionid = get_field('collection', 'id', 'autocopytemplate', 1, 'institution', $institution)) {
@@ -2104,3 +2498,25 @@ function get_active_collection_template($institution='mahara') {
     return false;
 }
 
+/**
+ * Unlock the collections by the rollover date
+ *
+ * When unlocking via rollover we leave the views still locked
+ * so a person can only delete their collection but not edit it
+ *
+ * @param $date string A valid date or string that can be used by strtotime() function
+ *
+ */
+function unlock_collections_by_rollover($date = '-6 months') {
+    // Unlock the collections
+    $rollover = db_format_timestamp(strtotime($date));
+    execute_sql("UPDATE {collection} SET " . db_quote_identifier('lock') . " = 0
+                 WHERE id IN (
+                    SELECT ct_collection  FROM (
+                        SELECT ct.collection as ct_collection FROM {collection_template} ct
+                        JOIN {collection} c ON c.id = ct.collection
+                        WHERE ct.rolloverdate < ?
+                        AND c." . db_quote_identifier('lock') . " = 1
+                    ) as ct
+                )", array($rollover));
+}

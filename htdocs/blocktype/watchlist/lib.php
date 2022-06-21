@@ -23,7 +23,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
     }
 
     public static function get_title() {
-        return get_string('title', 'blocktype.watchlist');
+        return get_string('title1', 'blocktype.watchlist');
     }
 
     public static function get_description() {
@@ -149,8 +149,6 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
             'id'         => 'watchlist_pagination',
             'datatable'  => 'watchlistblock',
             'jsonscript' => 'blocktype/watchlist/watchlist.json.php',
-            'resultcounttextsingular' => get_string('result'),
-            'resultcounttextplural'   => get_string('results'),
         );
 
         $smarty = smarty_core();
@@ -173,8 +171,6 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
                 'limit' => $views['limit'],
                 'offset' => $views['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
             ));
             $views['pagination'] = $pagination['html'];
             $views['pagination_js'] = $pagination['javascript'];
@@ -182,7 +178,42 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
         return $views;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
+        return true;
+    }
+
+    public static function has_config() {
+        return true;
+    }
+
+    public static function get_config_options() {
+        $elements = array();
+        $elements['watchlistnotification'] = array(
+            'type' => 'fieldset',
+            'legend' => get_string('watchlistnotification', 'blocktype.watchlist'),
+            'elements' => array(
+                'watchlistnotification_delay' => array(
+                    'title'        => get_string('watchlistdelaytitle', 'blocktype.watchlist'),
+                    'type'         => 'text',
+                    'defaultvalue' => get_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay'),
+                    'rules' => array( 'integer' => true, 'minvalue' => 0 ),
+                    'description' => get_string('watchlistdelaydescription', 'blocktype.watchlist'),
+                )
+            ),
+        );
+        return array(
+            'elements' => $elements,
+        );
+    }
+
+    public static function save_config_options(Pieform $form, $values) {
+        set_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay', (int)$values['watchlistnotification_delay']);
+    }
+
+    public static function postinst($prevversion) {
+        if ($prevversion == 0) {
+            return set_config_plugin('blocktype', 'watchlist', 'watchlistnotification_delay', 20);
+        }
         return true;
     }
 
@@ -268,7 +299,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -288,7 +319,7 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
      * on the dashboard is translatable.
      */
     public static function get_instance_title(BlockInstance $instance) {
-        return get_string('title', 'blocktype.watchlist');
+        return get_string('title1', 'blocktype.watchlist');
     }
 
     public static function filter_views_shared_to_user($viewdata, $options) {
@@ -332,12 +363,13 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
 
         $options->now = $now;
         $options->then = $then;
+        $count = 0;
 
-        if (isset($then) && !empty($then) && $options->orderby == 'owner') {
+        if ($then && $options->orderby == 'owner') {
             list($viewdata, $count) = self::filter_views_by_owner($filterbydata, $options);
         }
 
-        if (isset($then) && !empty($then) && $options->orderby == 'activity') {
+        if ($then && $options->orderby == 'activity') {
             list($viewdata, $count) = self::filter_views_by_activity($filterbydata, $options);
         }
 
@@ -350,21 +382,20 @@ class PluginBlocktypeWatchlist extends MaharaCoreBlocktype {
     private static function filter_views_by_owner($viewdata, $options) {
         $views = array();
 
-        // sort alphabetically by firstname and lastname
-        function compare_fullname($a, $b) {
-            if (!empty($a['owner']) && !empty($b['owner'])) {
-                // sort by owner last name
-                $retval = strnatcmp(no_accents($a['user']->lastname), no_accents($b['user']->lastname));
-                // if last names are identical, sort by first name
-                if (!$retval) {
-                    $retval = strnatcmp(no_accents($a['user']->firstname), no_accents($b['user']->firstname));
-                    return $retval;
-                }
-            }
-        }
 
         if (count($viewdata) > 1) {
-            usort($viewdata, __NAMESPACE__ . '\compare_fullname');
+            // Sort alphabetically by firstname and lastname by comparing fullname
+            usort($viewdata, function ($a, $b) {
+                if (!empty($a['owner']) && !empty($b['owner'])) {
+                    // sort by owner last name
+                    $retval = strnatcmp(no_accents($a['user']->lastname), no_accents($b['user']->lastname));
+                    // if last names are identical, sort by first name
+                    if (!$retval) {
+                        $retval = strnatcmp(no_accents($a['user']->firstname), no_accents($b['user']->firstname));
+                    }
+                    return $retval;
+                }
+            });
         }
         $count = 0;
         foreach ($viewdata as $v) {

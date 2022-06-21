@@ -19,9 +19,9 @@ Background:
      | Page UserA_01 | Page 01| user | UserA |
 
     And the following "educationhistory" exist:
-    | user  | startdate  | enddate    | institution        | institutionaddress    | qualtype              | qualname                        | qualdescription                                                                                 | attachment |
-    | UserA | 1 Jan 2009 | 2 Dec 2010 | University College | 23a O'Dell Boulevard  | Masters of Philosophy | Machine Learning - Creation 2.1 | This qualification is a 4 to 6 year degree that ends in an alternate (self-contained) universe. | Image2.png |
-    | UserA | 1 Jan 2009 | 2 Dec 2010 | University of Life | 2/103 Industrial Lane | Masters of Arts       | North American Cultural Studies | This qualification is a 4.5-year degree that ends in writing a Master's thesis.                 | Image2.png |
+    | user  | startdate  | enddate    | institution        | displayorder | institutionaddress    | qualtype              | qualname                        | qualdescription                                                                                 | attachment |
+    | UserA | 1 Jan 2009 | 2 Dec 2010 | University of Life |            2 | 2/103 Industrial Lane | Masters of Arts       | North American Cultural Studies | This qualification is a 4.5-year degree that ends in writing a Master's thesis.                 | Image2.png |
+    | UserA | 1 Jan 2009 | 2 Dec 2010 | University College |            1 | 23a O'Dell Boulevard  | Masters of Philosophy | Machine Learning - Creation 2.1 | This qualification is a 4 to 6 year degree that ends in an alternate (self-contained) universe. | Image2.png |
 
     And the following "employmenthistory" exist:
     | user  | startdate  | enddate     | employer    | employeraddress | jobtitle     | attachment | positiondescription |
@@ -43,7 +43,7 @@ Scenario: Creating a Cover letter
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I choose "Résumé" in "Create" from main menu
     And I follow "Introduction"
-    And I click on "Edit"
+    And I press "Edit"
     And I fill in "A whole bunch of Texty text" in first editor
     And I click on "Save"
     Then I should see "Saved successfully"
@@ -71,7 +71,7 @@ Scenario: Editing Education and Employment info
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Editing resume
     When I choose "Résumé" in "Create" from main menu
-    And I follow "Education and employment"
+    And I follow "Education"
     # Adding Education history
     And I click on "Move down" in "North American Cultural Studies" row
     And I wait "1" seconds
@@ -82,8 +82,10 @@ Scenario: Editing Education and Employment info
     | addeducationhistory_startdate | 1 Jan 2017 |
     | addeducationhistory_institution | Mail-order PhD |
     | addeducationhistory_institutionaddress | 45 Empty St |
-    And I click on "addeducationhistory_submit"
+    And I click on "addeducationhistory_submitbtn"
     And I should see "Saved successfully"
+    And I scroll to the top
+    And I follow "Employment"
     # Adding an Employment history
     And I press "Add employment history"
     And I set the following fields to these values:
@@ -94,17 +96,23 @@ Scenario: Editing Education and Employment info
      | addemploymenthistory_jobtitle | Code Ninja |
      | addemploymenthistory_positiondescription | A programmer, computer programmer, developer, dev, coder, or software engineer is a person who creates computer software. The term computer programmer can refer to a specialist in one area of computer programming or to a generalist who writes code for many kinds of software. One who practices or professes a formal approach to programming may also be known as a programmer analyst. |
     And I scroll to the base of id "addemploymenthistory"
-    And I attach the file "Image2.png" to "addemploymenthistory_attachments_files_0"
+    And I click on "Add a file" in the "#addemploymenthistory_filebrowser_open_upload_browse_container" "css_element"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
     # Verifying it saved
-    And I click on "addemploymenthistory_submit"
+    And I click on "addemploymenthistory_submitbtn"
     Then I should see "Saved successfully"
     And I click on "Move down" in "Test Analyst" row
     And I wait "1" seconds
     And I click on "Move up" in "Test Analyst" row
     # delete employment and education history  (Bug 1755669)
+    And I scroll to the top
+    And I follow "Education"
     And I scroll to the base of id "educationhistorylist"
     And I wait "1" seconds
     And I click on "Delete \"North American Cultural Studies (Masters of Arts) at University of Life\"" delete button
+    And I scroll to the top
+    And I follow "Employment"
     And I scroll to the base of id "employmenthistorylist"
     And I wait "1" seconds
     And I click on "Delete \"Code Ninja: Xero\"" delete button
@@ -112,7 +120,7 @@ Scenario: Editing Education and Employment info
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Profile page" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "My entire résumé"
     And I set the field "Block title" to "My entire résumé"
@@ -133,7 +141,7 @@ Scenario: Editing Education and Employment info
     And I scroll to the base of id "bottom-pane"
     Then I should see "Address: 23a O'Dell Boulevard"
     # Test whether a qualification with just start date and title also shows address
-    When I scroll to the base of id "bottom-pane"
+    When I scroll to the id beginning with "educationhistorylist"
     And I follow "Mail-order PhD"
     Then I should see "45 Empty St"
 
@@ -148,9 +156,12 @@ Scenario: Adding Achievements
     | addcertification_title | ISTQB Foundation Agile Tester Extension |
     | addcertification_description | Designed for testers holding the ISTQB® Foundation Certificate, this extension course provides an understanding of the fundamentals of testing in Agile projects. |
     And I scroll to the base of id "addcertification"
-    And I attach the file "Image2.png" to "Attach file"
+    And I click on "Add a file"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
+    And I scroll to the base of id "addcertification_submitbtn_container"
     And I wait "1" seconds
-    And I press "Save"
+    And I click on "Save" in the "#addcertification_submitbtn_container" "css_element"
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Scrum Master Certification" row
@@ -165,8 +176,12 @@ Scenario: Adding Achievements
     | addbook_contribution | asdgfasg |
     | addbook_description | details asdfsda |
     And I scroll to the base of id "addbook"
-    And I attach the file "Image2.png" to "addbook_attachments_files_0"
-    And I click on "addbook_submit"
+    And I click on "Add a file" in the "#addbook_filebrowser_open_upload_browse_container" "css_element"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
+    And I scroll to the base of id "addbook_submitbtn_container"
+    And I wait "1" seconds
+    And I click on "Save" in the "#addbook_submitbtn_container" "css_element"
     And I scroll to the id "main-nav"
     And I wait "1" seconds
     And I should see "Saved successfully"
@@ -183,8 +198,12 @@ Scenario: Adding Achievements
     | addmembership_title | sdrtyh |
     | addmembership_description | sdfh |
     And I scroll to the base of id "addmembership"
-    And I attach the file "Image2.png" to "addmembership_attachments_files_0"
-    And I click on "addmembership_submit"
+    And I click on "Add a file" in the "#addmembership_filebrowser_open_upload_browse_container" "css_element"
+    And I attach the file "Image2.png" to "File"
+    And I close the dialog
+    And I scroll to the base of id "addmembership_submitbtn_container"
+    And I wait "1" seconds
+    And I click on "Save" in the "#addmembership_submitbtn_container" "css_element"
     And I scroll to the id "main-nav"
     And I should see "Saved successfully"
     And I click on "Move down" in "Accredited Technologist" row
@@ -206,7 +225,7 @@ Scenario: Adding Goals and Skills
     And I set the field "Description" to "Become a certified diver"
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -215,7 +234,7 @@ Scenario: Adding Goals and Skills
     | Description | Become tenured professor |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the top
@@ -224,7 +243,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_personalskill"
@@ -233,7 +252,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_academicskill"
@@ -242,7 +261,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
     And I scroll to the base of id "skills_edit_workskill"
@@ -251,7 +270,7 @@ Scenario: Adding Goals and Skills
     | Description | whateve ry askdf |
     And I press "Add a file"
     And I attach the file "Image2.png" to "File"
-    And I press "Close" in the "Upload dialog" property
+    And I press "Close" in the "Upload dialog" "Modal" property
     And I press "Save"
     And I should see "Saved successfully"
 
@@ -267,13 +286,13 @@ Scenario: Adding interests
     And I should see "Saved successfully"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "One résumé field"
     And I select the radio "Interests"
     And I press "Save"
     And I display the page
-    And I should see "clarinet" in the "Resume field block" property
+    And I should see "clarinet" in the "Resume field block" "Blocks" property
 
 Scenario: Adding license info
     Given I log in as "UserA" with password "Kupuh1pa!"
@@ -282,7 +301,7 @@ Scenario: Adding license info
     And I follow "License"
     And I fill in the following:
     | License | http://creativecommons.org/licenses/by/4.0/ |
-    And I follow "Advanced licensing"
+    And I press "Advanced licensing"
     And I fill in the following:
     | Licensor| test1 |
     | Original URL | something here |

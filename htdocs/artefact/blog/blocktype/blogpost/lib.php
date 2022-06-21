@@ -43,6 +43,10 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         return array('blog' => 11000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         $configdata = $instance->get('configdata');
 
@@ -96,7 +100,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         return $artefacts;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -105,6 +109,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         safe_require('artefact', 'blog');
         $configdata = $instance->get('configdata');
 
+        $blog = null;
         if (!empty($configdata['artefactid'])) {
             $blog = $instance->get_artefact_instance($configdata['artefactid']);
         }
@@ -142,7 +147,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
             $elements[] = array(
                 'type' => 'html',
                 'name' => 'notice',
-                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('blogpost', 'artefact.blog')) . '</div>',
+                'value' => '<div class="metadata">' . get_string('blogcopiedfromanotherview', 'artefact.blog', get_string('Blogpost', 'artefact.blog')) . '</div>',
             );
         }
         return $elements;
@@ -152,7 +157,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
         $element = array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('blogpost', 'artefact.blog'),
+            'title' => get_string('Blogpost', 'artefact.blog'),
             'description' => get_string('choosepublishedblogpostsdescription', 'blocktype.blog/blogpost'),
             'defaultvalue' => $default,
             'blocktype' => 'blogpost',
@@ -191,7 +196,7 @@ class PluginBlocktypeBlogpost extends MaharaCoreBlocktype {
                      array('fieldname' => 'ctime', 'order' => 'DESC'));
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'nocopy';
     }
 

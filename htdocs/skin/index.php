@@ -69,8 +69,7 @@ $pagination = build_pagination(array(
     'count' => $data->count,
     'limit' => $limit,
     'offset' => $offset,
-    'resultcounttextsingular' => get_string('skin', 'skin'),
-    'resultcounttextplural' => get_string('skins', 'skin'),
+    'resultcounttext' => get_string('nskins', 'skin', $data->count)
 ));
 
 $smarty = smarty();

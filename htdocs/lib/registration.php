@@ -1,5 +1,9 @@
 <?php
 /**
+ * Provides the registration form for registering a site
+ *
+ * Provides the functionality for registering a Mahara site with the
+ * Mahara Project.
  *
  * @package    mahara
  * @subpackage core
@@ -17,7 +21,11 @@
 defined('INTERNAL') || die();
 
 /**
- * @return string that is the registation form
+ * Builds the register_site form
+ *
+ * Provides a table of site data and option to register site with Mahara Project
+ * @param  bool  $registered  If the site has been registered
+ * @return Pieform The 'registration' form
  * @ingroup Registration
  */
 function register_site($registered = null)  {
@@ -37,7 +45,11 @@ EOF;
     $data = registration_data();
     // Format each line of data to be sent.
     foreach($data as $key => $val) {
-        $info .= '<tr><th>'. hsc($key) . '</th><td>' . hsc($val) . "</td></tr>\n";
+        $keystring = hsc($key);
+        if (string_exists($keystring, 'statistics')) {
+            $keystring = get_string($keystring, 'statistics');
+        }
+        $info .= '<tr><th>'. $keystring . '</th><td>' . hsc($val) . "</td></tr>\n";
     }
     $info .= '</tbody></table>';
 
@@ -81,8 +93,11 @@ EOF;
     );
     return pieform($form);
 }
+
 /**
  * Runs when registration form is submitted
+ * @param  Pieform  $form  Pieform  The'register' pieform
+ * @param  array  $values of submitted data via pieform
  */
 function register_submit(Pieform $form, $values) {
     global $SESSION;
@@ -147,6 +162,7 @@ function register_submit(Pieform $form, $values) {
 
 /**
  * Runs when the 'Weekly updates' switch is changed
+ * @param  array  $values of submitted data via pieform
  */
 
 function update_weeklyupdates($values) {
@@ -192,6 +208,9 @@ function registration_send_data() {
     return mahara_http_request($request);
 }
 
+/**
+ * Save the site registration id to database
+ */
 function registration_store_data() {
     $data = registration_data();
     db_begin();
@@ -299,6 +318,9 @@ function registration_data() {
     return $data_to_send;
 }
 
+/**
+ * Save the registration id per institution to the database
+ */
 function institution_registration_store_data() {
     $data = institution_registration_data();
     db_begin();
@@ -318,6 +340,10 @@ function institution_registration_store_data() {
     db_commit();
 }
 
+/**
+ *  Query the database to return stats on institution members, views, blocks
+ *  and artefacts and forum interactions during a week
+ */
 function institution_registration_data() {
     $data_to_store = array();
     foreach (get_column('institution', 'name') as $institution) {

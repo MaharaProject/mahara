@@ -126,10 +126,10 @@ class PluginModuleAssessmentreport extends PluginModule {
         }
         $subject = get_string('subject', 'module.assessmentreport', $type);
         if ($group) {
-            $message = get_string('message', 'module.assessmentreport', $type, $data['name'], $host, format_date(strtotime("now"), 'strftimedatetimesuffix'));
+            $message = get_string('message1', 'module.assessmentreport', $type, $data['name'], $host, format_date(strtotime("now"), 'strftimedatetimesuffix'));
         }
         else {
-            $message = get_string('messageexternal', 'module.assessmentreport', $type, $data['name'], $host, format_date(strtotime("now"), 'strftimedatetimesuffix'));
+            $message = get_string('messageexternal1', 'module.assessmentreport', $type, $data['name'], $host, format_date(strtotime("now"), 'strftimedatetimesuffix'));
         }
 
         activity_occurred(
@@ -155,6 +155,6 @@ class PluginModuleAssessmentreport extends PluginModule {
      * @return bool|void
      */
     public static function postinst($prevversion) {
-
+        return true;
     }
 }

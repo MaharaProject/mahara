@@ -16,24 +16,24 @@
                 <a href="{$WWWROOT}interaction/{$interaction->plugin}/view.php?id={$interaction->id}">
                     {$interaction->title}
                 </a> [
-                
-                <a href="{$WWWROOT}interaction/edit.php?id={$interaction->id}" class="btn-edit">
+
+                <a href="{$WWWROOT}interaction/edit.php?id={$interaction->id}">
                     {str tag='edit'}
                 </a> |
-                
-                <a href="{$WWWROOT}interaction/delete.php?id={$interaction->id}" class="btn-del">
+
+                <a href="{$WWWROOT}interaction/delete.php?id={$interaction->id}">
                     {str tag='delete'}
                 </a> ]
             </li>
         {/foreach}
-            <li> [ 
+            <li> [
                 <a href="{$WWWROOT}interaction/edit.php?group={$group->id}&plugin={$plugin}">
                     {str tag='addnewinteraction' args=$pluginnames.$plugin.single section='group'}
-                </a> 
+                </a>
                 ]
         </ul>
     {/if}
-{/foreach} 
+{/foreach}
 </ul>
 
 {include file="footer.tpl"}

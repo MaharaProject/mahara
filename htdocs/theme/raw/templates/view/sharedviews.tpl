@@ -12,7 +12,7 @@
                 <th>{str tag=lastcomment section=artefact.comment}</th>
                 {if $completionvisible}
                     <th>{str tag=completionpercentage section=collection} {$completionpercentagehelp|safe}</th>
-                    <th>{str tag=verification section=collection} {$verificationhelp|safe}</th>
+                    <th>{str tag=review section=view} {$verificationhelp|safe}</th>
                 {/if}
                 {if $canremoveownaccess}
                     <th>{str tag=removemyaccess section=collection}</th>

@@ -105,24 +105,23 @@ else if ($restrictedview && is_isolated()) {
 }
 
 $blocksjs = '';
+$viewcontent = '';
 $layoutjs = array();
+$newlayout = false;
 if (!$restrictedview) {
     if ($newlayout = $view->uses_new_layout()) {
-        $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
+        $layoutjs = array('js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js');
         $blocks = $view->get_blocks();
         $blocks = json_encode($blocks);
         $blocksjs = <<<EOF
             $(function () {
                 var options = {
-                    verticalMargin: 5,
+                    margin: 1,
                     cellHeight: 10,
                     disableDrag : true,
                     disableResize: true,
                 };
-                var grid = $('.grid-stack');
-                grid.gridstack(options);
-                grid = $('.grid-stack').data('gridstack');
-
+                var grid = GridStack.init(options);
                 if (grid) {
                     // should add the blocks one by one
                     var blocks = {$blocks};
@@ -343,12 +342,12 @@ $stafflogin =  $stafflogin && !$userobj->is_admin_for_user($USER);
 $stafflogin = $stafflogin && !$userobj->is_institutional_admin();
 //Users can still log into other institutional staffmembers.
 
-if ($userid != $USER->get('id') && ($USER->is_admin_for_user($user) || $stafflogin ) && is_null($USER->get('parentuser'))) {
+$adminforuser = $USER->is_supportadmin_for_user($user);
+if ($userid != $USER->get('id') && $adminforuser && is_null($USER->get('parentuser'))) {
     $loginas = get_string('loginasuser', 'admin', display_username($user));
 } else {
     $loginas = null;
 }
-$canedit = $USER->is_staff_for_user($userobj) ? true : false;
 
 // Set up skin, if the page has one
 $viewskin = $view->get('skin');
@@ -384,7 +383,7 @@ if ($grouprequestedlistform) {
     $smarty->assign('addform',$grouprequestedlistform);
 }
 if ($remoteusermessage) {
-    $smarty->assign('message', $record->message);
+    $smarty->assign('message', $record->message ?? '');
 }
 if ($remoteuseracceptform) {
     $smarty->assign('acceptform', acceptfriend_form($userid, 'modal'));
@@ -393,12 +392,13 @@ if ($remoteusernewfriendform) {
     $smarty->assign('newfriendform', addfriend_form($userid, 'pageactions'));
 }
 if ($remoteuserfriendscontrol) {
-    $smarty->assign('friendscontrol', $friendscontrol);
+    $smarty->assign('friendscontrol', $friendscontrol ?? '');
 }
 if ($remoteuserrelationship) {
     $smarty->assign('relationship', $relationship);
 }
 
+$smarty->assign('adminforuser', $adminforuser);
 $smarty->assign('loginas', $loginas);
 $smarty->assign('canedit', $canedit);
 

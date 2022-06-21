@@ -14,7 +14,7 @@ defined('INTERNAL') || die();
 class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
 
     public static function get_title() {
-        return get_string('title1', 'blocktype.newviews');
+        return get_string('title2', 'blocktype.newviews');
     }
 
     public static function get_description() {
@@ -67,7 +67,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:newviews:newviews.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -120,12 +120,12 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
         return $elements;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
     public static function get_instance_title(BlockInstance $instance) {
-        return get_string('title1', 'blocktype.newviews');
+        return get_string('title2', 'blocktype.newviews');
     }
 
     public static function should_ajaxify() {
@@ -136,7 +136,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

@@ -22,7 +22,7 @@ define('MENUITEM', 'manageinstitutions/institutionusers');
 require_once('institution.php');
 $institutionelement = get_institution_selector(false);
 
-if (empty($institutionelement)) {
+if (!$institutionelement) {
     $smarty = smarty();
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
@@ -32,7 +32,7 @@ $institution = param_alphanum('institution', false);
 if (!$institution || !$USER->can_edit_institution($institution)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
-else if (!empty($institution)) {
+else if ($institution) {
     $institutionelement['defaultvalue'] = $institution;
 }
 

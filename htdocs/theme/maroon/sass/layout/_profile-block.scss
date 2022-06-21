@@ -70,10 +70,10 @@
             color: $state-warning-text;
         }
         a {
-            color: $state-warning-text;
+            color: $state-warning-link;
             &:hover,
             &:focus {
-              text-decoration-color: $state-warning-text;
+              text-decoration-color: $state-warning-link;
             }
         }
     }

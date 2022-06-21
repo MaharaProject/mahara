@@ -24,7 +24,8 @@ $string['xmlextensionnotloaded'] = 'Your server configuration does not include t
 $string['gdextensionnotloaded'] = 'Your server configuration does not include the gd extension. Mahara requires this in order to perform resizes and other operations on uploaded images. Please make sure that it is loaded in php.ini or install it if it is not installed.';
 $string['gdfreetypenotloaded'] = 'Your server configuration of the gd extension does not include Freetype support. Please make sure that gd is configured with it.';
 $string['sessionextensionnotloaded'] = 'Your server configuration does not include the session extension. Mahara requires this in order to support people logging in. Please make sure that it is loaded in php.ini or install it if it is not installed.';
-$string['curllibrarynotinstalled'] = 'Your server configuration does not include the curl extension. Mahara requires this for Moodle integration and to retrieve external feeds. Please make sure that curl is loaded in php.ini or install it if it is not installed.';
+$string['curllibrarynotinstalled'] = 'Your server configuration does not include the cURL extension. Mahara requires this for Moodle integration and to retrieve external feeds. Please make sure that cURL is loaded in php.ini or install it if it is not installed.';
+$string['intlextensionnotloaded'] = 'Your server configuration does not include the intl extension for PHP. Mahara requires this extension to parse information related to language locales.';
 $string['registerglobals'] = 'You have dangerous PHP settings: register_globals is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag register_globals off';
 $string['magicquotesgpc'] = 'You have dangerous PHP settings: magic_quotes_gpc is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
@@ -89,6 +90,7 @@ $string['errorat'] = ' at ';
 $string['unrecoverableerror'] = 'A nonrecoverable error occurred. This probably means that you have encountered a bug in the system.';
 $string['unrecoverableerrortitle'] = '%s - Site unavailable';
 $string['parameterexception'] = 'A required parameter was missing.';
+$string['wrongparamtype'] = 'A function or method has been passed the wrong kind of argument.';
 
 $string['notfound'] = 'Not found';
 $string['notfoundexception'] = 'The page you are looking for could not be found.';
@@ -160,9 +162,10 @@ $string['nomemcacheserversdefined'] = 'The session save handler "%s" has no rela
 $string['memcacheusememcached'] = 'The "memcache" session storage is obsolete. Please use "memcached".';
 $string['siteoutofsyncfor'] = 'This site has database information newer than %s files indicate it should be.';
 $string['updatesitetimezone'] = 'The time zone for the site now needs to be set via "Configure site" →  "Site options" →  "Site settings". Please set it there and delete the $cfg->dbtimezone line from your config.php file.';
-$string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please got to "Administration" →  "Extensions" →  "Plugin administration" to enable it.';
+$string['pluginnotactive1'] = 'The plugin "%s" is not enabled. Please go to "Administration" → "Extensions" → "Plugin administration" to enable it.';
 
-$string['fileuploadtoobig'] = 'The file upload is too big as it is bigger than "%s"';
+$string['fileuploadtoobig'] = 'A file you are trying to upload is bigger than %s, the maximum file size you are allowed to upload.';
+$string['fileuploadtoomany'] = 'You are trying to upload too many files. You can upload up to %s.';
 $string['sideblockmenuclash'] = 'The sideblock name "%s" is already in use. Please choose a different one.';
 $string['isolatedinstitutionsremoverules'] = 'We have hidden %s access rules due to isolated institutions being in effect. The hidden rules will be removed once the form is saved.';
 $string['randomkeyminlength'] = 'Length must be a positive integer equal to or greater than 8';

@@ -42,18 +42,17 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $formid = $form->get_name();
     $prefix = $formid . '_' . $element['name'];
-
     if (!empty($element['tabs'])) {
         $tabdata = pieform_element_filebrowser_configure_tabs($element, $prefix);
         $smarty->assign('tabs', $tabdata);
-        if (!$group && $tabdata['owner'] == 'group') {
+        if (!$group && !empty($tabdata) && $tabdata['owner'] == 'group') {
             $group = $tabdata['ownerid'];
         }
         else if (!$institution) {
-            if ($tabdata['owner'] == 'institution') {
+            if (!empty($tabdata) && $tabdata['owner'] == 'institution') {
                 $institution = $tabdata['ownerid'];
             }
-            else if ($tabdata['owner'] == 'site') {
+            else if (!empty($tabdata) && $tabdata['owner'] == 'site') {
                 $institution = 'mahara';
             }
         }
@@ -71,16 +70,20 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $folder = null;
     }
     $path = pieform_element_filebrowser_get_path($folder);
+    $phpmaxuploadlimit = (integer)ini_get('max_file_uploads');
     $smarty->assign('folder', $folder);
     $smarty->assign('foldername', $path[0]->title);
     $smarty->assign('path', array_reverse($path));
     $smarty->assign('highlight', !empty($element['highlight'][0]) ? $element['highlight'][0] : -1);
     $smarty->assign('edit', !empty($element['edit']) ? $element['edit'] : -1);
+    $smarty->assign('maxfileuploadstext', get_string('maxfileuploads', 'artefact.file', $phpmaxuploadlimit ));
+
     if (isset($element['browse'])) {
         $smarty->assign('browse', (int) $element['browse']);
     }
 
     $config = array_map('intval', $element['config']);
+    $selectedliststr = '';
 
     if ($group && $config['edit']) {
         $smarty->assign('groupinfo', pieform_element_filebrowser_get_groupinfo($group));
@@ -143,6 +146,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         $maxuploadsize = display_size(get_max_upload_size(!$institution && !$group));
         $smarty->assign('maxuploadsize', $maxuploadsize);
         $smarty->assign('phpmaxfilesize', get_max_upload_size(false));
+        $config['maxfileuploads'] = $phpmaxuploadlimit;
         if ($group) {
             $smarty->assign('uploaddisabled', !pieform_element_filebrowser_edit_group_folder($group, $folder));
         }
@@ -197,7 +201,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
     $_PIEFORM_FILEBROWSERS[$prefix]['views_js'] = $initjs;
 
     $initjs .= "jQuery({$prefix}.init);";
-    if ($form->is_submitted() && $form->has_errors()) {
+    if ($form->is_submitted()) {
         // need to reapply bootstrap file browser stuff
         $initjs .= "jQuery('.js-filebrowser').each(function() {";
         $initjs .= "  if (jQuery(this).find('.modal-filebrowser').length == 0) {";
@@ -219,23 +223,6 @@ function pieform_element_filebrowser(Pieform $form, $element) {
 
     $smarty->assign('folderparams', $params);
 
-
-    // Add mobile media-capture form tags when users are on mobile or tablet
-    if ($SESSION->get('mobile') || $SESSION->get('tablet')) {
-        $supportedmediatypes = array('image/*');
-        if (isset($element['accept'])) {
-            $accepted = explode(',', $element['accept']);
-            foreach ($accepted as $type) {
-                if (in_array($type, $supportedmediatypes)) {
-                    switch ($type) {
-                        case 'image/*':
-                            $smarty->assign('capturedevice', true);
-                            break;
-                    }
-                }
-            }
-        }
-    }
     $colspan = 4;
     if (!$config['showtags'] && !$config['editmeta']) {
         $colspan++;
@@ -941,9 +928,13 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
         $groups = group_get_user_groups($USER->get('id'));
         $ownerid = $groups[0]->id;
     }
-    $parentfolder     = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
-    $institution      = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
-    $group            = !empty($element['group']) ? $element['group'] : $form->get_property('group');
+    $parentfolder = $data['uploadfolder'] ? (int) $data['uploadfolder'] : null;
+    $institution = !empty($element['institution']) ? $element['institution'] : $form->get_property('institution');
+    $group       = !empty($element['group']) ? $element['group'] : $form->get_property('group');
+    $license     = '';
+    $licensor    = '';
+    $licensorurl = '';
+
     // If allowed upload form on group tab + user tab
     $uploadplaces = !empty($element['config']['uploadplaces']) ? $element['config']['uploadplaces'] : array();
     if (empty($group) && $owner == 'group' && !empty($ownerid) && in_array('group', $uploadplaces)) {
@@ -1028,7 +1019,7 @@ function pieform_element_filebrowser_upload(Pieform $form, $element, $data) {
     else {
         $originalname = $_FILES['userfile']['name'];
     }
-    $originalname = $originalname ? basename($originalname) : get_string('file', 'artefact.file');
+    $originalname = $originalname ? basename($originalname) : get_string('File', 'artefact.file');
     $data->title = ArtefactTypeFileBase::get_new_file_title($originalname, $parentfolder, $data->owner, $group, $institution);
 
     // Overwrite image file with resized version if required
@@ -1663,7 +1654,7 @@ function pieform_element_filebrowser_get_headdata($element) {
     if ($element['config']['upload']) {
         // only add dropzone if filebrowser is allowed to upload
         $headdata[] = '<script>var upload_max_filesize = ' . get_real_size(ini_get('upload_max_filesize')) . '</script>';
-        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/min/dropzone.min.js?v=' . $cacheversion . '"></script>';
+        $headdata[] = '<script src="' . get_config('wwwroot') . 'js/dropzone/dropzone.min.js?v=' . $cacheversion . '"></script>';
         $headdata[] = '<script src="' . get_config('wwwroot') . 'artefact/file/js/filedropzone.js?v=' . $cacheversion . '"></script>';
     }
     if ($element['config']['edit']) {

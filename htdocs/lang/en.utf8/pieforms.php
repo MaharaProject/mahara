@@ -57,12 +57,11 @@ $string['element.expiry.years.lowercase'] = array(
     1 => '%s years'
 );
 
-$string['element.expiry.days'] = 'Days';
-$string['element.expiry.weeks'] = 'Weeks';
-$string['element.expiry.months'] = 'Months';
-$string['element.expiry.years'] = 'Years';
-$string['element.expiry.noenddate'] = 'No end date';
-$string['element.expiry.noenddate.lowercase'] = 'no end date';
+$string['element.expiry.days'] = 'days';
+$string['element.expiry.weeks'] = 'weeks';
+$string['element.expiry.months'] = 'months';
+$string['element.expiry.years'] = 'years';
+$string['element.expiry.noenddate'] = 'no end date';
 
 $string['element.files.addattachment'] = 'Add attachment';
 
@@ -81,7 +80,7 @@ $string['rule.before.before'] = 'This cannot be after the field "%s"';
 $string['rule.email.email'] = 'Email address is invalid';
 
 $string['rule.integer.integer'] = 'The field must be an integer';
-
+$string['rule.float.float'] = 'This field only accepts decimal number values';
 $string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long. Please revise it or try splitting this over multiple instances.';
 
 $string['rule.minlength.minlength'] = 'This field must be at least %d characters long.';

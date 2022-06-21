@@ -18,10 +18,11 @@ class HtmlExportBlog extends HtmlExportArtefactPlugin {
 
     public function pagination_data($artefact) {
         if ($artefact instanceof ArtefactTypeBlog) {
+            $count = $artefact->count_published_posts();
             return array(
                 'perpage'    => ArtefactTypeBlog::pagination,
-                'childcount' => $artefact->count_published_posts(),
-                'plural'     => get_string('blogs', 'artefact.blog'),
+                'childcount' => $count,
+                'plural'     => get_string('nblogs', 'artefact.blog', $count),
             );
         }
     }

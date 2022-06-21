@@ -33,9 +33,19 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 8000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'htmllite' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
+        }
+        else {
+            $filedir = 'export_info/';
+            if ($exporting == 'pdf') {
+                $filedir .= 'files/';
+            }
         }
         // The exporting for PDF
         require_once(get_config('docroot') . 'lib/view.php');
@@ -55,11 +65,11 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             if ($description) {
                 $html .= '<div class="card-body">' . $description . '</div>';
             }
-            $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+            $html .= '<div class="text-midtone text-small">' . get_string('notrendertopdf', 'artefact.file');
             $html .= '<br>' . get_string('notrendertopdffiles', 'artefact.file', 1);
             // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
             // We then override the link in the PDF pdf_view_export_data() function.
-            $html .= '<a href="' . $url . '">export_info/files/' . $artefact->get('id') . '_' . $artefact->get('title') . '</a>';
+            $html .= '<a href="' . $url . '">' . $filedir . $artefact->get('id') . '_' . $artefact->get('title') . '</a>';
             $html .= '</div>';
         }
         return $html;
@@ -73,7 +83,10 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         $view = new View($configdata['viewid']);
         $group = $view->get('group');
 
+        $blockid = ($instance->get('id'));
+
         $result = '';
+        $commentcount = 0;
         $artefactid = isset($configdata['artefactid']) ? $configdata['artefactid'] : null;
         if ($artefactid) {
             $artefact = $instance->get_artefact_instance($configdata['artefactid']);
@@ -109,9 +122,22 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             else if ($language == 'en') {
                 $language = 'en-GB';
             }
-            $result = '<iframe allowfullscreen src="' . $urlbase . 'artefact/file/blocktype/pdf/viewer.php?editing=' . $editing . '&ingroup=' . !empty($group) . '&file=' . $artefactid . '&lang=' . $language . '&view=' . $instance->get('view')
-                 . ($versioning ? '&versioning=true' : '')
-                 . '" class="pdfiframe"></iframe>';
+
+            $viewid = $instance->get('view');
+            $file = artefact_instance_from_id($artefactid);
+            if (!($file instanceof ArtefactTypeFile)) {
+                throw new NotFoundException();
+            }
+            $url = $urlbase . 'artefact/file/download.php?file=' . $artefactid . '&view=' . $viewid . '&title=' . urlencode($file->get('title'));
+            $src = $urlbase . 'artefact/file/blocktype/pdf/viewer.php?';
+            $src .= 'editing=' . $editing;
+            $src .= '&ingroup=' . !empty($group);
+            $src .= '&artefactid=' . $artefactid;
+            $src .= '&lang=' . $language;
+            $src .= '&view=' . $viewid;
+            $src .= ($versioning ? '&versioning=true' : '');
+
+            $result = '<iframe allow="fullscreen" src="' . $src .'" class="pdfiframe"></iframe>';
 
             require_once(get_config('docroot') . 'artefact/comment/lib.php');
             require_once(get_config('docroot') . 'lib/view.php');
@@ -129,12 +155,13 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             }
         }
         $smarty->assign('html', $result);
+        $smarty->assign('blockid', $blockid);
         $smarty->assign('editing', $editing);
         $smarty->assign('blockid', $instance->get('id'));
         return $smarty->fetch('blocktype:pdf:pdfrender.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -148,7 +175,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
                 'type'         => 'fieldset',
                 'collapsible'  => true,
                 'collapsed'    => true,
-                'legend'       => get_string('file', 'artefact.file'),
+                'legend'       => get_string('File', 'artefact.file'),
                 'class'        => 'last select-file with-formgroup',
                 'elements'     => array(
                     'pdfwarning' => array(
@@ -172,7 +199,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
 
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
-        $element['title'] = get_string('file', 'artefact.file');
+        $element['title'] = get_string('File', 'artefact.file');
         $element['name'] = 'artefactid';
         $element['accept'] = 'application/pdf';
         $element['config']['selectone'] = true;
@@ -188,7 +215,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         return array(
             'name'  => 'artefactid',
             'type'  => 'artefactchooser',
-            'title' => get_string('file', 'artefact.file'),
+            'title' => get_string('File', 'artefact.file'),
             'defaultvalue' => $default,
             'blocktype' => 'html',
             'limit' => 10,
@@ -197,7 +224,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
         );
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 

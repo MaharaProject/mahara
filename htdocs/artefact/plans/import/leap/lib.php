@@ -48,16 +48,16 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         if ($strategy != self::STRATEGY_IMPORT_AS_PLAN) {
             throw new ImportException($importer, 'TODO: get_string: unknown strategy chosen for importing entry');
         }
-        self::add_import_entry_request_plan($entry, $importer);
+        return self::add_import_entry_request_plan($entry, $importer);
     }
 
-/**
- * Import from entry requests for Mahara plans and their tasks
- *
- * @param PluginImportLeap $importer
- * @return updated DB
- * @throw    ImportException
- */
+    /**
+     * Import from entry requests for Mahara plans and their tasks
+     *
+     * @param PluginImportLeap $importer
+     * @return void
+     * @throw    ImportException
+     */
     public static function import_from_requests(PluginImportLeap $importer) {
         $importid = $importer->get('importertransport')->get('importid');
         if ($entry_requests = get_records_select_array('import_entry_requests', 'importid = ? AND plugin = ? AND entrytype = ?', array($importid, 'plans', 'plan'))) {
@@ -149,14 +149,15 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
         else {
             $type = 'plan';
         }
-
+        $authorname = $author = null;
         if (isset($entry->author->name) && strlen($entry->author->name)) {
             $authorname = $entry->author->name;
         }
         else {
             $author = $importer->get('usr');
         }
-
+        $completiondate = null;
+        $completed = null;
         // Set completiondate and completed status if we can find them
         if ($type === 'task') {
 
@@ -183,12 +184,12 @@ class LeapImportPlans extends LeapImportArtefactPlugin {
             'content' => array(
                 'title'       => (string)$entry->title,
                 'description' => PluginImportLeap::get_entry_content($entry, $importer),
-                'authorname'  => isset($authorname) ? $authorname : null,
+                'authorname'  => $authorname,
                 'author'      => isset($author) ? $author : null,
                 'ctime'       => (string)$entry->published,
                 'mtime'       => (string)$entry->updated,
-                'completiondate' => ($type === 'task') ? $completiondate : null,
-                'completed'   => ($type === 'task') ? $completed : null,
+                'completiondate' => $completiondate,
+                'completed'   => $completed,
                 'tags'        => PluginImportLeap::get_entry_tags($entry),
             ),
         ));

@@ -4,20 +4,40 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.0.13 (2019-08-06)
+ * Version: 5.10.2 (2021-11-17)
  */
 (function () {
     'use strict';
 
-    var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
+    var global$4 = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
-    var global$1 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
+    var typeOf = function (x) {
+      var t = typeof x;
+      if (x === null) {
+        return 'null';
+      } else if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
+        return 'array';
+      } else if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
+        return 'string';
+      } else {
+        return t;
+      }
+    };
+    var isType = function (type) {
+      return function (value) {
+        return typeOf(value) === type;
+      };
+    };
+    var isString = isType('string');
+    var isArray = isType('array');
+
+    var global$3 = tinymce.util.Tools.resolve('tinymce.dom.DOMUtils');
 
     var global$2 = tinymce.util.Tools.resolve('tinymce.EditorManager');
 
-    var global$3 = tinymce.util.Tools.resolve('tinymce.Env');
+    var global$1 = tinymce.util.Tools.resolve('tinymce.Env');
 
-    var global$4 = tinymce.util.Tools.resolve('tinymce.util.Tools');
+    var global = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     var shouldMergeClasses = function (editor) {
       return editor.getParam('importcss_merge_classes');
@@ -40,132 +60,36 @@
     var getFileFilter = function (editor) {
       return editor.getParam('importcss_file_filter');
     };
-    var Settings = {
-      shouldMergeClasses: shouldMergeClasses,
-      shouldImportExclusive: shouldImportExclusive,
-      getSelectorConverter: getSelectorConverter,
-      getSelectorFilter: getSelectorFilter,
-      getCssGroups: getCssGroups,
-      shouldAppend: shouldAppend,
-      getFileFilter: getFileFilter
+    var getSkin = function (editor) {
+      var skin = editor.getParam('skin');
+      return skin !== false ? skin || 'oxide' : false;
+    };
+    var getSkinUrl = function (editor) {
+      return editor.getParam('skin_url');
     };
 
-    var constant = function (value) {
-      return function () {
-        return value;
-      };
-    };
-    var never = constant(false);
-    var always = constant(true);
-
-    var never$1 = never;
-    var always$1 = always;
-    var none = function () {
-      return NONE;
-    };
-    var NONE = function () {
-      var eq = function (o) {
-        return o.isNone();
-      };
-      var call = function (thunk) {
-        return thunk();
-      };
-      var id = function (n) {
-        return n;
-      };
-      var noop = function () {
-      };
-      var nul = function () {
-        return null;
-      };
-      var undef = function () {
-        return undefined;
-      };
-      var me = {
-        fold: function (n, s) {
-          return n();
-        },
-        is: never$1,
-        isSome: never$1,
-        isNone: always$1,
-        getOr: id,
-        getOrThunk: call,
-        getOrDie: function (msg) {
-          throw new Error(msg || 'error: getOrDie called on none.');
-        },
-        getOrNull: nul,
-        getOrUndefined: undef,
-        or: id,
-        orThunk: call,
-        map: none,
-        ap: none,
-        each: noop,
-        bind: none,
-        flatten: none,
-        exists: never$1,
-        forall: always$1,
-        filter: none,
-        equals: eq,
-        equals_: eq,
-        toArray: function () {
-          return [];
-        },
-        toString: constant('none()')
-      };
-      if (Object.freeze) {
-        Object.freeze(me);
-      }
-      return me;
-    }();
-
-    var typeOf = function (x) {
-      if (x === null) {
-        return 'null';
-      }
-      var t = typeof x;
-      if (t === 'object' && (Array.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'Array')) {
-        return 'array';
-      }
-      if (t === 'object' && (String.prototype.isPrototypeOf(x) || x.constructor && x.constructor.name === 'String')) {
-        return 'string';
-      }
-      return t;
-    };
-    var isType = function (type) {
-      return function (value) {
-        return typeOf(value) === type;
-      };
-    };
-    var isArray = isType('array');
-    var isFunction = isType('function');
-
-    var slice = Array.prototype.slice;
+    var nativePush = Array.prototype.push;
     var map = function (xs, f) {
       var len = xs.length;
       var r = new Array(len);
       for (var i = 0; i < len; i++) {
         var x = xs[i];
-        r[i] = f(x, i, xs);
+        r[i] = f(x, i);
       }
       return r;
     };
-    var push = Array.prototype.push;
     var flatten = function (xs) {
       var r = [];
       for (var i = 0, len = xs.length; i < len; ++i) {
         if (!isArray(xs[i])) {
           throw new Error('Arr.flatten item ' + i + ' was not an array, input: ' + xs);
         }
-        push.apply(r, xs[i]);
+        nativePush.apply(r, xs[i]);
       }
       return r;
     };
     var bind = function (xs, f) {
-      var output = map(xs, f);
-      return flatten(output);
-    };
-    var from = isFunction(Array.from) ? Array.from : function (x) {
-      return slice.call(x);
+      return flatten(map(xs, f));
     };
 
     var generate = function () {
@@ -200,24 +124,26 @@
       };
     };
 
+    var internalEditorStyle = /^\.(?:ephox|tiny-pageembed|mce)(?:[.-]+\w+)+$/;
     var removeCacheSuffix = function (url) {
-      var cacheSuffix = global$3.cacheSuffix;
-      if (typeof url === 'string') {
+      var cacheSuffix = global$1.cacheSuffix;
+      if (isString(url)) {
         url = url.replace('?' + cacheSuffix, '').replace('&' + cacheSuffix, '');
       }
       return url;
     };
     var isSkinContentCss = function (editor, href) {
-      var settings = editor.settings, skin = settings.skin !== false ? settings.skin || 'oxide' : false;
+      var skin = getSkin(editor);
       if (skin) {
-        var skinUrl = settings.skin_url ? editor.documentBaseURI.toAbsolute(settings.skin_url) : global$2.baseURL + '/skins/ui/' + skin;
+        var skinUrlBase = getSkinUrl(editor);
+        var skinUrl = skinUrlBase ? editor.documentBaseURI.toAbsolute(skinUrlBase) : global$2.baseURL + '/skins/ui/' + skin;
         var contentSkinUrlPart = global$2.baseURL + '/skins/content/';
         return href === skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css' || href.indexOf(contentSkinUrlPart) !== -1;
       }
       return false;
     };
     var compileFilter = function (filter) {
-      if (typeof filter === 'string') {
+      if (isString(filter)) {
         return function (value) {
           return value.indexOf(filter) !== -1;
         };
@@ -228,32 +154,39 @@
       }
       return filter;
     };
+    var isCssImportRule = function (rule) {
+      return rule.styleSheet;
+    };
+    var isCssPageRule = function (rule) {
+      return rule.selectorText;
+    };
     var getSelectors = function (editor, doc, fileFilter) {
-      var selectors = [], contentCSSUrls = {};
-      function append(styleSheet, imported) {
+      var selectors = [];
+      var contentCSSUrls = {};
+      var append = function (styleSheet, imported) {
         var href = styleSheet.href, rules;
         href = removeCacheSuffix(href);
         if (!href || !fileFilter(href, imported) || isSkinContentCss(editor, href)) {
           return;
         }
-        global$4.each(styleSheet.imports, function (styleSheet) {
+        global.each(styleSheet.imports, function (styleSheet) {
           append(styleSheet, true);
         });
         try {
           rules = styleSheet.cssRules || styleSheet.rules;
         } catch (e) {
         }
-        global$4.each(rules, function (cssRule) {
-          if (cssRule.styleSheet) {
+        global.each(rules, function (cssRule) {
+          if (isCssImportRule(cssRule)) {
             append(cssRule.styleSheet, true);
-          } else if (cssRule.selectorText) {
-            global$4.each(cssRule.selectorText.split(','), function (selector) {
-              selectors.push(global$4.trim(selector));
+          } else if (isCssPageRule(cssRule)) {
+            global.each(cssRule.selectorText.split(','), function (selector) {
+              selectors.push(global.trim(selector));
             });
           }
         });
-      }
-      global$4.each(editor.contentCSS, function (url) {
+      };
+      global.each(editor.contentCSS, function (url) {
         contentCSSUrls[url] = true;
       });
       if (!fileFilter) {
@@ -262,7 +195,7 @@
         };
       }
       try {
-        global$4.each(doc.styleSheets, function (styleSheet) {
+        global.each(doc.styleSheets, function (styleSheet) {
           append(styleSheet);
         });
       } catch (e) {
@@ -277,7 +210,7 @@
       }
       var elementName = selector[1];
       var classes = selector[2].substr(1).split('.').join(' ');
-      var inlineSelectorElements = global$4.makeMap('a,img');
+      var inlineSelectorElements = global.makeMap('a,img');
       if (selector[1]) {
         format = { title: selectorText };
         if (editor.schema.getTextBlockElements()[elementName]) {
@@ -294,7 +227,7 @@
           classes: classes
         };
       }
-      if (Settings.shouldMergeClasses(editor) !== false) {
+      if (shouldMergeClasses(editor) !== false) {
         format.classes = classes;
       } else {
         format.attributes = { class: classes };
@@ -302,25 +235,21 @@
       return format;
     };
     var getGroupsBySelector = function (groups, selector) {
-      return global$4.grep(groups, function (group) {
+      return global.grep(groups, function (group) {
         return !group.filter || group.filter(selector);
       });
     };
     var compileUserDefinedGroups = function (groups) {
-      return global$4.map(groups, function (group) {
-        return global$4.extend({}, group, {
+      return global.map(groups, function (group) {
+        return global.extend({}, group, {
           original: group,
           selectors: {},
-          filter: compileFilter(group.filter),
-          item: {
-            text: group.title,
-            menu: []
-          }
+          filter: compileFilter(group.filter)
         });
       });
     };
     var isExclusiveMode = function (editor, group) {
-      return group === null || Settings.shouldImportExclusive(editor) !== false;
+      return group === null || shouldImportExclusive(editor) !== false;
     };
     var isUniqueSelector = function (editor, selector, group, globallyUniqueSelectors) {
       return !(isExclusiveMode(editor, group) ? selector in globallyUniqueSelectors : selector in group.selectors);
@@ -336,8 +265,8 @@
       var selectorConverter;
       if (group && group.selector_converter) {
         selectorConverter = group.selector_converter;
-      } else if (Settings.getSelectorConverter(editor)) {
-        selectorConverter = Settings.getSelectorConverter(editor);
+      } else if (getSelectorConverter(editor)) {
+        selectorConverter = getSelectorConverter(editor);
       } else {
         selectorConverter = function () {
           return defaultConvertSelectorToFormat(editor, selector);
@@ -346,32 +275,32 @@
       return selectorConverter.call(plugin, selector, group);
     };
     var setup = function (editor) {
-      editor.on('init', function (e) {
+      editor.on('init', function () {
         var model = generate();
         var globallyUniqueSelectors = {};
-        var selectorFilter = compileFilter(Settings.getSelectorFilter(editor));
-        var groups = compileUserDefinedGroups(Settings.getCssGroups(editor));
+        var selectorFilter = compileFilter(getSelectorFilter(editor));
+        var groups = compileUserDefinedGroups(getCssGroups(editor));
         var processSelector = function (selector, group) {
           if (isUniqueSelector(editor, selector, group, globallyUniqueSelectors)) {
             markUniqueSelector(editor, selector, group, globallyUniqueSelectors);
             var format = convertSelectorToFormat(editor, editor.plugins.importcss, selector, group);
             if (format) {
-              var formatName = format.name || global$1.DOM.uniqueId();
+              var formatName = format.name || global$3.DOM.uniqueId();
               editor.formatter.register(formatName, format);
-              return global$4.extend({}, {
+              return {
                 title: format.title,
                 format: formatName
-              });
+              };
             }
           }
           return null;
         };
-        global$4.each(getSelectors(editor, editor.getDoc(), compileFilter(Settings.getFileFilter(editor))), function (selector) {
-          if (selector.indexOf('.mce-') === -1) {
+        global.each(getSelectors(editor, editor.getDoc(), compileFilter(getFileFilter(editor))), function (selector) {
+          if (!internalEditorStyle.test(selector)) {
             if (!selectorFilter || selectorFilter(selector)) {
               var selectorGroups = getGroupsBySelector(groups, selector);
               if (selectorGroups.length > 0) {
-                global$4.each(selectorGroups, function (group) {
+                global.each(selectorGroups, function (group) {
                   var menuItem = processSelector(selector, group);
                   if (menuItem) {
                     model.addItemToGroup(group.title, menuItem);
@@ -389,27 +318,22 @@
         var items = model.toFormats();
         editor.fire('addStyleModifications', {
           items: items,
-          replace: !Settings.shouldAppend(editor)
+          replace: !shouldAppend(editor)
         });
       });
-    };
-    var ImportCss = {
-      defaultConvertSelectorToFormat: defaultConvertSelectorToFormat,
-      setup: setup
     };
 
     var get = function (editor) {
       var convertSelectorToFormat = function (selectorText) {
-        return ImportCss.defaultConvertSelectorToFormat(editor, selectorText);
+        return defaultConvertSelectorToFormat(editor, selectorText);
       };
       return { convertSelectorToFormat: convertSelectorToFormat };
     };
-    var Api = { get: get };
 
     function Plugin () {
-      global.add('importcss', function (editor) {
-        ImportCss.setup(editor);
-        return Api.get(editor);
+      global$4.add('importcss', function (editor) {
+        setup(editor);
+        return get(editor);
       });
     }
 

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Base Blocktype class.
  *
  * @package    mahara
  * @subpackage blocktype
@@ -16,8 +17,14 @@ defined('INTERNAL') || die();
  * Helper interface to hold IPluginBlocktype's abstract static methods
  */
 interface IPluginBlocktype {
+    /**
+     * Retrieves the title of the block
+     */
     public static function get_title();
 
+    /**
+     * Retrieves the description of the block
+     */
     public static function get_description();
 
     /**
@@ -49,7 +56,23 @@ interface IPluginBlocktype {
      */
     public static function get_categories();
 
+    /**
+     * Render the block for displaying on display page or edit page
+     *
+     * @param BlockInstance $instance
+     * @param boolean $editing  Whether in edit mode
+     * @param boolean $versioning Whether in versioning mode
+     */
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false);
+
+    /**
+     * Render the block for export
+     *
+     * @param BlockInstance $instance
+     * @param boolean $editing    Whether in edit mode
+     * @param boolean $versioning Whether in versioning mode
+     * @param string  $exporting  Type of export being done, eg 'pdf' for PDF export
+     */
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null);
 }
 
@@ -73,15 +96,23 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
     const BLOCKTYPE_LIST_ICON_PNG = 0;
     const BLOCKTYPE_LIST_ICON_FONTAWESOME = 1;
 
+    /**
+     * Return the type of Plugin.
+     *
+     * @return string
+     *   The type of plugin this provides.
+     */
     public static function get_plugintype_name() {
         return 'blocktype';
     }
 
     /**
-     * Optionally specify a place for a block to link to. This will be rendered in the block header
-     * in templates
-     * @var BlockInstance
-     * @return String or false
+     * Optionally specify a place for a block to link to.
+     *
+     * This will be rendered in the block header in templates.
+     *
+     * @param BlockInstance $instance
+     * @return string|false
      */
     public static function get_link(BlockInstance $instance) {
         return false;
@@ -94,6 +125,21 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
         return true;
     }
 
+    /**
+     * Return a BlockInstance for exporting.
+     *
+     * @param BlockInstance $instance
+     *   The block we are working with.
+     * @param bool $editing
+     *   Is this block being edited?
+     * @param mixed $versioning
+     *   Does this block support versioning?
+     * @param mixed $exporting
+     *   Is the content being displayed or exported?
+     *
+     * @return mixed
+     *   The block prepared for exporting.
+     */
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
         return static::render_instance($instance, $editing, $versioning);
     }
@@ -102,7 +148,7 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
      * To define a pluginwide configuration
      */
     public static function get_base_config_options() {
-        $type = array();
+        $types = array();
         $blocks = get_records_sql_array("SELECT b.name, b.artefactplugin, bc.sortorder,
                                    (SELECT COUNT(*) FROM {block_instance} bi WHERE bi.blocktype = b.name) AS blockcount
                                   FROM {blocktype_installed} b
@@ -212,6 +258,15 @@ EOF;
         return $js;
     }
 
+    /**
+     * Return the theme path for this plugin's blocktype.
+     *
+     * @param string $pluginname
+     *   The internal plugin name.
+     *
+     * @return string
+     *   The path.
+     */
     public static function get_theme_path($pluginname) {
         if (($artefactname = blocktype_artefactplugin($pluginname))) {
             // Path for block plugins that sit under an artefact
@@ -260,10 +315,31 @@ EOF;
         return false;
     }
 
+    /**
+     * Return the class name for the block icon.
+     *
+     * This will typically be a Font Awesome classname.
+     *
+     * @param string $blocktypename
+     *
+     * @return string
+     *   The CSS class for the icon for this blocktype.
+     */
     public static function get_css_icon_type($blocktypename) {
         return '';
     }
 
+    /**
+     * Return the XML for blocktypes.
+     *
+     * Replaces placeholders with values for the blocktype.
+     *
+     * @param string $xml
+     *   The XML being worked on.
+     *
+     * @return string
+     *   The XML with substitutions made.
+     */
     public static function extra_xmldb_substitution($xml) {
         return str_replace(
         '<!-- PLUGINTYPE_INSTALLED_EXTRAFIELDS -->',
@@ -278,28 +354,46 @@ EOF;
     }
 
     /**
-     * override this to return true if the blocktype
-     * can only reasonably be placed once in a view
-    */
+     * Should there only ever be one block on a given View?
+     *
+     * Override this to return true if the blocktype can only reasonably be
+     * placed once in a view.
+     *
+     * @return bool
+     *   True if only one block should appear.
+     */
     public static function single_only() {
         return false;
     }
 
     /**
-     * override this to return true if the blocktype
-     * can only contain one artefact per block.
-     * example: Journal block can have multiple artefact so return false.
-     * example: Image block has one image per block so return true.
-    */
+     * Should the blocktype only contain one artefact per block?
+     *
+     * examples:
+     *   The Journal block can have multiple artefacts so return false.
+     *   The Image block has one image per block so return true.
+     *
+     * @return bool
+     *   Return true if the Block should only contain one artefact.
+     */
     public static function single_artefact_per_block() {
         return false;
     }
 
-
+    /**
+     * Display the cofiguration details about a block within a popup modal
+     *
+     * @param BlockInstance $instance
+     */
     public static function shows_details_in_modal(BlockInstance $instance) {
         return false;
     }
 
+    /**
+     * Display the details about a block within a popup modal based on artefactids in block instance configdata
+     *
+     * @param BlockInstance $instance
+     */
     public static function render_details_in_modal(BlockInstance $instance) {
         return false;
     }
@@ -326,6 +420,7 @@ EOF;
      * Allows block types to override the instance's title.
      *
      * For example: My Views, My Groups, My Friends, Wall
+     * @param BlockInstance $instance
      */
     public static function override_instance_title(BlockInstance $instance) {
         return false;
@@ -333,11 +428,17 @@ EOF;
 
     /**
      * Allow title field to be required on block configuration form.
+     * @param BlockInstance $instance
      */
     public static function title_mandatory(BlockInstance $instance) {
         return false;
     }
 
+    /**
+     * Fetch all the view types
+     *
+     * @return array $viewtypes
+     */
     public static function get_viewtypes() {
         static $viewtypes = null;
 
@@ -352,58 +453,71 @@ EOF;
     }
 
     /**
-    * This function must be implemented in the subclass if it requires
-    * javascript. It returns an array of javascript files, either local
-    * or remote.
-    */
+     * This function must be implemented in the subclass if it requires
+     * javascript. It returns an array of javascript files, either local
+     * or remote.
+     *
+     * @param BlockInstance $instance
+     */
     public static function get_instance_javascript(BlockInstance $instance) {
         return array();
     }
 
-   /**
-    * This function must be implemented in the subclass if it requires
-    * toolbar options for the view. It returns an array of button <a> tags and/or
-    * html to display in the toobar area.
-    */
+    /**
+     * This function must be implemented in the subclass if it requires
+     * toolbar options for the view. It returns an array of button <a> tags and/or
+     * html to display in the toobar area.
+     *
+     * @param BlockInstance $instance
+     */
     public static function get_instance_toolbars(BlockInstance $instance) {
         return array();
     }
 
     /**
-    * This function must be implemented in the subclass if it requires
-    * css file outside of sass compiled css. It returns an array of css files, either local
-    * or remote.
-    */
+     * This function must be implemented in the subclass if it requires
+     * css file outside of sass compiled css. It returns an array of css files, either local
+     * or remote.
+     *
+     * @param BlockInstance $instance
+     */
     public static function get_instance_css(BlockInstance $instance) {
         return array();
     }
 
     /**
      * Inline js to be executed when a block is rendered.
+     *
+     * @param BlockInstance $instance
      */
     public static function get_instance_inline_javascript(BlockInstance $instance) {
     }
 
     /**
-    * subclasses can override this if they need to do something a bit special
-    * eg more than just what the BlockInstance->delete function does.
-    *
-    * @param BlockInstance $instance
-    */
+     * subclasses can override this if they need to do something a bit special
+     * eg more than just what the BlockInstance->delete function does.
+     *
+     * @param BlockInstance $instance
+     */
     public static function delete_instance(BlockInstance $instance) { }
 
     /**
-    * This function must be implemented in the subclass if it has config
-    */
+     * This function must be implemented in the subclass if it has config
+     *
+     * @param BlockInstance $instance
+     */
     public static function instance_config_form(BlockInstance $instance) {
         throw new SystemException(get_string('blocktypemissingconfigform', 'error', $instance->get('blocktype')));
     }
 
     /**
-    * Thus function must be implemented in the subclass is it has an
-    * instance config form that requires javascript. It returns an
-    * array of javascript files, either local or remote.
-    */
+     * Thus function must be implemented in the subclass is it has an
+     * instance config form that requires javascript. It returns an
+     * array of javascript files, either local or remote.
+     *
+     * @param BlockInstance $instance
+     * @return array
+     */
     public static function get_instance_config_javascript(BlockInstance $instance) {
         return array();
     }
@@ -411,6 +525,9 @@ EOF;
     /**
      * Blocktype plugins can implement this to perform custom pieform
      * validation, should they need it
+     *
+     * @param Pieform $form
+     * @param array   $values The submitted form values
      */
     public static function instance_config_validate(Pieform $form, $values) { }
 
@@ -424,6 +541,7 @@ EOF;
     * Note that it should just handle top level artefacts.
     * The cache rebuilder will figure out the children.
     *
+    * @param BlockInstance $instance
     * @return array ids of artefacts in this block instance
     */
     public static function get_artefacts(BlockInstance $instance) {
@@ -443,6 +561,9 @@ EOF;
     * the time of the version creation to save in view_versioning.
     *
     * Note that it should just handle child level artefacts.
+    *
+    * @param BlockInstance $instance
+    * @return array
     */
     public static function get_current_artefacts(BlockInstance $instance) {
         return array();
@@ -468,15 +589,22 @@ EOF;
     }
 
     /**
-     *
+     * Check that the block instance has configuration settings
      * this is different to has_config - has_config is plugin wide config settings
      * this is specific to this TYPE of plugin and relates to whether individual instances
      * can be configured within a view
+     *
+     * @param BlockInstance $instance
      */
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 
+    /**
+     * Fetch the category display name
+     * @param string $name Name of the category
+     * @return string Category name
+     */
     public static function category_title_from_name($name) {
         $title = get_string('blocktypecategory.'. $name, 'view');
         if (strpos($title, '[[') !== 0) {
@@ -486,11 +614,23 @@ EOF;
         return get_string('pluginname', 'artefact.' . $name);
     }
 
+    /**
+     * Fetch the category description
+     * @param string $name Name of the category
+     * @return string Category description
+     */
     public static function category_description_from_name($name) {
         $description = get_string('blocktypecategorydesc.'. $name, 'view');
         return $description;
     }
 
+    /**
+     * Fetch the blocktypes that are associated with a category
+     * @param string $category      Name of the category
+     * @param View $view        A view object
+     * @param string $blocktype Optional name of a blocktype
+     * @return array            Array of blocktypes
+     */
     public static function get_blocktypes_for_category($category, View $view, $blocktype = null) {
         $sql = 'SELECT bti.name, bti.artefactplugin, btic.sortorder
             FROM {blocktype_installed} bti
@@ -620,7 +760,6 @@ EOF;
         return $configdata;
     }
 
-
     /**
      * Rewrite a block instance's relationships to views & collections at the end of the leap import process.
      *
@@ -637,7 +776,7 @@ EOF;
         // Do nothing, in the default case
     }
 
-    /*
+    /**
      * The copy_type of a block affects how it should be copied when its view gets copied.
      * nocopy:       The block doesn't appear in the new view at all.
      * shallow:      A new block of the same type is created in the new view with a configuration as specified by the
@@ -651,12 +790,15 @@ EOF;
      *
      * If the old owner and the new owner are the same, reference is used unless 'fullinclself' is specified.
      * If a block contains no artefacts, reference and full are equivalent.
+     *
+     * @param BlockInstance $instance of the block
+     * @param View $view - the view the block is created for
      */
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
-    /*
+    /**
      * The ignore_copy_artefacttypes of a block affects which artefacttypes should be ignored when copying.
      * You can specify which artefacts to ignore by an array of artefacttypes.
      */
@@ -794,11 +936,25 @@ EOF;
      * This method should be overridden in the child class, if peer role
      * should be able to see the block
      *
-     * @param array user access role for the view
+     * @param BlockInstance $bi the block to display
+     * @param array $roles user access role for the view
      * @return boolean whether display the block content for the roles
      */
-    public static function display_for_roles($roles) {
-        return !(count($roles) == 1 && $roles[0] == 'peer');
+    public static function display_for_roles(BlockInstance $bi, $roles) {
+        if (!(count($roles) == 1 && $roles[0] == 'peer')) {
+            // logged in user not a peer role
+            return true;
+        }
+        else {
+            // a user with peer role only is accessing the view,
+            // the block will be visible depending on the settings
+            // of the institutions the owner belongs to
+            $view = $bi->get_view();
+            $ownerid = $view->get('owner');
+            $ownerobj = new User();
+            $ownerobj = $ownerobj->find_by_id($ownerid);
+            return $ownerobj->peers_allowed_content();
+        }
     }
 
     /**
@@ -820,7 +976,7 @@ EOF;
  * useful as a way of mapping the behavior of core blocks to theme items that are
  * not easily queried by the code.)
  */
-abstract class MaharaCoreBlocktype extends PluginBlockType {
+abstract class MaharaCoreBlocktype extends PluginBlocktype {
 
     /**
      * Use a css icon based on the name of the block
@@ -846,52 +1002,189 @@ abstract class MaharaCoreBlocktype extends PluginBlockType {
  * in its blocktype.config field, then the default implementation of get_artefacts()
  * doesn't really matter.
  */
-abstract class SystemBlockType extends PluginBlockType {
+abstract class SystemBlockType extends PluginBlocktype {
+    /**
+     * Fetch the artefact associated with the block instance
+     * @param BlockInstance $instance The block instance
+     * @return array
+     */
     public static function get_artefacts(BlockInstance $instance) {
         return array();
     }
 
+    /**
+     * Dummy function to make it compatible
+     * @param mixed $default The default value for the element
+     */
     public final static function artefactchooser_element($default=null) {
     }
 }
 
 
+/**
+ * An instance of a Blocktype.
+ */
 class BlockInstance {
 
     const RETRACTABLE_NO = 0;
     const RETRACTABLE_YES = 1;
     const RETRACTABLE_RETRACTED = 2;
 
+    /**
+     * The ID of this block instance
+     * @var integer
+     */
     private $id;
+
+    /**
+     * The type of block
+     * @var string
+     */
     private $blocktype;
+
+    /**
+     * The artefact plugin type the block belongs to
+     * @var string
+     */
     private $artefactplugin;
+
+    /**
+     * The block title
+     * @var string
+     */
     private $title;
+
+    /**
+     * The block instance configuration data
+     * @var array
+     */
     private $configdata = array();
+
+    /**
+     * A setting to tell the commit() whether there is any changes to the object to actually commit to database
+     * @var boolean
+     */
     private $dirty;
+
+    /**
+     * The ID of the view the block is on
+     * @var integer
+     */
     private $view;
+
+    /**
+     * The View object the block belongs to
+     * @var View
+     */
     private $view_obj;
+
+    /**
+     * The row the block is in (legacy)
+     * @var integer
+     */
     private $row;
+
+    /**
+     * The column the block is in (legacy)
+     * @var integer
+     */
     private $column;
+
+    /**
+     * The order the blocks are within a layout cell
+     * @var integer
+     */
     private $order;
+
+    /**
+     * The order value for the last block in the column
+     * @var integer
+     */
     private $maxorderincolumn;
+
+    /**
+     * The artefacts associated with the block
+     * @var array
+     */
     private $artefacts = array();
+
+    /**
+     * Array of temporary related objects to the block, eg collection object
+     * @var array
+     */
     private $temp = array();
+
+    /**
+     * The tags associated with the block
+     * @var array
+     */
     private $tags = array();
+
+    /**
+     * Is the block on edit page
+     * @var boolean
+     */
     private $inedit = false;
+
+    /**
+     * Is the block configuration being edited
+     * @var boolean
+     */
     private $ineditconfig = false;
+
+    /**
+     * The vertical position in the gridstack grid (gs-x)
+     * @var integer
+     */
     private $positionx;
+
+    /**
+     * The horizontal position in the gridstack grid (gs-y)
+     * @var integer
+     */
     private $positiony;
+
+    /**
+     * The width of the gridstack widget (gs-w)
+     * @var integer
+     */
     private $width;
+
+    /**
+     * The height of the gridstack grid (gs-h)
+     * @var integer
+     */
     private $height;
 
+    /**
+     * Set to true if the block is being created
+     * @var boolean
+     */
+    private $new;
+
+
+    /**
+     * Quiet notifications for updates not related to content.
+     *
+     * E.g. If a block is moved/resized, we won't notify the watchlist about the event.
+     *
+     * @var bool
+     */
+    private $quietupdate = false;
+
+    /**
+     * Constructor for the block instance
+     *
+     * @param mixed $id   The id of the block instance to fetch. A '0' means make a new one
+     * @param mixed $data Values to create / update the block instance with
+     */
     public function __construct($id=0, $data=null) {
-         if (!empty($id)) {
+        if ($id == 0) {
+            $this->set_new();
+        }
+        if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('block_instance','id',$id)) {
-                    // TODO: 1) doesn't need get string here if this is the
-                    // only place the exception is used - can be done in the
-                    // class itself. 2) String needs to be defined, or taken
-                    // from lang/*/view.php where there is already one for it
                     throw new BlockInstanceNotFoundException(get_string('blockinstancenotfound', 'error', $id));
                 }
             }
@@ -935,6 +1228,12 @@ class BlockInstance {
         $this->artefactplugin = blocktype_artefactplugin($this->blocktype);
     }
 
+    /**
+     * Return the selected property of the block instance
+     * @param mixed $field
+     * @throws InvalidArgumentException if the property doesn't match one of the block's properties
+     * @return mixed Value of the field
+     */
     public function get($field) {
         if (!property_exists($this, $field)) {
             throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
@@ -974,6 +1273,14 @@ class BlockInstance {
         return $this->{$field};
     }
 
+    /**
+     * Update one of the fields of this block instance. Also marks the block as "dirty" so that $this->commit() will know
+     * to commit it
+     * @param string $field
+     * @param mixed $value
+     * @throws ParamOutOfRangeException
+     * @return boolean
+     */
     public function set($field, $value) {
         if (property_exists($this, $field)) {
             if ($field == 'tags') {
@@ -992,6 +1299,10 @@ class BlockInstance {
         throw new ParamOutOfRangeException("Field $field wasn't found in class " . get_class($this));
     }
 
+    /**
+     * Custom extension of set() to save tags correctly
+     * @param array $tags
+     */
     private function set_tags($tags) {
         global $USER;
 
@@ -1031,8 +1342,12 @@ class BlockInstance {
         }
     }
 
-    // returns false if it finds a bad attachment
-    // returns true if all attachments are allowed
+    /**
+     * Checks if the artefact can be seen by the current user
+     *
+     * @param string $id
+     * @return boolean false if it finds a bad attachment / true if all attachments are allowed
+     */
     private function verify_attachment_permissions($id) {
         global $USER;
 
@@ -1054,6 +1369,12 @@ class BlockInstance {
         return true;
     }
 
+    /**
+     * Save the block instance configuration form
+     *
+     * @param Pieform $form
+     * @param array   $values The submitted form values
+     */
     public function instance_config_store(Pieform $form, $values) {
         global $SESSION, $USER;
 
@@ -1146,9 +1467,10 @@ class BlockInstance {
 
         $this->commit();
         $this->set('ineditconfig', false);
+        $rendered = array();
         try {
             if ($form->get_property('quickedit')) {
-                $rendered = array('html' => $this->render_viewing());
+                $rendered['html'] = $this->render_viewing();
             }
             else {
                 $rendered = $this->render_editing(false, false, $form->submitted_by_js());
@@ -1188,6 +1510,11 @@ class BlockInstance {
         $form->reply(PIEFORM_OK, $result);
     }
 
+    /**
+     * Retrieve the title of the block
+     * Handles any title overrides if needed
+     * return string
+     */
     public function get_title() {
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
         $override = call_static_method($blocktypeclass, 'override_instance_title', $this);
@@ -1203,6 +1530,10 @@ class BlockInstance {
         return '';
     }
 
+    /**
+     * Transform a Block instance into a stdClass
+     * @return object
+     */
     public function to_stdclass() {
         return (object)get_object_vars($this);
     }
@@ -1211,8 +1542,10 @@ class BlockInstance {
      * Builds the HTML for the block, inserting the blocktype content at the
      * appropriate place
      *
-     * @param bool $configure Whether to render the block instance in configure
+     * @param boolean $configure Whether to render the block instance in configure
      *                        mode
+     * @param boolean $new New block being made
+     * @param boolean $jsreply Reply via ajax
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run
      */
@@ -1236,7 +1569,7 @@ class BlockInstance {
         else {
             try {
               $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
-              if (!call_static_method($blocktypeclass, 'display_for_roles', $user_roles)) {
+              if (!call_static_method($blocktypeclass, 'display_for_roles', $this, $user_roles)) {
                   $content = '';
                   $css = '';
                   $js = '';
@@ -1281,7 +1614,7 @@ class BlockInstance {
         $smarty->assign('height', $this->get('height'));
 
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config'));
+        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config', $this));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
         $smarty->assign('configtitle',  $configtitle);
         $smarty->assign('content', $content);
@@ -1290,7 +1623,7 @@ class BlockInstance {
         $smarty->assign('strmovetitletext', $title == '' ? get_string('movethisblock', 'view') : get_string('moveblock', 'view', "'$title'"));
         $smarty->assign('strmovetitletexttooltip', get_string('moveblock2', 'view'));
         $smarty->assign('strconfigtitletext', $title == '' ? get_string('configurethisblock1', 'view', $id) : get_string('configureblock1', 'view', "'$title'", $id));
-        $smarty->assign('strconfigtitletexttooltip', get_string('configureblock2', 'view'));
+        $smarty->assign('strconfigtitletexttooltip', get_string('configureblock3', 'view'));
         $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock1', 'view', $id) : get_string('removeblock1', 'view', "'$title'", $id));
         $smarty->assign('strremovetitletexttooltip', get_string('removeblock2', 'view'));
         $smarty->assign('lockblocks', ($this->get_view()->get('lockblocks') && ($this->get_view()->get('owner') || $this->get_view()->get('group')))); // Only lock blocks for user's portfolio and group pages
@@ -1320,7 +1653,13 @@ class BlockInstance {
         return array('html' => $smarty->fetch('view/blocktypecontainerediting.tpl'), 'javascript' => $js, 'pieformcss' => $css);
     }
 
-
+    /**
+     * Render the edit form when using quick edit on display page
+     * @return array Array with four keys: 'html' for raw html,
+     *                                     'javascript' for javascript to run
+     *                                     'pieformcss' for styling form
+     *                                     'title'      for displaying block instance title in modal
+     */
     public function render_editing_quickedit() {
         global $USER;
 
@@ -1347,7 +1686,12 @@ class BlockInstance {
         );
     }
 
-    public function order_artefacts_by_title($ids){
+    /**
+     * Get artefacts ordered by name
+     * @param array $ids
+     * @return array $results
+     */
+    public function order_artefacts_by_title($ids) {
       $result = array();
       if ($ids) {
           $artefacts =  get_records_sql_array(
@@ -1363,6 +1707,12 @@ class BlockInstance {
       return $result;
     }
 
+    /**
+     * Ordering titles by human readable sort order
+     * @param object $a
+     * @param object $b
+     * @return integer
+     */
     public static function my_files_cmp($a, $b) {
         return strnatcasecmp($a->title, $b->title);
     }
@@ -1388,7 +1738,7 @@ class BlockInstance {
         $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
 
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        $displayforrole = call_static_method($classname, 'display_for_roles', $user_roles);
+        $displayforrole = call_static_method($classname, 'display_for_roles', $this, $user_roles);
         $checkview = $this->get_view();
         if ($checkview->get('owner') == NULL ||
             ($USER->is_admin_for_user($checkview->get('owner')) && $checkview->is_objectionable())) {
@@ -1527,6 +1877,7 @@ class BlockInstance {
     /**
      * Builds the configuration pieform for this blockinstance
      *
+     * @param boolean $new Whether a new block
      * @return array Array with two keys: 'html' for raw html, 'javascript' for
      *               javascript to run, 'css' for dynamic css to add to header
      */
@@ -1571,7 +1922,8 @@ class BlockInstance {
                 'defaultvalue' => $title,
                 'rules' => $titlerules,
                 'hidewhenempty' => $hasdefault,
-                'expandtext'    => get_string('setblocktitle'),
+                'expandtext' => get_string('setblocktitle'),
+                'autoselect' => true,
             );
         }
         $elements = array_merge(
@@ -1724,6 +2076,13 @@ class BlockInstance {
         return $renderedform;
     }
 
+    /**
+     * Build quick edit form in modal on display page
+     *
+     * @return array Array with three keys: 'html' for raw html,
+     *                                      'javascript' for javascript to run
+     *                                      'css' for styling form
+     */
     public function build_quickedit_form() {
 
         $notretractable = get_config_plugin('blocktype', $this->get('blocktype'), 'notretractable');
@@ -1887,6 +2246,9 @@ class BlockInstance {
         return $renderedform;
     }
 
+    /**
+     * This method updates the contents of the block_instance table.
+     */
     public function commit() {
         if (empty($this->dirty)) {
             return;
@@ -1917,12 +2279,21 @@ class BlockInstance {
             $this->set_block_dimensions($this->positionx, $this->positiony, $this->width, $this->height);
         }
 
-        // Tell stuff about this
-        handle_event('blockinstancecommit', $this);
+        if (!$this->quietupdate) {
+            // Record the event in the watchlist
+            handle_event('blockinstancecommit', $this);
+        }
+        else {
+            // Skip sending notifications and reset the flag
+            $this->quietupdate = false;
+        }
 
         $this->dirty = false;
     }
 
+    /**
+     * This method updates the associated artefact list for the block
+     */
     public function rebuild_artefact_list() {
         db_begin();
 
@@ -1980,7 +2351,8 @@ class BlockInstance {
     }
 
     /**
-     * @return View the view object this block instance is in
+     * Get the view object this block instance is on
+     * @return View
      */
     public function get_view() {
         if (empty($this->view_obj)) {
@@ -1990,6 +2362,14 @@ class BlockInstance {
         return $this->view_obj;
     }
 
+    /**
+     * Check to see if a block can be moved within a column
+     *
+     * //TODO check if this is obsolete now with gridstack
+     * @param string $direction
+     * @return boolean
+     * @throw InvalidArgumentException
+     */
     public function can_move($direction) {
         switch ($direction) {
             case 'left':
@@ -2007,6 +2387,9 @@ class BlockInstance {
         }
     }
 
+    /**
+     * Detete method for safely removing a block instance from the database
+     */
     public function delete() {
         if (empty($this->id) || ($this->get_view()->get('lockblocks') && $this->get_view()->get('owner'))) {
             $this->dirty = false;
@@ -2051,6 +2434,7 @@ class BlockInstance {
      *    removed from it
      *
      * Don't override this method without doing the right thing in bulk_delete_artefacts too.
+     * @param string $artefact The id of the artefact to remove
      */
     final public function delete_artefact($artefact) {
         $configdata = $this->get('configdata');
@@ -2136,6 +2520,9 @@ class BlockInstance {
 
     /**
      * Get an artefact instance, checking republish permissions
+     *
+     * @param integer $id  ID of the artefact
+     * @return object $artefact
      */
     public function get_artefact_instance($id) {
         if (isset($this->artefacts[$id])) {
@@ -2159,6 +2546,11 @@ class BlockInstance {
         return $this->artefacts[$id] = $a;
     }
 
+    /**
+     * Add the artefact instance to the artefacts variable so it will be saved
+     *
+     * @param object $artefact
+     */
     public function save_artefact_instance($artefact) {
         $this->artefacts[$artefact->get('id')] = $artefact;
     }
@@ -2184,7 +2576,7 @@ class BlockInstance {
             $copytype = $configdata['copytype'];
         }
         else {
-            $copytype = call_static_method($blocktypeclass, 'default_copy_type');
+            $copytype = call_static_method($blocktypeclass, 'default_copy_type', $this, $view);
         }
 
         $viewowner = $view->ownership();
@@ -2195,7 +2587,7 @@ class BlockInstance {
         //
         // Note for later: this is Blockinstance->allowed_in_view. This
         // determines whether this blockinstance should be copied into a view.
-        // This could be a different question from BlockType::allowed_in_view!
+        // This could be a different question from Blocktype::allowed_in_view!
         // But for now they use the same method.
         if (!call_static_method($blocktypeclass, 'allowed_in_view', $view)) {
             return false;
@@ -2330,6 +2722,11 @@ class BlockInstance {
         return true;
     }
 
+    /**
+     * Copy tags to the new block
+     *
+     * @param integer $newid ID of block to copy tags to
+     */
     public function copy_tags($newid) {
         // Need to copy the tags to the new block
         if ($tagrecords = get_records_array('blocktype_taggedposts_tags', 'block_instance', $this->get('id'), 'tagtype desc, tag', 'tag, tagtype')) {
@@ -2343,6 +2740,14 @@ class BlockInstance {
         }
     }
 
+    /**
+     * Get temporary data via supplied key and id
+     *
+     * Relies on the method existing for the block
+     * @param string $key  The suffix for the 'get_instance_' call
+     * @param string $id   The ID for the item you want data for
+     * @return mixed
+     */
     public function get_data($key, $id) {
         if (!isset($this->temp[$key][$id])) {
             $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
@@ -2402,12 +2807,24 @@ class BlockInstance {
      * Each item should be a stdClass() object containing -
      * - title language pack key
      * - url relative to wwwroot
+     * @param integer $groupid ID of the group
+     * @param string $role The role the member has
      * @return array
      */
     public static function group_tabs($groupid, $role) {
         return array();
     }
 
+    /**
+     * Set the block gridstack position values
+     * Block dimensions are recorded based on the top left corner gridstack positions (gs-x, gs-y)
+     * and the grid cell width and height (gs-w, gs-h)
+     * @param integer $positionx  The gridstack gs-x value
+     * @param integer $positiony  The gridstack gs-y value
+     * @param integer $width      The gridstack gs-w value
+     * @param integer $height     The gridstack gs-h value
+     * @throws Exception
+     */
     public function set_block_dimensions($positionx, $positiony, $width, $height) {
         $obj = new StdClass();
         $obj->block = $this->id;
@@ -2429,8 +2846,36 @@ class BlockInstance {
         }
 
     }
+
+    /**
+     * Set the new state of this block instance.
+     */
+    public function set_new() {
+        $this->new = true;
+    }
+
+    /**
+     * Return the new state of this block instance.
+     *
+     * @return boolean
+     *   Return the current state of 'new' or false if not set.
+     */
+    public function is_new() {
+        if (!empty($this->new)) {
+            return $this->new;
+        }
+        return false;
+    }
+
 }
 
+
+/**
+ * Safely 'require' available blocktypes from enabled plugins.
+ *
+ * @return array|null
+ *   The list of enabled plugins.
+ */
 function require_blocktype_plugins() {
     static $plugins = null;
     if (is_null($plugins)) {
@@ -2442,6 +2887,14 @@ function require_blocktype_plugins() {
     return $plugins;
 }
 
+/**
+ * Return a single blocktype.
+ *
+ * @param string $filter
+ *
+ * @return array|null
+ *   The blocktype or null if not present.
+ */
 function blocktype_get_types_from_filter($filter) {
     static $contenttype_blocktype = null;
 

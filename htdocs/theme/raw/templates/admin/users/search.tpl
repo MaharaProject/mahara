@@ -40,10 +40,10 @@
     <div class="advanced as-link link-expand-right form-group collapsible-group">
         <fieldset class="pieform-fieldset advanced last as-link link-expand-right collapsible">
             <legend>
-                <a href="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
+                <button type="button" data-target="#initials" data-toggle="collapse" aria-expanded="{if $search->f || $search->l}true{else}false{/if}" aria-controls="initials" class="{if !$search->f && !$search->l}collapsed{/if}">
                     {str tag='moreoptions' section='view'}
                     <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
-                </a>
+                </button>
             </legend>
             <div id="initials" class="initials collapse{if $search->f || $search->l} show{/if}" aria-expanded="{if $search->f || $search->l}true{else}false{/if}">
                 <h2 class="filter-result-heading" tabindex="0">{str tag="filterresultsby"}</h2>
@@ -131,7 +131,7 @@
                             {/if}
                                 {if $c.sort}
                                     <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
-                                        {$c.name}
+                                        <span>{$c.name}</span>
                                         <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
                                     </a>
                                 {else}

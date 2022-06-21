@@ -80,43 +80,79 @@
             position: relative;
         }
 
-        // Styles for all links inside navbar-nav
-        a  {
+        > li > a,
+        > li > button.menu-dropdown-toggle {
             display: block;
             width: 100%;
-        }
-
-        > li > a {
+            text-align: left;
             color: $navbar-default-link-color;
             background-color: $navbar-default-link-bg;
             padding: $navbar-default-padding-y $navbar-default-padding-x;
             font-weight: $font-weight-normal;
-            border-top: 1px solid $navbar-default-link-border;
-            border-bottom: 1px solid $navbar-default-link-border;
+            border: 1px solid $navbar-default-link-border;
             margin-top: -1px;
+            text-decoration: none;
+            border-radius: 0;
+            float: none;
+
+            @include media-breakpoint-down(md) {
+                border-right: 0;
+                border-left: 0;
+            }
+
+            // the icons on the left
+            .icon {
+                margin-right: $spacing-sm;
+                width: 1.5em; // 24px
+                text-align: center;
+            }
+
+            // navbar menu children toggles
+            .icon.navbar-showchildren {
+                color: $navbar-inverse-toggle-hover-color;
+                background: $navbar-inverse-toggle-hover-bg;
+                border-radius: 0;
+                border: 0;
+                position: absolute;
+                right: $spacing-base; // 10px
+                top: 0.4375rem; // 7px
+                height: 2.375rem; // 38px;
+                width: 2.625rem; // 42px;
+                padding: 0.75rem;
+                margin: 0;
+                cursor: pointer;
+                transform: rotate(-180deg);
+                transition-duration: 0.3s;
+                text-align: center;
+            }
+
             &:hover,
             &:focus {
                 background-color: $navbar-default-link-hover-bg;
                 text-decoration:none;
                 color: $navbar-default-link-hover-color;
             }
+
             &.disabled {
                 color: $btn-link-disabled-color;
                 cursor: not-allowed;
             }
-            @include media-breakpoint-up(md) {
-                border: 1px solid $navbar-default-link-border;
-            }
-            .icon {
-                margin-right: $spacing-sm;
-                width: 1.5em; // 24px
-                text-align: center;
+
+            &.collapsed {
+                .icon.navbar-showchildren {
+                    transform: rotate(0deg);
+                    transition-duration: 0.3s;
+                    background: $navbar-inverse-toggle-bg;
+                    color: $navbar-inverse-toggle-color;
+                }
             }
         }
 
-        > .active > a {
+        > .active > a,
+        > .active > button.menu-dropdown-toggle {
             background-color: $navbar-default-active-bg;
             color: $navbar-default-active-color;
+
             &:hover,
             &:focus {
                 background-color: $navbar-default-active-bg;
@@ -131,14 +167,17 @@
         max-width: 100%;
         // overflow: hidden;
         padding: 0;
+        clear: both;
 
         li > a {
+            display: block;
             color: $navbar-inverse-link-color;
             background-color: $navbar-inverse-bg;
             padding: $navbar-default-padding-y $navbar-default-padding-x $navbar-default-padding-y 2.8125rem;
             margin-top: -1px;
             font-weight: $font-weight-normal;
             white-space: normal;
+            text-decoration: none;
             &:hover,
             &:focus {
                 text-decoration: none;

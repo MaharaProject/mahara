@@ -1,5 +1,6 @@
 <?php
 /**
+ * Webservices logging search library
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -33,7 +34,7 @@ require_once('user.php');
  * @return array Contains search results markup/pagination
  */
 function build_webservice_log_search_results($search) {
-    global $THEME;
+    global $THEME, $USER;
     $THEME->templatedirs[]= get_config('docroot') . 'auth/webservice/theme/raw/';
 
     $results = get_log_search_results($search);
@@ -66,6 +67,12 @@ function build_webservice_log_search_results($search) {
             'datatable' => 'searchresults',
             'jsonscript' => 'webservice/admin/logsearch.json.php',
     ));
+
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
+        }
+    }
 
     $cols = array(
             'username'     => array('name'     => get_string('userauth', 'auth.webservice'),
@@ -102,6 +109,9 @@ function build_webservice_log_search_results($search) {
  *
  * Contents of double-quoted strings are counted as a single term,
  * '"' can be entered as '\"', '\' as '\\'.
+ *
+ * @param string $query The value to be chuncked in to search terms
+ * @return array $terms
  */
 function split_query_string($query) {
     $terms = array();

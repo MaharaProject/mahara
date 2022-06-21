@@ -1,5 +1,6 @@
 <?php
 /**
+ * Group members page.
  *
  * @package    mahara
  * @subpackage core
@@ -146,7 +147,7 @@ $searchform = pieform(array(
                 'submit' => array(
                     'type' => 'button',
                     'usebuttontag' => true,
-                    'class' => 'btn-primary no-label input-group-append',
+                    'class' => 'btn-secondary no-label input-group-append',
                     'value' => get_string('search')
                 )
             )
@@ -206,6 +207,13 @@ $smarty->assign('instructions', $instructions);
 $smarty->assign('membershiptype', $membershiptype);
 $smarty->display('group/members.tpl');
 
+/**
+ * Submit group members search
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function search_submit(Pieform $form, $values) {
     redirect('/group/members.php?id=' . $values['id'] .
                     ((isset($values['query']) && ($values['query'] != '')) ? '&query=' . urlencode($values['query']) : '') .

@@ -26,10 +26,11 @@ require_once('group.php');
 safe_require('artefact', 'comment');
 safe_require('artefact', 'file');
 require_once(get_config('docroot') . 'blocktype/lib.php');
+require_once(get_config('docroot') . 'export/lib.php');
 
 // Used by the Mahara assignment submission plugin for Moodle, to indicate that a user
 // coming over from mnet should be able to view a certain page (i.e. a teacher viewing
-// an assignmnet submission)
+// an assignment submission)
 $mnetviewid = param_integer('mnetviewid', false);
 $mnetcollid = param_integer('mnetcollid', false);
 if (
@@ -90,6 +91,7 @@ if (!isset($view)) {
 
 $is_admin = $USER->get('admin') || $USER->is_institutional_admin();
 $is_owner = $view->get('owner') == $USER->get('id');
+$is_group_admin = false;
 
 // check if this is a group page and the user is group admin
 if ($groupid = $view->get('group')) {
@@ -173,10 +175,50 @@ else if ($viewtoken && $viewtoken->gotomatrix && $collection && $collection->has
     redirect($collection->get_framework_url($collection, true));
 }
 $submittedgroup = (int)$view->get('submittedgroup');
-if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id'))) {
+$submittedhost = $view->get('submittedhost');
+
+$user_logged_in = $USER->is_logged_in();
+$access_via_group = ($submittedgroup && group_user_can_assess_submitted_views($submittedgroup, $USER->get('id')));
+$access_via_submittedhost = ($submittedhost && host_user_can_assess_submitted_views($submittedhost));
+
+if ($user_logged_in && $access_via_submittedhost) {
+    // If the view is part of a submitted collection, the whole
+    // collection must be released at once.
+    $releasecollection = !empty($collection);
+    $add_form = true;
+    if ($releasecollection) {
+        if ($ctime = $collection->get('submittedtime')) {
+            $text = get_string('collectionsubmittedtohoston', 'view', format_date(strtotime($ctime)));
+        }
+        else {
+            $text = get_string('collectionsubmittedtohost', 'view');
+        }
+        if (is_collection_in_export_queue($collection->get('id'))) {
+            $add_form = false;
+        }
+    }
+    else if ($view->get('submittedtime')) {
+        $text = get_string('viewsubmittedtohoston', 'view', format_date(strtotime($view->get('submittedtime'))));
+        if (is_view_in_export_queue($view->get('id'))) {
+            $add_form = false;
+        }
+    }
+    else {
+        $text = get_string('viewsubmittedtohost', 'view');
+        // $add_form = false;
+    }
+    if ($add_form) {
+        $releaseform = release_form($text, $releasecollection);
+    }
+    else {
+        $releaseform = $text . ' ' . get_string('submittedpendingrelease', 'view');
+    }
+}
+else if ($user_logged_in && $access_via_group) {
     // The user is a tutor of the group that this view has
     // been submitted to, and is entitled to release the view
     $submittedgroup = get_group_by_id($submittedgroup, true);
+    $ltigradeform = '';
 
     // Form for LTI grading
     if (is_plugin_active('lti', 'module')) {
@@ -193,11 +235,18 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
     $releasecollection = !empty($collection) && $collection->get('submittedgroup') == $submittedgroup->id && empty($ltigradeform);
 
     if ($releasecollection) {
-        if (isset($ltigradeform) && $ltigradeform && $ctime = $collection->get('submittedtime')) {
+        if ($ltigradeform && $ctime = $collection->get('submittedtime')) {
             preg_match("/^.*?\"(.*?)\" - \"(.*?)\"/", $submittedgroup->name, $matches);
             $lticoursename = hsc($matches[1]);
             $ltiassignmentname = hsc($matches[2]);
-            $text = get_string('collectionsubmittedtogroupgrade', 'view', group_homepage_url($submittedgroup), $ltiassignmentname, $lticoursename, format_date(strtotime($ctime)));
+            $text = get_string(
+                'collectionsubmittedtogroupgrade',
+                'view',
+                group_homepage_url($submittedgroup),
+                $ltiassignmentname,
+                $lticoursename,
+                format_date(strtotime($ctime))
+            );
         }
         else if ($ctime = $collection->get('submittedtime')) {
             $text = get_string(
@@ -222,26 +271,7 @@ if ($USER->is_logged_in() && $submittedgroup && group_user_can_assess_submitted_
         $text = get_string('viewsubmittedtogroup1', 'view', group_homepage_url($submittedgroup), hsc($submittedgroup->name));
     }
     if (($releasecollection && $collection->get('submittedstatus') == Collection::SUBMITTED) || $view->get('submittedstatus') == View::SUBMITTED && empty($ltigradeform)) {
-        $releaseform = pieform(array(
-            'name'     => 'releaseview',
-            'method'   => 'post',
-            'class' => 'form-inline',
-            'plugintype' => 'core',
-            'pluginname' => 'view',
-            'autofocus' => false,
-            'elements' => array(
-                'submittedview' => array(
-                    'type'  => 'html',
-                    'value' => $text,
-                ),
-                'submit' => array(
-                    'type'  => 'button',
-                    'usebuttontag' => true,
-                    'class' => 'btn-secondary float-right',
-                    'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
-                ),
-            ),
-        ));
+        $releaseform = release_form($text, $releasecollection);
     }
     else if ($ltigradeform) {
         $releaseform = $text;
@@ -259,12 +289,82 @@ else {
     $releaseform = '';
 }
 
-function releaseview_submit() {
-    global $USER, $SESSION, $view, $collection, $submittedgroup, $releasecollection;
+/**
+ * Return the release form.
+ *
+ * @param string $text
+ * @param bool $releasecollection
+ *
+ * @return string The HTML for the Pieform.
+ */
+function release_form($text, $releasecollection) {
+    global $view, $collection;
+    $form = array(
+        'name'     => 'releaseview',
+        'method'   => 'post',
+        'class' => 'form-inline',
+        'plugintype' => 'core',
+        'pluginname' => 'view',
+        'autofocus' => false,
+        'elements' => [],
+    );
+
+    $form['elements']['submittedview'] = array(
+        'type'  => 'html',
+        'value' => $text,
+    );
+
+    if (is_plugin_active('submissions', 'module')) {
+        list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
+
+        if (!empty($submission)) {
+            $form['elements']['selectsuccess'] = [
+                'type' => 'select',
+                'options' => [
+                    null => get_string('chooseresult', 'module.submissions'),
+                    1 => get_string('noresult', 'module.submissions'),
+                    2 => get_string('fail', 'module.submissions'),
+                    3 => get_string('success', 'module.submissions'),
+                ],
+                'defaultvalue' => $evaluation->get('success')
+            ];
+        }
+    }
+
+    $form['elements']['submit'] = array(
+        'type'  => 'button',
+        'usebuttontag' => true,
+        'class' => 'btn-secondary float-right',
+        'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
+    );
+    return pieform($form);
+}
+
+function releaseview_submit(Pieform $form, $values) {
+    global $USER, $SESSION, $view, $collection, $submittedgroup, $submittedhost, $releasecollection;
+    $submission = array();
+
+    if (is_plugin_active('submissions', 'module')) {
+        /** @var \Submissions\Models\Submission $submission */
+        /** @var \Submissions\Models\Evaluation $evaluation */
+        list($submission, $evaluation) = \Submissions\Repository\SubmissionRepository::findCurrentSubmissionAndAssignedEvaluationByPortfolioElement(($releasecollection ? $collection : $view));
+        if ($submission && $evaluation->get('success') != $values['selectsuccess']) {
+            $evaluation->set('success', ($values['selectsuccess'] == null ? null : $values['selectsuccess']));
+            $evaluation->commit();
+        }
+    }
 
     if ($releasecollection) {
         if (is_object($submittedgroup) && $submittedgroup->allowarchives) {
             $collection->pendingrelease($USER);
+            $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
+        }
+        else if ($submittedhost) {
+            $externalhost = new stdClass();
+            $externalhost->id = $submittedhost;
+            $externalhost->name = $submittedhost;
+            $externalhost->url = $submittedhost;
+            $collection->pendingrelease($USER, $externalhost, false);
             $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
         else {
@@ -277,9 +377,23 @@ function releaseview_submit() {
             $view->pendingrelease($USER);
             $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
         }
+        else if ($submittedhost) {
+            $externalhost = new stdClass();
+            $externalhost->id = $submittedhost;
+            $externalhost->name = $submittedhost;
+            $externalhost->url = $submittedhost;
+            $view->pendingrelease($USER, $externalhost);
+            $SESSION->add_ok_msg(get_string('portfolioreleasedpending', 'group'));
+        }
         else {
             $view->release($USER);
             $SESSION->add_ok_msg(get_string('portfolioreleasedsuccess', 'group'));
+        }
+    }
+    if (is_plugin_active('submissions', 'module')) {
+        $flashback = \Submissions\Tools\UrlFlashback::createInstanceFromEntry();
+        if ($flashback->isValid() && $submission && $flashback->getData()->selectedSubmission->submissionId === $submission->get('id')) {
+            redirect($flashback->flashbackUrl);
         }
     }
     if ($submittedgroup) {
@@ -293,9 +407,7 @@ function releaseview_submit() {
 $javascript = array('paginator', 'viewmenu', 'js/collection-navigation.js',
         'js/jquery/jquery-mobile/jquery.mobile.custom.min.js',
         'js/jquery/jquery-ui/js/jquery-ui.min.js',
-        'js/lodash/lodash.js',
-        'js/gridstack/gridstack.js',
-        'js/gridstack/gridstack.jQueryUI.js',
+        'js/gridstack/gridstack_modules/gridstack-h5.js',
         'js/gridlayout.js',
         'js/views.js',
         'tinymce',
@@ -313,6 +425,8 @@ if (!empty($releaseform) || ($commenttype = $view->user_comments_allowed($USER))
 }
 $objectionform = false;
 $revokeaccessform = false;
+$notrudeform = array();
+$stillrudeform = array();
 if ($USER->is_logged_in()) {
     if (record_exists('view_access', 'view', $view->get('id'), 'usr', $USER->get('id'))) {
         $revokeaccessform = pieform(revokemyaccess_form($view->get('id')));
@@ -383,9 +497,15 @@ if ($owner && $owner == $USER->get('id')) {
     }
 }
 
+$ownerobj = null;
+if ($owner) {
+    $ownerobj = new User();
+    $ownerobj = $ownerobj->find_by_id($owner);
+}
 // Don't show page content to a user with peer role
 // if the view doesn't have a peer assessment block
-if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
+if (!($USER->has_peer_role_only($view) && $owner && !$ownerobj->peers_allowed_content())
+    || $view->has_peer_assessement_block()
     || ($USER->is_admin_for_user($view->get('owner')) && $view->is_objectionable())) {
     $peerhidden = false;
     if ($newlayout = $view->uses_new_layout()) {
@@ -406,16 +526,13 @@ if (!$USER->has_peer_role_only($view) || $view->has_peer_assessement_block()
         $blocksjs =  <<<EOF
 $(function () {
     var options = {
-        verticalMargin: 5,
+        margin: 1,
         cellHeight: 10,
         disableDrag : true,
         disableResize: true,
         minCellColumns: {$mincolumns},
     };
-    var grid = $('.grid-stack');
-    grid.gridstack(options);
-    grid = $('.grid-stack').data('gridstack');
-
+    var grid = GridStack.init(options);
     if (grid) {
         var blocks = {$blocks};
         if ({$blockresizeonload}) {
@@ -448,16 +565,31 @@ $smarty = smarty(
     array('confirmcopytitle' => 'view',
           'confirmcopydesc' => 'view',
           'View' => 'view',
-          'Collection' => 'collection'),
+          'Collection' => 'collection',
+          'Comments' => 'artefact.comment',
+          'addcomment' => 'artefact.comment'),
     array(
         'sidebars' => false,
         'skin' => $skin
     )
 );
 
+$commentonartefact = param_integer('artefact', null);
+// doublecheck it's a comment on  artefact in case is old email
+if ($showcomment) {
+    $artefacttype = get_field('artefact', 'artefacttype', 'id', $showcomment);
+    $classname = generate_artefact_class_name($artefacttype);
+    $tmpcomment = new $classname($showcomment);
+    if ($tmpcomment->get('onartefact') && !$commentonartefact) {
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&showcomment=' . $showcomment . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
+    }
+}
+
 $javascript = <<<EOF
 var viewid = {$viewid};
 var showmore = {$showmore};
+var commentonartefact = '{$commentonartefact}';
+var showcommentid = '{$showcomment}';
 
 jQuery(function () {
     paginator = {$feedback->pagination_js}
@@ -513,7 +645,52 @@ jQuery(window).on('blocksloaded', {}, function() {
     $('.feedbacktable.modal-docked form').each(function() {
         initTinyMCE($(this).prop('id'));
     });
+
+    // Focus on a page comment
+    if (showcommentid && !commentonartefact) {
+        focusOnShowComment();
+    }
 });
+
+/**
+ * Focus on the comment matching the id provided by the showcomment param value
+ *
+ * Note: First wait for blocks to load
+ */
+function focusOnShowComment() {
+    setTimeout(function() {
+        const commentIdString = 'comment' + showcommentid;
+
+        // Identify the comment by focusing on the author link
+        $(".comment-container button.collapsed").trigger('click');
+
+        const author_link = $("#" + commentIdString + " a")[1];
+        author_link.focus();
+        scrollToComment(commentIdString);
+    }, 500);
+}
+
+/**
+ * Scroll down to the commentIdString
+ *
+ * Note: First wait for the dropdown to open
+ */
+function scrollToComment(commentIdString) {
+    setTimeout(function() {
+        const element = document.getElementById(commentIdString);
+        const headerOffset = $('header').height();
+        const sitemessagesOffset = $('.site-messages').height();
+        // Scroll down for page comments
+        if (!commentonartefact) {
+            const y = element.getBoundingClientRect().top + window.pageYOffset - headerOffset - sitemessagesOffset;
+            window.scrollTo({top: y, behavior: 'smooth'});
+        }
+        else {
+            const sectionOffset = $('#' + commentIdString).offset();
+            $('#configureblock .modal-body').animate({ scrollTop: sectionOffset.top - 60 }, 'smooth');
+        }
+    }, 500);
+}
 
 function activateModalLinks() {
     $('.commentlink').off('click');
@@ -574,6 +751,12 @@ EOF;
                 $('#configureblock').addClass('active').removeClass('closed');
             });
             $('a#tmp_modal_link').click();
+
+            // Focus on an artefact comment
+            const commentonartefact = {$artefact};
+            if (showcommentid && commentonartefact) {
+                focusOnShowComment();
+            }
         });
 EOF;
     }
@@ -590,6 +773,7 @@ EOF;
 }
 
 // collection top navigation
+$shownav = 0;
 if ($collection) {
     $shownav = $collection->get('navigation');
     if ($shownav) {
@@ -639,7 +823,7 @@ if ($view->is_anonymous()) {
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());
-$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
+$smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?return=view&id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
 if ($can_edit) {
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid);
     $smarty->assign('usercaneditview', TRUE);

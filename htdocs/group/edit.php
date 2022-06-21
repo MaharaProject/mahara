@@ -1,5 +1,6 @@
 <?php
 /**
+ * Create/edit a group.
  *
  * @package    mahara
  * @subpackage core
@@ -67,6 +68,7 @@ else {
         'editroles'      => 'all',
         'hidden'         => 0,
         'groupparticipationreports' => 0,
+        'grouparchivereports' => 0,
         'invitefriends'  => 0,
         'suggestfriends' => 0,
         'urlid'          => null,
@@ -97,6 +99,20 @@ else {
                 }
                 $group_data->$item = $v->value;
             }
+        }
+    }
+    // If we are in institutions other than "mahara" check which institutions have reached their max group limit
+    $userinsts = $USER->institutions;
+    if (!empty($userinsts)) {
+        $maxedoutgroups = 0;
+        foreach ($USER->institutions as $inst) {
+            if (group_max_reached($inst->institution, false)) {
+                $maxedoutgroups++;
+            }
+        }
+        // if all groups have reached max limit, prevent creating new group
+        if ($maxedoutgroups === count($USER->institutions) && !$USER->get('admin')) {
+            throw new AccessDeniedException(get_string('groupmaxreachednolink','group', $group_data->institution));
         }
     }
 }
@@ -271,6 +287,13 @@ if ($cancreatecontrolled) {
         'disabled'     => !$group_data->submittableto,
         'help'         => true,
     );
+    $elements['grouparchivereports'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('grouparchivereports', 'group'),
+        'description'  => get_string('grouparchivereportsdesc', 'group'),
+        'defaultvalue' => $group_data->grouparchivereports,
+        'disabled'     => !$group_data->submittableto,
+    );
 }
 else {
     $form['elements']['submittableto'] = array(
@@ -280,6 +303,10 @@ else {
     $form['elements']['allowarchives'] = array(
         'type'         => 'hidden',
         'value'        => $group_data->allowarchives,
+    );
+    $form['elements']['grouparchivereports'] = array(
+        'type'         => 'hidden',
+        'value'        => $group_data->grouparchivereports,
     );
 }
 
@@ -426,7 +453,7 @@ $elements['viewnotify'] = array(
     'type' => 'select',
     'title' => get_string('viewnotify', 'group'),
     'options' => $notifyroles,
-    'description' => get_string('viewnotifydescription2', 'group'),
+    'description' => get_string('viewnotifydescription3', 'group'),
     'defaultvalue' => $group_data->viewnotify
 );
 $elements['feedbacknotify'] = array(
@@ -454,8 +481,20 @@ $form['elements']['settings']['elements'] = $elements;
 $editgroup = pieform($form);
 
 
+/**
+ * Validate group setting changes
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function editgroup_validate(Pieform $form, $values) {
     global $group_data, $namemaxlength;
+
+    if ((empty($group_data->id) || $group_data->institution !== $values['institution']) && group_max_reached($values['institution'], true)) {
+        $form->set_error('institution', get_string('groupmaxreached','group', get_config('wwwroot'), $values['institution']), false);
+    }
+
     if ($group_data->name != $values['name']) {
         // This check has not always been case-insensitive; don't use get_record in case we get >1 row back.
         if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower(trim($values['name']))))) {
@@ -519,10 +558,22 @@ function editgroup_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit cancelling edits to group settings.
+ *
+ * @return void
+ */
 function editgroup_cancel_submit() {
     redirect('/group/index.php');
 }
 
+/**
+ * Submit group setting edits
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function editgroup_submit(Pieform $form, $values) {
     global $USER, $SESSION, $group_data, $publicallowed;
 
@@ -550,6 +601,7 @@ function editgroup_submit(Pieform $form, $values) {
         'hidemembers'    => (!empty($values['hidemembersfrommembers']) ? $values['hidemembersfrommembers'] : $values['hidemembers']),
         'hidemembersfrommembers' => intval($values['hidemembersfrommembers']),
         'groupparticipationreports' => intval($values['groupparticipationreports']),
+        'grouparchivereports' => intval($values['grouparchivereports']),
         'invitefriends'  => intval($values['invitefriends']),
         'suggestfriends' => intval($values['suggestfriends']),
         'editwindowstart' => db_format_timestamp($values['editwindowstart']),
@@ -673,10 +725,13 @@ jQuery(function($) {
     $("#editgroup_submittableto").on("click", function() {
         if (this.checked) {
             $("#editgroup_allowarchives").prop("disabled", false);
+            $("#editgroup_grouparchivereports").prop("disabled", false);
         }
         else {
             $("#editgroup_allowarchives").prop("checked", false);
             $("#editgroup_allowarchives").prop("disabled", true);
+            $("#editgroup_grouparchivereports").prop("checked", false);
+            $("#editgroup_grouparchivereports").prop("disabled", true);
         }
     });
 });

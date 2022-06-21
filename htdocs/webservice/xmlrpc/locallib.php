@@ -275,6 +275,7 @@ class webservice_xmlrpc_server extends webservice_base_server {
     private $payload_signed = false;
     private $payload_encrypted = false;
     public $publickey = null;
+    protected $response;
 
     /**
      * Contructor

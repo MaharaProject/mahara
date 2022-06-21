@@ -9,6 +9,20 @@ DOCKER_UBUNTU_VERSION = bionic
 TEST_ADMIN_PASSWD = Kupuh1pa!
 TEST_ADMIN_EMAIL  = user@example.org
 
+# Export these so they are available in the docker-compose calls later.
+export COMPOSE_PROJECT_NAME = $(shell basename $$(pwd))
+export MAHARA_DB_HOST = ${COMPOSE_PROJECT_NAME}-mahara-db
+export MAHARA_REDIS_SERVER = ${COMPOSE_PROJECT_NAME}-mahara-redis
+export MAHARA_DOCKER_PORT = 6142
+export MAHARA_WWW_ROOT = http://localhost:${MAHARA_DOCKER_PORT}/${COMPOSE_PROJECT_NAME}
+export MAHARA_ELASTICSEARCH_HOST = ${COMPOSE_PROJECT_NAME}-mahara-elastic
+
+CCRED=$(shell echo "\033[0;31m")
+CCYELLOW=$(shell echo "\033[0;33m")
+CCLIGHTGREEN=$(shell echo "\033[0;92m")
+CCMAGENTA=$(shell echo "\033[0;95m")
+CCEND=$(shell echo "\033[0m")
+
 # Make expects targets to create a file that matches the target name
 # unless the target is phony.
 # Refer to: https://www.gnu.org/software/make/manual/html_node/Phony-Targets.html
@@ -20,6 +34,7 @@ all: css
 
 production = true
 css:
+	$(info Rebuilding CSS on host)
 ifeq (, $(shell which npm))
 	$(error ERROR: Can't find the "npm" executable. Try "sudo apt-get install npm")
 endif
@@ -40,6 +55,20 @@ clean-css:
 
 help:
 	@echo "Run 'make' to do "build" Mahara (currently only CSS)"
+	@echo "Run 'make new-dev-environment' if this is your first checkout"
+	@echo "   This will run the 'docker-image', 'css' and 'up' targets"
+	@echo "Run 'make up' to bring the docker instance back up if it was shut down"
+	@echo "Run 'make down' to shut down the docker instance"
+	@echo ""
+	@echo "Reviews repository management targets"
+	@echo "====================================="
+	@echo "   This is for the https://reviews.mahara.org code review system"
+	@echo "Run 'make minaccept' to run the quick pre-commit tests"
+	@echo "Run 'make push' to push your changes to the reviews repository"
+	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
+	@echo ""
+	@echo "Helper targets"
+	@echo "=============="
 	@echo "Run 'make initcomposer' to install Composer and phpunit"
 	@echo "Run 'make phpunit' to execute phpunit tests"
 	@echo "Run 'make install' runs the Mahara install script"
@@ -47,9 +76,6 @@ help:
 	@echo "Run 'make ssphp' to install SimpleSAMLphp"
 	@echo "Run 'make cleanssphp' to remove SimpleSAMLphp"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
-	@echo "Run 'make minaccept' to run the quick pre-commit tests"
-	@echo "Run 'make checksignoff' to check that your commits are all Signed-off-by"
-	@echo "Run 'make push' to push your changes to the repo"
 	@echo "Run 'make docker-image' to build a Mahara docker image"
 	@echo "Run 'make docker-builder' builds the docker builder image required for docker-build"
 
@@ -84,7 +110,7 @@ ifdef simplesamlphp
 	@echo "SimpleSAMLphp already exists - doing nothing"
 else
 	@echo "Pulling SimpleSAMLphp from download ..."
-	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.1/simplesamlphp-1.19.1.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
+	@curl -sSL https://github.com/simplesamlphp/simplesamlphp/releases/download/v1.19.5/simplesamlphp-1.19.5.tar.gz | tar  --transform 's/simplesamlphp-[0-9]+\.[0-9]+\.[0-9]+/simplesamlphp/x1' -C htdocs/auth/saml/extlib -xzf - # SimpleSAMLPHP release tarball already has all composer dependencies.
 	@php append_composer.php htdocs/auth/saml/extlib/simplesamlphp/composer.json simplesamlphp/composer-module-installer
 	@php external/composer.phar --working-dir=htdocs/auth/saml/extlib/simplesamlphp require predis/predis
 	@echo "Copying www/resources/* files to sp/resources/ ..."
@@ -139,7 +165,7 @@ behat:
 
 revision := $(shell git rev-parse --verify HEAD 2>/dev/null)
 whitelist := $(shell grep / test/WHITELIST | xargs -I entry find entry -type f | xargs -I file echo '! -path ' file 2>/dev/null)
-mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/20.10_DEV)
+mergebase := $(shell git fetch gerrit >/dev/null 2>&1 && git merge-base HEAD gerrit/22.04_DEV)
 breakpoints := $(shell git diff-tree --diff-filter=ACM --no-commit-id -r -z -p $(mergebase) HEAD test/behat/features |  grep "I insert breakpoint")
 
 minaccept:
@@ -178,32 +204,33 @@ securitycheck:
 	fi
 
 push: securitycheck minaccept
-	@echo "Pushing the change upstream..."
+	@echo "Pushing the change upstream ..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/for/20.10_DEV; \
+		git push gerrit HEAD:refs/for/22.04_DEV; \
 	else \
-		git push gerrit HEAD:refs/for/20.10_DEV -o topic=$(TAG); \
+		git push gerrit HEAD:refs/for/22.04_DEV -o topic=$(TAG); \
 	fi
 
 wip: securitycheck
 	@echo "Pushing the change upstream as WIP ..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/for/20.10_DEV%wip; \
+		git push gerrit HEAD:refs/for/22.04_DEV%wip; \
 	else \
-		git push gerrit HEAD:refs/for/20.10_DEV%wip -o topic=$(TAG); \
+		git push gerrit HEAD:refs/for/22.04_DEV%wip -o topic=$(TAG); \
 	fi
 
 security: minaccept
-	@echo "Pushing the SECURITY change upstream..."
+	@echo "Pushing the SECURITY change upstream ..."
 	@if test -z "$(TAG)"; then \
-		git push gerrit HEAD:refs/for/20.10_DEV%private; \
+		git push gerrit HEAD:refs/for/22.04_DEV%private; \
 	else \
-		git push gerrit HEAD:refs/for/20.10_DEV%private -o topic=$(TAG); \
+		git push gerrit HEAD:refs/for/22.04_DEV%private -o topic=$(TAG); \
 	fi
 	ssh $(sshargs) gerrit set-reviewers --add \"Mahara Security Managers\" -- $(sha1chain)
 
 # Builds Mahara server docker image
 docker-image:
+	$(info Preparing images)
 	docker build --pull --file docker/Dockerfile.mahara-base \
 	  --build-arg BASE_VERSION=$(DOCKER_UBUNTU_VERSION) \
 		--tag mahara-base:$(DOCKER_UBUNTU_VERSION) .
@@ -223,3 +250,68 @@ docker-builder:
 	  --build-arg BASE_IMAGE=mahara-base:$(DOCKER_UBUNTU_VERSION) \
 		--build-arg IMAGE_UID=$(shell id -u) --build-arg IMAGE_GID=$(shell id -g) \
 		--tag mahara-builder .
+
+#Connects to the database created by docker compose for this environment
+docker-db-connect:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run db psql -h ${COMPOSE_PROJECT_NAME}-mahara-db -U mahara
+
+docker-db-drop:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --rm db /bin/bash -c "PGPASSWORD=\$$POSTGRES_PASSWORD dropdb -h ${COMPOSE_PROJECT_NAME}-mahara-db -U \$$POSTGRES_USER  \$$POSTGRES_DB"
+
+docker-db-create:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --rm db /bin/bash -c "PGPASSWORD=\$$POSTGRES_PASSWORD createdb -h ${COMPOSE_PROJECT_NAME}-mahara-db -U \$$POSTGRES_USER  \$$POSTGRES_DB"
+
+docker-db-refresh:
+	$(MAKE) docker-db-drop
+	$(MAKE) docker-db-create
+
+docker-db-restore:
+ifdef dbpath
+	$(MAKE) docker-db-refresh
+	@echo 'dbpath is defined'
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --rm  -v $(dbpath):/tmp/dump.pgdump \
+	       	db /bin/bash -c	"PGPASSWORD=\$$POSTGRES_PASSWORD pg_restore -O -h ${COMPOSE_PROJECT_NAME}-mahara-db -U \$$POSTGRES_USER -d \$$POSTGRES_DB /tmp/dump.pgdump"
+else
+	@echo 'Usage :$$ dbpath="/path/to/dbdump" make docker-db-restore'
+endif
+# Brings up a new development instance.
+up:
+ifeq (,$(wildcard ./htdocs/config.php))
+	cp ./htdocs/config-environment.php ./htdocs/config.php
+endif
+ifeq (,$(wildcard ./docker/.env))
+	cp ./docker/.env-dist ./docker/.env
+endif
+	$(MAKE) shared-up
+	$(MAKE) dev-up
+	$(MAKE) css
+
+# Take down a single development instance. See `make shared-down`.
+down:
+	$(info Shutting down site containers.)
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml down
+
+# Spins up the shared containers. Has a static project name so that only one
+# instance of these containers are created.
+shared-up:
+	$(info Starting shared containers.)
+	$(shell export COMPOSE_PROJECT_NAME=shared-mahara && docker-compose -f docker/docker-compose.shared.yaml up -d)
+
+# @TODO: This will error out if there are any containers connected to
+# mahara-net. We should check with `docker network inspect mahara-net` to see
+# how many containers are connected. If more than 2 (mail/nginx) then do not
+# shutdown.
+shared-down:
+	$(info Shutting down shared containers.)
+	$(shell export COMPOSE_PROJECT_NAME=shared-mahara && docker-compose -f docker/docker-compose.shared.yaml down)
+
+docker-bash:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run --user=www-data web /bin/bash
+
+# Brings up a new development instance, that assumes the presense of shared
+# mailhog and nginx containers.
+dev-up:
+	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml up -d
+	$(info Your site will be available at ${MAHARA_WWW_ROOT}/)
+	$(info You can view logs of the container you are interested in with the `docker logs <container-name>` command.)
+	$(info The `docker ps` will give you a list of running containers.)

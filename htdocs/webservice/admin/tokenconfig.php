@@ -1,5 +1,6 @@
 <?php
 /**
+ * Token configuration
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -30,7 +31,6 @@ if (empty($dbtoken)) {
 
 $dbuser = get_record('usr', 'id', $dbtoken->userid);
 $dbservice = get_record('external_services', 'id', $dbtoken->externalserviceid);
-
 $token_details =
     array(
         'name'             => 'allocate_webservice_tokens',
@@ -107,12 +107,24 @@ $token_details['elements']['restricted'] = array(
 
 $functions = get_records_array('external_services_functions', 'externalserviceid', $dbtoken->externalserviceid);
 $function_list = array();
+
 if ($functions) {
     foreach ($functions as $function) {
         $dbfunction = get_record('external_functions', 'name', $function->functionname);
         $function_list[]= '<a href="' . get_config('wwwroot') . 'webservice/wsdoc.php?id=' . $dbfunction->id . '">' . $function->functionname . '</a>';
     }
 }
+$selected_auth_instance_id = get_field('external_tokens', 'authinstance', 'token', $dbtoken->token);
+$auth_instance_options = get_auth_instances_options();
+$token_details['elements']['authinstance'] = array(
+    'type'         => 'select',
+    'title'        => get_string('authenticatedby', 'admin'),
+    'description'  => get_string('authenticatedbydescription', 'admin'),
+    'options'      => $auth_instance_options,
+    'defaultvalue' =>  $selected_auth_instance_id,
+    'class'        => 'hidden',
+);
+
 $token_details['elements']['functions'] = array(
     'title'        => get_string('functions', 'auth.webservice'),
     'value'        =>  implode(', ', $function_list),
@@ -177,31 +189,65 @@ $pieform = pieform_instance($form);
 $form = $pieform->build(false);
 
 $inlinejs = <<<EOF
-  function toggle_xmlrpc_part() {
-      if ($('#allocate_webservice_tokens_wssigenc').is(':checked')) {
-          $('#allocate_webservice_tokens_publickey_container').show();
-          $('#allocate_webservice_tokens_publickeyexpires_container').show();
-      }
-      else {
-          $('#allocate_webservice_tokens_publickey_container').hide();
-          $('#allocate_webservice_tokens_publickeyexpires_container').hide();
-      }
-  }
-  jQuery(function($) {
-      $('#allocate_webservice_tokens_wssigenc_container').on('click', function() {
-          toggle_xmlrpc_part();
-      });
-      toggle_xmlrpc_part();
-      $('#allocate_webservice_tokens_service').on('change', function() {
-          var params = {};
-          params.service = this.value;
-          sendjsonrequest('service.json.php', params, 'POST', function(data) {
-              if (data.servicelist) {
-                  $('#allocate_webservice_tokens_functions_container').html(data.servicelist);
-              }
-          });
-      });
-  });
+    function toggle_xmlrpc_part() {
+        if ($('#allocate_webservice_tokens_wssigenc').is(':checked')) {
+            $('#allocate_webservice_tokens_publickey_container').show();
+            $('#allocate_webservice_tokens_publickeyexpires_container').show();
+        }
+        else {
+            $('#allocate_webservice_tokens_publickey_container').hide();
+            $('#allocate_webservice_tokens_publickeyexpires_container').hide();
+        }
+    }
+    jQuery(function ($) {
+        var params = {};
+
+        // Check initial service state
+        let initialService = $("#allocate_webservice_tokens_service").val();
+        params.service = initialService;
+        getServiceData(params);
+
+        $('#allocate_webservice_tokens_wssigenc_container').on('click', function () {
+            toggle_xmlrpc_part();
+        });
+        toggle_xmlrpc_part();
+
+        $('#allocate_webservice_tokens_service').on('change', function () {
+            params.service = this.value;
+            getServiceData(params);
+        });
+
+        /**
+         * Get service data to allocate the 'Service access tokens' form
+         *
+         * @return void
+         */
+        function getServiceData(params) {
+            sendjsonrequest('service.json.php', params, 'POST', function (data) {
+                if (data.servicelist) {
+                    $('#allocate_webservice_tokens_functions_container').html(data.servicelist);
+                }
+                showHideAuthMethodSelect(data.show_auth_method_select);
+            });
+        }
+
+        /**
+         * Check to show/hide the 'Authentication method' select
+         *
+         * Hide the 'Authentication method' dropdown when not part of the chosen service
+         *
+         * @return void
+         */
+        function showHideAuthMethodSelect(serviceHasAuthMethod) {
+            if (serviceHasAuthMethod) {
+                $("#allocate_webservice_tokens_authinstance_container").show();
+            }
+            else {
+                $("#allocate_webservice_tokens_authinstance_container").hide();
+            }
+        }
+
+    });
 EOF;
 
 $smarty = smarty();
@@ -213,6 +259,30 @@ $heading = get_string('tokens', 'auth.webservice');
 $smarty->assign('PAGEHEADING', $heading);
 $smarty->display('form.tpl');
 
+/**
+ * Get all auth instance options without filtering by usr_institutions
+ *
+ * @return array $options
+ */
+function get_auth_instances_options() {
+    $options = array(
+                    '0'  => get_string('nosites', 'auth.webservice'),
+                    '-1' => get_string('allsites', 'auth.webservice')
+                    );
+    $authinstances = auth_get_auth_instances();
+    // Now add the valid auth methods for institutions the user is in to the page.
+    foreach ($authinstances as $authinstance) {
+        $options[$authinstance->id] = $authinstance->displayname . ': ' . $authinstance->instancename;
+    }
+    return $options;
+}
+
+/**
+ * Save the allocation webservice token information to external_tokens db table
+ *
+ * @param Pieform $form The pieform being submitted
+ * @param array $values data entered on pieform
+ */
 function allocate_webservice_tokens_submit(Pieform $form, $values) {
     global $SESSION;
     $dbtoken = get_record('external_tokens', 'id', $values['tokenid']);
@@ -251,6 +321,10 @@ function allocate_webservice_tokens_submit(Pieform $form, $values) {
         $dbtoken->externalserviceid = $values['service'];
     }
 
+    if (isset($values['authinstance'])) {
+        $dbtoken->authinstance = $values['authinstance'];
+    }
+
     $dbuser = get_record('usr', 'id', $values['user']);
     if ($dbtoken->userid != $dbuser->id) {
         $dbtoken->userid = $dbuser->id;
@@ -271,6 +345,13 @@ function allocate_webservice_tokens_submit(Pieform $form, $values) {
     redirect('/webservice/admin/index.php?open=webservices_token');
 }
 
+/**
+ * Validate the webservice token form
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ * @return bool|void
+ */
 function allocate_webservice_tokens_validate(PieForm $form, $values) {
     global $SESSION;
     $dbtoken = get_record('external_tokens', 'id', $values['tokenid']);

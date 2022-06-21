@@ -11,12 +11,33 @@ Background:
   | insttwo | Institution Two | ON | OFF |
 
   And the following "users" exist:
-  | username | password | email | firstname | lastname | institution | authname | role |
-  | StaffA | Kupuh1pa! | StaffA@example.com | Alexei | Staff | instone | internal | staff |
+  | username      | password  | email              | firstname | lastname | institution | authname | role         |
+  | StaffA        | Kupuh1pa! | StaffA@example.com | Alexei    | Staff    | instone     | internal | staff        |
+  | SupportAdminB | Kupuh1pa! | SAB@example.com    | Betty     | Support  | instone     | internal | supportadmin |
+
+Scenario: Masquerading as a support admin
+  Given I log in as "SupportAdminB" with password "Kupuh1pa!"
+  And I choose "People search" from administration menu
+  # Check they can get to the user edit admin page from the people list
+  And I follow "StaffA"
+  And I follow "Log in as this person"
+  And I follow "Become Betty Support again"
+  And I choose "People search" from administration menu
+  # Check they can get to the user edit admin page via the person's profile page
+  And I follow "Alexei"
+  And I press "Log in as StaffA"
+  And I follow "Become Betty Support again"
+  And I log out
+  Given I log in as "StaffA" with password "Kupuh1pa!"
+  And I choose "People search" from administration menu
+  # Check they can not get to the user edit admin page via the person's profile page
+  And I follow "Betty"
+  Then I should not see "Log in as SupportAdminB"
+  # Need to have a step to check that a link is not present on the page
 
 Scenario: Admin to add a person (Bug 1703721)
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Add a person" in "People" from administration menu
+  And I choose "Add a person" from administration menu
   And I set the following fields to these values:
   | First name | Bob |
   | Last name | One |
@@ -29,7 +50,7 @@ Scenario: Admin to add a person (Bug 1703721)
   And I press "General account options"
   And I set the following fields to these values:
   | Multiple journals | 1 |
-  And I press "×" in the "Options dialog" property
+  And I press "×" in the "Options dialog" "Modal" property
   And I press "Create account"
   Then I should see "New account created successfully"
   And I expand "Institution settings - Institution One" node
@@ -40,13 +61,13 @@ Scenario: Admin to add a person (Bug 1703721)
   And I follow "Log in as this person"
   And I should see "You are required to change your password before you can proceed."
   And I follow "log in anyway"
-  And I choose "People" from administration menu
+  And I choose "People search" from administration menu
   And I follow "Bob"
   And I wait "1" seconds
   And I should see "Administrator of Institution One"
   And I click on "Show administration menu"
-  And I should see "Groups" in the "Administration menu" property
-  And I should not see "Extensions" in the "Administration menu" property
+  And I should see "Groups" in the "Administration menu" "Nav" property
+  And I should not see "Extensions" in the "Administration menu" "Nav" property
   # Checking  multiple journals
   And I choose "Journals" in "Create" from main menu
   And I should see "Create journal"
@@ -56,8 +77,8 @@ Scenario: Admin to add a person (Bug 1703721)
   # Login as staff member
   Given I log in as "StaffA" with password "Kupuh1pa!"
   And I click on "Show administration menu"
-  And I should see "Reports" in the "Administration menu" property
-  And I should not see "Groups" in the "Administration menu" property
+  And I should see "Reports" in the "Administration menu" "Nav" property
+  And I should not see "Groups" in the "Administration menu" "Nav" property
   # Site admin role already tested in menu_navigation.feature file
 
 Scenario: Create people by csv (Bug 1426983)
@@ -79,7 +100,7 @@ Scenario: Create people by csv (Bug 1426983)
   And I should see "Accounts updated: 20."
   And I log out
   # Check that we update the fields, password change and email received
-  Given I log in as "user0005" with password "cH@ngeme3"
+  Given I log in as "person0005" with password "cH@ngeme3"
   And I should see "You are required to change your password before you can proceed."
   And I fill in "New password" with "dr@Gon123"
   And I fill in "Confirm password" with "dr@Gon123"
@@ -92,13 +113,13 @@ Scenario: Create people by csv (Bug 1426983)
   And the "Mobile phone" field should contain "0491 570 110"
   And I scroll to the center of id "profileform"
   And I follow "General"
-  And the "Occupation" field should contain "Hairdresser"
+  And the "Occupation" field should contain "Minister for Māori Development"
   And I log out
   # Login back as admin
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "People search" in "People" from administration menu
   # Check that we can delete an account after upload (Bug #1558864)
-  And I follow "user0005"
+  And I follow "person0005"
   And I follow "Suspend or delete this account"
   And I scroll to the id "delete"
   And I press and confirm "Delete account"

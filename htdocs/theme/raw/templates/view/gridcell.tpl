@@ -1,11 +1,11 @@
 <div id="block_{$id}"
 class="grid-stack-item"
-data-gs-x="{$positionx}"
-data-gs-y="{$positiony}"
-data-gs-width="{$width}"
-data-gs-height="{$height}"
-data-gs-min-height="{$height}"
-data-gs-id="{$id}"
+gs-x="{$positionx}"
+gs-y="{$positiony}"
+gs-w="{$width}"
+gs-h="{$height}"
+gs-min-h="{$height}"
+gs-id="{$id}"
 >
 
     <div class="grid-stack-item-content ui-draggable-handle">

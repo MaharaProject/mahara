@@ -1,0 +1,108 @@
+body.lti-advantage-deeplinks {
+  justify-content: normal;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 0.75rem;
+
+    li {
+      background: transparent;
+      color: $lti-advantage-ql-row-color;
+      font-weight: 400;
+      line-height: 1.4rem;
+      list-style-image: none;
+      list-style-position: outside;
+      list-style-type: none;
+      border: 1px solid transparent;
+      border-top-color: $lti-advantage-ql-row-border-top-color;
+      padding: 0.75rem 0;
+      cursor: pointer;
+
+      &:hover {
+        background: $lti-advantage-ql-row-hover-background; /*#e8f8ff;*/
+        border-top-color: $lti-advantage-ql-row-hover-border-top-color; /*#006fbf;*/
+      }
+    }
+  }
+
+  .ltimodalwrapper {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: $lti-advantage-ql-wrapper-background-fallback; /* Fallback color */
+    background-color: $lti-advantage-ql-wrapper-background; /* Black w/ opacity */
+
+    /* Modal Content/Box */
+    .ltimodal-box {
+      margin: 10% auto; /* 15% from the top and centered */
+      border: 1px solid $lti-advantage-ql-modal-content-border-color;
+      width: 80%; /* Could be more or less, depending on screen size */
+    }
+
+    .ltimodal-title {
+      background: $lti-advantage-ql-modal-title-background;
+      border-bottom: 1px solid $lti-advantage-ql-modal-title-border-bottom-color;
+      font-size: 1.12em;
+
+      h2 {
+        word-wrap: break-word;
+        padding: 0.55em 0 0.45em 0.6em;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 400;
+        line-height: 1.8rem;
+      }
+    }
+
+    .ltimodal-content {
+      background-color: $lti-advantage-ql-modal-content-background-color;
+      padding: 20px;
+
+      /* The title of the submission in the confirmation text */
+      .title {
+        font-style: italic;
+      }
+    }
+
+    .btns {
+      min-height: calc(2rem + 20px);
+      background-color: $lti-advantage-ql-modal-btnsrow-background-color;
+      border-top: 1px solid $lti-advantage-ql-modal-btnsrow-border-color;
+      padding: 0.5em;
+      box-shadow: 0 0 6px 1px $lti-advantage-ql-modal-btnsrow-box-shadow-color;
+
+      .btn {
+
+        &.btn-primary {
+          color: $lti-advantage-ql-btn-primary-color;
+          background-color: $lti-advantage-ql-btn-primary-background-color;
+          border-color: $lti-advantage-ql-btn-primary-border-color;
+          &:hover,
+          &:focus {
+            color: $lti-advantage-ql-btn-primary-color;
+            background-color: scale-color($lti-advantage-ql-btn-primary-background-color, $lightness: -10%);
+            border-color: scale-color($lti-advantage-ql-btn-primary-border-color, $lightness: -10%);
+          }
+        }
+
+        &.btn-secondary {
+          color: $lti-advantage-ql-btn-secondary-color;
+          background-color: $lti-advantage-ql-btn-secondary-background-color;
+          border-color: $lti-advantage-ql-btn-secondary-border-color;
+          &:hover,
+          &:focus {
+              color: $lti-advantage-ql-btn-secondary-color;
+              background-color: scale-color($lti-advantage-ql-btn-secondary-background-color, $lightness: -10%);
+              border-color: scale-color($lti-advantage-ql-btn-secondary-border-color, $lightness: -10%);
+          }
+        }
+      }
+    }
+  }
+}

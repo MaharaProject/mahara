@@ -52,11 +52,11 @@ Scenario: Mahara member can use Institution tags in their content
 
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I follow "Settings" in the "Toolbar buttons" property
+    And I press "Settings" in the "Toolbar buttons" "Nav" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"
     And I press "Save"
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Tagged journal entries"
     And I fill in select2 input "instconf_tagselect" with "One tag" and select "Institution One: One tag"
@@ -75,15 +75,15 @@ Scenario: Mahara member can use Institution tags in their content
     And I press "Save changes"
 
     Given I choose "Pages and collections" in "Create" from main menu
-    And I follow "Tags" in the "#sb-tags" "css_element"
-    And I follow "Edit tags"
-    Then I should see "Test" in the "My tags list" property
-    Then I should not see "Institution One: One tag" in the "My tags list" property
+    And I click on "Tags" in the "Tags block" "Blocks" property
+    And I press "Edit tags"
+    Then I should see "Test" in the "My tags list" "Tags" property
+    Then I should not see "Institution One: One tag" in the "My tags list" "Tags" property
 
 Scenario: Inst admin can use Institution tags when creating Institution pages
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Test view |
@@ -92,7 +92,7 @@ Scenario: Inst admin can use Institution tags when creating Institution pages
     And I press "Save"
 
     # Inst admin put an institution tag on a text block artefact on an institution page
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Text"
     And I set the field "Block title" to "Text Block 1"

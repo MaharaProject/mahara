@@ -27,9 +27,9 @@
                     <tr>
                         <th>{str tag=name section=collection}</th>
                         <th>{str tag=accesslist section=view}</th>
-                        <th class="al-edit text-tiny text-center active">{str tag=editaccess section=view}</th>
+                        <th class="al-edit text-tiny text-center">{str tag=editaccess section=view}</th>
                         {* Customisation for Pharmacy Council WR349184 *}
-                        {if $showcontent}<th class="secreturls text-tiny text-center active">{str tag=secreturls section=view}</th>{/if}
+                        {if $showcontent}<th class="secreturls text-tiny text-center">{str tag=secreturls section=view}</th>{/if}
                         {* End customisation *}
                     </tr>
                 </thead>
@@ -51,9 +51,9 @@
                 <tr>
                     <th>{str tag=title section=view}</th>
                     <th>{str tag=accesslist section=view}</th>
-                    <th class="al-edit text-tiny text-center active">{str tag=editaccess section=view}</th>
+                    <th class="al-edit text-tiny text-center">{str tag=editaccess section=view}</th>
                     {* Customisation for Pharmacy Council WR349184 *}
-                    {if $showcontent}<th class="secreturls text-tiny text-center active">{str tag=secreturls section=view}</th>{/if}
+                    {if $showcontent}<th class="secreturls text-tiny text-center">{str tag=secreturls section=view}</th>{/if}
                     {* End customisation *}
                 </tr>
             </thead>

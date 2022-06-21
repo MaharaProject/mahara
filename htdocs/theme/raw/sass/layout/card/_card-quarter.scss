@@ -88,16 +88,6 @@
             padding: 0;
             margin: 0;
             min-width: auto;
-            a {
-                white-space: normal;
-                background-color: $dropdown-bg;
-                padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-
-                &:focus,
-                &:hover {
-                    background-color: $dropdown-link-hover-bg;
-                }
-            }
             .icon {
                 position: absolute;
                 padding-top: $dropdown-item-padding-y / 2;
@@ -177,6 +167,13 @@
         background-color: $state-warning-bg;
         color: $state-warning-text;
         border-color: $state-warning-border;
+        a {
+            color: $state-warning-link;
+            &:hover,
+            &:focus {
+              text-decoration-color: $state-warning-link;
+            }
+        }
     }
     .card-danger {
         background-color: $state-danger-bg;

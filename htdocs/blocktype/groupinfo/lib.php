@@ -57,11 +57,11 @@ class PluginBlocktypeGroupInfo extends MaharaCoreBlocktype {
         return $dwoo->fetch('blocktype:groupinfo:groupinfo.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -87,7 +87,7 @@ class PluginBlocktypeGroupInfo extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

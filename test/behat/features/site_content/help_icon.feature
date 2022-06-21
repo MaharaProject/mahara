@@ -32,11 +32,11 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I follow "Close help"
   # Pages
   And I follow "Page 01"
-  And I follow "Edit"
+  And I press "Edit"
   And I click on "Help"
-  Then I should see "Designing your page layout enables you to personalise the way in which your resources and information can be displayed."
+  Then I should see "You can move blocks around the page either by dragging them or using your keyboard controls."
   And I follow "Close help"
-  Given I click on "Settings" in the "Toolbar buttons" property
+  Given I click on "Settings" in the "Toolbar buttons" "Nav" property
   And I click on "Help"
   # Tags
   Then I should see "You can add tags to artefacts, pages and collections you create."
@@ -45,9 +45,9 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Add"
   And I click on "Collection"
   # Edit collection settings
-  And I click on "Help" in the "h1 heading" property
+  And I click on "Help" in the "H1 heading" "Common" property
   Then I should see "Here you may give your collection a title and description to give people an idea of what your collection is about."
-  And I follow "Help" in the "Tags section" property
+  And I follow "Help" in the "Tags section" "Tags" property
   Then I should see "You can add tags to artefacts, pages and collections you create. Tags are descriptive labels that allow you to find your content later on more easily."
   And I set the field "Collection name" to "Collection 01"
   And I press "Next: Edit collection pages"
@@ -68,13 +68,13 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   Then I should see "Skins help you customise the look of your portfolio pages to give them a personal touch."
   And I follow "Close help"
   # Create skin
-  And I follow "Create skin"
+  And I press "Create skin"
   And I click on "Help"
   Then I should see "You can design your own skin"
   # Import skin
   And I choose "Skins" in "Create" from main menu
   And I press "More options"
-  And I follow "Import" in the ".btn-top-right" "css_element"
+  And I follow "Import" in the "Top right button group" "Nav" property
   And I click on "Help"
   And I should see "You can import skins from other Mahara sites."
   # Export
@@ -91,7 +91,7 @@ Scenario: Showing correct external manual help file for mahara page
   #Test by going to pages and collections help for user / institution / site / group
   When I log in as "admin" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
-  And I follow "Help" in the ".footer-nav" "css_element"
+  And I click on "Help" in the "Footer" "Footer" property
   And I wait "1" seconds
   And I switch to the new window
   And I scroll to the center of id "overview-page"
@@ -99,14 +99,14 @@ Scenario: Showing correct external manual help file for mahara page
   And I switch to the main window
   When I am on homepage
   And I choose "Pages and collections" in "Institutions" from administration menu
-  And I follow "Help" in the ".footer-nav" "css_element"
+  And I follow "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "institution-pages"
-  And I should see "11.6.12. Institution pages and collections" in "h2" on the screen
+  And I should see "11.6.13. Institution pages and collections" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
   And I choose "Pages and collections" in "Configure site" from administration menu
-  And I follow "Help" in the ".footer-nav" "css_element"
+  And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "site-pages-and-collections"
   And I should see "11.3.7. Site pages and collections" in "h2" on the screen
@@ -114,7 +114,7 @@ Scenario: Showing correct external manual help file for mahara page
   When I am on homepage
   And I follow "GroupA"
   And I follow "Pages and collections (tab)"
-  And I follow "Help" in the ".footer-nav" "css_element"
+  And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "pages-and-collections"
   And I should see "6.4.4. Pages and collections" in "h2" on the screen

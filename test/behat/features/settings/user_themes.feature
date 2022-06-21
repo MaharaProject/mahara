@@ -14,7 +14,7 @@ Background:
 
 Scenario: Activate page themes setting and edit a page (Bug 1591304)
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "Configure site" from administration menu
+ And I choose "Site options" from administration menu
  # I set the page themes option
  And I expand the section "Account settings"
  And I enable the switch "Authors can choose page themes"
@@ -23,10 +23,10 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  # Now set a theme as an author and confirm logo changes
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I follow "Page UserA_01"
- And I follow "Edit"
- And I follow "Settings" in the "Toolbar buttons" property
- And I follow "Advanced"
+ And I press "Edit"
+ And I press "Settings" in the "Toolbar buttons" "Nav" property
+ And I press "Advanced"
  And I scroll to the id "settings_theme"
  And I select "Modern" from "theme"
  And I press "Save"
- Then the "div#logo-area" element should contain "/theme/modern/images/site-logo"
+ Then "/theme/modern/images/site-logo" should be in the "Logo" "Header" property

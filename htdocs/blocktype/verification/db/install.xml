@@ -19,6 +19,19 @@
                 <KEY NAME="userfk" TYPE="foreign" FIELDS="from" REFTABLE="usr" REFFIELDS="id" />
             </KEYS>
         </TABLE>
+        <TABLE NAME="blocktype_verification_undo">
+            <FIELDS>
+                <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="usr" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="reporter" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="viewfk" TYPE="foreign" FIELDS="view" REFTABLE="view" REFFIELDS="id" />
+                <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
+                <KEY NAME="userfk" TYPE="foreign" FIELDS="usr" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="reporterfk" TYPE="foreign" FIELDS="reporter" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>
-

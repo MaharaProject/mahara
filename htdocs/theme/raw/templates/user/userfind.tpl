@@ -1,26 +1,25 @@
 <div class="list-group-item {if $user->pending} list-group-item-warning{/if}">
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
-            <div class="user-icon user-icon-40 float-left">
-                <img src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
+            <div class="user-icon user-icon-60 float-left">
+                <img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
-            <h3 class="list-group-item-heading middle inline">
+            <h3 class="list-group-item-heading">
                 <a href="{profile_url($user)}">
                     {$user->display_name}
                 </a>
                 {if $user->pending}
-                <span class="pendingfriend text-small text-midtone text-weight-normal">
+                <span class="pendingfriend text-regular text-midtone font-base">
                     - {str tag='pendingsince' section='group' arg1=$user->pending_time}
                 </span>
                 {elseif $user->friend && $page == 'find'}
-                <span class="existingfriend text-small text-midtone text-weight-normal">
+                <span class="existingfriend text-regular text-midtone font-base">
                     - {str tag='existingfriend' section='group'}
                 </span>
                 {/if}
             </h3>
-
             {if $user->friend && $user->views}
-            <p class="viewlist detail text-small">
+            <p class="viewlist detail text-small push-left-for-usericon-60">
                 <strong>
                     {str tag='Portfolios' section='view'}:
                 </strong>
@@ -30,21 +29,21 @@
             </p>
             {/if}
             {if $user->institutions}
-            <div class="memberof detail text-small">
+            <div class="memberof detail text-small push-left-for-usericon-60">
                 <span class="icon text-default icon-university left" role="presentation" aria-hidden="true"></span>
                 {$user->institutions|safe}
             </div>
             {/if}
             {if $user->introduction}
-            <div class="text-small detail text-midtone">
+            <div class="text-small detail text-midtone push-left-for-usericon-60">
                 <a class="text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
                     href="#userintro{$user->id}" role="button" aria-expanded="false"
                     aria-controls="userintro{$user->id}">
-                    <span class="icon icon-chevron-down collapse-indicator float-left" role="presentation" aria-hidden="true"></span>
                     {str tag=showintroduction section=group}
+                    <span class="icon icon-chevron-down collapse-indicator text-inline" role="presentation" aria-hidden="true"></span>
                 </a>
             </div>
-            <div class="introduction detail text-small">
+            <div class="introduction detail text-small push-left-for-usericon-60">
                 <div class="collapse" id="userintro{$user->id}">
                     {$user->introduction|safe}
                 </div>
@@ -65,17 +64,17 @@
                 <li class="acceptdenyfriendbtns">
                     <div class="btn-group">
                         {$user->accept|safe}
-                        <a href="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn btn-secondary btn-sm">
+                        <button data-url="{$WWWROOT}user/denyrequest.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" type="submit" class="btn btn-secondary btn-sm">
                             <span class="icon icon-ban text-danger left" role="presentation" aria-hidden="true"></span>
                             {str tag='deny' section='group'}
-                        </a>
+                        </button>
                     </div>
                 </li>
                 {/if}
                 {if $user->friend}
                 <li class="removefriend">
                     <span class="icon text-danger icon-user-times left" role="presentation" aria-hidden="true"></span>
-                    <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-del">
+                    <a href="{$WWWROOT}user/removefriend.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}">
                         {str tag='removefromfriendslist' section='group'}
                     </a>
                 </li>
@@ -90,7 +89,7 @@
                 {if $user->friendscontrol == 'auth'}
                 <li class="friend">
                     <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}" class="btn-request">
+                    <a href="{$WWWROOT}user/requestfriendship.php?id={$user->id}&amp;returnto={$page}&amp;offset={$offset}">
                         {str tag='sendfriendrequest' section='group'}
                     </a>
                 </li>

@@ -127,6 +127,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
         if ($type == 'text') {
             $description = format_whitespace($description);
         }
+        $authorname = $author = null;
         if (isset($entry->author->name) && strlen($entry->author->name)) {
             $authorname = (string)$entry->author->name;
         }
@@ -145,7 +146,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
                 'allowcomments' => $allowcomments,
                 'ctime'        => (string) $entry->published,
                 'mtime'        => (string) $entry->updated,
-                'authorname'   => isset($authorname) ? $authorname : null,
+                'authorname'   => $authorname,
                 'author'       => isset($author) ? $author : null,
                 'tags'         => PluginImportLeap::get_entry_tags($entry),
             ),
@@ -176,6 +177,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
         if ($type == 'text') {
             $description = format_whitespace($description);
         }
+        $authorname = $author = null;
         if (isset($entry->author->name) && strlen($entry->author->name)) {
             $authorname = (string)$entry->author->name;
         }
@@ -192,7 +194,7 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
                 'description' => $description,
                 'ctime'       => (string) $entry->published,
                 'mtime'       => (string) $entry->updated,
-                'authorname'  => isset($authorname) ? $authorname : null,
+                'authorname'  => $authorname,
                 'author'      => isset($author) ? $author : null,
                 'tags'        => PluginImportLeap::get_entry_tags($entry),
                 'private'     => (int) PluginImportLeap::is_correct_category_scheme($entry, $importer, 'audience', 'Private'),
@@ -247,7 +249,6 @@ class LeapImportAnnotation extends LeapImportArtefactPlugin {
                 foreach ($config['annotationfeedback'] as $item) {
                     self::add_import_entry_request_annotationfeedback($item['feedbackentry'], $importer, $item['annotationentryid']);
                 }
-
                 break;
             case self::STRATEGY_IMPORT_AS_ANNOTATION_FEEDBACK:
                 if (is_array($otherentries) && count($otherentries) == 1) {

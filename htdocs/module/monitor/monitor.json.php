@@ -31,6 +31,8 @@ $subpages = PluginModuleMonitor::get_list_of_types();
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
+$data = array();
+
 if (!in_array($type, $subpages)) {
     $type = PluginModuleMonitor::type_default;
 }

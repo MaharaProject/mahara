@@ -12,8 +12,7 @@
 defined('INTERNAL') || die();
 
 // Strings for statistics
-$string['allowpublicprofiles'] = 'Allow public profiles';
-$string['allowpublicviews1'] = 'Allow public portfolios';
+$string['allowpublicprofiles'] = 'Public profiles allowed';
 $string['artefact_type_academicgoal'] = 'Artefact: Academic goals';
 $string['artefact_type_academicskill'] = 'Artefact: Academic skills';
 $string['artefact_type_address'] = 'Artefact: Postal address';
@@ -100,7 +99,7 @@ $string['blocktype_text'] = 'Block: Text';
 $string['blocktype_textbox'] = 'Block: Note';
 $string['blocktype_socialprofile'] = 'Block: Social media';
 $string['blocktype_wall'] = 'Block: Wall';
-$string['blocktype_watchlist'] = 'Block: Watched pages';
+$string['blocktype_watchlist'] = 'Block: Pages I am watching';
 $string['count_block_instance'] = 'Number of blocks';
 $string['count_blocktype_wall_post'] = 'Number of wall posts';
 $string['count_group'] = 'Number of groups';
@@ -108,79 +107,107 @@ $string['count_group_member'] = 'Number of group members';
 $string['count_host'] = 'Number of Moodle hosts';
 $string['count_institution'] = 'Number of institutions';
 $string['count_interaction_forum_post'] = 'Number of forum posts';
-$string['count_usr'] = 'Number of people';
+$string['count_usr'] = 'Number of accounts';
 $string['count_usr_friend'] = 'Number of friend relationships';
-$string['count_usr_institution'] = 'Number of people in institutions';
+$string['count_usr_institution'] = 'Number of accounts in institutions';
 $string['count_members'] = 'Number of members of institution';
 $string['count_artefacts'] = 'Number of artefacts';
 $string['count_blocks'] = 'Number of blocks';
 $string['count_views'] = 'Number of pages';
 $string['dbtype'] = 'Database type';
-$string['enablenetworking'] = 'Enabled networking';
+$string['enablenetworking'] = 'Networking enabled';
 $string['grouptypes'] = 'Group types';
 $string['installation_key'] = 'Installation key';
 $string['lang'] = 'Language';
 $string['newstats'] = 'New statistics';
-$string['plugin_artefact_blog_version'] = 'Artefact plugin Journal version';
-$string['plugin_artefact_comment_version'] = 'Artefact plugin Comment version';
-$string['plugin_artefact_file_version'] = 'Artefact plugin File version';
-$string['plugin_artefact_internal_version'] = 'Artefact plugin XXXXXX version';
-$string['plugin_artefact_plans_version'] = 'Artefact plugin Plans version';
-$string['plugin_artefact_resume_version'] = 'Artefact plugin Résumé version';
-$string['plugin_auth_browserid_version'] = 'Authentication plugin Persona version';
-$string['plugin_auth_imap_version'] = 'Authentication plugin IMAP version';
-$string['plugin_auth_internal_version'] = 'Authentication plugin Internal version';
-$string['plugin_auth_ldap_version'] = 'Authentication plugin LDAP version';
-$string['plugin_auth_none_version'] = 'Authentication plugin None version';
-$string['plugin_auth_saml_version'] = 'Authentication plugin SAML version';
-$string['plugin_auth_xmlrpc_version'] = 'Authentication plugin XML-RPC version';
-$string['plugin_blocktype_blogpost_version'] = 'Block type plugin Journal entry version';
-$string['plugin_blocktype_blog_version'] = 'Block type plugin Journal version';
-$string['plugin_blocktype_contactinfo_version'] = 'Block type plugin Contact information version';
-$string['plugin_blocktype_creativecommons_version'] = 'Block type plugin Creative Commons version';
-$string['plugin_blocktype_entireresume_version'] = 'Block type plugin Entire résumé version';
-$string['plugin_blocktype_externalfeed_version'] = 'Block type plugin External feed version';
-$string['plugin_blocktype_externalvideo_version'] = 'Block type plugin External media version';
-$string['plugin_blocktype_filedownload_version'] = 'Block type plugin File(s) to download version';
-$string['plugin_blocktype_folder_version'] = 'Block type plugin Folder version';
-$string['plugin_blocktype_gallery_version'] = 'Block type plugin Image gallery version';
-$string['plugin_blocktype_googleapps_version'] = 'Block type plugin Google Apps version';
-$string['plugin_blocktype_groupinfo_version'] = 'Block type plugin Group info version';
-$string['plugin_blocktype_groupmembers_version'] = 'Block type plugin Group members version';
-$string['plugin_blocktype_groupviews_version'] = 'Block type plugin Group portfolios version';
-$string['plugin_blocktype_html_version'] = 'Block type plugin Some HTML version';
-$string['plugin_blocktype_html_version'] = 'Block type plugin PDF version';
-$string['plugin_blocktype_image_version'] = 'Block type plugin Image version';
-$string['plugin_blocktype_inbox_version'] = 'Block type plugin Inbox version';
-$string['plugin_blocktype_internalmedia_version'] = 'Block type plugin Embedded media version';
-$string['plugin_blocktype_myfriends_version'] = 'Block type plugin My friends version';
-$string['plugin_blocktype_mygroups_version'] = 'Block type plugin My groups version';
-$string['plugin_blocktype_myviews_version'] = 'Block type plugin My portfolios version';
-$string['plugin_blocktype_navigation_version'] = 'Block type plugin Navigation version';
-$string['plugin_blocktype_newviews_version'] = 'Block type plugin Latest pages version';
-$string['plugin_blocktype_plans_version'] = 'Block type plugin Plans version';
-$string['plugin_blocktype_profileinfo_version'] = 'Block type plugin Profile information version';
-$string['plugin_blocktype_recentforumposts_version'] = 'Block type plugin Recent forum posts version';
-$string['plugin_blocktype_recentposts_version'] = 'Block type plugin Recent journal posts version';
-$string['plugin_blocktype_resumefield_version'] = 'Block type plugin Single résumé field version';
-$string['plugin_blocktype_taggedposts_version'] = 'Block type plugin Tagged journal entries version';
-$string['plugin_blocktype_textbox_version'] = 'Block type plugin Note version';
-$string['plugin_blocktype_wall_version'] = 'Block type plugin Wall version';
-$string['plugin_blocktype_watchlist_version'] = 'Block type plugin Watched pages version';
-$string['plugin_export_html_version'] = 'Export plugin HTML version';
-$string['plugin_export_leap_version'] = 'Export plugin Leap2A version';
-$string['plugin_grouptype_course_version'] = 'Group type plugin Course version';
-$string['plugin_grouptype_standard_version'] = 'Group type plugin Standard version';
-$string['plugin_import_file_version'] = 'Import plugin File version';
-$string['plugin_import_leap_version'] = 'Import plugin Leap2A version';
-$string['plugin_interaction_forum_version'] = 'Interaction plugin Forum version';
-$string['plugin_notification_emaildigest_version'] = 'Notification plugin Email digest version';
-$string['plugin_notification_email_version'] = 'Notification plugin Email version';
-$string['plugin_notification_internal_version'] = 'Notification plugin Internal version';
-$string['plugin_search_internal_version'] = 'Search plugin Internal version';
+$string['allowpublicviews'] = 'Public portfolios allowed';
+$string['phpversion'] = 'PHP version';
+$string['dbversion'] = 'Database version';
+$string['osversion'] = 'Operating system version';
+$string['phpsapi'] = 'PHP SAPI';
+$string['webserver'] = 'Web server';
+$string['phpmodules'] = 'PHP modules installed';
+$string['view_type_progress'] = 'Number of progress completion pages';
+$string['plugin_artefact_annotation_version'] = 'Artefact plugin "Annotation" version';
+$string['plugin_artefact_blog_version'] = 'Artefact plugin "Journal" version';
+$string['plugin_artefact_comment_version'] = 'Artefact plugin "Comment" version';
+$string['plugin_artefact_file_version'] = 'Artefact plugin "File" version';
+$string['plugin_artefact_internal_version'] = 'Artefact plugin "Internal" version';
+$string['plugin_artefact_peerassessment_version'] = 'Artefact plugin "Peer assessment" version';
+$string['plugin_artefact_plans_version'] = 'Artefact plugin "Plans" version';
+$string['plugin_artefact_resume_version'] = 'Artefact plugin "Résumé"" version';
+$string['plugin_auth_imap_version'] = 'Authentication plugin "IMAP" version';
+$string['plugin_auth_internal_version'] = 'Authentication plugin "Internal" version';
+$string['plugin_auth_ldap_version'] = 'Authentication plugin "LDAP" version';
+$string['plugin_auth_none_version'] = 'Authentication plugin "None" version';
+$string['plugin_auth_saml_version'] = 'Authentication plugin "SAML" version';
+$string['plugin_auth_webservice_version'] = 'Authentication plugin "Web services" verison';
+$string['plugin_auth_xmlrpc_version'] = 'Authentication plugin "XML-RPC" version';
+$string['plugin_blocktype_annotation_version'] = 'Block type plugin "Annotation" version';
+$string['plugin_blocktype_blogpost_version'] = 'Block type plugin "Journal entry" version';
+$string['plugin_blocktype_blog_version'] = 'Block type plugin "Journal" version';
+$string['plugin_blocktype_contactinfo_version'] = 'Block type plugin "Contact information" version';
+$string['plugin_blocktype_creativecommons_version'] = 'Block type plugin "Creative Commons" version';
+$string['plugin_blocktype_entireresume_version'] = 'Block type plugin "Entire résumé"" version';
+$string['plugin_blocktype_externalfeed_version'] = 'Block type plugin "External feed" version';
+$string['plugin_blocktype_externalvideo_version'] = 'Block type plugin "External media" version';
+$string['plugin_blocktype_filedownload_version'] = 'Block type plugin "File(s) to download" version';
+$string['plugin_blocktype_folder_version'] = 'Block type plugin "Folder" version';
+$string['plugin_blocktype_gallery_version'] = 'Block type plugin "Image gallery" version';
+$string['plugin_blocktype_googleapps_version'] = 'Block type plugin "Google Apps" version';
+$string['plugin_blocktype_groupinfo_version'] = 'Block type plugin "Group info" version';
+$string['plugin_blocktype_groupmembers_version'] = 'Block type plugin "Group members" version';
+$string['plugin_blocktype_groupviews_version'] = 'Block type plugin "Group portfolios" version';
+$string['plugin_blocktype_html_version'] = 'Block type plugin "Some HTML" version';
+$string['plugin_blocktype_pdf_version'] = 'Block type plugin "PDF" version';
+$string['plugin_blocktype_image_version'] = 'Block type plugin "Image" version';
+$string['plugin_blocktype_inbox_version'] = 'Block type plugin "Inbox" version';
+$string['plugin_blocktype_internalmedia_version'] = 'Block type plugin "Embedded media" version';
+$string['plugin_blocktype_myfriends_version'] = 'Block type plugin "My friends" version';
+$string['plugin_blocktype_mygroups_version'] = 'Block type plugin "My groups" version';
+$string['plugin_blocktype_myviews_version'] = 'Block type plugin "My portfolios" version';
+$string['plugin_blocktype_navigation_version'] = 'Block type plugin "Navigation" version';
+$string['plugin_blocktype_newviews_version'] = 'Block type plugin "Portfolios shared with me" version';
+$string['plugin_blocktype_plans_version'] = 'Block type plugin "Plans" version';
+$string['plugin_blocktype_profileinfo_version'] = 'Block type plugin "Profile information" version';
+$string['plugin_blocktype_socialprofile_version'] = 'Block type plugin "Social media" version';
+$string['plugin_blocktype_recentforumposts_version'] = 'Block type plugin "Recent forum posts" version';
+$string['plugin_blocktype_recentposts_version'] = 'Block type plugin "Recent journal posts" version';
+$string['plugin_blocktype_resumefield_version'] = 'Block type plugin "Single résumé field" version';
+$string['plugin_blocktype_taggedposts_version'] = 'Block type plugin "Tagged journal entries" version';
+$string['plugin_blocktype_comment_version'] = 'Block type plugin "Comment" version';
+$string['plugin_blocktype_textbox_version'] = 'Block type plugin "Note" version';
+$string['plugin_blocktype_peerassessment_version'] = 'Block type plugin "Peer assessment" version';
+$string['plugin_blocktype_signoff_version'] = 'Block type plugin "Sign-off and verification" version';
+$string['plugin_blocktype_openbadgedisplayer_version'] = 'Block type plugin "Open Badges" version';
+$string['plugin_blocktype_placeholder_version'] = 'Block type plugin "Placeholder" version';
+$string['plugin_blocktype_text_version'] = 'Block type plugin "Text" version';
+$string['plugin_blocktype_verification_version'] = 'Block type plugin "Portfolio review" version';
+$string['plugin_blocktype_wall_version'] = 'Block type plugin "Wall" version';
+$string['plugin_blocktype_watchlist_version'] = 'Block type plugin "Pages I am watching" version';
+$string['plugin_export_html_version'] = 'Export plugin "HTML" version';
+$string['plugin_export_leap_version'] = 'Export plugin "Leap2A" version';
+$string['plugin_export_pdf_version'] = 'Export plugin "PDF" version';
+$string['plugin_grouptype_course_version'] = 'Group type plugin "Course" version';
+$string['plugin_grouptype_standard_version'] = 'Group type plugin "Standard" version';
+$string['plugin_import_file_version'] = 'Import plugin "File" version';
+$string['plugin_import_leap_version'] = 'Import plugin "Leap2A" version';
+$string['plugin_interaction_forum_version'] = 'Interaction plugin "Forum" version';
+$string['plugin_notification_emaildigest_version'] = 'Notification plugin "Email digest" version';
+$string['plugin_notification_email_version'] = 'Notification plugin "Email" version';
+$string['plugin_notification_internal_version'] = 'Notification plugin "Internal" version';
+$string['plugin_search_internal_version'] = 'Search plugin "Internal" version';
+$string['plugin_search_elasticsearch_version'] = 'Search plugin "Elasticsearch" version';
+$string['plugin_module_assessmentreport_version'] = 'Module "Assessment notification" version';
+$string['plugin_module_framework_version'] = 'Module "SmartEvidence" version';
+$string['plugin_module_lti_version'] = 'Module "LTI" version';
+$string['plugin_module_mobileapi_version'] = 'Module "Mobile API" version';
+$string['plugin_module_monitor_version'] = 'Module "Monitor" version';
+$string['plugin_module_multirecipientnotification_version'] = 'Module "Multi recipient notifcation" version';
+$string['plugin_module_submissions_version'] = 'Module "Submissions" version';
 $string['release'] = 'Release';
 $string['sitename'] = 'Site name';
-$string['theme'] = 'Theme';
+$string['theme'] = 'Site theme';
 $string['usersloggedin'] = 'Number of logged-in people in the last week';
 $string['version'] = 'Version';
 $string['view_type_dashboard'] = 'Number of dashboards';
@@ -218,7 +245,7 @@ $string['reportdescaccesslist'] = '<ul>
 <li>Access list, i.e. who has permission to view the portfolio</li>
 </ul><p>Listed are portfolios that were created during the selected time period. Their current access permissions are shown.</p>';
 
-$string['reportcompletionverification'] = 'Completion and verification';
+$string['reportcompletionverification'] = 'Completion and review';
 $string['reportdesccompletionverification'] = '<ul>
 <li>Personal information of the portfolio author</li>
 <li>Email address of portfolio author</li>
@@ -226,24 +253,24 @@ $string['reportdesccompletionverification'] = '<ul>
 <li>Portfolio title</li>
 <li>Portfolio creation date</li>
 <li>Template title with link to it</li>
-<li>Personal information of the verifier</li>
-<li>Email address of the verifier</li>
-<li>Date on which the verifier received access to the portfolio</li>
-<li>Date on which the verifier confirmed the primary statement on the portfolio</li>
-<li>Date on which the verifier removed their access to the portfolio</li>
-<li>Date when the verifier\'s access to the portfolio was removed by the system</li>
-<li>The Percentage of completions per portfolio per individual</li>
+<li>Personal information of the reviewer</li>
+<li>Email address of the reviewer</li>
+<li>Date on which the reviewer received access to the portfolio</li>
+<li>Date on which the reviewer confirmed the primary statement on the portfolio</li>
+<li>Date on which the reviewer removed their access to the portfolio</li>
+<li>Date when the reviewer\'s access to the portfolio was removed by the system</li>
+<li>The percentage of completions per portfolio per individual</li>
 </ul>';
 
-$string['reportportfolioswithverifiers'] = 'Portfolios with verifiers';
+$string['reportportfolioswithverifiers'] = 'Portfolios with reviewers';
 $string['reportdescportfolioswithverifiers'] = '<ul>
 <li>Date of the week commencing for time period</li>
-<li>Total number of portfolios with verifiers</li>
-<li>Total number of portfolios without verifiers</li>
+<li>Total number of portfolios with reviewers</li>
+<li>Total number of portfolios without reviewers</li>
 </ul>';
-$string['withverifier'] = 'With verifiers';
-$string['withoutverifier'] = 'Without verifiers';
-$string['currentverifiersinfo'] = 'Current verifiers';
+$string['withverifier'] = 'With reviewers';
+$string['withoutverifier'] = 'Without reviewers';
+$string['currentverifiersinfo'] = 'Current reviewers';
 
 $string['reportdescusers'] = '<ul>
 <li>Date</li>
@@ -292,10 +319,10 @@ $string['reportdesccollaboration'] = '<ul>
 <li>Number of portfolios shared with friends</li>
 </ul>';
 
-$string['reportverifiersummary'] = 'Verifier summary';
+$string['reportverifiersummary'] = 'Reviewer summary';
 $string['reportdescverifiersummary'] = '<ul>
 <li>Date for time period per week</li>
-<li>Columns representing the number of verifiers per portfolio, i.e. a value of "3" in the "One" column represents three verifiers with access to one portfolio each.</li>
+<li>Columns representing the number of reviewers per portfolio, i.e. a value of "3" in the "One" column represents three reviewers with access to one portfolio each.</li>
 </ul>';
 $string['date'] = 'Date';
 $string['one'] = 'One';
@@ -309,8 +336,11 @@ $string['eight'] = 'Eight';
 $string['nine'] = 'Nine';
 $string['tenormore'] = 'Ten +';
 $string['verifiersummarydate'] = 'w.c. %s';
-$string['verifierinfo'] = 'Verifier allocation';
-$string['verifierloadinfo'] = 'Verifier allocation load';
+$string['verifierinfo'] = 'Reviewer allocation';
+$string['verifierloadinfo'] = 'Reviewer allocation load';
+$string['verifieroptions_all'] = 'Show all';
+$string['verifieroptions_current'] = 'Show authors with current reviewers';
+$string['verifieroptions_none'] = 'Show authors without a current reviewer';
 
 $string['reportmasquerading'] = 'Masquerading sessions';
 $string['reportdescmasquerading'] = '<ul>
@@ -467,15 +497,15 @@ $string['reportdesclogins'] = '<ul>
 <p><strong>Note:</strong> This report is only available when you select "All institutions" in the "Institution" drop-down menu.';
 
 $string['userscollaborationreports'] = 'Collaboration';
-$string['usersverifiersummaryreports'] = 'Verifier summary';
+$string['usersverifiersummaryreports'] = 'Reviewer summary';
 $string['userspageactivityreports'] = 'Page activity';
 $string['usersmasqueradingreports'] = 'Masquerading sessions';
 $string['usersaccesslistreports'] = 'Portfolio access';
 $string['usersuseractivityreports'] = 'Account activity';
 $string['usersuserdetailsreports'] = 'Account details';
 $string['usersuseragreementreports'] = 'Legal consent';
-$string['userscompletionverificationreports'] = 'Completion and verification';
-$string['usersportfolioswithverifiersreports'] = 'Portfolios with verifiers';
+$string['userscompletionverificationreports'] = 'Completion and review';
+$string['usersportfolioswithverifiersreports'] = 'Portfolios with reviewers';
 $string['groupsreports'] = 'Groups overview';
 $string['contentreports'] = 'Content overview';
 $string['peoplereports'] = 'People overview';
@@ -532,25 +562,25 @@ $string['assessmensubmitted'] = 'Submission date';
 $string['assessmentmarker'] = 'Released by';
 $string['assessmentreleaseddate'] = 'Release date';
 
-// Completion and verification report
+//Completion and review report
+
 $string['registrationnumber'] = 'Registration number';
 $string['apcstatusdate'] = 'APC start date';
 $string['portfoliotitle'] = 'Portfolio';
 $string['portfoliocreationdate'] = 'Portfolio created';
 $string['templatetitle'] = 'Template';
-$string['verifierfirstname'] = 'Verifier first name';
-$string['verifierlastname'] = 'Verifier last name';
-$string['verifierdisplayname'] = 'Verifier display name ';
-$string['verifierusername'] = 'Verifier username';
-$string['verifierregistrationnumber'] = 'Verifier registration number';
-$string['verifieremail'] = 'Verifier email';
+$string['verifierfirstname'] = 'Reviewer first name';
+$string['verifierlastname'] = 'Reviewer last name';
+$string['verifierdisplayname'] = 'Reviewer display name ';
+$string['verifierusername'] = 'Reviewer username';
+$string['verifierregistrationnumber'] = 'Reviewer student ID';
+$string['verifieremail'] = 'Reviewer email';
 $string['accessfromdate'] = 'Access granted';
 $string['accessrevokedbyauthordate'] = 'Access revoked by author';
-$string['accessrevokedbyaccessordate'] = 'Access revoked by verifier';
-$string['accessrevokedbysystemdate'] = 'Access revoked by system';
-$string['dateverified'] = 'Verifier confirmed primary statement';
+$string['accessrevokedbyaccessordate'] = 'Access revoked by reviewer';
+$string['dateverified'] = 'Reviewer confirmed primary statement';
 $string['completionpercentage'] = 'Completion percentage';
 $string['portfoliofilter'] = 'Filter by template';
 $string['portfoliofilterdescription'] = 'Filter the results to one or more portfolio templates';
-$string['portfolioverifierfilter'] = 'Verifier assigned';
-$string['portfolioveriferfilterdescription'] = 'Filter the results based on whether they have a verifier assigned or not';
+$string['portfolioverifierfilter'] = 'Reviewer assigned';
+$string['portfolioveriferfilterdescription'] = 'Filter the results based on whether they have a reviewer assigned or not';

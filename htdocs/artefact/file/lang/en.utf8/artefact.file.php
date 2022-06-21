@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Lang file for the file artefact
  *
  * @package    mahara
  * @subpackage lang
@@ -88,7 +89,7 @@ $string['editfile'] = 'Edit file';
 $string['editfolder'] = 'Edit folder';
 $string['editingfailed'] = 'Editing failed: file or folder does not exist any more';
 $string['emptyfolder'] = 'Empty folder';
-$string['file'] = 'File'; // Capitalised to be consistent with names of all the other artefact types
+$string['file'] = 'file';
 $string['File'] = 'File';
 $string['fileadded'] = 'File selected';
 $string['filealreadyindestination'] = 'The file you moved is already in that folder';
@@ -134,8 +135,9 @@ $string['gotofolder'] = 'Go to %s';
 $string['groupfiles'] = 'Group files';
 $string['home'] = 'Home';
 $string['htmlremovedmessage'] = 'You are viewing <strong>%s</strong> by <a href="%s">%s</a>. The file displayed below has been filtered to remove malicious content and is only a rough representation of the original.';
-$string['htmlremovedmessagenoowner'] = 'You are viewing <strong>%s</strong>. The file displayed below has been filtered to remove malicious content and is only a rough representation of the original.';
-$string['image'] = 'Image';
+$string['htmlremovedmessagenoowner'] = 'You are viewing <strong>%s</strong>. The file displayed below has been filtered to remove malicious content and is only an approximate representation of the original.';
+$string['image'] = 'image';
+$string['Image'] = 'Image';
 $string['Images'] = 'Images';
 $string['imagesdir'] = 'images';
 $string['imagesdirdesc'] = 'Image files';
@@ -143,7 +145,9 @@ $string['lastmodified'] = 'Last modified';
 $string['myfiles'] = 'My files';
 $string['Name'] = 'Name';
 $string['namefieldisrequired'] = 'The name field is required';
-$string['maxuploadsize'] = 'Maximum upload size';
+$string['maxuploadsize'] = 'Maximum file size';
+$string['maxuploadsizeis'] = 'Maximum file size: %s';
+$string['maxfileuploads'] = 'maximum files to upload: %s';
 $string['nofolderformove'] = 'No folder available to move to';
 $string['movefaileddestinationinartefact'] = 'You cannot put a folder inside itself.';
 $string['movefaileddestinationnotfolder'] = 'You can only move files into folders.';
@@ -253,7 +257,7 @@ $string['tar'] = 'TAR archive';
 $string['gz'] = 'Gzip compressed file';
 $string['bz2'] = 'Bzip2 compressed file';
 $string['txt'] = 'Plain text file';
-$string['video'] = 'Video file';
+$string['videofile'] = 'Video file';
 $string['wav'] = 'WAV audio file';
 $string['m4a'] = 'M4A audio file';
 $string['wmv'] = 'WMV video file';
@@ -268,7 +272,7 @@ $string['rpm'] = 'RPM RealPlayer movie';
 $string['rm'] = 'RM RealPlayer movie';
 $string['webm'] = 'WEBM video file';
 $string['3gp'] = '3GPP media file';
-
+$string['video'] = 'video';
 
 // Profile icons
 $string['cantcreatetempprofileiconfile'] = 'Could not write temporary profile picture image in %s';
@@ -392,3 +396,8 @@ $string['notrendertopdffiles'] = array(
     'The files have been added to: ',
 );
 $string['notrendertopdflink'] = 'The file can be accessed at: ';
+
+$string['rotate90img'] = 'Rotate image 90 degrees clockwise from original position';
+$string['rotate180img'] = 'Rotate image 180 degrees clockwise from original position';
+$string['rotate270img'] = 'Rotate image 270 degrees clockwise from original position';
+$string['rotate0img'] = 'Rotate image to the original position';

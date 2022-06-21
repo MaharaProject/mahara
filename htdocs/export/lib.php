@@ -27,6 +27,11 @@ interface IPluginExport {
      * A human-readable description for the export
      */
     public static function get_description();
+
+    /**
+     * Is the plugin activated or not?
+     */
+    public static function is_active();
 }
 
 /**
@@ -118,18 +123,18 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             $options = array($this->leapfile, $this->filedir);
         }
         else {
-            $options = array($this->rootdir);
+            $options = array($this->rootdir ?? null);
         }
         // zip everything up
         $this->notify_progress_callback(95, get_string('creatingzipfile', 'export'));
         try {
-            create_zip_archive($this->exportdir, $this->zipfile, $options);
+            create_zip_archive($this->exportdir ?? null, $this->zipfile, $options);
         }
         catch (SystemException $e) {
             throw new SystemException('Failed to zip the export file: ' . $e->getMessage());
         }
         $this->notify_progress_callback(100, get_string('Done', 'export'));
-        return $this->zipfile;
+        return $this->zipfile ?? '';
     }
 
     /**
@@ -139,6 +144,8 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      * @return bool
      */
     abstract public function is_diskspace_available();
+
+    abstract protected function collection_menu($collectionid);
 
     //  MAIN CLASS DEFINITION
 
@@ -161,6 +168,11 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      * Whether the user requested to export comments as well
      */
     public $includefeedback = false;
+
+    /**
+     * Include private comments in export
+     */
+    public $includeprivatefeedback = false;
 
     /**
      * User object for the user being exported.
@@ -321,7 +333,19 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             }
         }
 
-
+        // check if there are any artefacts that shouldn't be exported for each artefact type
+        $artefactsnotincluded = array();
+        $plugins = plugins_installed('artefact');
+        foreach ($plugins as &$plugin) {
+            safe_require('artefact', $plugin->name);
+            $classname = generate_class_name('artefact', $plugin->name);
+            if (is_callable($classname . '::exclude_artefacts_in_export')) {
+                if ($artefacts = call_static_method($classname, 'exclude_artefacts_in_export', $userid)) {
+                    $artefactsnotincluded = array_unique(array_merge($artefactsnotincluded, $artefacts));
+                }
+            }
+        }
+        $tmpartefacts = array_diff($tmpartefacts, $artefactsnotincluded);
 
         $this->collections = array();
         if (empty($this->views)) {
@@ -707,10 +731,12 @@ function export_process_queue($id = false) {
 
         if ($row->exporttype == 'leap') {
             $exporter->includefeedback = false; // currently only doing leap2a exports and they can't handle feedback
+            $exporter->includeprivatefeedback = false;
             $createarchive = true;
         }
         else {
             $exporter->includefeedback = true;
+            $exporter->includeprivatefeedback = true;
             $createarchive = false;
         }
 
@@ -987,6 +1013,40 @@ function create_zip_archive($exportdir, $filename, $files) {
     }
 }
 
+/**
+ * Check if the view is in the export queue.
+ *
+ * @param int $viewid
+ *
+ * @return boolean True if the view is in the export queue.
+ */
+function is_view_in_export_queue($viewid) {
+    return is_content_in_export_queue('view', $viewid);
+}
+
+/**
+ * Check if the collection is in the export queue.
+ *
+ * @param int $collection_id
+ *
+ * @return boolean True if the collection is in the export queue.
+ */
+function is_collection_in_export_queue($collection_id) {
+    return is_content_in_export_queue('collection', $collection_id);
+}
+
+/**
+ * Check if a view or collection is in the export queue.
+ *
+ * @param string $thing
+ * @param int $id
+ *
+ * @return boolean True if the thing is in the export queue.
+ */
+function is_content_in_export_queue($thing, $id) {
+    return (bool) count_records('export_queue_items', $thing, $id);
+}
+
 class PluginExportAll extends PluginExport {
 
     protected $htmlexporter;
@@ -1023,13 +1083,20 @@ class PluginExportAll extends PluginExport {
 
     public static function get_title() {}
     public static function get_description() {}
+    public static function is_active() {}
+    protected function collection_menu($collectionid) {}
 
     public function export() {
 
         $this->htmlexporter->includefeedback = $this->includefeedback;
+        $this->htmlexporter->includeprivatefeedback = $this->includeprivatefeedback;
+
         $this->leapexporter->includefeedback = $this->includefeedback;
+        $this->leapexporter->includeprivatefeedback = $this->includeprivatefeedback;
+
         if ($this->pdfactive) {
             $this->pdfexporter->includefeedback = $this->includefeedback;
+            $this->pdfexporter->includeprivatefeedback = $this->includeprivatefeedback;
             $this->notify_progress_callback(0, get_string('startingpdfexport', 'export'));
             try {
                 $pdf = $this->pdfexporter->export();

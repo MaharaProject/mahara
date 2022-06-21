@@ -106,7 +106,7 @@ $searchform = array(
                 ),
                 'submit' => array(
                     'type' => 'submit',
-                    'class' => 'btn-primary no-label input-group',
+                    'class' => 'btn-secondary no-label input-group',
                     'value' => get_string('search'),
                 )
             )

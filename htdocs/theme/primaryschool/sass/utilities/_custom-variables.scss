@@ -40,7 +40,7 @@ $navbar-default-link-border:                transparent;
 $navbar-default-link-color:                 $white;
 $navbar-default-link-hover-color:           $white;
 $navbar-default-link-bg:                    $theme-primary-color;
-$navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -5%);
+$navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -10%);
 $navbar-default-active-color:               $gray-700;
 $navbar-default-active-bg:                  #f1f1f1;
 
@@ -48,7 +48,7 @@ $navbar-default-active-bg:                  #f1f1f1;
 $navbar-inverse-bg:                         scale-color($navbar-default-link-bg, $lightness: -10%);
 $navbar-inverse-link-color:                 $white;
 $navbar-inverse-link-hover-color:           $white;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -5.5%);
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -15%);
 $navbar-inverse-link-active-color:          $white;
 $navbar-inverse-link-active-bg:             scale-color($navbar-default-link-bg, $lightness: -15%);
 
@@ -59,7 +59,6 @@ $navbar-inverse-toggle-hover-color:         $white;
 $navbar-inverse-toggle-hover-bg:            scale-color($navbar-inverse-bg, $lightness: -5%);
 $navbar-inverse-toggle-active-color:        $white;
 $navbar-inverse-toggle-active-bg:           scale-color($navbar-default-link-bg, $lightness: -10%);
-
 
 //== Tabs
 $nav-tabs-border-color:                     $gray-100;
@@ -73,11 +72,7 @@ $nav-tabs-active-link-hover-border-color:   $theme-primary-color;
 $nav-tabs-justified-link-border-color:            #f7f7f7;
 $nav-tabs-justified-active-link-border-color:     $body-bg;
 
-
 //== Buttons
-
-$btn-font-weight:                normal;
-
 $btn-secondary-color:            $gray-700;
 $btn-secondary-bg:               #F9F9F9;
 $btn-secondary-border:           $gray-200;
@@ -90,6 +85,13 @@ $btn-success-color:              $white;
 $btn-success-bg:                 $theme-primary-color;
 $btn-success-border:             scale-color($theme-primary-color, $lightness: -5%);
 
+// Cards
+$card-secondary-header-color:    $white;
+$card-secondary-border-width:    0;
+
 // Collapse/expand indicator
 $collapse-indicator-color:                  scale-color($theme-primary-color, $lightness: 10%);
 $collapse-indicator-hover-color:            $theme-primary-color;
+
+// User icon border radius
+$user-icon-border-radius:                   50%;

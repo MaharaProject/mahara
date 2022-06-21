@@ -1,0 +1,17 @@
+LTI Advantage (1.3) in Mahara
+=============================
+
+Website: https://github.com/IMSGlobal/lti-1-3-php-library
+Version: master (there are no releases yet)
+
+
+Uses libraries:
+https://github.com/fproject/php-jwt
+https://github.com/phpseclib/phpseclib
+
+Changes:
+
+* Changed cookie creation function depending on php version
+commit: 0ade28235ea736d0724e4a233a760f07ccaa005b
+* Changed cache management to allow setting of the cache dir.
+commit: 245d6f057854f8b4a89bfd81a76d8dbfa4ce4d4b

@@ -49,12 +49,31 @@ $elements = array(
     ),
     'includefeedback' => array(
         'type' => 'switchbox',
-        'class' => 'last',
         'title' => get_string('includecomments', 'export'),
         'description' => get_string('includecommentsdescription', 'export'),
         'defaultvalue' => 1,
     ),
+    'includeprivatefeedback' => array(
+        'type' => 'switchbox',
+        'class' => 'last',
+        'title' => get_string('includeprivatefeedback', 'export'),
+        'description' => get_string('includeprivatefeedbackdesc1', 'export'),
+        'defaultvalue' => 0,
+    ),
 );
+
+$inlinejs = <<<EOF
+jQuery(function($) {
+    $("#export_includefeedback").on("click", function() {
+        if (this.checked) {
+            $("#export_includeprivatefeedback").prop("disabled", false);
+        }
+        else {
+            $("#export_includeprivatefeedback").prop("disabled", true);
+        }
+    });
+});
+EOF;
 
 if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = ? ORDER BY title', array($USER->get('id'), 'portfolio'))) {
     foreach ($viewids as $viewid) {
@@ -71,8 +90,7 @@ if ($viewids = get_column_sql('SELECT id FROM {view} WHERE owner = ? AND type = 
         'paginator',
         'js/preview.js',
         'js/export.js',
-        'js/lodash/lodash.js',
-        'js/gridstack/gridstack.js',
+        'js/gridstack/gridstack_modules/gridstack-h5.js',
         'js/gridlayout.js',
         'js/collection-navigation.js',
     );
@@ -209,6 +227,7 @@ function export_submit(Pieform $form, $values) {
             'what'            => $values['what'],
             'views'           => $views,
             'includefeedback' => $values['includefeedback'],
+            'includeprivatefeedback' => $values['includeprivatefeedback'],
         );
         $SESSION->set('exportdata', $exportdata);
         $SESSION->set('exportprogress', false);
@@ -225,5 +244,6 @@ $smarty = smarty(
 );
 setpageicon($smarty, 'icon-upload');
 $smarty->assign('pagedescriptionhtml', get_string('exportportfoliodescription1', 'export'));
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');

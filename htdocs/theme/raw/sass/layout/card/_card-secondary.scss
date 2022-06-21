@@ -2,6 +2,7 @@
 
 .card.card-secondary {
     @include box-shadow(none);
+    padding: 0.2rem;
     border-color: transparent;
     .admin & {
         border-color: $card-border-color;
@@ -13,6 +14,7 @@
         background-color: transparent;
         .card-header {
             background-color: $card-header-bg;
+            color: $card-header-color;
 
             > .blockinstance-header {
                 display: block;
@@ -24,7 +26,8 @@
     }
     > .card-header, .card-header-nested {
         padding: $card-spacer-y ($card-spacer-x / 2) $card-spacer-y 0px;
-        background: transparent;
+        background: $card-secondary-header-bg;
+        color: $card-secondary-header-color;
         font-family: $headings-font-family;
         font-size: $h3-font-size;
         font-weight: $headings-font-weight;

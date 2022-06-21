@@ -21,7 +21,7 @@ use Behat\Behat\Exception\PendingException as PendingException;
 class BehatDataGenerators extends BehatBase {
 
     /**
-     * @var testing_data_generator
+     * @var TestingDataGenerator
      */
     protected $datagenerator;
 
@@ -83,28 +83,29 @@ class BehatDataGenerators extends BehatBase {
         'institutions' => array(
             'datagenerator' => 'institution',
             'available' => array(
-                'name'             => 'text',
-                'displayname'      => 'text',
-                'showonlineusers'  => 'number',
-                'registerallowed'  => 'bool',
-                'registerconfirm'  => 'bool',
-                'lang'             => 'text',
-                'theme'            => 'text',
-                'dropdownmenu'     => 'bool',
-                'skins'            => 'bool',
-                'licensemandatory' => 'bool',
-                'licensedefault'   => 'text',
-                'defaultquota'     => 'text',
-                'defaultmembershipperiod' => 'number',
-                'maxuseraccounts'  => 'number',
-                'expiry'           => 'text',
-                'allowinstitutionpublicviews' => 'bool',
-                'commentthreaded'  => 'bool',
-                'members'          => 'text',
-                'staff'            => 'text',
-                'admins'           => 'text',
-                'authname'         => 'string',
-                'tags'             => 'bool',
+              'name'                       => 'text',
+              'displayname'                => 'text',
+              'showonlineusers'            => 'number',
+              'registerallowed'            => 'bool',
+              'registerconfirm'            => 'bool',
+              'lang'                       => 'text',
+              'theme'                      => 'text',
+              'dropdownmenu'               => 'bool',
+              'skins'                      => 'bool',
+              'licensemandatory'           => 'bool',
+              'licensedefault'             => 'text',
+              'defaultquota'               => 'text',
+              'defaultmembershipperiod'    => 'number',
+              'maxuseraccounts'            => 'number',
+              'expiry'                     => 'text',
+              'allowinstitutionpublicviews'=> 'bool',
+              'progresscompletion'         => 'bool',
+              'commentthreaded'            => 'bool',
+              'members'                    => 'text',
+              'staff'                      => 'text',
+              'admins'                     => 'text',
+              'authname'                   => 'string',
+              'tags'                       => 'bool',
             ),
             'required' => array('name', 'displayname')
         ),
@@ -128,19 +129,21 @@ class BehatDataGenerators extends BehatBase {
                 'type'             => 'text',
                 'data'             => 'text',
                 'page'             => 'text',
-                'retractable'      => 'text'
+                'retractable'      => 'text',
+                'updateonly'       => 'bool',
             ),
             'required' => array('title', 'type', 'page')
         ),
         'collections' => array(
             'datagenerator' => 'collection',
             'available' => array(
-                'title'            => 'text',
-                'description'      => 'text',
-                'ownertype'        => 'text',
-                'ownername'        => 'text',
-                'pages'            => 'text',
-                'lock'             => 'bool',
+                'title'              => 'text',
+                'description'        => 'text',
+                'ownertype'          => 'text',
+                'ownername'          => 'text',
+                'pages'              => 'text',
+                'lock'               => 'bool',
+                'progresscompletion' => 'bool',
             ),
             'required' => array('title', 'ownertype', 'ownername')
         ),
@@ -304,7 +307,8 @@ class BehatDataGenerators extends BehatBase {
             'qualtype'               => 'text',
             'qualname'               => 'text',
             'qualdescription'        => 'text',
-            'attachment'             => 'text'
+            'attachment'             => 'text',
+            'displayorder'           => 'text'
           ),
           'required' => array('user','startdate','institution')
         ),
@@ -318,7 +322,8 @@ class BehatDataGenerators extends BehatBase {
             'employeraddress'        => 'text',
             'jobtitle'               => 'text',
             'positiondescription'    => 'text',
-            'attachment'             => 'text'
+            'attachment'             => 'text',
+            'displayorder'           => 'text'
           ),
           'required' => array ('user','startdate','employer','jobtitle')
         ),
@@ -375,6 +380,18 @@ class BehatDataGenerators extends BehatBase {
             'attachment'               => 'text'
           ),
           'required' => array('user','startdate','title')
+        ),
+        'pagecomments' => array(
+          'datagenerator' => 'page_comment',
+          'available' => array(
+            'user'                     => 'text',
+            'comment'                  => 'text',
+            'attachment'               => 'text',
+            'private'                  => 'bool',
+            'page'                     => 'text',
+            'group'                    => 'text' // compulsory for comments on group pages
+          ),
+          'required' => array('user', 'comment', 'page')
         )
       );
 

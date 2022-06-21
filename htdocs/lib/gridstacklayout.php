@@ -1,5 +1,7 @@
 <?php
 /**
+ * Supplies functions to translate views created in v<=19.04 layout grid to
+ * use Gridstack.js layout
  *
  * @package    mahara
  * @subpackage core
@@ -11,8 +13,9 @@
 
 defined('INTERNAL') || die();
 
-/*
+/**
  * Saves blocks with new layout data into the database
+ * @param  int  $viewid  The id of the View
  */
 function save_blocks_in_new_layout($viewid) {
     if ($viewid) {
@@ -65,9 +68,11 @@ function save_blocks_in_new_layout($viewid) {
 }
 
 
-/*
+/**
  * This function will take the blocks in the old layout
  * and create a structure with blocks in the new gridstack layout
+ * @param  array  $blocks  array of block data of blocks created in old layout
+ * @param  int  $y  The y-axis of the blocks in the layout
  */
 
 function translate_to_new_layout($blocks, $y=0) {
@@ -101,7 +106,11 @@ function translate_to_new_layout($blocks, $y=0) {
     return $gridblocks;
 }
 
-/* Helper function to translate the column widths*/
+/**
+ * Helper function to translate the column widths
+ * @param  int  $viewid  The id of the View
+ * @param  int  $row  The row of the old page layout
+ */
 function get_column_widths($viewid, $row) {
 
     // get the view's layout
@@ -112,12 +121,12 @@ function get_column_widths($viewid, $row) {
 }
 
 
-/*
+/**
  * Creates a data structure to use when translating old layout to new gridstack layout
  * data structure contains the blocks from a view that still uses old layout
+ * @param  int  $viewid  The id of the View
  */
 function get_blocks_in_old_layout($viewid) {
-
     // get old layout structure
     $sql = "SELECT " . db_quote_identifier('row') . ", columns
         FROM {view_rows_columns}
@@ -130,6 +139,7 @@ function get_blocks_in_old_layout($viewid) {
         WHERE view = ?
         ORDER BY " . db_quote_identifier('row') . ", " . db_quote_identifier('column') . ", " . db_quote_identifier('order');
     $oldblocks = get_records_sql_array($sql, array($viewid));
+    $content = array();
     if ($oldlayout) {
         foreach ($oldlayout as $row) {
             $columnwidths = get_column_widths($viewid, $row->row);

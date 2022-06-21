@@ -82,7 +82,7 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:creativecommons:statement.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -183,7 +183,7 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
         );
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
@@ -191,7 +191,7 @@ class PluginBlocktypeCreativecommons extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

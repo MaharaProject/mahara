@@ -24,7 +24,7 @@ Background:
     Given I log in as "celeste" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Celeste's Page" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
 
 Scenario: Add Journal block to the page
@@ -36,7 +36,7 @@ Scenario: Add Journal block to the page
     Then I should see "Spacefood is kind of gross"
 
 # Adding a journal entry from a journal block on a portfolio page
-    Given I click on "Edit"
+    Given I press "Edit"
     Then I should see "New entry"
     When I follow "New entry"
     Then I should see "New journal entry in journal \"Mars journal\""

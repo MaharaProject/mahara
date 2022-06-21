@@ -17,26 +17,26 @@ Scenario: Embed and play mp4
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   And I attach the file "testvid3.mp4" to "File"
   And I press "Save"
   And I display the page
   And I press "Play Video"
   # check remaining time is displayed
   And I wait "3" seconds
-  And I should see "0:00" in the "Videojs time remaining" property
+  And I should see "0:00" in the "Videojs time remaining" "Misc" property
 
 Scenario: Embed and play mp3
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   And I set the field "Block title" to "mahara.mp3"
   And I attach the file "mahara.mp3" to "File"
   And I press "Save"
@@ -58,10 +58,10 @@ Scenario: Change settings and embed 3gp
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   And I attach the file "testvid1.3gp" to "File"
   And I press "Save"
   And I display the page
@@ -72,10 +72,10 @@ Scenario: Embed unsupported file type
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
-  When I follow "Drag to add a new block" in the "blocktype sidebar" property
+  When I click on the add block button
   And I press "Add"
   And I click on blocktype "Embedded media"
-  And I follow "Media"
+  And I press "Media"
   # mkv is not supported
   And I attach the file "testvid2.mkv" to "File"
   Then I should see "The file you uploaded was not the correct type for this block."

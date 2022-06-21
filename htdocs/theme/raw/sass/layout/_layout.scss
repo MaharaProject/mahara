@@ -138,6 +138,9 @@ iframe {
     &.lead {
         margin-top: $spacing-base;
     }
+    &.groupdescription {
+        margin-top: 0;
+    }
 }
 
 .postlist {
@@ -256,4 +259,44 @@ body {
 .last-updated {
   margin: $spacing-xl 0 0 0;
   font-weight: $font-weight-light;
+}
+
+// using flex to keep list-group-item btns on top right and not hide title under
+.flex-row {
+    display: flex;
+}
+.flex-title {
+    flex: 1 1 auto;
+    margin-bottom: $spacing-base;
+
+    .list-group-item-heading {
+        margin-bottom: 0;
+    }
+
+    // when there's double flex-title
+    .flex-title {
+        margin-bottom: 0;
+    }
+
+    &.attachment-title {
+        margin-bottom: 0;
+    }
+}
+.flex-controls {
+    text-align: right;
+    padding-left: $spacing-base;
+    @include media-breakpoint-up(md) {
+        white-space: nowrap;
+    }
+    .btn {
+      margin-bottom: 0.0625rem; // 1px;
+    }
+}
+
+// for groups page where statuses in the right column need to display before the left column on md screens and below
+.group-user-status {
+    order: -1;
+    @include media-breakpoint-up(md) {
+        order: 1;
+    }
 }

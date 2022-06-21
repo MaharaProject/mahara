@@ -6,7 +6,13 @@
         padding: $spacing-base 5.625rem $spacing-base $spacing-lg; // 10px 90px 10px 15px;
         display: block;
         word-break: break-word;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
     }
+
     a.user-icon {
         z-index: 5;
         position: absolute;
@@ -22,11 +28,6 @@
 
     + .list-group {
         min-height: 2.625rem; // 42px;
-
-        .list-group-item-heading {
-            font-size: $font-size-base;
-            margin-bottom: ($list-group-item-padding-y / 2);
-        }
     }
 }
 

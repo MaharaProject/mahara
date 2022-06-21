@@ -1,0 +1,213 @@
+/* Custom css to go here to override what is supplied in the following files
+- htdocs/js/DataTables/datatables.min.css
+- htdocs/module/submissions/js/piertables.css
+*/
+
+// icons for sorting in table head
+table.dataTable {
+  thead {
+    .sorting,
+    .sorting_asc,
+    .sorting_desc,
+    .sorting_asc_disabled,
+    .sorting_desc_disabled {
+      color: $link-color;
+      &:hover,
+      &:focus {
+        color: $link-hover-color;
+        text-decoration: $link-hover-decoration;
+      }
+      &::before {
+        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f0d8";
+        top: 2px;
+        right: 4px;
+        text-decoration: none;
+        color: $theme-text-midtone-color;
+      }
+      &::after {
+        font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f0d7";
+        right: 4px;
+        text-decoration: none;
+        color: $theme-text-midtone-color;
+        top: 10px;
+      }
+    }
+  }
+
+  // in table small coloured buttons
+  .btn-info {
+    background-color: theme-color("info");
+    border-color: theme-color("info");
+  }
+  .btn-warning {
+    background-color: theme-color("warning");
+    border-color: theme-color("warning");
+  }
+  .btn-danger {
+    background-color: theme-color("danger");
+    border-color: theme-color("danger");
+  }
+  .btn-success {
+    background-color: theme-color("success");
+    border-color: theme-color("success");
+  }
+}
+
+// pagination info
+.dataTables_info {
+  float: right;
+  font-size: $font-size-sm;
+  font-weight: 300;
+  line-height: 1.4;
+  padding-top: 0 !important;
+}
+.dataTables_length {
+  float: right;
+  label {
+    min-width: auto;
+    padding-right: 0;
+  }
+}
+// pagination
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+  justify-content: flex-start;
+  text-align: left;
+  margin: 15px 15px 15px 0;
+}
+.dataTables_paginate {
+  .page-link {
+    font-size: $font-size-sm;
+    padding: $pagination-padding-y-sm $pagination-padding-x-sm;
+    line-height: $pagination-line-height;
+    color: $pagination-color;
+    background-color: $pagination-bg;
+    border-color: $pagination-border-color;
+    &:hover,
+    &:focus {
+      color: $pagination-hover-color;
+      background-color: $pagination-hover-bg;
+      border-color: $pagination-hover-border-color;
+    }
+  }
+  .page-item.disabled .page-link {
+    border-color: $pagination-border-color;
+    color: $pagination-disabled-color;
+    background-color: $pagination-disabled-bg;
+  }
+  .page-item.active .page-link {
+    color: $pagination-active-color;
+    background-color: $pagination-active-bg;
+    border-color: $pagination-active-border-color;
+  }
+  .previous .page-link::before {
+    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f100";
+    padding-right: 3px;
+  }
+  .next .page-link::after {
+    font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f101";
+    padding-left: 3px;
+  }
+}
+
+// row color when selected
+table.dataTable tbody tr.selected {
+  background-color: $table-active-bg !important;
+}
+
+// Display comment fields correctly
+table.dataTable.nowrap td .pt-feedback {
+  white-space: normal !important;
+}
+
+// in table btton group and dropdowns
+table.dataTable tbody td .btn-group {
+  margin-left: 0;
+  z-index: auto;
+}
+div.dt-button-collection div.dropdown-menu {
+  z-index: 10;
+  padding: 0;
+  > a {
+    padding: .357rem .715rem;
+    color: $theme-text-color;
+    &::before {
+      font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free";
+      font-weight: 400;
+      content: "\f0c8";
+      padding-right: 5px;
+      color: $gray-700;
+    }
+    &:hover,
+    &:focus {
+      background-color: $dropdown-link-hover-bg;
+    }
+    &.active {
+      color: $theme-text-color;
+      background-color: $custom-select-bg;
+      font-weight: bold;
+      &::before {
+        font-family: "Font Awesome 5 Free Regular", "Font Awesome 5 Free";
+        font-weight: 400;
+        content: "\f14a";
+        padding-right: 5px;
+        color: $theme-primary-color;
+      }
+      &:hover,
+      &:focus {
+        background-color: $dropdown-link-hover-bg;
+      }
+    }
+  }
+}
+
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td.dtr-control::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control::before {
+  top: 1.5rem; // 24px
+  left: 0.25rem; // 4px;
+  height: 1rem;
+  width: 1rem;
+  display: block;
+  position: absolute;
+  color: $collapse-indicator-color;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  box-sizing: content-box;
+  text-align: center;
+  text-indent: 0 !important;
+  line-height: 1;
+  background-color: transparent;
+  font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+  font-weight: 900;
+  padding-left: 0.25rem; // 4px;
+  content: "\f107";
+  &:hover,
+  &:focus {
+    color: $collapse-indicator-hover-color;
+  }
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control::before {
+  background-color: transparent;
+  font-family: "Font Awesome 5 Free Solid", "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f106";
+}
+
+.dataTables_wrapper .search-category .radio-group.well {
+  background-color: inherit !important;
+  border: none;
+  padding: 0.25rem 1rem 0.25rem 0;
+}

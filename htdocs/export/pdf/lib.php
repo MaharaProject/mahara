@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackage export-html
+ * @subpackage export-pdf
  * @author     Catalyst IT Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
@@ -11,6 +11,7 @@
 
 defined('INTERNAL') || die();
 require_once(get_config('docroot') . 'export/html/lib.php');
+global $pdfactive;
 $pdfactive = false;
 if (db_table_exists('export_installed')) {
     $pdfactive = get_field('export_installed', 'active', 'name', 'pdf');
@@ -37,7 +38,7 @@ use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Cookies\Cookie;
 
 /**
- * HTML export plugin
+ * PDF export plugin
  */
 class PluginExportPdf extends PluginExportHtml {
 
@@ -72,8 +73,30 @@ class PluginExportPdf extends PluginExportHtml {
         return get_string('description', 'export.pdf');
     }
 
+    /**
+     * Is the plugin activated or not?
+     *
+     * @return boolean
+     */
+    public static function is_active() {
+        $active = false;
+        if (get_field('export_installed', 'active', 'name', 'pdf')) {
+            $active = true;
+        }
+        return $active;
+    }
+
     public static function get_plugin_display_name() {
         return 'PDF';
+    }
+
+    /**
+     * Post install hook
+     */
+    public static function postinst($fromversion) {
+        if ($fromversion == 0) {
+            set_field('export_installed', 'active', 0, 'name', 'pdf');
+        }
     }
 
     public static function has_pdf_combiner() {
@@ -161,7 +184,7 @@ class PluginExportPdf extends PluginExportHtml {
     }
 
     /**
-     * Dumps all views into the HTML export
+     * Generates the PDF files from the HTML export dump
      */
     private function pdf_view_export_data() {
         global $pdfrun;

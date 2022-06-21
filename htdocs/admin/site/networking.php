@@ -16,6 +16,7 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'networking');
 
+$OVERRIDDEN = array(); // will be set within init.php file
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 require_once('searchlib.php');

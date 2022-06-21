@@ -10,6 +10,7 @@
  */
 
 define('INTERNAL', 1);
+define('MENUITEM', 'development/styleguide');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'styleguide');
@@ -93,10 +94,6 @@ $inlinecss = <<<EOT
     p ~ div > .btn-group-top {
         margin-top: 0;
     }
-    .blockinstance .card-header {
-        border-bottom: 2px solid #ddd;
-        height: 45px;
-    }
 }
 </style>
 EOT;
@@ -135,6 +132,7 @@ $smarty->setDefaultCompilerFactory(
     }
 );
 
+setpageicon($smarty, 'icon-paint-roller');
 $smarty->assign('description', get_string('styleguide_description'));
 $smarty->assign('copy', get_string('copy'));
 $smarty->assign('scrollup', get_string('scroll_to_top'));

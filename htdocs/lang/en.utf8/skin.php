@@ -76,6 +76,10 @@ $string['modifieddate'] = 'Modified';
 $string['noskins'] = 'There are no skins';
 $string['skin'] = 'skin';
 $string['skins'] = 'skins';
+$string['nskins'] = array(
+    '%s skin',
+    '%s skins'
+);
 
 $string['allskins'] = 'All skins';
 $string['siteskins'] = 'Site skins';
@@ -180,7 +184,7 @@ $string['manageskins'] = 'Manage skins';
 $string['sitefontsmenu'] = 'Fonts';
 $string['sitefonts'] = 'Fonts';
 $string['sitefontsdescription'] = 'The following fonts have been installed on your site for use in skins.';
-$string['installfontinstructions'] = '<p>
+$string['installfontinstructions1'] = '<p>
 Add fonts, which allow font embedding into web pages, via the CSS @font-face rule. Remember that not all authors / foundries allow this.
 </p>
 <p>
@@ -189,10 +193,25 @@ When you find an appropriate free font that you are allowed to embed into a web 
 </p>
 <p>
 You can use <a href="https://www.fontsquirrel.com/tools/webfont-generator/">FontSquirrel Online Generator</a> for the conversion.
+</p>
+<p>
+Or you can install a Google font via the following steps:
+<ol>
+<li>Visit <a href="https://google-webfonts-helper.herokuapp.com">Google webfonts helper</a>. Do this at your own risk. This service is not provided by Google Fonts.</li>
+<li>Select the font for which you are looking.</li>
+<li>Select the character sets you require.</li>
+<li>Select the styles you want to have available.</li>
+<li>Download the resulting ZIP file in step 4 on the page.</li>
+<li>Upload that ZIP file in this form.</li>
+</ol>
 </p>';
 $string['nofonts'] = 'There are no fonts.';
 $string['font'] = 'font';
 $string['fonts'] = 'fonts';
+$string['nfonts'] = array(
+    '%s font',
+    '%s fonts'
+);
 
 $string['installfont'] = 'Install font';
 $string['fontinstalled'] = 'Font installed successfully';
@@ -291,21 +310,7 @@ $string['sampletext21'] = 'Grumpy wizards make toxic brew for the evil Queen and
 $string['sampletitle22'] = 'The quick brown fox...';
 $string['sampletext22'] = 'The quick brown fox jumps over the lazy dog.';
 
-/* SKINS - GOOGLE WEB FONTS */
-$string['installgwfont'] = 'Install Google font(s)';
 $string['archivereadingerror'] = 'Error reading ZIP archive.';
-$string['gwfontadded'] = 'Google font(s) installed successfully';
-$string['gwfontsnotavailable'] = 'Google fonts are currently not available.';
-
-$string['gwfinstructions'] = '<ol>
-<li>Visit <a href="https://fonts.google.com">Google fonts</a></li>
-<li>Select fonts and add them to your collection</li>
-<li>Download fonts in a collection as a ZIP file</li>
-<li>Upload that ZIP file in this form</li>
-<li>Install Google font(s)</li>
-</ol>';
-$string['gwfzipfile'] = 'Valid ZIP file';
-$string['gwfzipdescription'] = 'A valid ZIP file that contains all selected Google fonts to be installed.';
 $string['notvalidzipfile'] = 'This is not a valid ZIP file.';
 
 $string['fontlicence'] = 'Font license';

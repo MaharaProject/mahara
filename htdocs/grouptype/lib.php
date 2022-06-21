@@ -42,6 +42,8 @@ interface IGroupType {
     public static function get_view_assessing_roles();
 
     public static function default_artefact_rolepermissions();
+
+    public static function default_role();
 }
 
 abstract class GroupType implements IGroupType {
@@ -90,5 +92,9 @@ abstract class GroupType implements IGroupType {
      */
     public static function can_become_admin($userid) {
         return true;
+    }
+
+    public static function default_role() {
+        return 'member';
     }
 }

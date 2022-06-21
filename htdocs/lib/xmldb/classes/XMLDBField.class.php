@@ -37,6 +37,7 @@ class XMLDBField extends XMLDBObject {
     var $enum;
     var $enumvalues;
     var $decimals;
+    var $precision;
 
     /**
      * Creates one new XMLDBField

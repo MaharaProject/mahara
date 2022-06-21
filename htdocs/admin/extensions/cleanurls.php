@@ -110,6 +110,7 @@ function regenerateurls_submit(Pieform $form, $values) {
     );
 
     $last = null;
+    $taken = array();
     if ($dupurls) {
         log_debug('Fixing ' . count($dupurls) . ' duplicate user urls');
         $ids = array();
@@ -212,7 +213,7 @@ function regenerateurls_submit(Pieform $form, $values) {
                 $taken = get_column_sql(
                     "SELECT urlid FROM {group} WHERE urlid LIKE ?",
                     array(substr($dupurls[$i]->urlid, 0, 24) . '%')
-                );
+                ) ?? array();
             }
             else {
                 // Append digits while keeping the max length at 30
@@ -325,6 +326,8 @@ function regenerateurls_submit(Pieform $form, $values) {
             $hasdupes = clone $dupurls[$i];
             unset($hasdupes->id);
             if ($hasdupes != $last) {
+                $ownersql = '';
+                $ownervalue = '';
                 // The first view with this name can keep it
                 // Get similar view names to check uniqueness when appending digits
                 if (!is_null($hasdupes->owner)) {

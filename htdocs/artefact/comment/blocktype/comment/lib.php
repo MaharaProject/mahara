@@ -99,11 +99,18 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
         global $USER, $exporter;
 
+        if (!$exporter->includefeedback) {
+            return;
+        }
+
         $view = new View($instance->get('view'));
         safe_require('artefact', 'comment');
         $commentoptions = ArtefactTypeComment::get_comment_options();
         $commentoptions->view = $instance->get_view();
         $commentoptions->export = true;
+        if (!$exporter->includeprivatefeedback) {
+            $commentoptions->privatefeedback = false;
+        }
         $feedback = ArtefactTypeComment::get_comments($commentoptions);
         $smarty = smarty_core();
         $smarty->assign('feedback', $feedback);
@@ -113,7 +120,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
         return $html;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 
@@ -121,7 +128,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

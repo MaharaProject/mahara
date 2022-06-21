@@ -17,6 +17,12 @@
                 </td>
                 <td class="center">{if $institution->maxuseraccounts}{$institution->maxuseraccounts}{/if}</td>
                 <td class="center">
+                {if !$institution->site}
+                        <a href="{$WWWROOT}group/index.php?filter=all">{$institution->groupcount}</a>
+                {/if}
+                </td>
+                <td class="center">{if $institution->maxgroups}{$institution->maxgroups}{/if}</td>
+                <td class="center">
                     {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionstaff.php?institution={$institution->name}">{/if}
                         {$institution->staff}
                     {if !$institution->site}</a>{/if}</td>
@@ -39,14 +45,14 @@
                             <button type="submit" name="edit" value="1" class="btn-secondary btn-sm button btn
                             {if !($siteadmin && !$institution->members && $institution->name != 'mahara')} no-delete-btn btn-group-last{/if}
                             {if !$webserviceconnections} btn-group-first {/if}"
-                            alt="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
+                            title="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
                                  <span class="icon icon-cog text-default" role="presentation" aria-hidden="true"></span>
                                  <span class="sr-only">
                                      {str tag="edit"}
                                  </span>
                              </button>
                          {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
-                            <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last" alt="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
+                            <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last" title="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
 
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                 <span class="sr-only">

@@ -517,8 +517,7 @@ class ArtefactTypePlan extends ArtefactType {
                                            'setlimit' => true,
                                            'jumplinks' => 6,
                                            'numbersincludeprevnext' => 2,
-                                           'resultcounttextsingular' => get_string('plan', 'artefact.plans'),
-                                           'resultcounttextplural' => get_string('plans', 'artefact.plans'),
+                                           'resultcounttext' => get_string('nplans', 'artefact.plans', $plans['count']),
                                        ]);
         $plans['pagination'] = $pagination['html'];
         $plans['pagination_js'] = $pagination['javascript'];
@@ -900,6 +899,7 @@ class ArtefactTypeTask extends ArtefactType {
         $new = empty($this->id);
 
         if ($new) {
+            require_once('tools/PlansTools.php');
             // Adjust title if parent plan has another task with the same title
             if (!empty($this->get('group'))) {
                 $ownerType = 'group';
@@ -909,7 +909,8 @@ class ArtefactTypeTask extends ArtefactType {
                 $ownerType = 'owner';
                 $ownerId = $this->get('owner');
             }
-            $this->set('title',
+            if ($this->get('parent')) {
+                $this->set('title',
                        PlansTools::createUniqueStringForDBField(
                            'artefact',
                            'title',
@@ -919,7 +920,19 @@ class ArtefactTypeTask extends ArtefactType {
                            'parent',
                            $this->get('parent')
                        )
-            );
+                );
+            }
+            else {
+                $this->set('title',
+                       PlansTools::createUniqueStringForDBField(
+                           'artefact',
+                           'title',
+                           $this->get('title'),
+                           $ownerType,
+                           $ownerId
+                       )
+                );
+            }
         }
 
         parent::commit();
@@ -1412,7 +1425,12 @@ class ArtefactTypeTask extends ArtefactType {
         }
 
         if ($values['completiondate']) {
-            if ($values['completiondate'] < $now->getTimestamp()) {
+            // Check if the completion date is in the future. To allow setting today's date as the completion date
+            // we need to check the posted date with current time
+            $currenttime = $now->format('H:i:s');
+            $completionday = date('Y-m-d', $values['completiondate']);
+            $completiondate = strtotime($completionday . ' ' . $currenttime);
+            if ($completiondate < $now->getTimestamp()) {
                 $form->set_error('completiondate', get_string('completiondatemustbeinfuture', 'artefact.plans'));
             }
         }
@@ -1515,8 +1533,10 @@ class ArtefactTypeTask extends ArtefactType {
     public static function get_tasks(ArtefactTypePlan $plan, $offset = 0, $limit = 10, $tasks = null) {
         require_once('tools/PlansTools.php');
 
-        $datenow = time(); // time now to use for formatting tasks by completion
-
+        $d = new DateTime(); // time now to use for formatting tasks by completion
+        $datenow = $d->getTimestamp();
+        $d->setTime(0, 0, 0);
+        $datebegin = $d->getTimestamp();
         $sql = "SELECT a.id, at.artefact AS task, " .
                     db_format_tsfield('startdate') . ", " .
                     db_format_tsfield('completiondate') . ", " .
@@ -1542,14 +1562,14 @@ class ArtefactTypeTask extends ArtefactType {
         if (!empty($results)) {
             foreach ($results as $result) {
                 if (!empty($result->completiondate)) {
-
                     // if record hasn't been completed and reminder time span is active mark it as time critical
                     if (!$result->completed && $result->reminder && ($result->completiondate - $result->reminder) < $datenow) {
                         $result->istimecritical = true;
                     }
 
                     // if record hasn't been completed and completiondate has passed mark as such for display
-                    if ($result->completiondate < $datenow && !$result->completed) {
+                    // we want to allow today's date to still be able to be completed
+                    if ($result->completiondate < $datebegin && !$result->completed) {
                         $result->completed = -1;
                     }
                     $result->completiondate = format_date($result->completiondate, 'strftimedateshort');
@@ -1644,8 +1664,7 @@ class ArtefactTypeTask extends ArtefactType {
             'setlimit' => true,
             'jumplinks' => 6,
             'numbersincludeprevnext' => 2,
-            'resultcounttextsingular' => get_string('task', 'artefact.plans'),
-            'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
+            'resultcounttext' => get_string('ntasks', 'artefact.plans', $tasks['count']),
         ]);
         $tasks['pagination'] = $pagination['html'];
         $tasks['pagination_js'] = $pagination['javascript'];
@@ -1679,7 +1698,7 @@ class ArtefactTypeTask extends ArtefactType {
             $view = new View($options['view']);
             $owner = $view->get('owner');
             if ($owner && $owner == $USER->get('id')) {
-                if (!empty($options) && !empty($options['versioning'])) {
+                if ($options && !empty($options['versioning'])) {
                     $smarty->assign('canedit', false);
                 }
                 else {
@@ -1701,8 +1720,7 @@ class ArtefactTypeTask extends ArtefactType {
                 'limit' => $tasks['limit'],
                 'offset' => $tasks['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => get_string('task', 'artefact.plans'),
-                'resultcounttextplural' => get_string('tasks', 'artefact.plans'),
+                'resultcounttext' => get_string('ntasks', 'artefact.plans', $tasks['count']),
             ]);
             $tasks['pagination'] = $pagination['html'];
             $tasks['pagination_js'] = $pagination['javascript'];

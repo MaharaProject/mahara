@@ -17,6 +17,10 @@ $string['Blog'] = 'Journal';
 $string['Blogs'] = 'Journals';
 $string['blog'] = 'journal';
 $string['blogs'] = 'journals';
+$string['nblogs'] = array(
+    '%s journal',
+    '%s journals'
+);
 $string['siteblogs'] = 'Site journals';
 $string['siteblogsdesc'] = 'Create and administer site journals';
 $string['institutionblogs'] = 'Institution journals';
@@ -39,7 +43,8 @@ $string['blogdesc'] = 'Description';
 $string['blogdescdesc'] = 'e.g., ‘A record of Jill\'s experiences and reflections’.';
 $string['blogdoesnotexist'] = 'You are trying to access a journal that does not exist';
 $string['blogpostdoesnotexist'] = 'You are trying to access a journal entry that does not exist';
-$string['blogpost'] = 'Journal entry';
+$string['blogpost'] = 'journal entry';
+$string['Blogpost'] = 'Journal entry';
 $string['blogdeleted'] = 'Journal deleted';
 $string['blogpostdeleted'] = 'Journal entry deleted';
 $string['blogpostpublished'] = 'Journal entry published';

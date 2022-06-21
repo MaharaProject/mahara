@@ -20,14 +20,15 @@ Scenario: Clicking randomly around Mahara (Bug: 1426983)
     And I follow "About me"
     # Checking Resume submenu and tabs
     And I choose "Résumé" in "Create" from main menu
-    And I follow "Education and employment"
+    And I follow "Education"
+    And I follow "Employment"
     And I follow "Achievements"
     And I follow "Goals and skills"
     And I follow "Interests"
     And I follow "Introduction"
     # Checking messages
     And I choose inbox
-    And I follow "Inbox" in the "Arrow-bar nav" property
+    And I follow "Inbox" in the "Arrow-bar nav" "Nav" property
     And I follow "Sent"
     And I follow "Compose"
     # Checking Homepage

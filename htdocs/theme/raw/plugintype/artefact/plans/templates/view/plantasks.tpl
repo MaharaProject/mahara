@@ -2,8 +2,8 @@
     <div class="task-item list-group-item{if $task->completed == -1} plan_incomplete{/if}">
         {if $editing}
         <div class="float-right btn-group btn-group-top">
-            <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></a>
-            <a class="btn btn-secondary btn-sm" href="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></a>
+            <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/task/edit.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='editthistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-pencil-alt text-default"></span></button>
+            <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></button>
         </div>
         {/if}
         <span class="{if $task->completed == -1}overdue-task{else}complete-task{/if}">

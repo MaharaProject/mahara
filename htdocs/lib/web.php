@@ -100,7 +100,6 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 
     // Include rtl.css for right-to-left langs
     if ($langdirection == 'rtl') {
-        $smarty->assign('LANGDIRECTION', 'rtl');
         if ($rtlsheets = $THEME->get_url('style/rtl.css', true)) {
             $stylesheets = array_merge($stylesheets, array_reverse($rtlsheets));
         }
@@ -116,7 +115,7 @@ function get_stylesheets_for_current_page($stylesheets, $extraconfig) {
 */
 function user_personal_section() {
     $usersection = !defined('ADMIN') && !defined('STAFF') && !defined('INSTITUTIONALADMIN') &&
-        !defined('INSTITUTIONALSTAFF') && !defined('GROUP') && !defined('CREATEGROUP');
+        !defined('INSTITUTIONALSTAFF') && !defined('INSTITUTIONALSUPPORTADMIN') && !defined('GROUP') && !defined('CREATEGROUP');
 
     return $usersection ? 1 : 0;
 }
@@ -347,6 +346,7 @@ EOF;
         theme: 'mobile',
         toolbar: ['undo', 'bold', 'italic', 'link', 'bullist', 'styleselect'],
     },
+    browser_spellcheck: true,
     contextmenu: false,
     plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
     skin: 'oxide',
@@ -438,7 +438,7 @@ tinyMCE.init({
             // such as div.vertcentre
             // and IE doesn't like a preset z-index
             // This work-around will remove/add classes: .vertcenter .configure .blockinstane
-            // of the configure block div
+            // of the edit block div
             // when toggling fullscreen
             jQuery('div[aria-label="Fullscreen"]').on('click', function(e) {
                 jQuery('div#configureblock').toggleClass('vertcentre');
@@ -513,7 +513,6 @@ EOF;
             unset($headers[$key]);
         }
     }
-    $javascript_array[] = $jsroot . 'keyboardNavigation.js';
 
     //If necessary, load MathJax path
     if (get_config('mathjax')) {
@@ -645,6 +644,10 @@ EOF;
 
     $smarty->assign('STRINGJS', $stringjs);
 
+    if ($langdirection == 'rtl') {
+        $smarty->assign('LANGDIRECTION', 'rtl');
+    }
+
     $stylesheets = get_stylesheets_for_current_page($stylesheets, $extraconfig);
 
     // Disable CSS transforms, transitions, and animations when running behat tests
@@ -688,15 +691,13 @@ EOF;
     }
 
     // and/or disable drop-downs if a handheld device detected
-    $dropdownmenu = $SESSION->get('handheld_device') ? false : $dropdownmenu && get_config('dropdownmenuenabled');
+    $dropdownmenu = $dropdownmenu && get_config('dropdownmenuenabled');
 
     if ($dropdownmenu) {
         $smarty->assign('DROPDOWNMENU', $dropdownmenu);
         $javascript_array[] = $jsroot . 'dropdown-nav.js';
     }
 
-    $smarty->assign('MOBILE', $SESSION->get('mobile'));
-    $smarty->assign('HANDHELD_DEVICE', $SESSION->get('handheld_device'));
     if (defined('FILEBROWSERS') ||
         (defined('SECTION_PAGE') && SECTION_PAGE == 'blocks')) {
         // Need to add the headers for select2 here so filebrowser has correct language
@@ -755,7 +756,7 @@ EOF;
         $smarty->assign('SITEOUTOFSYNC', SITEOUTOFSYNC);
     }
     if (function_exists('local_header_top_content')) {
-        $sitetop = (isset($sitetop) ? $sitetop : '') . local_header_top_content();
+        $sitetop = local_header_top_content();
     }
     if (isset($sitetop)) {
         $smarty->assign('SITETOP', $sitetop);
@@ -775,6 +776,9 @@ EOF;
     if (defined('INSTITUTIONALSTAFF')) {
         $smarty->assign('INSTITUTIONALSTAFF', true);
     }
+    if (defined('INSTITUTIONALSUPPORTADMIN')) {
+        $smarty->assign('INSTITUTIONALSUPPORTADMIN', true);
+    }
 
     $smarty->assign('LOGGEDIN', $USER->is_logged_in());
     $smarty->assign('loggedout', !$USER->is_logged_in());
@@ -788,7 +792,7 @@ EOF;
     if ($USER->is_logged_in()) {
         global $SELECTEDSUBNAV; // It's evil, but rightnav & mainnav stuff are now in different templates.
         $smarty->assign('MAINNAV', main_nav());
-        $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff();
+        $is_admin = $USER->get('admin') || $USER->is_institutional_admin() || $USER->get('staff') || $USER->is_institutional_staff() || $USER->is_institutional_supportadmin();
         if ($is_admin) {
             $smarty->assign('MAINNAVADMIN', main_nav('adminnav'));
         }
@@ -804,9 +808,17 @@ EOF;
         else {
             $smarty->assign('SELECTEDSUBNAV', $SELECTEDSUBNAV);
         }
-        $displaylangs = get_languages();
-        if (count($displaylangs) > 1) {
-            $smarty->assign('LANGCHOICES', get_languages());
+        $installedlangs = get_languages();
+        if (count($installedlangs) > 1) {
+            $acceptedlang = get_accept_lang();
+            $honouracceptlangs = array();
+            foreach (array_reverse($installedlangs) as $key => $value) {
+                if ($key !== $acceptedlang) {
+                    $honouracceptlangs[$key] = $value;
+                }
+            }
+            $honouracceptlangs[$acceptedlang] = $installedlangs[$acceptedlang];
+            $smarty->assign('LANGCHOICES', array_reverse($honouracceptlangs));
         }
         $smarty->assign('LANGCURRENT', current_language());
     }
@@ -1071,6 +1083,7 @@ class Theme {
      * Given a theme name, retrieves the $theme variable in the themeconfig.php file
      */
     public static function get_theme_config($themename) {
+        $theme = null;
         $themeconfigfile = get_config('docroot') . 'theme/' . $themename . '/themeconfig.php';
         if (is_readable($themeconfigfile)) {
             require( get_config('docroot') . 'theme/' . $themename . '/themeconfig.php' );
@@ -1229,6 +1242,7 @@ class Theme {
         );
 
         // Then check each theme
+        $themedir = '';
         foreach ($this->inheritance as $themedir) {
             $searchloc = array();
             // Check in the /theme directory
@@ -1439,7 +1453,6 @@ function jsstrings() {
             'view' => array(
                 'confirmcloseblockinstance',
                 'confirmdeleteblockinstance',
-                'blocksinstructionajaxlive1',
             ),
         ),
         'viewmenu' => array(
@@ -1832,14 +1845,14 @@ function param_integer_list($name) {
 }
 
 /**
- * This function returns a GET or POST parameter as a boolean.
+ * param_boolean
  *
  * @param string The GET or POST parameter you want returned
- *
+ * @param  mixed $params _param_retrieve looks for further arguments
+ *               - needed for PHPStan compaining about the wrong number of arguments given
  * @return bool The value of the parameter
- *
  */
-function param_boolean($name) {
+function param_boolean($name,...$params) {
 
     list ($value) = _param_retrieve($name, false);
 
@@ -2286,7 +2299,7 @@ function get_block_help(Pieform $form, $element) {
  * @return bool
  */
 function in_admin_section() {
-    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF') || defined('INADMINMENU');
+    return defined('ADMIN') || defined('INSTITUTIONALADMIN') || defined('STAFF') || defined('INSTITUTIONALSTAFF') || defined('INSTITUTIONALSUPPORTADMIN') || defined('INADMINMENU');
 }
 
 /**
@@ -2295,7 +2308,7 @@ function in_admin_section() {
  * See the function find_menu_children() in lib/web.php
  * for a description of the expected array structure.
  *
- * @return $adminnav a data structure containing the admin navigation
+ * @return array $adminnav a data structure containing the admin navigation
  */
 function admin_nav() {
     $menu = array(
@@ -2454,10 +2467,10 @@ function admin_nav() {
             'title'  => get_string('groupcategories', 'admin'),
             'weight' => 20,
         ),
-        'managegroups/archives' => array(
+        'managegroups/submissions' => array(
             'path'   => 'managegroups/archives',
             'url'    => 'admin/groups/archives.php',
-            'title'  => get_string('archivedsubmissions', 'admin'),
+            'title'  => get_string('submissions', 'admin'),
             'weight' => 27,
         ),
         'managegroups/settings' => array(
@@ -2514,6 +2527,12 @@ function admin_nav() {
             'url'    => 'admin/users/institutionstaff.php',
             'title'  => get_string('Staff', 'admin'),
             'weight' => 30,
+        ),
+        'manageinstitutions/institutionsupportadmins' => array(
+            'path'   => 'manageinstitutions/institutionsupportadmins',
+            'url'    => 'admin/users/institutionsupportadmins.php',
+            'title'  => get_string('Supportadmins', 'admin'),
+            'weight' => 35,
         ),
         'manageinstitutions/institutionadmins' => array(
             'path'   => 'manageinstitutions/institutionadmins',
@@ -2600,6 +2619,43 @@ function admin_nav() {
             'url'    => 'admin/extensions/cleanurls.php',
             'title'  => get_string('cleanurls', 'admin'),
             'weight' => 40,
+        ),
+        'development' => array(
+            'path'   => 'development',
+            'url'    => 'map/componentmap.php',
+            'title'  => get_string('development', 'admin'),
+            'weight' => 80,
+            'iconclass' => 'code',
+        ),
+        'development/behatsteps' => array(
+            'path'   => 'development/behatsteps',
+            'url'    => 'testing/frameworks/behat/behat_steps_used.php',
+            'title'  => get_string('behatvariables', 'admin'),
+            'weight' => 10,
+        ),
+        'development/componentmap' => array(
+            'path'   => 'development/componentmap',
+            'url'    => 'map/componentmap.php',
+            'title'  => get_string('componentmap', 'admin'),
+            'weight' => 20,
+        ),
+        'development/langpacks' => array(
+            'path'   => 'development/langpacks',
+            'url'    => 'admin/site/langpacks.php',
+            'title'  => get_string('langpacks', 'langpacks'),
+            'weight' => 25,
+        ),
+        'development/styleguide' => array(
+            'path'   => 'development/styleguide',
+            'url'    => 'theme/styleguide.php',
+            'title'  => get_string('styleguide', 'admin'),
+            'weight' => 30,
+        ),
+        'development/updateurls' => array(
+            'path'   => 'development/updateurls',
+            'url'    => 'admin/extensions/embeddedurls.php',
+            'title'  => get_string('embeddedurls', 'admin'),
+            'weight' => 23,
         ),
     );
 
@@ -2701,10 +2757,10 @@ function institutional_admin_nav() {
             'weight' => 20,
             'iconclass' => 'users',
         ),
-        'managegroups/archives' => array(
+        'managegroups/submissions' => array(
             'path'   => 'managegroups/archives',
             'url'    => 'admin/groups/archives.php',
-            'title'  => get_string('archivedsubmissions', 'admin'),
+            'title'  => get_string('submissions', 'admin'),
             'weight' => 5,
         ),
         'managegroups/uploadcsv' => array(
@@ -2917,9 +2973,6 @@ function institutional_staff_nav() {
 function mahara_standard_nav() {
     global $SESSION;
 
-    $exportenabled = (plugins_installed('export') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
-    $importenabled = (plugins_installed('import') && !$SESSION->get('handheld_device')) ? TRUE : FALSE;
-
     $menu = array(
         'home' => array(
             'path' => 'home',
@@ -2977,15 +3030,13 @@ function mahara_standard_nav() {
             'path' => 'manage/export',
             'url' => 'export/index.php',
             'title' => get_string('Export', 'export'),
-            'weight' => 70,
-            'ignore' => !$exportenabled,
+            'weight' => 70
         ),
         'manage/import' => array(
             'path' => 'manage/import',
             'url' => 'import/index.php',
             'title' => get_string('Import', 'import'),
-            'weight' => 80,
-            'ignore' => !$importenabled,
+            'weight' => 80
         ),
         'manage' => array(
             'path' => 'manage',
@@ -3026,35 +3077,36 @@ function mahara_standard_nav() {
  * @return array
  */
 function main_nav($type = null) {
-    global $USER, $SESSION;
+    global $USER;
 
     $language = current_language();
     $cachemenu = false;
     // Get the first institution
     $institution = $USER->get_primary_institution();
-    $menutype = $SESSION->get('handheld_device') ? 'mob_' : '';
+    $menu = array();
+    $menutype = '';
     if ($type == 'adminnav') {
         global $USER, $SESSION;
         if ($USER->get('admin')) {
-            $menutype .= 'admin_nav';
+            $menutype = 'admin_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = admin_nav();
             }
         }
         else if ($USER->get('staff')) {
-            $menutype .= 'staff_nav';
+            $menutype = 'staff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = staff_nav();
             }
         }
         else if ($USER->is_institutional_admin()) {
-            $menutype .= 'instadmin_nav';
+            $menutype = 'instadmin_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_admin_nav();
             }
         }
         else {
-            $menutype .= 'inststaff_nav';
+            $menutype = 'inststaff_nav';
             if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
                 $menu = institutional_staff_nav();
             }
@@ -3062,7 +3114,7 @@ function main_nav($type = null) {
     }
     else {
         // Build the menu structure for the site
-        $menutype .= 'standard_nav';
+        $menutype = 'standard_nav';
         if (!($cachemenu = get_config_institution($institution, $menutype . '_' . $language))) {
             $menu = mahara_standard_nav();
         }
@@ -3073,7 +3125,6 @@ function main_nav($type = null) {
     }
     else {
         $menu = array_filter($menu, function($a) { return empty($a["ignore"]); });
-
         // enable plugins to augment the menu structure
         foreach (array('artefact', 'interaction', 'module', 'auth') as $plugintype) {
             if ($plugins = plugins_installed($plugintype)) {
@@ -3354,6 +3405,10 @@ function apps_get_menu_tabs() {
  *   weight: Where in the menu the item should be inserted. Larger number are to the right.
  *
  * Used by main_nav()
+ *
+ * @param  array $menu (pass by reference)
+ * @param  string $path
+ * @return array
  */
 function find_menu_children(&$menu, $path) {
     global $SELECTEDSUBNAV;
@@ -3887,6 +3942,24 @@ function clean_html($text, $xhtml=false) {
     $config->set('Attr.EnableID', true);
     $config->set('Attr.IDPrefix', 'user_');
 
+    /**
+     * Uncomment the following lines to allow further CSS property options
+     * to be valid. To see which will become valid see the file
+     * htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     * This should be replicated in clean_css() for stylesheets as well.
+     */
+    // $config->set('CSS.AllowTricky', true);
+
+    // Add extra CSS3 classes.
+    $config->set('CSS.Proprietary', true);
+    /// And remove the opacity parameters we just included.
+    $config->set('CSS.ForbiddenProperties', [
+        '-moz-opacity',
+        '-khtml-opacity',
+        'filter',
+        'opacity',
+    ]);
+
     // Allow base64 images via the 'data' option
     // need to set all the allowed schemes for this to work
     $config->set('URI.AllowedSchemes', array('http' => true,
@@ -4002,11 +4075,21 @@ function clean_css($input_css, $preserve_css=false) {
     $config->set('CSS.AllowImportant', true);
     $config->set('CSS.Trusted', true);
     /**
-     * Uncomment the following lines to allow further CSS property options to be valid.
-     * To see which will become valid see the file htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     * Uncomment the following lines to allow further CSS property options
+     * to be valid. To see which will become valid see the file
+     * htdocs/lib/htmlpurifier/HTMLPurifier/CSSDefinition.php
+     * This should be replicated in clean_html() for inline css as well.
      */
     // $config->set('CSS.AllowTricky', true);
-    // $config->set('CSS.Proprietary', true);
+
+    // Add extra CSS3 classes.
+    $config->set('CSS.Proprietary', true);
+    // And remove the opacity parameters we just included.
+    $config->set('CSS.ForbiddenProperties', [
+        '-moz-opacity',
+        '-khtml-opacity',
+        'filter',
+    ]);
 
     $config->set('Cache.SerializerPermissions', get_config('directorypermissions'));
     $config->set('Cache.SerializerPath', get_config('dataroot') . 'htmlpurifier');
@@ -4218,6 +4301,7 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
  *   for an example. Note that the paginator javascript library is NOT
  *   automatically included just because you call this function, so make sure
  *   that your smarty() call hooks it in.
+ * - hidecount(bool): option to hide count
  *
  * @param array $params Options for the pagination
  */
@@ -4265,8 +4349,6 @@ function build_pagination($params) {
     $params['previoustext'] = (isset($params['previoustext'])) ? $params['previoustext'] : get_string('previous');
     $params['nexttext']  = (isset($params['nexttext']))  ? $params['nexttext'] : get_string('next');
     $params['lasttext']  = (isset($params['lasttext']))  ? $params['lasttext'] : get_string('last');
-    $params['resultcounttextsingular'] = (isset($params['resultcounttextsingular'])) ? $params['resultcounttextsingular'] : get_string('result');
-    $params['resultcounttextplural'] = (isset($params['resultcounttextplural'])) ? $params['resultcounttextplural'] : get_string('results');
 
     if (!isset($params['numbersincludefirstlast'])) {
         $params['numbersincludefirstlast'] = true;
@@ -4289,9 +4371,11 @@ function build_pagination($params) {
     }
     $output .= '">';
     // Output the count of results
-    $resultsstr = ($params['count'] == 1) ? $params['resultcounttextsingular'] : $params['resultcounttextplural'];
-    if($params['count'] > 0){
-        $output .= '<div class="lead text-small results float-right">' . $params['count'] . ' ' . $resultsstr . '</div>';
+    $resultsstr = isset($params['resultcounttext']) ? $params['resultcounttext'] : get_string('nresults', 'mahara', $params['count']);
+    if ($params['count'] > 0) {
+        if (!isset($params['hidecount'])) {
+            $output .= '<div class="lead text-small results float-right">' . $resultsstr . '</div>';
+        }
     }
 
     if ($params['limit'] && ($params['limit'] < $params['count'])) {
@@ -4395,6 +4479,7 @@ function build_pagination($params) {
 
              // add ellipsis if pages skipped
             $text = $i + 1;
+            $prevpagenum = 0;
             if ($k != 0 && $prevpagenum < $i - 1) {
                 $text = '<span class="metadata d-none d-md-inline-block">...</span>' . ($i + 1);
             }
@@ -4746,7 +4831,7 @@ function language_select_form() {
                             'submitonchange' => true,
                             'class' => 'submitonchange',
                             'options' => $languages,
-                            'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : 'default',
+                            'defaultvalue' => $SESSION->get('lang') ? $SESSION->get('lang') : get_accept_lang(),
                             'rules' => array('required' => true),
                         ),
                         'changelang' => array(
@@ -5021,7 +5106,7 @@ function can_use_skins($userid = null, $managesiteskin=false, $issiteview=false)
  * @return string    An <img> tag of the icon we want
  */
 function display_icon($type, $id = false, $title = "") {
-    global $THEME;
+    $image = '';
     switch ($type) {
         case 'on':
         case 'yes':

@@ -195,6 +195,10 @@
         padding: 0;
     }
 
+    &.collapsible-group {
+        margin-bottom: -$card-border-width;
+    }
+
     &.with-padding {
         .form-group {
             padding: $spacing-xl 0;
@@ -262,6 +266,7 @@
             background-color: transparent;
             border: none;
             color: $link-color;
+            text-decoration: underline;
             &:hover,
             &:focus {
                 color: $link-hover-color;

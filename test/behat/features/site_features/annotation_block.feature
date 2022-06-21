@@ -13,12 +13,12 @@ Scenario: Accessing annotation block (Bug 1443730)
  Given I log in as "admin" with password "Kupuh1pa!"
 # Checking if annotation block is available by default
  And I follow "Page admin_01"
- And I follow "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ And I press "Edit"
+ When I click on the add block button
  And I press "Add"
  And I click on "Show more"
  And I click on "Show more"
- And I should not see "Annotation" in the "Content types" property
+ And I should not see "Annotation" in the "Content types" "Blocks" property
  And I display the page
 # Navigating to admin block to turn it on
  And I choose "Plugin administration" in "Extensions" from administration menu
@@ -26,8 +26,8 @@ Scenario: Accessing annotation block (Bug 1443730)
  And I am on homepage
 # Editing page to add annotation block
  And follow "Page admin_01"
- And I follow "Edit"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ And I press "Edit"
+ When I click on the add block button
  And I press "Add"
  And I set the field "Block title" to "Annotation"
  And I click on blocktype "Annotation"

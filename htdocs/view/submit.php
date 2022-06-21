@@ -74,12 +74,22 @@ function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $view, $collection, $group;
 
     if (!empty($collection)) {
-        $collection->submit($group, null, $USER->get('id'));
-        $SESSION->add_ok_msg(get_string('collectionsubmitted', 'view'));
+        try {
+            $collection->submit($group, null, $USER->get('id'));
+            $SESSION->add_ok_msg(get_string('collectionsubmitted', 'view'));
+        }
+        catch (SubmissionException $e) {
+            $SESSION->add_error_msg($e->getMessage());
+        }
     }
     else if (!empty($view)) {
-        $view->submit($group, null, $USER->get('id'));
-        $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
+        try {
+            $view->submit($group, null, $USER->get('id'));
+            $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
+        }
+        catch (SubmissionException $e) {
+            $SESSION->add_error_msg($e->getMessage());
+        }
     }
 
     redirect('/' . returnto());

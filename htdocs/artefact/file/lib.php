@@ -1,5 +1,6 @@
 <?php
 /**
+ * Artefact file class
  *
  * @package    mahara
  * @subpackage artefact-internal
@@ -13,12 +14,18 @@ defined('INTERNAL') || die();
 
 require_once('file.php');
 
+/**
+ * Plugin artefact file class
+ */
 class PluginArtefactFile extends PluginArtefact {
 
     public static function is_active() {
         return get_field('artefact_installed', 'active', 'name', 'file');
     }
 
+    /**
+     * {@inheritDoc} from the PluginArtefact class
+     */
     public static function get_artefact_types() {
         return array(
             'file',
@@ -121,6 +128,7 @@ class PluginArtefactFile extends PluginArtefact {
         }
         set_config_plugin('artefact', 'file', 'commentsallowedimage', 1);
         self::resync_filetype_list();
+        return true;
     }
 
     public static function set_quota_triggers() {
@@ -180,6 +188,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'foldernamerequired',
                     'foldernotempty',
                     'maxuploadsize',
+                    'maxuploadsizeis',
                     'fileisfolder',
                     'nametoolong',
                     'namefieldisrequired',
@@ -187,6 +196,10 @@ class PluginArtefactFile extends PluginArtefact {
                     'uploadingfiletofolder',
                     'youmustagreetothecopyrightnotice',
                     'moveto',
+                    'rotate0img',
+                    'rotate90img',
+                    'rotate180img',
+                    'rotate270img',
                 ),
             ),
         );
@@ -460,7 +473,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-
+        return false;
     }
 
     public static function collapse_config() {
@@ -997,7 +1010,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         return array(
             'name'         => 'filebrowser',
             'type'         => 'filebrowser',
-            'title'        => get_string('file', 'artefact.file'),
+            'title'        => get_string('File', 'artefact.file'),
             'folder'       => (int) param_variable('folder', 0),
             'highlight'    => null,
             'browse'       => true,
@@ -1195,7 +1208,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $data->width    = $imageinfo[0];
             $data->height   = $imageinfo[1];
             if (isset($data->artefacttype) && $data->artefacttype == 'profileicon') {
-                return new ArtefactTypeProfileicon(0, $data);
+                return new ArtefactTypeProfileIcon(0, $data);
             }
             return new ArtefactTypeImage(0, $data);
         }
@@ -1318,7 +1331,9 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * Processes a newly uploaded file, copies it to disk, and creates
      * a new artefact object.
      * Takes the name of a file input.
-     * Returns false for no errors, or a string describing the error.
+     * @throw UploadException when file fails to upload
+     * @throw QuotaExceededException when user has exceeded their file quota
+     * @return int File id
      */
     public static function save_uploaded_file($inputname, $data, $inputindex=null, $resized=false) {
         require_once('uploadmanager.php');
@@ -1408,7 +1423,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         }
         $filetype = get_string($this->get('oldextension'), 'artefact.file');
         if (substr($filetype, 0, 2) == '[[') {
-            $filetype = $this->get('oldextension') . ' ' . get_string('file', 'artefact.file');
+            $filetype = $this->get('oldextension') . ' ' . get_string('File', 'artefact.file');
         }
 
         $uploadedby = null;
@@ -1579,7 +1594,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
         if (!empty($filerecords)) {
             foreach ($filerecords as $filerecord) {
-                if (!empty($externalfilesystem)) {
+                if ($externalfilesystem) {
                     // We can't use artefact_instance_from_id() as we've removed all artefacts already
                     $classname = generate_artefact_class_name($filerecord->artefacttype);
                     $fileartefact = new $classname(0, $filerecord);
@@ -1733,7 +1748,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
                 'defaultagreement' => array(
                     'type'         => 'html',
                     'title'        => get_string('defaultagreement', 'artefact.file'),
-                    'value'        => get_string('uploadcopyrightdefaultcontent', 'install'),
+                    'value'        => '<div>' . get_string('uploadcopyrightdefaultcontent', 'install') .'</div>',
                 ),
                 'usecustomagreement' => array(
                     'title'        => get_string('usecustomagreement', 'artefact.file'),
@@ -1994,7 +2009,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      *                       that is set by: (quotaused / quota) * 100
      * @param $notifyadmins  bool
      */
-    function notify_users_threshold_exceeded($users, $notifyadmins = false) {
+    public static function notify_users_threshold_exceeded($users, $notifyadmins = false) {
         // if we have just been given a $user object
         if (is_object($users)) {
             $users[] = $users;
@@ -2037,7 +2052,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
      * @param $groups        array of group objects - the $group object needs to include a quotausedpercent
      *                       that is set by: (quotaused / quota) * 100
      */
-    function notify_groups_threshold_exceeded($groups) {
+    public static function notify_groups_threshold_exceeded($groups) {
         // if we have just been given a $group object
         if (is_object($groups)) {
             $groups[] = $groups;
@@ -2136,6 +2151,8 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
 
 class ArtefactTypeFolder extends ArtefactTypeFileBase {
 
+    protected $size;
+
     public function __construct($id = 0, $data = null) {
 
         parent::__construct($id, $data);
@@ -2216,12 +2233,17 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $child->title = $child->hovertitle = $c->get('title');
                 $child->date = format_date(strtotime($child->mtime), 'strftimedaydatetime');
                 $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
-                if (!empty($options['pdfexportfiledir'])) {
-                    if ($child->artefacttype == 'folder') {
-                        $child->title = $child->title . ' [' . $options['pdfexportfiledir'] . $this->get('title') . '/' . $child->title . ']';
+                if (!empty($options['exportfiledir'])) {
+                    if ($child->artefacttype == 'folder' && $options['exporttype'] == 'pdf') {
+                        $child->title = $child->title . ' [' . $options['exportfiledir'] . $this->get('title') . '/' . $child->title . ']';
                     }
                     else {
-                        $child->title = $child->title . ' [' . $options['pdfexportfiledir'] . $child->id . '-' . $child->title . ']';
+                        if ($options['exporttype'] == 'pdflite') {
+                            $child->title = $child->title;
+                        }
+                        else {
+                            $child->title = $child->title . ' [' . $options['exportfiledir'] . $child->id . '-' . $child->title . ']';
+                        }
                     }
                 }
                 $count = ArtefactTypeComment::count_comments(null, array($child->id));
@@ -2237,8 +2259,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         if (isset($options['blockid'])) {
             $smarty->assign('blockid', $options['blockid']);
         }
-        $template = !empty($options['pdfexport']) ? 'artefact:file:folder_render_self_pdfexport.tpl' : 'artefact:file:folder_render_self.tpl';
-        if (isset($options['modal']) && !isset($options['pdfexport'])) {
+        $template = !empty($options['exporttype']) ? 'artefact:file:folder_render_self_pdfexport.tpl' : 'artefact:file:folder_render_self.tpl';
+        if (isset($options['modal']) && !isset($options['exporttype'])) {
             $smarty->assign('modal', $options['modal']);
             $template = 'artefact:file:folder_render_in_modal.tpl';
         }
@@ -2263,24 +2285,28 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
         // There is one public files directory and many admins, so the
         // name of the directory uses the site language rather than
         // the language of the admin who first creates it.
-        $name = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
-        $folders = get_records_select_array(
-            'artefact',
-            'title = ? AND artefacttype = ? AND institution = ? AND parent IS NULL',
-            array($name, 'folder', 'mahara'),
-            'id', 'id', 0, 1
-        );
-        if (!$folders) {
-            $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
-            $data = (object) array('title' => $name,
+        $title = get_string_from_language(get_config('lang'), 'adminpublicdirname', 'admin');
+        $description = get_string_from_language(get_config('lang'), 'adminpublicdirdescription', 'admin');
+        $id = get_config('sitepublicfolder');
+        if ($id && get_field('artefact', 'id', 'artefacttype', 'folder', 'id', $id)) {
+            $a = new ArtefactTypeFolder($id);
+            // Check that the name of the folder matches the site language
+            if ($a->get('title') !== $title || $a->get('description') !== $description) {
+                $a->set('title', $title);
+                $a->set('description', $description);
+                $a->commit();
+            }
+        }
+        else {
+            $data = (object) array('title' => $title,
                                    'description' => $description,
                                    'institution' => 'mahara');
             $f = new ArtefactTypeFolder(0, $data);
             $f->commit();
-            $folderid = $f->get('id');
-            return $folderid;
+            $id = $f->get('id');
+            set_config('sitepublicfolder', $id);
         }
-        return $folders[0]->id;
+        return $id;
     }
 
     public static function change_public_folder_name($oldlang, $newlang) {
@@ -2359,6 +2385,19 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
             return $f->get('id');
         }
         return $record->id;
+    }
+
+    /**
+     * Get the folder id of which contains the given file artefact
+     *
+     * @param  integer $artefactid of a file stored inside a folder
+     * @return integer|false
+     */
+    public static function get_folder_id_artefact_contents($artefactid) {
+        if ($folderid = get_field_sql("SELECT id FROM {artefact} WHERE id = (SELECT parent FROM {artefact} WHERE id = ?)", array($artefactid))) {
+            return $folderid;
+        }
+        return false;
     }
 
     // append the view id to to the end of image and anchor urls so they are visible to logged out users also
@@ -2566,7 +2605,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     }
 
     public static function get_title_progressbar() {
-        return get_string('image','artefact.file');
+        return get_string('Image','artefact.file');
     }
 
     public static function is_metaartefact() {
@@ -2792,7 +2831,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         );
 
         // User has a profile icon file selected. Use it.
-        if (!empty($data) && !empty($data->profileicon)) {
+        if ($data && !empty($data->profileicon)) {
             $id = $data->profileicon;
             $mimetype = $data->filetype;
 
@@ -2803,7 +2842,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
 
         // No profile icon file selected. Go through fallback icons.
         // Look for an appropriate image on gravatar.com if not 'root' user
-        $useremail = (!empty($data) && $userid !== 0) ? $data->email : false;
+        $useremail = ($data && $userid !== 0) ? $data->email : false;
         if ($useremail and $gravatarurl = remote_avatar_url($useremail, $size)) {
             redirect($gravatarurl);
         }
@@ -2918,6 +2957,11 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
         }
     }
 
+    /**
+     * @throw UploadException
+     * @return void
+     */
+
     public static function save_uploaded_file($inputname, $data, $inputindex=null, $resized=false) {
         global $USER;
 
@@ -2996,7 +3040,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
             $archive_obj = new PharData($path);
         }
         catch (UnexpectedValueException $e) {
-            $path = self::delete_from_temp($path);
+            self::delete_from_temp($path);
             return false;
         }
 
@@ -3264,7 +3308,7 @@ class ArtefactTypeArchive extends ArtefactTypeFile {
 
         if (!$keeptemphandle) {
             // Delete the temporary file
-            self::delete_from_temp($tmparchivepath);
+            self::delete_from_temp($this->get_path());
             $this->handle = null;
             $this->temparchivepathlength = 0;
         }
@@ -3366,7 +3410,7 @@ class ArtefactTypeVideo extends ArtefactTypeFile {
     }
 
     public static function get_title_progressbar() {
-        return get_string('video','artefact.file');
+        return get_string('videofile','artefact.file');
     }
 
     public static function is_metaartefact() {

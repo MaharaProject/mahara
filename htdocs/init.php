@@ -149,10 +149,12 @@ try {
     if (!empty($CFG->dbport)) {
         $db->port = $CFG->dbport;
     }
-    if (!empty($CFG->dbpersist)) {    // Use persistent connection (default)
+    if (!empty($CFG->dbpersist)) {
+        // Use persistent connection
         $dbconnected = $db->PConnect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
-    else {                                                     // Use single connection
+    else {
+        // Use single connection (default)
         $dbconnected = $db->Connect($CFG->dbhost,$CFG->dbuser,$CFG->dbpass,$CFG->dbname);
     }
 
@@ -163,7 +165,7 @@ try {
         $dbfriendlyname = 'PostgreSQL';
     }
     else if (is_mysql()) {
-        $okversion = '5.6';
+        $okversion = '5.7';
         $dbfriendlyname = 'MySQL';
     }
     if (version_compare($dbversion['version'], $okversion, '<')) {
@@ -190,7 +192,7 @@ catch (Exception $e) {
 }
 try {
     db_ignore_sql_exceptions(true);
-    load_config();
+    load_config(defined('BEHAT_TEST'));
     db_ignore_sql_exceptions(false);
 }
 catch (SQLException $e) {
@@ -382,18 +384,21 @@ if (!defined('CLI')) {
     // Don't print precise PHP version as an HTTP header
     header_remove('x-powered-by');
 
-    // Allow LTI to load in an iframe
+    // Allow LTI to load in an iframe.
     if ($csp_ancestor_exemption = $SESSION->get('csp-ancestor-exemption')) {
-        header("Content-Security-Policy: frame-ancestors 'self' $csp_ancestor_exemption");
-        header('X-Frame-Options: ALLOW-FROM '. $csp_ancestor_exemption);
+        if (!empty($csp_ancestor_exemption)) {
+            update_csp_headers($csp_ancestor_exemption);
+        }
+        else {
+            set_default_headers();
+        }
     }
     else if ($saml_logout = $SESSION->get('saml_logout')) {
         // To allow IDP SAML to logout within an iframe we temporarily ignore content security policy
         // This is set via auth/saml/sp/saml2-logout.php
     }
     else {
-        header("Content-Security-Policy: frame-ancestors 'self'");
-        header('X-Frame-Options: SAMEORIGIN');
+        set_default_headers();
     }
 }
 
@@ -459,25 +464,6 @@ if (defined('JSON') && !defined('NOSESSKEY')) {
         $USER->logout();
         json_reply('global', get_string('invalidsesskey'), 1);
     }
-}
-$mobile_detection_done = $SESSION->get('mobile_detection');
-// Device detection
-if (!$mobile_detection_done) {
-    if (get_config('installed') && get_account_preference($USER->get('id'), 'devicedetection')) {
-        require_once(get_config('libroot') . 'mobile_detect/Mobile_Detect.php');
-        $detect = new Mobile_Detect();
-        $isMobile = $detect->isMobile();
-        $isTablet = $detect->isTablet();
-        $SESSION->set('handheld_device', $isMobile);
-        $SESSION->set('mobile', $isTablet ? false : $isMobile);
-        $SESSION->set('tablet', $isTablet);
-    }
-    else {
-        $SESSION->set('handheld_device', false);
-        $SESSION->set('mobile', false);
-        $SESSION->set('tablet', false);
-    }
-    $SESSION->set('mobile_detection', true);
 }
 
 // Run modules bootstrap code.
@@ -583,4 +569,22 @@ function is_cli() {
         return true;
     }
     return false;
+}
+
+/**
+ * Set headers to allow the site to load in an iframe.
+ *
+ * @param string $csp_ancestor_exemption
+ */
+function update_csp_headers($csp_ancestor_exemption) {
+    header("Content-Security-Policy: frame-ancestors 'self' " . $csp_ancestor_exemption);
+    header('X-Frame-Options: ALLOW-FROM '. $csp_ancestor_exemption);
+}
+
+/**
+ * Set default security headers.
+ */
+function set_default_headers() {
+    header("Content-Security-Policy: frame-ancestors 'self'");
+    header('X-Frame-Options: SAMEORIGIN');
 }

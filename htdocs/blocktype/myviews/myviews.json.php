@@ -58,9 +58,8 @@ $pagination = array(
     'id'         => 'myviews_pagination',
     'datatable'  => 'myviewlist',
     'jsonscript' => 'blocktype/myviews/myviews.json.php',
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural'   => get_string('views', 'view'),
+    'resultcounttext' => get_string('nportfolios', 'view', $views['count']),
 );
-PluginBlocktypeMyViews::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination);
+PluginBlocktypeMyviews::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination, $editing);
 
 json_reply(false, array('data' => $views));

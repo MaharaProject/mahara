@@ -65,10 +65,12 @@ $logged-in-height-small: 5rem; // 80px;
             }
         }
 
-        &:focus,
-        &:hover {
-            .widget-heading {
-                background-color: $dashboard-widget-hover-bg;
+        &.logged-in {
+            &:focus,
+            &:hover {
+                .widget-heading {
+                    background-color: $dashboard-widget-hover-bg;
+                }
             }
         }
     }

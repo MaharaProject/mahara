@@ -21,6 +21,7 @@ require_once(get_config('docroot') . 'export/lib.php');
 require_once(get_config('docroot') . 'lib/activity.php');
 require_once(get_config('docroot') . 'lib/file.php');
 require_once(get_config('docroot') . 'webservice/lib.php');
+require_once(get_config('docroot') . 'lib/collection.php');
 if (file_exists(get_config('docroot') . 'local/lib/cron.php')) {
     require_once(get_config('docroot') . 'local/lib/cron.php');
 }

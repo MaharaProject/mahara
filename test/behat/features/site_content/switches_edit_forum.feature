@@ -18,9 +18,9 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     And I follow "Turtles"
     And I follow "Forums"
     And I follow "General discussion"
-    And I follow "Edit forum"
+    And I click on "Edit forum"
     # There are 2 settings links on the page and it needs to identify which one to follow
-    And I follow "Forum settings"
+    And I press "Forum settings"
     # Checking "Automatically subscribe group members" switchbox is on by default
     And the "edit_interaction_autosubscribe" checkbox should be checked
     # Checking it can be turned off
@@ -38,11 +38,11 @@ Scenario: Turning on and off switches in the group forums tab (Bug 1431569)
     And I press "Save"
     # And I add another forum
     And I follow "Forums"
-    And I follow "New forum"
+    And I click on "New forum"
     And I set the following fields to these values:
     | Title | Freshwater turtles |
     | Description | All about freshwater turtles |
-    And I follow "Forum settings"
+    And I press "Forum settings"
     # Checking "Automatically subscribe people" switchbox is on by default
     And the "edit_interaction_autosubscribe" checkbox should be checked
     And I press "Save"

@@ -3,14 +3,15 @@
     <div class='btn-group-vertical'>
     {/if}
         {foreach from=$blocktypes item=blocktype}{strip}
-            <a class="{if !$accessible} not-accessible{/if} blocktype-drag blocktypelink btn btn-primary hide-title-collapsed" href="#" title="{$blocktype.title}">
-                <input type="radio" id="blocktype-list-radio-{$blocktype.name}" class="blocktype-radio" name="blocktype" value="{$blocktype.name}">
-                <span class="icon icon-{$blocktype.cssicon} {$blocktype.cssicontype}" title="{$blocktype.title}" role="presentation" aria-hidden="true"></span>
-                <label for="blocktype-list-radio-{$blocktype.name}" class="blocktypetitle title">
-                    <span class="hidden">{$blocktype.title}</span>
-                </label>
-                <span class="sr-only">({$blocktype.description})</span>
-            </a>{/strip}
+            <div class="{if !$accessible} not-accessible{/if} blocktype-drag grid-stack-item hide-title-collapsed" href="#" title="{$blocktype.title}" gs-w="4" gs-h="5" gs-max-w="4">
+              <div class="grid-stack-item-content btn btn-primary">
+                <span class="icon icon-{$blocktype.cssicon} {$blocktype.cssicontype} icon-lg" title="{$blocktype.title}" role="presentation" aria-hidden="true"></span>
+                <span class="labelspan hidden">{$blocktype.title}</span>
+                {if $blocktype.name != 'placeholder'}
+                    <span class="sr-only">({$blocktype.description})</span>
+                {/if}
+              </div>
+            </div>{/strip}
         {/foreach}
     {if $javascript}
     </div>

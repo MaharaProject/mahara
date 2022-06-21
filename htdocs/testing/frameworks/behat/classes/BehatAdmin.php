@@ -54,7 +54,6 @@ class BehatAdmin extends BehatBase {
                 'loggedinprofileviewaccess',
                 'staffreports',
                 'staffstats',
-                'userscandisabledevicedetection',
                 'masqueradingreasonrequired',
                 'masqueradingnotified',
                 'showprogressbar',
@@ -92,6 +91,8 @@ class BehatAdmin extends BehatBase {
                 'sitefilesaccess',
                 'watchlistnotification_delay',
             // Logging settings
+                'eventloglevel',
+                'eventlogenhancedsearch',
             // Experiment settings
                 'skins',
         );
@@ -117,6 +118,9 @@ class BehatAdmin extends BehatBase {
             if (isset($settings[$setting]) && !set_config($setting, $settings[$setting])) {
                 throw new SystemException("Can not set the option \"$setting\" to \"$settings[$setting]\"");
             }
+        }
+        if (isset($settings['skins'])) {
+            set_config_institution('mahara', 'skins', (bool)$settings['skins']);
         }
         if (isset($settings['lang']) && $oldlanguage != $settings['lang']) {
             safe_require('artefact', 'file');
@@ -249,7 +253,24 @@ class BehatAdmin extends BehatBase {
                 ),
             ),
             'search' => array (
+                // @todo make this modular so search plugins are not hardcoded.
                 'elasticsearch' => array(
+                    'indexname' => array(),
+                    'types' => array(
+                        'usr',
+                        'interaction_instance',
+                        'interaction_forum_post',
+                        'group',
+                        'view',
+                        'artefact',
+                        'block_instance',
+                        'collection',
+                    ),
+                    'cronlimit' => array(),
+                    'shards' => array(),
+                    'replicashards' => array(),
+                ),
+                'elasticsearch7' => array(
                     'indexname' => array(),
                     'types' => array(
                         'usr',
@@ -281,11 +302,16 @@ class BehatAdmin extends BehatBase {
             $values = array_merge($mandatory, $values);
             $settings['artefact']['internal']['profilepublic'] = implode(',', $values);
         }
-        // if search elasticsearch types set we need to make sure to use only valid ones
-        if (!empty($settings['search']['elasticsearch']['types'])) {
-            $values = explode(',', $settings['search']['elasticsearch']['types']);
-            $values = array_intersect($values, $allowsettings['search']['elasticsearch']['types']);
-            $settings['search']['elasticsearch']['types'] = implode(',', $values);
+        // If search Elasticsearch types are set we need to make sure to use
+        // only valid ones.
+        // @todo - make this modular so search plugins are not hard coded.
+        $search_plugins = ['elasticsearch', 'elasticsearch7'];
+        foreach ($search_plugins as $search_plugin) {
+            if (!empty($settings['search'][$search_plugin]['types'])) {
+                $values = explode(',', $settings['search'][$search_plugin]['types']);
+                $values = array_intersect($values, $allowsettings['search'][$search_plugin]['types']);
+                $settings['search'][$search_plugin]['types'] = implode(',', $values);
+            }
         }
 
         // Update plugin settings

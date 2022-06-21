@@ -16,12 +16,12 @@ define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'siteoptions');
 
+$OVERRIDDEN = array(); // will be set within init.php file
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once('searchlib.php');
 require_once('antispam.php');
 require_once(get_config('libroot') . 'activity.php');
 define('TITLE', get_string('siteoptions', 'admin'));
-
 $langoptions = get_languages();
 $themeoptions = get_all_themes();
 unset($themeoptions['custom']); // Only available for institution configurable themes
@@ -34,6 +34,16 @@ $timezones = getoptions_timezone();
 $notificationelements = get_notification_settings_elements(null, true);
 
 validate_theme(get_config('theme'));
+
+// Search plugin doesn't clean up when switching.
+$search_plugin_default_value = get_config('searchplugin');
+$search_plugins_installed = plugins_installed('search');
+if (!array_key_exists($search_plugin_default_value, $search_plugins_installed)) {
+    $search_plugin_default_value = 'internal';
+}
+// Do we provide enhances event log reporting?
+$search_class = generate_class_name('search', $search_plugin_default_value);
+$enhanced_event_log_reporting = $search_class::provides_enhanced_event_log_reports();
 
 $spamtraps = available_spam_traps();
 $isolatedinstitutions = is_isolated();
@@ -75,7 +85,6 @@ $siteoptionform = array(
                 'country' => array(
                     'type'         => 'select',
                     'title'        => get_string('country', 'admin'),
-                    'description'  => get_string('sitecountrydescription', 'admin'),
                     'defaultvalue' => get_config('country'),
                     'options'      => array('' => get_string('nocountryselected')) + $countries,
                     'help'         => true,
@@ -210,13 +219,6 @@ $siteoptionform = array(
                     'help'         => true,
                     'disabled'     => in_array('generatesitemap', $OVERRIDDEN) || !get_config('allowpublicviews'),
                 ),
-                'watchlistnotification_delay' => array(
-                    'type'         => 'text',
-                    'title'        => get_string('watchlistdelaytitle', 'admin'),
-                    'description'  => get_string('watchlistdelaydescription', 'admin'),
-                    'defaultvalue' => get_config('watchlistnotification_delay'),
-                    'disabled'     => in_array('watchlistnotification_delay', $OVERRIDDEN),
-                ),
             ),
         ),
         'institutionsettings' => array(
@@ -268,15 +270,15 @@ $siteoptionform = array(
                 ),
                 'staffreports' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('staffaccessreports', 'admin'),
-                    'description'  => get_string('staffaccessreportsdescription1', 'admin'),
+                    'title'        => get_string('staffaccessreports1', 'admin'),
+                    'description'  => get_string('staffaccessreportsdescription2', 'admin'),
                     'defaultvalue' => get_config('staffreports'),
                     'disabled'     => in_array('staffreports', $OVERRIDDEN),
                 ),
                 'staffstats' => array(
                     'type'         => 'switchbox',
-                    'title'        => get_string('institutionstaffallreports', 'admin'),
-                    'description'  => get_string('institutionstaffallreportsdescription', 'admin'),
+                    'title'        => get_string('institutionstaffallreports1', 'admin'),
+                    'description'  => get_string('institutionstaffallreportsdescription1', 'admin'),
                     'defaultvalue' => get_config('staffstats'),
                     'disabled'     => in_array('staffstats', $OVERRIDDEN),
                 ),
@@ -333,13 +335,6 @@ $siteoptionform = array(
                   'help'         => true,
                   'disabled'     => in_array('allowanonymouspages', $OVERRIDDEN),
               ),
-                'userscandisabledevicedetection' => array(
-                    'type'         => 'switchbox',
-                    'title'        => get_string('userscandisabledevicedetection', 'admin'),
-                    'description'  => get_string('userscandisabledevicedetectiondescription1', 'admin'),
-                    'defaultvalue' => get_config('userscandisabledevicedetection'),
-                    'disabled'     => in_array('userscandisabledevicedetection', $OVERRIDDEN),
-                ),
                 'exporttoqueue' => array(
                     'type'         => 'switchbox',
                     'title'        => get_string('exporttoqueue', 'admin'),
@@ -599,7 +594,7 @@ $siteoptionform = array(
                     'type'         => 'select',
                     'title'        => get_string('searchplugin', 'admin'),
                     'description'  => get_string('searchplugindescription', 'admin'),
-                    'defaultvalue' => get_config('searchplugin'),
+                    'defaultvalue' => $search_plugin_default_value,
                     'collapseifoneoption' => true,
                     'options'      => $searchpluginoptions,
                     'help'         => true,
@@ -841,7 +836,7 @@ $siteoptionform = array(
                     'description'  => get_string('eventlogenhancedsearchdescription1', 'admin'),
                     'defaultvalue' => get_config('eventlogenhancedsearch'),
                     'help'         => true,
-                    'disabled'     => (get_config('searchplugin') != 'elasticsearch' || in_array('eventlogenhancedsearch', $OVERRIDDEN)),
+                    'disabled'     => !$enhanced_event_log_reporting,
                 ),
             ),
         ),
@@ -869,14 +864,14 @@ $siteoptionform = pieform($siteoptionform);
 
 function siteoptions_validate(Pieform $form, $values) {
 
-    if (get_config('searchplugin') != $values['searchplugin']) {
-        // Call the new search plugin's can connect
-        safe_require('search', $values['searchplugin']);
-        $connect = call_static_method(generate_class_name('search', $values['searchplugin']), 'can_connect');
-        if (!$connect) {
-            $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
-        }
+    // Call the new search plugin's can connect
+    safe_require('search', $values['searchplugin']);
+    $search_class_name = generate_class_name('search', $values['searchplugin']);
+    $connect = call_static_method($search_class_name, 'can_connect');
+    if (!$connect) {
+        $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
     }
+
     if ($values['viruschecking'] == true) {
         $pathtoclam = escapeshellcmd(trim(get_config('pathtoclam')));
         if (!$pathtoclam ) {
@@ -907,8 +902,7 @@ function siteoptions_submit(Pieform $form, $values) {
         'proxyaddress', 'proxyauthmodel', 'proxyauthcredentials', 'smtphosts', 'smtpport', 'smtpuser', 'smtppass', 'smtpsecure',
         'noreplyaddress', 'homepageinfo', 'showprogressbar', 'showonlineuserssideblock', 'onlineuserssideblockmaxusers',
         'registerterms', 'licensemetadata', 'licenseallowcustom', 'creategroups', 'createpublicgroups', 'allowgroupcategories', 'owngroupsonly', 'wysiwyg',
-        'staffreports', 'staffstats', 'userscandisabledevicedetection', 'watchlistnotification_delay',
-        'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
+        'staffreports', 'staffstats', 'masqueradingreasonrequired', 'masqueradingnotified', 'searchuserspublic',
         'eventloglevel', 'eventlogexpiry', 'eventlogenhancedsearch', 'sitefilesaccess', 'exporttoqueue', 'defaultmultipleblogs',
         'defaultreviewselfdeletion'
     );
@@ -980,8 +974,19 @@ function siteoptions_submit(Pieform $form, $values) {
         $values['allowpublicprofiles'] = 1;
     }
     // Can only set advanced event log searching if search plugin is elasticsearch
-    if (!empty($values['eventlogenhancedsearch']) && $values['searchplugin'] != 'elasticsearch') {
-        $values['eventlogenhancedsearch'] = false;
+    if (!empty($values['eventlogenhancedsearch'])) {
+        $search_plugin = $values['searchplugin'];
+        $search_class = generate_class_name('search', $search_plugin);
+        if (
+            !class_exists($search_class) ||
+            !method_exists($search_class, 'provides_enhanced_event_log_reports') ||
+            !$search_class::provides_enhanced_event_log_reports()
+        ) {
+            // Either there is no search class, no way to check enhanced event
+            // log reports are supported, or the class doesn't support them.
+            // In these cases we want to force this to be false.
+            $values['eventlogenhancedsearch'] = false;
+        }
     }
     // If password policy is changed, force reset password for all users with internal authentication.
     if ($values['passwordpolicy'] != get_password_policy()) {

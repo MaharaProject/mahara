@@ -16,6 +16,10 @@ $string['Assessment'] = 'Assessment';
 $string['Assessments'] = 'Assessments';
 $string['assessment'] = 'assessment';
 $string['assessments'] = 'assessments';
+$string['nassessments'] = array(
+    '%s assessment',
+    '%s assessments'
+);
 $string['makeassessmentpublic'] = 'Publish assessment';
 $string['attachfile'] = 'Attach file';
 $string['messageempty'] = 'Peer assessment is empty';
@@ -58,3 +62,4 @@ $string['progress_verify'] = array(
     "Give 1 verification to another person's peer assessment page",
     "Give %s verifications to other people's peer assessment pages",
 );
+$string['importedassessment'] = "Imported peer assessment";

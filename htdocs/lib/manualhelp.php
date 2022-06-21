@@ -1,5 +1,7 @@
 <?php
 /**
+ * Supplies helper functions to create & retrieve links to the Mahara manual
+ * with regard person's language and Mahara version.
  *
  * @package    mahara
  * @subpackage core
@@ -62,6 +64,8 @@ function get_manual_help_link_array($keys) {
 /**
  * For the given keys finds the most specific manual link.
  *
+ * @param   array $keys An array of keys that indicate what help file we want
+ *
  * @return string
  */
 function _get_manual_help_link_suffix($keys) {
@@ -74,6 +78,14 @@ function _get_manual_help_link_suffix($keys) {
     return "";
 }
 
+/**
+ * For the given keys finds the most specific manual link.
+ *
+ * @param   int $length of the $key
+ * @param   array $keys An array of keys that indicate what help file we want
+ *
+ * @return string
+ */
 function _get_manual_link($length, $keys) {
     global $manual_link_map;
     $key = "";
@@ -112,7 +124,7 @@ function _get_manual_language() {
 
 /**
  * Get the current version of Mahara so we can point to the corresponding version of the manual.
- * If current version is master/release candidate we use the most current stable version
+ * If current version is main/release candidate we use the most current stable version
  *
  * @return string
  */
@@ -120,27 +132,26 @@ function _get_mahara_version() {
     $release = get_config("release");
     $series = get_config("series");
     if (preg_match('/dev$/', $release) || preg_match('/rc/', $release)) {
-        // We are either on master or a branch in release candidate
+        // We are either on main or a branch in release candidate
         // so we need the latest released branch
-        $versions = cron_check_for_updates(true);
-
-        // Need this of PHP older than 7.3
-        if (!function_exists('array_key_first')) {
-            function array_key_first(array $arr) {
-                foreach($arr as $key => $unused) {
-                    return $key;
-                }
-                return NULL;
-            }
+        preg_match('/^(\d+)\.(\d+).*/', $release, $matches);
+        if ($matches[2] == '10') {
+            $matches[2] = '04';
         }
-
-        $series = array_key_first((array)$versions);
+        else {
+            $matches[1] = (int)$matches[1] - 1;
+            $matches[2] = '10';
+        }
+        $series = $matches[1] . '.' . $matches[2];
     }
     return $series;
 }
 
+/**
+ * Return Mahara manual URL
+ */
 function _get_manual_link_prefix() {
-    return "http://manual.mahara.org";
+    return "https://manual.mahara.org";
 }
 
 $manual_link_map = array(
@@ -151,6 +162,7 @@ $manual_link_map = array(
     "configextensions|cleanurls" => "administration/extensions.html#clean-urls",
     "configextensions|filters" => "administration/extensions.html#html-filters",
     "configextensions|frameworks" => "administration/smartevidence.html#smartevidence-admin",
+    "configextensions|frameworks|uploadmatrix" => "administration/smartevidence_import.html",
     "configextensions|frameworks|frameworkmanager" => "administration/smartevidence.html#smartevidence-admin", // Need to point to new place once created
     "configextensions|iframesites" => "administration/extensions.html#allowed-iframe-sources",
     "configextensions|pluginadmin|plugins" => "administration/extensions.html",

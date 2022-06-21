@@ -23,7 +23,7 @@ class ArtefactTest extends MaharaUnitTest {
      * Shared setUp method.
      * Requires a test user, and create artefacts to test with.
      */
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         $this->testuserid = $this->create_test_user();
     }
@@ -31,7 +31,7 @@ class ArtefactTest extends MaharaUnitTest {
     /**
      * Clean up after ourselves.
      */
-    public function tearDown() {
+    public function tearDown(): void {
         parent::tearDown();
     }
 

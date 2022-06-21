@@ -26,7 +26,6 @@ require_once(get_config('docroot') . 'lib/user.php');
 require_once(get_config('docroot') . 'api/xmlrpc/lib.php');
 
 global $WEBSERVICE_OAUTH_USER;
-
 /**
 * Class container for core Mahara user related API calls
 */
@@ -68,11 +67,11 @@ class mahara_view_external extends external_api {
                 'users' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_NUMBER, 'Mahara ID of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the portfolio owner', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'query'           => new external_value(PARAM_RAW, 'Portfolio query filter to apply', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_NUMBER, get_string('portfolioownerid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('portfolioownerusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, get_string('portfolioremoteuser', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, get_string('portfolioowneremail', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'query'           => new external_value(PARAM_RAW, get_string('portfolioquery', WEBSERVICE_LANG), VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -97,7 +96,8 @@ class mahara_view_external extends external_api {
         }
         else if (isset($user['username'])) {
             $username = strtolower($user['username']);
-            $dbuser = get_record('usr', 'username', $username);
+            $sql = 'SELECT * FROM {usr} WHERE LOWER(username) = ?';
+            $dbuser = get_record_sql($sql, array($username));
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['username']));
             }
@@ -105,7 +105,8 @@ class mahara_view_external extends external_api {
         }
         else if (isset($user['email'])) {
             $email = strtolower($user['email']);
-            $dbuser = get_record('usr', 'email', $email, null, null, null, null, '*', 0);
+            $sql = 'SELECT * FROM {usr} WHERE LOWER(email) = ?';
+            $dbuser = get_record_sql($sql, array($email), 0);
             if (empty($dbuser)) {
                 throw new WebserviceInvalidParameterException(get_string('invalidusername', 'auth.webservice', $user['email']));
             }
@@ -280,81 +281,83 @@ class mahara_view_external extends external_api {
         return new external_multiple_structure(
                 new external_single_structure(
                         array(
-                    'id'              => new external_value(PARAM_NUMBER, 'ID of the user'),
-                    'username'        => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-                    'firstname'       => new external_value(PARAM_NOTAGS, 'The first name(s) of the user'),
-                    'lastname'        => new external_value(PARAM_NOTAGS, 'The family name of the user'),
-                    'email'           => new external_value(PARAM_TEXT, 'An email address - allow email as root@localhost'),
-                    'auth'            => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                    'studentid'       => new external_value(PARAM_RAW, 'An arbitrary ID code number perhaps from the institution'),
-                    'institution'     => new external_value(PARAM_SAFEDIR, 'Mahara institution'),
-                    'preferredname'   => new external_value(PARAM_RAW, 'User preferred name'),
-                    'introduction'    => new external_value(PARAM_RAW, 'User introduction'),
-                    'country'         => new external_value(PARAM_ALPHA, 'Home country code of the user, such as AU or CZ'),
-                    'city'            => new external_value(PARAM_NOTAGS, 'Home city of the user'),
-                    'address'         => new external_value(PARAM_RAW, 'Introduction text'),
-                    'town'            => new external_value(PARAM_NOTAGS, 'Home town of the user'),
-                    'homenumber'      => new external_value(PARAM_RAW, 'Home phone number'),
-                    'businessnumber'  => new external_value(PARAM_RAW, 'business phone number'),
-                    'mobilenumber'    => new external_value(PARAM_RAW, 'mobile phone number'),
-                    'faxnumber'       => new external_value(PARAM_RAW, 'fax number'),
-                    'officialwebsite' => new external_value(PARAM_RAW, 'Official user website'),
-                    'personalwebsite' => new external_value(PARAM_RAW, 'Personal website'),
-                    'blogaddress'     => new external_value(PARAM_RAW, 'Blog web address'),
-                    'aimscreenname'   => new external_value(PARAM_ALPHANUMEXT, 'AIM screen name'),
-                    'icqnumber'       => new external_value(PARAM_ALPHANUMEXT, 'ICQ Number'),
-                    'msnnumber'       => new external_value(PARAM_ALPHANUMEXT, 'MSN Number'),
-                    'yahoochat'       => new external_value(PARAM_ALPHANUMEXT, 'Yahoo chat'),
-                    'skypeusername'   => new external_value(PARAM_ALPHANUMEXT, 'Skype username'),
-                    'jabberusername'  => new external_value(PARAM_RAW, 'Jabber/XMPP username'),
-                    'occupation'      => new external_value(PARAM_TEXT, 'Occupation'),
-                    'industry'        => new external_value(PARAM_TEXT, 'Industry'),
+                    'id'              => new external_value(PARAM_NUMBER, get_string('portfolioownerid', WEBSERVICE_LANG)),
+                    'username'        => new external_value(PARAM_RAW, get_string('portfolioownerusername', WEBSERVICE_LANG)),
+                    'firstname'       => new external_value(PARAM_NOTAGS, get_string('firstname', WEBSERVICE_LANG)),
+                    'lastname'        => new external_value(PARAM_NOTAGS, get_string('lastname', WEBSERVICE_LANG)),
+                    'email'           => new external_value(PARAM_TEXT, get_string('portfolioowneremail', WEBSERVICE_LANG)),
+                    'auth'            => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+                    'studentid'       => new external_value(PARAM_RAW, get_string('studentidinst', WEBSERVICE_LANG)),
+                    'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG)),
+                    'preferredname'   => new external_value(PARAM_RAW, get_string('preferredname', WEBSERVICE_LANG)),
+                    'introduction'    => new external_value(PARAM_RAW, get_string('introduction', WEBSERVICE_LANG)),
+                    'country'         => new external_value(PARAM_ALPHA, get_string('country', WEBSERVICE_LANG)),
+                    'city'            => new external_value(PARAM_NOTAGS, get_string('city', WEBSERVICE_LANG)),
+                    'address'         => new external_value(PARAM_RAW, get_string('useraddress', WEBSERVICE_LANG)),
+                    'town'            => new external_value(PARAM_NOTAGS, get_string('town', WEBSERVICE_LANG)),
+                    'homenumber'      => new external_value(PARAM_RAW, get_string('homenumber', WEBSERVICE_LANG)),
+                    'businessnumber'  => new external_value(PARAM_RAW, get_string('businessnumber', WEBSERVICE_LANG)),
+                    'mobilenumber'    => new external_value(PARAM_RAW, get_string('mobilenumber', WEBSERVICE_LANG)),
+                    'faxnumber'       => new external_value(PARAM_RAW, get_string('faxnumber', WEBSERVICE_LANG)),
+                    'officialwebsite' => new external_value(PARAM_RAW, get_string('officialwebsite', WEBSERVICE_LANG)),
+                    'personalwebsite' => new external_value(PARAM_RAW, get_string('personalwebsite', WEBSERVICE_LANG)),
+                    'blogaddress'     => new external_value(PARAM_RAW, get_string('blogaddress', WEBSERVICE_LANG)),
+                    'aimscreenname'   => new external_value(PARAM_ALPHANUMEXT, get_string('aimscreenname', WEBSERVICE_LANG)),
+                    'icqnumber'       => new external_value(PARAM_ALPHANUMEXT, get_string('icqnumber', WEBSERVICE_LANG)),
+                    'msnnumber'       => new external_value(PARAM_ALPHANUMEXT, get_string('msnnumber', WEBSERVICE_LANG)),
+                    'yahoochat'       => new external_value(PARAM_ALPHANUMEXT, get_string('yahoochat', WEBSERVICE_LANG)),
+                    'skypeusername'   => new external_value(PARAM_ALPHANUMEXT, get_string('skypeusername', WEBSERVICE_LANG)),
+                    'jabberusername'  => new external_value(PARAM_RAW, get_string('jabberusername', WEBSERVICE_LANG)),
+                    'occupation'      => new external_value(PARAM_TEXT, get_string('occupation', WEBSERVICE_LANG)),
+                    'industry'        => new external_value(PARAM_TEXT, get_string('industry', WEBSERVICE_LANG)),
                     'auths'           => new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                    'auth'       => new external_value(PARAM_SAFEDIR, 'Auth plugins include manual, ldap, imap, etc'),
-                                                    'remoteuser' => new external_value(PARAM_RAW, 'remote username'),
-                                                ), 'Connected Remote Users')
+                                                    'auth'       => new external_value(PARAM_SAFEDIR, get_string('authplugins', WEBSERVICE_LANG)),
+                                                    'remoteuser' => new external_value(PARAM_RAW, get_string('remoteuser', WEBSERVICE_LANG)),
+                                                ), get_string('remoteusersconnected', WEBSERVICE_LANG))
                                         ),
                     'views'           => new external_single_structure(
                                                 array(
-                                                    'ids'   => new external_value(PARAM_RAW, 'ids for views'),
-                                                    'count'   => new external_value(PARAM_NUMBER, 'count of views'),
-                                                    'displayname'=> new external_value(PARAM_RAW, 'User displayname'),
+                                                    'ids'   => new external_value(PARAM_RAW,  get_string('viewsids', WEBSERVICE_LANG)),
+                                                    'count'   => new external_value(PARAM_NUMBER, get_string('viewscount', WEBSERVICE_LANG)),
+                                                    'displayname' => new external_value(PARAM_RAW,  get_string('displayname', WEBSERVICE_LANG)),
                                                     'data' => new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                    'title'       => new external_value(PARAM_RAW, 'View title'),
-                                                    'description' => new external_value(PARAM_RAW, 'View description'),
-                                                    'mtime' => new external_value(PARAM_RAW, 'View modification time'),
-                                                    'ctime' => new external_value(PARAM_RAW, 'View creation time'),
-                                                    'collid' => new external_value(PARAM_NUMBER, 'View coll id'),
-                                                    'type' => new external_value(PARAM_RAW, 'View type'),
-                                                    'id' => new external_value(PARAM_NUMBER, 'View ID'),
-                                                    'displaytitle' => new external_value(PARAM_RAW, 'View display title'),
-                                                    'url' => new external_value(PARAM_RAW, 'View relative URL'),
-                                                    'fullurl' => new external_value(PARAM_RAW, 'View full URL'),
-                                                    'submittedtime' => new external_value(PARAM_RAW, 'Time when submitted'),
-                                                ), 'A View')
+                                                    'title'       => new external_value(PARAM_RAW, get_string('viewtitle', WEBSERVICE_LANG)),
+                                                    'description' => new external_value(PARAM_RAW, get_string('viewdesc', WEBSERVICE_LANG)),
+                                                    'mtime' => new external_value(PARAM_RAW, get_string('viewmodtime', WEBSERVICE_LANG)),
+                                                    'ctime' => new external_value(PARAM_RAW, get_string('viewcreatetime', WEBSERVICE_LANG)),
+                                                    'collid' => new external_value(PARAM_NUMBER, get_string('viewcollid', WEBSERVICE_LANG)),
+                                                    'type' => new external_value(PARAM_RAW, get_string('viewtype', WEBSERVICE_LANG)),
+                                                    'id' => new external_value(PARAM_NUMBER, get_string('viewid', WEBSERVICE_LANG)),
+                                                    'displaytitle' => new external_value(PARAM_RAW, get_string('displaytitle', WEBSERVICE_LANG)),
+                                                    'url' => new external_value(PARAM_RAW, get_string('viewrelativeurl', WEBSERVICE_LANG)),
+                                                    'fullurl' => new external_value(PARAM_RAW, get_string('viewfullurl', WEBSERVICE_LANG)),
+                                                    'submittedtime' => new external_value(PARAM_RAW, get_string('submittedtime', WEBSERVICE_LANG)),
+                                                ),
+                                                get_string('view', WEBSERVICE_LANG)
+                                            )
                                         ),
                                                     'collections' => new external_single_structure(
                                                 array(
-                                                    'count'       => new external_value(PARAM_NUMBER, 'Collections count'),
+                                                    'count'       => new external_value(PARAM_NUMBER, get_string('collectionscount', WEBSERVICE_LANG)),
                                                     'data' =>
                                         new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                    'name'       => new external_value(PARAM_RAW, 'View name'),
-                                                    'description' => new external_value(PARAM_RAW, 'View description'),
-                                                    'id' => new external_value(PARAM_NUMBER, 'View ID'),
-                                                    'url' => new external_value(PARAM_RAW, 'View relative URL'),
-                                                    'numviews' => new external_value(PARAM_NUMBER, 'number of views'),
-                                                    'submittedtime' => new external_value(PARAM_RAW, 'Time when submitted'),
-                                                    'fullurl' => new external_value(PARAM_RAW, 'View full URL'),
-                                                ), 'A View')
+                                                    'name'       => new external_value(PARAM_RAW, get_string('viewtitle', WEBSERVICE_LANG)),
+                                                    'description' => new external_value(PARAM_RAW, get_string('viewdesc', WEBSERVICE_LANG)),
+                                                    'id' => new external_value(PARAM_NUMBER, get_string('viewid', WEBSERVICE_LANG)),
+                                                    'url' => new external_value(PARAM_RAW, get_string('viewrelativeurl', WEBSERVICE_LANG)),
+                                                    'numviews' => new external_value(PARAM_NUMBER, get_string('viewscount', WEBSERVICE_LANG)),
+                                                    'submittedtime' => new external_value(PARAM_RAW, get_string('submittedtime', WEBSERVICE_LANG)),
+                                                    'fullurl' => new external_value(PARAM_RAW, get_string('viewfullurl', WEBSERVICE_LANG)),
+                                                ), get_string('view', WEBSERVICE_LANG))
                                         ),
-                                                ), 'Collections')
-                                                ), 'Views'),
+                                                ), get_string('collections', WEBSERVICE_LANG))
+                                                ), get_string('views', WEBSERVICE_LANG)),
                         )
                 )
         );
@@ -373,15 +376,15 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'Mahara ID of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the person submitting their portfolio for assessment', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'viewid'          => new external_value(PARAM_INTEGER, 'Mahara ID of the page or collection that was submitted.', VALUE_REQUIRED),
-                            'iscollection'    => new external_value(PARAM_BOOL, 'Does this Mahara ID represent a collection?', VALUE_OPTIONAL),
-                            'lock'            => new external_value(PARAM_BOOL, 'Shall the submission be locked from editing?', VALUE_OPTIONAL),
-                            'apilevel'        => new external_value(PARAM_RAW, 'API level requested'),
-                            'wwwroot'         => new external_value(PARAM_RAW, 'Client URN to distinguish remote lockers', VALUE_REQUIRED),
+                            'id'              => new external_value(PARAM_INTEGER, get_string('idownersubmitportfolio', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('usernamesubmitportfolio', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, get_string('remoteusersubmitportfolio', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, get_string('owneremailsubmitportfolio', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'viewid'          => new external_value(PARAM_INTEGER, get_string('viewidsubmit', WEBSERVICE_LANG), VALUE_REQUIRED),
+                            'iscollection'    => new external_value(PARAM_BOOL, get_string('iscollection', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'lock'            => new external_value(PARAM_BOOL, get_string('lock', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'apilevel'        => new external_value(PARAM_RAW, get_string('apilevel', WEBSERVICE_LANG)),
+                            'wwwroot'         => new external_value(PARAM_RAW, get_string('wwwroot', WEBSERVICE_LANG), VALUE_REQUIRED),
                             )
                         )
                     )
@@ -432,7 +435,7 @@ class mahara_view_external extends external_api {
                 list($apiname, $apinumber) = explode(':', $v['apilevel'], 2);
             }
             else {
-                throw new XmlrpcClientException('Invalid application level ' . hsc((string) $apilevel));
+                throw new XmlrpcClientException('Invalid application level ' . hsc((string) $v['apilevel']));
             }
 
             if ($apiname === 'moodle-assignsubmission-mahara' && ((int) $apinumber) >= 2) {
@@ -553,7 +556,7 @@ class mahara_view_external extends external_api {
                 safe_require('artefact', $plugin->name);
                 $classname = generate_class_name('artefact', $plugin->name);
                 if (is_callable($classname . '::view_submit_external_data')) {
-                    $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $viewid, $iscollection);
+                    $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $viewid, $v['iscollection']);
                 }
             }
             db_commit();
@@ -575,17 +578,17 @@ class mahara_view_external extends external_api {
         return new external_multiple_structure(
                 new external_single_structure(
                         array(
-                            'id'           => new external_value(PARAM_NUMBER, 'ID of the user'),
-                            'username'     => new external_value(PARAM_RAW, 'Username policy is defined in Mahara security config'),
-                            'viewid'       => new external_value(PARAM_INTEGER, 'View ID'),
-                            'iscollection' => new external_value(PARAM_BOOL, 'Is a collection'),
-                            'lock'         => new external_value(PARAM_BOOL, 'Locked'),
-                            'title'        => new external_value(PARAM_RAW, 'Title'),
-                            'description'  => new external_value(PARAM_RAW, 'Description'),
-                            'fullurl'      => new external_value(PARAM_RAW, 'Full URL'),
-                            'url'          => new external_value(PARAM_RAW, 'Relative URL'),
-                            'accesskey'    => new external_value(PARAM_RAW, 'Access Key'),
-                            'apilevel'     => new external_value(PARAM_RAW, 'API Level'),
+                            'id'           => new external_value(PARAM_NUMBER, get_string('userid', WEBSERVICE_LANG)),
+                            'username'     => new external_value(PARAM_RAW, get_string('username', WEBSERVICE_LANG)),
+                            'viewid'       => new external_value(PARAM_INTEGER, get_string('viewid', WEBSERVICE_LANG)),
+                            'iscollection' => new external_value(PARAM_BOOL, get_string('isacollection', WEBSERVICE_LANG)),
+                            'lock'         => new external_value(PARAM_BOOL, get_string('locked', WEBSERVICE_LANG)),
+                            'title'        => new external_value(PARAM_RAW, get_string('viewtitle', WEBSERVICE_LANG)),
+                            'description'  => new external_value(PARAM_RAW, get_string('viewdesc', WEBSERVICE_LANG)),
+                            'fullurl'      => new external_value(PARAM_RAW,  get_string('fullurl', WEBSERVICE_LANG)),
+                            'url'          => new external_value(PARAM_RAW, get_string('relativeurl', WEBSERVICE_LANG)),
+                            'accesskey'    => new external_value(PARAM_RAW, get_string('accesskey', WEBSERVICE_LANG)),
+                            'apilevel'     => new external_value(PARAM_RAW, get_string('requestedapilvl', WEBSERVICE_LANG)),
                         )
                 )
         );
@@ -605,17 +608,17 @@ class mahara_view_external extends external_api {
                 'views' => new external_multiple_structure(
                     new external_single_structure(
                         array(
-                            'id'              => new external_value(PARAM_INTEGER, 'ID of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'username'        => new external_value(PARAM_RAW, 'Username of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'remoteuser'      => new external_value(PARAM_RAW, 'Remote username of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'email'           => new external_value(PARAM_RAW, 'Email address of the person who releases this submission.', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'viewid'          => new external_value(PARAM_INTEGER, 'Mahara ID of the page or collection that was submitted.', VALUE_REQUIRED),
-                            'iscollection'    => new external_value(PARAM_BOOL, 'Does this Mahara ID represent a collection?', VALUE_OPTIONAL),
-                            'viewoutcomes'    => new external_value(PARAM_RAW, 'Outcomes associated with this portfolio', VALUE_OPTIONAL),
-                            'archiveonrelease' => new external_value(PARAM_BOOL, 'Do you want to archive this submitted portfolio when it is released?', VALUE_OPTIONAL),
-                            'externalid'      => new external_value(PARAM_RAW, 'External ID to which the submission relates.', VALUE_OPTIONAL),
-                            'externalname'    => new external_value(PARAM_RAW, 'External name to which the submission relates.', VALUE_OPTIONAL),
-                            'externalfullurl' => new external_value(PARAM_RAW, 'Full URL path of the site where the submissions was made.', VALUE_OPTIONAL),
+                            'id'              => new external_value(PARAM_INTEGER, get_string('releaserid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'username'        => new external_value(PARAM_RAW, get_string('releaserusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'remoteuser'      => new external_value(PARAM_RAW, get_string('releaserremoteusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'email'           => new external_value(PARAM_RAW, get_string('releaseremail', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'viewid'          => new external_value(PARAM_INTEGER, get_string('viewidsubmit', WEBSERVICE_LANG), VALUE_REQUIRED),
+                            'iscollection'    => new external_value(PARAM_BOOL, get_string('iscollection', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'viewoutcomes'    => new external_value(PARAM_RAW,  get_string('viewoutcomes', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'archiveonrelease' => new external_value(PARAM_BOOL, get_string('archiveonrelease', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'externalid'      => new external_value(PARAM_RAW, get_string('submissionextid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'externalname'    => new external_value(PARAM_RAW, get_string('submissionextname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'externalfullurl' => new external_value(PARAM_RAW, get_string('externalfullurl', WEBSERVICE_LANG), VALUE_OPTIONAL),
                             )
                         )
                     )
@@ -713,5 +716,176 @@ class mahara_view_external extends external_api {
      */
     public static function release_submitted_view_returns() {
         return null;
+    }
+
+    /**
+     * Webservice parameter definition for input of "generate_view_for_plagiarism_test" method
+     *
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
+    public static function generate_view_for_plagiarism_test_parameters() {
+        return new external_function_parameters(
+            array(
+                'views' => new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'viewid'          => new external_value(PARAM_INTEGER, get_string('viewidtotest', WEBSERVICE_LANG), VALUE_REQUIRED),
+                            'iscollection'    => new external_value(PARAM_BOOL, get_string('iscollection', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'submittedhost'   => new external_value(PARAM_RAW, get_string('submittedhost', WEBSERVICE_LANG), VALUE_REQUIRED),
+                            'exporttype'      => new external_value(PARAM_TEXT, get_string('liteexporttype', WEBSERVICE_LANG), VALUE_REQUIRED),
+                        )
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * Check that the portfolio id supplied is a valid submitted portfolio
+     *
+     * @param array $v array of view webservice parameters
+     *
+     * @return array An array containing userobject, viewobject, portfoliotype, and portfolioid
+     */
+    private static function _check_valid_portfolio($v) {
+        global $WEBSERVICE_INSTITUTION;
+        $cid = $v['iscollection'];
+        if ($cid) {
+            $vid = get_field_sql("SELECT view FROM {collection_view} WHERE collection = ? ORDER BY displayorder LIMIT 1", array($v['viewid'])); // Make sure the collection is valid
+        }
+        else {
+            $vid = get_field('view', 'id', 'id', $v['viewid']); // Make sure viewid is valid
+            // doublecheck if view is part of a collection and if so return the collection export
+            if ($collectionid = get_field_sql("SELECT collection FROM {collection_view} WHERE view = ? ORDER BY displayorder LIMIT 1", array($v['viewid']))) {
+                $cid = true;
+                $v['viewid'] = $collectionid;
+            }
+        }
+        $portfoliotype = $cid ? 'collection' : 'view';
+        $portfolioid = $v['viewid'];
+        if (!$vid) {
+            throw new WebserviceInvalidParameterException(get_string('invalidviewid', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        else {
+            require_once('view.php');
+            $view = new View($vid);
+        }
+
+        if (empty($view->get('owner'))) {
+            throw new WebserviceInvalidParameterException(get_string('invalidviewid', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        $user = self::checkuser(array('id' => $view->get('owner')));
+        // check the institution
+        if (!mahara_external_in_institution($user, $WEBSERVICE_INSTITUTION)) {
+            throw new WebserviceInvalidParameterException(get_string('invalidviewiduser', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        // Check that the view has currently submitted
+        if (!$view->is_submitted()) {
+            throw new WebserviceInvalidParameterException(get_string('viewnotsubmitted', 'auth.webservice', $portfoliotype, $portfolioid));
+        }
+        if ($view->get('submittedhost') != $v['submittedhost']) {
+            throw new WebserviceInvalidParameterException(get_string('viewnotsubmittedtothishost', 'auth.webservice', $portfoliotype, $portfolioid, $v['submittedhost']));
+        }
+        $userobj = new User();
+        $userobj->find_by_id($user->id);
+
+        return array($userobj, $view, $portfoliotype, $portfolioid);
+    }
+
+    /**
+     * Generate the export lite file for the view / collection id supplied
+     *
+     * @param array $views  array of views
+     * @return array An array of arrays describing generation outcome
+     */
+    public static function generate_view_for_plagiarism_test($views) {
+        global $USER, $exporter;
+
+        $params = self::validate_parameters(self::generate_view_for_plagiarism_test_parameters(),
+                array('views' => $views));
+        $result = array();
+        foreach ($params['views'] as $v) {
+            list($user, $view, $portfoliotype, $portfolioid) = self::_check_valid_portfolio($v);
+            $exporttype = $v['exporttype'];
+            safe_require('export', $exporttype);
+            $class = generate_class_name('export', $exporttype);
+            if (!call_static_method($class, 'is_active')) {
+                throw new WebserviceInvalidParameterException(get_string('exporttypenotavailable', 'auth.webservice', $exporttype));
+            }
+            // OK we are now looking good
+            if ($portfoliotype == 'collection') {
+                $views = get_column('collection_view', 'view', 'collection', $portfolioid);
+                $exporter = new $class($user, $views, PluginExport::EXPORT_LIST_OF_COLLECTIONS);
+            }
+            else {
+                $views = array($portfolioid);
+                $exporter = new $class($user, $views, PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS);
+            }
+            $exporter->includefeedback = true;
+
+            $errors = $info = array();
+            try {
+                $info = $exporter->export(false);
+                create_zip_archive($info['exportdir'], $info['zipfile'], $info['dirs']);
+            }
+            catch (SystemException $e) {
+                $errors[] = get_string('exportzipfileerror', 'export', $e->getMessage());
+            }
+
+            // We need to move this to avoid it being deleted by the export_cleanup_old_exports cron
+            // so we need to put it somewhere safe
+            $exportlitedir = get_config('dataroot') . $exporttype . '/' . $portfoliotype . '/' . $portfolioid . '/';
+            $filetimestamp = '';
+            if (!check_dir_exists($exportlitedir)) {
+                $errors[] = get_string('exportlitenotwritable', 'export', $exportlitedir);
+            }
+            else {
+                copy($info['exportdir'] . $info['zipfile'], $exportlitedir . $info['zipfile']);
+                $filetimestamp = preg_replace('/.*?-(\d+)\.zip$/', '$1', $info['zipfile']);
+            }
+
+            if (!empty($errors)) {
+                throw new WebserviceInvalidParameterException(implode("\n", $errors));
+            }
+
+            // Return valid view id in $fileurl and get the download.php file to work out if a collection or not
+            $fileurl = get_config('wwwroot') . 'webservice/download.php?t=' . $exporttype . '&c=' . $filetimestamp . '&v=' . $views[0];
+            $data = array(
+                'id'           => $user->get('id'),
+                'username'     => $user->get('username'),
+                'viewid'       => $portfolioid,
+                'iscollection' => $v['iscollection'],
+                'fileurl'      => $fileurl,
+                'submittedhost' => $v['submittedhost'],
+            );
+
+            $result[]= $data;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Webservice parameter definition for output of "generate_view_for_plagiarism_test" method
+     *
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function generate_view_for_plagiarism_test_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id'            => new external_value(PARAM_INTEGER, get_string('releaserid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                    'username'      => new external_value(PARAM_RAW, get_string('releaserusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                    'viewid'        => new external_value(PARAM_INTEGER, get_string('viewid', WEBSERVICE_LANG)),
+                    'iscollection'  => new external_value(PARAM_BOOL, get_string('iscollection', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                    'fileurl'      => new external_value(PARAM_RAW, get_string('fileurl', WEBSERVICE_LANG)),
+                    'submittedhost' => new external_value(PARAM_RAW, get_string('submittedhost', WEBSERVICE_LANG)),
+                )
+            )
+        );
     }
 }

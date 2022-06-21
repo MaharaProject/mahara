@@ -1,0 +1,11 @@
+<!-- @license http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later -->
+<!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
+<h1>SAML 2.0 field for affiliation IDs</h1>
+<p>The Identity Provider (IdP) can pass in affiliation information for account holders. This field works in conjunction with</p>
+    <ul>
+      <li>SSO field for affiliation emails</li>
+      <li>SSO field for affiliation roles</li>
+      <li>SSO field for affiliation role delimiter</li>
+    </ul>
+
+<p>If you set this value, the username is checked and then any affiliated IDs until one is found that already exists in the system. If none are found, the username of the main identity is used as remote username.</p>

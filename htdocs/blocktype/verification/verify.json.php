@@ -45,11 +45,11 @@ if ($config['verified']) {
         $view->get_collection()->lock_collection();
     }
     if (!empty($config['notification'])) {
-        // send notification to page owner
+        // Send notification to page owner
         $owner = $view->get('owner');
         require_once('activity.php');
-        //Check if verfier name needs to be anonomized.
-        if(empty($config['displayverifiername'])) {
+        //Check if verifier name needs to be anonymized.
+        if (empty($config['displayverifiername'])) {
             $verifiersubjectstring = 'verifymessagesubjectnoname';
             $verifiersubjectargs = array();
             $verifiermessagestring = 'verifymessagenoname';

@@ -124,7 +124,7 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
         // As block_instances do not have certain fields we need to get their
         // info either from the view they are on or from their configdata
         $record->ctime = parent::checkctime ( $data->ctime );
-        $record->description = $data->description;
+        $record->description = isset($data->description) ? $data->description : '';
         $record->owner = $data->owner;
         $record->group = $data->group;
         $record->institution = $data->institution;
@@ -157,21 +157,19 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
         require_once( get_config ( 'docroot' ) . 'blocktype/lib.php' );
         $bi = new BlockInstance ( $id );
         $configdata = $bi->get ( 'configdata' );
-        // We can only deal with blocktypes that have a 'text' configdata at this point
-        if (! is_array ( $configdata ) || ! array_key_exists ( 'text', $configdata )) {
-            return false;
-        }
         $record->title = str_replace ( array (
                 "\r\n",
                 "\n",
                 "\r"
         ), ' ', strip_tags ( $record->title ) );
-        $record->description = str_replace ( array (
-                "\r\n",
-                "\n",
-                "\r"
-        ), ' ', strip_tags ( $configdata ['text'] ) );
-
+        if (is_array ( $configdata ) && array_key_exists('text', $configdata)) {
+           // We can only deal with blocktypes that have a 'text' configdata for description at this point
+            $record->description = str_replace ( array (
+                    "\r\n",
+                    "\n",
+                    "\r"
+            ), ' ', strip_tags ( $configdata ['text'] ) );
+        }
         // If user is owner
         if ($USER->get ( 'id' ) == $record->owner) {
             $record->link = 'view/view.php?id=' . $record->view_id;

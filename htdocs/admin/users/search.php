@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('INSTITUTIONALSTAFF', 1);
+define('INSTITUTIONALSUPPORTADMIN', 1);
 define('MENUITEM', 'configusers/usersearch');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 define('TITLE', get_string('usersearch', 'admin'));
@@ -42,7 +42,7 @@ if ($USER->get('admin') || $USER->get('staff')) {
     $search->institution = param_alphanum('institution', 'all');
 }
 else {
-    $institutionnames = array_keys(array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions')));
+    $institutionnames = array_keys(array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions'), $USER->get('supportadmininstitutions')));
     $institutions = get_records_select_array(
         'institution',
         'name IN (' . join(',', array_fill(0, count($institutionnames), '?')) . ')',

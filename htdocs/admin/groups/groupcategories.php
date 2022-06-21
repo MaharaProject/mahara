@@ -158,7 +158,7 @@ jQuery(function($) {
           // The save button says 'update' and there's a cancel button.
           var rowtype = 'edit';
           save.prop('value',{$getstring['update']});
-          var cancel = $('<input>', {'type':'button','class':'button btn btn-sm btn-secondary','value':{$getstring['cancel']}});
+          var cancel = $('<input>', {'type':'button','class':'button btn btn-secondary','value':{$getstring['cancel']}});
           cancel.on('click', closeopenedits);
           var savecancelwrapper = $('<span class="btn-group btn-add-group">').append(save).append(cancel);
           savecancel = [savecancelwrapper];

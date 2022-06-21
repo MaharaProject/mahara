@@ -1,6 +1,7 @@
 <?php
 /**
- *
+ * Recognise zip files on upload & add unzip page
+
  * @package    mahara
  * @subpackage artefact-file
  * @author     Catalyst IT Ltd
@@ -145,6 +146,11 @@ $smarty->assign('error', $error);
 $smarty->assign('form', $form);
 $smarty->display('artefact:file:extract.tpl');
 
+/**
+ * Get url for a file
+ *
+ * @param  mixed $file
+ */
 function files_page($file) {
     $url = get_config('wwwroot') . 'artefact/file/';
     if ($owner = $file->get('owner')) {
@@ -167,6 +173,13 @@ function files_page($file) {
     return $url;
 }
 
+/**
+ * unzip_artefact form submit handler
+ *
+ * @param  mixed $form
+ * @param  mixed $values
+ * @return void
+ */
 function unzip_artefact_submit(Pieform $form, $values) {
     global $file, $SESSION;
 

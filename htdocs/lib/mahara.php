@@ -12,6 +12,19 @@
 defined('INTERNAL') || die();
 
 /**
+ * Recursive way to strip slashes from a value
+ *
+ * @param mixed $value
+ * @return mixed;
+ */
+function stripslashes_deep($value) {
+    $value = is_array($value) ?
+      array_map('stripslashes_deep', $value) :
+      stripslashes($value);
+    return $value;
+}
+
+/**
  * work around silly php settings
  * and broken setup stuff about the install
  * and raise a warning/fail depending on severity
@@ -66,6 +79,9 @@ function ensure_sanity() {
     if (!extension_loaded('mbstring')) {
         throw new ConfigSanityException(get_string('mbstringextensionnotloaded', 'error'));
     }
+    if (!extension_loaded('intl')) {
+        throw new ConfigSanityException(get_string('intlextensionnotloaded', 'error'));
+    }
     // Check for freetype in the gd extension
     $gd_info = gd_info();
     if (!$gd_info['FreeType Support']) {
@@ -82,12 +98,6 @@ function ensure_sanity() {
 
     // magic_quotes_gpc workaround
     if (!defined('CRON') && ini_get_bool('magic_quotes_gpc')) {
-        function stripslashes_deep($value) {
-            $value = is_array($value) ?
-                array_map('stripslashes_deep', $value) :
-                stripslashes($value);
-            return $value;
-        }
         $_POST = array_map('stripslashes_deep', $_POST);
         $_GET = array_map('stripslashes_deep', $_GET);
         $_COOKIE = array_map('stripslashes_deep', $_COOKIE);
@@ -99,11 +109,6 @@ function ensure_sanity() {
                 $_SERVER[$tocheck] = stripslashes($_SERVER[$tocheck]);
             }
         }
-    }
-
-    if (ini_get_bool('magic_quotes_runtime')) {
-        // Turn of magic_quotes_runtime. Anyone with this on deserves a slap in the face
-        set_magic_quotes_runtime(0);
     }
 
     if (ini_get_bool('magic_quotes_sybase')) {
@@ -452,6 +457,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
         return $langfile;
     }
 
+    $location = '';
     if ($plugintype == 'blocktype') { // these are a bit of a special case
         $bits = explode('/', $pluginname);
         if (count($bits) == 2) {
@@ -488,7 +494,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
 
     // if it's not found, try the parent language if there is one...
-    if (empty($data) && empty($trieden)) {
+    if (empty($trieden)) {
         $langfile = get_language_root($lang) . 'lang/' . $lang . '/langconfig.php';
         if ($parentlang = get_string_from_file('parentlanguage', $langfile)) {
             if ($parentlang == 'en.utf8') {
@@ -503,7 +509,7 @@ function get_helpfile_location($plugintype, $pluginname, $form, $element, $page=
     }
 
     // if it's STILL not found, and we haven't already tried english ...
-    if (empty($data) && empty($trieden)) {
+    if (empty($trieden)) {
         $langfile = get_language_root('en.utf8') . $location . 'en.utf8/' . $subdir . $file;
         $langfile = Path::getAbsolute($langfile);
         if (is_valid_help_page($langfile)) {
@@ -671,6 +677,9 @@ function get_languages() {
                             if ($langname = get_string_from_file('thislanguage', $langfile)) {
                                 $langs[$subdir] = $langname;
                             }
+                            else {
+                                log_warn(get_string('brokenlangpack', 'langpacks', $langfile, $searchpath), true, false);
+                            }
                         }
                     }
                 }
@@ -678,7 +687,7 @@ function get_languages() {
                 asort($langs);
             }
             else {
-                log_warn('Unable to read language directory ' . $langbase);
+                log_warn(get_string('unreadablelangpack', 'langpacks', $langbase), true, false);
             }
         }
     }
@@ -849,6 +858,7 @@ function get_institution_themes($institution) {
  */
 function get_all_theme_objects() {
     static $themes = null;
+    static $theme = null;
 
     if (is_null($themes)) {
         $themes = array();
@@ -1000,7 +1010,7 @@ function ini_get_bool($ini_get_arg) {
  * as not every page needs them
  * @return boolean false if the assignment fails (generally if the databse is not installed)
  */
-function load_config() {
+function load_config($behat=false) {
    global $CFG;
    global $OVERRIDDEN;    // array containing the config fields overridden by $CFG
 
@@ -1011,8 +1021,13 @@ function load_config() {
 
    $dbconfig = get_records_array('config', '', '', '', 'field, value');
    foreach ($dbconfig as $cfg) {
-       if (!isset($CFG->{$cfg->field})) {
+       if ($behat) {
            $CFG->{$cfg->field} = $cfg->value;
+       }
+       else {
+           if (!isset($CFG->{$cfg->field})) {
+               $CFG->{$cfg->field} = $cfg->value;
+           }
        }
    }
 
@@ -1480,7 +1495,7 @@ function current_language() {
 
     // If there's no language from the user pref or the logged-out lang menu...
     if (empty($lang)) {
-        $lang = !empty($CFG->lang) ? $CFG->lang : 'en.utf8';
+        $lang = !empty($CFG->lang) ? $CFG->lang : get_accept_lang();
     }
 
     if ($lang == $lastlang) {
@@ -1488,8 +1503,53 @@ function current_language() {
     }
 
     set_locale_for_language($lang);
-
     return $lastlang = $lang;
+}
+
+/**
+ * Try to match the Accept-Language request header with installed lang packs
+ *
+ * @return string of matching lang pack key (ending with .utf8) on success
+ * @return en.utf8 on failing to match an installed language that is not English
+ */
+
+function get_accept_lang() {
+    $acceptlangs = array();
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $acceptlangs = preg_replace('/;q=[0-9\.]+/', '', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $acceptlangs = explode(',', $acceptlangs);
+    }
+    else if (isset($_SERVER['LANGUAGE'])) {
+        // If installing via CLI
+        $acceptlangs = explode(':', $_SERVER['LANGUAGE']);
+    }
+
+    $langpacks = get_languages(); // installed lang packs
+    // keep list of first 2 or 5 letters for the lang packs for matching the accept-language values
+    // Mahara language packs don't matchup with Accept-Language languages so will need to change any _ to -
+    $langpacksshort = array_map(function($v) {
+        $v = preg_replace('/_/', '-', $v);
+        if (preg_match('/-/', $v)) {
+            return substr($v, 0, 5);
+        }
+        return substr($v, 0, 2);
+    }, array_keys($langpacks));
+
+    // match the langpack short names to their full lang pack name
+    $matchedkeys = array_combine($langpacksshort, array_keys($langpacks));
+
+    foreach ($acceptlangs as $lang) {
+        // match the closest possible to an acceptlang option
+        if (isset($matchedkeys[$lang]) && language_installed($matchedkeys[$lang])) {
+            return $matchedkeys[$lang];
+        }
+        $langshort = substr($lang, 0, 2);
+        // check for next best similar lang option
+        if (isset($matchedkeys[$langshort]) && language_installed($matchedkeys[$langshort])) {
+            return $matchedkeys[$langshort];
+        }
+    }
+    return 'en.utf8';
 }
 
 
@@ -1510,6 +1570,7 @@ function get_user_institution_language($userid = null, &$sourceinst = null) {
         $userid = $USER->id;
     }
     $instlangs = get_configs_user_institutions('lang', $userid);
+    $instlang = 'default';
     // Every user belongs to at least one institution
     foreach ($instlangs as $name => $lang) {
         $sourceinst = $name;
@@ -1519,9 +1580,6 @@ function get_user_institution_language($userid = null, &$sourceinst = null) {
         if (!empty($instlang) && $instlang != 'default' && language_installed($instlang)) {
             break;
         }
-    }
-    if (!$instlang) {
-        $instlang = 'default';
     }
     return $instlang;
 }
@@ -1662,6 +1720,7 @@ function safe_require($plugintype, $pluginname, $filename='lib.php', $function='
         throw new SystemException ("File $fullpath was outside document root!");
     }
 
+    $isloaded = false;
     if ($function == 'require') { $isloaded = require($realpath); }
     if ($function == 'include') { $isloaded = include($realpath); }
     if ($function == 'require_once') { $isloaded = require_once($realpath); }
@@ -1985,8 +2044,10 @@ function handle_event($event, $data, $ignorefields = array()) {
     // Set viewaccess rules for elasticsearch
     if ($event == 'updateviewaccess' && get_config('searchplugin') == 'elasticsearch' && is_array($data)) {
         if (isset($data['rules']) && isset($data['rules']->view)) {
-            safe_require('search', 'elasticsearch');
-            ElasticsearchIndexing::add_to_queue($data['rules']->view, 'view');
+            $item = new stdClass;
+            $item->id = $data['rules']->view;
+            $item->table = 'view';
+            bulk_add_to_search_queue([$item]);
         }
     }
 
@@ -2115,6 +2176,7 @@ function handle_event($event, $data, $ignorefields = array()) {
         // we need to add a 'sharedcommenttogroup' event
         if (is_event_comment_shared_with_group($reftype, $logdata)) {
             $wheresql = '';
+            $commenttypeid = -1;
             if (!empty($logdata['onartefact'])) {
                 $commenttype = 'artefact';
                 $commenttypeid = $logdata['onartefact'];
@@ -2254,7 +2316,7 @@ function event_find_owner_type($event) {
 /**
  * Used by XMLDB
  */
-function debugging($message, $level) {
+function debugging($message, $level=null) {
     log_debug($message);
 }
 function xmldb_dbg($message) {
@@ -2609,7 +2671,7 @@ abstract class Plugin implements IPlugin {
                     break;
 
                 default:
-                    log_error("Unknown WEBSERVICE_TYPE: ".$c->type);
+                    log_warn("Unknown WEBSERVICE_TYPE: ".$c->type);
                     break;
             }
             if ($client) {
@@ -2822,7 +2884,7 @@ abstract class Plugin implements IPlugin {
 
     /**
      * Fetch plugin's display name rather than plugin name that is based on dir name.
-     * @return $tring or null
+     * @return string|null
      */
     public static function get_plugin_display_name() {
         return null;
@@ -2831,7 +2893,7 @@ abstract class Plugin implements IPlugin {
     /**
      * Check if plugin's contains dependencies before installing it.
      * For example, it relies on an operating system package to be installed
-     * @return $tring or null
+     * @return string|null
      */
     public static function has_plugin_dependencies() {
         return null;
@@ -3056,7 +3118,7 @@ function pieform_template_dir($file, $pluginlocation='') {
 
 /**
  * Given a view id, and a user id (defaults to currently logged in user if not
- * specified) will return wether this user is allowed to look at this view.
+ * specified) will return whether this user is allowed to look at this view.
  *
  * @param mixed $view           viewid or View to check
  * @param integer $user_id      User trying to look at the view (defaults to
@@ -3134,10 +3196,13 @@ function can_view_view($view, $user_id=null) {
         return false;
     }
 
-    // if the owner want to view the page, allow it
-    if ($view->get('owner') == $USER->get('id')) {
-        return true;
+    // if the owner wants to view their own page, allow it (user ID is 0 when logged out)
+    if (!empty($view->get('owner')) && $USER->get('id') > 0) {
+        if ($view->get('owner') === $USER->get('id')) {
+            return true;
+        }
     }
+
     if ($user_id && $user->can_edit_view($view)) {
         return true;
     }
@@ -4029,6 +4094,7 @@ function profile_sideblock() {
         $sort = $sortorder;
     }
     $grouplabels = (array)json_decode($USER->get_account_preference('groupsideblocklabels'));
+    $total = -1;
     if ($limitto === null) {
         $data['groups'] = group_get_user_groups($USER->get('id'), null, $sort, null, 0, true, $grouplabels);
         $total = count($data['groups']);
@@ -4938,19 +5004,24 @@ function cron_email_reset_rebounce() {
     }
 }
 
+/**
+ * Auto copy portfolios in the copy queue
+ *
+ */
 function portfolio_auto_copy() {
     // change this limit later when we know the number
     $limit = 1000;
     $sql = "SELECT * FROM {view_copy_queue} ORDER BY id LIMIT " . $limit;
-    // view_copy_queue entries
     $entries = get_records_sql_assoc($sql);
 
     if ($entries) {
         $user = new User();
         foreach ($entries as $id => $entry) {
             $error = false;
+            $copied = array();
             try {
                 $user->find_by_id($entry->usr);
+                $copied = $user->copy_views(array($entry->view), false);
                 if ($user->get('deleted')) {
                     throw new UserNotFoundException();
                 }
@@ -4958,11 +5029,12 @@ function portfolio_auto_copy() {
                     $copied = $user->copy_views(array($entry->view), false);
                 }
                 else if (isset($entry->collection)) {
-                    // auto copy templates are tracked in a different table, check if this collection is one
                     require_once(get_config('libroot') . 'collection.php');
                     $collection = new Collection($entry->collection);
-                    // if it is a autocopytemplate, copy it...
-                    if ($collection->get('autocopytemplate')) {
+                    if (!$collection->get('autocopytemplate')) {
+                        $copied = $user->copy_collections(array($entry->collection), false);
+                    }
+                    else {
                         // PCNZ customisation - only copy the autocopy template if the person is Registered, current
                         if (get_account_preference($user->get('id'), 'registerstatus') == 2) { // the value for PCNZ_REGISTEREDCURRENT
                             $copied = Collection::create_from_template(
@@ -4974,9 +5046,6 @@ function portfolio_auto_copy() {
                         else {
                             $copied = array('ignore'); // to trigger the deletion of the queued item
                         }
-                    }
-                    else {
-                        $copied = $user->copy_collections(array($entry->collection), false);
                     }
                 }
                 else {
@@ -5109,8 +5178,6 @@ function build_portfolio_search_html(&$data) {
         'jumplinks' => 6,
         'numbersincludeprevnext' => 2,
         'numbersincludefirstlast' => false,
-        'resultcounttextsingular' => get_string('result'),
-        'resultcounttextplural' => get_string('results'),
     ));
     $data->pagination = $pagination['html'];
     $data->pagination_js = $pagination['javascript'];
@@ -5535,6 +5602,7 @@ function get_installed_plugins_paths() {
 function get_all_versions_hash() {
     $versions = array();
     // Get core version
+    $config = null; // is set via version.php below
     require(get_config('libroot') . 'version.php');
     $versions['core'] = $config->version;
     // All installed plugins
@@ -5649,7 +5717,7 @@ function libxml_before($state = true) {
 function libxml_after() {
     if (function_exists('libxml_disable_entity_loader')) {
 
-        if (defined('MAHARA_LIBXML_ENTITY_LOADER_BEFORE')) {
+        if (defined('MAHARA_LIBXML_ENTITY_LOADER_BEFORE') && defined('MAHARA_LIBXML_USE_INTERNAL_ERRORS_BEFORE')) {
             $xmlerrors = MAHARA_LIBXML_USE_INTERNAL_ERRORS_BEFORE;
             $xmlstate = MAHARA_LIBXML_ENTITY_LOADER_BEFORE;
         }
@@ -5785,7 +5853,7 @@ function clear_all_caches($clearsessiondirs = false) {
             rmdirr($session_dir);
             Session::create_directory_levels($session_dir);
         }
-
+        clear_language_cache();
         clearstatcache();
 
         handle_event('clearcaches', array());
@@ -5822,6 +5890,16 @@ function clear_resized_images_cache($profileonly=false) {
             return false;
         }
     }
+    return true;
+}
+
+/**
+ * Clear the info for installed language packs
+ * from the dataroot temp directory and from config db table
+ */
+function clear_language_cache() {
+    execute_sql('DELETE FROM {config} WHERE field LIKE ?', array('lang_%_etag'));
+    rmdirr(get_config('dataroot') . 'temp');
 }
 
 /*
@@ -5877,6 +5955,7 @@ function sort_by_title($a, $b) {
  *  drop_elasticsearch_triggers();
  *  execute_sql("UPDATE {view} ... ");
  *  create_elasticsearch_triggers();
+ * @deprecated Retained for legacy upgrades.
  */
 function drop_elasticsearch_triggers() {
     if (get_config('searchplugin') == 'elasticsearch') {
@@ -5892,6 +5971,8 @@ function drop_elasticsearch_triggers() {
 
 /**
  * Paired with  drop_elasticsearch_triggers(); - see it's info for useage
+ *
+ * @deprecated Will be removed in the future.
  */
 function create_elasticsearch_triggers() {
     if (get_config('searchplugin') == 'elasticsearch') {
@@ -5972,10 +6053,10 @@ function get_password_policy_description($type = 'generic') {
         $description = get_string('passwordinvalidform1', 'auth.internal', $numbervalue, $formatdesc);
     }
     else if ($type == 'user') {
-        $description = get_string('yournewpassword1', 'mahara', $numbervalue, get_string('passworddescription.' . $formatvalue, 'mahara'));
+        $description = get_string('yournewpassword1', 'mahara', $numbervalue, get_string('passworddescription1.' . $formatvalue, 'mahara'));
     }
     else {
-        $description = get_string('passworddescriptionbase', 'mahara', $numbervalue) . ' ' . get_string('passworddescription.' . $formatvalue, 'mahara');
+        $description = get_string('passworddescriptionbase', 'mahara', $numbervalue) . ' ' . get_string('passworddescription1.' . $formatvalue, 'mahara');
     }
     return $description;
 }
@@ -6156,11 +6237,13 @@ function notify_landing_removed($landingpage, $deleted=false) {
 }
 
 function get_max_offset($offset, $limit, $count) {
-    $offset = $limit * floor($offset / $limit);
-    // check offset is not going beyond last page from pagination
-    $maxoffset = $limit * floor($count / $limit);
-    if ($offset > $maxoffset) {
-        $offset = $maxoffset;
+    if ($limit) {
+        $offset = $limit * floor($offset / $limit);
+        // check offset is not going beyond last page from pagination
+        $maxoffset = $limit * floor($count / $limit);
+        if ($offset > $maxoffset) {
+            $offset = $maxoffset;
+        }
     }
     return $offset;
 }
@@ -6233,4 +6316,23 @@ function get_mahara_timezone() {
         return 'UTC';
     }
     db_ignore_sql_exceptions(false);
+}
+
+/**
+ * Check if the current search plugin has the requested method.
+ *
+ * @param string $method The method we are checking for.
+ *
+ * @return string|false The search class if found, otherwise false.
+ */
+function does_search_plugin_have($method) {
+    $search_plugin = get_config('searchplugin');
+    if ($search_plugin) {
+        safe_require('search', $search_plugin);
+        $search_class = generate_class_name('search', $search_plugin);
+        if (method_exists($search_class, $method)) {
+            return $search_class;
+        }
+    }
+    return false;
 }

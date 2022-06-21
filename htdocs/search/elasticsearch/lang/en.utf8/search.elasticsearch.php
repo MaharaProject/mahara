@@ -78,6 +78,10 @@ $string['portdescription'] = 'The port to contact Elasticsearch on. Default is 9
 $string['Portfolio'] = 'Portfolio';
 $string['record'] = 'record';
 $string['records'] = 'records';
+$string['nrecords'] = array(
+    '%s record',
+    '%s records'
+);
 $string['relevance'] = 'Relevance';
 $string['replicashards'] = 'Replica shards';
 $string['replicashardsdescription'] = 'The number of copies of shards to be made. Note: If you only have 1 node, set replicas to 0.';

@@ -1,14 +1,3 @@
-.collapsible legend,
-.card-header {
-    a:not(.secondary-link) {
-        color: $link-color;
-        &.collapsed {
-            background-color: transparent;
-            color: $link-hover-color;
-        }
-    }
-}
-
 // sidebar card headings
 .sidebar .card > .card-header {
     @include border-top-radius(0);

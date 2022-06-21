@@ -21,6 +21,8 @@ safe_require('artefact', 'annotation');
 // really be a parameter.
 $extradata = json_decode(param_variable('extradata', null));
 $ispagination = false;
+$limit = null;
+$offset = null;
 if (param_exists('offset')) {
     $ispagination = true;
     $limit    = param_integer('limit', 10);

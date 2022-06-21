@@ -32,7 +32,7 @@ if ($USER->is_logged_in()) {
     $view = $USER->get_view_by_type('dashboard');
     $layoutjs = array();
     if ($newlayout = $view->uses_new_layout()) {
-        $layoutjs = array('js/lodash/lodash.js', 'js/gridstack/gridstack.js', 'js/gridlayout.js');
+        $layoutjs = array('js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js');
     }
 
     $javascript = array('paginator');
@@ -57,17 +57,13 @@ if ($USER->is_logged_in()) {
         $blocksjs = <<<EOF
         $(function () {
             var options = {
-                verticalMargin: 5,
+                margin: 1,
                 cellHeight: 10,
                 disableDrag : true,
-                disableResize: true,
+                disableResize: true
             };
-            var grid = $('.grid-stack');
-            grid.gridstack(options);
-            grid = $('.grid-stack').data('gridstack');
-
-            // should add the blocks one by one
             var blocks = {$blocks};
+            var grid = GridStack.init(options);
             loadGrid(grid, blocks);
         });
 EOF;

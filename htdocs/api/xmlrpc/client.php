@@ -20,6 +20,9 @@ class Client {
     private $timeout          = 60;
     private $params           = array();
     private $method           = '';
+    private $peer             = '';
+    public  $response         = '';
+    private $rawresponse      = '';
 
     function __construct() {
         return true;
@@ -71,6 +74,7 @@ class Client {
 
         $timestamp_receive = time();
         $remote_timestamp  = null;
+        $payload = null;
 
         $curl_errno = $result->errno;
         if ($curl_errno || $this->rawresponse == false) {

@@ -39,25 +39,32 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
             $data = $instance->get_data('feed', $configdata['feedid']);
             return sanitize_url($data->link);
         }
+        return '';
     }
 
     public static function get_categories() {
         return array('external' => 34000);
     }
+
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             if (is_postgres()) {
                 $table = new XMLDBTable('blocktype_externalfeed_data');
                 $index = new XMLDBIndex('urlautautix');
                 $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('url', 'authuser', 'authpassword'));
-                add_index($table, $index);
+                return add_index($table, $index);
             }
             else if (is_mysql()) {
                 // MySQL needs size limits when indexing text fields
-                execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD INDEX
+                return execute_sql('ALTER TABLE {blocktype_externalfeed_data} ADD INDEX
                                {blocextedata_urlautaut_ix} (url(255), authuser(255), authpassword(255))');
             }
         }
+        return true;
     }
 
     public static function get_blocktype_type_content_types() {
@@ -81,8 +88,9 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
             }
 
             // only keep the number of entries the user asked for
-            if (count($data->content) && !empty($data->content) && is_array($data->content)) {
-                $chunks = array_chunk($data->content, isset($configdata['count']) ? $configdata['count'] : 10);
+            $count = !empty($configdata['count']) ? (int)$configdata['count'] : 10;
+            if (!empty($data->content) && is_array($data->content) && count($data->content) > $count) {
+                $chunks = array_chunk($data->content, $count);
                 $data->content = $chunks[0];
 
                 foreach ($data->content as &$c) {
@@ -132,7 +140,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         );
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -561,7 +569,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
         return $result;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
@@ -631,7 +639,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

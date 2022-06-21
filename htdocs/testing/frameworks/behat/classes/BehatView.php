@@ -48,7 +48,7 @@ class BehatView extends BehatBase {
     }
 
     /**
-     * Configure a block
+     * Edit a block
      *
      * @throws ElementNotFoundException if not found.
      * @Given /^I configure the block "(?P<block_title>(?:[^"]|\\")*)"$/

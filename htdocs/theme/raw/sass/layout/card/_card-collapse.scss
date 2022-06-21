@@ -7,6 +7,7 @@
     .card-header {
         padding: $card-spacer-y ($card-spacer-x / 2);
         a {
+            text-decoration: none;
             border-radius: 0;
         }
     }
@@ -38,7 +39,8 @@
                 }
             }
             legend {
-                a {
+                a,
+                button {
                     border-bottom: $card-border-width solid $card-border-color;
                     &.collapsed {
                         @include border-bottom-radius($card-border-radius);
@@ -52,7 +54,8 @@
             }
         }
         &.first .card-header a,
-        &.first legend a {
+        &.first legend a,
+        &.first legend button {
             @include border-top-radius($card-border-radius);
         }
 
@@ -79,6 +82,10 @@
                 border-top-left-radius: $card-border-radius;
                 border-top-right-radius: $card-border-radius;
             }
+
+            a {
+                text-decoration: none;
+            }
         }
 
         // cancel for filelist
@@ -92,6 +99,7 @@
             border: $card-border-width solid $card-border-color;
             padding: $card-spacer-y $card-spacer-x;
             background: $card-bg;
+            margin-top: -$card-border-width; //remove double border
             margin-bottom: -$card-border-width; //remove double border
             .jstabs & {
                 border: 0;
@@ -170,10 +178,37 @@
         right: 0;
         width: auto;
         font-weight: $font-weight-normal;
+        font-size: $font-size-base;
 
         @include media-breakpoint-down(sm) {
             position: static;
             text-align: right;
+        }
+
+        button[data-toggle="collapse"] {
+            margin-top: -$btn-border-width;
+            border-bottom-left-radius: $btn-border-radius;
+            border-bottom-right-radius: $btn-border-radius;
+            padding: $btn-padding-y $btn-padding-x !important;
+
+            color: $btn-secondary-color;
+            background-color: $btn-secondary-bg;
+            border-color: $btn-secondary-border;
+            box-shadow: none;
+            text-decoration: none;
+
+            .collapse-indicator {
+                color: $btn-secondary-color;
+                margin-left: $spacing-sm;
+            }
+
+            &:hover,
+            &:focus,
+            &:active {
+                color: $btn-secondary-color;
+                background-color: scale-color($btn-secondary-bg, $lightness: -10%);
+                border-color: scale-color($btn-secondary-border, $lightness: -10%);
+            }
         }
     }
 }

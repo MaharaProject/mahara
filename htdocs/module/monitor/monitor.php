@@ -23,12 +23,13 @@ require_once(get_config('docroot') . '/module/monitor/type/MonitorType_processes
 require_once(get_config('docroot') . '/module/monitor/type/MonitorType_ldaplookup.php');
 require_once(get_config('docroot') . '/module/monitor/type/MonitorType_ldapsuspendedusers.php');
 require_once(get_config('docroot') . '/module/monitor/type/MonitorType_elasticsearch.php');
+require_once(get_config('docroot') . '/module/monitor/type/MonitorType_search.php');
 
 define('TITLE', get_string('monitor', 'module.monitor'));
 
 $type = param_alpha('type', PluginModuleMonitor::type_default);
-define('SUBSECTIONHEADING', get_string($type, 'module.monitor'));
 $subpages = PluginModuleMonitor::get_list_of_types();
+$subnavtitles = [];
 $offset = param_integer('offset', 0);
 $limit  = param_integer('limit', 10);
 
@@ -52,11 +53,38 @@ case PluginModuleMonitor::type_elasticsearch:
     $params[] = MonitorType_elasticsearch::get_unprocessed_queue_size();
     $data = MonitorType_elasticsearch::format_for_display($params);
     break;
+case PluginModuleMonitor::type_search:
+    $params = array();
+    $title = '';
+    if ($search_class = does_search_plugin_have('monitor_task_list')) {
+        $tasks = $search_class::monitor_task_list();
+        foreach ($tasks as $task) {
+            $params[] = $search_class::$task();
+        }
+        $title = $search_class::monitor_title();
+        $subnavtitles[PluginModuleMonitor::type_search] = $search_class::monitor_subnav_title();
+    }
+    $data = MonitorType_search::format_for_display($title, $params);
+    break;
 case PluginModuleMonitor::type_processes:
 default:
     $results = MonitorType_processes::get_long_running_cron_processes();
     $data = MonitorType_processes::format_for_display($results, $limit, $offset);
     break;
+}
+
+// Prep titles for all types.
+foreach ($subpages as $thistype) {
+    switch ($thistype) {
+        case PluginModuleMonitor::type_search:
+            if ($search_class = does_search_plugin_have('monitor_task_list')) {
+                $subnavtitles[$thistype] = $search_class::monitor_subnav_title();
+            }
+            break;
+
+        default:
+            $subnavtitles[$thistype] = get_string($thistype, 'module.monitor');
+    }
 }
 
 $js = '';
@@ -65,14 +93,21 @@ if (!empty($data['table']) && !empty($data['table']['pagination_js'])) {
 }
 $subnav = array('subnav' => array('class' => 'monitor'));
 foreach ($subpages as $k => $page) {
+    $thistitle = $subnavtitles[$page];
     $subnav[$page] = array('path' => 'adminhome/monitor',
                            'url' => 'module/monitor/monitor.php?type=' . $page,
-                           'title' => get_string($page, 'module.monitor'),
+                           'title' => $thistitle,
                            'weight' => ($k * 10) + 10,
                            );
     if ($page == $type) {
         $subnav[$page]['selected'] = 1;
+        define('SUBSECTIONHEADING', $thistitle);
     }
+}
+
+if (!defined('SUBSECTIONHEADING')) {
+    // For the templates.
+    define('SUBSECTIONHEADING', get_string($type, 'module.monitor'));
 }
 
 $smarty = smarty(array('paginator'));

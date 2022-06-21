@@ -69,7 +69,7 @@ else {
     );
     foreach ($sharedviews['data'] as &$view) {
         if (!$editing && isset($view['template']) && $view['template']) {
-            $view['form'] = pieform(create_view_form($group, null, $view->id));
+            $view['form'] = pieform(create_view_form($groupid, null, $view->id));
         }
     }
 }
@@ -82,8 +82,7 @@ if (!empty($configdata['showsharedviews'])) {
         'id'         => 'sharedviews_pagination',
         'datatable'  => 'sharedviewlist',
         'jsonscript' => 'blocktype/groupviews/sharedviews.json.php',
-        'resultcounttextsingular' => get_string('view', 'view'),
-        'resultcounttextplural'   => get_string('views', 'view'),
+        'resultcounttext' => get_string('nviews1', 'view', $sharedviews['count']),
     );
     PluginBlocktypeGroupViews::render_items($sharedviews, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
 }

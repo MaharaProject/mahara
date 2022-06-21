@@ -19,13 +19,13 @@ Scenario:
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Configuring the block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "PDF"
     And I fill in the following:
     | Block title | Mahara about PDF |
 
-    And I follow "File"
+    And I press "File"
     And I attach the file "mahara_about.pdf" to "File"
     And I press "Save"
     And I display the page

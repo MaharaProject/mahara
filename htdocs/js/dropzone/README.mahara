@@ -1,11 +1,13 @@
 dropzonejs
 -----
 
-Website: https://github.com/enyo/dropzone
-Version: 5.7.0
+Website: https://github.com/dropzone/dropzone/releases
+Version: 5.9.3
+
+Minified files available from: https://cdnjs.com/libraries/dropzone/5.9.3
 
 Note: To override any css place the changes in ./theme/raw/sass/components/_dropzone-previews.scss
 
 Modifications:
 
-- none
+- keep the .min stuff, especially dropzone.min.js

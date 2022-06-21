@@ -10,6 +10,12 @@
       margin-left: $spacing-base;
       margin-right: $spacing-base;
     }
+
+    .grid-stack-placeholder > .placeholder-content {
+        inset: 0px !important;
+        background-color: $gray-100;
+        border-color: $draggable-border-color !important;
+    }
 }
 
 .gridstackblock.card {
@@ -20,6 +26,8 @@
 .grid-stack > .grid-stack-item > .grid-stack-item-content {
     overflow: hidden !important;
     touch-action: auto !important;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
 }
 
 // take away the move cursor when page in display mode
@@ -43,4 +51,17 @@
 
 .blockinstructions legend a {
    outline: 0;
+}
+
+.gridedit {
+    min-height: 3rem;
+}
+
+.grid-stack.gridedit .ui-draggable-handle {
+    border: 1px dashed $draggable-border-color;
+}
+
+// fixing the draggable arrow position
+.grid-stack > .grid-stack-item.ui-resizable > .ui-icon-gripsmall-diagonal-se {
+  right: 12px;
 }

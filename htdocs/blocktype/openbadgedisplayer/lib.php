@@ -29,7 +29,7 @@
 
 defined('INTERNAL') || die();
 
-class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
+class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
 
     private static $source = null;
     private static $deprecatedhosts = array('backpack');
@@ -184,7 +184,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
      * @return string HTML code
      */
     private static function get_badge_html($group, $fromcache=false) {
-        if (!isset($group) && !is_string($group)) {
+        if (!$group && !is_string($group)) {
             return '';
         }
 
@@ -368,7 +368,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return strtotime($assertion->expires) < time();
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -736,7 +736,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         if (!empty($values['badgegroup'])) {
             foreach ($values['badgegroup'] as $key => $badgegroup) {
                 list($host, $uid, $group) = explode(':', $badgegroup);
-                if (!isset($uid) || !in_array($uid, array_values($validbackpackids[$host]))) {
+                if (!$uid || !in_array($uid, array_values($validbackpackids[$host]))) {
                     unset($values['badgegroup'][$key]);
                 }
             }
@@ -744,7 +744,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlocktype {
         return $values;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

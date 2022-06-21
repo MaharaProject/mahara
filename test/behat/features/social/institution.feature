@@ -28,13 +28,23 @@ Feature: Mahara account permissions in institutions
     Then I should see "Request membership of an institution"
     And I log out
 
+  Scenario: Edit an institution and change some options
+    Given I log in as "admin" with password "Kupuh1pa!"
+    And I choose "Settings" in "Institutions" from administration menu
+    And I press "Edit \"Institution One\""
+    And I set the following fields to these values:
+    | Institution name                   | Institution Three |
+    And I press "Submit"
+    Then I should see "Institution Three"
+    And I log out
+
   Scenario: Site admin vs institution admin when sharing institution page
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
-    And I follow "Edit"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I press "Edit"
+    And I press "Share" in the "Toolbar buttons" "Nav" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should not contain "Institution Two"
     And I choose "People search" in "People" from administration menu
@@ -47,8 +57,8 @@ Feature: Mahara account permissions in institutions
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
     And I follow "Page InstOne_01"
-    And I follow "Edit"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I press "Edit"
+    And I press "Share" in the "Toolbar buttons" "Nav" property
     Then the "accesslist[0][searchtype]" select box should contain "Institution One"
     And the "accesslist[0][searchtype]" select box should contain "Institution Two"
     And I log out

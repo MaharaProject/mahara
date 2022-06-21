@@ -143,8 +143,14 @@ function create_settings_pieform() {
     $canedittitle, $canuseskins;
     $inlinejavascript = '';
 
-    //get elements for each section of the form
+    // Get the elements for each section of the form
+    $advancedclasslast = '';
+    $advancedelements = array();
+    $basicelements = array();
     $extrasettingformfields = array();
+    $hiddenskinelements = array();
+    $skinelements = array();
+
     if ($canedittitle) {
         $basicelements = get_basic_elements();
         list($advancedelements, $inlinejs) = get_advanced_elements();
@@ -235,23 +241,7 @@ function create_settings_pieform() {
 }
 
 function get_basic_elements() {
-    global $view, $urlallowed, $group, $institution, $USER;
-
-    $formatstring = '%s (%s)';
-    $ownerformatoptions = array(
-        FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
-        FORMAT_NAME_LASTNAME => sprintf($formatstring, get_string('lastname'), $USER->get('lastname')),
-        FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
-    );
-
-    $displayname = display_name($USER);
-    if ($displayname !== '') {
-        $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
-    }
-    $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
-    if ($studentid !== '') {
-        $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
-    }
+    global $view, $urlallowed, $group, $institution, $USER, $new;
 
     $createtagsoptions = array();
     $typecast = is_postgres() ? '::varchar' : '';
@@ -278,6 +268,7 @@ function get_basic_elements() {
             'title'        => get_string('title','view'),
             'defaultvalue' => $view->get('title'),
             'rules'        => array( 'required' => true ),
+            'autoselect'   => $new,
         ),
         'description' => array(
             'type'         => 'textarea',
@@ -331,18 +322,18 @@ function get_advanced_elements() {
 
     $formatstring = '%s (%s)';
     $ownerformatoptions = array(
-        FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
-        FORMAT_NAME_LASTNAME => sprintf($formatstring, get_string('lastname'), $USER->get('lastname')),
-        FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
+        View::FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
+        View::FORMAT_NAME_LASTNAME => sprintf($formatstring, get_string('lastname'), $USER->get('lastname')),
+        View::FORMAT_NAME_FIRSTNAMELASTNAME => sprintf($formatstring, get_string('fullname'), full_name())
     );
 
     $displayname = display_name($USER);
     if ($displayname !== '') {
-        $ownerformatoptions[FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferredname'), $displayname);
+        $ownerformatoptions[View::FORMAT_NAME_DISPLAYNAME] = sprintf($formatstring, get_string('preferrednamedisplay'), $displayname);
     }
     $studentid = (string)get_field('artefact', 'title', 'owner', $USER->get('id'), 'artefacttype', 'studentid');
     if ($studentid !== '') {
-        $ownerformatoptions[FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
+        $ownerformatoptions[View::FORMAT_NAME_STUDENTID] = sprintf($formatstring, get_string('studentid'), $studentid);
     }
 
     $elements = array();
@@ -399,7 +390,7 @@ function get_advanced_elements() {
     if (!($group || $institution)) {
         $default = $view->get('ownerformat');
         if (!$default) {
-            $default = FORMAT_NAME_DISPLAYNAME;
+            $default = View::FORMAT_NAME_DISPLAYNAME;
         }
         $elements['ownerformat'] = array(
             'type'         => 'select',
@@ -546,8 +537,8 @@ EOF;
     return array($elements, $inlinejs);
 }
 
-function get_skin_elements() {
-    global $view, $USER, $pieformname;
+function get_skin_elements(): array {
+    global $view, $USER, $pieformname, $THEME;
     $issiteview = $view->get('institution') == 'mahara';
 
     if (!can_use_skins(null, false, $issiteview)) {
@@ -557,7 +548,7 @@ function get_skin_elements() {
     // Is page skin already saved/set for current page?
     $skin = param_integer('skin', null);
     $saved = false;
-    if (!isset($skin)) {
+    if (!$skin) {
         $skin = $view->get('skin');
         $saved = true;
     }
@@ -660,7 +651,7 @@ function settings_validate(Pieform $form, $values) {
     if ($canuseskins && isset($values['skinid']) && $values['skinid']) {
         $skin = new Skin($values['skinid']);
         if (!$skin->can_use()) {
-            throw new AcessDeniedException();
+            throw new AccessDeniedException();
         }
     }
 }
@@ -703,6 +694,8 @@ function settings_submit(Pieform $form, $values) {
 }
 
 function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=null) {
+    $tagselect = array();
+
     if ($bt == 'taggedposts') {
         $tagselect = $configdata['tagselect'];
         unset($configdata['tagselect']);
@@ -745,9 +738,10 @@ function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=nul
             $bi->set('title', $title);
         }
     }
-
-    if ($blockinfo['tags']) {
-        $bi->set('tags', $blockinfo['tags']);
+    if (!is_null($blockinfo)) {
+        if ($blockinfo['tags']) {
+            $bi->set('tags', $blockinfo['tags']);
+        }
     }
     if ($bt == 'taggedposts') {
         $blocktypeclass::save_tag_selection($tagselect, $bi);
@@ -827,8 +821,10 @@ function set_view_title_and_description(Pieform $form, $values) {
                     }
                 }
                 if (!empty($combineddata['artefact'])) {
+                    $configdata = array();
                     $filedownload = array();
                     $plans = array();
+
                     foreach ($combineddata['artefact'] as $ak => $av) {
                         safe_require('artefact', 'file');
                         $bt = false;

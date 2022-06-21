@@ -1,47 +1,61 @@
 //
 // Extenstion to Button groups so we can use forms as buttons
 // --------------------------------------------------
-
 .btn-group {
-    font-family: $btn-font-family;
-}
-
-.btn-group .form-as-button {
-    .btn {
-        @include border-right-radius(0);
-    }
-    &:last-of-type {
+    .form-as-button,
+    .form-as-button .button.group-item {
         .btn {
-            @include border-right-radius($btn-border-radius);
-            border-right-width: $btn-border-width;
+            border-radius: $btn-border-radius-sm;
         }
-    }
-    ~ .form-as-button {
-        .btn {
-            @include border-left-radius(0);
-        }
-    }
 
-    div:first-child {
-        display: inline-block;
-    }
-    div.first {
-        .btn {
+        &:last-child,
+        &:not(:first-child) {
+            .btn {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                border-right-width: $btn-border-width;
+                margin-left: -$btn-border-width;
+            }
+        }
+        &:first-child,
+        &:not(:last-child) {
+            .btn {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+        &:first-child:last-child,
+        &:only-child {
+            .btn {
+                border-radius: $btn-border-radius-sm;
+            }
+        }
+
+        ~ .form-as-button {
+            .btn {
+                @include border-left-radius(0);
+            }
+        }
+
+        div:first-child {
             display: inline-block;
-            border-bottom-right-radius: $btn-border-radius;
-            border-top-right-radius: 0;
         }
-    }
-    div.last {
-        display: inline-block;
-        margin: 0;
-        padding: 0;
-
-        .btn {
-            border-left: 0;
+        div.first {
+            .btn {
+                display: inline-block;
+            }
+        }
+        div.last {
             display: inline-block;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: $btn-border-radius;
+            margin: 0;
+            padding: 0;
+
+            .btn {
+                border-left: 0;
+                display: inline-block;
+                border-top-right-radius: $btn-border-radius-sm;
+                border-bottom-right-radius: $btn-border-radius-sm;
+            }
         }
     }
 }
@@ -56,25 +70,13 @@
     margin-right: -$btn-border-width;
 }
 
-.group-item,
-.btn-group-item {
-    &.btn,
-    .btn {
-        border-right-width: $btn-border-width !important; // Overriding standard styling above
-        padding-top: $spacing-xs !important; // 3px Override standard btn padding
-    }
-    &:only-of-type .btn {
-        border-radius: $btn-border-radius;
-    }
-}
-
 .btn-group.only-button .btn {
-    border-bottom-right-radius: $btn-border-radius !important;
+    border-bottom-right-radius: $btn-border-radius-sm !important;
     border-right-width: $btn-border-width !important;
 }
 
 .btn-group.only-button-top .btn {
-    border-top-right-radius: $btn-border-radius !important;
+    border-top-right-radius: $btn-border-radius-sm !important;
 }
 
 // If there are not-button siblings of group button elements
@@ -83,8 +85,8 @@
 }
 
 .btn-group > .btn.btn-group-first {
-    border-top-left-radius: $btn-border-radius !important;
-    border-bottom-left-radius: $btn-border-radius !important;
+    border-top-left-radius: $btn-border-radius-sm !important;
+    border-bottom-left-radius: $btn-border-radius-sm !important;
 }
 .btn-group > .btn-group-first:not(.btn-group-last) {
     display: inline-block;
@@ -95,8 +97,8 @@
 }
 
 .btn-group > .btn.btn-group-last {
-    border-top-right-radius: $btn-border-radius !important;
-    border-bottom-right-radius: $btn-border-radius !important;
+    border-top-right-radius: $btn-border-radius-sm !important;
+    border-bottom-right-radius: $btn-border-radius-sm !important;
 }
 .btn-group > .btn-group-last:not(.btn-group-first) {
     display: inline-block;
@@ -128,11 +130,6 @@ fieldset.btn-group {
   display: block;
 }
 
-.btn-group-top .form-as-button:only-of-type .btn {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-
 // Used to stop dropdown being covered by the button
 .controls .btn-group {
     z-index: 1;
@@ -143,9 +140,23 @@ fieldset.btn-group {
     font-size: 0;
 }
 
-.extensions .card-header .btn-group-top {
-    margin-top: -$spacing-base;
-    margin-bottom: 0;
+// plugin admin buttons
+.extensions {
+    .card-header .btn-group-top {
+        margin-top: -$spacing-base - $btn-border-width;
+        margin-bottom: 0;
+        a {
+            color: $theme-text-color;
+            border-radius: $btn-border-radius-sm;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+    }
+    // can remove this if btn-sm class is added to the button
+    .list-group-item .btn-secondary {
+        font-size: $font-size-sm;
+        padding: $btn-padding-y-sm $btn-padding-x-sm;
+    }
 }
 
 // annotation modal
@@ -156,9 +167,175 @@ fieldset.btn-group {
     }
 }
 
-// peer assessment block
-.bt-peerassessment {
-    .comment-item .assessment-item-buttons {
-        margin-top: -0.8125rem; // -13px;
+#menuitemlist .edit .btn-group .btn-secondary {
+    border-top-left-radius: $btn-border-radius-sm;
+    border-bottom-left-radius: $btn-border-radius-sm;
+}
+
+h1 ~ div > .btn-group-top,
+h2 ~ div > .btn-group-top,
+h3 ~ div > .btn-group-top,
+h4 ~ div > .btn-group-top,
+h5 ~ div > .btn-group-top,
+h6 ~ div > .btn-group-top,
+p ~ div > .btn-group-top,
+.page-header ~ div.btn-group-top,
+.nav-tabs +  div.btn-group-top {
+    margin-top: -1.25rem; // -20px;
+    margin-left: -100%;
+
+    @include media-breakpoint-down(md) {
+        margin: 0 0 $spacing-base 0;
+        width: 100%;
+        float: none;
     }
+
+    .btn-group .btn,
+    .form-as-button button,
+    .btn {
+        @include border-top-radius(0);
+        border-top: 0;
+
+        @include media-breakpoint-down(md) {
+            margin-bottom: $spacing-xs;
+            margin-left: $btn-border-width;
+            margin-right: $btn-border-width;
+            width: 100%;
+            border-radius: $btn-border-radius-sm;
+            border-right-width: $btn-border-width;
+            border-top: $btn-border-width solid $btn-secondary-border;
+        }
+
+        .btn {
+            margin-bottom: 0;
+        }
+    }
+
+    .dropdown-toggle:last-of-type {
+        border-bottom-right-radius: $btn-border-radius-sm;
+    }
+
+    @include media-breakpoint-down(md) {
+        .form-as-button,
+        .form-as-button:last-child,
+        .form-as-button:not(:first-child),
+        .form-as-button:first-child,
+        .form-as-button:not(:last-child),
+        .form-as-button:first-child:last-child,
+        .form-as-button:only-child {
+            .btn {
+                border-radius: $btn-border-radius-sm;
+                margin-left: $btn-border-width;
+                margin-right: $btn-border-width;
+            }
+        }
+
+        .btn,
+        > .btn:not(:last-child),
+        > .btn:not(:last-child):not(.dropdown-toggle),
+        > .btn-group:not(:last-child) > .btn,
+        > .btn:not(:first-child),
+        > .btn-group:not(:first-child) > .btn {
+            border-radius: $btn-border-radius-sm;
+            margin-left: $btn-border-width;
+            margin-right: $btn-border-width;
+        }
+    }
+}
+
+.btn-group-top {
+    position: relative;
+    z-index: 4;
+    @include media-breakpoint-up(md) {
+        float: right;
+        .btn {
+            @include border-top-radius(0);
+        }
+        .btn-group-top {
+            margin: 0;
+        }
+    }
+}
+
+.nav-tabs +  div.btn-group-top{
+    margin-top: 0;
+}
+
+td.btn-group {
+    min-width: 18.75rem; // 300px;
+}
+
+// Often the same template is used to render buttons at the top of the page and
+// in a list group. cf. groups table/groups
+.list-group,
+.card-header {
+    .btn-group-top {
+        @include clearfix;
+        margin-top: -0.8125rem; // -13px;
+        text-align: right;
+        float: right;
+
+        .btn {
+            border-top: $btn-border-width solid $btn-secondary-border;
+        }
+
+        .form-as-button,
+        .form-as-button .button.group-item {
+            .btn {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+            &:last-of-type,
+            &:not(:first-of-type),
+            &:first-of-type,
+            &:not(:last-of-type),
+            &:first-of-type:last-of-type,
+            &:only-of-type {
+                .btn {
+                    border-top-left-radius: 0;
+                    border-top-right-radius: 0;
+                }
+            }
+        }
+
+        .btn-top-right {
+            margin: 0; // negate nested margin
+        }
+    }
+}
+// Edit page configure buttons
+.card-secondary .card-header .blockinstance-controls .btn-group-top {
+    position: absolute;
+    top: 0.6875rem; // 11px;
+    right: $spacing-base;
+    margin-top: 0px;
+    .btn {
+        border-radius: $btn-border-radius-sm;
+        border-color: transparent;
+        background: scale-color($btn-secondary-bg, $lightness: 20%);
+        &:hover,
+        &:focus {
+            background: $btn-secondary-bg;
+        }
+        &:first-child {
+            border-radius: $btn-border-radius-sm 0 0 $btn-border-radius-sm;
+        }
+        &:last-child {
+            border-radius: 0 $btn-border-radius-sm $btn-border-radius-sm 0;
+        }
+    }
+}
+
+// group action buttons on a list-group need to be small but not on group homepage
+.list-group-item .btn-action-list {
+    .btn {
+        @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}
+
+// journals delete button need to be pushed back to margin so show missing a border between
+.postcontrols .pieform.form-as-button:not(:last-child) .btn {
+    margin-left: 0;
 }

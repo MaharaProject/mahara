@@ -22,6 +22,10 @@ Background:
     | name          | owner | grouptype | editroles |
     | The Avengers  | admin | standard  | all       |
 
+    And the following "blocks" exist:
+    | title                     | type     | page                   | retractable | updateonly | data                                                |
+    | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     When I click on "Send contact request" in "Bob UserB" row
@@ -66,7 +70,7 @@ Background:
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
-    And I follow "Edit \"The Avengers\" Settings"
+    And I press "Edit \"The Avengers\" Settings"
     # Checking all the switches can all be changed
     And I set the following fields to these values:
     | Open | 0 |
@@ -84,7 +88,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     | Auto-add people | 1 |
     | Send forum posts immediately | 1 |
     And I press "Save group"
-    And I follow "Edit \"The Avengers\" Settings"
+    And I press "Edit \"The Avengers\" Settings"
     # Checking all the switches can all be changed back
     And I set the following fields to these values:
     | Open | 1 |
@@ -115,7 +119,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     And I wait "1" seconds
     When I click on "Join this group" in "The Avengers" row
     Then I should see "You are now a group member."
-    When I follow "Recommend to contacts"
+    When I press "Recommend to friends"
     Then I should see "Bob UserB"
     And I should see "Cecilia UserC"
     And I should see "Dave UserD"
@@ -134,7 +138,7 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Then I should see "Angela UserA suggested you join a group"
     When I follow "Angela UserA suggested you join a group"
     Then I should see "Angela UserA suggested that you join the group \"The Avengers\" on Mahara - Acceptance test site"
-    When I follow "The Avengers"
+    When I go to group "The Avengers"
     Then I should see "About | The Avengers"
     When I press "Join this group"
     Then I should see "You are now a group member."

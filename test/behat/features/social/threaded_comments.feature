@@ -5,6 +5,10 @@ Feature: Threaded comments
    So I can post things only they can see, and they can post private replies to it
 
 Background:
+    Given the following site settings are set:
+     | field            | value |
+     | allowpublicviews | 1     |
+
     Given the following "institutions" exist:
      | name | displayname | commentthreaded | allowinstitutionpublicviews |
      | instone | Institution One | 1 | 1 |
@@ -26,15 +30,17 @@ Background:
 Scenario: Public comment by page owner, public reply by third party
     Given I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Add comment"
     And I fill in "Public comment by AdminA" in editor "Comment"
     And I enable the switch "Make comment public"
     And I press "Comment"
     And I log out
     And I log in as "AdminB" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     And I click on "Reply" in "Public comment by AdminA" row
     # I should see a preview of the reply-to comment below the feedback form
-    And I should see "Public comment by AdminA" in the "Comment preview" property
+    And I should see "Public comment by AdminA" in the "Comment preview" "Comment" property
     And I fill in "Public reply by AdminB" in editor "Comment"
     When I press "Comment"
     Then I should see "Public comment by AdminA"
@@ -43,12 +49,14 @@ Scenario: Public comment by page owner, public reply by third party
 Scenario: Public comment by non-owner, owner can private reply, another non-owner cannot private reply
     Given I log in as "AdminB" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Add comment"
     And I fill in "Public comment by AdminB" in editor "Comment"
     And I enable the switch "Make comment public"
     And I press "Comment"
     And I log out
     And I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     And I click on "Reply" in "Public comment by AdminB" row
     And I disable the switch "Make comment public"
     And I fill in "Private reply by AdminA" in editor "Comment"
@@ -56,9 +64,10 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
     And I log out
     And I log in as "AdminC" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     And I click on "Reply" in "Public comment by AdminB" row
     # I should not be able to make a private reply to a comment by someone other than the page owner
-    And I should see "Public" in the "Make comment public status" property
+    And I should see "Public" in the "Make comment public status" "Comment" property
     When I fill in "Public reply by AdminC" in editor "Comment"
     And I press "Comment"
     Then I should see "Public comment by AdminB"
@@ -68,6 +77,7 @@ Scenario: Public comment by non-owner, owner can private reply, another non-owne
 Scenario: Private comment by commenter, private reply by page owner, private counter-reply by page commenter
     Given I log in as "AdminB" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Add comment"
     And I fill in "Private comment by AdminB" in editor "Comment"
     And I disable the switch "Make comment public"
     And I press "Comment"
@@ -76,14 +86,16 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
     And I log out
     And I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     And I click on "Reply" in "Private comment by AdminB" row
     # There should be no option to make a public reply to a private comment
-    And I should see "Private" in the "Make comment public status" property
+    And I should see "Private" in the "Make comment public status" "Comment" property
     And I fill in "Private reply by AdminA" in editor "Comment"
     And I press "Comment"
     And I log out
     And I log in as "AdminB" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     # I should be able to see the AdminA's private reply to my private comment
     # (An exception to the general rule that only the AdminA can see private comments)
     And I should see "Private reply by AdminA"
@@ -100,6 +112,7 @@ Scenario: Private comment by commenter, private reply by page owner, private cou
 
 Scenario: No private replies to anonymous comments
     Given I go to portfolio page "Page AdminA_01"
+    And I press "Add comment"
     And I fill in "Name" with "Anonymous User"
     # No WYSIWYG editor for anonymous users
     And I fill in "Comment" with "Public comment by anonymous user"
@@ -108,13 +121,15 @@ Scenario: No private replies to anonymous comments
     # Public comments are now always moderated
     When I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     And I click on "Make comment public"
     And I log out
     When I log in as "AdminB" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Comments"
     And I click on "Reply" in "Public comment by anonymous user" row
     # I should not be able to make a private reply to a comment by someone other than the page owner
-    Then I should see "Public" in the "Make comment public status" property
+    Then I should see "Public" in the "Make comment public status" "Comment" property
     And I fill in "Public reply by AdminB" in editor "Comment"
     And I press "Comment"
     And I should see "Public comment by anonymous user"
@@ -123,6 +138,7 @@ Scenario: No private replies to anonymous comments
 Scenario: No replies to deleted comments
     Given I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Add comment"
     And I fill in "I will delete this comment" in editor "Comment"
     And I enable the switch "Make comment public"
     When I press "Comment"
@@ -134,6 +150,7 @@ Scenario: No replies to deleted comments
 Scenario: Deleted comments
     Given I log in as "AdminA" with password "Kupuh1pa!"
     And I go to portfolio page "Page AdminA_01"
+    And I press "Add comment"
     # Create a tree of comments like so:
     #
     # * Comment #1

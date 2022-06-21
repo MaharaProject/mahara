@@ -25,6 +25,10 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         return array('internal' => 26000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function get_css_icon_type($blockname) {
         return 'icon-regular';
     }
@@ -168,7 +172,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         return $return ? $return : false;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -424,7 +428,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         return $configdata;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

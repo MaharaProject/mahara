@@ -46,7 +46,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
-        global $USER;
+        global $USER, $exporter;
         safe_require('artefact', 'file');
         $configdata = $instance->get('configdata');
         $smarty = smarty_core();
@@ -59,7 +59,15 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
             $smarty->assign('text', $newtext);
             if (isset($configdata['instructions'])) {
                 $newinstructions = ArtefactTypeFolder::append_view_url($configdata['instructions'], $instance->get('view'));
-                $smarty->assign('instructions', $newinstructions);
+                if ($exporter && (
+                    get_class($exporter) == 'PluginExportHtmlLite' ||
+                    get_class($exporter) == 'PluginExportPdfLite'
+                    )) {
+                    $smarty->assign('instructions', null);
+                }
+                else {
+                    $smarty->assign('instructions', $newinstructions);
+                }
                 $smarty->assign('blockid', $instance->get('id'));
                 $smarty->assign('editing', $editing);
             }
@@ -70,7 +78,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:text:content.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -185,7 +193,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
         EmbeddedImage::delete_embedded_images('instructions', $instance->get('id'));
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
@@ -432,7 +440,8 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
     public static function postinst($prevversion) {
         if ($prevversion < 2020020700) {
             // set the blocktype that have quickmode
-            set_field('blocktype_installed', 'quickedit', 1, 'name', 'text');
+            return set_field('blocktype_installed', 'quickedit', 1, 'name', 'text');
         }
+        return true;
     }
 }

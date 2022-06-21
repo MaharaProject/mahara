@@ -36,7 +36,7 @@ try {
 }
 // we catch any unexpected errors (inner hook also has a try catch since it runs in cron)
 catch (Exception $e) {
-    cli::cli_exit($e->getMessage(), true);
+    $cli->cli_exit($e->getMessage(), true);
 }
 
-cli::cli_exit('---------- ended at ' . date('r', time()) . ' ----------', true);
+$cli->cli_exit('---------- ended at ' . date('r', time()) . ' ----------', true);

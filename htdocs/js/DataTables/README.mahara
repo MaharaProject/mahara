@@ -1,0 +1,29 @@
+DataTables
+-----
+
+Website: https://datatables.net/
+Version: 1.11.4
+
+Modifications:
+
+- none
+
+Download setup for datatables.js and datatables.css:
+
+1. Visit                        https://datatables.net/download/index
+2. Choose styling framework     Bootstrap4
+3. Select packages              Datatables
+4. Extensions                   Buttons
+                                    Column visibility
+                                    HTML5 export
+                                        JSZip
+                                        pdfmake
+                                ColReorder
+                                FixedColumns
+                                KeyTable
+                                Responsive
+                                RowGroup
+5. Pick a download method       Tab Downloads
+                                    Minify
+                                    Concatenate
+

@@ -58,15 +58,41 @@ function framework_config_submit(Pieform $form, $values) {
     redirect(get_config('wwwroot') . 'module/framework/frameworkmanager.php?id=' . $values['framework']);
 }
 
+/**
+ * Export framework on main page
+ *
+ * @params Pieform $form
+ * @params array $values
+ */
+function framework_export_submit(Pieform $form, $values) {
+    global $USER;
+
+    $values['framework'] = intval($values['framework']);
+    $f = new Framework($values['framework']);
+    $json = $f->to_json();
+    $tmpdir = get_config('dataroot') . 'temp';
+    if (!check_dir_exists($tmpdir) || !is_writable($tmpdir)) {
+        throw new SystemException(get_string('cli_tmpdir_notwritable', 'admin', $tmpdir));
+    }
+    $filename = 'framework_' . $values['framework'] . '_' . time() . '.matrix';
+    $USER->set_download_file($json, $filename, 'application/json');
+    redirect(get_config('wwwroot') . 'download.php');
+}
+
 function import_matrix_file_section() {
     //show Browse for matrix file form.
     define('SUBSECTIONHEADING', get_string('upload'));
     $active_tab = 'import';
     $form = upload_matrix_form();
+    $helplink = get_manual_help_link_array(array('configextensions','frameworks','uploadmatrix'));
+    $manuallink = $helplink['prefix'] .'/'.  $helplink['language'] . '/' . $helplink['version'] . '/' .  $helplink['suffix'];
+    $branchname = $helplink['version'] . "_STABLE";
     $smarty = smarty();
     setpageicon($smarty, 'icon-th');
     $smarty->assign('wwwroot', get_config('wwwroot'));
     $smarty->assign('SUBPAGENAV', PluginModuleFramework::submenu_items($active_tab));
+    $smarty->assign('branchname', $branchname);
+    $smarty->assign('manuallink', $manuallink);
     $smarty->assign('form', $form);
     $smarty->display('module:framework:uploadframework.tpl');
     exit;
@@ -90,9 +116,9 @@ function edit_framework_section() {
     if ($frameworks) {
         foreach ($frameworks as $framework) {
             $framework = new Framework($framework->id);
-            $framework->collections = count($framework->get_collectionids());
+            $framework_collections_count = count($framework->get_collectionids());
             $fw[$framework->get('id')] = $framework->get('name');
-            if (!$framework->get('active') && !$framework->collections) {
+            if (!$framework->get('active') && !$framework_collections_count) {
                 $fw_edit[$framework->get('id')] = $framework->get('name');
             }
         }
@@ -145,12 +171,25 @@ function edit_framework_section() {
         'invalidjsonineditor' => 'module.framework',
         'validjson' => 'module.framework',
         'moveright' => 'module.framework',
+        'moverightspecific' => 'module.framework',
         'moveleft' => 'module.framework',
+        'moveleftspecific' => 'module.framework',
         'deletelast' => 'module.framework',
-        'collapse' => 'mahara',
+        'collapsespecific' => 'mahara',
+        'collapse' => 'module.framework',
+        'collapseform' => 'module.framework',
         'add' => 'mahara',
-        'expand' => 'mahara',
+        'addstandard' => 'module.framework',
+        'addstandardelement' => 'module.framework',
+        'addspecific' => 'module.framework',
+        'expand' => 'module.framework',
+        'expandform' => 'module.framework',
+        'expandspecific' => 'mahara',
+        'delete' => 'mahara',
+        'deletespecific' => 'mahara',
         'deleteall' => 'module.framework',
+        'deleteallspecific' => 'module.framework',
+        'deleteallstandardelements' => 'module.framework',
         'selfassesseddescription' => 'module.framework',
         'standardsdescription' => 'module.framework',
         'no' => 'mahara',
@@ -161,8 +200,7 @@ function edit_framework_section() {
         'all' => 'module.framework',
         'copyexistingframework' => 'module.framework',
         'editsavedframework' => 'module.framework',
-        'removestandardorelementconfirm' => 'module.framework',
-        'delete' => 'module.framework'
+        'removestandardorelementconfirm' => 'module.framework'
     );
 
     //set up variables for correct selection of framework from dropdowns
@@ -208,9 +246,10 @@ function management_section() {
                     'classes' => 'icon icon-lg icon-times text-danger displayicon'
                 );
             }
-            $framework->collections = count($fk->get_collectionids());
+            $framework_collections_count = count($fk->get_collectionids());
+            $framework->collections = $framework_collections_count;
             $framework->delete = false;
-            if (empty($framework->collections)) {
+            if (empty($framework_collections_count)) {
                 $framework->delete = pieform(
                     array(
                         'name' => 'framework_delete_' . $framework->id,
@@ -238,13 +277,33 @@ function management_section() {
                     'name' => 'framework_config_' . $framework->id,
                     'successcallback' => 'framework_config_submit',
                     'renderer' => 'div',
-                    'class' => (empty($framework->collections) ? 'btn-group-first' : 'btn-group-first btn-group-last'),
+                    'class' => 'btn-group-first',
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
                             'class'        => 'btn-secondary btn-sm button',
                             'usebuttontag' => true,
                             'value'        => '<span class="icon icon-cog" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('edit') . '</span>',
+                        ),
+                        'framework'  => array(
+                            'type'         => 'hidden',
+                            'value'        => $framework->id,
+                        )
+                    ),
+                )
+            );
+            $framework->export = pieform(
+                array(
+                    'name' => 'framework_export_' . $framework->id,
+                    'successcallback' => 'framework_export_submit',
+                    'renderer' => 'div',
+                    'class' => (empty($framework_collections_count) ? 'btn-group' : 'btn-group-last'),
+                    'elements' => array(
+                        'submit' => array(
+                            'type'         => 'button',
+                            'class'        => 'btn-secondary btn-sm button',
+                            'usebuttontag' => true,
+                            'value'        => '<span class="icon icon-download" role="presentation" aria-hidden="true"></span><span class="sr-only">'. get_string('Download', 'admin') . '</span>',
                         ),
                         'framework'  => array(
                             'type'         => 'hidden',

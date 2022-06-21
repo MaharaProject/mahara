@@ -19,39 +19,39 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I should not see "Manage access"
     # Check there is no access to "Share" on each of the four edit template pages BUG - # 1824767
     When I follow "Dashboard template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=2"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Group homepage template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=3"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Profile template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=1"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
     When I choose "Pages and collections" in "Configure site" from administration menu
     And I follow "Page template"
-    Then I should not see "Share" in the "Vertical button group" property
+    Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=4"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
 
     # Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     When I choose "Pages and collections" in "Configure site" from administration menu
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I set the field "Page title" to "Site page with block templates"
     And I press "Save"
     And I should see "Share"
 
     # Add a Profile information block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Profile information"
     And I set the following fields to these values:
@@ -65,7 +65,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I press "Save"
     And I wait "1" seconds
     And I should see "Postal address"
-    And I follow "Share" in the "Toolbar buttons" property
+    And I press "Share" in the "Toolbar buttons" "Nav" property
     And I select "Registered people" from "General" in shared with select2 box
     And I expand "Advanced options" node
     And I enable the switch "Allow copying"
@@ -75,19 +75,19 @@ Scenario: Check templates not editable then create and use the Page template wit
     # Copy site portfolio page for UserA
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Copy"
+    And I press "Copy"
     And I press "Copy page"
-    And I follow "Edit"
-    And I follow "Display page"
+    And I press "Edit"
+    And I press "Display page"
     Then I should see "Town: Wellington"
     And I log out
 
     # Copy site portfolio page for UserB
     And I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Copy"
+    And I press "Copy"
     And I press "Copy page"
-    And I follow "Edit"
-    And I follow "Display page"
+    And I press "Edit"
+    And I press "Display page"
     Then I should see "Town: Oslo"
     And I log out

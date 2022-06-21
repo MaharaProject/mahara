@@ -57,10 +57,11 @@ Background:
     # Add 'Page completion' block to Page UserA_00
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
-    And I click on "Edit"
+    And I press on "Edit"
     # Author adds 'Page completion' block
     ## End customisation
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    # Author adds 'Page completion' block/sign off block
+    When I click on the add block button
     And I press "Add"
     # PCNZ Customisation WR349172
     And I click on blocktype "Page completion"
@@ -69,13 +70,13 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I follow "Return to pages and collections"
+    And I press "Return to pages and collections"
     And I go to portfolio page "Page UserA_01"
-    And I click on "Edit"
+    And I press on "Edit"
     # PCNZ Customisation WR349172
-    # Author adds 'Page completion' block
     ## End customisation
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    # Author adds 'Page completion' block/sign off block
+    When I click on the add block button
     And I press "Add"
     # PCNZ Customisation WR349172
     And I click on blocktype "Page completion"
@@ -84,13 +85,13 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I follow "Return to pages and collections"
+    And I press "Return to pages and collections"
     # PCNZ Customisation WR349172
-    # Add peer assessment and 'Page completion' blocks to Page Page UserA_03
+    # Add peer assessment and 'Page completion'/signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
-    And I click on "Edit"
-    # Author adds 'Page completion' block
-    When I follow "Drag to add a new block" in the "blocktype sidebar" "Views" property
+    And I press on "Edit"
+    # Author adds 'Page completion' block/sign off block
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Page completion"
     ## End customisation
@@ -98,7 +99,7 @@ Background:
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I follow "Return to pages and collections"
+    And I press "Return to pages and collections"
     # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
     And I follow "Pages"

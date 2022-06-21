@@ -66,6 +66,9 @@ $string['groupalreadyexistssuggest'] = 'A group by this name already exists. The
 $string['groupshortnamealreadyexists'] = 'A group by this short name already exists.';
 $string['invalidshortname'] = 'Invalid group short name.';
 $string['shortnameformat1'] = 'Group short names can be from 2 to 255 characters in length and contain only lowercase alphanumeric characters, ".", "-", and "_".';
+$string['groupmaxreached'] = 'Groups cannot be added to this institution because the maximum number of groups allowed in the institution has been reached. Please get in touch with the <a href="%sinstitution/index.php?institution=%s">institution administrator</a> to increase the limit.';
+$string['groupmaxreachednolink'] = 'Groups cannot be added to this institution because the maximum number of groups allowed in the institution has been reached. Please get in touch with the institution administrator to increase the limit.';
+$string['exceedsgroupmax'] = 'Adding this many groups exceeds the group limit for your institution. You can add %s more groups within your limit. Try adding fewer groups or get in touch with the site administrator to discuss raising the limit.';
 $string['Created'] = 'Created';
 $string['editable'] = 'Editable';
 $string['editability'] = 'Editability';
@@ -99,7 +102,7 @@ $string['hasbeeninvitedtojoin'] = 'has been invited to join this group';
 $string['groupinvitesfrom'] = 'Invited to join:';
 $string['requestedmembershipin'] = 'Requested membership in:';
 $string['viewnotify'] = 'Shared page notifications';
-$string['viewnotifydescription2'] = 'Select which group members should receive a notification when a new group page is created and when a group member shares one of their pages with the group. The group member sharing the page will not receive this notification. For very large groups it would be best to limit this to non ordinary members as it can produce a lot of notifications.';
+$string['viewnotifydescription3'] = 'Select which group members should receive a notification when a new group portfolio is created and when a group member shares one of their portfolios with the group. The group member sharing the portfolio will not receive this notification. For very large groups it would be best to limit this to non ordinary members as it can produce a lot of notifications.';
 $string['commentnotify'] = 'Comment notifications';
 $string['commentnotifydescription1'] = 'Select which group members should receive a notification when comments are placed on a group page and artefacts.';
 $string['allowsendnow'] = 'Send forum posts immediately';
@@ -148,8 +151,8 @@ $string['invites'] = "Invites";
 $string['member'] = 'member';
 $string['members'] = 'members';
 $string['Members'] = 'Members';
-$string['nmembers'] = array(
-    '1 member',
+$string['nmembers1'] = array(
+    '%s member',
     '%s members',
 );
 
@@ -167,6 +170,8 @@ $string['memberchangesuccess'] = 'Membership status changed successfully';
 $string['portfolioreleasedsubject'] = 'Portfolio "%s" released';
 $string['portfolioreleasedmessage'] = 'Your portfolio "%s" has been released from "%s" by %s.';
 $string['portfolioreleasedsuccess'] = 'Portfolio was released successfully';
+$string['portfolioreleasedsuccesswithname'] = 'Portfolio "%s" was released successfully';
+$string['portfolioreleasefailed'] =  'Failed to release "%s" after archiving';
 $string['portfolioreleasedpending'] = 'Portfolio will be released after archiving';
 $string['leavegroup'] = 'Leave this group';
 $string['joingroup'] = 'Join this group';
@@ -224,6 +229,10 @@ $string['nogroupsfound'] = 'No groups found.';
 $string['group'] = 'group';
 $string['Group'] = 'Group';
 $string['groups'] = 'groups';
+$string['ngroups'] = array(
+    '%s group',
+    '%s groups'
+);
 $string['notamember'] = 'You are not a member of this group.';
 $string['notmembermayjoin'] = 'You must join the group \'%s\' to see this page.';
 $string['declinerequestsuccess'] = 'Group membership request has been declined successfully.';
@@ -316,8 +325,16 @@ $string['existingfriend'] = 'existing friend';
 $string['nosearchresultsfound'] = 'No search results found';
 $string['friend'] = 'friend';
 $string['friends'] = 'friends';
+$string['nfriends'] = array(
+    '%s friend',
+    '%s friends'
+);
 $string['user'] = 'person';
 $string['users'] = 'persons';
+$string['nusers'] = array(
+    '%s person',
+    '%s people'
+);
 $string['Friends'] = 'Friends';
 $string['friendrequests'] = 'Friend requests';
 $string['Everyone'] = 'Everyone';
@@ -411,6 +428,13 @@ $string['extcommenters'] = "Non-members involved";
 $string['groupparticipationreports'] = "Participation report";
 $string['groupparticipationreportsdesc1'] = "Group administrators can access a report displaying all group and shared pages and who has commented on them.";
 
+// Group archives
+$string['archives'] = 'Archive';
+$string['grouparchivereportsheading'] = "Archive of submissions";
+$string['grouparchivereports'] = "Access archive of submissions";
+$string['grouparchivereportsdesc'] = "Group administrators can access archived submission files.";
+$string['grouparchivereportserror'] = 'You can only allow archive submission report if submissions are allowed.';
+
 $string['returntogroupportfolios'] = "Return to group pages and collections";
 $string['showintroduction'] = "Introduction";
 
@@ -430,3 +454,6 @@ $string['mygrouplabel'] = 'My group labels';
 $string['removegrouplabelfilter'] = 'Remove the group label filter "%s"';
 $string['agrouplabeltooshort'] = 'One or more group labels are too short, they need at least %s characters.';
 $string['agrouplabeltoolong'] = 'One or more group labels are too long, they can have at most %s characters.';
+
+// Current Archive release messages.
+$string['currentarchivereleasedsubmittedhostmessage'] = 'Your portfolio "%s" has been released from "%s" by %s. You can submit your portfolio again if needed.';

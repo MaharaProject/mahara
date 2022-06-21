@@ -98,7 +98,7 @@ class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
 
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -137,7 +137,7 @@ class PluginBlocktypeGroupMembers extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

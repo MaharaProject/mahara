@@ -27,7 +27,7 @@ class ThemeTest extends MaharaUnitTest {
      * Require a test user, and
      * create a theme to test with.
      */
-    public function setUp() {
+    public function setUp(): void {
         parent::setUp();
         $this->testuserid = $this->create_test_user();
         $this->theme = new Theme($this->testuserid);

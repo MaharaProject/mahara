@@ -1,5 +1,5 @@
 {if $LANGCHOICES}
-<nav>
+<nav aria-label="{str tag="language" section="mahara"}">
   <div id="main-language" class="nav collapse navbar-collapse nav-language" role="tabcard">
     <ul id="navadmin" class="nav navbar-nav">{strip}
       {foreach from=$LANGCHOICES key=key item=item name=lang}

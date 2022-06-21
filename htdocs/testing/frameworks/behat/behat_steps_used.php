@@ -11,12 +11,13 @@
 
 define('INTERNAL', 1);
 define('ADMIN', 1);
-//define('MENUITEM', 'configsite/behatsteps');
+define('MENUITEM', 'development/behatsteps');
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'admin');
 define('SECTION_PAGE', 'behatsteps');
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
+require_once(dirname(dirname(__DIR__)) . '/classes/util.php');
 require_once('pieforms/pieform.php');
 define('TITLE', get_string('behatvariables', 'admin'));
 
@@ -31,6 +32,7 @@ function read_dir_files(&$output, $dirpath) {
         }
         if (is_dir($dirpath . '/' . $file)) {
             read_dir_files($output, $dirpath . '/' . $file);
+            continue;
         }
         $gitroot = dirname(get_config('docroot'));
         $filename = str_replace($gitroot, '', str_replace('.', '_', $file->getPathname()));
@@ -54,7 +56,7 @@ function read_dir_files(&$output, $dirpath) {
     }
     return $output;
 }
-$data = false;
+$data = null;
 if (file_exists($dirpath)) {
     read_dir_files($data, $dirpath);
     ksort($data);
@@ -66,6 +68,14 @@ if (get_config('behat_dataroot')) {
     // Find the behat.yml file
     require_once(get_config('docroot') . 'testing/frameworks/behat/classes/util.php');
     $behatyml = BehatTestingUtil::get_behat_config_path();
+    if (!is_readable($behatyml)) {
+        // Try and get it to be readable
+        if (is_writable(get_config('behat_dataroot') . '/behat')) {
+            // If we need to update the config file we need this to call validate_plugin().
+            require_once(get_config('docroot') . 'lib/upgrade.php');
+            BehatConfigManager::update_config_file();
+        }
+    }
     if (is_readable($behatyml)) {
         $hascore = true;
         // Run the behat config command to get list of core features
@@ -99,8 +109,8 @@ if (get_config('behat_dataroot')) {
 }
 
 $smarty = smarty(array());
-setpageicon($smarty, 'icon-cogs');
+setpageicon($smarty, 'icon-vial');
 $smarty->assign('PAGEHEADING', TITLE);
 $smarty->assign('data', $data);
 $smarty->assign('hascore', $hascore);
-$smarty->display('testing/behatvariables.tpl');
+$smarty->display('misc/behatvariables.tpl');

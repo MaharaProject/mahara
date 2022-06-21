@@ -28,7 +28,7 @@
                             {if $view.type == 'profile'}
                             <div class="widget-detail"><p>{str tag=profiledescription}</p></div>
                             {elseif $view.type == 'dashboard'}
-                            <div class="widget-detail"><p>{str tag=dashboarddescription}</p></div>
+                            <div class="widget-detail"><p>{str tag=dashboarddescription1}</p></div>
                             {elseif $view.type == 'grouphomepage'}
                             <div class="widget-detail"><p>{str tag=grouphomepagedescription section=view}</p></div>
                             {elseif $view.description}
@@ -47,7 +47,7 @@
                                 {if $view.type == 'profile'}
                                     <p>{str tag=profiledescription}</p>
                                 {elseif $view.type == 'dashboard'}
-                                    <p>{str tag=dashboarddescription}</p>
+                                    <p>{str tag=dashboarddescription1}</p>
                                 {elseif $view.type == 'grouphomepage'}
                                     <p>{str tag=grouphomepagedescription section=view}</p>
                                 {elseif $view.description}
@@ -68,11 +68,10 @@
                             {* Note: This is positioned relative to base of card-quarter *}
                             <div class="page-access">
                                 {if $view.accesslist || $view.manageaccess}
-                                    <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='manageaccess' section='view'}">
-                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                                    <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock{/if} close-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="sr-only">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
-                                    </a>
+                                    </button>
                                     <ul class="dropdown-menu" role="menu">
                                       {if $view.manageaccesssuspended}
                                         <li class="view-details">{str tag="pending" section="view"}</li>
@@ -80,7 +79,7 @@
                                         {foreach from=$view.manageaccess item=manageitem}
                                         <li class="dropdown-item">
                                             {if $manageitem->accesstype == 'managesharing'}
-                                            <a class="seperator" href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
+                                            <a class="seperator" href="{$WWWROOT}view/accessurl.php?return=index&id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                                 <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
                                                 <span class="link-text">{$manageitem->displayname}</span>
                                                 <span class="sr-only">{$manageitem->accessibilityname}</span>
@@ -122,11 +121,12 @@
                             </div>
 
                             <div class="page-controls">
-                                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
+                                <button class="dropdown-toggle btn btn-link moremenu" type="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="sr-only">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
-                                </a>
+                                </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
                                     <li class="dropdown-item">
@@ -137,7 +137,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !$view.collnoedit}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !$view.collnoedit} {* WR 349179: PCNZ customisation'*}
                                     <li class="dropdown-item">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
@@ -168,6 +168,9 @@
                                     <br>
                                     {str tag=modified section=mahara} {format_date(strtotime($view.vmtime), 'strftimerecentyear')}
                                     <br>
+                                    {if $view.lockedcoll && $view.unlockcoll}{str tag=lockedcollection section=collection arg1=$view.unlockcoll}
+                                    <br>
+                                    {/if}
                                 </li>
                                 {if $view.submittedto}
                                 <li class="view-details dropdown-item">

@@ -15,6 +15,11 @@ Background:
      | Page UserA_01 | Page 01 | user | UserA |
      | Page UserA_02 | Page 02 | user | UserA |
 
+  And the following "blocks" exist:
+     | title                     | type     | page                   | retractable | updateonly | data                                                |
+     | Portfolios shared with me | newviews | Dashboard page: UserA  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+     | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
+
  Scenario: Adding tags to files (Bug 1426983)
    # Log in as the UserA
    Given I log in as "UserA" with password "Kupuh1pa!"
@@ -34,7 +39,7 @@ Background:
    And I press "Save changes"
    # Creating a Journal with tag
    And I choose "Journals" in "Create" from main menu
-   And I follow "New entry"
+   And I press "New entry"
    And I set the following fields to these values:
    | Title *  | Journal one  |
    | Entry | This is a test |
@@ -43,7 +48,7 @@ Background:
    And I press "Save entry"
    # Creating a Plan with a tag
    And I choose "Plans" in "Create" from main menu
-   And I follow "New plan"
+   And I press "New plan"
    And I fill in the following:
    | Title *  | Plan 9 from outer space  |
    | Description  | Woooo |
@@ -51,7 +56,7 @@ Background:
    And I fill in select2 input "addplan_tags" with "blue" and select "blue"
    And I press "Save plan"
    # Creating a Task with a tag
-   And I follow "New task"
+   And I press "New task"
    And I fill in the following:
    | Title * | Task one   |
    And I fill in "Completion date" with "tomorrow" date in the format "Y/m/d"
@@ -61,19 +66,19 @@ Background:
    # Adding a tag to page 1
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_01" card menu
-   And I follow "Settings" in the "#toolbar-buttons" "css_element"
+   And I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Adding a tag to page 2
    And I choose "Pages and collections" in "Create" from main menu
    And I click on "Edit" in "Page UserA_02" card menu
-   And I follow "Settings" in the "#toolbar-buttons" "css_element"
+   And I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "#orange" and select "#orange"
    And I fill in select2 input "settings_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Note with a tag
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I click on the add block button
    And I press "Add"
    And I click on blocktype "Note"
    # create a note block with a Unique name (Note Block 3304)
@@ -83,7 +88,7 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a Text block with a tag
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I click on the add block button
    And I press "Add"
    And I click on blocktype "Text"
    # create a text block with a Unique name (Text Block 101)
@@ -93,14 +98,14 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    # Creating a resume field with a tag
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I click on the add block button
    And I press "Add"
    And I click on blocktype "One résumé field"
    And I fill in select2 input "instconf_tags" with "êyellow" and select "êyellow"
    And I press "Save"
    # Creating an external video block with a tag
    # need to do this one last as the loading of video effects takes focus away from the add block modal
-   When I follow "Drag to add a new block" in the "blocktype sidebar" property
+   When I click on the add block button
    And I press "Add"
    And I click on blocktype "External media"
    And I fill in "URL or embed code" with "https://www.youtube.com/embed/VeS1iqQ6VIc"
@@ -108,15 +113,15 @@ Background:
    And I fill in select2 input "instconf_tags" with "Tag" and select "Tag"
    And I press "Save"
    And I choose "Pages and collections" in "Create" from main menu
-   Then I follow "Tags" in the "#sb-tags" "css_element"
+   Then I follow "Tags" in the "Tags block" "Blocks" property
    # Verifying tags are saved
-   And I should see "blue" in the "#results_container" element
-   And I should see "@black" in the "#results_container" element
-   And I should see "#orange" in the "#results_container" element
-   And I should see "&red" in the "#results_container" element
-   And I should see "ébrown" in the "#results_container" element
-   And I should see "ègreen" in the "#results_container" element
-   And I should see "êyellow" in the "#results_container" element
+   And I should see "blue" in the "Search results for all tags" "Tags" property
+   And I should see "@black" in the "Search results for all tags" "Tags" property
+   And I should see "#orange" in the "Search results for all tags" "Tags" property
+   And I should see "&red" in the "Search results for all tags" "Tags" property
+   And I should see "ébrown" in the "Search results for all tags" "Tags" property
+   And I should see "ègreen" in the "Search results for all tags" "Tags" property
+   And I should see "êyellow" in the "Search results for all tags" "Tags" property
    # Check the repeated tags
    And I follow "blue"
    And I should see "Journal one"
@@ -128,8 +133,8 @@ Background:
    And I should not see "Text Block 101"
    # Check tags can be deleted from a page - Bug 1715491
    Given I follow "Page UserA_02"
-   And I follow "Edit"
-   And I click on "Settings" in the "Toolbar buttons" property
+   And I press "Edit"
+   And I click on "Settings" in the "Toolbar buttons" "Nav" property
    And I clear value "#orange (1)" from select2 field "settings_tags"
    And I press "Save"
    And I display the page
@@ -138,7 +143,7 @@ Background:
    # Create Portfolio page via tags = blue
    Given I choose "Pages and collections" in "Create" from main menu
    And I scroll to the base of id "addview-button"
-   And I follow "Add"
+   And I press "Add"
    And I click on "Page" in the dialog
    And I fill in the following:
    | Page title | Create portfolio via tags feature |
@@ -149,11 +154,11 @@ Background:
    When I press "Save"
    Then I should see "Tagged journal entries"
    And I should see "Plans"
-   When I follow "Settings" in the "Toolbar buttons" property
+   When I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_createtags" with "@black" and select "@black"
    And I press "Save"
    Then I should see "Note Block 3304"
-   When I follow "Settings" in the "Toolbar buttons" property
+   When I press "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_createtags" with "ébrown" and select "ébrown"
    And I press "Save"
 

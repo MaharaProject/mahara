@@ -16,7 +16,7 @@ Scenario: Sending messages between people and admin (Bug 1426983)
    # Sending message 1
    And I choose "People" in "Engage" from main menu
    And I follow "Angela"
-   And I follow "Send message"
+   And I press "Send message"
    And I fill in the following:
    | Subject   | Hi there |
    | Message   | This is a test message   |
@@ -48,7 +48,7 @@ Scenario: Sending messages between people and admin (Bug 1426983)
    Then I log in as "admin" with password "Kupuh1pa!"
    And I choose "People search" in "People" from administration menu
    And I follow "Bob"
-   And I follow "Log in as UserB"
+   And I press "Log in as UserB"
    And I follow "Admin Account"
    And I follow "Make contact request"
    And I fill in "Would you like to be my contact?" for "Message"
@@ -62,9 +62,9 @@ Scenario: Sending messages between people and admin (Bug 1426983)
    And I follow "Requests"
    And I should see "Would you like to be my contact?"
    And I press "Approve request"
-   And I should see "Accepted contact request"
-   And I follow "Log in as UserB"
-   # In UserA's inbox block I'll see a "Contact request accepted" notification
+   And I should see "Accepted friend request"
+   And I press "Log in as UserB"
+   # In UserA's inbox block I'll see a "Friend request accepted" notification
    And I choose inbox
    And I expand the section "Contact request accepted"
    # Expanding it shows me another "More..." link which takes me to the inbox

@@ -64,7 +64,7 @@ if ($institution || $add) {
         function delete_validate(Pieform $form, $values) {
             // Ensure the institution has no members left
             if ($members = get_field('usr_institution', 'COUNT(*)', 'institution', $values['i'])) {
-                $form->set_error('submit', get_string('institutionstillhas', 'admin', get_string('nmembers', 'group', $members)));
+                $form->set_error('submit', get_string('institutionstillhas', 'admin', get_string('nmembers1', 'group', $members)));
             }
 
             // If some users are still using one of this institution's authinstances, it's okay if
@@ -96,7 +96,9 @@ if ($institution || $add) {
 
             $authinstanceids = get_column('auth_instance', 'id', 'institution', $values['i']);
             $collectionids = get_column('collection', 'id', 'institution', $values['i']);
-            $viewids = get_column('view', 'id', 'institution', $values['i']);
+            // progress page types will be deleted as part of the collection so we don't want to try and delete them again as a view
+            $viewids = get_column_sql("SELECT id FROM {view} WHERE institution = ? AND type != ?", array($values['i'], 'progress'));
+
             $artefactids = get_column('artefact', 'id', 'institution', $values['i']);
             $regdataids = get_column('institution_registration', 'id', 'institution', $values['i']);
             $host = get_field('host', 'wwwroot', 'institution', $values['i']);
@@ -249,9 +251,11 @@ if ($institution || $add) {
         $data->commentsortorder = get_config_institution($institution, 'commentsortorder');
         $data->commentthreaded = get_config_institution($institution, 'commentthreaded');
         $data->allowinstitutionsmartevidence = get_config_institution($institution, 'allowinstitutionsmartevidence');
+        $data->allowpeersviewcontent = get_config_institution($institution, 'allowpeersviewcontent');
         $data->reviewselfdeletion = get_config_institution($institution, 'reviewselfdeletion');
         $data->progresscompletion = get_config_institution($institution, 'progresscompletion');
         $data->showonlineusers = (is_isolated() && $data->showonlineusers == 2 ? 1 : $data->showonlineusers);
+        $data->maxgroups = get_config_institution($institution, 'maxgroups');
         $lockedprofilefields = (array) get_column('institution_locked_profile_field', 'profilefield', 'name', $institution);
 
         // TODO: Find a better way to work around Smarty's minimal looping logic
@@ -284,6 +288,7 @@ if ($institution || $add) {
         $data->defaultmembershipperiod = null;
         $data->showonlineusers = is_isolated() ? 1 : 2;
         $data->allowinstitutionpublicviews = get_config('allowpublicviews') ? 1 : 0;
+        $data->allowpeersviewcontent = 0;
         $data->allowinstitutionsmartevidence = 0;
         $data->progresscompletion = 0;
         $data->tags = 0;
@@ -331,6 +336,7 @@ if ($institution || $add) {
         ),
         'displayname' => array(
             'type' => 'text',
+            'autofocus' => true,
             'title' => get_string('institutionname', 'admin'),
             'defaultvalue' => $data->displayname,
             'rules' => array(
@@ -594,12 +600,31 @@ if ($institution || $add) {
             'help'         => true,
         );
 
+        $elements['allowpeersviewcontent'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('allowpeersviewcontent', 'admin'),
+            'description'  => get_string('allowpeersviewcontentdescription','admin'),
+            'defaultvalue' => isset($data->allowpeersviewcontent) ? $data->allowpeersviewcontent : false,
+            'help'         => true,
+        );
+
         if ($USER->get('admin')) {
             $elements['maxuseraccounts'] = array(
                 'type'         => 'text',
                 'title'        => get_string('maxuseraccounts1','admin'),
                 'description'  => get_string('maxuseraccountsdescription','admin'),
                 'defaultvalue' => empty($data->maxuseraccounts) ? '' : $data->maxuseraccounts,
+                'rules'        => array(
+                    'regex'     => '/^\d*$/',
+                    'maxlength' => 8,
+                ),
+                'size'         => 5,
+            );
+            $elements['maxgroups'] = array(
+                'type'         => 'text',
+                'title'        => get_string('maxnumberofgroups', 'admin'),
+                'description'  => get_string('maxgroupsdescription', 'admin'),
+                'defaultvalue' => empty($data->maxgroups) ? '' : $data->maxgroups,
                 'rules'        => array(
                     'regex'     => '/^\d*$/',
                     'maxlength' => 8,
@@ -697,7 +722,6 @@ if ($institution || $add) {
         'pluginname' => 'admin',
         'elements' => $elements
     ));
-
 }
 else {
     // Get a list of institutions
@@ -863,6 +887,18 @@ function institution_validate(Pieform $form, $values) {
         $form->set_error('allowinstitutionsmartevidence', get_string('institutionsmartevidencenotallowed', 'admin'));
     }
 
+    // check that current group/member count is within new limit
+    if ($USER->get('admin') && !empty($institution && $institution !== 'mahara')) {
+        $instarray = Institution::count_members(false, false, $institution);
+        $thisinst = $instarray[$institution];
+        if ($thisinst->members > $values['maxuseraccounts'] && !empty($values['maxuseraccounts'])) {
+            $form->set_error('maxuseraccounts', get_string('maxmembersexceeded', 'admin', $thisinst->members));
+        }
+        if ($thisinst->groupcount > $values['maxgroups'] && !empty($values['maxgroups'])) {
+            $form->set_error('maxgroups', get_string('institutionmaxgroupsexceeded', 'admin', $thisinst->groupcount));
+        }
+    }
+
     // Validate plugins settings.
     plugin_institution_prefs_validate($form, $values);
 }
@@ -880,7 +916,7 @@ function institution_submit(Pieform $form, $values) {
     }
     else {
         $newinstitution = new Institution($institution);
-        $newinstitution->displayname = $values['displayname'];
+        $newinstitution->set('displayname', $values['displayname']);
         $oldinstitution = get_record('institution', 'name', $institution);
     }
 
@@ -898,10 +934,10 @@ function institution_submit(Pieform $form, $values) {
 
     if (!empty($values['lang'])) {
         if ($values['lang'] == 'sitedefault') {
-            $newinstitution->lang = null;
+            $newinstitution->set('lang', null);
         }
         else {
-            $newinstitution->lang = $values['lang'];
+            $newinstitution->set('lang', $values['lang']);
         }
     }
 
@@ -994,14 +1030,16 @@ function institution_submit(Pieform $form, $values) {
         $newinstitution->defaultquota = empty($values['defaultquota']) ? get_config_plugin('artefact', 'file', 'defaultquota') : $values['defaultquota'];
     }
     if ($institution != 'mahara') {
-        $newinstitution->defaultmembershipperiod  = ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null;
+        $newinstitution->set('defaultmembershipperiod', ($values['defaultmembershipperiod']) ? intval($values['defaultmembershipperiod']) : null);
         if ($USER->get('admin')) {
-            $newinstitution->maxuseraccounts      = ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null;
+            $newinstitution->set('maxuseraccounts', ($values['maxuseraccounts']) ? intval($values['maxuseraccounts']) : null);
+            $newinstitution->maxgroups            = ($values['maxgroups']) ? intval($values['maxgroups']) : null;
             $newinstitution->expiry               = db_format_timestamp($values['expiry']);
         }
     }
 
     $newinstitution->allowinstitutionpublicviews  = (isset($values['allowinstitutionpublicviews']) && $values['allowinstitutionpublicviews']) ? 1 : 0;
+    $newinstitution->allowpeersviewcontent =  (isset($values['allowpeersviewcontent']) && $values['allowpeersviewcontent']) ? 1 : 0;
     $newinstitution->allowinstitutionsmartevidence  = (isset($values['allowinstitutionsmartevidence']) && $values['allowinstitutionsmartevidence']) ? 1 : 0;
     $newinstitution->tags  = (isset($values['allowinstitutiontags']) && $values['allowinstitutiontags']) ? 1 : 0;
     $newinstitution->progresscompletion  = (isset($values['progresscompletion']) && $values['progresscompletion']) ? 1 : 0;
@@ -1244,6 +1282,7 @@ if ($institution && $institution != 'mahara') {
             }
             else {
                 // Need to logout any users that are using this institution's authinstance.
+                $loggedinarray = array();
                 if ($loggedin = get_records_sql_array("SELECT ui.usr FROM {usr_institution} ui
                     JOIN {usr} u ON u.id = ui.usr
                     JOIN {auth_instance} ai ON ai.id = u.authinstance
@@ -1360,7 +1399,13 @@ if (isset($suspended)) {
     }
 }
 
-$smarty->assign('PAGEHEADING', get_string('admininstitutions', 'admin'));
+if ($add) {
+    $smarty->assign('PAGEHEADING', get_string('addinstitution', 'admin'));
+}
+else {
+    $smarty->assign('PAGEHEADING', get_string('editinstitution', 'admin'));
+}
+
 $smarty->display('admin/users/institutions.tpl');
 
 function theme_sort($a, $b) {

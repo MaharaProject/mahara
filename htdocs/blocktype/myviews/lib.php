@@ -68,8 +68,9 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
      * @param string template
      * @param array options
      * @param array pagination
+     * @param boolean editing
      */
-    public static function render_items(&$items, $template, $options, $pagination) {
+    public static function render_items(&$items, $template, $options, $pagination, $editing) {
         $smarty = smarty_core();
         $smarty->assign('options', $options);
         $smarty->assign('items', $items['data']);
@@ -85,11 +86,10 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
                 'jsonscript' => $pagination['jsonscript'],
                 'count' => $items['count'],
                 'limit' => $items['limit'],
-                'setlimit' => true,
+                'setlimit' => $editing ? false : true,
                 'offset' => $items['offset'],
+                'resultcounttext' => $pagination['resultcounttext'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
             ));
             $items['pagination'] = $pagination['html'];
             $items['pagination_js'] = $pagination['javascript'];
@@ -131,19 +131,18 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
             'id'         => 'myviews_pagination',
             'datatable'  => 'myviewlist',
             'jsonscript' => 'blocktype/myviews/myviews.json.php',
-            'resultcounttextsingular' => get_string('result'),
-            'resultcounttextplural'   => get_string('results'),
+            'resultcounttext' => get_string('nportfolios', 'view', $views['count']),
         );
-        self::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination);
+        self::render_items($views, 'blocktype:myviews:myviewspaginator.tpl', array(), $pagination, $editing);
         $smarty->assign('myviews', $views);
         return $smarty->fetch('blocktype:myviews:myviews.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -167,7 +166,7 @@ class PluginBlocktypeMyviews extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

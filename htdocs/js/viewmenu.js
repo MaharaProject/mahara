@@ -30,7 +30,7 @@ function addFeedbackError(form, data) {
         formError(form, data);
     }
     else {
-        // Error was made in a modal, find out if comment block or configure block and display error message there
+        // Error was made in a modal, find out if comment block or edit block and display error message there
         var errmsg = get_string('errorprocessingform', 'mahara');
         if ($('#configureblock').hasClass('active')) {
             $('#modal_messages').addClass('alert alert-danger').html(errmsg);
@@ -50,6 +50,8 @@ function addFeedbackSuccess(form, data) {
 
     if (data.data.baseplacement) {
         paginator.updateResults(data);
+        $('#comment-section-count').text('(' + data.data.count + ')');
+        $('#comment-section-title').text(get_string('Comments', 'artefact.comments'));
     }
     // Clear rating from previous submission
     jQuery('#add_feedback_form_rating_container input.star').each(function() {
@@ -108,6 +110,8 @@ function addFeedbackSuccess(form, data) {
         // update the size of the comment block
         updateBlockSizes();
     }
+    findButtonDataUrls();
+
 }
 
 function objectionSuccess(form, data) {
@@ -249,6 +253,14 @@ function open_modal(e) {
         params['blockid'] = $(e.target).closest('a').data('blockid');
     }
 
+    // When getting comments artefacts inside a block, configure the showcomment option
+    if (window.location.search.match(/showcomment=([^&]*)/)) {
+        const showcommentid = window.location.search.match(/showcomment=([^&]*)/)[1];
+        if (showcommentid) {
+            params['showcomment'] = showcommentid;
+        }
+    }
+
     sendjsonrequest(config['wwwroot'] + 'view/viewblocks.json.php',  params, 'POST', function(data) {
         block.find('.modal-title').text(data.title);
         $('.blockinstance-content').html(data.html);
@@ -272,6 +284,15 @@ function open_modal(e) {
 function delete_comment_from_modal_submit(form, data) {
     if (!data.data.artefact) {
         paginator.updateResults(data);
+        if (data.data.baseplacement) {
+            if (data.data.count > 0) {
+                $('#comment-section-count').text('(' + data.data.count + ')');
+            }
+            else {
+                $('#comment-section-title').text(get_string('addcomment', 'artefact.comments'));
+                $('#comment-section-count').text('');
+            }
+        }
         paginator.alertProxy('pagechanged', data);
         return;
     }

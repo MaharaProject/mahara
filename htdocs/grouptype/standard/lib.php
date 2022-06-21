@@ -17,6 +17,7 @@ class PluginGrouptypeStandard extends PluginGrouptype {
         if ($prevversion == 0) {
             parent::installgrouptype('GroupTypeStandard');
         }
+        return true;
     }
 
     public static function can_be_disabled() {

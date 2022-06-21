@@ -28,7 +28,6 @@ require_once(get_config('docroot') . 'lib/institution.php');
 require_once(get_config('docroot') . 'lib/searchlib.php');
 
 global $WEBSERVICE_OAUTH_USER;
-
 /**
  * Class container for core Mahara group related API calls
  */
@@ -52,44 +51,46 @@ class mahara_group_external extends external_api {
             $group_notify_roles[] = $key . ' = ' . $role;
         }
         return new external_function_parameters(
-        array(
+            array(
                 'groups' => new external_multiple_structure(
-                                new external_single_structure(
+                    new external_single_structure(
                                     array(
-                                        'name'            => new external_value(PARAM_RAW, 'Group name'),
-                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL),
-                                        'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
-                                        'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
-                                        'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
-                                        'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
-                                        'forcecategory'   => new external_value(PARAM_BOOL, 'Creates the group category if it does not already exist', VALUE_DEFAULT, '0'),
-                                        'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
-                                        'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT, '0'),
-                                        'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT, '0'),
-                                        'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators', VALUE_DEFAULT, '0'),
-                                        'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group', VALUE_DEFAULT),
-                                        'public'          => new external_value(PARAM_BOOL, 'Public group', VALUE_DEFAULT),
-                                        'viewnotify'      => new external_value(PARAM_INT, 'Shared page notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
-                                        'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
-                                        'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
-                                        'hidden'          => new external_value(PARAM_BOOL, 'Hide group', VALUE_DEFAULT),
-                                        'hidemembers'     => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
-                                        'hidemembersfrommembers' => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
-                                        'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report', VALUE_DEFAULT),
+                                        'name'            => new external_value(PARAM_RAW, get_string('groupname', WEBSERVICE_LANG)),
+                                        'shortname'       => new external_value(PARAM_RAW, get_string('groupshortname', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                        'description'     => new external_value(PARAM_NOTAGS,  get_string('groupdesc', WEBSERVICE_LANG)),
+                                        'institution'     => new external_value(PARAM_TEXT, get_string('institutionforctrlgroups', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                        'grouptype'       => new external_value(PARAM_ALPHANUMEXT, get_string('grouptype', WEBSERVICE_LANG) . implode(',', $group_types)),
+                                        'category'        => new external_value(PARAM_TEXT,  get_string('groupcategory', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                        'forcecategory'   => new external_value(PARAM_BOOL, get_string('forcegroupcategory', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                                        'editroles'       => new external_value(PARAM_ALPHANUMEXT,  get_string('groupcaneditroles', WEBSERVICE_LANG) . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
+                                        'open'            => new external_value(PARAM_BOOL, get_string('grouptypeopen', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                                        'controlled'      => new external_value(PARAM_BOOL, get_string('grouptypectrl', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                                        'request'         => new external_value(PARAM_BOOL, get_string('grouptypereq', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                                        'submitpages'     => new external_value(PARAM_BOOL,  get_string('grouptypesubmitpage', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'public'          => new external_value(PARAM_BOOL, get_string('grouptypepublic', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'viewnotify'      => new external_value(PARAM_INT, get_string('viewnotify', WEBSERVICE_LANG) . implode(', ', $group_notify_roles), VALUE_DEFAULT),
+                                        'feedbacknotify'  => new external_value(PARAM_INT, get_string('feedbacknotify', WEBSERVICE_LANG) . implode(', ', $group_notify_roles), VALUE_DEFAULT),
+                                        'usersautoadded'  => new external_value(PARAM_BOOL, get_string('usersautoadded', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'hidden'          => new external_value(PARAM_BOOL, get_string('grouphidden', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'hidemembers'     => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'hidemembersfrommembers' => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'groupparticipationreports' => new external_value(PARAM_BOOL, get_string('groupparticipationreports', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                        'grouparchivereports' => new external_value(PARAM_BOOL, get_string('grouparchivereports', WEBSERVICE_LANG), VALUE_DEFAULT),
                                         'members'         => new external_multiple_structure(
-                                                                new external_single_structure(
+                                            new external_single_structure(
                                                                     array(
-                                                                        'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL),
-                                                                        'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL),
-                                                                        'role'     => new external_value(PARAM_ALPHANUMEXT, 'member role: ' . implode(', ', self::$member_roles))
-                                                                        ), 'Group membership')
-                                                            ),
+                                                                        'id'       => new external_value(PARAM_NUMBER, get_string('memberuserid', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                        'username' => new external_value(PARAM_RAW, get_string('memberusername', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                                                        'role'     => new external_value(PARAM_ALPHANUMEXT, get_string('memberrole', WEBSERVICE_LANG) . implode(', ', self::$member_roles))
+                                                                        ), get_string('groupmembership', WEBSERVICE_LANG))
+                                                                    ),
                                     )
                             )
-                    )
-            )
+                            )
+                            )
         );
     }
+
 
     /**
      * Create one or more group
@@ -221,7 +222,7 @@ class mahara_group_external extends external_api {
 
             // check for the rest
             foreach (array('category', 'open', 'controlled', 'request', 'submitpages', 'editroles',
-                           'hidemembers', 'invitefriends', 'suggestfriends', 'hidden', 'quota', 'groupparticipationreports',
+                           'hidemembers', 'invitefriends', 'suggestfriends', 'hidden', 'quota', 'groupparticipationreports', 'grouparchivereports',
                            'hidemembersfrommembers', 'public', 'usersautoadded', 'viewnotify', 'feedbacknotify') as $attr) {
                 if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
                     $create[$attr] = $group[$attr];
@@ -251,8 +252,8 @@ class mahara_group_external extends external_api {
         return new external_multiple_structure(
                             new external_single_structure(
                                 array(
-                                        'id'       => new external_value(PARAM_INT, 'group id'),
-                                        'name'     => new external_value(PARAM_RAW, 'group name'),
+                                        'id'       => new external_value(PARAM_INT, get_string('groupid', WEBSERVICE_LANG)),
+                                        'name'     => new external_value(PARAM_RAW, get_string('groupname', WEBSERVICE_LANG)),
                                 )
                             )
                         );
@@ -270,10 +271,10 @@ class mahara_group_external extends external_api {
                             'groups' => new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                        'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                        'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                        'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
+                                                        'id'              => new external_value(PARAM_NUMBER, get_string('groupid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'name'            => new external_value(PARAM_RAW, get_string('groupname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'shortname'       => new external_value(PARAM_RAW, get_string('groupshortname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'institution'     => new external_value(PARAM_TEXT,get_string('institutionforctrlgroups', WEBSERVICE_LANG) , VALUE_OPTIONAL),
                                                 )
                                             )
                                         )
@@ -361,34 +362,35 @@ class mahara_group_external extends external_api {
                             new external_multiple_structure(
                                 new external_single_structure(
                                     array(
-                                            'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                            'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                            'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                            'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
-                                            'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
-                                            'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types), VALUE_OPTIONAL),
-                                            'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
-                                            'forcecategory'   => new external_value(PARAM_BOOL, 'Creates the group category if it does not already exist', VALUE_DEFAULT, '0'),
-                                            'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles), VALUE_OPTIONAL),
-                                            'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators', VALUE_DEFAULT),
-                                            'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave', VALUE_DEFAULT),
-                                            'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators', VALUE_DEFAULT),
-                                            'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group', VALUE_DEFAULT),
-                                            'public'          => new external_value(PARAM_BOOL, 'Public group', VALUE_DEFAULT),
-                                            'viewnotify'      => new external_value(PARAM_INT, 'Shared page notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
-                                            'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications allowed: ' . implode(', ', $group_notify_roles), VALUE_DEFAULT),
-                                            'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users', VALUE_DEFAULT),
-                                            'hidden'          => new external_value(PARAM_BOOL, 'Hide group', VALUE_DEFAULT),
-                                            'hidemembers'     => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
-                                            'hidemembersfrommembers' => new external_value(PARAM_INT, 'Hide membership', VALUE_DEFAULT),
-                                            'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report', VALUE_DEFAULT),
+                                            'id'              => new external_value(PARAM_NUMBER, get_string('groupid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                            'name'            => new external_value(PARAM_RAW, get_string('groupname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                            'shortname'       => new external_value(PARAM_RAW, get_string('groupshortname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                            'description'     => new external_value(PARAM_NOTAGS, get_string('groupdesc', WEBSERVICE_LANG)),
+                                            'institution'     => new external_value(PARAM_TEXT, get_string('institutionforctrlgroups', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                            'grouptype'       => new external_value(PARAM_ALPHANUMEXT,  get_string('grouptype', WEBSERVICE_LANG). implode(',', $group_types), VALUE_OPTIONAL),
+                                            'category'        => new external_value(PARAM_TEXT,  get_string('groupcategory', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                            'forcecategory'   => new external_value(PARAM_BOOL,  get_string('forcecategory', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
+                                            'editroles'       => new external_value(PARAM_ALPHANUMEXT,  get_string('groupcaneditroles', WEBSERVICE_LANG). implode(', ', $group_edit_roles), VALUE_OPTIONAL),
+                                            'open'            => new external_value(PARAM_BOOL,  get_string('grouptypeopen', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'controlled'      => new external_value(PARAM_BOOL, get_string('grouptypectrl', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'request'         => new external_value(PARAM_BOOL, get_string('grouptypereq', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'submitpages'     => new external_value(PARAM_BOOL, get_string('grouptypesubmitpage', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'public'          => new external_value(PARAM_BOOL, get_string('grouptypepublic', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'viewnotify'      => new external_value(PARAM_INT, get_string('viewnotify', WEBSERVICE_LANG) . implode(', ', $group_notify_roles), VALUE_DEFAULT),
+                                            'feedbacknotify'  => new external_value(PARAM_INT, get_string('feedbacknotify', WEBSERVICE_LANG) . implode(', ', $group_notify_roles), VALUE_DEFAULT),
+                                            'usersautoadded'  => new external_value(PARAM_BOOL, get_string('usersautoadded', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'hidden'          => new external_value(PARAM_BOOL, get_string('grouphidden', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'hidemembers'     => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'hidemembersfrommembers' => new external_value(PARAM_INT,get_string('hidemembership', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'groupparticipationreports' => new external_value(PARAM_BOOL, get_string('groupparticipationreports', WEBSERVICE_LANG), VALUE_DEFAULT),
+                                            'grouparchivereports' => new external_value(PARAM_BOOL, get_string('grouparchivereports', WEBSERVICE_LANG), VALUE_DEFAULT),
                                             'members'         => new external_multiple_structure(
                                                                     new external_single_structure(
                                                                         array(
-                                                                                'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
-                                                                                'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
-                                                                                'role'     => new external_value(PARAM_ALPHANUMEXT, 'member role: ' . implode(', ', self::$member_roles))
-                                                                        ), 'Group membership')
+                                                                                'id'       => new external_value(PARAM_NUMBER, get_string('memberuserid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
+                                                                                'username' => new external_value(PARAM_RAW, get_string('memberusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
+                                                                                'role'     => new external_value(PARAM_ALPHANUMEXT, get_string('memberrole', WEBSERVICE_LANG) . implode(', ', self::$member_roles))
+                                                                        ), get_string('groupmembership', WEBSERVICE_LANG))
                                                                     ),
                                                                 )
                                                             )
@@ -530,7 +532,7 @@ class mahara_group_external extends external_api {
             foreach (array('name', 'description', 'grouptype', 'category', 'editroles',
                            'open', 'controlled', 'request', 'submitpages', 'quota',
                            'hidemembers', 'invitefriends', 'suggestfriends',
-                           'hidden', 'hidemembersfrommembers', 'groupparticipationreports',
+                           'hidden', 'hidemembersfrommembers', 'groupparticipationreports', 'grouparchivereports',
                            'usersautoadded', 'public', 'viewnotify', 'feedbacknotify') as $attr) {
                 if (isset($group[$attr]) && $group[$attr] !== false && $group[$attr] !== null && strlen("" . $group[$attr])) {
                     $newvalues->{$attr} = $group[$attr];
@@ -570,13 +572,13 @@ class mahara_group_external extends external_api {
                     new external_multiple_structure (
                         new external_single_structure (
                             array(
-                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
-                                'description'     => new external_value(PARAM_NOTAGS, 'Group description'),
-                                'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category', VALUE_OPTIONAL),
-                                'forcecategory'   => new external_value(PARAM_BOOL, 'Creates the group category if it does not already exist', VALUE_DEFAULT, '0'),
+                                'id'              => new external_value(PARAM_NUMBER, get_string('groupid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                'name'            => new external_value(PARAM_RAW, get_string('groupname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                'shortname'       => new external_value(PARAM_RAW, get_string('groupshortname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                'institution'     => new external_value(PARAM_TEXT,get_string('institutionforctrlgroups', WEBSERVICE_LANG) , VALUE_OPTIONAL),
+                                'description'     => new external_value(PARAM_NOTAGS, get_string('groupdesc', WEBSERVICE_LANG)),
+                                'category'        => new external_value(PARAM_TEXT, get_string('groupcategory', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                'forcecategory'   => new external_value(PARAM_BOOL, get_string('forcegroupcategory', WEBSERVICE_LANG), VALUE_DEFAULT, '0'),
                             )
                         )
                     )
@@ -678,29 +680,31 @@ class mahara_group_external extends external_api {
     public static function update_group_members_parameters() {
 
         return new external_function_parameters(
-                    array(
-                            'groups' =>
-                                new external_multiple_structure(
-                                    new external_single_structure(
-                                        array(
-                                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                'name'            => new external_value(PARAM_RAW, 'Group name', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
-                                                'members'         => new external_multiple_structure(
-                                                                        new external_single_structure(
-                                                                            array(
-                                                                                    'id'       => new external_value(PARAM_NUMBER, 'member user Id', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
-                                                                                    'username' => new external_value(PARAM_RAW, 'member username', VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
-                                                                                    'role'     => new external_value(PARAM_ALPHANUMEXT, 'member role: admin, tutor, member', VALUE_OPTIONAL),
-                                                                                    'action'   => new external_value(PARAM_ALPHANUMEXT, 'member action: add, or remove')
-                                                                                ), 'Group membership actions')
-                                                                        ),
-                                                                    )
-                                                                )
-                                                            )
-                                                        )
-                                                    );
+            array(
+                'groups' =>
+                new external_multiple_structure(
+                    new external_single_structure(
+                        array(
+                            'id'              => new external_value(PARAM_NUMBER, get_string('groupid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'name'            => new external_value(PARAM_RAW, get_string('groupname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'shortname'       => new external_value(PARAM_RAW, get_string('groupshortname', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                            'institution'     => new external_value(PARAM_TEXT, get_string('institutionforctrlgroups', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                            'members'         => new external_multiple_structure(
+                                new external_single_structure(
+                                    array(
+                                        'id'       => new external_value(PARAM_NUMBER, get_string('memberuserid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
+                                        'username' => new external_value(PARAM_RAW, get_string('memberusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'memberid'),
+                                        'role'     => new external_value(PARAM_ALPHANUMEXT, get_string('memberroleexplicit', WEBSERVICE_LANG), VALUE_OPTIONAL),
+                                        'action'   => new external_value(PARAM_ALPHANUMEXT, get_string('memberactionexplicit', WEBSERVICE_LANG))
+                                    ),
+                                    get_string('groupmemberactions', WEBSERVICE_LANG)
+                                )
+                            ),
+                        )
+                    )
+                )
+            )
+        );
     }
 
     /**
@@ -840,9 +844,9 @@ class mahara_group_external extends external_api {
                             'groups' => new external_multiple_structure(
                                             new external_single_structure(
                                                 array(
-                                                        'id'              => new external_value(PARAM_NUMBER, 'ID of the group', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                        'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups', VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                                                        'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups', VALUE_OPTIONAL),
+                                                        'id'              => new external_value(PARAM_NUMBER,  get_string('groupid', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'shortname'       => new external_value(PARAM_RAW,  get_string('groupshortname', WEBSERVICE_LANG ), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
+                                                        'institution'     => new external_value(PARAM_TEXT,  get_string('institutionforctrlgroups', WEBSERVICE_LANG ), VALUE_OPTIONAL),
                                                     )
                                                 )
                                             )
@@ -933,6 +937,7 @@ class mahara_group_external extends external_api {
                         'hidemembers'    => $dbgroup->hidemembers,
                         'hidemembersfrommembers' => $dbgroup->hidemembersfrommembers,
                         'groupparticipationreports' => $dbgroup->groupparticipationreports,
+                        'grouparchivereports' => $dbgroup->grouparchivereports,
                         'members'        => $members,
             );
         }
@@ -955,33 +960,34 @@ class mahara_group_external extends external_api {
         return new external_multiple_structure(
                     new external_single_structure(
                         array(
-                                'id'              => new external_value(PARAM_NUMBER, 'ID of the group'),
-                                'name'            => new external_value(PARAM_RAW, 'Group name'),
-                                'shortname'       => new external_value(PARAM_RAW, 'Group shortname for API only controlled groups'),
-                                'description'     => new external_value(PARAM_RAW, 'Group description'),
-                                'institution'     => new external_value(PARAM_TEXT, 'Mahara institution - required for API controlled groups'),
-                                'grouptype'       => new external_value(PARAM_ALPHANUMEXT, 'Group type: ' . implode(',', $group_types)),
-                                'category'        => new external_value(PARAM_TEXT, 'Group category - the title of an existing group category'),
-                                'editroles'       => new external_value(PARAM_ALPHANUMEXT, 'Edit roles allowed: ' . implode(', ', $group_edit_roles)),
-                                'open'            => new external_value(PARAM_BOOL, 'Open - Users can join the group without approval from group administrators'),
-                                'controlled'      => new external_value(PARAM_BOOL, 'Controlled - Group administrators can add users to the group without their consent, and members cannot choose to leave'),
-                                'request'         => new external_value(PARAM_BOOL, 'Request - Users can send membership requests to group administrators'),
-                                'submitpages'     => new external_value(PARAM_BOOL, 'Submit pages - Members can submit pages to the group'),
-                                'public'          => new external_value(PARAM_BOOL, 'Public group'),
-                                'viewnotify'      => new external_value(PARAM_INT, 'Shared page notifications'),
-                                'feedbacknotify'  => new external_value(PARAM_INT, 'Comment notifications'),
-                                'usersautoadded'  => new external_value(PARAM_BOOL, 'Auto-adding users'),
-                                'hidden'          => new external_value(PARAM_BOOL, 'Hide group'),
-                                'hidemembers'     => new external_value(PARAM_INT, 'Hide membership'),
-                                'hidemembersfrommembers' => new external_value(PARAM_INT, 'Hide membership'),
-                                'groupparticipationreports' => new external_value(PARAM_BOOL, 'Participation report'),
+                                'id'              => new external_value(PARAM_NUMBER,  get_string('groupid', WEBSERVICE_LANG)),
+                                'name'            => new external_value(PARAM_RAW,  get_string('groupname', WEBSERVICE_LANG)),
+                                'shortname'       => new external_value(PARAM_RAW,  get_string('groupshortname', WEBSERVICE_LANG)),
+                                'description'     => new external_value(PARAM_RAW,  get_string('groupdesc', WEBSERVICE_LANG)),
+                                'institution'     => new external_value(PARAM_TEXT,  get_string('institutionforctrlgroups', WEBSERVICE_LANG)),
+                                'grouptype'       => new external_value(PARAM_ALPHANUMEXT,  get_string('grouptype', WEBSERVICE_LANG) . implode(',', $group_types)),
+                                'category'        => new external_value(PARAM_TEXT,  get_string('groupcategory', WEBSERVICE_LANG)),
+                                'editroles'       => new external_value(PARAM_ALPHANUMEXT,  get_string('groupcaneditroles', WEBSERVICE_LANG) . implode(', ', $group_edit_roles)),
+                                'open'            => new external_value(PARAM_BOOL,  get_string('grouptypeopen', WEBSERVICE_LANG)),
+                                'controlled'      => new external_value(PARAM_BOOL,  get_string('grouptypectrl', WEBSERVICE_LANG)),
+                                'request'         => new external_value(PARAM_BOOL,  get_string('grouptypereq', WEBSERVICE_LANG)),
+                                'submitpages'     => new external_value(PARAM_BOOL,  get_string('grouptypesubmitpage', WEBSERVICE_LANG)),
+                                'public'          => new external_value(PARAM_BOOL,  get_string('grouptypepublic', WEBSERVICE_LANG)),
+                                'viewnotify'      => new external_value(PARAM_INT, get_string('viewnotify', WEBSERVICE_LANG). implode('. ', $notifyroles)),
+                                'feedbacknotify'  => new external_value(PARAM_INT, get_string('feedbacknotifyexplicit', WEBSERVICE_LANG)),
+                                'usersautoadded'  => new external_value(PARAM_BOOL, get_string('usersautoadded', WEBSERVICE_LANG)),
+                                'hidden'          => new external_value(PARAM_BOOL, get_string('grouphidden', WEBSERVICE_LANG)),
+                                'hidemembers'     => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG)),
+                                'hidemembersfrommembers' => new external_value(PARAM_INT, get_string('hidemembership', WEBSERVICE_LANG)),
+                                'groupparticipationreports' => new external_value(PARAM_BOOL, get_string('groupparticipationreports', WEBSERVICE_LANG)),
+                                'grouparchivereports' => new external_value(PARAM_BOOL, get_string('grouparchivereports', WEBSERVICE_LANG), VALUE_DEFAULT),
                                 'members'         => new external_multiple_structure(
                                                         new external_single_structure(
                                                             array(
-                                                                    'id' => new external_value(PARAM_NUMBER, 'member user Id'),
-                                                                    'username' => new external_value(PARAM_RAW, 'member username'),
-                                                                    'role' => new external_value(PARAM_ALPHANUMEXT, 'member role: admin, ')
-                                                                    ), 'Group membership')
+                                                                    'id' => new external_value(PARAM_NUMBER, get_string('memberuserid', WEBSERVICE_LANG)),
+                                                                    'username' => new external_value(PARAM_RAW, get_string('memberusername', WEBSERVICE_LANG)),
+                                                                    'role' => new external_value(PARAM_ALPHANUMEXT, get_string('memberroleonlyadmin', WEBSERVICE_LANG))
+                                                                    ), get_string('groupmembership', WEBSERVICE_LANG))
                                                                 ),
                                                             )
                                                         )

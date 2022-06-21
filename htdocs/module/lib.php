@@ -1,5 +1,7 @@
 <?php
 /**
+ * The Plugin class for custom plugins
+ *
  * @package    mahara
  * @subpackage module
  * @author     Catalyst IT Ltd
@@ -10,11 +12,17 @@
 defined('INTERNAL') || die();
 
 /**
+ * Provides the module plugin class for custom plugins
+ *
  * The "Module" plugin type is a generic plugin type for plugins that don't fit into
  * any of the other plugin types. It allows for encapsulation, as well as access to the
  * standard plugin APIs.
  */
 abstract class PluginModule extends Plugin {
+
+    /**
+     * {@inheritDoc}
+     **/
     public static function get_plugintype_name() {
         return 'module';
     }
@@ -96,6 +104,8 @@ abstract class PluginModule extends Plugin {
      * Each item should be a stdClass() object containing -
      * - title language pack key
      * - url relative to wwwroot
+     * @param   int $groupid    The id of the group in the group table
+     * @param   string  $role   The group membership role of the logged in user
      * @return array
      */
     public static function group_tabs($groupid, $role) {

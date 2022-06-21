@@ -70,8 +70,8 @@ EOD;
     */
     public function reset() {
         $this->usercounter = 0;
-        $this->$groupcount = 0;
-        $this->$institutioncount = 0;
+        $this->groupcount = 0;
+        $this->institutioncount = 0;
         self::$viewcolcounts = array();
 
         foreach ($this->generators as $generator) {
@@ -83,7 +83,7 @@ EOD;
      * Return generator for given plugin.
      * @param string $plugintype the plugin type, e.g. 'artefact' or 'blocktype'.
      * @param string $pluginname the plugin name, e.g. 'blog' or 'file'.
-     * @return an instance of a plugin generator extending from CoreGenerator.
+     * @return array an instance of a plugin generator extending from CoreGenerator.
      */
     public function get_plugin_generator($plugintype, $pluginname) {
         $pluginfullname = "{$plugintype}.{$pluginname}";
@@ -95,7 +95,7 @@ EOD;
         $classname =  generate_generator_class_name($plugintype, $pluginname);
 
         if (!class_exists($classname)) {
-            throw new UndefinedException("The plugin $pluginfullname does not support " .
+            throw new SystemException("The plugin $pluginfullname does not support " .
                             "data generators yet. Class {$classname} not found.");
         }
 
@@ -333,10 +333,10 @@ EOD;
         $record['email']     = sanitize_email($record['email']);
 
         $authobj = AuthFactory::create($auth->id);
-        if (method_exists($authobj, 'is_username_valid_admin') && !$authobj->is_username_valid_admin($record['username'])) {
+        if (method_exists($authobj, 'is_username_valid_admin') && !AuthInternal::is_username_valid_admin($record['username'])) {
             throw new SystemException("New username'" . $record['username'] . "' is not valid.");
         }
-        if (method_exists($authobj, 'is_username_valid') && !$authobj->is_username_valid($record['username'])) {
+        if (method_exists($authobj, 'is_username_valid') && !AuthInternal::is_username_valid($record['username'])) {
             throw new SystemException("New username'" . $record['username'] . "' is not valid.");
         }
         if (record_exists_select('usr', 'LOWER(username) = ?', array(strtolower($record['username'])))) {
@@ -420,6 +420,9 @@ EOD;
             else if ($record['role'] == 'staff') {
                 set_field('usr_institution', 'staff', 1, 'usr', $user->id, 'institution', $record['institution']);
             }
+            else if ($record['role'] == 'supportadmin') {
+                set_field('usr_institution', 'supportadmin', 1, 'usr', $user->id, 'institution', $record['institution']);
+            }
         }
 
         db_commit();
@@ -430,16 +433,14 @@ EOD;
     /**
      * Create a test group
      * @param array $record
-     * @throws ErrorException if creating failed
+     * @throws SystemException if creating failed
      * @return int new group id
      */
     public function create_group($record) {
         // Data validation
         $record['name'] = trim($record['name']);
         if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower($record['name'])))) {
-            if (count($ids) > 1 || $ids[0]->id != $group_data->id) {
                 throw new SystemException("Invalid group name '" . $record['name'] . "'. " . get_string('groupalreadyexists', 'group'));
-            }
         }
         $record['owner'] = trim($record['owner']);
         $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['owner'])));
@@ -532,6 +533,7 @@ EOD;
                 'hidemembers'    => 0,
                 'hidemembersfrommembers' => 0,
                 'groupparticipationreports' => 0,
+                'grouparchivereports' => 0,
                 'urlid'          => null,
                 'editwindowstart' => isset($record['editwindowstart']) ? $record['editwindowstart'] : null,
                 'editwindowend'  => isset($record['editwindowend']) ? $record['editwindowend'] : null,
@@ -633,7 +635,7 @@ EOD;
         $newinstitution->expiry = !empty($record['expiry']) ? db_format_timestamp($record['expiry']) : null;
 
         $newinstitution->allowinstitutionpublicviews  = (isset($record['allowinstitutionpublicviews']) && $record['allowinstitutionpublicviews']) ? 1 : 0;
-
+        $newinstitution->progresscompletion =  (isset($record['progresscompletion']) && $record['progresscompletion']) ? 1 : 0;
         // Save the changes to the DB
         $newinstitution->commit();
 
@@ -683,6 +685,7 @@ EOD;
         }
 
         db_commit();
+        return $newinstitution->id;
     }
 
     /**
@@ -743,6 +746,7 @@ EOD;
 
         require_once('view.php');
         $view = View::create($record, $userid);
+        return $view->get('id');
     }
 
     /**
@@ -757,11 +761,16 @@ EOD;
 
         if (preg_match('/^Dashboard page\:/', $record['page'])) {
             list($record['page'], $ownername) = explode(":", $record['page']);
-            $ownerid = get_field('usr', 'id', 'username', $ownername);
-            $sql = "SELECT id FROM {view} WHERE type = 'dashboard' AND LOWER(TRIM(title)) = ? AND \"owner\" = ?";
-            $page = strtolower(trim($record['page']));
+            $ownerid = get_field('usr', 'id', 'username', trim($ownername));
+            $sql = "SELECT id FROM {view} WHERE type = 'dashboard' AND \"owner\" = ?";
+            if (!$viewid = get_field_sql($sql, array($ownerid))) {
+                $duser = new User();
+                $duser->find_by_id($ownerid);
+                $dview = $duser->install_view('dashboard');
+                $viewid = $dview->get('id');
+            }
             $view = trim($record['page']);
-            $viewid = $this->get_view_id_by_owner($view, $ownerid);
+            $page = strtolower(trim($record['page']));
         }
         else {
             $sql = "SELECT id FROM {view} WHERE LOWER(TRIM(title)) = ?";
@@ -776,7 +785,7 @@ EOD;
         }
 
         if ($ownerid != null) {
-            $ids = get_records_sql_array($sql, array($page,$ownerid));
+            $ids = get_records_sql_array($sql, array($ownerid));
         }
         else {
             $ids = get_records_sql_array($sql, array($page));
@@ -822,18 +831,30 @@ EOD;
             $result = call_static_method($classname, $functionname, $sortedfields, $ownertype, $ownerid, $title, $view);
             $configdata = array_merge($configdata, (array)$result);
 
-            // make new block
-            $blockinstance = self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
-            //taggedposts blocktype - block instance needs to pre-exist
-            if ($functionname == 'generate_configdata_taggedposts') {
-                PluginBlocktypeTaggedposts::instance_config_save($configdata, $blockinstance);
+            if (isset($record['updateonly']) && $record['updateonly']) {
+                // If we only want to update an existing block
+                $blockid = get_field('block_instance', 'id', 'blocktype', $blocktype, 'view', $viewid);
+                safe_require('blocktype', $blocktype);
+                $blockinstance = new BlockInstance($blockid);
+                $blockinstance->set('configdata', $configdata);
+                $blockinstance->commit();
+                self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
             }
-            // setting tags to blocks
-            self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
+            else {
+                // make new block
+                $blockinstance = self::create_new_block_instance($blocktype, $view, $viewid, $title, self::$viewcolcounts, $configdata, $maxcols);
+                //taggedposts blocktype - block instance needs to pre-exist
+                if ($functionname == 'generate_configdata_taggedposts') {
+                    PluginBlocktypeTaggedposts::instance_config_save($configdata, $blockinstance);
+                }
+                // setting tags to blocks
+                self::set_block_tags($view, $blockinstance, $ownertype, $ownerid, $configdata);
+            }
         }
         else {
             throw new SystemException("The blocktype {$record['type']} is not supported yet.");
         }
+        return $blockinstance->get('id');
     }
 
     /**
@@ -937,6 +958,26 @@ EOD;
     }
 
     /**
+     *
+     * generate configdata for blocktype: newviews aka latest portfolios I can view
+     *
+     * @param array $sortedfields holding each chunk of data between the ; in the behat data column
+     * @return array $configdata of key and values for db table
+     */
+    public static function generate_configdata_newviews($sortedfields) {
+        $configdata = array();
+        foreach($sortedfields as $key => $value) {
+            if ($key == 'limit') {
+                $configdata[$key] = (int)$value;
+            }
+            else {
+                $configdata[$key] = (bool)$value;
+            }
+        }
+        return $configdata;
+    }
+
+    /**
      * generate configdata for blocktype: blog aka journal
      * displaying the blogs that were created using the function create_blog
      * given a matching blog title
@@ -975,8 +1016,8 @@ EOD;
     public static function generate_configdata_blogpost($sortedfields) {
 
         $configdata = array();
-        $blogpostid;
-        $blogid;
+        $blogpostid = null;
+        $blogid = null;
 
         foreach($sortedfields as $key => $value) {
             if ($key == 'journaltitle') {
@@ -1062,6 +1103,7 @@ EOD;
                 }
             }
         }
+        return $configdata;
     }
 
     /**
@@ -1189,7 +1231,7 @@ EOD;
                     $configdata['artefactids'][] = self::process_attachment($file, $ownertype, $ownerid);
                 }
             }
-            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle' || $key == 'photoframe' ) {
+            if ($key == 'imagesel' || $key == 'width' || $key == 'showdesc' || $key == 'imagestyle') {
 
                 //imageselection options are 0,1,2 in the table
                 if ($key == 'imagesel') {
@@ -1289,7 +1331,6 @@ EOD;
      * @return array $configdata of key and values of db table
      */
     public static function generate_configdata_internalmedia($sortedfields, $ownertype, $ownerid) {
-        $mediatype;
         $configdata = array();
         foreach ($sortedfields as $key => $value) {
             if ($key == 'attachment') {
@@ -1328,7 +1369,7 @@ EOD;
     public static function generate_configdata_navigation($sortedfields, $ownertype, $ownerid, $title, $view) {
         $configdata = array();
         $copytoall = true;
-        $collectionid;
+        $collectionid = null;
 
         foreach ($sortedfields as $key => $value) {
             if ($key == 'collection') {
@@ -1557,16 +1598,18 @@ EOD;
      * @return array $configdata of key and values for db table
      */
     public static function generate_configdata_resumefield($sortedfields, $ownertype, $ownerid) {
+        $configdata = array();
         foreach ($sortedfields as $key => $value) {
             if ($key == 'artefacttype') {
                 if (!$artefactid = get_field('artefact', 'id', 'owner', $ownerid, 'artefacttype', $value)) {
                     throw new SystemException('The user ' . self::get_user_username($ownerid) . ' does not have a ' . $value);
                 }
                 else {
-                  return array('artefactid' => $artefactid);
+                  $configdata = array('artefactid' => $artefactid);
                 }
             }
         }
+        return $configdata;
     }
 
     /**
@@ -1588,12 +1631,13 @@ EOD;
                     $newprofile->set('title', $media);
                     $newprofile->set('description', $media);
                     $newprofile->set('note', $media);
-                    $id = $newprofile->commit(); //update the contents of the artefact table only
+                    $newprofile->commit(); //update the contents of the artefact table only
                     $artefactid[] = $newprofile->get('id');
                 }
                 return $configdata = array('artefactids' => $artefactid);
             }
         }
+        return array();
     }
 
     /**
@@ -1665,6 +1709,7 @@ EOD;
         $copynote = false;
         $existingtextboxfound = false;
         $htmlartefactid = null;
+        $values = array();
 
         foreach ($sortedfields as $key => $value) {
             if ($key == 'notetitle') {
@@ -1967,6 +2012,9 @@ EOD;
      * @return int new collection id
      */
     public function create_collection($record) {
+        $groupid = null;
+        $institutionid = null;
+
         // Validation
         $sqljoin = $sqlwhere = null;
         switch ($record['ownertype']) {
@@ -2043,7 +2091,14 @@ EOD;
         }
         $data->navigation = 1;
         $data->submittedstatus = 0;
-        $data->progresscompletion = 0;
+        $data->progresscompletion = isset($record['progresscompletion']) && $record['progresscompletion'] ? 1 : 0;
+
+        $institution = null;
+        if ($data->progresscompletion && $record['ownertype'] === 'group') {
+            $institution = get_field('group', 'institution', 'id', $groupid);
+            $institution = new Institution($institution);
+            $data->progresscompletion = $institution->progresscompletion ? 1 : 0;
+        }
         $data->autocopytemplate = 0;
         $data->template = 0;
         $data->lock = !empty($record['lock']) ? 1 : 0;
@@ -2054,8 +2109,11 @@ EOD;
         if (!empty($addviews)) {
             $collection->add_views($addviews);
         }
+        if ($data->progresscompletion) {
+            $collection->add_progresscompletion_view();
+        }
+        return $collection->get('id');
     }
-
 
     /**
      * A fixture to set up journals in bulk.
@@ -2066,7 +2124,9 @@ EOD;
      * | owner   | ownertype | title      | description           | tags      |
      * | userA   | user      | Blog One   | This is my new blog   | cats,dogs |
      * | Group B | group     | Group Blog | This is my group blog |           |
-     * @param unknown $record
+     *
+     * @param  mixed $record
+     * @return void
      * @throws SystemException
      */
     public function create_blog($record) {
@@ -2083,7 +2143,7 @@ EOD;
             }
         }
         else {
-            throw new systemException("The " . $record['title'] . " cannot be empty");
+            throw new SystemException("The " . $record['title'] . " cannot be empty");
         }
         safe_require('artefact', 'blog');
         if (!empty($record['tags'])) {
@@ -2227,11 +2287,11 @@ EOD;
         $record['topic'] = trim($record['topic']);
         $record['user'] = trim($record['user']);
 
-        $groupid;
-        $forumid;
-        $topicid;
-        $postid;
-        $userid;
+        $groupid = null;
+        $forumid = null;
+        $topicid = null;
+        $postid = null;
+        $userid = null;
         $parentpostid = null;
         $newtopic = false;
         $newsubject = false;
@@ -2428,6 +2488,34 @@ EOD;
 
       $activity =  new ActivityTypeMaharamessage($data, false);
       $activity->notify_users();
+    }
+
+    public function create_page_comment($record) {
+        $data = new stdClass();
+        $onview = $this->get_view_id($record['page']);
+        if (!$viewrecord = get_record('view', 'id', $onview)) {
+            throw new ViewNotFoundException(get_string('viewnotfound', 'error', $onview));
+        }
+        $data->onview = $onview;
+        require_once('view.php');
+        $view = new View($onview);
+        $ownerid = $view->get('owner');
+        $data->owner = $ownerid;
+        $data->author = $this->get_user_id($record['user']);
+        $data->private = !empty($record['private']) ? 1 : 0;
+        if (!empty($record['group'])) {
+            $group_id = get_field('group', 'id', 'name', $record['group']);
+            $data->group = $group_id ? $group_id : null;
+        }
+        $data->title = 'Comment';
+
+        $comment = new ArtefactTypeComment(0, $data);
+        $comment->commit();
+        $newdescription = EmbeddedImage::prepare_embedded_images($record['comment'], 'comment', $comment->get('id'), null , $ownerid);
+        $updatedcomment = new stdClass();
+        $updatedcomment->id = $comment->get('id');
+        $updatedcomment->description = $newdescription;
+        update_record('artefact', $updatedcomment, 'id');
     }
 
     /**
@@ -2671,10 +2759,10 @@ EOD;
         foreach ($itemdata as $artefacttype => $title) {
             $classname = generate_artefact_class_name($artefacttype);
             $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
-            $artefact = new $classname(0, array(
-              'owner' => $userid,
-              'title' => $title,
-            ));
+            $data = new stdClass();
+            $data->owner = $userid;
+            $data->title = $title;
+            $artefact = new $classname(0, $data);
             $artefact->commit();
         }
     }
@@ -2731,10 +2819,10 @@ EOD;
              $itemdata['artefact'] =  $artefact->get('id');
          }
          else {
-           $artefact = new ArtefactTypeEducationhistory();
-           $artefact->set('owner', $this->get_user_id($record['user']));
-           $artefact->commit();
-           $itemdata['artefact'] = $artefact->get('id');
+             $artefact = new ArtefactTypeEducationhistory();
+             $artefact->set('owner', $userid);
+             $artefact->commit();
+             $itemdata['artefact'] = $artefact->get('id');
          }
 
          $formelements = ArtefactTypeEducationhistory::get_addform_elements();
@@ -2743,8 +2831,10 @@ EOD;
                   $itemdata[$element] = $record[$element];
              }
          }
-         //default to prevent db error
-         $itemdata['displayorder'] = 1;
+         $display = get_field_sql("SELECT CASE WHEN MAX(displayorder) IS NULL THEN 1 ELSE MAX(displayorder) +1 END AS display
+                                   FROM {artefact_resume_educationhistory} WHERE artefact = ?", array($artefact->get('id')));
+
+         $itemdata['displayorder'] = $display;
          $table = 'artefact_resume_educationhistory';
          $itemid = insert_record($table, (object)$itemdata, 'id', true);
      }
@@ -2770,7 +2860,7 @@ EOD;
          }
          else {
            $artefact = new ArtefactTypeEmploymenthistory();
-           $artefact->set('owner', $this->get_user_id($record['user']));
+           $artefact->set('owner', $userid);
            $artefact->commit();
            $itemdata['artefact'] = $artefact->get('id');
          }
@@ -2781,8 +2871,9 @@ EOD;
                   $itemdata[$element] = $record[$element];
              }
          }
-         //default to prevent db error
-         $itemdata['displayorder'] = 1;
+         $display = get_field_sql("SELECT CASE WHEN MAX(displayorder) IS NULL THEN 1 ELSE MAX(displayorder) +1 END AS display
+                                   FROM {artefact_resume_employmenthistory} WHERE artefact = ?", array($artefact->get('id')));
+         $itemdata['displayorder'] = $display;
          $table = 'artefact_resume_employmenthistory';
          $itemid = insert_record($table, (object)$itemdata, 'id', true);
 
@@ -2986,7 +3077,7 @@ EOD;
         }
         else {
             //pick any plan artefact owned by the given user
-            $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $ownertype . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
+            $planid = get_field_sql("SELECT id FROM {artefact} WHERE artefacttype = ? AND " . $record['ownertype'] . " = ? ORDER BY id LIMIT 1", array('plan', $owner));
             if (!$planid) {
                 throw new SystemException("The " . $record['ownertype'] . " " . $record['owner'] . " does not have a plan to add task to. Please create plan first");
             }
@@ -3016,8 +3107,8 @@ EOD;
      *
      * @param array $record an array representation of a row of the testing table
      * @param string $owner null variable passed in by reference for owner
-     * @param string $owner null variable passed in by reference for ownertype
-     * @return return type
+     * @param string $ownertype null variable passed in by reference for ownertype
+     * @return void (pass by reference) updates $ownertype and $owner
      */
     public function set_owner($record, &$owner, &$ownertype = null) {
       $ownertype = null;

@@ -83,8 +83,7 @@ if (!empty($configdata['showsharedcollections'])) {
         'id'         => 'sharedcollections_pagination',
         'datatable'  => 'sharedcollectionlist',
         'jsonscript' => 'blocktype/groupviews/sharedcollections.json.php',
-        'resultcounttextsingular' => get_string('collection', 'collection'),
-        'resultcounttextplural'   => get_string('collections', 'collection'),
+        'resultcounttext' => get_string('ncollections', 'collection', $sharedcollections['count']),
     );
     PluginBlocktypeGroupViews::render_items($sharedcollections, 'blocktype:groupviews:sharedviews.tpl', $configdata, $pagination);
 }

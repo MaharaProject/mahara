@@ -47,3 +47,43 @@ $string['removefriendrequest'] = 'Delete a contact request';
 $string['removefriend'] = 'Remove a contact';
 $string['addfriendrequest'] = 'Send a contact request';
 $string['friendshare'] = 'Contacts';
+$string['verifieroptions_current'] = 'Show authors with current verifiers';
+$string['verifieroptions_none'] = 'Show authors without a current verifier';
+$string['reportportfolioswithverifiers'] = 'Portfolios with verifiers';
+$string['reportcompletionverification'] = 'Completion and verification';
+$string['reportdesccompletionverification'] = '<ul>
+<li>Personal information of the portfolio author</li>
+<li>Email address of portfolio author</li>
+<li>APC start date</li>
+<li>Portfolio title</li>
+<li>Portfolio creation date</li>
+<li>Template title with link to it</li>
+<li>Personal information of the verifier</li>
+<li>Email address of the verifier</li>
+<li>Date on which the verifier received access to the portfolio</li>
+<li>Date on which the verifier confirmed the primary statement on the portfolio</li>
+<li>Date on which the verifier removed their access to the portfolio</li>
+<li>Date when the verifier\'s access to the portfolio was removed by the system</li>
+<li>The Percentage of completions per portfolio per individual</li>
+</ul>';
+$string['reportdescportfolioswithverifiers'] = '<ul>
+<li>Date of the week commencing for time period</li>
+<li>Total number of portfolios with verifiers</li>
+<li>Total number of portfolios without verifiers</li>
+</ul>';
+$string['withverifier'] = 'With verifiers';
+$string['withoutverifier'] = 'Without verifiers';
+$string['currentverifiersinfo'] = 'Current verifiers';
+$string['reportverifiersummary'] = 'Verifier summary';
+$string['userscompletionverificationreports'] = 'Completion and verification';
+$string['usersportfolioswithverifiersreports'] = 'Portfolios with verifiers';
+$string['accessrevokedbyaccessordate'] = 'Access revoked by verifier';
+$string['portfolioveriferfilterdescription'] = 'Filter the results based on whether they have a verifier assigned or not';
+$string['verifierfirstname'] = 'Verifier first name';
+$string['verifierlastname'] = 'Verifier last name';
+$string['verifierdisplayname'] = 'Verifier display name ';
+$string['verifierusername'] = 'Verifier username';
+$string['verifierregistrationnumber'] = 'Verifier registration number';
+$string['verifieremail'] = 'Verifier email';
+$string['dateverified'] = 'Verifier confirmed primary statement';
+$string['portfolioverifierfilter'] = 'Verifier assigned';

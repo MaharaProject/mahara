@@ -74,8 +74,7 @@ else {
         'id'         => 'allsubmitted_pagination',
         'datatable'  => 'allsubmissionlist',
         'jsonscript' => 'blocktype/groupviews/allsubmissions.json.php',
-        'resultcounttextsingular' => get_string('vieworcollection', 'view'),
-        'resultcounttextplural'   => get_string('viewsandcollections', 'view'),
+        'resultcounttext' => get_string('nviewsandcollections', 'view', $allsubmitted['count']),
     );
     PluginBlocktypeGroupViews::render_items($allsubmitted, 'blocktype:groupviews:allsubmissions.tpl', $configdata, $pagination);
 }

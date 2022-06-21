@@ -14,10 +14,10 @@
 // initialise previous and next buttons
 function collection_nav_init(preview=false) {
     var currentIndex = $('#currentindex').data('currentindex');
-    var indexLength = $('.custom-dropdown > ul').children().length;
+    var indexLength = $('.custom-dropdown .dropdown-menu > li').children().length;
 
     function findLink(target) {
-        $('.custom-dropdown > ul').children().each(function() {
+        $('.dropdown-menu').children().each(function() {
             var elem = $($(this).children()[0]);
             if (elem.data('index') === target && elem.data('location')) {
                 if (preview) {
@@ -49,7 +49,7 @@ function collection_nav_init(preview=false) {
     }
 
     // setup next
-    if (currentIndex !== (indexLength - 1)) {
+    if ((currentIndex + 1) < indexLength) {
         $('.nextpage').removeClass('disabled');
         $('.nextpage').off("click");
         $('.nextpage').on("click", function() {

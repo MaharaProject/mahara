@@ -51,8 +51,6 @@ Feature: Mahara users submit pages / colelctions to a group
     Then I should see "Collection submitted"
     And I follow "Collection UserA_01"
     And I click on "Details"
-    And I should see "Add comment" in the "Block header" property
-    And I should see "Details" in the "Block header" property
     And I should not see "Quick edit"
     And I log out
 
@@ -72,4 +70,4 @@ Feature: Mahara users submit pages / colelctions to a group
     And I choose "Groups" in "Engage" from main menu
     When I click on "GroupA"
     And I scroll to the base of id "groupviewlist"
-    Then I should see "Cecilia User" in the "Members without a submission to the group" property
+    Then I should see "Cecilia User" in the "Members without a submission to the group" "Groups" property

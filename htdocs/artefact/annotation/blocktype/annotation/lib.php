@@ -135,7 +135,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             $text = $artefact->get('description');
             require_once(get_config('docroot') . 'lib/view.php');
             $view = new View($viewid);
-            list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing, $versioning);
+            list($feedbackcount, $annotationfeedback) = ArtefactTypeAnnotationfeedback::get_annotation_feedback_for_view($artefact, $view, $instance->get('id'), true, $editing);
             $smarty->assign('annotationfeedback', $annotationfeedback);
         }
         if ($versioning) {
@@ -149,8 +149,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $html;
     }
 
-    public static function has_instance_config() {
-        return true;
+    /**
+     * Once created annotations should not be editable.
+     *
+     * @param BlockInstance $instance
+     *   With this being a static we need to pass this in.
+     *
+     * @return boolean
+     *   Return true/false based on if this is a new block.
+     */
+    public static function has_instance_config(BlockInstance $instance) {
+        return $instance->is_new();
     }
 
     public static function instance_config_form(BlockInstance $instance) {
@@ -252,7 +261,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
             $standards = $framework->standards();
             $evidence = $framework->get_evidence($collection->get('id'), $instance->get('id'));
             $selectoptions = array();
-            $selectdesciptions = array();
+            $selectdescriptions = array();
             foreach ($standards['standards'] as $standard) {
                 if (isset($standard->options)) {
                     $selectoptions[$standard->id] = array(
@@ -406,10 +415,17 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function default_copy_type() {
-        return 'fullinclself';
+    public static function default_copy_type(BlockInstance $instance, View $view) {
+        if ($instance->get_view()->get('owner') == $view->get('owner')) {
+            return 'fullinclself';
+        }
+        return 'nocopy';
     }
 
+    /**
+     * To stop original annotation getting copies of the feedback
+     * when we copy a page
+     */
     public static function ignore_copy_artefacttypes() {
         return array('annotationfeedback');
     }
@@ -442,7 +458,8 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
 
     public static function postinst($fromversion) {
         if ($fromversion == 0) {
-            set_field('blocktype_installed', 'active', 0, 'artefactplugin', 'annotation');
+            return set_field('blocktype_installed', 'active', 0, 'artefactplugin', 'annotation');
         }
+        return true;
     }
 }

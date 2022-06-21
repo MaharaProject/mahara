@@ -1,0 +1,20 @@
+{
+  "name": "submissions",
+  "description": "The Submissions Mahara PlugIn.",
+  "type": "PlugIn",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Alexander Del Ponte",
+      "email": "delponte@uni-bremen.de",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"Submissions\\": "src/"},
+    "exclude-from-classmap": [
+    ]
+  },
+  "require": {
+  }
+}

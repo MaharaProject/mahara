@@ -20,6 +20,7 @@ safe_require('artefact', 'comment');
 $viewid = param_integer('viewid');
 $blockid = param_variable('blockid', null);
 $artefactid = param_integer('artefactid', null);
+$showcomment = param_integer('showcomment', null);
 
 if (!can_view_view($viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
@@ -29,7 +30,10 @@ if ($artefactid && !artefact_in_view($artefactid, $viewid)) {
 }
 
 $html = '';
+$title = '';
 $quickedit = 0;
+$artefact = null;
+$block = null;
 if ($blockid) {
     $block = new BlockInstance($blockid);
     if ((int)$block->get('view') !== $viewid) {
@@ -59,6 +63,7 @@ if ($quickedit) {
 }
 else {
     // Render the artefact
+    $rendered = array();
     $options = array(
         'viewid' => $viewid,
         'details' => true,
@@ -88,6 +93,7 @@ else {
         $commentoptions = ArtefactTypeComment::get_comment_options();
         $commentoptions->view = $view;
         $commentoptions->artefact = $artefact;
+        $commentoptions->showcomment = $showcomment;
         if ($blockid) {
             $commentoptions->blockid = $blockid;
         }

@@ -117,8 +117,9 @@ class PluginArtefactInternal extends PluginArtefact {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-            set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
+            return set_config_plugin('artefact', 'internal', 'allowcomments', 'notes');
         }
+        return true;
     }
 
     public static function right_nav_menu_items() {
@@ -433,23 +434,38 @@ class PluginArtefactInternal extends PluginArtefact {
 class ArtefactTypeProfile extends ArtefactType {
 
     /**
+     * Profile artefact constructor
+     *
      * overriding this because profile fields
      * are unique in that except for email, you only get ONE
      * so if we don't get an id, we still need to go look for it.
      * On the other hand, if our caller knows the artefact is new,
-     * we can skip the query.
+     * we can skip the query
+     *
+     * @param  integer $id
+     * @param  Object|array $data
+     *  On importing a leap2a: Array
+     *  On updating profile fields: Object
+     * @param  boolean $new
+     * @return void
      */
     public function __construct($id=0, $data=null, $new = FALSE) {
         $type = $this->get_artefact_type();
         if (!empty($id) || $type == 'email' || $type == 'socialprofile') {
-            return parent::__construct($id, $data);
+            parent::__construct($id, $data);
+            return;
         }
-        if (!empty($data['owner'])) {
-            if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data['owner'])) {
-                return parent::__construct($a->id, $a);
+
+        if (!empty($data) && !is_object($data) && is_array($data)) {
+            $data = (object)$data;
+        }
+        if (!empty($data->owner)) {
+            if (!$new && $a = get_record('artefact', 'artefacttype', $type, 'owner', $data->owner)) {
+                parent::__construct($a->id, $a);
+                return;
             }
             else {
-                $this->owner = $data['owner'];
+                $this->owner = $data->owner;
             }
         }
         $this->ctime = time();
@@ -477,7 +493,7 @@ class ArtefactTypeProfile extends ArtefactType {
     }
 
     public static function get_icon($options=null) {
-
+        return false;
     }
 
     public static function is_singular() {
@@ -1170,7 +1186,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
      * Get an array of all the social profiles input for this user.
      * @return array of social profiles.
      */
-    public function get_social_profiles() {
+    public static function get_social_profiles() {
         global $USER;
 
         $sql = 'SELECT * FROM {artefact}
@@ -1202,6 +1218,9 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         switch ($type) {
             case 'facebook':
                 $link = 'https://www.facebook.com/' . hsc($data);
+                break;
+            case 'tumblr':
+                $link = 'https://' . hsc($data) . '.tumblr.com';
                 break;
             case 'twitter':
                 // Strip an "@" sign if they put one on.
@@ -1243,39 +1262,62 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
     }
 
     /**
-     * Add favicon of different messaging systems or
-     * social sites, contained in the input data.
+     * Add favicon of different messaging systems or social sites, contained in
+     * the input data in a number of formats.
+     *
+     * The returned array is of the form [
+     * 'note'      => string // originally passed into function.
+     * 'title'     => string // originally passed into function.
+     * 'icon'      => string // the URL of the icon.
+     * 'link'      => string // URL or application call.
+     * 'faicon'    => string // HTML span with the font awesome class.
+     * 'icon_class => string // Font Awesome class as a string.
+     * ]
      * @param array $data with details of the social profile.
-     * $data[]->note - the type of social profile (i.e. icq, aim, etc).
-     * $data[]->title - display name of the social profile.
-     * $data[]->icon - the URL of the icon. Will be populated by this function.
+     * [
+     *   $data[]->note - the type of social profile (i.e. icq, aim, etc).
+     *   $data[]->title - display name of the social profile.
+     *   $data[]->icon - the URL of the icon. Will be populated by this function.
+     * ]
      * @return array of icon details for the specified social profile.
-     * $newdata[]->note - originally passed into function.
-     * $newdata[]->title - originally passed into function.
-     * $newdata[]->icon - the URL of the icon.
-     * $newdata[]->link - URL or application call.
      */
     public static function get_profile_icons($data) {
         $newdata = array();
         foreach ($data as $record) {
 
             $record->link = self::get_profile_link($record->title, $record->note);
+            // Add the properties here so we don't have to check for their
+            // presence elsewhere.
+            if (!property_exists($record, 'faicon')) {
+                $record->faicon = '';
+            }
+            if (!property_exists($record, 'icon_class')) {
+                $record->icon_class = '';
+            }
+            if (!property_exists($record, 'icon')) {
+                $record->icon = '';
+            }
 
             switch ($record->note) {
                 case 'facebook':
-                $record->faicon = '<span class="icon icon-brand icon-lg icon-facebook-square" style="color: #4267B2"></span>';
+                    $record->faicon = '<span class="icon icon-brand icon-lg icon-facebook-square" style="color: #4267B2"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-facebook-square';
                     break;
                 case 'tumblr':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-tumblr-square" style="color: #001935"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-tumblr-square';
                     break;
                 case 'twitter':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-twitter" style="color: #00ACED"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-twitter';
                     break;
                 case 'instagram':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-instagram" style="background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); background-clip: text; color: transparent; line-height: 1"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-instagram';
                     break;
                 case 'pinterest':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-pinterest" style="color: #E80021"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-pinterest';
                     break;
                 case 'icq':
                     $record->icon = favicon_display_url('www.icq.com');
@@ -1285,26 +1327,33 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
                     break;
                 case 'yahoo':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-yahoo" style="color: #4B06A3"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-yahoo';
                     break;
                 case 'skype':
                     $record->faicon = '<span class="icon icon-brand icon-lg icon-skype" style="color: #3498D8"></span>';
+                    $record->icon_class = 'icon icon-brand icon-lg icon-skype';
                     break;
                 case 'jabber':
                     // Since www.jabber.org favicon is not working...
                     $record->icon = favicon_display_url('planet.jabber.org');
                     break;
                 default:
-                    // We'll fall back to the "no favicon" default icon
-                    $record->faicon = '<span class="icon icon-lg icon-globe-americas" style="color: #BFBFF2"></span>';
+                    // This condition is for 'Other' social networks not found in the dropdown
+                    // $record->title == $record->link, description = Name of social network
 
-                    // If they've supplied a URL, use its favicon
-                    if (filter_var($record->title, FILTER_VALIDATE_URL)) {
-                        $url = parse_url($record->title);
+                    // Check for valid URL to take the favicon to use as the icon
+                    if (filter_var($record->link, FILTER_VALIDATE_URL)) {
+                        $url = parse_url($record->link);
                         // Check if $url['host'] actually exists - just in case
                         // it was badly formatted.
                         if (isset($url['host'])) {
                             $record->icon = favicon_display_url($url['host']);
                         }
+                    }
+                    else {
+                         // We'll fall back to the "no favicon" default icon
+                        $record->faicon = '<span class="icon icon-lg icon-globe-americas" style="color: #BFBFF2"></span>';
+                        $record->icon_class = 'icon icon-lg icon-globe-americas';
                     }
             }
             $newdata[] = $record;
@@ -1312,7 +1361,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         return $newdata;
     }
 
-    public function render_profile_element() {
+    public static function render_profile_element() {
         $data = self::get_social_profiles();
 
         // Build pagination for 'socialprofile' artefacts table
@@ -1355,7 +1404,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
     /**
      * Used in the mandatory fields check during the authentication process.
      */
-    public function get_new_profile_elements() {
+    public static function get_new_profile_elements() {
 
         $socialnetworkoptions = array();
         foreach (ArtefactTypeSocialprofile::$socialnetworks as $socialnetwork) {
@@ -1365,7 +1414,7 @@ class ArtefactTypeSocialprofile extends ArtefactTypeProfileField {
         $items = array(
             'socialprofile_profiletype' => array(
                 'type'        => 'select',
-                'title'       => get_string('profiletype', 'artefact.internal'),
+                'title'       => get_string('socialprofile', 'artefact.internal'),
                 'options'     => $socialnetworkoptions,
                 'allowother'  => true,
                 'width'        => 171,

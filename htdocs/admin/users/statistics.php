@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('INSTITUTIONALSTAFF', 1);
+define('INSTITUTIONALSUPPORTADMIN', 1);
 define('MENUITEM', 'reports');
 
 require(dirname(dirname(dirname(__FILE__))).'/init.php');
@@ -26,10 +26,11 @@ $notallowed = false;
 
 $allstaffstats = get_config('staffstats');
 $userstaffstats = get_config('staffreports'); // The old 'Users/access list/masquerading' reports from users section
-
 if (!$USER->get('admin') && !$USER->is_institutional_admin($institution) &&
     (!$USER->is_institutional_staff($institution) ||
-     ($USER->is_institutional_staff($institution) && empty($allstaffstats) && empty($userstaffstats)))) {
+     ($USER->is_institutional_staff($institution) && empty($allstaffstats) && empty($userstaffstats))) &&
+    (!$USER->is_institutional_supportadmin($institution) ||
+     ($USER->is_institutional_supportadmin($institution) && empty($allstaffstats) && empty($userstaffstats)))) {
     $notallowed = true;
 }
 
@@ -48,7 +49,7 @@ if (empty($institutionelement) || $notallowed) {
 if (!$institution || !$USER->can_edit_institution($institution, true)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
-else if (!empty($institution)) {
+else if ($institution) {
     $institutionelement['defaultvalue'] = $institution;
 }
 
@@ -242,7 +243,7 @@ jQuery(function ($) {
         var filteroptid = filteropt.prop('id');
         sendjsonrequest(config['wwwroot'] + 'json/stats_setting.php', {'setting':filteroptid}, 'POST', function(data) {
             filteropt.parent().hide();
-            // if in tabular mode we can sort a column to update the table otherwise relead the page
+            // if in tabular mode we can sort a column to update the table otherwise reload the page
             if ($('#statistics_table th a').length) {
                 $('#statistics_table th a').first().trigger('click');
             }

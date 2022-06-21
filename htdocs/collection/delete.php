@@ -1,5 +1,6 @@
 <?php
 /**
+ * Manage the deletion of a Collection.
  *
  * @package    mahara
  * @subpackage core
@@ -11,8 +12,8 @@
 
 define('INTERNAL', 1);
 
-define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
+define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PAGE', 'delete');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
@@ -85,6 +86,12 @@ $smarty->assign('message', get_string('collectionconfirmdelete1', 'collection', 
 $smarty->assign('form', $form);
 $smarty->display('collection/delete.tpl');
 
+/**
+ * Callback to process the delete collection form.
+ *
+ * @param Pieform $form The Pieform being processed.
+ * @param array $values The values submitted by the form.
+ */
 function deletecollection_submit(Pieform $form, $values) {
     global $SESSION, $collection, $baseurl;
     $collection->delete(true);

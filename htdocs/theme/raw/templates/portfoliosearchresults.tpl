@@ -1,31 +1,29 @@
 {foreach from=$data item=result}
     <div class="list-group-item">
-        {if $result->type == 'artefact'}
-            {if $result->thumb}
-                <img src="{$result->thumb}" alt="" class="artefact-img">
-                <h2 class="title list-group-item-heading text-inline">
-                {if $result->link}
-                    <a href="{$WWWROOT}{$result->link}">
-                        {$result->title|str_shorten_html:50:true|safe}
-                    </a>
-                {else}
+    {if $result->type == 'artefact'}
+        {if $result->thumb}
+            <span class="artefact-img-30"><img src="{$result->thumb}" alt="" class="artefact-img"></span>
+            <h2 class="title list-group-item-heading text-inline">
+            {if $result->link}
+                <a href="{$WWWROOT}{$result->link}">
                     {$result->title|str_shorten_html:50:true|safe}
-                {/if}
-                </h2>
+                </a>
             {else}
-                <h2 class="title list-group-item-heading text-inline">
-                <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
-                {if $result->link}
-                    <a href="{$WWWROOT}{$result->link}">
-                        {$result->title|str_shorten_html:50:true|safe}
-                    </a>
-                {else}
-                    {$result->title|str_shorten_html:50:true|safe}
-                {/if}
-                </h2>
+                {$result->title|str_shorten_html:50:true|safe}
             {/if}
+        {else}
+            <h2 class="title list-group-item-heading text-inline">
+            <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+            {if $result->link}
+                <a href="{$WWWROOT}{$result->link}">
+                    {$result->title|str_shorten_html:50:true|safe}
+                </a>
+            {else}
+                {$result->title|str_shorten_html:50:true|safe}
+            {/if}
+        {/if}
 
-            <span class="artefacttype text-midtone">
+            <span class="artefacttype text-midtone text-regular">
             {if $result->artefacttype == "blogpost"}
                 ({str tag=blogpost section=search.elasticsearch})
             {elseif $result->artefacttype == "forumpost"}
@@ -38,6 +36,7 @@
                 ({$result->typelabel})
             {/if}
             </span>
+        </h2>
         <div class="row">
             <div class="col-md-7">
                 <div class="detail">
@@ -55,9 +54,9 @@
             {if is_array($result->views) && count($result->views) > 0}
                 <div class="usedon">
                 {if count($result->views) > 1}
-                    <strong>{str tag=usedonpages section=search.elasticsearch}:</strong>
+                    {str tag=usedonpages section=search.elasticsearch}:
                 {else}
-                    <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
+                    {str tag=usedonpage section=search.elasticsearch}:
                 {/if}
                     <ul class="list-group list-unstyled">
                     {foreach from=$result->views key=id item=view}
@@ -123,7 +122,7 @@
             <!-- VIEWS -->
             {if is_array($result->views) && count($result->views) > 0}
                 <div class="usedon">
-                    <strong>{str tag=usedonpage section=search.elasticsearch}:</strong>
+                    {str tag=usedonpage section=search.elasticsearch}:
                     <ul class="list-group list-unstyled">
                     {foreach from=$result->views key=id item=view}
                     <li>
@@ -157,9 +156,9 @@
                 {if is_array($result->views) && count($result->views) > 0}
                     <div class="usedon">
                     {if count($result->views) > 1}
-                        <strong>{str tag=views}:</strong>
+                        {str tag=views}:
                     {else}
-                        <strong>{str tag=view}:</strong>
+                        {str tag=view}:
                     {/if}
                     {foreach from=$result->views key=id item=view name=views}
                         <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>{if !$.foreach.views.last}, {/if}

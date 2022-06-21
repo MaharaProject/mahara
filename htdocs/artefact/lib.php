@@ -89,6 +89,15 @@ abstract class PluginArtefact extends Plugin implements IPluginArtefact {
     }
 
     /**
+     * Returns any artefacts that should not be included in an export
+     * @param array $userid
+     * @return array of artefact ids
+     */
+    public static function exclude_artefacts_in_export($userid) {
+        return array();
+    }
+
+    /**
      * When filtering searches, some artefact types are classified the same way
      * even when they come from different artefact plugins.  This function allows
      * artefact plugins to declare which search filter content type each of their
@@ -225,7 +234,7 @@ interface IArtefactType {
      *                       'view' for the id of the view in which the icon is
      *                       being displayed.
      * @abstract
-     * @return string URL for the icon
+     * @return string|false URL for the icon
      */
     public static function get_icon($options=null);
 
@@ -297,14 +306,11 @@ abstract class ArtefactType implements IArtefactType {
      * to build up the basic information about the object.
      * If an id is not supplied, we just create an empty
      * artefact, ready to be filled up.
-     * If the $new parameter is true, we can skip the query
-     * because we know the artefact is new.
      *
      * @param int   $id     artefact.id
      * @param mixed $data   optional data supplied for artefact
-     * @param bool  $new
      */
-    public function __construct($id=0, $data=null, $new = FALSE) {
+    public function __construct($id=0, $data=null) {
         if (!empty($id)) {
             if (empty($data)) {
                 if (!$data = get_record('artefact','id',$id)) {
@@ -356,6 +362,7 @@ abstract class ArtefactType implements IArtefactType {
         }
 
         $this->atime = time();
+        return $this;
     }
 
     /**
@@ -1218,7 +1225,7 @@ abstract class ArtefactType implements IArtefactType {
         return array();
     }
 
-    public function attachments_from_id_list($artefactids, $viewid=null, $itemid=null) {
+    public static function attachments_from_id_list($artefactids, $viewid=null, $itemid=null) {
         if (empty($artefactids)) {
             return array();
         }
@@ -1264,7 +1271,7 @@ abstract class ArtefactType implements IArtefactType {
     }
 
 
-    public function tags_from_id_list($artefactids) {
+    public static function tags_from_id_list($artefactids) {
         if (empty($artefactids)) {
             return array();
         }
@@ -1497,7 +1504,7 @@ abstract class ArtefactType implements IArtefactType {
         else {
             $newparent = get_record('artefact', 'id', $newparentid);
 
-            if ($this->is_child_of($newparent, $this->id) || empty($newparent)) {
+            if ($this->is_child_of($newparent) || empty($newparent)) {
                 // You can't move an item into its own child.
                 throw new NotFoundException(get_string('cantmoveitem', 'mahara'));
             }
@@ -1642,7 +1649,7 @@ function artefact_check_plugin_sanity($pluginname) {
             }
         }
         if (!class_exists($typeclassname)) {
-            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $plugin));
+            throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $pluginname));
         }
     }
     $types = call_static_method($classname, 'get_block_types');
@@ -1888,7 +1895,7 @@ function artefact_get_descendants(array $ids) {
     if (get_config('version') < 2014050901) {
         $seen = array();
         $new = $ids;
-        if (!empty($new)) {
+        if ($new) {
             $new = array_combine($new, $new);
         }
         while (!empty($new)) {

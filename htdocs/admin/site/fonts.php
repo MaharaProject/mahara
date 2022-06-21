@@ -133,8 +133,7 @@ $pagination = build_pagination(array(
     'offset' => $offset,
     'datatable' => 'fontlist',
     'jsonscript' => 'admin/site/fonts.json.php',
-    'resultcounttextsingular' => get_string('font', 'skin'),
-    'resultcounttextplural' => get_string('fonts', 'skin')
+    'resultcounttext' => get_string('nfonts', 'skin', $data->count)
 ));
 
 $js = <<< EOF

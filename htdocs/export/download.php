@@ -92,6 +92,7 @@ default:
 }
 
 $exporter->includefeedback = $exportdata['includefeedback'];
+$exporter->includeprivatefeedback = $exportdata['includeprivatefeedback'];
 
 // Get an estimate of how big the unzipped export file would be
 // so we can check that we have enough disk space for it

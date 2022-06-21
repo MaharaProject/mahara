@@ -133,6 +133,7 @@ if ($data) {
                     }
                     else if ($b->institution == 'mahara') {
                         $ownername = get_config('sitename');
+                        $ownerurl = get_config('wwwroot');
                     }
                     else {
                         $ownername = $b->institutionname;

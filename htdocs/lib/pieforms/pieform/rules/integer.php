@@ -37,4 +37,5 @@ function pieform_rule_integer(Pieform $form, $value, $element) {/*{{{*/
     if (!is_numeric($value) || floor($value) != $value) {
         return $form->i18n('rule', 'integer', 'integer', $element);
     }
+    return '';
 }/*}}}*/

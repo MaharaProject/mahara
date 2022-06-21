@@ -72,6 +72,9 @@ h1 {
                 max-width: 100%;
             }
         }
+        .btn-secondary {
+            border-radius: $btn-border-radius-sm;
+        }
     }
     ~ div.with-heading {
         padding-bottom: $spacing-base;
@@ -85,6 +88,11 @@ h1 {
         .tags a {
             margin-right: 0;
         }
+    }
+
+    // when there are tabs above search under h1
+    ~ .nav-tabs + form.with-heading {
+        margin-top: 0;
     }
 }
 
@@ -119,6 +127,7 @@ strong em {
 a {
     &.link-block {
         display: block;
+        text-decoration: none;
     }
     &:hover {
         text-decoration-color: $link-hover-color;
@@ -138,6 +147,7 @@ a {
 
 .link-unstyled {
     color: $theme-text-color;
+    text-decoration: none;
     &:hover,
     &:focus {
         text-decoration: none;
@@ -152,15 +162,17 @@ a {
     margin: $spacing-base 0 0 0;
     padding: $input-btn-padding-y $input-btn-padding-x;
     display: inline-block;
+    text-decoration: none !important;
     &:hover,
     &:focus {
         background-color: $accent-bg;
-        text-decoration: none;
+        text-decoration: none !important;
     }
     .icon {
         display: inline-block;
     }
-    &.js-peerassessment-modal {
+    &.js-peerassessment-modal,
+    &.js-add-comment-modal {
         margin: $spacing-base 0;
     }
 }
@@ -169,7 +181,10 @@ img {
     max-width: 100%;
     height: auto;
     &.artefact-img {
-        margin-right: $spacing-base;
+        line-height: 1;
+        max-width: 1.875rem; // 30px;
+        max-height: 1.875rem; // 30px;
+        margin-right: $spacing-sm;
     }
 }
 
@@ -183,7 +198,7 @@ img {
 }
 
 hr {
-    margin-top: $line-height-base / 2;
+    margin-top: #{$line-height-base / 2}rem;
 }
 
 ul {
@@ -208,6 +223,13 @@ ul {
           }
           &.acceptdenyfriendbtns {
             margin-bottom: $spacing-base;
+          }
+          a {
+              text-decoration: none;
+              &:hover,
+              &:focus {
+                text-decoration: underline;
+              }
           }
         }
     }
@@ -315,7 +337,8 @@ pre {
 .forum-post .postedits,
 .mce-content-body,
 .blockinstructions,
-.viewinstructions {
+.viewinstructions,
+.bt-groupinfo {
   h1, h2, h3, h4, h5, h6  {
     font-family: $font-family-base;
     font-weight: $font-weight-bold;
@@ -366,11 +389,9 @@ body#tinymce {
     }
 }
 
-// Group listing user status on right
+// Group listing user status on right but not on group home page
 .groupuserstatus {
-    clear: both;
-    padding: $spacing-base 0 0 0;
-
+    margin-bottom: $spacing-base;
     @include media-breakpoint-up(md) {
         text-align: right;
     }
@@ -382,7 +403,8 @@ body#tinymce {
 }
 
 .artefacttype {
-  font-family: $font-family-base;
+    font-family: $font-family-base;
+    font-weight: $font-weight-base;
 }
 
 .no-margin-top {
@@ -391,4 +413,16 @@ body#tinymce {
 
 small, .small {
   font-size: $font-size-sm;
+}
+
+.font-base {
+    font-family: $font-family-base;
+    font-weight: $font-weight-base;
+}
+
+// portfolio completion table icons
+a.verify_action,
+a.unsignoff_action,
+a.signoff_action {
+    text-decoration: none;
 }

@@ -39,14 +39,16 @@ $cli->setup($settings);
 $force = $cli->get_cli_param('force');
 // Check whether Mahara is installed yet
 if (!table_exists(new XMLDBTable('config'))) {
-    cli::cli_exit(get_string('maharanotinstalled', 'admin'), false);
+    $cli->cli_exit(get_string('maharanotinstalled', 'admin'), false);
 }
 
 // Check whether we need to do anything
 $upgrades = check_upgrades();
 if (empty($upgrades['settings']['toupgradecount'])) {
-    cli::cli_exit(get_string('noupgrades', 'admin'), false);
+    $cli->cli_exit(get_string('noupgrades', 'admin'), false);
 }
+
+log_info('---------- begin upgrade ' . date('r', time()) . ' ----------');
 
 // Check for issues which would pose problems during upgrade
 ensure_upgrade_sanity();
@@ -57,7 +59,7 @@ if (get_field('config', 'value', 'field', '_upgrade')) {
         delete_records('config', 'field', '_upgrade');
     }
     else {
-        cli::cli_exit(get_string('cli_upgrade_flag', 'admin'), false);
+        $cli->cli_exit(get_string('cli_upgrade_flag', 'admin'), false);
     }
 }
 // set the flag for this run
@@ -76,3 +78,4 @@ foreach ($upgrades as $name => $data) {
 }
 // upgrade completed so remove any upgrade holds
 delete_records('config', 'field', '_upgrade');
+log_info('---------- upgrade finished ' . date('r', time()) . ' ----------');

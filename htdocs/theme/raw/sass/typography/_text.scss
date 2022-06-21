@@ -44,18 +44,21 @@
     color: $state-danger-text !important; // Needs to be important to override default
 }
 
+.text-warning {
+    color: $state-warning-text !important; // Needs to be important to override default
+
+    &a {
+        color: $state-warning-link;
+        &:hover,
+        &:focus {
+          text-decoration-color: $state-warning-link;
+        }
+    }
+}
+
 .inboxblock {
   .unread {
       font-weight: $font-weight-bold;
-  }
-  a {
-      &:hover,
-      &:focus {
-        text-decoration: none;
-        .subject {
-          text-decoration: underline;
-        }
-      }
   }
 }
 
@@ -65,4 +68,8 @@
 
 .text-weight-normal {
   font-weight: $font-weight-base;
+}
+
+.locked-post {
+    margin-left: $spacing-base;
 }

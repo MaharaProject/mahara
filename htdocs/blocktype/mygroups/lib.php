@@ -50,6 +50,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         $smarty->assign('options', $options);
         $smarty->assign('items', $items['data']);
         $items['tablerows'] = $smarty->fetch($template);
+        $resultcounttext = $pagination['resultcounttext'];
         if ($items['limit'] && $pagination) {
             $pagination = build_pagination(array(
                 'id' => $pagination['id'],
@@ -61,8 +62,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
                 'limit' => $items['limit'],
                 'offset' => $items['offset'],
                 'numbersincludefirstlast' => false,
-                'resultcounttextsingular' => $pagination['resultcounttextsingular'] ? $pagination['resultcounttextsingular'] : get_string('result'),
-                'resultcounttextplural' => $pagination['resultcounttextplural'] ? $pagination['resultcounttextplural'] :get_string('results'),
+                'resultcounttext' => $resultcounttext ? $resultcounttext : null,
             ));
             $items['pagination'] = $pagination['html'];
             $items['pagination_js'] = $pagination['javascript'];
@@ -106,8 +106,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
             'id' => 'mygroups_pagination',
             'datatable' => 'usergroupstable',
             'jsonscript' => 'blocktype/mygroups/mygroups.json.php',
-            'resultcounttextsingular' => get_string('group', 'group'),
-            'resultcounttextplural' => get_string('groups', 'group'),
+            'resultcounttext' => get_string('ngroups', 'group', $groups['count']),
         );
         self::render_items($groups, 'blocktype:mygroups:mygroupslist.tpl', $configdata, $pagination);
 
@@ -116,7 +115,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:mygroups:mygroups.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -169,7 +168,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
         return $values;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -193,7 +192,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

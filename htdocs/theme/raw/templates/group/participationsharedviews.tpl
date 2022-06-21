@@ -1,7 +1,7 @@
 {if $itemcount}
   {foreach from=$items item=view}
     <tr class="{cycle values='r0,r1'}">
-      <td class="sv"><a href="{$view->url}">{$view->title}</a>{if $view->collection} <span class="text-small text-midtone">({str tag='nviews' section='view' arg1=$view->viewcount})</span>{/if}</td>
+      <td class="sv"><a href="{$view->url}">{$view->title}</a>{if $view->collection} <span class="text-small text-midtone">({str tag='nviews1' section='view' arg1=$view->viewcount})</span>{/if}</td>
       <td class="sb"><label class="d-none">{str tag=sharedby section=view}: </label>
     {if $view->owner}
             <a href="{$WWWROOT}user/view.php?id={$view->owner}">{$view->owner|display_name:null:true}</a>

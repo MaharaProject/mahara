@@ -3,19 +3,10 @@ jQuery UI in Mahara
 
 This javascript library is required for the flexible page layout feature developed by Mike Kelly.
 
-Website: http://jqueryui.com/
-Version: 1.12.1
-
-Note that the last commit to this code was June 2017
+Website: https://jqueryui.com/
+Version: 1.13.1
 
 Changes:
-
-* Fixed deprecated .unique to .uniqueSort
-* Fixed jquery 3.4.0 deprecations:
-  :first -> .first()
-  :last -> .last()
-  :even -> :nth-child(odd) - odd because css is 1-based; jquery is 0-based
-
 
 Notes:
 
@@ -24,9 +15,11 @@ jQuery UI plugin touch-punch
 
 This javascript library is required for jQuery UI draggable / droppable / sortable to work on mobile devices
 
-Website: http://touchpunch.furf.com/
+Website: https://github.com/furf/jquery-ui-touch-punch
 Version: 0.2.3
 Dependency package: jquery-ui
+
+Notes: No longer maintained
 
 Changes:
 

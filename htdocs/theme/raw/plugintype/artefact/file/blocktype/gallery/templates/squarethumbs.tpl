@@ -1,12 +1,12 @@
 <div id="thumbnails{$instanceid}" class="card-body thumbnails js-masonry">
     {foreach from=$images item=image}
         <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;height:{$image.squaredimensions}px;"{/if} class="thumb">
-            <a data-fancybox="{$image.fancybox}" href="{$image.link}" title="{$image.title}" data-caption="{$image.title}">
-                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{if $image.width}{$image.width}{else}{$width}{/if}" height="{if $image.height}{$image.height}{else}{$width}{/if}" {if $frame}class="frame mx-auto d-block"{/if}/>
+            <a {if $image.fancybox}class="gallery-popup" data-target="#gallerymodal" data-toggle="modal" data-link="{$image.link}" data-caption="{$image.description}"{/if} title="{$image.title}">
+                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{$width}" height="{$width}"/>
             </a>
-        {if $showdescription && $image.title}
+        {if $showdescription && $image.description}
         <p class="text-small title">
-            {$image.title|truncate:60|clean_html|safe}
+            {$image.description|truncate:60|clean_html|safe}
         </p>
         {/if}
         </div>
@@ -17,3 +17,40 @@
     {$copyright|safe}
 </div>
 {/if}
+
+<!-- Modal -->
+<div class="modal fade" id="gallerymodal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered gallery">
+        <div class="modal-content">
+            <div class="modal-header gallery">
+                <div class="modal-header-title"></div>
+                <div class="modal-title gallery">
+                    <button class="deletebutton close gallery" data-dismiss="modal" aria-label="{str tag=Close}">
+                        <span class="times">×</span>
+                        <span class="sr-only">{str tag=Close}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body gallery">
+                <div class="modal-image"></div>
+                <div class="modal-caption"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+jQuery(function($) {literal}{{/literal}
+    $('.gallery-popup').each(function() {
+        $(this).off('click');
+        $(this).on('click', function(e) {
+            e.preventDefault();
+            let btn = e.target.closest('a');
+            let modalimg = $('<img>', {literal}{{/literal}'src':$(btn).data('link'){literal}}{/literal});
+            $('#gallerymodal').find('.modal-image').html(modalimg);
+            $('#gallerymodal').find('.modal-caption').text($(btn).data('caption'));
+            $('#gallerymodal').find('.modal-header-title').text($(btn).prop('title'));
+        });
+    });
+{literal}}{/literal});
+</script>

@@ -429,9 +429,6 @@ function basename(path) {
 jQuery(function($) {
     // Autofocus the first element with a class of 'autofocus' on page load (@todo: move this to pieforms.js)
     $('.autofocus').first().trigger("focus");
-    if ($('.autofocus').first().trigger("focus").prop('id') == 'settings_title' && getUrlParameter('new', window.location.href)) {
-        $('.autofocus').first().trigger('select');
-    }
 });
 
 // Contextual Help
@@ -1212,15 +1209,6 @@ function replaceTarget(element) {
  */
 jQuery(function($) {
     /**
-     * Wire up menu so that links with submenu but no url just toggle the child collapse
-     */
-    $('nav .menu-dropdown-toggle').on('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        $(this).next().trigger('click');
-    });
-
-    /**
      * Send focus to first menu item unless it's an element of a sub menu
      * Closes menu and returns focus to menu button
      */
@@ -1228,11 +1216,11 @@ jQuery(function($) {
         var parent = $(this);
 
         if (!$(e.target).hasClass('child-nav collapse show')) {
-            $(this).find('ul li').first().find('a').focus();
+            $(this).find('ul li').first().find('a, button').focus();
         }
 
         // Return focus to menu button from last submenu button
-        $($(this).find('button.navbar-showchildren').last()).on('blur', function() {
+        $($(this).find('.menu-dropdown-toggle').last()).on('blur', function() {
             if ($(this).hasClass('collapsed')) {
                 var id = $(parent).attr('id');
                 $('button[aria-controls="' + id + '"]').focus();
@@ -1241,18 +1229,19 @@ jQuery(function($) {
         });
 
         // Return focus to menu button from last element in last submenu when tabbing away
-        $(this).find('ul li').last().find('a').on('blur', function() {
+        $(this).find('ul li').last().focusout(function() {
             var id = $(parent).attr('id');
             $('button[aria-controls="' + id + '"]').focus();
             $(parent).collapse('hide');
         });
     });
 
-    // Returns focus back to the menu button when the menu is closed
-    $('nav .navbar-collapse').on('hide.bs.collapse', function(e) {
-        if (!$(e.target).hasClass('child-nav collapse show')) {
-            var id = $(this).attr('id');
-            $('button[aria-controls=' + id + ']').focus();
+    // Return focus to the menu button on pressing esc on nav
+    $('nav .navbar-collapse').on('keyup', function(e) {
+        if (e.keyCode == 27) {
+            var parent = $(this);
+            var id = $(parent).attr('id');
+            $('button[aria-controls="' + id + '"]').focus();
         }
     });
 });
@@ -1330,4 +1319,33 @@ jQuery(function($) {
             $('a' + this.hash).attr('tabindex', 0).focus();
         }
     });
+});
+
+/**
+ * Helper function to set up redirects for 'data-url'
+ * attributes.
+ *
+ * Especially helpful to call after javascript
+ * has been overwritten by other jquery/js to
+ * allow the redirect of the buttons to work again.
+ * e.g. <button data=url="..."></button>
+ *
+ * The data-ignore=true flag is to stop certain buttons
+ * with data-url from removing their existing on click functions
+ */
+function findButtonDataUrls() {
+    jQuery('[data-url]').each(function() {
+        if (!jQuery(this).data('ignore')) {
+            jQuery(this).off('click');
+            jQuery(this).on('click', function(e) {
+                e.preventDefault();
+                let btn = e.target.closest('button');
+                window.location.href = jQuery(btn).data('url');
+            });
+        }
+    });
+}
+
+jQuery(function($) {
+    findButtonDataUrls();
 });

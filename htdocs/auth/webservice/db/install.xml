@@ -73,6 +73,7 @@
             <FIELD NAME="clientname" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Name of client program that generated and uses client."/>
             <FIELD NAME="clientenv" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Brief description of the environment of the client program (OS, browser, etc)"/>
             <FIELD NAME="clientguid" TYPE="char" LENGTH="128" NOTNULL="false" SEQUENCE="false" COMMENT="Optional unique ID for the client program."/>
+            <FIELD NAME="authinstance" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" UNSIGNED="false" SEQUENCE="false" COMMENT="auth instance associated with the upload_file functions"/>
           </FIELDS>
           <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

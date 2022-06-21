@@ -26,19 +26,28 @@ if ($font) {
     $font = preg_replace(Skin::FONTNAME_FILTER_CHARACTERS, '', $font);
 }
 $fontdata = null;
-
+$fontlicence = '';
+$fonttitle = '';
+$stylesheet = '';
 if (!empty($font)) {
     $stylesheet = Skin::get_css_font_face_from_font_name($font);
     $fontdata = get_record('skin_fonts', 'name', $font);
     $fonttitle = $fontdata->title;
     if (!empty($fontdata->licence) && !is_null($fontdata->licence)) {
         if (preg_match('/^t_(.*)/', $fontdata->fonttype, $matches)) {
-            $fontpath = get_config('wwwroot') . 'theme/' . $matches[1] . '/fonts/' . strtolower($fontdata->name) . '/';
+            $fontpath = 'theme/' . $matches[1] . '/fonts/' . strtolower($fontdata->name) . '/' . $fontdata->licence;
         }
         else {
-            $fontpath = get_config('wwwroot') . 'skins/fonts/' . $fontdata->name . '/';
+            $fontpath = 'skins/fonts/' . $fontdata->name . '/' . $fontdata->licence;
         }
-        $fontlicence = '<a href="' . $fontpath . $fontdata->licence . '">' . get_string('fontlicence', 'skin') . '</a>';
+
+        if (!file_exists(get_config('docroot') . $fontpath)) {
+            // Try the dataroot
+            if (file_exists(get_config('dataroot') . 'skins/fonts/' . $fontdata->name . '/' . $fontdata->licence)) {
+                $fontpath = 'skin/licence.php?family=' . $fontdata->title;
+            }
+        }
+        $fontlicence = '<a href="' . get_config('wwwroot') . $fontpath . '">' . get_string('fontlicence', 'skin') . '</a>';
     }
     else {
         $fontlicence = get_string('fontlicencenotfound', 'skin');

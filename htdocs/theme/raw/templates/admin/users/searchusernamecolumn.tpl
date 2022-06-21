@@ -1,6 +1,6 @@
 {if !$r.active}
-    <span class="icon icon-user-times" title="{str tag=inactive section=admin}"></span>
-    <span class="sr-only">{str tag=inactivefor1 section=admin arg1=$r.username}</span>
+  <span class="icon icon-user-times" title="{str tag=inactive section=admin}"></span>
+  <span class="sr-only">{str tag=inactivefor1 section=admin arg1=$r.username}</span>
 {/if}
 {*PCNZ customization WR 34916*}
 {if $r.canedituser}
@@ -16,7 +16,7 @@
 <span class="sr-only">{str tag=registeredstatussuspendedfor section=admin arg1=$r.username}</span>
 {/if}
 {* End of customisation *}
-  <a href="{$WWWROOT}admin/users/edit.php?id={$r.id}"> {$r.username}</a>
+  <a href="{$WWWROOT}admin/users/edit.php?id={$r.id}">{$r.username}</a>
 {else}
   {$r.username}
 {/if}

@@ -37,4 +37,5 @@ function pieform_rule_required(Pieform $form, $value, $element, $check) {/*{{{*/
     if ($check && ($value == '' || $value == array())) {
         return $form->i18n('rule', 'required', 'required', $element);
     }
+    return '';
 }/*}}}*/

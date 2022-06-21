@@ -1,5 +1,6 @@
 <?php
 /**
+ * Deleting a group.
  *
  * @package    mahara
  * @subpackage core
@@ -49,6 +50,13 @@ $smarty->assign('message', get_string('groupconfirmdelete', 'group'));
 $smarty->assign('form', $form);
 $smarty->display('group/delete.tpl');
 
+/**
+ * Submit the deletion of a group
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function deletegroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $groupid;
     group_delete($groupid);

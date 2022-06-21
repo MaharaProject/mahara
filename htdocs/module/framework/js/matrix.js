@@ -49,8 +49,13 @@ jQuery(function($) {
     });
 
     var cellx = celly = 0;
+    var editingAnnotation = false;
+    var confirmCleanOnRefresh = false;
+
     $('#tablematrix td.mid span.icon:not(.disabled)').on('click', function(e) {
         e.preventDefault();
+        editingAnnotation = true;
+
         cellx = $(this).closest('td').index();
         celly = $(this).closest('tr').index();
         var params = {};
@@ -77,62 +82,73 @@ jQuery(function($) {
                 newpagemodal.find('form').each(function() {
                     formchangemanager.add($(this).attr('id'));
                 });
+
+                // Confirm unloading the page
+                window.addEventListener("beforeunload", function(e) {
+                    // This event prompts the user to confirm leaving the page. If confirmed, the block will be deleted in the 'unload' event
+                });
+
+                // On unloading the page, delete empty annotation block
+                window.addEventListener("unload", function(e) {
+                    if (editingAnnotation) {
+                        cleanUpAnnotationBlock(e, true);
+                    }
+                });
+
+                 /**
+                  * Clean up annotation blocks
+                  *
+                  * Delete empty, unwanted annotation blocks on cancel and page refresh
+                  * @param {*} e Event
+                  * @param boolean onRefresh
+                  */
+                function cleanUpAnnotationBlock(e, onRefresh=false) {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    var isConfirmed = null;
+                    if (typeof formchangemanager !== 'undefined') {
+                        var isDirtyForm = formchangemanager.checkDirtyChanges()
+                        if (isDirtyForm) {
+                            isConfirmed = formchangemanager.confirmLeavingForm();
+                        }
+                    }
+
+                    // If the user has confirm leaving the form, of refreshes the page (confirming the page unload prompt, delete block)
+                    if (onRefresh || isConfirmed === null || isConfirmed === true) {
+                        if (data.data.form.isnew) {
+                            // Delete the empty annotation on cancel and page refresh
+                            params.action = 'delete';
+                            params.blockconfig = $('#instconf_blockconfig').val(); // Update the block ID
+                            // Delete the block if block is not deleted yet (i.e. page refresh without clicking 'cancel' )
+                            if (params.blockconfig != undefined) {
+                                editmatrix_update(params);
+                            }
+                        }
+                        if (hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
+                        }
+                        feedbacktextarea = $("#addfeedbackmatrix textarea");
+                        if (feedbacktextarea.length && hastinymce) {
+                            tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
+                        }
+                        hide_dock();
+                        //focus on matrix annotation
+                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
+                    }
+                }
+
                 deletebutton = newpagemodal.find('.deletebutton');
                 // Lock focus to the newly opened dialog
                 deletebutton.trigger("focus");
                 deletebutton.off('click'); // Remove any previous click event
                 deletebutton.on('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    var confirm = null;
-                    if (typeof formchangemanager !== 'undefined') {
-                        confirm = formchangemanager.confirmLeavingForm();
-                    }
-                    if (confirm === null || confirm === true) {
-                        if (data.data.form.isnew) {
-                            // need to delete empty annotation on cancel
-                            params.action = 'delete';
-                            params.blockconfig = $('#instconf_blockconfig').val();
-                            editmatrix_update(params);
-                        }
-                        if (hastinymce) {
-                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
-                        }
-                        feedbacktextarea = $("#addfeedbackmatrix textarea");
-                        if (feedbacktextarea.length && hastinymce) {
-                            tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
-                        }
-                        hide_dock();
-                        //focus on matrix annotation
-                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
-                    }
+                    cleanUpAnnotationBlock(e);
                 });
                 cancelbutton = newpagemodal.find('.submitcancel.cancel');
                 cancelbutton.off('click'); // Remove any previous click event
                 cancelbutton.on('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    var confirm = null;
-                    if (typeof formchangemanager !== 'undefined') {
-                        confirm = formchangemanager.confirmLeavingForm();
-                    }
-                    if (confirm === null || confirm === true) {
-                        if (data.data.form.isnew) {
-                            params.action = 'delete';
-                            params.blockconfig = $('#instconf_blockconfig').val();
-                            editmatrix_update(params);
-                        }
-                        if (hastinymce) {
-                            tinyMCE.execCommand('mceRemoveEditor', false, "instconf_text");
-                        }
-                        feedbacktextarea = $("#addfeedbackmatrix textarea");
-                        if (feedbacktextarea.length && hastinymce) {
-                            tinyMCE.execCommand('mceRemoveEditor', false, feedbacktextarea.attr('id'));
-                        }
-                        hide_dock();
-                        //focus on matrix annotation
-                        $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon a').trigger("focus");
-                    }
+                    cleanUpAnnotationBlock(e);
                 });
                 if (hastinymce) {
                     tinyMCE.idCounter=0;
@@ -198,11 +214,11 @@ jQuery(function($) {
                 // When we are saving the annotation feedback form - changing the evidence status
                 $('#annotationfeedback').on('submit', function(se) {
                     se.preventDefault();
-                    var confirm = null;
+                    var isLeaveFormConfirmed = null;
                     if (typeof formchangemanager !== 'undefined') {
-                        confirm = formchangemanager.confirmLeavingForm();
+                        isLeaveFormConfirmed = formchangemanager.confirmLeavingForm();
                     }
-                    if (confirm === null || confirm === true) {
+                    if (isLeaveFormConfirmed === null || isLeaveFormConfirmed === true) {
                         var sdata = $("#annotationfeedback :input").serializeArray();
                         var values = {};
                         sdata.forEach(function(item, index) {
@@ -285,6 +301,7 @@ jQuery(function($) {
     }
 
     function editmatrix_update(data) {
+        editingAnnotation = true;
         params = data;
         sendjsonrequest('matrixpoint.json.php', params, 'POST', function(results) {
             var hastinymce = false;
@@ -293,10 +310,10 @@ jQuery(function($) {
             }
             if (results.data.class) {
                 $('#tablematrix tr').eq(celly).find('td').eq(cellx).find('span.icon')
-                  .attr('class', results.data.class)
-                  .attr('title', results.data.title)
-                  .data('option', results.data.option)
-                  .data('view', results.data.view).empty();
+                    .attr('class', results.data.class)
+                    .attr('title', results.data.title)
+                    .data('option', results.data.option)
+                    .data('view', results.data.view).empty();
                 if (results.data.readyforassessment) {
                     var readyforassessment = parseInt($('#tablematrix tr').eq(celly).find('td.completedcount.readyforassessment span:nth-child(2)').text(), 10);
                     $('#tablematrix tr').eq(celly).find('td.completedcount.readyforassessment span:nth-child(2)')
@@ -330,6 +347,7 @@ jQuery(function($) {
                 }
             }
         });
+        editingAnnotation = false;
     }
     // Setup
     carousel_matrix();

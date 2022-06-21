@@ -32,6 +32,17 @@ class User {
     protected $changed       = false;
     protected $attributes    = array();
 
+    protected $admininstitutions;
+    protected $authinstance;
+    protected $email;
+    protected $grouproles;
+    protected $id;
+    protected $institutions;
+    protected $institutiontheme;
+    protected $roles;
+    protected $staffinstitutions;
+    protected $urlid;
+
     /**
      * Sets defaults for the user object (only because PHP5 does not appear
      * to support private static const arrays), and resumes a session
@@ -75,6 +86,7 @@ class User {
             'institutiontheme' => null,
             'admininstitutions' => array(),
             'staffinstitutions' => array(),
+            'supportadmininstitutions' => array(),
             'parentuser'       => null,
             'loginanyway'       => false,
             'sesskey'          => '',
@@ -86,14 +98,12 @@ class User {
             'probation'        => 0,
         );
         $this->attributes = array();
-
     }
 
     /**
      *
      */
     public function find_by_id($id) {
-
         if (!is_numeric($id) || $id < 0) {
             throw new InvalidArgumentException('parameter must be a positive integer to create a User object');
         }
@@ -309,7 +319,7 @@ class User {
      */
     public function create() {
         $this->set('ctime', time());
-        if (get_config('cleanurls') && is_null($this->urlid)) {
+        if (get_config('cleanurls') && is_null($this->get('urlid'))) {
             $desiredurlid = generate_urlid(get_raw_user_urlid($this), get_config('cleanurluserdefault'), 3, 30);
             $this->set('urlid', get_new_profile_urlid($desiredurlid));
         }
@@ -412,9 +422,9 @@ class User {
             return;
         }
         $record = $this->to_stdclass();
-        if (is_numeric($this->id) && 0 < $this->id) {
+        if (is_numeric($this->get('id')) && 0 < $this->get('id')) {
             try {
-                update_record('usr', $record, array('id' => $this->id));
+                update_record('usr', $record, array('id' => $this->get('id')));
             } catch (Exception $e) {
                 throw $e;
                 //var_dump($e);
@@ -570,7 +580,7 @@ class User {
         list($view) = View::create_from_template(array(
             'owner' => $this->get('id'),
             'title' => get_field('view', 'title', 'id', $systemdashboardviewid),
-            'description' => get_string('dashboarddescription'),
+            'description' => get_string('dashboarddescription1'),
             'type'  => 'dashboard',
         ), $systemdashboardviewid, $this->get('id'), false, false, $artefactcopies);
 
@@ -579,7 +589,7 @@ class User {
         return $view;
     }
 
-    protected function install_view($viewtype) {
+    public function install_view($viewtype) {
         $function = 'install_' . $viewtype . '_view';
         return $this->$function();
     }
@@ -591,7 +601,7 @@ class User {
         $views = get_records_select_assoc(
             'view',
             '"owner" = ? AND type IN (' . join(',', array_map('db_quote', $types)) . ')',
-            array($this->id),
+            array($this->get('id')),
             '',
             'type,id'
         );
@@ -721,7 +731,7 @@ class User {
     public function leave_institution($institution) {
         if ($institution != 'mahara' && $this->in_institution($institution)) {
             // Make inactive any usr_roles for this institution
-            foreach ($this->roles as $inst => $roles) {
+            foreach ($this->get('roles') as $inst => $roles) {
                 if ($inst == $institution) {
                     foreach ($roles as $role) {
                         $this->update_role($role->id, 0);
@@ -787,6 +797,14 @@ class User {
         return isset($a[$institution]);
     }
 
+    public function is_institutional_supportadmin($institution = null) {
+        $a = $this->get('supportadmininstitutions');
+        if (is_null($institution)) {
+            return !empty($a);
+        }
+        return isset($a[$institution]);
+    }
+
     public function is_institutional_staff($institution = null) {
         $a = $this->get('staffinstitutions');
         if (is_null($institution)) {
@@ -795,9 +813,12 @@ class User {
         return isset($a[$institution]);
     }
 
-    public function can_edit_institution($institution = null, $staff = false) {
+    public function can_edit_institution($institution = null, $staff = false, $supportadmin = false) {
         if ($staff) {
             return $this->get('admin') || $this->get('staff') || $this->is_institutional_admin($institution) || $this->is_institutional_staff($institution);
+        }
+        if ($supportadmin) {
+            return $this->get('admin') || $this->is_institutional_admin($institution) || $this->is_institutional_supportadmin($institution);
         }
         return $this->get('admin') || $this->is_institutional_admin($institution);
     }
@@ -876,6 +897,29 @@ class User {
         return false;
     }
 
+    public function is_supportadmin_for_user($user) {
+        if ($this->get('admin') || $this->get('staff')) {
+            return true;
+        }
+        if (!$this->is_institutional_admin() && !$this->is_institutional_staff() && !$this->is_institutional_supportadmin()) {
+            return false;
+        }
+        if ($user instanceof User) {
+            $userinstitutions = $user->get('institutions');
+        }
+        else {
+            $userinstitutions = load_user_institutions($user->id);
+        }
+
+        foreach ($userinstitutions as $i) {
+            if ($this->is_institutional_admin($i->institution)
+                || $this->is_institutional_supportadmin($i->institution)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function is_staff_for_user($user) {
         if ($this->get('admin') || $this->get('staff')) {
             return true;
@@ -890,6 +934,7 @@ class User {
         }
         foreach ($userinstitutions as $i) {
             if ($this->is_institutional_admin($i->institution)
+                || $this->is_institutional_supportadmin($i->institution)
                 || $this->is_institutional_staff($i->institution)) {
                 return true;
             }
@@ -907,14 +952,22 @@ class User {
     }
 
     public function reset_institutions($nocachecss=false) {
-        $institutions             = load_user_institutions($this->id);
+        $institutions             = load_user_institutions($this->get('id'));
         $admininstitutions = array();
         $staffinstitutions = array();
+        $supportadmininstitutions = array();
         $themename = get_config('theme');
         $headerlogo = null;
         $headerlogosmall = null;
         $stylesheets = array();
         $themeinstitution = null;
+        $supportadmin_exist = false;
+
+        // The support admin exists from 22.04
+        if (get_config('version') > 2022031500) {
+            $supportadmin_exist = true;
+        }
+
         foreach ($institutions as $name => $i) {
             if ($i->admin) {
                 $admininstitutions[$i->institution] = $i->institution;
@@ -922,12 +975,15 @@ class User {
             if ($i->staff) {
                 $staffinstitutions[$i->institution] = $i->institution;
             }
+            if ($supportadmin_exist && $i->supportadmin) {
+                $supportadmininstitutions[$i->institution] = $i->institution;
+            }
             if (is_null($themeinstitution)) {
                 $themeinstitution = $name;
             }
         }
-        if ($this->authinstance) {
-            $authobj = AuthFactory::create($this->authinstance);
+        if ($this->get('authinstance')) {
+            $authobj = AuthFactory::create($this->get('authinstance'));
             if (isset($institutions[$authobj->institution])) {
                 if ($institutions[$authobj->institution]->theme) {
                     $themeinstitution = $authobj->institution;
@@ -946,16 +1002,17 @@ class User {
                 $stylesheets[] = $stylesheet;
             }
         }
-        $this->institutiontheme = (object) array(
+        $this->set('institutiontheme', (object) array(
             'basename'    => $themename,
             'headerlogo'  => $headerlogo,
             'headerlogosmall'  => $headerlogosmall,
             'stylesheets' => $stylesheets,
             'institutionname' => $themeinstitution,
-        );
-        $this->institutions       = $institutions;
-        $this->admininstitutions  = $admininstitutions;
-        $this->staffinstitutions  = $staffinstitutions;
+        ));
+        $this->set('institutions', $institutions);
+        $this->set('admininstitutions', $admininstitutions);
+        $this->set('staffinstitutions', $staffinstitutions);
+        $this->set('supportadmininstitutions', $supportadmininstitutions);
     }
 
     public function get_themedata() {
@@ -966,7 +1023,7 @@ class User {
             $list = (explode('/', $preftheme));
             if (count($list) > 1) {
                 $iid = $list[1];
-                $institutions = load_user_institutions($this->id);
+                $institutions = load_user_institutions($this->get('id'));
                 if (isset($institutions[$iid])) {
                     $institution = $institutions[$iid];
                     $stylesheets = array();
@@ -987,15 +1044,15 @@ class User {
             }
             // Or the current preferred theme is not available
             // The system will pick one
-            return $this->institutiontheme;
+            return $this->get('institutiontheme');
         }
-        if ($this->institutiontheme) {
+        if ($this->get('institutiontheme')) {
             // No theme set so use 'sitedefault'
-            $instobj = $this->institutiontheme;
+            $instobj = $this->get('institutiontheme');
             $instobj->altname = 'sitedefault';
             $this->set('institutiontheme', $instobj);
         }
-        return $this->institutiontheme;
+        return $this->get('institutiontheme');
     }
 
     public function get_roletypes() {
@@ -1041,7 +1098,7 @@ class User {
             $role = (object) $role;
             if (isset($role->role) && !empty($role->role)) {
                 $classname = 'UserRole' . ucfirst($role->role);
-                $role->usr = $this->id;
+                $role->usr = $this->get('id');
                 $r = new $classname($role);
                 $r->commit();
             }
@@ -1270,7 +1327,7 @@ class User {
         }
 
         require_once('group.php');
-        if (!$role = group_user_access($group, $this->id)) {
+        if (!$role = group_user_access($group, $this->get('id'))) {
             return false;
         }
         if ($role == 'admin') {
@@ -1279,7 +1336,7 @@ class User {
         if (!group_within_edit_window($group)) {
             return false;
         }
-        if ($this->id == $a->get('author')) {
+        if ($this->get('id') == $a->get('author')) {
             return true;
         }
 
@@ -1324,13 +1381,13 @@ class User {
         }
 
         require_once('group.php');
-        if (!$role = group_user_access($group, $this->id)) {
+        if (!$role = group_user_access($group, $this->get('id'))) {
             return false;
         }
         if ($role == 'admin') {
             return true;
         }
-        if ($this->id == $a->get('author')) {
+        if ($this->get('id') == $a->get('author')) {
             return true;
         }
 
@@ -1356,14 +1413,15 @@ class User {
         $group = $v->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if (!isset($this->grouproles[$group])) {
+            $grouproles = $this->get('grouproles');
+            if (!isset($grouproles[$group])) {
                 return false;
             }
-            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $this->grouproles[$group] != 'admin') {
+            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $grouproles[$group] != 'admin') {
                 return false;
             }
             require_once('group.php');
-            return group_role_can_edit_views($group, $this->grouproles[$group]);
+            return group_role_can_edit_views($group, $grouproles[$group]);
         }
         return false;
     }
@@ -1383,14 +1441,15 @@ class User {
         $group = $v->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if (!isset($this->grouproles[$group])) {
+            $grouproles = $this->get('grouproles');
+            if (!isset($grouproles[$group])) {
                 return false;
             }
-            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $this->grouproles[$group] != 'admin') {
+            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $grouproles[$group] != 'admin') {
                 return false;
             }
             require_once('group.php');
-            return group_role_can_moderate_views($group, $this->grouproles[$group]);
+            return group_role_can_moderate_views($group, $grouproles[$group]);
         }
         return false;
     }
@@ -1439,6 +1498,28 @@ class User {
        return (!empty($user_roles) && count($user_roles) == 1 && $user_roles[0] == 'peer');
     }
 
+
+    /**
+     * Checks if the user belongs to an institution that doesn't allow peers to see the block contents of a page
+     * @return boolean
+     */
+    public function peers_allowed_content() {
+        $institutions = $this->get('institutions');
+        if (empty($institutions)) {
+            return get_config_institution('mahara', 'allowpeersviewcontent');
+        }
+        else {
+            foreach($institutions as $i) {
+                // if any of the institutuons the user is member of has the 'allowpeersviewcontent' set to 'No'
+                // then the content of the page will not be displayed
+                if (empty(get_config_institution($i->institution, 'allowpeersviewcontent'))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /**
      * Function to check current user can edit collection
      *
@@ -1468,11 +1549,12 @@ class User {
         $group = $c->get('group');
         if ($group) {
             $this->reset_grouproles();
-            if (!isset($this->grouproles[$group])) {
+            $grouproles = $this->get('grouproles');
+            if (!isset($grouproles[$group])) {
                 return false;
             }
             require_once('group.php');
-            return group_role_can_edit_views($group, $this->grouproles[$group]);
+            return group_role_can_edit_views($group, $grouproles[$group]);
         }
         return false;
     }
@@ -1537,24 +1619,26 @@ class User {
                                     get_config('wwwroot'));
 
         $fullname = display_name($this, null, true);
+        $emailsubject = '';
+        $emailmessage = '';
 
         switch ($type) {
             case 0:
                 $emailsubject = get_string('pendingdeletionadminemailsubject', 'account', get_config('sitename'));
                 $emailmessage = get_string('pendingdeletionadminemailtext', 'account',
-                            $fullname, $pendingdeletionslink, $fullname, $this->email,
+                            $fullname, $pendingdeletionslink, $fullname, $this->get('email'),
                             $message, get_config('sitename'));
                 break;
             case 1:
                 $emailsubject = get_string('resenddeletionadminemailsubject', 'account', get_config('sitename'));
                 $emailmessage = get_string('resenddeletionadminemailtext', 'account',
-                            $fullname, $pendingdeletionslink, $fullname, $this->email,
+                            $fullname, $pendingdeletionslink, $fullname, $this->get('email'),
                             $message, get_config('sitename'));
                 break;
             case 2:
                 $emailsubject = get_string('canceldeletionadminemailsubject', 'account', get_config('sitename'));
                 $emailmessage = get_string('canceldeletionadminemailtext', 'account',
-                            $fullname, $fullname, $this->email,
+                            $fullname, $fullname, $this->get('email'),
                             get_config('sitename'));
                 break;
         }
@@ -1728,8 +1812,8 @@ class User {
         if (empty($institution)) {
             return;
         }
-        // Dont copy now but add to copy queue.
-        // But dont do it for site templates so new user can have them immediately
+        // Don't copy now but add to copy queue.
+        // But don't do it for site templates so new user can have them immediately
         $time = db_format_timestamp(time());
         // Get list of available views which are not in collections
         $templateviewids = get_column_sql("
@@ -1791,7 +1875,7 @@ class User {
                     $where = new stdClass();
                     $where->view = $result->view;
                     $where->collection = $result->collection;
-                    $where->usr = $this->id;
+                    $where->usr = $this->get('id');
 
                     $record = clone $where;
                     $record->ctime = db_format_timestamp(time());
@@ -1806,7 +1890,7 @@ class User {
             foreach ($templateids as $id) {
                 $where = new stdClass();
                 $where->view = $id;
-                $where->usr = $this->id;
+                $where->usr = $this->get('id');
 
                 $record = clone $where;
                 $record->ctime = db_format_timestamp(time());
@@ -1829,6 +1913,25 @@ class User {
 class LiveUser extends User {
 
     protected $SESSION;
+
+    protected $accountprefs;
+    protected $active;
+    protected $activityprefs;
+    protected $deleted;
+    protected $expiry;
+    protected $expirymailsent;
+    protected $inactivemailsent;
+    protected $lastaccess;
+    protected $lastlastlogin;
+    protected $lastlogin;
+    protected $logout_time;
+    protected $quota;
+    protected $sessionid;
+    protected $sesskey;
+    protected $suspendedctime;
+    protected $suspendedcusr;
+    protected $suspendedreason;
+    protected $unread;
 
     public function __construct() {
 
@@ -1991,7 +2094,7 @@ class LiveUser extends User {
      * should be occasionally reloaded into the session.
      */
     public function reload_background_fields() {
-        if ($this->id == '0') {
+        if ($this->get('id') == '0') {
             return;
         }
         $reload = array(
@@ -1999,7 +2102,7 @@ class LiveUser extends User {
             'suspendedcusr', 'quota', 'unread',
         );
         $tsfields = array('expiry', 'suspendedctime');
-        $record = get_record('usr', 'id', $this->id);
+        $record = get_record('usr', 'id', $this->get('id'));
         foreach ($reload as $f) {
             if (!isset($record->$f)) {
                 continue;
@@ -2074,17 +2177,17 @@ class LiveUser extends User {
         $this->populate($user);
         $this->SESSION->regenerate_id();
         $time = time();
-        $this->lastlastlogin      = $this->lastlogin;
-        $this->lastlogin          = $time;
-        $this->lastaccess         = $time;
-        $this->sessionid          = session_id();
-        $this->logout_time        = $time + get_config('session_timeout');
-        $this->sesskey            = get_random_key();
+        $this->set('lastlastlogin', $this->lastlogin);
+        $this->set('lastlogin', $time);
+        $this->set('lastaccess', $time);
+        $this->set('sessionid', session_id());
+        $this->set('logout_time', $time + get_config('session_timeout'));
+        $this->set('sesskey', get_random_key());
 
         // We need a user->id before we load_c*_preferences
         if (empty($user->id)) $this->commit();
-        $this->activityprefs      = load_activity_preferences($user->id);
-        $this->accountprefs       = load_account_preferences($user->id);
+        $this->set('activityprefs', load_activity_preferences($user->id));
+        $this->set('accountprefs', load_account_preferences($user->id));
 
         // Record the successful login in the usr_login_data table
         insert_record('usr_login_data', (object) array('usr' => $user->id, 'ctime' => db_format_timestamp($time)));
@@ -2181,9 +2284,45 @@ class LiveUser extends User {
             $id = $this->get('id');
         }
         $this->find_by_id($id);
-        $this->activityprefs = load_activity_preferences($id);
-        $this->accountprefs = load_account_preferences($id);
+        $this->set('activityprefs', load_activity_preferences($id));
+        $this->set('accountprefs', load_account_preferences($id));
         $this->load_views();
+    }
+
+    public function can_masquerade_as($user, $roles=array()) {
+        if (!$user instanceof User) {
+            $userobj = new User();
+            $userobj->find_by_id($user->id);
+            $user = $userobj;
+        }
+        // No point masquerading as yourself
+        if ($this->id === $user->get('id')) {
+            return false;
+        }
+        // Admins can masquerade no matter the $roles
+        if ($this->is_admin_for_user($user)) {
+            return true;
+        }
+        if (empty($roles)) {
+            return false;
+        }
+        if (in_array('staff', $roles)) {
+            $stafflogin = $this->is_staff_for_user($user) && !$user->get('staff');
+            $stafflogin = $stafflogin && !$user->is_admin_for_user($this);
+            $stafflogin = $stafflogin && !$user->is_institutional_admin();
+            if ($stafflogin && is_null($this->get('parentuser'))) {
+                return true;
+            }
+        }
+        if (in_array('supportadmin', $roles)) {
+            $supportadminlogin = $this->is_supportadmin_for_user($user) && !$user->get('staff');
+            $supportadminlogin = $supportadminlogin && !$user->is_admin_for_user($this);
+            $supportadminlogin = $supportadminlogin && !$user->is_institutional_admin();
+            if ($supportadminlogin && is_null($this->get('parentuser'))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function change_identity_to($userid) {
@@ -2197,7 +2336,7 @@ class LiveUser extends User {
         $stafflogin = $stafflogin && !$user->is_institutional_admin();
         //Users can still log into other staffmembers.
 
-        if ( !$this->is_admin_for_user($user) && !$stafflogin ) {
+        if ( !$this->can_masquerade_as($user) && !$stafflogin ) {
             //End PCNZ customization.
             throw new AccessDeniedException(get_string('loginasdenied', 'admin'));
         }
@@ -2282,14 +2421,20 @@ class LiveUser extends User {
     * @param $content string file contents
     * @param $name string filename to be used when downloading the file
     * @param $mimetype string
+    * @param $suffix boolean datestamp to be added to end of filename
     */
-    public function set_download_file($content, $name, $mimetype) {
+    public function set_download_file($content, $name, $mimetype, $suffix=false) {
         global $SESSION;
 
         $filename = get_random_key();
-        $dir = get_config('dataroot') . 'export/' . $this->id . '/';
+        $dir = get_config('dataroot') . 'export/' . $this->get('id') . '/';
         check_dir_exists($dir);
         file_put_contents($dir . $filename, $content);
+        if ($suffix) {
+            // Append the current date to the end of the name of the file but before the file extension
+            // eg "cats.csv" would become "cats_20210101123010.csv"
+            $name = preg_replace('/\.(.*?)$/', '_' . date('YmdHis', time()) . '.$1', $name);
+        }
 
         $SESSION->set('downloadfile', array(
             'file'     => $filename,

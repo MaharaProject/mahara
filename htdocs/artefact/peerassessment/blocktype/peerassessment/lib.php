@@ -42,7 +42,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         return array('portfolio');
     }
 
-    public static function display_for_roles($roles) {
+    public static function display_for_roles(BlockInstance $bi, $roles) {
         return true;
     }
 
@@ -59,11 +59,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $limit       = param_integer('limit', 10);
         $offset      = param_integer('offset', 0);
         $showcomment = param_integer('showcomment', null);
-        // Create the "make assessment private form" now if it's been submitted
-        if (param_exists('make_public_submit')) {
-            pieform(ArtefactTypePeerassessment::make_public_form(param_integer('assessment')));
-        }
-        else if (param_exists('delete_assessment_submit')) {
+        if (param_exists('delete_assessment_submit')) {
             pieform(ArtefactTypePeerassessment::delete_assessment_form(param_integer('assessment'), param_integer('view'), param_integer('block')));
         }
         $view = new View($instance->get('view'));
@@ -75,7 +71,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         $options->showcomment = $showcomment;
         $options->view = $instance->get_view();
         $options->block = $instance->get('id');
-        $feedback = ArtefactTypePeerassessment::get_assessments($options, $versioning);
+        $feedback = ArtefactTypePeerassessment::get_assessments($options, $versioning, $exporter);
         $feedbackform = ArtefactTypePeerassessment::add_assessment_form(true, $instance->get('id'), 0);
         $feedbackform = pieform($feedbackform);
         $smarty = smarty_core();
@@ -97,7 +93,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         return $html;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -177,7 +173,7 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
             safe_require('artefact', 'peerassessment');
             foreach ($artefacts as $artefactid) {
                 // Delete the assessment.
-                $a = new ArtefactTypePeerAssessment($artefactid);
+                $a = new ArtefactTypePeerassessment($artefactid);
                 $a->delete();
             }
         }

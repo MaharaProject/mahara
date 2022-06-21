@@ -29,9 +29,9 @@ Scenario: Import and check the two exported Release 20-10 skins
     # Import the two skins
     And I choose "Skins" in "Create" from main menu
     And I click on "More options"
-    And I click on "Import" in the ".dropdown-menu" "css_element"
+    And I click on "Import" in the "Dropdown" "Misc" property
     And I attach the file "20-10_2ExportedSkins.xml" to "Valid XML file "
-    And I click on "Import" in the "#importskinform_submit_container" "css_element"
+    And I press "Import"
     Then I should see "Skin imported successfully"
     And I should see "2 skins"
     And I should see "20-10 SimplePersonalSkin (created Dan)"

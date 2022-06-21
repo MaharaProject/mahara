@@ -67,7 +67,7 @@ $CFG->prefix = (isset($CFG->dbprefix)) ? $CFG->dbprefix : '';
 
 /// Based on $CFG->dbtype, add the proper generator class
     if (!file_exists($CFG->libdir . '/xmldb/classes/generators/' . $CFG->dbtype . '/' . $CFG->dbtype . '.class.php')) {
-        error ('DB Type: ' . $CFG->dbtype . ' not supported by XMLDDB');
+        error (E_WARNING, 'DB Type: ' . $CFG->dbtype . ' not supported by XMLDDB', null, null, null);
     }
     require_once($CFG->libdir . '/xmldb/classes/generators/' . $CFG->dbtype . '/' . $CFG->dbtype . '.class.php');
 
@@ -449,6 +449,7 @@ function find_key_name(XMLDBTable $table, XMLDBKey $key) {
     $isfk = ($key->getType() == XMLDB_KEY_FOREIGN || $key->getType() == XMLDB_KEY_FOREIGN_UNIQUE);
 
     $fields = $key->getFields();
+    $reftable = $reffields = null;
     if ($isfk) {
         $reffields = $key->getRefFields();
         $reftable = get_config('dbprefix') . $key->getRefTable();
@@ -708,7 +709,7 @@ function uninstall_from_xmldb_file($file) {
                         // dropped when the table is dropped
                         continue;
                     }
-                    drop_key($table, $key);
+                    drop_key($table, $key, true, true, true);
                 }
             }
             drop_table($table);
@@ -877,7 +878,7 @@ function create_temp_table($table, $continue=true, $feedback=true) {
 
 /**
  * This function will rename the table passed as argument
- * Before renaming the index, the function will check it exists
+ * Before renaming the table, the function will check it exists
  *
  * @uses $CFG, $db
  * @param XMLDBTable table object (just the name is mandatory)
@@ -904,7 +905,7 @@ function rename_table($table, $newname, $continue=true, $feedback=true) {
 
 /// Check newname isn't empty
     if (!$newname) {
-        debugging('New name for table ' . $index->getName() . ' is empty! Rename skipped', DEBUG_DEVELOPER);
+        debugging('New name for table ' . $table->getName() . ' is empty! Rename skipped', DEBUG_DEVELOPER);
         return true; //Table doesn't exist, nothing to do
     }
 
@@ -1225,9 +1226,10 @@ function add_key($table, $key, $continue=true, $feedback=true) {
  * @param XMLDBKey key object (full specs are required)
  * @param boolean continue to specify if must continue on error (true) or stop (false)
  * @param boolean feedback to specify to show status info (true) or not (false)
+ * @param boolean quiet to specify if we need to alert about missing key
  * @return boolean true on success, false on error
  */
-function drop_key($table, $key, $continue=true, $feedback=true) {
+function drop_key($table, $key, $continue=true, $feedback=true, $quiet=false) {
 
     global $CFG, $db;
 
@@ -1242,7 +1244,9 @@ function drop_key($table, $key, $continue=true, $feedback=true) {
 
     // Check key exists.
     if (!db_key_exists($table, $key)) {
-        debugging('Key ' . $key->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
+        if (!$quiet) {
+            debugging('Key ' . $key->getName() . ' does not exist. Delete skipped', DEBUG_DEVELOPER);
+        }
         return true; // Key doesn't exist, nothing to do.
     }
 

@@ -290,7 +290,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         ';
         $params = array($instance->get('id'));
         if ($records = get_records_sql_array($sql, $params, 0, 1)) {
-            $data = array_map(function($item) use ($owner) {
+            $data = array_map(function($item) {
                 $item->displayname = display_name($item);
                 $item->text = clean_html($item->text);
                 $item->profileurl = profile_url($item);
@@ -302,7 +302,9 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
     }
 
     public static function delete_instance(BlockInstance $instance) {
-        return delete_records('blocktype_verification_comment', 'instance', $instance->get('id'));
+        delete_records('blocktype_verification_comment', 'instance', $instance->get('id'));
+        delete_records('blocktype_verification_undo', 'block', $instance->get('id'));
+        return true;
     }
 
     public static function comment_validate(Pieform $form, $values) {
@@ -402,7 +404,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             $owner = $view->get('owner');
             require_once('activity.php');
 
-            if(empty($configdata['displayverifiername'])) {
+            if (empty($configdata['displayverifiername'])) {
                 $verifiersubjectstring = 'verifymessagesubjectnoname';
                 $verifiersubjectargs = array();
                 $verifiermessagestring = 'verifymessagenoname';
@@ -453,7 +455,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
             ));
         }
 
-        if (empty($newtext)) {
+        if (empty($newtext) || $record->private) {
             // check if is the last verified locking statement block
             if (PluginBlocktypeVerification::is_last_locking_block($instance)) {
                 $view->get_collection()->unlock_collection();
@@ -469,7 +471,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         ));
     }
 
-    public function verification_comment_js($id, $text) {
+    public static function verification_comment_js($id, $text) {
        $js = <<<EOF
 function verification_comment_success_{$id}(form, data) {
     formSuccess(form, data);
@@ -477,7 +479,7 @@ function verification_comment_success_{$id}(form, data) {
         handle_cancel_{$id}({$id}, data.comments.text);
     }
     else {
-        location.reload(); // PCNZ customisation: Reload page so we can see the reset statement link/form
+        location.reload();
     }
     $(window).trigger('colresize');
 }
@@ -498,7 +500,7 @@ EOF;
         return "<script>$js</script>";
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -668,7 +670,7 @@ EOF;
         return $values;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'fullinclself';
     }
 
@@ -684,7 +686,7 @@ EOF;
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();
@@ -696,7 +698,7 @@ EOF;
     public static function is_last_locking_block(BlockInstance $instance) {
         $viewid = $instance->get_view()->get('id');
 
-        $sql = "SELECT bi.id, bi.configdata, text FROM {block_instance} bi
+        $sql = "SELECT bi.id, bi.configdata, bvc.text, bvc.private FROM {block_instance} bi
         LEFT JOIN {blocktype_verification_comment} bvc
         ON bi.id = bvc.instance
         WHERE bi.blocktype = 'verification'
@@ -712,7 +714,7 @@ EOF;
                     break;
                 }
                 if ($config['lockportfolio'] == 1 && $config['addcomment'] == 1) {
-                    if ($b->text) {
+                    if ($b->text && empty($b->private)) {
                         $unlockcollection = false;
                     }
                     break;

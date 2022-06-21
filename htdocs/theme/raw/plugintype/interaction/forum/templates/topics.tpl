@@ -85,18 +85,18 @@
     {if $moderator}
     <td class="control-buttons">
         <div class="btn-group">
-            <a href="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="edit"}">
+            <button data-url="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" type="button"  class="btn btn-secondary btn-sm" title="{str tag="edit"}">
                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
-            </a>
-            <a href="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" class="btn btn-secondary btn-sm" title="{str tag="delete"}">
+            </button>
+            <button data-url="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" type="button" class="btn btn-secondary btn-sm" title="{str tag="delete"}">
                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="sr-only">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
-            </a>
+            </button>
         </div>
     </td>
     {/if}

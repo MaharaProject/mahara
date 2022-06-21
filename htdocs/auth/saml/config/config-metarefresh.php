@@ -11,8 +11,13 @@
 $finalsources = array();
 $sources = Metarefresh::get_metadata_urls();
 //Pull through each idp's fetch url
-foreach($sources as $identityid => $src) {
-    $finalsources[] = array('src' => $src);
+$x = 0;
+foreach($sources as $identityid => $source) {
+    $finalsources[$x] = array('src' => $source['src']);
+    if (!empty($source['validateFingerprint'])) {
+        $finalsources[$x]['validateFingerprint'] = $source['validateFingerprint'];
+    }
+    $x++;
 }
 $config = array(
     'conditionalGET' => TRUE,

@@ -6,8 +6,24 @@
     border-left: 5px solid theme-color("secondary");
     padding-left: $spacing-lg;
     .forumpostleft {
-        min-width: 7.5rem; // 120px;
+        max-width: 7.5rem; // 120px;
         padding-right: $spacing-xl;
+
+        .poster {
+            word-wrap: break-word;
+        }
+    }
+    .forumsubject {
+        a {
+            text-decoration: $link-decoration;
+            &:hover,
+            &:focus {
+                text-decoration: $link-hover-decoration;
+            }
+        }
+    }
+    .media-body {
+        padding-bottom: $spacing-base;
     }
     .title {
         margin: 0;

@@ -65,8 +65,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
             'limit' => $friends['limit'],
             'offset' => $friends['offset'],
             'numbersincludefirstlast' => false,
-            'resultcounttextsingular' => get_string('friend', 'group'),
-            'resultcounttextplural' => get_string('friends', 'group'),
+            'resultcounttext' => get_string('nfriends', 'group',$friends['count']),
         ));
         $friends['pagination'] = $pagination['html'];
         $friends['pagination_js'] = $pagination['javascript'];
@@ -143,11 +142,11 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:myfriends:myfriends.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return false;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 
@@ -173,7 +172,7 @@ class PluginBlocktypeMyfriends extends MaharaCoreBlocktype {
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

@@ -1,9 +1,5 @@
 {include file="header.tpl"}
 
-{if $accessible}
-    <span class="sr-only">{str tag=accessibilitymodedescription section=view}</span>
-{/if}
-
 <div class="view-instructions blocks">
     <form action="{$formurl}" method="post" class="row">
         <input type="submit" name="{$action_name}" id="action-dummy" class="d-none">
@@ -13,23 +9,27 @@
         <input type="hidden" name="sesskey" value="{$SESSKEY}">
 
         <div class="col-with-collapse">
+        {if $accessible}
+            <div id="blocksinstructionaccessible" class="lead view-description with-addblock">
+                {str tag='accessibilitymodedescription1' section='view'}
+            </div>
+        {else}
+            <div id="blocksinstruction" class="lead view-description with-addblock">
+                {str tag='blocksinstructionajaxlive2' section='view'}
+            </div>
+        {/if}
         {if $instructions}
             <div id="viewinstructions" class="last form-group collapsible-group small-group">
             <fieldset  class="pieform-fieldset collapsible collapsible-small">
                 <legend>
                     <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
-                        {str tag='instructions' section='view'}
-                        <span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
+                        {str tag='instructions' section='view'}<span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                     </a>
                 </legend>
                 <div class="fieldset-body collapse viewinstructions {if !$instructionscollapsed} show {/if}" id="viewinstructions-dropdown">
                     {$instructions|clean_html|safe}
                 </div>
             </fieldset>
-            </div>
-        {else}
-            <div id="blocksinstruction" class="lead view-description with-addblock">
-                {str tag='blocksintructionnoajax' section='view'}
             </div>
         {/if}
         </div>
@@ -81,7 +81,7 @@
                     <span class="sr-only">{str tag=closeconfiguration section=view}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline float-left"></h1>
-                <span class="icon icon-cogs icon-2x float-right" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-pencil-alt icon-2x float-right" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">
             </div>

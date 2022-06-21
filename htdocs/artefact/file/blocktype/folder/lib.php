@@ -38,8 +38,12 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 4000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         // The exporting for pdf
@@ -47,8 +51,8 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         $configdata = $instance->get('configdata');
         $configdata['viewid'] = $instance->get('view');
         $configdata['simpledisplay'] = true;
-        $configdata['pdfexport'] = true; // pass down flag that we are in pdf export
-        $configdata['pdfexportfiledir'] = 'export_info/files/';
+        $configdata['exporttype'] = $exporting; // pass down flag of the export type
+        $configdata['exportfiledir'] = 'export_info/files/';
         list($result, $commentcount, $comments) = self::render_instance_data($instance, $editing, $versioning, $configdata);
 
         $smarty = smarty_core();
@@ -144,11 +148,12 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
 
     public static function postinst($prevversion) {
         if ($prevversion < 2013120900) {
-            set_config_plugin('blocktype', 'folder', 'sortorder', 'asc');
+            return set_config_plugin('blocktype', 'folder', 'sortorder', 'asc');
         }
+        return true;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -220,7 +225,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
 
     public static function filebrowser_element(&$instance, $default=array()) {
         $element = ArtefactTypeFileBase::blockconfig_filebrowser_element($instance, $default);
-        $element['title'] = get_string('file', 'artefact.file');
+        $element['title'] = get_string('File', 'artefact.file');
         $element['name'] = 'artefactid';
         $element['config']['upload'] = false;
         $element['config']['selectone'] = true;
@@ -232,7 +237,7 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         return $element;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 

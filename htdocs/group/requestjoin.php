@@ -1,5 +1,6 @@
 <?php
 /**
+ * Page for requesting to join a group.
  *
  * @package    mahara
  * @subpackage core
@@ -53,6 +54,13 @@ $smarty->assign('subheading', get_string('requestjoinspecifiedgroup', 'group', $
 $smarty->assign('form', $form);
 $smarty->display('group/requestjoin.tpl');
 
+/**
+ * Submit the request for joining a group
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function requestjoingroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $group, $goto;
     insert_record(

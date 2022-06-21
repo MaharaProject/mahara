@@ -224,6 +224,7 @@ class ElasticsearchType_artefact extends ElasticsearchType {
 
         return $record;
     }
+
     public static function getRecordDataById($type, $id) {
         global $USER;
 
@@ -305,11 +306,11 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                     $record->link = 'artefact/resume/interests.php';
                     break;
                 case 'plan' :
-                    $record->link = 'artefact/plans/plan.php?id=' . $record->id;
+                    $record->link = 'artefact/plans/plan/view.php?id=' . $record->id;
                     break;
                 case 'task' :
                     if (isset ( $record->parent ) && intval ( $record->parent ) > 0) {
-                        $record->link = 'artefact/plans/plan.php?id=' . $record->parent;
+                        $record->link = 'artefact/plans/plan/view.php?id=' . $record->parent;
                     }
                     break;
             }
@@ -324,12 +325,16 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                             "\r"
             ), ' ', strip_tags ( $record->note ) );
             $socialprofile = new ArtefactTypeSocialprofile ( $record->id );
-            $icons = $socialprofile->get_profile_icons ( array (
-                            $record
-            ) );
-            if (! empty ( $icons )) {
+            $icons = $socialprofile->get_profile_icons(array($record));
+            if (!empty($icons)) {
                 $record->link = $icons [0]->link;
-                $record->icon = $icons [0]->icon;
+
+                if (isset($icons[0]->faicon)) {
+                    $record->faicon = $icons [0]->faicon;
+                }
+                else {
+                    $record->icon = $icons [0]->icon;
+                }
             }
             else {
                 // Instantiate the attribute used by the template.
@@ -403,10 +408,10 @@ class ElasticsearchType_artefact extends ElasticsearchType {
         if ($record->artefacttype == 'image' || $record->artefacttype == 'profileicon') {
             if (isset ( $record->width ) && isset ( $record->height ) && intval ( $record->width ) > 0 && intval ( $record->height ) > 0) {
                 if ($record->width > $record->height) {
-                    $size = '80x' . intval ( $record->height * 80 / $record->width );
+                    $size = '30x' . intval ( $record->height * 30 / $record->width );
                 }
                 else {
-                    $size = intval ( $record->width * 80 / $record->height ) . 'x80';
+                    $size = intval ( $record->width * 30 / $record->height ) . 'x30';
                 }
             }
             $vars = array (
@@ -441,7 +446,16 @@ class ElasticsearchType_artefact extends ElasticsearchType {
                 WHERE   art.id = ?
                 AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
                 AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
+                UNION
+                SELECT vac.view AS view_id, vac.accesstype, vac.group, vac.role, vac.usr, vac.institution
+                FROM {artefact} art
+                INNER JOIN {artefact_peer_assessment} aps ON aps.assessment = art.id
+                INNER JOIN {view_access} vac ON vac.view = aps.view
+                WHERE art.id = ?
+                AND (vac.startdate IS NULL OR vac.startdate < current_timestamp)
+                AND (vac.stopdate IS NULL OR vac.stopdate > current_timestamp)
                 ', array (
+                $artefactid,
                 $artefactid,
                 $artefactid
         ) );

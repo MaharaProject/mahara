@@ -1,5 +1,5 @@
 @javascript @core @blocktype @blocktype_newviews
-Feature: Looking at the "Latest changes I can view" (newviews) block on my dashboard
+Feature: Looking at the "Portfolios shared with me" (newviews) block on my dashboard
     In order to see new pages across the site
     So I can know what people are up to
 
@@ -24,14 +24,17 @@ Background:
       | title | accesstype |
       | Page UserA_01 | public |
       | Collection UserA_01 | public |
+    And the following "blocks" exist:
+      | title                     | type     | page                   | retractable | updateonly | data                                                |
+      | Portfolios shared with me | newviews | Dashboard page: UserB  | no          | yes        | limit=5;user=1;friend=1;group=1;loggedin=1;public=1 |
 
 Scenario: Share pages and collections to a group.
 The list of shared pages must take into account of access date (Bug 1374163)
     And I log in as "UserB" with password "Kupuh1pa!"
-    Then I should see "Page UserA_01" in the "Latest changes I can view" property
-    And I should see "Collection UserA_01" in the "Latest changes I can view" property
+    Then I should see "Page UserA_01" in the "Portfolios shared with me" "Blocks" property
+    And I should see "Collection UserA_01" in the "Portfolios shared with me" "Blocks" property
     # I shouldn't see the pages I didn't share
-    And I should not see "Page UserA_02" in the "Latest changes I can view" property
-    And I should not see "Collection UserA_02" in the "Latest changes I can view" property
+    And I should not see "Page UserA_02" in the "Portfolios shared with me" "Blocks" property
+    And I should not see "Collection UserA_02" in the "Portfolios shared with me" "Blocks" property
     # I shouldn't see the individual pages in a collection
-    And I should not see "Page UserA_03" in the "Latest changes I can view" property
+    And I should not see "Page UserA_03" in the "Portfolios shared with me" "Blocks" property

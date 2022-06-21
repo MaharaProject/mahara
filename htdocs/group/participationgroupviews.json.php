@@ -1,9 +1,10 @@
 <?php
 /**
+ * Participation report - group views.
  *
  * @package    mahara
  * @subpackage core
- * @author     Son Nguyen <son.nguyen@catalyst.net.nz>, Catalyst IT, NZ
+ * @author     Son Nguyen (Catalyst IT, NZ) <son.nguyen@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
@@ -40,8 +41,7 @@ $pagination = array(
     'datatable'  => 'groupviewsreport',
     'jsonscript' => 'group/participationgroupviews.json.php',
     'setlimit'   => true,
-    'resultcounttextsingular' => get_string('view', 'view'),
-    'resultcounttextplural'   => get_string('views', 'view'),
+    'resultcounttext' => get_string('nviews1', 'view', $groupviews['count']),
 );
 
 $groupviews = View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);

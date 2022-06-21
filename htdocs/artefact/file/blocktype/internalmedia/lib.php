@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utility for the internal media blocktype
  *
  * @package    mahara
  * @subpackage blocktype-internalmedia
@@ -11,6 +12,9 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Utility class for the internal media blocktype
+ */
 class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     /**
@@ -44,8 +48,41 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
     public static function postinst($oldversion) {
         if ($oldversion == 0) {
-            set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4')));
+            return set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize(array('flv', 'mp3', 'mp4')));
         }
+        return true;
+    }
+
+    /**
+     * Render the block for export
+     * Allowing us to render it differently for each export type
+     *
+     * @param BlockInstance $instance An instance of the block
+     * @param boolean $editing        If rendering in edit mode    - unused but needed to match render_instance()
+     * @param boolean $versioning     If rendering in version mode - unused but needed to match render_instance()
+     * @param string|null $exporting  The exporting format name
+     * @return string HTML markup
+     */
+    public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
+            return self::render_instance($instance, $editing, $versioning);
+        }
+        list($artefact, $width, $height) = self::get_mediaplayer_details($instance);
+        $html = '<div class="text-midtone text-small">';
+        if ($artefact && $artefact->get('description')) {
+            $html .= $artefact->get('description');
+        }
+        else {
+            $html .= get_string('notrendertopdf', 'artefact.file');
+        }
+        if ($exporting == 'pdf') {
+            $html .= '<br>' . get_string('notrendertopdflink', 'artefact.file');
+            // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
+            // We then override the link in the PDF pdf_view_export_data() function.
+            $html .= '<a href="' . $url . '">export_info/files/' . $artefact->get('id') . '_' . $artefact->get('title') . '</a>';
+        }
+        $html .= '</div>';
+        return $html;
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
@@ -80,7 +117,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:internalmedia:internalmedia.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -303,7 +340,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         }
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
@@ -341,7 +378,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
 
 /**
  * Hierarchy of classes that hold the code for the different media players
- * we use. See BlocktypeInternalMedia::get_all_filetype_players() for how
+ * we use. See PluginBlocktypeInternalmedia::get_all_filetype_players() for how
  * we map mimetypes to media players.
  */
 abstract class MaharaMediaPlayer {
@@ -512,7 +549,7 @@ class MaharaMediaPlayer_html5audio extends MaharaMediaPlayer {
      */
     public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = PluginBlocktypeInternalMedia::get_download_link($artefact, $block);
+        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
 
         require_once('file.php');
         $mimetype = $artefact->get('filetype');
@@ -567,7 +604,7 @@ class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
      */
     public static function get_html(ArtefactType $artefact, BlockInstance $block, $width, $height) {
 
-        $url = PluginBlocktypeInternalMedia::get_download_link($artefact, $block);
+        $url = PluginBlocktypeInternalmedia::get_download_link($artefact, $block);
 
         require_once('file.php');
         $mimetype = $artefact->get('filetype');

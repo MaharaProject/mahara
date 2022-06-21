@@ -64,7 +64,7 @@ jQuery(function($) {
     };
 
     dock.getLoadingIndicator = function() {
-        return '<div class="modal-loading"></div>';
+        return '<div class="modal-loading"><div class="loading-inner"><span class="icon-spinner icon-pulse icon icon-lg"></span></div></div>';
     };
 
     dock.init = function(scope){

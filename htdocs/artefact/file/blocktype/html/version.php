@@ -1,5 +1,6 @@
 <?php
 /**
+ *  Version file for html blocktype to render html snippets from inside a view
  *
  * @package    mahara
  * @subpackage artefact-file
@@ -12,5 +13,5 @@
 defined('INTERNAL') || die();
 
 $config = new stdClass();
-$config->version = 2010090801;
-$config->release = '1.0.1';
+$config->version = 2021042900;
+$config->release = '1.0.2';

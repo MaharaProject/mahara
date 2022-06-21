@@ -21,24 +21,26 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I press "Create folder"
     And I follow "Folder1"
     # Creating subfolder inside Folder1
+    And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Subfolder" for "files_filebrowser_createfolder_name"
-    And I scroll to the top
     And I press "Create folder"
     # Uploading Image to Folder1
     And I attach the file "Image1.jpg" to "File"
     # Confirming upload was successful
     And I should see "Upload of Image1.jpg to Folder1 complete"
     # Going back to Home
+    And I scroll to the base of id 'files_filebrowser_foldernav'
     And I follow "Home"
     # Creating Folder2
+    And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Folder2" for "files_filebrowser_createfolder_name"
-    And I scroll to the top
     And I press "Create folder"
     And I follow "Folder2"
     # Creatign Subfolder2
+    And I scroll to the base of id "files_filebrowser_upload_container"
     And I fill in "Subfolder2" for "files_filebrowser_createfolder_name"
-    And I scroll to the top
     And I press "Create folder"
+    And I wait "1" seconds
     And I follow "Subfolder2"
     And I attach the file "Image3.png" to "File"
     # Confirming upload was successful
@@ -50,6 +52,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     And I delete the "Image3.png" row
     And I should see "Image Image3.png deleted"
     # Verifying you can move from subfolder2 to Home
+    And I scroll to the base of id 'files_filebrowser_foldernav'
     And I follow "Home"
     # Verifying all 2 folders are still there
     Then I should see "Folder1"
@@ -59,7 +62,7 @@ Scenario: Creating sub folder and attaching files (Bug 1426983)
     # this could be expanded to check the other folder block options
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I click on blocktype "Folder"
     And I expand "Folders" node

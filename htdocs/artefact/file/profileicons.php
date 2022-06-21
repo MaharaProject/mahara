@@ -1,5 +1,6 @@
 <?php
 /**
+ * Make profile icons into file artefacts
  *
  * @package    mahara
  * @subpackage core
@@ -193,28 +194,53 @@ jQuery(function($) {
 EOF;
 
 $filesize = 0;
+
+/**
+ * Validation checks for uploading a profile icon
+ *
+ * Creates form errors for when checks fail.
+ * - preprocess
+ * - size limit
+ * - check it is an image
+ * - check the account hasn't reached limit of profile icons
+ * - check the account won't exceed file space on upload
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ *      [file] => Array (
+                [name] => cat.jpg
+                [type] => image/jpeg
+                [tmp_name] => /tmp/abc
+                [error] => 0
+                [size] => 1234
+        )
+        [title] =>
+        [submit] => Upload
+        [sesskey] => abc
+ */
 function upload_validate(Pieform $form, $values) {
     global $USER, $filesize;
     require_once('file.php');
     require_once('uploadmanager.php');
 
+    // new upload manager
     $um = new upload_manager('file', false, null, false, get_max_upload_size(true));
     if ($error = $um->preprocess_file()) {
         $form->set_error('file', $error);
         return false;
     }
-
+    // checking image info
     $imageinfo = getimagesize($values['file']['tmp_name']);
     if (!$imageinfo || !is_image_type($imageinfo[2])) {
         $form->set_error('file', get_string('filenotimage'));
         return false;
     }
-
+    // check the account hasn't reached the limit of existing profile icons
     if (get_field('artefact', 'COUNT(*)', 'artefacttype', 'profileicon', 'owner', $USER->id) >= 5) {
         $form->set_error('file', get_string('onlyfiveprofileicons', 'artefact.file'));
         return false;
     }
-
+    // check that uploading the file doesn't exceed the quota this person has for filespace
     $filesize = $um->file['size'];
     if (!$USER->quota_allowed($filesize)) {
         $form->set_error('file', get_string('profileiconuploadexceedsquota', 'artefact.file', get_config('wwwroot')));
@@ -231,6 +257,13 @@ function upload_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Submit the uploading of profile icon
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @throws Exception on exceeding quota, upload error etc.
+ */
 function upload_submit(Pieform $form, $values) {
     safe_require('artefact', 'file');
 
@@ -259,8 +292,18 @@ function upload_submit(Pieform $form, $values) {
     $form->json_reply(PIEFORM_OK, get_string('profileiconaddedtoimagesfolder', 'artefact.file', get_string('imagesdir', 'artefact.file')));
 }
 
+/**
+ * profileiconsettings_submit_default
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ *      [default] => Default
+ *      [sesskey] => abcde
+ * @throws Exception if the selected profileicon could not be set as default
+ */
 function profileiconsettings_submit_default(Pieform $form, $values) {
     global $USER, $SESSION;
+    log_debug($values);
 
     $default = param_integer('d');
 
@@ -280,6 +323,13 @@ function profileiconsettings_submit_default(Pieform $form, $values) {
     redirect('/artefact/file/profileicons.php');
 }
 
+/**
+ * Submit the deletion of a profile icon
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @throws Exception on denial of access
+ */
 function profileiconsettings_submit_delete(Pieform $form, $values) {
     require_once(get_config('docroot') . 'artefact/lib.php');
     require_once('file.php');

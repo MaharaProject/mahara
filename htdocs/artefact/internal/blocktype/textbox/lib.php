@@ -318,7 +318,7 @@ jQuery(function() {
 EOF;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -383,7 +383,7 @@ EOF;
             $instance->commit();
         }
 
-        // get the default value for allowing comments on Notes
+        // Get the default value for allowing comments on Notes
         if ($allowcomments = get_config_plugin('artefact', 'internal', 'allowcomments')) {
             $allowcomments = explode(',', $allowcomments);
             $allowcomments = in_array('notes', $allowcomments);
@@ -434,8 +434,8 @@ EOF;
             ),
             'chooseartefact' => array(
                 'type'  => 'html',
-                'value' => '<a id="chooseartefactlink" href="#" class="btn btn-secondary">'
-                    . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</a>',
+                'value' => '<button id="chooseartefactlink" class="btn btn-secondary">'
+                    . get_string('usecontentfromanothertextbox1', 'blocktype.internal/textbox') . '</button>',
             ),
             'managenotes' => array(
                 'type'  => 'html',
@@ -612,7 +612,7 @@ EOF;
         return $element;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 

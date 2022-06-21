@@ -60,6 +60,7 @@ class PluginModuleFramework extends PluginModule {
                  set_field('blocktype_installed', 'active', 1, 'name', 'annotation');
             }
         }
+        return true;
     }
 
     public static function matrix_is_valid_json($filename) {
@@ -183,6 +184,8 @@ class Framework {
     private $active = 1; // active by default
     private $evidencestatuses;
     private $standards;
+    private $mtime;
+    private $collections;
 
     const EVIDENCE_BEGUN = 0;
     const EVIDENCE_INCOMPLETE = 1;
@@ -222,6 +225,55 @@ class Framework {
                 $this->{$field} = $value;
             }
         }
+    }
+
+    public function to_json() {
+        $f = new stdClass();
+        $f->framework = new stdClass();
+        $f->framework->name = $this->name;
+        $f->framework->institution = $this->institution;
+        $f->framework->description = $this->description;
+        $f->framework->selfassess = $this->selfassess;
+        $evidence_statuses = $this->get('evidencestatuses');
+        $evidence_statuses_type = array('begun', 'incomplete', 'partialcomplete', 'completed');
+        foreach ($evidence_statuses as $i => $status) {
+            $f->framework->evidencestatuses[$i] = new stdClass();
+            $f->framework->evidencestatuses[$i]->{$evidence_statuses_type[$i]} = $status;
+        }
+        $standards = $this->standards();
+        foreach ($standards['standards'] as $si => $standard) {
+            $f->framework->standards[$si] = new stdClass();
+            $f->framework->standards[$si]->shortname = $standard->shortname;
+            $f->framework->standards[$si]->name = $standard->name;
+            $f->framework->standards[$si]->description = $standard->description;
+            $f->framework->standards[$si]->standardid = $si + 1;
+        }
+        // Long count of how many outer and inner loops we have done
+        $x = 0;
+        $tracking = array();
+        $parents = array();
+        foreach ($standards['standards'] as $si => $standard) {
+            foreach ($standard->options as $oi => $option) {
+                $f->framework->standardelements[$x] = new stdClass();
+                $f->framework->standardelements[$x]->standardid = $si + 1;
+                $f->framework->standardelements[$x]->shortname = $option->shortname;
+                $f->framework->standardelements[$x]->name = $option->name;
+                $f->framework->standardelements[$x]->description = $option->description;
+                if ($option->level > 0) {
+                    $parents[$option->parent][] = 1;
+                    $f->framework->standardelements[$x]->elementid = $tracking[$option->parent] . '.' . count($parents[$option->parent]);
+                    $f->framework->standardelements[$x]->parentid = $tracking[$option->parent];
+                    $tracking[$option->id] = $f->framework->standardelements[$x]->elementid;
+                }
+                else {
+                    $f->framework->standardelements[$x]->elementid = ($si + 1) . '.' . ($oi + 1);
+                    $tracking[$option->id] = $f->framework->standardelements[$x]->elementid;
+                }
+                $x++;
+            }
+        }
+        $content = json_encode($f, JSON_PRETTY_PRINT);
+        return $content;
     }
 
     public function get($field) {
@@ -557,7 +609,7 @@ class Framework {
         $ids = array();
         $data = $this->collections();
 
-        if (!empty($data)) {
+        if ($data) {
             foreach ($data as $c) {
                 $ids[] = $c->get('id');
             }
@@ -1273,7 +1325,7 @@ function validate_matrixupload(Pieform $form, $values) {
         return;
     }
     $um = new upload_manager('matrix');
-    if ($error = $um->preprocess_file()) {
+    if ($error = $um->preprocess_file(array('matrix'))) {
         $form->set_error('matrix', $error);
         return;
     }

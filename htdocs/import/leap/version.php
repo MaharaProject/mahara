@@ -1,5 +1,6 @@
 <?php
 /**
+ * Version file for Leap plugin
  *
  * @package    mahara
  * @subpackage export-leap

@@ -202,6 +202,7 @@ abstract class LeapExportElementResumeCompositeChild extends LeapExportElement {
     protected $entrydata;
     protected $originalrecord;
     protected $parentartefact;
+    protected $sibling;
 
     public function __construct(ArtefactTypeResumeComposite $parentartefact, PluginExportLeap $exporter, $child) {
         $this->originalrecord = $child;
@@ -421,7 +422,6 @@ class LeapExportElementResumeCompositeSibling extends LeapExportElementResumeCom
 
     protected $siblingrel;
     protected $leaptype;
-    protected $sibling;
 
     public function __construct(ArtefactTypeResumeComposite $parentartefact,
         PluginExportLeap $exporter,

@@ -75,6 +75,18 @@ class Institution {
     // Fields that have been updated and need to be saved on commit
     protected $dirtyfields = array();
 
+    protected $name;
+
+    protected $displayname;
+
+    protected $defaultmembership;
+
+    protected $defaultmembershipperiod;
+
+    protected $maxuseraccounts;
+
+    protected $lang;
+
     public function __construct($name = null) {
         $this->fields = self::$dbfields;
 
@@ -107,10 +119,18 @@ class Institution {
         return null;
     }
 
+    public function set($field, $value) {
+        if (property_exists($this, $field)) {
+            $this->{$field} = $value;
+            $this->__set($field, $value);
+            return true;
+        }
+        throw new InvalidArgumentException("Field $field wasn't found in class " . get_class($this));
+    }
 
     public function __set($name, $value) {
         if (!is_string($name)) {
-            throw new ParamOutOfRangeException();
+            throw new ParamOutOfRangeException(get_string('wrongparamtype', 'error'));
         }
 
         // Validate the DB fields
@@ -195,13 +215,13 @@ class Institution {
             return false;
         }
 
-        $this->name = $name;
+        $this->set('name', $name);
 
         if (empty($displayname) || !is_string($displayname)) {
             return false;
         }
 
-        $this->displayname = $displayname;
+        $this->set('displayname', $displayname);
         $this->initialized = max(self::INITIALIZED, $this->initialized);
         $this->dirtyfields = self::$dbfields;
         return true;
@@ -276,8 +296,14 @@ class Institution {
     }
 
     protected function populate($result) {
+
         foreach (array_keys(self::$dbfields) as $fieldname) {
-            $this->{$fieldname} = $result->{$fieldname};
+            if (in_array($fieldname, array('name', 'displayname'))) {
+                $this->set($fieldname, $result->{$fieldname});
+            }
+            else {
+                $this->{$fieldname} = $result->{$fieldname};
+            }
         }
         try {
             $this->configs = get_records_menu('institution_config', 'institution', $result->name, 'field', 'field, value');
@@ -289,10 +315,11 @@ class Institution {
         if (!$this->configs) {
             $this->configs = array();
         }
+
         $this->verifyReady();
     }
 
-    public function addUserAsMember($user, $staff=null, $admin=null) {
+    public function addUserAsMember($user, $staff=null, $admin=null, $supportadmin=null, $authid=null) {
         global $USER;
         if ($this->isFull()) {
             $this->send_admin_institution_is_full_message();
@@ -300,6 +327,27 @@ class Institution {
         }
         if (is_numeric($user)) {
             $user = get_record('usr', 'id', $user);
+        }
+
+        // comes from 'No institution', we need to set the auth instance in usr table
+        $userobj = new User();
+        $userobj->find_by_id($user->id);
+        $institutions = $userobj->get('institutions');
+        if (empty($institutions) && empty($authid)) {
+            $oldauthmethod = get_field('auth_instance', 'authname', 'id', $userobj->get('authinstance'));
+            // Return auth methods with the most relevant one first
+            if ($authinstances = get_records_sql_array(
+                "SELECT * FROM {auth_instance}
+                 WHERE institution = ? AND active = 1
+                 ORDER BY CASE WHEN authname = ? THEN 0 ELSE 1 END, priority",
+                array($this->name, $oldauthmethod))) {
+                $user->authinstance = $authinstances[0]->id;
+                update_record('usr', array('id' => $user->id, 'authinstance' => $user->authinstance));
+            }
+        }
+        else if (!empty($authid)) {
+            $user->authinstance = $authid;
+            update_record('usr', array('id' => $user->id, 'authinstance' => $user->authinstance));
         }
 
         $lang = get_account_preference($user->id, 'lang');
@@ -332,6 +380,9 @@ class Institution {
         }
         if ($admin) {
             $userinst->admin = true;
+        }
+        if ($supportadmin) {
+            $userinst->supportadmin = true;
         }
         $defaultexpiry = $this->defaultmembershipperiod;
         if (!empty($defaultexpiry)) {
@@ -386,14 +437,19 @@ class Institution {
         db_commit();
     }
 
-    public function addUserAsStaff($user) {
+    public function addUserAsStaff($user, $authid=null) {
         // Only to be used to add a member to an institution and bump ther permissions to staff
-        $this->addUserAsMember($user, true);
+        $this->addUserAsMember($user, true, null, null, $authid);
     }
 
-    public function addUserAsAdmin($user) {
+    public function addUserAsAdmin($user, $authid=null) {
         // Only to be used to add a member to an institution and bump ther permissions to admin
-        $this->addUserAsMember($user, null, true);
+        $this->addUserAsMember($user, null, true, null, $authid);
+    }
+
+    public function addUserAsSupportAdmin($user, $authid=null) {
+        // Only to be used to add a member to an institution and bump ther permissions to admin
+        $this->addUserAsMember($user, null, null, true, $authid);
     }
 
     public function add_members($userids) {
@@ -828,7 +884,7 @@ class Institution {
      * @return bool
      */
     public function isFull() {
-        return ($this->maxuseraccounts != '') && ($this->countMembers() >= $this->maxuseraccounts);
+        return (!empty($this->maxuseraccounts)) && ($this->countMembers() >= $this->maxuseraccounts);
     }
 
     /**
@@ -881,6 +937,20 @@ class Institution {
             if ($results = get_records_sql_array("SELECT u.id FROM {usr} u WHERE u.deleted = 0 AND u.staff = 1 AND u.admin = 0")) {
                 return array_map('extract_institution_user_id', $results);
             }
+        }
+        return array();
+    }
+
+    /**
+     * Returns the current institution support admin member records
+     *
+     * @return array  A data structure containing supportadmin
+     */
+    public function supportadmin() {
+        if ($results = get_records_sql_array('
+            SELECT u.id FROM {usr} u INNER JOIN {usr_institution} i ON u.id = i.usr
+            WHERE i.institution = ? AND u.deleted = 0 AND i.supportadmin = 1', array($this->name))) {
+            return array_map('extract_institution_user_id', $results);
         }
         return array();
     }
@@ -939,6 +1009,8 @@ class Institution {
                 ii.name,
                 ii.displayname,
                 ii.maxuseraccounts,
+                (SELECT value FROM {institution_config} WHERE institution = ii.name AND field = \'maxgroups\') AS maxgroups,
+                (SELECT COUNT(*) FROM {group} WHERE institution = ii.name) AS groupcount,
                 ii.suspended,
                 COALESCE(a.members, 0) AS members,
                 COALESCE(a.staff, 0) AS staff,
@@ -1017,25 +1089,27 @@ function get_institution_selector($includedefault = true, $assumesiteadmin=false
         }
     }
     else if ($USER->is_institutional_admin() && ($USER->is_institutional_staff() && $includeinstitutionstaff)) {
-        // if a user is both an admin for some institution and is a staff member for others
+        // if a user is both an admin for some institution and is a supportadmin / staff member for others
+        $supportstaff = array_merge($USER->get('staffinstitutions'), $USER->get('supportadmininstitutions'));
         $institutions = get_records_select_array(
             'institution',
-            'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) .
-                      ',' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
+            'name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) .
+                      ',' . join(',', array_map('db_quote', $supportstaff)) . ')',
             null, 'displayname'
         );
     }
     else if ($USER->is_institutional_admin()) {
         $institutions = get_records_select_array(
             'institution',
-            'name IN (' . join(',', array_map('db_quote',$USER->get('admininstitutions'))) . ')',
+            'name IN (' . join(',', array_map('db_quote', $USER->get('admininstitutions'))) . ')',
             null, 'displayname'
         );
     }
     else if ($includeinstitutionstaff) {
+        $supportstaff = array_merge($USER->get('staffinstitutions'), $USER->get('supportadmininstitutions'));
         $institutions = get_records_select_array(
             'institution',
-            'name IN (' . join(',', array_map('db_quote',$USER->get('staffinstitutions'))) . ')',
+            'name IN (' . join(',', array_map('db_quote', $supportstaff)) . ')',
             null, 'displayname'
         );
     }
@@ -1085,7 +1159,7 @@ function institution_selector_for_page($institution, $page) {
     }
     $institutionelement = get_institution_selector(false);
 
-    if (empty($institutionelement)) {
+    if (!$institutionelement) {
         return array('institution' => false, 'institutionselector' => null, 'institutionselectorjs' => '');
     }
 
@@ -1160,8 +1234,7 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
                 'offset' => $offset,
                 'setlimit' => true,
                 'jumplinks' => 4,
-                'resultcounttextsingular' => get_string('institution', 'admin'),
-                'resultcounttextplural' => get_string('institutions', 'admin'),
+                'resultcounttext' => get_string('ninstitutions', 'admin', $count),
             ));
 
     $data['pagination'] = $pagination['html'];
@@ -1256,15 +1329,15 @@ function plugin_institution_prefs_validate(Pieform $form, $values) {
  * @param Pieform $form
  * @param array $values
  * @param Institution $institution
- * @return bool is page need to be refreshed
  */
-function plugin_institution_prefs_submit(Pieform $form, $values, Institution $institution) {
+function plugin_institution_prefs_submit(Pieform $form, $values, Institution $institution): void {
     $elements = array();
     $installed = plugin_all_installed();
     foreach ($installed as $i) {
         if (!safe_require_plugin($i->plugintype, $i->name)) {
             continue;
         }
+
         call_static_method(generate_class_name($i->plugintype, $i->name), 'institutionprefs_submit', $form, $values, $institution);
     }
 }

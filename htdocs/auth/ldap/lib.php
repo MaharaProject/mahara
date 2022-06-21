@@ -191,6 +191,7 @@ class AuthLdap extends Auth {
                             }
                         }
                     }
+                    unset($ldapdetails);
                 }
                 return true;
             }
@@ -524,12 +525,14 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * return all groups declared in LDAP
-     * DOES NOT SUPPORT PAGED RESULTS if more than 1000 (AD)
+     * Return all groups declared in LDAP.
+     *
+     * DOES NOT SUPPORT PAGED RESULTS if more than 1000 (ActiveDirectory)
+     *
      * @param string filter
      * @return array of strings
      */
-    private function ldap_get_grouplist($filter = "*", $searchsub) {
+    private function ldap_get_grouplist($filter = "*", $searchsub = array()) {
         /// returns all groups from ldap servers
         global $CFG;
 
@@ -588,9 +591,10 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * Search for group members on an OpenLDAP directory
-     * @param string $group
-     * @return multitype:|multitype:Ambigous <string, boolean, string, unknown>
+     * Search for group members on an OpenLDAP directory.
+     *
+     * @param string $groupfilter
+     * @return array
      */
     private function ldap_get_group_members_rfc($groupfilter) {
         global $CFG;
@@ -665,10 +669,11 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * Specific search for Active Directory problems if more than 999 members
-     * TODO: Reduce redundancy between this and ldap_get_group_members_rfc
+     * Specific search for Active Directory problems if more than 999 members.
+     *
+     * @todo Reduce redundancy between this and ldap_get_group_members_rfc()
      * @param string $group
-     * @return multitype:|multitype:Ambigous <string, boolean, string, unknown>
+     * @return array
      */
     private function ldap_get_group_members_ad($groupfilter) {
         global $CFG;
@@ -1235,11 +1240,9 @@ class AuthLdap extends Auth {
                             set_field('usr_institution', 'studentid', $record['ldapstudentid'], 'usr', $record['id'], 'institution', $this->institution);
                         }
                     }
-
-                    unset($ldapdetails);
                     $nbupdated++;
 
-                    //unsuspend if was suspended by me at a previous run
+                    // unsuspend if was suspended by me at a previous run
                     if (!empty($record['suspendedreason']) && strstr($record['suspendedreason'], AUTH_LDAP_SUSPENDED_REASON) !== false) {
                         log_info('unsuspending user ' . $ldapusername);
 
@@ -1353,12 +1356,13 @@ class AuthLdap extends Auth {
                         var_dump($todb);
                     }
                     //check for used email
-                    if (
+                    if (!empty($todb->email) && (
                             ($d1 = get_record('usr', 'email', $todb->email))
                             ||
                             ($d2 = get_record('artefact_internal_profile_email', 'email', $todb->email))
+                        )
                     ) {
-                        if (empty($d1)) {
+                        if (empty($d1) && !empty($d2)) {
                             $d1 = get_record('usr', 'id', $d2->owner);
                         }
                         if (get_config('auth_ldap_debug_sync_cron')) {
@@ -1366,6 +1370,10 @@ class AuthLdap extends Auth {
                             var_dump($d1);
                         }
                         log_warn(get_string('emailalreadytaken', 'auth.internal') .' '. $d1->username . ' '.$todb->email);
+                        $nberrors ++;
+                    }
+                    else if (empty($todb->email)) {
+                        log_warn(get_string('emailmissing', 'auth.ldap') . ' ' . $ldapusername);
                         $nberrors ++;
                     }
                     else {
@@ -1491,6 +1499,7 @@ class AuthLdap extends Auth {
             // test whether this group exists within the institution
             // group.shortname is limited to 255 characters. Unlikely anyone will hit this, but why not?
             $shortname = substr($group, 0, 255);
+            $groupid = -1;
             if (!$dbgroup = get_record('group', 'shortname', $shortname, 'institution', $this->institution)) {
                 if (!$docreate) {
                     log_debug('autocreation is off so skipping Mahara not existing group ' . $group);

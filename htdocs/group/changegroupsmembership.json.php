@@ -1,5 +1,6 @@
 <?php
 /**
+ * Add AJAX group membership controls to 'My friends' and 'Find friends'.
  *
  * @package    mahara
  * @subpackage core

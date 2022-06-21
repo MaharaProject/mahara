@@ -43,8 +43,9 @@ class OAuthSessionSESSION extends OAuthSessionAbstract
 	 * @param string $key
 	 * @return The value or null if not set.
 	 */
-	public function get ( $key ) 
+	public function get ( $key )
 	{
+        global $SESSION;
         return @$SESSION->get($key);
 	}
 	
@@ -56,6 +57,7 @@ class OAuthSessionSESSION extends OAuthSessionAbstract
 	 */
 	public function set ( $key, $data ) 
 	{
+        global $SESSION;
         $SESSION->set($key, $data);
 	}
 }

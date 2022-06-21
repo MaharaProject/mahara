@@ -55,50 +55,51 @@ class BehatTestingUtil extends TestingUtil {
      */
     protected static $datarootskipondrop = array('.', '..', 'lock');
 
-/**
- * Checks that the behat config vars are properly set.
- *
- * @return errorCode. (see testing/frameworks/behat/lib.php)
- */
-function check_test_site_config() {
-    global $CFG;
+    /**
+     * Checks that the behat config vars are properly set.
+     *
+     * @return int (errorcode see testing/frameworks/behat/lib.php)
+     */
+    private static function check_test_site_config() {
+        global $CFG;
 
-    // Verify prefix value.
-    if (empty($CFG->behat_wwwroot)
-        || empty($CFG->behat_dataroot)
-        || empty($CFG->behat_dbprefix)
-    ) {
-        return BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING;
-    }
-    if ($CFG->behat_wwwroot == $CFG->wwwroot_orig
-        || (isset($CFG->phpunit_wwwroot) && $CFG->behat_wwwroot == $CFG->phpunit_wwwroot)
+        // Verify prefix value.
+        if (empty($CFG->behat_wwwroot)
+            || empty($CFG->behat_dataroot)
+            || empty($CFG->behat_dbprefix)
         ) {
-        return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT;
-    }
-    if ($CFG->behat_dataroot == $CFG->dataroot_orig
-        || (isset($CFG->phpunit_dataroot) && $CFG->behat_dataroot == $CFG->phpunit_dataroot)
-        ) {
-        return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT;
-    }
-    if ($CFG->behat_dbprefix == $CFG->dbprefix_orig
-        || (isset($CFG->phpunit_dbprefix) && $CFG->behat_dbprefix == $CFG->phpunit_dbprefix)
-        ) {
-        return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX;
-    }
-    $CFG->behat_dataroot = realpath($CFG->behat_dataroot);
-    if (!file_exists($CFG->behat_dataroot)) {
-        $permissions = isset($CFG->directorypermissions) ? $CFG->directorypermissions : 02777;
-        umask(0);
-        if (!mkdir($CFG->behat_dataroot, $permissions, true)) {
-            return BEHAT_MAHARA_EXITCODE_BADPERMISSIONS;
+            return BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING;
         }
+        if ($CFG->behat_wwwroot == $CFG->wwwroot_orig
+            || (isset($CFG->phpunit_wwwroot) && $CFG->behat_wwwroot == $CFG->phpunit_wwwroot)
+            ) {
+            return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT;
+        }
+        if ($CFG->behat_dataroot == $CFG->dataroot_orig
+            || (isset($CFG->phpunit_dataroot) && $CFG->behat_dataroot == $CFG->phpunit_dataroot)
+            ) {
+            return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT;
+        }
+        if ($CFG->behat_dbprefix == $CFG->dbprefix_orig
+            || (isset($CFG->phpunit_dbprefix) && $CFG->behat_dbprefix == $CFG->phpunit_dbprefix)
+            ) {
+            return BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX;
+        }
+        $CFG->behat_dataroot = realpath($CFG->behat_dataroot);
+        if (!file_exists($CFG->behat_dataroot)) {
+            $permissions = isset($CFG->directorypermissions) ? $CFG->directorypermissions : 02777;
+            umask(0);
+            if (!mkdir($CFG->behat_dataroot, $permissions, true)) {
+                return BEHAT_MAHARA_EXITCODE_BADPERMISSIONS;
+            }
+        }
+        if (!is_dir($CFG->behat_dataroot) or !is_writable($CFG->behat_dataroot)) {
+            return BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT;
+        }
+        return 0;
     }
-    if (!is_dir($CFG->behat_dataroot) or !is_writable($CFG->behat_dataroot)) {
-        return BEHAT_MAHARA_EXITCODE_NOTWRITABLEDATAROOT;
-    }
-}
 
-/**
+    /**
      * Installs a site using $CFG->dataroot and $CFG->dbprefix
      * As we are setting up the behat test environment, these settings
      * are replaced by $CFG->behat_dataroot and $CFG->behat_dbprefix
@@ -140,13 +141,17 @@ function check_test_site_config() {
 
         // Stop PDF export from being active
         set_field('export_installed', 'active', 0, 'name', 'pdf');
+        // Stop PDFLite export from being active
+        set_field('export_installed', 'active', 0, 'name', 'pdflite');
 
         // We need to keep the installed dataroot artefact files.
         // So each time we reset the dataroot before running a test, the default files are still installed.
         self::save_original_data_files();
 
-        // Disable some settings that are not wanted on test sites.
+        // Disable/enable some settings that are needed for test sites.
         set_config('sendemail', false);
+        set_config('isolatedinstitutions', false);
+        set_config('skins', true);
 
         // Keeps the current version of database and dataroot.
         self::store_versions_hash();

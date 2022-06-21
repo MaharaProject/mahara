@@ -24,8 +24,8 @@ $string['ssphpnotconfigured'] = 'SimpleSAMLPHP is not configured.';
 $string['manage_certificate2'] = 'This is the certificate generated as part of the SAML Service Provider.';
 $string['manage_new_certificate'] = 'This is the new certificate generated as part of the SAML Service Provider.<br>
 Both the new and old certificates will be valid. Once you have notified all Identity Providers of your new certificate, you can remove older certificates via the "Delete old certificate" button.';
-$string['nullprivatecert'] = "Could not generate or save the private key";
-$string['nullpubliccert'] = "Could not generate or save the public certificate";
+$string['nullprivatecert'] = "Could not save the private key";
+$string['nullpubliccert'] = "Could not save the public certificate";
 $string['defaultinstitution'] = 'Default institution';
 $string['description'] = 'Authenticate against a SAML 2.0 Identity Provider service';
 $string['disco'] = 'Identity Provider discovery';
@@ -59,6 +59,12 @@ $string['idpentityupdatedduplicates'] = array(
     1 => "Updated the Identity Provider metadata for this and %s other SAML instances."
 );
 $string['metarefresh_metadata_url'] = 'Metadata URL for auto-refresh';
+$string['metarefresh_metadata_signature'] = 'Metadata validate signature';
+$string['metadatarefreshfailed_subject'] = 'Metadata auto-refresh failed';
+$string['metadatarefreshfailed_body'] = 'The auto-refresh of the SAML metadata could not be completed.
+Check the cron log for more information. The error response may appear below:
+
+%s';
 $string['idpprovider'] = 'Provider';
 $string['idptable'] = 'Installed Identity Providers';
 $string['institutionattribute'] = 'Institution attribute (contains "%s")';
@@ -91,10 +97,15 @@ $string['samlfieldforavatar'] = 'SSO field for avatar icon';
 $string['samlfieldforavatardescription'] = 'Supplied avatar needs to contain a base64 encoded image string';
 $string['samlfieldforrole'] = 'SSO field for roles';
 $string['samlfieldforroleprefix'] = 'SSO field for role prefix';
+$string['samlfieldforidaffiliations'] = 'SSO field for affiliation IDs';
+$string['samlfieldforemailaffiliations'] = 'SSO field for affiliation emails';
+$string['samlfieldforroleaffiliations'] = 'SSO field for affiliation roles';
+$string['samlfieldforroleaffiliationdelimiter'] = 'Role delimiter character';
 $string['samlfieldforrolesiteadmin'] = "Role mapping for 'Site administrator'";
 $string['samlfieldforrolesitestaff'] = "Role mapping for 'Site staff'";
 $string['samlfieldforroleinstadmin'] = "Role mapping for 'Institution administrator'";
 $string['samlfieldforroleinststaff'] = "Role mapping for 'Institution staff'";
+$string['samlfieldforroleinstsupportadmin'] = "Role mapping for 'Institution support administrator'";
 $string['samlfieldfororganisationname'] = "SSO field for 'Organisation'";
 $string['populaterolestoallsaml'] = 'Copy roles to all SAML instances';
 $string['populaterolestoallsamldescription'] = "If this switch is enabled, the values for all the 'Role' fields are copied to all other SAML authentication instances that use the same Identity Provider on submission of this form. This field then resets to 'No'.";
@@ -140,4 +151,4 @@ $string['noentityidpneednamespace'] = 'Does your XML EntityDescriptor tag requir
 $string['novalidauthinstanceprovided'] = 'Your selection is not possible. Please select a different institution.';
 $string['identityprovider'] = 'Identity Provider';
 $string['selectmigrateto'] = 'Select institution to move to...';
-$string['samlneedtoremovephar'] = 'Unable to remove %s file. Please delete the file and then run "make ssphp" again.';
+$string['samlneedtoremovephar'] = 'Unable to remove the file %s. Please delete the file and then run "make ssphp" again.';

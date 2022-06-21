@@ -69,7 +69,6 @@ class AuthInternal extends Auth {
     public static function can_use_registration_captcha() {
         return true;
     }
-
     /**
      * Generate a valid password that can be used as a temp password
      * which can be sent out by create_user()
@@ -164,7 +163,7 @@ class AuthInternal extends Auth {
      * @param string $username The username to check
      * @return bool            Whether the username is valid
      */
-    public function is_username_valid($username) {
+    public static function is_username_valid($username) {
         return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_=+\[{\]}\\|;:\'",<\.>\/?`]{3,30}$/', $username);
     }
     /**
@@ -184,7 +183,7 @@ class AuthInternal extends Auth {
      * @param string $username The username to check
      * @return bool            Whether the username is valid
      */
-    public function is_username_valid_admin($username) {
+    public static function is_username_valid_admin($username) {
         return preg_match('/^[a-zA-Z0-9!@#$%^&*()\-_=+\[{\]}\\|;:\'",<\.>\/?`]{3,236}$/', $username);
     }
 
@@ -206,9 +205,9 @@ class AuthInternal extends Auth {
         // proposed username must pass validation
         $valid = false;
         if ($USER->is_admin_for_user($user)) {
-            $valid = $this->is_username_valid_admin($username);
+            $valid = self::is_username_valid_admin($username);
         } else {
-            $valid = $this->is_username_valid($username);
+            $valid = self::is_username_valid($username);
         }
 
         if ($valid) {

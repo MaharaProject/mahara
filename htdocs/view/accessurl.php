@@ -53,7 +53,7 @@ $group = $view->get('group');
 $institution = $view->get('institution');
 View::set_nav($group, $institution, true);
 
-if (!$USER->can_edit_view($view)) {
+if (!$USER->can_edit_view($view) && !($USER->get('id') == $view->get('owner'))) {
     throw new AccessDeniedException(get_string('accessdeniedaccesss', 'view'));
 }
 if ($group && !group_within_edit_window($group)) {
@@ -272,7 +272,7 @@ $form['elements']['more']['elements']['startdate'] = array(
     'type'         => 'calendar',
     'title'        => get_string('startdate','view'),
     'description'  => get_string('datetimeformatguide1', 'mahara', pieform_element_calendar_human_readable_datetimeformat()),
-    'defaultvalue' => isset($view) ? strtotime($view->get('startdate')) : null,
+    'defaultvalue' => $view ? strtotime($view->get('startdate')) : null,
     'caloptions'   => array(
         'showsTime'      => true,
     ),
@@ -281,7 +281,7 @@ $form['elements']['more']['elements']['stopdate'] = array(
     'type'         => 'calendar',
     'title'        => get_string('stopdate','view'),
     'description'  => get_string('datetimeformatguide1', 'mahara', pieform_element_calendar_human_readable_datetimeformat()),
-    'defaultvalue' => isset($view) ? strtotime($view->get('stopdate')) : null,
+    'defaultvalue' => $view ? strtotime($view->get('stopdate')) : null,
     'caloptions'   => array(
         'showsTime'      => true,
     ),
@@ -521,18 +521,29 @@ function accessurl_submit(Pieform $form, $values) {
         }
     }
     set_progress_done('copyviewexistingmembersprogress');
-
-    if ($collectionid && $shareurl) {
-        redirect($shareurl);
-    }
-    if ($view->get('owner')) {
+    $return = param_alpha('return', 'view');
+    if ($view->get('owner') && $return == 'edit') {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
         redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
     }
+    if ($view->get('owner') && $return == 'view') {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $view->get('id'));
+    }
+    if ($view->get('owner') && $return == 'index') {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
+        redirect(get_config('wwwroot') . 'view/index.php');
+    }
     if ($view->get('group')) {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
         redirect(get_config('wwwroot') . 'group/shareviews.php?group=' . $view->get('group'));
     }
     if ($view->get('institution')) {
+        $SESSION->add_ok_msg(get_string('accesssavedsuccessfully', 'view'));
         redirect(get_config('wwwroot') . 'view/institutionshare.php?institution=' . $view->get('institution'));
+    }
+    if ($collectionid && $shareurl) {
+        redirect($shareurl);
     }
 }
 

@@ -37,6 +37,7 @@ var editor;
 jQuery(function($) {
     // Use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
+    JSONEditor.defaults.options.iconlib = 'fontawesome4';
     // Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
     JSONEditor.defaults.options.disable_edit_json = true;
 
@@ -45,15 +46,24 @@ jQuery(function($) {
 
     // Override default editor strings to allow translation by us
     // - fyi, not all editor strings are overridden, just the ones currently used.
-    // - The original editor defaults in htdocs/js/jsoneditor/src/defaults.js
-    JSONEditor.defaults.languages.en.button_collapse = get_string('collapse');
-    JSONEditor.defaults.languages.en.button_expand = get_string('expand');
-    JSONEditor.defaults.languages.en.button_add_row_title = get_string('add');
-    JSONEditor.defaults.languages.en.button_move_down_title = get_string('moveright'); // Move right
-    JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleft');
-    JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteall');
+    // - The original editor defaults in htdocs/js/jsoneditor/src/jsoneditor.js
+    JSONEditor.defaults.languages.en.button_collapse = get_string('collapse', 'module.framework'); // string used for button text
+    JSONEditor.defaults.languages.en.button_collapse_title = get_string('collapseform', 'module.framework', '{{0}}'); // string used for title and aria-label
+    JSONEditor.defaults.languages.en.button_expand = get_string('expand', 'module.framework'); // string used for button text
+    JSONEditor.defaults.languages.en.button_expand_title = get_string('expandform', 'module.framework', '{{0}}'); // string used for title and aria-label
+    JSONEditor.defaults.languages.en.button_add_row_text = get_string('add');
+    JSONEditor.defaults.languages.en.button_add_row_title = get_string('addspecific', 'module.framework');
+    JSONEditor.defaults.languages.en.button_move_down = get_string('moveright', 'module.framework');
+    JSONEditor.defaults.languages.en.button_move_down_title = get_string('moverightspecific', 'module.framework', '{{0}}');
+    JSONEditor.defaults.languages.en.button_move_up = get_string('moveleft', 'module.framework');
+    JSONEditor.defaults.languages.en.button_move_up_title = get_string('moveleftspecific', 'module.framework', '{{0}}');
+    JSONEditor.defaults.languages.en.button_delete_all = get_string('deleteall');
+    JSONEditor.defaults.languages.en.button_delete_all_title = get_string('deleteallspecific', 'module.framework', '{{0}}');
+
     JSONEditor.defaults.languages.en.remove_element_message = get_string('removestandardorelementconfirm');
-    JSONEditor.defaults.languages.en.button_delete_row_title = get_string('delete','module.framework','{{0}}');
+    JSONEditor.defaults.languages.en.button_delete_row_title_short = get_string('delete','module.framework');
+    JSONEditor.defaults.languages.en.button_delete_row_title = get_string('deletespecific','mahara', '{{0}}');
+
 
     // Enable select2
     JSONEditor.plugins.select2.enable = true;
@@ -213,7 +223,8 @@ jQuery(function($) {
                         "description": get_string('instdescription'),
                         "id": "inst_desc",
                         "enum": inst_names.split(','),
-                        "default": get_string('all')
+                        "default": get_string('all'),
+                        "required": true
                     },
                     "name": {
                         "type": "string",
@@ -235,7 +246,8 @@ jQuery(function($) {
                         "default": false,
                         "options": {
                             "enum_titles": [get_string('yes'), get_string('no')]
-                        }
+                        },
+                        "required": true
                     },
                     "evidencestatuses": {
                         "title": get_string('evidencestatuses'),
@@ -341,7 +353,7 @@ jQuery(function($) {
                         "description": get_string('standardelementsdescription', 'module.framework'),
                         "items": {
                             "title": get_string('standardelement'),
-                            "headerTemplate": "{{self.elementid}}",
+                            "headerTemplate": "Standard element {{self.elementid}}",
                             "type": "object",
                             "id": "standardelement",
                             "options": {
@@ -446,8 +458,24 @@ jQuery(function($) {
             },
         });
         // Add ids to things so we can call them more easily later.
-        $('div[data-schemaid="standards"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standard");
-        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-add').attr("id", "add_standardelement");
+        $('div[data-schemaid="standards"] > div > div > button.json-editor-btn-add').attr("id", "add_standard");
+        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btn-add').attr("id", "add_standardelement");
+        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btntype-deleteall').attr("id", "deleteall_standardelements");
+        // Add ids to all <input>, <select> and <textarea> tags and associate with their <label> for accessibility
+        $('#editor_holder :input').each(function() {
+            let name = $(this).attr('name');
+            if (name !== undefined) {
+                name = name.replace(/[\[\]']+/g, '');
+                name = name.replace('root', '');
+                $(this).prop('id', name);
+                $(this).prev('label').prop('for', name);
+              }
+        });
+        // Add aria-labels to add, delete and move buttons
+        $('#add_standard').attr('aria-label', get_string('addstandard', 'module.framework'))
+        $('#add_standardelement').attr('aria-label', get_string('addstandardelement', 'module.framework'));
+        $('#deleteall_standardelements').attr('aria-label', get_string('deleteallstandardelements', 'module.framework'));
+
         // Make text same as rest of site
         $("div.form-group p.form-text").addClass("description");
         $("div.form-group form-control-label").addClass("label");
@@ -460,8 +488,7 @@ jQuery(function($) {
         std_index = 0;
         eid = 1;
         se_index = 0;
-        // Add id to the framework description textarea
-        $('div[data-schemapath="root.description"] > div > textarea').attr("id", "title_description_textarea");
+
         textarea_init();
 
         update_parent_array();
@@ -786,10 +813,10 @@ jQuery(function($) {
                 $(this).attr("id", "std_element_" + standardelementid + "_" + schemapath[3] + "_textarea");
             }
         });
-        // Set min row height for desc fields to 6
-        $("textarea[id$='_description_textarea']").attr('rows', '6');
+        // Set min row height for description fields to 6
+        $("textarea[id$='description']").attr('rows', '6');
 
-        $('div.form-group textarea[id$="_description_textarea"]').each(function() {
+        $('div.form-group textarea[id$="description"]').each(function() {
             $(this).off('click input');
             $(this).on('click input', function() {
                 textarea_autoexpand(this);
@@ -1071,8 +1098,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_standard_button_handlers() {
-        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standard"] > h3 > div > button.json-editor-btn-delete').on('click', function(e) {
+        $('[data-schemaid="standard"] > div > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standard"] > div > div > button.json-editor-btn-delete').on('click', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
@@ -1179,8 +1206,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_element_button_handlers() {
-        $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standardelement"] > h3 > div > button.json-editor-btn-delete').on('click', function() {
+        $('[data-schemaid="standardelement"] > div > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standardelement"] > div > button.json-editor-btn-delete').on('click', function() {
             var el_id = 0,
             parent_array_temp = parent_array;
 
@@ -1209,7 +1236,7 @@ jQuery(function($) {
     function update_delete_button_handler() {
         // Standard element section
         // 'Delete all' button
-        $('div[data-schemaid="standardelements"] > h3 > div > button.json-editor-btn-delete').eq(1).on('click', function () {
+        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btn-delete').eq(1).on('click', function () {
             update_parent_array();
             eid = 1;
             se_index = 0;

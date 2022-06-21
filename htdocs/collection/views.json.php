@@ -1,5 +1,6 @@
 <?php
 /**
+ * Handle the AJAX requests for Views.
  *
  * @package    mahara
  * @subpackage core
@@ -32,7 +33,7 @@ $message = $messagestatus = null;
 if (!empty($direction)) {
     parse_str($direction, $direction_array);
     $viewids = array();
-    // get all the id's of the existing views attached to collection - if any
+    // Get all the id's of the existing views attached to collection, if any.
     $firstviewaccess = array();
     if (!empty($views['views'])) {
         foreach ($views['views'] as $v) {
@@ -41,13 +42,15 @@ if (!empty($direction)) {
         $firstview = new View($viewids[0]);
         $firstviewaccess = $firstview->get_access();
     }
-    // now check if there are any new views to add to the collection
-    // items dragged from the 'add to collection' list. (currently handles only one at a time)
+    // Now check if there are any new views to add to the collection items
+    // dragged from the 'add to collection' list. Currently handles only one
+    // at a time.
     $diff = array_diff($direction_array['row'], $viewids);
     if (!empty($diff)) {
 
-        // if the collection has been set to be auto copy and it doesnt have any views yet,
-        // make sure the new views are shared with the institution
+        // If the collection has been set to be auto copy and it doesnt have
+        // any views yet, make sure the new views are shared with the
+        // institution.
         $institution = $collection->get('institution');
         if (isset($institution) && $institution && empty($viewids) && $collection->get('autocopytemplate')) {
             $time = db_format_timestamp(time());
@@ -59,13 +62,13 @@ if (!empty($direction)) {
             );
         }
 
-        // turn it into an array understood by $collection->add_views()
+        // Turn it into an array understood by $collection->add_views().
         $addviews = array();
         $newviewid = false;
         foreach ($diff as $v) {
             $newviewid = $v;
-            // We need to check that the id's are allowed to be added to the collection
-            // by checking if the user can edit the view.
+            // We need to check that the id's are allowed to be added to the
+            // collection by checking if the user can edit the view.
             $view = new View($v);
 
             $viewowner = $view->get('owner');
@@ -84,41 +87,43 @@ if (!empty($direction)) {
         if (!empty($addviews)) {
             $collection->add_views($addviews);
             if ($collection->get('template')) {
-                // added views should be set to template too
+                // Added views should be set to template too.
                 $collection->set_views_as_template();
             }
-            // New view permissions
+            // New view permissions.
             $collectiondifferent = false;
             $different = false;
             $differentarray = array();
             if (!empty($firstviewaccess) && empty($viewaccess)) {
-                // adding the collection access rules to the added pages
+                // Adding the collection access rules to the added pages.
                 $different = true;
                 $differentarray[] = $newviewid;
             }
             else if (!empty($firstviewaccess)) {
                 $merged = combine_arrays($firstviewaccess, $viewaccess);
                 if ($merged != $firstviewaccess) {
-                    // adding the new access rules to both collection and added pages
+                    // Adding the new access rules to both collection and
+                    // added pages.
                     $different = true;
                     $collectiondifferent = true;
                     $differentarray[] = $newviewid;
                 }
                 else if ($merged != $viewaccess) {
-                    // adding the collection access rules to the added pages
+                    // Adding the collection access rules to the added pages.
                     $different = true;
                     $differentarray[] = $newviewid;
                 }
             }
             else if (empty($firstviewaccess) && !empty($viewaccess)) {
-                // adding the page's access rules to the collection pages
+                // Adding the page's access rules to the collection pages.
                 $different = true;
                 $collectiondifferent = true;
             }
             if ($collectiondifferent) {
                 $differentarray = array_merge($differentarray, $viewids);
             }
-            // Check if the collection has a secret url token for any of the existing views
+            // Check if the collection has a secret url token for any of the
+            // existing views.
             $hassecreturl = false;
             $views_all = array_merge($differentarray, $viewids);
             if (!empty($views_all)) {
@@ -148,7 +153,7 @@ if (!empty($direction)) {
     $collection->set_viewdisplayorder(null, $direction_array['row']);
 }
 
-// We need to call the collection again to get the updated view list
+// We need to call the collection again to get the updated view list.
 $collection = new Collection($id);
 $views = $collection->get('views');
 

@@ -64,5 +64,5 @@ function xmldb_module_lti_upgrade($oldversion=0) {
 
     }
 
-    return true;
+    return $status;
 }

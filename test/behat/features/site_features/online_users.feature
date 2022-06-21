@@ -54,17 +54,17 @@ Scenario: log in as the latest person and check the following
     3) Person can click the name of somebody else and be redirected to their profile page
     When I log in as "UserO" with password "Kupuh1pa!"
     #Person should see last 10 people online within the last 10 minutes
-    Then I should see "Olive User" in the "Online users block" property
-    And I should see "Jake User" in the "Online users block" property
-    And I should see "Ian User" in the "Online users block" property
-    And I should see "Henry User" in the "Online users block" property
-    And I should see "Gail User" in the "Online users block" property
-    And I should see "Fred User" in the "Online users block" property
-    And I should see "Earl User" in the "Online users block" property
-    And I should see "Dave User" in the "Online users block" property
-    And I should see "Carol User" in the "Online users block" property
-    And I should see "Bob User" in the "Online users block" property
-    And I should not see "Angela User" in the "Online users block" property
+    Then I should see "Olive User" in the "Online users block" "Blocks" property
+    And I should see "Jake User" in the "Online users block" "Blocks" property
+    And I should see "Ian User" in the "Online users block" "Blocks" property
+    And I should see "Henry User" in the "Online users block" "Blocks" property
+    And I should see "Gail User" in the "Online users block" "Blocks" property
+    And I should see "Fred User" in the "Online users block" "Blocks" property
+    And I should see "Earl User" in the "Online users block" "Blocks" property
+    And I should see "Dave User" in the "Online users block" "Blocks" property
+    And I should see "Carol User" in the "Online users block" "Blocks" property
+    And I should see "Bob User" in the "Online users block" "Blocks" property
+    And I should not see "Angela User" in the "Online users block" "Blocks" property
     # when person follows show people online,
     # 1) Person should be redirected to "People online" page
     # 2) Person should see all people online within the last 10 minutes
@@ -72,7 +72,7 @@ Scenario: log in as the latest person and check the following
     # 4) The table is ordered in Alphabetical order
     When I follow "Show people online"
     Then I am on "/user/online.php"
-    And I should see "People online" in the "H1 heading" property
+    And I should see "People online" in the "H1 heading" "Common" property
     And I should see "Earl User"
     And I should see "Dave User"
     And I should see "Carol User"

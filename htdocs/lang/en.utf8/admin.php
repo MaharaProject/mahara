@@ -85,6 +85,7 @@ $string['managegroups'] = 'Manage groups';
 $string['Extensions']   = 'Extensions';
 $string['configextensions']   = 'Administer extensions';
 $string['manageinstitutions'] = 'Manage institutions';
+$string['embeddedurls'] = 'Embedded URLs';
 
 // Admin homepage strings
 $string['siteoptions']    = 'Site options';
@@ -133,6 +134,10 @@ $string['settings']   = 'Settings';
 $string['institution']   = 'Institution';
 $string['institutions']   = 'institutions';
 $string['Institutions']   = 'Institutions';
+$string['ninstitutions'] = array(
+    '%s institution',
+    '%s institutions'
+);
 $string['institutiondetails']   = 'Institution details';
 $string['institutionauth']   = 'Institution authorities';
 $string['institutionsettingsdesc'] = 'Set up and manage institutions';
@@ -220,16 +225,16 @@ $string['generatedviewurls'] = array(
 );
 $string['cleanurlsdescriptionshort'] = 'Configure site to use human-readable URLs';
 
-$string['embeddedurls'] = 'Update embedded URLs';
-$string['embeddedurlsdescription'] = '<p>If you change your URL, the existing links within embedded content on the site will point to the wrong place.</p><p>You can fix them up here by specifying the old URL domain.</p>';
-$string['nopotentialembeddedurls'] = '<p>There are no potential old URLs detected.</p>';
-$string['potentialembeddedurls'] = '<p>The following sections look to have old URLs.</p>';
+$string['embeddedurlstitle1'] = 'Embedded URLs';
+$string['embeddedurlsdescription1'] = '<p>If you change the URL to your site, existing links to content on the site within text, e.g. in page instructions, text blocks, and forums, will point to the wrong place.</p><p>If potentially old URLs are detected, you can fix them here by specifying the old URL domain and updating them.</p>';
+$string['nopotentialembeddedurls1'] = '<p>No potentially old URLs detected</p>';
+$string['potentialembeddedurls1'] = '<p>Old URLs detected</p>';
 $string['oldurl'] = 'Old site URL';
 $string['oldurldescription'] = 'Enter the URL path of the old site, e.g. "https://oldsite.com" to see if there is anything to update.';
 $string['checkurl'] = 'Check URL';
 $string['domigrateurls'] = 'Update URLs';
 $string['migrateurlsdescription'] = 'Change all embedded URLs that start with "%s" to now start with "%s"';
-$string['migrateurlsconfirm'] = 'Confirm migration';
+$string['migrateurlsconfirm1'] = 'Confirm the updating of the URLs';
 $string['migratedbasicurls'] = 'Updated %s content URLs';
 $string['migratedblockurls'] = 'Updated %s block content URLs';
 $string['section_view_instructions'] = 'Page instructions';
@@ -260,18 +265,21 @@ $string['groupcategoriespagedescription'] = 'The categories listed here can be a
 $string['groupquotas'] = "Group quota for '%s'";
 $string['groupfilequotadescription'] = 'Total storage available in the group\'s files area.';
 $string['groupadminsforgroup'] = "Group administrators for '%s'";
-$string['potentialadmins'] = 'Potential administrators';
-$string['currentadmins'] = 'Current administrators';
 $string['makeusersintoadmins'] = 'Turn selected regular accounts into administrator accounts';
 $string['makeadminsintousers'] = 'Turn selected administrator accounts back into regular accounts';
 $string['groupadminsupdated'] = 'Group administrators have been updated';
 $string['groupquotaupdated'] = 'Group quota has been updated';
 $string['addnewgroupcategory'] = 'Enter new group category';
+$string['submissions'] = 'Submissions';
 $string['archivedsubmissions'] = 'Archived submissions';
 $string['archivedsubmissionsdesc'] = 'Administer archived submissions';
+$string['currentsubmissions'] = 'Current submissions';
+$string['releasesubmissionlabel'] = 'Release';
 $string['submittedto'] = 'Submitted to';
+$string['submittedon'] = 'Submitted on';
 $string['ID'] = 'ID';
 $string['filenameleap'] = 'Leap2A file';
+$string['filenameleaphtml'] = 'Archive file';
 $string['archivedon'] = 'Archived on';
 $string['filemissing'] = '%s (file missing)';
 $string['filemissingdesc'] = 'File %s%s is missing from server';
@@ -388,6 +396,8 @@ $string['allowpublicviews1'] = 'Allow public portfolios';
 $string['allowpublicviewsdescription2'] = 'People can create portfolios that are accessible to the public rather than only to registered people.';
 $string['allowinstitutionpublicviews1'] = 'Allow public institution portfolios';
 $string['allowinstitutionpublicviewsdescription3'] = 'Allow institution members to create portfolios that are accessible to the public rather than only to registered people.';
+$string['allowpeersviewcontent'] = 'Allow peers to see portfolio content';
+$string['allowpeersviewcontentdescription'] = 'Allow account holders who receive the \'Peer\' role on a portfolio to see the entire content in the portfolio.';
 $string['allowinstitutionsmartevidence'] = 'Allow SmartEvidence';
 $string['allowinstitutionsmartevidencedescription'] = 'Turn collections into SmartEvidence collections, which are linked to a competency framework.';
 $string['institutionsmartevidencenotallowed'] = 'You need to activate the "smartevidence" module on the "Plugin administration" page before you can set the SmartEvidence options';
@@ -510,10 +520,10 @@ $string['smallviewheaders'] = 'Small page headers';
 $string['smallviewheadersdescription1'] = 'Display a small header and site navigation when viewing or editing portfolio pages.';
 $string['spamhaus2'] = 'Spamhaus URL deny list';
 $string['spamhausdescription1'] = 'Check URLs against the Spamhaus DNSBL.';
-$string['staffaccessreports'] = 'Access reports for staff';
-$string['staffaccessreportsdescription1'] = 'Allow site and institution staff to access the "Account details", "Portfolio access", and "Masquerading sessions" reports in their institution(s). These reports are normally restricted to administrators.';
-$string['institutionstaffallreports'] = 'All reports for institution staff';
-$string['institutionstaffallreportsdescription'] = 'Allow institution staff to access all reports for their institution(s). The reports are normally restricted to administrators and site staff.';
+$string['staffaccessreports1'] = 'Access reports for staff and support administrators';
+$string['staffaccessreportsdescription2'] = 'Allow site staff, institution staff, and institution support administrators to access the "Account details", "Legal consent", "Masquerading sessions", and "Portfolio access" reports in their institution(s). These reports are normally restricted to administrators.';
+$string['institutionstaffallreports1'] = 'All reports for institution staff and support administrators';
+$string['institutionstaffallreportsdescription1'] = 'Allow institution staff and support administrators to access all reports for their institution(s). The reports are normally restricted to administrators and site staff.';
 $string['surbl2'] = 'SURBL URL deny list';
 $string['surbldescription1'] = 'Check URLs against the SURBL DNSBL.';
 $string['disableexternalresources'] = 'Disable external resources in HTML';
@@ -550,11 +560,9 @@ $string['eventloglevelnone'] = 'None';
 $string['eventloglevelmasq'] = 'Masquerading';
 $string['eventloglevelall'] = 'All';
 $string['eventlogenhancedsearch'] = 'Event log reporting';
-$string['eventlogenhancedsearchdescription1'] = 'This is required if you want to use the advanced analytics features in order to report over more activity on your site. You also need to enable Elasticsearch in the "Search Settings".';
+$string['eventlogenhancedsearchdescription1'] = 'This is required if you want to use the advanced analytics features in order to report over more activity on your site. You also need to enable a search plugin in the "Search Settings" that supports reporting.';
 $string['sitefilesaccess'] = 'Access to site files';
 $string['sitefilesaccessdescription1'] = 'Allow registered people to access site files in subfolders. By default, only files in the top level directory are accessible to them.';
-$string['watchlistdelaydescription'] = 'The delay in minutes between sending emails regarding watchlist changes.';
-$string['watchlistdelaytitle'] = 'Watchlist notification delay';
 $string['defaultmultipleblogs'] = 'Multiple journals';
 $string['defaultmultipleblogsdescription1'] = 'Allow people to have multiple journals by default. They can override this on their account settings page.';
 $string['defaultreviewsselfdeletion'] = 'Review accounts before self-deletion';
@@ -601,6 +609,7 @@ $string['oneormorelinksarebad']              = 'One or more of the links here ar
 $string['confirmdeletemenuitem'] = 'Do you really want to delete this item?';
 $string['deletingmenuitem']    = 'Deleting item';
 $string['deletefailed']        = 'Failed deleting item';
+$string['deletefailedonlyadmin'] = 'You cannot delete this account. It is the only site administrator account.';
 $string['externallink']        = 'External link';
 $string['editlinksandresources'] = 'Edit links and resources';
 $string['linkedto']            = 'Linked to';
@@ -702,6 +711,7 @@ $string['groupcsvfiledescription'] = 'The file containing groups to add';
 $string['groupmemberscsvfiledescription'] = 'The file containing group members to update';
 $string['csverroremptyfile'] = 'The CSV file is empty.';
 $string['invalidfilename'] = 'The file "%s" does not exist.';
+$string['invalidfilenameformatforcsv'] = 'The file format for "%s" is not valid. Please upload a valid comma-separated values (.csv) file.';
 $string['uploadcsverrorinvalidfieldname'] = 'The field name "%s" is invalid, or you have more fields than your header row specifies.';
 $string['uploadcsverrorrequiredfieldnotspecified'] = 'A required field "%s" has not been specified in the format line.';
 $string['uploadcsverrornorecords'] = 'The file appears to contain no records (although the header is fine).';
@@ -835,7 +845,6 @@ $string['Import'] = 'Import';
 $string['bulkimportdirdoesntexist'] = 'The directory %s does not exist.';
 $string['unabletoreadbulkimportdir'] = 'The directory %s is unreadable.';
 $string['unabletoreadcsvfile'] = 'Unable to read CSV file %s.';
-$string['importfilenotreadable'] = 'Unable to read Leap2A file %s.';
 $string['importfileisnotazipfile'] = 'Import file %s was not detected as a ZIP file.';
 $string['unzipfailed'] = 'Failed to unzip the Leap2A file %s. See the error log for more information.';
 $string['importfailedfornusers'] = 'Import failed for %d of %d accounts.';
@@ -848,6 +857,11 @@ $string['institutionadminuserspagedescription1'] = 'Here you can choose which in
 $string['potentialadmins'] = 'Potential administrators';
 $string['currentadmins'] = 'Current administrators';
 $string['adminusersupdated'] = 'Administrators updated';
+
+// Institution support admin
+
+$string['institutionsupportadminpagedescription'] = 'Here you can choose which institution members shall be institution support administrators for your institution. The current support administrators are in the "Institution support administrator" field, and potentials are in the "Institution members" field.';
+$string['supportadminusersupdated'] = 'Support administrators updated';
 
 // Staff Users
 $string['staffuserspagedescription1'] = 'Here you can choose which people shall be staff for the site. The current staff are in the "Current staff" field, and potential staff are in the "Potential staff" field.';
@@ -862,11 +876,11 @@ $string['staffusersupdated'] = 'Staff updated';
 
 // Suspended Users
 $string['deleteusers'] = 'Delete accounts';
-$string['deleteuser'] = 'Delete account';
 $string['confirmdeleteusers1'] = 'Are you sure you want to delete the accounts for the selected people?';
 $string['exportingnotsupportedyet'] = 'Exporting profiles is not supported yet.';
 $string['exportuserprofiles'] = 'Export profiles';
 $string['nousersselected'] = 'Nobody selected';
+$string['nocontentselected'] = 'No Portfolios selected';
 $string['suspenduser'] = 'Suspend person';
 $string['suspendeduserstitle'] = 'Suspended and expired accounts';
 $string['suspendedusers'] = 'Suspended people';
@@ -1002,6 +1016,7 @@ $string['loginasoverridelegalaccept'] = 'As you are masquerading as another pers
 $string['Add'] = 'Add';
 $string['all'] = 'All';
 $string['admininstitutions'] = 'Administer institutions';
+$string['editinstitution'] = 'Edit institution';
 $string['adminauthorities'] = 'Administer authorities';
 $string['addinstitution'] = 'Add institution';
 $string['authplugin'] = 'Authentication plugin';
@@ -1024,6 +1039,9 @@ $string['institutionshortnamedescription'] = 'The short name is generated automa
 $string['institutionexpirydescription'] = 'The date at which this institutions membership of %s will be suspended.';
 $string['institutionlanguage'] = 'Language';
 $string['institutionlanguagedescription'] = 'The default language for institution members.';
+$string['includedinstitutions'] = 'Included institutions (shortnames)';
+$string['excludedinstitutions'] = 'Excluded institutions (shortnames)';
+$string['noinstitution'] = 'Include accounts that are not members of any institution';
 $string['defaultlangforinstitution'] = '%s default';
 $string['institutionupdatedsuccessfully'] = 'Institution updated successfully.';
 $string['registrationallowed'] = 'Registration allowed';
@@ -1077,6 +1095,8 @@ $string['institutionadmin'] = 'Institution administrator';
 $string['institutionadmins'] = 'Institution administrators';
 $string['institutionadministrator'] = 'Institution administrator';
 $string['institutionadmindescription1'] = 'Allow this person to administer all others in this institution.';
+$string['institutionsupportadmin'] = 'Institution support administrator';
+$string['institutionsupportadmindescription'] = 'Allow this person to masquerade as others in this institution who have fewer privileges, i.e. members and staff.';
 $string['settingsfor'] = 'Settings for:';
 $string['institutionmembers'] = 'Institution members';
 $string['notadminforinstitution'] = 'You are not an administrator for that institution.';
@@ -1091,6 +1111,7 @@ $string['institutionusersinstructionsinvited2'] = 'The list in the "%1$s" field 
 
 $string['editmembers'] = 'Edit members';
 $string['editstaff'] = 'Edit staff';
+$string['editsupportadmins'] = 'Edit support administrators';
 $string['editadmins'] = 'Edit administrators';
 $string['membershipexpiry'] = 'Membership expires';
 $string['membershipexpirydescription'] = 'Date on which the person will be removed automatically from the institution.';
@@ -1147,16 +1168,23 @@ $string['institutionmaxusersexceeded'] = 'This institution is full. You will hav
 $string['institutionuserserrortoomanyusers'] = 'These people were not added. The number of members cannot exceed the maximum allowed for the institution. You can add fewer people, remove some members from the institution or ask the site administrator to increase the maximum number.';
 $string['institutionuserserrortoomanyinvites'] = 'Your invitations were not sent. The number of existing members plus the number of outstanding invitations cannot exceed the institution\'s maximum number of account. You can invite fewer people, remove some members from the institution, or ask the site administrator to increase the maximum number.';
 
+$string['maxnumberofgroups'] = 'Maximum number of groups allowed';
+$string['maxgroupsdescription'] = 'The maximum number of groups that can be associated with the institution. If there is no limit, this field should be left blank.';
+$string['institutionmaxgroupsexceeded'] = 'This institution already has %s groups. Either delete some groups or increase the group limit.';
+$string['maxmembersexceeded'] = 'This institution already has %s members. Either remove members or increase the account limit.';
+
 $string['Shortname'] = 'Short name';
 $string['Members'] = 'Members';
-$string['Maximum'] = 'Maximum';
+$string['Maximummembers'] = 'Maximum members';
+$string['Maximumgroups'] = 'Maximum groups';
 $string['Staff'] = 'Staff';
 $string['Admins'] = 'Administrators';
+$string['Supportadmins'] = 'Support administrators';
 
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate people with an institution, you should create the institution first.';
 $string['noinstitutionreports'] = 'Unable to view institution reports';
-$string['noinstitutionreportsdescription1'] = 'Staff report access needs to be turned on for the site to allow staff to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
+$string['noinstitutionreportsdescription2'] = 'Institution report access needs to be turned on for the site to allow staff or support adminstrators to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
 $string['noinstitutionstaticpages'] = 'You do not have permission to edit any institution static pages or no institutions have been created yet.';
 $string['noinstitutionstaticpagesadmin'] = 'If you are a site administrator, please edit the default static pages in <a href="%s">Configure site</a>.';
 
@@ -1273,13 +1301,13 @@ $string['unabletodeleteself1'] = 'You are not allowed to delete yourself.';
 $string['unabletodeletealladmins1'] = 'You are not allowed to delete all site administrators.';
 $string['unabletosuspendself'] = 'You are not allowed to suspend yourself.';
 $string['unabletosuspendalladmins'] = 'You are not allowed to suspend all site administrators.';
-$string['verifierload'] = 'Percentage of portfolios by verifier load';
-$string['verifierpercentage'] = 'Percentage of portfolios allocated to a verifier';
+$string['verifierload'] = 'Percentage of portfolios by reviewer load';
+$string['verifierpercentage'] = 'Percentage of portfolios allocated to a reviewer';
 $string['countportfolios'] = '%s template portfolios selected';
 $string['allocated'] = 'Allocated';
 $string['unallocated'] = 'Unallocated';
-$string['currentverifiersovertime'] = 'Current verifiers over time';
-$string['currentverifiers'] = 'Current verifiers';
+$string['currentverifiersovertime'] = 'Current reviewers over time';
+$string['currentverifiers'] = 'Current reviewers';
 
 // general stuff
 $string['notificationssaved'] = 'Notification settings saved';
@@ -1319,9 +1347,6 @@ $string['groupmanagespecific'] = 'Manage "%s"';
 $string['groupdelete'] = 'Delete';
 $string['managegroupquotadescription1'] = 'Use this form to change the group file quota for this group.';
 $string['managegroupdescription1'] = 'Use this form to promote and demote administrators for this group. If you remove a group administrator they will remain a group member.';
-
-$string['userscandisabledevicedetection'] = 'People can disable device detection';
-$string['userscandisabledevicedetectiondescription1'] = 'People will be allowed to disable mobile device detection when they are browsing this site.';
 
 // Admin user search logged in filter
 $string['loggedinfilter'] = 'Filter by login date:';
@@ -1439,30 +1464,34 @@ $string['cli_restore_warning'] = '*** WARNING *** Unable to restore backup of "%
 $string['cli_tmpdir_notwritable'] = 'The temporary upload directory "%s" is not writable.';
 $string['cli_lang_branch'] = 'Mahara series version to fetch langpacks for series "%s"';
 
-// Fast index for elasticsearch
+// Fast index for Elasticsearch
 $string['cli_fast_index'] = 'Elasticsearch fast indexer allows quicker indexing of sites by avoiding waiting for the next cron run. Instead, it begins the next run immediately after first finishes.';
 $string['cli_unabletoupdatecron'] = 'Unable to update the search cron database record';
 $string['cli_problemindexing'] = 'A problem occurred while indexing';
 $string['cli_done'] = 'Indexing finished';
 
-// Clean up old users
+// Clean up old accounts
 $string['cli_param_dryrun'] = 'Dry run to indicate what will happen. Set to "true" by default. Need to set -d=false to actually update database.';
 $string['cli_deleteinactiveusers_beforedate'] = 'Delete accounts where their last login date is earlier than this date. Date can be any datetime string, e.g. "2018-02-25" or "-6 months".';
 $string['cli_deleteinactiveusers_limit'] = 'Limit of accounts to work with for each delete run.';
 $string['cli_deleteinactiveusers_cleanusers'] = 'Try to delete account data from the "usr" table as well.';
-$string['cli_deleteinactiveusers_info'] = 'This command-line PHP script allows you to delete old accounts. This will only work for people who either have not logged in or have never made a forum post.';
+$string['cli_deleteinactiveusers_info1'] = 'This command-line PHP script allows you to delete old accounts based on certain settings, e.g. have not logged in since a certain date, belong to a particular group. You can only fully delete accounts from the database with the "cleanusers" flag if they have not participated in collaborative activities.';
 $string['cli_deleteinactiveusers_neverloggedin'] = 'Delete accounts that have never been logged into (were set up by an administrator).';
 $string['cli_param_baddate'] = 'The supplied date "%s" is not valid.';
 $string['cli_deleteinactiveusers_usercount'] = 'There are "%s" accounts to delete.';
 $string['cli_deleteinactiveusers_userunabletoclean'] = 'Unable to delete the account for "%s" (ID %s) fully.';
 $string['cli_deleteinactiveusers_userunabletodelete'] = 'Unable to delete the account for "%s" (ID %s).';
 $string['cli_deleteinactiveusers_nouserstodelete'] = 'There are no accounts to delete.';
+$string['cli_deleteinactiveusers_problem'] = 'Too many institution parameters given. Please use --institution OR --incl_inst OR --excl_inst to filter by institution.';
 $string['cli_deleteinactiveusers_onlydryrun1'] = 'This is only a dry run with the following settings:
-Institution: %s
 Group: %s
 Before date: %s
 Delete accounts from "usr" table: %s
 Never logged in: %s';
+$string['cli_deleteinactiveusers_onlydryrun1_inst_params'] = '
+Included institution(s): %s
+Excluded institution(s): %s
+Include accounts not in an institution? %s';
 
 // Clean up old groups
 $string['cli_deleteinactivegroups_info'] = 'This command-line PHP script allows you to delete old groups. This will only work for groups that do not have any members. This will also include groups with only one owner / administrator if the "onlyadmins" flag is set.';
@@ -1486,6 +1515,7 @@ $string['cli_deleteinactivegroups_groupunabletoclean'] = 'Unable to fully delete
 
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
+$string['withselectedcontentrelease'] = 'Release selected items';
 $string['allothers'] = 'All others';
 
 // Behat variables script
@@ -1493,7 +1523,7 @@ $string['behatvariables'] = 'Behat steps';
 $string['behatvariablesdesc'] = 'Tool to find available Behat steps quickly';
 $string['nobehatfeaturefiles'] = 'No Behat feature files found';
 $string['behatmatchingrows'] = '%s in ';
-$string['behatnocore'] = 'Unable to read core Behat steps from behat.yml file';
+$string['behatnocoresteps'] = '<p>Unable to read Behat steps from the behat.yml file. To see them, <a href="https://wiki.mahara.org/wiki/Testing_Area/Behat_Testing/Setup#chown">make the www-data the owner of your Behat dataroot directory</a>.</p>';
 $string['behatstepnotused'] = 'Currently, this Behat step is not used.';
 
 // Privacy Statement section
@@ -1532,7 +1562,6 @@ $string['registerrefusal'] = 'Your account will not be created when you do not c
 $string['registerprivacy'] = 'Please read the privacy statement. If you do not consent to it, you cannot create an account on the site.';
 $string['registertermsandconditions'] = 'Please read the terms and conditions. If you do not consent to them, you cannot create an account on the site.';
 $string['enterreason'] = 'Please enter the reason of refusal here...';
-$string['hasrefused'] = 'has refused the privacy statement';
 $string['privacylowcase'] = 'privacy statement';
 $string['termsandconditionslowcase'] = 'terms and conditions';
 $string['hasrefused'] = 'has refused the %s';
@@ -1601,3 +1630,12 @@ $string['cli_locking_no_review_block'] = ' portfolio completion page does not ha
 $string['cli_locking_no_portfolio_completion'] = ' does not match a collection that has a portfolio completion page.';
 $string['cli_locking_locked'] = ' is now locked.';
 $string['cli_locking_unlocked'] = ' is now unlocked.';
+
+// Mahara map / component library
+$string['componentmap'] = 'Components library';
+$string['development'] = 'Development';
+$string['exportthirdpartycsv'] = 'Export plugin information in CSV format';
+$string['Path'] = 'Path';
+$string['styleguide'] = 'Style guide';
+$string['thirdpartyplugins'] = 'Third party plugins based on README.Mahara files';
+$string['url'] = 'url';

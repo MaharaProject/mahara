@@ -15,7 +15,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I press "Save profile"
     And I choose "Pages and collections" in "Create" from main menu
     # Creating a page
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I fill in "Page title" with "test page name 1"
     And I press "Save"
@@ -23,7 +23,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I should see "Page saved successfully"
     # Creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Add"
+    And I press "Add"
     And I click on "Collection" in the dialog
     And I fill in "Collection name" with "test collection name"
     And the "Page navigation bar" checkbox should be checked
@@ -36,7 +36,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I check "test page name 1"
     And the "test page name 1" checkbox should be checked
     And I press "Add pages"
-    And I follow "Next: Edit access"
+    And I press "Next: Edit access"
     And I click on "Return to pages and collections"
     And I click on "test collection name" card menu
     And I should see "Delete"

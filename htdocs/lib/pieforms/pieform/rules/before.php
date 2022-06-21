@@ -41,4 +41,5 @@ function pieform_rule_before(Pieform $form, $value, $element, $otherelement) {/*
     if ($value != '' && $othervalue != '' && intval($value) > intval($othervalue)) {
         return sprintf($form->i18n('rule', 'before', 'before', $element), $otherelement['title']);
     }
+    return '';
 }/*}}}*/

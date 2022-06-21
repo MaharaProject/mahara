@@ -130,7 +130,11 @@ class BehatHooks extends BehatBase {
             throw new Exception('The test site is not enabled for behat testing');
         }
 
-        //BehatTestingUtil::drop_site();
+        // Check if our tests passed.
+        if ($event->getTestResult()->isPassed()) {
+            // Our tests passed. We can clean up the database.
+            BehatTestingUtil::drop_site();
+        }
         BehatTestingUtil::stop_test_mode();
     }
 
@@ -298,10 +302,12 @@ class BehatHooks extends BehatBase {
 
         if (!$scope->getTestResult()->isPassed()) {
             // create filename string
-
-            $featureFolder = preg_replace('/\W/', '', $scope->getFeature()->getTitle());
+            preg_match('|test/behat/features/(.*)\.feature|', $scope->getFeature()->getFile(), $matches);
+            $featureFolder = preg_replace('/\W/', '', preg_replace('/\//', '__', $matches[1]));
             $scenarioName = $this->currentScenario->getTitle();
-            $fileName = preg_replace('/\W/', '', $scenarioName) . '.png';
+            $scenarioLine = $scope->getStep()->getLine();
+
+            $fileName = preg_replace('/\W/', '', $scope->getStep()->getText()) . '_line' . $scenarioLine . '.png';
 
             // create screenshots directory if it doesn't exist
             if (!file_exists($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder)) {
@@ -309,7 +315,14 @@ class BehatHooks extends BehatBase {
             }
 
             // For Selenium2 Driver you can use:
-            file_put_contents($CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder . '/' . $fileName, $this->getSession()->getDriver()->getScreenshot());
+            $screenshotfile = $CFG->behat_dataroot . '/behat/html_results/screenshots/' . $featureFolder . '/' . $fileName;
+            $out = file_put_contents($screenshotfile, $this->getSession()->getDriver()->getScreenshot());
+
+            if (!empty($CFG->behat_view_screenshots) && $out !== false && $eog = exec('apt-cache policy eog | grep Installed')) { // Ubuntu
+                if (!preg_match('/Installed\: \(none\)/', $eog)) {
+                    exec('eog ' . $screenshotfile . " > /dev/null 2>/dev/null &");
+                }
+            }
         }
     }
 

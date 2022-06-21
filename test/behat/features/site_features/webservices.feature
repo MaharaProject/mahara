@@ -59,7 +59,7 @@ Scenario: As administrator I can
     And I press "Save"
     # Verify token was made and Test the token
     And I scroll to the id "webservices_token_edit_1_submit_container"
-    And I should see "Edit" in the "#webservices_token_edit_1_submit_container" element
+    And I should see "Edit" in the "Manage service access tokens" "Webservices" property
     And I choose "Test client" in "Web services" from administration menu
     Then I should see "This is the interactive test client facility for web services."
     # Verify Text on Web service test client | Web services configuration page with and without a protocol
@@ -76,11 +76,11 @@ Scenario: As administrator I can
     # NOTE: Pressing "Execute" here fails as behat is not set up to handle webservice calls
     ###
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I follow "Configuration for module mobileapi"
+    And I press "Configuration for module mobileapi"
     And I enable the switch "Manual token generation"
     And I press "Save"
     When I choose "Connected apps" in "Settings" from account menu
-    And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
+    And I follow "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
     And I click on "Generate"
     Then I should see "Manually created"
     When I press "Delete \"Manually created\""
@@ -91,7 +91,7 @@ Scenario: As administrator I can
   2) Generate a manual token once administrator has allowed this
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I follow "Configuration for module mobileapi"
+    And I press "Configuration for module mobileapi"
     And I enable the switch "Auto-configure mobile apps API"
     And I enable the switch "Manual token generation"
     And I press "Save"
@@ -100,7 +100,7 @@ Scenario: As administrator I can
     And I go to "webservice/admin/index.php"
     Then I should see "You are forbidden from accessing the administration section."
     When I choose "Connected apps" in "Settings" from account menu
-    And I follow "Mahara Mobile" in the ".arrow-bar" "css_element"
+    And I follow "Mahara Mobile" in the "Arrow-bar nav" "Nav" property
     And I click on "Generate"
     Then I should see "Manually created"
     When I press "Delete \"Manually created\""

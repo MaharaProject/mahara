@@ -78,10 +78,10 @@ Scenario: Institution One admin locks First name, Last name fields
     Then I should see "Choose the way to import your portfolio items"
     When I expand "About me" node
     # user should see ignore for all of the Locked fields for inst
-    And I should see "Ignore" in the "Import First name" property
-    And I should see "Ignore" in the "Import Last name" property
+    And I should see "Ignore" in the "Import First name" "Profile" property
+    And I should see "Ignore" in the "Import Last name" "Profile" property
     # Student ID field was not locked so user should see additional option of "Add new"
-    And I should see "Ignore" in the "Import Student ID" property
-    And I should see "Add new" in the "Import Student ID" property
+    And I should see "Ignore" in the "Import Student ID" "Profile" property
+    And I should see "Add new" in the "Import Student ID" "Profile" property
     When I expand "Contact information" node
-    Then I should see "Ignore" in the "Import Email address" property
+    Then I should see "Ignore" in the "Import Email address" "Profile" property

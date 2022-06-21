@@ -279,7 +279,6 @@
         workspace = $('[data-role="workspace"]');
         viewThemeSelect = $('#viewtheme-select');
 
-        attachAccordion();
         attachToolbarToggle();
 
         // Rewrite the configure buttons to be ajax
@@ -330,47 +329,6 @@
 
             cols.height(height);
             }
-    }
-
-    function attachAccordion(){
-        // Update the status of a collapsible block category by adding/removing class 'expanded'
-        $j('div#content-editor-foldable div.block-category-title').on('click', function() {
-            // Collapse all other expanded category
-            $j(this).parent().find('div.expanded').toggleClass('expanded');
-            $j(this).toggleClass('expanded');
-        });
-
-        contentEditor.find('.btn-accordion').accordion({
-            icons: false,
-            heightStyle: 'content',
-            collapsible: true,
-            active: false,
-            header: ".block-category-title",
-            activate: function(event, ui) {
-                // When all animation is off ($j.fx.off == true)
-                // We can not rely on the class 'ui-state-active' as it is only
-                // added when accordion widget animation functions are activated
-                var active = $(this).find('.expanded');
-                if (active.length) {
-                    var category = active.next('div'),
-                        categoryid = category.attr('id'),
-                        pd = {
-                            'id': $('#viewid').val(),
-                            'change': 0,
-                            'action': 'blocktype_list',
-                            'c': categoryid
-                        };
-
-                    sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-                        $(category).html(data.data);
-                        makeNewBlocksDraggable();
-
-                    });
-                    return false;
-                }
-            }
-        });
-
     }
 
     function attachToolbarToggle (){
@@ -433,39 +391,33 @@
 
         $('.blocktype-drag.not-accessible').draggable({
             start: function(event, ui) {
-                $(this).attr('data-gs-width', 4);
-                $(this).attr('data-gs-height', 3);
+                $(this).attr('gs-width', 4);
+                $(this).attr('gs-height', 3);
             },
             helper: function(event) {
               var original = $(this),
                   helper = $("<div></div>").append(original.clone());
-              helper.find('label span').removeClass('hidden');
+              helper.find('.labelspan').removeClass('hidden');
               helper.children().each(function(index) {
                   // Set helper cell sizes to match at least the original sizes
                   $(this).css('min-width', '200px');
               });
-
-              // show dotted line with correct dimensions when dragging placeholder block
-              var node = {width: 4, height: 3};
-              $(this).data('_gridstack_node', node);
-
               return helper;
             },
             connectToSortable: '.grid-stack',
             appendTo: 'body',
         });
 
+
         $( ".gridedit" ).droppable({
             drop: function(event, ui) {
                 var placeholder = $('.grid-stack').children().last(),
-                x = placeholder.attr('data-gs-x'),
-                y = placeholder.attr('data-gs-y');
+                x = placeholder.attr('gs-x'),
+                y = placeholder.attr('gs-y'),
+                grid = document.querySelector('.grid-stack').gridstack;
 
-
-                var grid = $('.grid-stack').data('gridstack');
                 grid.removeWidget(placeholder);
                 $(placeholder).remove();
-
 
                 $('.grid-stack .blocktype-drag').removeClass('btn btn-primary');
                 addNewBlock({'positionx': x, 'positiony': y}, 'placeholder');
@@ -486,13 +438,13 @@
 
     var addblockstarted = false; // To stop the double clicking of add block button causing multiple saving problem
     function startAddBlock(element) {
-        var addblockdialog = $('#addblock');
+        var addblockdialog = jQuery('#addblock');
         addblockdialog.modal('show');
         if (!addblockstarted) {
             addblockstarted = true;
             addblockdialog.one('dialog.end', function(event, options) {
                 if (options.saved) {
-                    addNewBlock(options.position, element.find('.blocktype-radio').val());
+                    addNewBlock(options.position, 'placeholder');
                 }
                 else {
                     element.trigger("focus");
@@ -520,9 +472,16 @@
         if (config.blockeditormaxwidth) {
             pd['cfheight'] = $(window).height() - 100;
         }
-        var grid = $('.grid-stack').data('gridstack');
+        var grid = document.querySelector('.grid-stack').gridstack;
         if (whereTo == 'bottom') {
-            pd['positiony'] = grid.grid.getGridHeight();
+            // To place it at the base we need to find the last item position and
+            // make our one lower than that by adding the dimension height value
+            if (grid.el.childNodes.length > 1) {
+                pd['positiony'] = grid.el.childNodes[grid.el.childNodes.length - 1].getAttribute('gs-y') + 3;
+            }
+            else {
+                pd['positiony'] = 0;
+            }
         }
         else {
             if (typeof(whereTo['positionx']) !== 'undefined') {
@@ -532,11 +491,9 @@
                 pd['positiony'] = whereTo['positiony'];
             }
         }
+
         let width = 4; // Default gridstack block width for desktop
-        // The following line works from left to right and returns the first set non-falsy value
-        // as the width value then compares that value to grid.opts.minWidth value and if smaller then treats layout as being in mobile view
-        // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Logical_OR
-        if ((grid.container[0].clientWidth || grid.container[0].parentElement.clientWidth || window.innerWidth) <= grid.opts.minWidth) {
+        if (grid._widthOrContainer() <= grid.opts.minWidth) {
             width = 1; // Default gridstack block width for mobile
             pd['gridonecolumn'] = true;
         }
@@ -547,17 +504,16 @@
                 configureButton = blockinstance.find('.configurebutton'),
                 blockId = blockinstance.attr('id').substr(6),
                 dimensions = {
-                    positionx: blockinstance[0].getAttribute('data-gs-x'),
-                    positiony: blockinstance[0].getAttribute('data-gs-y'),
+                    positionx: blockinstance[0].getAttribute('gs-x'),
+                    positiony: blockinstance[0].getAttribute('gs-y'),
                 }
-
             addBlockCss(data.css);
 
-            var grid = $('.grid-stack').data('gridstack'),
-            minWidth = grid.opts.minCellColumns;
+            var grid = GridStack.init();
+            var minWidth = grid.opts.minCellColumns;
             dimensions.width = 4;
             dimensions.height = 3;
-            addNewWidget(blockinstance, blockId, dimensions, grid, 'placeholder', minWidth, dimensions.height);
+            addNewWidget(blockinstance[0], blockId, dimensions, grid, 'placeholder', minWidth, dimensions.height);
 
             if (data.data.configure) {
                 showDock($('#configureblock'), true);
@@ -630,6 +586,9 @@
      * in that case.
      */
     function rewriteDeleteButton(button, pblockinstanceId) {
+        if (button.hasClass('gallery')) {
+            return;
+        }
         button.off('click touchstart');
         button.on('click touchstart', function(e) {
             e.stopPropagation();
@@ -655,13 +614,13 @@
                 pd[self.attr('name')] = 1;
 
                 sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
-
                     if (blockinstanceId !== undefined && blockinstanceId !== null) {
                         $('#blockinstance_' + blockinstanceId).remove();
                     }
 
-                    var grid = $('.grid-stack').data('gridstack');
-                    grid.removeWidget($('#block_' + blockinstanceId));
+                    var gridstackobj = document.querySelector('.grid-stack').gridstack;
+                    var blocktoremove = document.getElementById('block_' + blockinstanceId);
+                    gridstackobj.removeWidget(blocktoremove);
 
                     if (!$('#configureblock').hasClass('d-none')) {
                         hideDock();
@@ -706,9 +665,9 @@
 
             sendjsonrequest(config['wwwroot'] + 'view/blocks.json.php', pd, 'POST', function(data) {
 
-                var grid = $('.grid-stack').data('gridstack'),
-                item = $('#block_' + blockinstanceId);
-                grid.removeWidget(item);
+                var gridstackobj = document.querySelector('.grid-stack').gridstack;
+                var blocktoremove = document.getElementById('block_' + blockinstanceId);
+                gridstackobj.removeWidget(blocktoremove);
 
                 if (!$('#configureblock').hasClass('d-none')) {
                     hideDock();
@@ -756,7 +715,7 @@
         e.stopPropagation();
         e.preventDefault();
 
-        var addblockdialog = $('#addblock');
+        var addblockdialog = jQuery('#addblock');
 
         options.trigger = e.type;
         addblockdialog.modal('hide').trigger('dialog.end', options);
@@ -853,7 +812,7 @@
      * modal closes.
      */
     function showMediaPlayers() {
-        if (!config['handheld_device'] && tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
+        if (tinyMCE && tinyMCE.activeEditor && tinyMCE.activeEditor.id) {
             tinyMCE.execCommand('mceRemoveEditor', false, tinyMCE.activeEditor.id);
         }
         if (config.mathjax && MathJax !== undefined) {
@@ -969,27 +928,6 @@
         });
         return {'row': row, 'column': column, 'order': order};
     }
-
-    /**
-     * Initialise
-     *
-     */
-    $(function() {
-        /**
-         * changes the intructions so they are for ajax
-         */
-        $('#blocksinstruction').html(strings['blocksinstructionajaxlive1']);
-        $('.blocks #viewinstructions-dropdown').on('hide.bs.collapse show.bs.collapse', function(event) {
-            var pd = {
-                'viewid': $('#viewid').val(),
-                'action': event.type
-            };
-            sendjsonrequest(config['wwwroot'] + 'view/instructions.json.php',
-                pd, 'POST', function() {}
-            );
-        });
-    });
-
 }( window.ViewManager = window.ViewManager || {}, jQuery ));
 
 ViewManager.addCSSRules();

@@ -89,7 +89,7 @@ class BehatConfigManager {
         $plugins = TestsFinder::get_plugins_with_tests('features');
         if ($plugins) {
             foreach ($plugins as $pluginname => $path) {
-                $path = self::clean_path($path) ;
+                $path = self::clean_path($path);
                 if (file_exists($path . self::get_behat_tests_path())) {
                     $suites[$pluginname] = array(
                         'paths'    => array($path),

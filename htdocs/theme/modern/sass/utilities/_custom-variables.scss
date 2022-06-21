@@ -42,15 +42,15 @@ $navbar-default-link-border:                scale-color($navbar-default-bg, $lig
 $navbar-default-link-color:                 $white;
 $navbar-default-link-hover-color:           $navbar-default-link-color;
 $navbar-default-link-bg:                    $navbar-default-bg;
-$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: -3%);
+$navbar-default-link-hover-bg:              scale-color($theme-primary-color, $lightness: -15%);
 $navbar-default-active-color:               $navbar-default-link-color;
-$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -3%);
+$navbar-default-active-bg:                  scale-color($theme-primary-color, $lightness: -15%);
 
 // Navbar menus children
 $navbar-inverse-bg:                         $theme-secondary-color;
 $navbar-inverse-link-color:                 $white;
 $navbar-inverse-link-hover-color:           $white;
-$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -2%);
+$navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -10%);
 $navbar-inverse-link-active-color:          $white;
 $navbar-inverse-link-active-bg:             $navbar-inverse-link-hover-bg;
 
@@ -71,7 +71,6 @@ $btn-primary-color:              $white;
 $btn-primary-bg:                 $theme-primary-color;
 $btn-primary-border:             scale-color($btn-primary-bg, $lightness: -8%);
 
-
 // Popovers
 $popover-fallback-border-color:       #ccc;
 
@@ -80,4 +79,7 @@ $card-border-color:          #ccc;
 $card-header-bg:             #f9f9f9;
 $card-footer-bg:             #f5f5f5;
 
-$card-secondary-border:       $theme-primary-color;
+$card-secondary-border-color:       $theme-primary-color;
+
+// User icon border radius
+$user-icon-border-radius:                   50%;

@@ -6,6 +6,8 @@
         display: inline-block;
         min-width: 1.25rem; // 20px;
         max-width: 100%;
+        border-radius: $input-border-radius;
+
         &.input-short {
             max-width: 12.5rem; // 200px;
             .select2 {
@@ -90,7 +92,7 @@
             }
             select.form-control {
                 height: $input-height-sm;
-                line-height: $input-height-sm / 2 + 0.125rem;
+                line-height: ($input-height-sm / 2) + 0.125rem;
             }
         }
     }
@@ -104,7 +106,7 @@
             padding-top: $spacing-sm;
             padding-bottom: $spacing-sm;
             height: $input-height-lg;
-            line-height: $input-height-lg / 2 + $spacing-xs;
+            line-height: ($input-height-lg / 2) + $spacing-xs;
         }
     }
 
@@ -126,6 +128,10 @@
 
 .last-updated-offset {
     margin-top: $spacing-xxl;
+}
+
+.dropdown-toggle {
+    border-radius: $input-border-radius;
 }
 
 .dropdown-single-option {
@@ -195,6 +201,13 @@
           color: $dropdown-link-hover-color;
           background-color: $dropdown-link-hover-bg;
       }
+    }
+    &:active,
+    &.active {
+        background-color: $dropdown-link-active-bg;
+        a {
+            color: $dropdown-link-active-color;
+        }
     }
 }
 
@@ -274,4 +287,10 @@
     margin-top: 0.375rem; // 6px;
     margin-left: -0.375rem; // 6px;
     margin-right: 0.75rem; // 12px;
+}
+
+// get tag inputs to inherit the input radius variable for quicker change
+.select2-container--default .select2-selection--single,
+.select2-container--default .select2-selection--multiple {
+    border-radius: $input-border-radius !important;
 }

@@ -35,7 +35,7 @@ Scenario:  Checking the "Send Message Now" forum post option is disabled after t
 
  # Create new topic
  When I follow "General discussion"
- And I follow "New topic"
+ And I press "New topic"
  And I set the following fields to these values:
  | Subject | Testing subject 1 |
  | Message | message for testing subject 1 |
@@ -49,5 +49,5 @@ Scenario:  Checking the "Send Message Now" forum post option is disabled after t
  And I follow "General discussion"
 
  # Checking the send message is disabled once a message has sent
- Then I follow "Edit topic"
+ Then I press "Edit topic"
  Then I should not see "Send message now"

@@ -16,6 +16,8 @@ $string['pluginname'] = 'Résumé';
 // Tabs
 $string['introduction'] = 'Introduction';
 $string['educationandemployment'] = 'Education and employment';
+$string['education'] = 'Education';
+$string['employment'] = 'Employment';
 $string['achievements'] = 'Achievements';
 $string['goals'] = 'Goals';
 $string['skills'] = 'Skills';

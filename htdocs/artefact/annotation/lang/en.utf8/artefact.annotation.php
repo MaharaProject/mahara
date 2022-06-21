@@ -18,6 +18,10 @@ $string['annotation'] = 'annotation';
 $string['annotations'] = 'annotations';
 $string['Annotationfeedback'] = 'Feedback';
 $string['annotationfeedback'] = 'feedback';
+$string['nannotationfeedback'] = array(
+    '%s item of feedback',
+    '%s items of feedback'
+);
 $string['typeannotationfeedback'] = 'Feedback on annotations';
 $string['allowannotationfeedback'] = 'Allow feedback';
 $string['approvalrequired'] = 'Feedback is moderated. If you choose to make this feedback public, it will not be visible to others until it is approved by the owner.';

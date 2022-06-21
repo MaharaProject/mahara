@@ -1,9 +1,10 @@
 <?php
 /**
+ * Participation report for a group.
  *
  * @package    mahara
  * @subpackage core
- * @author     Melissa Draper <melissa@catalyst.net.nz>, Catalyst IT Ltd
+ * @author     Melissa Draper (Catalyst IT Ltd) <melissa@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
@@ -41,8 +42,7 @@ $pagination = array(
     'datatable'  => 'sharedviewsreport',
     'jsonscript' => 'group/participationsharedviews.json.php',
     'setlimit'   => true,
-    'resultcounttextsingular' => get_string('portfolio', 'view'),
-    'resultcounttextplural'   => get_string('portfolios', 'view'),
+    'resultcounttext' => get_string('nportfolios', 'view', $sharedviews['count']),
 );
 
 $sharedviews = View::render_participation_views($sharedviews, 'group/participationsharedviews.tpl', $pagination);
@@ -55,8 +55,7 @@ $pagination = array(
     'datatable'  => 'groupviewsreport',
     'jsonscript' => 'group/participationgroupviews.json.php',
     'setlimit'   => true,
-    'resultcounttextsingular' => get_string('portfolio', 'view'),
-    'resultcounttextplural'   => get_string('portfolios', 'view'),
+    'resultcounttext' => get_string('nportfolios', 'view', $groupviews['count']),
 );
 
 $groupviews = View::render_participation_views($groupviews, 'group/participationgroupviews.tpl', $pagination);

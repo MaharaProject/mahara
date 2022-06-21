@@ -4,6 +4,14 @@ In order to change the way an institution is configured
 As an admin
 So I can have different settings for each institution
 
+Background:
+  Given the following "institutions" exist:
+    | name    | displayname     | registerallowed | registerconfirm | theme  |
+    | instone | Institution One | ON              | OFF             | maroon |
+  And the following "users" exist:
+    | username | password  | email             | firstname | lastname | institution | authname | role |
+    | UserA    | Kupuh1pa! | UserA@example.com | Angela    | User     | instone      | internal | member |
+
 Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  Given I log in as "admin" with password "Kupuh1pa!"
  And I choose "Settings" in "Institutions" from administration menu
@@ -32,3 +40,7 @@ Scenario: Turning switches on and off on Edit Institution page (Bug 1431569)
  | Email disabled | 1 |
  | Social media | 1 |
 And I press "Submit"
+
+Scenario: Set an institution theme
+ Given I log in as "UserA" with password "Kupuh1pa!"
+ Then "/theme/maroon/images/site-logo" should be in the "Logo" "Header" property

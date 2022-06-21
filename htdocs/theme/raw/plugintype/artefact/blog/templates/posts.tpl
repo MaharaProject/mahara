@@ -1,11 +1,12 @@
 {foreach from=$posts item=post}
     <div id="posttitle_{$post->id}" class="{if $post->published} published{else} draft{/if} list-group-item">
-        <div class="post-heading">
-            <h2 class="list-group-item-heading title text-inline">
-                {$post->title}
-            </h2>
-
-            <div class="list-group-item-controls">
+        <div class="post-heading flex-row">
+            <div class="flex-title">
+                <h2 class="list-group-item-heading title text-inline">
+                    {$post->title}
+                </h2>
+            </div>
+            <div class="flex-controls list-group-item-controls">
                 <span id="poststatus{$post->id}" class="poststatus text-inline">
                     {if $post->published}
                         {str tag=published section=artefact.blog}
@@ -21,7 +22,7 @@
                 {/if}
 
                 {if $post->locked}
-                <span class="locked-post text-muted">
+                <span class="locked-post text-muted text-small">
                     <span class="icon icon-lock left" role="presentation" aria-hidden="true"></span>
                     {str tag=submittedforassessment section=view}
                 </span>

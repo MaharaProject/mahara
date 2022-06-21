@@ -16,41 +16,41 @@ Scenario: Create a block and see comments and details modal and headers update a
     Given I log in as "UserA" with password "Kupuh1pa!"
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I set the field "Block title" to "Image Block"
     And I click on blocktype "Image"
-    And I follow "Image"
+    And I press "Image"
     And I attach the file "Image1.jpg" to "File"
     And I press "Save"
-    And I click on "Display page"
+    And I display the page
     And I click on "Details"
-    And I should see "Add comment" in the ".block-header .commentlink" "css_element"
-    And I should see "Details" in the ".commentlink" "css_element"
+    And I should see "Add comment" in the "Block header" "Blocks" property
+    And I should see "Details" in the "Block header" "Blocks" property
     # Open the modal and see metadata details and add comment form
     When I follow "Add comment"
-    And I should see "Image1.jpg" in the "div#configureblock" "css_element"
-    And I should see "Preview" in the "div#configureblock" "css_element"
+    And I should see "Image1.jpg" in the "Modal header" "Modal" property
+    And I should see "Preview" in the "Modal content" "Modal" property
     And I fill in "This is a comment in a modal" in editor "Comment"
     And I click on "Comment"
     And I should see "Comment submitted"
-    And I should see "Comments (1) and details" in the ".commentlink" "css_element"
+    And I should see "Comments (1) and details" in the "Block header" "Blocks" property
     # Delete comment from modal
     When I follow "Comments (1) and details"
     And I should see "This is a comment in a modal"
     And I delete the "This is a comment in a modal" row
     And I wait "1" seconds
-    Then the "div#modal_messages" element should contain "Comment removed"
+    Then I should see "Comment removed" in the "Message" "Modal" property
     And I close the dialog
     And I should see "Add comment"
-    And I should see "Details" in the ".commentlink" "css_element"
+    And I should see "Details" in the "Block header" "Blocks" property
     # Disable comments on the artefact and see modal reflect changes
     When I follow "Add comment"
     And I should not see "Comment removed"
     And I click on "Comment"
-    Then the "div#modal_messages" element should contain "There was an error with submitting this form. Please check the marked fields and try again."
+    Then I should see "There was an error with submitting this form. Please check the marked fields and try again." in the "Message" "Modal" property
     And I close the dialog
-    And I click on "Edit" in the ".pageactions" "css_element"
+    And I click on "Edit" in the "Page action buttons" "Views" property
     And I configure the block "Image Block"
     And I wait "1" seconds
     And I click on "Image - Image1.jpg"
@@ -60,33 +60,32 @@ Scenario: Create a block and see comments and details modal and headers update a
     When I disable the switch "Comments"
     And I press "Save changes"
     And I close the dialog
-    And I click on "Display page" in the ".pageactions" "css_element"
-    And I should see "Details" in the ".modal_link" "css_element"
-    And I should not see "Add comment" in the ".modal_link" "css_element"
+    And I click on "Display page" in the "Page action buttons" "Views" property
+    And I should see "Details" in the "Block header" "Blocks" property
+    And I should not see "Add comment" in the "Block header" "Blocks" property
     # The image in the block is also a link to the modal
     And I follow "Details"
-    And I should see "Preview" in the "div#configureblock" "css_element"
-    And I should not see "Add comment" in the "div#configureblock" "css_element"
+    And I should see "Preview" in the "Modal content" "Modal" property
+    And I should not see "Add comment" in the "Block header" "Blocks" property
 
 Scenario: Add a block with multiple artefacts and see the comments and details header change accordingly
     Given I log in as "UserA" with password "Kupuh1pa!"
     Given I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    When I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I set the field "Block title" to "File(s) to Download Block"
     And I click on blocktype "File(s) to download"
-    And I expand "Files" node in the "#instconf_artefactfieldset_container" "css_element"
+    And I expand the section "Files"
     And I attach the file "Image2.png" to "File"
     And I attach the file "mahara_about.pdf" to "File"
     And I click on "Edit file \"mahara_about.pdf\""
     When I disable the switch "Comments"
     And I press "Save changes"
     And I press "Save"
-    And I click on "Display page" in the ".pageactions" "css_element"
-    And I click on "Details" in the ".pageactions" "css_element"
+    And I click on "Display page" in the "Page action buttons" "Views" property
+    And I click on "Details" in the "Page action buttons" "Views" property
     Then the "Image2.png" row should contain display button "Details"
     And the "Image2.png" row should contain display button "Add comment"
     And the "mahara_about.pdf" row should contain display button "Details"
     And the "mahara_about.pdf" row should not contain display button "Add comment"
-    And I should not see "Add comment" in the ".block-header .modal_link" "css_element"

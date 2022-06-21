@@ -66,7 +66,6 @@ class module_lti_launch extends external_api {
 
                 // Canvas specific LTI params
                 'custom_canvas_api_domain' => new external_value(PARAM_TEXT, 'LTI custom_canvas_api_domain', VALUE_OPTIONAL),
-                'custom_canvas_api_domain' => new external_value(PARAM_TEXT, 'LTI custom_canvas_api_domain', VALUE_OPTIONAL),
                 'custom_canvas_course_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_course_id', VALUE_OPTIONAL),
                 'custom_canvas_enrollment_state' => new external_value(PARAM_TEXT, 'LTI custom_canvas_enrollment_state', VALUE_OPTIONAL),
                 'custom_canvas_user_id' => new external_value(PARAM_TEXT, 'LTI custom_canvas_user_id', VALUE_OPTIONAL),
@@ -213,7 +212,14 @@ class module_lti_launch extends external_api {
             }
             else {
                 $USER->logout();
-                throw new AccessDeniedException(get_string('autocreationnotenabled', 'module.lti'));
+                if ($parentauthid && in_array(get_field('auth_instance', 'authname', 'id', $parentauthid), array('internal', 'ldap'))) {
+                    // They can just login via the login box with their parent auth
+                    $SESSION->add_error_msg(get_string('autocreationnotenabledredirect', 'module.lti'));
+                    redirect(get_config('wwwroot'));
+                }
+                else {
+                    throw new AccessDeniedException(get_string('autocreationnotenabled', 'module.lti'));
+                }
             }
         }
 
@@ -337,19 +343,44 @@ class module_lti_launch extends external_api {
 
         // Redirect if the resource_link_id is a link to a view or collection
         $matches = [];
+        require_once(get_config('libroot') . 'view.php');
+        require_once('collection.php');
         if (preg_match('/\/view\/view\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
-            if ($collection_views = get_column_sql('
-                SELECT view FROM {collection_view}
-                WHERE collection = (
-                    SELECT collection FROM {collection_view}
-                    WHERE view = ?
-                )', array($matches[1]))) {
-                // all pages in the collection are allowed
-                $SESSION->set('lti.canviewview', $collection_views);
+            $view = new View($matches[1]);
+            if ($view) {
+                $collection = $view->get_collection();
+                if ($collection) {
+                    $canview = array();
+                    // Our view is part of a collection.
+                    if ($pid = $collection->has_progresscompletion()) {
+                        $canview[] = $pid;
+                    }
+                    $views = $collection->get('views');
+                    // Add all View IDs for views in the collection.
+                    foreach ($views['views'] as $views) {
+                        $canview[] = $views->id;
+                    }
+                    // all pages in the collection are allowed
+                    $SESSION->set('lti.canviewview', $canview);
+                }
+                else {
+                    $SESSION->set('lti.canviewview', array($matches[1]));
+                }
             }
-            else {
-                $SESSION->set('lti.canviewview', array($matches[1]));
+            redirect($params['resource_link_id']);
+        }
+        else if (preg_match('/^\/collection\/progresscompletion\.php\?id=([0-9]+)$/', $params['resource_link_id'], $matches)) {
+            $collectionid = (int)$matches[1];
+            $collection = new Collection($collectionid);
+            $canview = array();
+            if ($pid = $collection->has_progresscompletion()) {
+                $canview[] = $pid;
             }
+            $views = $collection->get('views');
+            foreach ($views['views'] as $view) {
+                $canview[] = $view->id;
+            }
+            $SESSION->set('lti.canviewview', $canview);
             redirect($params['resource_link_id']);
         }
         else {

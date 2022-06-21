@@ -21,12 +21,12 @@ Scenario: Adding a placeholder block to the page
     And I choose "Pages and collections" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     # Add a placeholder block
-    And I follow "Drag to add a new block" in the "blocktype sidebar" property
+    When I click on the add block button
     And I press "Add"
     And I fill in the following:
     | Block title | Mahara placeholder block |
     And I press "Save"
-    Then I should see "Please configure this block to choose its type."
+    Then I should see "Please edit this block to choose its type."
 
     # Edit placeholder block and check we can see more options
     And I scroll to the top

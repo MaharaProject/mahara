@@ -62,21 +62,6 @@ function search_user($query_string, $limit, $offset = 0, $data = array()) {
 }
 
 /*
-*   The elastic search plug-in is for now only used in the "Universal Search" page.
-*   Search is performed using the internal plug-in in all other case.
-*   This might change in the future.
-*/
-function search_all($query_string, $limit, $offset = 0, $data = array(), $type = null) {
-    if (record_exists('search_installed', 'name', 'elasticsearch', 'active', 1)) {
-        safe_require('search', 'elasticsearch');
-        $plugin = 'elasticsearch';
-        $results = call_static_method(generate_class_name('search', $plugin), 'search_all', $query_string, $limit, $offset, $data, $type);
-        return $results;
-    }
-}
-
-
-/*
  * Institutional admin queries:
  *
  * These are only used to populate user lists on the Institution
@@ -96,7 +81,7 @@ function get_institutional_admin_search_results($search, $limit) {
     $results = institutional_admin_user_search($search->query, $institution, $limit);
     if ($results['count']) {
         foreach ($results['data'] as &$r) {
-            $r['name'] = display_name($r['id'], null, false, false, true);
+            $r['name'] = display_name($r['id'], $USER, false, false, true);
         }
     }
     return $results;
@@ -276,7 +261,26 @@ function get_admin_user_search_results($search, $offset, $limit) {
             'string' => array_unique($archivesubmissionsusers),
         );
     }
+
+    // Filter by submissions not yet archived.
+    if (!empty($search->currentsubmissions)) {
+        $currentsubmissionsusers = get_column_sql("
+            SELECT DISTINCT owner
+            FROM {view}
+            WHERE submittedstatus > 0");
+        if (empty($currentsubmissionsusers)) {
+            // use a fake id number so that the query's in function will return no results
+            $currentsubmissionsusers = array(-1);
+        }
+        $constraints[] = array(
+            'field'  => 'currentsubmissions',
+            'type'   => 'in',
+            'string' => array_unique($currentsubmissionsusers),
+        );
+    }
+
     // Filter by duplicate emails
+    $duplicateemailartefacts = array();
     if (!empty($search->duplicateemail)) {
         $duplicateemailartefacts = get_column_sql('
             SELECT id
@@ -330,7 +334,7 @@ function get_admin_user_search_results($search, $offset, $limit) {
     // Filter by viewable institutions:
     global $USER;
     if (!$USER->get('admin') && !$USER->get('staff')) {
-        $allowed = array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions'));
+        $allowed = array_merge($USER->get('admininstitutions'), $USER->get('staffinstitutions'), $USER->get('supportadmininstitutions'));
         if (empty($search->institution)) {
             $search->institution = 'all';
         }
@@ -431,6 +435,10 @@ function get_admin_user_search_results($search, $offset, $limit) {
                 unset($result['email']);
             }
         }
+    }
+
+    if (empty($results['data'])) {
+        $results['data'] = [];
     }
 
     return $results;
@@ -580,13 +588,13 @@ function build_admin_user_search_results($search, $offset, $limit) {
             }
         }
     }
-    // PCNZ customisation WR 356027
+
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
-            $result['canedituser'] = $USER->is_staff_for_user((object)$result);
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
         }
     }
-    // End PCNZ customization
+
     $smarty = smarty_core();
     $smarty->assign('results', $results);
     $smarty->assign('institutions', $institutions);
@@ -679,6 +687,7 @@ function build_admin_export_queue_results($search, $offset, $limit) {
                 }
             }
             // To get the status we check if the starttime is set
+            $status = $statustype = '';
             if (empty($firstitem->starttime)) {
                 $status = get_string('exportpending', 'admin', format_date($firstitem->added));
                 $statustype = 'pending';
@@ -760,6 +769,12 @@ function build_admin_export_queue_results($search, $offset, $limit) {
         ),
     );
 
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
+        }
+    }
+
     $smarty = smarty_core();
     $smarty->assign('results', $results);
     $smarty->assign('USER', $USER);
@@ -780,48 +795,83 @@ function build_admin_export_queue_results($search, $offset, $limit) {
 }
 
 /**
- * Returns the search results for the archived submissions
+ * Returns the search results for the archived or current submissions.
  *
- * @param array  $search            The parameters we want to search against
- * @param int    $offset            What result to start showing paginated results from
- * @param int    $limit             How many results to show
+ * @param array $search The parameters we want to search against.
+ * @param int $offset What result to start showing paginated results from.
+ * @param int $limit How many results to show.
  *
- * @return array  A data structure containing results (see top of file).
+ * @return array A data structure containing results (see top of file).
  */
-
 function build_admin_archived_submissions_results($search, $offset, $limit) {
     global $USER;
 
+    if (is_plugin_active('lti_advantage', 'module')) {
+        safe_require('module', 'lti_advantage', 'database.php');
+    }
+
     $wantedparams = array('query', 'sortby', 'sortdir', 'institution');
     $params = array();
+    $shortparams = array();
     foreach ($search as $k => $v) {
         if (!in_array($k, $wantedparams)) {
             continue;
         }
         if (!empty($v)) {
             $params[] = $k . '=' . $v;
+            if ($k != 'sortby' && $k != 'sortdir') {
+                 $shortparams[] = $k . '=' . $v;
+            }
         }
     }
+    if ($search['type'] == 'current') {
+        $params[] = 'current=1';
+        $shortparams[] = 'current=1';
+    }
     $searchurl = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $params) . '&limit=' . $limit;
+    $searchurlshort = get_config('wwwroot') . 'admin/groups/archives.php?' . join('&', $shortparams) . '&limit=' . $limit;
 
     // Use get_admin_user_search_results() as it hooks into the same
     // funky stuff the user search box query does on user/search.php page.
-    $search->archivedsubmissions = true;
+    if ($search['type'] == 'current') {
+        $search['currentsubmissions'] = true;
+    }
+    else {
+        $search['archivedsubmissions'] = true;
+    }
 
-    $results = get_admin_user_search_results($search, $offset, $limit);
-    // Now that we have the users we need to do some last minute alterations
-    if (!empty($results['count'])) {
-        foreach ($results['data'] as $key => $data) {
-            // alter the archivectime to be human readable
+    $results = get_admin_user_search_results((object) $search, $offset, $limit);
+
+    // Now that we have the results we need to do some last minute alterations.
+    foreach ($results['data'] as $key => $data) {
+        // Massage the results regardless of type.
+        if (is_plugin_active('lti_advantage', 'module')) {
+            // Use the short name if set for the Submitted to column.
+            $results['data'][$key]['submittedto'] = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['submittedto']);
+            // Use the short name if set for the ID column.
+            $results['data'][$key]['specialid'] = LTI_Advantage_Database::find_name_of_issuer($results['data'][$key]['specialid']);
+        }
+        // Make the deleted group name more human readable.
+        $results['data'][$key]['groupdeleted'] = false;
+        if (preg_match('/^(.*?)(\.deleted\.)(.*)$/', $data['submittedto'], $matches)) {
+            $results['data'][$key]['groupdeleted'] = true;
+            $results['data'][$key]['submittedto'] = $matches[1] . ' (' . get_string('deleted') . ' ' . format_date($matches[3]) . ')';
+        }
+
+        // Massage the results for the Archived Submissions.
+        if ($search['type'] == 'archived') {
+            // Alter the archivectime to be human readable.
             $results['data'][$key]['archivectime'] = format_date($data['archivectime']);
-            // make sure the archive file is still on server at the path 'filepath' (not moved or deleted by server admin)
+
+            // Make sure the archive file is still on server at the path
+            // 'filepath' (not moved or deleted by server admin).
             $results['data'][$key]['filemissing'] = (!file_exists($data['filepath'] . $data['filename'])) ? true : false;
-            // make the deleted group name more human readable
-            $results['data'][$key]['groupdeleted'] = false;
-            if (preg_match('/^(.*?)(\.deleted\.)(.*)$/', $data['submittedto'], $matches)) {
-                $results['data'][$key]['groupdeleted'] = true;
-                $results['data'][$key]['submittedto'] = $matches[1] . ' (' . get_string('deleted') . ' ' . format_date($matches[3]) . ')';
-            }
+        }
+
+        // Massage the results for the Current Submissions.
+        if ($search['type'] == 'current') {
+            // Format the date nicely.
+            $results['data'][$key]['submittedtime'] = format_date(strtotime($data['submittedtime']));
         }
     }
 
@@ -840,50 +890,89 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
             'jsonscript' => 'admin/groups/archives.json.php',
     ));
 
-    $cols = array(
-        'submittedto' => array(
-            'name'     => get_string('submittedto', 'admin'),
-            'sort'     => true,
-            'template' => 'admin/groups/submittedtocontentcolumn.tpl',
-        ),
-        'specialid' => array(
-            'name'     => get_string('ID', 'admin'),
-            'sort'     => true,
-        ),
-        'icon' => array(
-            'template' => 'admin/users/searchiconcolumn.tpl',
-            'class'    => 'center',
-            'accessible' => get_string('profileicon'),
-        ),
-        'firstname' => array(
-            'name'     => get_string('firstname'),
-            'sort'     => true,
-            'template' => 'admin/users/searchfirstnamecolumn.tpl',
-        ),
-        'lastname' => array(
-            'name'     => get_string('lastname'),
-            'sort'     => true,
-            'template' => 'admin/users/searchlastnamecolumn.tpl',
-        ),
-        'preferredname' => array(
-            'name'     => get_string('displayname'),
-            'sort'     => true,
-        ),
-        'username' => array(
-            'name'     => get_string('username'),
-            'sort'     => true,
-            'template' => 'admin/users/searchusernamecolumn.tpl',
-        ),
-        'filetitle' => array(
-            'name'     => get_string('filenameleap', 'admin'),
+    $cols = [];
+    $cols['submittedto'] = [
+        'id'       => 'submittedto',
+        'name'     => get_string('submittedto', 'admin'),
+        'sort'     => true,
+        'helplink' => get_help_icon('core', 'reports', 'submissions', 'submittedto'),
+    ];
+    if ($search['type'] == 'archived') {
+        // The Current Submissions does this in the SQL. Use a template for the
+        // Archived Submissions.
+        $cols['submittedto']['template'] = 'admin/groups/submittedtocontentcolumn.tpl';
+    }
+    $cols['specialid'] = [
+        'id'       => 'specialid',
+        'name'     => get_string('ID', 'admin'),
+        'sort'     => true,
+        'helplink' => param_exists('current') ? get_help_icon('core', 'groups', 'submissions', 'specialid') : get_help_icon('core', 'groups', 'submissions', 'archiveid'),
+    ];
+    $cols['icon'] = [
+        'template' => 'admin/users/searchiconcolumn.tpl',
+        'class'    => 'center',
+        'accessible' => get_string('profileicon'),
+    ];
+    $cols['firstname'] = [
+        'name'     => get_string('firstname'),
+        'sort'     => true,
+        'template' => 'admin/users/searchfirstnamecolumn.tpl',
+    ];
+    $cols['lastname'] = [
+        'name'     => get_string('lastname'),
+        'sort'     => true,
+        'template' => 'admin/users/searchlastnamecolumn.tpl',
+     ];
+    $cols['preferredname'] = [
+        'name'     => get_string('displayname'),
+        'sort'     => true,
+    ];
+    $cols['username'] = [
+        'name'     => get_string('username'),
+        'sort'     => true,
+        'template' => 'admin/users/searchusernamecolumn.tpl',
+    ];
+    if ($search['type'] == 'archived') {
+        $cols['filetitle'] = [
+            'name'     => get_string('filenameleaphtml', 'admin'),
             'sort'     => true,
             'template' => 'admin/groups/leap2acontentcolumn.tpl',
-        ),
-        'archivectime' => array(
-            'name'     => get_string('archivedon', 'admin'),
+        ];
+        $cols['archivectime'] = [
+            'name' => get_string('archivedon', 'admin'),
+            'sort' => true,
+        ];
+    }
+    if ($search['type'] == 'current') {
+        // Portfolio name is title.
+        $cols['title'] = [
+            'name' => get_string('Portfolio', 'view'),
             'sort'     => true,
-        ),
-    );
+            'template' => 'admin/groups/releasetitlecolumn.tpl',
+        ];
+
+        // Submission date
+        $cols['submittedtime'] = [
+            'name' => get_string('submittedon', 'admin'),
+            'sort'     => true,
+        ];
+
+        // Release checkboxen column.
+        $cols['release'] = array(
+            'name'     => get_string('releasesubmissionlabel', 'admin'),
+            // 'mergefirst' => true,
+            'headhtml' => '<div class="btn-group" role="group"><a class="btn btn-sm btn-secondary" href="" id="selectallrelease">' . get_string('All') . '</a><a class="btn active btn-sm btn-secondary" href="" id="selectnonerelease">' . get_string('none') . '</a></div>',
+            'template' => 'admin/groups/releaseselectcolumn.tpl',
+            'class'    => 'nojs-hidden',
+            'accessible' => get_string('bulkselect'),
+        );
+    }
+
+    if ($results['data']) {
+        foreach ($results['data'] as &$result) {
+            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
+        }
+    }
 
     $smarty = smarty_core();
     $smarty->assign('results', $results);
@@ -896,8 +985,9 @@ function build_admin_archived_submissions_results($search, $offset, $limit) {
 
     return array($html, $cols, $pagination, array(
         'url' => $searchurl,
-        'sortby' => $search->sortby,
-        'sortdir' => $search->sortdir
+        'urlshort' => $searchurlshort,
+        'sortby' => $search['sortby'],
+        'sortdir' => $search['sortdir'],
     ));
 }
 

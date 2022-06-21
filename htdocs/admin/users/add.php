@@ -33,10 +33,9 @@ else {
 }
 
 $authinstancecount = count($authinstances);
+$options = array();
 
 if ($authinstancecount) {
-    $options = array();
-
     $external = false;
     foreach ($authinstances as $authinstance) {
         if ($USER->can_edit_institution($authinstance->name)) {
@@ -146,13 +145,12 @@ unset($elements['groupsideblocklabels']);
 
 $form = pieform(array(
     'name'       => 'adduser',
-    'class'      => 'card card-body',
+    'class'      => 'card card-body form-condensed',
     'autofocus'  => false,
     'template'   => 'adduser.php',
     'templatedir' => pieform_template_dir('adduser.php'),
     'plugintype' => 'core',
     'pluginname' => 'admin',
-    'class'      => 'form-condensed',
     'elements'   => $elements,
 ));
 
@@ -194,12 +192,12 @@ function adduser_validate(Pieform $form, $values) {
     }
 
     if (method_exists($authobj, 'is_username_valid_admin')) {
-        if (!$authobj->is_username_valid_admin($username)) {
+        if (!get_class($authobj)::is_username_valid_admin($username)) {
             $form->set_error('username', get_string('usernameinvalidadminform', 'auth.internal'));
         }
     }
     else if (method_exists($authobj, 'is_username_valid')) {
-        if (!$authobj->is_username_valid($username)) {
+        if (!get_class($authobj)::is_username_valid($username)) {
             $form->set_error('username', get_string('usernameinvalidform', 'auth.internal'));
         }
     }

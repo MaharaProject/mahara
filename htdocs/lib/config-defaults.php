@@ -342,12 +342,6 @@ $cfg->accesstimeupdatefrequency = 300;
 $cfg->accessidletimeout = 600;
 
 /**
- * @global bool $cfg->showonlineuserssideblock
- * Whether to show the onlineusers sideblock
- */
-//$cfg->showonlineuserssideblock = true;
-
-/**
  * @global int $cfg->leapovermnetlogelevel if importing Leap2A over an xmlrpc mnet connection,
  * set this to something higher than 0 to log import information
  * see the constants in import/leap/lib.php
@@ -886,3 +880,872 @@ $cfg->saml_log_attributes = false;
 *  rules but the first visible one are removed. It just needs that 'Save'
 */
 //$cfg->accesslistmaximum = 100;
+
+/**
+ * ===================================================================
+ * Configuration values in Admin menu > Configure site > Site options
+ * ===================================================================
+ */
+
+/**
+ * Site settings :: Site name
+ *
+ * Choose a name for your Mahara instance. It appears in certain places around
+ * the site, e.g. in the title bar of the browser and in emails sent from the
+ * site. Therefore, it should not be too long.
+ *
+ * @var string $cfg->sitename
+ */
+//$cfg->sitename = '';
+
+/**
+ * Site settings :: Language
+ *
+ * Set the default language for your site. If you have multiple language packs
+ * installed, you see a drop-down menu. Otherwise, the standard language,
+ * English, is displayed. The directory name of the selected language pack is
+ * the value that should be used here.
+ *
+ * @see get_languages()
+ * @var string $cfg->lang
+ */
+//$cfg->lang = 'en.utf8';
+
+/**
+ * Site settings :: Theme
+ *
+ * Mahara comes with a number of themes that you can use. If you have
+ * institutions set up, they can choose their own theme. You can search for
+ * community-contributed themes on the Mahara wiki. The value used is the
+ * directory name of the theme.
+ *
+ * @see get_all_themes()
+ * @var string $cfg->theme
+ */
+//$cfg->theme = 'raw';
+
+/**
+ * Site settings :: Country
+ *
+ * The country selected is the default for country selections throughout your
+ * Mahara installation. The value should be the ISO 3166 two character shortcode.
+ *
+ * @see getoptions_country()
+ * @var string $cfg->country
+ */
+//$cfg->country = 'nz';
+
+/**
+ * Site settings :: Time zone
+ *
+ * the time zone in which you want to have time stamps displayed around the
+ * site. If you do not select one, one will be chosen according to the country
+ * if you entered one. This may not be accurate if a country has more than one
+ * time zone. The value should be an IANA time zone.
+ *
+ * @see getoptions_timezone()
+ * @var string $cfg->timezone
+ */
+//$cfg->timezone = 'Pacific/Auckland';
+
+/**
+ * Site settings :: Show homepage / dashboard information
+ *
+ * If set to ‘true’, information about Mahara and how it is used is displayed on
+ * the homepage for logged-out and on the dashboard for registered people.
+ * Account holders can disable this for their own dashboard.
+ *
+ * @var boolean $cfg->homepageinfo
+ */
+// $cfg->homepageinfo = true;
+
+/**
+ * Site settings :: Custom landing page
+ *
+ * Set to 'true' if you want people to arrive at a different page than the
+ * dashboard after having logged in. The select menu where you
+ * can choose the appropriate page becomes visible.
+ *
+ * @var boolean $cfg->homepageredirect
+ */
+//$cfg->homepageredirect = false;
+
+/**
+ * Site settings :: Custom landing page URL
+ *
+ * The internal URL to a page. The page needs to be accessible to all
+ * registered people. Only used if $cfg->homepageredirect is 'true'.
+ *
+ * @var boolean $cfg->homepageredirecturl
+ */
+//$cfg->homepageredirecturl = '/view/view.php?id=7';
+
+/**
+ * Site settings :: Registration agreement
+ *
+ * If set to 'true', administrators cannot make the 'Confirm registration' setting
+ * optional when configuring an institution. This prevents institution
+ * administrators from disabling this setting. New accounts can only be created with
+ * administrator approval.
+ *
+ * @var boolean $cfg->registerterms
+ */
+//$cfg->registerterms = false;
+
+/**
+ * Site settings :: Require reason for masquerading
+ *
+ * If set to 'true', administrators will be required to enter a reason for
+ * masquerading as another person. This will be logged, and if the setting
+ * 'Notify people of masquerading' is enabled, included in the notification
+ * to the account holder about the masquerading. This setting needs logging
+ * to be turned on.
+ *
+ * @var boolean $cfg->masqueradingreasonrequired
+ */
+//$cfg->masqueradingreasonrequired = false;
+
+/**
+ * Site settings :: Notify people of masquerading
+ *
+ * If set to 'true', account holders will be notified when an administrator
+ * masqueraded as them. The notification will include who, when and - if
+ * enabled under 'Require reason for masquerading' - why. This setting needs
+ * logging to be turned on.
+ *
+ * @var boolean $cfg->masqueradingnotified
+ */
+//$cfg->masqueradingnotified = false;
+
+/**
+ * Site settings :: Anonymous comments
+ *
+ * If set to 'true', logged-out people and people without a login can
+ * leave comments on public pages or pages they can access via a secret URL.
+ *
+ * @var boolean $cfg->anonymouscomments
+ */
+//$cfg->anonymouscomments = false;
+
+/**
+ * Site settings :: Access to site files
+ *
+ * If set to 'true', registered people will have access to site files in
+ * subfolders of the folder 'public'. By default, only files directly in the
+ * folder 'public' are accessible to them.
+ *
+ * @var boolean $cfg->sitefilesaccess
+ */
+//$cfg->sitefilesaccess = false;
+
+/**
+ * Site settings :: License metadata
+ *
+ * If set to 'true', authors can choose under which license they want to make
+ * their content available. They can set a default license in their account
+ * settings and then decide for each artefact individually as well. An
+ * institution administrator can set the default license in the institution
+ * settings.
+ *
+ * @var boolean $cfg->licensemetadata
+ */
+//$cfg->licensemetadata = false;
+
+/**
+ * Site settings :: Custom licenses
+ *
+ * If set to 'true', authors can enter any URL as license for their content. If
+ * not allowed, they will be limited to the licenses configured by the site
+ * administrator.
+ *
+ * @var boolean $cfg->licenseallowcustom
+ */
+//$cfg->licenseallowcustom = false;
+
+/**
+ * Site settings :: Enable MathJax
+ *
+ * If set to 'true', mathematics and science equations can be displayed nicely in
+ * Mahara pages. For more information on how to configure it, see above.
+ *
+ * @var boolean $cfg->mathjax
+ */
+//$cfg->mathjax = false;
+
+/**
+ * Site settings :: Sitemap
+ *
+ * If set to 'true', sitemap files from publicly accessible pages, groups, and
+ * forum topics are generated that can be sent to another service.
+ *
+ * @var boolean $cfg->generatesitemap
+ */
+//$cfg->generatesitemap = 1;
+
+/**
+ * Institution settings :: People allowed multiple institutions
+ *
+ * If set to 'true', account holders can be members of several institutions at
+ * the same time. Thus, a person who belongs to two or more institutions only
+ * needs one account. You cannot allow multiple institutions when 'Strict
+ * privacy' is turned on, and when the site has isolated institutions.
+ *
+ * @var boolean $cfg->usersallowedmultipleinstitutions
+ */
+//$cfg->usersallowedmultipleinstitutions = true;
+
+/**
+ * Institution settings :: Warning time for institution expiry
+ *
+ * If set to 'true', a notification will be sent to the site and institution
+ * administrators this amount of time before an institution is due to expire
+ * and be suspended. This value is a number of minutes. If the value is set
+ * to 0, this triggers the 'no end date' (in the UI) and institutions won't
+ * expire.
+ *
+ * @var int $cfg->institutionexpirynotification
+ */
+//$cfg->institutionexpirynotification = 60 * 60 * 24 * 7;
+
+/**
+ * Institution settings :: Auto-suspend expired institutions
+ *
+ * If set to 'true', this option will allow Mahara to automatically suspend an
+ * institution that has expired automatically. This means that members of that
+ * institution will not be able to log in until the institution has been
+ * unsuspended.
+ *
+ * @var boolean $cfg->institutionautosuspend
+ */
+//$cfg->institutionautosuspend = false;
+
+/**
+ * Institution settings :: Review accounts before self-deletion
+ *
+ * If set to 'true', every institution is forced to approve or deny the deletion
+ * of accounts if people attempt to delete their account. If set to 'false', it
+ * is up to each institution to activate this setting.
+ *
+ * This setting gives institutions in a formal learning setting the possibility
+ * to prevent accidental account deletion by people before portfolios are
+ * archived if required.
+ *
+ * @var boolean $cfg->defaultreviewselfdeletion
+ */
+//$cfg->defaultreviewselfdeletion = false;
+
+/**
+ * Institution settings :: Access reports for staff
+ *
+ * If set to 'true', site and institution staff will have access to people
+ * reports. The following reports are available to them:
+ *  - Masquerading sessions (if logging of these is turned on)
+ *  - Portfolio access
+ *  - Account details
+ *
+ * @var boolean $cfg->staffreports
+ */
+//$cfg->staffreports = false;
+
+/**
+ * Institution settings :: All reports for institution staff
+ *
+ * If set to 'true', institution staff will have access to all reports in their
+ * institutions. This is normally restricted to administrators and site staff.
+ *
+ * @var boolean $cfg->staffstats
+ */
+//$cfg->staffstats = false;
+
+/**
+ * Account settings :: Authors can choose page themes
+ *
+ * If set to 'true', authors can select a theme for their portfolio page. The
+ * page is displayed with this theme to other people. Thus, the institution
+ * or site theme can be overwritten.
+ *
+ * @var boolean $cfg->userscanchooseviewthemes
+ */
+//$cfg->userscanchooseviewthemes = false;
+
+/**
+ * Account settings :: Display remote avatars
+ *
+ * If set to 'true', account holders' default profile pictures will be their
+ * Gravatar pictures (remote avatar). They will need an account with Gravatar
+ * for this to work.
+ *
+ * If you use your own avatar server to provide profile pictures for your
+ * account holders, you can use that instead of Gravatar for the default
+ * profile pictures. In order to do so, you need to add the remote avatar
+ * base URL to your config.php via the $cfg->remoteavatarbaseurl var.
+ *
+ * @var boolean $cfg->remoteavatars
+ */
+//$cfg->remoteavatars = false;
+
+/**
+ * Account settings :: People can hide real names
+ *
+ * If set to 'true', people who have set a display name may choose to be
+ * searchable only by their display name and will not be found in searches by
+ * their real name. In the administration section of the site, people are
+ * always searchable by their real names. An administrator (site and
+ * institution) always sees the display name, first and last name, and username.
+ *
+ * @var boolean $cfg->userscanhiderealnames
+ */
+//$cfg->userscanhiderealnames = false;
+
+/**
+ * Account settings :: Never display usernames
+ *
+ * If set to 'true', ordinary account holders cannot search for others using
+ * their username in the search. They will also not be able to see the
+ * username of any other person on the site.
+ *
+ * These restrictions do not apply to staff and administrators. Additionally,
+ * Clean URLs (if activated) for profile pages will be generated using display
+ * names (if provided) or real names, rather than usernames.
+ *
+ * @var boolean $cfg->nousernames
+ */
+//$cfg->nousernames = false;
+
+/**
+ * Account settings :: Allow anonymous pages
+ *
+ * If set to 'true', account holders can hide their name as the author of a page
+ * from others. Administrators and staff can still view authorship information
+ * by clicking on the 'Author's name hidden' link that will reveal the real
+ * name.
+ *
+ * The name is also anonymised in blocks that are on the page and would
+ * normally display the author's name.
+ *
+ * @var boolean $cfg->allowanonymouspages
+ */
+//$cfg->allowanonymouspages = false;
+
+/**
+ * Account settings :: Export to queue
+ *
+ * If set to 'true', the export queue will handle the exporting of personal
+ * portfolios for better server load management. The person exporting a
+ * portfolio will receive an email when the export is ready for download.
+ *
+ * @var boolean $cfg->exporttoqueue
+ */
+//$cfg->exporttoqueue = false;
+
+/**
+ * Account settings :: Multiple journals
+ *
+ * If set to 'true', all account holders will have multiple journals by default.
+ * They can still change that setting in their personal account settings.
+ *
+ * @var boolean $cfg->defaultmultipleblogs
+ */
+//$cfg->defaultmultipleblogs = false;
+
+/**
+ * Account settings :: HTML editor
+ *
+ * Choose whether the HTML editor is used by default or not. If set to
+ * 'Person-decides', account holders will be allowed to choose whether to use the
+ * HTML editor in their personal settings or not. Otherwise the specified
+ * setting will be used site-wide.
+ *
+ * Options are;
+ *  - an empty string : Person decides
+ *  - disable : no one has it
+ *  - enabled : everyone has it
+ *
+ * @var string $cfg->wysiwyg
+ */
+//$cfg->wysiwyg = "";
+
+/**
+ * Account settings :: Session lifetime
+ *
+ * For security reasons, after a specified period of inactivity, a person will
+ * be logged out automatically. The field this relates to is
+ * 'sessionlifetime', and it is measured in minutes. However, the database entry for
+ * 'session_timeout' is in seconds.
+ *
+ * The default value is 86400 seconds (24 hours).
+ *
+ * @var int $cfg->session_timeout
+ */
+//$cfg->session_timeout = 60 * 60 * 24;
+
+/**
+ * Account settings :: Default registration expiry lifetime
+ *
+ * As site administrator you can decide when pending registrations that require
+ * approval expire. This time is specified in minutes, or 0 for 'No end date'.
+ * The value should round to 'days' at a minimum. If the latter option is
+ * chosen, pending registrations will not expire by default.
+ *
+ * The default value is 2 weeks.
+ *
+ * @var int $cfg->defaultregistrationexpirylifetime
+ */
+//$cfg->defaultregistrationexpirylifetime = 60 * 24 * 7 * 2;
+
+/**
+ * Account settings :: Default account lifetime
+ *
+ * If set to 'true', accounts will expire after this amount of time from when they were
+ * created. When an account is expired, the account holder cannot log in. This
+ * time is specified in minutes, or 0 for 'No end date'. The value should round
+ * to 'days' at a minimum. If the latter option is chosen, accounts will not
+ * expire by default.
+ *
+ * @var int $cfg->defaultaccountlifetime
+ */
+//$cfg->defaultaccountlifetime = 0;
+
+/**
+ * Account settings :: Default account inactivity time
+ *
+ * How long an account will remain active without the person logging in. This
+ * time is specified in minutes, or 0 for 'No end date'. The value should round
+ * to 'days' at a minimum.
+ *
+ * @var int $cfg->defaultaccountinactiveexpire
+ */
+//$cfg->defaultaccountinactiveexpire = 0;
+
+/**
+ * Account settings :: Warning time for inactivity / expiry
+ *
+ * The time before accounts expire or become inactive, at which a warning
+ * message will be sent to the primary email address of the account holder.
+ *
+ * This time is specified in minutes, or 0 for 'No end date'. The value should
+ * round to 'days' at a minimum.
+ *
+ * @var int $cfg->defaultaccountinactivewarn
+ */
+//$cfg->defaultaccountinactivewarn = 60 * 24 * 7;
+
+/**
+ * Access settings :: Allow public portfolios
+ *
+ * If set to 'true', people can create portfolios that are accessible to the
+ * public rather than only to registered people.
+ *
+ * @var boolean $cfg->allowpublicviews
+ */
+//$cfg->allowpublicviews = true;
+
+/**
+ * Access settings :: Allow public profiles
+ *
+ * If set to 'true', people can set their profile pages to be accessible to the
+ * public rather than only to registered people.
+ *
+ * @var boolean $cfg->allowpublicprofiles
+ */
+//$cfg->allowpublicprofiles = true;
+
+/**
+ * Access settings :: Profile access for all registered people
+ *
+ * If set to 'true', profile pages will be viewable by all registered people.
+ *
+ * @var boolean $cfg->loggedinprofileviewaccess
+ */
+//$cfg->loggedinprofileviewaccess = true;
+
+/**
+ * Group settings :: Create groups
+ *
+ * Decide who will be able to create new groups.
+ *
+ * Valid values:
+ *  - admins : Administrators only
+ *  - staff  : Administrators and staff only
+ *  - all    : Everyone
+ *
+ * @var string $cfg->creategroups
+ */
+//$cfg->creategroups = 'all';
+
+/**
+ * Group settings :: Create public groups
+ *
+ * Decide who will be able to create groups that are viewable by the general
+ * public.
+ *
+ * Valid values:
+ *  - siteadmins : Site administrators only
+ *  - admins     : Administrators only
+ *  - staff      : Administrators and staff only
+ *  - all        : Everyone
+ *
+ * @var string $cfg->createpublicgroups
+ */
+//$cfg->createpublicgroups = 'all';
+
+/**
+ * Group settings :: Allow group categories
+ *
+ * If set to 'true', allow site administrators to create categories that can be
+ * assigned to groups.
+ *
+ * @var boolean $cfg->allowgroupcategories
+ */
+//$cfg->allowgroupcategories = false;
+
+/**
+ * Group settings :: See own groups only
+ *
+ * If set to 'true', allow people to see only groups that they own or that they
+ * are members of. They can also only search for others who are in these
+ * groups. This setting requires that isolated institutions are turned on in
+ * the config.php file.
+ *
+ * @see $cfg->isolatedinstitutions
+ * @var boolean $cfg->owngroupsonly
+ */
+//$cfg->owngroupsonly = false;
+
+/**
+ * Side block settings :: Tag cloud
+ *
+ * If set to 'true', people can see a sidebar in a few places on the site with
+ * a list of their most frequently used tags.
+ *
+ * @var boolean $cfg->showtagssideblock
+ */
+//$cfg->showtagssideblock = true;
+
+/**
+ * Side block settings :: Maximum tags in cloud
+ *
+ * The default number of tags to display in tag clouds.
+ *
+ * @var int $cfg->tagssideblockmaxtags
+ */
+//$cfg->tagssideblockmaxtags = 20;
+
+/**
+ * Side block settings :: Show who is online
+ *
+ * If set to 'true', people can see a sidebar with a list of everyone who has
+ * been online over the past ten minutes.
+ *
+ * @var bool $cfg->showonlineuserssideblock
+ */
+//$cfg->showonlineuserssideblock = true;
+
+/**
+ * Side block settings :: Limit for "People online"
+ *
+ * The maximum number of people to display in the sidebar "People online".
+ *
+ * @var int $cfg->onlineuserssideblockmaxusers
+ */
+//$cfg->onlineuserssideblockmaxusers = 10;
+
+/**
+ * Side block settings :: Show profile completion
+ *
+ * If set to 'true', a progress bar with tips about what to complete in the
+ * personal profile will be displayed in a side block. Account holders can
+ * disable it in their account settings.
+ *
+ * @var boolean $cfg->showprogressbar
+ */
+//$cfg->showprogressbar = false;
+
+/**
+ * Side block settings :: Portfolio search
+ *
+ * If set to 'true', the 'Search my portfolio' side block is displayed in the
+ * 'Pages and collections' and 'Files' areas of the site. However, it has not
+ * been working for most people for a long time.
+ *
+ * @var boolean $cfg->showselfsearchsideblock
+ */
+//$cfg->showselfsearchsideblock = false;
+
+/**
+ * Search settings :: Search plugin
+ *
+ * The search plugin to use.
+ *
+ * @see get_search_plugins()
+ * @var string $cfg->searchplugin
+ */
+//$cfg->searchplugin = 'internal';
+
+/**
+ * Search settings :: Show people in public search
+ *
+ * If set to 'true', this will allow names to appear in public search results.
+ * This needs to have 'publicsearchallowed' set to true and be using a search
+ * plugin that allows public search, e.g. Elasticsearch. Changing this setting
+ * will require search re-indexing.
+ *
+ * @var boolean $cfg->searchuserspublic
+ */
+//$cfg->searchuserspublic = false;
+
+/**
+ * Security settings :: Password policy
+ *
+ * The password policy for people whose account is set to use the built-in
+ * internal authentication method. The password policy does not affect accounts
+ * using external authentication, e.g. SSO or LDAP.
+ *
+ * The string is created from a number (minimum characters) and a string
+ * representing the complexity. These values are concatenated with an
+ * underscore.
+ *
+ * The password to be from 8 to 20 (inclusive) characters. The complexity has to be one of
+ * the following:
+ *  - ul   : Upper and lower case letters
+ *  - uln  : Upper and lower case letters, numbers
+ *  - ulns : Upper and lower case letters, numbers, symbols
+ *
+ * @var string $cfg->passwordpolicy
+ */
+//$cfg->passwordpolicy = '8_ulns';
+
+/**
+ * Security setting :: Virus checking
+ *
+ * If set to 'true', all uploaded files are checked for viruses using ClamAV. You
+ * have to have ClamAV installed on your server.
+ *
+ * @var boolean $cfg->viruschecking
+ */
+//$cfg->viruschecking = false;
+
+/**
+ * Security setting :: Anti-spam
+ *
+ * The type of anti-spam measures used on publicly visible forms.
+ *
+ * @see available_spam_traps()
+ * @var string $cfg->antispam
+ */
+//$cfg->antispam = 'advanced';
+
+/**
+ * Security setting :: Spamhaus URL deny list
+ *
+ * If set to 'true', URLs are checked against the Spamhaus DNSBL.
+ *
+ * @var boolean $cfg->spamhaus
+ */
+//$cfg->spamhaus = false;
+
+/**
+ * Security setting :: SURBL URL deny list
+ *
+ * If set to 'true', URLs are checked against the SURBL DNSBL.
+ *
+ * @var boolean $cfg->surbl
+ */
+//$cfg->surbl = false;
+
+/**
+ * Security setting :: Disable external resources in HTML
+ *
+ * If set to 'true', authors will be prevented from embedding external resources
+ * such as images from remote sites into their forum posts and other HTML
+ * content. YouTube videos and other media can also not be embedded. It is
+ * however a good thing to do from a security standpoint since it does
+ * neutralise a few clever phishing attacks. See the HTML Purifier
+ * documentation for more details.
+ *
+ * @var boolean $cfg->disableexternalresources
+ */
+//$cfg->disableexternalresources = false;
+
+/**
+ * Security setting :: reCAPTCHA on account registration / 'Contact us' forms
+ *
+ * If set to 'true', people who register themselves on the site and who use the
+ * ‘Contact us’ form when not logged in are required to fill in the reCAPTCHA
+ * form. This is for spam protection.
+ *
+ * @var boolean $cfg->recaptchaonregisterform
+ */
+//$cfg->recaptchaonregisterform = false;
+
+/**
+ * Security setting :: reCAPTCHA site key
+ *
+ * The site key for your site's reCAPTCHA account.
+ *
+ * @var string $cfg->recaptchapublickey
+ */
+//$cfg->recaptchapublickey = '';
+
+/**
+ * Security setting :: reCAPTCHA secret key
+ *
+ * The secret key for your site's reCAPTCHA account.
+ *
+ * @var string $cfg->recaptchaprivatekey
+ */
+//$cfg->recaptchaprivatekey = '';
+
+/**
+ * Security setting :: HSTS override
+ *
+ * If your web server already sets the HTTP Strict Transport Security (HSTS)
+ * header, then deactivate it here for Mahara. This prevents it from being set
+ * twice and causing an error when you check your site for the proper
+ * configuration, e.g. via an SSL check tool.
+ *
+ * @var boolean $cfg->hstsoverride
+ */
+//$cfg->hstsoverride = false;
+
+/**
+ * Proxy settings :: Proxy address
+ *
+ * If your site uses a proxy server to access the Internet, specify it
+ * in hostname:portnumber notation.
+ *
+ * @var string $cfg->proxyaddress
+ */
+//$cfg->proxyaddress = '';
+
+/**
+ * Proxy settings :: Proxy authentication model
+ *
+ * Enter your proxy's authentication model if needed:
+ *  - [empty string] : None
+ *  - basic          : Basic [NCSA]
+ *
+ * @var string $cfg->proxyauthmodel
+ */
+//$cfg->proxyauthmodel = '';
+
+/**
+ * Proxy settings :: Proxy credentials
+ *
+ * Enter the credentials required for your proxy to authenticate your web
+ * server in username:password format.
+ *
+ * @var string $cfg->proxyauthcredentials
+ */
+//$cfg->proxyauthcredentials = '';
+
+/**
+ * Email settings :: SMTP host
+ *
+ * If you want to force Mahara to use a specific SMTP server instead of the
+ * system one, enter its hostname here, e.g. smtp.example.com. It is possible
+ * to specify more than one host by separating them with semicolons,
+ * e.g. smtp1.example.com;smtp2.example.com, but keep in mind that all other
+ * settings, e.g. authentication credentials and port numbers, will apply to
+ * all listed servers. It is not possible to specify different credentials for
+ * each server in this list. This feature is useful when SMTP host
+ * authentication is not required or you list different frontends for the same
+ * mail server in which case other settings will work.
+ *
+ * @var string $cfg->smtphosts
+ */
+//$cfg->smtphosts = '';
+
+/**
+ * Email settings :: SMTP port
+ *
+ * If your SMTP server uses a port number different from 25, you may specify
+ * it here. When encryption is enabled, the default ports are 465 for SSL and
+ * 587 for TLS. You only need to specify a port number if it is different from
+ * these. Check the correct settings with your mail service provider.
+ *
+ * @var int $cfg->smtpport
+ */
+//$cfg->smtpport = '';
+
+/**
+ * Email settings :: User
+ *
+ * If your SMTP server requires authentication, enter the username here.
+ *
+ * @var string $cfg->smtpuser
+ */
+//$cfg->smtpuser = '';
+
+/**
+ * Email settings :: Password
+ *
+ * If your SMTP server requires authentication, enter the password here.
+ *
+ * @var string $cfg->smtppass
+ */
+//$cfg->smtppass = '';
+
+/**
+ * Email settings :: SMTP encryption
+ *
+ * If your SMTP server supports encryption, enable it here using one of these
+ * values:
+ *  - [empty string] : None
+ *  - ssl            : SSL
+ *  - tls            : TLS
+ *
+ * @var string $cfg->smtpsecure
+ */
+//$cfg->smtpsecure = '';
+
+/**
+ * Email settings :: System mail address
+ *
+ * This email address is the address that emails are sent from when Mahara
+ * sends email.
+ *
+ * @var string $cfg->noreplyaddress
+ */
+//$cfg->noreplyaddress = '';
+
+/**
+ * Logging settings :: Log events
+ *
+ * Decide which events you wish to log in the database. Events are generated
+ * every time a person does something significant on the site, such as editing
+ * a page. This log is kept in the event_log table in the database.
+ *
+ * Valid values:
+ *  - none : Nothing is logged in the database.
+ *  - masq : Only masquerading sessions are logged. This setting needs to be
+ *           turned on if you wish to report on administrator masquerading of
+ *           account holders.
+ *  - all  : All events that can be logged in the database are logged.
+ *
+ * @var string $cfg->eventloglevel
+ */
+//$cfg->eventloglevel = 'none';
+
+/**
+ * Logging settings :: Event log expiry
+ *
+ * Decide for how long you wish to keep your database log. If you selected to
+ * log all events, the table can grow quite quickly especially on an active
+ * site. This is value is a number of minutes. If the value is set to 0 this
+ * triggers the 'No end date' (in the UI) and the event log is not deleted by
+ * default.
+ *
+ * @var int $cfg->eventlogexpiry
+ */
+//$cfg->eventlogexpiry = 0;
+
+/**
+ * Logging settings :: Event log reporting
+ *
+ * If set to 'true', you can report over a number of activities on the site in
+ * the ‘Reports’ section that require events to be logged.
+ *
+ * @var boolean $cfg->eventlogenhancedsearch
+ */
+//$cfg->eventlogenhancedsearch = false;

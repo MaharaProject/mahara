@@ -70,8 +70,8 @@ $smarty->display('module:framework:frameworkmanager.tpl');
 
 
 function frameworkconfig_submit(Pieform $form, $values) {
+    global $plugintype, $pluginname, $classname, $USER, $SESSION;
     $success = false;
-    global $plugintype, $pluginname, $classname, $USER;
 
     if (!is_plugin_active($pluginname, $plugintype)) {
         $SESSION->add_error_msg(get_string('needtoactivate', 'module.framework'));

@@ -449,17 +449,6 @@ $config = array (
     'memcache_store.expires' =>  60,
 
     /*
-     * The hostname and port of the Redis datastore instance.
-     */
-    'store.redis.host' => $redis_config['host'],
-    'store.redis.port' => $redis_config['port'],
-
-    /*
-     * The prefix we should use on our Redis datastore.
-     */
-    'store.redis.prefix' => $redis_config['prefix'],
-
-    /*
      * Should signing of generated metadata be enabled by default.
      *
      * Metadata signing can also be enabled for a individual SP or IdP by setting the

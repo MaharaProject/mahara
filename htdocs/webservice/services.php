@@ -123,6 +123,15 @@ $functions = array(
         'type'        => 'write',
     ),
 
+    // === artefact file related functions ===
+    'mahara_upload_file' => array(
+        'classname'   => 'mahara_user_external',
+        'methodname'  => 'upload_file',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Upload a file to the files area',
+        'type'        => 'write',
+    ),
+
     // === group related functions ===
 
     'mahara_group_create_groups' => array(
@@ -252,6 +261,14 @@ $functions = array(
         'methodname'  => 'release_submitted_view',
         'classpath'   => WEBSERVICE_DIRECTORY,
         'description' => 'Unlock view that has been used for an assessment',
+        'type'        => 'write',
+    ),
+
+    'mahara_submission_generate_view_for_plagiarism_test' => array(
+        'classname'   => 'mahara_view_external',
+        'methodname'  => 'generate_view_for_plagiarism_test',
+        'classpath'   => WEBSERVICE_DIRECTORY,
+        'description' => 'Generate a zip file containing view to be sent to a plagiarism tester',
         'type'        => 'write',
     ),
 

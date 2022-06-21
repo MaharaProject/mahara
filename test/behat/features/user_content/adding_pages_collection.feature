@@ -23,7 +23,7 @@ Scenario: Creating a collection AND adding pages
     # Create Test collection
     # This is the test for manually creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Add"
+    And I press "Add"
     And I click on "Collection" in the dialog
     And I fill in the following:
         | Collection name | Test Collection |
@@ -62,7 +62,7 @@ Scenario: Creating a collection AND adding pages
     #And I press "Save"
     ## End customisation
     And I choose "Pages and collections" in "Create" from main menu
-    And I follow "Add"
+    And I press "Add"
     And I click on "Page" in the dialog
     And I set the following fields to these values:
     | Page title | New page |

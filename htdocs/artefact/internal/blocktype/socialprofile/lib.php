@@ -26,6 +26,10 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
         return array('internal' => 27000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile');
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
 
         $configdata = $instance->get('configdata');
@@ -80,7 +84,7 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:socialprofile:content.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -201,7 +205,7 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
         return $configdata;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'shallow';
     }
 

@@ -1,5 +1,8 @@
 <?php
 /**
+ * Groups page.
+ *
+ * Allows creation of groups, search and shows list of my groups.
  *
  * @package    mahara
  * @subpackage core
@@ -92,8 +95,7 @@ $pagination = build_pagination(array(
     'setlimit' => true,
     'jumplinks' => 6,
     'numbersincludeprevnext' => 2,
-    'resultcounttextsingular' => get_string('group', 'group'),
-    'resultcounttextplural' => get_string('groups', 'group'),
+    'resultcounttext' => get_string('ngroups', 'group', $groups['count']),
 ));
 
 $smarty = smarty_core();

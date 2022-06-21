@@ -1,5 +1,6 @@
 <?php
 /**
+ * Edit forum topic utils
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -28,10 +29,12 @@ define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 $userid = $USER->get('id');
 $topicid = param_integer('id', 0);
 $returnto = param_alpha('returnto', 'topic');
-
 $page = get_config('wwwroot') . 'interaction/forum/edittopic.php';
+
+$topic = null;
+
 if ($topicid == 0) { // new topic
-    unset($topicid);
+    $topidid = null;
     $forumid = param_integer('forum');
     $page .= '?forum=' . $forumid;
 }
@@ -80,7 +83,7 @@ if (!group_within_edit_window($forum->groupid)) {
     throw new AccessDeniedException(get_string('cantaddtopic', 'interaction.forum'));
 }
 
-if (!isset($topicid)) { // new topic
+if (empty($topicid)) { // new topic
     $topictype = get_string('addtopic','interaction.forum');
     define('TITLE', $forum->title . ' - ' . $topictype);
 }
@@ -226,6 +229,12 @@ if (isset($topic) && (!empty($topic->sent) || !user_can_edit_post($topic->poster
 
 $editform = pieform($editform);
 
+/**
+ * Validate a new topic to be added
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function addtopic_validate(Pieform $form, $values) {
     if ($baddomain = get_first_blacklisted_domain($values['body'])) {
         $form->set_error('body', get_string('denylisteddomaininurl', 'mahara', $baddomain));
@@ -236,16 +245,22 @@ function addtopic_validate(Pieform $form, $values) {
     }
 }
 
+/**
+ * Validate the modifications to a topic
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function edittopic_validate(Pieform $form, $values) {
-    if ($baddomain = get_first_blacklisted_domain($values['body'])) {
-        $form->set_error('body', get_string('denylisteddomaininurl', 'mahara', $baddomain));
-    }
-    $result = probation_validate_content($values['body']);
-    if ($result !== true) {
-        $form->set_error('body', get_string('newuserscantpostlinksorimages1'));
-    }
+    addtopic_validate($form, $values);
 }
 
+/**
+ * Check whether a post needs an approval
+ *
+ * @param  int $topicid
+ * @return bool
+ */
 function post_needs_approval($topicid) {
     $needsapproval = get_field_sql("SELECT c.value FROM {interaction_forum_instance_config} c
                               INNER JOIN {interaction_forum_topic} t
@@ -254,6 +269,13 @@ function post_needs_approval($topicid) {
 }
 
 
+/**
+ * Submit the addition of a new topic
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function addtopic_submit(Pieform $form, $values) {
     global $USER, $SESSION, $moderator;
     $forumid = param_integer('forum');
@@ -339,6 +361,12 @@ function addtopic_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Submit the edited changes of a topic
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ */
 function edittopic_submit(Pieform $form, $values) {
     global $SESSION, $USER, $topic;
     $topicid = param_integer('id');
@@ -407,6 +435,12 @@ function edittopic_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
+/**
+ * Add an attachment to the topic
+ *
+ * @param  int $attachmentid
+ * @return void
+ */
 function add_attachment($attachmentid) {
     global $forumid, $topic;
     $instance = new InteractionForumInstance($forumid);
@@ -415,6 +449,12 @@ function add_attachment($attachmentid) {
     }
 }
 
+/**
+ * Delete an attachment from the topic
+ *
+ * @param  int $attachmentid
+ * @return void
+ */
 function delete_note_attachment($attachmentid) {
     global $forumid, $topic;
     $instance = new InteractionForumInstance($forumid);
@@ -434,11 +474,9 @@ $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $topictype);
 $smarty->assign('moderator', $moderator);
 $smarty->assign('editform', $editform);
+$smarty->assign('INLINEJAVASCRIPT', $inlinejs);
 if (!isset($timeleft)) {
     $timeleft = 0;
 }
 $smarty->assign('timeleft', $timeleft);
-if (isset($inlinejs)) {
-    $smarty->assign('INLINEJAVASCRIPT', $inlinejs);
-}
 $smarty->display('interaction:forum:edittopic.tpl');

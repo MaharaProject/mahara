@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 {if !$group || $canedit}
 <div class="btn-top-right btn-group btn-group-top">
-    <a class="btn btn-secondary settings" href="{$WWWROOT}artefact/blog/new/index.php{if $institutionname}?institution={$institutionname}{/if}{if $group}?group={$group}{/if}">
+    <button class="btn btn-secondary settings" data-url="{$WWWROOT}artefact/blog/new/index.php{if $institutionname}?institution={$institutionname}{/if}{if $group}?group={$group}{/if}">
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str section="artefact.blog" tag="addblog"}
-    </a>
+    </button>
 </div>
 {/if}
 {if !$blogs->data}

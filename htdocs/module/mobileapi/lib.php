@@ -18,7 +18,7 @@ defined('INTERNAL') || die();
 class PluginModuleMobileapi extends PluginModule {
     public static function postinst($fromversion) {
         require_once(get_config('docroot') . 'webservice/lib.php');
-        external_reload_component('module/mobileapi', false);
+        return external_reload_component('module/mobileapi');
     }
 
     public static function has_config() {
@@ -135,7 +135,7 @@ class PluginModuleMobileapi extends PluginModule {
             set_config('webservice_provider_rest_enabled', true);
 
             require_once(get_config('docroot') . 'webservice/lib.php');
-            external_reload_component('module/mobileapi', false);
+            external_reload_component('module/mobileapi');
             set_field('external_services', 'enabled', 1, 'shortname', 'maharamobile', 'component', 'module/mobileapi');
             set_field('external_services', 'restrictedusers', 0, 'shortname', 'maharamobile', 'component', 'module/mobileapi');
             set_field('external_services', 'tokenusers', 1, 'shortname', 'maharamobile', 'component', 'module/mobileapi');

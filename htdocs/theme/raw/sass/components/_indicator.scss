@@ -32,7 +32,6 @@
     }
     // advanced options collapsible
     .link-expand-right & {
-        margin-top: 0;
         padding-left: $spacing-sm;
         padding-right: $spacing-sm;
     }
@@ -50,7 +49,8 @@
 }
 
 tr[data-toggle="collapse"],
-a[data-toggle="collapse"] {
+a[data-toggle="collapse"],
+button[data-toggle="collapse"] {
     &:hover {
       outline: none;
     }

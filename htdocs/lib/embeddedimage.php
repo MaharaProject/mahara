@@ -157,6 +157,7 @@ class EmbeddedImage {
             $fieldvalue = substr($dummydom->saveHTML($dummydom->getElementsByTagName('div')->item(0)), strlen('<div>'), -strlen('</div>'));
             return $fieldvalue;
         }
+        return $fieldvalue;
     }
 
     /**

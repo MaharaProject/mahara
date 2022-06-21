@@ -31,10 +31,11 @@
         font-weight: $font-weight-normal;
         line-height: $line-height-base;
         margin-bottom: 0;
+        margin-top: 0;
+        margin-left: $spacing-sm;
         padding: $btn-padding-y $btn-padding-x;
         text-align: center;
         white-space: nowrap;
-        margin-left: $spacing-sm;
         &:focus,
         &:hover {
             text-decoration: none;

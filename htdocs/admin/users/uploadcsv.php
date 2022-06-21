@@ -34,6 +34,7 @@ $ALLOWEDKEYS = array_merge($ALLOWEDKEYS, $specialcases);
 
 $UPDATES         = array(); // During validation, remember which users already exist
 $INSTITUTIONNAME = array(); // Mapping from institution id to display name
+$authinstanceelement = array();
 
 if ($USER->get('admin')) {
     $authinstances = auth_get_auth_instances();
@@ -188,6 +189,13 @@ function uploadcsv_validate(Pieform $form, $values) {
         }
     }
 
+    require_once('uploadmanager.php');
+    $um = new upload_manager('file');
+    if ($error = $um->preprocess_file(array('csv'))) {
+        $form->set_error('file', $error);
+        return;
+    }
+
     require_once('csvfile.php');
 
     $authinstance = (int) $values['authinstance'];
@@ -239,6 +247,8 @@ function uploadcsv_validate(Pieform $form, $values) {
         return;
     }
 
+    $usernames = array();
+
     $existing_usernames = get_records_menu('usr', '', NULL, '', 'LOWER(username) AS username, 1 AS key2');
     $existing_usr_email_addresses = get_records_menu('usr', '', NULL, '', 'email, 1 AS key2');
     $existing_internal_email_addresses = get_records_menu('artefact_internal_profile_email', 'verified', 1, '', 'email, 1 AS key2');
@@ -268,17 +278,20 @@ function uploadcsv_validate(Pieform $form, $values) {
         $username = $line[$formatkeylookup['username']];
         $password = isset($formatkeylookup['password']) ? $line[$formatkeylookup['password']] : null;
         $email    = $line[$formatkeylookup['email']];
+
+        $remoteuser = '';
+
         if (isset($remoteusers)) {
             $remoteuser = strlen($line[$formatkeylookup['remoteuser']]) ? $line[$formatkeylookup['remoteuser']] : null;
         }
 
         if (method_exists($authobj, 'is_username_valid_admin')) {
-            if (!$authobj->is_username_valid_admin($username)) {
+            if (!get_class($authobj)::is_username_valid_admin($username)) {
                 $csverrors->add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }
         else if (method_exists($authobj, 'is_username_valid')) {
-            if (!$authobj->is_username_valid($username)) {
+            if (!get_class($authobj)::is_username_valid($username)) {
                 $csverrors->add($i, get_string('uploadcsverrorinvalidusername', 'admin', $i));
             }
         }

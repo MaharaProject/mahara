@@ -109,7 +109,7 @@ Scenario: Users from different institutions cannot see other institution users i
 
     # Users can not send messages via the inbox to people outside their institution
     When I follow "Inbox"
-    And I follow "Compose"
+    And I press "Compose"
     # Check we can select user in institution
     And I fill in select2 input "sendmessage_recipients" with "UserB" and select "Bob User"
     # Check we cannot select user not institution

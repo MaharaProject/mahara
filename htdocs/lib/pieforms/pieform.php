@@ -146,13 +146,18 @@ class Pieform {/*{{{*/
      * @var bool
      */
     private $submitted_by_dropzone = false;
-
     private $has_required_fields = false;
     private $all_required_field_labels_hidden = false;
-
     private $has_oneof_fields = false;
-
     private $submitvalue = 'submit';
+
+    protected $defaults;
+    protected $time;
+    protected $spamerror;
+    protected $error;
+
+    public $hashedfields = array();
+
 
     /*}}}*/
 
@@ -234,6 +239,10 @@ class Pieform {/*{{{*/
 
         if (!$this->data['replycallback']) {
             $this->data['replycallback'] = $this->name . '_reply';
+        }
+
+        if (!$this->data['errorcallback']) {
+            $this->data['errorcallback'] = $this->name . '_error';
         }
 
         $this->data['configdirs'] = array_map(
@@ -793,6 +802,7 @@ class Pieform {/*{{{*/
             $hidden_elements .= pieform_element_hidden($this, $element);
 
             ob_start();
+            $old_level = null;
 
             if ($this->get_property('ignoretemplatenotices')) {
                 $old_level = error_reporting(E_ALL & ~E_NOTICE);
@@ -1287,6 +1297,11 @@ EOF;
             $result .= ' title="' . self::hsc($element['elementtitle']) . '"';
         }
 
+        if (isset($element['aria-label'])) {
+            $result .= ' aria-label="' . self::hsc($element['aria-label']) . '"';
+        }
+
+
         if (!in_array('maxlength', $exclude) && isset($element['rules']['maxlength'])) {
             $result .= ' maxlength="' . intval($element['rules']['maxlength']) . '"';
         }
@@ -1337,7 +1352,7 @@ EOF;
             throw new PieformException("The type \"$type\" is not allowed for an include plugin");
         }
 
-        if (!isset($name) || !preg_match('/^[a-z_][a-z0-9_]*$/', $name)) {
+        if (!$name || !preg_match('/^[a-z_][a-z0-9_]*$/', $name)) {
             throw new PieformException("The name \"$name\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
@@ -1378,11 +1393,11 @@ EOF;
             throw new PieformException("Invalid plugin name '$plugin'");
         }
 
-        if (!isset($pluginname) || !preg_match('/^[a-z_][a-z0-9_]*$/', $pluginname)) {
+        if (!$pluginname || !preg_match('/^[a-z_][a-z0-9_]*$/', $pluginname)) {
             throw new PieformException("The pluginname \"$pluginname\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
-        if (!isset($key) || !preg_match('/^[a-z_][a-z0-9_]*$/', $key)) {
+        if (!$key || !preg_match('/^[a-z_][a-z0-9_]*$/', $key)) {
             throw new PieformException("The key \"$key\" is not valid (validity test: could you give a PHP function the name?)");
         }
 
@@ -1915,6 +1930,7 @@ function pieform_render_element(Pieform $form, $element) {/*{{{*/
  */
 function pieform_get_headdata() {/*{{{*/
     $htmlelements = array();
+    $form = null;
     foreach ($GLOBALS['_PIEFORM_REGISTRY'] as $form) {
         foreach ($form->get_elements() as $element) {
             $function = 'pieform_element_' . $element['type'] . '_get_headdata';

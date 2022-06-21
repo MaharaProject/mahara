@@ -32,3 +32,7 @@ $string['statsmaxfriends1'] = array(
 $string['statsnofriends'] = 'Has 0 contacts';
 
 $string['cli_locking_no_review_block'] = ' portfolio completion page does not have a verification block.';
+$string['verifierpercentage'] = 'Percentage of portfolios allocated to a verifier';
+$string['verifierload'] = 'Percentage of portfolios by verifier load';
+$string['currentverifiersovertime'] = 'Current verifiers over time';
+$string['currentverifiers'] = 'Current verifiers';

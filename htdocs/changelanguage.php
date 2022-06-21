@@ -13,7 +13,7 @@ define('INTERNAL', 1);
 define('PUBLIC', 1);
 require('init.php');
 
-$lang = param_alphanumext('lang');
+$lang =  param_alphanumext('lang') === 'default' ?  get_accept_lang() : param_alphanumext('lang');
 $languages = get_languages();
 if (!isset($languages[$lang])) {
     throw new ParameterException('Unknown language');

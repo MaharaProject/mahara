@@ -87,6 +87,7 @@ function pieform_element_multisubmit(Pieform $form, $element) {
     if (!empty($elems)) {
         return $elems;
     }
+    return '';
 }
 
 function pieform_element_multisubmit_set_attributes($element) {

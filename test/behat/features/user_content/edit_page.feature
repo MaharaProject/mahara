@@ -15,10 +15,10 @@ Scenario: Clicking ID's (Bug 1428456)
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Profile page"
  And I scroll to the base of id "viewh1"
- And I follow "Edit"
+ And I press "Edit"
 
  # Checking if we can add a block
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -27,7 +27,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  And I wait "1" seconds
  Then I should see "Buck Mulligan"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -36,7 +36,7 @@ Scenario: Clicking ID's (Bug 1428456)
  And I press "Save"
  And I wait "1" seconds
  Then I should see "Robert Cohn"
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -56,7 +56,7 @@ Scenario: Clicking ID's (Bug 1428456)
  # Checking that we can delete more than one block (Bug #1511536)
  # We need to leave and return to the page for this
  And I display the page
- And I follow "Edit"
+ And I press "Edit"
  And I wait "1" seconds
  When I delete the block "The Sun Also Rises"
  Then I should not see "Robert Cohn"
@@ -69,7 +69,7 @@ Scenario: Clicking ID's (Bug 1428456)
 
  # Checking we can add a block, make config changes, then delete the block
  # without it causing 'unsaved changes' popup when navigating away
- When I follow "Drag to add a new block" in the "blocktype sidebar" property
+ When I click on the add block button
  And I press "Add"
  And I click on blocktype "Text"
  And I set the following fields to these values:
@@ -88,8 +88,8 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I choose "Pages and collections" in "Create" from main menu
  And I follow "Profile page"
  And I scroll to the base of id "viewh1"
- And I follow "Edit"
- And I follow "Settings" in the "Toolbar buttons" property
+ And I press "Edit"
+ And I click on "Settings" in the "Toolbar buttons" "Nav" property
  And I should not see "Basics"
  And I should see "Skin"
  And I press "Save"
@@ -97,8 +97,8 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
 
  # Dashboard page
  And I choose "Dashboard" from main menu
- And I follow "Edit dashboard"
- And I follow "Settings" in the "Toolbar buttons" property
+ And I press "Edit dashboard"
+ And I press "Settings" in the "Toolbar buttons" "Nav" property
  And I should not see "Basics"
  And I should see "Skin"
  And I press "Save"

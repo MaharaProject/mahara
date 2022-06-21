@@ -123,7 +123,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
     }
 
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         $configdata = $instance->get('configdata');
@@ -156,7 +156,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             // We can fetch the thumbnail of the video and display that
             $html .= '<div class="image"><img src="https://img.youtube.com/vi/' . $video['youtube'] . '/0.jpg"></div>';
         }
-        $html .= '<div class="text-midtone">' . get_string('notrendertopdf', 'artefact.file');
+        $html .= '<div class="text-midtone text-small">' . get_string('notrendertopdf', 'artefact.file');
         $html .= '<br>' . get_string('notrendertopdflink', 'artefact.file');
         // We need to add an <a> link so that the HTML export() sub-task makes a copy of the artefct for the export 'files/' directory
         // We then override the link in the PDF pdf_view_export_data() function.
@@ -243,7 +243,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:externalvideo:content.tpl');
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -508,8 +508,8 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
                 );
                 $lname = strtolower($name);
                 if (isset($fa_domains[$lname])) {
-                    $data[$sourcestr]['faicon'] = $fa_domains[$lname]['faicon'];
-                    $data[$sourcestr]['style'] = $fa_domains[$lname]['style'];
+                    $data[$servicestr]['faicon'] = $fa_domains[$lname]['faicon'];
+                    $data[$servicestr]['style'] = $fa_domains[$lname]['style'];
                 }
             }
         }
@@ -520,7 +520,7 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
         return $smarty->fetch('blocktype:externalvideo:servicelist.tpl');
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 
@@ -530,15 +530,16 @@ class PluginBlocktypeExternalvideo extends MaharaCoreBlocktype {
             ensure_record_exists('iframe_source', (object) array('prefix' => 'prezi.com/embed/', 'name' => 'Prezi'), (object) array('prefix' => 'prezi.com/embed/', 'name' => 'Prezi'));
             ensure_record_exists('iframe_source_icon', (object) array('name' => 'Youtube [privacy mode]', 'domain' => 'www.youtube.com'), (object) array('name' => 'Youtube [privacy mode]', 'domain' => 'www.youtube.com'));
             ensure_record_exists('iframe_source', (object) array('prefix' => 'www.youtube-nocookie.com/embed/', 'name' => 'Youtube [privacy mode]'), (object) array('prefix' => 'www.youtube-nocookie.com/embed/', 'name' => 'Youtube [privacy mode]'));
-            update_safe_iframe_regex();
+            return update_safe_iframe_regex();
         }
+        return true;
     }
 
     /**
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
-     * @return multitype:
+     * @return array
      */
     public static function get_artefacts(BlockInstance $instance) {
         return array();

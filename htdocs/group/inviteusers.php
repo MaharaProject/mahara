@@ -1,5 +1,6 @@
 <?php
 /**
+ * Add/invite members to a group in bulk.
  *
  * @package    mahara
  * @subpackage core
@@ -67,6 +68,13 @@ $smarty->assign('form', $form);
 $smarty->display('group/form.tpl');
 exit;
 
+/**
+ * Submission of adding members.
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function addmembers_submit(Pieform $form, $values) {
     global $SESSION, $group, $USER, $friends;
 

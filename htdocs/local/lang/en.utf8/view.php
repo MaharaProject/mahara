@@ -32,3 +32,5 @@ $string['drafttextblockdescription'] = 'Please leave this option set at "No" so 
 $string['friends'] = 'Contacts';
 $string['friend'] = 'Contact';
 $string['sharedviewsdescription'] = 'This page lists the most recently modified or commented on pages that have been shared with you.';
+$string['review'] = 'Verify';
+$string['verifier'] = 'Verifier';

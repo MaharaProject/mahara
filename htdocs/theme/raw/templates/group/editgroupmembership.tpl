@@ -23,9 +23,9 @@
                             </div>
                         {/foreach}
                     </div>
-                    <a href="" class="btn btn-primary js-editgroup-submit" data-userid="{$userid}" data-addtype="{$addtype}">
+                    <button class="btn btn-primary js-editgroup-submit" type="submit" data-userid="{$userid}" data-addtype="{$addtype}">
                         {str tag=applychanges}
-                    </a>
+                    </button>
                 {/if}
                 </div>
                 {/foreach}

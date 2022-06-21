@@ -18,7 +18,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
     }
 
     public static function postinst($oldversion) {
-        set_config_plugin('blocktype', 'signoff', 'notretractable', true);
+        return set_config_plugin('blocktype', 'signoff', 'notretractable', true);
     }
 
     public static function single_only() {
@@ -57,11 +57,11 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         return array('portfolio');
     }
 
-    public static function display_for_roles($roles) {
+    public static function display_for_roles(BlockInstance $bi, $roles) {
         return true;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'fullinclself';
     }
 
@@ -83,12 +83,12 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
             $smarty->assign('view', $view->get('id'));
             // Verify option
             $smarty->assign('showverify', !empty($configdata['verify']));
-            $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view, false));
-            $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view, false));
+            $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view));
+            $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view));
             // Signoff option
             $smarty->assign('showsignoff', !empty($configdata['signoff']));
-            $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view, false));
-            $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view, false));
+            $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view));
+            $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view));
 
             $element['signoff'] = array(
                 'type'         => 'switchbox',
@@ -104,7 +104,10 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         return $html;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
+        if ($instance->get_view()->get_original_template()) {
+            return false;
+        }
         return true;
     }
 

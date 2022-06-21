@@ -16,6 +16,10 @@ define('SECTION_PAGE', 'manage');
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 
 $group = get_record_select('group', 'id = ? AND deleted = 0', array(param_integer('id')));
+if (!$group) {
+    // Group doesn't exist.
+    throw new NotFoundException(get_string('invalidgroup', 'group'));
+}
 
 define('TITLE', get_string('administergroups', 'admin'));
 

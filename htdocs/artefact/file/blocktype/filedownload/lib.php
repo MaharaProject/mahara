@@ -1,5 +1,6 @@
 <?php
 /**
+ * Utility for the 'filedownload' blocktype
  *
  * @package    mahara
  * @subpackage blocktype-image
@@ -11,6 +12,9 @@
 
 defined('INTERNAL') || die();
 
+/**
+ * Blocktype class for downloading files
+ */
 class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
 
     public static function get_title() {
@@ -25,8 +29,12 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return array('fileimagevideo' => 3000);
     }
 
+    public static function get_viewtypes() {
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+    }
+
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {
-        if ($exporting != 'pdf') {
+        if ($exporting != 'pdf' && $exporting != 'pdflite') {
             return self::render_instance($instance, $editing, $versioning);
         }
         // The exporting for pdf
@@ -37,6 +45,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('files', $files);
         $smarty->assign('editing', $editing);
+        $smarty->assign('exporttype', $exporting);
         return $smarty->fetch('blocktype:filedownload:filedownload_pdfexport.tpl');
     }
 
@@ -102,7 +111,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return $files;
     }
 
-    public static function has_instance_config() {
+    public static function has_instance_config(BlockInstance $instance) {
         return true;
     }
 
@@ -156,7 +165,7 @@ class PluginBlocktypeFiledownload extends MaharaCoreBlocktype {
         return $element;
     }
 
-    public static function default_copy_type() {
+    public static function default_copy_type(BlockInstance $instance, View $view) {
         return 'full';
     }
 

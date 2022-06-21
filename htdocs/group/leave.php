@@ -1,5 +1,6 @@
 <?php
 /**
+ * Manage leaving a group.
  *
  * @package    mahara
  * @subpackage core
@@ -53,6 +54,13 @@ $smarty->assign('message', get_string('groupconfirmleave', 'group'));
 $smarty->assign('group', $group);
 $smarty->display('group/leave.tpl');
 
+/**
+ * Submit leaving a group.
+ *
+ * @param  Pieform $form
+ * @param  array $values
+ * @return void
+ */
 function leavegroup_submit(Pieform $form, $values) {
     global $USER, $SESSION, $groupid, $goto;
     group_remove_user($groupid, $USER->get('id'));

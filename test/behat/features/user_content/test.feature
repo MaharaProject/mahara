@@ -15,13 +15,13 @@ Background:
     | licensemetadata | 0 |
 
     Given the following "users" exist:
-    # Available fields: username*, password*, email*, firstname*, lastname*, institution, role, authname, remoteusername, studentid, preferredname, town, country, occupation
+    # Available fields: username*, password*, email*, firstname*, lastname*, institution, role*, authname, remoteusername, studentid, preferredname, town, country, occupation
     | username | password | email             | firstname | lastname | institution | authname | role |
-    | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | member |
+    | UserA    | Kupuh1pa!| UserA@example.org | Painterio | Mahara   | mahara      | internal | admin |
     | UserB    | Kupuh1pa!| UserB@example.org | Mechania  | Mahara   | mahara      | internal | member |
 
     And the following "groups" exist:
-    # Availble fields: name*, owner*, description, grouptype, open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
+    # Available fields: name*, owner*, description, grouptype*, editroles* open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
     #                 editwindowstart, editwindowstart, editwindowend, members, staff, admins, institution, public
     | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
     | Group1 | UserB | Group1 owned by UserB | standard  | ON   | OFF           | all       | ON            | OFF           | UserA   |       |
@@ -107,29 +107,36 @@ Background:
     And the following "forumposts" exist:
     # Available fields: group*, forum, topic, subject, message*, user*
     | group  | forum      | topic     | subject    | message                     | user  |
-    | Group1 | unicorns!  | topic one |            | mahara unicorns unite!      | UserB |
-    | Group1 | unicorns!  | topic one |            | yay! mahara unicorns unite! | UserB |
+    | Group1 | unicorns!  | topic one | hello      | mahara unicorns unite!      | UserB |
+    | Group1 | unicorns!  | topic one | whatsup    | yay! mahara unicorns unite! | UserB |
     | Group1 | unicorns!  | topic one | cheer on   | woo! mahara unicorns unite! | UserB |
     | Group1 |            | topic one | cheer on   | 10 papercranes, let's go!   | UserB |
     | Group1 | unicorns!  | topic one | extra subj | 100 papercranes, let's go!  | UserB |
     | Group1 | unicorns!  |           | origami    | 1000 papercranes, let's go! | UserB |
-    | Group1 |            |           |            | 1000 papercranes, let's go! | UserB |
+    | Group1 |            |           | postpost   | 1000 papercranes, let's go! | UserB |
 
     And the following "pages" exist:
     # Available fields: title*, description, ownertype*, ownername*, layout, tags
-    | title         | description   | ownertype | ownername |
-    | Page One A    | UserA Page 1 | user      | UserA     |
-    | Page Two A    | UserA Page 2 | user      | UserA     |
-    | Page Three A  | UserA Page 3 | user      | UserA     |
-    | Page Four A   | UserA Page 4 | user      | UserA     |
-    | Page One B    | UserB Page 1 | user      | UserB     |
-    | Page One Grp  | Group Page 1 | group     | Group1    |
+    | title        | description  | ownertype | ownername |
+    | Page One A   | UserA Page 1 | user      | UserA     |
+    | Page Two A   | UserA Page 2 | user      | UserA     |
+    | Page Three A | UserA Page 3 | user      | UserA     |
+    | Page Four A  | UserA Page 4 | user      | UserA     |
+    | Page One B   | UserB Page 1 | user      | UserB     |
+    | Page One Grp | Group Page 1 | group     | Group1    |
+
+    And the following "pagecomments" exist:
+    # Available fields: user*, comment*, page*, attachment, private, group (compulsory for group pages)
+    | user  | page         | comment                        | private |  group  |
+    | UserB | Page Two A   | Comment by User B on page      | false   |         |
+    | UserB | Page Three A | Hi, I am a comment by User B   | false   |         |
+    | UserA | Page Three A | Hi, I am a comment by the owner| false   |         |
+    | UserA | Page One Grp | Hi, I am a comment by UserA    | false   |  Group1 |
 
     And the following "collections" exist:
     # Available fields: title*, description, ownertype*, ownername*, pages
-    | title          | ownertype | ownername | lock  | description | pages                   |
-    | collection one | user      | UserA     | false |desc of col  | Page One A, Page Two A  |
-
+    | title          | ownertype | ownername | lock  | description | pages                                |
+    | collection one | user      | UserA     | false | desc of col | Page One A, Page Two A, Page Three A |
 
     And the following "journals" exist:
     # Available fields: owner*, ownertype*, title*, description, tags
@@ -139,14 +146,14 @@ Background:
 
     And the following "journalentries" exist:
     # Available fields: owner*, ownertype*, title*, entry*, blog, tags, draft
-    | owner   | ownertype | title       | entry                  | blog     | tags      | draft |
-    | UserA   | user      | Entry One   | This is my entry One  | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Two   | This is my entry Two   | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Three | This is my entry Three | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Four  | This is my entry Four  | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Five  | This is my entry Five  | journal1 | cats,dogs | 0     |
-    | UserA   | user      | Entry Mini  | This is my min fields  |          |           | 0     |
-    | Group1  | group     | Group e1    | This is my group entry | journal2 |           | 0     |
+    |  owner  |  ownertype |  title       |  entry                  |  blog     |  tags      |  draft |
+    |  UserA  |  user      |  Entry One   |  This is my entry One   |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Two   |  This is my entry Two   |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Three |  This is my entry Three |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Four  |  This is my entry Four  |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Five  |  This is my entry Five  |  journal1 |  cats,dogs |  0     |
+    |  UserA  |  user      |  Entry Mini  |  This is my min fields  |           |            |  0     |
+    |  Group1 |  group     |  Group e1    |  This is my group entry |  journal2 |            |  0     |
 
     And the following "plans" exist:
     # Available fields: owner*, ownertype*, title*, description, tags
@@ -233,9 +240,9 @@ Background:
     And the following "blocks" exist:
     # Page One B
     | title                | type           | page          |retractable | data |
-    | Gallery - style 1    | gallery        | Page One B    | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=1;photoframe=1 |
-    | Gallery - style 2    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=yes;width=75;imagestyle=2 |
-    | Gallery - style 3    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image3.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3;photoframe=0|
+    | Gallery - style 1    | gallery        | Page One B    | no         | attachments=Image1.jpg,Image3.png,Image3.png,Image2.png,Image1.jpg;imagesel=2;showdesc=yes |
+    | Gallery - style 2    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=yes;imagestyle=2 |
+    | Gallery - style 3    | gallery        | Page One B    | yes        | attachments=Image3.png,Image2.png,Image3.png,Image1.jpg,Image1.jpg;imagesel=2;showdesc=no;imagestyle=3 |
     | Folder               | folder         | Page One B    | no         | dirname=myfolder;attachments=mahara_about.pdf,Image2.png,Image1.jpg,Image3.png,mahara.mp3 |
     | Some HTML            | html           | Page One B    | yes        | attachment=test_html.html |
     | Profile Information  | profileinfo    | Page One B    | no         | introtext =Mahara unicorn here! Nice to meet you :);profileicon=Image3.png |

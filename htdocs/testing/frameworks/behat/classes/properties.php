@@ -1,118 +1,353 @@
 <?php
-
-//This syntax is a workaround for creating a const array. Array constants
-//are allowed from php 5.6 on, so once mahara upgrades, this code can be changed
-//to take advantage of this.
-
-//This table can take css and xpath locators, e.g:
-//'Groups dropdown' => array("li.managegroups", "css_element"),
-//OR
-//'Groups dropdown' => array("//li[@class='managegroups']", "xpath_element"),
-define ("LOCATOR_CONSTANTS", json_encode(array(
-    'Admin home sub-menu'                       => array(".adminhome", "css_element"),
-    'Arrow-bar nav'                             => array(".arrow-bar", "css_element"),
-    'My portfolios'                             => array(".bt-myviews", "css_element"),
-    'Latest changes I can view'                 => array(".bt-newviews", "css_element"),
-    'Resume field block'                        => array(".bt-resumefield", "css_element"),
-    'Watched pages'                             => array(".bt-watchlist", "css_element"),
-    'Select'                                    => array(".btn[title='Select']", "css_element"),
-    "Vertical button group"                     => array(".btn-group-vertical", "css_element"),
-    'Top right button group'                    => array(".btn-top-right.btn-group", "css_element"),
-    'Comment preview'                           => array(".commentreplyview", "css_element"),
-    'Comment text'                              => array(".comment-text", "css_element"),
-    'Extensions sub-menu'                       => array(".configextensions ul", "css_element"),
-    'Configure site sub-menu'                   => array(".configsite", "css_element"),
-    'Users sub-menu'                            => array(".configusers", "css_element"),
-    'Create sub-menu'                           => array(".create", "css_element"),
-    'Comment feedbacktable'                     => array(".feedbacktable", "css_element"),
-    'File download heading 1'                   => array("li.filedownload-item:nth-of-type(1)>.list-group-item-heading", "css_element"),
-    'File download heading 2'                   => array("li.filedownload-item:nth-of-type(2)>.list-group-item-heading", "css_element"),
-    'Filelist table'                            => array(".filelist", "css_element"),
-    'Footer'                                    => array(".footer", "css_element"),
-    'Pages and Collections boxes'               => array(".grouppageswrap", "css_element"),
-    'Manage sub-menu'                           => array(".manage", "css_element"),
-    'Admin Groups sub-menu'                     => array(".managegroups ul", "css_element"),
-    'Institutions sub-menu'                     => array(".manageinstitutions ul", "css_element"),
-    'Options dialog'                            => array(".modal-header", "css_element"),
-    'Share sub-menu'                            => array(".share", "css_element"),
-    'Engage sub-menu'                           => array(".engage", "css_element"),
-    'Tinymce editor menu'                       => array(".tox-toolbar", "css_element"),
-    'Tinymce editor'                            => array(".tox-edit-area", "css_element"),
-    'Web services sub-menu'                     => array(".webservices", "css_element"),
-    'H1 heading'                                => array("h1", "css_element"),
-    'Collections text-box'                      => array(".select2-selection__rendered", "css_element"),
-    'Videojs time remaining'                    => array(".vjs-remaining-time-display", "css_element"),
-    'Annotation'                                => array("#activate_blocktype_annotation", "css_element"),
-    'Smartevidence'                             => array("#activate_module_framework", "css_element"),
-    'Make comment public status'                => array("#add_feedback_form_ispublic_container", "css_element"),
-    'Submissions to this group'                 => array("#allsubmissionlist", "css_element"),
-    'Blocktype sidebar'                         => array("#content-editor-foldable", "css_element"),
-    'Tags section'                              => array("#edit_tags_container", "css_element"),
-    'My tags list'                              => array(".mytags", "css_element"),
-    'Upload dialog'                             => array(".modal-filebrowser", "css_element"),
-    'Filter by first name'                      => array("#firstnamelist", "css_element"),
-    'Find people results'                       => array("#friendslist_pagination", "css_element"),
-    'My groups box'                             => array("#groups", "css_element"),
-    'Group portfolios'                          => array("#groupviewlist", "css_element"),
-    'Main menu'                                 => array("#main-nav", "css_element"),
-    'Administration menu'                       => array("#main-nav-admin", "css_element"),
-    'Import First name'                         => array("#profilefield-profile #profile-profile:nth-of-type(1)", "css_element"),
-    'Import Last name'                          => array("#profilefield-profile #profile-profile:nth-of-type(2)", "css_element"),
-    'Import Student ID'                         => array("#profilefield-profile #profile-profile:nth-of-type(3)", "css_element"),
-    'Import Email address'                      => array("#profilefield-contact #profile-contact:nth-of-type(1)", "css_element"),
-    'Members without a submission to the group' => array("#nosubmissionslist", "css_element"),
-    'Collections shared with this group'        => array("#sharedcollectionlist", "css_element"),
-    'Pages shared with this group'              => array("#sharedviewlist", "css_element"),
-    'Shared with this group report'             => array("#sharedviewsreport", "css_element"),
-    'Matrix table'                              => array("#tablematrix", "css_element"),
-    'Toolbar buttons'                           => array("#toolbar-buttons", "css_element"),
-    'Account menu'                                 => array(".icon-chevron-down.collapsed", "css_element"),
-    'Signoff page'                              => array("#signoff-confirm-form", "css_element"),
-    'Verify page'                               => array("#verify-confirm-form", "css_element"),
-    'Display page button'                       => array("#view-return-controls .btn-secondary:nth-of-type(1)", "css_element"),
-    'Return to pages and collections button'    => array("#view-return-controls .btn-secondary:nth-of-type(2)", "css_element"),
-    'Progressbar block'                         => array("#sb-progressbar .card-header", "css_element"),
-    'Progressbar'                               => array("#progress_bar_fill.progress-bar", "css_element"),
-    'Inbox message icon'                        => array("#activitylist .card-header a h2", "css_element"),
-    'Online users block'                        => array("#sb-onlineusers", "css_element"),
-    'Timeline Bar'                              => array(".timeline-bar", "css_element"),
-    'Show more tags'                            => array(".text-small .icon-ellipsis-h", "css_element"),
-    'Terms and conditions Edit icon'            => array("#termsandconditions .btn-secondary","css_element"),
-    'Privacy statement Edit icon'               => array("#privacy .btn-group","css_element"),
-    'Content types'                             => array("#placeholderlist", "css_element"),
-    'Block header'                              => array(".block-header", "css_element"),
-    // properties with xpath_elements
-    'Settings sub-menu'                         => array("//span[@innertext='Settings']", "xpath_element"),
-    'Settings'                                  => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']", "xpath_element"),
-    'Legal'                                     => array("//ul[#'userchildmenu-8']/?/?/a[@innertext='Legal']", "xpath_element"),
-    'Secret urls - table row 1'                 => array("//table/tbody/tr[1]/td[4]/a", "xpath_element"),
-    'File Size'                                 => array("//table[@id='files_filebrowser_filelist']/tbody/tr[1]/td[4]", "xpath_element"),
-    'Multirecipientnotification'                => array("//li[@id='module.multirecipientnotification']", "xpath_element"),
-    'Country mandatory field'                   => array("//div[@id='pluginconfig_mandatory_container']/div[@class='checkboxes-option checkbox']/label[contains(text(),'Country')]", "xpath_element"),
-    // xpath related to participation report
-    'Group views report tr1 tc1'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[1]", "xpath_element"),
-    'Group views report tr1 tc2'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[2]", "xpath_element"),
-    'Group views report tr1 tc3'                => array("//*[@id='groupviewsreport']/tbody/tr[1]/td[3]", "xpath_element"),
-    'First Legal'                               => array("//a[contains(@href, 'fs=privacy')]/strong", "xpath_element"),
-    'Second Legal'                              => array("//a[contains(@href, 'fs=termsandconditions')]/strong", "xpath_element"),
-    'Group views report tr3 tc1'                => array("//*[@id='groupviewsreport']/tbody/tr[3]/td[1]", "xpath_element"),
-
-    )));
+/**
+ * @package    mahara
+ * @subpackage test/behat
+ * @author     Catalyst IT Ltd
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
 
 /**
-* @param string $property
-*/
+ * Contains arrays of 'properties', or labelled css/xpath elements.
+ *
+ * This enables the test writer to use the more readable label (array key) in
+ * feature files and not to have to find, or write, the css directly.
+ *
+ * Related properties are grouped into categories,
+ * each of which is in an array constant.
+ * The test writer can pass in the 'location'(array constant) as an
+ * optional second parameter to specify the array to be searched.
+ *
+ * There is a parent array ('LOCATORS'), which is searched in order if the
+ * location parameter is not included. The array constants should be given
+ * in order of most to least used in the parent array, to cut down on search times.
+ *
+ */
+
+define('LOCATORS', array(
+    'NAV',
+    'BLOCKS',
+    'HEADER',
+    'DASHBOARD',
+    'COMMON',
+    'ACCOUNT',
+    'VIEWS',
+    'FILES',
+    'FOOTER',
+    'MODAL',
+    'MISC',
+    'GROUPS',
+    'COMMENT',
+    'TAGS',
+    'PROFILE',
+    'PEOPLE',
+    'INSTITUTIONS',
+    'SITEOPTIONS',
+    'TINYMCE',
+    'SMARTEVIDENCE',
+    'REPORT',
+    'PEERASSESSMENT',
+    'LEGAL',
+    'WEBSERVICES',
+));
+
+/**
+ * Arrays group related content together.
+ * Order of arrays doesn't affect functionality.
+ * For readability, they are in alphabetical order.
+ *
+ * Properties have descriptive keys, using labels or text from the page,
+ * if possible.
+ * The intention is that someone looking at the visible page (not the html)
+ * would know which element is intended by that name.
+ *
+ */
+
+// elements accessed via the account menu
+define('ACCOUNT', array(
+    'Preferences heading 1' => '#accountprefs h2:nth-of-type(1)',
+    'Preferences heading 2' => '#accountprefs h2:nth-of-type(2)',
+    'Friends control radio' => '#accountprefs_friendscontrol_container > div.radio-wrapper > div:first-child > input.radio',
+    'Message from other people' => '#activityprefs_activity_usermessage',
+    'System message' => '#activityprefs_activity_maharamessage',
+));
+
+define('BLOCKS', array(
+    'Content types' => '#placeholderlist',
+    //in edit mode, the class has '-editor', so we use 'class^='
+    //to capture both options
+    'My portfolios' => '[class^=bt-myviews]',
+    'Portfolios shared with me' => '[class^=bt-newviews]',
+    'Inbox' => '[class^=bt-inbox]',
+    'Resume field block' => '.bt-resumefield',
+    'Pages I am watching' => '[class^=bt-watchlist]',
+    'Online users block' => '#sb-onlineusers',
+    'Block header' => '.block-header',
+    'Tags block' => '#sb-tags',
+    'Group info' => '.bt-groupinfo',
+));
+
+define('COMMENT', array(
+    'Comment preview' => '.commentreplyview',
+    'Comment text' => '.comment-text',
+    'Comment feedbacktable' => '.feedbacktable',
+    'Make comment public status' => '#add_feedback_form_ispublic_container',
+));
+
+define('COMMON', array(
+    'Page heading' => '.section-heading',
+    'H1 heading' => 'h1',
+));
+
+define('DASHBOARD', array(
+    'Static pages' => "//a[contains(@href, 'site/pages')]/b",
+    'Create'=> '',
+    'Share'=>'',
+    'Engage'=>'',
+    'Edit dashboard'=>'',
+));
+
+define('FILES', array(
+    'Select' => ".btn[title='Select']",//tick to select file button
+    'File download heading 1' => 'li.filedownload-item:nth-of-type(1)>.list-group-item-heading',
+    'File download heading 2' => 'li.filedownload-item:nth-of-type(2)>.list-group-item-heading',
+    'Filelist table' => '.filelist',
+));
+
+define('FOOTER', array(
+    'Footer' => '.footer',
+    'Footer menu' => '.footer-nav',
+    'Footer help' => '#footerhelp',
+));
+
+define('GROUPS', array(
+    'Submissions to this group' => '#allsubmissionlist',
+    'My groups box' => '#groups',
+    'Group portfolios' => '#groupviewlist',
+    'Members without a submission to the group' => '#nosubmissionslist',
+    'Collections shared with this group' => '#sharedcollectionlist',
+    'Pages shared with this group' => '#sharedviewlist',
+    'Sorted by dropdown' => '#search_sortoption',
+    'Groups results' => '#findgroups',
+    'Search results heading row 1' => '#membersearchresults .list-group-item:nth-of-type(1) .list-group-item-heading',
+    'Search results heading row 2' => '#membersearchresults .list-group-item:nth-of-type(2) .list-group-item-heading',
+    'Search results heading row 3' => '#membersearchresults .list-group-item:nth-of-type(3) .list-group-item-heading',
+    'Search results heading row 4' => '#membersearchresults .list-group-item:nth-of-type(4) .list-group-item-heading',
+    'Search results heading row 6' => '#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading',
+));
+
+define('HEADER', array(
+    'Logo'    =>'div#logo-area',
+    'Search'  =>'#usf_query',
+    'Language' =>'.lang-toggle',
+    'Inbox' => '#nav-inbox',
+    'Profile' =>'.user-icon',
+));
+
+define ('INSTITUTIONS', array(
+    'Expires column' => 'tbody tr td:nth-of-type(3)',
+    'Submenu' => '.manageinstitutions ul',
+));
+
+define('LEGAL', array(
+    //account/userprivacy.php
+    'First Legal' => "//a[contains(@href, 'fs=privacy')]/strong",
+    'Second Legal' => "//a[contains(@href, 'fs=termsandconditions')]/strong",
+    'Terms and conditions Edit icon' => '#termsandconditions .btn-secondary',
+    'Privacy statement Edit icon' => '#privacy .btn-group',
+));
+
+define('MODAL', array(
+    'Upload dialog' => '.modal-filebrowser',
+    'Options dialog' => '.modal-header',
+    'Modal header' => '.modal-header',
+    'Modal content' => '.modal-body',
+    'Message' => 'div#modal_messages',
+    'File download modal' => '#instconf_artefactfieldset_container',
+));
+
+define('MISC', array(
+    'Inbox message icon' => '#activitylist .card-header a h2',
+    'Inbox' => '#activitylist',
+    'Videojs time remaining' => '.vjs-remaining-time-display',
+    'Progressbar block' => '#sb-progressbar .card-header',
+    'Progressbar' => '#progress_bar_fill.progress-bar',
+    'Timeline Bar' => '.timeline-bar',
+    //are these used?
+    'Settings' => "//ul[#'userchildmenu-8']/?/?/a[@innertext='Settings']",
+    'Legal' => "//ul[#'userchildmenu-8']/?/?/a[@innertext='Legal']",
+    'Secret urls - table row 1' => '//table/tbody/tr[1]/td[4]/a',
+    'File Size' => "//table[@id='files_filebrowser_filelist']/tbody/tr[1]/td[4]",
+    'Multirecipientnotification' => "//li[@id='module.multirecipientnotification']",
+    'Current skin' => '.col-md-3',
+    'Dropdown' => '.dropdown-menu',
+));
+
+define('NAV', array(
+    'Main menu' => '#main-nav',
+    'Administration menu' => '#main-nav-admin',
+    'Admin home sub-menu' => '.adminhome',
+    'Arrow-bar nav' => '.arrow-bar',
+    'Settings sub-menu' => "//span[@innertext='Settings']",
+    'Top right button group' => '.btn-top-right.btn-group',
+    'Manage sub-menu' => '.manage',
+    'Admin Groups sub-menu' => '.managegroups ul',
+    'Institutions sub-menu' => '.manageinstitutions ul',
+    'Share sub-menu' => '.share',
+    'Engage sub-menu' => '.engage',
+    'Extensions sub-menu' => '.configextensions ul',
+    'Configure site sub-menu' => '.configsite',
+    'Users sub-menu' => '.configusers',
+    'Create sub-menu' => '.create',
+    'Web services sub-menu' => '.webservices',
+    'Toolbar buttons' => '#toolbar-buttons',
+    'Account menu' => '.icon-chevron-down.collapsed',
+));
+
+define('PEERASSESSMENT', array(
+    'Signoff page' => '#signoff-confirm-form',
+    'Verify page' => '#verify-confirm-form',
+));
+
+define('PEOPLE', array(
+    'Filter by first name' => '#firstnamelist',
+    'Find people results' => '#friendslist_pagination',
+    'Pending since' => '.pendingfriend',
+));
+
+define('PROFILE', array(
+    'Country mandatory field' => "//div[@id='pluginconfig_mandatory_container']/div[@class='checkboxes-option checkbox']/label[contains(text(),'Country')]",
+    'Import First name' => '#profilefield-profile #profile-profile:nth-of-type(1)',
+    'Import Last name' => '#profilefield-profile #profile-profile:nth-of-type(2)',
+    'Import Student ID' => '#profilefield-profile #profile-profile:nth-of-type(3)',
+    'Import Email address' => '#profilefield-contact #profile-contact:nth-of-type(1)',
+));
+
+//VIEWS is Pages and Collections, just shorter to write
+define('VIEWS', array(
+    'Pages and Collections boxes' => '.grouppageswrap',
+    'Collections text-box' => '.select2-selection__rendered',
+    'Return to pages and collections button' => '#view-return-controls .btn-secondary:nth-of-type(2)',
+    //button group followed by individual buttons
+    'Vertical button group' => '.btn-group-vertical',
+    'Settings button' => '.editlayout',
+    'Display page button' => '.displaycontent',
+    'Share button' => '.editshare',
+    'Return button' => '.returntolocation',
+    'Page action buttons' => '.pageactions',
+    'Page content' => '.user-page-content',
+    'Last updated' => '.last-updated',
+    'Main content' => 'div#column-container',
+));
+
+define('REPORT', array(
+    'Group views report tr1 tc1' => "//*[@id='groupviewsreport']/tbody/tr[1]/td[1]",
+    'Group views report tr1 tc2' => "//*[@id='groupviewsreport']/tbody/tr[1]/td[2]",
+    'Group views report tr1 tc3' => "//*[@id='groupviewsreport']/tbody/tr[1]/td[3]",
+    'Group views report tr3 tc1' => "//*[@id='groupviewsreport']/tbody/tr[3]/td[1]",
+    'Shared with this group report' => '#sharedviewsreport',
+    'Account details row 1' => '#statistics_table tbody tr:nth-of-type(1)',
+));
+
+define('SITEOPTIONS', array(
+    'Notification settings' => '#siteoptions_notificationsettings_open',
+));
+
+define('SMARTEVIDENCE', array(
+    'Annotation' => '#activate_blocktype_annotation',
+    'Smartevidence' => '#activate_module_framework',
+    'Matrix table' => '#tablematrix',
+    // Edit buttons on rows in the annotation modal.
+    'Feedback annotation row 2' => "div[id^=annotation_feedbacktable] div.list-group-item:nth-child(2) div.comment-item-buttons",
+    'Feedback annotation row 3' => "div[id^=annotation_feedbacktable] div.list-group-item:nth-child(3) div.comment-item-buttons",
+    'Feedback annotation row 4' => "div[id^=annotation_feedbacktable] div.list-group-item:nth-child(4) div.comment-item-buttons",
+));
+
+define('TAGS', array(
+    'Tags section' => '#edit_tags_container',
+    'My tags list' => '.mytags',
+    'Show more tags' => '.text-small .icon-ellipsis-h',
+    'Tags block' => '#sb-tags',
+    'Search results for all tags' => '#results_container',
+));
+
+define('TINYMCE', array(
+    'Tinymce editor menu' => '.tox-toolbar',
+    'Tinymce editor' => '.tox-edit-area',
+));
+
+define ('WEBSERVICES', array(
+    'Manage service access tokens' => '#webservices_token_pseudofieldset',
+));
+
+/**
+ * Looks for the css or xpath for the requested property.
+ *
+ * If a location (array constant) is passed in, checks that array directly,
+ * otherwise searches all the array constants until a matching property key is found.
+ *
+ * Returns the css/xpath value, plus the selectortype (css_element/xpath_element), or null if none found. A check for null return
+ * and throwing an ExpectationException will help the test writer debug.
+ *
+ * @param string $property name of page element to look up
+ * @param string $location name of array constant property is in (optional)
+ * @return array (selector, selectortype) or null if not found
+ */
 function get_property($property, $location = null) {
-  if (!$location) {
-    $location = LOCATOR_CONSTANTS;
-  }
-  $location = json_decode($location, true);
-  if (isset($location[ucfirst($property)])) {
-     return $location[ucfirst($property)];
-  }
-  else {
-    return null;
-  }
+  $locator = array();
+    if (!$location) {
+        //we don't know which array to look in, so search all in order
+        //stop the search once key is found
+        log_debug($property);
+        $stopsearch = false;
+        while (!$stopsearch) {
+            foreach (LOCATORS as $locate) {
+                if (isset($locate[ucfirst($property)])) {
+                    $locator[0] = $locate[ucfirst($property)];
+                    $stopsearch = true;
+                }
+            }
+            $stopsearch = true; //if key not found, stop looking!
+        }
+    }
+    else {
+        //tell PHP we mean the constant, not just some string with the same name
+        $location = constant(strtoupper($location));
+        if (isset($location[ucfirst($property)])) {
+            $locator[0] = $location[ucfirst($property)];
+        }
+    }
+    // if a property was found, set css or xpath and return
+    if (isset($locator[0])) {
+        $locator[1] = set_selector_type($locator[0]);
+        return $locator;
+    }
+    else {
+        return null;//no property found.
+    }
 }
 
- ?>
+/**
+ * Avoid having to individually set the selector type by using regex
+ * to determine the type.
+ *
+ * Note: There are other types available, as in BehatSelectors.php,
+ * $allowedselectors. We don't currently use these, so they are not
+ * included here.
+ *
+ * @TODO investigate this:
+ * Mahara selector types are currently handled by some custom code
+ * before being passed to behat as behat selector types.
+ * This might be redundant functionality.
+ *
+ *  @param string $locator css or xpath returned by the LOCATORS arrays
+*/
+function set_selector_type($locator) {
+    if (preg_match('/^\/\//', $locator)) {
+        return 'xpath_element';
+    }
+    else {
+        return 'css_element';
+    }
+}

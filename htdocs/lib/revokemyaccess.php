@@ -89,17 +89,17 @@ function revokemyaccess_form_submit(Pieform $form, $values) {
 
     // You can only remove things shared to you.
     $view_access =  get_records_select_array('view_access', "view = ? AND usr = ?", array($viewid, $USER->id));
-    if($view_access === false) {
+    if ($view_access === false) {
         throw new AccessDeniedException();
     }
     $viewobj = new View($values['viewid']);
-    if(!$viewobj) {
+    if (!$viewobj) {
         throw new ViewNotFoundException(get_string('viewnotfound', 'error', $values['viewid']));
     }
     $collection = $viewobj->get_collection();
     $owner = $viewobj->get_owner_object();
     if ($collection && $viewids = get_column('collection_view', 'view', 'collection', $collection->get('id'))) {
-        if (!empty($viewids)) {
+        if ($viewids) {
             // The code will never reach this point unless at least one view exists. So it is safe.
             $insql = implode(",", $viewids);
             delete_records_sql("DELETE FROM {view_access} WHERE view IN (" . $insql . ") AND usr = ?", array($USER->id));
@@ -154,7 +154,7 @@ function revokemyaccess_form_cancel_submit(Pieform $form) {
 function revokemyaccess_event_handler($viewid, $message='') {
     global $USER;
     $viewobj = new View($viewid);
-    if(!$viewobj) {
+    if (!$viewobj) {
         throw new ViewNotFoundException(get_string('viewnotfound', 'error', $viewid));
     }
     $portfolioid = $viewobj->get('collection') ? $viewobj->get('collection')->get('id') : $viewobj->get('id');

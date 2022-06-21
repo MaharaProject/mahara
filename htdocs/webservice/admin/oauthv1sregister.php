@@ -1,5 +1,6 @@
 <?php
 /**
+ * External application using the oAuth version 1 protocol
  *
  * @package    mahara
  * @subpackage auth-webservice
@@ -36,7 +37,11 @@ $services = get_records_array('external_services', 'restrictedusers', 0);
 $disabledopts = array();
 $sopts = array();
 foreach ($services as $service) {
-    $sopts[$service->id] = $service->name;
+    // Check langstring exists before adding to list options
+    $displayname = get_string($service->shortname, preg_replace('/\//', '.', $service->component));
+    if (has_oauth($service->id)) {
+        $sopts[$service->id] = string_exists($displayname) ? $displayname : $service->name;
+    }
     $disabledopts[$service->id] = array();
     if (substr_count($service->component, '/') > 0) {
         list($moduletype, $module) = explode("/", $service->component);
@@ -54,54 +59,85 @@ if ($config_server_id) {
 }
 // we have an edit form
 else if (!empty($dbserver)) {
-    $disabled = array();
+    $disabled = $hidden = $extra = $info = array();
     list($moduletype, $module) = get_module_from_serverid($server_id);
     safe_require_plugin($moduletype, $module);
     $classname = generate_class_name($moduletype, $module);
     if (is_callable(array($classname, 'disable_webservice_fields'))) {
         $disabled = call_static_method($classname, 'disable_webservice_fields');
     }
-    $form = webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled);
+    if (is_callable(array($classname, 'hide_webservice_fields'))) {
+        $hidden = call_static_method($classname, 'hide_webservice_fields');
+    }
+    if (is_callable(array($classname, 'extra_webservice_fields'))) {
+        $extra = call_static_method($classname, 'extra_webservice_fields', $dbserver);
+    }
+    if (is_callable(array($classname, 'info_webservice_fields'))) {
+        $info = call_static_method($classname, 'info_webservice_fields');
+    }
+    $form = webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled, $hidden, $extra, $info);
 }
 // else we have just the standard list
 else {
     $form = webservice_server_list_form($sopts, $iopts);
 }
 
+/**
+ * Add webservice external application
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservices_add_application_submit(Pieform $form, $values) {
     global $SESSION, $USER, $services;
+    $redirect = get_config('wwwroot').'/webservice/admin/oauthv1sregister.php';
 
     $dbuser = get_record('usr', 'id', $USER->get('id'));
     if (empty($dbuser)) {
-        $SESSION->add_error_msg(get_string('erroruser', 'auth.webservice'));
-        redirect('/webservice/admin/oauthv1sregister.php');
+        $form->reply(PIEFORM_ERR, array(
+            'message'  => get_string('erroruser', 'auth.webservice'),
+            'goto'     => $redirect,
+        ));
     }
     $store = OAuthStore::instance();
 
-    $new_app = array(
-        'application_title' => $values['application'],
-        'application_uri'   => 'http://example.com',
-        'requester_name'    => $dbuser->firstname . ' ' . $dbuser->lastname,
-        'requester_email'   => $dbuser->email,
-        'callback_uri'      => 'http://example.com',
-        'institution'       => $values['institution'],
-        'externalserviceid' => $values['service'],
-    );
-    foreach ($services as $k => $service) {
-        if ($service->id == $values['service'] && isset($service->component)) {
-            list($moduletype, $module) = get_module_from_serverid($service->id);
-            safe_require_plugin($moduletype, $module);
-            $classname = generate_class_name($moduletype, $module);
-            if (is_callable(array($classname, 'add_application'))) {
-                $new_app = call_static_method($classname, 'add_application', $new_app);
+    list($moduletype, $module) = get_module_from_external_service($values['service']);
+    safe_require_plugin($moduletype, $module);
+    $classname = generate_class_name($moduletype, $module);
+
+    if (is_callable(array($classname, 'create_new_app'))) {
+        $new_app = call_static_method($classname, 'create_new_app', $values, $dbuser);
+    }
+    else {
+
+        $new_app = array(
+            'application_title' => $values['application'],
+            'application_uri'   => 'http://example.com',
+            'requester_name'    => $dbuser->firstname . ' ' . $dbuser->lastname,
+            'requester_email'   => $dbuser->email,
+            'callback_uri'      => 'http://example.com',
+            'institution'       => $values['institution'],
+            'externalserviceid' => $values['service'],
+        );
+        foreach ($services as $k => $service) {
+            if ($service->id == $values['service'] && isset($service->component)) {
+                list($moduletype, $module) = get_module_from_serverid($service->id);
+                safe_require_plugin($moduletype, $module);
+                $classname = generate_class_name($moduletype, $module);
+                if (is_callable(array($classname, 'add_application'))) {
+                    $new_app = call_static_method($classname, 'add_application', $new_app);
+                }
             }
         }
     }
     $key = $store->updateConsumer($new_app, $dbuser->id, true);
     $c = (object) $store->getConsumer($key, $dbuser->id, true);
+
     if (empty($c)) {
-        $SESSION->add_error_msg(get_string('errorregister', 'auth.webservice'));
-        redirect('/webservice/admin/oauthv1sregister.php');
+        $form->reply(PIEFORM_ERR, array(
+            'message'  => get_string('errorregister', 'auth.webservice'),
+            'goto'     => $redirect,
+        ));
     }
     else {
         // New application added - now check that institution has 'webservices' auth
@@ -113,20 +149,37 @@ function webservices_add_application_submit(Pieform $form, $values) {
         $priority = is_null($priorities->webservicepriority) ? $priorities->maxpriority + 1 : $priorities->webservicepriority;
         if (!ensure_record_exists('auth_instance', (object) array('institution' => $values['institution'], 'authname' => 'webservice'),
                                                    (object) array('institution' => $values['institution'], 'authname' => 'webservice', 'active' => 1, 'priority' => $priority, 'instancename' => 'webservice'))) {
-            $SESSION->add_error_msg(get_string('setauthinstancefailed', 'auth.webservice', institution_display_name($values['institution'])));
+            $form->reply(PIEFORM_ERR, array(
+                'message'  => get_string('setauthinstancefailed', 'auth.webservice', institution_display_name($values['institution'])),
+                'goto'     => $redirect . '?edit=' . $c->id,
+            ));
         }
-        redirect('/webservice/admin/oauthv1sregister.php?edit=' . $c->id);
+        redirect($redirect . '?edit=' . $c->id);
     }
-
 }
 
+/**
+ * Add webservice external application configuration
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservices_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
+
     $store = OAuthStore::instance();
     $is_admin = ($USER->get('admin') ||defined('ADMIN') || defined('INSTITUTIONALADMIN') || $USER->is_institutional_admin() ? true : false);
     $dbserver = get_record('oauth_server_registry', 'id', $values['token']);
     if ($dbserver) {
         if ($values['action'] == 'delete') {
+
+            list($moduletype, $module) = get_module_from_serverid($values['token']);
+            safe_require_plugin($moduletype, $module);
+            $classname = generate_class_name($moduletype, $module);
+
+            if (is_callable(array($classname, 'webservices_server_submit'))) {
+                call_static_method($classname, 'webservices_server_submit', $form, $values);
+            }
 
             delete_records_sql('
                                 DELETE FROM {oauth_server_config}
@@ -161,32 +214,61 @@ function webservices_server_submit(Pieform $form, $values) {
     redirect('/webservice/admin/oauthv1sregister.php');
 }
 
+/**
+ * Validate the webservice external application
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_oauth_server_validate(Pieform $form, $values) {
     $owner = array_diff($values['user'], array(''));
     if (empty($owner)) {
         $form->set_error('user', get_string('needtosetowner', 'auth.webservice'));
     }
+    list($moduletype, $module) = get_module_from_external_service($values['service']);
+    safe_require_plugin($moduletype, $module);
+    $classname = generate_class_name($moduletype, $module);
+
+    if (is_callable(array($classname, 'webservice_oauth_server_validate'))) {
+        return call_static_method($classname, 'webservice_oauth_server_validate', $form, $values);
+    }
 }
 
+/**
+ * Save the webservice external application
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_oauth_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
+    $redirect = get_config('wwwroot').'/webservice/admin/oauthv1sregister.php';
 
     $store = OAuthStore::instance();
     $dbserver = get_record('oauth_server_registry', 'id', $values['id']);
     if ($dbserver) {
+        list($moduletype, $module) = get_module_from_external_service($values['service']);
+        safe_require_plugin($moduletype, $module);
+        $classname = generate_class_name($moduletype, $module);
 
-       $app = array(
-                    'application_title' => $values['application_title'],
-                    'application_uri'   => $values['application_uri'],
-                    'requester_name'    => $dbserver->requester_name,
-                    'requester_email'   => $dbserver->requester_email,
-                    'callback_uri'      => $values['callback_uri'],
-                    'institution'       => $values['institution'],
-                    'externalserviceid' => $values['service'],
-                    'consumer_key'      => $dbserver->consumer_key,
-                    'consumer_secret'   => $dbserver->consumer_secret,
-                    'id'                => $values['id'],
-       );
+        if (is_callable(array($classname, 'get_app_values'))) {
+            $app = call_static_method($classname, 'get_app_values', $values, $dbserver);
+        }
+        else {
+            $app = array(
+                        'application_title' => $values['application_title'],
+                        'application_uri'   => $values['application_uri'],
+                        'requester_name'    => $dbserver->requester_name,
+                        'requester_email'   => $dbserver->requester_email,
+                        'callback_uri'      => $values['callback_uri'],
+                        'institution'       => $values['institution'],
+                        'externalserviceid' => $values['service'],
+                        'consumer_key'      => $dbserver->consumer_key,
+                        'consumer_secret'   => $dbserver->consumer_secret,
+                        'id'                => $values['id'],
+                        'enabled'           => $values['enabled']
+            );
+        }
         if ($USER->get('admin') && isset($values['user'])) {
             $useridchange = !empty($values['user'][0]) ? $values['user'][0] : false;
             if ($useridchange) {
@@ -196,17 +278,28 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
 
         $key = $store->updateConsumer($app, $USER->get('id'), true);
         $c = (object) $store->getConsumer($key, $USER->get('id'), true);
+
+        if (is_callable(array($classname, 'webservice_oauth_server_submit'))) {
+            call_static_method($classname, 'webservice_oauth_server_submit', $form, $values);
+        }
+
         if (empty($c)) {
-            $SESSION->add_error_msg(get_string('errorregister', 'auth.webservice'));
-            redirect('/webservice/admin/oauthv1sregister.php');
+            $form->reply(PIEFORM_ERR, array(
+                'message'  => get_string('errorregister', 'auth.webservice'),
+                'goto'     => $redirect,
+            ));
         }
         else {
-            redirect('/webservice/admin/oauthv1sregister.php?edit=' . $c->id);
+            $form->reply(PIEFORM_OK, array(
+                'message'  => get_string('confirmupdate', 'auth.webservice', $app['application_title']),
+                'goto'     => $redirect,
+            ));
         }
     }
-
-    $SESSION->add_error_msg(get_string('errorupdate', 'auth.webservice'));
-    redirect('/webservice/admin/oauthv1sregister.php');
+    $form->reply(PIEFORM_ERR, array(
+        'message'  => get_string('errorupdate', 'auth.webservice'),
+        'goto'     => $redirect,
+    ));
 }
 
 $pieform = pieform_instance($form);
@@ -219,10 +312,28 @@ PluginAuthWebservice::menu_items($smarty, 'webservice/oauthconfig');
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');
 
+/**
+ * Dummy save function for external application list
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_main_submit(Pieform $form, $values) {
 }
 
-function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = array()) {
+/**
+ * The form array for making the edit external application form
+ *
+ * @param object $dbserver A db object
+ * @param array $sopts     Service options
+ * @param array $iopts     Institution options
+ * @param array $disabled  Any webservice fields to be disabled
+ * @param array $hidden    Any webservice fields to not hide from the form
+ * @param array $extra     Any extra fields to display for this instance
+ * @param array $info      Any extra fields to display for this webservice type
+ * @return array A pieform compatible array to build a Pieform from
+ */
+function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = array(), $hidden = array(), $extra = array(), $info = array()) {
     global $USER, $disabledopts;
 
     $server_details =
@@ -248,16 +359,20 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
                     ),
                 ),
             );
-    $server_details['elements']['consumer_key_html'] = array(
-        'title'        => get_string('consumer_key', 'auth.webservice'),
-        'type'         => 'html',
-        'value'        => $dbserver->consumer_key,
-    );
-    $server_details['elements']['consumer_secret'] = array(
-        'title'        => get_string('consumer_secret', 'auth.webservice'),
-        'type'         => 'html',
-        'value'        => $dbserver->consumer_secret,
-    );
+    if (!in_array('consumer_key_html', $hidden)) {
+        $server_details['elements']['consumer_key_html'] = array(
+            'title'        => get_string('consumer_key', 'auth.webservice'),
+            'type'         => 'html',
+            'value'        => $dbserver->consumer_key,
+        );
+    }
+    if (!in_array('consumer_secret', $hidden)) {
+        $server_details['elements']['consumer_secret'] = array(
+            'title'        => get_string('consumer_secret', 'auth.webservice'),
+            'type'         => 'html',
+            'value'        => $dbserver->consumer_secret,
+        );
+    }
 
     $server_details['elements']['application_title'] = array(
         'title'        => get_string('application_title', 'auth.webservice'),
@@ -291,27 +406,30 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
             'type'         => 'html',
         );
     }
-
-    $server_details['elements']['application_uri'] = array(
-        'title'        => get_string('application_uri', 'auth.webservice'),
-        'defaultvalue' =>  $dbserver->application_uri,
-        'type'         => 'text',
-        'disabled'     => (isset($disabled['application_uri']) ? true : false),
-        'help'         => true,
-    );
-
-    $server_details['elements']['callback_uri'] = array(
-        'title'        => get_string('callback', 'auth.webservice'),
-        'defaultvalue' =>  $dbserver->callback_uri,
-        'type'         => 'text',
-        'disabled'     => (isset($disabled['callback_uri']) ? true : false),
-    );
+    if (!in_array('application_uri', $hidden)) {
+        $server_details['elements']['application_uri'] = array(
+            'title'        => get_string('application_uri', 'auth.webservice'),
+            'defaultvalue' =>  $dbserver->application_uri,
+            'type'         => 'text',
+            'disabled'     => (isset($disabled['application_uri']) ? true : false),
+            'help'         => true,
+        );
+    }
+    if (!in_array('callback_uri', $hidden)) {
+        $server_details['elements']['callback_uri'] = array(
+            'title'        => get_string('callback', 'auth.webservice'),
+            'defaultvalue' =>  $dbserver->callback_uri,
+            'type'         => 'text',
+            'disabled'     => (isset($disabled['callback_uri']) ? true : false),
+        );
+    }
 
     $server_details['elements']['institution'] = array(
         'type'         => 'select',
         'title'        => get_string('institution'),
         'options'      => $iopts,
         'defaultvalue' => trim($dbserver->institution),
+        'disabled'     => (isset($disabled['institution']) ? true : false),
     );
 
     $server_details['elements']['service'] = array(
@@ -319,14 +437,17 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
         'title'        => get_string('servicename', 'auth.webservice'),
         'options'      => $sopts,
         'defaultvalue' => $dbserver->externalserviceid,
+        'disabled'     => (isset($disabled['service']) ? true : false),
     );
 
     $server_details['elements']['enabled'] = array(
         'title'        => get_string('enabled'),
-        'defaultvalue' => (($dbserver->enabled == 1) ? 'checked' : ''),
+        'defaultvalue' => (($dbserver->enabled == 1) ? true : false),
         'type'         => 'switchbox',
-        'disabled'     => true,
     );
+
+    $server_details['elements'] = array_merge($server_details['elements'], $extra);
+    $server_details['elements'] = array_merge($server_details['elements'], $info);
 
     $functions = get_records_array('external_services_functions', 'externalserviceid', $dbserver->externalserviceid);
     $function_list = array();
@@ -338,7 +459,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
     }
     $server_details['elements']['functions'] = array(
         'title'        => get_string('functions', 'auth.webservice'),
-        'value'        => '<div class="align-with-input">' . implode(', ', $function_list) . '</div>',
+        'value'        => '<div class="align-with-input-desc">' . implode(', ', $function_list) . '</div>',
         'type'         => 'html',
     );
 
@@ -346,7 +467,7 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
     $server_details['elements']['disabledopts'] = array(
         'type' => 'html',
         'value' => '<script>var disopts = ' . $disabledoptstr . ';
-                            var selectedservice;
+        var selectedservice;
         jQuery(function($) {
             function update_service(service) {
                $("#webservice_oauth_server input").each(function() {
@@ -374,18 +495,18 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
     );
 
     $elements = array(
-            // fieldset for managing service function list
-            'token_details' => array(
-                    'type' => 'fieldset',
-                    'class' => 'with-padding',
-                    'elements' => array(
-                        'sflist' => array(
-                            'value' =>     pieform($server_details),
-                        )
-                    ),
-                    'collapsible' => false,
-                ),
-        );
+        // fieldset for managing service function list
+        'token_details' => array(
+            'type' => 'fieldset',
+            'class' => 'with-padding',
+            'elements' => array(
+                'sflist' => array(
+                    'value' =>     pieform($server_details),
+                )
+            ),
+            'collapsible' => false,
+        ),
+    );
 
     $form = array(
         'renderer' => 'div',
@@ -399,6 +520,13 @@ function webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled = arra
     return $form;
 }
 
+/**
+ * The form array for making the server list
+ *
+ * @param array $sopts     Service options
+ * @param array $iopts     Institution options
+ * @return array $form A pieform compatible array for building a Pieform
+ */
 function webservice_server_list_form($sopts, $iopts) {
     global $USER, $THEME;
 
@@ -436,55 +564,55 @@ function webservice_server_list_form($sopts, $iopts) {
             'successcallback' => 'webservices_tokens_submit',
             'renderer'   => 'multicolumntable',
             'elements'   => array(
-                            'application' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('application', 'auth.webservice'),
-                            ),
-                            'username' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('owner', 'auth.webservice'),
-                            ),
-                            'consumer_key' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('consumer_key', 'auth.webservice'),
-                            ),
-                            'consumer_secret' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('consumer_secret', 'auth.webservice'),
-                            ),
-                            'enabled' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('enabled'),
-                            ),
-                            'institution' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type'  => 'html',
-                                'value' => get_string('institution'),
-                            ),
-                            'actions' => array(
-                                'title' => ' ',
-                                'datatable' => true,
-                                'type' => 'html',
-                                'value' => '',
-                            ),
-                        ),
-            );
+                'application' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type'  => 'html',
+                    'value' => get_string('application', 'auth.webservice'),
+                ),
+                'username' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type'  => 'html',
+                    'value' => get_string('owner', 'auth.webservice'),
+                ),
+                'consumer_key' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type'  => 'html',
+                    'value' => get_string('consumer_key', 'auth.webservice'),
+                ),
+                'consumer_secret' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type'  => 'html',
+                    'value' => get_string('consumer_secret', 'auth.webservice'),
+                ),
+                'enabled' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type'  => 'html',
+                    'value' => get_string('enabled'),
+                ),
+                'institution' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type'  => 'html',
+                    'value' => get_string('institution'),
+                ),
+                'actions' => array(
+                    'title' => ' ',
+                    'datatable' => true,
+                    'type' => 'html',
+                    'value' => '',
+                ),
+            ),
+        );
         foreach ($dbconsumers as $consumer) {
             $form['elements']['id' . $consumer->id . '_application'] = array(
                 'value'        =>  $consumer->application_title,
                 'type'         => 'html',
-                'key'        => $consumer->consumer_key,
+                'key'          => $consumer->consumer_key,
             );
 
             if ($USER->is_admin_for_user($consumer->userid)) {
@@ -496,17 +624,17 @@ function webservice_server_list_form($sopts, $iopts) {
             $form['elements']['id' . $consumer->id . '_username'] = array(
                 'value'        =>  '<a href="' . $user_url . '">' . $consumer->username . '</a>',
                 'type'         => 'html',
-                'key'        => $consumer->consumer_key,
+                'key'          => $consumer->consumer_key,
             );
             $form['elements']['id' . $consumer->id . '_consumer_key'] = array(
                 'value'        =>  $consumer->consumer_key,
                 'type'         => 'html',
-                'key'        => $consumer->consumer_key,
+                'key'          => $consumer->consumer_key,
             );
             $form['elements']['id' . $consumer->id . '_consumer_secret'] = array(
                 'value'        =>  $consumer->consumer_secret,
                 'type'         => 'html',
-                'key'        => $consumer->consumer_key,
+                'key'          => $consumer->consumer_key,
             );
             $form['elements']['id' . $consumer->id . '_enabled'] = array(
                 'value' => (
@@ -516,12 +644,12 @@ function webservice_server_list_form($sopts, $iopts) {
                            ),
                 'type'         => 'html',
                 'class'        => 'text-center',
-                'key'        => $consumer->consumer_key,
+                'key'          => $consumer->consumer_key,
             );
             $form['elements']['id' . $consumer->id . '_institution'] = array(
                 'value'        => institution_display_name($consumer->institution),
                 'type'         => 'html',
-                'key'        => $consumer->consumer_key,
+                'key'          => $consumer->consumer_key,
             );
 
             // edit and delete buttons
@@ -540,7 +668,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'type' => 'button',
                                 'usebuttontag' => true,
                                 'class' => 'btn-secondary btn-sm',
-                                'value' => '<span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('editspecific', 'mahara', $consumer->application_title) . '</span>',
+                                'value' => '<span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>',
                                 'elementtitle' => get_string('editspecific', 'mahara', $consumer->application_title),
                             ),
                         ),
@@ -561,7 +689,7 @@ function webservice_server_list_form($sopts, $iopts) {
                                 'usebuttontag' => true,
                                 'class' => 'btn-secondary btn-sm',
                                 'confirm' => get_string('confirmdeleteexternalapp', 'auth.webservice'),
-                                'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">'.get_string('deletespecific', 'mahara', $consumer->application_title).'</span>',
+                                'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>',
                                 'elementtitle' => get_string('deletespecific', 'mahara', $consumer->application_title),
                             ),
                         ),
@@ -680,11 +808,19 @@ function webservice_server_list_form($sopts, $iopts) {
     return $form;
 }
 
+/**
+ * The form array for making the server config form
+ *
+ * @param integer $serverid   ID of service record
+ *
+ * @return array $form A pieform compatible array for building a Pieform
+ */
 function webservice_server_config_form($serverid) {
     global $USER, $THEME;
 
     list($moduletype, $module) = get_module_from_serverid($serverid);
 
+    $form = array();
     if (safe_require_plugin($moduletype, $module)) {
 
         $elements = call_static_method(generate_class_name($moduletype, $module), 'get_oauth_service_config_options', $serverid);
@@ -704,20 +840,21 @@ function webservice_server_config_form($serverid) {
         $fieldset = array(
             // fieldset for managing service function list
             'token_details' => array(
-                    'type' => 'fieldset',
-                    'class' => 'with-padding',
-                    'elements' => array(
-                        'sflist' => array(
-                            'value' =>  pieform(array(
-                                'name' => 'oauthconfigoptions',
-                                'plugintype' => $moduletype,
-                                'pluginname' => $module,
-                                'successcallback'  => 'webservice_server_config_submit',
-                                'elements' => $elements)),
-                        )
-                    ),
-                    'collapsible' => false,
+                'type' => 'fieldset',
+                'class' => 'with-padding',
+                'elements' => array(
+                    'sflist' => array(
+                        'value' =>  pieform(array(
+                            'name' => 'oauthconfigoptions',
+                            'plugintype' => $moduletype,
+                            'pluginname' => $module,
+                            'successcallback'  => 'webservice_server_config_submit',
+                            'elements' => $elements
+                        )),
+                    )
                 ),
+                'collapsible' => false,
+            ),
         );
 
         $form = array(
@@ -726,10 +863,16 @@ function webservice_server_config_form($serverid) {
             'elements' => $fieldset,
         );
 
-        return $form;
     }
+    return $form;
 }
 
+/**
+ * Submit the webservice server config form
+ *
+ * @param Pieform $form The pieform being validated
+ * @param array $values data entered on pieform
+ */
 function webservice_server_config_submit(Pieform $form, $values) {
 
     $serverid = $values['id'];
@@ -745,7 +888,14 @@ function webservice_server_config_submit(Pieform $form, $values) {
     return false;
 }
 
-
+/**
+ * Update values in the external application configuration
+ *
+ * @param integer $serverid External server ID
+ * @param string $key   The configuration field
+ * @param string $value The configuration value
+ * @return boolean
+ */
 function update_oauth_server_config($serverid, $key, $value) {
 
     $dbvalue = get_field('oauth_server_config', 'value', 'oauthserverregistryid', $serverid, 'field', $key);
@@ -769,6 +919,12 @@ function update_oauth_server_config($serverid, $key, $value) {
     return false;
 }
 
+/**
+ * Get the external application service plugintype and pluginname based on server id
+ *
+ * @param integer $serverid The id of the external service
+ * @return array
+ */
 function get_module_from_serverid($serverid) {
 
     $consumer = get_record_sql('
@@ -785,6 +941,18 @@ function get_module_from_serverid($serverid) {
     return array('auth', 'webservice');
 }
 
+function get_module_from_external_service($serviceid) {
+
+    $consumer = get_record_sql('
+            SELECT es.id, es.component
+            FROM {external_services} es
+            WHERE es.id = ? ', array($serviceid));
+    if (substr_count($consumer->component, '/') > 0) {
+        return explode("/", $consumer->component);
+    }
+    return array('auth', 'webservice');
+}
+
 /**
  * Translate the supplied user id to it's display name
  *
@@ -793,4 +961,27 @@ function get_module_from_serverid($serverid) {
  */
 function translate_ids_to_names(array $ids) {
     return translate_user_ids_to_names($ids);
+}
+
+/**
+ * Check service has OAuth configured. This includes checking custom apps that may be
+ * using LTI functions.
+ * @param object $serviceid ID of the web service group that the external app is being registered with
+ * @return bool Whether or not the web service group has OAuth configured
+ */
+function has_oauth($serviceid) {
+    // Get the classname for each of the functions added to the service
+    $service_classnames = get_column_sql("
+        SELECT DISTINCT classname FROM {external_functions} WHERE name IN (
+            SELECT functionname FROM {external_services_functions} WHERE externalserviceid = ?
+    )", array($serviceid));
+
+    // Check if any of those classnames have OAuth configured
+    $service_oauth = false;
+    foreach ($service_classnames as $classname) {
+        if ($classname == 'module_lti_launch' || $classname == 'module_lti_advantage_launch') {
+            $service_oauth = true;
+        }
+    }
+    return $service_oauth;
 }

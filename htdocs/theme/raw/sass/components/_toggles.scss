@@ -15,6 +15,7 @@
     float: right;
     border: 0;
     cursor: pointer;
+    text-decoration: none;
 
     &:hover,
     &:focus {
@@ -81,48 +82,6 @@
             &:focus {
                 color: $navbar-toggle-hover-color;
                 background-color: $navbar-toggle-hover-bg;
-            }
-        }
-    }
-}
-
-// navbar menu children toggles
-.nav {
-    .navbar-showchildren {
-        color: $navbar-inverse-toggle-color;
-        background: $navbar-inverse-toggle-bg;
-        border-radius: 0;
-        border: 0;
-        position: absolute;
-        right: $spacing-base; // 10px
-        top: 0.4375rem; // 7px
-        height: 2.375rem; // 38px;
-        width: 2.625rem; // 42px;
-        margin: 0;
-        transition-duration: 0.3s;
-        cursor: pointer;
-
-        &:hover,
-        &:focus {
-            background: $navbar-inverse-toggle-hover-bg;
-            .icon {
-                color: $navbar-inverse-toggle-hover-color;
-            }
-        }
-        .icon {
-            transform: rotate(-180deg);
-            transition-duration: 0.3s;
-        }
-        &.collapsed {
-            .icon {
-                transform: rotate(0deg);
-                transition-duration: 0.3s;
-            }
-        }
-        .active & {
-            background-color: $navbar-inverse-toggle-active-bg;
-            .icon {
-                color: $navbar-inverse-toggle-active-color;
             }
         }
     }

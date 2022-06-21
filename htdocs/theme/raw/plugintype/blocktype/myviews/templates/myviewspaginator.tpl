@@ -6,7 +6,7 @@
 
         {if $view.collid}
         <span class="text-small text-midtone">
-            ({str tag=nviews section=view arg1=$view.numpages})
+            ({str tag=nviews1 section=view arg1=$view.numpages})
         </span>
         {/if}
 

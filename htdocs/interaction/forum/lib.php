@@ -1,5 +1,6 @@
 <?php
 /**
+ * Forum interaction plugin
  *
  * @package    mahara
  * @subpackage interaction-forum
@@ -11,7 +12,7 @@
 
 require_once('activity.php');
 
-// Contstants for objectionable content reporting events.
+// Constants for objectionable content reporting events.
 define('REPORT_OBJECTIONABLE', 1);
 define('MAKE_NOT_OBJECTIONABLE', 2);
 define('DELETE_OBJECTIONABLE_POST', 3);
@@ -19,8 +20,18 @@ define('DELETE_OBJECTIONABLE_TOPIC', 4);
 define('POST_NEEDS_APPROVAL', 5);
 define('POST_REJECTED', 6);
 
+/**
+ * Plugin Interaction Forum class
+ */
 class PluginInteractionForum extends PluginInteraction {
 
+    /**
+     * Get the config form
+     *
+     * @param  mixed $group
+     * @param  mixed $instance OPTIONAL
+     * @return Pieform Form for forum config
+     */
     public static function instance_config_form($group, $instance=null) {
         global $USER;
         if (isset($instance)) {
@@ -169,6 +180,11 @@ class PluginInteractionForum extends PluginInteraction {
         return $form;
     }
 
+    /**
+     * JS intent configuration
+     *
+     * @return string JS markup
+     */
     public static function instance_config_js() {
         return <<<EOF
 jQuery(function($) {
@@ -211,6 +227,12 @@ jQuery(function($) {
 EOF;
     }
 
+    /**
+     * Save the config
+     *
+     * @param  mixed $instance
+     * @param  mixed $values
+     */
     public static function instance_config_save($instance, $values){
         global $USER;
         db_begin();
@@ -398,13 +420,25 @@ EOF;
         db_commit();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Plugin::postinst()
+     * @param  mixed $prevversion
+     */
     public static function postinst($prevversion) {
         // On a new installation, set post delay to 30 minutes
         if ($prevversion == 0) {
-            set_config_plugin('interaction', 'forum', 'postdelay', 30);
+            return set_config_plugin('interaction', 'forum', 'postdelay', 30);
         }
+        return true;
     }
 
+    /**
+     * Get the activity types
+     *
+     * @return array The list of associated activity types
+     */
     public static function get_activity_types() {
         return array(
             (object)array(
@@ -431,6 +465,9 @@ EOF;
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public static function get_cron() {
         return array(
             (object)array(
@@ -445,6 +482,9 @@ EOF;
         );
     }
 
+    /**
+     * Clean up forum notifications for new posts
+     */
     public static function clean_forum_notifications() {
         safe_require('notification', 'internal');
         PluginNotificationInternal::clean_notifications(array('newpost'));
@@ -470,6 +510,11 @@ EOF;
         );
     }
 
+    /**
+     * Get the menu items
+     *
+     * @return array List of menu items
+     */
     public static function menu_items() {
         return array(
             'engage/topics' => array(
@@ -481,6 +526,13 @@ EOF;
         );
     }
 
+    /**
+     * Get the menu items
+     *
+     * Get the menu items appropriate to the role held by the current logged in user for the given group.
+     * @param  object $group
+     * @return array List of menu items
+     */
     public static function group_menu_items($group) {
         global $USER;
         $role = group_user_access($group->id);
@@ -512,7 +564,8 @@ EOF;
      * When a user joins a group, subscribe them automatically to all forums
      * that should be subscribable
      *
-     * @param array $eventdata
+     * @param $event (used by get_event_subscriptions())
+     * @param $gm
      */
     public static function user_joined_group($event, $gm) {
         if ($forumids = get_column_sql("
@@ -533,6 +586,7 @@ EOF;
     /**
      * When a group is created, create one forum automatically.
      *
+     * @param $event (used by get_event_subscriptions())
      * @param array $eventdata
      */
     public static function create_default_forum($event, $eventdata) {
@@ -592,8 +646,10 @@ EOF;
         return $forums;
     }
 
-    /*
-     *  Check if we need to process new forum posts
+    /**
+     * Check if we need to process new forum posts
+     *
+     * @return bool
      */
     public static function interaction_forum_new_post_needs_to_run() {
         return (bool)count_records_sql('SELECT COUNT(*) FROM {interaction_forum_post} WHERE sent = 0 AND deleted = 0 AND approved = 1');
@@ -626,6 +682,12 @@ EOF;
         }
     }
 
+    /**
+     * Indicates whether this plugin can be disabled.
+     *
+     * @return bool
+     * @see Plugin::can_be_disabled()
+     */
     public static function can_be_disabled() {
         return false; //TODO until it either becomes an artefact plugin or stops being hardcoded everywhere
     }
@@ -643,10 +705,21 @@ EOF;
     }
 
 
+    /**
+     * Whether this plugin should show a config form on the Administration->Extensions screen.
+     *
+     * @see Plugin::has_config()
+     */
     public static function has_config() {
         return true;
     }
 
+    /**
+     *  If has_config() is true, this function should return a pieform array
+     *
+     * @see Plugin::get_config_options
+     * @return void
+     */
     public static function get_config_options() {
         $postdelay = (int) get_config_plugin('interaction', 'forum', 'postdelay');
 
@@ -664,13 +737,40 @@ EOF;
         );
     }
 
+    /**
+     * Save config options
+     *
+     * The Pieform success callback function the plugin's config form.
+     *
+     * @param  Pieform $form
+     * @param  array $values
+     * @see Plugin::save_config_options()
+     */
     public static function save_config_options(Pieform $form, $values) {
         set_config_plugin('interaction', 'forum', 'postdelay', $values['postdelay']);
     }
 
+    /**
+     * Get the active topics
+     *
+     * @param  int $limit
+     * @param  int $offset
+     * @param  string $category
+     * @param  array $forumids OPTIONAL
+     * @return array
+     * ```
+     * $result[
+     *  'count'  => int
+     *  'limit'  => int,
+     *  'offset' => int,
+     *  'data'   => array
+     * ]
+     * ```
+     */
     public static function get_active_topics($limit, $offset, $category, $forumids = array()) {
         global $USER;
 
+        $lastposts = '';
         if (is_postgres()) {
             $lastposts = '
                     SELECT DISTINCT ON (topic) topic, id, poster, subject, body, ctime
@@ -762,10 +862,18 @@ EOF;
         return $result;
     }
 
-    // Rewrite download links in the post body to add a post id parameter.
-    // Used in download.php to determine permission to view the file.
+    /**
+     * Rewrite download links in the post body to add a post id parameter.
+     * Used in download.php to determine permission to view the file.
+     */
     static $replacement_postid;
 
+    /**
+     * Replace the download link
+     *
+     * @param  mixed $matches
+     * @return string URL
+     */
     public static function replace_download_link($matches) {
         parse_str(html_entity_decode($matches[1]), $params);
         if (empty($params['file'])) {
@@ -780,6 +888,13 @@ EOF;
         return $url . '&post=' . (int) self::$replacement_postid;
     }
 
+    /**
+     * Prepare post body
+     *
+     * @param  mixed $body
+     * @param  int $postid
+     * @return array
+     */
     public static function prepare_post_body($body, $postid) {
         self::$replacement_postid = $postid;
         return preg_replace_callback(
@@ -792,6 +907,10 @@ EOF;
     /**
      * Given a post id & the id of an image artefact, check that the logged-in user
      * has permission to see the image in the context of the post.
+     *
+     * @param  ArtefactType|null $file
+     * @param  int $postid
+     * @return bool
      */
     public static function can_see_attached_file($file, $postid) {
         global $USER;
@@ -855,8 +974,8 @@ EOF;
     /**
      * Return number of forums associated to a group
      *
-     * @param  $groupid: the group ID number
-     * @return the number of forums
+     * @param  $groupid The group ID number
+     * @return int|null The number of forums
      *     OR null if invalid $groupid
      */
     public static function count_group_forums($groupid) {
@@ -869,9 +988,8 @@ EOF;
     /**
      * Return number of topics associated to a group
      *
-     * @param  $groupid: the group ID number
-     * @return the number of topics
-     *     OR null if invalid $groupid
+     * @param  mixed $groupid the group ID number
+     * @return int|null the number of topics
      */
     public static function count_group_topics($groupid) {
         if ($groupid && $groupid > 0) {
@@ -887,9 +1005,8 @@ EOF;
     /**
      * Return number of posts associated to a group
      *
-     * @param  $groupid: the group ID number
-     * @return the number of posts
-     *     OR null if invalid $groupid
+     * @param  mixed $groupid the group ID number
+     * @return int|null the number of posts associated to a group
      */
     public static function count_group_posts($groupid) {
         if ($groupid && $groupid > 0) {
@@ -917,8 +1034,14 @@ EOF;
     }
 }
 
+/**
+ * Interaction instance extension to manage the forum plugin
+ */
 class InteractionForumInstance extends InteractionInstance {
 
+    /**
+     * {@inheritDoc}
+     */
     public static function get_plugin() {
         return 'forum';
     }
@@ -1023,11 +1146,15 @@ class InteractionForumInstance extends InteractionInstance {
    }
 }
 
+/**
+ *  Activity plugin for new forum posts
+ */
 class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
 
     protected $postid;
     protected $temp;
     protected $attachments = array();
+    protected $customheaders = array();
 
     public function __construct($data, $cron=false) {
         parent::__construct($data, $cron);
@@ -1234,6 +1361,9 @@ class ActivityTypeInteractionForumNewPost extends ActivityTypePlugin {
     }
 }
 
+/**
+ * Activity plugin for reporting an Interaction Form Post
+ */
 class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
 
     protected $postid;
@@ -1346,7 +1476,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
 
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
 
         $this->temp = (object) array('post' => $post);
@@ -1389,6 +1519,9 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
     }
 }
 
+/**
+ * Activity Type Interaction Forum Postmoderation class
+ */
 class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
 
     protected $topicid;
@@ -1466,7 +1599,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
             );
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
 
     }
@@ -1493,7 +1626,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
             );
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
         return $return;
     }
@@ -1521,7 +1654,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
             );
         }
         else {
-            throw new SystemException();
+            throw new SystemException(get_string('unrecoverableerror'), 'error');
         }
         return $return;
     }
@@ -1607,12 +1740,11 @@ function get_forum_moderators($forumid) {
 /**
  * Is a user allowed to edit a post
  *
- * @param boolean $moderator
  * @param int $poster the the id of the user who created the post
  * @param int $posttime the time the post was made
- * @param int $userid optional id of user, defaults to logged in user
- *
- * @returns boolean
+ * @param int $userid OPTIONAL id of user, defaults to logged in user
+ * @param mixed $verifydelay OPTIONAL
+ * @return bool
  */
 function user_can_edit_post($poster, $posttime, $userid=null, $verifydelay=true) {
     if (empty($userid)) {
@@ -1632,7 +1764,7 @@ function user_can_edit_post($poster, $posttime, $userid=null, $verifydelay=true)
  * @param string $relative the format (for strftime) for a relative date (with %v where yesterday/today should be)
  * @param string $absolute the format (for strftime) for an absolute date
  * @param int $time1 the time to display
- * @param int $time2 optional the time $time1 is relative to, defaults to current time
+ * @param int $time2 OPTIONAL the time $time1 is relative to, defaults to current time
  */
 function relative_date($relative, $absolute, $time1, $time2=null) {
     if ($time2==null) {
@@ -1655,6 +1787,12 @@ function relative_date($relative, $absolute, $time1, $time2=null) {
 
 }
 
+/**
+ * Validate a forum subscription
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function subscribe_forum_validate(Pieform $form, $values) {
     if (!is_logged_in()) {
         throw new AccessDeniedException();
@@ -1666,11 +1804,11 @@ function subscribe_forum_validate(Pieform $form, $values) {
     }
 }
 
-/*
+/**
  * Subscribes a user to a forum and unsubscribes from any topic inside the forum
  *
- * @param int $user the ID of the user
- * @param int $forum the ID of the forum
+ * @param int $user The ID of the user
+ * @param int $forum The ID of the forum
  */
 
 function subscribe_user_to_forum($user, $forum) {
@@ -1696,6 +1834,12 @@ function subscribe_user_to_forum($user, $forum) {
     db_commit();
 }
 
+/**
+ * Submit a forum subscription
+ *
+ * @param  Pieform $form
+ * @param  mixed $values
+ */
 function subscribe_forum_submit(Pieform $form, $values) {
     global $USER, $SESSION;
 
@@ -1734,11 +1878,11 @@ function subscribe_forum_submit(Pieform $form, $values) {
     }
 }
 
-/*
+/**
  * Return the subject for the topic
  *
- * @param int $postid the ID of the post
- *
+ * @param int $postid The ID of the post
+ * @param bool $isparent OPTIONAL
  * @return string the subject
  */
 

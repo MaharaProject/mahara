@@ -1,10 +1,10 @@
 {include file="header.tpl"}
 {if $canedit}
     <div class="btn-top-right btn-group btn-group-top">
-        <a class="btn btn-secondary settings" href="{$newtasklink}">
+        <button class="btn btn-secondary settings" type="button" data-url="{$newtasklink}">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
             {str section="artefact.plans" tag="newtask"}
-        </a>
+        </button>
     </div>
 {/if}
 <div id="planswrap" class="plan-wrapper view-container">

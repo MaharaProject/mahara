@@ -21,6 +21,7 @@ class PluginModuleMonitor extends PluginModule {
     const type_ldaplookup         = 'ldaplookup';
     const type_ldapsuspendedusers = 'ldapsuspendedusers';
     const type_elasticsearch      = 'elasticsearch';
+    const type_search             = 'search';
 
     /**
      * API-Function: Is the plugin activated or not?
@@ -121,6 +122,22 @@ class PluginModuleMonitor extends PluginModule {
                 'disabled' => in_array('plugin_module_monitor_allowedips', $OVERRIDDEN),
             ),
         );
+        // Check Monitor Types for module type specific config.
+        $monitor_types = self::get_list_of_types();
+        foreach($monitor_types as $type) {
+            $class_name = "MonitorType_{$type}";
+            require_once(get_config('docroot') . "module/monitor/type/{$class_name}.php");
+            if (method_exists($class_name, 'has_config') && $class_name::has_config()) {
+                $elements[$class_name] = [
+                    'type' => 'fieldset',
+                    'legend' => get_string('config' . strtolower($class_name) . 'legend', 'module.monitor'),
+                    'elements' => $class_name::config_elements(),
+                    'collapsible' => true,
+                    'collapsed' => false,
+                ];
+            }
+        }
+
         return array('elements' => $elements);
     }
 
@@ -155,6 +172,7 @@ class PluginModuleMonitor extends PluginModule {
                 $value = '2';
                 break;
 
+            case 'configmonitortype_searchhoursuntilold':
             case 'hourstoconsiderelasticsearchrecordold':
                 $value = '1';
                 break;
@@ -182,6 +200,17 @@ class PluginModuleMonitor extends PluginModule {
         set_config_plugin('module', 'monitor', 'hourstoconsiderelasticsearchrecordold', $values['hourstoconsiderelasticsearchrecordold']);
         set_config_plugin('module', 'monitor', 'ldapsuspendeduserspercentage', $values['ldapsuspendeduserspercentage']);
         set_config_plugin('module', 'monitor', 'allowedips', implode(',', explode("\n", $values['allowedips'])));
+        // Check each Monitor Type for config saving.
+        $monitor_types = self::get_list_of_types();
+        foreach($monitor_types as $type) {
+            $class_name = "MonitorType_{$type}";
+            require_once(get_config('docroot') . "module/monitor/type/{$class_name}.php");
+            if (method_exists($class_name, 'has_config') && $class_name::has_config()) {
+                if (method_exists($class_name, 'save_config_options')) {
+                    $class_name::save_config_options($values);
+                }
+            }
+        }
     }
 
     /**
@@ -195,6 +224,7 @@ class PluginModuleMonitor extends PluginModule {
             set_config_plugin('module', 'monitor', 'hourstoconsiderelasticsearchrecordold', self::get_default_config_value('hourstoconsiderelasticsearchrecordold'));
             set_config_plugin('module', 'monitor', 'ldapsuspendeduserspercentage', self::get_default_config_value('ldapsuspendeduserspercentage'));
         }
+        return true;
     }
 
     /**
@@ -221,6 +251,11 @@ class PluginModuleMonitor extends PluginModule {
             if (get_config('series') > 15.04) {
                 $types[] = self::type_elasticsearch;
             }
+        }
+        if (does_search_plugin_have('monitor_support')) {
+            // The currently selected search plugin has monitor support. Add it
+            // to the list of types.
+            $types[] = self::type_search;
         }
         return $types;
     }

@@ -73,7 +73,6 @@ $string['institutionviews'] = 'Institution pages';
 $string['institutionviewscollections'] = 'Institution pages and collections';
 $string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these people access to the page?';
 $string['viewdeleted'] = 'Page deleted';
-$string['viewsubmitted'] = 'Page submitted';
 $string['deletethisview'] = 'Delete this page';
 $string['submitthisviewto1'] = 'Submit this page for assessment to';
 $string['submitthiscollectionto1'] = 'Submit this collection for assessment to';
@@ -84,29 +83,41 @@ $string['accessbetweendates3'] = 'Nobody can see this page before %s or after %s
 $string['artefactsinthisview'] = 'Artefacts in this page';
 $string['whocanseethisview'] = 'Who can see this page';
 $string['pending'] = 'Portfolio under review';
-$string['view'] = 'page';
 $string['panelmenu'] = 'Menu';
 $string['vieworcollection'] = 'page or collection';
-$string['views'] = 'pages';
 $string['viewsandcollections'] = 'pages and collections';
+$string['nviewsandcollections'] = array(
+    '%s page or collection',
+    '%s pages and collections'
+);
+$string['view'] = 'page';
+$string['views'] = 'pages';
+$string['nviews1'] = array(
+    '%s page',
+    '%s pages'
+);
 $string['View'] = 'Page';
 $string['Views'] = 'Pages';
 $string['portfolio'] = 'portfolio';
 $string['portfolios'] = 'portfolios';
+$string['nportfolios'] = array(
+    '%s portfolio',
+    '%s portfolios'
+);
 $string['Viewscollections'] = 'Pages and collections';
 $string['viewsubmittedtogroup1'] = 'This portfolio has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon1'] = 'This portfolio was submitted to <a href="%s">%s</a> on %s.';
 $string['viewsubmittedtogroupgrade'] = 'This portfolio was submitted to the assignment <a href="%s">"%s"</a> in "%s" on %s.';
+$string['viewsubmittedtohoston'] = 'This portfolio was submitted on %s.';
+$string['viewsubmittedtohost'] = 'This portfolio has been submitted for assessment.';
 $string['collectionsubmittedtogroup'] = 'This collection has been submitted to <a href="%s">%s</a>.';
 $string['collectionsubmittedtogroupon'] = 'This collection was submitted to <a href="%s">%s</a> on %s.';
 $string['collectionsubmittedtogroupgrade'] = 'This collection was submitted to the assignment <a href="%s">"%s"</a> in "%s" on %s.';
+$string['collectionsubmittedtohost'] = 'This collection has been submitted for assessment.';
+$string['collectionsubmittedtohoston'] = 'This collection was submitted on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
 $string['noviews1'] = 'No pages or collections.';
-$string['nviews'] = array(
-    '1 page',
-    '%s pages',
-);
 $string['youhavenoviews1'] = 'You don\'t have any pages or collections.';
 $string['youhaventcreatedanyviewsyet'] = "You have not created any pages yet.";
 $string['youhavenviews'] = array(
@@ -135,7 +146,6 @@ $string['listedinpages'] = 'Listed in pages';
 $string['public'] = 'Public';
 $string['registeredusers'] = 'Registered people';
 $string['friends'] = 'Friends';
-$string['groups'] = 'Groups';
 $string['users'] = 'People';
 $string['friend'] = 'Friend';
 $string['group'] = 'Group';
@@ -145,9 +155,9 @@ $string['nospecialrole'] = 'No special role';
 $string['peer'] = 'Peer';
 $string['manager'] = 'Manager';
 $string['peermanager'] = 'Peer and manager';
-$string['verifier'] = 'Verifier';
+$string['verifier'] = 'Reviewer';
 
-// secret url
+// Secret url
 $string['token'] = 'Secret URL';
 $string['editsecreturlaccess'] = 'Edit secret URL access';
 $string['editsecreturlaccessfor'] = 'Edit secret URL access (ID %s)';
@@ -195,7 +205,6 @@ $string['Createdon'] = 'Created on';
 $string['Added'] = 'Added';
 $string['share'] = 'Share';
 $string['sharedbyme'] = 'Shared by me';
-$string['sharewith'] = 'Share with';
 $string['whosharewith'] = 'Who do you want to share with?';
 $string['accesslist'] = 'Access list';
 $string['defaultaccesslistmessage'] = 'Nobody besides you can view your selected pages / collections. Add people to give them access.';
@@ -224,6 +233,7 @@ $string['shareallwithmaximum'] = array(
 $string['submitconfirm'] = 'If you submit \'%s\' to %s for assessment, you will not be able to edit its contents until your tutor has finished marking it. Are you sure you want to submit now?';
 $string['viewsubmitted'] = 'Page submitted';
 $string['collectionsubmitted'] = 'Collection submitted';
+$string['viewnotsubmitted'] = 'Portfolio not currently submitted';
 $string['collectionviewsalreadysubmitted'] = "Some pages in this collection have already been submitted: \"%s\"\nYou cannot submit the collection until they have been released, or removed from the collection.";
 $string['viewalreadysubmitted'] = 'This page has already been submitted to another assignment or group.';
 $string['collectionalreadysubmitted'] = 'This collection has already been submitted to another assignment or group.';
@@ -268,6 +278,7 @@ $string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
 
 $string['viewcreatedsuccessfully'] = 'Page created successfully';
 $string['viewaccesseditedsuccessfully'] = 'Page access saved successfully';
+$string['accesssavedsuccessfully'] = 'Access settings saved successfully';
 $string['viewsavedsuccessfully'] = 'Page saved successfully';
 $string['savedtotimeline'] = 'Saved to timeline';
 $string['updatedaccessfornumviews1'] = array(
@@ -311,13 +322,12 @@ $string['err.removecolumn'] = 'Failed to delete column';
 $string['success.changetheme'] = 'Theme updated successfully';
 $string['err.changetheme'] = 'Could not update theme';
 
-$string['confirmcloseblockinstance'] = 'Are you sure you wish to continue without saving your changes?';
+$string['confirmcloseblockinstance'] = 'Are you sure you want to continue without saving your changes?';
 $string['confirmdeleteblockinstance'] = 'Are you sure you wish to delete this block?';
 $string['blockinstanceconfiguredsuccessfully'] = 'Block configured successfully';
 $string['blockconfigurationrenderingerror'] = 'Configuration failed because the block could not be rendered.';
 
-$string['blocksintructionnoajax'] = 'Select a block and choose where to add it to your page. You can position a block using the arrow buttons in its titlebar.';
-$string['blocksinstructionajaxlive1'] = 'This area shows a preview of what your page looks like. Changes are saved automatically.<br>Drag \'Add a new block\' onto the page to add one. You can then choose what type of block it will be. You can then also drag blocks around the page to change their position.';
+$string['blocksinstructionajaxlive2'] = 'This is a preview of your page. Changes are saved automatically.<br>Drag the \'Plus\' button onto the page to create a new block. Choose what type of block it will be. Drag blocks around the page to change their position.';
 $string['blockchangedsuccess'] = "Changed the placeholder block to a '%s' block successfully.";
 $string['blockchangederror'] = "Changing the block to a '%s' block failed.";
 $string['blockchangedbacksuccess'] = "Changed the block back to a placeholder block.";
@@ -331,8 +341,9 @@ $string['nrrows'] = array(
     '%s row',
     '%s rows',
 );
-$string['addnewblock'] = 'Drag to add a new block';
-$string['addnewblockaccessibility'] = 'Click to add a new block';
+$string['addnewblockdrag'] = 'Drag to add a new block';
+$string['addnewblockaccessible'] = 'Click to add a new block';
+$string['addnewblock'] = 'Add new block';
 $string['addnewblockhere'] = 'Add new block here';
 $string['add'] = 'Add';
 $string['addcolumn'] = 'Add column';
@@ -341,8 +352,8 @@ $string['removecolumn'] = 'Remove this column';
 $string['moveblock2'] = 'Move block';
 $string['moveblock'] = 'Move %s block';
 $string['movethisblock'] = 'Move this block';
-$string['Configure'] = 'Configure';
-$string['configureblock2'] = 'Configure block';
+$string['Configure1'] = 'Edit';
+$string['configureblock3'] = 'Edit block';
 $string['configureblock1'] = 'Configure %s block (ID %s)';
 $string['configurethisblock1'] = 'Configure this block (ID %s)';
 $string['closeconfiguration'] = 'Close configuration';
@@ -412,7 +423,7 @@ $string['choosetemplatepageandcollectiondescription'] = '<p>Here you can search 
 $string['choosetemplategrouppageandcollectiondescription'] = '<p>Here you can search through the pages that this group is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Groups cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
 $string['choosetemplateinstitutionpageandcollectiondescription'] = '<p>Here you can search through the pages that this institution is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Institutions cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
 $string['choosetemplatesitepageandcollectiondescription1'] = '<p>Here you can search through the pages that can be copied on the site level as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Currently, it is not possible to have copies of journals, journal entries, plans and résumé information in site-level pages.</p>';
-$string['copiedblocksandartefactsfromtemplate'] = 'Copied %d blocks and %d artefacts from %s';
+
 $string['filescopiedfromviewtemplate'] = 'Files copied from %s';
 $string['viewfilesdirname'] = 'viewfiles';
 $string['viewfilesdirdesc'] = 'Files from copied pages';
@@ -471,19 +482,19 @@ $string['Profile'] = 'Profile';
 $string['profile'] = 'profile'; // for stats
 $string['Portfolio'] = 'Portfolio';
 $string['Portfolios'] = 'Portfolios';
+$string['Pages'] = 'Pages';
 $string['Collection'] = 'Collection';
 $string['Grouphomepage'] = 'Group homepage';
 $string['grouphomepage'] = 'group homepage'; // for stats
-$string['progress'] = 'Progress completion'; // for stats
-$string['Progress'] = 'Progress completion'; // for stats
-$string['progress'] = 'progress'; // for stats
+$string['Progress'] = 'Portfolio completion'; // for stats
+$string['progress'] = 'Portfolio completion'; // for stats
 $string['grouphomepagedescription'] = 'The group homepage contains the content that appears on the "About" tab for this group';
 $string['pageaccessrules'] = 'Page access rules';
 
 // Shared views
 $string['sharedwithme'] = 'Shared with me';
 $string['sharedwithellipsis'] = 'Shared with...';
-$string['sharedwithdescription'] = 'Select which portfolios you wish to see in the block. You can choose with whom they need to have been shared by the portfolio author.';
+$string['sharedwithdescription'] = 'Select which portfolios from other people you want to see in this block.';
 $string['titleanddescription'] = 'Title, description, tags';
 $string['titleanddescriptionnotags'] = 'Title, description';
 $string['titleanddescriptionandtagsandowner'] = 'Title, description, tags, owner';
@@ -504,6 +515,7 @@ $string['entersearchquery'] = 'Enter search query';
 $string['allow'] = 'Allow';
 $string['comments'] = 'Comments';
 $string['moderate'] = 'Moderate';
+$string['review'] = 'Review';
 
 // Group reports
 $string['sharedby'] = 'Shared by';
@@ -556,9 +568,8 @@ $string['itemgrabbed'] = 'Item grabbed: %s';
 $string['itemdropped'] = 'Item dropped: %s';
 $string['itemreorder'] = 'List has been reordered. Item %s is now in position %s of %s';
 $string['reordercancelled'] = 'The reordering was cancelled';
-$string['accessibilitymodedescription'] = 'This page has the accessible layout enabled.
- In this mode, the page blocks will have full page width and will be displayed one after the other.
- To change a block position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys.';
+$string['accessibilitymodedescription1'] = 'This page has the accessible layout enabled. Click the \'Add new block\' button to add a block to the page.<br>
+In this mode, the page blocks have full page width and are displayed one after the other. To change a block\'s position, navigate to it, grab it with the \'Enter\' key, and move it up and down the list of blocks with the arrow keys on your keyboard.';
 $string['blocktypeis'] = ' %s blocktype';
 
 
