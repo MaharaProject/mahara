@@ -1,4 +1,11 @@
 <?php
+/**
+ * Custom form for Pieforms.
+ *
+ * @see htdocs/lib/pieforms/pieform.php:814
+ * @see htdocs/export/index.php:145
+ */
+
 
 function export_form_cell_html($element) {
     global $THEME;
@@ -20,6 +27,7 @@ EOF;
 
 function display_artefacts($array, $itemsinrow) {
     $grid = 12; // Bootstrap grid
+    $colwidth = '';
     if ($grid % $itemsinrow == 0) {
         $colwidth = $grid/$itemsinrow;
     }
@@ -34,11 +42,13 @@ function display_artefacts($array, $itemsinrow) {
     }
 }
 
+// @phpstan-ignore-next-line - Always set in pieform.php
 echo $form_tag;
 $leadstr = get_field('export_installed', 'active', 'name', 'pdf') ? 'exportarchivedescriptionpdf' : 'exportarchivedescription1';
 echo '<p class="lead">' . get_string($leadstr, 'export') . '</p>';
 echo '<h2 class="title">' . get_string('whatdoyouwanttoexport', 'export') . '</h2>';
 echo '<div class="element form-group form-group-no-border" id="whattoexport-buttons">';
+// @phpstan-ignore-next-line - Always set in pieform.php
 echo '<div>'. $elements['what']['html'] . '</div>';
 echo '</div>';
 
@@ -47,6 +57,7 @@ $body = array();
 $row = $col = 0;
 // Number of items in a row, this should be 1, 2, 3, 4, 6 or 12
 $itemsinrow = 3;
+// @phpstan-ignore-next-line - Always set in pieform.php
 foreach ($elements as $key => $element) {
     if (substr($key, 0, 5) == 'view_') {
         $body[$row][$col] = export_form_cell_html($element);
@@ -106,5 +117,6 @@ echo '</div>';
 echo '<div id="export_submit_container" class="form-group last">';
 echo $elements['submit']['html'];
 echo '</div>';
+// @phpstan-ignore-next-line - Always set in pieform.php
 echo $hidden_elements;
 echo '</form>';
