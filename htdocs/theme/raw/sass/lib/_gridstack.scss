@@ -76,7 +76,6 @@ $animation_speed: .3s !default;
       background-position: center;
       @include vendor(transform, rotate(45deg));
     }
-  }
 
     > .ui-resizable-se {
       @include vendor(transform, rotate(-45deg));
