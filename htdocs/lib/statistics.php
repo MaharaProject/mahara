@@ -2276,36 +2276,6 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     ";
 
     if (isset($extra['verifierfilter']) && !empty($extra['verifierfilter'])) {
-<<<<<<< HEAD
-        $configdatasql = ",
-         (SELECT el2.ctime AS verifieddate
-         FROM {event_log} el2, json_to_record(el2.data::json)
-         AS z(block text), json_to_record(z.block::json)
-         AS w(verified int, " . '"primary"' . " boolean)
-         WHERE el2.parentresourceid = c.id
-         AND el2.parentresourcetype = 'collection'
-         AND el2.event = 'verifiedprogress'
-         AND w.verified = 1
-         AND w.primary IS TRUE
-         ORDER BY el2.ctime LIMIT 1) ";
-
-        if ($extra['verifierfilter'] == 'none') {
-            $wheresql .= " AND NOT EXISTS (SELECT data FROM {event_log} WHERE cv.view = parentresourceid AND parentresourcetype = 'view' AND event = 'updateviewaccess' AND y.role = 'verifier') ";
-            $configdatasql = '';
-        }
-        else if ($extra['verifierfilter'] == 'current') {
-            $wheresql .= " AND (el.resourcetype = 'user' AND y.role = 'verifier') ";
-        }
-    }
-
-    $customsql = "
-    (SELECT z.apcstatusdate AS apcstartdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(apcstatusdate timestamp) WHERE el2.usr = u.id ORDER BY el2.ctime LIMIT 1),
-    el.ctime AS accessfromdate,
-    (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
-    (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1),
-    (SELECT el2.ctime AS accessrevokedbysystemdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.event = 'removeviewaccess' AND z.removedby = 'system') ORDER BY el2.ctime LIMIT 1) ";
-
-=======
         if (is_mysql()) {
             $configdatasql = ",
              (SELECT el2.ctime AS verifieddate
@@ -2341,17 +2311,20 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     }
     if (is_mysql()) {
         $customsql = "
+        (SELECT el2.apcstatusdate FROM { event_log } el2 WHERE el2.usr = u.id ORDER BY el2.ctime LIMIT 1) AS apcstartdate,
         el.ctime AS accessfromdate,
         (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el.data->>'$.rules.usr' = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'accessor' ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyaccessordate,
-        (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'owner') ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyauthordate ";
+        (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'owner') ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyauthordate,
+        (SELECT el2.ctime FROM { event_log } el2, WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.event = 'removeviewaccess' AND el2.data ->> '$.removedby' = 'system' ) ORDER BY el2.ctime LIMIT 1) as accessrevokedbysystemdate ";
     }
     else {
         $customsql = "
+        (SELECT z.apcstatusdate AS apcstartdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(apcstatusdate timestamp) WHERE el2.usr = u.id ORDER BY el2.ctime LIMIT 1),
         el.ctime AS accessfromdate,
         (SELECT el2.ctime AS accessrevokedbyaccessordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND y.usr = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'accessor' ORDER BY el2.ctime LIMIT 1),
-        (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1) ";
+        (SELECT el2.ctime AS accessrevokedbyauthordate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND z.removedby = 'owner') ORDER BY el2.ctime LIMIT 1),
+        (SELECT el2.ctime AS accessrevokedbysystemdate FROM {event_log} el2, json_to_record(el2.data::json) AS z(removedby text) WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.event = 'removeviewaccess' AND z.removedby = 'system') ORDER BY el2.ctime LIMIT 1) ";
     }
->>>>>>> merge_helper_branch
     if (!empty($configdatasql)) {
         $customsql .= $configdatasql;
     }
