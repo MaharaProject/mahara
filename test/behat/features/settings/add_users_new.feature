@@ -107,7 +107,7 @@ Scenario: Create people by csv (Bug 1426983)
   And I press "Submit"
   And I should see "Your new password has been saved"
   And I choose "Profile" from account menu
-  And the "Student ID" field should contain "64000005"
+  And the "Registration number" field should contain "64000005"
   And I follow "Contact information"
   And the "Town" field should contain "Stewarts River"
   And the "Mobile phone" field should contain "0491 570 110"

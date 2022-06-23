@@ -2328,16 +2328,7 @@ class LiveUser extends User {
     public function change_identity_to($userid) {
         $user = new User;
         $user->find_by_id($userid);
-        //CR1 Request: PCNZ customization Allow staff to login as other users, but not as site wide staff.
-        $stafflogin = $this->is_staff_for_user($user) && !$user->get('staff');
-        //Staff can't privilage escalate through an administrator.
-        $stafflogin = $stafflogin && !$user->is_admin_for_user($this);
-        //Or an parallel institutional admin.
-        $stafflogin = $stafflogin && !$user->is_institutional_admin();
-        //Users can still log into other staffmembers.
-
-        if ( !$this->can_masquerade_as($user) && !$stafflogin ) {
-            //End PCNZ customization.
+        if (!$this->can_masquerade_as($user, array('supportadmin'))) {
             throw new AccessDeniedException(get_string('loginasdenied', 'admin'));
         }
         $olduser = $this->get('parentuser');

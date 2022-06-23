@@ -21,16 +21,14 @@ if (isset($_POST['pieform_login'])) {
 
 if (param_integer('restore', 0)) {
     $id = $USER->restore_identity();
-    //PCNZ customization, Redirect user to a valid location when they log out of masquraded user.
-    $user = new User;
-    $user->find_by_id($id);
-    if ($USER->is_admin_for_user($user)) {
-        redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);
-    } else
-    {
-        redirect(get_config('wwwroot') . 'user/view.php?id=' . $id);
-    }
-    //End PCNZ customization.
+    redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);
+}
+
+// Check that we are not trying to masquerade as ourself
+$id = param_integer('id');
+if ($id === (int)$USER->get('id')) {
+    $SESSION->add_error_msg(get_string('nomasqueradeasself', 'admin'));
+    redirect(get_config('wwwroot') . 'admin/users/edit.php?id=' . $id);
 }
 
 /**

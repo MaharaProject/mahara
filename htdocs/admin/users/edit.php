@@ -1127,19 +1127,6 @@ $smarty->assign('institutions', count($allinstitutions));
 $smarty->assign('institutionform', $institutionform);
 $smarty->assign('loginas', $loginas);
 
-// WR 356027 PCNZ Customization, allow staff to login as users in institution.
-$stafflogin = $USER->is_staff_for_user($user) && !$user->get('staff');
-//Staff can't privilage escalate through an administrator.
-$stafflogin =  $stafflogin && !$user->is_admin_for_user($USER);
-//Or an institiutional administrator.
-$stafflogin = $stafflogin && !$user->is_institutional_admin();
-//Users can still log into other institutional staffmembers.
-if ($id != $USER->get('id') && ($USER->is_admin_for_user($user) || $stafflogin ) && is_null($USER->get('parentuser'))) {
-    $smarty->assign('loginas', true);
-}
-else {
-    $smarty->assign('loginas', false);
-}
 $smarty->assign('PAGEHEADING', display_name($user));
 $smarty->assign('SUBSECTIONHEADING', TITLE);
 setpageicon($smarty, 'icon-user-cog');
