@@ -2311,8 +2311,8 @@ function completionverification_stats_table($limit, $offset, $extra, $institutio
     }
     if (is_mysql()) {
         $customsql = "
-        (SELECT el2.apcstatusdate FROM { event_log } el2 WHERE el2.usr = u.id ORDER BY el2.ctime LIMIT 1) AS apcstartdate,
-        el.ctime AS accessfromdate,
+        (SELECT el2.data->>'$.apcstatusdate' FROM {event_log} el2 WHERE el2.usr = u.id ORDER BY el2.ctime LIMIT 1) AS apcstartdate,
+         el.ctime AS accessfromdate,
         (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el.data->>'$.rules.usr' = el2.usr) AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'accessor' ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyaccessordate,
         (SELECT el2.ctime FROM {event_log} el2 WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.usr = el.usr AND el2.event = 'removeviewaccess' AND el2.ctime > el.ctime AND el2.data->>'$.removedby' = 'owner') ORDER BY el2.ctime LIMIT 1) AS accessrevokedbyauthordate,
         (SELECT el2.ctime FROM { event_log } el2, WHERE (c.id = el2.resourceid AND el2.resourcetype = 'collection' AND el2.event = 'removeviewaccess' AND el2.data ->> '$.removedby' = 'system' ) ORDER BY el2.ctime LIMIT 1) as accessrevokedbysystemdate ";
