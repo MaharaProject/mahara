@@ -22,7 +22,8 @@ Given the following "users" exist:
   And I click on "Contact us"
   And I am on homepage
   # test click is possible - opens a new window, which we're not checking at this stage
-  And I click on "Help"
+  # PCNZ customisation: Help -> Manual
+  And I click on "Manual"
   And I switch to the main window
 
   Scenario: Admin changes settings which are visible to user
