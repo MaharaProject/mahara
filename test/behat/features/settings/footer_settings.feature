@@ -13,7 +13,8 @@ Given the following "users" exist:
   Scenario: User can see correct headings in footer by default
   #log in as a normal user
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I click on "Legal" in the "Footer" "Footer" property
+  # PCNZ customisation: Legal -> Terms and conditions
+  And I click on "Terms and conditions" in the "Footer" "Footer" property
   And I should see "Displayed are the current privacy statements and terms and conditions."
   And I am on homepage
   And I click on "About"
@@ -28,8 +29,9 @@ Given the following "users" exist:
   #log in as admin account
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "Menus" in "Configure site" from administration menu
+  # PCNZ - are these all available to disable?
   And I disable the following switches:
-     | Legal |
+     | Terms and conditions |
      | About |
      | Contact us |
      | External manual |
@@ -37,7 +39,7 @@ Given the following "users" exist:
   And I log out
   #Go back to homepage as UserA and check if settings saved
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I should not see "Legal"
+  And I should not see "Terms and conditions"
   And I should not see "About"
   And I should not see "Contact us"
   And I should not see "External manual"
