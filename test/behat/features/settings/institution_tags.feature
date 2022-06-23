@@ -5,19 +5,20 @@ Feature: Create Institution tags
    So I can add institution tags
 
 Background:
+    # PCNZ customisation - requires that an insitution referenced by 'pcnz' exists
     Given the following "institutions" exist:
-    | name | displayname | registerallowed | registerconfirm | tags |
-    | instone | Institution One | ON | OFF | 1 |
+    | name| displayname    | registerallowed| registerconfirm| tags |
+    | pcnz| Institution One| ON             | OFF            | 1 |
 
     And the following "users" exist:
-    | username | password | email | firstname | lastname | institution | authname | role |
-    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | instone | internal | member |
-    | UserB | Kupuh1pa! | UserB@example.org | Bob | User | instone | internal | admin |
+    | username| password | email            | firstname| lastname| institution| authname| role   |
+    | UserA   | Kupuh1pa!| UserA@example.org| Angela   | User    | pcnz       | internal| member |
+    | UserB   | Kupuh1pa!| UserB@example.org| Bob      | User    | pcnz       | internal| admin  |
 
     And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01| user | UserA |
-    | Page InstOne_01 | Page | institution | instone |
+    | Page InstOne_01 | Page | institution | pcnz |
 
     And the following "journals" exist:
     | owner | ownertype | title | description | tags |
@@ -51,11 +52,14 @@ Scenario: Mahara member can use Institution tags in their content
     And I press "Save entry"
 
     Given I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" card menu
-    And I press "Settings" in the "Toolbar buttons" "Nav" property
-    And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
-    And I fill in select2 input "settings_tags" with "Test" and select "Test"
-    And I press "Save"
+    # PCNZ customisation - no Edit/Copy (start)
+    And I follow "Page UserA_01"
+    And I press "Edit"
+     And I press "Settings" in the "Toolbar buttons" "Nav" property
+     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
+     And I fill in select2 input "settings_tags" with "Test" and select "Test"
+     And I press "Save"
+    # PCNZ customisation - no Edit/Copy (end)
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "Tagged journal entries"
