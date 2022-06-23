@@ -13,8 +13,9 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I fill in the following:
     | First name | Test     |
     | Last name | Admin     |
-    | Student ID | jk74020n |
-    | Display name  | Test Admin   |
+    | Registration number | jk74020n |
+    # PCNZ customisation: Display name -> Preferred name
+    | Preferred name  | Test Admin   |
     # Updating Contact information tab
     And I scroll to the top
     And I follow "Contact information"
@@ -48,14 +49,15 @@ Scenario: Editing admin profile page (Bug: 1426983)
     # Resetting/Editing details
     And I choose "Profile" from account menu
     And I follow "About me"
-    # check that Student ID saved
+    # check that Registration number saved
     And the following fields match these values:
-    | Student ID | jk74020n |
+    | Registration number | jk74020n |
     And I fill in the following:
     | First name   | Admin  |
     | Last name | User  |
-    | Student ID ||
-    |  Display name   | Admin Account|
+    | Registration number ||
+    # PCNZ customisation: Display name -> Preferred name
+    | Preferred name | Admin Account|
     And I press "Save profile"
     # Verifing settings saved
     And I should see "Profile saved successfully"

@@ -55,13 +55,14 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I press "Add"
     And I click on blocktype "Profile information"
     And I set the following fields to these values:
-    | First name     | 1 |
-    | Last name      | 1 |
-    | Student ID     | 1 |
-    | Display name   | 1 |
-    | Postal address | 1 |
-    | Town           | 1 |
-    | Country        | 1 |
+    # PCNZ customisation: Display name -> Preferred name, Student ID -> Registration number
+    |  First name         |  1 |
+    |  Last name          |  1 |
+    |  Registration number|  1 |
+    |  Preferred name     |  1 |
+    |  Postal address     |  1 |
+    |  Town               |  1 |
+    |  Country            |  1 |
     And I press "Save"
     And I wait "1" seconds
     And I should see "Postal address"

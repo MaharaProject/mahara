@@ -44,8 +44,10 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     When I expand the section "Profile"
     Then I should see "First name"
     And I should see "Last name"
-    And I should see "Student ID"
-    And I should see "Display name"
+    # PCNZ customisation - Registration number -> registration number
+    And I should see "Registration number"
+    # PCNZ customisation - Display name -> Preferred name
+    And I should see "Preferred name"
     And I should see "Introduction"
     And I should see "Official website address"
     And I should see "Personal website address"
@@ -66,7 +68,7 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     # site admin enable 4 fields
     When I enable the switch "First name"
     And I enable the switch "Last name"
-    And I enable the switch "Student ID"
+    And I enable the switch "Registration number"
     And I enable the switch "City/region"
     And I press "Submit"
     Then I should see "Progress bar saved successfully."
@@ -79,7 +81,7 @@ Scenario Outline: 1) Site admin enables the side block 'Profile completion' in A
     When I choose "Profile" from account menu
     Then I should see "Profile"
     And I follow "About me"
-    When I fill in "Student ID" with "123456"
+    When I fill in "Registration number" with "123456"
     And I press "Save profile"
     Then I should see "Profile saved successfully"
     # Verify progress bar has gone from 50% to 75%

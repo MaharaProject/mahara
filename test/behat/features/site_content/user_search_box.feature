@@ -24,7 +24,8 @@ Given the following "users" exist:
  And I choose "Profile" from account menu
  And I follow "About me"
  And I fill in the following:
- | Display name  | Alpha |
+ # PCNZ customisation: Display name -> Preferred name
+ | Preferred name  | Alpha |
  And I press "Save profile"
  #Log out as UserA
  And I log out
