@@ -33,14 +33,14 @@ Scenario: Site admin can send messages to anyone even if
     When I follow "Dave"
     Then I should see "Send message"
     When I choose "People" in "Engage" from main menu
-    Then I should see "Send message" in the "Dave User (UserD)" row
+    Then I should see "Send message" in the "Dave User" row
     And I log out
 
     # Mahara member with no roles canot send messages to a user
     # who "Does not allow anyone to send me messages"
     Given I log in as "UserC" with password "Kupuh1pa!"
     When I choose "People" in "Engage" from main menu
-    #Then I should not see "Send message" in the "Dave User (UserD)" row
+    #Then I should not see "Send message" in the "Dave User" row
     When I follow "Dave"
     Then I should not see "Send message"
     And I log out
