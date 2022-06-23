@@ -4,8 +4,6 @@ body.loggedout .dashboard-widget-container {
 .dashboard-widget-container {
 
     .thumbnail-widget {
-        text-decoration: none;
-
         @include media-breakpoint-up(md) {
             padding-left: 0;
             width: 10 / 2 * 10%;

@@ -146,3 +146,8 @@ input#upload_file {
     background-color: $white;
     border-color: $theme-primary-color;
 }
+
+.link-expand-right.form-group legend button[data-toggle="collapse"] {
+  border-bottom-right-radius: $border-radius-sm !important;
+  border-bottom-left-radius: $border-radius-sm !important;
+}

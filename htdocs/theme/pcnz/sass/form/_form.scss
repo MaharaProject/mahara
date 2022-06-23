@@ -66,3 +66,11 @@
 .form-control.file {
     border-radius: $border-radius-sm;
 }
+
+#search_groupcategory_container .picker,
+#usertype_type_container .picker,
+#search_filter_container .picker,
+#searchviews_orderby_container .picker,
+#searchviews_type_container .picker {
+    border-radius: $border-radius-sm;
+}

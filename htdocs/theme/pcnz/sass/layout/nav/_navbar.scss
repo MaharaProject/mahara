@@ -1,7 +1,6 @@
 // Login link and language form
 .topright-menu {
     .login-link a {
-        border-radius: $btn-border-radius;
         font-weight: $font-weight-normal;
         border: 1px solid $theme-primary-color;
 
@@ -15,13 +14,7 @@
 // Header search form
 .navbar-form.navbar-collapse {
     @include media-breakpoint-up(md) {
-        position: relative;
-        display: inline-block;
-        top: auto;
-        right: auto;
         margin: 3.5rem $spacing-xl 0 0; // 56px 20px 0 0;
-        float: right;
-        clear: none;
     }
     .input-group-append.btn {
         border-top-right-radius: 1.25rem;
@@ -29,9 +22,6 @@
     }
 
     .header-search-form {
-        @include media-breakpoint-down(md) {
-            width: 100%;
-        }
         input[type=text] {
             @media (min-width: 768px) and (max-width: 992px) {
                 max-width: 150px;

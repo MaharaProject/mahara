@@ -1,0 +1,10 @@
+.notification {
+    .subject {
+      font-weight: $font-weight-normal;
+    }
+    &.text-weight-bold {
+        .subject {
+          font-weight: $font-weight-bold;
+        }
+    }
+}
