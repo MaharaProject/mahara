@@ -48,13 +48,14 @@ Scenario: Person changes preference settings
     And I fill in "Confirm password" with "Password123!"
     And I press "Save"
     Then I should see "Preferences saved"
-    And I should see "Change username" in the "Preferences heading 2" "Account" property
-    When I fill in "New username" with "UserAA"
-    And I press "Save"
-    Then I should see "There was an error with submitting this form. Please check the marked fields and try again."
-    And I fill in "Password123!" for "accountprefs_oldpasswordchangeuser"
-    And I press "Save"
-    And I should see "Preferences saved"
+    # PCNZ customisation: cannot edit usernames
+    # And I should see "Change username" in the "Preferences heading 2" "Account" property
+    # When I fill in "New username" with "UserAA"
+    # And I press "Save"
+    # Then I should see "There was an error with submitting this form. Please check the marked fields and try again."
+    # And I fill in "Password123!" for "accountprefs_oldpasswordchangeuser"
+    # And I press "Save"
+    # And I should see "Preferences saved"
     And a "Friends control radio" "Account" property should exist
     And I press "Save"
     Then I should see "Preferences saved"
