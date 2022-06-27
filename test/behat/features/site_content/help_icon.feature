@@ -22,6 +22,10 @@ Background:
   | title | description| ownertype | ownername |
   | Page 01 | UserA's page 01 | user | UserA |
 
+  And the following "collections" exist:
+  | title          | ownertype | ownername | lock  | description | pages                                |
+  | Collection 01  | user      | UserA     | false | | |
+
   And the following "groups" exist:
   | name | owner | description | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
   | GroupA | admin | GroupA owned by admin | standard | ON | ON | all | ON | ON | UserA |  |
@@ -47,15 +51,17 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   Then I should see "You can add tags to artefacts, pages and collections you create."
   # Collections
   Given I choose "Pages and collections" in "Create" from main menu
-  And I click on "Add"
-  And I click on "Collection"
+  # (Not available) And I click on "Add"
+  # (Not available) And I click on "Collection"
   # Edit collection settings
-  And I click on "Manual" in the "H1 heading" "Common" property
-  Then I should see "Here you may give your collection a title and description to give people an idea of what your collection is about."
-  And I follow "Manual" in the "Tags section" "Tags" property
-  Then I should see "You can add tags to artefacts, pages and collections you create. Tags are descriptive labels that allow you to find your content later on more easily."
-  And I set the field "Collection name" to "Collection 01"
-  And I press "Next: Edit collection pages"
+  Then I click on "Collection 01"
+  # PCNZ customisation - cannot add/edit collections/pages
+  # (Not available) And I click on "Manual" in the "H1 heading" "Common" property
+  # (Not available) Then I should see "Here you may give your collection a title and description to give people an idea of what your collection is about."
+  # (Not available) And I follow "Manual" in the "Tags section" "Tags" property
+  # (Not available) Then I should see "You can add tags to artefacts, pages and collections you create. Tags are descriptive labels that allow you to find your content later on more easily."
+  # (Not available)And I set the field "Collection name" to "Collection 01"
+  # (Not available)And I press "Next: Edit collection pages"
   # Edit collection pages
   And I follow "Manual"
   Then I should see "Here you can add pages to your collection and set the order in which they will be displayed in the collection navigation."
@@ -66,7 +72,8 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   # Shared with me
   And I choose "Shared with me" in "Share" from main menu
   And I click on "Manual"
-  Then I should see "On this page you can list the most recently modified or commented on pages that have been shared with"
+  # PCNZ customisation: custom help text
+  Then I should see "Here you can see the portfolios that others have shared with you."
   # Skins
   And I choose "Skins" in "Create" from main menu
   And I click on "Manual"
