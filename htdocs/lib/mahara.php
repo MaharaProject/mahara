@@ -335,6 +335,15 @@ function count_string_args($identifier, $section = 'mahara') {
     return count($matches[0]);
 }
 
+/**
+ * The main lang string getter.
+ *
+ * @param string $identifier The lang string identifier
+ * @param string $section   Where the lang string resides
+ * @param string $args,... Optional arguments to pass to the lang string
+ *
+ * @return string The translated lang string
+ */
 function get_string($identifier, $section='mahara') {
 
     $variables = func_get_args();
@@ -2652,7 +2661,7 @@ abstract class Plugin implements IPlugin {
                                           array("features" => SOAP_WAIT_ONE_WAY_CALLS,
                                                 'stream_context' => webservice_create_context($c->url),));
                         //when function return null
-                        $wsseSoapClient = new webservice_soap_client_wsse(array($client, '_doRequest'), $client->wsdlfile, $client->getOptions());
+                        $wsseSoapClient = new webservice_soap_client_wsse($client->wsdlfile);
                         $wsseSoapClient->__setUsernameToken($c->username, $c->password);
                         $client->setSoapClient($wsseSoapClient);
                     }

@@ -102,9 +102,9 @@ function ws_debugging() {
 /**
  * Check that a user is in the institution
  *
- * @param array $user array('id' => .., 'username' => ..)
- * @param string $institution
- * @return boolean true on yes
+ * @param object $user The user being checked
+ * @param string $institution The institution to check
+ * @return boolean true if user is found in the institution
  */
 function mahara_external_in_institution($user, $institution) {
     $institutions = array_keys(load_user_institutions($user->id));
@@ -156,32 +156,30 @@ function mahara_external_atom_returns() {
  * the account must have membership for the selected auth_instance
  *
  * @param object $dbuser
- * @return object $auth_instance or null if $dbuser is empty
+ * @return object|null $auth_instance or null if $dbuser is empty
  */
 function webservice_validate_user($dbuser) {
     global $SESSION;
-    if (!empty($dbuser)) {
-        if ($auth_instance = get_record_sql("SELECT * FROM {auth_instance}
-                                             WHERE authname = 'webservice'
-                                             AND active = 1
-                                             AND institution = (
-                                                SELECT institution FROM {auth_instance}
-                                                WHERE id = ?
-                                                AND active = 1
-                                             )", array($dbuser->authinstance))) {
-            // User belongs to an institution that contains the 'webservice' auth method
-            $memberships = count_records('usr_institution', 'usr', $dbuser->id);
-            if ($memberships == 0) {
-                // auth instance should be a mahara one
-                if ($auth_instance->institution == 'mahara') {
-                    return $auth_instance;
-                }
+    if ($auth_instance = get_record_sql("SELECT * FROM {auth_instance}
+                                            WHERE authname = 'webservice'
+                                            AND active = 1
+                                            AND institution = (
+                                            SELECT institution FROM {auth_instance}
+                                            WHERE id = ?
+                                            AND active = 1
+                                            )", array($dbuser->authinstance))) {
+        // User belongs to an institution that contains the 'webservice' auth method
+        $memberships = count_records('usr_institution', 'usr', $dbuser->id);
+        if ($memberships == 0) {
+            // auth instance should be a mahara one
+            if ($auth_instance->institution == 'mahara') {
+                return $auth_instance;
             }
-            else {
-                $membership = get_record('usr_institution', 'usr', $dbuser->id, 'institution', $auth_instance->institution);
-                if (!empty($membership)) {
-                    return $auth_instance;
-                }
+        }
+        else {
+            $membership = get_record('usr_institution', 'usr', $dbuser->id, 'institution', $auth_instance->institution);
+            if (!empty($membership)) {
+                return $auth_instance;
             }
         }
     }
@@ -473,7 +471,7 @@ function webservice_connection_definitions() {
                     if ($i->active) {
                         $classname = generate_class_name($plugin, $key);
                         if (method_exists($classname, 'define_webservice_connections')) {
-                            $conns = call_static_method($classname, 'define_webservice_connections');
+                            $conns = $classname::define_webservice_connections();
                             if (!empty($conns)) {
                                 $connections[$classname] = array('connections' => $conns, 'type' => $plugin, 'key' => $key);
                             }
@@ -481,11 +479,12 @@ function webservice_connection_definitions() {
                     }
                     if ($plugin == 'artefact') {
                         safe_require('artefact', $key);
-                        if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
+                        $classname = generate_class_name('artefact', $i->name);
+                        if ($types = $classname::get_artefact_types()) {
                             foreach ($types as $t) {
                                 $classname = generate_artefact_class_name($t);
                                 if (method_exists($classname, 'define_webservice_connections')) {
-                                    $conns = call_static_method($classname, 'define_webservice_connections');
+                                    $conns = $classname::define_webservice_connections();
                                     if (!empty($conns)) {
                                         $connections[$classname] = array('connections' => $conns, 'type' => $plugin, 'key' => $key);
                                     }
@@ -936,6 +935,8 @@ class external_value extends external_description {
     public $type;
     /** @property bool $allownull allow null values */
     public $allownull;
+    /** @property string|false $oneof A string to identify a oneof grouping */
+    public $oneof;
 
     /**
      * Constructor
@@ -947,11 +948,11 @@ class external_value extends external_description {
      * @param bool $oneof
      */
     public function __construct($type, $desc='', $required=VALUE_REQUIRED,
-    $default=null, $allownull=NULL_ALLOWED, $oneof=false) {
+        $default=null, $allownull=NULL_ALLOWED, $oneof=false) {
         parent::__construct($desc, $required, $default);
         $this->type      = $type;
         $this->allownull = $allownull;
-        $this->oneof     = $oneof; // a string to identify a oneof grouping
+        $this->oneof     = $oneof;
     }
 }
 
@@ -1038,7 +1039,7 @@ interface webservice_test_client_interface {
  * Mandatory interface for all web service protocol classes
  * @author Petr Skoda (skodak)
  */
-interface webservice_server_interface {
+interface WebserviceServerInterface {
     /**
      * Process request from client.
      * @return void
@@ -1050,33 +1051,36 @@ interface webservice_server_interface {
  * Abstract web service base class.
  * @author Petr Skoda (skodak)
  */
-abstract class webservice_server implements webservice_server_interface {
+abstract class WebserviceServer implements WebserviceServerInterface {
 
-    /** @property string $wsname name of the web server plugin */
+    /** @var string $wsname name of the web server plugin */
     protected $wsname = null;
 
-    /** @property string $username name of local user */
+    /** @var string $username name of local user */
     protected $username = null;
 
-    /** @property string $password password of the local user */
+    /** @var string $password password of the local user */
     protected $password = null;
 
-    /** @property string $service service for wsdl look up */
+    /** @var string $service service for wsdl look up */
     protected $service = null;
 
-    /** @property int $userid the local user */
+    /** @var int $userid the local user */
     protected $userid = null;
 
-    /** @property integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_* */
+    /** @var integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_* */
     protected $authmethod;
 
-    /** @property string $token authentication token*/
+    /** @var integer $auth method string */
+    protected $auth;
+
+    /** @var string $token authentication token*/
     protected $token = null;
 
-    /** @property int restrict call to one service id*/
+    /** @var int restrict call to one service id*/
     protected $restricted_serviceid = null;
 
-    /** @property string info to add to logging*/
+    /** @var string info to add to logging*/
     protected $info = null;
 
     protected $oauth_token_details = null;
@@ -1395,7 +1399,7 @@ abstract class webservice_server implements webservice_server_interface {
  * simple and token authentication.
  * @author Petr Skoda (skodak)
  */
-abstract class webservice_base_server extends webservice_server {
+abstract class WebserviceBaseServer extends WebserviceServer {
 
     /** @property array $parameters the function parameters - the real values submitted in the request */
     protected $parameters = null;

@@ -54,6 +54,8 @@ else {
 list($html, $columns, $searchurl, $pagination) = build_webservice_log_search_results($search);
 
 $institutionselect = false;
+// Default select type. Override if we have $institutions.
+$selecttype = 'institution_requested';
 if (count($institutions) > 1) {
     $selecttype = $USER->get('admin') ? 'institution' : 'institution_requested';
     $options = array('all' => get_string('All'));

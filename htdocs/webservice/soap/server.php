@@ -56,6 +56,6 @@ else {
 }
 
 // run the dispatcher
-$server = new webservice_soap_server($authmethod);
+$server = new WebserviceSoapServer($authmethod);
 $server->run();
 die;

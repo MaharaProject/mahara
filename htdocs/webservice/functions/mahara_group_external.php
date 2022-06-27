@@ -47,6 +47,7 @@ class mahara_group_external extends external_api {
         $group_types = group_get_grouptypes();
         $group_edit_roles = array_keys(group_get_editroles_options());
         $notifyroles = array(get_string('none', 'admin')) + group_get_editroles_options(true);
+        $group_notify_roles = [];
         foreach ($notifyroles as $key => $role) {
             $group_notify_roles[] = $key . ' = ' . $role;
         }
@@ -353,6 +354,7 @@ class mahara_group_external extends external_api {
         $group_types = group_get_grouptypes();
         $group_edit_roles = array_keys(group_get_editroles_options());
         $notifyroles = array(get_string('none', 'admin')) + group_get_editroles_options(true);
+        $group_notify_roles = [];
         foreach ($notifyroles as $key => $role) {
             $group_notify_roles[] = $key . ' = ' . $role;
         }

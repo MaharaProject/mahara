@@ -339,7 +339,7 @@ function get_record($table, $field1, $value1, $field2=null, $value2=null, $field
  * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
- * @return Found record as object. False if not found
+ * @return object|false Found record as object. False if not found
  * @throws SQLException
  */
 function get_record_sql($sql, array $values=null, $strictness=WARN_MULTIPLE) {

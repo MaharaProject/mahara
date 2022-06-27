@@ -31,6 +31,7 @@ class webservice_rest_client {
     private $type;
     private $json;
     private $consumer;
+    private $secret;
     private $token;
     private $headers = array();
     public $connection;
@@ -226,8 +227,9 @@ class webservice_rest_client {
      * @param array $node
      */
     private static function recurse_structure($node) {
-        $result = array();
+        $result = [];
         if (isset($node['SINGLE']['KEY'])) {
+            $item = [];
             foreach ($node['SINGLE']['KEY'] as $element) {
                 if (isset($element['MULTIPLE'])) {
                     $item[$element['@name']] = self::recurse_structure($element['MULTIPLE']);
@@ -241,7 +243,7 @@ class webservice_rest_client {
         else {
             if (isset($node['SINGLE'])) {
                 foreach ($node['SINGLE'] as $single) {
-                    $item = array();
+                    $item = [];
                     $single = array_shift($single);
                     foreach ($single as $element) {
                         if (isset($element['MULTIPLE'])) {
@@ -269,6 +271,11 @@ class webservice_rest_client {
 class webservice_xml2array {
 
     /**
+     * @param DOMDocument|false $dom a DOMDocument or false.
+     */
+    private $dom;
+
+    /**
      * Constructor for XML parser
      */
     public function __construct($xml) {
@@ -286,11 +293,12 @@ class webservice_xml2array {
      * the XML document
      *
      * @param object $node of XML
-     * @return array
+     * @return array|string
      */
     function _process($node) {
         $occurance = array();
         $result = array();
+        // @phpstan-ignore-next-line - This is a recursive function, $node can eventually be 'empty'.
         if (empty($node)) {
             return $result;
         }
@@ -348,9 +356,9 @@ class webservice_xml2array {
     }
 
     /**
-     * sort of wrapper for the mainline
+     * A wrapper for the mainline.
      *
-     * @return array PHP values parsed out of XML
+     * @return array Values parsed out of the XML
      */
     function getResult() {
         return $this->_process($this->dom);

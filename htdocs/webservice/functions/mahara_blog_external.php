@@ -60,8 +60,12 @@ class mahara_blog_external extends external_api {
     /**
      * Check that a user exists
      *
-     * @param array $user array('id' => .., 'username' => ..)
-     * @return array() of user
+     * Check a user exists by looking up the user by id, userid, username,
+     * email, or remoteuser and return the user object.
+     *
+     * @param array $user A user array to check
+     * @return object The user
+     * @throws WebserviceInvalidParameterException
      */
     private static function checkuser($user) {
         global $WEBSERVICE_INSTITUTION;
@@ -109,13 +113,20 @@ class mahara_blog_external extends external_api {
             throw new WebserviceInvalidParameterException(get_string('musthaveid', 'auth.webservice'));
         }
         // now get the user
-        if ($user = get_user($id)) {
-            if ($user->deleted) {
+        if ($return_user = get_user($id)) {
+            if ($return_user->deleted) {
                 throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));
             }
             // get the remoteuser
-            $user->remoteuser = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
-            return $user;
+            $return_user->remoteuser = get_field(
+                'auth_remote_user',
+                'remoteusername',
+                'authinstance',
+                $return_user->authinstance,
+                'localusr',
+                $return_user->id
+            );
+            return $return_user;
         }
         else {
             throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));

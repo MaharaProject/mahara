@@ -62,6 +62,6 @@ else {
 }
 
 // run the dispatcher
-$server = new webservice_xmlrpc_server($authmethod);
+$server = new WebserviceXmlrpcServer($authmethod);
 $server->run();
 die;

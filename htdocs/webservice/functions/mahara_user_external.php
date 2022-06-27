@@ -645,8 +645,12 @@ class mahara_user_external extends external_api {
     /**
      * Check that a user exists
      *
-     * @param array $user array('id' => .., 'username' => ..)
-     * @return array() of user
+     * Check a user exists by looking up the user by id, userid, username,
+     * email, or remoteuser and return the user object.
+     *
+     * @param array $user A user array to check
+     * @return object The user
+     * @throws WebserviceInvalidParameterException
      */
     private static function checkuser($user) {
         global $WEBSERVICE_INSTITUTION;
@@ -933,9 +937,9 @@ class mahara_user_external extends external_api {
                  'link'    => get_config('wwwroot'),
                  'email'   => $USER->get('email'),
                  'uri'     => get_config('wwwroot'),
-                 'title'   => 'Get Online Users by ' . $USER->username . ' at ' . webservice_rest_server::format_rfc3339_date(time()),
+                 'title'   => 'Get Online Users by ' . $USER->username . ' at ' . WebserviceRestServer::format_rfc3339_date(time()),
                  'name'    => 'mahara_user_external_get_online_users',
-                 'updated' => webservice_rest_server::format_rfc3339_date(time()),
+                 'updated' => WebserviceRestServer::format_rfc3339_date(time()),
                  'entries' => array(),
         );
 
@@ -949,8 +953,8 @@ class mahara_user_external extends external_api {
                              'link'      => get_config('wwwroot') . 'user/view.php?id=' . $user->id,
                              'email'     => $user->email,
                              'name'      => display_name($user),
-                             'updated'   => webservice_rest_server::format_rfc3339_date(strtotime($user->lastaccess)),
-                             'published' => webservice_rest_server::format_rfc3339_date(time()),
+                             'updated'   => WebserviceRestServer::format_rfc3339_date(strtotime($user->lastaccess)),
+                             'published' => WebserviceRestServer::format_rfc3339_date(time()),
                              'title'     => 'last_access',
             );
         }
@@ -1147,7 +1151,7 @@ class mahara_user_external extends external_api {
                         array(
                             'id'              => new external_value(PARAM_NUMBER, get_string('favsownerid', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
                             'username'        => new external_value(PARAM_RAW, get_string('favsownerusername', WEBSERVICE_LANG), VALUE_OPTIONAL, null, NULL_ALLOWED, 'id'),
-                            'shortname'       => new external_value(PARAM_SAFEDIR, get_string('favshortname', WEBSERVICE_LANG), VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED, null, NULL_ALLOWED, 'id'),
+                            'shortname'       => new external_value(PARAM_SAFEDIR, get_string('favshortname', WEBSERVICE_LANG), VALUE_DEFAULT, 'favourites', NULL_NOT_ALLOWED),
                             'institution'     => new external_value(PARAM_SAFEDIR, get_string('institution', WEBSERVICE_LANG), VALUE_DEFAULT, 'mahara', NULL_NOT_ALLOWED), //TODO: change 'mahara'?
                             'favourites'      => new external_multiple_structure(
                                                             new external_single_structure(
