@@ -4,6 +4,11 @@ In order to view the message
 As user/admin
 So admin can view the message in their inbox
 
+Background:
+  Given the following "institutions" exist:
+  | name | displayname | registerallowed | registerconfirm |
+  | pcnz | Institution One | ON | OFF |
+
 Scenario: Checking that admin user can view messages in their mail sent from Contact us page
  Given I follow "Contact us"
  And I fill in "Name" with "Dean"
