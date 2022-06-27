@@ -81,7 +81,8 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  Then I should see "Site options" in the "Configure site sub-menu" "Nav" property
  And I should see "Static pages" in the "Configure site sub-menu" "Nav" property
  And I should see "Menus" in the "Configure site sub-menu" "Nav" property
- And I should see "Legal" in the "Configure site sub-menu" "Nav" property
+ # PCNZ customisation: Legal -> Terms and conditions
+ And I should see "Terms and conditions" in the "Configure site sub-menu" "Nav" property
  And I should see "Networking" in the "Configure site sub-menu" "Nav" property
  And I should see "Licenses" in the "Configure site sub-menu" "Nav" property
  And I should see "Pages and collections" in the "Configure site sub-menu" "Nav" property
@@ -111,7 +112,8 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  When I press "Institutions"
  Then I should see "Settings" in the "Institutions sub-menu" "Nav" property
  And I should see "Static pages" in the "Institutions sub-menu" "Nav" property
- And I should see "Legal" in the "Institutions sub-menu" "Nav" property
+ # PCNZ customisation: Legal -> Terms and conditions
+ And I should see "Terms and conditions" in the "Institutions sub-menu" "Nav" property
  And I should see "Members" in the "Institutions sub-menu" "Nav" property
  And I should see "Staff" in the "Institutions sub-menu" "Nav" property
  And I should see "Administrators" in the "Institutions sub-menu" "Nav" property
@@ -168,7 +170,8 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  Then I should see "Profile completion" in the "Institutions sub-menu" "Nav" property
  And I should see "Settings" in the "Institutions sub-menu" "Nav" property
  And I should see "Static pages" in the "Institutions sub-menu" "Nav" property
- And I should see "Legal" in the "Institutions sub-menu" "Nav" property
+ # PCNZ customisation: Legal -> Terms and conditions
+ And I should see "Terms and conditions" in the "Institutions sub-menu" "Nav" property
  And I should see "Members" in the "Institutions sub-menu" "Nav" property
  And I should see "Staff" in the "Institutions sub-menu" "Nav" property
  And I should see "Administrators" in the "Institutions sub-menu" "Nav" property
@@ -190,9 +193,11 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Settings"
  When I press "Settings"
  Then I should see "Preferences"
- And I should see "Legal"
+ # PCNZ customisation: Legal -> Terms and conditions
+ And I should see "Terms and conditions"
  And I wait "1" seconds
  And I should see "Notifications"
  And I should see "Connected apps"
- And I should see "Institution membership"
+ # PCNZ customisation 'Institution membership -> Institutions'
+ And I should see "Institutions"
  And I should see "Logout"
