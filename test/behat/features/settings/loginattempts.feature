@@ -5,7 +5,12 @@ As an admin/user
 So I can prevent dictionary attacks on my passwords
 
 Background:
-  Given the following "users" exist:
+
+  Given the following "institutions" exist:
+    | name| displayname | registerallowed| registerconfirm| allowinstitutionpublicviews |
+    | pcnz| Hall of Fame| ON             | OFF            | 1                           |
+
+  And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
   And I am on homepage

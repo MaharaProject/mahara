@@ -5,6 +5,10 @@ Feature: Contextual helps for Mahara pages
   So I can click the (i) icon next to the page title to get help about the page
 
 Background:
+  Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
   Given the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
   | UserA | Kupuh1pa! | test01@example.com | Angela | User | mahara | internal | member |
