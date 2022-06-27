@@ -11,7 +11,8 @@ Background:
 Scenario: Check default blocks are displayed
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Check the big button navigation
-    And I click on "Develop your portfolio"
+    # PCNZ customisation string change to 'Add material to your portfolio'
+    And I click on "Add material to your portfolio"
     Then I should see "Pages and collections" in the "H1 heading" "Common" property
     And I am on homepage
     And I click on "Control your privacy"

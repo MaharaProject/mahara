@@ -3042,13 +3042,6 @@ function install_system_dashboard_view() {
             ),
         ),
         array(
-            'blocktype' => 'myviews',
-            'title' => '',
-            'positionx' => 0,
-            'positiony' => 3,
-            'config' => null,
-        ),
-        array(
             'blocktype' => 'inbox',
             'title' => '',
             'positionx' => 0,
@@ -3072,21 +3065,6 @@ function install_system_dashboard_view() {
             'positionx' => 0,
             'positiony' => 3,
             'config' => null,
-        ),
-        array(
-            'blocktype' => 'newviews',
-            'title' => '',
-            'positionx' => 6,
-            'positiony' => 0,
-            'config' => array(
-                'limit'       => 10,
-                'user'        => 1,
-                'group'       => 1,
-                'friend'      => 1,
-                'institution' => 0,
-                'loggedin'    => 0,
-                'public'      => 0,
-            ),
         ),
         array(
             'blocktype' => 'watchlist',
