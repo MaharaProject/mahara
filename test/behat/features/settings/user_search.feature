@@ -15,7 +15,7 @@ Scenario: Testing functions for people search page (Bug 1431569)
  And I press "Advanced options"
  And I follow "A" in the "Filter by first name" "People" property
  And I follow "UserA"
- And I should see "Account settings | Angela User (UserA)"
+ And I should see "Account settings | Angela User"
  # Flicking the switches to new settings
  And I set the following fields to these values:
  | Force password change on next login  | 1 |
@@ -29,4 +29,5 @@ Scenario: Testing functions for people search page (Bug 1431569)
  And I set the following fields to these values:
  | Search for people | UserA@example.org |
  And I press the key "Enter" in the "Search for people" field
- Then I should see "UserA"
+ # PCNZ customisation - display name is not user name, but firstname and lastname
+ Then I should see "Angela User"
