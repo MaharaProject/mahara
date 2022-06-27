@@ -19,7 +19,8 @@ Given the following "users" exist:
  #click on the search icon
  And I press "usf_submit"
  #Verifying if UserA can see User B in the search results
- And I should see "UserB"
+ # PCNZ - displayname customisation
+ And I should see "Bob User"
  #Change the display name of "UserA"
  And I choose "Profile" from account menu
  And I follow "About me"
