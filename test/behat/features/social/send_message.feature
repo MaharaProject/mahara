@@ -18,7 +18,7 @@ Scenario: Selecting select2 option via ajax (Bug #1520011)
     Then I should see "Recipients *"
     And I should see "Subject *"
     And I should see "Message *"
-    And I fill in select2 input "sendmessage_recipients" with "UserA" and select "Angela User (UserA)"
+    And I fill in select2 input "sendmessage_recipients" with "Angela" and select "Angela User"
     And I set the following fields to these values:
     | Subject | Test message with < & > |
     | Message | This is a test with > & < |
