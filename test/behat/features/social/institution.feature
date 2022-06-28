@@ -24,7 +24,8 @@ Feature: Mahara account permissions in institutions
   Scenario: Register to an institution
     # Member can register to an institution
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Institution membership" in "Settings" from account menu
+    # PCNZ customisation: 'Institution membership -> Institutions'
+    And I choose "Institutions" in "Settings" from account menu
     Then I should see "Request membership of an institution"
     And I log out
 
@@ -67,7 +68,7 @@ Feature: Mahara account permissions in institutions
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Members" in "Institutions" from administration menu
     And I select "People who have not requested institution membership yet" from "People to display:"
-    And I select "UserC" from "Non-members"
+    And I select "Cecilia User" from "Non-members"
     And I press "Turn selected non-members into invited"
     And I press "Add members"
     And I should see "People added"
