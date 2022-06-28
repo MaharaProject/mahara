@@ -5,11 +5,15 @@ Feature: Configure navigation block
   So I can easily get from that page to another
 
 Background:
-  Given the following "users" exist:
+  Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+  And the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
   | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
-  Given the following "pages" exist:
+  And the following "pages" exist:
   | title         | description         | ownertype | ownername | instructions                |
   | Page UserA_01 | Page 01 description | user      | UserA     | The instructions for page 1 |
   | Page UserA_02 | Page 02 description | user      | UserA     | The instructions for page 2 |
