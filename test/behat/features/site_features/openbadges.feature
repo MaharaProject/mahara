@@ -4,7 +4,11 @@ Feature: The openbadges block should be present
     As a user I add the block to a page
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
@@ -18,7 +22,9 @@ Scenario: Open badges block
     # So all we can do is check that the block exists and saves to a page
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" card menu
+    # PCNZ customisation - no edit/copy
+    And I click on "Page UserA_01"
+    Then I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "Open Badges"
