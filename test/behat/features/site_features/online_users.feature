@@ -78,11 +78,13 @@ Scenario: log in as the latest person and check the following
     And I should see "Carol User"
     And I should see "Bob User"
     And I should see "Angela User"
-    And I should not see "Olive User (UserO)"
+    And I insert breakpoint
+    # PCNZ customisation - custom display name without displaying username for regular accounts matches the profile box at the bottom
+    Then I should not see "Olive User" in the "Search results" "Online_users" property
     When I jump to page "2" of the list "onlinelist_pagination"
-    Then I should see "Olive User (UserO)"
+    Then I should see "Olive User"
     # Person can click a person's name and be redirected to their profile page
-    When I follow "Olive User (UserO)"
+    When I follow "Olive User" in the "Search results" "Online_users" property
     Then I should see "Olive User"
     And I should see "About me"
     And I log out
