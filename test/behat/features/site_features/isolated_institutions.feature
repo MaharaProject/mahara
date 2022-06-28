@@ -63,8 +63,10 @@ Background:
 Scenario: Users from different institutions cannot see other institution users in the "People" page
     Given I log in as "UserC" with password "Kupuh1pa!"
     # User should not be allowed to join another institution
-    When I choose "Institution membership" in "Settings" from account menu
-    Then I should see "You are a member of Institution One"
+    # PCNZ customisation 'Institution membership -> Institutions'
+    When I choose "Institutions" in "Settings" from account menu
+    # PCNZ customisation: custom text
+    Then I should see "You are registered in Institution \"Institution One\""
     And I should not see "Request membership of an institution"
 
     # Searching people
@@ -108,12 +110,13 @@ Scenario: Users from different institutions cannot see other institution users i
     And I should not see "GroupF"
 
     # Users can not send messages via the inbox to people outside their institution
-    When I follow "Inbox"
-    And I press "Compose"
-    # Check we can select user in institution
-    And I fill in select2 input "sendmessage_recipients" with "UserB" and select "Bob User"
-    # Check we cannot select user not institution
-    And I fill in select2 input "sendmessage_recipients" with "UserF" and is not found
+    # PCNZ customisation - WR 357487
+    # (Not available) When I follow "Inbox"
+    # (Not available) And I press "Compose"
+    # (Not available) # Check we can select user in institution
+    # (Not available) And I fill in select2 input "sendmessage_recipients" with "UserB" and select "Bob User"
+    # (Not available) # Check we cannot select user not institution
+    # (Not available) And I fill in select2 input "sendmessage_recipients" with "UserF" and is not found
 
     # Check that one can see profile page for an institution member and not for one who isn't
     # For the profile pages to exist we need to login as these users first
