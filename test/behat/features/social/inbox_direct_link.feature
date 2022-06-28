@@ -22,13 +22,15 @@ And the following "messages" exist:
      | friendaccept | UserD | UserA | Contact request accepted - Dmitri | Contact request accepted from Dmitri | 1 | user/view.php?id=[to] | |
 
 Scenario: Going to a direct link to a message will open the message directly in the inbox (Bug 1837194)
-   # Log in as users
-   Given I log in as "UserA" with password "Kupuh1pa!"
-   # Go to a specific message and verify its body is visible - but not another's body.
-   When I go directly to the message from "Cecilia User"
-   Then I should see "Friend request from Cecilia" in the "Inbox" "Misc" property
-   And I should not see "Friend request from Bob" in the "Inbox" "Misc" property
-   # Go to another specific message and verify its body is visible - but not another's body.
-   And I go directly to the message from "Bob User"
-   And I should see "Friend request from Bob" in the "Inbox" "Misc" property
-   And I should not see "Friend request from Cecilia" in the "Inbox" "Misc" property
+# PCNZ customisation: connections are not encouraged and customisations such as not allowing messages from anyone
+# are in place ensure this situation does not come about.
+#    # Log in as users
+#    Given I log in as "UserA" with password "Kupuh1pa!"
+#    # Go to a specific message and verify its body is visible - but not another's body.
+#    When I go directly to the message from "Cecilia User"
+#    Then I should see "Friend request from Cecilia" in the "Inbox" "Misc" property
+#    And I should not see "Friend request from Bob" in the "Inbox" "Misc" property
+#    # Go to another specific message and verify its body is visible - but not another's body.
+#    And I go directly to the message from "Bob User"
+#    And I should see "Friend request from Bob" in the "Inbox" "Misc" property
+#    And I should not see "Friend request from Cecilia" in the "Inbox" "Misc" property
