@@ -29,7 +29,7 @@ Scenario: Group moderator approved a forum post
     And I select "Fully expand" from "Forum indent mode"
     # Group owner sets up moderation of forum and adds a moderator "UserC"
     And I disable the switch "Allow group members to unsubscribe"
-    And I select "UserC" from "Potential moderators"
+    And I select "Cecilia User" from "Potential moderators"
     And I press "rightarrow"
     And the "moderateposts" select box should contain "None"
     And the "moderateposts" select box should contain "Posts"
