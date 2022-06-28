@@ -46,7 +46,7 @@ Scenario: As administrator I can
     And I collapse "Manage service groups" node
     And I wait "1" seconds
     And I expand the section "Manage service access tokens"
-    And I fill in select2 input "webservices_token_generate_userid" with "Service" and select "Service Admin (serviceadmin)"
+    And I fill in select2 input "webservices_token_generate_userid" with "Service" and select "Service Admin"
     And I press "Generate token"
     And I select "Institution 1" from "Institution"
     And I select "Test service" from "Service"
