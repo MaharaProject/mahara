@@ -137,6 +137,10 @@ define('GROUPS', array(
     'Search results heading row 6' => '#membersearchresults .list-group-item:nth-of-type(6) .list-group-item-heading',
 ));
 
+define ('ONLINE_USERS', array(
+    'Search results' => '#onlinelist'
+));
+
 define('HEADER', array(
     'Logo'    =>'div#logo-area',
     'Search'  =>'#usf_query',
