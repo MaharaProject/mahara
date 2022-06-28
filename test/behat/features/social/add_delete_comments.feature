@@ -2,7 +2,11 @@
 Feature: Writing and deleting comments
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | admin |
     Given the following "pages" exist:
@@ -64,7 +68,8 @@ Scenario: Add comments block to page
     And I press "Comment"
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" card menu
+    And I click on "Page UserA_01"
+    Then I press "Edit"
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page
     When I click on the add block button
