@@ -5,7 +5,11 @@ Feature: Annotation via smart evnidence map
  So I can annotate people's work
 
 Background:
-    Given the following "pages" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page admin_01 | Page 01 | user | admin |
     | Page admin_02 | Page 02 | user | admin |
@@ -23,7 +27,8 @@ Scenario: Accessing annotation block
  And I press "activate_blocktype_annotation_submit"
  And I should see "Hide" in the "Smartevidence" "Smartevidence" property
  And I choose "Settings" in "Institutions" from administration menu
- And I press "Edit"
+ # PCNZ customisation - requiring the pcnz auth instance, there will be two institutions so we must specify the institution
+ And I press "Edit \"No Institution\""
  And I enable the switch "Allow SmartEvidence"
  And I press "Submit"
 
@@ -38,8 +43,11 @@ Scenario: Accessing annotation block
 
  # Update 'Test collection' to have smart evidence
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Edit" in "Collection admin_01" card menu
- And I select "Title of your framework" from "SmartEvidence framework"
+ And I click on "Collection admin_01"
+ # PCNZ customisation - this button is hidden, however we need to test that
+ # this functionality works, so I'll hardcode the edit collection url in.
+ And I go to "/collection/edit.php?id=1"
+ Then I select "Title of your framework" from "SmartEvidence framework"
  And I press "Save"
  And follow "Collection admin_01"
 
