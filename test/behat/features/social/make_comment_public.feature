@@ -5,8 +5,11 @@ Feature: As a user I want to make just one comment from a list public (Bug 17294
     while the rest of the list remains private
 
 Background:
+ Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
 
-  Given the following "users" exist:
+  And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | user |
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | user |
