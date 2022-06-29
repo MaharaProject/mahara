@@ -4,7 +4,11 @@ As a user
 In order to test the pagination of the plan
 
 Background:
-    Given the following "pages" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page admin_01 | Page 01 | user | admin |
 
@@ -20,7 +24,8 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     And I press "Save plan"
     #  add plan block to page
     Given I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page admin_01" card menu
+    And I click on "Page admin_01"
+    And I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "Plans"
@@ -131,7 +136,8 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     Then I should see "Alien invasion"
     # Add the plan to a page
     When I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page admin_01" card menu
+    And I follow "Page admin_01"
+    And I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "Plans"
